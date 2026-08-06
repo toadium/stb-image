@@ -223,3 +223,45 @@ extern "c" fn stb_image_mbt_set_unpremultiply_on_load(
 extern "c" fn stb_image_mbt_convert_iphone_png_to_rgb(
   flag_true_if_should_convert : Int,
 ) -> Unit = "stb_image_mbt_convert_iphone_png_to_rgb"
+
+///|
+extern "c" fn stb_image_mbt_hdr_to_ldr_gamma(gamma : Float) -> Unit =
+  "stb_image_mbt_hdr_to_ldr_gamma"
+
+///|
+extern "c" fn stb_image_mbt_hdr_to_ldr_scale(scale : Float) -> Unit =
+  "stb_image_mbt_hdr_to_ldr_scale"
+
+///|
+extern "c" fn stb_image_mbt_ldr_to_hdr_gamma(gamma : Float) -> Unit =
+  "stb_image_mbt_ldr_to_hdr_gamma"
+
+///|
+extern "c" fn stb_image_mbt_ldr_to_hdr_scale(scale : Float) -> Unit =
+  "stb_image_mbt_ldr_to_hdr_scale"
+
+///|
+#borrow(buffer, w_ref, h_ref, z_ref, c_ref, delays_len_ref)
+extern "c" fn stb_image_mbt_load_gif_from_memory(
+  buffer : Bytes,
+  len : Int,
+  desired_channels : Int,
+  w_ref : Ref[Int],
+  h_ref : Ref[Int],
+  z_ref : Ref[Int],
+  c_ref : Ref[Int],
+  delays_len_ref : Ref[Int],
+) -> Bytes = "stb_image_mbt_load_gif_from_memory"
+
+///|
+#borrow(path, w_ref, h_ref, z_ref, c_ref, delays_len_ref)
+extern "c" fn stb_image_mbt_load_gif_from_path(
+  path : Bytes,
+  path_len : Int,
+  desired_channels : Int,
+  w_ref : Ref[Int],
+  h_ref : Ref[Int],
+  z_ref : Ref[Int],
+  c_ref : Ref[Int],
+  delays_len_ref : Ref[Int],
+) -> Bytes = "stb_image_mbt_load_gif_from_path"

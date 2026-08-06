@@ -17,9 +17,10 @@
 /* 5. MoonBit 运行时 API */
 #include <moonbit.h>
 
-/* 6. C 标准库（memcpy、malloc、free、realloc） */
+/* 6. C 标准库（memcpy、malloc、free、realloc、fopen、fread） */
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // ============================================================
 // Load 函数（v0.2 扩展：添加 desired_channels 参数）
@@ -454,4 +455,123 @@ MOONBIT_FFI_EXPORT void stb_image_mbt_convert_iphone_png_to_rgb(
     int32_t flag_true_if_should_convert
 ) {
     stbi_convert_iphone_png_to_rgb((int)flag_true_if_should_convert);
+}
+
+// ============================================================
+// HDR 配置 API（v0.4 补齐 v0.3 遗漏）
+// ============================================================
+
+MOONBIT_FFI_EXPORT void stb_image_mbt_hdr_to_ldr_gamma(float gamma) {
+    stbi_hdr_to_ldr_gamma(gamma);
+}
+
+MOONBIT_FFI_EXPORT void stb_image_mbt_hdr_to_ldr_scale(float scale) {
+    stbi_hdr_to_ldr_scale(scale);
+}
+
+MOONBIT_FFI_EXPORT void stb_image_mbt_ldr_to_hdr_gamma(float gamma) {
+    stbi_ldr_to_hdr_gamma(gamma);
+}
+
+MOONBIT_FFI_EXPORT void stb_image_mbt_ldr_to_hdr_scale(float scale) {
+    stbi_ldr_to_hdr_scale(scale);
+}
+
+// ============================================================
+// 动画 GIF 加载函数（v0.4）
+// ============================================================
+
+MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_load_gif_from_memory(
+    moonbit_bytes_t buffer,
+    int32_t len,
+    int32_t desired_channels,
+    int32_t *w_ref,
+    int32_t *h_ref,
+    int32_t *z_ref,
+    int32_t *c_ref,
+    int32_t *delays_len_ref
+) {
+    int w = 0, h = 0, z = 0, c = 0;
+    int *delays = NULL;
+    stbi_uc *result = stbi_load_gif_from_memory(
+        (stbi_uc const *)buffer, (int)len, &delays, &w, &h, &z, &c, (int)desired_channels
+    );
+    if (result == NULL) {
+        *w_ref = 0; *h_ref = 0; *z_ref = 0; *c_ref = 0;
+        *delays_len_ref = 0;
+        return moonbit_make_bytes(0, 0);
+    }
+    int actual = (desired_channels != 0) ? (int)desired_channels : c;
+    int32_t delays_size = (int32_t)z * (int32_t)sizeof(int);
+    int32_t pixel_size = (int32_t)w * (int32_t)h * (int32_t)z * (int32_t)actual;
+    int32_t total_size = delays_size + pixel_size;
+    moonbit_bytes_t out = moonbit_make_bytes(total_size, 0);
+    if (delays != NULL) {
+        memcpy(out, delays, (size_t)delays_size);
+        STBI_FREE(delays);
+    }
+    memcpy((char *)out + delays_size, result, (size_t)pixel_size);
+    stbi_image_free(result);
+    *w_ref = (int32_t)w;
+    *h_ref = (int32_t)h;
+    *z_ref = (int32_t)z;
+    *c_ref = (int32_t)actual;
+    *delays_len_ref = delays_size;
+    return out;
+}
+
+MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_load_gif_from_path(
+    moonbit_bytes_t path_bytes,
+    int32_t path_len,
+    int32_t desired_channels,
+    int32_t *w_ref,
+    int32_t *h_ref,
+    int32_t *z_ref,
+    int32_t *c_ref,
+    int32_t *delays_len_ref
+) {
+    char *path_cstr = (char *)malloc((size_t)path_len + 1);
+    memcpy(path_cstr, path_bytes, (size_t)path_len);
+    path_cstr[path_len] = '\0';
+    FILE *f = fopen(path_cstr, "rb");
+    free(path_cstr);
+    if (f == NULL) {
+        *w_ref = 0; *h_ref = 0; *z_ref = 0; *c_ref = 0;
+        *delays_len_ref = 0;
+        return moonbit_make_bytes(0, 0);
+    }
+    fseek(f, 0, SEEK_END);
+    long file_size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    unsigned char *file_data = (unsigned char *)malloc((size_t)file_size);
+    fread(file_data, 1, (size_t)file_size, f);
+    fclose(f);
+    int w = 0, h = 0, z = 0, c = 0;
+    int *delays = NULL;
+    stbi_uc *result = stbi_load_gif_from_memory(
+        file_data, (int)file_size, &delays, &w, &h, &z, &c, (int)desired_channels
+    );
+    free(file_data);
+    if (result == NULL) {
+        *w_ref = 0; *h_ref = 0; *z_ref = 0; *c_ref = 0;
+        *delays_len_ref = 0;
+        return moonbit_make_bytes(0, 0);
+    }
+    int actual = (desired_channels != 0) ? (int)desired_channels : c;
+    int32_t delays_size = (int32_t)z * (int32_t)sizeof(int);
+    int32_t pixel_size = (int32_t)w * (int32_t)h * (int32_t)z * (int32_t)actual;
+    int32_t total_size = delays_size + pixel_size;
+    moonbit_bytes_t out = moonbit_make_bytes(total_size, 0);
+    if (delays != NULL) {
+        memcpy(out, delays, (size_t)delays_size);
+        STBI_FREE(delays);
+    }
+    memcpy((char *)out + delays_size, result, (size_t)pixel_size);
+    stbi_image_free(result);
+    *w_ref = (int32_t)w;
+    *h_ref = (int32_t)h;
+    *z_ref = (int32_t)z;
+    *c_ref = (int32_t)actual;
+    *delays_len_ref = delays_size;
+    return out;
 }

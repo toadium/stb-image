@@ -80,3 +80,27 @@ pub fn set_unpremultiply_on_load(flag : Bool) -> Unit {
 pub fn convert_iphone_png_to_rgb(flag : Bool) -> Unit {
   stb_image_mbt_convert_iphone_png_to_rgb(if flag { 1 } else { 0 })
 }
+
+///|
+/// 设置 HDR 转 LDR 的 gamma 值（默认 1.0）
+pub fn hdr_to_ldr_gamma(gamma : Float) -> Unit {
+  stb_image_mbt_hdr_to_ldr_gamma(gamma)
+}
+
+///|
+/// 设置 HDR 转 LDR 的 scale 值（默认 1.0）
+pub fn hdr_to_ldr_scale(scale : Float) -> Unit {
+  stb_image_mbt_hdr_to_ldr_scale(scale)
+}
+
+///|
+/// 设置 LDR 转 HDR 的 gamma 值（默认 1.0）
+pub fn ldr_to_hdr_gamma(gamma : Float) -> Unit {
+  stb_image_mbt_ldr_to_hdr_gamma(gamma)
+}
+
+///|
+/// 设置 LDR 转 HDR 的 scale 值（默认 1.0）
+pub fn ldr_to_hdr_scale(scale : Float) -> Unit {
+  stb_image_mbt_ldr_to_hdr_scale(scale)
+}

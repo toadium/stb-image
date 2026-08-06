@@ -34,6 +34,13 @@ pub(all) struct ImageInfo {
 } derive(Eq, @debug.Debug)
 
 ///|
+/// 动画 GIF 解码结果，包含多帧图像和每帧延迟（毫秒）
+pub(all) struct GifAnimation {
+  frames : Array[Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
+
+///|
 /// 加载失败领域错误
 pub(all) suberror LoadError {
   FileIO(String)
