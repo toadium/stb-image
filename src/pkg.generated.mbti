@@ -6,9 +6,67 @@ import {
 }
 
 // Values
-pub fn load_from_bytes(Bytes) -> Image raise LoadError
+pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 
-pub fn load_from_path(String) -> Image raise LoadError
+pub fn failure_reason() -> String
+
+pub fn flip_vertically_on_write(Bool) -> Unit
+
+pub fn hdr_to_ldr_gamma(Float) -> Unit
+
+pub fn hdr_to_ldr_scale(Float) -> Unit
+
+pub fn info_from_bytes(Bytes) -> ImageInfo? raise LoadError
+
+pub fn info_from_path(String) -> ImageInfo?
+
+pub fn is_16_bit_from_bytes(Bytes) -> Bool
+
+pub fn is_16_bit_from_path(String) -> Bool
+
+pub fn is_hdr_from_bytes(Bytes) -> Bool
+
+pub fn is_hdr_from_path(String) -> Bool
+
+pub fn ldr_to_hdr_gamma(Float) -> Unit
+
+pub fn ldr_to_hdr_scale(Float) -> Unit
+
+pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> Image16 raise LoadError
+
+pub fn load_16_from_path(String, req_channels? : Int?) -> Image16 raise LoadError
+
+pub fn load_from_bytes(Bytes, req_channels? : Int?) -> Image raise LoadError
+
+pub fn load_from_path(String, req_channels? : Int?) -> Image raise LoadError
+
+pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> GifAnimation raise LoadError
+
+pub fn load_gif_from_path(String, req_channels? : Int?) -> GifAnimation raise LoadError
+
+pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> ImageF raise LoadError
+
+pub fn loadf_from_path(String, req_channels? : Int?) -> ImageF raise LoadError
+
+pub fn set_flip_vertically_on_load(Bool) -> Unit
+
+pub fn set_unpremultiply_on_load(Bool) -> Unit
+
+pub fn write_bmp_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_bmp_to_path(String, Image) -> Unit raise LoadError
+
+pub fn write_jpeg_to_bytes(Image, quality? : Int) -> Bytes raise LoadError
+
+pub fn write_jpeg_to_path(String, Image, quality? : Int) -> Unit raise LoadError
+
+pub fn write_png_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_png_to_path(String, Image) -> Unit raise LoadError
+
+pub fn write_tga_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_tga_to_path(String, Image) -> Unit raise LoadError
 
 // Errors
 pub(all) suberror LoadError {
@@ -18,11 +76,36 @@ pub(all) suberror LoadError {
 }
 
 // Types and methods
+pub(all) struct GifAnimation {
+  frames : Array[Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
+
 pub(all) struct Image {
   width : Int
   height : Int
   channels : Int
   data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Image16 {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageF {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageInfo {
+  width : Int
+  height : Int
+  channels : Int
 } derive(Eq, @debug.Debug)
 
 // Type aliases
