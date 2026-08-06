@@ -14,7 +14,11 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-/* 5. MoonBit 运行时 API */
+/* 5. stb_image_resize2 实现宏 + 头文件 */
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize2.h"
+
+/* 6. MoonBit 运行时 API */
 #include <moonbit.h>
 
 /* 6. C 标准库（memcpy、malloc、free、realloc、fopen、fread） */
@@ -242,6 +246,46 @@ MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_write_jpg_to_bytes(
 ) {
     stb_image_mbt_write_buffer buf = {NULL, 0, 0};
     int result = stbi_write_jpg_to_func(stb_image_mbt_write_callback, &buf, (int)w, (int)h, (int)comp, data, (int)quality);
+    if (result == 0) {
+        free(buf.data);
+        return moonbit_make_bytes(0, 0);
+    }
+    moonbit_bytes_t out = moonbit_make_bytes((int32_t)buf.size, 0);
+    memcpy(out, buf.data, buf.size);
+    free(buf.data);
+    return out;
+}
+
+// ============================================================
+// HDR (float) Write 函数
+// stbi_write_hdr 接受 const float*，ImageF.data 中 float 以
+// little-endian 连续存储，内存布局一致，可直接传递。
+// ============================================================
+
+MOONBIT_FFI_EXPORT int32_t stb_image_mbt_write_hdr_to_path(
+    moonbit_bytes_t path_bytes,
+    int32_t path_len,
+    int32_t w,
+    int32_t h,
+    int32_t comp,
+    moonbit_bytes_t data
+) {
+    char *path_cstr = (char *)malloc((size_t)path_len + 1);
+    memcpy(path_cstr, path_bytes, (size_t)path_len);
+    path_cstr[path_len] = '\0';
+    int result = stbi_write_hdr(path_cstr, (int)w, (int)h, (int)comp, (const float *)data);
+    free(path_cstr);
+    return (int32_t)result;
+}
+
+MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_write_hdr_to_bytes(
+    int32_t w,
+    int32_t h,
+    int32_t comp,
+    moonbit_bytes_t data
+) {
+    stb_image_mbt_write_buffer buf = {NULL, 0, 0};
+    int result = stbi_write_hdr_to_func(stb_image_mbt_write_callback, &buf, (int)w, (int)h, (int)comp, (const float *)data);
     if (result == 0) {
         free(buf.data);
         return moonbit_make_bytes(0, 0);
@@ -573,5 +617,90 @@ MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_load_gif_from_path(
     *z_ref = (int32_t)z;
     *c_ref = (int32_t)actual;
     *delays_len_ref = delays_size;
+    return out;
+}
+
+// ============================================================
+// Resize 函数（v1.1：绑定 stb_image_resize2.h）
+// 使用 medium API stbir_resize，传 NULL 让库分配输出缓冲区。
+// data_type: 0=UINT8, 1=UINT8_SRGB, 3=UINT16, 4=FLOAT
+// filter:     0=DEFAULT, 1=BOX, 2=TRIANGLE, 3=CUBICBSPLINE, 4=CATMULLROM, 5=MITCHELL, 6=POINT_SAMPLE
+// edge:       0=CLAMP, 1=REFLECT, 2=WRAP, 3=ZERO
+// ============================================================
+
+static stbir_pixel_layout stb_image_mbt_channels_to_layout(int channels) {
+    switch (channels) {
+        case 1:  return STBIR_1CHANNEL;
+        case 2:  return STBIR_2CHANNEL;
+        case 3:  return STBIR_RGB;
+        case 4:  return STBIR_4CHANNEL;
+        default: return STBIR_4CHANNEL;
+    }
+}
+
+MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_resize(
+    moonbit_bytes_t input,
+    int32_t in_w,
+    int32_t in_h,
+    int32_t out_w,
+    int32_t out_h,
+    int32_t channels,
+    int32_t data_type,
+    int32_t filter,
+    int32_t edge
+) {
+    stbir_pixel_layout layout = stb_image_mbt_channels_to_layout((int)channels);
+    int pixel_size;
+    switch ((int)data_type) {
+        case STBIR_TYPE_UINT16:  pixel_size = 2; break;
+        case STBIR_TYPE_FLOAT:   pixel_size = 4; break;
+        default:                 pixel_size = 1; break;
+    }
+    int64_t out_bytes = (int64_t)out_w * (int64_t)out_h * (int64_t)channels * (int64_t)pixel_size;
+    void *result = stbir_resize(
+        input, (int)in_w, (int)in_h, 0,
+        NULL, (int)out_w, (int)out_h, 0,
+        layout, (stbir_datatype)data_type,
+        (stbir_edge)edge, (stbir_filter)filter
+    );
+    if (result == NULL) {
+        return moonbit_make_bytes(0, 0);
+    }
+    moonbit_bytes_t out = moonbit_make_bytes((int32_t)out_bytes, 0);
+    memcpy(out, result, (size_t)out_bytes);
+    free(result);
+    return out;
+}
+
+// ============================================================
+// 文件读取（用于 EXIF 等元数据读取）
+// ============================================================
+
+MOONBIT_FFI_EXPORT moonbit_bytes_t stb_image_mbt_read_file(
+    moonbit_bytes_t path_bytes,
+    int32_t path_len,
+    int32_t *len_ref
+) {
+    char *path_cstr = (char *)malloc((size_t)path_len + 1);
+    memcpy(path_cstr, path_bytes, (size_t)path_len);
+    path_cstr[path_len] = '\0';
+    FILE *f = fopen(path_cstr, "rb");
+    free(path_cstr);
+    if (f == NULL) {
+        *len_ref = 0;
+        return moonbit_make_bytes(0, 0);
+    }
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (size <= 0) {
+        fclose(f);
+        *len_ref = 0;
+        return moonbit_make_bytes(0, 0);
+    }
+    moonbit_bytes_t out = moonbit_make_bytes((int32_t)size, 0);
+    size_t read = fread(out, 1, (size_t)size, f);
+    fclose(f);
+    *len_ref = (int32_t)read;
     return out;
 }

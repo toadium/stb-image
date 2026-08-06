@@ -1,12 +1,12 @@
 name = "MoonBit-Toadium/stb-image"
 
-version = "1.0.0"
+version = "1.6.0"
 
 license = "MIT"
 
-description = "MoonBit native FFI bindings for stb_image.h: decode PNG/JPEG/BMP/GIF/WebP/TGA/PSD/HDR/PIC."
+description = "MoonBit image library: FFI decode/encode/resize + pure MoonBit QOI/ICO/ICNS/GIF codec."
 
-keywords = [ "moonbit", "image", "ffi", "native", "stb", "png", "jpeg", "bmp", "gif", "webp" ]
+keywords = [ "moonbit", "image", "ffi", "native", "stb", "png", "jpeg", "bmp", "gif", "qoi", "ico", "icns", "resize", "hdr" ]
 
 preferred_target = "native"
 

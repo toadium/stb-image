@@ -105,6 +105,26 @@ extern "c" fn stb_image_mbt_write_jpg_to_bytes(
 ) -> Bytes = "stb_image_mbt_write_jpg_to_bytes"
 
 ///|
+#borrow(path, data)
+extern "c" fn stb_image_mbt_write_hdr_to_path(
+  path : Bytes,
+  path_len : Int,
+  w : Int,
+  h : Int,
+  comp : Int,
+  data : Bytes,
+) -> Int = "stb_image_mbt_write_hdr_to_path"
+
+///|
+#borrow(data)
+extern "c" fn stb_image_mbt_write_hdr_to_bytes(
+  w : Int,
+  h : Int,
+  comp : Int,
+  data : Bytes,
+) -> Bytes = "stb_image_mbt_write_hdr_to_bytes"
+
+///|
 extern "c" fn stb_image_mbt_set_flip_vertically_on_load(
   flag_true_if_should_flip : Int,
 ) -> Unit = "stb_image_mbt_set_flip_vertically_on_load"
@@ -265,3 +285,18 @@ extern "c" fn stb_image_mbt_load_gif_from_path(
   c_ref : Ref[Int],
   delays_len_ref : Ref[Int],
 ) -> Bytes = "stb_image_mbt_load_gif_from_path"
+
+///|
+#borrow(input)
+extern "c" fn stb_image_mbt_resize(
+  input : Bytes,
+  in_w : Int,
+  in_h : Int,
+  out_w : Int,
+  out_h : Int,
+  channels : Int,
+  data_type : Int,
+  filter : Int,
+  edge : Int,
+) -> Bytes = "stb_image_mbt_resize"
+
