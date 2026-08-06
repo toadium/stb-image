@@ -2,13 +2,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-315%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-341%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
 MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07.
 
-Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize), roundtrip tests, performance benchmarks.
+Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize/morphology/edge detect/quality metrics), roundtrip tests, performance benchmarks.
 
 ## Features
 
@@ -19,16 +19,18 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 - **Format detection**: `detect_format` / `decode_any` / `is_supported_format`
 - **Image processing**: crop, rotate, flip, color convert, draw/compositing
 - **Color adjustment**: brightness, contrast, gamma, invert, HSV/HSL conversion
-- **Filters**: box blur, gaussian blur, sharpen, Sobel edge detect
+- **Filters**: box blur, gaussian blur, sharpen, Sobel/Laplacian/Prewitt edge detect
 - **Geometry**: affine warp, arbitrary angle rotate
 - **Histogram**: compute, equalize, normalize
 - **Quantize**: Floyd-Steinberg dithering, median cut
+- **Morphology**: erode, dilate, open, close (3x3 structuring element)
+- **Quality metrics**: MSE, PSNR, SSIM
 - **Metadata**: EXIF reading, PNG text chunks
 - **Animated GIF**: multi-frame decode/encode with per-frame delays
 - **Info query**: dimensions without decoding pixels
 - **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
 - **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **254 tests + 29 benchmarks**, all passing under AddressSanitizer
+- **341 tests + 29 benchmarks**, all passing under AddressSanitizer
 
 ## Installation
 
@@ -192,7 +194,7 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 | `rgb_to_hsl` | `(Int, Int, Int) -> (Float, Float, Float)` | RGB to HSL |
 | `hsl_to_rgb` | `(Float, Float, Float) -> (Int, Int, Int)` | HSL to RGB |
 
-### Filters (4 functions)
+### Filters (6 functions)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -200,6 +202,8 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 | `gaussian_blur` | `(Image, Int, Float) -> Image` | Gaussian blur (separable kernel) |
 | `sharpen` | `(Image, Float) -> Image` | Sharpen (Laplacian) |
 | `edge_detect_sobel` | `(Image) -> Image` | Sobel edge detection |
+| `edge_detect_laplacian` | `(Image) -> Image` | Laplacian edge detection |
+| `edge_detect_prewitt` | `(Image) -> Image` | Prewitt edge detection |
 
 ### Geometry (2 functions)
 
@@ -222,6 +226,23 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 |----------|-----------|-------------|
 | `floyd_steinberg` | `(Image, Int) -> Image` | Floyd-Steinberg dithering |
 | `median_cut` | `(Image, Int) -> Image` | Median cut quantization |
+
+### Morphology (4 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `erode` | `(Image) -> Image` | Erosion (3x3 min filter) |
+| `dilate` | `(Image) -> Image` | Dilation (3x3 max filter) |
+| `morph_open` | `(Image) -> Image` | Opening (erode then dilate) |
+| `morph_close` | `(Image) -> Image` | Closing (dilate then erode) |
+
+### Quality Metrics (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `mse` | `(Image, Image) -> Double` | Mean squared error |
+| `psnr` | `(Image, Image) -> Double` | Peak signal-to-noise ratio (dB) |
+| `ssim` | `(Image, Image) -> Double` | Structural similarity index [-1, 1] |
 
 ### Draw (2 functions)
 
@@ -291,7 +312,7 @@ Four-layer architecture, dependencies flow downward:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Test & Docs    *_test.mbt (254 tests + 29 bench)  │
+│  Test & Docs    *_test.mbt (341 tests + 29 bench)  │
 │                  roundtrip_test.mbt, bench.mbt      │
 │                  README.mbt.md, SKILL.md            │
 ├─────────────────────────────────────────────────────┤
@@ -300,6 +321,7 @@ Four-layer architecture, dependencies flow downward:
 │                  histogram/quantize/exif/png_meta   │
 │                  qoi/icon_encode/gif_encode         │
 │                  pnm_encode/image_detect/draw       │
+│                  morphology/edge_detect/quality     │
 │                  image_types.mbt (types)            │
 ├─────────────────────────────────────────────────────┤
 │  FFI Boundary   ffi.mbt (extern "c")                │
@@ -347,7 +369,7 @@ moon info  # outputs src/pkg.generated.mbti
 
 ```
 stb-image/
-├── moon.mod                  # Module config (v1.6.0, preferred_target = native)
+├── moon.mod                  # Module config (v1.10.0, preferred_target = native)
 ├── ROADMAP.md                # Iteration roadmap
 ├── COMPARISON.md             # mooncakes.io image library comparison
 ├── SKILL.md                  # Package usage guide
@@ -379,14 +401,17 @@ stb-image/
 │   ├── histogram.mbt         # histogram/histogram_equalize/histogram_normalize
 │   ├── quantize.mbt          # floyd_steinberg/median_cut
 │   ├── draw.mbt              # draw_copy/draw_over
+│   ├── morphology.mbt        # erode/dilate/morph_open/morph_close
+│   ├── edge_detect.mbt       # edge_detect_laplacian/edge_detect_prewitt
+│   ├── image_quality.mbt     # mse/psnr/ssim
 │   ├── exif.mbt              # read_exif_from_bytes/read_exif_from_path
 │   ├── png_meta.mbt          # read_png_text_chunks/read_png_text_chunks_from_path
 │   ├── file_io_native.mbt    # read_file_bytes
-│   ├── *_test.mbt            # 254 tests
+│   ├── *_test.mbt            # 341 tests
 │   ├── roundtrip_test.mbt    # Full format roundtrip tests
 │   ├── bench.mbt             # 29 performance benchmarks
 │   ├── README.mbt.md         # MoonBit doc-test
-│   └── pkg.generated.mbti    # Frozen API interface (88 pub fn + 11 types)
+│   └── pkg.generated.mbti    # Frozen API interface (128 pub fn + 12 types)
 ├── scripts/
 │   ├── prepare.py            # Vendoring script
 │   ├── gen_testdata.py       # Test image generator
@@ -412,6 +437,7 @@ stb-image/
 | **v1.7** | **pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend modes** | **275+29** |
 | **v1.8** | **more blend modes + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** |
 | **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** |
+| **v1.10** | **morphology (erode/dilate/open/close) + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** |
 
 ## Upstream
 

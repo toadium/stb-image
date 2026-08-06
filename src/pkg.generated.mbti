@@ -54,9 +54,15 @@ pub fn decode_qoi(Bytes) -> Image raise LoadError
 
 pub fn detect_format(Bytes) -> ImageFormat
 
+pub fn dilate(Image) -> Image
+
 pub fn draw_copy(Image, Image, Int, Int) -> Image raise LoadError
 
 pub fn draw_over(Image, Image, Int, Int) -> Image raise LoadError
+
+pub fn edge_detect_laplacian(Image) -> Image
+
+pub fn edge_detect_prewitt(Image) -> Image
 
 pub fn edge_detect_sobel(Image) -> Image
 
@@ -77,6 +83,8 @@ pub fn encode_pnm(Image) -> Bytes
 pub fn encode_ppm(Image) -> Bytes
 
 pub fn encode_qoi(Image) -> Bytes raise LoadError
+
+pub fn erode(Image) -> Image
 
 pub fn extract_channel(Image, Int) -> Image raise LoadError
 
@@ -152,6 +160,12 @@ pub fn mean_value(Image) -> Float
 
 pub fn median_cut(Image, Int) -> Image
 
+pub fn morph_close(Image) -> Image
+
+pub fn morph_open(Image) -> Image
+
+pub fn mse(Image, Image) -> Double
+
 pub fn pad(Image, Int, Int, Array[Byte]) -> Image raise LoadError
 
 pub fn pixelate(Image, Int) -> Image raise LoadError
@@ -159,6 +173,8 @@ pub fn pixelate(Image, Int) -> Image raise LoadError
 pub fn posterize(Image, Int) -> Image raise LoadError
 
 pub fn premultiply_alpha(Image) -> Image raise LoadError
+
+pub fn psnr(Image, Image) -> Double
 
 pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
 
@@ -203,6 +219,8 @@ pub fn set_flip_vertically_on_load(Bool) -> Unit
 pub fn set_unpremultiply_on_load(Bool) -> Unit
 
 pub fn sharpen(Image, Float) -> Image
+
+pub fn ssim(Image, Image) -> Double
 
 pub fn swap_channels(Image, Int, Int) -> Image raise LoadError
 

@@ -1,17 +1,18 @@
 # stb-image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 `COMPARISON.md`）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.9.0
+> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.10.0
 
 ## 现状定位
 
-**stb-image v1.6.0 的独特优势**：
+**stb-image v1.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
 - ASan 内存安全验证（独家）
-- 88 公开函数 + 11 类型，254 测试 + 29 基准测试
+- 128 公开函数 + 12 类型，341 测试 + 29 基准测试
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
+- 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
 
 **主要差距**（对比 5 个已有库）：
 | 缺失功能 | 已有此功能的库 | 实现路径 |
@@ -133,6 +134,63 @@
 
 ---
 
+## v1.7 — API 增强 ✅
+
+**目标**：补齐常用图像处理工具函数
+
+### 功能
+1. **图像工具**（4 函数）— `pad` / `add_border` / `resize_to_cover` / `resize_to_contain`
+2. **像素操作**（3 函数）— `threshold` / `posterize` / `extract_channel`
+3. **混合模式**（3 函数）— `blend_multiply` / `blend_screen` / `blend_overlay`
+
+### 交付物
+- 275 测试 + 29 基准测试
+
+---
+
+## v1.8 — 更多 API 增强 ✅
+
+**目标**：继续扩展像素级操作和统计
+
+### 功能
+1. **更多混合模式**（4 函数）— `blend_darken` / `blend_lighten` / `blend_difference` / `blend_exclusion`
+2. **图像统计**（2 函数 + 1 类型）— `compute_stats` / `mean_value` + `ImageStats`
+3. **高级像素操作**（4 函数）— `pixelate` / `replace_color` / `convolve` / `swap_channels`
+
+### 交付物
+- 292 测试 + 29 基准测试
+
+---
+
+## v1.9 — 拼接/噪声/色彩映射 ✅
+
+**目标**：图像合成和噪声生成
+
+### 功能
+1. **图像拼接**（5 函数）— `hstack` / `vstack` / `tile` / `flip_vertical` / `transpose`
+2. **噪声**（2 函数）— `add_noise_gaussian` / `add_noise_salt_pepper`（LCG + Box-Muller）
+3. **色彩映射**（4 函数）— `apply_lut` / `gradient_map` / `set_alpha` / `fill_alpha`
+
+### 交付物
+- 315 测试 + 29 基准测试
+
+---
+
+## v1.10 — 形态学 + 边缘检测 + 质量评估 ✅
+
+**目标**：补齐形态学操作和图像质量评估
+
+### 功能
+1. **形态学操作**（4 函数）— `erode` / `dilate` / `morph_open` / `morph_close`（3x3 结构元素）
+2. **边缘检测扩展**（2 函数）— `edge_detect_laplacian` / `edge_detect_prewitt`
+3. **图像质量评估**（3 函数）— `mse` / `psnr` / `ssim`
+
+### 交付物
+- 341 测试 + 29 基准测试
+- 128 公开函数 + 12 类型/枚举
+
+---
+
 ## v2.0 — 多目标支持（架构升级）
 
 **目标**：支持 wasm/js 目标，与 mizchi 拉平
@@ -198,6 +256,7 @@
 | **v1.7** | **API 增强: pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend** | **275+29** | **中** |
 | **v1.8** | **更多 blend + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** | **中** |
 | **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** | **中** |
+| **v1.10** | **morphology + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** | **中** |
 | v2.0 | 多目标支持 | — | 中 — 架构升级 |
 | v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
 
