@@ -20,11 +20,10 @@ STB_IMAGE_SHA256 = "594c2fe35d49488b4382dbfaec8f98366defca819d916ac95becf3e75f42
 STB_IMAGE_URL = f"https://raw.githubusercontent.com/nothings/stb/{STB_IMAGE_COMMIT}/stb_image.h"
 STB_IMAGE_FILENAME = "stb_image.h"
 
-# stb_image_write.h 预留（v0.2 激活，本任务仅预留参数骨架，不实际下载）
-# v0.2 纶入时填入具体 commit hash + SHA256
-STB_IMAGE_WRITE_COMMIT = ""  # 待 v0.2 填入
-STB_IMAGE_WRITE_SHA256 = ""  # 待 v0.2 填入
-STB_IMAGE_WRITE_URL = ""     # 待 v0.2 填入
+# stb_image_write.h v1.16（与 stb_image.h 同一 commit，v0.2 激活）
+STB_IMAGE_WRITE_COMMIT = "013ac3beddff3dbffafd5177e7972067cd2b5083"
+STB_IMAGE_WRITE_SHA256 = "cbd5f0ad7a9cf4468affb36354a1d2338034f2c12473cf1a8e32053cb6914a05"
+STB_IMAGE_WRITE_URL = f"https://raw.githubusercontent.com/nothings/stb/{STB_IMAGE_WRITE_COMMIT}/stb_image_write.h"
 STB_IMAGE_WRITE_FILENAME = "stb_image_write.h"
 
 # 路径常量

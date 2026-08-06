@@ -11,7 +11,9 @@ options(
     "ffi.mbt": ["native"],
     "ffi_test.mbt": ["native"],
     "image_load_native.mbt": ["native"],
+    "image_write_native.mbt": ["native"],
     "image_test.mbt": ["native"],
+    "image_write_test.mbt": ["native"],
     "README.mbt.md": ["native"],
   },
 )

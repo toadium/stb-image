@@ -5,6 +5,7 @@
 extern "c" fn test_load_from_memory(
   buffer : Bytes,
   len : Int,
+  desired_channels : Int,
   w_ref : Ref[Int],
   h_ref : Ref[Int],
   c_ref : Ref[Int],
@@ -15,6 +16,7 @@ extern "c" fn test_load_from_memory(
 extern "c" fn test_load_from_path(
   path : Bytes,
   path_len : Int,
+  desired_channels : Int,
   w_ref : Ref[Int],
   h_ref : Ref[Int],
   c_ref : Ref[Int],
@@ -49,7 +51,7 @@ test "load_from_memory: 1x1 BMP success returns correct dimensions" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(bmp, bmp.length(), w, h, c)
+  let pixels = test_load_from_memory(bmp, bmp.length(), 0, w, h, c)
   // Success: non-zero length Bytes returned
   assert_true(pixels.length() > 0)
   // ABI normalization: w/h/c written back to Ref[Int]
@@ -66,7 +68,7 @@ test "load_from_memory: 1x1 BMP success returns correct pixel data" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(bmp, bmp.length(), w, h, c)
+  let pixels = test_load_from_memory(bmp, bmp.length(), 0, w, h, c)
 
   // stb_image returns RGB order: R=255, G=0, B=0
   assert_eq(pixels[0].to_int(), 255)
@@ -80,7 +82,7 @@ test "load_from_memory: 2x2 BMP success returns correct dimensions" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(bmp, bmp.length(), w, h, c)
+  let pixels = test_load_from_memory(bmp, bmp.length(), 0, w, h, c)
   assert_true(pixels.length() > 0)
   assert_eq(w.val, 2)
   assert_eq(h.val, 2)
@@ -94,7 +96,7 @@ test "load_from_memory: 2x2 BMP success returns correct pixel data" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(bmp, bmp.length(), w, h, c)
+  let pixels = test_load_from_memory(bmp, bmp.length(), 0, w, h, c)
   // RGB order, top-to-bottom, left-to-right
   // (0,0)=red:   R=255, G=0,   B=0
   // (1,0)=white: R=255, G=255, B=255
@@ -120,7 +122,7 @@ test "load_from_memory: invalid bytes failure returns zero-length and zero dims"
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(invalid, invalid.length(), w, h, c)
+  let pixels = test_load_from_memory(invalid, invalid.length(), 0, w, h, c)
   // Failure signal: zero-length Bytes
   assert_eq(pixels.length(), 0)
   // Output params actively zeroed
@@ -135,7 +137,7 @@ test "load_from_memory: empty bytes boundary returns zero-length and zero dims" 
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_memory(empty, 0, w, h, c)
+  let pixels = test_load_from_memory(empty, 0, 0, w, h, c)
   assert_eq(pixels.length(), 0)
   assert_eq(w.val, 0)
   assert_eq(h.val, 0)
@@ -148,7 +150,7 @@ test "load_from_memory: input buffer unchanged after call" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let _ = test_load_from_memory(bmp, bmp.length(), w, h, c)
+  let _ = test_load_from_memory(bmp, bmp.length(), 0, w, h, c)
   // #borrow semantics: stb reads only, does not modify input Bytes
   assert_eq(bmp, make_1x1_red_bmp())
 }
@@ -163,7 +165,7 @@ test "load_from_path: 4x4 BMP file success returns correct dimensions" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, path.length(), w, h, c)
+  let pixels = test_load_from_path(path, path.length(), 0, w, h, c)
   assert_true(pixels.length() > 0)
   assert_eq(w.val, 4)
   assert_eq(h.val, 4)
@@ -177,7 +179,7 @@ test "load_from_path: 4x4 BMP file success returns correct pixel data" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, path.length(), w, h, c)
+  let pixels = test_load_from_path(path, path.length(), 0, w, h, c)
   // stb_image returns RGB order: R=255, G=0, B=0 for all 16 pixels
   assert_eq(pixels[0].to_int(), 255)
   assert_eq(pixels[1].to_int(), 0)
@@ -193,7 +195,7 @@ test "load_from_path: 4x4 PNG file success returns correct dimensions" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, path.length(), w, h, c)
+  let pixels = test_load_from_path(path, path.length(), 0, w, h, c)
   assert_true(pixels.length() > 0)
   assert_eq(w.val, 4)
   assert_eq(h.val, 4)
@@ -207,7 +209,7 @@ test "load_from_path: 4x4 PNG file success returns correct pixel data" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, path.length(), w, h, c)
+  let pixels = test_load_from_path(path, path.length(), 0, w, h, c)
   // RGB order: R=255, G=0, B=0
   assert_eq(pixels[0].to_int(), 255)
   assert_eq(pixels[1].to_int(), 0)
@@ -220,7 +222,7 @@ test "load_from_path: non-existent file failure returns zero-length and zero dim
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, path.length(), w, h, c)
+  let pixels = test_load_from_path(path, path.length(), 0, w, h, c)
   assert_eq(pixels.length(), 0)
   assert_eq(w.val, 0)
   assert_eq(h.val, 0)
@@ -233,7 +235,7 @@ test "load_from_path: empty path boundary returns zero-length and zero dims" {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let pixels = test_load_from_path(path, 0, w, h, c)
+  let pixels = test_load_from_path(path, 0, 0, w, h, c)
   assert_eq(pixels.length(), 0)
   assert_eq(w.val, 0)
   assert_eq(h.val, 0)
