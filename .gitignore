@@ -4,3 +4,7 @@ target/
 _build/
 testdata/roundtrip_out.png
 testdata/roundtrip_out.hdr
+.pytest_cache/
+image-mbt/
+.codeartsdoer/
+.benchmarks./
