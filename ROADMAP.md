@@ -1,7 +1,7 @@
 # stb-image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 `COMPARISON.md`）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.8.0
+> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.9.0
 
 ## 现状定位
 
@@ -197,6 +197,7 @@
 | **v1.6** | **PNG meta/roundtrip/bench** | **254+29** | **中** |
 | **v1.7** | **API 增强: pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend** | **275+29** | **中** |
 | **v1.8** | **更多 blend + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** | **中** |
+| **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** | **中** |
 | v2.0 | 多目标支持 | — | 中 — 架构升级 |
 | v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
 
