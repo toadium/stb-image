@@ -127,3 +127,67 @@ pub fn blend_overlay(base : Image, blend : Image) -> Image raise LoadError {
   }
   Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
 }
+
+///|
+/// 变暗混合。result = min(base, blend)。
+pub fn blend_darken(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = (if b < l { b } else { l }).to_byte()
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 变亮混合。result = max(base, blend)。
+pub fn blend_lighten(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = (if b > l { b } else { l }).to_byte()
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 差值混合。result = |base - blend|。
+pub fn blend_difference(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = (if b > l { b - l } else { l - b }).to_byte()
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 排除混合。result = base + blend - 2 * base * blend / 255。
+pub fn blend_exclusion(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = clamp_byte_v(b + l - 2 * b * l / 255)
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}

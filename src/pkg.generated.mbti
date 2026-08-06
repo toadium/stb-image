@@ -14,6 +14,14 @@ pub fn adjust_contrast(Image, Float) -> Image
 
 pub fn adjust_gamma(Image, Float) -> Image
 
+pub fn blend_darken(Image, Image) -> Image raise LoadError
+
+pub fn blend_difference(Image, Image) -> Image raise LoadError
+
+pub fn blend_exclusion(Image, Image) -> Image raise LoadError
+
+pub fn blend_lighten(Image, Image) -> Image raise LoadError
+
 pub fn blend_multiply(Image, Image) -> Image raise LoadError
 
 pub fn blend_overlay(Image, Image) -> Image raise LoadError
@@ -22,7 +30,11 @@ pub fn blend_screen(Image, Image) -> Image raise LoadError
 
 pub fn box_blur(Image, Int) -> Image
 
+pub fn compute_stats(Image) -> ImageStats
+
 pub fn convert_iphone_png_to_rgb(Bool) -> Unit
+
+pub fn convolve(Image, Array[Float], Float, Float) -> Image raise LoadError
 
 pub fn crop(Image, Int, Int, Int, Int) -> Image raise LoadError
 
@@ -122,9 +134,13 @@ pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> ImageF raise LoadError
 
 pub fn loadf_from_path(String, req_channels? : Int?) -> ImageF raise LoadError
 
+pub fn mean_value(Image) -> Float
+
 pub fn median_cut(Image, Int) -> Image
 
 pub fn pad(Image, Int, Int, Array[Byte]) -> Image raise LoadError
+
+pub fn pixelate(Image, Int) -> Image raise LoadError
 
 pub fn posterize(Image, Int) -> Image raise LoadError
 
@@ -139,6 +155,8 @@ pub fn read_file_bytes(String) -> Bytes raise LoadError
 pub fn read_png_text_chunks(Bytes) -> Array[PngTextChunk]
 
 pub fn read_png_text_chunks_from_path(String) -> Array[PngTextChunk] raise LoadError
+
+pub fn replace_color(Image, Array[Byte], Array[Byte], Int) -> Image raise LoadError
 
 pub fn resize(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
 
@@ -169,6 +187,8 @@ pub fn set_flip_vertically_on_load(Bool) -> Unit
 pub fn set_unpremultiply_on_load(Bool) -> Unit
 
 pub fn sharpen(Image, Float) -> Image
+
+pub fn swap_channels(Image, Int, Int) -> Image raise LoadError
 
 pub fn threshold(Image, Int) -> Image
 
@@ -260,6 +280,13 @@ pub(all) struct ImageInfo {
   width : Int
   height : Int
   channels : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageStats {
+  mean : Float
+  stddev : Float
+  min_val : Int
+  max_val : Int
 } derive(Eq, @debug.Debug)
 
 pub(all) struct PngTextChunk {
