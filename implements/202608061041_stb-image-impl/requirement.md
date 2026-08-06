@@ -1,0 +1,1419 @@
+# stb-image 实现任务
+
+## 一、需求文档（req.md）
+
+# `stb-image`：MoonBit 原生 FFI 绑定 `stb_image.h` 的需求文档
+
+## 一、项目背景与目标
+
+### 目标用户
+在 MoonBit 中处理图片资源的前端/游戏/工具开发者，以及希望用 MoonBit 快速读取 PNG/JPEG/BMP/GIF/WebP 等常见格式的个人开发者。
+
+### 要解决的核心问题
+MoonBit 生态当前缺少对广泛使用的 `stb_image.h` 的绑定。`stb_image` 是事实上的行业标准单头文件 C 库，API 稳定、支持格式多（含 HDR/PSD/PIC/PNM 等 MoonBit 生态较少覆盖的格式），读取路径足够通用，且其姊妹库 `stb_image_write.h` 提供 PNG/BMP/TGA/JPEG/HDR 的写入能力。将这两个头文件以 MoonBit 包形式绑定，可自包含地提供完整的图像 load/write 能力，作为 MoonBit 生态中独立的图像处理基础库。
+
+经源码仓库核实，现状如下（已核实，非推断）：
+
+- **mooncakes stb 绑定空白**：`mooncakes.io-index/user` 下 12 个用户目录（bobzhang、bzy-debug、fantix、Guest0x0、lijunchen、lucifer1004、peter-jerry-ye、test、tonyfettes、wangziling、Yoorkin、Yu-zh）无 stb 相关包；`.mooncakes` 缓存中亦无 stb/image 相关包。**stb 绑定完全空白**结论已核实
+- **本地工作区无现成通用图像 codec 参考实现**：`moonbit_wp` 内仅有 mbtpdf/graphics/pdfimage、office.mbt/pdflite/image（PDF 专用图像处理），非通用图像 codec，无可直接复用的 PNG/JPEG 解码参考实现
+
+### 项目定位
+本项目为 MoonBit 原生 FFI 绑定项目，将 `stb_image.h`（及后续 `stb_image_write.h`）的能力以 MoonBit 包形式暴露。**最终目标是提供一个完整的图像处理库**，覆盖 load/write/info/16-bit/float/flip/回调入口等 stb_image 全部能力。MVP 阶段先以 native 目标 + load 路径落地，后续按版本迭代计划逐步演进到完整库（见第六节）。项目根目录为 `D:\CodeWorkspace\forMoonbit\stb-image`。
+
+## 二、MVP 范围
+
+MVP 是完整库演进路径的第一步，聚焦最常用的 load 路径，以最小 API 面验证 FFI 可行性与工具链配合。完整能力集见第六节"版本迭代计划"。
+
+### 加载入口（已澄清）
+原始需求提到"从文件路径、`Bytes`、`InputStream` 加载图片"。经核实，**MoonBit 标准库中不存在 `InputStream` 类型**（`core` 中无此类型；`moonbitlang/async/io` 中有异步 `Reader` trait，但属于异步库且不适用于 MVP 的同步 native 场景）。结合原始需求后文"当前 MVP 限定本地/内存入口，网络流读取可后续扩展"，澄清如下：
+
+- **MVP 暴露两个加载入口**：
+  1. `load_from_path(path : String) -> Image raise LoadError`：从本地文件路径加载
+  2. `load_from_bytes(data : Bytes) -> Image raise LoadError`：从内存字节序列加载
+- **流式接口（`InputStream` 或类似）不在 MVP 范围内**，留作后续扩展。后续如需流式接口，可基于 `moonbitlang/async/io` 的 `Reader` trait 设计异步包装，或自定义同步流 trait，或直接绑定 stb_image 的 `stbi_io_callbacks`（read/skip/eof）机制，但这是后话
+
+### 支持格式
+与 `stb_image` 默认配置一致，支持以下 9 种格式的 decode：
+- PNG、JPEG、BMP、GIF、WebP、TGA、PSD、HDR、PIC
+
+（注：stb_image v2.30 默认还包含 PNM（PPM/PGM）decode；MVP 暂不暴露 PNM，留作后续版本增量。stb_image v2.x 默认包含 WebP decode；如 vendoring 的版本对 WebP 有特殊开关需求，应在 vendoring 脚本中显式处理。）
+
+### 返回的 `Image` 值类型
+原始需求说"返回图像信息：width、height、channels（灰度/RGB/RGBA）、data（`Bytes`）"。澄清如下：
+
+- `Image` 为值类型（struct），包含四个字段：
+  - `width : Int`
+  - `height : Int`
+  - `channels : Int`：**原始通道数**（1=灰度、2=灰度+alpha、3=RGB、4=RGBA），由 stb_image 的 `channels` 输出参数提供，**不做归一化**
+  - `data : Bytes`：像素数据，长度为 `width * height * channels`
+- **设计决策**：本项目保留原始通道，让调用者决定是否转换。这是 stb_image 的自然语义，也是完整库应有的灵活性——完整库后续版本会暴露 `req_channels` 参数（对应 stb_image 的 `desired_channels`），让调用者可选强制转换到指定通道数
+- **MVP 不暴露 `req_channels` 参数**：始终返回原始通道。此为 MVP 保持最小 API 面的阶段性限制，完整库版本会解锁（见第五节边界约束与第六节版本迭代计划）
+
+### 错误处理（已澄清）
+原始需求说"以 MoonBit `Error` 返回'不支持的格式'或'解码失败'，不暴露 C 错误码"。"返回"一词有歧义（`raise` 还是 `Result`），澄清如下：
+
+- **采用 `raise` 抛出错误**（符合 MoonBit 惯例）
+- 定义 `suberror LoadError`，至少包含以下构造子（最终命名与层级由技术设计决定）：
+  - `UnsupportedFormat(String)`：stb_image 无法识别的格式
+  - `DecodeFailed(String)`：解码过程中的损坏数据、不完整文件等
+  - 文件路径入口还需处理 `IOError`/文件不存在等情况（可复用标准库错误或并入 LoadError，由技术设计决定）
+- **不暴露 C 错误码**：stb_image 本身不返回错误码（仅返回 NULL 指针表示失败），C wrapper 负责将失败转换为 MoonBit 错误。完整库版本可考虑暴露 `stbi_failure_reason()` 的简要原因字符串供调试，但 MVP 不做
+
+### vendoring
+- 将 `stb_image.h` 的稳定版本放入 `native-stub` 目录
+- 提供可重复运行的下载脚本（建议 `scripts/prepare.py`，参考 make-moonbit-c-bindings 技能的 `templates/prepare.py`）
+- 脚本要求：
+  - **固定版本标识**：stb_image.h 无正式版本号，建议固定为上游 `nothings/stb` 仓库的特定 git commit hash（或日期标识），并在脚本中硬编码
+  - **校验哈希**：下载后用 SHA256 校验，哈希值硬编码于脚本
+  - **失败时报错退出**：下载失败或哈希不匹配时非零退出，**不自动回退**到其他版本
+  - **幂等**：重复运行脚本应无 tracked diff
+- **完整库版本会追加 vendoring `stb_image_write.h`**（同仓库姊妹头文件），脚本应预留扩展能力。建议脚本支持一次性 vendoring 多个头文件（如 `--include-write` 参数），避免 v0.2 纳入 write 时修改脚本结构
+
+## 三、FFI 实现要点
+
+依据 `moonbit-c-binding` 与 `make-moonbit-c-bindings` 技能（项目 `.codeartsdoer/skills` 下已配置），FFI 方案要点如下（保留用户原意，补充澄清）：
+
+- **包布局**（建议，由技术设计最终确定；依据 MoonBit v0.10.5 规范，使用新格式 `moon.mod`/`moon.pkg`，旧 `moon.mod.json`/`moon.pkg.json` 已在 v0.10.4 弃用）：
+  ```
+  scripts/prepare.py          # vendoring 脚本
+  moon.mod                    # preferred_target = "native"（新格式，非 moon.mod.json）
+  src/moon.pkg                # native-stub + targets 门控（新格式，非 moon.pkg.json）
+  src/wrapper.c               # ABI 归一化 C wrapper
+  src/ffi.mbt                 # 私有 extern "c" 声明（native 门控；小写形式，与 skill 模板一致）
+  src/stb_image.h             # vendored 上游头文件
+  src/image.mbt               # 安全公开 MoonBit API
+  src/image_test.mbt          # 回归测试
+  src/README.mbt.md           # 测试过的文档示例
+  ```
+- **`moon.mod` 配置**（新 DSL 语法）：`preferred_target = "native"`（下划线，非旧 JSON 的 `"preferred-target"`）；可设 `supported_targets = "native"` 声明仅 native
+- **`moon.pkg` 配置**（新 DSL 语法）：`options("native-stub": ["wrapper.c"], targets: { "ffi.mbt": ["native"], "README.mbt.md": ["native"] })`；`stb_image.h` 放入 `native-stub` 同目录。`README.mbt.md` 含 native FFI 示例故门控到 native；`image.mbt`（安全公开 API）是否门控由技术设计确定（其类型定义应在所有后端可用，但调用 FFI 的部分需条件编译），完整门控列表可参考 make-moonbit-c-bindings skill 模板
+- **`ffi.mbt` 门控**：在 `moon.pkg` 的 `options(targets: { "ffi.mbt": ["native"] })` 中声明，仅 native 后端编译
+- **`extern "c"` 大小写**：本项目使用小写 `extern "c"`（与 make-moonbit-c-bindings skill 模板一致）；MoonBit 官方 FFI 文档示例用大写 `extern "C"`，两者均接受，技术设计阶段可统一为官方大写形式
+- **C wrapper 负责 ABI 归一化**：
+  - `stbi_load_from_memory` 返回的 `unsigned char*` 拷贝到 `moonbit_make_bytes` 后由 MoonBit GC 接管
+  - C 侧用 `stbi_image_free` 释放原始指针（避免泄漏）
+  - 失败时（返回 NULL）转换为 MoonBit 错误信号（如返回 NULL 让 MoonBit 侧 raise）
+- **数据返回统一用 `Bytes`**：避免 `FixedArray[Byte]` 二选一歧义；像素数据为二进制，无需 `@utf8` 字符串转换
+- **所有权**：输入 `Bytes` 用 `#borrow`（stb 仅在调用期间读取，不存储引用）
+- **`moonbit_make_bytes` 已核实存在**：`moonbit-native-runtime/include/moonbit.h:343` 声明 `moonbit_make_bytes(int32_t size, int value) -> moonbit_bytes_t`，方案可行
+
+## 四、验收标准
+
+- `moon check` 通过
+- `moon test --target native` 通过
+- 提供 **6-10 张测试图片**的自动回归测试，覆盖 happy path + 损坏文件 error path：
+  - 测试格式聚焦 **PNG/JPEG/BMP/GIF/WebP** 5 种常见格式（基于"6-10 张"数量与 5 格式的合理匹配推断；TGA/PSD/HDR/PIC 为可选测试，如方便取得可一并纳入）
+  - 每种格式至少 1 张正常图片 + 至少 1 张损坏图片用于 error path
+  - 测试图片建议为小尺寸样本，vendoring 到仓库 `testdata/` 目录（或类似位置），来源可在脚本中生成或从公开测试图片库下载并固定哈希
+- 通过 `moonbit-c-binding` 的 ASan 验证脚本（`scripts/run-asan.py`，从 `moonbit-c-binding/scripts/run-asan.py` 复制或调用），无内存泄漏/越界
+- `moon info --target native` 正常
+- 发布到 mooncakes.io 的包包含 `SKILL.md`（包使用说明/技能文档）与 minimal example（README 中的最小可用示例）
+
+## 五、边界约束（重新审视）
+
+用户明确声明"我需要一个完整的库"，不再满足于 MVP 仅读取的定位。本节重新审视 v1 中所有限制，区分**完整库目标**（最终应达成）与**MVP 阶段性限制**（当前不做但给出解锁计划）。阶段性限制均非永久边界，而是为控制 MVP 复杂度而设；完整库目标在第六节"版本迭代计划"中规划演进路径。
+
+### 完整库目标（最终应达成）
+
+以下能力属于完整库应有范畴，MVP 不做但后续版本会逐步纳入：
+
+- **`stb_image_write` 绑定**：完整库应提供 PNG/BMP/TGA/JPEG/HDR 的 write 能力（vendoring `stb_image_write.h` v1.16）。这是"完整库"的核心增量之一
+- **`req_channels` 参数**：完整库应暴露 `desired_channels` 参数，让调用者可选强制转换到 1/2/3/4 通道（对应 stb_image 的 STBI_grey/STBI_grey_alpha/STBI_rgb/STBI_rgb_alpha）
+- **16-bit 接口**：完整库应暴露 `stbi_load_16*` 系列，返回 `UInt16` 像素数据（对应 16-bit PNG/PSD/TGA/PNM）
+- **float 接口（HDR）**：完整库应暴露 `stbi_loadf*` 系列，返回 `Float` 像素数据（HDR 线性域）
+- **info 接口**：完整库应暴露 `stbi_info*` 系列，不解码仅查询 width/height/channels；以及 `stbi_is_16_bit*`、`stbi_is_hdr*` 查询
+- **flip 配置**：完整库应暴露 `stbi_set_flip_vertically_on_load`（及 write 端的 `stbi_flip_vertically_on_write`）
+- **回调入口（I/O callbacks）**：完整库应暴露 `stbi_io_callbacks`（read/skip/eof）机制，支持从任意数据源加载（打包文件、自定义存储等）；这是 stb_image 的流式能力载体
+- **动画 GIF**：完整库应暴露 `stbi_load_gif_from_memory`，返回多帧 + delays
+- **PNM 格式**：完整库应暴露 PNM（PPM/PGM）decode
+- **HDR 配置**：完整库应暴露 `stbi_hdr_to_ldr_gamma/scale`、`stbi_ldr_to_hdr_gamma/scale`
+- **iPhone PNG / unpremultiply 配置**：完整库应暴露 `stbi_convert_iphone_png_to_rgb`、`stbi_set_unpremultiply_on_load`（含 thread-local 版本）
+- **多目标支持**：完整库应考虑 wasm/js 目标支持（见第六节演进考量）
+
+### MVP 阶段性限制（当前不做，给出解锁计划）
+
+以下为 MVP 阶段为控制复杂度而设的限制，均非永久边界：
+
+- **不做 `stb_image_write` 绑定**：MVP 仅读取。解锁计划：v0.2 纳入 write 能力（见第六节）
+- **不暴露 `req_channels` 参数**：MVP 始终返回原始通道。解锁计划：v0.2 暴露 `req_channels` 可选参数
+- **不暴露 16-bit / float 接口**：MVP 仅 8-bit。解锁计划：v0.3 纳入 16-bit 与 float（HDR）
+- **不暴露 info / is_16_bit / is_hdr 查询**：MVP 仅完整解码。解锁计划：v0.3 纳入 info 系列
+- **不暴露 flip / iPhone PNG / unpremultiply / HDR 配置**：MVP 不做加载期变换。解锁计划：v0.3 纳入配置 API
+- **不暴露回调入口（I/O callbacks）**：MVP 仅 path + bytes 入口。解锁计划：v0.4 纳入 callbacks（流式能力）
+- **不暴露动画 GIF**：MVP 仅单帧。解锁计划：v0.4 纳入 `stbi_load_gif_from_memory`
+- **不暴露 PNM 格式**：MVP 支持 9 种格式（PNG/JPEG/BMP/GIF/WebP/TGA/PSD/HDR/PIC），不含 PNM。解锁计划：v0.3 纳入 PNM
+- **不暴露 `stbi_failure_reason`**：MVP 不暴露 C 错误字符串。解锁计划：v0.3 可选暴露供调试
+- **不追求零拷贝**：MVP 允许解码后从 C 分配的缓冲拷贝到 MoonBit `Bytes`（由 GC 接管），C 侧随后释放原始缓冲。此为性能优化阶段的限制，完整库可在后续版本评估零拷贝可行性（需权衡 MoonBit GC 与 C 分配的边界安全）
+- **仅支持 native 目标**：MVP 不暴露 wasm/js/wasm-gc 构建。`moon.mod` 设置 `preferred_target = "native"`（新格式，下划线；旧 `"preferred-target"` 已弃用），`ffi.mbt` 通过 `moon.pkg` 的 `targets` 门控到 native，可设 `supported_targets = "native"` 声明模块级支持范围（`supported_targets` 可在 `moon.mod` 模块级与 `moon.pkg` 包级两处设置，两者并存时取交集；此处指模块级）。解锁计划：v1.0 评估多目标支持（见第六节演进考量）
+
+## 六、版本迭代计划
+
+本节规划从 MVP 到完整库的演进路径。各版本目标、范围、关键 API 增量与验收标准概要如下。版本号非承诺，仅表达演进顺序与相对节奏。
+
+### stb_image 完整能力梳理（规划基准）
+
+依据上游 `stb_image.h` v2.30 与 `stb_image_write.h` v1.16 的完整 API 列表（已 webfetch 核实），完整库的能力矩阵如下：
+
+**load 端（stb_image.h）**：
+- 8-bit load：from path / from memory / from file / from callbacks
+- 16-bit load：from path / from memory / from file / from callbacks（返回 `UInt16`）
+- float load（HDR）：from path / from memory / from file / from callbacks（返回 `Float`）
+- info（不完整解码）：from path / from memory / from file / from callbacks
+- is_16_bit / is_hdr 查询：from path / from memory / from file / from callbacks
+- 动画 GIF：`stbi_load_gif_from_memory`（多帧 + delays）
+- 配置：flip_vertically_on_load、set_unpremultiply_on_load、convert_iphone_png_to_rgb（含 thread-local 版本）
+- HDR 配置：hdr_to_ldr_gamma/scale、ldr_to_hdr_gamma/scale
+- failure_reason、image_free
+- I/O callbacks（read/skip/eof）
+- desired_channels（req_channels）参数
+- 支持格式：PNG、JPEG、BMP、GIF、WebP、TGA、PSD、HDR、PIC、PNM（PPM/PGM）
+
+**write 端（stb_image_write.h）**：
+- write PNG/BMP/TGA/JPEG/HDR to file
+- write PNG/BMP/TGA/JPEG/HDR to func（callback）
+- write PNG to mem
+- flip_vertically_on_write
+- 配置：tga_with_rle、png_compression_level、force_png_filter
+
+### v0.1 — MVP（load 路径落地）
+
+**目标**：验证 FFI 可行性，落地最常用的 load 路径，native 目标。
+
+**范围**：
+- 加载入口：`load_from_path`、`load_from_bytes`（8-bit）
+- 支持格式：PNG、JPEG、BMP、GIF、WebP、TGA、PSD、HDR、PIC（9 种）
+- 返回 `Image { width, height, channels, data : Bytes }`，保留原始通道，不暴露 `req_channels`
+- 错误处理：`raise LoadError`（UnsupportedFormat / DecodeFailed）
+- vendoring `stb_image.h`，native 目标
+
+**关键 API 增量**：`load_from_path`、`load_from_bytes`、`Image`、`LoadError`
+
+**验收标准概要**：见第四节（`moon check` / `moon test --target native` / ASan / 6-10 张测试图片 / `moon info` / SKILL.md + minimal example）
+
+### v0.2 — write 能力 + req_channels
+
+**目标**：补齐 write 路径，暴露通道强制转换，使库具备基本读写闭环。
+
+**范围**：
+- vendoring `stb_image_write.h` v1.16
+- write 入口：`write_png_to_path`、`write_jpeg_to_path`（含 quality 参数）、`write_bmp_to_path`、`write_tga_to_path`、`write_hdr_to_path`（float 数据）；以及对应的 `*_to_bytes` 版本（基于 `stbi_write_*_to_func`）
+- `req_channels` 可选参数：`load_from_path(path, req_channels~? : Int?)`、`load_from_bytes(data, req_channels~? : Int?)`，对应 stb_image 的 `desired_channels`
+- flip 配置：`set_flip_vertically_on_load`、`flip_vertically_on_write`
+- write 端配置：`set_png_compression_level`、`set_tga_with_rle`
+
+**关键 API 增量**：`write_*_to_path`、`write_*_to_bytes`、`req_channels` 参数、flip 配置、write 端配置
+
+**验收标准概要**：load → write round-trip 测试（decode 后 re-encode 比对）、req_channels 转换测试、flip 测试、ASan 通过
+
+### v0.3 — 16-bit / float / info / 配置 API / PNM
+
+**目标**：覆盖 stb_image 的全部数据类型与查询能力，补齐 HDR 与 16-bit 路径。
+
+**范围**：
+- 16-bit load：`load_16_from_path`、`load_16_from_bytes`（返回 `Image16 { width, height, channels, data : Bytes }`，data 为 `UInt16` 序列）
+- float load（HDR）：`loadf_from_path`、`loadf_from_bytes`（返回 `ImageF { width, height, channels, data : Bytes }`，data 为 `Float` 序列）
+- info 接口：`info_from_path`、`info_from_bytes`（返回 `{ width, height, channels }`，不解码）
+- 查询接口：`is_16_bit_from_path`、`is_16_bit_from_bytes`、`is_hdr_from_path`、`is_hdr_from_bytes`
+- HDR 配置：`hdr_to_ldr_gamma`、`hdr_to_ldr_scale`、`ldr_to_hdr_gamma`、`ldr_to_hdr_scale`
+- iPhone PNG / unpremultiply 配置：`convert_iphone_png_to_rgb`、`set_unpremultiply_on_load`（含 thread-local 版本）
+- PNM 格式支持（PPM/PGM decode）
+- 可选暴露 `failure_reason` 供调试
+
+**关键 API 增量**：`Image16`、`ImageF`、`load_16_*`、`loadf_*`、`info_*`、`is_16_bit_*`、`is_hdr_*`、HDR/iPhone/unpremultiply 配置、PNM
+
+**验收标准概要**：16-bit PNG/PSD/TGA/PNM 测试、HDR float round-trip 测试、info 不解码测试、PNM 测试、ASan 通过
+
+### v0.4 — 回调入口 / 动画 GIF / 流式能力
+
+**目标**：暴露 stb_image 的 I/O callbacks 机制，支持从任意数据源加载；纳入动画 GIF。
+
+**范围**：
+- I/O callbacks：定义 MoonBit 侧的 `IoCallbacks` trait（read/skip/eof），绑定 `stbi_load_from_callbacks` / `stbi_load_16_from_callbacks` / `stbi_loadf_from_callbacks` / `stbi_info_from_callbacks`
+- 动画 GIF：`load_gif_from_bytes`（返回多帧 `Array[Image]` + `Array[Int]` delays）
+- 基于 callbacks 的流式读取包装（可基于 `moonbitlang/async/io` 的 `Reader` trait 设计异步包装，或自定义同步流 trait）
+
+**关键 API 增量**：`IoCallbacks` trait、`load_*_from_callbacks`、`load_gif_from_bytes`
+
+**验收标准概要**：自定义回调源（如 in-memory 包装、分块读取）测试、动画 GIF 多帧 + delays 测试、ASan 通过
+
+### v1.0 — 多目标支持 / 完整库
+
+**目标**：评估并纳入 wasm/js 目标支持，达成完整库定位。
+
+**范围**：
+- 多目标支持演进考量（见下节）
+- API 面冻结，文档完整，SKILL.md 完善
+- 性能优化评估（含零拷贝可行性评估）
+
+**关键 API 增量**：多目标构建（如可行）
+
+**验收标准概要**：多目标 `moon test` 通过、API 文档完整、性能基准测试
+
+### 多目标支持（wasm/js）演进考量
+
+MVP 仅 native 目标，因 `stb_image.h` 是 C 头文件，FFI 通过 `extern "c"` + native-stub 实现。多目标支持的演进需评估以下路径（由技术设计最终确定，本需求文档不预设答案）：
+
+- **wasm 目标**：MoonBit wasm 后端可通过 Emscripten 将 `stb_image.h` 编译为 wasm 模块，再以 MoonBit extern wasm 导入。需评估 Emscripten 构建链集成、wasm 模块 vendoring、ABI 差异
+- **js 目标**：可通过 Emscripten 编译为 js + wasm，或直接绑定浏览器原生 Image API（但后者偏离 stb_image 绑定初衷）。需评估哪种路径更符合项目定位
+- **wasm-gc 目标**：stb_image 是 C 库，wasm-gc 后端对 C FFI 的支持需核实 MoonBit 工具链最新能力
+- **替代路径**：若多目标 FFI 成本过高，可考虑在 wasm/js 目标提供纯 MoonBit 实现的 decode 路径（但此为重大设计决策，超出 FFI 绑定项目范畴，需独立评估）
+
+多目标支持是 v1.0 的核心评估项，而非承诺交付。若评估表明某目标成本过高或收益过低，可在 v1.0 暂缓该目标并继续后续版本。
+
+## 七、澄清与推断汇总
+
+以下为澄清过程中对用户原始表述的推断与补充，供下游审议：
+
+| 原始表述 | 澄清结果 | 依据 |
+|---------|---------|------|
+| "从文件路径、`Bytes`、`InputStream` 加载" | MVP 仅暴露 `load_from_path` + `load_from_bytes`，移除 `InputStream` | MoonBit 标准库无 `InputStream` 类型；原始需求已限定"本地/内存入口" |
+| "以 MoonBit `Error` 返回" | 采用 `raise LoadError` 抛出错误 | MoonBit 惯例；"返回"一词歧义，选更惯用方式 |
+| "channels（灰度/RGB/RGBA）" | 保留原始通道数，不归一化 | stb_image 自然语义；完整库应有的灵活性 |
+| "6-10 张测试图片（PNG/JPEG/BMP/GIF/WebP）" | 聚焦 5 种常见格式，每种正常+损坏各 1 张 | 数量与格式数匹配；TGA/PSD/HDR/PIC 可选 |
+| "包含 `SKILL.md` 与 minimal example" | `SKILL.md` 为包使用说明文档，minimal example 为 README 示例 | 基于 make-moonbit-c-bindings 技能的 `README.mbt.md` 惯例推断 |
+| stb_image.h 版本标识 | 用 git commit hash 固定 | stb_image.h 无正式版本号，此为业界惯例 |
+| 是否暴露 `req_channels` | MVP 不暴露，完整库 v0.2 暴露 | 基于"MVP 保持最小 API 面"推断；用户"完整库"诉求要求最终暴露 |
+| "我需要一个完整的库" | 重新审视边界约束，区分完整库目标与 MVP 阶段性限制，新增版本迭代计划 | 用户 v2 修订指令明确要求 |
+| stb_image 完整能力范围 | 涵盖 load/write/info/16-bit/float/flip/回调/动画 GIF/HDR 配置/PNM | webfetch 核实 stb_image.h v2.30 + stb_image_write.h v1.16 完整 API |
+| PNM 格式 | MVP 不暴露，v0.3 纳入 | stb_image v2.30 默认支持 PNM，但原始需求仅列 9 种格式 |
+
+## 八、下游设计输入
+
+本需求文档已澄清至可支撑下游架构设计与技术设计的程度。下游设计需重点关注以下决策点（本需求文档不预设答案）：
+
+1. **`LoadError` 的具体构造子与层级**：是否复用标准库 `IOError`，还是全部并入 `LoadError`
+2. **C wrapper 的错误信号机制**：通过返回 NULL、输出参数、还是其他方式让 MoonBit 侧感知失败
+3. **`Image` struct 的导出级别**：`pub(all)` 还是 `pub`，是否 derive `Eq`/`Show`/`@debug.Debug`
+4. **测试图片的取得方式**：脚本生成、公开库下载、还是手工制作并 vendoring
+5. **vendoring 的 stb_image.h 具体版本**：选择哪个 commit hash（建议选近期稳定 commit）
+6. **`SKILL.md` 的具体内容结构**：是否参照 `.codeartsdoer/skills` 下的 SKILL.md 格式
+7. **版本迭代的包结构策略**：v0.2 纳入 write 后，write API 放在同一包还是拆子包（如 `stb-image/write`）
+8. **16-bit / float 数据的 `Bytes` 编码**：`Image16.data` 的 `UInt16` 序列以 little-endian 还是 native endian 存放于 `Bytes`；`ImageF.data` 的 `Float` 同理
+9. **`IoCallbacks` trait 的设计**：read/skip/eof 的签名如何映射 MoonBit 语义（read 返回实际读取字节数、skip 支持负值 unget、eof 返回 Bool）
+10. **多目标支持的路径选择**：Emscripten + wasm 导入、js + wasm、还是纯 MoonBit 实现；wasm-gc 后端 C FFI 可行性核实
+11. **零拷贝可行性评估**：是否在 v1.0 或之后版本提供零拷贝路径（如直接暴露 C 指针包装的 `Bytes` 视图），需权衡 GC 边界安全
+12. **write 端回调设计**：v0.2 的 `write_*_to_bytes` 基于 `stbi_write_*_to_func` 回调写入，MoonBit 侧需设计回调机制将 C 侧的写入回调转换为 `Bytes` 累积（如动态缓冲 + 容量扩展策略）；此设计与决策点 9 的 load 端 `IoCallbacks` trait 对偶，但方向相反（read vs write），需独立设计
+
+
+
+## 二、架构设计文档（0801_stb-image-arch-design\design_v3.md）
+
+# `stb-image` 架构级 OOD 设计（v2）
+
+> 本设计为架构级 OOD 设计，聚焦职责划分、抽象层次、协作模式与关键设计决策。具体字段、方法签名、算法细节留待技术设计阶段。设计目标语言为 MoonBit（v0.10.5 规范，新格式 `moon.mod`/`moon.pkg`，native 后端）。
+
+---
+
+## 一、概述
+
+### 设计目标
+
+将 C 单头文件库 `stb_image.h`（及后续 `stb_image_write.h`）以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供安全、惯用、可演进的图像 load/write 能力。MVP 阶段聚焦最常用的 8-bit load 路径（native 目标），后续按版本迭代计划逐步演进到完整库。
+
+### 核心架构思路
+
+采用**分层架构**，自下而上四层，每层职责内聚、依赖单向向下：
+
+1. **Vendoring 层** — 外部 C 源码的受控引入与版本固定
+2. **FFI 边界层** — ABI 归一化、所有权转移、失败信号转换
+3. **安全 API 层** — MoonBit 语义的公开接口，错误抛出，类型构造
+4. **测试与文档层** — 回归测试、文档示例、ASan 验证
+
+层间依赖严格单向：上层只依赖下层，下层不感知上层。FFI 边界层是唯一的"语言边界"，承担所有 C/MoonBit 跨越的脏工作；安全 API 层对调用者呈现纯粹的 MoonBit 语义。
+
+### 核心抽象
+
+- **`Image`** — 解码结果的值对象，承载像素数据与元信息
+- **`LoadError`** — 加载失败的领域错误类型
+- **FFI 私有声明集** — `extern "c"` 声明与 C wrapper 函数，不对外可见
+- **Vendoring 脚本** — 可重复的 C 源码引入流程
+
+设计刻意保持抽象面最小：MVP 不引入"加载源"抽象（path 与 bytes 两个入口直接对应 stb_image 的两个 C API），避免过度设计。流式能力（`IoCallbacks`）留待 v0.4 作为正交扩展引入。
+
+---
+
+## 二、模块划分
+
+### MVP 阶段：单包结构
+
+MVP 采用单包结构（`src/`），所有源码与 vendored C 头文件同居一目录。这一选择基于以下考量：
+
+- **FFI 局部性**：`extern "c"` 声明、C wrapper、vendored 头文件必须在同一 `native-stub` 目录，物理上不可拆
+- **API 面小**：MVP 仅 `load_from_path`/`load_from_bytes` 两个入口 + `Image` + `LoadError`，无按职责拆包的规模驱动
+- **演进可控**：单包不阻碍后续拆分，v0.2 纳入 write 时再评估拆子包（见设计决策 D7）
+
+### 包内文件职责划分
+
+| 文件 | 所属层 | 职责 | 门控 |
+|------|--------|------|------|
+| `scripts/prepare.py` | Vendoring | 下载 pinned 上游头文件、SHA256 校验、刷新 `moon.pkg` 的 native-stub 列表 | 不参与编译 |
+| `src/stb_image.h`（vendored） | Vendoring | 上游 C 头文件本体 | 由 `native-stub` 编译 |
+| `src/wrapper.c` | FFI 边界 | ABI 归一化、`moonbit_make_bytes` 拷贝、`stbi_image_free` 释放、NULL→失败信号 | `native-stub` |
+| `src/ffi.mbt` | FFI 边界 | 私有 `extern "c"` 声明，仅 native 后端编译 | `targets: ["native"]` |
+| `src/image.mbt` | 安全 API | 公开 `Image`/`LoadError`/`load_from_*`，错误映射，类型构造 | 类型定义全后端可用；FFI 调用部分条件编译到 native |
+| `src/image_test.mbt` | 测试 | 回归测试（happy + error path） | 测试模式 |
+| `src/README.mbt.md` | 测试与文档 | 测试过的文档示例（`mbt check` 块） | `targets: ["native"]`（含 FFI 示例） |
+| `testdata/` | 测试 | vendored 测试图片（正常 + 损坏样本） | 不参与编译 |
+
+### 模块间依赖方向
+
+```
+测试与文档层 ──→ 安全 API 层 ──→ FFI 边界层 ──→ Vendoring 层
+     │                │                │
+     └─→ testdata/    └─→ (MoonBit core) └─→ (C runtime + moonbit.h)
+```
+
+无环依赖。安全 API 层不直接接触 C 头文件，只通过 `ffi.mbt` 的 `extern "c"` 声明间接调用；C wrapper 是 FFI 边界层内部组件，对安全 API 层不可见。
+
+### 后续版本的模块演进策略
+
+- **v0.2（write 纳入）**：评估是否拆 `src/read/` + `src/write/` 子包，或保持单包按文件分职责（`image_load.mbt` / `image_write.mbt`）。倾向后者，因 FFI 边界层仍共享同一 `wrapper.c` 与 vendored 头文件，拆包收益有限（见设计决策 D7）
+- **v0.4（callbacks）**：`IoCallbacks` trait 作为安全 API 层的新抽象，不改变分层结构
+- **v1.0（多目标）**：若纳入 wasm/js，可能引入 `src/wasm/` 子目录承载 Emscripten 产物，FFI 边界层按目标分文件门控
+
+---
+
+## 三、核心抽象
+
+### 3.1 `Image` — 解码结果值对象
+
+**角色**：领域值对象，表示一次成功解码的图像数据。
+
+**职责**：
+- 承载图像的几何元信息（宽、高、通道数）与像素数据
+- 作为不可变值在调用者间传递；MVP 不提供变换方法（变换属完整库后续版本或调用者侧职责）
+
+**协作**：
+- 由安全 API 层的 `load_from_path`/`load_from_bytes` 构造
+- 调用者读取其字段用于后续处理（写入文件、转换格式、上传等）
+- 不与 FFI 边界层直接协作——`Image` 在 FFI 调用返回后由安全 API 层一次性构造，构造完成即脱离 FFI 边界
+
+**类型形态选择**：`struct`（值类型）。理由：
+- `Image` 是数据的简单聚合，无不变式需要维护、无资源需要释放（`data : Bytes` 由 MoonBit GC 接管，无需 finalizer）
+- `struct` 的值语义符合"解码快照"的领域直觉
+- 不用 `enum`：无多态分支；不用 `type`（opaque）：字段需对调用者可见
+- 导出级别 `pub(all)`：允许外部构造与字段访问（调用者可能从其他来源拼装 `Image`，如完整库的 write 路径需接收 `Image` 输入）
+- derive `Eq`/`@debug.Debug`：支持测试断言与调试输出，不 derive `Show`（避免对大 `Bytes` 的完整字符串化）
+
+**为何不是 `Bytes` 直接包装**：`Image` 需同时携带几何元信息，单一 `Bytes` 无法表达"这是 100×100×3 的像素"还是"30000 字节的裸数据"。元信息与数据共生，struct 是自然形态。
+
+### 3.2 `LoadError` — 加载失败领域错误
+
+**角色**：领域错误类型，表示加载过程中可向调用者暴露的失败类别。
+
+**职责**：
+- 分类失败原因：不支持的格式、解码失败（损坏数据/不完整文件）、文件 IO 失败（路径不存在/不可读）
+- 携带人类可读的失败描述字符串供调试
+- 不暴露 C 错误码或 `stbi_failure_reason` 的原始 C 字符串（MVP 阶段性限制）
+
+**协作**：
+- 由安全 API 层在 FFI 返回失败信号时构造并 `raise`
+- 调用者通过 `try ... catch { LoadError::... => ... }` 模式匹配处理
+- 不与 FFI 边界层直接协作——FFI 边界层只负责把 C 失败转换为可被安全 API 层识别的信号（如 NULL 指针、零尺寸输出参数），错误类型的构造是安全 API 层职责
+
+**类型形态选择**：`suberror`（MoonBit 检查式错误）。理由：
+- MoonBit 惯例：领域错误用 `suberror` + `raise`，不用 `Result`（需求文档已澄清）
+- `suberror` 让错误类型在函数签名中显式声明，调用者无法忽略
+- 不用 `enum`：`suberror` 是 `Error` 的子类型，可直接 `raise`；普通 `enum` 需额外 `impl Error`
+- 构造子至少三个：`UnsupportedFormat(String)`、`DecodeFailed(String)`、`FileIO(String)`（文件路径入口的 IO 失败，统一并入 `LoadError` 而非复用标准库 `IOError`，理由见设计决策 D1）
+- `pub(all)`：允许外部 `raise` 该错误（如更上层包装）
+
+**为何不区分更细的解码失败子类**：MVP 阶段 stb_image 的失败信号只有"返回 NULL"一种，无法区分"格式不支持"与"数据损坏"的深层原因。细分到 `UnsupportedFormat` vs `DecodeFailed` 已是 MVP 可支撑的粒度；更细的分类留待 v0.3 暴露 `stbi_failure_reason` 后再评估。
+
+**MVP 阶段 `UnsupportedFormat` 与 `DecodeFailed` 的区分粒度**：见 4.2 节"MVP 实际契约"与设计决策 D2。三个构造子是完整库目标的语义意图，MVP 阶段 `FileIO` 可独立区分（path 入口预检查），但 `UnsupportedFormat` 与 `DecodeFailed` 在 stb_image 仅返回 NULL 的失败语义下不可精确区分，需约定默认归类策略。
+
+### 3.3 FFI 私有声明集 — 语言边界抽象
+
+**角色**：FFI 边界层的内部抽象，将 C wrapper 函数声明为 MoonBit 可调用。
+
+**职责**：
+- 声明 `extern "c"` 函数，对应 `wrapper.c` 中的 `MOONBIT_FFI_EXPORT` 函数
+- 标注所有权：输入 `Bytes` 用 `#borrow`（stb 仅在调用期间读取）
+- 保持私有：不 `pub`，仅供同包 `image.mbt` 调用
+
+**协作**：
+- 被 `image.mbt` 的安全包装函数调用
+- 调用 `wrapper.c` 中的对应函数（通过符号名匹配）
+- 不被外部包直接访问
+
+**类型形态选择**：顶层 `extern "c" fn` 声明（非 trait、非 struct）。理由：
+- FFI 声明是函数级别的语言机制，无需封装为类型
+- 保持私有 + `targets: ["native"]` 门控，确保不泄漏到其他后端或外部包
+- 使用小写 `extern "c"`（与 make-moonbit-c-bindings skill 模板一致；MoonBit 官方文档用大写 `extern "C"`，两者均接受，技术设计阶段统一）
+
+**为何不引入 opaque handle 类型**：MVP 的 load 路径是"一次性解码返回数据"模式，C 侧不返回需要长期管理的 handle（返回的是裸 `unsigned char*`，立即拷贝到 MoonBit `Bytes` 后释放）。无 handle 就无需 `type Handle` + finalizer 模式。后续版本若暴露 `stbi_image_load` 的流式变体或需延迟释放的场景，再引入 opaque handle。
+
+### 3.4 C Wrapper 函数集 — ABI 归一化抽象
+
+**角色**：FFI 边界层的 C 侧组件，承担所有 C/MoonBit 跨越的脏工作。
+
+**职责**：
+- 调用 vendored `stb_image.h` 的 `stbi_load`/`stbi_load_from_memory`
+- 将返回的 `unsigned char*` 拷贝到 `moonbit_make_bytes` 创建的 MoonBit `Bytes`
+- 调用 `stbi_image_free` 释放 C 侧原始缓冲（避免泄漏）
+- 失败时（C 返回 NULL）向 MoonBit 侧返回统一的失败信号：NULL 指针 + 零尺寸输出参数（width/height/channels 写入 0），由安全 API 层检查并 raise。注意：stb_image 失败时输出参数保持不变（非写入 0），C wrapper 需在 stb_image 返回 NULL 时**主动**将 width/height/channels 写入 0 以统一失败信号
+- 输出参数（width/height/channels）通过指针写回，MoonBit 侧读取
+
+**协作**：
+- 被 `ffi.mbt` 的 `extern "c"` 声明调用
+- 调用 `stb_image.h` 的 C API 与 `moonbit.h` 的运行时 API（`moonbit_make_bytes`）
+- 不直接被 MoonBit 安全 API 调用（经 `ffi.mbt` 间接）
+
+**为何需要 wrapper 而非直接 `extern "c"` 声明 stb_image**：
+- stb_image 的 `stbi_load` 返回 `unsigned char*` 并通过 `int*` 输出参数返回 width/height/channels，这一 ABI 不能直接映射到 MoonBit 的值语义
+- 拷贝 + 释放的 ownership 转移必须在 C 侧完成（MoonBit 侧无法直接 `stbi_image_free` 一个 C 指针）
+- 集中在 wrapper 中处理 ABI 归一化，让 `ffi.mbt` 声明保持简单
+
+### 3.5 Vendoring 脚本 — 可重复构建抽象
+
+**角色**：Vendoring 层的流程抽象，将"获取上游 C 源码"这一外部依赖固化。
+
+**职责**：
+- 下载 pinned 版本的 `stb_image.h`（按 git commit hash 固定，SHA256 校验）
+- 将头文件复制到 `src/` 目录（按 make-moonbit-c-bindings 模板的扁平化命名约定）
+- 刷新 `moon.pkg` 的 `native-stub` 受管块
+- 幂等：重复运行无 tracked diff
+- 失败时非零退出，不自动回退
+- 预留多文件扩展能力（`--include-write` 参数，供 v0.2 纳入 `stb_image_write.h`）
+
+**协作**：
+- 被 CI 或开发者手动调用
+- 读写 `src/` 目录与 `moon.pkg` 文件
+- 不参与编译流程
+
+**类型形态选择**：Python 脚本（非 MoonBit 代码）。理由：vendoring 是构建期流程，在 MoonBit 编译之前发生；用 Python 跨语言脚本符合 make-moonbit-c-bindings skill 模板惯例，且 Python 跨平台可移植性优于 shell。
+
+---
+
+## 四、关键行为契约
+
+### 4.1 加载契约（happy path）
+
+**场景**：调用者提供有效路径或字节序列，期望得到 `Image`。
+
+**契约**：
+- `load_from_path(path)`：若 `path` 指向一个可读的、stb_image 支持格式的有效图像文件，返回 `Image`，其 `width`/`height`/`channels` 为图像原始维度与原始通道数，`data` 长度为 `width * height * channels`，像素数据为 8-bit
+- `load_from_bytes(data)`：若 `data` 是一个 stb_image 支持格式的有效图像编码，返回 `Image`，语义同上
+- 两个入口的解码语义等价：同一图像的文件内容与 `load_from_path` 读取的字节应产生相同的 `Image`（浮点精度差异除外，MVP 仅 8-bit 无此问题）
+- 通道数保留原始值（1/2/3/4），不做归一化；调用者决定是否转换
+- 返回后，C 侧不持有任何指向输入或输出的指针（所有权完全转移至 MoonBit GC）
+
+### 4.2 加载契约（error path）
+
+**场景**：调用者提供无效输入，期望得到 `LoadError`。
+
+`LoadError` 的三个构造子（`FileIO` / `UnsupportedFormat` / `DecodeFailed`）是**完整库目标的语义意图**——表达"加载图像"操作中可向调用者暴露的三类失败类别。MVP 阶段受限于 stb_image 的失败语义（仅返回 NULL，无原因区分），三类错误的**实际可达区分粒度**如下，调用者应基于此实际契约编写错误处理代码。
+
+#### 4.2.1 完整库目标（语义意图）
+
+| 错误类别 | 构造子 | 语义意图的触发条件 |
+|---------|--------|------------------|
+| 文件 IO 失败 | `FileIO(String)` | path 入口：文件不存在、不可读、权限不足 |
+| 格式不支持 | `UnsupportedFormat(String)` | stb_image 无法识别字节序列的图像格式 |
+| 解码失败 | `DecodeFailed(String)` | 格式可识别但数据损坏、不完整、或违反格式约束 |
+
+#### 4.2.2 MVP 实际契约
+
+MVP 阶段 stb_image 失败时仅返回 NULL 指针，无失败原因字符串（`stbi_failure_reason` 未暴露）。安全 API 层可达的错误区分粒度为：
+
+- **`FileIO` 可独立区分**：path 入口在调用 FFI 前可预检查文件可读性（或由 C wrapper 在 `stbi_load` 返回 NULL 时辅以 `errno`/平台 IO 错误检查），将"文件系统层失败"与"解码层失败"分离。`load_from_bytes` 入口不产生 `FileIO`。
+- **`UnsupportedFormat` 与 `DecodeFailed` 在 MVP 阶段不可精确区分**：两者在 stb_image 侧均表现为 NULL 返回，无附加信号。MVP 约定**默认归类为 `DecodeFailed`**，理由：
+  - "格式不支持"本质是"字节序列不符合任何已知格式的解码约束"，是"解码失败"的广义形式，归入 `DecodeFailed` 语义自洽
+  - 调用者对 `DecodeFailed` 的典型处理（重新获取源文件、报告输入无效）对"格式不支持"场景同样适用，不会产生误导性处理差异
+  - 保留 `UnsupportedFormat` 构造子是为了 v0.3 暴露 `stbi_failure_reason` 后能精确区分，避免届时破坏性地新增构造子；MVP 阶段安全 API 层不主动构造 `UnsupportedFormat`（除非未来引入格式签名预嗅探机制，见下文）
+- **可选的格式嗅探增强**：技术设计阶段可评估在安全 API 层增加轻量格式签名预检查（如检查 PNG 的 8 字节魔数 `\x89PNG\r\n\x1a\n`、JPEG 的 `0xFFD8` 等），对 9 种支持格式做嗅探级区分——嗅探失败 → `UnsupportedFormat`，嗅探通过但 stb_image 返回 NULL → `DecodeFailed`。此增强不依赖 `stbi_failure_reason`，可在 MVP 内实现，但增加安全 API 层的格式知识负担。是否纳入由技术设计权衡（见设计决策 D2）。
+
+#### 4.2.3 错误描述字符串
+
+- 错误描述字符串为**人类可读的中文提示**（符合项目交互语言偏好），不暴露 C 错误码或 `stbi_failure_reason` 原始字符串（MVP 阶段性限制）
+- 示例：`FileIO("文件不存在: /path/to/missing.png")`、`DecodeFailed("stb_image 解码返回 NULL，输入可能为不支持的格式或损坏数据")`
+- v0.3 暴露 `stbi_failure_reason` 后，可将 C 侧原因字符串附加至描述，届时可重新评估 `UnsupportedFormat` 的精确构造
+
+#### 4.2.4 内存安全契约
+
+任何失败情况下，C 侧不泄漏内存（即使解码中途失败，wrapper 负责清理临时分配）；MoonBit 侧不直接 `free` 任何 C 指针。
+
+### 4.3 FFI 边界契约
+
+**场景**：安全 API 层调用 FFI 边界层。
+
+**契约**：
+- 输入 `Bytes` 用 `#borrow`：C 侧仅在调用期间读取，不存储引用；调用返回后 MoonBit 侧的 `Bytes` 仍有效
+- 输出 `Bytes` 由 C wrapper 通过 `moonbit_make_bytes` 创建，所有权归 MoonBit GC；C 侧的原始缓冲在拷贝后立即 `stbi_image_free`
+- **失败信号**：C wrapper 在 stb_image 返回 NULL 时，向 MoonBit 侧返回 NULL 指针（或零长度 `Bytes`），width/height/channels 输出参数写入 0。安全 API 层检查该信号（返回的 `Bytes` 为空或 width==0）并 `raise LoadError`。此为唯一的失败信号方案，与设计决策 D2 一致。注意：stb_image 失败时输出参数保持不变（非写入 0），C wrapper 需在 stb_image 返回 NULL 时**主动**将 width/height/channels 写入 0 以统一失败信号
+- 内存安全：无论成功或失败，C 侧分配的所有临时缓冲都被释放；MoonBit 侧不直接 `free` 任何 C 指针
+- **路径编码提示**：`load_from_path` 的 `path : String` 在 MoonBit 侧为 UTF-8，传递到 C 侧 `stbi_load(const char*)` 时按平台惯例转换。Windows 上非 ASCII 路径可利用 stb_image.h 提供的 `STBI_WINDOWS_UTF8` 编译宏（内部使用 `_wfopen`）或调用 `stbi_convert_wchar_to_utf8` 将 `wchar_t*` 转为 UTF-8 后传递，亦可在 C wrapper 侧用平台 `fopen` 宽字符包装处理——此为 C wrapper 的实现细节，架构层仅提示技术设计需评估 Windows 路径编码兼容性（见设计决策 D2）
+
+### 4.4 Vendoring 契约
+
+**场景**：CI 或开发者运行 `scripts/prepare.py`。
+
+**契约**：
+- 下载的 `stb_image.h` 的 SHA256 必须与脚本中硬编码的期望值匹配，否则非零退出
+- 重复运行脚本，`src/` 下 vendored 文件与 `moon.pkg` 的 native-stub 列表无变化（幂等）
+- 脚本不自动回退到其他版本：哈希不匹配即失败，强制开发者显式更新 pinned 版本
+- `--include-write` 参数（预留）：运行时额外 vendoring `stb_image_write.h`，供 v0.2 使用
+
+---
+
+## 五、错误处理策略
+
+### 整体策略
+
+采用 MoonBit 检查式错误（`suberror` + `raise`），不使用 `Result`/`Option` 作为正常返回值的错误载体。理由：符合 MoonBit 惯例，且加载失败是"异常路径"而非"常规分支"，用 `raise` 让正常路径的代码更简洁。
+
+### 错误分类
+
+| 错误类别 | 构造子 | 语义意图触发场景 | MVP 可达性 |
+|---------|--------|----------------|-----------|
+| 文件 IO 失败 | `FileIO(String)` | path 入口：文件不存在、不可读、权限不足 | 可独立区分（path 入口预检查或 C wrapper 辅以平台 IO 错误） |
+| 格式不支持 | `UnsupportedFormat(String)` | stb_image 无法识别字节序列的图像格式 | MVP 阶段不可与 `DecodeFailed` 精确区分；默认归入 `DecodeFailed`；可选格式嗅探增强可部分达成 |
+| 解码失败 | `DecodeFailed(String)` | 格式可识别但数据损坏、不完整、或违反格式约束 | MVP 阶段作为 NULL 返回的默认归类 |
+
+### 错误层级决策
+
+- **统一并入 `LoadError`**：文件 IO 失败不复用标准库 `IOError`，而是作为 `LoadError::FileIO` 的一个构造子。理由：调用者面对的是"加载图像"这一单一领域操作，错误处理只需匹配 `LoadError` 一个类型；若同时暴露 `IOError` 与 `LoadError`，调用者需 `catch` 两层，增加心智负担且无实际收益（MVP 的 IO 失败场景简单，不需要 `IOError` 的细粒度）
+- **不嵌套错误**：`LoadError` 不包含 `cause : Error` 字段。理由：MVP 的失败原因链路简单（C 返回 NULL → MoonBit raise），无多层包装需求
+
+### FFI 错误信号机制
+
+C wrapper 与安全 API 层之间的失败信号约定（设计决策 D2）：
+- **方案**：C wrapper 在 stb_image 返回 NULL 时，向 MoonBit 侧返回 NULL 指针（输出参数 width/height/channels 写入 0）；安全 API 层检查返回的 `Bytes` 是否为空（或检查 width==0）并 `raise`
+- **不采用**：通过 `Ref[Int]` 输出错误码——增加 FFI 参数复杂度，且 MVP 不需要区分 C 侧的失败原因
+- **不采用**：抛出 C 异常——C 无异常机制，且 stb_image 本身仅返回 NULL
+
+### 不暴露的内容
+
+- C 错误码（stb_image 本身不返回错误码）
+- `stbi_failure_reason()` 的原始 C 字符串（MVP 阶段性限制，v0.3 可选暴露）
+- C 层的 `errno` 或系统错误码（文件 IO 失败仅描述为字符串）
+
+---
+
+## 六、并发设计
+
+MVP 不涉及并发设计。
+
+- stb_image 是同步 C 库，所有 load 操作在调用线程同步完成
+- MoonBit native 后端的 FFI 调用是同步的，不引入异步运行时
+- 无共享可变状态：每次 `load_from_*` 调用是独立的，不共享 C 侧全局状态（stb_image 的配置 API 如 `stbi_set_flip_vertically_on_load` 是全局状态，但 MVP 不暴露）
+- 完整库版本若暴露 thread-local 配置（v0.3 的 `set_unpremultiply_on_load` thread-local 变体），需评估 MoonBit native 后端的线程模型与 stb_image thread-local 的交互——此为 v0.3 设计议题，MVP 不预设
+
+---
+
+## 七、设计决策
+
+### D1. `LoadError` 统一并入文件 IO 失败，不复用标准库 `IOError`
+
+**决策**：`LoadError` 包含 `FileIO(String)` 构造子，path 入口的文件不存在/不可读统一 `raise LoadError::FileIO(...)`。
+
+**理由**：调用者面对"加载图像"单一领域操作，只需匹配一个 `LoadError` 类型。若同时暴露 `IOError` 与 `LoadError`，调用者需 `catch` 两层，心智负担增加而无实际收益（MVP 的 IO 失败场景简单）。
+
+**权衡**：失去与标准库 `IOError` 的互操作——若调用者上层有通用 IO 错误处理逻辑，需额外 `match LoadError::FileIO(s) => raise IOError::...(s)` 转换。MVP 判断这一场景不常见，可接受。
+
+### D2. C wrapper 错误信号：返回 NULL + 零尺寸输出参数；MVP 默认归类 `DecodeFailed`；可选格式嗅探增强
+
+**决策**：
+1. C wrapper 在 stb_image 返回 NULL 时，向 MoonBit 侧返回 NULL 指针（`moonbit_make_bytes(0, 0)` 或直接返回 NULL），width/height/channels 输出参数写入 0。安全 API 层检查返回的 `Bytes` 是否为空并 `raise LoadError`。注意：stb_image 失败时输出参数保持不变（非写入 0），C wrapper 需主动写入 0 以统一失败信号。
+2. MVP 阶段 NULL 返回时，安全 API 层**默认 `raise LoadError::DecodeFailed(...)`**（含中文提示"stb_image 解码返回 NULL，输入可能为不支持的格式或损坏数据"）。`FileIO` 通过 path 入口的预检查（或 C wrapper 辅以平台 IO 错误）独立区分。
+3. **可选的格式嗅探增强**：技术设计阶段可评估在安全 API 层增加轻量格式签名预检查（检查 9 种支持格式的魔数/文件头签名），嗅探失败 → `raise UnsupportedFormat`，嗅探通过但 stb_image 返回 NULL → `raise DecodeFailed`。此增强不依赖 `stbi_failure_reason`，可在 MVP 内实现，但增加安全 API 层的格式知识负担（需维护 9 种格式的签名表）。是否纳入由技术设计权衡复杂度与区分收益。
+4. **Windows 路径编码**：技术设计阶段需评估 `load_from_path` 在 Windows 上非 ASCII 路径的兼容性。C wrapper 可在 `stbi_load` 返回 NULL 时辅以平台 IO 错误检查（如 Windows 的 `GetLastError` / `_wfopen`）以区分 `FileIO` 与解码失败；非 ASCII 路径可利用 stb_image.h 提供的 `STBI_WINDOWS_UTF8` 编译宏（内部使用 `_wfopen`）或调用 `stbi_convert_wchar_to_utf8` 将 `wchar_t*` 转为 UTF-8 后传递。此为 C wrapper 实现细节，架构层仅提示。
+
+**理由**：
+- stb_image 的失败信号本身就是"返回 NULL"，wrapper 忠实传递这一信号即可，无需发明额外的错误码通道。MoonBit 侧检查空 `Bytes` 是廉价操作
+- 默认归类 `DecodeFailed` 而非 `UnsupportedFormat`：前者语义更广义（"格式不支持"是"解码失败"的子情形），且调用者对两者的典型处理（重新获取源文件、报告输入无效）一致，不会产生误导性处理差异
+- 保留 `UnsupportedFormat` 构造子是为了 v0.3 暴露 `stbi_failure_reason` 后能精确区分，避免届时破坏性地新增构造子
+
+**权衡**：
+- 无法在 MoonBit 侧精确区分"格式不支持"与"数据损坏"——两者都表现为 NULL 返回。MVP 接受这一损失。v0.3 暴露 `stbi_failure_reason` 后可改进
+- 格式嗅探增强若纳入，可将"格式不支持"从"解码失败"中部分分离，但嗅探本身可能误判（如格式签名正确但数据损坏，嗅探通过 → `DecodeFailed`，符合预期；如格式签名错误但实际是 stb_image 支持的某种边缘编码，嗅探失败 → `UnsupportedFormat`，可能误归）。技术设计需评估嗅探的精确度
+- 默认归类策略（`DecodeFailed`）是 MVP 的约定，v0.3 暴露 `stbi_failure_reason` 后可重新评估归类策略，届时可基于 C 侧原因字符串精确构造 `UnsupportedFormat` 或 `DecodeFailed`
+
+### D3. `Image` 导出级别 `pub(all)`，derive `Eq`/`@debug.Debug`
+
+**决策**：`Image` 为 `pub(all) struct`，derive `Eq` 与 `@debug.Debug`，不 derive `Show`。
+
+**理由**：
+- `pub(all)`：允许外部构造与字段访问。完整库的 write 路径需接收 `Image` 作为输入，调用者也可能从其他来源拼装 `Image`（如手动构造测试 fixture）
+- `Eq`：支持测试断言（`assert_eq(loaded, expected)`）
+- `@debug.Debug`：支持 `debug_inspect` 用于测试快照与调试输出
+- 不 derive `Show`：`Image.data` 可能很大，`Show` 的完整字符串化不适用；调试用 `Debug` 即可
+
+### D4. 测试图片 vendoring 到 `testdata/`，由脚本生成小尺寸样本
+
+**决策**：测试图片放入 `testdata/` 目录，由 `scripts/prepare.py`（或独立的 `scripts/gen_testdata.py`）生成小尺寸样本（如 4×4 纯色 PNG/JPEG/BMP/GIF/WebP），损坏样本通过对正常样本施加字节破坏生成。
+
+**理由**：
+- 脚本生成避免下载外部图片的版权与可重复性问题
+- 小尺寸样本（4×4 或 8×8）足以覆盖解码逻辑，且测试快
+- 损坏样本可确定性生成（如截断、翻转关键字节），覆盖 error path
+- vendoring 到 `testdata/` 让测试自包含，无需网络
+
+**权衡**：脚本生成的样本可能无法覆盖真实图片的某些边缘情况（如 JPEG 的多种采样因子）。MVP 接受这一风险，后续版本可补充从公开测试图片库下载的样本（固定哈希）。
+
+### D5. vendoring 的 stb_image.h 版本：固定为近期稳定 commit
+
+**决策**：`scripts/prepare.py` 中硬编码 `stb_image.h` 的 git commit hash（建议选 nothings/stb 仓库近 6 个月内标记为 release 的 commit），附 SHA256 校验。
+
+**理由**：stb_image.h 无正式版本号，commit hash 是最精确的版本标识。选近期稳定 commit 平衡"新功能/修复"与"已验证稳定性"。
+
+**权衡**：commit hash 不如语义版本号直观。脚本中应附注释记录 commit 日期与上游 release tag（若存在），供维护者理解。
+
+### D6. `SKILL.md` 内容结构：参照 `.codeartsdoer/skills` 下 SKILL.md 格式
+
+**决策**：包根目录的 `SKILL.md` 参照项目 `.codeartsdoer/skills` 下各技能的 SKILL.md 格式（YAML frontmatter + Markdown 正文），内容覆盖：包用途、快速开始、API 概览、最小示例、错误处理、目标后端限制、版本演进路线。
+
+**理由**：与项目既有技能格式一致，便于复用工具链；`SKILL.md` 作为"包使用说明/技能文档"的角色在需求文档中已明确。
+
+### D7. 版本迭代的包结构策略：MVP 单包，v0.2 评估后倾向保持单包按文件分职责
+
+**决策**：MVP 单包（`src/`）。v0.2 纳入 write 时，倾向保持单包，通过文件名分职责（`image_load.mbt` / `image_write.mbt` / `image_info.mbt`），而非拆 `src/read/` + `src/write/` 子包。
+
+**理由**：
+- FFI 边界层共享同一 `wrapper.c` 与 vendored 头文件，物理上同居 `src/`，拆包需重复配置 native-stub
+- `Image`/`LoadError` 等类型 read/write 共用，拆包需提取到 `src/common/` 子包，增加导入复杂度
+- 单包内按文件分职责已足够组织代码，MoonBit 文件名纯组织性、不创建命名空间
+- 拆包的收益（独立版本化、独立可见性控制）在当前规模下不显著
+
+**权衡**：若完整库 API 面显著增长（v0.4+），单包可能过于庞大。届时可重新评估拆包，但拆分边界应基于"FFI 边界层 vs 安全 API 层"或"read vs write"而非细粒度功能。
+
+### D8. 16-bit / float 数据的 `Bytes` 编码：little-endian
+
+**决策**：v0.3 的 `Image16.data`（`UInt16` 序列）与 `ImageF.data`（`Float` 序列）以 little-endian 字节序存放于 `Bytes`。
+
+**理由**：
+- little-endian 是 x86/ARM 等主流平台的原生字节序，C wrapper 可直接 `memcpy` 而无需字节序转换，零开销
+- MoonBit native 后端运行在 little-endian 平台（x86_64/aarch64），与 C 侧一致
+- 文档化字节序后，调用者可明确解码（`Bytes` 索引 0..1 为第一个 `UInt16` 的低/高字节）
+
+**权衡**：若未来支持 big-endian 平台（如某些嵌入式场景），需在 wrapper 中加字节序转换。MVP 不考虑该场景。
+
+### D9. `IoCallbacks` trait 设计：留待 v0.4，映射 stb_image 的 read/skip/eof 语义
+
+**决策**：v0.4 引入 `IoCallbacks` trait，映射 stb_image 的 `stbi_io_callbacks`（read/skip/eof）语义。MVP 不预设其具体签名，但确立设计方向：trait 方法对应 C 的三个回调，read 返回实际读取字节数，skip 支持负值（unget），eof 返回 `Bool`。
+
+**理由**：v0.4 的 callbacks 涉及 C→MoonBit 反向调用（trampoline），需 `moonbit_incref`/`moonbit_decref` 管理回调状态生命周期，复杂度高于 MVP 的正向 FFI。留待 v0.4 专项设计，MVP 不引入该抽象。
+
+### D10. 多目标支持路径：留待 v1.0 评估，不预设
+
+**决策**：MVP 仅 native 目标。v1.0 评估 wasm/js 目标支持路径（Emscripten + wasm 导入 / js + wasm / 纯 MoonBit 实现 / wasm-gc C FFI 可行性），不预设答案。
+
+**理由**：多目标支持是重大设计决策，涉及构建链集成、ABI 差异、性能权衡，需独立评估。MVP 的 native-only 限制通过 `moon.mod` 的 `preferred_target = "native"` 与 `moon.pkg` 的 `targets` 门控实现，不阻碍后续扩展。
+
+### D11. 零拷贝可行性：留待 v1.0 评估
+
+**决策**：MVP 允许解码后从 C 缓冲拷贝到 MoonBit `Bytes`。v1.0 评估零拷贝路径（如直接暴露 C 指针包装的 `Bytes` 视图）的可行性与收益。
+
+**理由**：零拷贝需权衡 MoonBit GC 与 C 分配的边界安全，复杂度高。MVP 的拷贝路径简单可靠，性能损失在解码本身（远大于拷贝）面前可忽略。v1.0 在性能基准测试的指导下评估零拷贝的收益是否值得复杂度。
+
+### D12. write 端回调设计：留待 v0.2，与 load 端 `IoCallbacks` 对偶但独立设计
+
+**决策**：v0.2 的 `write_*_to_bytes` 基于 `stbi_write_*_to_func` 回调写入，MoonBit 侧设计回调机制将 C 侧的写入回调转换为 `Bytes` 累积（动态缓冲 + 容量扩展）。此设计与 D9 的 load 端 `IoCallbacks` 对偶（read vs write），但方向相反，独立设计。
+
+**理由**：write 回调是 C→MoonBit 的数据流（C 产生数据，MoonBit 累积），与 load 回调（MoonBit 产生数据，C 消费）方向相反，需独立的缓冲管理策略。v0.2 专项设计，MVP 不涉及。
+
+### D13. `ffi.mbt` 门控 native，`image.mbt` 类型定义全后端可用但 FFI 调用条件编译
+
+**决策**：`ffi.mbt` 通过 `moon.pkg` 的 `targets: ["ffi.mbt": ["native"]]` 门控到 native。`image.mbt` 的类型定义（`Image`/`LoadError`）在所有后端可见，但 FFI 调用部分通过条件编译或文件门控限制到 native。注：`supported_targets` 的实际语法为 `"+native"`（带 `+` 前缀表示追加语义），非 `"native"`；技术设计阶段应以此为准。
+
+**理由**：
+- 类型定义全后端可用：让 `Image`/`LoadError` 可被其他后端的代码引用（如 wasm 目标的纯 MoonBit 代码可构造 `LoadError` 用于错误处理）
+- FFI 调用仅 native：`extern "c"` 仅 native 后端支持，其他后端调用 FFI 需报编译错误
+- 具体实现方式（单文件内条件编译 vs 拆 `image_types.mbt` + `image_load_native.mbt`）留待技术设计
+
+### D14. `extern "c"` 大小写：统一为小写 `extern "c"`
+
+**决策**：本项目统一使用小写 `extern "c"`（与 make-moonbit-c-bindings skill 模板一致）。
+
+**理由**：skill 模板使用小写，保持一致性便于工具复用。MoonBit 官方文档用大写 `extern "C"`，两者均接受；技术设计阶段可在 skill 模板与官方文档之间选择，本设计不强制。
+
+---
+
+## 八、与需求文档决策点的对应
+
+| 需求文档决策点 | 本设计决策 | 说明 |
+|--------------|----------|------|
+| 1. `LoadError` 构造子与层级 | D1 | 统一并入 `LoadError`，不复用 `IOError` |
+| 2. C wrapper 错误信号机制 | D2 | 返回 NULL + 零尺寸输出参数；MVP 默认归类 `DecodeFailed`；可选格式嗅探增强；提示 Windows 路径编码 |
+| 3. `Image` struct 导出级别 | D3 | `pub(all)`，derive `Eq`/`@debug.Debug` |
+| 4. 测试图片取得方式 | D4 | 脚本生成小尺寸样本，vendoring 到 `testdata/` |
+| 5. vendoring 的 stb_image.h 版本 | D5 | 固定近期稳定 commit hash + SHA256 |
+| 6. `SKILL.md` 内容结构 | D6 | 参照 `.codeartsdoer/skills` 下 SKILL.md 格式 |
+| 7. 版本迭代的包结构策略 | D7 | MVP 单包，v0.2 倾向保持单包按文件分职责 |
+| 8. 16-bit/float 数据的 `Bytes` 编码 | D8 | little-endian |
+| 9. `IoCallbacks` trait 设计 | D9 | 留待 v0.4，映射 read/skip/eof 语义 |
+| 10. 多目标支持路径选择 | D10 | 留待 v1.0 评估，不预设 |
+| 11. 零拷贝可行性评估 | D11 | 留待 v1.0 评估 |
+| 12. write 端回调设计 | D12 | 留待 v0.2，与 load 端对偶但独立设计 |
+
+---
+
+## 九、设计原则遵循说明
+
+- **聚焦职责和抽象**：每个抽象的角色与职责用自然语言描述，未列出完整字段/方法签名
+- **抽象层次适当**：类型形态选择（`struct` vs `enum` vs `suberror` vs `type`）仅在影响设计语义时讨论（如 `Image` 为何用 `struct` 而非 `type`）
+- **协作优于结构**：每个抽象的"协作"小节描述交互关系，而非静态成员列表
+- **可行性**：所有设计在 MoonBit v0.10.5 类型系统与 native FFI 能力范围内（`suberror`/`raise`/`struct`/`extern "c"`/`#borrow`/`moon.pkg` targets 门控均已核实）
+- **单一职责**：四层架构每层职责内聚；`Image` 只承载数据，`LoadError` 只承载错误，FFI 边界层只处理跨语言脏工作
+- **接口隔离**：FFI 边界层通过私有 `extern "c"` 声明与安全 API 层隔离；安全 API 层通过 `pub` 暴露的 `load_from_*` 函数与调用者隔离
+
+---
+
+## 修订说明（v2）
+
+| 审查意见 | 修改措施 |
+|---------|---------|
+| **问题 1（主要）**：4.2 节错误路径契约与 D2 权衡不一致。4.2 节承诺三种可区分的错误类别（`FileIO`/`UnsupportedFormat`/`DecodeFailed`）及其触发条件，但 D2 明确指出 MVP 阶段无法区分 `UnsupportedFormat` 与 `DecodeFailed`（stb_image 失败时仅返回 NULL）。4.2 节未注明此实现限制，也未说明 NULL 返回时的默认归类策略 | 重写 4.2 节为四个子节：4.2.1 完整库目标（语义意图）——保留三构造子的语义意图表；4.2.2 MVP 实际契约——明确 `FileIO` 可独立区分、`UnsupportedFormat` 与 `DecodeFailed` 不可精确区分并约定**默认归类 `DecodeFailed`**（附理由）、提出可选格式嗅探增强作为部分达成路径；4.2.3 错误描述字符串——明确中文提示与示例；4.2.4 内存安全契约。同步修订 3.2 节增加"MVP 阶段区分粒度"说明段，修订第五节错误分类表增加"MVP 可达性"列，修订 D2 决策增加默认归类策略、格式嗅探增强、Windows 路径编码提示三个子点，修订第八节对应表 D2 行 |
+| **轻微问题 1**：3.4 节描述失败信号为"NULL 指针或负数尺寸"（两种可能），D2 明确选择"NULL 指针 + 零尺寸输出参数"（一种具体方案），表述不统一 | 3.4 节失败信号描述统一为"NULL 指针 + 零尺寸输出参数（width/height/channels 写入 0）"，与 D2 一致；4.3 节 FFI 边界契约的失败信号描述同步统一，并明确标注"此为唯一的失败信号方案，与设计决策 D2 一致" |
+| **轻微问题 2**：4.2 节"错误描述字符串为人类可读的英文/中文提示"中"英文/中文"的选择未明确 | 4.2.3 节明确错误描述字符串为**中文提示**（符合项目交互语言偏好），给出 `FileIO`/`DecodeFailed` 的示例字符串，并说明 v0.3 暴露 `stbi_failure_reason` 后可附加 C 侧原因 |
+| **轻微问题 3**：设计未明确 `load_from_path` 的 path 参数在 Windows 上的编码处理 | 4.3 节 FFI 边界契约增加"路径编码提示"条目，说明 MoonBit `String`（UTF-8）到 C `const char*` 的平台惯例转换与 Windows 非 ASCII 路径的宽字符处理需求；D2 决策增加第 4 子点"Windows 路径编码"，提示技术设计阶段需评估 Windows 兼容性 |
+
+---
+
+## 修订说明（v3）
+
+> 修订依据：`deliberations/202608060855_design-v2-review/output_v1.md`（7 维度独立审查报告）
+> 修订日期：2026-08-06
+> 修订范围：3 个问题（1 个轻微技术性错误 + 2 个可改进细节），均不影响架构整体成立
+
+| 审查问题 | 问题性质 | 修订位置 | 修订措施 |
+|---------|---------|---------|---------|
+| **问题 1**：4.3 节 `stbi_load_16` 与宽字符路径混淆。`stbi_load_16` 是 16-bit 像素深度的 load 接口（返回 `unsigned short*`），与宽字符路径（`wchar_t`）无关，原文将其列为 Windows 非 ASCII 路径处理方案之一属技术性事实错误 | 轻微技术性错误 | 3.4 节 C Wrapper 职责（路径编码提示条目）、4.3 节 FFI 边界契约（路径编码提示条目）、D2 决策第 4 子点（Windows 路径编码） | 将 `stbi_load_16` 表述替换为 stb_image.h 实际提供的 Windows UTF-8 支持机制：`STBI_WINDOWS_UTF8` 编译宏（内部使用 `_wfopen`）+ `stbi_convert_wchar_to_utf8` 转换函数。已 webfetch 核实 stb_image.h v2.30 上游 |
+| **问题 2**：失败信号"写入 0"的来源未澄清。多处表述"width/height/channels 输出参数写入 0"作为失败信号，但未明确这是 C wrapper 的主动行为还是 stb_image 的自然行为。stb_image 失败时输出参数保持不变（非写入 0），"写入 0"是 C wrapper 需主动执行的约定行为 | 可改进细节 | 3.4 节 C Wrapper 职责（失败信号条目）、4.3 节 FFI 边界契约（失败信号条目）、D2 决策第 1 子点 | 在三处增加澄清句："注意：stb_image 失败时输出参数保持不变（非写入 0），C wrapper 需在 stb_image 返回 NULL 时**主动**将 width/height/channels 写入 0 以统一失败信号"。避免技术设计阶段实现者误以为 stb_image 已写入 0 而省略 wrapper 的主动写入步骤 |
+| **问题 3**：`supported_targets` 语法提示缺失。req.md 提到 `supported_targets = "native"`，但实际 v0.10.5 规范先例使用 `supported_targets = "+native"`（带 `+` 前缀表示追加语义）。已核实 14 处先例均使用 `"+native"` 形式 | 可改进细节 | D13 决策 | 在 D13 决策末尾增加提示："注：`supported_targets` 的实际语法为 `"+native"`（带 `+` 前缀表示追加语义），非 `"native"`；技术设计阶段应以此为准"。避免技术设计阶段沿用 req.md 的 `"native"` 表述而导致配置不生效 |
+
+**未修订部分**：审查报告确认通过的 7 个维度（需求响应充分度、OOD 质量、FFI 架构合理性、MoonBit v0.10.5 规范一致性、版本迭代架构支撑、自包含性、可支撑下游）的相关内容均保留原样，不引入无关变更。既有约束（架构级 OOD 定位、"只参考不引用已有库"、MoonBit v0.10.5 规范、版本迭代架构支撑）均保留。
+
+## 三、技术方案文档
+
+# `stb-image` 技术方案设计（v2）
+
+> 本设计为技术方案级设计，承接架构级 OOD 设计（design_v3.md），为编码实现铺路。聚焦技术选型决策、数据流方向、关键类型轮廓与方案决策，不涉及完整代码片段与逐字段签名。目标语言为 MoonBit v0.10.5（新格式 `moon.mod`/`moon.pkg` DSL，native 后端）。
+>
+> **v2 修订说明**：基于 `deliberations/202608060953_tech-v1-review/output_v1.md` 的独立审查报告，对 v1 进行三处修订（问题 1/3/4），问题 2 为 v1 相对架构设计的正向纠偏（亮点确认，无需修订）。修订位置见文末「修订说明（v2）」。
+
+---
+
+## 一、概述
+
+### 设计定位
+
+本技术方案是架构设计与编码实现之间的桥梁。比架构设计更具体（落实到工具链配置、C API 签名、FFI 机制级别），比代码更抽象（不给出完整实现）。实现者在编码时查阅 MoonBit / stb_image API 文档是正常编码活动。
+
+### 技术方案范围
+
+MVP 阶段（v0.1）需明确的技术事项：
+
+1. **工具链配置**：`moon.mod`/`moon.pkg` 新格式 DSL 语法、native 后端声明、文件门控
+2. **Vendoring 方案**：stb_image.h 单头文件库的特殊 vendoring 策略、版本固定、幂等脚本
+3. **FFI 边界层方案**：C wrapper 的 ABI 归一化机制、所有权转移、失败信号、extern "c" 声明
+4. **安全 API 层方案**：类型轮廓、错误处理流程、条件编译策略
+5. **测试与验证方案**：测试图片生成、ASan 验证、验证门
+6. **文档方案**：SKILL.md 结构、README.mbt.md 示例
+7. **Windows 兼容性**：非 ASCII 路径处理决策
+8. **格式嗅探增强决策**：是否在 MVP 纳入格式签名预检查
+
+---
+
+## 二、技术选型决策
+
+### 2.1 MoonBit 工具链版本与配置格式
+
+**决策**：采用 MoonBit v0.10.5 规范，新格式 `moon.mod`/`moon.pkg` DSL 语法（非旧 `moon.mod.json`/`moon.pkg.json`，后者在 v0.10.4 弃用）。
+
+**已核实事实**（来源：`moonbit_wp/llvm.mbt` 同类型 native FFI 绑定项目先例 + `moonbit_wiki/toolchain/package-management.md`）：
+
+- `moon.mod` 新 DSL：`preferred_target = "native"`（下划线，非旧 JSON 的 `"preferred-target"`）
+- `moon.pkg` 新 DSL：`options("native-stub": [...], targets: { ... })`
+- 38 处 `preferred_target = "native"` 先例确认下划线语法
+- `moon fmt` 可自动从旧格式迁移到新格式
+
+**理由**：v0.10.5 是当前稳定规范，新格式 DSL 是官方推荐方向；旧 JSON 格式已弃用，新项目不应采用。
+
+### 2.2 目标后端策略
+
+**决策**：MVP 仅 native 后端。`moon.mod` 设 `preferred_target = "native"`；`moon.pkg` 设 `supported_targets = "native"`（包级声明仅支持 native）。
+
+**`supported_targets` 语法决策**：采用 `"native"`（非 `"+native"`）。
+
+**已核实事实**：
+- `llvm.mbt/unsafe/moon.pkg`（同为 native FFI 绑定项目）用 `supported_targets = "native"`
+- `moonbit_wiki/toolchain/package-management.md` 示例用 `supported_targets = "native"`
+- `"+native"` 语义为"在默认支持集合上追加 native"（适用于 async examples 等 native-only 应用），`"native"` 语义为"声明仅支持 native"（排他性）
+
+**理由**：本项目是 native-only FFI 绑定，`"native"` 准确表达排他性声明，与 `llvm.mbt` 先例一致。架构设计 D13 提示的 `"+native"` 适用于"追加"语义场景，不适用于本项目的"仅 native"定位。
+
+**权衡**：`supported_targets = "native"` 会阻止 `moon check --target all` 构建其他目标，这正是 MVP 期望行为（wasm/js 目标不支持 `extern "c"`）。
+
+**与 c-binding skill 提示的关系**（v2 补充）：`moonbit_wiki/agent-guide/c-binding.md` 提示"勿用 `supported-targets: ["native"]`（阻止下游包在其他 target 构建）；用 `targets` 门控单文件"。该提示针对**希望被下游跨目标复用的一般库**——此类库需保留在其他 target 上的可构建性，故仅用文件级 `targets` 门控 FFI 部分。本项目是 **native-only FFI 绑定**，`extern "c"` 仅 native 后端支持，不存在"在其他 target 上构建本包"的合法场景；排他性声明 `supported_targets = "native"` 是准确语义，与 `llvm.mbt` 先例一致。故本项目采用包级 `supported_targets = "native"`，而非仅用文件级 `targets` 门控。
+
+### 2.3 stb_image.h Vendoring 策略
+
+**决策**：stb_image.h 是**单头文件库**（header-only），vendoring 策略与一般多文件 C 库不同。
+
+**关键事实**（已 webfetch 核实 stb_image.h v2.30 上游）：
+- stb_image.h 是单头文件，使用时需在**一个 C 文件**中 `#define STB_IMAGE_IMPLEMENTATION` 然后 `#include "stb_image.h"` 来生成实现
+- 头文件本身包含 API 声明与实现（通过 `#ifdef STB_IMAGE_IMPLEMENTATION` 控制）
+- 无需 vendoring 多个 `.c` 文件，只需一个 `.h` 文件
+
+**Vendoring 方案**：
+- `scripts/prepare.py` 下载 pinned `stb_image.h` 到 `src/stb_image.h`（保留原名，不扁平化）
+- `src/wrapper.c` 中 `#define STB_IMAGE_IMPLEMENTATION` + `#include "stb_image.h"` 生成实现
+- `moon.pkg` 的 `native-stub` 仅列 `wrapper.c`（stb_image.h 通过 `#include` 被 wrapper.c 纳入编译，无需单独列出）
+- stb_image.h 放在 `src/` 目录（与 wrapper.c 同目录，便于 `#include "stb_image.h"`）
+
+**理由**：单头文件库无需扁平化命名（无 `upstream#include#stb_image.h` 必要），保留原名提升可读性与维护性。wrapper.c 集中管理 IMPLEMENTATION 宏定义，避免宏泄漏。
+
+### 2.4 C wrapper 与 moonbit.h 运行时
+
+**决策**：C wrapper 负责 ABI 归一化，使用 `moonbit.h` 运行时 API 管理 MoonBit 对象。
+
+**已核实事实**（来源：`moonbit_wp/moonbit-native-runtime/include/moonbit.h`）：
+- `moonbit_make_bytes(int32_t size, int value) -> moonbit_bytes_t`（第 343 行）：创建 GC 管理的 `Bytes`
+- `moonbit_make_external_object(void (*finalize)(void*), uint32_t payload_size) -> void*`（第 374 行）：创建 GC 管理的 external object（MVP 不需要，无 handle 场景）
+- `MOONBIT_FFI_EXPORT` 宏（第 50/53 行）：导出 C 函数给 MoonBit 调用
+- `Moonbit_array_length(obj)` 宏（第 228 行）：获取 GC 管理数组/Bytes 长度
+- `moonbit_incref`/`moonbit_decref`（第 311-312 行）：引用计数管理（MVP 不需要，无回调场景）
+
+**MVP 仅需使用的 moonbit.h API**：`moonbit_make_bytes`（创建输出 Bytes）+ `MOONBIT_FFI_EXPORT`（导出 wrapper 函数）。无 external object、无 incref/decref（MVP 无 handle、无回调）。
+
+### 2.5 ASan 验证工具
+
+**决策**：采用 `moonbit-c-binding` skill 的 `scripts/run-asan.py` 脚本，复制到项目 `scripts/run-asan.py`。
+
+**已核实事实**（来源：`make-moonbit-c-bindings` skill + `moonbit-c-binding` skill）：
+- `moonbit-c-binding/scripts/run-asan.py` 是现成的 ASan 验证脚本
+- 脚本职责：强制 clang 作为 C 编译器、禁用 tcc、设置 ASan 编译/链接标志、运行后恢复 `moon.pkg`
+- 不重新发明 ASan 脚本，除非现成脚本无法适配项目
+
+---
+
+## 三、项目配置方案
+
+### 3.1 文件布局
+
+```
+stb-image/                          # 项目根
+├── moon.mod                        # 模块配置（新 DSL）
+├── scripts/
+│   ├── prepare.py                  # vendoring 脚本
+│   └── run-asan.py                 # ASan 验证脚本（从 moonbit-c-binding 复制）
+├── src/
+│   ├── moon.pkg                    # 包配置（新 DSL）
+│   ├── stb_image.h                 # vendored 上游头文件
+│   ├── wrapper.c                   # ABI 归一化 C wrapper
+│   ├── ffi.mbt                     # 私有 extern "c" 声明（native 门控）
+│   ├── image_types.mbt             # Image / LoadError 类型定义（全后端可用）
+│   ├── image_load_native.mbt       # load_from_* 实现（native 门控，调用 FFI）
+│   ├── image_test.mbt              # 回归测试（native 门控）
+│   └── README.mbt.md               # 测试过的文档示例（native 门控）
+├── testdata/                       # vendored 测试图片
+│   ├── png/ jpeg/ bmp/ gif/ webp/  # 5 种格式目录
+│   └── ...                         # 正常 + 损坏样本
+├── SKILL.md                        # 包使用说明 / 技能文档
+├── README.md -> src/README.mbt.md  # README 软链或复制
+└── LICENSE
+```
+
+**与架构设计 D13 的对应**：采用"拆 `image_types.mbt` + `image_load_native.mbt`"方案（而非单文件内条件编译），理由见 §6.5 条件编译策略。
+
+### 3.2 `moon.mod` 配置
+
+**决策**：新 DSL 语法，模块级配置。
+
+**配置项轮廓**：
+- `name`：`<user>/stb-image`（发布到 mooncakes.io 的模块名，user 待定）
+- `version`：`0.1.0`
+- `preferred_target = "native"`（下划线，新 DSL）
+- `license`：SPDX 标识（建议 `Public Domain` 或 `MIT`，stb_image 本身为 public domain）
+- `repository`、`description`、`keywords`：发布元数据
+- `readme = "README.mbt.md"`
+
+**不设模块级 `supported_targets`**：模块级不限制，让包级 `moon.pkg` 的 `supported_targets = "native"` 生效（包级声明更精确，未来若拆子包可独立配置）。
+
+### 3.3 `src/moon.pkg` 配置
+
+**决策**：新 DSL 语法，包级配置。
+
+**配置项轮廓**：
+- `supported_targets = "native"`（包级声明仅支持 native，与 llvm.mbt 先例一致）
+- `options(...)` **单一块**同时承载 `native-stub` 与 `targets`（MoonBit `moon.pkg` DSL 要求二者在同一 `options(...)` 块内，见 `package-management.md:63-75` 示例）：
+
+```moon.pkg
+options(
+  "native-stub": ["wrapper.c"],
+  targets: {
+    "ffi.mbt": ["native"],
+    "image_load_native.mbt": ["native"],
+    "image_test.mbt": ["native"],
+    "README.mbt.md": ["native"],
+  },
+)
+```
+
+- `image_types.mbt` **不门控**：`Image`/`LoadError` 类型定义全后端可用（架构设计 D13），不出现在 `targets` 块中
+
+**门控清单**（已核实 make-moonbit-c-bindings skill 模板 + llvm.mbt 先例；与 §7.2 测试层设计同步）：
+
+| 文件 | 门控 | 理由 |
+|------|------|------|
+| `ffi.mbt` | `["native"]` | `extern "c"` 仅 native 后端支持 |
+| `image_load_native.mbt` | `["native"]` | 调用 FFI 的实现，仅 native |
+| `image_types.mbt` | 不门控 | `Image`/`LoadError` 类型定义全后端可用（D13） |
+| `image_test.mbt` | `["native"]` | 测试调用 `load_from_*`，仅 native 可用（见 §7.2） |
+| `README.mbt.md` | `["native"]` | 含 FFI 示例，仅 native 可运行 |
+| `wrapper.c` | `native-stub` | C 源文件，仅 native 编译 |
+
+---
+
+## 四、Vendoring 方案
+
+### 4.1 prepare.py 脚本设计
+
+**决策**：基于 `make-moonbit-c-bindings/templates/prepare.py` 改造，适配 stb_image.h 单头文件库特性。
+
+**与模板的差异**（stb_image.h 单头文件库特殊处理）：
+- **下载源**：从 `nothings/stb` GitHub raw URL 下载单个 `stb_image.h` 文件（非 tarball）
+- **无需扁平化**：单文件直接复制为 `src/stb_image.h`（保留原名，非 `upstream#include#stb_image.h`）
+- **无需 include 重写**：单头文件无 `#include "其他.h"` 依赖
+- **无需刷新 native-stub 列表**：stb_image.h 不列入 native-stub（通过 wrapper.c 的 `#include` 纪入），native-stub 仅固定为 `["wrapper.c"]`
+- **保留 managed block 标记**：为 v0.2 纳入 `stb_image_write.h` 预留扩展点（见 §4.4）
+
+**脚本职责**：
+1. 下载 pinned `stb_image.h`（按 git commit hash 固定 URL）到 `.prepare/` 缓存
+2. SHA256 校验（哈希硬编码于脚本，不匹配则非零退出，不自动回退）
+3. 复制到 `src/stb_image.h`
+4. 幂等：重复运行无 tracked diff（若内容相同则不写文件，避免时间戳变化）
+
+### 4.2 版本固定策略
+
+**决策**：固定为 `nothings/stb` 仓库的特定 git commit hash。
+
+**版本选择**（架构设计 D5）：
+- stb_image.h 无正式版本号，当前最新版本标识为 `v2.30`（2024-05-31，文件头注释）
+- 建议固定为 v2.30 对应的近期稳定 commit hash
+- 脚本中硬编码 commit hash + SHA256，附注释记录 commit 日期与版本标识
+
+**实现者需在编码时确定的具体值**：
+- 上游 commit hash（建议选 v2.30 标签对应的 commit）
+- 该 commit 的 stb_image.h SHA256 哈希
+- 下载 URL（`https://raw.githubusercontent.com/nothings/stb/<commit-hash>/stb_image.h`）
+
+### 4.3 幂等性保证
+
+**决策**：脚本采用"先读后比再写"策略保证幂等。
+
+**机制**：
+- 下载到 `.prepare/` 缓存目录（`.gitignore` 忽略）
+- 校验 SHA256
+- 读取现有 `src/stb_image.h`（若存在），与下载内容比较
+- 仅当内容不同时写入（避免时间戳变化产生 tracked diff）
+- 重复运行：缓存命中 → 校验通过 → 内容相同 → 不写入 → 无 diff
+
+### 4.4 `--include-write` 扩展预留
+
+**决策**：脚本预留 `--include-write` 参数，供 v0.2 纳入 `stb_image_write.h`。
+
+**预留机制**：
+- 脚本支持 `--include-write` 命令行参数
+- 不带参数：仅 vendoring `stb_image.h`
+- 带 `--include-write`：额外下载 `stb_image_write.h` 到 `src/stb_image_write.h`
+- wrapper.c 中预留条件编译块（`#ifdef STB_IMAGE_WRITE_IMPLEMENTATION`），v0.2 时激活
+
+**理由**：避免 v0.2 纳入 write 时修改脚本结构，降低版本迭代成本。
+
+---
+
+## 五、FFI 边界层方案
+
+### 5.1 C wrapper 设计
+
+**决策**：C wrapper 集中处理所有 C/MoonBit 跨越的脏工作，对安全 API 层不可见。
+
+**wrapper.c 职责轮廓**：
+1. `#define STB_IMAGE_IMPLEMENTATION` + `#include "stb_image.h"`（生成 stb_image 实现）
+2. `#include <moonbit.h>`（使用 moonbit 运行时 API）
+3. 定义两个 `MOONBIT_FFI_EXPORT` 函数，对应 `load_from_path` 与 `load_from_bytes`：
+   - `stb_image_mbt_load_from_memory`：接收 `Bytes`（#borrow）+ 长度，调用 `stbi_load_from_memory`，拷贝到 `moonbit_make_bytes`，`stbi_image_free` 原始缓冲，返回 `Bytes` + 输出参数（width/height/channels）
+   - `stb_image_mbt_load_from_path`：接收 `Bytes`（UTF-8 路径，#borrow），调用 `stbi_load`，同上处理
+4. 失败信号处理：stbi_load* 返回 NULL 时，主动将 width/height/channels 输出参数写入 0，返回 NULL（或零长度 Bytes）
+
+**关键 C API 签名**（已 webfetch 核实 stb_image.h v2.30）：
+- `stbi_uc *stbi_load(char const *filename, int *x, int *y, int *channels_in_file, int desired_channels)`
+- `stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *channels_in_file, int desired_channels)`
+- `void stbi_image_free(void *retval_from_stbi_load)`
+- 失败时返回 NULL，`*x, *y, *channels_in_file` **保持不变**（非写入 0），wrapper 需主动写入 0
+
+**ABI 归一化要点**：
+- `desired_channels` 传 `0`（STBI_default）：MVP 不强制通道数，返回原始通道（需求文档 §二、MVP 范围）
+- 输出参数（width/height/channels）通过 C 指针写回，MoonBit 侧用 `Ref[Int]` 接收（#borrow Ref）
+- 返回的 `unsigned char*` 拷贝到 `moonbit_make_bytes(size, 0)` 后，立即 `stbi_image_free` 释放原始缓冲
+- 拷贝用 `memcpy`（C 标准库）
+
+**所有权转移流程**（load_from_bytes 为例）：
+```
+MoonBit Bytes (输入, #borrow) → C wrapper → stbi_load_from_memory → C 分配的 unsigned char*
+→ memcpy 到 moonbit_make_bytes (MoonBit GC 接管) → stbi_image_free (释放 C 缓冲)
+→ 返回 MoonBit Bytes (输出, GC 管理)
+```
+
+**为何 wrapper 而非直接 extern "c" 声明 stb_image**：
+- stbi_load 的 `int*` 输出参数与 `unsigned char*` 返回值不能直接映射到 MoonBit 值语义
+- 拷贝 + 释放的 ownership 转移必须在 C 侧完成（MoonBit 侧无法 stbi_image_free 一个 C 指针）
+- 集中处理 ABI 归一化，让 ffi.mbt 声明保持简单
+
+### 5.2 extern "c" 声明设计
+
+**决策**：`ffi.mbt` 中私有声明 `extern "c"` 函数，对应 wrapper.c 的 `MOONBIT_FFI_EXPORT` 函数。
+
+**声明轮廓**：
+- 两个 `extern "c" fn` 声明，对应 `stb_image_mbt_load_from_memory` 与 `stb_image_mbt_load_from_path`
+- 输入 `Bytes` 标注 `#borrow`（stb 仅在调用期间读取，不存储引用）
+- 输出参数用 `Ref[Int]` 标注 `#borrow`（C 写入 Ref，MoonBit 读取 `.val`）
+- 返回 `Bytes`（成功时为像素数据，失败时为空 Bytes 或 NULL）
+- 私有：不 `pub`，仅供同包 `image_load_native.mbt` 调用
+- `targets: ["native"]` 门控
+
+**extern "c" 大小写**（架构设计 D14）：统一为小写 `extern "c"`（与 make-moonbit-c-bindings skill 模板一致）。
+
+**类型映射**（已核实 moonbit_wiki/language/ffi.md C 后端 ABI 表）：
+| C 类型 | MoonBit 类型 | 用途 |
+|--------|-------------|------|
+| `int32_t` | `Int` | width/height/channels、Bytes 长度 |
+| `uint8_t*`（输入） | `Bytes`（#borrow） | 输入像素数据/路径字符串 |
+| `uint8_t*`（输出） | `Bytes`（GC 管理） | 输出像素数据 |
+| `int32_t*`（输出参数） | `Ref[Int]`（#borrow） | width/height/channels 写回 |
+
+### 5.3 Windows 路径编码兼容性
+
+**决策**：在 wrapper.c 中 `#define STBI_WINDOWS_UTF8`（条件编译，仅 Windows 平台），启用 stb_image.h 内置的 UTF-8 路径支持。
+
+**已核实事实**（webfetch stb_image.h）：
+- stb_image.h 提供 `STBI_WINDOWS_UTF8` 编译宏，定义后内部 `stbi__fopen` 使用 `_wfopen` 处理 UTF-8 路径
+- 提供 `stbi_convert_wchar_to_utf8` 函数将 `wchar_t*` 转为 UTF-8
+- MoonBit `String` 在 native 后端为 UTF-8 编码的 `Bytes`，可直接传递给 `stbi_load` 的 `const char*` 参数
+
+**方案**：
+- wrapper.c 中条件定义：`#if defined(_WIN32) \n #define STBI_WINDOWS_UTF8 \n #endif`
+- MoonBit 侧 `load_from_path(path : String)` 将 `String` 转为 `Bytes`（UTF-8）传递给 C wrapper
+- C wrapper 直接传递给 `stbi_load`（stb_image 内部处理 UTF-8 → wchar_t 转换）
+
+**理由**：利用 stb_image.h 内置机制，无需在 wrapper 侧重新实现宽字符转换，跨平台兼容性最佳。
+
+**FileIO 错误区分**（架构设计 D2 第 4 子点）：
+- `stbi_load` 在文件无法打开时返回 NULL（内部 `stbi__fopen` 失败）
+- C wrapper 在 `stbi_load` 返回 NULL 时，无法直接区分"文件不存在"与"解码失败"
+- **MVP 策略**：path 入口在 MoonBit 侧预检查文件可读性（用 MoonBit 标准库的 `@fs` 或 `try ... catch` 文件读取），预检查失败 → `raise LoadError::FileIO(...)`；预检查通过但 stbi_load 返回 NULL → `raise LoadError::DecodeFailed(...)`
+- 此策略将 FileIO 与 DecodeFailed 的区分放在 MoonBit 侧（预检查），而非 C wrapper 侧（errno 检查），简化 wrapper 实现
+
+---
+
+## 六、安全 API 层方案
+
+### 6.1 `Image` 类型轮廓
+
+**决策**：`pub(all) struct`，derive `Eq` 与 `@debug.Debug`，不 derive `Show`（架构设计 D3）。
+
+**字段轮廓**（需求文档 §二、MVP 范围）：
+- `width : Int`
+- `height : Int`
+- `channels : Int`（原始通道数，1/2/3/4，不归一化）
+- `data : Bytes`（像素数据，长度 = width * height * channels）
+
+**类型形态**：`struct`（值类型），非 `enum`/`type`/`suberror`。理由：数据的简单聚合，无不变式、无资源释放（`data : Bytes` 由 GC 接管），值语义符合"解码快照"的领域直觉。
+
+**导出级别**：`pub(all)` 允许外部构造与字段访问（完整库 write 路径需接收 `Image` 输入，调用者可能从其他来源拼装 `Image`）。
+
+**derive 决策**：
+- `Eq`：支持测试断言 `assert_eq(loaded, expected)`
+- `@debug.Debug`：支持 `debug_inspect` 用于测试快照与调试
+- 不 derive `Show`：`Image.data` 可能很大，完整字符串化不适用
+
+**定义位置**：`src/image_types.mbt`（不门控，全后端可用，架构设计 D13）。
+
+### 6.2 `LoadError` 类型轮廓
+
+**决策**：`pub(all) suberror`，三个构造子（架构设计 D1 + D2）。
+
+**构造子轮廓**：
+- `FileIO(String)`：path 入口的文件不存在/不可读/权限不足
+- `UnsupportedFormat(String)`：stb_image 无法识别字节序列的图像格式（MVP 阶段不主动构造，保留供 v0.3）
+- `DecodeFailed(String)`：格式可识别但数据损坏/不完整，或 stb_image 返回 NULL 的默认归类
+
+**类型形态**：`suberror`（MoonBit 检查式错误），非 `enum`。理由：`suberror` 是 `Error` 的子类型，可直接 `raise`；让错误类型在函数签名中显式声明，调用者无法忽略。
+
+**导出级别**：`pub(all)` 允许外部 `raise` 该错误（如更上层包装）。
+
+**错误描述字符串**：人类可读的**中文提示**（符合项目交互语言偏好），不暴露 C 错误码或 `stbi_failure_reason` 原始字符串（MVP 阶段性限制）。
+
+**定义位置**：`src/image_types.mbt`（不门控，全后端可用）。
+
+### 6.3 `load_from_path` / `load_from_bytes` 设计
+
+**决策**：两个公开函数，`raise LoadError` 抛出错误。
+
+**函数轮廓**：
+- `pub fn load_from_path(path : String) -> Image raise LoadError`
+- `pub fn load_from_bytes(data : Bytes) -> Image raise LoadError`
+
+**`load_from_path` 流程**：
+1. MoonBit 侧预检查文件可读性（用标准库文件 API 或 `try` 读取文件头）：失败 → `raise LoadError::FileIO("文件不存在或不可读: " + path)`
+2. 将 `path : String` 转为 UTF-8 `Bytes`（MoonBit String 在 native 后端即 UTF-8）
+3. 调用 FFI `stb_image_mbt_load_from_path`（传入 path Bytes + 三个 `Ref[Int]` 接收 width/height/channels）
+4. 检查返回的 `Bytes` 是否为空（或 width == 0）：是 → `raise LoadError::DecodeFailed("stb_image 解码返回 NULL，输入可能为不支持的格式或损坏数据")`
+5. 构造 `Image { width, height, channels, data }` 返回
+
+**`load_from_bytes` 流程**：
+1. 检查 `data` 是否为空：是 → `raise LoadError::DecodeFailed("输入数据为空")`（边界保护）
+2. 调用 FFI `stb_image_mbt_load_from_memory`（传入 data + data.length() + 三个 `Ref[Int]`）
+3. 检查返回的 `Bytes` 是否为空（或 width == 0）：是 → `raise LoadError::DecodeFailed(...)`
+4. 构造 `Image` 返回
+
+**定义位置**：`src/image_load_native.mbt`（门控 `["native"]`，调用 FFI）。
+
+### 6.4 错误处理流程与格式嗅探决策
+
+**决策**：MVP **不纳入**格式嗅探增强，采用默认归类策略（架构设计 D2）。
+
+**MVP 错误区分粒度**：
+- `FileIO`：可独立区分（path 入口 MoonBit 侧预检查）
+- `UnsupportedFormat` vs `DecodeFailed`：**不可精确区分**，stb_image 返回 NULL 时默认归类为 `DecodeFailed`
+- `UnsupportedFormat` 构造子保留但不主动构造（供 v0.3 暴露 `stbi_failure_reason` 后精确区分）
+
+**不纳入格式嗅探的理由**：
+- 嗅探需维护 9 种格式的签名表（PNG `\x89PNG\r\n\x1a\n`、JPEG `0xFFD8` 等），增加安全 API 层的格式知识负担
+- 嗅探本身可能误判（边缘编码场景）
+- MVP 的目标是验证 FFI 可行性，格式嗅探属增强功能，可后版本纳入
+- 调用者对 `DecodeFailed` 的典型处理（重新获取源文件、报告输入无效）对"格式不支持"场景同样适用，不会产生误导性处理差异
+
+**权衡**：若后续用户反馈需要精确区分格式不支持，可在 v0.2 或 v0.3 纳入嗅探（不依赖 `stbi_failure_reason`，可在 MVP 后增量实现）。
+
+### 6.5 条件编译策略
+
+**决策**：采用"拆文件"方案实现类型定义全后端可用 + FFI 调用 native 门控（架构设计 D13）。
+
+**文件拆分**：
+- `src/image_types.mbt`：`Image`/`LoadError` 类型定义，**不门控**（全后端可用）
+- `src/image_load_native.mbt`：`load_from_path`/`load_from_bytes` 实现，**门控 `["native"]`**（调用 FFI）
+
+**理由**：
+- MoonBit 的 `targets` 门控以文件为单位，单文件内条件编译不支持
+- 拆文件让类型定义在其他后端可见（如 wasm 目标的纯 MoonBit 代码可构造 `LoadError` 用于错误处理）
+- FFI 调用仅 native：`extern "c"` 仅 native 后端支持，其他后端调用 FFI 需报编译错误
+- 拆文件比单文件内条件编译更清晰，符合 MoonBit 文件组织惯例
+
+**非 native 后端的影响**：
+- `image_load_native.mbt` 在非 native 后端不编译，`load_from_path`/`load_from_bytes` 在非 native 后端不可用
+- 这是 MVP 的预期行为（完整库 v1.0 才评估多目标支持）
+- 调用者在非 native 后端引用 `load_from_*` 会得到"函数未定义"编译错误，符合预期
+
+---
+
+## 七、测试与验证方案
+
+### 7.1 测试图片生成策略
+
+**决策**：由 `scripts/prepare.py`（或独立 `scripts/gen_testdata.py`）生成小尺寸样本，vendoring 到 `testdata/`（架构设计 D4）。
+
+**样本规格**：
+- 尺寸：4×4 或 8×8（小尺寸，测试快）
+- 格式：PNG、JPEG、BMP、GIF、WebP（5 种常见格式，需求文档 §四）
+- 每种格式：1 张正常图片 + 1 张损坏图片
+- 损坏样本生成方式：对正常样本施加字节破坏（截断、翻转关键字节、清零魔数）
+
+**生成方式**（实现者决策，技术方案不预设）：
+- **脚本生成**：用 Python PIL-Pillow 生成小尺寸样本（需 Python 环境依赖）
+- **或手工制作**：预先制作好小尺寸样本，vendoring 到 `testdata/`，脚本仅校验哈希
+- **或混合**：正常样本手工制作，损坏样本由脚本从正常样本生成
+
+**技术方案建议**：倾向"手工制作正常样本 + 脚本生成损坏样本"，避免 Python 依赖，损坏样本可确定性生成（截断、翻转字节）。
+
+**testdata 目录结构**：
+```
+testdata/
+├── png/
+│   ├── normal.png      # 4×4 纯色 PNG
+│   └── corrupt.png     # 截断或魔数破坏的 PNG
+├── jpeg/
+├── bmp/
+├── gif/
+└── webp/
+```
+
+**测试图片加载方式**：测试代码用 MoonBit 标准库读取 `testdata/` 下文件（相对路径），或 vendored 为 `Bytes` 字面量（若文件小）。实现者根据 MoonBit 测试框架能力选择。
+
+### 7.2 测试层设计
+
+**决策**：遵循 `make-moonbit-c-bindings` skill 的测试层建议。
+
+**测试层轮廓**：
+1. **Unit 测试**：安全 MoonBit 验证（空输入拒绝、错误类型匹配）
+2. **Smoke 测试**：每个公开 FFI 函数的 happy path（5 种格式正常解码）
+3. **Regression 测试**：error path（5 种格式损坏文件 → `LoadError`）
+4. **ASan 测试**：C 内存安全（通过 `scripts/run-asan.py`）
+5. **Doctest**：`README.mbt.md` 的 `mbt check` 块
+6. **幂等测试**：`scripts/prepare.py` 重复运行无 diff
+
+**测试文件门控决策**：
+- `image_test.mbt` 调用 `load_from_*`，而 `load_from_*` 仅在 native 后端可用（见 §6.5）
+- 若 `image_test.mbt` 不门控，在非 native 后端会因 `load_from_*` 未定义而编译失败
+- MoonBit 条件编译以文件为单位，无法在文件内跳过单个测试
+- **结论**：`image_test.mbt` 门控到 `["native"]`（`targets: { "image_test.mbt": ["native"] }`），因为测试核心是验证 FFI 行为，仅 native 有意义
+
+**与 §3.3 门控清单的同步**（v2 修订）：§3.3 门控清单已同步本结论，`image_test.mbt` 在 §3.3 与此处均为 `["native"]` 门控，两处表述一致。
+
+### 7.3 ASan 验证
+
+**决策**：采用 `moonbit-c-binding/scripts/run-asan.py`，复制为 `scripts/run-asan.py`。
+
+**ASan 验证关注点**：
+- C wrapper 的 `moonbit_make_bytes` 拷贝后是否正确 `stbi_image_free` 原始缓冲（避免泄漏）
+- `#borrow` 输入 Bytes 在 C 调用期间是否有效（避免 use-after-free）
+- 失败路径（stbi_load 返回 NULL）是否正确清理临时分配
+- 输出参数（Ref[Int]）写入是否越界
+
+**ASan 脚本职责**（已核实 `moonbit-c-binding` skill）：
+- 临时强制 clang 作为 C 编译器
+- 禁用 tcc -run（debug 构建默认用 tcc）
+- 设置 `MOON_CC`/`MOON_AR` + ASan 编译/链接标志
+- 运行 `moon test --target native`
+- 恢复 `moon.pkg`（若脚本修改了配置）
+
+### 7.4 标准验证门
+
+**决策**：遵循 `make-moonbit-c-bindings` skill 的标准验证门。
+
+**验证命令序列**（实现完成后运行）：
+```bash
+moon fmt                                    # 格式化
+moon check --target native --warn-list +73  # 类型检查（native）
+moon test --target native                   # 运行测试
+python3 scripts/run-asan.py                 # ASan 验证
+moon info --target native                   # 生成接口信息
+python3 scripts/prepare.py                  # vendoring 幂等性
+git status --short                          # 确认无意外 diff
+```
+
+**注意**：不使用 `moon check --target all`（因 `supported_targets = "native"` 会阻止其他目标构建，这正是 MVP 期望行为）。
+
+---
+
+## 八、文档方案
+
+### 8.1 SKILL.md 结构
+
+**决策**：参照项目 `.codeartsdoer/skills` 下 SKILL.md 格式（YAML frontmatter + Markdown 正文），架构设计 D6。
+
+**内容轮廓**：
+- **YAML frontmatter**：`name`、`description`（包用途简述）
+- **包用途**：一句话说明 stb-image 是 stb_image.h 的 MoonBit 原生 FFI 绑定
+- **快速开始**：安装命令 + 最小示例（load_from_path + load_from_bytes）
+- **API 概览**：`Image`、`LoadError`、`load_from_path`、`load_from_bytes` 的简要说明
+- **最小示例**：完整可运行的代码片段
+- **错误处理**：`try ... catch LoadError` 模式示例
+- **目标后端限制**：MVP 仅 native，说明 wasm/js 支持在 v1.0 评估
+- **版本演进路线**：v0.1 → v0.2 → v0.3 → v0.4 → v1.0 的概要
+
+**位置**：项目根目录 `SKILL.md`。
+
+### 8.2 README.mbt.md 文档示例
+
+**决策**：测试过的文档示例，`mbt check` 块（`make-moonbit-c-bindings` skill 惯例）。
+
+**内容轮廓**：
+- 包简介
+- `mbt check` 块：最小可用示例（load_from_bytes 解码一个小 PNG 字面量，inspect 结果）
+- 错误处理示例（try-catch LoadError）
+
+**位置**：`src/README.mbt.md`，门控 `["native"]`（含 FFI 示例）。`README.md` 软链或复制到项目根。
+
+---
+
+## 九、需要验证的技术假设
+
+以下假设在编码实现时需通过实际构建验证：
+
+1. **MoonBit 标准库文件读取 API**：`load_from_path` 的 MoonBit 侧预检查需用标准库文件 API（如 `@fs` 或类似）。需核实 MoonBit v0.10.5 native 后端可用的文件读取 API（`moonbitlang/core/fs` 或 `moonbitlang/x`）。若标准库无现成 API，可降级为"不预检查，直接调用 FFI，失败时统一归为 DecodeFailed"（牺牲 FileIO 区分能力）。
+
+2. **`Ref[Int]` 作为 C 输出参数的 ABI 兼容性**：`moonbit-c-binding` skill 的类型映射表列出 `int *result` → `Ref[T]` with `#borrow`。需在编码时验证 C wrapper 写入 `Ref[Int].val` 的正确性（C 侧通过指针写回，MoonBit 侧读取 `.val`）。
+
+3. **stb_image.h 在 MoonBit native 编译链下的编译兼容性**：stb_image.h 是标准 C99 代码，MoonBit native 后端用 tcc（debug）或 clang/gcc（release）编译。需验证 stb_image.h 在 tcc/clang/gcc 下均能编译通过（特别是 SIMD 代码路径）。
+
+4. **`moonbit_make_bytes` 的 `init` 参数语义**：`moonbit_make_bytes(int32_t size, int value)` 的 `value` 参数用于初始化字节值。wrapper 创建输出 Bytes 时应传 `0`（零初始化），随后 `memcpy` 覆盖。需验证 `init=0` 不会影响 `memcpy` 后的数据正确性。
+
+5. **空 Bytes 作为失败信号的可靠性**：C wrapper 在 stbi_load 返回 NULL 时返回 `moonbit_make_bytes(0, 0)`（零长度 Bytes）或 NULL。需验证 MoonBit 侧检查 `Bytes` 是否为空（`bytes.length() == 0`）的可靠性，以及 NULL 返回在 MoonBit 侧的表现（是否需要包装为 `Bytes?` 或统一返回空 Bytes）。
+
+6. **testdata 文件在测试中的访问路径**：MoonBit 测试运行时的工作目录与 `testdata/` 的相对路径关系需验证。若测试无法通过相对路径访问 `testdata/`，可能需将测试图片 vendored 为 `Bytes` 字面量（base64 编码嵌入测试代码）。
+
+---
+
+## 十、版本演进技术支撑
+
+本技术方案的 MVP 决策如何支撑后续版本迭代（需求文档 §六）：
+
+### v0.2（write + req_channels）技术支撑
+- **vendoring 脚本预留 `--include-write`**：§4.4 已预留，v0.2 激活即可
+- **wrapper.c 预留条件编译块**：v0.2 纳入 `stb_image_write.h` 的 IMPLEMENTATION 宏
+- **包结构保持单包**：架构设计 D7，v0.2 按文件分职责（`image_load.mbt` / `image_write.mbt`），不拆子包
+- **`req_channels` 参数**：v0.2 在 `load_from_*` 增加可选参数，C wrapper 透传 `desired_channels`
+
+### v0.3（16-bit / float / info / 配置 / PNM）技术支撑
+- **类型定义全后端可用**：§6.5 拆文件策略让 `Image16`/`ImageF` 等新类型可定义在 `image_types.mbt`，全后端可见
+- **little-endian 编码**：架构设计 D8，C wrapper 直接 `memcpy`（native 平台 little-endian，零开销）
+- **`stbi_failure_reason` 暴露**：v0.3 可在 wrapper 增加 `stb_image_mbt_failure_reason` 函数，返回 C 字符串为 `Bytes`，MoonBit 侧 `@utf8.decode_lossy` 转为 `String`，用于精确区分 `UnsupportedFormat` 与 `DecodeFailed`
+
+### v0.4（callbacks / 动画 GIF）技术支撑
+- **`IoCallbacks` trait**：架构设计 D9，涉及 C→MoonBit 反向调用（trampoline），需 `moonbit_incref`/`moonbit_decref` 管理回调状态生命周期
+- **FFI 边界层扩展**：wrapper.c 增加 callbacks 相关函数，ffi.mbt 增加对应 `extern "c"` 声明
+- **单包结构仍可容纳**：callbacks 作为安全 API 层新抽象，不改变分层结构
+
+### v1.0（多目标支持）技术支撑
+- **类型定义全后端可用**：§6.5 拆文件策略让 `Image`/`LoadError` 在 wasm/js 后端可用，为多目标提供类型基础
+- **`supported_targets` 可扩展**：§2.2 采用包级 `supported_targets = "native"`，v1.0 评估多目标时可改为 `"+native+wasm"` 或移除限制
+- **FFI 边界层按目标分文件门控**：v1.0 若纳入 wasm/js，可引入 `src/wasm/` 子目录承载 Emscripten 产物，`targets` 门控按目标编译不同 FFI 实现
+
+---
+
+## 十一、与架构设计决策的对应
+
+| 架构设计决策 | 本技术方案落实 |
+|------------|-------------|
+| D1. `LoadError` 统一并入 FileIO | §6.2 三构造子，FileIO 独立区分（path 入口预检查） |
+| D2. C wrapper 错误信号 + 默认归类 + 格式嗅探 + Windows | §5.1 失败信号（NULL + 零尺寸输出参数）、§6.4 不纳入嗅探、§5.3 STBI_WINDOWS_UTF8 |
+| D3. `Image` pub(all) + derive Eq/Debug | §6.1 类型轮廓 |
+| D4. 测试图片脚本生成 | §7.1 testdata 生成策略 |
+| D5. vendoring 固定 commit hash | §4.2 版本固定策略 |
+| D6. SKILL.md 参照技能格式 | §8.1 SKILL.md 结构 |
+| D7. MVP 单包，v0.2 保持单包 | §3.1 文件布局，单包按文件分职责 |
+| D8. 16-bit/float little-endian | §10 v0.3 技术支撑 |
+| D9. IoCallbacks 留待 v0.4 | §10 v0.4 技术支撑 |
+| D10. 多目标留待 v1.0 | §10 v1.0 技术支撑 |
+| D11. 零拷贝留待 v1.0 | MVP 允许拷贝，§5.1 所有权转移流程 |
+| D12. write 回调留待 v0.2 | §10 v0.2 技术支撑 |
+| D13. ffi.mbt 门控 native，类型定义全后端 | §6.5 拆文件条件编译策略 |
+| D14. extern "c" 小写 | §5.2 统一小写 |
+
+---
+
+## 十二、设计原则遵循说明
+
+- **决策明确**：所有技术选型（工具链版本、配置格式、目标后端、vendoring 策略、FFI 机制、类型轮廓、错误处理、测试策略、文档结构）均已确定，不存在需实现者自行探索的方向性问题
+- **路径清晰**：实现者知道该走哪条技术路径（新 DSL 语法、单头文件 vendoring、C wrapper ABI 归一化、拆文件条件编译、脚本生成测试图片、ASan 验证）
+- **准确可信**：涉及的技术选型决策经过文档或代码验证（moonbit_wiki、llvm.mbt 先例、stb_image.h 上游、moonbit.h 头文件、skill 模板）
+- **深度适当**：停留在决策层，不深入实现层（未给出完整代码片段、逐字段类型定义、逐方法签名）
+- **不凭假设设计**：关键决策（moon.mod/moon.pkg 新 DSL 语法、supported_targets 语法、moonbit_make_bytes 签名、stb_image.h API、STBI_WINDOWS_UTF8 机制）均通过查阅文档或代码确认
+
+---
+
+## 修订说明（v2）
+
+基于 `deliberations/202608060953_tech-v1-review/output_v1.md` 的独立审查报告（APPROVED_WITH_MINOR_ISSUES），对 v1 进行修订。审查报告发现 4 个问题，处理如下：
+
+| 问题 | 审查意见摘要 | 处理方式 | 修订位置 |
+|------|------------|---------|---------|
+| 问题 1 | §2.2 未明确引用 c-binding skill 的"勿用 supported-targets"提示，实现者若同时查阅该 skill 可能困惑 | **修改**：在 §2.2 权衡段后新增"与 c-binding skill 提示的关系"段落，明确引用该提示并解释为何对本项目（native-only FFI 绑定）不适用 | §2.2 末尾 |
+| 问题 2 | supported_targets 语法：架构设计 D13 末尾"`+native`"提示本身错误，tech_v1 §2.2 正向纠偏 | **保留+确认**：这是 v1 的亮点，tech_v2 维持 §2.2 原决策（`"native"` 排他性声明）。建议后续修订 design_v3.md D13 末尾错误提示（不在本次技术方案修订范围） | §2.2（未改动，记录确认） |
+| 问题 3 | §3.3 门控清单 `image_test.mbt` 标注"不门控"与 §7.2 修正结论"`["native"]`"不同步 | **修改**：§3.3 门控清单表 `image_test.mbt` 行改为 `["native"]`，理由改为"测试调用 `load_from_*`，仅 native 可用（见 §7.2）"；§3.1 文件布局注释同步；§7.2 表述整理为决策结论 + 与 §3.3 同步说明 | §3.1、§3.3 门控清单、§7.2 测试文件门控 |
+| 问题 4 | §3.3 将 `options("native-stub": ...)` 与 `options(targets: ...)` 分两行分写，可能误解为两个独立块 | **修改**：§3.3 配置项轮廓合并为单一 `options(...)` 块示意，并注明"`native-stub` 与 `targets` 在同一 `options(...)` 块内"，引用 `package-management.md:63-75` | §3.3 配置项轮廓 |
+
+**未修订部分**：审查报告 8 维度中 7 项通过、1 项基本通过，所有通过部分的技术内容均保留不变，仅做上述三处定点修订与必要的同步表述调整。既有约束（技术方案级别定位、"只参考不引用已有库"、MoonBit v0.10.5 规范、FFI 最佳实践、版本迭代技术支撑）全部保留。
