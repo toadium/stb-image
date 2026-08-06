@@ -1,0 +1,27 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8" @encoding/utf8,
+}
+
+supported_targets = "native"
+
+options(
+  "native-stub": ["wrapper.c"],
+  targets: {
+    "ffi.mbt": ["native"],
+    "ffi_test.mbt": ["native"],
+    "image_load_native.mbt": ["native"],
+    "image_write_native.mbt": ["native"],
+    "image_16_native.mbt": ["native"],
+    "image_float_native.mbt": ["native"],
+    "image_info_native.mbt": ["native"],
+    "image_gif_native.mbt": ["native"],
+    "image_test.mbt": ["native"],
+    "image_write_test.mbt": ["native"],
+    "image_16_test.mbt": ["native"],
+    "image_float_test.mbt": ["native"],
+    "image_info_test.mbt": ["native"],
+    "image_gif_test.mbt": ["native"],
+    "README.mbt.md": ["native"],
+  },
+)
