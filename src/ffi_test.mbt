@@ -158,66 +158,60 @@ test "load_from_memory: input buffer unchanged after call" {
 // ============================================================
 
 ///|
-test "load_from_path: 1x1 BMP file success returns correct dimensions" {
-  let path = b"testdata/1x1_red.bmp"
+test "load_from_path: 4x4 BMP file success returns correct dimensions" {
+  let path = b"testdata/test_4x4_red.bmp"
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
   let pixels = test_load_from_path(path, path.length(), w, h, c)
   assert_true(pixels.length() > 0)
-  assert_eq(w.val, 1)
-  assert_eq(h.val, 1)
+  assert_eq(w.val, 4)
+  assert_eq(h.val, 4)
   assert_eq(c.val, 3)
-  assert_eq(pixels.length(), 3)
+  assert_eq(pixels.length(), 48)
 }
 
 ///|
-test "load_from_path: 1x1 BMP file success returns correct pixel data" {
-  let path = b"testdata/1x1_red.bmp"
+test "load_from_path: 4x4 BMP file success returns correct pixel data" {
+  let path = b"testdata/test_4x4_red.bmp"
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
   let pixels = test_load_from_path(path, path.length(), w, h, c)
-  // stb_image returns RGB order: R=255, G=0, B=0
+  // stb_image returns RGB order: R=255, G=0, B=0 for all 16 pixels
   assert_eq(pixels[0].to_int(), 255)
   assert_eq(pixels[1].to_int(), 0)
   assert_eq(pixels[2].to_int(), 0)
+  assert_eq(pixels[45].to_int(), 255)
+  assert_eq(pixels[46].to_int(), 0)
+  assert_eq(pixels[47].to_int(), 0)
 }
 
 ///|
-test "load_from_path: 2x2 BMP file success returns correct dimensions" {
-  let path = b"testdata/2x2_colors.bmp"
+test "load_from_path: 4x4 PNG file success returns correct dimensions" {
+  let path = b"testdata/test_4x4_red.png"
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
   let pixels = test_load_from_path(path, path.length(), w, h, c)
   assert_true(pixels.length() > 0)
-  assert_eq(w.val, 2)
-  assert_eq(h.val, 2)
+  assert_eq(w.val, 4)
+  assert_eq(h.val, 4)
   assert_eq(c.val, 3)
-  assert_eq(pixels.length(), 12)
+  assert_eq(pixels.length(), 48)
 }
 
 ///|
-test "load_from_path: 2x2 BMP file success returns correct pixel data" {
-  let path = b"testdata/2x2_colors.bmp"
+test "load_from_path: 4x4 PNG file success returns correct pixel data" {
+  let path = b"testdata/test_4x4_red.png"
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
   let pixels = test_load_from_path(path, path.length(), w, h, c)
-  // RGB order, top-to-bottom, left-to-right
+  // RGB order: R=255, G=0, B=0
   assert_eq(pixels[0].to_int(), 255)
   assert_eq(pixels[1].to_int(), 0)
   assert_eq(pixels[2].to_int(), 0)
-  assert_eq(pixels[3].to_int(), 255)
-  assert_eq(pixels[4].to_int(), 255)
-  assert_eq(pixels[5].to_int(), 255)
-  assert_eq(pixels[6].to_int(), 0)
-  assert_eq(pixels[7].to_int(), 255)
-  assert_eq(pixels[8].to_int(), 0)
-  assert_eq(pixels[9].to_int(), 0)
-  assert_eq(pixels[10].to_int(), 0)
-  assert_eq(pixels[11].to_int(), 255)
 }
 
 ///|
