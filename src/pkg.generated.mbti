@@ -6,11 +6,19 @@ import {
 }
 
 // Values
+pub fn add_border(Image, Int, Int, Int, Int, Array[Byte]) -> Image raise LoadError
+
 pub fn adjust_brightness(Image, Int) -> Image
 
 pub fn adjust_contrast(Image, Float) -> Image
 
 pub fn adjust_gamma(Image, Float) -> Image
+
+pub fn blend_multiply(Image, Image) -> Image raise LoadError
+
+pub fn blend_overlay(Image, Image) -> Image raise LoadError
+
+pub fn blend_screen(Image, Image) -> Image raise LoadError
 
 pub fn box_blur(Image, Int) -> Image
 
@@ -51,6 +59,8 @@ pub fn encode_pnm(Image) -> Bytes
 pub fn encode_ppm(Image) -> Bytes
 
 pub fn encode_qoi(Image) -> Bytes raise LoadError
+
+pub fn extract_channel(Image, Int) -> Image raise LoadError
 
 pub fn failure_reason() -> String
 
@@ -114,6 +124,10 @@ pub fn loadf_from_path(String, req_channels? : Int?) -> ImageF raise LoadError
 
 pub fn median_cut(Image, Int) -> Image
 
+pub fn pad(Image, Int, Int, Array[Byte]) -> Image raise LoadError
+
+pub fn posterize(Image, Int) -> Image raise LoadError
+
 pub fn premultiply_alpha(Image) -> Image raise LoadError
 
 pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
@@ -131,6 +145,10 @@ pub fn resize(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Im
 pub fn resize_16(Image16, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image16 raise LoadError
 
 pub fn resize_srgb(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
+
+pub fn resize_to_contain(Image, Int, Int, Array[Byte]) -> Image raise LoadError
+
+pub fn resize_to_cover(Image, Int, Int) -> Image raise LoadError
 
 pub fn resizef(ImageF, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> ImageF raise LoadError
 
@@ -151,6 +169,8 @@ pub fn set_flip_vertically_on_load(Bool) -> Unit
 pub fn set_unpremultiply_on_load(Bool) -> Unit
 
 pub fn sharpen(Image, Float) -> Image
+
+pub fn threshold(Image, Int) -> Image
 
 pub fn to_grayscale(Image) -> Image
 

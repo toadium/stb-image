@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-254%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-275%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
@@ -409,6 +409,7 @@ stb-image/
 | v1.4 | color adjust + filters + geometry + histogram + quantize | 206 |
 | v1.5 | PNM encode + GIF animation + EXIF reading | 229 |
 | **v1.6** | **PNG metadata + roundtrip tests + benchmarks** | **254+29** |
+| **v1.7** | **pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend modes** | **275+29** |
 
 ## Upstream
 

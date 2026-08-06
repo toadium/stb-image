@@ -1,0 +1,129 @@
+// 像素操作（纯 MoonBit）：threshold / posterize / extract_channel / blend 模式
+
+///|
+fn clamp_byte_v(v : Int) -> Byte {
+  if v < 0 {
+    b'\x00'
+  } else if v > 255 {
+    b'\xFF'
+  } else {
+    v.to_byte()
+  }
+}
+
+///|
+/// 二值化。像素值 >= threshold 设为 255，否则设为 0。
+/// 仅影响颜色通道，alpha 通道不变。
+pub fn threshold(img : Image, thresh : Int) -> Image {
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      out[i * ch + c] = if img.data[i * ch + c].to_int() >= thresh {
+        b'\xFF'
+      } else {
+        b'\x00'
+      }
+    }
+    if ch == 4 {
+      out[i * ch + 3] = img.data[i * ch + 3]
+    }
+  }
+  Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+}
+
+///|
+/// 色调分离。将每个通道的值量化到 levels 个级别。
+/// levels=2 等价于二值化，levels=4 将 0-255 分成 4 段。
+pub fn posterize(img : Image, levels : Int) -> Image raise LoadError {
+  if levels < 2 || levels > 256 {
+    raise LoadError::DecodeFailed("posterize levels 必须在 [2, 256] 范围内")
+  }
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let step = 256.0F / Float::from_int(levels)
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let v = img.data[i * ch + c].to_int()
+      let quantized = (Float::from_int(v) / step).to_int() * step.to_int()
+      out[i * ch + c] = clamp_byte_v(quantized)
+    }
+    if ch == 4 {
+      out[i * ch + 3] = img.data[i * ch + 3]
+    }
+  }
+  Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+}
+
+///|
+/// 提取单个通道。返回单通道 Image（channels=1）。
+/// channel: 0=R/Gray, 1=G, 2=B, 3=A
+pub fn extract_channel(img : Image, channel : Int) -> Image raise LoadError {
+  if channel < 0 || channel >= img.channels {
+    raise LoadError::DecodeFailed("channel 索引越界")
+  }
+  let n = img.width * img.height
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    out[i] = img.data[i * img.channels + channel]
+  }
+  Image::{ width: img.width, height: img.height, channels: 1, data: Bytes::from_array(out) }
+}
+
+///|
+/// 乘法混合。result = base * blend / 255。
+/// 两图必须尺寸和通道数相同。
+pub fn blend_multiply(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = (b * l / 255).to_byte()
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 滤色混合。result = 255 - (255 - base) * (255 - blend) / 255。
+pub fn blend_screen(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = (255 - (255 - b) * (255 - l) / 255).to_byte()
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 叠加混合。暗部用乘法，亮部用滤色。
+/// result = if base < 128: 2*base*blend/255 else: 255 - 2*(255-base)*(255-blend)/255
+pub fn blend_overlay(base : Image, blend : Image) -> Image raise LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = if b < 128 {
+      (2 * b * l / 255).to_byte()
+    } else {
+      clamp_byte_v(255 - 2 * (255 - b) * (255 - l) / 255)
+    }
+  }
+  Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
