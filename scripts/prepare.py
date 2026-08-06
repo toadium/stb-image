@@ -26,6 +26,12 @@ STB_IMAGE_WRITE_SHA256 = "cbd5f0ad7a9cf4468affb36354a1d2338034f2c12473cf1a8e3205
 STB_IMAGE_WRITE_URL = f"https://raw.githubusercontent.com/nothings/stb/{STB_IMAGE_WRITE_COMMIT}/stb_image_write.h"
 STB_IMAGE_WRITE_FILENAME = "stb_image_write.h"
 
+# stb_image_resize2.h v2.07（与 stb_image.h 同一 commit，v1.1 激活）
+STB_IMAGE_RESIZE_COMMIT = "013ac3beddff3dbffafd5177e7972067cd2b5083"
+STB_IMAGE_RESIZE_SHA256 = "6909c201963550882b6921020016a1766b376f488f78e120b6e23f9a6bb92b13"
+STB_IMAGE_RESIZE_URL = f"https://raw.githubusercontent.com/nothings/stb/{STB_IMAGE_RESIZE_COMMIT}/stb_image_resize2.h"
+STB_IMAGE_RESIZE_FILENAME = "stb_image_resize2.h"
+
 # 路径常量
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_DIR = REPO_ROOT / "src"
@@ -118,6 +124,11 @@ def main() -> None:
         action="store_true",
         help="additionally vendor stb_image_write.h (not yet activated, reserved for v0.2)",
     )
+    parser.add_argument(
+        "--include-resize",
+        action="store_true",
+        help="additionally vendor stb_image_resize2.h (activated in v1.1)",
+    )
     args = parser.parse_args()
 
     vendor_single_header(
@@ -137,6 +148,19 @@ def main() -> None:
             STB_IMAGE_WRITE_URL,
             STB_IMAGE_WRITE_SHA256,
             STB_IMAGE_WRITE_FILENAME,
+            CACHE_DIR,
+            PACKAGE_DIR,
+        )
+
+    if args.include_resize:
+        if STB_IMAGE_RESIZE_COMMIT == "":
+            raise SystemExit(
+                "--include-resize 尚未激活，待 v1.1 填入 stb_image_resize2.h 的 commit hash + SHA256"
+            )
+        vendor_single_header(
+            STB_IMAGE_RESIZE_URL,
+            STB_IMAGE_RESIZE_SHA256,
+            STB_IMAGE_RESIZE_FILENAME,
             CACHE_DIR,
             PACKAGE_DIR,
         )

@@ -1,6 +1,8 @@
 import {
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
+  "moonbitlang/core/math" @math,
+  "moonbitlang/core/bench" @bench,
 }
 
 supported_targets = "native"
@@ -22,6 +24,12 @@ options(
     "image_float_test.mbt": ["native"],
     "image_info_test.mbt": ["native"],
     "image_gif_test.mbt": ["native"],
+    "exif.mbt": ["native"],
+    "exif_test.mbt": ["native"],
+    "png_meta.mbt": ["native"],
+    "png_meta_test.mbt": ["native"],
+    "file_io_native.mbt": ["native"],
+    "bench.mbt": ["native"],
     "README.mbt.md": ["native"],
   },
 )

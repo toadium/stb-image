@@ -81,6 +81,26 @@ pub fn write_jpeg_to_bytes(img : Image, quality~ : Int = 90) -> Bytes raise Load
 }
 
 ///|
+/// 将 HDR float 图像写入 HDR 文件
+pub fn write_hdr_to_path(path : String, img : ImageF) -> Unit raise LoadError {
+  let path_bytes = @encoding/utf8.encode(path)
+  let result = stb_image_mbt_write_hdr_to_path(path_bytes, path_bytes.length(), img.width, img.height, img.channels, img.data)
+  if result == 0 {
+    raise LoadError::DecodeFailed("stb_image_write HDR 写入失败")
+  }
+}
+
+///|
+/// 将 HDR float 图像编码为 HDR 字节序列
+pub fn write_hdr_to_bytes(img : ImageF) -> Bytes raise LoadError {
+  let result = stb_image_mbt_write_hdr_to_bytes(img.width, img.height, img.channels, img.data)
+  if result.length() == 0 {
+    raise LoadError::DecodeFailed("stb_image_write HDR 编码失败")
+  }
+  result
+}
+
+///|
 /// 设置加载时是否垂直翻转图像
 pub fn set_flip_vertically_on_load(flag : Bool) -> Unit {
   stb_image_mbt_set_flip_vertically_on_load(if flag { 1 } else { 0 })
