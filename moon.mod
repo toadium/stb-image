@@ -9,3 +9,5 @@ description = "MoonBit native FFI bindings for stb_image.h: decode PNG/JPEG/BMP/
 keywords = [ "moonbit", "image", "ffi", "native", "stb", "png", "jpeg", "bmp", "gif", "webp" ]
 
 preferred_target = "native"
+
+readme = "src/README.mbt.md"

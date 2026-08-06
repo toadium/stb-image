@@ -1,11 +1,29 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "MoonBit-Toadium/stb-image/src"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
+pub fn load_from_bytes(Bytes) -> Image raise LoadError
+
+pub fn load_from_path(String) -> Image raise LoadError
 
 // Errors
+pub(all) suberror LoadError {
+  FileIO(String)
+  UnsupportedFormat(String)
+  DecodeFailed(String)
+}
 
 // Types and methods
+pub(all) struct Image {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 
