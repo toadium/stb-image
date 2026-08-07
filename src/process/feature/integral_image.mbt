@@ -22,11 +22,15 @@ pub fn integral_image(img : @core.Image) -> IntegralImage raise @core.LoadError 
   let ch = img.channels
   let iw = w + 1
   let ih = h + 1
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let data : Array[Int64] = Array::make(iw * ih, 0L)
   for y in 0..<h {
     let mut row_sum = 0L
     for x in 0..<w {
-      row_sum += Int64::from_int(img.data[(y * w + x) * ch].to_int())
+      row_sum += Int64::from_int(data_int[(y * w + x) * ch])
       data[(y + 1) * iw + x + 1] = data[y * iw + x + 1] + row_sum
     }
   }
@@ -91,11 +95,15 @@ pub fn integral_image_sq(
   let ch = img.channels
   let iw = w + 1
   let ih = h + 1
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let data : Array[Int64] = Array::make(iw * ih, 0L)
   for y in 0..<h {
     let mut row_sum = 0L
     for x in 0..<w {
-      let v = Int64::from_int(img.data[(y * w + x) * ch].to_int())
+      let v = Int64::from_int(data_int[(y * w + x) * ch])
       row_sum += v * v
       data[(y + 1) * iw + x + 1] = data[y * iw + x + 1] + row_sum
     }

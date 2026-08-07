@@ -29,8 +29,12 @@ pub fn find_contours(img : @core.Image) -> Array[Contour] raise @core.LoadError 
   let ch = img.channels
   // 转为二值
   let binary : Array[Bool] = Array::make(w * h, false)
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   for i in 0..<(w * h) {
-    binary[i] = img.data[i * ch].to_int() > 0
+    binary[i] = data_int[i * ch] > 0
   }
   let visited : Array[Bool] = Array::make(w * h, false)
   let contours : Array[Contour] = []

@@ -37,23 +37,27 @@ pub fn hough_lines(
   // 预计算 sin/cos 表
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
+  let angle_scale = theta_resolution * 3.141592653589793F / 180.0F
   for t in 0..<n_theta {
-    let angle = Float::from_int(t) *
-      theta_resolution *
-      3.141592653589793F /
-      180.0F
+    let angle = Float::from_int(t) * angle_scale
     cos_table[t] = @math.cosf(angle)
     sin_table[t] = @math.sinf(angle)
   }
+  // 预计算 to_int
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   // 遍历边缘点
   for y in 0..<h {
+    let fy = Float::from_int(y)
     for x in 0..<w {
-      if img.data[(y * w + x) * ch].to_int() == 0 {
+      if data_int[(y * w + x) * ch] == 0 {
         continue
       }
+      let fx = Float::from_int(x)
       for t in 0..<n_theta {
-        let rho = Float::from_int(x) * cos_table[t] +
-          Float::from_int(y) * sin_table[t]
+        let rho = fx * cos_table[t] + fy * sin_table[t]
         let rho_idx = ((rho / rho_resolution).to_int() + max_rho).clamp(
           min=0,
           max=n_rho - 1,
@@ -64,15 +68,13 @@ pub fn hough_lines(
   }
   // 收集结果
   let lines : Array[HoughLine] = []
+  let max_rho_f = Float::from_int(max_rho)
   for r in 0..<n_rho {
     for t in 0..<n_theta {
       if accumulator[r][t] >= threshold {
         lines.push(HoughLine::{
-          rho: (Float::from_int(r) - Float::from_int(max_rho)) * rho_resolution,
-          theta: Float::from_int(t) *
-          theta_resolution *
-          3.141592653589793F /
-          180.0F,
+          rho: (Float::from_int(r) - max_rho_f) * rho_resolution,
+          theta: Float::from_int(t) * angle_scale,
           votes: accumulator[r][t],
         })
       }

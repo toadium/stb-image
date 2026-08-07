@@ -47,6 +47,12 @@ fn clahe_channel(
 ) -> Unit {
   let w = img.width
   let h = img.height
+  let n = w * h
+  // 预计算 to_int 数组
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   // 块数
   let ntx = (w + tile_size - 1) / tile_size
   let nty = (h + tile_size - 1) / tile_size
@@ -62,8 +68,9 @@ fn clahe_channel(
       let y1 = if y0 + tile_size < h { y0 + tile_size } else { h }
       let tile_pixels = (x1 - x0) * (y1 - y0)
       for y in y0..<y1 {
+        let row_base = y * w
         for x in x0..<x1 {
-          let v = img.data[(y * w + x) * ch + channel].to_int()
+          let v = data_int[(row_base + x) * ch + channel]
           hist[v] += 1
         }
       }
@@ -99,17 +106,34 @@ fn clahe_channel(
       }
     }
   }
+  // 预计算 tile 坐标和权重
+  let inv_tile_size = 1.0F / Float::from_int(tile_size)
+  let tx_arr : Array[Int] = Array::make(w, 0)
+  let wx_arr : Array[Float] = Array::make(w, 0.0F)
+  for x in 0..<w {
+    let fx = Float::from_int(x) * inv_tile_size - 0.5F
+    let t = fx.to_int()
+    tx_arr[x] = t
+    wx_arr[x] = fx - Float::from_int(t)
+  }
+  let ty_arr : Array[Int] = Array::make(h, 0)
+  let wy_arr : Array[Float] = Array::make(h, 0.0F)
+  for y in 0..<h {
+    let fy = Float::from_int(y) * inv_tile_size - 0.5F
+    let t = fy.to_int()
+    ty_arr[y] = t
+    wy_arr[y] = fy - Float::from_int(t)
+  }
   // 双线性插值应用 LUT
   for y in 0..<h {
+    let ty = ty_arr[y]
+    let wy = wy_arr[y]
+    let row_base = y * w
+    let wy_inv = 1.0F - wy
     for x in 0..<w {
-      let v = img.data[(y * w + x) * ch + channel].to_int()
-      // 计算块坐标（浮点）
-      let fx = Float::from_int(x) / Float::from_int(tile_size) - 0.5
-      let fy = Float::from_int(y) / Float::from_int(tile_size) - 0.5
-      let tx = fx.to_int()
-      let ty = fy.to_int()
-      let wx = fx - Float::from_int(tx)
-      let wy = fy - Float::from_int(ty)
+      let tx = tx_arr[x]
+      let wx = wx_arr[x]
+      let v = data_int[(row_base + x) * ch + channel]
       // 4 个相邻块
       let t00 = tile_clamp(tx, ty, ntx, nty)
       let t01 = tile_clamp(tx + 1, ty, ntx, nty)
@@ -119,10 +143,11 @@ fn clahe_channel(
       let v01 = Float::from_int(luts[t01][v])
       let v10 = Float::from_int(luts[t10][v])
       let v11 = Float::from_int(luts[t11][v])
-      let top = v00 * (1.0 - wx) + v01 * wx
-      let bot = v10 * (1.0 - wx) + v11 * wx
-      let result = clamp_i((top * (1.0 - wy) + bot * wy).to_int(), 0, 255)
-      out[(y * w + x) * ch + channel] = result.to_byte()
+      let wx_inv = 1.0F - wx
+      let top = v00 * wx_inv + v01 * wx
+      let bot = v10 * wx_inv + v11 * wx
+      let result = clamp_i((top * wy_inv + bot * wy).to_int(), 0, 255)
+      out[(row_base + x) * ch + channel] = result.to_byte()
     }
   }
 }

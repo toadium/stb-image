@@ -26,12 +26,16 @@ pub fn k_means_quantize(
   let centroids_r : Array[Int] = Array::make(k, 0)
   let centroids_g : Array[Int] = Array::make(k, 0)
   let centroids_b : Array[Int] = Array::make(k, 0)
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let step = if n > k { n / k } else { 1 }
   for i in 0..<k {
     let idx = (i * step).clamp(min=0, max=n - 1)
-    centroids_r[i] = img.data[idx * ch].to_int()
-    centroids_g[i] = img.data[idx * ch + 1].to_int()
-    centroids_b[i] = img.data[idx * ch + 2].to_int()
+    centroids_r[i] = data_int[idx * ch]
+    centroids_g[i] = data_int[idx * ch + 1]
+    centroids_b[i] = data_int[idx * ch + 2]
   }
   // 迭代
   let labels : Array[Int] = Array::make(n, 0)
@@ -40,9 +44,9 @@ pub fn k_means_quantize(
     // 分配每个像素到最近的聚类
     let mut changed = false
     for i in 0..<n {
-      let r = img.data[i * ch].to_int()
-      let g = img.data[i * ch + 1].to_int()
-      let b = img.data[i * ch + 2].to_int()
+      let r = data_int[i * ch]
+      let g = data_int[i * ch + 1]
+      let b = data_int[i * ch + 2]
       let mut best = 0
       let mut best_dist = dist_sq(
         r,
@@ -75,9 +79,9 @@ pub fn k_means_quantize(
     let cnt : Array[Int] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
-      sum_r[label] += img.data[i * ch].to_int()
-      sum_g[label] += img.data[i * ch + 1].to_int()
-      sum_b[label] += img.data[i * ch + 2].to_int()
+      sum_r[label] += data_int[i * ch]
+      sum_g[label] += data_int[i * ch + 1]
+      sum_b[label] += data_int[i * ch + 2]
       cnt[label] += 1
     }
     for j in 0..<k {

@@ -41,10 +41,8 @@ pub fn freq_filter(
       let x = i % w
       let dist = Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)).sqrt()
       let gain = filter_gain(filter_type, dist, cutoff, band_width)
-      out_data[i] = Complex::{
-        re: shifted.data[i].re * gain,
-        im: shifted.data[i].im * gain,
-      }
+      let src = shifted.data[i]
+      out_data[i] = Complex::{ re: src.re * gain, im: src.im * gain }
     }
     let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
     let unshifted = fft_shift(filtered_fft)
@@ -144,10 +142,8 @@ pub fn freq_filter_gaussian(
         0.5F,
       )
       let gain = gaussian_gain(filter_type, dist, cutoff, band_width)
-      out_data[i] = Complex::{
-        re: shifted.data[i].re * gain,
-        im: shifted.data[i].im * gain,
-      }
+      let src = shifted.data[i]
+      out_data[i] = Complex::{ re: src.re * gain, im: src.im * gain }
     }
     let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
     let unshifted = fft_shift(filtered_fft)

@@ -34,9 +34,13 @@ pub fn connected_components(
   let n = w * h
   // 转为二值
   let binary : Array[Bool] = Array::make(n, false)
+  let ch = img.channels
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   for i in 0..<n {
-    let v = img.data[i * img.channels].to_int()
-    binary[i] = v > 0
+    binary[i] = data_int[i * ch] > 0
   }
   // 第一遍扫描：标记 + Union-Find
   let labels : Array[Int] = Array::make(n, 0)

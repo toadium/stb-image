@@ -50,7 +50,27 @@ pub fn distance_transform(
       )
   }
   // 前向扫描（左上到右下）
+  // 内部区域：x >= 1 && y >= 1 && y < h - 1
+  for y in 1..<(h - 1) {
+    for x in 1..<w {
+      let idx = y * w + x
+      if !binary[idx] {
+        continue
+      }
+      for m in mask1 {
+        let (dx, dy, d) = m
+        let nd = dist[(y + dy) * w + (x + dx)] + d
+        if nd < dist[idx] {
+          dist[idx] = nd
+        }
+      }
+    }
+  }
+  // 边界行
   for y in 0..<h {
+    if y >= 1 && y < h - 1 {
+      continue
+    }
     for x in 0..<w {
       let idx = y * w + x
       if !binary[idx] {
@@ -69,15 +89,70 @@ pub fn distance_transform(
       }
     }
   }
+  // 内部行的边界列
+  for y in 1..<(h - 1) {
+    let idx = y * w
+    if binary[idx] {
+      for m in mask1 {
+        let (dx, dy, d) = m
+        let nx = dx
+        let ny = y + dy
+        if nx >= 0 && ny >= 0 && ny < h {
+          let nd = dist[ny * w + nx] + d
+          if nd < dist[idx] {
+            dist[idx] = nd
+          }
+        }
+      }
+    }
+  }
   // 反向扫描（右下到左上）
+  // 内部区域：x < w - 1 && y >= 1 && y < h - 1
+  for y in 1..<(h - 1) {
+    for x in 0..<(w - 1) {
+      let idx = y * w + x
+      if !binary[idx] {
+        continue
+      }
+      for m in mask2 {
+        let (dx, dy, d) = m
+        let nd = dist[(y + dy) * w + (x + dx)] + d
+        if nd < dist[idx] {
+          dist[idx] = nd
+        }
+      }
+    }
+  }
+  // 边界行
   for yy in 0..<h {
-    let y = h - 1 - yy
+    if yy >= 1 && yy < h - 1 {
+      continue
+    }
+    let y = yy
     for xx in 0..<w {
       let x = w - 1 - xx
       let idx = y * w + x
       if !binary[idx] {
         continue
       }
+      for m in mask2 {
+        let (dx, dy, d) = m
+        let nx = x + dx
+        let ny = y + dy
+        if nx >= 0 && nx < w && ny >= 0 && ny < h {
+          let nd = dist[ny * w + nx] + d
+          if nd < dist[idx] {
+            dist[idx] = nd
+          }
+        }
+      }
+    }
+  }
+  // 内部行的边界列
+  for y in 1..<(h - 1) {
+    let x = w - 1
+    let idx = y * w + x
+    if binary[idx] {
       for m in mask2 {
         let (dx, dy, d) = m
         let nx = x + dx

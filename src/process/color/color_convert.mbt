@@ -8,11 +8,16 @@ pub fn to_grayscale(img : @core.Image) -> @core.Image {
     return img
   }
   let pixel_count = img.width * img.height
+  let ch = img.channels
+  let data_int : Array[Int] = Array::make(pixel_count * ch, 0)
+  for i in 0..<(pixel_count * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(pixel_count, b'\x00')
   for i in 0..<pixel_count {
-    let r = img.data[i * img.channels].to_int()
-    let g = img.data[i * img.channels + 1].to_int()
-    let b = img.data[i * img.channels + 2].to_int()
+    let r = data_int[i * ch]
+    let g = data_int[i * ch + 1]
+    let b = data_int[i * ch + 2]
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }
@@ -91,12 +96,16 @@ pub fn premultiply_alpha(
     )
   }
   let pixel_count = img.width * img.height
+  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  for i in 0..<(pixel_count * 4) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(pixel_count * 4, b'\x00')
   for i in 0..<pixel_count {
-    let r = img.data[i * 4].to_int()
-    let g = img.data[i * 4 + 1].to_int()
-    let b = img.data[i * 4 + 2].to_int()
-    let a = img.data[i * 4 + 3].to_int()
+    let r = data_int[i * 4]
+    let g = data_int[i * 4 + 1]
+    let b = data_int[i * 4 + 2]
+    let a = data_int[i * 4 + 3]
     out[i * 4] = (r * a / 255).to_byte()
     out[i * 4 + 1] = (g * a / 255).to_byte()
     out[i * 4 + 2] = (b * a / 255).to_byte()
@@ -122,12 +131,16 @@ pub fn unpremultiply_alpha(
     )
   }
   let pixel_count = img.width * img.height
+  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  for i in 0..<(pixel_count * 4) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(pixel_count * 4, b'\x00')
   for i in 0..<pixel_count {
-    let r = img.data[i * 4].to_int()
-    let g = img.data[i * 4 + 1].to_int()
-    let b = img.data[i * 4 + 2].to_int()
-    let a = img.data[i * 4 + 3].to_int()
+    let r = data_int[i * 4]
+    let g = data_int[i * 4 + 1]
+    let b = data_int[i * 4 + 2]
+    let a = data_int[i * 4 + 3]
     if a == 0 {
       out[i * 4] = b'\x00'
       out[i * 4 + 1] = b'\x00'

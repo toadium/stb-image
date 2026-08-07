@@ -82,10 +82,14 @@ pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
   // 收集所有 RGB 像素
   let pixels : Array[(Int, Int, Int)] = Array::make(n, (0, 0, 0))
   let ch = img.channels
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   for i in 0..<n {
-    let r = img.data[i * ch].to_int()
-    let g = if ch >= 2 { img.data[i * ch + 1].to_int() } else { r }
-    let b = if ch >= 3 { img.data[i * ch + 2].to_int() } else { r }
+    let r = data_int[i * ch]
+    let g = if ch >= 2 { data_int[i * ch + 1] } else { r }
+    let b = if ch >= 3 { data_int[i * ch + 2] } else { r }
     pixels[i] = (r, g, b)
   }
   // 初始 bucket 包含所有像素索引

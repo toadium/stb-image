@@ -7,13 +7,17 @@ pub fn histogram(img : @core.Image) -> Array[Int] {
   let hist : Array[Int] = Array::make(256, 0)
   let n = img.width * img.height
   let ch = img.channels
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   for i in 0..<n {
     let v = if ch == 1 {
-      img.data[i].to_int()
+      data_int[i]
     } else {
-      let r = img.data[i * ch].to_int()
-      let g = img.data[i * ch + 1].to_int()
-      let b = img.data[i * ch + 2].to_int()
+      let r = data_int[i * ch]
+      let g = data_int[i * ch + 1]
+      let b = data_int[i * ch + 2]
       (r * 299 + g * 587 + b * 114) / 1000
     }
     hist[v] += 1
@@ -56,10 +60,14 @@ pub fn histogram_equalize(img : @core.Image) -> @core.Image {
   // 应用 LUT
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      out[i * ch + c] = lut[img.data[i * ch + c].to_int()]
+      out[i * ch + c] = lut[data_int[i * ch + c]]
     }
     if ch == 4 {
       out[i * ch + 3] = img.data[i * ch + 3]
@@ -80,12 +88,16 @@ pub fn histogram_normalize(img : @core.Image) -> @core.Image {
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
   let n = img.width * img.height
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   // 找到颜色通道的最小值和最大值
   let mut min_val = 255
   let mut max_val = 0
   for i in 0..<n {
     for c in 0..<color_ch {
-      let v = img.data[i * ch + c].to_int()
+      let v = data_int[i * ch + c]
       if v < min_val {
         min_val = v
       }
@@ -102,7 +114,7 @@ pub fn histogram_normalize(img : @core.Image) -> @core.Image {
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      let v = img.data[i * ch + c].to_int()
+      let v = data_int[i * ch + c]
       let scaled = (v - min_val) * 255 / range
       out[i * ch + c] = scaled.clamp(min=0, max=255).to_byte()
     }

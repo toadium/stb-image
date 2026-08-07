@@ -91,13 +91,17 @@ pub fn haar_transform_2d(
   // 转灰度为 Float
   let coeffs : Array[Float] = Array::make(n, 0.0F)
   let ch = img.channels
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   for i in 0..<n {
     let v = if ch == 1 {
-      img.data[i].to_int()
+      data_int[i]
     } else {
-      let r = img.data[i * ch].to_int()
-      let g = img.data[i * ch + 1].to_int()
-      let b = img.data[i * ch + 2].to_int()
+      let r = data_int[i * ch]
+      let g = data_int[i * ch + 1]
+      let b = data_int[i * ch + 2]
       (r * 299 + g * 587 + b * 114) / 1000
     }
     coeffs[i] = Float::from_int(v)

@@ -4,7 +4,7 @@
 ///|
 /// 双线性插值采样。在 (x, y) 处采样通道 c 的值。
 fn sample_bilinear(
-  data : Bytes,
+  data : Array[Int],
   w : Int,
   h : Int,
   ch : Int,
@@ -14,16 +14,18 @@ fn sample_bilinear(
 ) -> Int {
   let x0 = x.to_int()
   let y0 = y.to_int()
-  let x0c = x0.clamp(min=0, max=w - 1)
-  let y0c = y0.clamp(min=0, max=h - 1)
-  let x1 = (x0 + 1).clamp(min=0, max=w - 1)
-  let y1 = (y0 + 1).clamp(min=0, max=h - 1)
+  let w_minus_1 = w - 1
+  let h_minus_1 = h - 1
+  let x0c = x0.clamp(min=0, max=w_minus_1)
+  let y0c = y0.clamp(min=0, max=h_minus_1)
+  let x1 = (x0 + 1).clamp(min=0, max=w_minus_1)
+  let y1 = (y0 + 1).clamp(min=0, max=h_minus_1)
   let fx = x - Float::from_int(x0)
   let fy = y - Float::from_int(y0)
-  let p00 = data[(y0c * w + x0c) * ch + c].to_int()
-  let p10 = data[(y0c * w + x1) * ch + c].to_int()
-  let p01 = data[(y1 * w + x0c) * ch + c].to_int()
-  let p11 = data[(y1 * w + x1) * ch + c].to_int()
+  let p00 = data[(y0c * w + x0c) * ch + c]
+  let p10 = data[(y0c * w + x1) * ch + c]
+  let p01 = data[(y1 * w + x0c) * ch + c]
+  let p11 = data[(y1 * w + x1) * ch + c]
   let top = Float::from_int(p00) * (1.0F - fx) + Float::from_int(p10) * fx
   let bot = Float::from_int(p01) * (1.0F - fx) + Float::from_int(p11) * fx
   (top * (1.0F - fy) + bot * fy + 0.5F).to_int()
@@ -45,13 +47,18 @@ pub fn warp_affine(
   let ch = img.channels
   let w = img.width
   let h = img.height
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(new_w * new_h * ch, b'\x00')
   for dy in 0..<new_h {
+    let fdy = Float::from_int(dy)
     for dx in 0..<new_w {
-      let sx = a * Float::from_int(dx) + b * Float::from_int(dy) + c
-      let sy = d * Float::from_int(dx) + e * Float::from_int(dy) + f
+      let sx = a * Float::from_int(dx) + b * fdy + c
+      let sy = d * Float::from_int(dx) + e * fdy + f
       for ci in 0..<ch {
-        let val = sample_bilinear(img.data, w, h, ch, ci, sx, sy)
+        let val = sample_bilinear(data_int, w, h, ch, ci, sx, sy)
         out[(dy * new_w + dx) * ch + ci] = val.clamp(min=0, max=255).to_byte()
       }
     }
@@ -82,25 +89,30 @@ pub fn rotate(img : @core.Image, angle_degrees : Float) -> @core.Image {
   // 即 matrix = (cos, sin, cx-cos*cx-sin*cy, -sin, cos, cy+sin*cx-cos*cy)
   let tx = cx - cos_a * cx - sin_a * cy
   let ty = cy + sin_a * cx - cos_a * cy
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
+  let w_max = Float::from_int(w) - 0.5F
+  let h_max = Float::from_int(h) - 0.5F
+  let w_minus_1_f = Float::from_int(w - 1)
+  let h_minus_1_f = Float::from_int(h - 1)
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for dy in 0..<h {
+    let fdy = Float::from_int(dy)
     for dx in 0..<w {
       let fdx = Float::from_int(dx)
-      let fdy = Float::from_int(dy)
       let sx = cos_a * fdx + sin_a * fdy + tx
       let sy = -sin_a * fdx + cos_a * fdy + ty
       // 超出边界的像素填黑（用 0.5 容差避免浮点误差）
-      if sx < -0.5F ||
-        sx > Float::from_int(w) - 0.5F ||
-        sy < -0.5F ||
-        sy > Float::from_int(h) - 0.5F {
+      if sx < -0.5F || sx > w_max || sy < -0.5F || sy > h_max {
         // 已经是 0
         continue
       }
-      let sx_c = sx.clamp(min=0.0F, max=Float::from_int(w - 1))
-      let sy_c = sy.clamp(min=0.0F, max=Float::from_int(h - 1))
+      let sx_c = sx.clamp(min=0.0F, max=w_minus_1_f)
+      let sy_c = sy.clamp(min=0.0F, max=h_minus_1_f)
       for ci in 0..<ch {
-        let val = sample_bilinear(img.data, w, h, ch, ci, sx_c, sy_c)
+        let val = sample_bilinear(data_int, w, h, ch, ci, sx_c, sy_c)
         out[(dy * w + dx) * ch + ci] = val.clamp(min=0, max=255).to_byte()
       }
     }

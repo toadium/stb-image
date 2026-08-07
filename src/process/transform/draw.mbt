@@ -62,14 +62,19 @@ pub fn draw_over(
   for i in 0..<dst.data.length() {
     out.push(dst.data[i])
   }
+  let src_n = src.width * src.height
+  let src_int : Array[Int] = Array::make(src_n * 4, 0)
+  for i in 0..<(src_n * 4) {
+    src_int[i] = src.data[i].to_int()
+  }
   for row in 0..<src.height {
     for col in 0..<src.width {
       let src_off = (row * src.width + col) * 4
       let dst_off = ((y + row) * dst.width + (x + col)) * 4
-      let sr = src.data[src_off].to_int()
-      let sg = src.data[src_off + 1].to_int()
-      let sb = src.data[src_off + 2].to_int()
-      let sa = src.data[src_off + 3].to_int()
+      let sr = src_int[src_off]
+      let sg = src_int[src_off + 1]
+      let sb = src_int[src_off + 2]
+      let sa = src_int[src_off + 3]
       let dr = out[dst_off].to_int()
       let dg = out[dst_off + 1].to_int()
       let db = out[dst_off + 2].to_int()

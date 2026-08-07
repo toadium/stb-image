@@ -51,21 +51,25 @@ pub fn kmeans_segment(
   let centroids_r : Array[Int] = Array::make(k, 0)
   let centroids_g : Array[Int] = Array::make(k, 0)
   let centroids_b : Array[Int] = Array::make(k, 0)
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let step = if n > k { n / k } else { 1 }
   for i in 0..<k {
     let idx = (i * step).clamp(min=0, max=n - 1)
-    centroids_r[i] = img.data[idx * ch].to_int()
-    centroids_g[i] = img.data[idx * ch + 1].to_int()
-    centroids_b[i] = img.data[idx * ch + 2].to_int()
+    centroids_r[i] = data_int[idx * ch]
+    centroids_g[i] = data_int[idx * ch + 1]
+    centroids_b[i] = data_int[idx * ch + 2]
   }
   let labels : Array[Int] = Array::make(n, 0)
   let iters = if max_iters < 1 { 20 } else { max_iters }
   for _ in 0..<iters {
     let mut changed = false
     for i in 0..<n {
-      let r = img.data[i * ch].to_int()
-      let g = img.data[i * ch + 1].to_int()
-      let b = img.data[i * ch + 2].to_int()
+      let r = data_int[i * ch]
+      let g = data_int[i * ch + 1]
+      let b = data_int[i * ch + 2]
       let mut best = 0
       let mut best_dist = color_dist_sq(
         r,
@@ -103,9 +107,9 @@ pub fn kmeans_segment(
     let cnt : Array[Int] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
-      sum_r[label] += img.data[i * ch].to_int()
-      sum_g[label] += img.data[i * ch + 1].to_int()
-      sum_b[label] += img.data[i * ch + 2].to_int()
+      sum_r[label] += data_int[i * ch]
+      sum_g[label] += data_int[i * ch + 1]
+      sum_b[label] += data_int[i * ch + 2]
       cnt[label] += 1
     }
     for j in 0..<k {
@@ -116,7 +120,7 @@ pub fn kmeans_segment(
       }
     }
   }
-  let regions = compute_regions(img, labels, w, h, ch, k)
+  let regions = compute_regions(data_int, labels, w, h, ch, k)
   (SegmentLabelImage::{ width: w, height: h, labels, num_regions: k }, regions)
 }
 
@@ -140,6 +144,10 @@ pub fn region_growing_segment(
   let n = w * h
   let labels : Array[Int] = Array::make(n, 0)
   let regions : Array[SegmentRegion] = []
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let mut current_label = 0
   for seed in seeds {
     let (sx, sy) = seed
@@ -151,9 +159,9 @@ pub fn region_growing_segment(
       continue // 已分配
     }
     current_label += 1
-    let seed_r = img.data[seed_idx * ch].to_int()
-    let seed_g = img.data[seed_idx * ch + 1].to_int()
-    let seed_b = img.data[seed_idx * ch + 2].to_int()
+    let seed_r = data_int[seed_idx * ch]
+    let seed_g = data_int[seed_idx * ch + 1]
+    let seed_b = data_int[seed_idx * ch + 2]
     // BFS 区域生长
     let stack : Array[Int] = [seed_idx]
     labels[seed_idx] = current_label
@@ -170,9 +178,9 @@ pub fn region_growing_segment(
       let px = idx % w
       let py = idx / w
       area += 1
-      sum_r += img.data[idx * ch].to_int()
-      sum_g += img.data[idx * ch + 1].to_int()
-      sum_b += img.data[idx * ch + 2].to_int()
+      sum_r += data_int[idx * ch]
+      sum_g += data_int[idx * ch + 1]
+      sum_b += data_int[idx * ch + 2]
       if px < min_x {
         min_x = px
       }
@@ -192,9 +200,9 @@ pub fn region_growing_segment(
         if nx >= 0 && nx < w && ny >= 0 && ny < h {
           let nidx = ny * w + nx
           if labels[nidx] == 0 {
-            let nr = img.data[nidx * ch].to_int()
-            let ng = img.data[nidx * ch + 1].to_int()
-            let nb2 = img.data[nidx * ch + 2].to_int()
+            let nr = data_int[nidx * ch]
+            let ng = data_int[nidx * ch + 1]
+            let nb2 = data_int[nidx * ch + 2]
             let dist = color_dist_sq(seed_r, seed_g, seed_b, nr, ng, nb2)
             if dist <= threshold * threshold {
               labels[nidx] = current_label
@@ -264,10 +272,14 @@ pub fn flood_fill(
   for i in 0..<(n * ch) {
     out[i] = img.data[i]
   }
+  let data_int : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let seed_idx = seed_y * w + seed_x
-  let seed_r = img.data[seed_idx * ch].to_int()
-  let seed_g = img.data[seed_idx * ch + 1].to_int()
-  let seed_b = img.data[seed_idx * ch + 2].to_int()
+  let seed_r = data_int[seed_idx * ch]
+  let seed_g = data_int[seed_idx * ch + 1]
+  let seed_b = data_int[seed_idx * ch + 2]
   let visited : Array[Bool] = Array::make(n, false)
   let stack : Array[Int] = [seed_idx]
   visited[seed_idx] = true
@@ -289,9 +301,9 @@ pub fn flood_fill(
       if nx >= 0 && nx < w && ny >= 0 && ny < h {
         let nidx = ny * w + nx
         if !visited[nidx] {
-          let nr = img.data[nidx * ch].to_int()
-          let ng = img.data[nidx * ch + 1].to_int()
-          let nb2 = img.data[nidx * ch + 2].to_int()
+          let nr = data_int[nidx * ch]
+          let ng = data_int[nidx * ch + 1]
+          let nb2 = data_int[nidx * ch + 2]
           let dist = color_dist_sq(seed_r, seed_g, seed_b, nr, ng, nb2)
           if dist <= threshold * threshold {
             visited[nidx] = true
@@ -354,7 +366,7 @@ fn color_dist_sq(
 
 ///|
 fn compute_regions(
-  img : @core.Image,
+  data_int : Array[Int],
   labels : Array[Int],
   w : Int,
   h : Int,
@@ -374,9 +386,9 @@ fn compute_regions(
       let idx = y * w + x
       let label = labels[idx]
       if label >= 0 && label < k {
-        sum_r[label] += img.data[idx * ch].to_int()
-        sum_g[label] += img.data[idx * ch + 1].to_int()
-        sum_b[label] += img.data[idx * ch + 2].to_int()
+        sum_r[label] += data_int[idx * ch]
+        sum_g[label] += data_int[idx * ch + 1]
+        sum_b[label] += data_int[idx * ch + 2]
         cnt[label] += 1
         if x < min_x[label] {
           min_x[label] = x

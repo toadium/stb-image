@@ -19,10 +19,14 @@ pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
+  let lut : Array[Byte] = Array::make(256, b'\x00')
+  for i in 0..<256 {
+    lut[i] = clamp_byte(i + delta)
+  }
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      out[i * ch + c] = clamp_byte(img.data[i * ch + c].to_int() + delta)
+      out[i * ch + c] = lut[img.data[i * ch + c].to_int()]
     }
     if ch == 4 {
       out[i * ch + 3] = img.data[i * ch + 3]
@@ -43,12 +47,15 @@ pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
+  let lut : Array[Byte] = Array::make(256, b'\x00')
+  for i in 0..<256 {
+    let adjusted = (Float::from_int(i - 128) * factor + 128.0F).to_int()
+    lut[i] = clamp_byte(adjusted)
+  }
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      let v = img.data[i * ch + c].to_int()
-      let adjusted = (Float::from_int(v - 128) * factor + 128.0F).to_int()
-      out[i * ch + c] = clamp_byte(adjusted)
+      out[i * ch + c] = lut[img.data[i * ch + c].to_int()]
     }
     if ch == 4 {
       out[i * ch + 3] = img.data[i * ch + 3]

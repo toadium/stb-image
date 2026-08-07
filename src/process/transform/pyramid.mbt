@@ -14,6 +14,10 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
   if new_w == 0 || new_h == 0 {
     raise @core.LoadError::DecodeFailed("图像太小，无法下采样")
   }
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(new_w * new_h * ch, b'\x00')
   for y in 0..<new_h {
     for x in 0..<new_w {
@@ -25,7 +29,7 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
             let sx = x * 2 + dx
             let sy = y * 2 + dy
             if sx < w && sy < h {
-              sum += img.data[(sy * w + sx) * ch + c].to_int()
+              sum += data_int[(sy * w + sx) * ch + c]
               count += 1
             }
           }
@@ -53,26 +57,53 @@ pub fn pyr_up(img : @core.Image) -> @core.Image raise @core.LoadError {
   let h = img.height
   let new_w = w * 2
   let new_h = h * 2
+  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    data_int[i] = img.data[i].to_int()
+  }
+  // 预计算 x 方向插值参数
+  let x0_arr : Array[Int] = Array::make(new_w, 0)
+  let x1_arr : Array[Int] = Array::make(new_w, 0)
+  let wx_arr : Array[Float] = Array::make(new_w, 0.0F)
+  for x in 0..<new_w {
+    let fx = (Float::from_int(x) - 0.5F) / 2.0F
+    let x0 = fx.to_int().clamp(min=0, max=w - 1)
+    x0_arr[x] = x0
+    x1_arr[x] = (x0 + 1).clamp(min=0, max=w - 1)
+    wx_arr[x] = fx - Float::from_int(x0)
+  }
+  // 预计算 y 方向插值参数
+  let y0_arr : Array[Int] = Array::make(new_h, 0)
+  let y1_arr : Array[Int] = Array::make(new_h, 0)
+  let wy_arr : Array[Float] = Array::make(new_h, 0.0F)
+  for y in 0..<new_h {
+    let fy = (Float::from_int(y) - 0.5F) / 2.0F
+    let y0 = fy.to_int().clamp(min=0, max=h - 1)
+    y0_arr[y] = y0
+    y1_arr[y] = (y0 + 1).clamp(min=0, max=h - 1)
+    wy_arr[y] = fy - Float::from_int(y0)
+  }
   let out : Array[Byte] = Array::make(new_w * new_h * ch, b'\x00')
   for y in 0..<new_h {
+    let y0 = y0_arr[y]
+    let y1 = y1_arr[y]
+    let wy = wy_arr[y]
+    let wy_inv = 1.0F - wy
+    let row0 = y0 * w
+    let row1 = y1 * w
     for x in 0..<new_w {
+      let x0 = x0_arr[x]
+      let x1 = x1_arr[x]
+      let wx = wx_arr[x]
+      let wx_inv = 1.0F - wx
       for c in 0..<ch {
-        // 双线性插值
-        let fx = (Float::from_int(x) - 0.5F) / 2.0F
-        let fy = (Float::from_int(y) - 0.5F) / 2.0F
-        let x0 = fx.to_int().clamp(min=0, max=w - 1)
-        let y0 = fy.to_int().clamp(min=0, max=h - 1)
-        let x1 = (x0 + 1).clamp(min=0, max=w - 1)
-        let y1 = (y0 + 1).clamp(min=0, max=h - 1)
-        let wx = fx - Float::from_int(x0)
-        let wy = fy - Float::from_int(y0)
-        let v00 = Float::from_int(img.data[(y0 * w + x0) * ch + c].to_int())
-        let v01 = Float::from_int(img.data[(y0 * w + x1) * ch + c].to_int())
-        let v10 = Float::from_int(img.data[(y1 * w + x0) * ch + c].to_int())
-        let v11 = Float::from_int(img.data[(y1 * w + x1) * ch + c].to_int())
-        let top = v00 * (1.0F - wx) + v01 * wx
-        let bot = v10 * (1.0F - wx) + v11 * wx
-        let v = top * (1.0F - wy) + bot * wy
+        let v00 = Float::from_int(data_int[(row0 + x0) * ch + c])
+        let v01 = Float::from_int(data_int[(row0 + x1) * ch + c])
+        let v10 = Float::from_int(data_int[(row1 + x0) * ch + c])
+        let v11 = Float::from_int(data_int[(row1 + x1) * ch + c])
+        let top = v00 * wx_inv + v01 * wx
+        let bot = v10 * wx_inv + v11 * wx
+        let v = top * wy_inv + bot * wy
         let clamped = if v < 0.0F {
           0
         } else if v > 255.0F {
@@ -134,14 +165,24 @@ fn laplacian_diff(a : @core.Image, b : @core.Image) -> @core.Image {
   let ch = a.channels
   let w = a.width
   let h = a.height
+  let a_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    a_int[i] = a.data[i].to_int()
+  }
+  let bw = b.width
+  let bh = b.height
+  let b_int : Array[Int] = Array::make(bw * bh * ch, 0)
+  for i in 0..<(bw * bh * ch) {
+    b_int[i] = b.data[i].to_int()
+  }
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for y in 0..<h {
+    let by = y * bh / h
     for x in 0..<w {
+      let bx = x * bw / w
       for c in 0..<ch {
-        let va = a.data[(y * w + x) * ch + c].to_int()
-        let bx = (x * b.width / w).clamp(min=0, max=b.width - 1)
-        let by = (y * b.height / h).clamp(min=0, max=b.height - 1)
-        let vb = b.data[(by * b.width + bx) * ch + c].to_int()
+        let va = a_int[(y * w + x) * ch + c]
+        let vb = b_int[(by * bw + bx) * ch + c]
         let diff = va - vb + 128
         let clamped = if diff < 0 { 0 } else if diff > 255 { 255 } else { diff }
         out[(y * w + x) * ch + c] = clamped.to_byte()

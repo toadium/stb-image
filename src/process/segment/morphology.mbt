@@ -174,7 +174,6 @@ pub fn morph_close(img : @core.Image) -> @core.Image {
 }
 
 ///|
-
 fn clamp_i(v : Int, lo : Int, hi : Int) -> Int {
   if v < lo {
     lo
