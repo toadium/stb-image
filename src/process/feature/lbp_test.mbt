@@ -106,3 +106,18 @@ test "lbp: 通道验证" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "lbp 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let result = lbp(img)
+  assert_eq(result.width, 1)
+  assert_eq(result.height, 1)
+  // 1x1 图像无邻居，LBP 应为 0
+  assert_eq(result.data[0], b'\x00')
+}

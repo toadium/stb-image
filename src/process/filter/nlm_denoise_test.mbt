@@ -137,3 +137,17 @@ test "nlm_denoise_fast 错误参数" {
     _ => assert_true(true)
   }
 }
+
+///|
+test "nlm_denoise 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let out = nlm_denoise(img, patch_size=1, search_size=1, h=10)
+  assert_eq(out.width, 1)
+  assert_eq(out.height, 1)
+  assert_eq(out.data[0], b'\x80')
+}

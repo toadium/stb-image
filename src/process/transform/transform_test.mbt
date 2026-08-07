@@ -128,6 +128,32 @@ test "cropf: 4x4 → 2x2" {
 }
 
 ///|
+test "crop_16: out of bounds raises" {
+  let img = @core.load_16_from_path("testdata/test_4x4_red.png")
+  try {
+    let _ = crop_16(img, 3, 3, 2, 2)
+    assert_true(false)
+  } catch {
+    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "cropf: out of bounds raises" {
+  let img = @core.loadf_from_path("testdata/test_4x4_red.png")
+  try {
+    let _ = cropf(img, 3, 3, 2, 2)
+    assert_true(false)
+  } catch {
+    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
 test "rotate_180: double rotation = identity" {
   let img = @core.load_from_path("testdata/test_4x4_red.png")
   let r = rotate_180(rotate_180(img))

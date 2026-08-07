@@ -74,3 +74,16 @@ test "watershed 2D 图" {
   assert_eq(labels[0], 1)
   assert_eq(labels[8], 2)
 }
+
+///|
+test "watershed 1x1 输入" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let labels = watershed(img, [1])
+  assert_eq(labels.length(), 1)
+  assert_eq(labels[0], 1)
+}

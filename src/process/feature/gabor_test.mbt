@@ -149,3 +149,17 @@ test "gabor_kernel 错误参数" {
     _ => assert_true(true)
   }
 }
+
+///|
+test "gabor_filter 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let out = gabor_filter(img, 3, 2.0F, 0.0F)
+  assert_eq(out.width, 1)
+  assert_eq(out.height, 1)
+  assert_eq(out.channels, 1)
+}

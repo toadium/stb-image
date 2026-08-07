@@ -97,3 +97,16 @@ test "draw_corners RGB" {
   let idx = (2 * 5 + 2) * 3
   assert_eq(out.data[idx], b'\xFF')
 }
+
+///|
+test "harris_corners 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let corners = harris_corners(img)
+  // 1x1 图像无梯度，无角点
+  assert_eq(corners.length(), 0)
+}
