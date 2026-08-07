@@ -37,7 +37,7 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 ## Installation
 
 ```bash
-moon add MoonBit-Toadium/stb-image
+moon add toadium/stb-image
 ```
 
 ## Quick Start
