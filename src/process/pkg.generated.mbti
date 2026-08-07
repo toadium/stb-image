@@ -1,0 +1,100 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn adjust_brightness(@core.Image, Int) -> @core.Image
+
+pub fn adjust_contrast(@core.Image, Float) -> @core.Image
+
+pub fn adjust_gamma(@core.Image, Float) -> @core.Image
+
+pub fn box_blur(@core.Image, Int) -> @core.Image
+
+pub fn crop(@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn crop_16(@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError
+
+pub fn cropf(@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError
+
+pub fn dilate(@core.Image) -> @core.Image
+
+pub fn draw_copy(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn draw_over(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn edge_detect_laplacian(@core.Image) -> @core.Image
+
+pub fn edge_detect_prewitt(@core.Image) -> @core.Image
+
+pub fn edge_detect_sobel(@core.Image) -> @core.Image
+
+pub fn erode(@core.Image) -> @core.Image
+
+pub fn flip_horizontal(@core.Image) -> @core.Image
+
+pub fn floyd_steinberg(@core.Image, Int) -> @core.Image
+
+pub fn gaussian_blur(@core.Image, Int, Float) -> @core.Image
+
+pub fn histogram(@core.Image) -> Array[Int]
+
+pub fn histogram_equalize(@core.Image) -> @core.Image
+
+pub fn histogram_normalize(@core.Image) -> @core.Image
+
+pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn invert(@core.Image) -> @core.Image
+
+pub fn median_cut(@core.Image, Int) -> @core.Image
+
+pub fn morph_close(@core.Image) -> @core.Image
+
+pub fn morph_open(@core.Image) -> @core.Image
+
+pub fn mse(@core.Image, @core.Image) -> Double
+
+pub fn premultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn psnr(@core.Image, @core.Image) -> Double
+
+pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rotate(@core.Image, Float) -> @core.Image
+
+pub fn rotate_180(@core.Image) -> @core.Image
+
+pub fn rotate_270(@core.Image) -> @core.Image
+
+pub fn rotate_90(@core.Image) -> @core.Image
+
+pub fn sharpen(@core.Image, Float) -> @core.Image
+
+pub fn ssim(@core.Image, @core.Image) -> Double
+
+pub fn to_grayscale(@core.Image) -> @core.Image
+
+pub fn to_rgb(@core.Image) -> @core.Image
+
+pub fn to_rgba(@core.Image) -> @core.Image
+
+pub fn unpremultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn warp_affine(@core.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @core.Image
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

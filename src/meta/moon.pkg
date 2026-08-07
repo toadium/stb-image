@@ -1,0 +1,7 @@
+import {
+  "MoonBit-Toadium/stb-image/src/core" @core,
+  "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8" @encoding/utf8,
+}
+
+supported_targets = "native"

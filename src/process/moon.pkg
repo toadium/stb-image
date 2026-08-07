@@ -1,0 +1,6 @@
+import {
+  "MoonBit-Toadium/stb-image/src/core" @core,
+  "moonbitlang/core/math" @math,
+}
+
+supported_targets = "native"
