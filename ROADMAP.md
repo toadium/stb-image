@@ -1,9 +1,63 @@
 # stb-image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 `COMPARISON.md`）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.10.0
+> 制定日期：2026-08-06 | 最后更新：2026-08-07 | 当前版本：v1.17.0
 
 ## 现状定位
+
+### 版本演进时间线
+
+```mermaid
+gantt
+    title stb-image 版本演进
+    dateFormat YYYY-MM-DD
+    axisFormat %m/%d
+
+    section 基础功能
+    v0.1 8位加载           :done, v01, 2026-07-20, 1d
+    v0.2 写入              :done, v02, after v01, 1d
+    v0.3 16位/浮点/配置    :done, v03, after v02, 1d
+    v0.4 HDR/GIF           :done, v04, after v03, 1d
+    v1.0 API冻结           :done, v10, after v04, 1d
+
+    section 格式扩展
+    v1.1 HDR写入/缩放      :done, v11, after v10, 1d
+    v1.2 QOI/ICO/GIF编码   :done, v12, after v11, 1d
+    v1.5 PNM/GIF动画/EXIF  :done, v15, after v12, 1d
+    v1.6 PNG元数据/roundtrip :done, v16, after v15, 1d
+
+    section 图像处理
+    v1.3 裁剪/旋转/色彩    :done, v13, after v12, 1d
+    v1.4 滤波/直方图/量化   :done, v14, after v13, 1d
+    v1.7 API增强           :done, v17, after v16, 1d
+    v1.8 更多API           :done, v18, after v17, 1d
+    v1.9 拼接/噪声/映射     :done, v19, after v18, 1d
+    v1.10 形态学/边缘/质量  :done, v110, after v19, 1d
+
+    section 高级算法
+    v1.12 CLAHE/K-means/FFT :done, v112, after v110, 1d
+    v1.13 频域/阈值/连通域   :done, v113, after v112, 1d
+    v1.14 霍夫/LBP/金字塔    :done, v114, after v113, 1d
+    v1.15 轮廓/分割/NLM/Retinex :done, v115, after v114, 1d
+    v1.16 Canny/分水岭/GLCM/Haar :done, v116, after v115, 1d
+    v1.17 Harris/去雾/距离/Gabor :done, v117, after v116, 1d
+```
+
+### 功能增长曲线
+
+```mermaid
+flowchart LR
+    V01["v0.1<br/>23 测试"] --> V04["v0.4<br/>61 测试"]
+    V04 --> V10["v1.0<br/>61 测试<br/>API冻结"]
+    V10 --> V12["v1.2<br/>114 测试<br/>格式扩展"]
+    V12 --> V16["v1.6<br/>254+29 测试<br/>元数据/基准"]
+    V16 --> V110["v1.10<br/>341+29 测试<br/>128 函数"]
+    V110 --> V114["v1.14<br/>433+29 测试<br/>164 函数"]
+    V114 --> V117["v1.17<br/>533+29 测试<br/>199 函数"]
+
+    classDef milestone fill:#e8f5e9,stroke:#2e7d32
+    class V10,V117 milestone
+```
 
 **stb-image v1.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
@@ -208,6 +262,102 @@
 
 ---
 
+## v1.12 — 高级图像处理算法 ✅
+
+**目标**：添加更多高级图像处理算法
+
+### 功能
+1. **混合模式扩展**（6 函数）— `blend_color_dodge` / `blend_color_burn` / `blend_hard_light` / `blend_soft_light` / `blend_linear_dodge` / `blend_linear_burn`
+2. **CLAHE**（1 函数）— `clahe`（对比度受限自适应直方图均衡，分块直方图+裁剪+双线性插值）
+3. **K-means 量化**（1 函数）— `k_means_quantize`（K-means 聚类色彩量化）
+4. **FFT 频域变换**（4 函数 + 2 类型）— `fft_2d` / `ifft_2d` / `fft_magnitude` / `fft_shift` + `Complex` / `FFTResult`（Cooley-Tukey radix-2，自动补零到 2 的幂次方）
+
+### 交付物
+- 369 测试 + 29 基准测试
+- 140 公开函数 + 14 类型/枚举
+
+---
+
+## v1.13 — 频域滤波 + 自适应阈值 + 连通域 + 积分图像 ✅
+
+**目标**：扩展图像分析能力
+
+### 功能
+1. **频域滤波**（2 函数 + 1 类型）— `freq_filter` / `freq_filter_gaussian` + `FreqFilterType`（低通/高通/带通/带阻，理想+高斯传递函数）
+2. **自适应阈值**（3 函数）— `adaptive_threshold_mean` / `adaptive_threshold_gaussian` / `threshold_otsu`（均值法、高斯加权法、Otsu 大津法）
+3. **连通域标记**（1 函数 + 2 类型）— `connected_components` + `ConnectedComponent` / `ConnectedComponentLabelImage`（两遍扫描 + Union-Find，4/8 连通，含面积/边界框/质心）
+4. **积分图像**（6 函数 + 2 类型）— `integral_image` / `integral_image_sq` / `integral_sum` / `integral_sum_sq` / `integral_mean` / `integral_variance` + `IntegralImage` / `IntegralImageSq`（O(1) 矩形区域查询）
+
+### 交付物
+- 402 测试 + 29 基准测试
+- 152 公开函数 + 21 类型/枚举
+
+---
+
+## v1.14 — 霍夫变换 + LBP + 图像金字塔 + 双边滤波 ✅
+
+**目标**：扩展特征提取和滤波能力
+
+### 功能
+1. **霍夫变换**（2 函数 + 1 类型）— `hough_lines` / `hough_lines_nms` + `HoughLine`（直线检测，极坐标累加器，非极大值抑制）
+2. **局部二值模式**（2 函数）— `lbp` / `lbp_uniform`（基本 LBP + 均匀 LBP，58 种均匀模式映射）
+3. **图像金字塔**（4 函数）— `pyr_down` / `pyr_up` / `build_gaussian_pyramid` / `build_laplacian_pyramid`（高斯金字塔 + 拉普拉斯金字塔，下采样2x2均值 + 上采样双线性插值）
+4. **双边滤波**（2 函数）— `bilateral_filter` / `bilateral_filter_fast`（保边去噪，空间+值域高斯加权，快速版降采样近似）
+
+### 交付物
+- 433 测试 + 29 基准测试
+- 164 公开函数 + 22 类型/枚举
+
+---
+
+## v1.15 — 轮廓提取 + 颜色分割 + NLM 去噪 + Retinex ✅
+
+**目标**：扩展轮廓分析和高级去噪能力
+
+### 功能
+1. **轮廓提取与绘制**（4 函数 + 2 类型）— `find_contours` / `draw_contours` / `contour_perimeter` / `contour_area` + `ContourPoint` / `Contour`（Moore 边界跟踪，外轮廓/孔洞标记，鞋带公式面积）
+2. **颜色分割**（4 函数 + 2 类型）— `kmeans_segment` / `region_growing_segment` / `flood_fill` / `segment_to_color` + `SegmentLabelImage` / `SegmentRegion`（K-means 聚类分割 + 区域生长 + 泛洪填充 + 标签可视化）
+3. **非局部均值去噪**（2 函数）— `nlm_denoise` / `nlm_denoise_fast`（块匹配加权平均，快速版降采样搜索）
+4. **多尺度 Retinex**（3 函数）— `ssr` / `msr` / `msrcr`（单尺度/多尺度/带颜色恢复，可分离高斯模糊）
+
+### 交付物
+- 472 测试 + 29 基准测试
+- 177 公开函数 + 26 类型/枚举
+
+---
+
+## v1.16 — Canny 边缘 + 分水岭 + GLCM + Haar 小波 ✅
+
+**目标**：扩展边缘检测、分割、纹理分析和多分辨率分析能力
+
+### 功能
+1. **Canny 边缘检测**（1 函数）— `canny_edge`（高斯模糊→Sobel 梯度→非极大值抑制→双阈值滞后连接）
+2. **分水岭分割**（2 函数）— `watershed` / `watershed_auto`（沉浸式分水岭算法，基于种子标记，自动寻找局部最小值）
+3. **GLCM 纹理分析**（3 函数 + 1 类型）— `compute_glcm` / `glcm_features` / `glcm_features_multi_direction` + `GlcmFeatures`（灰度共生矩阵，对比度/相关性/能量/同质性/熵/ASM/不相似性，4 方向）
+4. **Haar 小波变换**（5 函数 + 1 类型）— `haar_transform_1d` / `haar_inverse_transform_1d` / `haar_transform_2d` / `haar_inverse_transform_2d` / `haar_denoise` + `HaarWaveletResult`（多级分解重构，软/硬阈值去噪）
+
+### 交付物
+- 501 测试 + 29 基准测试
+- 188 公开函数 + 28 类型/枚举
+
+---
+
+## v1.17 — Harris 角点 + 去雾 + 距离变换 + Gabor 滤波 ✅
+
+**目标**：扩展特征检测、去雾、形态学和纹理分析能力
+
+### 功能
+1. **Harris 角点检测**（2 函数 + 1 类型）— `harris_corners` / `draw_corners` + `CornerPoint`（Sobel 梯度→结构张量→Harris 响应→NMS→距离过滤）
+2. **暗通道先验去雾**（2 函数）— `dehaze` / `guided_filter`（暗通道先验+大气光估计+透射率恢复+引导滤波优化）
+3. **距离变换**（3 函数）— `distance_transform` / `distance_transform_visualize` / `skeletonize`（两遍扫描，L1/L2/Linf 距离，骨架化）
+4. **Gabor 滤波**（3 函数）— `gabor_filter` / `gabor_filter_bank` / `gabor_kernel`（多方向多尺度纹理分析）
+
+### 交付物
+- 533 测试 + 29 基准测试
+- 199 公开函数 + 29 类型/枚举
+
+---
+
 ## v2.0 — 多目标支持（架构升级）
 
 **目标**：支持 wasm/js 目标，与 mizchi 拉平
@@ -275,6 +425,12 @@
 | **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** | **中** |
 | **v1.10** | **morphology + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** | **中** |
 | **v1.10.1** | **子包重构 + 双语README + 警告清理** | **341+29** | **中** |
+| **v1.12** | **6 blend + CLAHE + K-means + FFT** | **369+29** | **中** |
+| **v1.13** | **频域滤波 + 自适应阈值 + 连通域 + 积分图像** | **402+29** | **中** |
+| **v1.14** | **霍夫变换 + LBP + 图像金字塔 + 双边滤波** | **433+29** | **中** |
+| **v1.15** | **轮廓提取 + 颜色分割 + NLM 去噪 + Retinex** | **472+29** | **中** |
+| **v1.16** | **Canny 边缘 + 分水岭 + GLCM + Haar 小波** | **501+29** | **中** |
+| **v1.17** | **Harris 角点 + 去雾 + 距离变换 + Gabor 滤波** | **533+29** | **中** |
 | v2.0 | 多目标支持 | — | 中 — 架构升级 |
 | v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
 

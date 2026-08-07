@@ -173,3 +173,104 @@ test "blend: raises on size mismatch" {
   let _ = base
   let _ = blend
 }
+
+///|
+test "blend_color_dodge: white blend gives white" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\xFF')
+  let result = blend_color_dodge(base, blend)
+  assert_eq(result.data[0], b'\xFF')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_color_dodge: zero blend gives base" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\x00')
+  let result = blend_color_dodge(base, blend)
+  assert_eq(result.data[0], b'\x80')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_color_burn: zero blend gives black" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\x00')
+  let result = blend_color_burn(base, blend)
+  assert_eq(result.data[0], b'\x00')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_color_burn: white blend gives base" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\xFF')
+  let result = blend_color_burn(base, blend)
+  assert_eq(result.data[0], b'\x80')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_hard_light: black blend gives black" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\x00')
+  let result = blend_hard_light(base, blend)
+  assert_eq(result.data[0], b'\x00')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_hard_light: white blend gives white" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\xFF')
+  let result = blend_hard_light(base, blend)
+  assert_eq(result.data[0], b'\xFF')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_soft_light: identity with black" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\x00')
+  let result = blend_soft_light(base, blend)
+  // soft_light(128, 0) = 128*128/255 ≈ 64
+  let v = result.data[0].to_int()
+  assert_true(v >= 62 && v <= 66)
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_linear_dodge: adds and clamps" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(2, 2, 3, b'\x80')
+  let result = blend_linear_dodge(base, blend)
+  assert_eq(result.data[0], b'\xFF')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
+
+///|
+test "blend_linear_burn: subtracts and clamps" {
+  let base = make_img(2, 2, 3, b'\x40')
+  let blend = make_img(2, 2, 3, b'\x40')
+  let result = blend_linear_burn(base, blend)
+  assert_eq(result.data[0], b'\x00')
+  let _ = base
+  let _ = blend
+  let _ = result
+}
