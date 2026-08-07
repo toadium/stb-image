@@ -40,49 +40,49 @@ pub type ResizeEdge = @core.ResizeEdge
 pub type ResizeFilter = @core.ResizeFilter
 
 ///|
-pub type Complex = @process.Complex
+pub type Complex = @frequency.Complex
 
 ///|
-pub type FFTResult = @process.FFTResult
+pub type FFTResult = @frequency.FFTResult
 
 ///|
-pub type FreqFilterType = @process.FreqFilterType
+pub type FreqFilterType = @frequency.FreqFilterType
 
 ///|
-pub type ConnectedComponent = @process.ConnectedComponent
+pub type ConnectedComponent = @segment.ConnectedComponent
 
 ///|
-pub type ConnectedComponentLabelImage = @process.ConnectedComponentLabelImage
+pub type ConnectedComponentLabelImage = @segment.ConnectedComponentLabelImage
 
 ///|
-pub type IntegralImage = @process.IntegralImage
+pub type IntegralImage = @feature.IntegralImage
 
 ///|
-pub type IntegralImageSq = @process.IntegralImageSq
+pub type IntegralImageSq = @feature.IntegralImageSq
 
 ///|
-pub type HoughLine = @process.HoughLine
+pub type HoughLine = @edge.HoughLine
 
 ///|
-pub type ContourPoint = @process.ContourPoint
+pub type ContourPoint = @edge.ContourPoint
 
 ///|
-pub type Contour = @process.Contour
+pub type Contour = @edge.Contour
 
 ///|
-pub type SegmentLabelImage = @process.SegmentLabelImage
+pub type SegmentLabelImage = @color.SegmentLabelImage
 
 ///|
-pub type SegmentRegion = @process.SegmentRegion
+pub type SegmentRegion = @color.SegmentRegion
 
 ///|
-pub type GlcmFeatures = @process.GlcmFeatures
+pub type GlcmFeatures = @feature.GlcmFeatures
 
 ///|
-pub type HaarWaveletResult = @process.HaarWaveletResult
+pub type HaarWaveletResult = @frequency.HaarWaveletResult
 
 ///|
-pub type CornerPoint = @process.CornerPoint
+pub type CornerPoint = @feature.CornerPoint
 
 // From core/
 
@@ -309,37 +309,37 @@ pub let write_tga_to_path : (String, @core.Image) -> Unit raise @core.LoadError 
 // From process/
 
 ///|
-pub let adjust_brightness : (@core.Image, Int) -> @core.Image = @process.adjust_brightness
+pub let adjust_brightness : (@core.Image, Int) -> @core.Image = @color.adjust_brightness
 
 ///|
-pub let adjust_contrast : (@core.Image, Float) -> @core.Image = @process.adjust_contrast
+pub let adjust_contrast : (@core.Image, Float) -> @core.Image = @color.adjust_contrast
 
 ///|
-pub let adjust_gamma : (@core.Image, Float) -> @core.Image = @process.adjust_gamma
+pub let adjust_gamma : (@core.Image, Float) -> @core.Image = @color.adjust_gamma
 
 ///|
-pub let adaptive_threshold_mean : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @process.adaptive_threshold_mean
+pub let adaptive_threshold_mean : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @color.adaptive_threshold_mean
 
 ///|
-pub let adaptive_threshold_gaussian : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @process.adaptive_threshold_gaussian
+pub let adaptive_threshold_gaussian : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @color.adaptive_threshold_gaussian
 
 ///|
-pub let bilateral_filter : (@core.Image, Int, Float, Float) -> @core.Image raise @core.LoadError = @process.bilateral_filter
+pub let bilateral_filter : (@core.Image, Int, Float, Float) -> @core.Image raise @core.LoadError = @filter.bilateral_filter
 
 ///|
-pub let bilateral_filter_fast : (@core.Image, Int, Float, Float, Int) -> @core.Image raise @core.LoadError = @process.bilateral_filter_fast
+pub let bilateral_filter_fast : (@core.Image, Int, Float, Float, Int) -> @core.Image raise @core.LoadError = @filter.bilateral_filter_fast
 
 ///|
-pub let box_blur : (@core.Image, Int) -> @core.Image = @process.box_blur
+pub let box_blur : (@core.Image, Int) -> @core.Image = @filter.box_blur
 
 ///|
-pub let build_gaussian_pyramid : (@core.Image, Int) -> Array[@core.Image] raise @core.LoadError = @process.build_gaussian_pyramid
+pub let build_gaussian_pyramid : (@core.Image, Int) -> Array[@core.Image] raise @core.LoadError = @transform.build_gaussian_pyramid
 
 ///|
-pub let build_laplacian_pyramid : (@core.Image, Int) -> Array[@core.Image] raise @core.LoadError = @process.build_laplacian_pyramid
+pub let build_laplacian_pyramid : (@core.Image, Int) -> Array[@core.Image] raise @core.LoadError = @transform.build_laplacian_pyramid
 
 ///|
-pub let clahe : (@core.Image, Int, Float) -> @core.Image raise @core.LoadError = @process.clahe
+pub let clahe : (@core.Image, Int, Float) -> @core.Image raise @core.LoadError = @color.clahe
 
 ///|
 pub fn canny_edge(
@@ -347,20 +347,20 @@ pub fn canny_edge(
   low_threshold? : Int = 50,
   high_threshold? : Int = 100,
 ) -> @core.Image raise @core.LoadError {
-  @process.canny_edge(arg0, low_threshold~, high_threshold~)
+  @edge.canny_edge(arg0, low_threshold~, high_threshold~)
 }
 
 ///|
 pub let connected_components : (@core.Image, Int) -> (
-  @process.ConnectedComponentLabelImage,
-  Array[@process.ConnectedComponent],
-) raise @core.LoadError = @process.connected_components
+  @segment.ConnectedComponentLabelImage,
+  Array[@segment.ConnectedComponent],
+) raise @core.LoadError = @segment.connected_components
 
 ///|
-pub let contour_area : (@process.Contour) -> Float = @process.contour_area
+pub let contour_area : (@edge.Contour) -> Float = @edge.contour_area
 
 ///|
-pub let contour_perimeter : (@process.Contour) -> Float = @process.contour_perimeter
+pub let contour_perimeter : (@edge.Contour) -> Float = @edge.contour_perimeter
 
 ///|
 pub fn compute_glcm(
@@ -369,11 +369,11 @@ pub fn compute_glcm(
   arg2 : Int,
   levels? : Int = 256,
 ) -> Array[Array[Int]] raise @core.LoadError {
-  @process.compute_glcm(arg0, arg1, arg2, levels~)
+  @feature.compute_glcm(arg0, arg1, arg2, levels~)
 }
 
 ///|
-pub let crop : (@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError = @process.crop
+pub let crop : (@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError = @transform.crop
 
 ///|
 pub fn dehaze(
@@ -382,80 +382,80 @@ pub fn dehaze(
   omega? : Float = 0.95F,
   t0? : Float = 0.1F,
 ) -> @core.Image raise @core.LoadError {
-  @process.dehaze(arg0, patch_size~, omega~, t0~)
+  @color.dehaze(arg0, patch_size~, omega~, t0~)
 }
 
 ///|
-pub let draw_contours : (@core.Image, Array[@process.Contour], Array[Byte]) -> @core.Image raise @core.LoadError = @process.draw_contours
+pub let draw_contours : (@core.Image, Array[@edge.Contour], Array[Byte]) -> @core.Image raise @core.LoadError = @edge.draw_contours
 
 ///|
 pub fn draw_corners(
   arg0 : @core.Image,
-  arg1 : Array[@process.CornerPoint],
+  arg1 : Array[@feature.CornerPoint],
   color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
   radius? : Int = 2,
 ) -> @core.Image raise @core.LoadError {
-  @process.draw_corners(arg0, arg1, color~, radius~)
+  @feature.draw_corners(arg0, arg1, color~, radius~)
 }
 
 ///|
-pub let crop_16 : (@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError = @process.crop_16
+pub let crop_16 : (@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError = @transform.crop_16
 
 ///|
-pub let cropf : (@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError = @process.cropf
+pub let cropf : (@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError = @transform.cropf
 
 ///|
-pub let dilate : (@core.Image) -> @core.Image = @process.dilate
+pub let dilate : (@core.Image) -> @core.Image = @segment.dilate
 
 ///|
-pub let draw_copy : (@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError = @process.draw_copy
+pub let draw_copy : (@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError = @transform.draw_copy
 
 ///|
-pub let draw_over : (@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError = @process.draw_over
+pub let draw_over : (@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError = @transform.draw_over
 
 ///|
-pub let edge_detect_laplacian : (@core.Image) -> @core.Image = @process.edge_detect_laplacian
+pub let edge_detect_laplacian : (@core.Image) -> @core.Image = @edge.edge_detect_laplacian
 
 ///|
-pub let edge_detect_prewitt : (@core.Image) -> @core.Image = @process.edge_detect_prewitt
+pub let edge_detect_prewitt : (@core.Image) -> @core.Image = @edge.edge_detect_prewitt
 
 ///|
-pub let edge_detect_sobel : (@core.Image) -> @core.Image = @process.edge_detect_sobel
+pub let edge_detect_sobel : (@core.Image) -> @core.Image = @filter.edge_detect_sobel
 
 ///|
-pub let erode : (@core.Image) -> @core.Image = @process.erode
+pub let erode : (@core.Image) -> @core.Image = @segment.erode
 
 ///|
-pub let fft_2d : (@core.Image) -> Array[@process.FFTResult] raise @core.LoadError = @process.fft_2d
+pub let fft_2d : (@core.Image) -> Array[@frequency.FFTResult] raise @core.LoadError = @frequency.fft_2d
 
 ///|
-pub let fft_magnitude : (@process.FFTResult, Bool) -> @core.Image = @process.fft_magnitude
+pub let fft_magnitude : (@frequency.FFTResult, Bool) -> @core.Image = @frequency.fft_magnitude
 
 ///|
-pub let fft_shift : (@process.FFTResult) -> @process.FFTResult = @process.fft_shift
+pub let fft_shift : (@frequency.FFTResult) -> @frequency.FFTResult = @frequency.fft_shift
 
 ///|
 pub fn freq_filter(
   arg0 : @core.Image,
-  arg1 : @process.FreqFilterType,
+  arg1 : @frequency.FreqFilterType,
   arg2 : Float,
   band_width? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.freq_filter(arg0, arg1, arg2, band_width~)
+  @frequency.freq_filter(arg0, arg1, arg2, band_width~)
 }
 
 ///|
 pub fn freq_filter_gaussian(
   arg0 : @core.Image,
-  arg1 : @process.FreqFilterType,
+  arg1 : @frequency.FreqFilterType,
   arg2 : Float,
   band_width? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.freq_filter_gaussian(arg0, arg1, arg2, band_width~)
+  @frequency.freq_filter_gaussian(arg0, arg1, arg2, band_width~)
 }
 
 ///|
-pub let flip_horizontal : (@core.Image) -> @core.Image = @process.flip_horizontal
+pub let flip_horizontal : (@core.Image) -> @core.Image = @transform.flip_horizontal
 
 ///|
 pub fn harris_corners(
@@ -463,8 +463,8 @@ pub fn harris_corners(
   k? : Float = 0.04F,
   threshold? : Float = 1000.0F,
   min_distance? : Int = 5,
-) -> Array[@process.CornerPoint] raise @core.LoadError {
-  @process.harris_corners(arg0, k~, threshold~, min_distance~)
+) -> Array[@feature.CornerPoint] raise @core.LoadError {
+  @feature.harris_corners(arg0, k~, threshold~, min_distance~)
 }
 
 ///|
@@ -473,34 +473,34 @@ pub fn hough_lines(
   arg1 : Int,
   theta_resolution? : Float = 1.0F,
   rho_resolution? : Float = 1.0F,
-) -> Array[@process.HoughLine] raise @core.LoadError {
-  @process.hough_lines(arg0, arg1, theta_resolution~, rho_resolution~)
+) -> Array[@edge.HoughLine] raise @core.LoadError {
+  @edge.hough_lines(arg0, arg1, theta_resolution~, rho_resolution~)
 }
 
 ///|
 pub fn hough_lines_nms(
-  arg0 : Array[@process.HoughLine],
+  arg0 : Array[@edge.HoughLine],
   rho_threshold? : Float = 5.0F,
   theta_threshold? : Float = 0.1F,
-) -> Array[@process.HoughLine] {
-  @process.hough_lines_nms(arg0, rho_threshold~, theta_threshold~)
+) -> Array[@edge.HoughLine] {
+  @edge.hough_lines_nms(arg0, rho_threshold~, theta_threshold~)
 }
 
 ///|
-pub let find_contours : (@core.Image) -> Array[@process.Contour] raise @core.LoadError = @process.find_contours
+pub let find_contours : (@core.Image) -> Array[@edge.Contour] raise @core.LoadError = @edge.find_contours
 
 ///|
-pub let floyd_steinberg : (@core.Image, Int) -> @core.Image = @process.floyd_steinberg
+pub let floyd_steinberg : (@core.Image, Int) -> @core.Image = @segment.floyd_steinberg
 
 ///|
-pub let glcm_features : (Array[Array[Int]]) -> @process.GlcmFeatures = @process.glcm_features
+pub let glcm_features : (Array[Array[Int]]) -> @feature.GlcmFeatures = @feature.glcm_features
 
 ///|
 pub fn glcm_features_multi_direction(
   arg0 : @core.Image,
   levels? : Int = 256,
-) -> Array[@process.GlcmFeatures] raise @core.LoadError {
-  @process.glcm_features_multi_direction(arg0, levels~)
+) -> Array[@feature.GlcmFeatures] raise @core.LoadError {
+  @feature.glcm_features_multi_direction(arg0, levels~)
 }
 
 ///|
@@ -513,7 +513,7 @@ pub fn gabor_filter(
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.gabor_filter(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
+  @feature.gabor_filter(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
 
 ///|
@@ -525,7 +525,7 @@ pub fn gabor_filter_bank(
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
 ) -> @core.Image raise @core.LoadError {
-  @process.gabor_filter_bank(
+  @feature.gabor_filter_bank(
     arg0,
     arg1,
     arg2,
@@ -544,27 +544,27 @@ pub fn gabor_kernel(
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
 ) -> Array[Array[Float]] raise @core.LoadError {
-  @process.gabor_kernel(arg1, arg2, arg3, lambda~, gamma~, phi~)
+  @feature.gabor_kernel(arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
 
 ///|
-pub let gaussian_blur : (@core.Image, Int, Float) -> @core.Image = @process.gaussian_blur
+pub let gaussian_blur : (@core.Image, Int, Float) -> @core.Image = @filter.gaussian_blur
 
 ///|
-pub let haar_inverse_transform_1d : (Array[Float]) -> Array[Float] = @process.haar_inverse_transform_1d
+pub let haar_inverse_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_inverse_transform_1d
 
 ///|
-pub let haar_inverse_transform_2d : (@process.HaarWaveletResult) -> @core.Image = @process.haar_inverse_transform_2d
+pub let haar_inverse_transform_2d : (@frequency.HaarWaveletResult) -> @core.Image = @frequency.haar_inverse_transform_2d
 
 ///|
-pub let haar_transform_1d : (Array[Float]) -> Array[Float] = @process.haar_transform_1d
+pub let haar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_transform_1d
 
 ///|
 pub fn haar_transform_2d(
   arg0 : @core.Image,
   levels? : Int = 1,
-) -> @process.HaarWaveletResult raise @core.LoadError {
-  @process.haar_transform_2d(arg0, levels~)
+) -> @frequency.HaarWaveletResult raise @core.LoadError {
+  @frequency.haar_transform_2d(arg0, levels~)
 }
 
 ///|
@@ -574,72 +574,72 @@ pub fn haar_denoise(
   soft? : Bool = true,
   levels? : Int = 3,
 ) -> @core.Image raise @core.LoadError {
-  @process.haar_denoise(arg0, threshold~, soft~, levels~)
+  @frequency.haar_denoise(arg0, threshold~, soft~, levels~)
 }
 
 ///|
-pub let histogram : (@core.Image) -> Array[Int] = @process.histogram
+pub let histogram : (@core.Image) -> Array[Int] = @feature.histogram
 
 ///|
-pub let histogram_equalize : (@core.Image) -> @core.Image = @process.histogram_equalize
+pub let histogram_equalize : (@core.Image) -> @core.Image = @feature.histogram_equalize
 
 ///|
-pub let histogram_normalize : (@core.Image) -> @core.Image = @process.histogram_normalize
+pub let histogram_normalize : (@core.Image) -> @core.Image = @feature.histogram_normalize
 
 ///|
-pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @process.hsl_to_rgb
+pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
 
 ///|
-pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @process.hsv_to_rgb
+pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsv_to_rgb
 
 ///|
-pub let ifft_2d : (@process.FFTResult) -> @core.Image = @process.ifft_2d
+pub let ifft_2d : (@frequency.FFTResult) -> @core.Image = @frequency.ifft_2d
 
 ///|
-pub let integral_image : (@core.Image) -> @process.IntegralImage raise @core.LoadError = @process.integral_image
+pub let integral_image : (@core.Image) -> @feature.IntegralImage raise @core.LoadError = @feature.integral_image
 
 ///|
-pub let integral_image_sq : (@core.Image) -> @process.IntegralImageSq raise @core.LoadError = @process.integral_image_sq
+pub let integral_image_sq : (@core.Image) -> @feature.IntegralImageSq raise @core.LoadError = @feature.integral_image_sq
 
 ///|
-pub let integral_mean : (@process.IntegralImage, Int, Int, Int, Int) -> Float = @process.integral_mean
+pub let integral_mean : (@feature.IntegralImage, Int, Int, Int, Int) -> Float = @feature.integral_mean
 
 ///|
-pub let integral_sum : (@process.IntegralImage, Int, Int, Int, Int) -> Int64 = @process.integral_sum
+pub let integral_sum : (@feature.IntegralImage, Int, Int, Int, Int) -> Int64 = @feature.integral_sum
 
 ///|
-pub let integral_sum_sq : (@process.IntegralImageSq, Int, Int, Int, Int) -> Int64 = @process.integral_sum_sq
+pub let integral_sum_sq : (@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64 = @feature.integral_sum_sq
 
 ///|
 pub let integral_variance : (
-  @process.IntegralImage,
-  @process.IntegralImageSq,
+  @feature.IntegralImage,
+  @feature.IntegralImageSq,
   Int,
   Int,
   Int,
   Int,
-) -> Float = @process.integral_variance
+) -> Float = @feature.integral_variance
 
 ///|
-pub let invert : (@core.Image) -> @core.Image = @process.invert
+pub let invert : (@core.Image) -> @core.Image = @color.invert
 
 ///|
-pub let k_means_quantize : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @process.k_means_quantize
+pub let k_means_quantize : (@core.Image, Int, Int) -> @core.Image raise @core.LoadError = @segment.k_means_quantize
 
 ///|
 pub fn kmeans_segment(
   arg0 : @core.Image,
   arg1 : Int,
   max_iters? : Int = 20,
-) -> (@process.SegmentLabelImage, Array[@process.SegmentRegion]) raise @core.LoadError {
-  @process.kmeans_segment(arg0, arg1, max_iters~)
+) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @core.LoadError {
+  @color.kmeans_segment(arg0, arg1, max_iters~)
 }
 
 ///|
-pub let lbp : (@core.Image) -> @core.Image raise @core.LoadError = @process.lbp
+pub let lbp : (@core.Image) -> @core.Image raise @core.LoadError = @feature.lbp
 
 ///|
-pub let lbp_uniform : (@core.Image) -> @core.Image raise @core.LoadError = @process.lbp_uniform
+pub let lbp_uniform : (@core.Image) -> @core.Image raise @core.LoadError = @feature.lbp_uniform
 
 ///|
 pub fn nlm_denoise(
@@ -648,7 +648,7 @@ pub fn nlm_denoise(
   search_size? : Int = 7,
   h? : Int = 10,
 ) -> @core.Image raise @core.LoadError {
-  @process.nlm_denoise(arg0, patch_size~, search_size~, h~)
+  @filter.nlm_denoise(arg0, patch_size~, search_size~, h~)
 }
 
 ///|
@@ -659,65 +659,65 @@ pub fn nlm_denoise_fast(
   h? : Int = 10,
   step? : Int = 2,
 ) -> @core.Image raise @core.LoadError {
-  @process.nlm_denoise_fast(arg0, patch_size~, search_size~, h~, step~)
+  @filter.nlm_denoise_fast(arg0, patch_size~, search_size~, h~, step~)
 }
 
 ///|
-pub let median_cut : (@core.Image, Int) -> @core.Image = @process.median_cut
+pub let median_cut : (@core.Image, Int) -> @core.Image = @segment.median_cut
 
 ///|
-pub let morph_close : (@core.Image) -> @core.Image = @process.morph_close
+pub let morph_close : (@core.Image) -> @core.Image = @segment.morph_close
 
 ///|
-pub let morph_open : (@core.Image) -> @core.Image = @process.morph_open
+pub let morph_open : (@core.Image) -> @core.Image = @segment.morph_open
 
 ///|
-pub let mse : (@core.Image, @core.Image) -> Double = @process.mse
+pub let mse : (@core.Image, @core.Image) -> Double = @feature.mse
 
 ///|
-pub let premultiply_alpha : (@core.Image) -> @core.Image raise @core.LoadError = @process.premultiply_alpha
+pub let premultiply_alpha : (@core.Image) -> @core.Image raise @core.LoadError = @color.premultiply_alpha
 
 ///|
-pub let psnr : (@core.Image, @core.Image) -> Double = @process.psnr
+pub let psnr : (@core.Image, @core.Image) -> Double = @feature.psnr
 
 ///|
-pub let pyr_down : (@core.Image) -> @core.Image raise @core.LoadError = @process.pyr_down
+pub let pyr_down : (@core.Image) -> @core.Image raise @core.LoadError = @transform.pyr_down
 
 ///|
-pub let pyr_up : (@core.Image) -> @core.Image raise @core.LoadError = @process.pyr_up
+pub let pyr_up : (@core.Image) -> @core.Image raise @core.LoadError = @transform.pyr_up
 
 ///|
 pub fn region_growing_segment(
   arg0 : @core.Image,
   arg1 : Array[(Int, Int)],
   threshold? : Int = 30,
-) -> (@process.SegmentLabelImage, Array[@process.SegmentRegion]) raise @core.LoadError {
-  @process.region_growing_segment(arg0, arg1, threshold~)
+) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @core.LoadError {
+  @color.region_growing_segment(arg0, arg1, threshold~)
 }
 
 ///|
-pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @process.rgb_to_hsl
+pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsl
 
 ///|
-pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @process.rgb_to_hsv
+pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv
 
 ///|
-pub let rotate : (@core.Image, Float) -> @core.Image = @process.rotate
+pub let rotate : (@core.Image, Float) -> @core.Image = @transform.rotate
 
 ///|
-pub let rotate_180 : (@core.Image) -> @core.Image = @process.rotate_180
+pub let rotate_180 : (@core.Image) -> @core.Image = @transform.rotate_180
 
 ///|
-pub let rotate_270 : (@core.Image) -> @core.Image = @process.rotate_270
+pub let rotate_270 : (@core.Image) -> @core.Image = @transform.rotate_270
 
 ///|
-pub let rotate_90 : (@core.Image) -> @core.Image = @process.rotate_90
+pub let rotate_90 : (@core.Image) -> @core.Image = @transform.rotate_90
 
 ///|
-pub let segment_to_color : (@process.SegmentLabelImage) -> @core.Image = @process.segment_to_color
+pub let segment_to_color : (@color.SegmentLabelImage) -> @core.Image = @color.segment_to_color
 
 ///|
-pub let sharpen : (@core.Image, Float) -> @core.Image = @process.sharpen
+pub let sharpen : (@core.Image, Float) -> @core.Image = @filter.sharpen
 
 ///|
 pub fn ssr(
@@ -726,7 +726,7 @@ pub fn ssr(
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.ssr(arg0, sigma~, gain~, offset~)
+  @color.ssr(arg0, sigma~, gain~, offset~)
 }
 
 ///|
@@ -736,7 +736,7 @@ pub fn msr(
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.msr(arg0, sigmas~, gain~, offset~)
+  @color.msr(arg0, sigmas~, gain~, offset~)
 }
 
 ///|
@@ -748,26 +748,26 @@ pub fn msrcr(
   alpha? : Float = 125.0F,
   beta? : Float = 46.0F,
 ) -> @core.Image raise @core.LoadError {
-  @process.msrcr(arg0, sigmas~, gain~, offset~, alpha~, beta~)
+  @color.msrcr(arg0, sigmas~, gain~, offset~, alpha~, beta~)
 }
 
 ///|
-pub let ssim : (@core.Image, @core.Image) -> Double = @process.ssim
+pub let ssim : (@core.Image, @core.Image) -> Double = @feature.ssim
 
 ///|
-pub let threshold_otsu : (@core.Image) -> @core.Image raise @core.LoadError = @process.threshold_otsu
+pub let threshold_otsu : (@core.Image) -> @core.Image raise @core.LoadError = @color.threshold_otsu
 
 ///|
-pub let to_grayscale : (@core.Image) -> @core.Image = @process.to_grayscale
+pub let to_grayscale : (@core.Image) -> @core.Image = @color.to_grayscale
 
 ///|
-pub let to_rgb : (@core.Image) -> @core.Image = @process.to_rgb
+pub let to_rgb : (@core.Image) -> @core.Image = @color.to_rgb
 
 ///|
-pub let to_rgba : (@core.Image) -> @core.Image = @process.to_rgba
+pub let to_rgba : (@core.Image) -> @core.Image = @color.to_rgba
 
 ///|
-pub let unpremultiply_alpha : (@core.Image) -> @core.Image raise @core.LoadError = @process.unpremultiply_alpha
+pub let unpremultiply_alpha : (@core.Image) -> @core.Image raise @core.LoadError = @color.unpremultiply_alpha
 
 ///|
 pub let warp_affine : (
@@ -775,27 +775,27 @@ pub let warp_affine : (
   (Float, Float, Float, Float, Float, Float),
   Int,
   Int,
-) -> @core.Image = @process.warp_affine
+) -> @core.Image = @transform.warp_affine
 
 ///|
-pub let watershed : (@core.Image, Array[Int]) -> Array[Int] raise @core.LoadError = @process.watershed
+pub let watershed : (@core.Image, Array[Int]) -> Array[Int] raise @core.LoadError = @segment.watershed
 
 ///|
-pub let watershed_auto : (@core.Image) -> (Array[Int], Int) raise @core.LoadError = @process.watershed_auto
+pub let watershed_auto : (@core.Image) -> (Array[Int], Int) raise @core.LoadError = @segment.watershed_auto
 
 ///|
 pub fn distance_transform(
   arg0 : @core.Image,
   distance_type? : Int = 2,
 ) -> Array[Float] raise @core.LoadError {
-  @process.distance_transform(arg0, distance_type~)
+  @segment.distance_transform(arg0, distance_type~)
 }
 
 ///|
-pub let distance_transform_visualize : (Array[Float], Int, Int) -> @core.Image = @process.distance_transform_visualize
+pub let distance_transform_visualize : (Array[Float], Int, Int) -> @core.Image = @segment.distance_transform_visualize
 
 ///|
-pub let skeletonize : (@core.Image) -> @core.Image raise @core.LoadError = @process.skeletonize
+pub let skeletonize : (@core.Image) -> @core.Image raise @core.LoadError = @segment.skeletonize
 
 ///|
 pub fn guided_filter(
@@ -804,7 +804,7 @@ pub fn guided_filter(
   radius? : Int = 20,
   eps? : Float = 0.001F,
 ) -> Array[Float] raise @core.LoadError {
-  @process.guided_filter(arg0, arg1, radius~, eps~)
+  @color.guided_filter(arg0, arg1, radius~, eps~)
 }
 
 ///|
@@ -815,7 +815,7 @@ pub fn flood_fill(
   arg3 : Array[Byte],
   threshold? : Int = 0,
 ) -> @core.Image raise @core.LoadError {
-  @process.flood_fill(arg0, arg1, arg2, arg3, threshold~)
+  @color.flood_fill(arg0, arg1, arg2, arg3, threshold~)
 }
 
 // From format/

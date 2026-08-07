@@ -173,7 +173,7 @@ test "roundtrip: GIF animation multi-frame" {
     "testdata/test_4x4_red.png",
     req_channels=Some(3),
   )
-  let img2 = @process.invert(img1)
+  let img2 = @color.invert(img1)
   let anim = @core.GifAnimation::{ frames: [img1, img2], delays: [100, 200] }
   let encoded = @format.encode_gif_animation(anim)
   let restored = @core.load_gif_from_bytes(encoded, req_channels=Some(3))
@@ -212,11 +212,11 @@ test "roundtrip: transform pipeline" {
     req_channels=Some(3),
   )
   // crop → rotate → flip → invert → invert → should be consistent
-  let cropped = @process.crop(img, 0, 0, 2, 2)
-  let rotated = @process.rotate_90(cropped)
-  let flipped = @process.flip_horizontal(rotated)
-  let inverted = @process.invert(flipped)
-  let restored = @process.invert(inverted)
+  let cropped = @transform.crop(img, 0, 0, 2, 2)
+  let rotated = @transform.rotate_90(cropped)
+  let flipped = @transform.flip_horizontal(rotated)
+  let inverted = @color.invert(flipped)
+  let restored = @color.invert(inverted)
   // double invert = identity
   assert_eq(restored.data, flipped.data)
   let _ = img
@@ -230,8 +230,8 @@ test "roundtrip: color conversion pipeline" {
     req_channels=Some(3),
   )
   // RGB → RGBA → RGB should preserve
-  let rgba = @process.to_rgba(img)
-  let rgb = @process.to_rgb(rgba)
+  let rgba = @color.to_rgba(img)
+  let rgb = @color.to_rgb(rgba)
   assert_eq(rgb.data, img.data)
   let _ = img
   let _ = rgb
@@ -258,8 +258,8 @@ test "roundtrip: filter then filter (box_blur twice)" {
     "testdata/test_4x4_red.png",
     req_channels=Some(3),
   )
-  let blurred1 = @process.box_blur(img, 1)
-  let blurred2 = @process.box_blur(blurred1, 1)
+  let blurred1 = @filter.box_blur(img, 1)
+  let blurred2 = @filter.box_blur(blurred1, 1)
   assert_eq(blurred2.width, img.width)
   assert_eq(blurred2.height, img.height)
   let _ = img
@@ -272,7 +272,7 @@ test "roundtrip: quantize then encode GIF" {
     "testdata/test_4x4_red.png",
     req_channels=Some(3),
   )
-  let quantized = @process.floyd_steinberg(img, 4)
+  let quantized = @segment.floyd_steinberg(img, 4)
   let gif = @format.encode_gif(quantized)
   let restored = @core.load_from_bytes(gif, req_channels=Some(3))
   assert_eq(restored.width, img.width)

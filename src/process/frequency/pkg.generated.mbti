@@ -1,0 +1,62 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/frequency"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn fft_2d(@core.Image) -> Array[FFTResult] raise @core.LoadError
+
+pub fn fft_magnitude(FFTResult, Bool) -> @core.Image
+
+pub fn fft_shift(FFTResult) -> FFTResult
+
+pub fn freq_filter(@core.Image, FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+
+pub fn freq_filter_gaussian(@core.Image, FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+
+pub fn haar_denoise(@core.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @core.Image raise @core.LoadError
+
+pub fn haar_inverse_transform_1d(Array[Float]) -> Array[Float]
+
+pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @core.Image
+
+pub fn haar_transform_1d(Array[Float]) -> Array[Float]
+
+pub fn haar_transform_2d(@core.Image, levels? : Int) -> HaarWaveletResult raise @core.LoadError
+
+pub fn ifft_2d(FFTResult) -> @core.Image
+
+// Errors
+
+// Types and methods
+pub struct Complex {
+  re : Float
+  im : Float
+}
+
+pub struct FFTResult {
+  width : Int
+  height : Int
+  data : Array[Complex]
+}
+
+pub(all) enum FreqFilterType {
+  LowPass
+  HighPass
+  BandPass
+  BandStop
+}
+
+pub struct HaarWaveletResult {
+  width : Int
+  height : Int
+  levels : Int
+  coefficients : Array[Float]
+}
+
+// Type aliases
+
+// Traits
+

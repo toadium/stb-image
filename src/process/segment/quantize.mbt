@@ -74,7 +74,7 @@ pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
 /// 算法：递归地沿最大方差通道在中位数处分割颜色空间。
 pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
   if num_colors < 2 {
-    return to_rgb(img)
+    return @color.to_rgb(img)
   }
   let w = img.width
   let h = img.height

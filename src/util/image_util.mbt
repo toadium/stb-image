@@ -109,7 +109,7 @@ pub fn resize_to_cover(
   let scaled = @core.resize(img, scaled_w, scaled_h)
   let x = (scaled_w - target_w) / 2
   let y = (scaled_h - target_h) / 2
-  @process.crop(scaled, x, y, target_w, target_h)
+  @transform.crop(scaled, x, y, target_w, target_h)
 }
 
 ///|

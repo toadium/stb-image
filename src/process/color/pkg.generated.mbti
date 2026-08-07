@@ -1,0 +1,86 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/color"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn adaptive_threshold_gaussian(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn adaptive_threshold_mean(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn adjust_brightness(@core.Image, Int) -> @core.Image
+
+pub fn adjust_contrast(@core.Image, Float) -> @core.Image
+
+pub fn adjust_gamma(@core.Image, Float) -> @core.Image
+
+pub fn clahe(@core.Image, Int, Float) -> @core.Image raise @core.LoadError
+
+pub fn dehaze(@core.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @core.Image raise @core.LoadError
+
+pub fn flood_fill(@core.Image, Int, Int, Array[Byte], threshold? : Int) -> @core.Image raise @core.LoadError
+
+pub fn guided_filter(@core.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @core.LoadError
+
+pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn invert(@core.Image) -> @core.Image
+
+pub fn kmeans_segment(@core.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError
+
+pub fn msr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+
+pub fn msrcr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @core.Image raise @core.LoadError
+
+pub fn premultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn region_growing_segment(@core.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError
+
+pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn segment_to_color(SegmentLabelImage) -> @core.Image
+
+pub fn ssr(@core.Image, sigma? : Float, gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+
+pub fn threshold_otsu(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn to_grayscale(@core.Image) -> @core.Image
+
+pub fn to_rgb(@core.Image) -> @core.Image
+
+pub fn to_rgba(@core.Image) -> @core.Image
+
+pub fn unpremultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+
+// Errors
+
+// Types and methods
+pub(all) struct SegmentLabelImage {
+  width : Int
+  height : Int
+  labels : Array[Int]
+  num_regions : Int
+}
+
+pub struct SegmentRegion {
+  label : Int
+  area : Int
+  mean_r : Int
+  mean_g : Int
+  mean_b : Int
+  bbox_x : Int
+  bbox_y : Int
+  bbox_w : Int
+  bbox_h : Int
+}
+
+// Type aliases
+
+// Traits
+

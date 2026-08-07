@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/edge"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn canny_edge(@core.Image, low_threshold? : Int, high_threshold? : Int) -> @core.Image raise @core.LoadError
+
+pub fn contour_area(Contour) -> Float
+
+pub fn contour_perimeter(Contour) -> Float
+
+pub fn draw_contours(@core.Image, Array[Contour], Array[Byte]) -> @core.Image raise @core.LoadError
+
+pub fn edge_detect_laplacian(@core.Image) -> @core.Image
+
+pub fn edge_detect_prewitt(@core.Image) -> @core.Image
+
+pub fn find_contours(@core.Image) -> Array[Contour] raise @core.LoadError
+
+pub fn hough_lines(@core.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[HoughLine] raise @core.LoadError
+
+pub fn hough_lines_nms(Array[HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[HoughLine]
+
+// Errors
+
+// Types and methods
+pub(all) struct Contour {
+  points : Array[ContourPoint]
+  is_outer : Bool
+}
+
+pub(all) struct ContourPoint {
+  x : Int
+  y : Int
+}
+
+pub(all) struct HoughLine {
+  rho : Float
+  theta : Float
+  votes : Int
+}
+
+// Type aliases
+
+// Traits
+

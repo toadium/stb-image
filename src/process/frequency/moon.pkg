@@ -1,7 +1,5 @@
 import {
   "MoonBit-Toadium/stb-image/src/core",
-  "MoonBit-Toadium/stb-image/src/process/transform",
-  "moonbitlang/core/debug",
   "moonbitlang/core/math",
 }
 

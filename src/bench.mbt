@@ -192,7 +192,7 @@ test "bench: box_blur radius=1" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.box_blur(img, 1)
+    let r = @filter.box_blur(img, 1)
     b.keep(r)
   })
 }
@@ -204,7 +204,7 @@ test "bench: gaussian_blur radius=1 sigma=1.5" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.gaussian_blur(img, 1, 1.5F)
+    let r = @filter.gaussian_blur(img, 1, 1.5F)
     b.keep(r)
   })
 }
@@ -216,7 +216,7 @@ test "bench: sharpen amount=1.0" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.sharpen(img, 1.0F)
+    let r = @filter.sharpen(img, 1.0F)
     b.keep(r)
   })
 }
@@ -228,7 +228,7 @@ test "bench: edge_detect_sobel" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.edge_detect_sobel(img)
+    let r = @filter.edge_detect_sobel(img)
     b.keep(r)
   })
 }
@@ -241,7 +241,7 @@ test "bench: crop 4x4 -> 2x2" (b : @bench.T) {
   )
   b.bench(fn() {
     try {
-      let r = @process.crop(img, 0, 0, 2, 2)
+      let r = @transform.crop(img, 0, 0, 2, 2)
       b.keep(r)
     } catch {
       _ => ()
@@ -256,7 +256,7 @@ test "bench: rotate_90" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.rotate_90(img)
+    let r = @transform.rotate_90(img)
     b.keep(r)
   })
 }
@@ -268,7 +268,7 @@ test "bench: flip_horizontal" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.flip_horizontal(img)
+    let r = @transform.flip_horizontal(img)
     b.keep(r)
   })
 }
@@ -280,7 +280,7 @@ test "bench: to_grayscale" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.to_grayscale(img)
+    let r = @color.to_grayscale(img)
     b.keep(r)
   })
 }
@@ -292,7 +292,7 @@ test "bench: to_rgba" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.to_rgba(img)
+    let r = @color.to_rgba(img)
     b.keep(r)
   })
 }
@@ -304,7 +304,7 @@ test "bench: adjust_gamma 2.2" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.adjust_gamma(img, 2.2F)
+    let r = @color.adjust_gamma(img, 2.2F)
     b.keep(r)
   })
 }
@@ -316,7 +316,7 @@ test "bench: invert" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.invert(img)
+    let r = @color.invert(img)
     b.keep(r)
   })
 }
@@ -328,7 +328,7 @@ test "bench: histogram" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.histogram(img)
+    let r = @feature.histogram(img)
     b.keep(r)
   })
 }
@@ -340,7 +340,7 @@ test "bench: histogram_equalize" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.histogram_equalize(img)
+    let r = @feature.histogram_equalize(img)
     b.keep(r)
   })
 }
@@ -352,7 +352,7 @@ test "bench: floyd_steinberg 4 colors" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.floyd_steinberg(img, 4)
+    let r = @segment.floyd_steinberg(img, 4)
     b.keep(r)
   })
 }
@@ -364,7 +364,7 @@ test "bench: median_cut 4 colors" (b : @bench.T) {
     req_channels=Some(3),
   )
   b.bench(fn() {
-    let r = @process.median_cut(img, 4)
+    let r = @segment.median_cut(img, 4)
     b.keep(r)
   })
 }
@@ -420,7 +420,7 @@ test "bench: fft_2d 64x64" (b : @bench.T) {
   let img = bench_make_gradient_64()
   b.bench(fn() {
     try {
-      let r = @process.fft_2d(img)
+      let r = @frequency.fft_2d(img)
       b.keep(r)
     } catch {
       _ => ()
@@ -431,9 +431,9 @@ test "bench: fft_2d 64x64" (b : @bench.T) {
 ///|
 test "bench: ifft_2d 64x64" (b : @bench.T) {
   let img = bench_make_gradient_64()
-  let fft = try! @process.fft_2d(img)[0]
+  let fft = try! @frequency.fft_2d(img)[0]
   b.bench(fn() {
-    let r = @process.ifft_2d(fft)
+    let r = @frequency.ifft_2d(fft)
     b.keep(r)
   })
 }
@@ -443,7 +443,7 @@ test "bench: watershed_auto 64x64" (b : @bench.T) {
   let img = bench_make_gradient_64()
   b.bench(fn() {
     try {
-      let (labels, count) = @process.watershed_auto(img)
+      let (labels, count) = @segment.watershed_auto(img)
       b.keep(labels)
       b.keep(count)
     } catch {
@@ -471,7 +471,7 @@ test "bench: nlm_denoise 32x32" (b : @bench.T) {
   }
   b.bench(fn() {
     try {
-      let r = @process.nlm_denoise(img, patch_size=2, search_size=5, h=10)
+      let r = @filter.nlm_denoise(img, patch_size=2, search_size=5, h=10)
       b.keep(r)
     } catch {
       _ => ()
@@ -497,7 +497,7 @@ test "bench: nlm_denoise_fast 32x32" (b : @bench.T) {
   }
   b.bench(fn() {
     try {
-      let r = @process.nlm_denoise_fast(
+      let r = @filter.nlm_denoise_fast(
         img,
         patch_size=2,
         search_size=5,

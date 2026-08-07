@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/filter"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn bilateral_filter(@core.Image, Int, Float, Float) -> @core.Image raise @core.LoadError
+
+pub fn bilateral_filter_fast(@core.Image, Int, Float, Float, Int) -> @core.Image raise @core.LoadError
+
+pub fn box_blur(@core.Image, Int) -> @core.Image
+
+pub fn edge_detect_sobel(@core.Image) -> @core.Image
+
+pub fn gaussian_blur(@core.Image, Int, Float) -> @core.Image
+
+pub fn nlm_denoise(@core.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @core.Image raise @core.LoadError
+
+pub fn nlm_denoise_fast(@core.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @core.Image raise @core.LoadError
+
+pub fn sharpen(@core.Image, Float) -> @core.Image
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

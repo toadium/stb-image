@@ -26,7 +26,7 @@ test "encode_gif_animation: multi-frame" {
     req_channels=Some(3),
   )
   // 创建第二帧（反色）
-  let img2 = @process.invert(img1)
+  let img2 = @color.invert(img1)
   let anim = @core.GifAnimation::{ frames: [img1, img2], delays: [100, 200] }
   let gif = encode_gif_animation(anim)
   // 应包含 Netscape Application Extension
@@ -52,7 +52,7 @@ test "encode_gif_animation: round-trip with load_gif" {
     "testdata/test_4x4_red.png",
     req_channels=Some(3),
   )
-  let img2 = @process.invert(img1)
+  let img2 = @color.invert(img1)
   let anim = @core.GifAnimation::{ frames: [img1, img2], delays: [100, 200] }
   let gif = encode_gif_animation(anim)
   // 用 stb_image 加载
@@ -122,7 +122,7 @@ test "encode_gif_animation: detect_format recognizes GIF" {
     req_channels=Some(3),
   )
   let anim = @core.GifAnimation::{
-    frames: [img, @process.invert(img)],
+    frames: [img, @color.invert(img)],
     delays: [100, 100],
   }
   let gif = encode_gif_animation(anim)

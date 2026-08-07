@@ -1,0 +1,58 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/segment"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn connected_components(@core.Image, Int) -> (ConnectedComponentLabelImage, Array[ConnectedComponent]) raise @core.LoadError
+
+pub fn dilate(@core.Image) -> @core.Image
+
+pub fn distance_transform(@core.Image, distance_type? : Int) -> Array[Float] raise @core.LoadError
+
+pub fn distance_transform_visualize(Array[Float], Int, Int) -> @core.Image
+
+pub fn erode(@core.Image) -> @core.Image
+
+pub fn floyd_steinberg(@core.Image, Int) -> @core.Image
+
+pub fn k_means_quantize(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn median_cut(@core.Image, Int) -> @core.Image
+
+pub fn morph_close(@core.Image) -> @core.Image
+
+pub fn morph_open(@core.Image) -> @core.Image
+
+pub fn skeletonize(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn watershed(@core.Image, Array[Int]) -> Array[Int] raise @core.LoadError
+
+pub fn watershed_auto(@core.Image) -> (Array[Int], Int) raise @core.LoadError
+
+// Errors
+
+// Types and methods
+pub struct ConnectedComponent {
+  label : Int
+  area : Int
+  bbox_x : Int
+  bbox_y : Int
+  bbox_w : Int
+  bbox_h : Int
+  centroid_x : Float
+  centroid_y : Float
+}
+
+pub struct ConnectedComponentLabelImage {
+  width : Int
+  height : Int
+  labels : Array[Int]
+}
+
+// Type aliases
+
+// Traits
+

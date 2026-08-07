@@ -1,0 +1,46 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/transform"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn build_gaussian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+
+pub fn build_laplacian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+
+pub fn crop(@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn crop_16(@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError
+
+pub fn cropf(@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError
+
+pub fn draw_copy(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn draw_over(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn flip_horizontal(@core.Image) -> @core.Image
+
+pub fn pyr_down(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn pyr_up(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn rotate(@core.Image, Float) -> @core.Image
+
+pub fn rotate_180(@core.Image) -> @core.Image
+
+pub fn rotate_270(@core.Image) -> @core.Image
+
+pub fn rotate_90(@core.Image) -> @core.Image
+
+pub fn warp_affine(@core.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @core.Image
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

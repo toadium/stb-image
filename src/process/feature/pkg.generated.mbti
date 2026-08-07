@@ -1,0 +1,87 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/process/feature"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+// Values
+pub fn compute_glcm(@core.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @core.LoadError
+
+pub fn draw_corners(@core.Image, Array[CornerPoint], color? : Array[Byte], radius? : Int) -> @core.Image raise @core.LoadError
+
+pub fn gabor_filter(@core.Image, Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> @core.Image raise @core.LoadError
+
+pub fn gabor_filter_bank(@core.Image, Int, Float, num_orientations? : Int, lambda? : Float, gamma? : Float) -> @core.Image raise @core.LoadError
+
+pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> Array[Array[Float]] raise @core.LoadError
+
+pub fn glcm_features(Array[Array[Int]]) -> GlcmFeatures
+
+pub fn glcm_features_multi_direction(@core.Image, levels? : Int) -> Array[GlcmFeatures] raise @core.LoadError
+
+pub fn harris_corners(@core.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[CornerPoint] raise @core.LoadError
+
+pub fn histogram(@core.Image) -> Array[Int]
+
+pub fn histogram_equalize(@core.Image) -> @core.Image
+
+pub fn histogram_normalize(@core.Image) -> @core.Image
+
+pub fn integral_image(@core.Image) -> IntegralImage raise @core.LoadError
+
+pub fn integral_image_sq(@core.Image) -> IntegralImageSq raise @core.LoadError
+
+pub fn integral_mean(IntegralImage, Int, Int, Int, Int) -> Float
+
+pub fn integral_sum(IntegralImage, Int, Int, Int, Int) -> Int64
+
+pub fn integral_sum_sq(IntegralImageSq, Int, Int, Int, Int) -> Int64
+
+pub fn integral_variance(IntegralImage, IntegralImageSq, Int, Int, Int, Int) -> Float
+
+pub fn lbp(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn lbp_uniform(@core.Image) -> @core.Image raise @core.LoadError
+
+pub fn mse(@core.Image, @core.Image) -> Double
+
+pub fn psnr(@core.Image, @core.Image) -> Double
+
+pub fn ssim(@core.Image, @core.Image) -> Double
+
+// Errors
+
+// Types and methods
+pub(all) struct CornerPoint {
+  x : Int
+  y : Int
+  response : Float
+}
+
+pub struct GlcmFeatures {
+  contrast : Float
+  correlation : Float
+  energy : Float
+  homogeneity : Float
+  entropy : Float
+  asm_value : Float
+  dissimilarity : Float
+}
+
+pub struct IntegralImage {
+  width : Int
+  height : Int
+  data : Array[Int64]
+}
+
+pub struct IntegralImageSq {
+  width : Int
+  height : Int
+  data : Array[Int64]
+}
+
+// Type aliases
+
+// Traits
+

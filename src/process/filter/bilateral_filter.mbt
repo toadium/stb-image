@@ -157,7 +157,7 @@ pub fn bilateral_filter_fast(
     if small.width < 4 || small.height < 4 {
       break
     }
-    small = pyr_down(small)
+    small = @transform.pyr_down(small)
   }
   // 在小图上做双边滤波
   let small_filtered = bilateral_filter(
@@ -171,7 +171,7 @@ pub fn bilateral_filter_fast(
   let target_w = img.width
   let target_h = img.height
   while result.width < target_w || result.height < target_h {
-    result = pyr_up(result)
+    result = @transform.pyr_up(result)
   }
   // 裁剪到原尺寸
   if result.width != target_w || result.height != target_h {
