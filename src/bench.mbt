@@ -842,3 +842,267 @@ test "bench: k_means_quantize 64x64" (b : @bench.T) {
     }
   })
 }
+
+// 128x128 大图基准测试
+
+///|
+fn bench_make_gradient_128() -> @core.Image {
+  let w = 128
+  let h = 128
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x + y) % 256).to_byte()
+    }
+  }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+}
+
+///|
+fn bench_make_gradient_128_noisy() -> @core.Image {
+  let w = 128
+  let h = 128
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x + y + x * 7 % 13) % 256).to_byte()
+    }
+  }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+}
+
+///|
+test "bench: gaussian_blur 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    let r = @filter.gaussian_blur(img, 3, 1.5F)
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: bilateral_filter 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @filter.bilateral_filter(img, 2, 3.0F, 30.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: canny_edge 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @edge.canny_edge(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: hough_lines 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @edge.hough_lines(img, 50)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: find_contours 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @edge.find_contours(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: clahe 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @color.clahe(img, 8, 3.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: msr 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @color.msr(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: fft_2d 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @frequency.fft_2d(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: freq_filter 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @frequency.freq_filter(
+        img,
+        @frequency.FreqFilterType::LowPass,
+        32.0F,
+      )
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: haar_transform_2d 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @frequency.haar_transform_2d(img, levels=4)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: watershed_auto 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let (labels, count) = @segment.watershed_auto(img)
+      b.keep(labels)
+      b.keep(count)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: ssim 128x128" (b : @bench.T) {
+  let img1 = bench_make_gradient_128()
+  let img2 = bench_make_gradient_128_noisy()
+  b.bench(fn() {
+    let r = @feature.ssim(img1, img2)
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: harris_corners 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @feature.harris_corners(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: gabor_filter 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @feature.gabor_filter(img, 5, 2.0F, 0.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: connected_components 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let (labels, count) = @segment.connected_components(img, 4)
+      b.keep(labels)
+      b.keep(count)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: distance_transform 128x128" (b : @bench.T) {
+  let img = bench_make_gradient_128()
+  b.bench(fn() {
+    try {
+      let r = @segment.distance_transform(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: nlm_denoise_fast 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @filter.nlm_denoise_fast(
+        img,
+        patch_size=2,
+        search_size=5,
+        h=10,
+        step=2,
+      )
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
