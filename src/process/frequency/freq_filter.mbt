@@ -137,10 +137,7 @@ pub fn freq_filter_gaussian(
     for i in 0..<n {
       let y = i / w
       let x = i % w
-      let dist = @math.powf(
-        Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)),
-        0.5F,
-      )
+      let dist = Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)).sqrt()
       let gain = gaussian_gain(filter_type, dist, cutoff, band_width)
       let src = shifted.data[i]
       out_data[i] = Complex::{ re: src.re * gain, im: src.im * gain }
