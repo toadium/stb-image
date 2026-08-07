@@ -232,21 +232,48 @@ fn gaussian_blur_channel(
   for i in 0..<kernel_size {
     kernel[i] = kernel[i] / kernel_sum
   }
-  // 水平模糊
+  // 水平模糊，分离内部/边界区域
   let temp : Array[Float] = Array::make(n, 0.0F)
   for y in 0..<h {
+    let row_base = y * w
+    // 内部区域：x in [radius, w-radius)
+    for x in radius..<(w - radius) {
+      let mut sum = 0.0F
+      let base = row_base + x - radius
+      for k in 0..<kernel_size {
+        sum += channel[base + k] * kernel[k]
+      }
+      temp[row_base + x] = sum
+    }
+    // 边界区域
     for x in 0..<w {
+      if x >= radius && x < w - radius {
+        continue
+      }
       let mut sum = 0.0F
       for k in -radius..<=radius {
         let px = (x + k).clamp(min=0, max=w - 1)
-        sum += channel[y * w + px] * kernel[k + radius]
+        sum += channel[row_base + px] * kernel[k + radius]
       }
-      temp[y * w + x] = sum
+      temp[row_base + x] = sum
     }
   }
-  // 垂直模糊
-  for y in 0..<h {
-    for x in 0..<w {
+  // 垂直模糊，分离内部/边界区域
+  for x in 0..<w {
+    // 内部区域：y in [radius, h-radius)
+    for y in radius..<(h - radius) {
+      let mut sum = 0.0F
+      let base = (y - radius) * w + x
+      for k in 0..<kernel_size {
+        sum += temp[base + k * w] * kernel[k]
+      }
+      out[y * w + x] = sum
+    }
+    // 边界区域
+    for y in 0..<h {
+      if y >= radius && y < h - radius {
+        continue
+      }
       let mut sum = 0.0F
       for k in -radius..<=radius {
         let py = (y + k).clamp(min=0, max=h - 1)

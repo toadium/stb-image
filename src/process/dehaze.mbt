@@ -85,10 +85,29 @@ fn compute_dark_channel(
     let b = img.data[i * ch + 2].to_int()
     min_channel[i] = r.min(g).min(b)
   }
-  // 最小值滤波
+  // 最小值滤波，分离内部/边界区域
   let dark : Array[Float] = Array::make(n, 0.0F)
+  // 内部区域：x in [patch_size, w-patch_size), y in [patch_size, h-patch_size)
+  for y in patch_size..<(h - patch_size) {
+    for x in patch_size..<(w - patch_size) {
+      let mut min_val = 255
+      for py in (y - patch_size)..<=(y + patch_size) {
+        for px in (x - patch_size)..<=(x + patch_size) {
+          if min_channel[py * w + px] < min_val {
+            min_val = min_channel[py * w + px]
+          }
+        }
+      }
+      dark[y * w + x] = Float::from_int(min_val) / 255.0F
+    }
+  }
+  // 边界区域
   for y in 0..<h {
+    let y_inner = y >= patch_size && y < h - patch_size
     for x in 0..<w {
+      if y_inner && x >= patch_size && x < w - patch_size {
+        continue
+      }
       let mut min_val = 255
       let y_start = (y - patch_size).clamp(min=0, max=h - 1)
       let y_end = (y + patch_size).clamp(min=0, max=h - 1)
@@ -224,7 +243,7 @@ pub fn guided_filter(
 }
 
 ///|
-/// 盒式滤波（均值滤波）
+/// 盒式滤波（均值滤波），分离内部/边界区域以消除热点 clamp 调用
 fn box_filter(
   data : Array[Float],
   w : Int,
@@ -233,8 +252,26 @@ fn box_filter(
 ) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
+  // 内部区域 count 恒为 (2*radius+1)²
+  let inner_count = Float::from_int((2 * radius + 1) * (2 * radius + 1))
+  for y in radius..<(h - radius) {
+    for x in radius..<(w - radius) {
+      let mut sum = 0.0F
+      for py in (y - radius)..<=(y + radius) {
+        for px in (x - radius)..<=(x + radius) {
+          sum += data[py * w + px]
+        }
+      }
+      out[y * w + x] = sum / inner_count
+    }
+  }
+  // 边界区域
   for y in 0..<h {
+    let y_inner = y >= radius && y < h - radius
     for x in 0..<w {
+      if y_inner && x >= radius && x < w - radius {
+        continue
+      }
       let mut sum = 0.0F
       let mut count = 0
       let y_start = (y - radius).clamp(min=0, max=h - 1)
