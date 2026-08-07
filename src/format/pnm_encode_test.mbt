@@ -1,6 +1,9 @@
 ///|
 test "encode_ppm: basic RGB image" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let ppm = encode_ppm(img)
   // 头部应以 "P6\n" 开头
   assert_eq(ppm[0].to_int(), 0x50) // P
@@ -12,7 +15,10 @@ test "encode_ppm: basic RGB image" {
 
 ///|
 test "encode_ppm: round-trip with load_from_bytes" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let ppm = encode_ppm(img)
   let restored = @core.load_from_bytes(ppm, req_channels=Some(3))
   assert_eq(restored.width, img.width)
@@ -102,7 +108,10 @@ test "encode_pnm: auto-selects PGM for grayscale" {
 
 ///|
 test "encode_pnm: auto-selects PPM for RGB" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let pnm = encode_pnm(img)
   assert_eq(pnm[1].to_int(), 0x36) // P6
   let _ = img
@@ -111,7 +120,10 @@ test "encode_pnm: auto-selects PPM for RGB" {
 
 ///|
 test "encode_ppm: detect_format recognizes PPM" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let ppm = encode_ppm(img)
   let fmt = @core.detect_format(ppm)
   assert_eq(fmt, @core.ImageFormat::Pnm)

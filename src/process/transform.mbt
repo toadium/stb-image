@@ -3,8 +3,19 @@
 
 ///|
 /// 裁剪 8-bit Image 的指定区域
-pub fn crop(img : @core.Image, x : Int, y : Int, w : Int, h : Int) -> @core.Image raise @core.LoadError {
-  if x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > img.width || y + h > img.height {
+pub fn crop(
+  img : @core.Image,
+  x : Int,
+  y : Int,
+  w : Int,
+  h : Int,
+) -> @core.Image raise @core.LoadError {
+  if x < 0 ||
+    y < 0 ||
+    w <= 0 ||
+    h <= 0 ||
+    x + w > img.width ||
+    y + h > img.height {
     raise @core.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
@@ -16,7 +27,12 @@ pub fn crop(img : @core.Image, x : Int, y : Int, w : Int, h : Int) -> @core.Imag
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -37,7 +53,12 @@ pub fn rotate_90(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -56,7 +77,12 @@ pub fn rotate_180(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -77,7 +103,12 @@ pub fn rotate_270(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -95,13 +126,29 @@ pub fn flip_horizontal(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 裁剪 16-bit Image16
-pub fn crop_16(img : @core.Image16, x : Int, y : Int, w : Int, h : Int) -> @core.Image16 raise @core.LoadError {
-  if x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > img.width || y + h > img.height {
+pub fn crop_16(
+  img : @core.Image16,
+  x : Int,
+  y : Int,
+  w : Int,
+  h : Int,
+) -> @core.Image16 raise @core.LoadError {
+  if x < 0 ||
+    y < 0 ||
+    w <= 0 ||
+    h <= 0 ||
+    x + w > img.width ||
+    y + h > img.height {
     raise @core.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
@@ -113,13 +160,29 @@ pub fn crop_16(img : @core.Image16, x : Int, y : Int, w : Int, h : Int) -> @core
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 裁剪 float ImageF
-pub fn cropf(img : @core.ImageF, x : Int, y : Int, w : Int, h : Int) -> @core.ImageF raise @core.LoadError {
-  if x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > img.width || y + h > img.height {
+pub fn cropf(
+  img : @core.ImageF,
+  x : Int,
+  y : Int,
+  w : Int,
+  h : Int,
+) -> @core.ImageF raise @core.LoadError {
+  if x < 0 ||
+    y < 0 ||
+    w <= 0 ||
+    h <= 0 ||
+    x + w > img.width ||
+    y + h > img.height {
     raise @core.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
@@ -131,5 +194,10 @@ pub fn cropf(img : @core.ImageF, x : Int, y : Int, w : Int, h : Int) -> @core.Im
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

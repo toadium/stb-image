@@ -7,13 +7,17 @@
 /// 返回 Float 数组，背景像素距离为 0。
 pub fn distance_transform(
   img : @core.Image,
-  distance_type~ : Int = 2
+  distance_type? : Int = 2,
 ) -> Array[Float] raise @core.LoadError {
   if distance_type != 1 && distance_type != 2 && distance_type != 3 {
-    raise @core.LoadError::DecodeFailed("distance_type 必须为 1(L1), 2(L2), 3(Linf)")
+    raise @core.LoadError::DecodeFailed(
+      "distance_type 必须为 1(L1), 2(L2), 3(Linf)",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("distance_transform 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "distance_transform 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -39,7 +43,11 @@ pub fn distance_transform(
   let (mask1, mask2) = match distance_type {
     1 => ([(0, -1, 1.0F), (-1, 0, 1.0F)], [(0, 1, 1.0F), (1, 0, 1.0F)])
     3 => ([(0, -1, 1.0F), (-1, 0, 1.0F)], [(0, 1, 1.0F), (1, 0, 1.0F)])
-    _ => ([(0, -1, 1.0F), (-1, 0, 1.0F), (-1, -1, 1.414F), (-1, 1, 1.414F)], [(0, 1, 1.0F), (1, 0, 1.0F), (1, 1, 1.414F), (1, -1, 1.414F)])
+    _ =>
+      (
+        [(0, -1, 1.0F), (-1, 0, 1.0F), (-1, -1, 1.414F), (-1, 1, 1.414F)],
+        [(0, 1, 1.0F), (1, 0, 1.0F), (1, 1, 1.414F), (1, -1, 1.414F)],
+      )
   }
   // 前向扫描（左上到右下）
   for y in 0..<h {
@@ -88,11 +96,20 @@ pub fn distance_transform(
 
 ///|
 /// 距离变换可视化。将距离变换结果归一化到 [0, 255] 并返回灰度图。
-pub fn distance_transform_visualize(dist : Array[Float], w : Int, h : Int) -> @core.Image {
+pub fn distance_transform_visualize(
+  dist : Array[Float],
+  w : Int,
+  h : Int,
+) -> @core.Image {
   let n = w * h
   let out : Array[Byte] = Array::make(n, b'\x00')
   if n == 0 {
-    return @core.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) }
+    return @core.Image::{
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: Bytes::from_array([]),
+    }
   }
   let mut max_dist = 0.0F
   for i in 0..<n {
@@ -106,7 +123,12 @@ pub fn distance_transform_visualize(dist : Array[Float], w : Int, h : Int) -> @c
       out[i] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -135,8 +157,8 @@ pub fn skeletonize(img : @core.Image) -> @core.Image raise @core.LoadError {
         continue
       }
       let mut is_max = true
-      for dy in -1..=1 {
-        for dx in -1..=1 {
+      for dy in -1..<=1 {
+        for dx in -1..<=1 {
           if dx == 0 && dy == 0 {
             continue
           }
@@ -163,5 +185,10 @@ pub fn skeletonize(img : @core.Image) -> @core.Image raise @core.LoadError {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

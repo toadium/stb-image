@@ -15,8 +15,8 @@ pub(all) struct HoughLine {
 pub fn hough_lines(
   img : @core.Image,
   threshold : Int,
-  theta_resolution~ : Float = 1.0F,
-  rho_resolution~ : Float = 1.0F
+  theta_resolution? : Float = 1.0F,
+  rho_resolution? : Float = 1.0F,
 ) -> Array[HoughLine] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("hough_lines 仅支持 channels=1/3/4")
@@ -30,12 +30,18 @@ pub fn hough_lines(
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
   // 累加器
-  let accumulator : Array[Array[Int]] = Array::make(n_rho, Array::make(n_theta, 0))
+  let accumulator : Array[Array[Int]] = Array::make(
+    n_rho,
+    Array::make(n_theta, 0),
+  )
   // 预计算 sin/cos 表
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
   for t in 0..<n_theta {
-    let angle = Float::from_int(t) * theta_resolution * 3.141592653589793F / 180.0F
+    let angle = Float::from_int(t) *
+      theta_resolution *
+      3.141592653589793F /
+      180.0F
     cos_table[t] = @math.cosf(angle)
     sin_table[t] = @math.sinf(angle)
   }
@@ -46,8 +52,12 @@ pub fn hough_lines(
         continue
       }
       for t in 0..<n_theta {
-        let rho = Float::from_int(x) * cos_table[t] + Float::from_int(y) * sin_table[t]
-        let rho_idx = ((rho / rho_resolution).to_int() + max_rho).clamp(min=0, max=n_rho - 1)
+        let rho = Float::from_int(x) * cos_table[t] +
+          Float::from_int(y) * sin_table[t]
+        let rho_idx = ((rho / rho_resolution).to_int() + max_rho).clamp(
+          min=0,
+          max=n_rho - 1,
+        )
         accumulator[rho_idx][t] += 1
       }
     }
@@ -59,7 +69,10 @@ pub fn hough_lines(
       if accumulator[r][t] >= threshold {
         lines.push(HoughLine::{
           rho: (Float::from_int(r) - Float::from_int(max_rho)) * rho_resolution,
-          theta: Float::from_int(t) * theta_resolution * 3.141592653589793F / 180.0F,
+          theta: Float::from_int(t) *
+          theta_resolution *
+          3.141592653589793F /
+          180.0F,
           votes: accumulator[r][t],
         })
       }
@@ -74,8 +87,8 @@ pub fn hough_lines(
 /// 非极大值抑制。对霍夫变换结果做 NMS，去除相近的重复直线。
 pub fn hough_lines_nms(
   lines : Array[HoughLine],
-  rho_threshold~ : Float = 5.0F,
-  theta_threshold~ : Float = 0.1F
+  rho_threshold? : Float = 5.0F,
+  theta_threshold? : Float = 0.1F,
 ) -> Array[HoughLine] {
   let result : Array[HoughLine] = []
   let suppressed : Array[Bool] = Array::make(lines.length(), false)

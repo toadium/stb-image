@@ -21,7 +21,7 @@ pub fn compute_glcm(
   img : @core.Image,
   dx : Int,
   dy : Int,
-  levels~ : Int = 256
+  levels? : Int = 256,
 ) -> Array[Array[Int]] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("compute_glcm 仅支持 channels=1/3/4")
@@ -84,7 +84,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
       homogeneity: 0.0F,
       entropy: 0.0F,
       asm_value: 0.0F,
-      dissimilarity: 0.0F
+      dissimilarity: 0.0F,
     }
   }
   // 归一化
@@ -102,7 +102,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
       homogeneity: 0.0F,
       entropy: 0.0F,
       asm_value: 0.0F,
-      dissimilarity: 0.0F
+      dissimilarity: 0.0F,
     }
   }
   // 计算均值和标准差
@@ -145,7 +145,10 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
         homogeneity += p / (1.0F + diff * diff)
         entropy += -p * Float::from_double(@math.log2(p.to_double()))
         if std_i > 0.0F && std_j > 0.0F {
-          correlation += p * (Float::from_int(i) - mean_i) * (Float::from_int(j) - mean_j) / (std_i * std_j)
+          correlation += p *
+            (Float::from_int(i) - mean_i) *
+            (Float::from_int(j) - mean_j) /
+            (std_i * std_j)
         }
       }
     }
@@ -157,7 +160,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
     homogeneity,
     entropy,
     asm_value: asm_val,
-    dissimilarity
+    dissimilarity,
   }
 }
 
@@ -166,7 +169,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
 /// 返回 4 个方向的纹理特征数组。
 pub fn glcm_features_multi_direction(
   img : @core.Image,
-  levels~ : Int = 256
+  levels? : Int = 256,
 ) -> Array[GlcmFeatures] raise @core.LoadError {
   let directions = [(1, 0), (1, 1), (0, 1), (-1, 1)]
   let result : Array[GlcmFeatures] = []

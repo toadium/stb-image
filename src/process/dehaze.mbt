@@ -8,9 +8,9 @@
 /// t0 为透射率下限（默认 0.1）。
 pub fn dehaze(
   img : @core.Image,
-  patch_size~ : Int = 7,
-  omega~ : Float = 0.95F,
-  t0~ : Float = 0.1F
+  patch_size? : Int = 7,
+  omega? : Float = 0.95F,
+  t0? : Float = 0.1F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("dehaze 需要 RGB/RGBA 图像")
@@ -59,7 +59,12 @@ pub fn dehaze(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -69,7 +74,7 @@ fn compute_dark_channel(
   w : Int,
   h : Int,
   ch : Int,
-  patch_size : Int
+  patch_size : Int,
 ) -> Array[Float] {
   let n = w * h
   // 先计算每个像素的最小通道值
@@ -89,8 +94,8 @@ fn compute_dark_channel(
       let y_end = (y + patch_size).clamp(min=0, max=h - 1)
       let x_start = (x - patch_size).clamp(min=0, max=w - 1)
       let x_end = (x + patch_size).clamp(min=0, max=w - 1)
-      for py in y_start..=y_end {
-        for px in x_start..=x_end {
+      for py in y_start..<=y_end {
+        for px in x_start..<=x_end {
           if min_channel[py * w + px] < min_val {
             min_val = min_channel[py * w + px]
           }
@@ -109,7 +114,7 @@ fn estimate_atmospheric_light(
   dark_channel : Array[Float],
   w : Int,
   h : Int,
-  ch : Int
+  ch : Int,
 ) -> Array[Int] {
   let n = w * h
   // 取暗通道中最亮的 0.1% 像素
@@ -148,11 +153,13 @@ fn estimate_atmospheric_light(
 pub fn guided_filter(
   img : @core.Image,
   input : Array[Float],
-  radius~ : Int = 20,
-  eps~ : Float = 0.001F
+  radius? : Int = 20,
+  eps? : Float = 0.001F,
 ) -> Array[Float] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("guided_filter 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "guided_filter 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -218,7 +225,12 @@ pub fn guided_filter(
 
 ///|
 /// 盒式滤波（均值滤波）
-fn box_filter(data : Array[Float], w : Int, h : Int, radius : Int) -> Array[Float] {
+fn box_filter(
+  data : Array[Float],
+  w : Int,
+  h : Int,
+  radius : Int,
+) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
   for y in 0..<h {
@@ -229,8 +241,8 @@ fn box_filter(data : Array[Float], w : Int, h : Int, radius : Int) -> Array[Floa
       let y_end = (y + radius).clamp(min=0, max=h - 1)
       let x_start = (x - radius).clamp(min=0, max=w - 1)
       let x_end = (x + radius).clamp(min=0, max=w - 1)
-      for py in y_start..=y_end {
-        for px in x_start..=x_end {
+      for py in y_start..<=y_end {
+        for px in x_start..<=x_end {
           sum += data[py * w + px]
           count += 1
         }

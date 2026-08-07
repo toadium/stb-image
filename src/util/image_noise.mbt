@@ -33,9 +33,14 @@ fn lcg_gaussian(rng : LCG) -> Float {
 
 ///|
 
+///|
 /// 添加高斯噪声。sigma 为标准差，seed 为随机种子。
 /// 仅影响颜色通道，alpha 通道不变。
-pub fn add_noise_gaussian(img : @core.Image, sigma : Float, seed : UInt) -> @core.Image {
+pub fn add_noise_gaussian(
+  img : @core.Image,
+  sigma : Float,
+  seed : UInt,
+) -> @core.Image {
   let rng = LCG::{ state: seed }
   let n = img.width * img.height
   let ch = img.channels
@@ -51,13 +56,22 @@ pub fn add_noise_gaussian(img : @core.Image, sigma : Float, seed : UInt) -> @cor
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 添加椒盐噪声。prob 为噪声概率（0.0~1.0），seed 为随机种子。
 /// 被选中的像素随机设为 0（椒）或 255（盐）。
-pub fn add_noise_salt_pepper(img : @core.Image, prob : Float, seed : UInt) -> @core.Image {
+pub fn add_noise_salt_pepper(
+  img : @core.Image,
+  prob : Float,
+  seed : UInt,
+) -> @core.Image {
   let rng = LCG::{ state: seed }
   let n = img.width * img.height
   let ch = img.channels
@@ -77,5 +91,10 @@ pub fn add_noise_salt_pepper(img : @core.Image, prob : Float, seed : UInt) -> @c
       }
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

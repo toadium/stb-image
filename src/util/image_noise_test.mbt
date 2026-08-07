@@ -1,7 +1,6 @@
 // image_noise 测试
 
 ///|
-
 test "add_noise_gaussian: preserves dimensions" {
   let img = mk(4, 4, 3, b'\x80')
   let result = add_noise_gaussian(img, 10.0F, 42U)
@@ -27,7 +26,7 @@ test "add_noise_gaussian: preserves alpha" {
     width: 1,
     height: 1,
     channels: 4,
-    data: [b'\x80', b'\x80', b'\x80', b'\xFF'] |> Bytes::from_array
+    data: [b'\x80', b'\x80', b'\x80', b'\xFF'] |> Bytes::from_array,
   }
   let result = add_noise_gaussian(img, 10.0F, 42U)
   assert_eq(result.data[3], b'\xFF')

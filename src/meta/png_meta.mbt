@@ -2,6 +2,7 @@
 
 ///|
 
+///|
 /// PNG text chunk（关键字-文本对）
 pub(all) struct PngTextChunk {
   keyword : String
@@ -14,9 +15,7 @@ fn read_png_bytes_as_string(data : Bytes, start : Int, end : Int) -> String {
   for i in start..<end {
     chars.push(data[i])
   }
-  try {
-    @encoding/utf8.decode(Bytes::from_array(chars)[:])
-  } catch {
+  @encoding/utf8.decode(Bytes::from_array(chars)[:]) catch {
     _ => ""
   }
 }
@@ -61,11 +60,15 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
         }
       }
       if sep >= 0 {
-        let keyword = read_png_bytes_as_string(data, data_start, data_start + sep)
+        let keyword = read_png_bytes_as_string(
+          data,
+          data_start,
+          data_start + sep,
+        )
         let text = read_png_bytes_as_string(
           data,
           data_start + sep + 1,
-          data_start + chunk_len
+          data_start + chunk_len,
         )
         result.push(PngTextChunk::{ keyword, text })
       }
@@ -81,7 +84,11 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
         }
       }
       if sep >= 0 && sep + 2 < chunk_len {
-        let keyword = read_png_bytes_as_string(data, data_start, data_start + sep)
+        let keyword = read_png_bytes_as_string(
+          data,
+          data_start,
+          data_start + sep,
+        )
         let comp_flag = data[data_start + sep + 1].to_int()
         // 跳过 compression_method (1 byte) + language_tag + 0x00 + translated_keyword + 0x00
         let mut text_start = sep + 3 // skip comp_flag + comp_method
@@ -100,7 +107,7 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
             read_png_bytes_as_string(
               data,
               data_start + text_start,
-              data_start + chunk_len
+              data_start + chunk_len,
             )
           } else {
             // 压缩文本不支持（需要 zlib 解压）
@@ -122,7 +129,9 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
 
 ///|
 /// 从 PNG 文件读取 text chunks。
-pub fn read_png_text_chunks_from_path(path : String) -> Array[PngTextChunk] raise @core.LoadError {
+pub fn read_png_text_chunks_from_path(
+  path : String,
+) -> Array[PngTextChunk] raise @core.LoadError {
   let file_data = @core.read_file_bytes(path)
   read_png_text_chunks(file_data)
 }

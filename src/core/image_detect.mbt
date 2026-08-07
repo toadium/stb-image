@@ -36,9 +36,7 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
     return ImageFormat::Jpeg
   }
   // BMP: BM
-  if len >= 2 &&
-    data[0].to_int() == 0x42 &&
-    data[1].to_int() == 0x4D {
+  if len >= 2 && data[0].to_int() == 0x42 && data[1].to_int() == 0x4D {
     return ImageFormat::Bmp
   }
   // GIF: GIF87a or GIF89a
@@ -86,7 +84,10 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
 ///|
 /// 自动检测格式并解码为 8-bit Image
 /// stb_image 内部支持 PNG/JPEG/BMP/GIF/PSD/TGA/HDR/PNM 自动检测
-pub fn decode_any(data : Bytes, req_channels~ : Int? = None) -> Image raise LoadError {
+pub fn decode_any(
+  data : Bytes,
+  req_channels? : Int? = None,
+) -> Image raise LoadError {
   load_from_bytes(data, req_channels~)
 }
 

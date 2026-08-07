@@ -39,7 +39,10 @@ test "load_gif_from_bytes: invalid data raises DecodeFailed" {
 
 ///|
 test "load_gif_from_path: req_channels=4 returns RGBA frames" {
-  let anim = load_gif_from_path("testdata/test_4x4_red.gif", req_channels=Some(4))
+  let anim = load_gif_from_path(
+    "testdata/test_4x4_red.gif",
+    req_channels=Some(4),
+  )
   let frame = anim.frames[0]
   assert_eq(frame.channels, 4)
   assert_eq(frame.data.length(), frame.width * frame.height * 4)

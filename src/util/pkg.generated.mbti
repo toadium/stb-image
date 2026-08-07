@@ -15,19 +15,31 @@ pub fn add_noise_salt_pepper(@core.Image, Float, UInt) -> @core.Image
 
 pub fn apply_lut(@core.Image, Array[Byte]) -> @core.Image raise @core.LoadError
 
+pub fn blend_color_burn(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_color_dodge(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
 pub fn blend_darken(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn blend_difference(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn blend_exclusion(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
+pub fn blend_hard_light(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
 pub fn blend_lighten(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_linear_burn(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_linear_dodge(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn blend_multiply(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn blend_overlay(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn blend_screen(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_soft_light(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
 pub fn compute_stats(@core.Image) -> ImageStats
 

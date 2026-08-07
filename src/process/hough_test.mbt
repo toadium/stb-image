@@ -7,7 +7,12 @@ test "hough_lines: 检测水平直线" {
   for x in 0..<8 {
     data[2 * 8 + x] = b'\xFF'
   }
-  let img = @core.Image::{ width: 8, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let lines = hough_lines(img, 4)
   assert_true(lines.length() > 0)
   // 票数最高的直线应有 8 票（8 个边缘点）
@@ -21,7 +26,12 @@ test "hough_lines: 检测垂直直线" {
   for y in 0..<4 {
     data[y * 8 + 3] = b'\xFF'
   }
-  let img = @core.Image::{ width: 8, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let lines = hough_lines(img, 3)
   assert_true(lines.length() > 0)
   assert_eq(lines[0].votes, 4)
@@ -44,7 +54,12 @@ test "hough_lines: 阈值过滤" {
   }
   data[4 * 8 + 0] = b'\xFF'
   data[5 * 8 + 1] = b'\xFF'
-  let img = @core.Image::{ width: 8, height: 8, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 8,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   // 阈值 5：至少有 8 像素直线
   let lines = hough_lines(img, 5)
   assert_true(lines.length() > 0)
@@ -60,7 +75,12 @@ test "hough_lines: 按票数降序" {
   for y in 0..<4 {
     data[y * 8 + 0] = b'\xFF'
   }
-  let img = @core.Image::{ width: 8, height: 8, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 8,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let lines = hough_lines(img, 3)
   for i in 1..<lines.length() {
     assert_true(lines[i - 1].votes >= lines[i].votes)

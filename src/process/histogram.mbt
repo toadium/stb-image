@@ -65,7 +65,12 @@ pub fn histogram_equalize(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -105,5 +110,10 @@ pub fn histogram_normalize(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

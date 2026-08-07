@@ -12,9 +12,9 @@ pub fn gabor_filter(
   ksize : Int,
   sigma : Float,
   theta : Float,
-  lambda~ : Float = 10.0F,
-  gamma~ : Float = 0.5F,
-  phi~ : Float = 0.0F
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+  phi? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("gabor_filter 仅支持 channels=1/3/4")
@@ -46,7 +46,10 @@ pub fn gabor_filter(
       let y = Float::from_int(ky - half)
       let x_prime = x * cos_t + y * sin_t
       let y_prime = -x * sin_t + y * cos_t
-      let gaussian = @math.expf(-(x_prime * x_prime + gamma * gamma * y_prime * y_prime) / (2.0F * sigma * sigma))
+      let gaussian = @math.expf(
+        -(x_prime * x_prime + gamma * gamma * y_prime * y_prime) /
+        (2.0F * sigma * sigma),
+      )
       let wave = @math.cosf(2.0F * 3.14159265F * x_prime / lambda + phi)
       let val = gaussian * wave
       kernel[ky * ksize + kx] = val
@@ -68,7 +71,9 @@ pub fn gabor_filter(
           for kx in 0..<ksize {
             let px = (x + kx - half).clamp(min=0, max=w - 1)
             let py = (y + ky - half).clamp(min=0, max=h - 1)
-            let pixel = Float::from_int(img.data[(py * w + px) * ch + c].to_int())
+            let pixel = Float::from_int(
+              img.data[(py * w + px) * ch + c].to_int(),
+            )
             sum += pixel * kernel[ky * ksize + kx]
           }
         }
@@ -77,7 +82,12 @@ pub fn gabor_filter(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -89,15 +99,19 @@ pub fn gabor_filter_bank(
   img : @core.Image,
   ksize : Int,
   sigma : Float,
-  num_orientations~ : Int = 4,
-  lambda~ : Float = 10.0F,
-  gamma~ : Float = 0.5F
+  num_orientations? : Int = 4,
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("gabor_filter_bank 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "gabor_filter_bank 仅支持 channels=1/3/4",
+    )
   }
   if num_orientations < 1 || num_orientations > 16 {
-    raise @core.LoadError::DecodeFailed("num_orientations 必须在 1..16 之间")
+    raise @core.LoadError::DecodeFailed(
+      "num_orientations 必须在 1..16 之间",
+    )
   }
   let ch = img.channels
   let w = img.width
@@ -109,7 +123,9 @@ pub fn gabor_filter_bank(
   // 累加各方向响应
   let accum : Array[Float] = Array::make(n * ch, 0.0F)
   for i in 0..<num_orientations {
-    let theta = Float::from_int(i) * 3.14159265F / Float::from_int(num_orientations)
+    let theta = Float::from_int(i) *
+      3.14159265F /
+      Float::from_int(num_orientations)
     let filtered = gabor_filter(img, ksize, sigma, theta, lambda~, gamma~)
     for j in 0..<(n * ch) {
       accum[j] += Float::from_int(filtered.data[j].to_int())
@@ -121,7 +137,12 @@ pub fn gabor_filter_bank(
     let val = (accum[j] / Float::from_int(num_orientations)).to_int()
     out[j] = val.clamp(min=0, max=255).to_byte()
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -130,9 +151,9 @@ pub fn gabor_kernel(
   ksize : Int,
   sigma : Float,
   theta : Float,
-  lambda~ : Float = 10.0F,
-  gamma~ : Float = 0.5F,
-  phi~ : Float = 0.0F
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+  phi? : Float = 0.0F,
 ) -> Array[Array[Float]] raise @core.LoadError {
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
     raise @core.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
@@ -153,7 +174,10 @@ pub fn gabor_kernel(
       let y = Float::from_int(ky - half)
       let x_prime = x * cos_t + y * sin_t
       let y_prime = -x * sin_t + y * cos_t
-      let gaussian = @math.expf(-(x_prime * x_prime + gamma * gamma * y_prime * y_prime) / (2.0F * sigma * sigma))
+      let gaussian = @math.expf(
+        -(x_prime * x_prime + gamma * gamma * y_prime * y_prime) /
+        (2.0F * sigma * sigma),
+      )
       let wave = @math.cosf(2.0F * 3.14159265F * x_prime / lambda + phi)
       kernel[ky][kx] = gaussian * wave
     }

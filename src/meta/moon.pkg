@@ -1,5 +1,5 @@
 import {
-  "MoonBit-Toadium/stb-image/src/core" @core,
+  "MoonBit-Toadium/stb-image/src/core",
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }

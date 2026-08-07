@@ -1,6 +1,9 @@
 ///|
 test "encode_gif_animation: single frame" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let anim = @core.GifAnimation::{ frames: [img], delays: [100] }
   let gif = encode_gif_animation(anim)
   // GIF89a header
@@ -18,7 +21,10 @@ test "encode_gif_animation: single frame" {
 
 ///|
 test "encode_gif_animation: multi-frame" {
-  let img1 = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img1 = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   // 创建第二帧（反色）
   let img2 = @process.invert(img1)
   let anim = @core.GifAnimation::{ frames: [img1, img2], delays: [100, 200] }
@@ -42,7 +48,10 @@ test "encode_gif_animation: multi-frame" {
 
 ///|
 test "encode_gif_animation: round-trip with load_gif" {
-  let img1 = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img1 = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let img2 = @process.invert(img1)
   let anim = @core.GifAnimation::{ frames: [img1, img2], delays: [100, 200] }
   let gif = encode_gif_animation(anim)
@@ -70,7 +79,10 @@ test "encode_gif_animation: empty frames raises" {
 
 ///|
 test "encode_gif_animation: mismatched lengths raises" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let anim = @core.GifAnimation::{ frames: [img], delays: [100, 200] }
   try {
     let _ = encode_gif_animation(anim)
@@ -85,7 +97,12 @@ test "encode_gif_animation: mismatched lengths raises" {
 
 ///|
 test "encode_gif_animation: invalid channels raises" {
-  let img = @core.Image::{ width: 1, height: 1, channels: 1, data: [b'\x80'] |> Bytes::from_array }
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: [b'\x80'] |> Bytes::from_array,
+  }
   let anim = @core.GifAnimation::{ frames: [img], delays: [100] }
   try {
     let _ = encode_gif_animation(anim)
@@ -100,8 +117,14 @@ test "encode_gif_animation: invalid channels raises" {
 
 ///|
 test "encode_gif_animation: detect_format recognizes GIF" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
-  let anim = @core.GifAnimation::{ frames: [img, @process.invert(img)], delays: [100, 100] }
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let anim = @core.GifAnimation::{
+    frames: [img, @process.invert(img)],
+    delays: [100, 100],
+  }
   let gif = encode_gif_animation(anim)
   let fmt = @core.detect_format(gif)
   assert_eq(fmt, @core.ImageFormat::Gif)

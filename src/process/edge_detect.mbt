@@ -37,7 +37,12 @@ pub fn edge_detect_laplacian(img : @core.Image) -> @core.Image {
       out[y * w + x] = clamp_b(lap.abs())
     }
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -66,11 +71,26 @@ pub fn edge_detect_prewitt(img : @core.Image) -> @core.Image {
           img.data[(py * w + px) * ch].to_int()
         }
       }
-      let gx = luminance(right, up) + luminance(right, y) + luminance(right, down) - luminance(left, up) - luminance(left, y) - luminance(left, down)
-      let gy = luminance(left, down) + luminance(x, down) + luminance(right, down) - luminance(left, up) - luminance(x, up) - luminance(right, up)
+      let gx = luminance(right, up) +
+        luminance(right, y) +
+        luminance(right, down) -
+        luminance(left, up) -
+        luminance(left, y) -
+        luminance(left, down)
+      let gy = luminance(left, down) +
+        luminance(x, down) +
+        luminance(right, down) -
+        luminance(left, up) -
+        luminance(x, up) -
+        luminance(right, up)
       let mag = @math.powf(Float::from_int(gx * gx + gy * gy), 0.5F)
       out[y * w + x] = clamp_b(mag.to_int())
     }
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

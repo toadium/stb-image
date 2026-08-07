@@ -9,9 +9,9 @@
 /// h 为滤波强度参数（默认 10），越大平滑越强。
 pub fn nlm_denoise(
   img : @core.Image,
-  patch_size~ : Int = 3,
-  search_size~ : Int = 7,
-  h~ : Int = 10
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("nlm_denoise 仅支持 channels=1/3/4")
@@ -53,13 +53,18 @@ pub fn nlm_denoise(
         let sy_end = (y + search_d).clamp(min=0, max=h_img - 1)
         let sx_start = (x - search_d).clamp(min=0, max=w - 1)
         let sx_end = (x + search_d).clamp(min=0, max=w - 1)
-        for sy in sy_start..=sy_end {
-          for sx in sx_start..=sx_end {
+        for sy in sy_start..<=sy_end {
+          for sx in sx_start..<=sx_end {
             // 计算块距离
-            let dist = patch_distance(img, x, y, sx, sy, w, h_img, ch, c, patch_d)
-            let weight = @math.expf(Float::from_int(-dist) / Float::from_int(h_sq * patch_area))
+            let dist = patch_distance(
+              img, x, y, sx, sy, w, h_img, ch, c, patch_d,
+            )
+            let weight = @math.expf(
+              Float::from_int(-dist) / Float::from_int(h_sq * patch_area),
+            )
             weight_sum += weight
-            value_sum += weight * Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
+            value_sum += weight *
+              Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
           }
         }
         let val = if weight_sum > 0.0F {
@@ -71,7 +76,12 @@ pub fn nlm_denoise(
       }
     }
   }
-  @core.Image::{ width: w, height: h_img, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h_img,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -86,11 +96,11 @@ fn patch_distance(
   h : Int,
   ch : Int,
   c : Int,
-  patch_d : Int
+  patch_d : Int,
 ) -> Int {
   let mut dist = 0
-  for dy in -patch_d..=patch_d {
-    for dx in -patch_d..=patch_d {
+  for dy in -patch_d..<=patch_d {
+    for dx in -patch_d..<=patch_d {
       let px1 = (x1 + dx).clamp(min=0, max=w - 1)
       let py1 = (y1 + dy).clamp(min=0, max=h - 1)
       let px2 = (x2 + dx).clamp(min=0, max=w - 1)
@@ -110,13 +120,15 @@ fn patch_distance(
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4）。
 pub fn nlm_denoise_fast(
   img : @core.Image,
-  patch_size~ : Int = 3,
-  search_size~ : Int = 7,
-  h~ : Int = 10,
-  step~ : Int = 2
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
+  step? : Int = 2,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("nlm_denoise_fast 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "nlm_denoise_fast 仅支持 channels=1/3/4",
+    )
   }
   if patch_size < 1 || patch_size > 10 {
     raise @core.LoadError::DecodeFailed("patch_size 必须在 1..10 之间")
@@ -159,10 +171,15 @@ pub fn nlm_denoise_fast(
         while sy <= sy_end {
           let mut sx = sx_start
           while sx <= sx_end {
-            let dist = patch_distance(img, x, y, sx, sy, w, h_img, ch, c, patch_d)
-            let weight = @math.expf(Float::from_int(-dist) / Float::from_int(h_sq * patch_area))
+            let dist = patch_distance(
+              img, x, y, sx, sy, w, h_img, ch, c, patch_d,
+            )
+            let weight = @math.expf(
+              Float::from_int(-dist) / Float::from_int(h_sq * patch_area),
+            )
             weight_sum += weight
-            value_sum += weight * Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
+            value_sum += weight *
+              Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
             sx += step
           }
           sy += step
@@ -176,5 +193,10 @@ pub fn nlm_denoise_fast(
       }
     }
   }
-  @core.Image::{ width: w, height: h_img, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h_img,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

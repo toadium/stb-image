@@ -1,9 +1,10 @@
 import {
-  "MoonBit-Toadium/stb-image/src/core" @core,
+  "MoonBit-Toadium/stb-image/src/core",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }
+
 import {
-  "MoonBit-Toadium/stb-image/src/process" @process,
+  "MoonBit-Toadium/stb-image/src/process",
 } for "test"
 
 supported_targets = "native"

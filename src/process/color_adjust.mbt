@@ -28,7 +28,12 @@ pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -49,7 +54,12 @@ pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -76,7 +86,12 @@ pub fn adjust_gamma(img : @core.Image, gamma : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -94,7 +109,12 @@ pub fn invert(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|

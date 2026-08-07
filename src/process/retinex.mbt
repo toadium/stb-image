@@ -14,9 +14,9 @@ fn logf(x : Float) -> Float {
 /// sigma 为高斯标准差，gain 为增益，offset 为偏移。
 pub fn ssr(
   img : @core.Image,
-  sigma~ : Float = 80.0F,
-  gain~ : Float = 1.0F,
-  offset~ : Float = 0.0F
+  sigma? : Float = 80.0F,
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("ssr 仅支持 channels=1/3/4")
@@ -53,7 +53,12 @@ pub fn ssr(
       out[i * ch + c] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -64,9 +69,9 @@ pub fn ssr(
 /// gain 为增益，offset 为偏移。
 pub fn msr(
   img : @core.Image,
-  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain~ : Float = 1.0F,
-  offset~ : Float = 0.0F
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("msr 仅支持 channels=1/3/4")
@@ -115,7 +120,12 @@ pub fn msr(
       out[i * ch + c] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -124,11 +134,11 @@ pub fn msr(
 /// 适用于 RGB/RGBA 图（channels=3/4）。
 pub fn msrcr(
   img : @core.Image,
-  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain~ : Float = 1.0F,
-  offset~ : Float = 0.0F,
-  alpha~ : Float = 125.0F,
-  beta~ : Float = 46.0F
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+  alpha? : Float = 125.0F,
+  beta? : Float = 46.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("msrcr 需要 RGB/RGBA 图像")
@@ -190,7 +200,12 @@ pub fn msrcr(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -199,7 +214,7 @@ fn gaussian_blur_channel(
   channel : Array[Float],
   w : Int,
   h : Int,
-  sigma : Float
+  sigma : Float,
 ) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
@@ -222,7 +237,7 @@ fn gaussian_blur_channel(
   for y in 0..<h {
     for x in 0..<w {
       let mut sum = 0.0F
-      for k in -radius..=radius {
+      for k in -radius..<=radius {
         let px = (x + k).clamp(min=0, max=w - 1)
         sum += channel[y * w + px] * kernel[k + radius]
       }
@@ -233,7 +248,7 @@ fn gaussian_blur_channel(
   for y in 0..<h {
     for x in 0..<w {
       let mut sum = 0.0F
-      for k in -radius..=radius {
+      for k in -radius..<=radius {
         let py = (y + k).clamp(min=0, max=h - 1)
         sum += temp[py * w + x] * kernel[k + radius]
       }

@@ -20,7 +20,9 @@ pub(all) struct Contour {
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4，取首通道）。
 pub fn find_contours(img : @core.Image) -> Array[Contour] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("find_contours 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "find_contours 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -57,14 +59,21 @@ fn trace_boundary(
   start_y : Int,
   w : Int,
   h : Int,
-  is_outer : Bool
+  is_outer : Bool,
 ) -> Contour {
   let points : Array[ContourPoint] = []
   let mut cx = start_x
   let mut cy = start_y
   // 8 邻域顺时针方向（从右开始）
   let dirs : Array[(Int, Int)] = [
-    (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1),
+    (1, 0),
+    (1, 1),
+    (0, 1),
+    (-1, 1),
+    (-1, 0),
+    (-1, -1),
+    (0, -1),
+    (1, -1),
   ]
   let mut dir_idx = 0 // 起始方向
   let mut count = 0
@@ -108,10 +117,12 @@ fn trace_boundary(
 pub fn draw_contours(
   img : @core.Image,
   contours : Array[Contour],
-  color : Array[Byte]
+  color : Array[Byte],
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("draw_contours 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "draw_contours 仅支持 channels=1/3/4",
+    )
   }
   let ch = img.channels
   let w = img.width
@@ -132,7 +143,12 @@ pub fn draw_contours(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|

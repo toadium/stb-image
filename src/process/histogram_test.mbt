@@ -1,6 +1,9 @@
 ///|
 test "histogram: returns 256 bins" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let hist = histogram(img)
   assert_eq(hist.length(), 256)
   // 总和 = 像素数
@@ -28,7 +31,10 @@ test "histogram: uniform image has single bin" {
 
 ///|
 test "histogram_equalize: preserves dimensions" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = histogram_equalize(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -53,7 +59,10 @@ test "histogram_equalize: uniform image is unchanged" {
 
 ///|
 test "histogram_equalize: preserves alpha" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(4))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
   let result = histogram_equalize(img)
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
   let _ = img
@@ -68,7 +77,12 @@ test "histogram_normalize: stretches range to 0-255" {
   data[1] = (100).to_byte()
   data[2] = (75).to_byte()
   data[3] = (50).to_byte()
-  let img = @core.Image::{ width: 4, height: 1, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 4,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = histogram_normalize(img)
   assert_eq(result.data[0].to_int(), 0)
   assert_eq(result.data[1].to_int(), 255)
@@ -93,7 +107,12 @@ test "histogram_normalize: uniform image is unchanged" {
 ///|
 test "histogram_normalize: already full range is identity" {
   let data : Array[Byte] = [b'\x00', b'\xFF', b'\x80', b'\x40']
-  let img = @core.Image::{ width: 4, height: 1, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 4,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = histogram_normalize(img)
   assert_eq(result.data[0].to_int(), 0)
   assert_eq(result.data[1].to_int(), 255)

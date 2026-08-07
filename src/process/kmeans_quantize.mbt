@@ -4,12 +4,18 @@
 /// K-means 色彩量化。将图像颜色聚为 k 类，每类用聚类中心替代。
 /// 适用于 RGB/RGBA 图像（channels=3/4），alpha 通道不变。
 /// max_iters 控制最大迭代次数（默认 20）。
-pub fn k_means_quantize(img : @core.Image, k : Int, max_iters : Int) -> @core.Image raise @core.LoadError {
+pub fn k_means_quantize(
+  img : @core.Image,
+  k : Int,
+  max_iters : Int,
+) -> @core.Image raise @core.LoadError {
   if k < 1 || k > 256 {
     raise @core.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("k_means_quantize 需要 RGB/RGBA 图像")
+    raise @core.LoadError::DecodeFailed(
+      "k_means_quantize 需要 RGB/RGBA 图像",
+    )
   }
   let ch = img.channels
   let n = img.width * img.height
@@ -38,7 +44,14 @@ pub fn k_means_quantize(img : @core.Image, k : Int, max_iters : Int) -> @core.Im
       let g = img.data[i * ch + 1].to_int()
       let b = img.data[i * ch + 2].to_int()
       let mut best = 0
-      let mut best_dist = dist_sq(r, g, b, centroids_r[0], centroids_g[0], centroids_b[0])
+      let mut best_dist = dist_sq(
+        r,
+        g,
+        b,
+        centroids_r[0],
+        centroids_g[0],
+        centroids_b[0],
+      )
       for j in 1..<k {
         let d = dist_sq(r, g, b, centroids_r[j], centroids_g[j], centroids_b[j])
         if d < best_dist {
@@ -86,7 +99,12 @@ pub fn k_means_quantize(img : @core.Image, k : Int, max_iters : Int) -> @core.Im
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|

@@ -1,5 +1,6 @@
 // Haar 小波变换测试
 
+///|
 test "haar_transform_1d 基本功能" {
   let data = [1.0F, 2.0F, 3.0F, 4.0F]
   let result = haar_transform_1d(data)
@@ -8,6 +9,7 @@ test "haar_transform_1d 基本功能" {
   assert_eq(data[0], 1.0F)
 }
 
+///|
 test "haar_transform_1d 逆变换" {
   let data = [1.0F, 2.0F, 3.0F, 4.0F]
   let transformed = haar_transform_1d(data)
@@ -18,12 +20,14 @@ test "haar_transform_1d 逆变换" {
   }
 }
 
+///|
 test "haar_transform_1d 单元素" {
   let data = [5.0F]
   let result = haar_transform_1d(data)
   assert_eq(result[0], 5.0F)
 }
 
+///|
 test "haar_transform_1d 常量信号" {
   let data = [3.0F, 3.0F, 3.0F, 3.0F]
   let result = haar_transform_1d(data)
@@ -32,12 +36,11 @@ test "haar_transform_1d 常量信号" {
   assert_true(result[3].abs() < 0.001F)
 }
 
+///|
 test "haar_transform_2d 基本功能" {
   let data = Bytes::from_array([
-    b'\x10', b'\x20', b'\x30', b'\x40',
-    b'\x50', b'\x60', b'\x70', b'\x80',
-    b'\x90', b'\xA0', b'\xB0', b'\xC0',
-    b'\xD0', b'\xE0', b'\xF0', b'\x00',
+    b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
+    b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = haar_transform_2d(img, levels=1)
@@ -47,12 +50,11 @@ test "haar_transform_2d 基本功能" {
   assert_eq(result.coefficients.length(), 16)
 }
 
+///|
 test "haar_transform_2d 逆变换" {
   let data = Bytes::from_array([
-    b'\x10', b'\x20', b'\x30', b'\x40',
-    b'\x50', b'\x60', b'\x70', b'\x80',
-    b'\x90', b'\xA0', b'\xB0', b'\xC0',
-    b'\xD0', b'\xE0', b'\xF0', b'\x00',
+    b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
+    b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = haar_transform_2d(img, levels=1)
@@ -70,8 +72,14 @@ test "haar_transform_2d 逆变换" {
   assert_true(correct >= 12)
 }
 
+///|
 test "haar_transform_2d 错误参数" {
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data: Bytes::from_array(Array::make(16, b'\x00')) }
+  let img = @core.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x00')),
+  }
   try {
     let _ = haar_transform_2d(img, levels=0)
     assert_true(false)
@@ -86,12 +94,11 @@ test "haar_transform_2d 错误参数" {
   }
 }
 
+///|
 test "haar_denoise 基本功能" {
   let data = Bytes::from_array([
-    b'\x40', b'\x41', b'\x3F', b'\x40',
-    b'\x40', b'\x3F', b'\x41', b'\x40',
-    b'\x41', b'\x40', b'\x40', b'\x3F',
-    b'\x3F', b'\x40', b'\x41', b'\x40',
+    b'\x40', b'\x41', b'\x3F', b'\x40', b'\x40', b'\x3F', b'\x41', b'\x40', b'\x41',
+    b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let out = haar_denoise(img, threshold=2.0F, soft=true, levels=1)
@@ -105,12 +112,11 @@ test "haar_denoise 基本功能" {
   }
 }
 
+///|
 test "haar_denoise 硬阈值" {
   let data = Bytes::from_array([
-    b'\x40', b'\x41', b'\x3F', b'\x40',
-    b'\x40', b'\x3F', b'\x41', b'\x40',
-    b'\x41', b'\x40', b'\x40', b'\x3F',
-    b'\x3F', b'\x40', b'\x41', b'\x40',
+    b'\x40', b'\x41', b'\x3F', b'\x40', b'\x40', b'\x3F', b'\x41', b'\x40', b'\x41',
+    b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let out = haar_denoise(img, threshold=5.0F, soft=false, levels=1)
@@ -118,6 +124,7 @@ test "haar_denoise 硬阈值" {
   assert_eq(out.height, 4)
 }
 
+///|
 test "haar_denoise RGB 图" {
   let data = Bytes::from_array(Array::make(48, b'\x40'))
   let img = @core.Image::{ width: 4, height: 4, channels: 3, data }

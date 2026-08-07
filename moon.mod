@@ -6,7 +6,22 @@ license = "MIT"
 
 description = "MoonBit image library: FFI decode/encode/resize + pure MoonBit QOI/ICO/ICNS/GIF codec."
 
-keywords = [ "moonbit", "image", "ffi", "native", "stb", "png", "jpeg", "bmp", "gif", "qoi", "ico", "icns", "resize", "hdr" ]
+keywords = [
+  "moonbit",
+  "image",
+  "ffi",
+  "native",
+  "stb",
+  "png",
+  "jpeg",
+  "bmp",
+  "gif",
+  "qoi",
+  "ico",
+  "icns",
+  "resize",
+  "hdr",
+]
 
 preferred_target = "native"
 

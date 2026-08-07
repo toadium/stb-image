@@ -13,7 +13,10 @@ fn clamp_b(v : Int) -> Byte {
 
 ///|
 /// 马赛克/像素化效果。将图像分成 block_size × block_size 的块，每块取左上角像素值。
-pub fn pixelate(img : @core.Image, block_size : Int) -> @core.Image raise @core.LoadError {
+pub fn pixelate(
+  img : @core.Image,
+  block_size : Int,
+) -> @core.Image raise @core.LoadError {
   if block_size <= 0 {
     raise @core.LoadError::DecodeFailed("block_size 必须为正数")
   }
@@ -23,8 +26,8 @@ pub fn pixelate(img : @core.Image, block_size : Int) -> @core.Image raise @core.
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for by in 0..<h {
     for bx in 0..<w {
-      let src_x = (bx / block_size) * block_size
-      let src_y = (by / block_size) * block_size
+      let src_x = bx / block_size * block_size
+      let src_y = by / block_size * block_size
       let src_off = (src_y * w + src_x) * ch
       let dst_off = (by * w + bx) * ch
       for c in 0..<ch {
@@ -32,7 +35,12 @@ pub fn pixelate(img : @core.Image, block_size : Int) -> @core.Image raise @core.
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -42,7 +50,7 @@ pub fn replace_color(
   img : @core.Image,
   old_color : Array[Byte],
   new_color : Array[Byte],
-  tolerance : Int
+  tolerance : Int,
 ) -> @core.Image raise @core.LoadError {
   let ch = img.channels
   if old_color.length() < ch || new_color.length() < ch {
@@ -63,7 +71,12 @@ pub fn replace_color(
       }
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -73,7 +86,7 @@ pub fn convolve(
   img : @core.Image,
   kernel : Array[Float],
   bias : Float,
-  scale : Float
+  scale : Float,
 ) -> @core.Image raise @core.LoadError {
   if kernel.length() < 9 {
     raise @core.LoadError::DecodeFailed("kernel 必须为 9 个值（3x3）")
@@ -103,12 +116,21 @@ pub fn convolve(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 交换两个通道。例如 swap_channels(img, 0, 2) 交换 R 和 B。
-pub fn swap_channels(img : @core.Image, ch1 : Int, ch2 : Int) -> @core.Image raise @core.LoadError {
+pub fn swap_channels(
+  img : @core.Image,
+  ch1 : Int,
+  ch2 : Int,
+) -> @core.Image raise @core.LoadError {
   if ch1 < 0 || ch1 >= img.channels || ch2 < 0 || ch2 >= img.channels {
     raise @core.LoadError::DecodeFailed("通道索引越界")
   }
@@ -127,7 +149,12 @@ pub fn swap_channels(img : @core.Image, ch1 : Int, ch2 : Int) -> @core.Image rai
     out[off + ch1] = out[off + ch2]
     out[off + ch2] = tmp
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -147,7 +174,7 @@ fn check_color_match(
   off : Int,
   ch : Int,
   target : Array[Byte],
-  tolerance : Int
+  tolerance : Int,
 ) -> Bool {
   for c in 0..<ch {
     let diff = (data[off + c].to_int() - target[c].to_int()).abs()

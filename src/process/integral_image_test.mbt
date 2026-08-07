@@ -2,10 +2,7 @@
 
 ///|
 test "integral_image: 基本积分" {
-  let data = Bytes::from_array([
-    b'\x01', b'\x02',
-    b'\x03', b'\x04',
-  ])
+  let data = Bytes::from_array([b'\x01', b'\x02', b'\x03', b'\x04'])
   let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
   let integral = integral_image(img)
   assert_eq(integral.width, 2)
@@ -37,9 +34,7 @@ test "integral_image: 均匀图像" {
 test "integral_image: 均值计算" {
   // 使用十进制值: 10,20,...,90 的十六进制为 0A,14,1E,28,32,3C,46,50,5A
   let data = Bytes::from_array([
-    b'\x0A', b'\x14', b'\x1E',
-    b'\x28', b'\x32', b'\x3C',
-    b'\x46', b'\x50', b'\x5A',
+    b'\x0A', b'\x14', b'\x1E', b'\x28', b'\x32', b'\x3C', b'\x46', b'\x50', b'\x5A',
   ])
   let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
   let integral = integral_image(img)
@@ -63,10 +58,7 @@ test "integral_image: 通道验证" {
 
 ///|
 test "integral_image_sq: 基本平方积分" {
-  let data = Bytes::from_array([
-    b'\x01', b'\x02',
-    b'\x03', b'\x04',
-  ])
+  let data = Bytes::from_array([b'\x01', b'\x02', b'\x03', b'\x04'])
   let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
   let integral_sq = integral_image_sq(img)
   // 全图平方和 = 1+4+9+16 = 30
@@ -76,10 +68,8 @@ test "integral_image_sq: 基本平方积分" {
 ///|
 test "integral_variance: 方差计算" {
   let data = Bytes::from_array([
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\xFF', b'\xFF', b'\xFF', b'\xFF',
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\xFF', b'\xFF', b'\xFF', b'\xFF',
+    b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let integral = integral_image(img)
@@ -92,8 +82,8 @@ test "integral_variance: 方差计算" {
 ///|
 test "integral_image: RGB 图像取首通道" {
   let data = Bytes::from_array([
-    b'\x0A', b'\xFF', b'\xFF', b'\x0B', b'\xFF', b'\xFF',
-    b'\x0C', b'\xFF', b'\xFF', b'\x0D', b'\xFF', b'\xFF',
+    b'\x0A', b'\xFF', b'\xFF', b'\x0B', b'\xFF', b'\xFF', b'\x0C', b'\xFF', b'\xFF',
+    b'\x0D', b'\xFF', b'\xFF',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
   let integral = integral_image(img)

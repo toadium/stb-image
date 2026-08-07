@@ -31,7 +31,10 @@ test "decode_qoi: round-trip 1x1 RGB" {
 
 ///|
 test "decode_qoi: round-trip 4x4 PNG" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)
@@ -44,7 +47,10 @@ test "decode_qoi: round-trip 4x4 PNG" {
 
 ///|
 test "decode_qoi: round-trip RGBA" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(4))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)

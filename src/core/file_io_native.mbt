@@ -5,7 +5,7 @@
 extern "c" fn file_io_read_file(
   path : Bytes,
   path_len : Int,
-  len_ref : Ref[Int]
+  len_ref : Ref[Int],
 ) -> Bytes = "stb_image_mbt_read_file"
 
 ///|

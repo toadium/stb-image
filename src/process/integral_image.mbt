@@ -13,7 +13,9 @@ pub struct IntegralImage {
 /// 计算积分图像。仅处理灰度图（channels=1）或 RGB 图（channels=3/4，取首通道）。
 pub fn integral_image(img : @core.Image) -> IntegralImage raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("integral_image 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "integral_image 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -33,7 +35,13 @@ pub fn integral_image(img : @core.Image) -> IntegralImage raise @core.LoadError 
 
 ///|
 /// 查询积分图像中矩形区域 [x, x+w) × [y, y+h) 的像素和。
-pub fn integral_sum(integral : IntegralImage, x : Int, y : Int, w : Int, h : Int) -> Int64 {
+pub fn integral_sum(
+  integral : IntegralImage,
+  x : Int,
+  y : Int,
+  w : Int,
+  h : Int,
+) -> Int64 {
   let iw = integral.width + 1
   let x2 = x + w
   let y2 = y + h
@@ -46,7 +54,13 @@ pub fn integral_sum(integral : IntegralImage, x : Int, y : Int, w : Int, h : Int
 
 ///|
 /// 使用积分图像快速计算矩形区域均值。
-pub fn integral_mean(integral : IntegralImage, x : Int, y : Int, w : Int, h : Int) -> Float {
+pub fn integral_mean(
+  integral : IntegralImage,
+  x : Int,
+  y : Int,
+  w : Int,
+  h : Int,
+) -> Float {
   if w <= 0 || h <= 0 {
     return 0.0F
   }
@@ -64,9 +78,13 @@ pub struct IntegralImageSq {
 
 ///|
 /// 计算平方积分图像。
-pub fn integral_image_sq(img : @core.Image) -> IntegralImageSq raise @core.LoadError {
+pub fn integral_image_sq(
+  img : @core.Image,
+) -> IntegralImageSq raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("integral_image_sq 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "integral_image_sq 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -94,14 +112,16 @@ pub fn integral_variance(
   x : Int,
   y : Int,
   w : Int,
-  h : Int
+  h : Int,
 ) -> Float {
   if w <= 0 || h <= 0 {
     return 0.0F
   }
   let n = Float::from_int(w * h)
   let sum = Float::from_int(integral_sum(integral, x, y, w, h).to_int())
-  let sum_sq = Float::from_int(integral_sum_sq(integral_sq, x, y, w, h).to_int())
+  let sum_sq = Float::from_int(
+    integral_sum_sq(integral_sq, x, y, w, h).to_int(),
+  )
   let mean = sum / n
   sum_sq / n - mean * mean
 }
@@ -113,7 +133,7 @@ pub fn integral_sum_sq(
   x : Int,
   y : Int,
   w : Int,
-  h : Int
+  h : Int,
 ) -> Int64 {
   let iw = integral_sq.width + 1
   let x2 = x + w

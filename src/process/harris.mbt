@@ -14,12 +14,14 @@ pub(all) struct CornerPoint {
 /// k 为 Harris 参数（默认 0.04），threshold 为响应阈值，min_distance 为角点间最小距离。
 pub fn harris_corners(
   img : @core.Image,
-  k~ : Float = 0.04F,
-  threshold~ : Float = 1000.0F,
-  min_distance~ : Int = 5
+  k? : Float = 0.04F,
+  threshold? : Float = 1000.0F,
+  min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("harris_corners 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "harris_corners 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -47,8 +49,24 @@ pub fn harris_corners(
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
-      ix[idx] = (gray[(y - 1) * w + (x + 1)] + 2.0F * gray[y * w + (x + 1)] + gray[(y + 1) * w + (x + 1)] - gray[(y - 1) * w + (x - 1)] - 2.0F * gray[y * w + (x - 1)] - gray[(y + 1) * w + (x - 1)]) / 8.0F
-      iy[idx] = (gray[(y + 1) * w + (x - 1)] + 2.0F * gray[(y + 1) * w + x] + gray[(y + 1) * w + (x + 1)] - gray[(y - 1) * w + (x - 1)] - 2.0F * gray[(y - 1) * w + x] - gray[(y - 1) * w + (x + 1)]) / 8.0F
+      ix[idx] = (
+          gray[(y - 1) * w + (x + 1)] +
+          2.0F * gray[y * w + (x + 1)] +
+          gray[(y + 1) * w + (x + 1)] -
+          gray[(y - 1) * w + (x - 1)] -
+          2.0F * gray[y * w + (x - 1)] -
+          gray[(y + 1) * w + (x - 1)]
+        ) /
+        8.0F
+      iy[idx] = (
+          gray[(y + 1) * w + (x - 1)] +
+          2.0F * gray[(y + 1) * w + x] +
+          gray[(y + 1) * w + (x + 1)] -
+          gray[(y - 1) * w + (x - 1)] -
+          2.0F * gray[(y - 1) * w + x] -
+          gray[(y - 1) * w + (x + 1)]
+        ) /
+        8.0F
     }
   }
   // 计算 Ix², Iy², IxIy
@@ -82,8 +100,8 @@ pub fn harris_corners(
       }
       // 检查是否为局部最大值
       let mut is_max = true
-      for dy in -1..=1 {
-        for dx in -1..=1 {
+      for dy in -1..<=1 {
+        for dx in -1..<=1 {
           if dx == 0 && dy == 0 {
             continue
           }
@@ -128,9 +146,7 @@ fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
   let kernel : Array[Float] = [
-    0.0625F, 0.125F, 0.0625F,
-    0.125F, 0.25F, 0.125F,
-    0.0625F, 0.125F, 0.0625F,
+    0.0625F, 0.125F, 0.0625F, 0.125F, 0.25F, 0.125F, 0.0625F, 0.125F, 0.0625F,
   ]
   for y in 0..<h {
     for x in 0..<w {
@@ -153,8 +169,8 @@ fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
 pub fn draw_corners(
   img : @core.Image,
   corners : Array[CornerPoint],
-  color~ : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
-  radius~ : Int = 2
+  color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
+  radius? : Int = 2,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("draw_corners 仅支持 channels=1/3/4")
@@ -168,8 +184,8 @@ pub fn draw_corners(
   }
   let draw_ch = if ch >= 3 { 3 } else { 1 }
   for corner in corners {
-    for dy in -radius..=radius {
-      for dx in -radius..=radius {
+    for dy in -radius..<=radius {
+      for dx in -radius..<=radius {
         let nx = corner.x + dx
         let ny = corner.y + dy
         if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -182,5 +198,10 @@ pub fn draw_corners(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

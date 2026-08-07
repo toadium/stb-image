@@ -34,8 +34,8 @@ pub fn ssim(img1 : @core.Image, img2 : @core.Image) -> Double {
   let w = img1.width
   let h = img1.height
   let ch = img1.channels
-  let c1 = (0.01 * 255.0) * (0.01 * 255.0)
-  let c2 = (0.03 * 255.0) * (0.03 * 255.0)
+  let c1 = 0.01 * 255.0 * (0.01 * 255.0)
+  let c2 = 0.03 * 255.0 * (0.03 * 255.0)
   let mut total : Double = 0.0
   let mut count = 0
   let win = 8
@@ -65,8 +65,10 @@ pub fn ssim(img1 : @core.Image, img2 : @core.Image) -> Double {
           let sx = clamp_i(x + dx - win / 2, 0, w - 1)
           let sy = clamp_i(y + dy - win / 2, 0, h - 1)
           for c in 0..<ch {
-            let v1 = img1.data[(sy * w + sx) * ch + c].to_int().to_double() - mu1
-            let v2 = img2.data[(sy * w + sx) * ch + c].to_int().to_double() - mu2
+            let v1 = img1.data[(sy * w + sx) * ch + c].to_int().to_double() -
+              mu1
+            let v2 = img2.data[(sy * w + sx) * ch + c].to_int().to_double() -
+              mu2
             var1 += v1 * v1
             var2 += v2 * v2
             cov += v1 * v2
@@ -76,7 +78,9 @@ pub fn ssim(img1 : @core.Image, img2 : @core.Image) -> Double {
       var1 /= n.to_double()
       var2 /= n.to_double()
       cov /= n.to_double()
-      let s = ((2.0 * mu1 * mu2 + c1) * (2.0 * cov + c2)) / ((mu1 * mu1 + mu2 * mu2 + c1) * (var1 + var2 + c2))
+      let s = (2.0 * mu1 * mu2 + c1) *
+        (2.0 * cov + c2) /
+        ((mu1 * mu1 + mu2 * mu2 + c1) * (var1 + var2 + c2))
       total += s
       count += 1
     }

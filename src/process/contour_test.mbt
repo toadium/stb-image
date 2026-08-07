@@ -8,7 +8,12 @@ test "find_contours: 单个矩形" {
       data[y * 6 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 6, height: 6, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 6,
+    height: 6,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let contours = find_contours(img)
   assert_true(contours.length() >= 1)
   assert_true(contours[0].points.length() > 0)
@@ -27,7 +32,12 @@ test "find_contours: 两个独立区域" {
   data[1 * 8 + 6] = b'\xFF'
   data[2 * 8 + 5] = b'\xFF'
   data[2 * 8 + 6] = b'\xFF'
-  let img = @core.Image::{ width: 8, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let contours = find_contours(img)
   assert_true(contours.length() >= 2)
 }
@@ -56,7 +66,12 @@ test "draw_contours: 绘制到图像" {
       data[y * 6 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 6, height: 6, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 6,
+    height: 6,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let contours = find_contours(img)
   let result = draw_contours(img, contours, [b'\x80'])
   assert_eq(result.width, 6)

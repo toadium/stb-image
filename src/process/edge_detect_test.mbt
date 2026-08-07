@@ -41,10 +41,16 @@ test "edge_detect_laplacian: detects edge in half-black image" {
       data[y * 4 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = edge_detect_laplacian(img)
   // 边界处应有响应（x=1 和 x=2 之间）
-  let has_edge = result.data[1 * 4 + 1].to_int() > 0 || result.data[1 * 4 + 2].to_int() > 0
+  let has_edge = result.data[1 * 4 + 1].to_int() > 0 ||
+    result.data[1 * 4 + 2].to_int() > 0
   assert_true(has_edge)
   let _ = img
   let _ = result
@@ -59,10 +65,16 @@ test "edge_detect_prewitt: detects edge in half-black image" {
       data[y * 4 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = edge_detect_prewitt(img)
   // 边界处应有响应
-  let has_edge = result.data[1 * 4 + 0].to_int() > 0 || result.data[2 * 4 + 0].to_int() > 0
+  let has_edge = result.data[1 * 4 + 0].to_int() > 0 ||
+    result.data[2 * 4 + 0].to_int() > 0
   assert_true(has_edge)
   let _ = img
   let _ = result
@@ -70,7 +82,10 @@ test "edge_detect_prewitt: detects edge in half-black image" {
 
 ///|
 test "edge_detect_laplacian: preserves dimensions" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = edge_detect_laplacian(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -81,7 +96,10 @@ test "edge_detect_laplacian: preserves dimensions" {
 
 ///|
 test "edge_detect_prewitt: preserves dimensions" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = edge_detect_prewitt(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -93,7 +111,10 @@ test "edge_detect_prewitt: preserves dimensions" {
 ///|
 test "edge_detect_laplacian: works with RGB image" {
   // 红色图像（均匀），边缘检测应返回全黑
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = edge_detect_laplacian(img)
   // 均匀红色图无边缘
   for i in 0..<16 {

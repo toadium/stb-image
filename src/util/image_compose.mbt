@@ -2,9 +2,14 @@
 
 ///|
 /// 水平拼接。两图高度和通道数必须相同。
-pub fn hstack(left : @core.Image, right : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn hstack(
+  left : @core.Image,
+  right : @core.Image,
+) -> @core.Image raise @core.LoadError {
   if left.height != right.height || left.channels != right.channels {
-    raise @core.LoadError::DecodeFailed("hstack 两图高度/通道数必须相同")
+    raise @core.LoadError::DecodeFailed(
+      "hstack 两图高度/通道数必须相同",
+    )
   }
   let ch = left.channels
   let new_w = left.width + right.width
@@ -26,14 +31,24 @@ pub fn hstack(left : @core.Image, right : @core.Image) -> @core.Image raise @cor
       }
     }
   }
-  @core.Image::{ width: new_w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 垂直拼接。两图宽度和通道数必须相同。
-pub fn vstack(top : @core.Image, bottom : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn vstack(
+  top : @core.Image,
+  bottom : @core.Image,
+) -> @core.Image raise @core.LoadError {
   if top.width != bottom.width || top.channels != bottom.channels {
-    raise @core.LoadError::DecodeFailed("vstack 两图宽度/通道数必须相同")
+    raise @core.LoadError::DecodeFailed(
+      "vstack 两图宽度/通道数必须相同",
+    )
   }
   let ch = top.channels
   let w = top.width
@@ -46,12 +61,21 @@ pub fn vstack(top : @core.Image, bottom : @core.Image) -> @core.Image raise @cor
   for i in 0..<(w * bottom.height * ch) {
     out[top_size + i] = bottom.data[i]
   }
-  @core.Image::{ width: w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 平铺图像。将 img 在 x 方向重复 cols 次，y 方向重复 rows 次。
-pub fn tile(img : @core.Image, cols : Int, rows : Int) -> @core.Image raise @core.LoadError {
+pub fn tile(
+  img : @core.Image,
+  cols : Int,
+  rows : Int,
+) -> @core.Image raise @core.LoadError {
   if cols <= 0 || rows <= 0 {
     raise @core.LoadError::DecodeFailed("tile cols/rows 必须为正数")
   }
@@ -70,7 +94,12 @@ pub fn tile(img : @core.Image, cols : Int, rows : Int) -> @core.Image raise @cor
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -89,7 +118,12 @@ pub fn flip_vertical(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -108,5 +142,10 @@ pub fn transpose(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

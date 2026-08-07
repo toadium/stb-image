@@ -5,7 +5,11 @@
 /// 将图像分成 tile_size × tile_size 的块，每块做直方图均衡，用双线性插值平滑拼接。
 /// clip_limit 控制对比度增强强度，值越大增强越强（典型值 2.0~4.0）。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
-pub fn clahe(img : @core.Image, tile_size : Int, clip_limit : Float) -> @core.Image raise @core.LoadError {
+pub fn clahe(
+  img : @core.Image,
+  tile_size : Int,
+  clip_limit : Float,
+) -> @core.Image raise @core.LoadError {
   if tile_size < 2 {
     raise @core.LoadError::DecodeFailed("tile_size 必须 >= 2")
   }
@@ -24,7 +28,12 @@ pub fn clahe(img : @core.Image, tile_size : Int, clip_limit : Float) -> @core.Im
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -34,7 +43,7 @@ fn clahe_channel(
   channel : Int,
   ch : Int,
   tile_size : Int,
-  clip_limit : Float
+  clip_limit : Float,
 ) -> Unit {
   let w = img.width
   let h = img.height
@@ -124,4 +133,3 @@ fn tile_clamp(tx : Int, ty : Int, ntx : Int, nty : Int) -> Int {
   let cy = if ty < 0 { 0 } else if ty >= nty { nty - 1 } else { ty }
   cy * ntx + cx
 }
-

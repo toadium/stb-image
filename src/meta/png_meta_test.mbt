@@ -19,14 +19,12 @@ test "read_png_text_chunks: empty bytes returns empty" {
 ///|
 test "read_png_text_chunks: PNG without text chunks returns empty" {
   // 读取测试 PNG 文件
-  let png = @core.write_png_to_bytes(
-    @core.Image::{
-      width: 1,
-      height: 1,
-      channels: 3,
-      data: [b'\xFF', b'\x00', b'\x00'] |> Bytes::from_array
-    }
-  )
+  let png = @core.write_png_to_bytes(@core.Image::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: [b'\xFF', b'\x00', b'\x00'] |> Bytes::from_array,
+  })
   let result = read_png_text_chunks(png)
   // stb_image_write 生成的 PNG 可能没有 text chunks
   assert_true(result.length() >= 0)

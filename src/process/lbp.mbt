@@ -44,7 +44,12 @@ pub fn lbp(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -92,7 +97,12 @@ pub fn lbp_uniform(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -103,7 +113,7 @@ fn get_pixel(
   c : Int,
   ch : Int,
   w : Int,
-  h : Int
+  h : Int,
 ) -> Int {
   if x < 0 || x >= w || y < 0 || y >= h {
     return 0

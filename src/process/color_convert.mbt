@@ -16,7 +16,12 @@ pub fn to_grayscale(img : @core.Image) -> @core.Image {
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -35,7 +40,12 @@ pub fn to_rgb(img : @core.Image) -> @core.Image {
     out[i * 3 + 1] = img.data[i * img.channels + 1]
     out[i * 3 + 2] = img.data[i * img.channels + 2]
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 3, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -49,19 +59,36 @@ pub fn to_rgba(img : @core.Image) -> @core.Image {
   for i in 0..<pixel_count {
     let src_ch = img.channels
     out[i * 4] = img.data[i * src_ch]
-    out[i * 4 + 1] = if src_ch >= 2 { img.data[i * src_ch + 1] } else { b'\x00' }
-    out[i * 4 + 2] = if src_ch >= 3 { img.data[i * src_ch + 2] } else { b'\x00' }
+    out[i * 4 + 1] = if src_ch >= 2 {
+      img.data[i * src_ch + 1]
+    } else {
+      b'\x00'
+    }
+    out[i * 4 + 2] = if src_ch >= 3 {
+      img.data[i * src_ch + 2]
+    } else {
+      b'\x00'
+    }
     out[i * 4 + 3] = b'\xFF'
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 4, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 4,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 预乘 alpha（RGBA → RGBA premultiplied）
 /// 要求 channels=4
-pub fn premultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn premultiply_alpha(
+  img : @core.Image,
+) -> @core.Image raise @core.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("premultiply_alpha 需要 channels=4 (RGBA)")
+    raise @core.LoadError::DecodeFailed(
+      "premultiply_alpha 需要 channels=4 (RGBA)",
+    )
   }
   let pixel_count = img.width * img.height
   let out : Array[Byte] = Array::make(pixel_count * 4, b'\x00')
@@ -70,20 +97,29 @@ pub fn premultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError
     let g = img.data[i * 4 + 1].to_int()
     let b = img.data[i * 4 + 2].to_int()
     let a = img.data[i * 4 + 3].to_int()
-    out[i * 4] = ((r * a) / 255).to_byte()
-    out[i * 4 + 1] = ((g * a) / 255).to_byte()
-    out[i * 4 + 2] = ((b * a) / 255).to_byte()
+    out[i * 4] = (r * a / 255).to_byte()
+    out[i * 4 + 1] = (g * a / 255).to_byte()
+    out[i * 4 + 2] = (b * a / 255).to_byte()
     out[i * 4 + 3] = a.to_byte()
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 4, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 4,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 反预乘 alpha（RGBA premA → RGBA unpremultiplied）
 /// 要求 channels=4
-pub fn unpremultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn unpremultiply_alpha(
+  img : @core.Image,
+) -> @core.Image raise @core.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("unpremultiply_alpha 需要 channels=4 (RGBA)")
+    raise @core.LoadError::DecodeFailed(
+      "unpremultiply_alpha 需要 channels=4 (RGBA)",
+    )
   }
   let pixel_count = img.width * img.height
   let out : Array[Byte] = Array::make(pixel_count * 4, b'\x00')
@@ -98,11 +134,16 @@ pub fn unpremultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadErr
       out[i * 4 + 2] = b'\x00'
       out[i * 4 + 3] = b'\x00'
     } else {
-      out[i * 4] = ((r * 255) / a).to_byte()
-      out[i * 4 + 1] = ((g * 255) / a).to_byte()
-      out[i * 4 + 2] = ((b * 255) / a).to_byte()
+      out[i * 4] = (r * 255 / a).to_byte()
+      out[i * 4 + 1] = (g * 255 / a).to_byte()
+      out[i * 4 + 2] = (b * 255 / a).to_byte()
       out[i * 4 + 3] = a.to_byte()
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 4, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 4,
+    data: Bytes::from_array(out),
+  }
 }

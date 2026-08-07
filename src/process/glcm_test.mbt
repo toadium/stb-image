@@ -1,5 +1,6 @@
 // GLCM 纹理分析测试
 
+///|
 test "compute_glcm 基本功能" {
   // 3x1 灰度图
   let data = Bytes::from_array([b'\x00', b'\x01', b'\x02'])
@@ -11,6 +12,7 @@ test "compute_glcm 基本功能" {
   assert_eq(glcm[1][2], 1)
 }
 
+///|
 test "compute_glcm 垂直方向" {
   // 1x3 灰度图
   let data = Bytes::from_array([b'\x00', b'\x01', b'\x02'])
@@ -21,6 +23,7 @@ test "compute_glcm 垂直方向" {
   assert_eq(glcm[1][2], 1)
 }
 
+///|
 test "compute_glcm 量化" {
   let data = Bytes::from_array([b'\x00', b'\x40', b'\x80', b'\xC0'])
   let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
@@ -32,8 +35,14 @@ test "compute_glcm 量化" {
   assert_eq(glcm[2][3], 1)
 }
 
+///|
 test "compute_glcm 错误参数" {
-  let img = @core.Image::{ width: 1, height: 1, channels: 1, data: Bytes::from_array([b'\x00']) }
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x00']),
+  }
   try {
     let _ = compute_glcm(img, 1, 0, levels=1)
     assert_true(false)
@@ -48,6 +57,7 @@ test "compute_glcm 错误参数" {
   }
 }
 
+///|
 test "glcm_features 基本功能" {
   let data = Bytes::from_array([b'\x00', b'\x40', b'\x80', b'\xC0'])
   let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
@@ -61,6 +71,7 @@ test "glcm_features 基本功能" {
   assert_true(features.homogeneity > 0.0F)
 }
 
+///|
 test "glcm_features 常量图" {
   let data = Bytes::from_array(Array::make(4, b'\x80'))
   let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
@@ -72,6 +83,7 @@ test "glcm_features 常量图" {
   assert_true(features.energy > 0.99F)
 }
 
+///|
 test "glcm_features 空矩阵" {
   let glcm : Array[Array[Int]] = []
   let features = glcm_features(glcm)
@@ -79,12 +91,11 @@ test "glcm_features 空矩阵" {
   assert_eq(features.energy, 0.0F)
 }
 
+///|
 test "glcm_features_multi_direction 基本功能" {
   // 3x3 灰度图
   let data = Bytes::from_array([
-    b'\x00', b'\x01', b'\x02',
-    b'\x01', b'\x02', b'\x03',
-    b'\x02', b'\x03', b'\x04',
+    b'\x00', b'\x01', b'\x02', b'\x01', b'\x02', b'\x03', b'\x02', b'\x03', b'\x04',
   ])
   let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
   let features = glcm_features_multi_direction(img, levels=8)

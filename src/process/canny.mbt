@@ -7,8 +7,8 @@
 /// low_threshold 和 high_threshold 为双阈值（low 应 < high）。
 pub fn canny_edge(
   img : @core.Image,
-  low_threshold~ : Int = 50,
-  high_threshold~ : Int = 100
+  low_threshold? : Int = 50,
+  high_threshold? : Int = 100,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("canny_edge 仅支持 channels=1/3/4")
@@ -17,7 +17,9 @@ pub fn canny_edge(
     raise @core.LoadError::DecodeFailed("low_threshold 必须在 0..255 之间")
   }
   if high_threshold < 0 || high_threshold > 255 {
-    raise @core.LoadError::DecodeFailed("high_threshold 必须在 0..255 之间")
+    raise @core.LoadError::DecodeFailed(
+      "high_threshold 必须在 0..255 之间",
+    )
   }
   if low_threshold > high_threshold {
     raise @core.LoadError::DecodeFailed("low_threshold 应 <= high_threshold")
@@ -50,14 +52,26 @@ pub fn canny_edge(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       // Sobel X
-      let gx = -blurred[(y - 1) * w + (x - 1)] - 2 * blurred[y * w + (x - 1)] - blurred[(y + 1) * w + (x - 1)] + blurred[(y - 1) * w + (x + 1)] + 2 * blurred[y * w + (x + 1)] + blurred[(y + 1) * w + (x + 1)]
+      let gx = -blurred[(y - 1) * w + (x - 1)] -
+        2 * blurred[y * w + (x - 1)] -
+        blurred[(y + 1) * w + (x - 1)] +
+        blurred[(y - 1) * w + (x + 1)] +
+        2 * blurred[y * w + (x + 1)] +
+        blurred[(y + 1) * w + (x + 1)]
       // Sobel Y
-      let gy = -blurred[(y - 1) * w + (x - 1)] - 2 * blurred[(y - 1) * w + x] - blurred[(y - 1) * w + (x + 1)] + blurred[(y + 1) * w + (x - 1)] + 2 * blurred[(y + 1) * w + x] + blurred[(y + 1) * w + (x + 1)]
+      let gy = -blurred[(y - 1) * w + (x - 1)] -
+        2 * blurred[(y - 1) * w + x] -
+        blurred[(y - 1) * w + (x + 1)] +
+        blurred[(y + 1) * w + (x - 1)] +
+        2 * blurred[(y + 1) * w + x] +
+        blurred[(y + 1) * w + (x + 1)]
       // 梯度幅值
       let mag = @math.powf(Float::from_int(gx * gx + gy * gy), 0.5F).to_int()
       gradient[idx] = mag
       // 梯度方向量化到 4 个方向
-      let angle = @math.atan2f(Float::from_int(gy), Float::from_int(gx)) * 180.0F / 3.14159265F
+      let angle = @math.atan2f(Float::from_int(gy), Float::from_int(gx)) *
+        180.0F /
+        3.14159265F
       let norm_angle = if angle < 0.0F { angle + 180.0F } else { angle }
       direction[idx] = if norm_angle < 22.5F || norm_angle >= 157.5F {
         0 // 水平
@@ -115,8 +129,8 @@ pub fn canny_edge(
     let x = idx % w
     let y = idx / w
     // 8 邻域
-    for dy in -1..=1 {
-      for dx in -1..=1 {
+    for dy in -1..<=1 {
+      for dx in -1..<=1 {
         if dx == 0 && dy == 0 {
           continue
         }
@@ -133,7 +147,12 @@ pub fn canny_edge(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -143,11 +162,8 @@ fn canny_gaussian_blur(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
   let out : Array[Int] = Array::make(n, 0)
   // 5x5 高斯核 (sigma=1.0)
   let kernel : Array[Int] = [
-    2, 4, 5, 4, 2,
-    4, 9, 12, 9, 4,
-    5, 12, 15, 12, 5,
-    4, 9, 12, 9, 4,
-    2, 4, 5, 4, 2,
+    2, 4, 5, 4, 2, 4, 9, 12, 9, 4, 5, 12, 15, 12, 5, 4, 9, 12, 9, 4, 2, 4, 5, 4,
+    2,
   ]
   let kernel_sum = 159
   for y in 0..<h {

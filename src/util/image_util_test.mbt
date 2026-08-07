@@ -6,7 +6,7 @@ fn make_test_img(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
     width: w,
     height: h,
     channels: ch,
-    data: Array::make(w * h * ch, v) |> Bytes::from_array
+    data: Array::make(w * h * ch, v) |> Bytes::from_array,
   }
 }
 

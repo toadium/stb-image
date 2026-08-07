@@ -1,13 +1,12 @@
 // color_map 测试：apply_lut / gradient_map / set_alpha / fill_alpha
 
 ///|
-
 test "apply_lut: identity lut" {
   let img = @core.Image::{
     width: 3,
     height: 1,
     channels: 1,
-    data: [b'\x00', b'\x80', b'\xFF'] |> Bytes::from_array
+    data: [b'\x00', b'\x80', b'\xFF'] |> Bytes::from_array,
   }
   let lut = Array::make(256, b'\x00')
   for i in 0..<256 {
@@ -25,7 +24,7 @@ test "apply_lut: invert lut" {
     width: 2,
     height: 1,
     channels: 1,
-    data: [b'\x00', b'\xFF'] |> Bytes::from_array
+    data: [b'\x00', b'\xFF'] |> Bytes::from_array,
   }
   let lut = Array::make(256, b'\x00')
   for i in 0..<256 {
@@ -105,7 +104,10 @@ test "fill_alpha: fills transparent pixels" {
     width: 2,
     height: 1,
     channels: 4,
-    data: [b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\xFF'] |> Bytes::from_array
+    data: [
+      b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\xFF',
+    ]
+    |> Bytes::from_array,
   }
   let result = fill_alpha(img, 128, b'\x00', b'\x00', b'\x00')
   // 第一个像素 alpha=0 < 128，填充为黑色

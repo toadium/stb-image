@@ -6,13 +6,15 @@
 pub fn adaptive_threshold_mean(
   img : @core.Image,
   block_size : Int,
-  c : Int
+  c : Int,
 ) -> @core.Image raise @core.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
     raise @core.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("adaptive_threshold_mean 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "adaptive_threshold_mean 仅支持 channels=1/3/4",
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -26,8 +28,8 @@ pub fn adaptive_threshold_mean(
       for x in 0..<w {
         let mut sum = 0
         let mut count = 0
-        for dy in -half..=half {
-          for dx in -half..=half {
+        for dy in -half..<=half {
+          for dx in -half..<=half {
             let ny = y + dy
             let nx = x + dx
             if ny >= 0 && ny < h && nx >= 0 && nx < w {
@@ -39,7 +41,11 @@ pub fn adaptive_threshold_mean(
         let mean = if count > 0 { sum / count } else { 0 }
         let threshold = mean - c
         let v = img.data[(y * w + x) * ch + c_idx].to_int()
-        out[(y * w + x) * ch + c_idx] = if v > threshold { b'\xFF' } else { b'\x00' }
+        out[(y * w + x) * ch + c_idx] = if v > threshold {
+          b'\xFF'
+        } else {
+          b'\x00'
+        }
       }
     }
   }
@@ -48,7 +54,12 @@ pub fn adaptive_threshold_mean(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -56,13 +67,15 @@ pub fn adaptive_threshold_mean(
 pub fn adaptive_threshold_gaussian(
   img : @core.Image,
   block_size : Int,
-  c : Int
+  c : Int,
 ) -> @core.Image raise @core.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
     raise @core.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("adaptive_threshold_gaussian 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "adaptive_threshold_gaussian 仅支持 channels=1/3/4",
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -73,7 +86,10 @@ pub fn adaptive_threshold_gaussian(
   let half = block_size / 2
   let sigma = Float::from_int(half) / 2.0F
   let two_sigma_sq = 2.0F * sigma * sigma
-  let weights : Array[Array[Float]] = Array::make(block_size, Array::make(block_size, 0.0F))
+  let weights : Array[Array[Float]] = Array::make(
+    block_size,
+    Array::make(block_size, 0.0F),
+  )
   for dy in 0..<block_size {
     for dx in 0..<block_size {
       let fy = Float::from_int(dy - half)
@@ -86,13 +102,16 @@ pub fn adaptive_threshold_gaussian(
       for x in 0..<w {
         let mut sum = 0.0F
         let mut weight_sum = 0.0F
-        for dy in -half..=half {
-          for dx in -half..=half {
+        for dy in -half..<=half {
+          for dx in -half..<=half {
             let ny = y + dy
             let nx = x + dx
             if ny >= 0 && ny < h && nx >= 0 && nx < w {
               let weight = weights[dy + half][dx + half]
-              sum += Float::from_int(img.data[(ny * w + nx) * ch + c_idx].to_int()) * weight
+              sum += Float::from_int(
+                  img.data[(ny * w + nx) * ch + c_idx].to_int(),
+                ) *
+                weight
               weight_sum += weight
             }
           }
@@ -100,7 +119,11 @@ pub fn adaptive_threshold_gaussian(
         let mean = if weight_sum > 0.0F { sum / weight_sum } else { 0.0F }
         let threshold = mean - Float::from_int(c)
         let v = Float::from_int(img.data[(y * w + x) * ch + c_idx].to_int())
-        out[(y * w + x) * ch + c_idx] = if v > threshold { b'\xFF' } else { b'\x00' }
+        out[(y * w + x) * ch + c_idx] = if v > threshold {
+          b'\xFF'
+        } else {
+          b'\x00'
+        }
       }
     }
   }
@@ -109,14 +132,21 @@ pub fn adaptive_threshold_gaussian(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// Otsu 大津法自动阈值。自动计算最佳全局阈值并二值化。
 pub fn threshold_otsu(img : @core.Image) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("threshold_otsu 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "threshold_otsu 仅支持 channels=1/3/4",
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -149,7 +179,10 @@ pub fn threshold_otsu(img : @core.Image) -> @core.Image raise @core.LoadError {
       let sum1 = sum - sum0
       let mean0 = Float::from_int(sum0) / Float::from_int(w0)
       let mean1 = Float::from_int(sum1) / Float::from_int(w1)
-      let var_between = Float::from_int(w0) * Float::from_int(w1) * (mean0 - mean1) * (mean0 - mean1)
+      let var_between = Float::from_int(w0) *
+        Float::from_int(w1) *
+        (mean0 - mean1) *
+        (mean0 - mean1)
       if var_between > best_var {
         best_var = var_between
         best_t = t
@@ -165,5 +198,10 @@ pub fn threshold_otsu(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

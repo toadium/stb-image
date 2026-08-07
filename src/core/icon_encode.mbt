@@ -2,11 +2,13 @@
 // ICO: Windows 图标格式，使用 PNG payload
 // ICNS: macOS 图标格式
 
+///|
 fn write_u16_le(out : Array[Byte], val : Int) -> Unit {
   out.push((val & 0xFF).to_byte())
   out.push(((val >> 8) & 0xFF).to_byte())
 }
 
+///|
 fn write_u32_le(out : Array[Byte], val : Int) -> Unit {
   out.push((val & 0xFF).to_byte())
   out.push(((val >> 8) & 0xFF).to_byte())
@@ -14,6 +16,7 @@ fn write_u32_le(out : Array[Byte], val : Int) -> Unit {
   out.push(((val >> 24) & 0xFF).to_byte())
 }
 
+///|
 fn write_u32_be(out : Array[Byte], val : Int) -> Unit {
   out.push(((val >> 24) & 0xFF).to_byte())
   out.push(((val >> 16) & 0xFF).to_byte())
@@ -31,20 +34,20 @@ pub fn encode_ico(img : Image) -> Bytes raise LoadError {
   let png_data = write_png_to_bytes(img)
   let out : Array[Byte] = []
   // ICO header (6 bytes)
-  write_u16_le(out, 0)    // reserved
-  write_u16_le(out, 1)    // type = 1 (ICO)
-  write_u16_le(out, 1)    // count = 1
+  write_u16_le(out, 0) // reserved
+  write_u16_le(out, 1) // type = 1 (ICO)
+  write_u16_le(out, 1) // count = 1
   // Directory entry (16 bytes)
   let w_byte = if img.width == 256 { 0 } else { img.width }
   let h_byte = if img.height == 256 { 0 } else { img.height }
-  out.push(w_byte.to_byte())  // width
-  out.push(h_byte.to_byte())  // height
-  out.push(b'\x00')           // colors (0 = true color)
-  out.push(b'\x00')           // reserved
-  write_u16_le(out, 1)        // planes
-  write_u16_le(out, 32)       // bit count
-  write_u32_le(out, png_data.length())  // size
-  write_u32_le(out, 22)       // offset (6 + 16 = 22)
+  out.push(w_byte.to_byte()) // width
+  out.push(h_byte.to_byte()) // height
+  out.push(b'\x00') // colors (0 = true color)
+  out.push(b'\x00') // reserved
+  write_u16_le(out, 1) // planes
+  write_u16_le(out, 32) // bit count
+  write_u32_le(out, png_data.length()) // size
+  write_u32_le(out, 22) // offset (6 + 16 = 22)
   // PNG data
   for i in 0..<png_data.length() {
     out.push(png_data[i])
@@ -105,6 +108,8 @@ pub fn encode_ico_sizes(images : Array[Image]) -> Bytes raise LoadError {
 
 // ICNS 图标类型码 (OSType) 与尺寸映射
 // 参考: https://en.wikipedia.org/wiki/Apple_Icon_Image_format
+
+///|
 fn icns_type_for_size(size : Int, has_alpha : Bool) -> String? {
   match (size, has_alpha) {
     (16, true) => Some("icp4")
@@ -133,7 +138,8 @@ pub fn encode_icns(img : Image) -> Bytes raise LoadError {
   let type_code = icns_type_for_size(img.width, has_alpha)
   let type_str = match type_code {
     Some(s) => s
-    None => raise LoadError::DecodeFailed("不支持的 ICNS 尺寸: \{img.width}")
+    None =>
+      raise LoadError::DecodeFailed("不支持的 ICNS 尺寸: \{img.width}")
   }
   let png_data = write_png_to_bytes(img)
   let icon_data_size = 8 + png_data.length()

@@ -29,7 +29,7 @@ pub struct SegmentRegion {
 pub fn kmeans_segment(
   img : @core.Image,
   k : Int,
-  max_iters~ : Int = 20
+  max_iters? : Int = 20,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError {
   if k < 1 || k > 256 {
     raise @core.LoadError::DecodeFailed("k 必须在 1..256 之间")
@@ -42,7 +42,10 @@ pub fn kmeans_segment(
   let h = img.height
   let n = w * h
   if n == 0 {
-    return (SegmentLabelImage::{ width: w, height: h, labels: [], num_regions: 0 }, [])
+    return (
+      SegmentLabelImage::{ width: w, height: h, labels: [], num_regions: 0 },
+      [],
+    )
   }
   // 初始化聚类中心
   let centroids_r : Array[Int] = Array::make(k, 0)
@@ -64,9 +67,23 @@ pub fn kmeans_segment(
       let g = img.data[i * ch + 1].to_int()
       let b = img.data[i * ch + 2].to_int()
       let mut best = 0
-      let mut best_dist = color_dist_sq(r, g, b, centroids_r[0], centroids_g[0], centroids_b[0])
+      let mut best_dist = color_dist_sq(
+        r,
+        g,
+        b,
+        centroids_r[0],
+        centroids_g[0],
+        centroids_b[0],
+      )
       for j in 1..<k {
-        let d = color_dist_sq(r, g, b, centroids_r[j], centroids_g[j], centroids_b[j])
+        let d = color_dist_sq(
+          r,
+          g,
+          b,
+          centroids_r[j],
+          centroids_g[j],
+          centroids_b[j],
+        )
         if d < best_dist {
           best_dist = d
           best = j
@@ -110,10 +127,12 @@ pub fn kmeans_segment(
 pub fn region_growing_segment(
   img : @core.Image,
   seeds : Array[(Int, Int)],
-  threshold~ : Int = 30
+  threshold? : Int = 30,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("region_growing_segment 需要 RGB/RGBA 图像")
+    raise @core.LoadError::DecodeFailed(
+      "region_growing_segment 需要 RGB/RGBA 图像",
+    )
   }
   let ch = img.channels
   let w = img.width
@@ -188,16 +207,36 @@ pub fn region_growing_segment(
     regions.push(SegmentRegion::{
       label: current_label,
       area,
-      mean_r: if area > 0 { sum_r / area } else { 0 },
-      mean_g: if area > 0 { sum_g / area } else { 0 },
-      mean_b: if area > 0 { sum_b / area } else { 0 },
+      mean_r: if area > 0 {
+        sum_r / area
+      } else {
+        0
+      },
+      mean_g: if area > 0 {
+        sum_g / area
+      } else {
+        0
+      },
+      mean_b: if area > 0 {
+        sum_b / area
+      } else {
+        0
+      },
       bbox_x: min_x,
       bbox_y: min_y,
       bbox_w: max_x - min_x + 1,
-      bbox_h: max_y - min_y + 1
+      bbox_h: max_y - min_y + 1,
     })
   }
-  (SegmentLabelImage::{ width: w, height: h, labels, num_regions: current_label }, regions)
+  (
+    SegmentLabelImage::{
+      width: w,
+      height: h,
+      labels,
+      num_regions: current_label,
+    },
+    regions,
+  )
 }
 
 ///|
@@ -209,7 +248,7 @@ pub fn flood_fill(
   seed_x : Int,
   seed_y : Int,
   fill_color : Array[Byte],
-  threshold~ : Int = 0
+  threshold? : Int = 0,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("flood_fill 需要 RGB/RGBA 图像")
@@ -262,7 +301,12 @@ pub fn flood_fill(
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -276,18 +320,32 @@ pub fn segment_to_color(seg : SegmentLabelImage) -> @core.Image {
   for i in 0..<n {
     let label = seg.labels[i]
     if label >= 0 && label < num {
-      let hue = Float::from_int((label * 360 / (if num > 0 { num } else { 1 })) % 360)
+      let hue = Float::from_int(
+        label * 360 / (if num > 0 { num } else { 1 }) % 360,
+      )
       let (r, g, b) = hsv_to_rgb(hue, 1.0F, 1.0F)
       out[i * 3] = r.to_byte()
       out[i * 3 + 1] = g.to_byte()
       out[i * 3 + 2] = b.to_byte()
     }
   }
-  @core.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
-fn color_dist_sq(r1 : Int, g1 : Int, b1 : Int, r2 : Int, g2 : Int, b2 : Int) -> Int {
+fn color_dist_sq(
+  r1 : Int,
+  g1 : Int,
+  b1 : Int,
+  r2 : Int,
+  g2 : Int,
+  b2 : Int,
+) -> Int {
   let dr = r1 - r2
   let dg = g1 - g2
   let db = b1 - b2
@@ -301,7 +359,7 @@ fn compute_regions(
   w : Int,
   h : Int,
   ch : Int,
-  k : Int
+  k : Int,
 ) -> Array[SegmentRegion] {
   let sum_r : Array[Int] = Array::make(k, 0)
   let sum_g : Array[Int] = Array::make(k, 0)
@@ -341,13 +399,41 @@ fn compute_regions(
     regions.push(SegmentRegion::{
       label: j,
       area,
-      mean_r: if area > 0 { sum_r[j] / area } else { 0 },
-      mean_g: if area > 0 { sum_g[j] / area } else { 0 },
-      mean_b: if area > 0 { sum_b[j] / area } else { 0 },
-      bbox_x: if area > 0 { min_x[j] } else { 0 },
-      bbox_y: if area > 0 { min_y[j] } else { 0 },
-      bbox_w: if area > 0 { max_x[j] - min_x[j] + 1 } else { 0 },
-      bbox_h: if area > 0 { max_y[j] - min_y[j] + 1 } else { 0 }
+      mean_r: if area > 0 {
+        sum_r[j] / area
+      } else {
+        0
+      },
+      mean_g: if area > 0 {
+        sum_g[j] / area
+      } else {
+        0
+      },
+      mean_b: if area > 0 {
+        sum_b[j] / area
+      } else {
+        0
+      },
+      bbox_x: if area > 0 {
+        min_x[j]
+      } else {
+        0
+      },
+      bbox_y: if area > 0 {
+        min_y[j]
+      } else {
+        0
+      },
+      bbox_w: if area > 0 {
+        max_x[j] - min_x[j] + 1
+      } else {
+        0
+      },
+      bbox_h: if area > 0 {
+        max_y[j] - min_y[j] + 1
+      } else {
+        0
+      },
     })
   }
   regions

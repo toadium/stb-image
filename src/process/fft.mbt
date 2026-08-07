@@ -38,7 +38,10 @@ fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
   let h = img.height
   let pw = next_pow2(w)
   let ph = next_pow2(h)
-  let data : Array[Complex] = Array::make(pw * ph, Complex::{ re: 0.0F, im: 0.0F })
+  let data : Array[Complex] = Array::make(pw * ph, Complex::{
+    re: 0.0F,
+    im: 0.0F,
+  })
   for y in 0..<h {
     for x in 0..<w {
       let v = Float::from_int(img.data[(y * w + x) * ch + channel].to_int())
@@ -73,7 +76,10 @@ fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
 pub fn ifft_2d(fft : FFTResult) -> @core.Image {
   let pw = fft.width
   let ph = fft.height
-  let data : Array[Complex] = Array::make(pw * ph, Complex::{ re: 0.0F, im: 0.0F })
+  let data : Array[Complex] = Array::make(pw * ph, Complex::{
+    re: 0.0F,
+    im: 0.0F,
+  })
   for i in 0..<(pw * ph) {
     data[i] = fft.data[i]
   }
@@ -101,10 +107,21 @@ pub fn ifft_2d(fft : FFTResult) -> @core.Image {
   let out : Array[Byte] = Array::make(pw * ph, b'\x00')
   for i in 0..<(pw * ph) {
     let v = data[i].re / norm
-    let clamped = if v < 0.0F { 0 } else if v > 255.0F { 255 } else { v.to_int() }
+    let clamped = if v < 0.0F {
+      0
+    } else if v > 255.0F {
+      255
+    } else {
+      v.to_int()
+    }
     out[i] = clamped.to_byte()
   }
-  @core.Image::{ width: pw, height: ph, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: pw,
+    height: ph,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -132,11 +149,22 @@ pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @core.Image {
   if max_mag > 0.0F {
     for i in 0..<n {
       let v = mags[i] / max_mag * 255.0F
-      let clamped = if v < 0.0F { 0 } else if v > 255.0F { 255 } else { v.to_int() }
+      let clamped = if v < 0.0F {
+        0
+      } else if v > 255.0F {
+        255
+      } else {
+        v.to_int()
+      }
       out[i] = clamped.to_byte()
     }
   }
-  @core.Image::{ width: fft.width, height: fft.height, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: fft.width,
+    height: fft.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|

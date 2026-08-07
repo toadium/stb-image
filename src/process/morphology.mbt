@@ -12,8 +12,8 @@ pub fn erode(img : @core.Image) -> @core.Image {
     for x in 0..<w {
       for c in 0..<ch {
         let mut min_v = 255
-        for dy in -1..=1 {
-          for dx in -1..=1 {
+        for dy in -1..<=1 {
+          for dx in -1..<=1 {
             let sx = clamp_i(x + dx, 0, w - 1)
             let sy = clamp_i(y + dy, 0, h - 1)
             let v = img.data[(sy * w + sx) * ch + c].to_int()
@@ -26,7 +26,12 @@ pub fn erode(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -40,8 +45,8 @@ pub fn dilate(img : @core.Image) -> @core.Image {
     for x in 0..<w {
       for c in 0..<ch {
         let mut max_v = 0
-        for dy in -1..=1 {
-          for dx in -1..=1 {
+        for dy in -1..<=1 {
+          for dx in -1..<=1 {
             let sx = clamp_i(x + dx, 0, w - 1)
             let sy = clamp_i(y + dy, 0, h - 1)
             let v = img.data[(sy * w + sx) * ch + c].to_int()
@@ -54,7 +59,12 @@ pub fn dilate(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|

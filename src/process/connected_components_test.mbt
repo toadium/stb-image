@@ -3,10 +3,8 @@
 ///|
 test "connected_components: 单个连通域" {
   let data = Bytes::from_array([
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\x00', b'\xFF', b'\xFF', b'\x00',
-    b'\x00', b'\xFF', b'\xFF', b'\x00',
-    b'\x00', b'\x00', b'\x00', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\x00', b'\x00',
+    b'\xFF', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let (label_img, comps) = connected_components(img, 4)
@@ -24,10 +22,8 @@ test "connected_components: 单个连通域" {
 ///|
 test "connected_components: 两个独立连通域" {
   let data = Bytes::from_array([
-    b'\xFF', b'\x00', b'\x00', b'\xFF',
-    b'\xFF', b'\x00', b'\x00', b'\xFF',
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\x00', b'\x00', b'\x00', b'\x00',
+    b'\xFF', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let (_, comps) = connected_components(img, 4)
@@ -39,10 +35,7 @@ test "connected_components: 两个独立连通域" {
 ///|
 test "connected_components: 四连通 vs 八连通" {
   // 对角线连接的两个像素
-  let data = Bytes::from_array([
-    b'\xFF', b'\x00',
-    b'\x00', b'\xFF',
-  ])
+  let data = Bytes::from_array([b'\xFF', b'\x00', b'\x00', b'\xFF'])
   let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
   // 四连通：两个独立域
   let (_, comps4) = connected_components(img, 4)
@@ -73,9 +66,7 @@ test "connected_components: 全前景" {
 ///|
 test "connected_components: 质心计算" {
   let data = Bytes::from_array([
-    b'\x00', b'\x00', b'\x00',
-    b'\xFF', b'\xFF', b'\xFF',
-    b'\x00', b'\x00', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
   let (_, comps) = connected_components(img, 4)
@@ -103,10 +94,8 @@ test "connected_components: connectivity 验证" {
 test "connected_components: 多个连通域" {
   // 4 个角各一个像素
   let data = Bytes::from_array([
-    b'\xFF', b'\x00', b'\x00', b'\xFF',
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\xFF', b'\x00', b'\x00', b'\xFF',
+    b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\xFF',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let (_, comps) = connected_components(img, 4)

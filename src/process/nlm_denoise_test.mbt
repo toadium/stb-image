@@ -1,11 +1,10 @@
 // NLM 去噪测试
 
+///|
 test "nlm_denoise 灰度图基本功能" {
   // 3x3 灰度图
   let data = Bytes::from_array([
-    b'\x80', b'\x82', b'\x7F',
-    b'\x81', b'\x80', b'\x83',
-    b'\x7F', b'\x82', b'\x80',
+    b'\x80', b'\x82', b'\x7F', b'\x81', b'\x80', b'\x83', b'\x7F', b'\x82', b'\x80',
   ])
   let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
   let out = nlm_denoise(img, patch_size=1, search_size=1, h=10)
@@ -17,6 +16,7 @@ test "nlm_denoise 灰度图基本功能" {
   assert_true(center >= 120 && center <= 135)
 }
 
+///|
 test "nlm_denoise 常量图不变" {
   // 3x3 常量灰度图
   let data = Bytes::from_array(Array::make(9, b'\x80'))
@@ -28,6 +28,7 @@ test "nlm_denoise 常量图不变" {
   }
 }
 
+///|
 test "nlm_denoise RGB 图" {
   let data = Bytes::from_array([
     b'\xFF', b'\x00', b'\x00', b'\xFE', b'\x01', b'\x00', b'\xFF', b'\x00', b'\x01',
@@ -44,12 +45,11 @@ test "nlm_denoise RGB 图" {
   assert_true(r >= 200)
 }
 
+///|
 test "nlm_denoise RGBA 图 alpha 不变" {
   let data = Bytes::from_array([
-    b'\x80', b'\x80', b'\x80', b'\xFF',
-    b'\x82', b'\x82', b'\x82', b'\x80',
-    b'\x7F', b'\x7F', b'\x7F', b'\xFF',
-    b'\x81', b'\x81', b'\x81', b'\xC0',
+    b'\x80', b'\x80', b'\x80', b'\xFF', b'\x82', b'\x82', b'\x82', b'\x80', b'\x7F',
+    b'\x7F', b'\x7F', b'\xFF', b'\x81', b'\x81', b'\x81', b'\xC0',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 4, data }
   let out = nlm_denoise(img, patch_size=1, search_size=1, h=10)
@@ -60,8 +60,14 @@ test "nlm_denoise RGBA 图 alpha 不变" {
   assert_eq(out.data[15], b'\xC0')
 }
 
+///|
 test "nlm_denoise 错误参数" {
-  let img = @core.Image::{ width: 1, height: 1, channels: 1, data: Bytes::from_array([b'\x00']) }
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x00']),
+  }
   try {
     let _ = nlm_denoise(img, patch_size=0)
     assert_true(false)
@@ -82,12 +88,11 @@ test "nlm_denoise 错误参数" {
   }
 }
 
+///|
 test "nlm_denoise_fast 基本功能" {
   let data = Bytes::from_array([
-    b'\x80', b'\x82', b'\x7F', b'\x81',
-    b'\x81', b'\x80', b'\x83', b'\x7F',
-    b'\x7F', b'\x82', b'\x80', b'\x81',
-    b'\x82', b'\x7F', b'\x81', b'\x80',
+    b'\x80', b'\x82', b'\x7F', b'\x81', b'\x81', b'\x80', b'\x83', b'\x7F', b'\x7F',
+    b'\x82', b'\x80', b'\x81', b'\x82', b'\x7F', b'\x81', b'\x80',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let out = nlm_denoise_fast(img, patch_size=1, search_size=2, h=10, step=2)
@@ -101,6 +106,7 @@ test "nlm_denoise_fast 基本功能" {
   }
 }
 
+///|
 test "nlm_denoise_fast 常量图不变" {
   let data = Bytes::from_array(Array::make(16, b'\x80'))
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
@@ -110,8 +116,14 @@ test "nlm_denoise_fast 常量图不变" {
   }
 }
 
+///|
 test "nlm_denoise_fast 错误参数" {
-  let img = @core.Image::{ width: 1, height: 1, channels: 1, data: Bytes::from_array([b'\x00']) }
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x00']),
+  }
   try {
     let _ = nlm_denoise_fast(img, step=0)
     assert_true(false)

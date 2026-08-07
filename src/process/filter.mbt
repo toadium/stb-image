@@ -38,7 +38,8 @@ pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
         temp[(y * w + x) * color_ch + c] = sum / win_size
         let x_out = clamp_coord(x - radius, w)
         let x_in = clamp_coord(x + radius + 1, w)
-        sum = sum - img.data[(y * w + x_out) * ch + c].to_int() +
+        sum = sum -
+          img.data[(y * w + x_out) * ch + c].to_int() +
           img.data[(y * w + x_in) * ch + c].to_int()
       }
     }
@@ -56,7 +57,8 @@ pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
         out[(y * w + x) * ch + c] = (sum / win_size).to_byte()
         let y_out = clamp_coord(y - radius, h)
         let y_in = clamp_coord(y + radius + 1, h)
-        sum = sum - temp[(y_out * w + x) * color_ch + c] +
+        sum = sum -
+          temp[(y_out * w + x) * color_ch + c] +
           temp[(y_in * w + x) * color_ch + c]
       }
     }
@@ -67,13 +69,22 @@ pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 高斯模糊。radius 为核半径，sigma 为标准差。
 /// 使用可分离高斯核，O(n*radius) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn gaussian_blur(img : @core.Image, radius : Int, sigma : Float) -> @core.Image {
+pub fn gaussian_blur(
+  img : @core.Image,
+  radius : Int,
+  sigma : Float,
+) -> @core.Image {
   if radius <= 0 {
     return img
   }
@@ -105,7 +116,8 @@ pub fn gaussian_blur(img : @core.Image, radius : Int, sigma : Float) -> @core.Im
         let mut acc = 0.0F
         for k in 0..<win_size {
           let sx = clamp_coord(x + k - radius, w)
-          acc += kernel[k] * Float::from_int(img.data[(y * w + sx) * ch + c].to_int())
+          acc += kernel[k] *
+            Float::from_int(img.data[(y * w + sx) * ch + c].to_int())
         }
         temp[(y * w + x) * color_ch + c] = acc
       }
@@ -121,7 +133,10 @@ pub fn gaussian_blur(img : @core.Image, radius : Int, sigma : Float) -> @core.Im
           let sy = clamp_coord(y + k - radius, h)
           acc += kernel[k] * temp[(sy * w + x) * color_ch + c]
         }
-        out[(y * w + x) * ch + c] = (acc + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+        out[(y * w + x) * ch + c] = (acc + 0.5F)
+          .to_int()
+          .clamp(min=0, max=255)
+          .to_byte()
       }
     }
   }
@@ -131,7 +146,12 @@ pub fn gaussian_blur(img : @core.Image, radius : Int, sigma : Float) -> @core.Im
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -159,7 +179,10 @@ pub fn sharpen(img : @core.Image, amount : Float) -> @core.Image {
         let bottom = img.data[(y_b * w + x) * ch + c].to_int()
         let val = Float::from_int(cx) * center -
           amount * Float::from_int(left + right + top + bottom)
-        out[(y * w + x) * ch + c] = (val + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+        out[(y * w + x) * ch + c] = (val + 0.5F)
+          .to_int()
+          .clamp(min=0, max=255)
+          .to_byte()
       }
     }
   }
@@ -169,7 +192,12 @@ pub fn sharpen(img : @core.Image, amount : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -201,7 +229,8 @@ pub fn edge_detect_sobel(img : @core.Image) -> @core.Image {
       let y_t = clamp_coord(y - 1, h)
       let y_b = clamp_coord(y + 1, h)
       // Gx = [-1 0 1; -2 0 2; -1 0 1]
-      let gx = -gray[y_t * w + x_l] + gray[y_t * w + x_r] -
+      let gx = -gray[y_t * w + x_l] +
+        gray[y_t * w + x_r] -
         2 * gray[y * w + x_l] +
         2 * gray[y * w + x_r] -
         gray[y_b * w + x_l] +
@@ -214,9 +243,14 @@ pub fn edge_detect_sobel(img : @core.Image) -> @core.Image {
         2 * gray[y_b * w + x] +
         gray[y_b * w + x_r]
       // magnitude = sqrt(Gx^2 + Gy^2)
-      let mag = (Float::from_int(gx * gx + gy * gy)).sqrt()
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt()
       out[y * w + x] = (mag + 0.5F).to_int().clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

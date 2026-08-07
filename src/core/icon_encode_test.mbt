@@ -44,7 +44,12 @@ test "encode_ico: multi-size" {
 
 ///|
 test "encode_ico: too large raises" {
-  let img = Image::{ width: 257, height: 257, channels: 4, data: Array::make(257 * 257 * 4, b'\x00') |> Bytes::from_array }
+  let img = Image::{
+    width: 257,
+    height: 257,
+    channels: 4,
+    data: Array::make(257 * 257 * 4, b'\x00') |> Bytes::from_array,
+  }
   try {
     let _ = encode_ico(img)
     assert_true(false)
@@ -72,7 +77,12 @@ test "encode_icns: 128x128 RGBA" {
 
 ///|
 test "encode_icns: non-square raises" {
-  let img = Image::{ width: 32, height: 64, channels: 4, data: Array::make(32 * 64 * 4, b'\x00') |> Bytes::from_array }
+  let img = Image::{
+    width: 32,
+    height: 64,
+    channels: 4,
+    data: Array::make(32 * 64 * 4, b'\x00') |> Bytes::from_array,
+  }
   try {
     let _ = encode_icns(img)
     assert_true(false)
@@ -85,7 +95,12 @@ test "encode_icns: non-square raises" {
 
 ///|
 test "encode_icns: unsupported size raises" {
-  let img = Image::{ width: 48, height: 48, channels: 4, data: Array::make(48 * 48 * 4, b'\x00') |> Bytes::from_array }
+  let img = Image::{
+    width: 48,
+    height: 48,
+    channels: 4,
+    data: Array::make(48 * 48 * 4, b'\x00') |> Bytes::from_array,
+  }
   try {
     let _ = encode_icns(img)
     assert_true(false)
@@ -102,7 +117,10 @@ test "encode_ico: round-trip with load (PNG in ICO)" {
   let ico = encode_ico(img)
   // ICO 中的 PNG data 从 offset 22 开始
   // 读取 directory entry 中的 size (offset 14-17)
-  let png_size = ico[14].to_int() | (ico[15].to_int() << 8) | (ico[16].to_int() << 16) | (ico[17].to_int() << 24)
+  let png_size = ico[14].to_int() |
+    (ico[15].to_int() << 8) |
+    (ico[16].to_int() << 16) |
+    (ico[17].to_int() << 24)
   assert_true(png_size > 0)
   // 提取 PNG 数据并验证可以解码
   let png_bytes : Array[Byte] = []

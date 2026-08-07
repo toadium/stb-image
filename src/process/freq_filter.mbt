@@ -16,7 +16,7 @@ pub fn freq_filter(
   img : @core.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
-  band_width~ : Float = 0.0F
+  band_width? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("freq_filter 仅支持 channels=1/3/4")
@@ -32,7 +32,10 @@ pub fn freq_filter(
     let cx = w / 2
     let cy = h / 2
     let n = w * h
-    let out_data : Array[Complex] = Array::make(n, Complex::{ re: 0.0F, im: 0.0F })
+    let out_data : Array[Complex] = Array::make(n, Complex::{
+      re: 0.0F,
+      im: 0.0F,
+    })
     for i in 0..<n {
       let y = i / w
       let x = i % w
@@ -68,7 +71,12 @@ pub fn freq_filter(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: pw, height: ph, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: pw,
+    height: ph,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -77,7 +85,7 @@ fn filter_gain(
   filter_type : FreqFilterType,
   dist : Float,
   cutoff : Float,
-  band_width : Float
+  band_width : Float,
 ) -> Float {
   match filter_type {
     LowPass => if dist <= cutoff { 1.0F } else { 0.0F }
@@ -85,12 +93,20 @@ fn filter_gain(
     BandPass => {
       let lo = cutoff - band_width / 2.0F
       let hi = cutoff + band_width / 2.0F
-      if dist >= lo && dist <= hi { 1.0F } else { 0.0F }
+      if dist >= lo && dist <= hi {
+        1.0F
+      } else {
+        0.0F
+      }
     }
     BandStop => {
       let lo = cutoff - band_width / 2.0F
       let hi = cutoff + band_width / 2.0F
-      if dist >= lo && dist <= hi { 0.0F } else { 1.0F }
+      if dist >= lo && dist <= hi {
+        0.0F
+      } else {
+        1.0F
+      }
     }
   }
 }
@@ -101,10 +117,12 @@ pub fn freq_filter_gaussian(
   img : @core.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
-  band_width~ : Float = 0.0F
+  band_width? : Float = 0.0F,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("freq_filter_gaussian 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "freq_filter_gaussian 仅支持 channels=1/3/4",
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -117,7 +135,10 @@ pub fn freq_filter_gaussian(
     let cx = w / 2
     let cy = h / 2
     let n = w * h
-    let out_data : Array[Complex] = Array::make(n, Complex::{ re: 0.0F, im: 0.0F })
+    let out_data : Array[Complex] = Array::make(n, Complex::{
+      re: 0.0F,
+      im: 0.0F,
+    })
     for i in 0..<n {
       let y = i / w
       let x = i % w
@@ -153,7 +174,12 @@ pub fn freq_filter_gaussian(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{ width: pw, height: ph, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: pw,
+    height: ph,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -162,7 +188,7 @@ fn gaussian_gain(
   filter_type : FreqFilterType,
   dist : Float,
   cutoff : Float,
-  band_width : Float
+  band_width : Float,
 ) -> Float {
   let eps = 0.0001F
   let c2 = cutoff * cutoff

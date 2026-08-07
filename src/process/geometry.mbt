@@ -10,7 +10,7 @@ fn sample_bilinear(
   ch : Int,
   c : Int,
   x : Float,
-  y : Float
+  y : Float,
 ) -> Int {
   let x0 = x.to_int()
   let y0 = y.to_int()
@@ -39,7 +39,7 @@ pub fn warp_affine(
   img : @core.Image,
   matrix : (Float, Float, Float, Float, Float, Float),
   new_w : Int,
-  new_h : Int
+  new_h : Int,
 ) -> @core.Image {
   let (a, b, c, d, e, f) = matrix
   let ch = img.channels
@@ -56,7 +56,12 @@ pub fn warp_affine(
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -85,7 +90,9 @@ pub fn rotate(img : @core.Image, angle_degrees : Float) -> @core.Image {
       let sx = cos_a * fdx + sin_a * fdy + tx
       let sy = -sin_a * fdx + cos_a * fdy + ty
       // 超出边界的像素填黑（用 0.5 容差避免浮点误差）
-      if sx < -0.5F || sx > Float::from_int(w) - 0.5F || sy < -0.5F ||
+      if sx < -0.5F ||
+        sx > Float::from_int(w) - 0.5F ||
+        sy < -0.5F ||
         sy > Float::from_int(h) - 0.5F {
         // 已经是 0
         continue
@@ -98,5 +105,10 @@ pub fn rotate(img : @core.Image, angle_degrees : Float) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

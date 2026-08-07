@@ -17,7 +17,12 @@ test "lbp: 均匀图像" {
 test "lbp: 中心最亮" {
   let data : Array[Byte] = Array::make(9, b'\x00')
   data[4] = b'\xFF' // 中心最亮
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = lbp(img)
   // 中心：所有邻居 < 中心，LBP = 0
   assert_eq(result.data[4], b'\x00')
@@ -27,7 +32,12 @@ test "lbp: 中心最亮" {
 test "lbp: 中心最暗" {
   let data : Array[Byte] = Array::make(9, b'\xFF')
   data[4] = b'\x00' // 中心最暗
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = lbp(img)
   // 中心：所有邻居 >= 中心，LBP = 0xFF
   assert_eq(result.data[4], b'\xFF')
@@ -36,10 +46,8 @@ test "lbp: 中心最暗" {
 ///|
 test "lbp: 输出范围 0-255" {
   let data = Bytes::from_array([
-    b'\x10', b'\x20', b'\x30', b'\x40',
-    b'\x50', b'\x60', b'\x70', b'\x80',
-    b'\x90', b'\xA0', b'\xB0', b'\xC0',
-    b'\xD0', b'\xE0', b'\xF0', b'\x00',
+    b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
+    b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = lbp(img)
@@ -52,10 +60,8 @@ test "lbp: 输出范围 0-255" {
 ///|
 test "lbp_uniform: 输出范围 0-59" {
   let data = Bytes::from_array([
-    b'\x10', b'\x20', b'\x30', b'\x40',
-    b'\x50', b'\x60', b'\x70', b'\x80',
-    b'\x90', b'\xA0', b'\xB0', b'\xC0',
-    b'\xD0', b'\xE0', b'\xF0', b'\x00',
+    b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
+    b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = lbp_uniform(img)
@@ -78,8 +84,8 @@ test "lbp_uniform: 均匀图像" {
 ///|
 test "lbp: RGB 图像" {
   let data = Bytes::from_array([
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00',
+    b'\xFF', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
   let result = lbp(img)

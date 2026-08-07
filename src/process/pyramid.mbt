@@ -34,7 +34,12 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -68,17 +73,31 @@ pub fn pyr_up(img : @core.Image) -> @core.Image raise @core.LoadError {
         let top = v00 * (1.0F - wx) + v01 * wx
         let bot = v10 * (1.0F - wx) + v11 * wx
         let v = top * (1.0F - wy) + bot * wy
-        let clamped = if v < 0.0F { 0 } else if v > 255.0F { 255 } else { v.to_int() }
+        let clamped = if v < 0.0F {
+          0
+        } else if v > 255.0F {
+          255
+        } else {
+          v.to_int()
+        }
         out[(y * new_w + x) * ch + c] = clamped.to_byte()
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 构建高斯金字塔。返回各级图像（从原图到最小级），levels 为最大层数（0=自动到 1x1）。
-pub fn build_gaussian_pyramid(img : @core.Image, levels : Int) -> Array[@core.Image] raise @core.LoadError {
+pub fn build_gaussian_pyramid(
+  img : @core.Image,
+  levels : Int,
+) -> Array[@core.Image] raise @core.LoadError {
   let result : Array[@core.Image] = [img]
   let mut current = img
   let max_levels = if levels == 0 { 100 } else { levels }
@@ -95,7 +114,10 @@ pub fn build_gaussian_pyramid(img : @core.Image, levels : Int) -> Array[@core.Im
 ///|
 /// 构建拉普拉斯金字塔。返回各级拉普拉斯图像（高斯金字塔相邻层之差）。
 /// 最后一层为高斯金字塔的最小级（不加差）。
-pub fn build_laplacian_pyramid(img : @core.Image, levels : Int) -> Array[@core.Image] raise @core.LoadError {
+pub fn build_laplacian_pyramid(
+  img : @core.Image,
+  levels : Int,
+) -> Array[@core.Image] raise @core.LoadError {
   let gaussian = build_gaussian_pyramid(img, levels)
   let result : Array[@core.Image] = []
   for i in 0..<(gaussian.length() - 1) {
@@ -126,5 +148,10 @@ fn laplacian_diff(a : @core.Image, b : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

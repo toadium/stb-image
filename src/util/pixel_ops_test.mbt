@@ -6,7 +6,7 @@ fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
     width: w,
     height: h,
     channels: ch,
-    data: Array::make(w * h * ch, v) |> Bytes::from_array
+    data: Array::make(w * h * ch, v) |> Bytes::from_array,
   }
 }
 
@@ -16,7 +16,7 @@ test "threshold: 128 splits values" {
     width: 2,
     height: 1,
     channels: 1,
-    data: [b'\x00', b'\xFF'] |> Bytes::from_array
+    data: [b'\x00', b'\xFF'] |> Bytes::from_array,
   }
   let result = threshold(img, 128)
   assert_eq(result.data[0], b'\x00')
@@ -31,7 +31,7 @@ test "threshold: preserves alpha" {
     width: 1,
     height: 1,
     channels: 4,
-    data: [b'\x40', b'\x40', b'\x40', b'\x80'] |> Bytes::from_array
+    data: [b'\x40', b'\x40', b'\x40', b'\x80'] |> Bytes::from_array,
   }
   let result = threshold(img, 128)
   assert_eq(result.data[3], b'\x80')
@@ -45,7 +45,7 @@ test "posterize: 2 levels equals binary" {
     width: 4,
     height: 1,
     channels: 1,
-    data: [b'\x00', b'\x40', b'\x80', b'\xFF'] |> Bytes::from_array
+    data: [b'\x00', b'\x40', b'\x80', b'\xFF'] |> Bytes::from_array,
   }
   let result = posterize(img, 2)
   assert_eq(result.data[0], b'\x00')
@@ -73,7 +73,8 @@ test "extract_channel: extracts R from RGB" {
     width: 2,
     height: 1,
     channels: 3,
-    data: [b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60'] |> Bytes::from_array
+    data: [b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60']
+    |> Bytes::from_array,
   }
   let r = extract_channel(img, 0)
   assert_eq(r.channels, 1)

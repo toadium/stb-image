@@ -34,7 +34,10 @@ test "adjust_brightness: clamps to 0 and 255" {
 
 ///|
 test "adjust_brightness: preserves alpha" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(4))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
   let result = adjust_brightness(img, 50)
   // alpha 通道不变
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
@@ -44,7 +47,10 @@ test "adjust_brightness: preserves alpha" {
 
 ///|
 test "adjust_contrast: factor=1.0 is identity" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = adjust_contrast(img, 1.0)
   assert_eq(result.data, img.data)
   let _ = img
@@ -65,7 +71,10 @@ test "adjust_contrast: factor=0.0 is gray (128)" {
 
 ///|
 test "adjust_gamma: gamma=1.0 is identity" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = adjust_gamma(img, 1.0)
   assert_eq(result.data, img.data)
   let _ = img
@@ -101,7 +110,10 @@ test "invert: 255 - original" {
 
 ///|
 test "invert: double invert is identity" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let result = invert(invert(img))
   assert_eq(result.data, img.data)
   let _ = img

@@ -12,10 +12,8 @@ test "pyr_down: 尺寸减半" {
 ///|
 test "pyr_down: 均值采样" {
   let data = Bytes::from_array([
-    b'\x00', b'\x10', b'\x20', b'\x30',
-    b'\x40', b'\x50', b'\x60', b'\x70',
-    b'\x80', b'\x90', b'\xA0', b'\xB0',
-    b'\xC0', b'\xD0', b'\xE0', b'\xF0',
+    b'\x00', b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80',
+    b'\x90', b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = pyr_down(img)

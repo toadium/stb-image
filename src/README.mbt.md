@@ -4,7 +4,7 @@ MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v
 
 ## Quick Start
 
-```moonbit
+```moonbit nocheck
 // Decode from file
 let img : Image = load_from_path("photo.png")
 println("width=\{img.width}, height=\{img.height}, channels=\{img.channels}")
@@ -84,7 +84,7 @@ println("frames=\{anim.frames.length()}, delays=\{anim.delays}")
 
 ## Error Handling
 
-```moonbit
+```moonbit nocheck
 try {
   let img = load_from_bytes(data)
 } catch {

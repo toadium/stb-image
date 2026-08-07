@@ -2,6 +2,7 @@
 // 单帧 GIF89a，使用 3-3-2 均匀量化（256 色调色板）+ LZW 压缩
 
 // 3-3-2 量化: R 8 levels, G 8 levels, B 4 levels = 256 colors
+///|
 fn quantize_332(r : Int, g : Int, b : Int) -> Int {
   let r_level = (r >> 5) & 0x07
   let g_level = (g >> 5) & 0x07
@@ -10,11 +11,13 @@ fn quantize_332(r : Int, g : Int, b : Int) -> Int {
 }
 
 // 构建 256 色 3-3-2 调色板
+
+///|
 fn build_332_palette() -> Array[Byte] {
   let palette : Array[Byte] = Array::make(768, b'\x00')
   for i in 0..<256 {
     let r_level = i / 32
-    let g_level = (i % 32) / 4
+    let g_level = i % 32 / 4
     let b_level = i % 4
     palette[i * 3] = (r_level * 36).to_byte()
     palette[i * 3 + 1] = (g_level * 36).to_byte()
@@ -25,6 +28,8 @@ fn build_332_palette() -> Array[Byte] {
 
 // LZW 压缩用于 GIF
 // 返回压缩后的字节数组（包含 sub-block 包装）
+
+///|
 fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
   let clear_code = 1 << min_code_size
   let end_code = clear_code + 1
@@ -91,7 +96,11 @@ fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
   let result : Array[Byte] = []
   let pos = Ref(0)
   while pos.val < output.length() {
-    let block_size = if output.length() - pos.val > 255 { 255 } else { output.length() - pos.val }
+    let block_size = if output.length() - pos.val > 255 {
+      255
+    } else {
+      output.length() - pos.val
+    }
     result.push(block_size.to_byte())
     for i in 0..<block_size {
       result.push(output[pos.val + i])
@@ -108,7 +117,9 @@ fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
 /// 输入 channels 应为 3 (RGB) 或 4 (RGBA，alpha 忽略)
 pub fn encode_gif(img : @core.Image) -> Bytes raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)")
+    raise @core.LoadError::DecodeFailed(
+      "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
+    )
   }
   let out : Array[Byte] = []
   // GIF89a header
@@ -169,7 +180,9 @@ pub fn encode_gif(img : @core.Image) -> Bytes raise @core.LoadError {
 /// frames 为帧数组，delays 为每帧延迟（毫秒，将转换为 1/100 秒单位）。
 /// 所有帧应具有相同尺寸和 channels（3 或 4）。
 /// 使用 3-3-2 均匀量化 + LZW 压缩，无限循环。
-pub fn encode_gif_animation(anim : @core.GifAnimation) -> Bytes raise @core.LoadError {
+pub fn encode_gif_animation(
+  anim : @core.GifAnimation,
+) -> Bytes raise @core.LoadError {
   let frames = anim.frames
   let delays = anim.delays
   if frames.length() == 0 {
@@ -180,7 +193,9 @@ pub fn encode_gif_animation(anim : @core.GifAnimation) -> Bytes raise @core.Load
   }
   let first = frames[0]
   if first.channels != 3 && first.channels != 4 {
-    raise @core.LoadError::DecodeFailed("GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)")
+    raise @core.LoadError::DecodeFailed(
+      "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
+    )
   }
   let w = first.width
   let h = first.height

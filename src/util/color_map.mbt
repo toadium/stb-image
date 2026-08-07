@@ -2,9 +2,13 @@
 
 ///|
 
+///|
 /// 应用查找表（LUT）。lut 为 256 个 Byte 的映射表，将每个像素值 v 替换为 lut[v]。
 /// 仅影响颜色通道，alpha 通道不变。
-pub fn apply_lut(img : @core.Image, lut : Array[Byte]) -> @core.Image raise @core.LoadError {
+pub fn apply_lut(
+  img : @core.Image,
+  lut : Array[Byte],
+) -> @core.Image raise @core.LoadError {
   if lut.length() < 256 {
     raise @core.LoadError::DecodeFailed("LUT 必须有 256 个条目")
   }
@@ -20,21 +24,34 @@ pub fn apply_lut(img : @core.Image, lut : Array[Byte]) -> @core.Image raise @cor
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 渐变映射。将图像亮度映射到 color_stops 定义的颜色渐变。
 /// color_stops 为渐变颜色点，每个点是 (position, r, g, b)，position ∈ [0, 255]。
 /// 返回 RGB 图像（channels=3）。
-pub fn gradient_map(img : @core.Image, color_stops : Array[(Int, Byte, Byte, Byte)]) -> @core.Image raise @core.LoadError {
+pub fn gradient_map(
+  img : @core.Image,
+  color_stops : Array[(Int, Byte, Byte, Byte)],
+) -> @core.Image raise @core.LoadError {
   if color_stops.length() < 2 {
-    raise @core.LoadError::DecodeFailed("gradient_map 至少需要 2 个颜色点")
+    raise @core.LoadError::DecodeFailed(
+      "gradient_map 至少需要 2 个颜色点",
+    )
   }
   let n = img.width * img.height
   let out : Array[Byte] = Array::make(n * 3, b'\x00')
   // 预计算 256 个亮度的映射
-  let lut : Array[(Byte, Byte, Byte)] = Array::make(256, (b'\x00', b'\x00', b'\x00'))
+  let lut : Array[(Byte, Byte, Byte)] = Array::make(
+    256,
+    (b'\x00', b'\x00', b'\x00'),
+  )
   for v in 0..<256 {
     lut[v] = interp_gradient(v, color_stops)
   }
@@ -54,11 +71,19 @@ pub fn gradient_map(img : @core.Image, color_stops : Array[(Int, Byte, Byte, Byt
     out[i * 3 + 1] = g
     out[i * 3 + 2] = b
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 3, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
-fn interp_gradient(v : Int, stops : Array[(Int, Byte, Byte, Byte)]) -> (Byte, Byte, Byte) {
+fn interp_gradient(
+  v : Int,
+  stops : Array[(Int, Byte, Byte, Byte)],
+) -> (Byte, Byte, Byte) {
   let len = stops.length()
   if v <= stops[0].0 {
     return (stops[0].1, stops[0].2, stops[0].3)
@@ -86,9 +111,14 @@ fn interp_gradient(v : Int, stops : Array[(Int, Byte, Byte, Byte)]) -> (Byte, By
 
 ///|
 /// 设置所有像素的 alpha 通道为指定值。图像必须是 RGBA（channels=4）。
-pub fn set_alpha(img : @core.Image, alpha : Byte) -> @core.Image raise @core.LoadError {
+pub fn set_alpha(
+  img : @core.Image,
+  alpha : Byte,
+) -> @core.Image raise @core.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("set_alpha 需要 RGBA 图像（channels=4）")
+    raise @core.LoadError::DecodeFailed(
+      "set_alpha 需要 RGBA 图像（channels=4）",
+    )
   }
   let n = img.width * img.height
   let out : Array[Byte] = Array::make(n * 4, b'\x00')
@@ -98,14 +128,27 @@ pub fn set_alpha(img : @core.Image, alpha : Byte) -> @core.Image raise @core.Loa
     out[i * 4 + 2] = img.data[i * 4 + 2]
     out[i * 4 + 3] = alpha
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 4, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 4,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 用指定颜色填充 alpha 通道。将 alpha < threshold 的像素的 RGB 设为指定颜色。
-pub fn fill_alpha(img : @core.Image, threshold : Int, fill_r : Byte, fill_g : Byte, fill_b : Byte) -> @core.Image raise @core.LoadError {
+pub fn fill_alpha(
+  img : @core.Image,
+  threshold : Int,
+  fill_r : Byte,
+  fill_g : Byte,
+  fill_b : Byte,
+) -> @core.Image raise @core.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("fill_alpha 需要 RGBA 图像（channels=4）")
+    raise @core.LoadError::DecodeFailed(
+      "fill_alpha 需要 RGBA 图像（channels=4）",
+    )
   }
   let n = img.width * img.height
   let out : Array[Byte] = Array::make(n * 4, b'\x00')
@@ -122,5 +165,10 @@ pub fn fill_alpha(img : @core.Image, threshold : Int, fill_r : Byte, fill_g : By
     }
     out[i * 4 + 3] = img.data[i * 4 + 3]
   }
-  @core.Image::{ width: img.width, height: img.height, channels: 4, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 4,
+    data: Bytes::from_array(out),
+  }
 }

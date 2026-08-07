@@ -19,13 +19,15 @@ pub struct ConnectedComponent {
 /// 返回标记图（每个像素的标签，0=背景，1..N=前景域）和连通域信息列表。
 pub fn connected_components(
   img : @core.Image,
-  connectivity : Int
+  connectivity : Int,
 ) -> (ConnectedComponentLabelImage, Array[ConnectedComponent]) raise @core.LoadError {
   if connectivity != 4 && connectivity != 8 {
     raise @core.LoadError::DecodeFailed("connectivity 必须为 4 或 8")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("connected_components 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "connected_components 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -145,10 +147,18 @@ pub fn connected_components(
     }
   }
   let components : Array[ConnectedComponent] = []
-  for label in 1..=final_count {
+  for label in 1..<=final_count {
     let area = areas[label]
-    let cx = if area > 0 { Float::from_int(sum_x[label]) / Float::from_int(area) } else { 0.0F }
-    let cy = if area > 0 { Float::from_int(sum_y[label]) / Float::from_int(area) } else { 0.0F }
+    let cx = if area > 0 {
+      Float::from_int(sum_x[label]) / Float::from_int(area)
+    } else {
+      0.0F
+    }
+    let cy = if area > 0 {
+      Float::from_int(sum_y[label]) / Float::from_int(area)
+    } else {
+      0.0F
+    }
     components.push(ConnectedComponent::{
       label,
       area,
@@ -160,7 +170,10 @@ pub fn connected_components(
       centroid_y: cy,
     })
   }
-  (ConnectedComponentLabelImage::{ width: w, height: h, labels: out_labels }, components)
+  (
+    ConnectedComponentLabelImage::{ width: w, height: h, labels: out_labels },
+    components,
+  )
 }
 
 ///|

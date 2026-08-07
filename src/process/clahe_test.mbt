@@ -1,13 +1,12 @@
 // CLAHE 测试
 
 ///|
-
 test "clahe: grayscale uniform image produces uniform output" {
   let img = @core.Image::{
     width: 8,
     height: 8,
     channels: 1,
-    data: Array::make(64, b'\x80') |> Bytes::from_array
+    data: Array::make(64, b'\x80') |> Bytes::from_array,
   }
   let result = clahe(img, 4, 2.0)
   // 均匀图像 CLAHE 后所有像素应相同
@@ -25,7 +24,7 @@ test "clahe: RGB image preserves channels" {
     width: 8,
     height: 8,
     channels: 3,
-    data: Array::make(64 * 3, b'\x80') |> Bytes::from_array
+    data: Array::make(64 * 3, b'\x80') |> Bytes::from_array,
   }
   let result = clahe(img, 4, 2.0)
   assert_eq(result.channels, 3)
@@ -45,7 +44,7 @@ test "clahe: RGBA preserves alpha" {
     width: 8,
     height: 8,
     channels: 4,
-    data: Bytes::from_array(data)
+    data: Bytes::from_array(data),
   }
   let result = clahe(img, 4, 2.0)
   for i in 0..<64 {
@@ -61,7 +60,7 @@ test "clahe: raises on invalid tile_size" {
     width: 4,
     height: 4,
     channels: 1,
-    data: Array::make(16, b'\x80') |> Bytes::from_array
+    data: Array::make(16, b'\x80') |> Bytes::from_array,
   }
   try {
     let _ = clahe(img, 1, 2.0)
@@ -85,7 +84,7 @@ test "clahe: enhances contrast on gradient" {
     width: 8,
     height: 8,
     channels: 1,
-    data: Bytes::from_array(data)
+    data: Bytes::from_array(data),
   }
   let result = clahe(img, 4, 3.0)
   // CLAHE 后像素值应在 0-255 范围内

@@ -8,7 +8,7 @@
 /// 返回分割结果，每个像素的标签对应其所属区域。
 pub fn watershed(
   img : @core.Image,
-  markers : Array[Int]
+  markers : Array[Int],
 ) -> Array[Int] raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("watershed 仅支持 channels=1/3/4")
@@ -17,7 +17,9 @@ pub fn watershed(
   let h = img.height
   let n = w * h
   if markers.length() != n {
-    raise @core.LoadError::DecodeFailed("markers 长度必须等于 width * height")
+    raise @core.LoadError::DecodeFailed(
+      "markers 长度必须等于 width * height",
+    )
   }
   if n == 0 {
     return []
@@ -71,8 +73,8 @@ pub fn watershed(
       let x = idx % w
       let y = idx / w
       let mut has_labeled_neighbor = false
-      for dy in -1..=1 {
-        for dx in -1..=1 {
+      for dy in -1..<=1 {
+        for dx in -1..<=1 {
           if dx == 0 && dy == 0 {
             continue
           }
@@ -102,8 +104,8 @@ pub fn watershed(
       let mut label = 0
       let mut is_wshed = false
       // 查看邻居标签
-      for dy in -1..=1 {
-        for dx in -1..=1 {
+      for dy in -1..<=1 {
+        for dx in -1..<=1 {
           if dx == 0 && dy == 0 {
             continue
           }
@@ -127,8 +129,8 @@ pub fn watershed(
       } else if label > 0 {
         labels[idx] = label
         // 将同级别未标记邻居加入队列
-        for dy in -1..=1 {
-          for dx in -1..=1 {
+        for dy in -1..<=1 {
+          for dx in -1..<=1 {
             if dx == 0 && dy == 0 {
               continue
             }
@@ -159,9 +161,13 @@ pub fn watershed(
 /// 自动分水岭分割（使用局部最小值作为种子点）。
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// 返回标签图和区域数量。
-pub fn watershed_auto(img : @core.Image) -> (Array[Int], Int) raise @core.LoadError {
+pub fn watershed_auto(
+  img : @core.Image,
+) -> (Array[Int], Int) raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("watershed_auto 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "watershed_auto 仅支持 channels=1/3/4",
+    )
   }
   let w = img.width
   let h = img.height
@@ -190,8 +196,8 @@ pub fn watershed_auto(img : @core.Image) -> (Array[Int], Int) raise @core.LoadEr
       let idx = y * w + x
       let val = gray[idx]
       let mut is_min = true
-      for dy in -1..=1 {
-        for dx in -1..=1 {
+      for dy in -1..<=1 {
+        for dx in -1..<=1 {
           if dx == 0 && dy == 0 {
             continue
           }
@@ -218,8 +224,8 @@ pub fn watershed_auto(img : @core.Image) -> (Array[Int], Int) raise @core.LoadEr
           let pidx = stack.remove(stack.length() - 1)
           let px = pidx % w
           let py = pidx / w
-          for dy in -1..=1 {
-            for dx in -1..=1 {
+          for dy in -1..<=1 {
+            for dx in -1..<=1 {
               if dx == 0 && dy == 0 {
                 continue
               }

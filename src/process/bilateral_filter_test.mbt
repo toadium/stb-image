@@ -19,7 +19,12 @@ test "bilateral_filter: 保边去噪" {
       data[y * 8 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 8, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = bilateral_filter(img, 2, 2.0F, 30.0F)
   assert_eq(result.width, 8)
   assert_eq(result.height, 4)
@@ -31,10 +36,10 @@ test "bilateral_filter: 保边去噪" {
 ///|
 test "bilateral_filter: 输出范围 0-255" {
   let data = Bytes::from_array([
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF',
-    b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00',
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF',
-    b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\xFF',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00', b'\xFF',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\xFF', b'\xFF', b'\x00', b'\xFF',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00',
   ])
   let img = @core.Image::{ width: 8, height: 4, channels: 1, data }
   let result = bilateral_filter(img, 2, 2.0F, 30.0F)
@@ -47,8 +52,8 @@ test "bilateral_filter: 输出范围 0-255" {
 ///|
 test "bilateral_filter: RGB 图像" {
   let data = Bytes::from_array([
-    b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00',
-    b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00',
+    b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF',
+    b'\xFF', b'\xFF', b'\x00',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
   let result = bilateral_filter(img, 1, 1.0F, 30.0F)

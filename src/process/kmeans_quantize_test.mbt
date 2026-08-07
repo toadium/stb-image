@@ -1,12 +1,17 @@
 // K-means 量化测试
 
 ///|
-
 test "k_means_quantize: k=1 gives single color" {
   let data : Array[Byte] = [
-    b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00'
+    b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF',
+    b'\xFF', b'\xFF', b'\x00',
   ]
-  let img = @core.Image::{ width: 2, height: 2, channels: 3, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 2,
+    height: 2,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
   let result = k_means_quantize(img, 1, 20)
   // k=1 时所有像素应该是同一个颜色（平均值）
   let r0 = result.data[0]
@@ -27,7 +32,7 @@ test "k_means_quantize: preserves channels" {
     width: 4,
     height: 4,
     channels: 3,
-    data: Array::make(48, b'\x80') |> Bytes::from_array
+    data: Array::make(48, b'\x80') |> Bytes::from_array,
   }
   let result = k_means_quantize(img, 4, 10)
   assert_eq(result.channels, 3)
@@ -43,7 +48,12 @@ test "k_means_quantize: RGBA preserves alpha" {
   for i in 0..<4 {
     data[i * 4 + 3] = b'\xFF'
   }
-  let img = @core.Image::{ width: 2, height: 2, channels: 4, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 2,
+    height: 2,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
   let result = k_means_quantize(img, 2, 10)
   for i in 0..<4 {
     assert_eq(result.data[i * 4 + 3], b'\xFF')
@@ -58,7 +68,7 @@ test "k_means_quantize: raises on invalid k" {
     width: 2,
     height: 2,
     channels: 3,
-    data: Array::make(12, b'\x80') |> Bytes::from_array
+    data: Array::make(12, b'\x80') |> Bytes::from_array,
   }
   try {
     let _ = k_means_quantize(img, 0, 10)
@@ -73,10 +83,15 @@ test "k_means_quantize: raises on invalid k" {
 ///|
 test "k_means_quantize: two distinct colors with k=2" {
   let data : Array[Byte] = [
-    b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF'
+    b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF',
+    b'\xFF', b'\xFF', b'\xFF',
   ]
-  let img = @core.Image::{ width: 2, height: 2, channels: 3, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 2,
+    height: 2,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
   let result = k_means_quantize(img, 2, 20)
   // 前两个像素应该是同一个颜色，后两个也是同一个颜色
   assert_eq(result.data[0], result.data[3])

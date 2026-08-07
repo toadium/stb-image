@@ -15,7 +15,10 @@ test "encode_gif: 1x1 RGB" {
 
 ///|
 test "encode_gif: 4x4 PNG → GIF round-trip" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
   let gif = encode_gif(img)
   // 用 load_from_bytes 解码回来
   let img2 = @core.load_from_bytes(gif)
@@ -28,7 +31,10 @@ test "encode_gif: 4x4 PNG → GIF round-trip" {
 
 ///|
 test "encode_gif: RGBA (alpha ignored)" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(4))
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
   let gif = encode_gif(img)
   let img2 = @core.load_from_bytes(gif)
   assert_eq(img2.width, 4)
@@ -74,8 +80,16 @@ test "encode_gif: 2x2 colors" {
 
 ///|
 test "encode_gif: larger image 32x32" {
-  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
-  let resized = @core.resize(img, 32, 32, filter=@core.ResizeFilter::PointSample)
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let resized = @core.resize(
+    img,
+    32,
+    32,
+    filter=@core.ResizeFilter::PointSample,
+  )
   let gif = encode_gif(resized)
   let img2 = @core.load_from_bytes(gif)
   assert_eq(img2.width, 32)

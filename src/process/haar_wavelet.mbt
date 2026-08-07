@@ -65,10 +65,12 @@ pub fn haar_inverse_transform_1d(data : Array[Float]) -> Array[Float] {
 /// levels 为分解层数。
 pub fn haar_transform_2d(
   img : @core.Image,
-  levels~ : Int = 1
+  levels? : Int = 1,
 ) -> HaarWaveletResult raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("haar_transform_2d 仅支持 channels=1/3/4")
+    raise @core.LoadError::DecodeFailed(
+      "haar_transform_2d 仅支持 channels=1/3/4",
+    )
   }
   if levels < 1 || levels > 10 {
     raise @core.LoadError::DecodeFailed("levels 必须在 1..10 之间")
@@ -77,7 +79,12 @@ pub fn haar_transform_2d(
   let h = img.height
   let n = w * h
   if n == 0 {
-    return HaarWaveletResult::{ width: w, height: h, levels: 0, coefficients: [] }
+    return HaarWaveletResult::{
+      width: w,
+      height: h,
+      levels: 0,
+      coefficients: [],
+    }
   }
   // 转灰度为 Float
   let coeffs : Array[Float] = Array::make(n, 0.0F)
@@ -135,7 +142,12 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
   let h = result.height
   let n = w * h
   if n == 0 {
-    return @core.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) }
+    return @core.Image::{
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: Bytes::from_array([]),
+    }
   }
   let coeffs = result.coefficients.copy()
   // 多级重构（从最小级别开始）
@@ -183,7 +195,12 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
     let val = coeffs[i].to_int()
     out[i] = val.clamp(min=0, max=255).to_byte()
   }
-  @core.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -193,9 +210,9 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
 /// threshold 为阈值，soft=true 为软阈值，false 为硬阈值。
 pub fn haar_denoise(
   img : @core.Image,
-  threshold~ : Float = 10.0F,
-  soft~ : Bool = true,
-  levels~ : Int = 3
+  threshold? : Float = 10.0F,
+  soft? : Bool = true,
+  levels? : Int = 3,
 ) -> @core.Image raise @core.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @core.LoadError::DecodeFailed("haar_denoise 仅支持 channels=1/3/4")
@@ -224,11 +241,9 @@ pub fn haar_denoise(
         } else {
           coeffs[idx] = 0.0F
         }
-      } else {
         // 硬阈值
-        if c.abs() < threshold {
-          coeffs[idx] = 0.0F
-        }
+      } else if c.abs() < threshold {
+        coeffs[idx] = 0.0F
       }
     }
   }

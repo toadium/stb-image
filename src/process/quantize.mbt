@@ -28,7 +28,10 @@ pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
       for c in 0..<color_ch {
         let idx = (y * w + x) * color_ch + c
         let old_val = buf[idx].clamp(min=0, max=255)
-        let new_val = ((old_val + half_step) / step * step).clamp(min=0, max=255)
+        let new_val = ((old_val + half_step) / step * step).clamp(
+          min=0,
+          max=255,
+        )
         buf[idx] = new_val
         let err = old_val - new_val
         // 误差扩散：右 7/16, 左下 3/16, 下 5/16, 右下 1/16
@@ -57,7 +60,12 @@ pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -129,7 +137,10 @@ pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
     num_buckets += 1
   }
   // 计算每个 bucket 的平均色作为调色板
-  let palette : Array[(Int, Int, Int)] = Array::make(buckets.length(), (0, 0, 0))
+  let palette : Array[(Int, Int, Int)] = Array::make(
+    buckets.length(),
+    (0, 0, 0),
+  )
   for bi in 0..<buckets.length() {
     palette[bi] = bucket_average(pixels, buckets[bi])
   }
@@ -152,7 +163,12 @@ pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
     out[i * 3 + 1] = pg.to_byte()
     out[i * 3 + 2] = pb.to_byte()
   }
-  @core.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -167,7 +183,7 @@ fn channel_value(pixel : (Int, Int, Int), ch : Int) -> Int {
 ///|
 fn bucket_max_range(
   pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int]
+  bucket : Array[Int],
 ) -> (Int, Int) {
   let mut min_r = 255
   let mut max_r = 0
@@ -211,7 +227,7 @@ fn bucket_max_range(
 ///|
 fn bucket_average(
   pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int]
+  bucket : Array[Int],
 ) -> (Int, Int, Int) {
   let mut sum_r = 0
   let mut sum_g = 0

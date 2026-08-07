@@ -3,7 +3,12 @@
 ///|
 /// 在图像四周填充指定颜色，生成新尺寸 (width+2*px, height+2*py) 的新图像。
 /// pad_color 长度应等于 channels，不足则循环使用。
-pub fn pad(img : @core.Image, px : Int, py : Int, pad_color : Array[Byte]) -> @core.Image raise @core.LoadError {
+pub fn pad(
+  img : @core.Image,
+  px : Int,
+  py : Int,
+  pad_color : Array[Byte],
+) -> @core.Image raise @core.LoadError {
   if px < 0 || py < 0 {
     raise @core.LoadError::DecodeFailed("pad 填充必须非负")
   }
@@ -33,7 +38,12 @@ pub fn pad(img : @core.Image, px : Int, py : Int, pad_color : Array[Byte]) -> @c
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -44,7 +54,7 @@ pub fn add_border(
   right : Int,
   bottom : Int,
   left : Int,
-  border_color : Array[Byte]
+  border_color : Array[Byte],
 ) -> @core.Image raise @core.LoadError {
   if top < 0 || right < 0 || bottom < 0 || left < 0 {
     raise @core.LoadError::DecodeFailed("border 宽度必须非负")
@@ -72,13 +82,22 @@ pub fn add_border(
       }
     }
   }
-  @core.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @core.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// Resize 并裁剪到精确尺寸（cover 模式）。
 /// 先按宽高比缩放使图像"覆盖"目标尺寸，然后居中裁剪多余部分。
-pub fn resize_to_cover(img : @core.Image, target_w : Int, target_h : Int) -> @core.Image raise @core.LoadError {
+pub fn resize_to_cover(
+  img : @core.Image,
+  target_w : Int,
+  target_h : Int,
+) -> @core.Image raise @core.LoadError {
   if target_w <= 0 || target_h <= 0 {
     raise @core.LoadError::DecodeFailed("目标尺寸必须为正数")
   }
@@ -99,7 +118,7 @@ pub fn resize_to_contain(
   img : @core.Image,
   target_w : Int,
   target_h : Int,
-  fill_color : Array[Byte]
+  fill_color : Array[Byte],
 ) -> @core.Image raise @core.LoadError {
   if target_w <= 0 || target_h <= 0 {
     raise @core.LoadError::DecodeFailed("目标尺寸必须为正数")

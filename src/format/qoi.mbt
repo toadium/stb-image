@@ -2,6 +2,7 @@
 // 规范: https://qoiformat.org/qoi-specification.pdf
 
 // QOI 哈希函数: (r*3 + g*5 + b*7 + a*11) % 64
+///|
 fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int {
   (r * 3 + g * 5 + b * 7 + a * 11) % 64
 }
@@ -13,12 +14,20 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
   if len < 14 {
     raise @core.LoadError::DecodeFailed("QOI 数据过短")
   }
-  if data[0].to_int() != 0x71 || data[1].to_int() != 0x6F ||
-    data[2].to_int() != 0x69 || data[3].to_int() != 0x66 {
+  if data[0].to_int() != 0x71 ||
+    data[1].to_int() != 0x6F ||
+    data[2].to_int() != 0x69 ||
+    data[3].to_int() != 0x66 {
     raise @core.LoadError::DecodeFailed("QOI magic 不匹配")
   }
-  let width = (data[4].to_int() << 24) | (data[5].to_int() << 16) | (data[6].to_int() << 8) | data[7].to_int()
-  let height = (data[8].to_int() << 24) | (data[9].to_int() << 16) | (data[10].to_int() << 8) | data[11].to_int()
+  let width = (data[4].to_int() << 24) |
+    (data[5].to_int() << 16) |
+    (data[6].to_int() << 8) |
+    data[7].to_int()
+  let height = (data[8].to_int() << 24) |
+    (data[9].to_int() << 16) |
+    (data[10].to_int() << 8) |
+    data[11].to_int()
   let channels = data[12].to_int()
   if width <= 0 || height <= 0 {
     raise @core.LoadError::DecodeFailed("QOI 尺寸无效")
@@ -97,7 +106,12 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
     index_b[h] = px_b.val
     index_a[h] = px_a.val
   }
-  @core.Image::{ width, height, channels: out_channels, data: Bytes::from_array(pixels) }
+  @core.Image::{
+    width,
+    height,
+    channels: out_channels,
+    data: Bytes::from_array(pixels),
+  }
 }
 
 ///|
@@ -105,7 +119,9 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
 /// 输入 Image 的 channels 必须为 3 (RGB) 或 4 (RGBA)
 pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("QOI 编码需要 channels 为 3 (RGB) 或 4 (RGBA)")
+    raise @core.LoadError::DecodeFailed(
+      "QOI 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
+    )
   }
   let out : Array[Byte] = []
   out.push(b'\x71')
@@ -137,7 +153,11 @@ pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError {
     let r = img.data[i * img.channels].to_int()
     let g = img.data[i * img.channels + 1].to_int()
     let b = img.data[i * img.channels + 2].to_int()
-    let a = if has_alpha { img.data[i * img.channels + 3].to_int() } else { 255 }
+    let a = if has_alpha {
+      img.data[i * img.channels + 3].to_int()
+    } else {
+      255
+    }
     if r == prev_r.val && g == prev_g.val && b == prev_b.val && a == prev_a.val {
       run.val += 1
       if run.val == 62 {
@@ -150,7 +170,10 @@ pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError {
         run.val = 0
       }
       let h = qoi_hash(r, g, b, a)
-      if index_r[h] == r && index_g[h] == g && index_b[h] == b && index_a[h] == a {
+      if index_r[h] == r &&
+        index_g[h] == g &&
+        index_b[h] == b &&
+        index_a[h] == a {
         out.push((h & 0x3F).to_byte())
       } else if a == prev_a.val {
         let dr = r - prev_r.val
@@ -159,8 +182,15 @@ pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError {
         let dr_dg = dr - dg
         let db_dg = db - dg
         if dr >= -2 && dr <= 1 && dg >= -2 && dg <= 1 && db >= -2 && db <= 1 {
-          out.push((0x40 | ((dr + 2) << 4) | ((dg + 2) << 2) | (db + 2)).to_byte())
-        } else if dg >= -32 && dg <= 31 && dr_dg >= -8 && dr_dg <= 7 && db_dg >= -8 && db_dg <= 7 {
+          out.push(
+            (0x40 | ((dr + 2) << 4) | ((dg + 2) << 2) | (db + 2)).to_byte(),
+          )
+        } else if dg >= -32 &&
+          dg <= 31 &&
+          dr_dg >= -8 &&
+          dr_dg <= 7 &&
+          db_dg >= -8 &&
+          db_dg <= 7 {
           out.push((0x80 | ((dg + 32) & 0x3F)).to_byte())
           out.push((((dr_dg + 8) << 4) | (db_dg + 8)).to_byte())
         } else {

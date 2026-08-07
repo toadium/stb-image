@@ -6,7 +6,7 @@ fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
     width: w,
     height: h,
     channels: ch,
-    data: Array::make(w * h * ch, v) |> Bytes::from_array
+    data: Array::make(w * h * ch, v) |> Bytes::from_array,
   }
 }
 
@@ -94,7 +94,7 @@ test "flip_vertical: reverses rows" {
     width: 2,
     height: 2,
     channels: 1,
-    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array
+    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
   }
   let result = flip_vertical(img)
   assert_eq(result.data[0], b'\x03')
@@ -111,7 +111,7 @@ test "flip_vertical: double flip is identity" {
     width: 2,
     height: 2,
     channels: 1,
-    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array
+    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
   }
   let result = flip_vertical(flip_vertical(img))
   assert_eq(result.data, img.data)
@@ -125,7 +125,8 @@ test "transpose: swaps dimensions" {
     width: 2,
     height: 3,
     channels: 1,
-    data: [b'\x01', b'\x02', b'\x03', b'\x04', b'\x05', b'\x06'] |> Bytes::from_array
+    data: [b'\x01', b'\x02', b'\x03', b'\x04', b'\x05', b'\x06']
+    |> Bytes::from_array,
   }
   let result = transpose(img)
   assert_eq(result.width, 3)

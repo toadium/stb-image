@@ -11,7 +11,6 @@ pub(all) struct ExifInfo {
 } derive(Eq, @debug.Debug)
 
 ///|
-
 fn read_u16_be(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() * 256 + data[offset + 1].to_int()
 }
@@ -24,17 +23,17 @@ fn read_u16_le(data : Bytes, offset : Int) -> Int {
 ///|
 fn read_u32_be(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() * 16777216 +
-    data[offset + 1].to_int() * 65536 +
-    data[offset + 2].to_int() * 256 +
-    data[offset + 3].to_int()
+  data[offset + 1].to_int() * 65536 +
+  data[offset + 2].to_int() * 256 +
+  data[offset + 3].to_int()
 }
 
 ///|
 fn read_u32_le(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() +
-    data[offset + 1].to_int() * 256 +
-    data[offset + 2].to_int() * 65536 +
-    data[offset + 3].to_int() * 16777216
+  data[offset + 1].to_int() * 256 +
+  data[offset + 2].to_int() * 65536 +
+  data[offset + 3].to_int() * 16777216
 }
 
 ///|
@@ -43,7 +42,7 @@ fn read_exif_string(
   tiff_start : Int,
   entry_offset : Int,
   count : Int,
-  little : Bool
+  little : Bool,
 ) -> String {
   let val_offset = if count <= 4 {
     tiff_start + entry_offset + 8
@@ -64,9 +63,7 @@ fn read_exif_string(
     }
     chars.push(b)
   }
-  try {
-    @encoding/utf8.decode(Bytes::from_array(chars)[:])
-  } catch {
+  @encoding/utf8.decode(Bytes::from_array(chars)[:]) catch {
     _ => ""
   }
 }
@@ -163,15 +160,20 @@ pub fn read_exif_from_bytes(data : Bytes) -> ExifInfo? {
     }
     let entry_offset = entry_pos - tiff_start
     match tag {
-      0x010F => make = read_exif_string(data, tiff_start, entry_offset, count, little)
-      0x0110 => model = read_exif_string(data, tiff_start, entry_offset, count, little)
+      0x010F =>
+        make = read_exif_string(data, tiff_start, entry_offset, count, little)
+      0x0110 =>
+        model = read_exif_string(data, tiff_start, entry_offset, count, little)
       0x0112 =>
         orientation = if little {
           read_u16_le(data, tiff_start + entry_offset + 8)
         } else {
           read_u16_be(data, tiff_start + entry_offset + 8)
         }
-      0x0132 => date_time = read_exif_string(data, tiff_start, entry_offset, count, little)
+      0x0132 =>
+        date_time = read_exif_string(
+          data, tiff_start, entry_offset, count, little,
+        )
       _ => ()
     }
   }

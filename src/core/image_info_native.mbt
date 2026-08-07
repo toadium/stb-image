@@ -22,7 +22,13 @@ pub fn info_from_path(path : String) -> ImageInfo? {
   let w = Ref(0)
   let h = Ref(0)
   let c = Ref(0)
-  let result = stb_image_mbt_info_from_path(path_bytes, path_bytes.length(), w, h, c)
+  let result = stb_image_mbt_info_from_path(
+    path_bytes,
+    path_bytes.length(),
+    w,
+    h,
+    c,
+  )
   if result == 0 {
     None
   } else {
@@ -63,13 +69,14 @@ pub fn failure_reason() -> String {
   if bytes.length() == 0 {
     return ""
   }
-  try @encoding/utf8.decode(bytes[:]) catch {
+  @encoding/utf8.decode(bytes[:]) catch {
     _ => "<utf8_decode_failed>"
   }
 }
 
 ///|
 
+///|
 /// 设置加载时是否对预乘 alpha 的图像进行反预乘处理
 pub fn set_unpremultiply_on_load(flag : Bool) -> Unit {
   stb_image_mbt_set_unpremultiply_on_load(if flag { 1 } else { 0 })

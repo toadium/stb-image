@@ -3,10 +3,8 @@
 ///|
 test "adaptive_threshold_mean: 基本二值化" {
   let data = Bytes::from_array([
-    b'\x00', b'\x00', b'\x00', b'\xFF',
-    b'\x00', b'\x00', b'\xFF', b'\xFF',
-    b'\x00', b'\xFF', b'\xFF', b'\xFF',
-    b'\xFF', b'\xFF', b'\xFF', b'\xFF',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\x00',
+    b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = adaptive_threshold_mean(img, 3, 5)
@@ -54,10 +52,8 @@ test "adaptive_threshold_mean: block_size 验证" {
 ///|
 test "adaptive_threshold_gaussian: 基本二值化" {
   let data = Bytes::from_array([
-    b'\x00', b'\x00', b'\x00', b'\xFF',
-    b'\x00', b'\x00', b'\xFF', b'\xFF',
-    b'\x00', b'\xFF', b'\xFF', b'\xFF',
-    b'\xFF', b'\xFF', b'\xFF', b'\xFF',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\x00',
+    b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
   ])
   let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
   let result = adaptive_threshold_gaussian(img, 3, 5)
@@ -87,7 +83,12 @@ test "threshold_otsu: 双峰直方图" {
       data[y * 8 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{ width: 8, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img = @core.Image::{
+    width: 8,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = threshold_otsu(img)
   assert_eq(result.width, 8)
   assert_eq(result.height, 4)
@@ -120,8 +121,8 @@ test "threshold_otsu: 均匀图像" {
 ///|
 test "threshold_otsu: RGB 图像" {
   let data = Bytes::from_array([
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00',
+    b'\xFF', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
   let result = threshold_otsu(img)
@@ -133,8 +134,8 @@ test "threshold_otsu: RGB 图像" {
 ///|
 test "adaptive_threshold_mean: RGB 图像" {
   let data = Bytes::from_array([
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
-    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00',
+    b'\x00', b'\xFF', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00',
+    b'\xFF', b'\x00', b'\x00',
   ])
   let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
   let result = adaptive_threshold_mean(img, 3, 5)
