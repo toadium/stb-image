@@ -2,85 +2,131 @@
 package "MoonBit-Toadium/stb-image/src"
 
 import {
-  "moonbitlang/core/debug",
+  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/meta",
+  "MoonBit-Toadium/stb-image/src/util",
 }
 
 // Values
-pub fn adjust_brightness(Image, Int) -> Image
+pub fn add_border(@core.Image, Int, Int, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
 
-pub fn adjust_contrast(Image, Float) -> Image
+pub fn add_noise_gaussian(@core.Image, Float, UInt) -> @core.Image
 
-pub fn adjust_gamma(Image, Float) -> Image
+pub fn add_noise_salt_pepper(@core.Image, Float, UInt) -> @core.Image
 
-pub fn box_blur(Image, Int) -> Image
+pub fn adjust_brightness(@core.Image, Int) -> @core.Image
+
+pub fn adjust_contrast(@core.Image, Float) -> @core.Image
+
+pub fn adjust_gamma(@core.Image, Float) -> @core.Image
+
+pub fn apply_lut(@core.Image, Array[Byte]) -> @core.Image raise @core.LoadError
+
+pub fn blend_darken(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_difference(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_exclusion(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_lighten(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_multiply(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_overlay(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn blend_screen(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
+pub fn box_blur(@core.Image, Int) -> @core.Image
+
+pub fn compute_stats(@core.Image) -> @util.ImageStats
 
 pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 
-pub fn crop(Image, Int, Int, Int, Int) -> Image raise LoadError
+pub fn convolve(@core.Image, Array[Float], Float, Float) -> @core.Image raise @core.LoadError
 
-pub fn crop_16(Image16, Int, Int, Int, Int) -> Image16 raise LoadError
+pub fn crop(@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError
 
-pub fn cropf(ImageF, Int, Int, Int, Int) -> ImageF raise LoadError
+pub fn crop_16(@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError
 
-pub fn decode_any(Bytes, req_channels? : Int?) -> Image raise LoadError
+pub fn cropf(@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError
 
-pub fn decode_qoi(Bytes) -> Image raise LoadError
+pub fn decode_any(Bytes, req_channels? : Int?) -> @core.Image raise @core.LoadError
 
-pub fn detect_format(Bytes) -> ImageFormat
+pub fn decode_qoi(Bytes) -> @core.Image raise @core.LoadError
 
-pub fn draw_copy(Image, Image, Int, Int) -> Image raise LoadError
+pub fn detect_format(Bytes) -> @core.ImageFormat
 
-pub fn draw_over(Image, Image, Int, Int) -> Image raise LoadError
+pub fn dilate(@core.Image) -> @core.Image
 
-pub fn edge_detect_sobel(Image) -> Image
+pub fn draw_copy(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
 
-pub fn encode_gif(Image) -> Bytes raise LoadError
+pub fn draw_over(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
 
-pub fn encode_gif_animation(GifAnimation) -> Bytes raise LoadError
+pub fn edge_detect_laplacian(@core.Image) -> @core.Image
 
-pub fn encode_icns(Image) -> Bytes raise LoadError
+pub fn edge_detect_prewitt(@core.Image) -> @core.Image
 
-pub fn encode_ico(Image) -> Bytes raise LoadError
+pub fn edge_detect_sobel(@core.Image) -> @core.Image
 
-pub fn encode_ico_sizes(Array[Image]) -> Bytes raise LoadError
+pub fn encode_gif(@core.Image) -> Bytes raise @core.LoadError
 
-pub fn encode_pgm(Image) -> Bytes
+pub fn encode_gif_animation(@core.GifAnimation) -> Bytes raise @core.LoadError
 
-pub fn encode_pnm(Image) -> Bytes
+pub fn encode_icns(@core.Image) -> Bytes raise @core.LoadError
 
-pub fn encode_ppm(Image) -> Bytes
+pub fn encode_ico(@core.Image) -> Bytes raise @core.LoadError
 
-pub fn encode_qoi(Image) -> Bytes raise LoadError
+pub fn encode_ico_sizes(Array[@core.Image]) -> Bytes raise @core.LoadError
+
+pub fn encode_pgm(@core.Image) -> Bytes
+
+pub fn encode_pnm(@core.Image) -> Bytes
+
+pub fn encode_ppm(@core.Image) -> Bytes
+
+pub fn encode_qoi(@core.Image) -> Bytes raise @core.LoadError
+
+pub fn erode(@core.Image) -> @core.Image
+
+pub fn extract_channel(@core.Image, Int) -> @core.Image raise @core.LoadError
 
 pub fn failure_reason() -> String
 
-pub fn flip_horizontal(Image) -> Image
+pub fn fill_alpha(@core.Image, Int, Byte, Byte, Byte) -> @core.Image raise @core.LoadError
+
+pub fn flip_horizontal(@core.Image) -> @core.Image
+
+pub fn flip_vertical(@core.Image) -> @core.Image
 
 pub fn flip_vertically_on_write(Bool) -> Unit
 
-pub fn floyd_steinberg(Image, Int) -> Image
+pub fn floyd_steinberg(@core.Image, Int) -> @core.Image
 
-pub fn gaussian_blur(Image, Int, Float) -> Image
+pub fn gaussian_blur(@core.Image, Int, Float) -> @core.Image
+
+pub fn gradient_map(@core.Image, Array[(Int, Byte, Byte, Byte)]) -> @core.Image raise @core.LoadError
 
 pub fn hdr_to_ldr_gamma(Float) -> Unit
 
 pub fn hdr_to_ldr_scale(Float) -> Unit
 
-pub fn histogram(Image) -> Array[Int]
+pub fn histogram(@core.Image) -> Array[Int]
 
-pub fn histogram_equalize(Image) -> Image
+pub fn histogram_equalize(@core.Image) -> @core.Image
 
-pub fn histogram_normalize(Image) -> Image
+pub fn histogram_normalize(@core.Image) -> @core.Image
 
 pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
+pub fn hstack(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+
 pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
-pub fn info_from_bytes(Bytes) -> ImageInfo? raise LoadError
+pub fn info_from_bytes(Bytes) -> @core.ImageInfo? raise @core.LoadError
 
-pub fn info_from_path(String) -> ImageInfo?
+pub fn info_from_path(String) -> @core.ImageInfo?
 
-pub fn invert(Image) -> Image
+pub fn invert(@core.Image) -> @core.Image
 
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
@@ -96,175 +142,156 @@ pub fn ldr_to_hdr_gamma(Float) -> Unit
 
 pub fn ldr_to_hdr_scale(Float) -> Unit
 
-pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> Image16 raise LoadError
+pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> @core.Image16 raise @core.LoadError
 
-pub fn load_16_from_path(String, req_channels? : Int?) -> Image16 raise LoadError
+pub fn load_16_from_path(String, req_channels? : Int?) -> @core.Image16 raise @core.LoadError
 
-pub fn load_from_bytes(Bytes, req_channels? : Int?) -> Image raise LoadError
+pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @core.Image raise @core.LoadError
 
-pub fn load_from_path(String, req_channels? : Int?) -> Image raise LoadError
+pub fn load_from_path(String, req_channels? : Int?) -> @core.Image raise @core.LoadError
 
-pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> GifAnimation raise LoadError
+pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> @core.GifAnimation raise @core.LoadError
 
-pub fn load_gif_from_path(String, req_channels? : Int?) -> GifAnimation raise LoadError
+pub fn load_gif_from_path(String, req_channels? : Int?) -> @core.GifAnimation raise @core.LoadError
 
-pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> ImageF raise LoadError
+pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @core.ImageF raise @core.LoadError
 
-pub fn loadf_from_path(String, req_channels? : Int?) -> ImageF raise LoadError
+pub fn loadf_from_path(String, req_channels? : Int?) -> @core.ImageF raise @core.LoadError
 
-pub fn median_cut(Image, Int) -> Image
+pub fn mean_value(@core.Image) -> Float
 
-pub fn premultiply_alpha(Image) -> Image raise LoadError
+pub fn median_cut(@core.Image, Int) -> @core.Image
 
-pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
+pub fn morph_close(@core.Image) -> @core.Image
 
-pub fn read_exif_from_path(String) -> ExifInfo? raise LoadError
+pub fn morph_open(@core.Image) -> @core.Image
 
-pub fn read_file_bytes(String) -> Bytes raise LoadError
+pub fn mse(@core.Image, @core.Image) -> Double
 
-pub fn read_png_text_chunks(Bytes) -> Array[PngTextChunk]
+pub fn pad(@core.Image, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
 
-pub fn read_png_text_chunks_from_path(String) -> Array[PngTextChunk] raise LoadError
+pub fn pixelate(@core.Image, Int) -> @core.Image raise @core.LoadError
 
-pub fn resize(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
+pub fn posterize(@core.Image, Int) -> @core.Image raise @core.LoadError
 
-pub fn resize_16(Image16, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image16 raise LoadError
+pub fn premultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
 
-pub fn resize_srgb(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
+pub fn psnr(@core.Image, @core.Image) -> Double
 
-pub fn resizef(ImageF, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> ImageF raise LoadError
+pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
+
+pub fn read_exif_from_path(String) -> @meta.ExifInfo? raise @core.LoadError
+
+pub fn read_file_bytes(String) -> Bytes raise @core.LoadError
+
+pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
+
+pub fn read_png_text_chunks_from_path(String) -> Array[@meta.PngTextChunk] raise @core.LoadError
+
+pub fn replace_color(@core.Image, Array[Byte], Array[Byte], Int) -> @core.Image raise @core.LoadError
+
+pub fn resize(@core.Image, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image raise @core.LoadError
+
+pub fn resize_16(@core.Image16, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image16 raise @core.LoadError
+
+pub fn resize_srgb(@core.Image, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image raise @core.LoadError
+
+pub fn resize_to_contain(@core.Image, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
+
+pub fn resize_to_cover(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+
+pub fn resizef(@core.ImageF, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.ImageF raise @core.LoadError
 
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
 
-pub fn rotate(Image, Float) -> Image
+pub fn rotate(@core.Image, Float) -> @core.Image
 
-pub fn rotate_180(Image) -> Image
+pub fn rotate_180(@core.Image) -> @core.Image
 
-pub fn rotate_270(Image) -> Image
+pub fn rotate_270(@core.Image) -> @core.Image
 
-pub fn rotate_90(Image) -> Image
+pub fn rotate_90(@core.Image) -> @core.Image
+
+pub fn set_alpha(@core.Image, Byte) -> @core.Image raise @core.LoadError
 
 pub fn set_flip_vertically_on_load(Bool) -> Unit
 
 pub fn set_unpremultiply_on_load(Bool) -> Unit
 
-pub fn sharpen(Image, Float) -> Image
+pub fn sharpen(@core.Image, Float) -> @core.Image
 
-pub fn to_grayscale(Image) -> Image
+pub fn ssim(@core.Image, @core.Image) -> Double
 
-pub fn to_rgb(Image) -> Image
+pub fn swap_channels(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
 
-pub fn to_rgba(Image) -> Image
+pub fn threshold(@core.Image, Int) -> @core.Image
 
-pub fn unpremultiply_alpha(Image) -> Image raise LoadError
+pub fn tile(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
 
-pub fn warp_affine(Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> Image
+pub fn to_grayscale(@core.Image) -> @core.Image
 
-pub fn write_bmp_to_bytes(Image) -> Bytes raise LoadError
+pub fn to_rgb(@core.Image) -> @core.Image
 
-pub fn write_bmp_to_path(String, Image) -> Unit raise LoadError
+pub fn to_rgba(@core.Image) -> @core.Image
 
-pub fn write_hdr_to_bytes(ImageF) -> Bytes raise LoadError
+pub fn transpose(@core.Image) -> @core.Image
 
-pub fn write_hdr_to_path(String, ImageF) -> Unit raise LoadError
+pub fn unpremultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
 
-pub fn write_jpeg_to_bytes(Image, quality? : Int) -> Bytes raise LoadError
+pub fn vstack(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
 
-pub fn write_jpeg_to_path(String, Image, quality? : Int) -> Unit raise LoadError
+pub fn warp_affine(@core.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @core.Image
 
-pub fn write_png_to_bytes(Image) -> Bytes raise LoadError
+pub fn write_bmp_to_bytes(@core.Image) -> Bytes raise @core.LoadError
 
-pub fn write_png_to_path(String, Image) -> Unit raise LoadError
+pub fn write_bmp_to_path(String, @core.Image) -> Unit raise @core.LoadError
 
-pub fn write_tga_to_bytes(Image) -> Bytes raise LoadError
+pub fn write_hdr_to_bytes(@core.ImageF) -> Bytes raise @core.LoadError
 
-pub fn write_tga_to_path(String, Image) -> Unit raise LoadError
+pub fn write_hdr_to_path(String, @core.ImageF) -> Unit raise @core.LoadError
+
+pub fn write_jpeg_to_bytes(@core.Image, quality? : Int) -> Bytes raise @core.LoadError
+
+pub fn write_jpeg_to_path(String, @core.Image, quality? : Int) -> Unit raise @core.LoadError
+
+pub fn write_png_to_bytes(@core.Image) -> Bytes raise @core.LoadError
+
+pub fn write_png_to_path(String, @core.Image) -> Unit raise @core.LoadError
+
+pub fn write_tga_to_bytes(@core.Image) -> Bytes raise @core.LoadError
+
+pub fn write_tga_to_path(String, @core.Image) -> Unit raise @core.LoadError
 
 // Errors
-pub(all) suberror LoadError {
-  FileIO(String)
-  UnsupportedFormat(String)
-  DecodeFailed(String)
-}
 
 // Types and methods
-pub(all) struct ExifInfo {
-  make : String
-  model : String
-  orientation : Int
-  date_time : String
-} derive(Eq, @debug.Debug)
-
-pub(all) struct GifAnimation {
-  frames : Array[Image]
-  delays : Array[Int]
-} derive(Eq, @debug.Debug)
-
-pub(all) struct Image {
-  width : Int
-  height : Int
-  channels : Int
-  data : Bytes
-} derive(Eq, @debug.Debug)
-
-pub(all) struct Image16 {
-  width : Int
-  height : Int
-  channels : Int
-  data : Bytes
-} derive(Eq, @debug.Debug)
-
-pub(all) struct ImageF {
-  width : Int
-  height : Int
-  channels : Int
-  data : Bytes
-} derive(Eq, @debug.Debug)
-
-pub(all) enum ImageFormat {
-  Png
-  Jpeg
-  Bmp
-  Gif
-  Tga
-  Psd
-  Hdr
-  Pnm
-  Qoi
-  Unknown
-} derive(Eq, @debug.Debug)
-
-pub(all) struct ImageInfo {
-  width : Int
-  height : Int
-  channels : Int
-} derive(Eq, @debug.Debug)
-
-pub(all) struct PngTextChunk {
-  keyword : String
-  text : String
-} derive(Eq, @debug.Debug)
-
-pub(all) enum ResizeEdge {
-  Clamp
-  Reflect
-  Wrap
-  Zero
-} derive(Eq, @debug.Debug)
-
-pub(all) enum ResizeFilter {
-  Default
-  Box
-  Triangle
-  CubicBSPline
-  CatmullROM
-  Mitchell
-  PointSample
-} derive(Eq, @debug.Debug)
 
 // Type aliases
+pub using @meta {type ExifInfo}
+
+pub using @core {type GifAnimation}
+
+pub using @core {type Image}
+
+pub using @core {type Image16}
+
+pub using @core {type ImageF}
+
+pub using @core {type ImageFormat}
+
+pub using @core {type ImageInfo}
+
+pub using @util {type ImageStats}
+
+pub using @core {type LoadError}
+
+pub using @meta {type PngTextChunk}
+
+pub using @core {type ResizeEdge}
+
+pub using @core {type ResizeFilter}
 
 // Traits
 

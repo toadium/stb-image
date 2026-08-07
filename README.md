@@ -1,14 +1,16 @@
 # stb-image
 
+[English](README.md) | [中文](README.zh.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-254%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-341%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
 MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07.
 
-Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize), roundtrip tests, performance benchmarks.
+Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize/morphology/edge detect/quality metrics), roundtrip tests, performance benchmarks.
 
 ## Features
 
@@ -19,16 +21,18 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 - **Format detection**: `detect_format` / `decode_any` / `is_supported_format`
 - **Image processing**: crop, rotate, flip, color convert, draw/compositing
 - **Color adjustment**: brightness, contrast, gamma, invert, HSV/HSL conversion
-- **Filters**: box blur, gaussian blur, sharpen, Sobel edge detect
+- **Filters**: box blur, gaussian blur, sharpen, Sobel/Laplacian/Prewitt edge detect
 - **Geometry**: affine warp, arbitrary angle rotate
 - **Histogram**: compute, equalize, normalize
 - **Quantize**: Floyd-Steinberg dithering, median cut
+- **Morphology**: erode, dilate, open, close (3x3 structuring element)
+- **Quality metrics**: MSE, PSNR, SSIM
 - **Metadata**: EXIF reading, PNG text chunks
 - **Animated GIF**: multi-frame decode/encode with per-frame delays
 - **Info query**: dimensions without decoding pixels
 - **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
 - **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **254 tests + 29 benchmarks**, all passing under AddressSanitizer
+- **341 tests + 29 benchmarks**, all passing under AddressSanitizer
 
 ## Installation
 
@@ -192,7 +196,7 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 | `rgb_to_hsl` | `(Int, Int, Int) -> (Float, Float, Float)` | RGB to HSL |
 | `hsl_to_rgb` | `(Float, Float, Float) -> (Int, Int, Int)` | HSL to RGB |
 
-### Filters (4 functions)
+### Filters (6 functions)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -200,6 +204,8 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 | `gaussian_blur` | `(Image, Int, Float) -> Image` | Gaussian blur (separable kernel) |
 | `sharpen` | `(Image, Float) -> Image` | Sharpen (Laplacian) |
 | `edge_detect_sobel` | `(Image) -> Image` | Sobel edge detection |
+| `edge_detect_laplacian` | `(Image) -> Image` | Laplacian edge detection |
+| `edge_detect_prewitt` | `(Image) -> Image` | Prewitt edge detection |
 
 ### Geometry (2 functions)
 
@@ -222,6 +228,23 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 |----------|-----------|-------------|
 | `floyd_steinberg` | `(Image, Int) -> Image` | Floyd-Steinberg dithering |
 | `median_cut` | `(Image, Int) -> Image` | Median cut quantization |
+
+### Morphology (4 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `erode` | `(Image) -> Image` | Erosion (3x3 min filter) |
+| `dilate` | `(Image) -> Image` | Dilation (3x3 max filter) |
+| `morph_open` | `(Image) -> Image` | Opening (erode then dilate) |
+| `morph_close` | `(Image) -> Image` | Closing (dilate then erode) |
+
+### Quality Metrics (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `mse` | `(Image, Image) -> Double` | Mean squared error |
+| `psnr` | `(Image, Image) -> Double` | Peak signal-to-noise ratio (dB) |
+| `ssim` | `(Image, Image) -> Double` | Structural similarity index [-1, 1] |
 
 ### Draw (2 functions)
 
@@ -287,29 +310,23 @@ try {
 
 ## Architecture
 
-Four-layer architecture, dependencies flow downward:
+Five-package architecture, dependencies flow downward:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Test & Docs    *_test.mbt (254 tests + 29 bench)  │
-│                  roundtrip_test.mbt, bench.mbt      │
-│                  README.mbt.md, SKILL.md            │
-├─────────────────────────────────────────────────────┤
-│  Safe API       image_*_native.mbt (pub fn)         │
-│                  transform/color/filter/geometry    │
-│                  histogram/quantize/exif/png_meta   │
-│                  qoi/icon_encode/gif_encode         │
-│                  pnm_encode/image_detect/draw       │
-│                  image_types.mbt (types)            │
-├─────────────────────────────────────────────────────┤
-│  FFI Boundary   ffi.mbt (extern "c")                │
-│                  wrapper.c (ABI normalization)      │
-├─────────────────────────────────────────────────────┤
-│  Vendoring      stb_image.h v2.30                   │
-│                  stb_image_write.h v1.16            │
-│                  stb_image_resize2.h v2.07          │
-│                  scripts/prepare.py                 │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  Root Package   reexport.mbt (backward-compat API surface)  │
+│                 bench.mbt, roundtrip_test.mbt               │
+├─────────────────────────────────────────────────────────────┤
+│  Subpackages    core/    process/  format/  meta/  util/    │
+│                 FFI types  image ops  codecs  EXIF  helpers │
+├─────────────────────────────────────────────────────────────┤
+│  FFI Boundary   core/ffi.mbt (extern "c")                   │
+│                 core/wrapper.c (ABI normalization)          │
+├─────────────────────────────────────────────────────────────┤
+│  Vendoring      core/stb_image.h v2.30                      │
+│                 core/stb_image_write.h v1.16                │
+│                 core/stb_image_resize2.h v2.07              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Target Support
@@ -347,50 +364,65 @@ moon info  # outputs src/pkg.generated.mbti
 
 ```
 stb-image/
-├── moon.mod                  # Module config (v1.6.0, preferred_target = native)
+├── moon.mod                  # Module config (v1.10.0, preferred_target = native)
 ├── ROADMAP.md                # Iteration roadmap
 ├── COMPARISON.md             # mooncakes.io image library comparison
 ├── SKILL.md                  # Package usage guide
 ├── src/
-│   ├── moon.pkg              # Package config (native-stub, targets gating)
-│   ├── wrapper.c             # C FFI wrapper (ABI normalization)
-│   ├── stb_image.h           # Vendored upstream v2.30
-│   ├── stb_image_write.h     # Vendored upstream v1.16
-│   ├── stb_image_resize2.h   # Vendored upstream v2.07
-│   ├── ffi.mbt               # Private extern "c" declarations
-│   ├── image_types.mbt       # Image, Image16, ImageF, ImageInfo, GifAnimation, LoadError
-│   ├── image_load_native.mbt # load_from_path/bytes
-│   ├── image_write_native.mbt# write_*_to_path/bytes, flip, HDR write
-│   ├── image_16_native.mbt   # load_16_from_path/bytes
-│   ├── image_float_native.mbt# loadf_from_path/bytes
-│   ├── image_info_native.mbt # info, is_16_bit, is_hdr, failure_reason, config
-│   ├── image_gif_native.mbt  # load_gif_from_path/bytes
-│   ├── image_resize_native.mbt# resize/resize_srgb/resize_16/resizef
-│   ├── image_detect.mbt      # detect_format/decode_any/is_supported_format
-│   ├── qoi.mbt               # decode_qoi/encode_qoi
-│   ├── icon_encode.mbt       # encode_ico/encode_ico_sizes/encode_icns
-│   ├── gif_encode.mbt        # encode_gif/encode_gif_animation
-│   ├── pnm_encode.mbt        # encode_ppm/encode_pgm/encode_pnm
-│   ├── transform.mbt         # crop/crop_16/cropf/rotate_*/flip_horizontal
-│   ├── color_convert.mbt     # to_grayscale/to_rgb/to_rgba/premultiply/unpremultiply
-│   ├── color_adjust.mbt      # adjust_*/invert/rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb
-│   ├── filter.mbt            # box_blur/gaussian_blur/sharpen/edge_detect_sobel
-│   ├── geometry.mbt          # warp_affine/rotate
-│   ├── histogram.mbt         # histogram/histogram_equalize/histogram_normalize
-│   ├── quantize.mbt          # floyd_steinberg/median_cut
-│   ├── draw.mbt              # draw_copy/draw_over
-│   ├── exif.mbt              # read_exif_from_bytes/read_exif_from_path
-│   ├── png_meta.mbt          # read_png_text_chunks/read_png_text_chunks_from_path
-│   ├── file_io_native.mbt    # read_file_bytes
-│   ├── *_test.mbt            # 254 tests
-│   ├── roundtrip_test.mbt    # Full format roundtrip tests
+│   ├── moon.pkg              # Root package: re-export + bench + roundtrip
+│   ├── reexport.mbt          # Backward-compat API (128 pub fn + 12 types)
 │   ├── bench.mbt             # 29 performance benchmarks
-│   ├── README.mbt.md         # MoonBit doc-test
-│   └── pkg.generated.mbti    # Frozen API interface (88 pub fn + 11 types)
+│   ├── roundtrip_test.mbt    # Full format roundtrip tests
+│   ├── core/                 # Core: types + FFI + load/write/resize + detect + ICO
+│   │   ├── moon.pkg          # native-stub: wrapper.c
+│   │   ├── image_types.mbt   # Image, Image16, ImageF, ImageInfo, GifAnimation, LoadError
+│   │   ├── ffi.mbt           # Private extern "c" declarations
+│   │   ├── wrapper.c         # C FFI wrapper (ABI normalization)
+│   │   ├── stb_image*.h      # Vendored upstream headers
+│   │   ├── image_*_native.mbt# load/write/resize/info/gif/16/float
+│   │   ├── image_detect.mbt  # detect_format/decode_any/is_supported_format
+│   │   ├── icon_encode.mbt   # encode_ico/encode_ico_sizes/encode_icns
+│   │   └── *_test.mbt        # Core tests
+│   ├── process/              # Image processing (pure MoonBit)
+│   │   ├── moon.pkg          # imports @core
+│   │   ├── transform.mbt     # crop/rotate_*/flip_horizontal
+│   │   ├── color_convert.mbt # to_grayscale/to_rgb/to_rgba/premultiply
+│   │   ├── color_adjust.mbt  # adjust_*/invert/rgb_to_hsv/hsv_to_rgb/...
+│   │   ├── filter.mbt        # box_blur/gaussian_blur/sharpen/edge_detect_sobel
+│   │   ├── geometry.mbt      # warp_affine/rotate
+│   │   ├── histogram.mbt     # histogram/equalize/normalize
+│   │   ├── quantize.mbt      # floyd_steinberg/median_cut
+│   │   ├── draw.mbt          # draw_copy/draw_over
+│   │   ├── morphology.mbt    # erode/dilate/morph_open/morph_close
+│   │   ├── edge_detect.mbt   # edge_detect_laplacian/edge_detect_prewitt
+│   │   ├── image_quality.mbt # mse/psnr/ssim
+│   │   └── *_test.mbt        # Process tests
+│   ├── format/               # Format codecs (pure MoonBit)
+│   │   ├── moon.pkg          # imports @core
+│   │   ├── qoi.mbt           # decode_qoi/encode_qoi
+│   │   ├── gif_encode.mbt    # encode_gif/encode_gif_animation
+│   │   ├── pnm_encode.mbt    # encode_ppm/encode_pgm/encode_pnm
+│   │   └── *_test.mbt        # Format tests
+│   ├── meta/                 # Metadata (pure MoonBit)
+│   │   ├── moon.pkg          # imports @core
+│   │   ├── exif.mbt          # read_exif_from_bytes/read_exif_from_path
+│   │   ├── png_meta.mbt      # read_png_text_chunks/...
+│   │   └── *_test.mbt        # Metadata tests
+│   └── util/                 # Utility functions (pure MoonBit)
+│       ├── moon.pkg          # imports @core, @process
+│       ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
+│       ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
+│       ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
+│       ├── image_stats.mbt   # compute_stats/mean_value
+│       ├── image_compose.mbt # hstack/vstack/tile/flip_vertical/transpose
+│       ├── image_noise.mbt   # add_noise_gaussian/add_noise_salt_pepper
+│       ├── color_map.mbt     # gradient_map/blend_*
+│       └── *_test.mbt        # Utility tests
 ├── scripts/
 │   ├── prepare.py            # Vendoring script
 │   ├── gen_testdata.py       # Test image generator
-│   └── run-asan.py           # ASan validation
+│   ├── run-asan.py           # ASan validation
+│   └── gen_reexport.py       # Re-export file generator
 └── testdata/                 # Test images (PNG/BMP/GIF/JPG + corrupt)
 ```
 
@@ -409,6 +441,10 @@ stb-image/
 | v1.4 | color adjust + filters + geometry + histogram + quantize | 206 |
 | v1.5 | PNM encode + GIF animation + EXIF reading | 229 |
 | **v1.6** | **PNG metadata + roundtrip tests + benchmarks** | **254+29** |
+| **v1.7** | **pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend modes** | **275+29** |
+| **v1.8** | **more blend modes + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** |
+| **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** |
+| **v1.10** | **morphology (erode/dilate/open/close) + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** |
 
 ## Upstream
 

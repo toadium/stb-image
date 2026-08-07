@@ -5,7 +5,7 @@
 test "bench: load PNG" (b : @bench.T) {
   b.bench(fn() {
     try {
-      let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+      let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
       b.keep(img)
     } catch {
       _ => ()
@@ -17,7 +17,7 @@ test "bench: load PNG" (b : @bench.T) {
 test "bench: load JPEG" (b : @bench.T) {
   b.bench(fn() {
     try {
-      let img = load_from_path("testdata/test_4x4_red.jpg", req_channels=Some(3))
+      let img = @core.load_from_path("testdata/test_4x4_red.jpg", req_channels=Some(3))
       b.keep(img)
     } catch {
       _ => ()
@@ -29,7 +29,7 @@ test "bench: load JPEG" (b : @bench.T) {
 test "bench: load BMP" (b : @bench.T) {
   b.bench(fn() {
     try {
-      let img = load_from_path("testdata/test_4x4_red.bmp", req_channels=Some(3))
+      let img = @core.load_from_path("testdata/test_4x4_red.bmp", req_channels=Some(3))
       b.keep(img)
     } catch {
       _ => ()
@@ -41,7 +41,7 @@ test "bench: load BMP" (b : @bench.T) {
 test "bench: load GIF" (b : @bench.T) {
   b.bench(fn() {
     try {
-      let img = load_from_path("testdata/test_4x4_red.gif", req_channels=Some(3))
+      let img = @core.load_from_path("testdata/test_4x4_red.gif", req_channels=Some(3))
       b.keep(img)
     } catch {
       _ => ()
@@ -51,10 +51,10 @@ test "bench: load GIF" (b : @bench.T) {
 
 ///|
 test "bench: write PNG" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let bytes = write_png_to_bytes(img)
+      let bytes = @core.write_png_to_bytes(img)
       b.keep(bytes)
     } catch {
       _ => ()
@@ -64,10 +64,10 @@ test "bench: write PNG" (b : @bench.T) {
 
 ///|
 test "bench: write JPEG" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let bytes = write_jpeg_to_bytes(img, quality=90)
+      let bytes = @core.write_jpeg_to_bytes(img, quality=90)
       b.keep(bytes)
     } catch {
       _ => ()
@@ -77,10 +77,10 @@ test "bench: write JPEG" (b : @bench.T) {
 
 ///|
 test "bench: write BMP" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let bytes = write_bmp_to_bytes(img)
+      let bytes = @core.write_bmp_to_bytes(img)
       b.keep(bytes)
     } catch {
       _ => ()
@@ -90,10 +90,10 @@ test "bench: write BMP" (b : @bench.T) {
 
 ///|
 test "bench: write QOI" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let bytes = encode_qoi(img)
+      let bytes = @format.encode_qoi(img)
       b.keep(bytes)
     } catch {
       _ => ()
@@ -103,10 +103,10 @@ test "bench: write QOI" (b : @bench.T) {
 
 ///|
 test "bench: write GIF" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let bytes = encode_gif(img)
+      let bytes = @format.encode_gif(img)
       b.keep(bytes)
     } catch {
       _ => ()
@@ -116,19 +116,19 @@ test "bench: write GIF" (b : @bench.T) {
 
 ///|
 test "bench: write PPM" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let bytes = encode_ppm(img)
+    let bytes = @format.encode_ppm(img)
     b.keep(bytes)
   })
 }
 
 ///|
 test "bench: resize 4x4 -> 8x8" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let r = resize(img, 8, 8)
+      let r = @core.resize(img, 8, 8)
       b.keep(r)
     } catch {
       _ => ()
@@ -138,10 +138,10 @@ test "bench: resize 4x4 -> 8x8" (b : @bench.T) {
 
 ///|
 test "bench: resize 4x4 -> 16x16" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let r = resize(img, 16, 16)
+      let r = @core.resize(img, 16, 16)
       b.keep(r)
     } catch {
       _ => ()
@@ -151,46 +151,46 @@ test "bench: resize 4x4 -> 16x16" (b : @bench.T) {
 
 ///|
 test "bench: box_blur radius=1" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = box_blur(img, 1)
+    let r = @process.box_blur(img, 1)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: gaussian_blur radius=1 sigma=1.5" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = gaussian_blur(img, 1, 1.5F)
+    let r = @process.gaussian_blur(img, 1, 1.5F)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: sharpen amount=1.0" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = sharpen(img, 1.0F)
+    let r = @process.sharpen(img, 1.0F)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: edge_detect_sobel" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = edge_detect_sobel(img)
+    let r = @process.edge_detect_sobel(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: crop 4x4 -> 2x2" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
     try {
-      let r = crop(img, 0, 0, 2, 2)
+      let r = @process.crop(img, 0, 0, 2, 2)
       b.keep(r)
     } catch {
       _ => ()
@@ -200,109 +200,109 @@ test "bench: crop 4x4 -> 2x2" (b : @bench.T) {
 
 ///|
 test "bench: rotate_90" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = rotate_90(img)
+    let r = @process.rotate_90(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: flip_horizontal" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = flip_horizontal(img)
+    let r = @process.flip_horizontal(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: to_grayscale" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = to_grayscale(img)
+    let r = @process.to_grayscale(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: to_rgba" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = to_rgba(img)
+    let r = @process.to_rgba(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: adjust_gamma 2.2" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = adjust_gamma(img, 2.2F)
+    let r = @process.adjust_gamma(img, 2.2F)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: invert" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = invert(img)
+    let r = @process.invert(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: histogram" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = histogram(img)
+    let r = @process.histogram(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: histogram_equalize" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = histogram_equalize(img)
+    let r = @process.histogram_equalize(img)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: floyd_steinberg 4 colors" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = floyd_steinberg(img, 4)
+    let r = @process.floyd_steinberg(img, 4)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: median_cut 4 colors" (b : @bench.T) {
-  let img = load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
+  let img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))
   b.bench(fn() {
-    let r = median_cut(img, 4)
+    let r = @process.median_cut(img, 4)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: detect_format" (b : @bench.T) {
-  let bytes = write_png_to_bytes(load_from_path("testdata/test_4x4_red.png", req_channels=Some(3)))
+  let bytes = @core.write_png_to_bytes(@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3)))
   b.bench(fn() {
-    let r = detect_format(bytes)
+    let r = @core.detect_format(bytes)
     b.keep(r)
   })
 }
 
 ///|
 test "bench: decode_any" (b : @bench.T) {
-  let bytes = write_png_to_bytes(load_from_path("testdata/test_4x4_red.png", req_channels=Some(3)))
+  let bytes = @core.write_png_to_bytes(@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3)))
   b.bench(fn() {
     try {
-      let r = decode_any(bytes, req_channels=Some(3))
+      let r = @core.decode_any(bytes, req_channels=Some(3))
       b.keep(r)
     } catch {
       _ => ()

@@ -1,0 +1,36 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/meta"
+
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
+
+pub fn read_exif_from_path(String) -> ExifInfo? raise @core.LoadError
+
+pub fn read_png_text_chunks(Bytes) -> Array[PngTextChunk]
+
+pub fn read_png_text_chunks_from_path(String) -> Array[PngTextChunk] raise @core.LoadError
+
+// Errors
+
+// Types and methods
+pub(all) struct ExifInfo {
+  make : String
+  model : String
+  orientation : Int
+  date_time : String
+} derive(Eq, @debug.Debug)
+
+pub(all) struct PngTextChunk {
+  keyword : String
+  text : String
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

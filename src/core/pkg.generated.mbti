@@ -1,0 +1,170 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/core"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn convert_iphone_png_to_rgb(Bool) -> Unit
+
+pub fn decode_any(Bytes, req_channels? : Int?) -> Image raise LoadError
+
+pub fn detect_format(Bytes) -> ImageFormat
+
+pub fn encode_icns(Image) -> Bytes raise LoadError
+
+pub fn encode_ico(Image) -> Bytes raise LoadError
+
+pub fn encode_ico_sizes(Array[Image]) -> Bytes raise LoadError
+
+pub fn failure_reason() -> String
+
+pub fn flip_vertically_on_write(Bool) -> Unit
+
+pub fn hdr_to_ldr_gamma(Float) -> Unit
+
+pub fn hdr_to_ldr_scale(Float) -> Unit
+
+pub fn info_from_bytes(Bytes) -> ImageInfo? raise LoadError
+
+pub fn info_from_path(String) -> ImageInfo?
+
+pub fn is_16_bit_from_bytes(Bytes) -> Bool
+
+pub fn is_16_bit_from_path(String) -> Bool
+
+pub fn is_hdr_from_bytes(Bytes) -> Bool
+
+pub fn is_hdr_from_path(String) -> Bool
+
+pub fn is_supported_format(Bytes) -> Bool
+
+pub fn ldr_to_hdr_gamma(Float) -> Unit
+
+pub fn ldr_to_hdr_scale(Float) -> Unit
+
+pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> Image16 raise LoadError
+
+pub fn load_16_from_path(String, req_channels? : Int?) -> Image16 raise LoadError
+
+pub fn load_from_bytes(Bytes, req_channels? : Int?) -> Image raise LoadError
+
+pub fn load_from_path(String, req_channels? : Int?) -> Image raise LoadError
+
+pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> GifAnimation raise LoadError
+
+pub fn load_gif_from_path(String, req_channels? : Int?) -> GifAnimation raise LoadError
+
+pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> ImageF raise LoadError
+
+pub fn loadf_from_path(String, req_channels? : Int?) -> ImageF raise LoadError
+
+pub fn read_file_bytes(String) -> Bytes raise LoadError
+
+pub fn resize(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
+
+pub fn resize_16(Image16, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image16 raise LoadError
+
+pub fn resize_srgb(Image, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> Image raise LoadError
+
+pub fn resizef(ImageF, Int, Int, filter? : ResizeFilter, edge? : ResizeEdge) -> ImageF raise LoadError
+
+pub fn set_flip_vertically_on_load(Bool) -> Unit
+
+pub fn set_unpremultiply_on_load(Bool) -> Unit
+
+pub fn write_bmp_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_bmp_to_path(String, Image) -> Unit raise LoadError
+
+pub fn write_hdr_to_bytes(ImageF) -> Bytes raise LoadError
+
+pub fn write_hdr_to_path(String, ImageF) -> Unit raise LoadError
+
+pub fn write_jpeg_to_bytes(Image, quality? : Int) -> Bytes raise LoadError
+
+pub fn write_jpeg_to_path(String, Image, quality? : Int) -> Unit raise LoadError
+
+pub fn write_png_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_png_to_path(String, Image) -> Unit raise LoadError
+
+pub fn write_tga_to_bytes(Image) -> Bytes raise LoadError
+
+pub fn write_tga_to_path(String, Image) -> Unit raise LoadError
+
+// Errors
+pub(all) suberror LoadError {
+  FileIO(String)
+  UnsupportedFormat(String)
+  DecodeFailed(String)
+}
+
+// Types and methods
+pub(all) struct GifAnimation {
+  frames : Array[Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Image {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Image16 {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageF {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ImageFormat {
+  Png
+  Jpeg
+  Bmp
+  Gif
+  Tga
+  Psd
+  Hdr
+  Pnm
+  Qoi
+  Unknown
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageInfo {
+  width : Int
+  height : Int
+  channels : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ResizeEdge {
+  Clamp
+  Reflect
+  Wrap
+  Zero
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ResizeFilter {
+  Default
+  Box
+  Triangle
+  CubicBSPline
+  CatmullROM
+  Mitchell
+  PointSample
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

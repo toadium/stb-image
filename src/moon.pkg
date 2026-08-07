@@ -1,35 +1,19 @@
 import {
-  "moonbitlang/core/debug",
-  "moonbitlang/core/encoding/utf8" @encoding/utf8,
-  "moonbitlang/core/math" @math,
   "moonbitlang/core/bench" @bench,
+  "MoonBit-Toadium/stb-image/src/core" @core,
+  "MoonBit-Toadium/stb-image/src/process" @process,
+  "MoonBit-Toadium/stb-image/src/format" @format,
+  "MoonBit-Toadium/stb-image/src/meta" @meta,
+  "MoonBit-Toadium/stb-image/src/util" @util,
 }
 
 supported_targets = "native"
 
 options(
-  "native-stub": ["wrapper.c"],
   targets: {
-    "ffi.mbt": ["native"],
-    "ffi_test.mbt": ["native"],
-    "image_load_native.mbt": ["native"],
-    "image_write_native.mbt": ["native"],
-    "image_16_native.mbt": ["native"],
-    "image_float_native.mbt": ["native"],
-    "image_info_native.mbt": ["native"],
-    "image_gif_native.mbt": ["native"],
-    "image_test.mbt": ["native"],
-    "image_write_test.mbt": ["native"],
-    "image_16_test.mbt": ["native"],
-    "image_float_test.mbt": ["native"],
-    "image_info_test.mbt": ["native"],
-    "image_gif_test.mbt": ["native"],
-    "exif.mbt": ["native"],
-    "exif_test.mbt": ["native"],
-    "png_meta.mbt": ["native"],
-    "png_meta_test.mbt": ["native"],
-    "file_io_native.mbt": ["native"],
+    "reexport.mbt": ["native"],
     "bench.mbt": ["native"],
+    "roundtrip_test.mbt": ["native"],
     "README.mbt.md": ["native"],
   },
 )
