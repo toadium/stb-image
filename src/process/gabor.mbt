@@ -55,7 +55,12 @@ pub fn gabor_filter(
       kernel[ky * ksize + kx] = val
     }
   }
-  // 卷积
+  // 预计算像素 Float 数组，避免内层循环重复类型转换
+  let src : Array[Float] = Array::make(n * ch, 0.0F)
+  for i in 0..<(n * ch) {
+    src[i] = Float::from_int(img.data[i].to_int())
+  }
+  // 卷积，分离内部/边界区域
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for c in 0..<ch {
     if ch == 4 && c == 3 {
@@ -64,17 +69,35 @@ pub fn gabor_filter(
       }
       continue
     }
+    // 内部区域：x in [half, w-half), y in [half, h-half)，核完全在图像内
+    for y in half..<(h - half) {
+      for x in half..<(w - half) {
+        let mut sum = 0.0F
+        let base = (y - half) * w + (x - half)
+        for ky in 0..<ksize {
+          let row = (base + ky * w) * ch + c
+          let krow = ky * ksize
+          for kx in 0..<ksize {
+            sum += src[row + kx * ch] * kernel[krow + kx]
+          }
+        }
+        let val = sum.to_int()
+        out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
+      }
+    }
+    // 边界区域：需要 clamp
     for y in 0..<h {
+      let y_inner = y >= half && y < h - half
       for x in 0..<w {
+        if y_inner && x >= half && x < w - half {
+          continue
+        }
         let mut sum = 0.0F
         for ky in 0..<ksize {
           for kx in 0..<ksize {
             let px = (x + kx - half).clamp(min=0, max=w - 1)
             let py = (y + ky - half).clamp(min=0, max=h - 1)
-            let pixel = Float::from_int(
-              img.data[(py * w + px) * ch + c].to_int(),
-            )
-            sum += pixel * kernel[ky * ksize + kx]
+            sum += src[(py * w + px) * ch + c] * kernel[ky * ksize + kx]
           }
         }
         let val = sum.to_int()

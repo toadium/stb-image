@@ -141,15 +141,35 @@ pub fn harris_corners(
 }
 
 ///|
-/// 3x3 高斯模糊（sigma=1.0）
+/// 3x3 高斯模糊（sigma=1.0），分离内部/边界区域以消除热点 clamp 调用
 fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
   let kernel : Array[Float] = [
     0.0625F, 0.125F, 0.0625F, 0.125F, 0.25F, 0.125F, 0.0625F, 0.125F, 0.0625F,
   ]
+  // 内部区域：x in [1, w-1), y in [1, h-1)，3x3 核完全在图像内
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let base = (y - 1) * w + (x - 1)
+      out[y * w + x] = data[base] * kernel[0] +
+        data[base + 1] * kernel[1] +
+        data[base + 2] * kernel[2] +
+        data[base + w] * kernel[3] +
+        data[base + w + 1] * kernel[4] +
+        data[base + w + 2] * kernel[5] +
+        data[base + 2 * w] * kernel[6] +
+        data[base + 2 * w + 1] * kernel[7] +
+        data[base + 2 * w + 2] * kernel[8]
+    }
+  }
+  // 边界区域：需要 clamp
   for y in 0..<h {
+    let y_inner = y >= 1 && y < h - 1
     for x in 0..<w {
+      if y_inner && x >= 1 && x < w - 1 {
+        continue
+      }
       let mut sum = 0.0F
       for ky in 0..<3 {
         for kx in 0..<3 {
