@@ -29,11 +29,8 @@ pub fn hough_lines(
   let diag = Float::from_int(w * w + h * h).sqrt()
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
-  // 累加器
-  let accumulator : Array[Array[Int]] = Array::make(
-    n_rho,
-    Array::make(n_theta, 0),
-  )
+  // 累加器（一维数组，提高缓存友好性）
+  let accumulator : Array[Int] = Array::make(n_rho * n_theta, 0)
   // 预计算 sin/cos 表
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
@@ -43,16 +40,17 @@ pub fn hough_lines(
     cos_table[t] = @math.cosf(angle)
     sin_table[t] = @math.sinf(angle)
   }
-  // 预计算 to_int
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
-  for i in 0..<(w * h * ch) {
-    data_int[i] = img.data[i].to_int()
+  // 预计算首通道 to_int（只看第一个通道判断边缘）
+  let data_int : Array[Int] = Array::make(w * h, 0)
+  for i in 0..<(w * h) {
+    data_int[i] = img.data[i * ch].to_int()
   }
   // 遍历边缘点
   for y in 0..<h {
     let fy = Float::from_int(y)
+    let row_base = y * w
     for x in 0..<w {
-      if data_int[(y * w + x) * ch] == 0 {
+      if data_int[row_base + x] == 0 {
         continue
       }
       let fx = Float::from_int(x)
@@ -62,7 +60,7 @@ pub fn hough_lines(
           min=0,
           max=n_rho - 1,
         )
-        accumulator[rho_idx][t] += 1
+        accumulator[rho_idx * n_theta + t] += 1
       }
     }
   }
@@ -70,12 +68,14 @@ pub fn hough_lines(
   let lines : Array[HoughLine] = []
   let max_rho_f = Float::from_int(max_rho)
   for r in 0..<n_rho {
+    let row_base = r * n_theta
     for t in 0..<n_theta {
-      if accumulator[r][t] >= threshold {
+      let votes = accumulator[row_base + t]
+      if votes >= threshold {
         lines.push(HoughLine::{
           rho: (Float::from_int(r) - max_rho_f) * rho_resolution,
           theta: Float::from_int(t) * angle_scale,
-          votes: accumulator[r][t],
+          votes,
         })
       }
     }

@@ -27,14 +27,10 @@ pub fn find_contours(img : @core.Image) -> Array[Contour] raise @core.LoadError 
   let w = img.width
   let h = img.height
   let ch = img.channels
-  // 转为二值
+  // 转为二值（直接从首通道计算，消除中间数组）
   let binary : Array[Bool] = Array::make(w * h, false)
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
-  for i in 0..<(w * h * ch) {
-    data_int[i] = img.data[i].to_int()
-  }
   for i in 0..<(w * h) {
-    binary[i] = data_int[i * ch] > 0
+    binary[i] = img.data[i * ch].to_int() > 0
   }
   let visited : Array[Bool] = Array::make(w * h, false)
   let contours : Array[Contour] = []
@@ -68,17 +64,6 @@ fn trace_boundary(
   let points : Array[ContourPoint] = []
   let mut cx = start_x
   let mut cy = start_y
-  // 8 邻域顺时针方向（从右开始）
-  let dirs : Array[(Int, Int)] = [
-    (1, 0),
-    (1, 1),
-    (0, 1),
-    (-1, 1),
-    (-1, 0),
-    (-1, -1),
-    (0, -1),
-    (1, -1),
-  ]
   let mut dir_idx = 0 // 起始方向
   let mut count = 0
   let max_count = w * h * 8 + 1
@@ -89,11 +74,20 @@ fn trace_boundary(
       points.push(ContourPoint::{ x: cx, y: cy })
     }
     count += 1
-    // 寻找下一个前景像素
+    // 寻找下一个前景像素（match 替代数组查找，消除堆分配）
     let mut found = false
     for i in 0..<8 {
       let d = (dir_idx + i) % 8
-      let (dx, dy) = dirs[d]
+      let (dx, dy) = match d {
+        0 => (1, 0)
+        1 => (1, 1)
+        2 => (0, 1)
+        3 => (-1, 1)
+        4 => (-1, 0)
+        5 => (-1, -1)
+        6 => (0, -1)
+        _ => (1, -1)
+      }
       let nx = cx + dx
       let ny = cy + dy
       if nx >= 0 && nx < w && ny >= 0 && ny < h && binary[ny * w + nx] {

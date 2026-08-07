@@ -105,17 +105,22 @@ pub fn msr(
       let v = img.data[i * ch + c].to_int()
       channel[i] = Float::from_int(if v == 0 { 1 } else { v })
     }
+    // 预计算 log(channel[i])，避免在每个 sigma 循环中重复计算
+    let log_channel : Array[Float] = Array::make(n, 0.0F)
+    for i in 0..<n {
+      log_channel[i] = logf(channel[i])
+    }
     let retinex_sum : Array[Float] = Array::make(n, 0.0F)
     for sigma in sigmas {
       let blurred = gaussian_blur_channel(channel, w, h, sigma)
       for i in 0..<n {
-        let log_i = logf(channel[i])
         let log_b = logf(if blurred[i] > 0.0F { blurred[i] } else { 1.0F })
-        retinex_sum[i] += log_i - log_b
+        retinex_sum[i] += log_channel[i] - log_b
       }
     }
+    let inv_scales = gain / Float::from_int(num_scales)
     for i in 0..<n {
-      let retinex = retinex_sum[i] / Float::from_int(num_scales) * gain + offset
+      let retinex = retinex_sum[i] * inv_scales + offset
       let val = (retinex * 30.0F + 128.0F).to_int()
       out[i * ch + c] = val.clamp(min=0, max=255).to_byte()
     }
@@ -174,17 +179,22 @@ pub fn msrcr(
     Array::make(n, 0.0F),
   ]
   for c in 0..<3 {
+    // 预计算 log(channel[i])
+    let log_channel : Array[Float] = Array::make(n, 0.0F)
+    for i in 0..<n {
+      log_channel[i] = logf(channels[c][i])
+    }
     let retinex_sum : Array[Float] = Array::make(n, 0.0F)
     for sigma in sigmas {
       let blurred = gaussian_blur_channel(channels[c], w, h, sigma)
       for i in 0..<n {
-        let log_i = logf(channels[c][i])
         let log_b = logf(if blurred[i] > 0.0F { blurred[i] } else { 1.0F })
-        retinex_sum[i] += log_i - log_b
+        retinex_sum[i] += log_channel[i] - log_b
       }
     }
+    let inv_scales = 1.0F / Float::from_int(num_scales)
     for i in 0..<n {
-      msr_results[c][i] = retinex_sum[i] / Float::from_int(num_scales)
+      msr_results[c][i] = retinex_sum[i] * inv_scales
     }
   }
   // 颜色恢复因子
@@ -232,54 +242,106 @@ fn gaussian_blur_channel(
   for i in 0..<kernel_size {
     kernel[i] = kernel[i] / kernel_sum
   }
-  // 水平模糊，分离内部/边界区域
+  // kernel prefix sum，用于大 radius 时 O(w) 替代 O(kernel_size)
+  let k_prefix : Array[Float] = Array::make(kernel_size + 1, 0.0F)
+  for i in 0..<kernel_size {
+    k_prefix[i + 1] = k_prefix[i] + kernel[i]
+  }
+  let total_k = k_prefix[kernel_size]
+  // 水平模糊
   let temp : Array[Float] = Array::make(n, 0.0F)
-  for y in 0..<h {
-    let row_base = y * w
-    // 内部区域：x in [radius, w-radius)
-    for x in radius..<(w - radius) {
-      let mut sum = 0.0F
-      let base = row_base + x - radius
-      for k in 0..<kernel_size {
-        sum += channel[base + k] * kernel[k]
+  if radius >= w {
+    // 大 radius：所有像素都是边界，用 prefix sum 将 O(kernel_size) 降为 O(w)
+    for y in 0..<h {
+      let row_base = y * w
+      let c0 = channel[row_base]
+      let cw1 = channel[row_base + w - 1]
+      for x in 0..<w {
+        let left_end = radius - x
+        let right_start = left_end + w
+        let mid_start = if left_end > 0 { left_end } else { 0 }
+        let mid_end = if right_start < kernel_size {
+          right_start
+        } else {
+          kernel_size
+        }
+        let mut sum = c0 * k_prefix[mid_start] +
+          cw1 * (total_k - k_prefix[mid_end])
+        for k in mid_start..<mid_end {
+          sum += channel[row_base + k - left_end] * kernel[k]
+        }
+        temp[row_base + x] = sum
       }
-      temp[row_base + x] = sum
     }
-    // 边界区域
-    for x in 0..<w {
-      if x >= radius && x < w - radius {
-        continue
+  } else {
+    // 正常情况：分离内部/边界区域
+    for y in 0..<h {
+      let row_base = y * w
+      for x in radius..<(w - radius) {
+        let mut sum = 0.0F
+        let base = row_base + x - radius
+        for k in 0..<kernel_size {
+          sum += channel[base + k] * kernel[k]
+        }
+        temp[row_base + x] = sum
       }
-      let mut sum = 0.0F
-      for k in -radius..<=radius {
-        let px = (x + k).clamp(min=0, max=w - 1)
-        sum += channel[row_base + px] * kernel[k + radius]
+      for x in 0..<w {
+        if x >= radius && x < w - radius {
+          continue
+        }
+        let mut sum = 0.0F
+        for k in -radius..<=radius {
+          let px = (x + k).clamp(min=0, max=w - 1)
+          sum += channel[row_base + px] * kernel[k + radius]
+        }
+        temp[row_base + x] = sum
       }
-      temp[row_base + x] = sum
     }
   }
-  // 垂直模糊，分离内部/边界区域
-  for x in 0..<w {
-    // 内部区域：y in [radius, h-radius)
-    for y in radius..<(h - radius) {
-      let mut sum = 0.0F
-      let base = (y - radius) * w + x
-      for k in 0..<kernel_size {
-        sum += temp[base + k * w] * kernel[k]
+  // 垂直模糊
+  if radius >= h {
+    // 大 radius：用 prefix sum 优化
+    for x in 0..<w {
+      let c0 = temp[x]
+      let ch1 = temp[(h - 1) * w + x]
+      for y in 0..<h {
+        let left_end = radius - y
+        let right_start = left_end + h
+        let mid_start = if left_end > 0 { left_end } else { 0 }
+        let mid_end = if right_start < kernel_size {
+          right_start
+        } else {
+          kernel_size
+        }
+        let mut sum = c0 * k_prefix[mid_start] +
+          ch1 * (total_k - k_prefix[mid_end])
+        for k in mid_start..<mid_end {
+          sum += temp[(k - left_end) * w + x] * kernel[k]
+        }
+        out[y * w + x] = sum
       }
-      out[y * w + x] = sum
     }
-    // 边界区域
-    for y in 0..<h {
-      if y >= radius && y < h - radius {
-        continue
+  } else {
+    for x in 0..<w {
+      for y in radius..<(h - radius) {
+        let mut sum = 0.0F
+        let base = (y - radius) * w + x
+        for k in 0..<kernel_size {
+          sum += temp[base + k * w] * kernel[k]
+        }
+        out[y * w + x] = sum
       }
-      let mut sum = 0.0F
-      for k in -radius..<=radius {
-        let py = (y + k).clamp(min=0, max=h - 1)
-        sum += temp[py * w + x] * kernel[k + radius]
+      for y in 0..<h {
+        if y >= radius && y < h - radius {
+          continue
+        }
+        let mut sum = 0.0F
+        for k in -radius..<=radius {
+          let py = (y + k).clamp(min=0, max=h - 1)
+          sum += temp[py * w + x] * kernel[k + radius]
+        }
+        out[y * w + x] = sum
       }
-      out[y * w + x] = sum
     }
   }
   out
