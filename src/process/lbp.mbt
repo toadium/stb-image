@@ -14,26 +14,77 @@ pub fn lbp(img : @core.Image) -> @core.Image raise @core.LoadError {
   let h = img.height
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  // 预计算像素 Int 数组
+  let src : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    src[i] = img.data[i].to_int()
+  }
   for c in 0..<color_ch {
-    for y in 0..<h {
-      for x in 0..<w {
-        let center = img.data[(y * w + x) * ch + c].to_int()
-        // 8 邻域，从左上顺时针：左上、上、右上、右、右下、下、左下、左
-        let neighbors : Array[Int] = [
-          get_pixel(img, x - 1, y - 1, c, ch, w, h),
-          get_pixel(img, x, y - 1, c, ch, w, h),
-          get_pixel(img, x + 1, y - 1, c, ch, w, h),
-          get_pixel(img, x + 1, y, c, ch, w, h),
-          get_pixel(img, x + 1, y + 1, c, ch, w, h),
-          get_pixel(img, x, y + 1, c, ch, w, h),
-          get_pixel(img, x - 1, y + 1, c, ch, w, h),
-          get_pixel(img, x - 1, y, c, ch, w, h),
-        ]
+    // 内部区域：x in [1, w-1), y in [1, h-1)，直接访问 8 邻域
+    for y in 1..<(h - 1) {
+      for x in 1..<(w - 1) {
+        let center = src[(y * w + x) * ch + c]
         let mut lbp_val = 0
-        for i in 0..<8 {
-          if neighbors[i] >= center {
-            lbp_val = lbp_val | (1 << i)
-          }
+        // 左上、上、右上、右、右下、下、左下、左
+        if src[((y - 1) * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 1
+        }
+        if src[((y - 1) * w + x) * ch + c] >= center {
+          lbp_val = lbp_val | 2
+        }
+        if src[((y - 1) * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 4
+        }
+        if src[(y * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 8
+        }
+        if src[((y + 1) * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 16
+        }
+        if src[((y + 1) * w + x) * ch + c] >= center {
+          lbp_val = lbp_val | 32
+        }
+        if src[((y + 1) * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 64
+        }
+        if src[(y * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 128
+        }
+        out[(y * w + x) * ch + c] = lbp_val.to_byte()
+      }
+    }
+    // 边界区域：使用 get_pixel_safe
+    for y in 0..<h {
+      let y_inner = y >= 1 && y < h - 1
+      for x in 0..<w {
+        if y_inner && x >= 1 && x < w - 1 {
+          continue
+        }
+        let center = src[(y * w + x) * ch + c]
+        let mut lbp_val = 0
+        if get_pixel_safe(src, x - 1, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 1
+        }
+        if get_pixel_safe(src, x, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 2
+        }
+        if get_pixel_safe(src, x + 1, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 4
+        }
+        if get_pixel_safe(src, x + 1, y, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 8
+        }
+        if get_pixel_safe(src, x + 1, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 16
+        }
+        if get_pixel_safe(src, x, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 32
+        }
+        if get_pixel_safe(src, x - 1, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 64
+        }
+        if get_pixel_safe(src, x - 1, y, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 128
         }
         out[(y * w + x) * ch + c] = lbp_val.to_byte()
       }
@@ -68,25 +119,76 @@ pub fn lbp_uniform(img : @core.Image) -> @core.Image raise @core.LoadError {
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   // 预计算均匀模式映射表
   let uniform_map = build_uniform_map()
+  // 预计算像素 Int 数组
+  let src : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    src[i] = img.data[i].to_int()
+  }
   for c in 0..<color_ch {
-    for y in 0..<h {
-      for x in 0..<w {
-        let center = img.data[(y * w + x) * ch + c].to_int()
-        let neighbors : Array[Int] = [
-          get_pixel(img, x - 1, y - 1, c, ch, w, h),
-          get_pixel(img, x, y - 1, c, ch, w, h),
-          get_pixel(img, x + 1, y - 1, c, ch, w, h),
-          get_pixel(img, x + 1, y, c, ch, w, h),
-          get_pixel(img, x + 1, y + 1, c, ch, w, h),
-          get_pixel(img, x, y + 1, c, ch, w, h),
-          get_pixel(img, x - 1, y + 1, c, ch, w, h),
-          get_pixel(img, x - 1, y, c, ch, w, h),
-        ]
+    // 内部区域
+    for y in 1..<(h - 1) {
+      for x in 1..<(w - 1) {
+        let center = src[(y * w + x) * ch + c]
         let mut lbp_val = 0
-        for i in 0..<8 {
-          if neighbors[i] >= center {
-            lbp_val = lbp_val | (1 << i)
-          }
+        if src[((y - 1) * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 1
+        }
+        if src[((y - 1) * w + x) * ch + c] >= center {
+          lbp_val = lbp_val | 2
+        }
+        if src[((y - 1) * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 4
+        }
+        if src[(y * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 8
+        }
+        if src[((y + 1) * w + (x + 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 16
+        }
+        if src[((y + 1) * w + x) * ch + c] >= center {
+          lbp_val = lbp_val | 32
+        }
+        if src[((y + 1) * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 64
+        }
+        if src[(y * w + (x - 1)) * ch + c] >= center {
+          lbp_val = lbp_val | 128
+        }
+        out[(y * w + x) * ch + c] = uniform_map[lbp_val].to_byte()
+      }
+    }
+    // 边界区域
+    for y in 0..<h {
+      let y_inner = y >= 1 && y < h - 1
+      for x in 0..<w {
+        if y_inner && x >= 1 && x < w - 1 {
+          continue
+        }
+        let center = src[(y * w + x) * ch + c]
+        let mut lbp_val = 0
+        if get_pixel_safe(src, x - 1, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 1
+        }
+        if get_pixel_safe(src, x, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 2
+        }
+        if get_pixel_safe(src, x + 1, y - 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 4
+        }
+        if get_pixel_safe(src, x + 1, y, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 8
+        }
+        if get_pixel_safe(src, x + 1, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 16
+        }
+        if get_pixel_safe(src, x, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 32
+        }
+        if get_pixel_safe(src, x - 1, y + 1, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 64
+        }
+        if get_pixel_safe(src, x - 1, y, c, ch, w, h) >= center {
+          lbp_val = lbp_val | 128
         }
         out[(y * w + x) * ch + c] = uniform_map[lbp_val].to_byte()
       }
@@ -106,8 +208,8 @@ pub fn lbp_uniform(img : @core.Image) -> @core.Image raise @core.LoadError {
 }
 
 ///|
-fn get_pixel(
-  img : @core.Image,
+fn get_pixel_safe(
+  src : Array[Int],
   x : Int,
   y : Int,
   c : Int,
@@ -118,7 +220,7 @@ fn get_pixel(
   if x < 0 || x >= w || y < 0 || y >= h {
     return 0
   }
-  img.data[(y * w + x) * ch + c].to_int()
+  src[(y * w + x) * ch + c]
 }
 
 ///|
