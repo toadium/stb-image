@@ -99,3 +99,19 @@ test "integral_image: 空区域" {
   assert_eq(integral_mean(integral, 0, 0, 0, 0), 0.0F)
   assert_eq(integral_mean(integral, 0, 0, 1, 0), 0.0F)
 }
+
+///|
+test "integral_image 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x40']),
+  }
+  let integral = integral_image(img)
+  assert_eq(integral.width, 1)
+  assert_eq(integral.height, 1)
+  // 1x1 积分图值 = 像素值
+  assert_eq(integral_sum(integral, 0, 0, 1, 1), 64L)
+  assert_eq(integral_mean(integral, 0, 0, 1, 1), 64.0F)
+}

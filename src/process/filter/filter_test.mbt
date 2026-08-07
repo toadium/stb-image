@@ -196,3 +196,31 @@ test "edge_detect_sobel: output dimensions match input" {
   let _ = img
   let _ = result
 }
+
+///|
+test "box_blur: radius exceeds image size" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let result = box_blur(img, 100)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 4)
+  assert_eq(result.channels, 3)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "gaussian_blur: radius exceeds image size" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let result = gaussian_blur(img, 100, 1.5F)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 4)
+  assert_eq(result.channels, 3)
+  let _ = img
+  let _ = result
+}

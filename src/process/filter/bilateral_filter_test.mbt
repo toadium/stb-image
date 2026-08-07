@@ -97,3 +97,17 @@ test "bilateral_filter_fast: downsample=1 等价于普通双边滤波" {
     assert_eq(result.data[i], b'\x80')
   }
 }
+
+///|
+test "bilateral_filter 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let result = bilateral_filter(img, 2, 3.0F, 30.0F)
+  assert_eq(result.width, 1)
+  assert_eq(result.height, 1)
+  assert_eq(result.data[0], b'\x80')
+}

@@ -113,3 +113,16 @@ test "hough_lines: 通道验证" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "hough_lines 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\xFF']),
+  }
+  let lines = hough_lines(img, 50)
+  // 1x1 图像可能检测到 0 或 1 条线，关键是不崩溃
+  assert_true(lines.length() >= 0)
+}

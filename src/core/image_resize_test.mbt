@@ -120,3 +120,14 @@ test "resize: identity resize (same size) preserves pixels" {
   let _ = resized
   let _ = img
 }
+
+///|
+test "resize: 4x4 downscale to 1x1" {
+  let img = load_from_path("testdata/test_4x4_red.png")
+  let resized = resize(img, 1, 1)
+  assert_eq(resized.width, 1)
+  assert_eq(resized.height, 1)
+  assert_eq(resized.channels, img.channels)
+  let _ = resized
+  let _ = img
+}

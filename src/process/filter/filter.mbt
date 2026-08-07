@@ -117,8 +117,8 @@ pub fn gaussian_blur(
   }
   // 水平模糊：src -> temp (Float)，分离内部/边界区域
   let temp : Array[Float] = Array::make(n * color_ch, 0.0F)
-  let x_inner_start = radius
-  let x_inner_end = w - radius
+  let x_inner_start = if radius >= w { w } else { radius }
+  let x_inner_end = if radius >= w { w } else { w - radius }
   for y in 0..<h {
     let row_base = y * w
     for c in 0..<color_ch {
@@ -153,8 +153,8 @@ pub fn gaussian_blur(
   }
   // 垂直模糊：temp -> out，分离内部/边界区域
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
-  let y_inner_start = radius
-  let y_inner_end = h - radius
+  let y_inner_start = if radius >= h { h } else { radius }
+  let y_inner_end = if radius >= h { h } else { h - radius }
   for x in 0..<w {
     for c in 0..<color_ch {
       // 内部区域：y >= radius && y < h - radius

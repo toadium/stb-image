@@ -135,3 +135,25 @@ test "rotate: 360 degrees approx identity" {
   let _ = img
   let _ = result
 }
+
+///|
+test "warp_affine: degenerate (zero) matrix maps all to origin" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let result = warp_affine(img, (0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F), 4, 4)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 4)
+  // 零矩阵将所有像素映射到源图 (0,0)，输出应全部等于源图左上角像素
+  let r0 = img.data[0]
+  let g0 = img.data[1]
+  let b0 = img.data[2]
+  for i in 0..<16 {
+    assert_eq(result.data[i * 3], r0)
+    assert_eq(result.data[i * 3 + 1], g0)
+    assert_eq(result.data[i * 3 + 2], b0)
+  }
+  let _ = img
+  let _ = result
+}

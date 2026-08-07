@@ -106,3 +106,21 @@ test "glcm_features_multi_direction 基本功能" {
     assert_true(f.contrast >= 0.0F)
   }
 }
+
+///|
+test "compute_glcm 1x1 功能测试" {
+  let img = @core.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let glcm = compute_glcm(img, 1, 0, levels=4)
+  // 1x1 图像无相邻像素，GLCM 应全零
+  assert_eq(glcm.length(), 4)
+  for y in 0..<4 {
+    for x in 0..<4 {
+      assert_eq(glcm[y][x], 0)
+    }
+  }
+}
