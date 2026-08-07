@@ -60,32 +60,26 @@ pub fn gabor_filter(
   for i in 0..<(n * ch) {
     src[i] = Float::from_int(img.data[i].to_int())
   }
-  // 卷积，分离内部/边界区域
+  // 卷积，分离内部/边界区域，ch=1 特化消除内层通道循环
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
-  for c in 0..<ch {
-    if ch == 4 && c == 3 {
-      for i in 0..<n {
-        out[i * ch + 3] = img.data[i * ch + 3]
-      }
-      continue
-    }
-    // 内部区域：x in [half, w-half), y in [half, h-half)，核完全在图像内
+  if ch == 1 {
+    // 内部区域
     for y in half..<(h - half) {
       for x in half..<(w - half) {
         let mut sum = 0.0F
         let base = (y - half) * w + (x - half)
         for ky in 0..<ksize {
-          let row = (base + ky * w) * ch + c
+          let row = base + ky * w
           let krow = ky * ksize
           for kx in 0..<ksize {
-            sum += src[row + kx * ch] * kernel[krow + kx]
+            sum += src[row + kx] * kernel[krow + kx]
           }
         }
         let val = sum.to_int()
-        out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
+        out[y * w + x] = val.clamp(min=0, max=255).to_byte()
       }
     }
-    // 边界区域：需要 clamp
+    // 边界区域
     for y in 0..<h {
       let y_inner = y >= half && y < h - half
       for x in 0..<w {
@@ -97,11 +91,55 @@ pub fn gabor_filter(
           for kx in 0..<ksize {
             let px = (x + kx - half).clamp(min=0, max=w - 1)
             let py = (y + ky - half).clamp(min=0, max=h - 1)
-            sum += src[(py * w + px) * ch + c] * kernel[ky * ksize + kx]
+            sum += src[py * w + px] * kernel[ky * ksize + kx]
           }
         }
         let val = sum.to_int()
-        out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
+        out[y * w + x] = val.clamp(min=0, max=255).to_byte()
+      }
+    }
+  } else {
+    for c in 0..<ch {
+      if ch == 4 && c == 3 {
+        for i in 0..<n {
+          out[i * ch + 3] = img.data[i * ch + 3]
+        }
+        continue
+      }
+      // 内部区域
+      for y in half..<(h - half) {
+        for x in half..<(w - half) {
+          let mut sum = 0.0F
+          let base = (y - half) * w + (x - half)
+          for ky in 0..<ksize {
+            let row = (base + ky * w) * ch + c
+            let krow = ky * ksize
+            for kx in 0..<ksize {
+              sum += src[row + kx * ch] * kernel[krow + kx]
+            }
+          }
+          let val = sum.to_int()
+          out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
+        }
+      }
+      // 边界区域
+      for y in 0..<h {
+        let y_inner = y >= half && y < h - half
+        for x in 0..<w {
+          if y_inner && x >= half && x < w - half {
+            continue
+          }
+          let mut sum = 0.0F
+          for ky in 0..<ksize {
+            for kx in 0..<ksize {
+              let px = (x + kx - half).clamp(min=0, max=w - 1)
+              let py = (y + ky - half).clamp(min=0, max=h - 1)
+              sum += src[(py * w + px) * ch + c] * kernel[ky * ksize + kx]
+            }
+          }
+          let val = sum.to_int()
+          out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
+        }
       }
     }
   }

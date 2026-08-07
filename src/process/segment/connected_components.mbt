@@ -35,12 +35,8 @@ pub fn connected_components(
   // 转为二值
   let binary : Array[Bool] = Array::make(n, false)
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(n * ch, 0)
-  for i in 0..<(n * ch) {
-    data_int[i] = img.data[i].to_int()
-  }
   for i in 0..<n {
-    binary[i] = data_int[i * ch] > 0
+    binary[i] = img.data[i * ch].to_int() > 0
   }
   // 第一遍扫描：标记 + Union-Find
   let labels : Array[Int] = Array::make(n, 0)
@@ -71,34 +67,77 @@ pub fn connected_components(
           ur = labels[idx - w + 1]
         }
       }
-      // 收集非零邻居标签
-      let neighbors : Array[Int] = []
+      // 收集非零邻居标签（用变量代替数组，避免堆分配）
+      let mut n1 = 0
+      let mut n2 = 0
+      let mut n3 = 0
+      let mut n4 = 0
+      let mut nc = 0
       if left > 0 {
-        neighbors.push(left)
+        n1 = left
+        nc = 1
       }
       if up > 0 {
-        neighbors.push(up)
+        if nc == 0 {
+          n1 = up
+          nc = 1
+        } else {
+          n2 = up
+          nc = 2
+        }
       }
       if ul > 0 {
-        neighbors.push(ul)
+        if nc == 0 {
+          n1 = ul
+          nc = 1
+        } else if nc == 1 {
+          n2 = ul
+          nc = 2
+        } else {
+          n3 = ul
+          nc = 3
+        }
       }
       if ur > 0 {
-        neighbors.push(ur)
+        if nc == 0 {
+          n1 = ur
+          nc = 1
+        } else if nc == 1 {
+          n2 = ur
+          nc = 2
+        } else if nc == 2 {
+          n3 = ur
+          nc = 3
+        } else {
+          n4 = ur
+          nc = 4
+        }
       }
-      if neighbors.length() == 0 {
+      if nc == 0 {
         labels[idx] = next_label
         parent.push(next_label)
         next_label += 1
       } else {
-        let mut min_label = neighbors[0]
-        for k in 1..<neighbors.length() {
-          if neighbors[k] < min_label {
-            min_label = neighbors[k]
-          }
+        let mut min_label = n1
+        if nc >= 2 && n2 < min_label {
+          min_label = n2
+        }
+        if nc >= 3 && n3 < min_label {
+          min_label = n3
+        }
+        if nc >= 4 && n4 < min_label {
+          min_label = n4
         }
         labels[idx] = min_label
-        for k in 0..<neighbors.length() {
-          union_labels(parent, min_label, neighbors[k])
+        union_labels(parent, min_label, n1)
+        if nc >= 2 {
+          union_labels(parent, min_label, n2)
+        }
+        if nc >= 3 {
+          union_labels(parent, min_label, n3)
+        }
+        if nc >= 4 {
+          union_labels(parent, min_label, n4)
         }
       }
     }
