@@ -211,6 +211,28 @@ pub fn fft_shift(fft : FFTResult) -> FFTResult {
 }
 
 ///|
+/// 原地 fft_shift，避免分配新数组
+fn fft_shift_inplace(fft : FFTResult) -> Unit {
+  let w = fft.width
+  let h = fft.height
+  let cy = h / 2
+  let cx = w / 2
+  for y in 0..<h {
+    for x in 0..<w {
+      let sy = (y + cy) % h
+      let sx = (x + cx) % w
+      let src_idx = sy * w + sx
+      let dst_idx = y * w + x
+      if src_idx > dst_idx {
+        let tmp = fft.data[dst_idx]
+        fft.data[dst_idx] = fft.data[src_idx]
+        fft.data[src_idx] = tmp
+      }
+    }
+  }
+}
+
+///|
 /// 1D 原地 FFT（Cooley-Tukey radix-2），分离实虚部数组版本
 /// inverse=true 时做逆变换（不含归一化，归一化由调用方负责）
 fn fft_1d_split(re : Array[Float], im : Array[Float], inverse : Bool) -> Unit {
@@ -257,9 +279,18 @@ fn fft_1d_split(re : Array[Float], im : Array[Float], inverse : Bool) -> Unit {
 ///|
 fn bit_reverse_split(re : Array[Float], im : Array[Float]) -> Unit {
   let n = re.length()
+  if n <= 1 {
+    return
+  }
   let bits = log2_int(n)
+  let high_bit = 1 << (bits - 1)
+  // 递推预计算 bit reversal：rev[i] = (rev[i>>1] >> 1) | ((i&1) << (bits-1))
+  let rev : Array[Int] = Array::make(n, 0)
+  for i in 1..<n {
+    rev[i] = (rev[i >> 1] >> 1) | (if (i & 1) != 0 { high_bit } else { 0 })
+  }
   for i in 0..<n {
-    let j = bit_reverse_int(i, bits)
+    let j = rev[i]
     if j > i {
       let tmp_re = re[i]
       let tmp_im = im[i]
@@ -269,17 +300,6 @@ fn bit_reverse_split(re : Array[Float], im : Array[Float]) -> Unit {
       im[j] = tmp_im
     }
   }
-}
-
-///|
-fn bit_reverse_int(x : Int, bits : Int) -> Int {
-  let mut result = 0
-  let mut v = x
-  for _ in 0..<bits {
-    result = (result << 1) | (v & 1)
-    v = v >> 1
-  }
-  result
 }
 
 ///|

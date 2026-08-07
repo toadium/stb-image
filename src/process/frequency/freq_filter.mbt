@@ -26,7 +26,8 @@ pub fn freq_filter(
   let ffts = fft_2d(img)
   let filtered : Array[FFTResult] = []
   for c in 0..<color_ch {
-    let shifted = fft_shift(ffts[c])
+    fft_shift_inplace(ffts[c])
+    let shifted = ffts[c]
     let w = shifted.width
     let h = shifted.height
     let cx = w / 2
@@ -36,17 +37,21 @@ pub fn freq_filter(
       re: 0.0F,
       im: 0.0F,
     })
-    for i in 0..<n {
-      let y = i / w
-      let x = i % w
-      let dist = Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)).sqrt()
-      let gain = filter_gain(filter_type, dist, cutoff, band_width)
-      let src = shifted.data[i]
-      out_data[i] = Complex::{ re: src.re * gain, im: src.im * gain }
+    let data = shifted.data
+    for y in 0..<h {
+      let dy = y - cy
+      let row = y * w
+      for x in 0..<w {
+        let dx = x - cx
+        let dist = Float::from_int(dx * dx + dy * dy).sqrt()
+        let gain = filter_gain(filter_type, dist, cutoff, band_width)
+        let src = data[row + x]
+        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain }
+      }
     }
     let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
-    let unshifted = fft_shift(filtered_fft)
-    filtered.push(unshifted)
+    fft_shift_inplace(filtered_fft)
+    filtered.push(filtered_fft)
   }
   if color_ch == 1 {
     return ifft_2d(filtered[0])
@@ -124,7 +129,8 @@ pub fn freq_filter_gaussian(
   let ffts = fft_2d(img)
   let filtered : Array[FFTResult] = []
   for c in 0..<color_ch {
-    let shifted = fft_shift(ffts[c])
+    fft_shift_inplace(ffts[c])
+    let shifted = ffts[c]
     let w = shifted.width
     let h = shifted.height
     let cx = w / 2
@@ -134,17 +140,21 @@ pub fn freq_filter_gaussian(
       re: 0.0F,
       im: 0.0F,
     })
-    for i in 0..<n {
-      let y = i / w
-      let x = i % w
-      let dist = Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)).sqrt()
-      let gain = gaussian_gain(filter_type, dist, cutoff, band_width)
-      let src = shifted.data[i]
-      out_data[i] = Complex::{ re: src.re * gain, im: src.im * gain }
+    let data = shifted.data
+    for y in 0..<h {
+      let dy = y - cy
+      let row = y * w
+      for x in 0..<w {
+        let dx = x - cx
+        let dist = Float::from_int(dx * dx + dy * dy).sqrt()
+        let gain = gaussian_gain(filter_type, dist, cutoff, band_width)
+        let src = data[row + x]
+        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain }
+      }
     }
     let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
-    let unshifted = fft_shift(filtered_fft)
-    filtered.push(unshifted)
+    fft_shift_inplace(filtered_fft)
+    filtered.push(filtered_fft)
   }
   if color_ch == 1 {
     return ifft_2d(filtered[0])
