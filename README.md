@@ -4,8 +4,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-533%20passed-brightgreen)]()
-[![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-546%20passed-brightgreen)]()
+[![Bench](https://img.shields.io/badge/bench-75%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
 MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07.
@@ -110,8 +110,8 @@ try {
 
 ```bash
 moon check --target native     # Check compilation
-moon test --target native      # Run 533 tests
-moon bench --target native     # Run 29 benchmarks
+moon test --target native      # Run 546 tests
+moon bench --target native     # Run 75 benchmarks
 moon info                      # Regenerate API interface
 ```
 
@@ -125,8 +125,8 @@ moon info                      # Regenerate API interface
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture diagrams, package dependencies, FFI boundary, data flow, design decisions |
-| [API.md](API.md) | Complete API reference (199 functions, 29 types) |
+| [ARCHITECTURE.en.md](ARCHITECTURE.en.md) | Architecture diagrams, package dependencies, FFI boundary, data flow, design decisions |
+| [API.en.md](API.en.md) | Complete API reference (199 functions, 29 types) |
 | [CHANGELOG.md](CHANGELOG.md) | Version history and upstream sources |
 | [ROADMAP.md](ROADMAP.md) | Iteration roadmap |
 | [COMPARISON.md](COMPARISON.md) | mooncakes.io image library comparison |

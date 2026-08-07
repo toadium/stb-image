@@ -4,8 +4,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-533%20passed-brightgreen)]()
-[![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-546%20passed-brightgreen)]()
+[![Bench](https://img.shields.io/badge/bench-75%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
 MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
@@ -110,8 +110,8 @@ try {
 
 ```bash
 moon check --target native     # 检查编译
-moon test --target native      # 运行 533 个测试
-moon bench --target native     # 运行 29 个基准测试
+moon test --target native      # 运行 546 个测试
+moon bench --target native     # 运行 75 个基准测试
 moon info                      # 重新生成 API 接口
 ```
 
