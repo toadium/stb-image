@@ -26,45 +26,87 @@ pub fn bilateral_filter(
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   let two_sps_sq = 2.0F * sigma_space * sigma_space
   let two_spc_sq = 2.0F * sigma_color * sigma_color
-  // 预计算空间权重表
-  let spatial_weights : Array[Array[Float]] = Array::make(
-    2 * radius + 1,
-    Array::make(2 * radius + 1, 0.0F),
-  )
+  // 预计算空间权重表（1D 扁平化，提升缓存局部性）
+  let sw_size = 2 * radius + 1
+  let spatial_weights : Array[Float] = Array::make(sw_size * sw_size, 0.0F)
   for dy in -radius..<=radius {
     for dx in -radius..<=radius {
       let dist_sq = Float::from_int(dx * dx + dy * dy)
-      spatial_weights[dy + radius][dx + radius] = @math.expf(
+      spatial_weights[(dy + radius) * sw_size + (dx + radius)] = @math.expf(
         -dist_sq / two_sps_sq,
       )
     }
   }
+  // 预计算像素 Float 数组，避免内层循环重复类型转换
+  let src : Array[Float] = Array::make(n * color_ch, 0.0F)
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      src[i * color_ch + c] = Float::from_int(img.data[i * ch + c].to_int())
+    }
+  }
+  // 预计算 color exp 查找表：像素值差 0-255，避免内层循环调用 expf
+  let color_lut : Array[Float] = Array::make(256, 0.0F)
+  for d in 0..<256 {
+    let diff = Float::from_int(d)
+    color_lut[d] = @math.expf(-(diff * diff) / two_spc_sq)
+  }
+  // 分离内部/边界区域：内部区域所有邻居都在图像内，无需边界检查
+  let x_inner_start = radius
+  let x_inner_end = w - radius
+  let y_inner_start = radius
+  let y_inner_end = h - radius
   for c in 0..<color_ch {
     for y in 0..<h {
+      let y_inner = y >= y_inner_start && y < y_inner_end
       for x in 0..<w {
-        let center_val = Float::from_int(
-          img.data[(y * w + x) * ch + c].to_int(),
-        )
+        let center_idx = (y * w + x) * color_ch + c
+        let center_val = src[center_idx]
         let mut weight_sum = 0.0F
         let mut value_sum = 0.0F
-        for dy in -radius..<=radius {
-          for dx in -radius..<=radius {
+        if y_inner && x >= x_inner_start && x < x_inner_end {
+          // 内部区域：所有邻居都在图像内
+          for dy in -radius..<=radius {
+            let row = (y + dy) * w
+            let sw_base = (dy + radius) * sw_size
+            for dx in -radius..<=radius {
+              let neighbor_val = src[(row + x + dx) * color_ch + c]
+              let color_diff = (neighbor_val - center_val).to_int()
+              let abs_diff = if color_diff < 0 {
+                -color_diff
+              } else {
+                color_diff
+              }
+              let weight = spatial_weights[sw_base + dx + radius] *
+                color_lut[abs_diff]
+              value_sum += neighbor_val * weight
+              weight_sum += weight
+            }
+          }
+        } else {
+          // 边界区域：需要边界检查
+          for dy in -radius..<=radius {
             let ny = y + dy
-            let nx = x + dx
-            if ny < 0 || ny >= h || nx < 0 || nx >= w {
+            if ny < 0 || ny >= h {
               continue
             }
-            let neighbor_val = Float::from_int(
-              img.data[(ny * w + nx) * ch + c].to_int(),
-            )
-            let color_diff = neighbor_val - center_val
-            let color_weight = @math.expf(
-              -(color_diff * color_diff) / two_spc_sq,
-            )
-            let weight = spatial_weights[dy + radius][dx + radius] *
-              color_weight
-            value_sum += neighbor_val * weight
-            weight_sum += weight
+            let sw_base = (dy + radius) * sw_size
+            for dx in -radius..<=radius {
+              let nx = x + dx
+              if nx < 0 || nx >= w {
+                continue
+              }
+              let neighbor_val = src[(ny * w + nx) * color_ch + c]
+              let color_diff = (neighbor_val - center_val).to_int()
+              let abs_diff = if color_diff < 0 {
+                -color_diff
+              } else {
+                color_diff
+              }
+              let weight = spatial_weights[sw_base + dx + radius] *
+                color_lut[abs_diff]
+              value_sum += neighbor_val * weight
+              weight_sum += weight
+            }
           }
         }
         let v = if weight_sum > 0.0F {

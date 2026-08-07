@@ -65,8 +65,8 @@ pub fn canny_edge(
         blurred[(y + 1) * w + (x - 1)] +
         2 * blurred[(y + 1) * w + x] +
         blurred[(y + 1) * w + (x + 1)]
-      // 梯度幅值
-      let mag = @math.powf(Float::from_int(gx * gx + gy * gy), 0.5F).to_int()
+      // 梯度幅值（sqrt 比 powf(x, 0.5) 更快）
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt().to_int()
       gradient[idx] = mag
       // 梯度方向量化到 4 个方向
       let angle = @math.atan2f(Float::from_int(gy), Float::from_int(gx)) *
@@ -156,7 +156,7 @@ pub fn canny_edge(
 }
 
 ///|
-/// 5x5 高斯模糊（sigma=1.0）
+/// 5x5 高斯模糊（sigma=1.0），分离内部/边界区域以消除热点 clamp 调用
 fn canny_gaussian_blur(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
   let n = w * h
   let out : Array[Int] = Array::make(n, 0)
@@ -166,8 +166,28 @@ fn canny_gaussian_blur(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
     2,
   ]
   let kernel_sum = 159
+  // 内部区域：x in [2, w-2), y in [2, h-2)，5x5 核完全在图像内，无需 clamp
+  for y in 2..<(h - 2) {
+    for x in 2..<(w - 2) {
+      let mut sum = 0
+      let base = (y - 2) * w + (x - 2)
+      for ky in 0..<5 {
+        let row = base + ky * w
+        let krow = ky * 5
+        for kx in 0..<5 {
+          sum += gray[row + kx] * kernel[krow + kx]
+        }
+      }
+      out[y * w + x] = sum / kernel_sum
+    }
+  }
+  // 边界区域：5x5 核可能超出图像，需要 clamp
   for y in 0..<h {
+    let y_inner = y >= 2 && y < h - 2
     for x in 0..<w {
+      if y_inner && x >= 2 && x < w - 2 {
+        continue
+      }
       let mut sum = 0
       for ky in 0..<5 {
         for kx in 0..<5 {
