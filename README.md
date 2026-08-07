@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-341%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-533%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
@@ -27,12 +27,215 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 - **Quantize**: Floyd-Steinberg dithering, median cut
 - **Morphology**: erode, dilate, open, close (3x3 structuring element)
 - **Quality metrics**: MSE, PSNR, SSIM
+- **Advanced processing**: CLAHE, K-means quantize, FFT frequency domain, frequency domain filtering (low/high/band pass)
+- **Adaptive thresholding**: mean, Gaussian-weighted, Otsu
+- **Connected components**: labeling with 4/8 connectivity, area/bbox/centroid
+- **Integral image**: O(1) rectangle sum/mean/variance query
+- **Hough transform**: line detection with NMS
+- **LBP**: local binary patterns (basic + uniform)
+- **Image pyramids**: Gaussian/Laplacian pyramid build/up/down
+- **Bilateral filter**: edge-preserving denoising
+- **Contour extraction**: Moore boundary tracking, perimeter, area
+- **Color segmentation**: K-means, region growing, flood fill
+- **NLM denoise**: non-local means (full + fast)
+- **Retinex**: SSR, MSR, MSRCR (multi-scale with color restoration)
+- **Canny edge**: Gaussian → Sobel → NMS → hysteresis
+- **Watershed**: immersion-based segmentation with auto seeds
+- **GLCM texture**: contrast, correlation, energy, homogeneity, entropy (4 directions)
+- **Haar wavelet**: 1D/2D transform, multi-level decomposition, denoise
+- **Harris corners**: structure tensor + NMS + distance filtering
+- **Dehaze**: dark channel prior + guided filter
+- **Distance transform**: L1/L2/Linf, skeletonize
+- **Gabor filter**: multi-orientation multi-scale texture analysis
+- **Blend modes**: 13 modes (multiply, screen, overlay, darken, lighten, difference, exclusion, color dodge, color burn, hard light, soft light, linear dodge, linear burn)
 - **Metadata**: EXIF reading, PNG text chunks
 - **Animated GIF**: multi-frame decode/encode with per-frame delays
 - **Info query**: dimensions without decoding pixels
 - **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
 - **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **341 tests + 29 benchmarks**, all passing under AddressSanitizer
+- **533 tests + 29 benchmarks**, all passing under AddressSanitizer
+
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph Root["Root Package (src/)"]
+        RE["reexport.mbt<br/>,199 pub fn + 29 types"]
+        Bench["bench.mbt (29 benchmarks)"]
+        RT["roundtrip_test.mbt"]
+    end
+
+    subgraph Core["core/ — FFI + Types"]
+        Types["image_types.mbt<br/>Image · Image16 · ImageF"]
+        FFI["ffi.mbt + wrapper.c<br/>stb_image.h FFI"]
+        Load["Load/Write/Resize<br/>8/16/float · GIF"]
+        Detect["detect_format<br/>decode_any"]
+    end
+
+    subgraph Process["process/ — Image Processing"]
+        Transform["transform · geometry<br/>crop · rotate · warp"]
+        Color["color_convert · color_adjust<br/>HSV · HSL · CLAHE"]
+        Filter["filter · bilateral · gabor<br/>blur · sharpen · denoise"]
+        Edge["edge_detect · canny · harris<br/>sobel · hough · LBP"]
+        Segment["contour · watershed<br/>kmeans · region_growing"]
+        Freq["fft · freq_filter · haar<br/>frequency domain"]
+        Retinex["retinex · dehaze<br/>SSR · MSR · MSRCR"]
+        Texture["glcm · distance_transform<br/>skeletonize"]
+    end
+
+    subgraph Format["format/ — Codecs"]
+        QOI["qoi.mbt"]
+        GIF["gif_encode.mbt"]
+        PNM["pnm_encode.mbt"]
+    end
+
+    subgraph Meta["meta/ — Metadata"]
+        EXIF["exif.mbt"]
+        PNGMeta["png_meta.mbt"]
+    end
+
+    subgraph Util["util/ — Utilities"]
+        PixelOps["pixel_ops · pixel_advanced"]
+        Compose["image_compose · image_noise"]
+        Blend["color_map (13 blend modes)"]
+        Stats["image_stats · image_util"]
+    end
+
+    Core --> Root
+    Process --> Root
+    Format --> Root
+    Meta --> Root
+    Util --> Root
+    Process -.-> Core
+```
+
+### Feature Categories
+
+```mermaid
+mindmap
+  root((stb-image))
+    Format I/O
+      Decode 10+ formats
+      Encode 8 formats
+      Auto-detect
+      Animated GIF
+    Pixel Types
+      8-bit Image
+      16-bit Image16
+      Float ImageF
+    Resize
+      7 filters
+      4 edge modes
+      sRGB colorspace
+    Color
+      HSV HSL conversion
+      Brightness Contrast Gamma
+      CLAHE
+      Retinex SSR MSR MSRCR
+    Filter
+      Box Gaussian Bilateral
+      Gabor filter bank
+      NLM denoise
+      Haar wavelet denoise
+    Edge Detect
+      Sobel Laplacian Prewitt
+      Canny
+      Harris corners
+      Hough transform
+    Segmentation
+      K-means
+      Region growing
+      Watershed
+      Contour extraction
+      Flood fill
+    Texture
+      LBP
+      GLCM
+      Gabor
+      Distance transform
+    Frequency
+      FFT IFFT
+      Frequency filtering
+      Haar wavelet
+    Morphology
+      Erode Dilate
+      Open Close
+      Skeletonize
+    Quality
+      MSE PSNR SSIM
+      Histogram
+      Integral image
+    Metadata
+      EXIF
+      PNG text chunks
+```
+
+### Data Flow
+
+```mermaid
+flowchart LR
+    File["File/Bytes"] --> Load["Load<br/>8/16/float"]
+    Load --> Img["Image / Image16 / ImageF"]
+    Img --> Proc["Process Pipeline"]
+    Proc --> Out["Output Image"]
+    Out --> Write["Write<br/>PNG/BMP/JPEG/..."]
+    Write --> Result["File/Bytes"]
+
+    subgraph Proc["Process Pipeline (composable)"]
+        direction TB
+        P1["Color Adjust<br/>brightness · contrast · gamma · CLAHE"]
+        P2["Filter<br/>blur · sharpen · bilateral · NLM · Gabor"]
+        P3["Geometry<br/>crop · rotate · warp · resize"]
+        P4["Edge/Feature<br/>Sobel · Canny · Harris · Hough · LBP"]
+        P5["Segmentation<br/>K-means · watershed · contour · flood_fill"]
+        P6["Frequency<br/>FFT · filter · Haar wavelet"]
+        P7["Quality<br/>MSE · PSNR · SSIM · histogram"]
+    end
+
+    Img -.-> Meta["Metadata<br/>EXIF · PNG chunks"]
+    Img -.-> Detect["Format Detect<br/>decode_any · detect_format"]
+```
+
+### API Classification
+
+```mermaid
+flowchart TB
+    subgraph IO["I/O (35 functions)"]
+        Load["Load (8)"]
+        Write["Write (10)"]
+        Resize["Resize (4)"]
+        Detect["Detect (3)"]
+        Query["Query (7)"]
+        Config["Config (8)"]
+        FileIO["File I/O (1)"]
+    end
+
+    subgraph Proc["Processing (120 functions)"]
+        Color["Color (21)"]
+        Filter["Filter (14)"]
+        Geo["Geometry (9)"]
+        Edge["Edge/Feature (14)"]
+        Seg["Segmentation (12)"]
+        Freq["Frequency (11)"]
+        Tex["Texture (10)"]
+        Morph["Morphology (6)"]
+        Qual["Quality (9)"]
+        Util["Utility (14)"]
+    end
+
+    subgraph Codec["Codec (9 functions)"]
+        QOI["QOI (2)"]
+        ICO["ICO/ICNS (3)"]
+        GIF["GIF/PNM (4)"]
+    end
+
+    subgraph MetaFn["Metadata (4 functions)"]
+        EXIF["EXIF (2)"]
+        PNG["PNG chunks (2)"]
+    end
+
+    Types["29 Types<br/>Image · Image16 · ImageF · ..."]
+```
 
 ## Installation
 
@@ -293,6 +496,250 @@ All load functions accept optional `req_channels : Int?` (1=gray, 2=gray+alpha, 
 |----------|-----------|-------------|
 | `read_file_bytes` | `(String) -> Bytes` | Read raw file bytes |
 
+### Blend Modes (13 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `blend_multiply` | `(Image, Image) -> Image` | Multiply blend |
+| `blend_screen` | `(Image, Image) -> Image` | Screen blend |
+| `blend_overlay` | `(Image, Image) -> Image` | Overlay blend |
+| `blend_darken` | `(Image, Image) -> Image` | Darken blend |
+| `blend_lighten` | `(Image, Image) -> Image` | Lighten blend |
+| `blend_difference` | `(Image, Image) -> Image` | Difference blend |
+| `blend_exclusion` | `(Image, Image) -> Image` | Exclusion blend |
+| `blend_color_dodge` | `(Image, Image) -> Image` | Color dodge blend |
+| `blend_color_burn` | `(Image, Image) -> Image` | Color burn blend |
+| `blend_hard_light` | `(Image, Image) -> Image` | Hard light blend |
+| `blend_soft_light` | `(Image, Image) -> Image` | Soft light blend |
+| `blend_linear_dodge` | `(Image, Image) -> Image` | Linear dodge blend |
+| `blend_linear_burn` | `(Image, Image) -> Image` | Linear burn blend |
+
+### Advanced Processing (5 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `clahe` | `(Image, Int, Float) -> Image` | CLAHE (tile size, clip limit) |
+| `k_means_quantize` | `(Image, Int, Int) -> Image` | K-means color quantize (k, max_iters) |
+| `convolve` | `(Image, Array[Float], Float, Float) -> Image` | Generic convolution (kernel, divisor, offset) |
+| `pixelate` | `(Image, Int) -> Image` | Pixelate effect (block size) |
+| `replace_color` | `(Image, Array[Byte], Array[Byte], Int) -> Image` | Replace color with tolerance |
+
+### FFT / Frequency Domain (6 functions + 2 types)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `fft_2d` | `(Image) -> Array[FFTResult]` | 2D FFT (per channel) |
+| `ifft_2d` | `(FFTResult) -> Image` | Inverse 2D FFT |
+| `fft_magnitude` | `(FFTResult, Bool) -> Image` | FFT magnitude spectrum |
+| `fft_shift` | `(FFTResult) -> FFTResult` | Center FFT (shift zero freq) |
+| `freq_filter` | `(Image, FreqFilterType, Float, band_width?: Float) -> Image` | Ideal freq filter |
+| `freq_filter_gaussian` | `(Image, FreqFilterType, Float, band_width?: Float) -> Image` | Gaussian freq filter |
+
+Types: `Complex` (re, im : Float), `FFTResult` (width, height : Int; data : Array[Complex]), `FreqFilterType` (LowPass | HighPass | BandPass | BandStop)
+
+### Adaptive Threshold (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `adaptive_threshold_mean` | `(Image, Int, Int) -> Image` | Mean adaptive threshold (block size, C) |
+| `adaptive_threshold_gaussian` | `(Image, Int, Int) -> Image` | Gaussian adaptive threshold |
+| `threshold_otsu` | `(Image) -> Image` | Otsu automatic threshold |
+
+### Connected Components (1 function + 2 types)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `connected_components` | `(Image, Int) -> (ConnectedComponentLabelImage, Array[ConnectedComponent])` | Label components (connectivity 4/8) |
+
+Types: `ConnectedComponent` (label, area, x, y, w, h, centroid_x, centroid_y), `ConnectedComponentLabelImage` (width, height, labels : Array[Int])
+
+### Integral Image (6 functions + 2 types)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `integral_image` | `(Image) -> IntegralImage` | Compute integral image |
+| `integral_image_sq` | `(Image) -> IntegralImageSq` | Compute squared integral image |
+| `integral_sum` | `(IntegralImage, Int, Int, Int, Int) -> Int64` | Rectangle sum O(1) |
+| `integral_sum_sq` | `(IntegralImageSq, Int, Int, Int, Int) -> Int64` | Rectangle squared sum O(1) |
+| `integral_mean` | `(IntegralImage, Int, Int, Int, Int) -> Float` | Rectangle mean O(1) |
+| `integral_variance` | `(IntegralImage, IntegralImageSq, Int, Int, Int, Int) -> Float` | Rectangle variance O(1) |
+
+Types: `IntegralImage` (width, height, data : Array[Int64]), `IntegralImageSq` (width, height, data : Array[Int64])
+
+### Hough Transform (2 functions + 1 type)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `hough_lines` | `(Image, Int, theta_resolution?: Float, rho_resolution?: Float) -> Array[HoughLine]` | Detect lines |
+| `hough_lines_nms` | `(Array[HoughLine], rho_threshold?: Float, theta_threshold?: Float) -> Array[HoughLine]` | NMS on Hough lines |
+
+Type: `HoughLine` (rho, theta : Float; votes : Int)
+
+### LBP (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `lbp` | `(Image) -> Image` | Local binary pattern |
+| `lbp_uniform` | `(Image) -> Image` | Uniform LBP (58 patterns) |
+
+### Image Pyramids (4 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `pyr_down` | `(Image) -> Image` | Downsample 2x (Gaussian) |
+| `pyr_up` | `(Image) -> Image` | Upsample 2x (bilinear) |
+| `build_gaussian_pyramid` | `(Image, Int) -> Array[Image]` | Build Gaussian pyramid (levels) |
+| `build_laplacian_pyramid` | `(Image, Int) -> Array[Image]` | Build Laplacian pyramid (levels) |
+
+### Bilateral Filter (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `bilateral_filter` | `(Image, Int, Float, Float) -> Image` | Bilateral filter (radius, sigma_space, sigma_color) |
+| `bilateral_filter_fast` | `(Image, Int, Float, Float, Int) -> Image` | Fast bilateral (downsampled) |
+
+### Contour (4 functions + 2 types)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `find_contours` | `(Image) -> Array[Contour]` | Moore boundary tracking |
+| `draw_contours` | `(Image, Array[Contour], Array[Byte]) -> Image` | Draw contours with color |
+| `contour_perimeter` | `(Contour) -> Float` | Contour perimeter |
+| `contour_area` | `(Contour) -> Float` | Contour area (shoelace) |
+
+Types: `ContourPoint` (x, y : Int), `Contour` (points : Array[ContourPoint]; is_hole : Bool)
+
+### Segmentation (4 functions + 2 types)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `kmeans_segment` | `(Image, Int, max_iters?: Int) -> (SegmentLabelImage, Array[SegmentRegion])` | K-means segmentation |
+| `region_growing_segment` | `(Image, Array[(Int, Int)], threshold?: Int) -> (SegmentLabelImage, Array[SegmentRegion])` | Region growing from seeds |
+| `flood_fill` | `(Image, Int, Int, Array[Byte], threshold?: Int) -> Image` | Flood fill from (x, y) |
+| `segment_to_color` | `(SegmentLabelImage) -> Image` | Visualize label image |
+
+Types: `SegmentLabelImage` (width, height, labels : Array[Int]), `SegmentRegion` (label, area, centroid_x, centroid_y, mean_color)
+
+### NLM Denoise (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `nlm_denoise` | `(Image, patch_size?: Int, search_size?: Int, h?: Int) -> Image` | Non-local means denoise |
+| `nlm_denoise_fast` | `(Image, patch_size?: Int, search_size?: Int, h?: Int, step?: Int) -> Image` | Fast NLM (downsampled search) |
+
+### Retinex (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `ssr` | `(Image, sigma?: Float, gain?: Float, offset?: Float) -> Image` | Single-scale Retinex |
+| `msr` | `(Image, sigmas?: Array[Float], gain?: Float, offset?: Float) -> Image` | Multi-scale Retinex |
+| `msrcr` | `(Image, sigmas?: Array[Float], gain?: Float, offset?: Float, alpha?: Float, beta?: Float) -> Image` | Multi-scale Retinex with color restoration |
+
+### Canny Edge (1 function)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `canny_edge` | `(Image, low_threshold?: Int, high_threshold?: Int) -> Image` | Canny edge detection |
+
+### Watershed (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `watershed` | `(Image, Array[Int]) -> Array[Int]` | Watershed from markers |
+| `watershed_auto` | `(Image) -> (Array[Int], Int)` | Auto watershed (find local minima) |
+
+### GLCM Texture (3 functions + 1 type)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `compute_glcm` | `(Image, Int, Int, levels?: Int) -> Array[Array[Int]]` | Compute GLCM (dx, dy) |
+| `glcm_features` | `(Array[Array[Int]]) -> GlcmFeatures` | GLCM features from matrix |
+| `glcm_features_multi_direction` | `(Image, levels?: Int) -> Array[GlcmFeatures]` | GLCM features (4 directions) |
+
+Type: `GlcmFeatures` (contrast, correlation, energy, homogeneity, entropy, asm, dissimilarity : Float)
+
+### Haar Wavelet (5 functions + 1 type)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `haar_transform_1d` | `(Array[Float]) -> Array[Float]` | 1D Haar transform |
+| `haar_inverse_transform_1d` | `(Array[Float]) -> Array[Float]` | 1D Haar inverse |
+| `haar_transform_2d` | `(Image, levels?: Int) -> HaarWaveletResult` | 2D Haar transform |
+| `haar_inverse_transform_2d` | `(HaarWaveletResult) -> Image` | 2D Haar inverse |
+| `haar_denoise` | `(Image, threshold?: Float, soft?: Bool, levels?: Int) -> Image` | Haar wavelet denoise |
+
+Type: `HaarWaveletResult` (width, height, channels : Int; ll : Array[Float]; lh, hl, hh : Array[Array[Float]]; levels : Int)
+
+### Harris Corners (2 functions + 1 type)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `harris_corners` | `(Image, k?: Float, threshold?: Float, min_distance?: Int) -> Array[CornerPoint]` | Harris corner detection |
+| `draw_corners` | `(Image, Array[CornerPoint], color?: Array[Byte], radius?: Int) -> Image` | Draw corner markers |
+
+Type: `CornerPoint` (x, y : Int; response : Float)
+
+### Dehaze (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `dehaze` | `(Image, patch_size?: Int, omega?: Float, t0?: Float) -> Image` | Dark channel prior dehaze |
+| `guided_filter` | `(Image, Array[Float], radius?: Int, eps?: Float) -> Array[Float]` | Guided filter |
+
+### Distance Transform (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `distance_transform` | `(Image, distance_type?: Int) -> Array[Float]` | Distance transform (1=L1, 2=L2, 3=Linf) |
+| `distance_transform_visualize` | `(Array[Float], Int, Int) -> Image` | Visualize distance field |
+| `skeletonize` | `(Image) -> Image` | Skeleton via distance transform |
+
+### Gabor Filter (3 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `gabor_filter` | `(Image, Int, Float, Float, lambda?: Float, gamma?: Float, phi?: Float) -> Image` | Gabor filter (size, theta, sigma, ...) |
+| `gabor_filter_bank` | `(Image, Int, Float, num_orientations?: Int, lambda?: Float, gamma?: Float) -> Image` | Gabor filter bank |
+| `gabor_kernel` | `(Int, Float, Float, lambda?: Float, gamma?: Float, phi?: Float) -> Array[Array[Float]]` | Get Gabor kernel |
+
+### Utility (14 functions + 1 type)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `pad` | `(Image, Int, Int, Array[Byte]) -> Image` | Pad with border color |
+| `add_border` | `(Image, Int, Int, Int, Int, Array[Byte]) -> Image` | Add asymmetric border |
+| `resize_to_cover` | `(Image, Int, Int) -> Image` | Resize to cover (crop excess) |
+| `resize_to_contain` | `(Image, Int, Int, Array[Byte]) -> Image` | Resize to contain (pad rest) |
+| `threshold` | `(Image, Int) -> Image` | Binary threshold |
+| `posterize` | `(Image, Int) -> Image` | Posterize (reduce levels) |
+| `extract_channel` | `(Image, Int) -> Image` | Extract single channel |
+| `swap_channels` | `(Image, Int, Int) -> Image` | Swap two channels |
+| `set_alpha` | `(Image, Byte) -> Image` | Set uniform alpha |
+| `fill_alpha` | `(Image, Int, Byte, Byte, Byte) -> Image` | Fill alpha with color |
+| `apply_lut` | `(Image, Array[Byte]) -> Image` | Apply 256-entry LUT |
+| `gradient_map` | `(Image, Array[(Int, Byte, Byte, Byte)]) -> Image` | Apply gradient color map |
+| `compute_stats` | `(Image) -> ImageStats` | Compute image statistics |
+| `mean_value` | `(Image) -> Float` | Mean pixel value |
+
+Type: `ImageStats` (min, max, mean, std_dev : Float; histogram : Array[Int])
+
+### Image Compose (5 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `hstack` | `(Image, Image) -> Image` | Horizontal stack |
+| `vstack` | `(Image, Image) -> Image` | Vertical stack |
+| `tile` | `(Image, Int, Int) -> Image` | Tile (cols, rows) |
+| `flip_vertical` | `(Image) -> Image` | Flip vertically |
+| `transpose` | `(Image) -> Image` | Transpose (swap x/y) |
+
+### Noise (2 functions)
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `add_noise_gaussian` | `(Image, Float, UInt) -> Image` | Add Gaussian noise (sigma, seed) |
+| `add_noise_salt_pepper` | `(Image, Float, UInt) -> Image` | Add salt-and-pepper noise (amount, seed) |
+
 ## Error Handling
 
 ```moonbit
@@ -308,26 +755,6 @@ try {
 
 `UnsupportedFormat` and `DecodeFailed` are not precisely distinguishable; stb_image returning NULL defaults to `DecodeFailed`. Use `failure_reason()` for the internal stb_image error string.
 
-## Architecture
-
-Five-package architecture, dependencies flow downward:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Root Package   reexport.mbt (backward-compat API surface)  │
-│                 bench.mbt, roundtrip_test.mbt               │
-├─────────────────────────────────────────────────────────────┤
-│  Subpackages    core/    process/  format/  meta/  util/    │
-│                 FFI types  image ops  codecs  EXIF  helpers │
-├─────────────────────────────────────────────────────────────┤
-│  FFI Boundary   core/ffi.mbt (extern "c")                   │
-│                 core/wrapper.c (ABI normalization)          │
-├─────────────────────────────────────────────────────────────┤
-│  Vendoring      core/stb_image.h v2.30                      │
-│                 core/stb_image_write.h v1.16                │
-│                 core/stb_image_resize2.h v2.07              │
-└─────────────────────────────────────────────────────────────┘
-```
 
 ## Target Support
 
@@ -364,7 +791,7 @@ moon info  # outputs src/pkg.generated.mbti
 
 ```
 stb-image/
-├── moon.mod                  # Module config (v1.10.0, preferred_target = native)
+├── moon.mod                  # Module config (v1.17.0, preferred_target = native)
 ├── ROADMAP.md                # Iteration roadmap
 ├── COMPARISON.md             # mooncakes.io image library comparison
 ├── SKILL.md                  # Package usage guide
@@ -445,6 +872,12 @@ stb-image/
 | **v1.8** | **more blend modes + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** |
 | **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** |
 | **v1.10** | **morphology (erode/dilate/open/close) + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** |
+| **v1.12** | **6 blend modes + CLAHE + K-means quantize + FFT frequency domain** | **369+29** |
+| **v1.13** | **frequency filtering + adaptive threshold + connected components + integral image** | **402+29** |
+| **v1.14** | **Hough transform + LBP + image pyramids + bilateral filter** | **433+29** |
+| **v1.15** | **contour extraction + color segmentation + NLM denoise + Retinex** | **472+29** |
+| **v1.16** | **Canny edge + watershed + GLCM texture + Haar wavelet** | **501+29** |
+| **v1.17** | **Harris corners + dehaze + distance transform + Gabor filter** | **533+29** |
 
 ## Upstream
 

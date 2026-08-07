@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-341%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-533%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-29%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
@@ -27,12 +27,215 @@ MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/
 - **量化**：Floyd-Steinberg 抖动、中位切割
 - **形态学**：腐蚀、膨胀、开运算、闭运算（3x3 结构元素）
 - **质量评估**：MSE、PSNR、SSIM
+- **高级处理**：CLAHE（对比度受限自适应直方图均衡）、K-means 色彩量化、FFT 频域变换、频域滤波（低通/高通/带通/带阻）
+- **自适应阈值**：均值法、高斯加权法、Otsu 大津法
+- **连通域标记**：4/8 连通，含面积/边界框/质心
+- **积分图像**：O(1) 矩形区域求和/均值/方差查询
+- **霍夫变换**：直线检测，含非极大值抑制
+- **局部二值模式(LBP)**：基本 LBP + 均匀 LBP
+- **图像金字塔**：高斯/拉普拉斯金字塔构建与上下采样
+- **双边滤波**：保边去噪滤波
+- **轮廓提取**：Moore 边界跟踪，周长，面积
+- **颜色分割**：K-means、区域生长、泛洪填充
+- **NLM 去噪**：非局部均值（完整版 + 快速版）
+- **Retinex**：SSR、MSR、MSRCR（多尺度带颜色恢复）
+- **Canny 边缘**：高斯 → Sobel → 非极大值抑制 → 滞后连接
+- **分水岭**：沉浸式分割，自动寻找种子
+- **GLCM 纹理**：对比度/相关性/能量/同质性/熵（4 方向）
+- **Haar 小波**：1D/2D 变换，多级分解，去噪
+- **Harris 角点**：结构张量 + 非极大值抑制 + 距离过滤
+- **去雾**：暗通道先验 + 引导滤波
+- **距离变换**：L1/L2/Linf 距离，骨架化
+- **Gabor 滤波**：多方向多尺度纹理分析
+- **混合模式**：13种（正片叠底、滤色、叠加、变暗、变亮、差值、排除、颜色减淡、颜色加深、强光、柔光、线性减淡、线性加深）
 - **元数据**：EXIF 读取、PNG 文本块
 - **动画GIF**：多帧解码/编码，支持逐帧延迟
 - **信息查询**：不解码像素即可获取尺寸
 - **可配置**：翻转、非预乘Alpha、iPhone PNG、HDR伽马/缩放
 - **错误诊断**：`failure_reason()` 获取 stb_image 内部错误字符串
-- **341 测试 + 29 基准测试**，全部通过 AddressSanitizer
+- **533 测试 + 29 基准测试**，全部通过 AddressSanitizer
+
+## 架构
+
+```mermaid
+flowchart TB
+    subgraph Root["根包 (src/)"]
+        RE["reexport.mbt<br/>199 pub fn + 29 types"]
+        Bench["bench.mbt (29 基准测试)"]
+        RT["roundtrip_test.mbt"]
+    end
+
+    subgraph Core["core/ — FFI + 类型"]
+        Types["image_types.mbt<br/>Image · Image16 · ImageF"]
+        FFI["ffi.mbt + wrapper.c<br/>stb_image.h FFI"]
+        Load["加载/写入/缩放<br/>8/16/float · GIF"]
+        Detect["detect_format<br/>decode_any"]
+    end
+
+    subgraph Process["process/ — 图像处理"]
+        Transform["transform · geometry<br/>裁剪 · 旋转 · 仿射"]
+        Color["color_convert · color_adjust<br/>HSV · HSL · CLAHE"]
+        Filter["filter · bilateral · gabor<br/>模糊 · 锐化 · 去噪"]
+        Edge["edge_detect · canny · harris<br/>sobel · hough · LBP"]
+        Segment["contour · watershed<br/>kmeans · region_growing"]
+        Freq["fft · freq_filter · haar<br/>频域分析"]
+        Retinex["retinex · dehaze<br/>SSR · MSR · MSRCR"]
+        Texture["glcm · distance_transform<br/>骨架化"]
+    end
+
+    subgraph Format["format/ — 编解码"]
+        QOI["qoi.mbt"]
+        GIF["gif_encode.mbt"]
+        PNM["pnm_encode.mbt"]
+    end
+
+    subgraph Meta["meta/ — 元数据"]
+        EXIF["exif.mbt"]
+        PNGMeta["png_meta.mbt"]
+    end
+
+    subgraph Util["util/ — 工具函数"]
+        PixelOps["pixel_ops · pixel_advanced"]
+        Compose["image_compose · image_noise"]
+        Blend["color_map (13 混合模式)"]
+        Stats["image_stats · image_util"]
+    end
+
+    Core --> Root
+    Process --> Root
+    Format --> Root
+    Meta --> Root
+    Util --> Root
+    Process -.-> Core
+```
+
+### 功能分类
+
+```mermaid
+mindmap
+  root((stb-image))
+    格式 I/O
+      解码 10+ 格式
+      编码 8 格式
+      自动检测
+      动画 GIF
+    像素类型
+      8位 Image
+      16位 Image16
+      浮点 ImageF
+    缩放
+      7 种滤波器
+      4 种边缘模式
+      sRGB 色彩空间
+    色彩
+      HSV HSL 转换
+      亮度 对比度 伽马
+      CLAHE
+      Retinex SSR MSR MSRCR
+    滤波
+      方框 高斯 双边
+      Gabor 滤波器组
+      NLM 去噪
+      Haar 小波去噪
+    边缘检测
+      Sobel Laplacian Prewitt
+      Canny
+      Harris 角点
+      Hough 变换
+    分割
+      K-means
+      区域生长
+      分水岭
+      轮廓提取
+      泛洪填充
+    纹理
+      LBP
+      GLCM
+      Gabor
+      距离变换
+    频域
+      FFT IFFT
+      频域滤波
+      Haar 小波
+    形态学
+      腐蚀 膨胀
+      开 闭运算
+      骨架化
+    质量
+      MSE PSNR SSIM
+      直方图
+      积分图像
+    元数据
+      EXIF
+      PNG 文本块
+```
+
+### 数据流
+
+```mermaid
+flowchart LR
+    File["文件/字节"] --> Load["加载<br/>8/16/float"]
+    Load --> Img["Image / Image16 / ImageF"]
+    Img --> Proc["处理流水线"]
+    Proc --> Out["输出图像"]
+    Out --> Write["写入<br/>PNG/BMP/JPEG/..."]
+    Write --> Result["文件/字节"]
+
+    subgraph Proc["处理流水线 (可组合)"]
+        direction TB
+        P1["色彩调整<br/>亮度 · 对比度 · 伽马 · CLAHE"]
+        P2["滤波<br/>模糊 · 锐化 · 双边 · NLM · Gabor"]
+        P3["几何<br/>裁剪 · 旋转 · 仿射 · 缩放"]
+        P4["边缘/特征<br/>Sobel · Canny · Harris · Hough · LBP"]
+        P5["分割<br/>K-means · 分水岭 · 轮廓 · 泛洪填充"]
+        P6["频域<br/>FFT · 滤波 · Haar 小波"]
+        P7["质量<br/>MSE · PSNR · SSIM · 直方图"]
+    end
+
+    Img -.-> Meta["元数据<br/>EXIF · PNG 文本块"]
+    Img -.-> Detect["格式检测<br/>decode_any · detect_format"]
+```
+
+### API 分类
+
+```mermaid
+flowchart TB
+    subgraph IO["I/O (35 函数)"]
+        Load["加载 (8)"]
+        Write["写入 (10)"]
+        Resize["缩放 (4)"]
+        Detect["检测 (3)"]
+        Query["查询 (7)"]
+        Config["配置 (8)"]
+        FileIO["文件 I/O (1)"]
+    end
+
+    subgraph Proc["处理 (120 函数)"]
+        Color["色彩 (21)"]
+        Filter["滤波 (14)"]
+        Geo["几何 (9)"]
+        Edge["边缘/特征 (14)"]
+        Seg["分割 (12)"]
+        Freq["频域 (11)"]
+        Tex["纹理 (10)"]
+        Morph["形态学 (6)"]
+        Qual["质量 (9)"]
+        Util["工具 (14)"]
+    end
+
+    subgraph Codec["编解码 (9 函数)"]
+        QOI["QOI (2)"]
+        ICO["ICO/ICNS (3)"]
+        GIF["GIF/PNM (4)"]
+    end
+
+    subgraph MetaFn["元数据 (4 函数)"]
+        EXIF["EXIF (2)"]
+        PNG["PNG 文本块 (2)"]
+    end
+
+    Types["29 类型<br/>Image · Image16 · ImageF · ..."]
+```
 
 ## 安装
 
@@ -293,6 +496,250 @@ let info : ImageInfo? = info_from_path("large.hdr")
 |------|------|------|
 | `read_file_bytes` | `(String) -> Bytes` | 读取原始文件字节 |
 
+### 混合模式（13个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `blend_multiply` | `(Image, Image) -> Image` | 正片叠底 |
+| `blend_screen` | `(Image, Image) -> Image` | 滤色 |
+| `blend_overlay` | `(Image, Image) -> Image` | 叠加 |
+| `blend_darken` | `(Image, Image) -> Image` | 变暗 |
+| `blend_lighten` | `(Image, Image) -> Image` | 变亮 |
+| `blend_difference` | `(Image, Image) -> Image` | 差值 |
+| `blend_exclusion` | `(Image, Image) -> Image` | 排除 |
+| `blend_color_dodge` | `(Image, Image) -> Image` | 颜色减淡 |
+| `blend_color_burn` | `(Image, Image) -> Image` | 颜色加深 |
+| `blend_hard_light` | `(Image, Image) -> Image` | 强光 |
+| `blend_soft_light` | `(Image, Image) -> Image` | 柔光 |
+| `blend_linear_dodge` | `(Image, Image) -> Image` | 线性减淡 |
+| `blend_linear_burn` | `(Image, Image) -> Image` | 线性加深 |
+
+### 高级处理（5个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `clahe` | `(Image, Int, Float) -> Image` | CLAHE（块大小，裁剪限制） |
+| `k_means_quantize` | `(Image, Int, Int) -> Image` | K-means 色彩量化（k, 最大迭代） |
+| `convolve` | `(Image, Array[Float], Float, Float) -> Image` | 通用卷积（核，除数，偏移） |
+| `pixelate` | `(Image, Int) -> Image` | 像素化效果（块大小） |
+| `replace_color` | `(Image, Array[Byte], Array[Byte], Int) -> Image` | 颜色替换（容差） |
+
+### FFT / 频域（6个函数 + 2个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `fft_2d` | `(Image) -> Array[FFTResult]` | 2D FFT（逐通道） |
+| `ifft_2d` | `(FFTResult) -> Image` | 2D 逆 FFT |
+| `fft_magnitude` | `(FFTResult, Bool) -> Image` | FFT 幅度谱 |
+| `fft_shift` | `(FFTResult) -> FFTResult` | FFT 中心化（零频移至中心） |
+| `freq_filter` | `(Image, FreqFilterType, Float, band_width?: Float) -> Image` | 理想频率滤波 |
+| `freq_filter_gaussian` | `(Image, FreqFilterType, Float, band_width?: Float) -> Image` | 高斯频率滤波 |
+
+类型：`Complex` (re, im : Float)、`FFTResult` (width, height : Int; data : Array[Complex])、`FreqFilterType` (LowPass | HighPass | BandPass | BandStop)
+
+### 自适应阈值（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `adaptive_threshold_mean` | `(Image, Int, Int) -> Image` | 均值自适应阈值（块大小，C） |
+| `adaptive_threshold_gaussian` | `(Image, Int, Int) -> Image` | 高斯加权自适应阈值 |
+| `threshold_otsu` | `(Image) -> Image` | Otsu 自动阈值 |
+
+### 连通域标记（1个函数 + 2个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `connected_components` | `(Image, Int) -> (ConnectedComponentLabelImage, Array[ConnectedComponent])` | 标记连通域（连通性 4/8） |
+
+类型：`ConnectedComponent` (label, area, x, y, w, h, centroid_x, centroid_y)、`ConnectedComponentLabelImage` (width, height, labels : Array[Int])
+
+### 积分图像（6个函数 + 2个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `integral_image` | `(Image) -> IntegralImage` | 计算积分图像 |
+| `integral_image_sq` | `(Image) -> IntegralImageSq` | 计算平方积分图像 |
+| `integral_sum` | `(IntegralImage, Int, Int, Int, Int) -> Int64` | 矩形区域求和 O(1) |
+| `integral_sum_sq` | `(IntegralImageSq, Int, Int, Int, Int) -> Int64` | 矩形区域平方和 O(1) |
+| `integral_mean` | `(IntegralImage, Int, Int, Int, Int) -> Float` | 矩形区域均值 O(1) |
+| `integral_variance` | `(IntegralImage, IntegralImageSq, Int, Int, Int, Int) -> Float` | 矩形区域方差 O(1) |
+
+类型：`IntegralImage` (width, height, data : Array[Int64])、`IntegralImageSq` (width, height, data : Array[Int64])
+
+### 霍夫变换（2个函数 + 1个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `hough_lines` | `(Image, Int, theta_resolution?: Float, rho_resolution?: Float) -> Array[HoughLine]` | 直线检测 |
+| `hough_lines_nms` | `(Array[HoughLine], rho_threshold?: Float, theta_threshold?: Float) -> Array[HoughLine]` | 霍夫直线非极大值抑制 |
+
+类型：`HoughLine` (rho, theta : Float; votes : Int)
+
+### LBP（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `lbp` | `(Image) -> Image` | 局部二值模式 |
+| `lbp_uniform` | `(Image) -> Image` | 均匀 LBP（58 种模式） |
+
+### 图像金字塔（4个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `pyr_down` | `(Image) -> Image` | 下采样 2x（高斯） |
+| `pyr_up` | `(Image) -> Image` | 上采样 2x（双线性） |
+| `build_gaussian_pyramid` | `(Image, Int) -> Array[Image]` | 构建高斯金字塔（层数） |
+| `build_laplacian_pyramid` | `(Image, Int) -> Array[Image]` | 构建拉普拉斯金字塔（层数） |
+
+### 双边滤波（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `bilateral_filter` | `(Image, Int, Float, Float) -> Image` | 双边滤波（半径，空间sigma，值域sigma） |
+| `bilateral_filter_fast` | `(Image, Int, Float, Float, Int) -> Image` | 快速双边（降采样近似） |
+
+### 轮廓（4个函数 + 2个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `find_contours` | `(Image) -> Array[Contour]` | Moore 边界跟踪 |
+| `draw_contours` | `(Image, Array[Contour], Array[Byte]) -> Image` | 绘制轮廓 |
+| `contour_perimeter` | `(Contour) -> Float` | 轮廓周长 |
+| `contour_area` | `(Contour) -> Float` | 轮廓面积（鞋带公式） |
+
+类型：`ContourPoint` (x, y : Int)、`Contour` (points : Array[ContourPoint]; is_hole : Bool)
+
+### 分割（4个函数 + 2个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `kmeans_segment` | `(Image, Int, max_iters?: Int) -> (SegmentLabelImage, Array[SegmentRegion])` | K-means 分割 |
+| `region_growing_segment` | `(Image, Array[(Int, Int)], threshold?: Int) -> (SegmentLabelImage, Array[SegmentRegion])` | 区域生长（种子点） |
+| `flood_fill` | `(Image, Int, Int, Array[Byte], threshold?: Int) -> Image` | 泛洪填充（从 x,y 开始） |
+| `segment_to_color` | `(SegmentLabelImage) -> Image` | 标签图可视化 |
+
+类型：`SegmentLabelImage` (width, height, labels : Array[Int])、`SegmentRegion` (label, area, centroid_x, centroid_y, mean_color)
+
+### NLM 去噪（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `nlm_denoise` | `(Image, patch_size?: Int, search_size?: Int, h?: Int) -> Image` | 非局部均值去噪 |
+| `nlm_denoise_fast` | `(Image, patch_size?: Int, search_size?: Int, h?: Int, step?: Int) -> Image` | 快速 NLM（降采样搜索） |
+
+### Retinex（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `ssr` | `(Image, sigma?: Float, gain?: Float, offset?: Float) -> Image` | 单尺度 Retinex |
+| `msr` | `(Image, sigmas?: Array[Float], gain?: Float, offset?: Float) -> Image` | 多尺度 Retinex |
+| `msrcr` | `(Image, sigmas?: Array[Float], gain?: Float, offset?: Float, alpha?: Float, beta?: Float) -> Image` | 多尺度 Retinex 带颜色恢复 |
+
+### Canny 边缘（1个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `canny_edge` | `(Image, low_threshold?: Int, high_threshold?: Int) -> Image` | Canny 边缘检测 |
+
+### 分水岭（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `watershed` | `(Image, Array[Int]) -> Array[Int]` | 分水岭（标记点） |
+| `watershed_auto` | `(Image) -> (Array[Int], Int)` | 自动分水岭（寻找局部最小值） |
+
+### GLCM 纹理（3个函数 + 1个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `compute_glcm` | `(Image, Int, Int, levels?: Int) -> Array[Array[Int]]` | 计算 GLCM（dx, dy） |
+| `glcm_features` | `(Array[Array[Int]]) -> GlcmFeatures` | 从矩阵计算 GLCM 特征 |
+| `glcm_features_multi_direction` | `(Image, levels?: Int) -> Array[GlcmFeatures]` | 多方向 GLCM 特征（4 方向） |
+
+类型：`GlcmFeatures` (contrast, correlation, energy, homogeneity, entropy, asm, dissimilarity : Float)
+
+### Haar 小波（5个函数 + 1个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `haar_transform_1d` | `(Array[Float]) -> Array[Float]` | 一维 Haar 变换 |
+| `haar_inverse_transform_1d` | `(Array[Float]) -> Array[Float]` | 一维 Haar 逆变换 |
+| `haar_transform_2d` | `(Image, levels?: Int) -> HaarWaveletResult` | 二维 Haar 变换 |
+| `haar_inverse_transform_2d` | `(HaarWaveletResult) -> Image` | 二维 Haar 逆变换 |
+| `haar_denoise` | `(Image, threshold?: Float, soft?: Bool, levels?: Int) -> Image` | Haar 小波去噪 |
+
+类型：`HaarWaveletResult` (width, height, channels : Int; ll : Array[Float]; lh, hl, hh : Array[Array[Float]]; levels : Int)
+
+### Harris 角点（2个函数 + 1个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `harris_corners` | `(Image, k?: Float, threshold?: Float, min_distance?: Int) -> Array[CornerPoint]` | Harris 角点检测 |
+| `draw_corners` | `(Image, Array[CornerPoint], color?: Array[Byte], radius?: Int) -> Image` | 绘制角点标记 |
+
+类型：`CornerPoint` (x, y : Int; response : Float)
+
+### 去雾（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `dehaze` | `(Image, patch_size?: Int, omega?: Float, t0?: Float) -> Image` | 暗通道先验去雾 |
+| `guided_filter` | `(Image, Array[Float], radius?: Int, eps?: Float) -> Array[Float]` | 引导滤波 |
+
+### 距离变换（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `distance_transform` | `(Image, distance_type?: Int) -> Array[Float]` | 距离变换（1=L1, 2=L2, 3=Linf） |
+| `distance_transform_visualize` | `(Array[Float], Int, Int) -> Image` | 距离场可视化 |
+| `skeletonize` | `(Image) -> Image` | 骨架化（基于距离变换） |
+
+### Gabor 滤波（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `gabor_filter` | `(Image, Int, Float, Float, lambda?: Float, gamma?: Float, phi?: Float) -> Image` | Gabor 滤波（大小，角度，sigma，...） |
+| `gabor_filter_bank` | `(Image, Int, Float, num_orientations?: Int, lambda?: Float, gamma?: Float) -> Image` | Gabor 滤波器组 |
+| `gabor_kernel` | `(Int, Float, Float, lambda?: Float, gamma?: Float, phi?: Float) -> Array[Array[Float]]` | 获取 Gabor 核 |
+
+### 工具函数（14个函数 + 1个类型）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `pad` | `(Image, Int, Int, Array[Byte]) -> Image` | 边缘填充（颜色） |
+| `add_border` | `(Image, Int, Int, Int, Int, Array[Byte]) -> Image` | 非对称边框 |
+| `resize_to_cover` | `(Image, Int, Int) -> Image` | 缩放至覆盖（裁剪多余） |
+| `resize_to_contain` | `(Image, Int, Int, Array[Byte]) -> Image` | 缩放至包含（填充余白） |
+| `threshold` | `(Image, Int) -> Image` | 二值阈值 |
+| `posterize` | `(Image, Int) -> Image` | 色调分离（减少色阶） |
+| `extract_channel` | `(Image, Int) -> Image` | 提取单通道 |
+| `swap_channels` | `(Image, Int, Int) -> Image` | 交换两通道 |
+| `set_alpha` | `(Image, Byte) -> Image` | 设置统一 Alpha |
+| `fill_alpha` | `(Image, Int, Byte, Byte, Byte) -> Image` | 用颜色填充 Alpha |
+| `apply_lut` | `(Image, Array[Byte]) -> Image` | 应用 256 项查找表 |
+| `gradient_map` | `(Image, Array[(Int, Byte, Byte, Byte)]) -> Image` | 渐变色彩映射 |
+| `compute_stats` | `(Image) -> ImageStats` | 计算图像统计 |
+| `mean_value` | `(Image) -> Float` | 平均像素值 |
+
+类型：`ImageStats` (min, max, mean, std_dev : Float; histogram : Array[Int])
+
+### 图像合成（5个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `hstack` | `(Image, Image) -> Image` | 水平拼接 |
+| `vstack` | `(Image, Image) -> Image` | 垂直拼接 |
+| `tile` | `(Image, Int, Int) -> Image` | 平铺（列数，行数） |
+| `flip_vertical` | `(Image) -> Image` | 垂直翻转 |
+| `transpose` | `(Image) -> Image` | 转置（交换 x/y） |
+
+### 噪声（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `add_noise_gaussian` | `(Image, Float, UInt) -> Image` | 添加高斯噪声（sigma，种子） |
+| `add_noise_salt_pepper` | `(Image, Float, UInt) -> Image` | 添加椒盐噪声（比例，种子） |
+
 ## 错误处理
 
 ```moonbit
@@ -308,26 +755,6 @@ try {
 
 `UnsupportedFormat` 和 `DecodeFailed` 无法精确区分；stb_image 返回 NULL 时默认为 `DecodeFailed`。使用 `failure_reason()` 获取 stb_image 内部错误字符串。
 
-## 架构
-
-五包架构，依赖向下流动：
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  根包           reexport.mbt（向后兼容API表面）             │
-│                 bench.mbt, roundtrip_test.mbt               │
-├─────────────────────────────────────────────────────────────┤
-│  子包           core/    process/  format/  meta/  util/    │
-│                 FFI类型   图像操作   编解码  EXIF  工具函数 │
-├─────────────────────────────────────────────────────────────┤
-│  FFI边界        core/ffi.mbt (extern "c")                   │
-│                 core/wrapper.c (ABI标准化)                  │
-├─────────────────────────────────────────────────────────────┤
-│  第三方代码     core/stb_image.h v2.30                      │
-│                 core/stb_image_write.h v1.16                │
-│                 core/stb_image_resize2.h v2.07              │
-└─────────────────────────────────────────────────────────────┘
-```
 
 ## 目标平台支持
 
@@ -364,7 +791,7 @@ moon info  # 输出 src/pkg.generated.mbti
 
 ```
 stb-image/
-├── moon.mod                  # 模块配置 (v1.10.0, preferred_target = native)
+├── moon.mod                  # 模块配置 (v1.17.0, preferred_target = native)
 ├── ROADMAP.md                # 迭代路线图
 ├── COMPARISON.md             # mooncakes.io 图像库对比
 ├── SKILL.md                  # 包使用指南
@@ -445,6 +872,12 @@ stb-image/
 | **v1.8** | **更多混合模式 + 统计 + pixelate/replace_color/convolve/swap_channels** | **292+29** |
 | **v1.9** | **hstack/vstack/tile/transpose + 噪声 + LUT/gradient_map + Alpha操作** | **315+29** |
 | **v1.10** | **形态学(erode/dilate/open/close) + Laplacian/Prewitt边缘 + MSE/PSNR/SSIM** | **341+29** |
+| **v1.12** | **6种混合模式 + CLAHE + K-means量化 + FFT频域变换** | **369+29** |
+| **v1.13** | **频域滤波 + 自适应阈值 + 连通域标记 + 积分图像** | **402+29** |
+| **v1.14** | **霍夫变换 + LBP + 图像金字塔 + 双边滤波** | **433+29** |
+| **v1.15** | **轮廓提取 + 颜色分割 + NLM 去噪 + Retinex** | **472+29** |
+| **v1.16** | **Canny 边缘 + 分水岭 + GLCM 纹理 + Haar 小波** | **501+29** |
+| **v1.17** | **Harris 角点 + 去雾 + 距离变换 + Gabor 滤波** | **533+29** |
 
 ## 上游
 

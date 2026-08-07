@@ -1,6 +1,6 @@
 name = "MoonBit-Toadium/stb-image"
 
-version = "1.10.0"
+version = "1.17.0"
 
 license = "MIT"
 

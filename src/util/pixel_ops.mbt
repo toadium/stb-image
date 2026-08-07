@@ -191,3 +191,113 @@ pub fn blend_exclusion(base : @core.Image, blend : @core.Image) -> @core.Image r
   }
   @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
 }
+
+///|
+/// 颜色减淡。result = base * 255 / (255 - blend)，blend=255 时结果为 255。
+pub fn blend_color_dodge(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = if l == 255 {
+      b'\xFF'
+    } else {
+      clamp_byte_v(b * 255 / (255 - l))
+    }
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 颜色加深。result = 255 - (255 - base) * 255 / blend，blend=0 时结果为 0。
+pub fn blend_color_burn(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = if l == 0 {
+      b'\x00'
+    } else {
+      clamp_byte_v(255 - (255 - b) * 255 / l)
+    }
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 强光。blend < 128 时用颜色加深，否则用颜色减淡。
+pub fn blend_hard_light(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = if l < 128 {
+      clamp_byte_v(2 * b * l / 255)
+    } else {
+      clamp_byte_v(255 - 2 * (255 - b) * (255 - l) / 255)
+    }
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 柔光。基于 blend 的亮度在乘法和滤色之间平滑过渡。
+/// result = (1 - 2*blend/255) * base^2/255 + (2*blend/255) * base
+pub fn blend_soft_light(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    let w = 2 * l
+    out[i] = clamp_byte_v((255 - w) * b * b / (255 * 255) + w * b / 255)
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 线性减淡（相加）。result = min(base + blend, 255)。
+pub fn blend_linear_dodge(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = clamp_byte_v(b + l)
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
+
+///|
+/// 线性加深（相减）。result = max(base + blend - 255, 0)。
+pub fn blend_linear_burn(base : @core.Image, blend : @core.Image) -> @core.Image raise @core.LoadError {
+  if base.width != blend.width || base.height != blend.height || base.channels != blend.channels {
+    raise @core.LoadError::DecodeFailed("blend 两图尺寸/通道数必须相同")
+  }
+  let n = base.width * base.height * base.channels
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let b = base.data[i].to_int()
+    let l = blend.data[i].to_int()
+    out[i] = clamp_byte_v(b + l - 255)
+  }
+  @core.Image::{ width: base.width, height: base.height, channels: base.channels, data: Bytes::from_array(out) }
+}
