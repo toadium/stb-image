@@ -510,3 +510,335 @@ test "bench: nlm_denoise_fast 32x32" (b : @bench.T) {
     }
   })
 }
+
+// 生成 64x64 渐变灰度图（带噪声，用于 ssim 等需要两幅图的基准）
+
+///|
+fn bench_make_gradient_64_noisy() -> @core.Image {
+  let w = 64
+  let h = 64
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x + y + x * 7 % 13) % 256).to_byte()
+    }
+  }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+}
+
+///|
+test "bench: bilateral_filter 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @filter.bilateral_filter(img, 2, 3.0F, 30.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: canny_edge 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @edge.canny_edge(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: hough_lines 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @edge.hough_lines(img, 50)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: find_contours 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @edge.find_contours(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: clahe 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @color.clahe(img, 8, 3.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: dehaze 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @color.dehaze(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: msr 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @color.msr(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: adaptive_threshold_mean 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @color.adaptive_threshold_mean(img, 5, 2)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: haar_transform_2d 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @frequency.haar_transform_2d(img, levels=3)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: freq_filter 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @frequency.freq_filter(
+        img,
+        @frequency.FreqFilterType::LowPass,
+        16.0F,
+      )
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: warp_affine 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    let r = @transform.warp_affine(
+      img,
+      (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F),
+      64,
+      64,
+    )
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: pyr_down 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @transform.pyr_down(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: draw_over 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @transform.draw_over(img, img, 0, 0)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: compute_glcm 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @feature.compute_glcm(img, 1, 0)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: integral_image 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @feature.integral_image(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: harris_corners 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @feature.harris_corners(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: gabor_filter 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @feature.gabor_filter(img, 5, 2.0F, 0.0F)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: lbp 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @feature.lbp(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: ssim 64x64" (b : @bench.T) {
+  let img1 = bench_make_gradient_64()
+  let img2 = bench_make_gradient_64_noisy()
+  b.bench(fn() {
+    let r = @feature.ssim(img1, img2)
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: connected_components 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let (labels, count) = @segment.connected_components(img, 4)
+      b.keep(labels)
+      b.keep(count)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: distance_transform 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @segment.distance_transform(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: kmeans_segment 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let (labels, regions) = @color.kmeans_segment(img, 4)
+      b.keep(labels)
+      b.keep(regions)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: erode 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    let r = @segment.erode(img)
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: k_means_quantize 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @segment.k_means_quantize(img, 4, 10)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
