@@ -219,11 +219,13 @@ pub fn watershed_auto(
       }
       if is_min && markers[idx] == 0 {
         current_label += 1
-        // BFS 标记连通的等值像素
+        // BFS 标记连通的等值像素（head 指针队列，避免 remove 开销）
         let stack : Array[Int] = [idx]
+        let mut sp = 0
         markers[idx] = current_label
-        while stack.length() > 0 {
-          let pidx = stack.remove(stack.length() - 1)
+        while sp < stack.length() {
+          let pidx = stack[sp]
+          sp += 1
           let px = pidx % w
           let py = pidx / w
           for dy in -1..<=1 {

@@ -55,21 +55,20 @@ pub fn bilateral_filter(
   let x_inner_end = w - radius
   let y_inner_start = radius
   let y_inner_end = h - radius
-  for c in 0..<color_ch {
+  if color_ch == 1 {
+    // color_ch=1 特化：消除内层通道循环和乘法
     for y in 0..<h {
       let y_inner = y >= y_inner_start && y < y_inner_end
       for x in 0..<w {
-        let center_idx = (y * w + x) * color_ch + c
-        let center_val = src[center_idx]
+        let center_val = src[y * w + x]
         let mut weight_sum = 0.0F
         let mut value_sum = 0.0F
         if y_inner && x >= x_inner_start && x < x_inner_end {
-          // 内部区域：所有邻居都在图像内
           for dy in -radius..<=radius {
-            let row = (y + dy) * w
+            let row = (y + dy) * w + x
             let sw_base = (dy + radius) * sw_size
             for dx in -radius..<=radius {
-              let neighbor_val = src[(row + x + dx) * color_ch + c]
+              let neighbor_val = src[row + dx]
               let color_diff = (neighbor_val - center_val).to_int()
               let abs_diff = if color_diff < 0 {
                 -color_diff
@@ -83,7 +82,6 @@ pub fn bilateral_filter(
             }
           }
         } else {
-          // 边界区域：需要边界检查
           for dy in -radius..<=radius {
             let ny = y + dy
             if ny < 0 || ny >= h {
@@ -95,7 +93,7 @@ pub fn bilateral_filter(
               if nx < 0 || nx >= w {
                 continue
               }
-              let neighbor_val = src[(ny * w + nx) * color_ch + c]
+              let neighbor_val = src[ny * w + nx]
               let color_diff = (neighbor_val - center_val).to_int()
               let abs_diff = if color_diff < 0 {
                 -color_diff
@@ -121,7 +119,78 @@ pub fn bilateral_filter(
         } else {
           v.to_int()
         }
-        out[(y * w + x) * ch + c] = clamped.to_byte()
+        out[y * w + x] = clamped.to_byte()
+      }
+    }
+  } else {
+    for c in 0..<color_ch {
+      for y in 0..<h {
+        let y_inner = y >= y_inner_start && y < y_inner_end
+        for x in 0..<w {
+          let center_idx = (y * w + x) * color_ch + c
+          let center_val = src[center_idx]
+          let mut weight_sum = 0.0F
+          let mut value_sum = 0.0F
+          if y_inner && x >= x_inner_start && x < x_inner_end {
+            // 内部区域：所有邻居都在图像内
+            for dy in -radius..<=radius {
+              let row = (y + dy) * w
+              let sw_base = (dy + radius) * sw_size
+              for dx in -radius..<=radius {
+                let neighbor_val = src[(row + x + dx) * color_ch + c]
+                let color_diff = (neighbor_val - center_val).to_int()
+                let abs_diff = if color_diff < 0 {
+                  -color_diff
+                } else {
+                  color_diff
+                }
+                let weight = spatial_weights[sw_base + dx + radius] *
+                  color_lut[abs_diff]
+                value_sum += neighbor_val * weight
+                weight_sum += weight
+              }
+            }
+          } else {
+            // 边界区域：需要边界检查
+            for dy in -radius..<=radius {
+              let ny = y + dy
+              if ny < 0 || ny >= h {
+                continue
+              }
+              let sw_base = (dy + radius) * sw_size
+              for dx in -radius..<=radius {
+                let nx = x + dx
+                if nx < 0 || nx >= w {
+                  continue
+                }
+                let neighbor_val = src[(ny * w + nx) * color_ch + c]
+                let color_diff = (neighbor_val - center_val).to_int()
+                let abs_diff = if color_diff < 0 {
+                  -color_diff
+                } else {
+                  color_diff
+                }
+                let weight = spatial_weights[sw_base + dx + radius] *
+                  color_lut[abs_diff]
+                value_sum += neighbor_val * weight
+                weight_sum += weight
+              }
+            }
+          }
+          let v = if weight_sum > 0.0F {
+            value_sum / weight_sum
+          } else {
+            center_val
+          }
+          let clamped = if v < 0.0F {
+            0
+          } else if v > 255.0F {
+            255
+          } else {
+            v.to_int()
+          }
+          out[(y * w + x) * ch + c] = clamped.to_byte()
+        }
       }
     }
   }
