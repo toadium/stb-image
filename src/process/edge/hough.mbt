@@ -40,6 +40,9 @@ pub fn hough_lines(
     cos_table[t] = @math.cosf(angle)
     sin_table[t] = @math.sinf(angle)
   }
+  // 预计算 1/rho_resolution，用乘法替代除法
+  let inv_rho_res = 1.0F / rho_resolution
+  let rho_max_idx = n_rho - 1
   // 预计算首通道 to_int（只看第一个通道判断边缘）
   let data_int : Array[Int] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
@@ -56,10 +59,15 @@ pub fn hough_lines(
       let fx = Float::from_int(x)
       for t in 0..<n_theta {
         let rho = fx * cos_table[t] + fy * sin_table[t]
-        let rho_idx = ((rho / rho_resolution).to_int() + max_rho).clamp(
-          min=0,
-          max=n_rho - 1,
-        )
+        let raw_idx = (rho * inv_rho_res).to_int() + max_rho
+        // 内联 clamp，避免方法调用开销
+        let rho_idx = if raw_idx < 0 {
+          0
+        } else if raw_idx > rho_max_idx {
+          rho_max_idx
+        } else {
+          raw_idx
+        }
         accumulator[rho_idx * n_theta + t] += 1
       }
     }

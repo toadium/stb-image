@@ -44,6 +44,7 @@ pub fn nlm_denoise(
     pixels[i] = img.data[i].to_int()
   }
   let denom = Float::from_int(h_sq * patch_area)
+  let early_term = (denom * 6.907755278982137F).to_int()
   let inner_start = search_d + patch_d
   // 内部区域：搜索窗口和块都完全在图像内
   for y in inner_start..<(h_img - inner_start) {
@@ -59,8 +60,11 @@ pub fn nlm_denoise(
           let row_sy = sy * w
           for sx in (x - search_d)..<=(x + search_d) {
             let dist = patch_distance_inner(
-              pixels, x, y, sx, sy, w, ch, c, patch_d,
+              pixels, x, y, sx, sy, w, ch, c, patch_d, early_term,
             )
+            if dist >= early_term {
+              continue
+            }
             let weight = @math.expf(Float::from_int(-dist) / denom)
             weight_sum += weight
             value_sum += weight *
@@ -101,8 +105,11 @@ pub fn nlm_denoise(
         for sy in sy_start..<=sy_end {
           for sx in sx_start..<=sx_end {
             let dist = patch_distance_fast(
-              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d,
+              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d, early_term,
             )
+            if dist >= early_term {
+              continue
+            }
             let weight = @math.expf(Float::from_int(-dist) / denom)
             weight_sum += weight
             value_sum += weight *
@@ -138,6 +145,7 @@ fn patch_distance_inner(
   ch : Int,
   c : Int,
   patch_d : Int,
+  early_term : Int,
 ) -> Int {
   let mut dist = 0
   for dy in -patch_d..<=patch_d {
@@ -148,6 +156,9 @@ fn patch_distance_inner(
       let v2 = pixels[(row2 + x2 + dx) * ch + c]
       let diff = v1 - v2
       dist += diff * diff
+      if dist >= early_term {
+        return dist
+      }
     }
   }
   dist
@@ -166,6 +177,7 @@ fn patch_distance_fast(
   ch : Int,
   c : Int,
   patch_d : Int,
+  early_term : Int,
 ) -> Int {
   let mut dist = 0
   let w_max = w - 1
@@ -209,6 +221,9 @@ fn patch_distance_fast(
       let v2 = pixels[(py2 * w + px2) * ch + c]
       let diff = v1 - v2
       dist += diff * diff
+      if dist >= early_term {
+        return dist
+      }
     }
   }
   dist
@@ -262,6 +277,7 @@ pub fn nlm_denoise_fast(
     pixels[i] = img.data[i].to_int()
   }
   let denom = Float::from_int(h_sq * patch_area)
+  let early_term = (denom * 6.907755278982137F).to_int()
   let inner_start = search_d + patch_d
   // 内部区域：搜索窗口和块都完全在图像内
   for y in inner_start..<(h_img - inner_start) {
@@ -281,8 +297,12 @@ pub fn nlm_denoise_fast(
           let sx_end = x + search_d
           while sx <= sx_end {
             let dist = patch_distance_inner(
-              pixels, x, y, sx, sy, w, ch, c, patch_d,
+              pixels, x, y, sx, sy, w, ch, c, patch_d, early_term,
             )
+            if dist >= early_term {
+              sx += step
+              continue
+            }
             let weight = @math.expf(Float::from_int(-dist) / denom)
             weight_sum += weight
             value_sum += weight *
@@ -327,8 +347,12 @@ pub fn nlm_denoise_fast(
           let mut sx = sx_start
           while sx <= sx_end {
             let dist = patch_distance_fast(
-              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d,
+              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d, early_term,
             )
+            if dist >= early_term {
+              sx += step
+              continue
+            }
             let weight = @math.expf(Float::from_int(-dist) / denom)
             weight_sum += weight
             value_sum += weight *
