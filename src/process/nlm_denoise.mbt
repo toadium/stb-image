@@ -38,6 +38,11 @@ pub fn nlm_denoise(
   let search_d = search_size
   // 预计算常数
   let patch_area = (2 * patch_d + 1) * (2 * patch_d + 1)
+  // 预计算像素 Int 数组，避免重复 .to_int() 转换
+  let pixels : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    pixels[i] = img.data[i].to_int()
+  }
   for y in 0..<h_img {
     for x in 0..<w {
       for c in 0..<ch {
@@ -49,28 +54,32 @@ pub fn nlm_denoise(
         let mut weight_sum = 0.0F
         let mut value_sum = 0.0F
         // 搜索窗口
-        let sy_start = (y - search_d).clamp(min=0, max=h_img - 1)
-        let sy_end = (y + search_d).clamp(min=0, max=h_img - 1)
-        let sx_start = (x - search_d).clamp(min=0, max=w - 1)
-        let sx_end = (x + search_d).clamp(min=0, max=w - 1)
+        let sy_start = if y - search_d < 0 { 0 } else { y - search_d }
+        let sy_end = if y + search_d > h_img - 1 {
+          h_img - 1
+        } else {
+          y + search_d
+        }
+        let sx_start = if x - search_d < 0 { 0 } else { x - search_d }
+        let sx_end = if x + search_d > w - 1 { w - 1 } else { x + search_d }
         for sy in sy_start..<=sy_end {
           for sx in sx_start..<=sx_end {
             // 计算块距离
-            let dist = patch_distance(
-              img, x, y, sx, sy, w, h_img, ch, c, patch_d,
+            let dist = patch_distance_fast(
+              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d,
             )
             let weight = @math.expf(
               Float::from_int(-dist) / Float::from_int(h_sq * patch_area),
             )
             weight_sum += weight
             value_sum += weight *
-              Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
+              Float::from_int(pixels[(sy * w + sx) * ch + c])
           }
         }
         let val = if weight_sum > 0.0F {
           (value_sum / weight_sum).to_int()
         } else {
-          img.data[(y * w + x) * ch + c].to_int()
+          pixels[(y * w + x) * ch + c]
         }
         out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
       }
@@ -85,9 +94,9 @@ pub fn nlm_denoise(
 }
 
 ///|
-/// 计算两个像素块之间的平方距离
-fn patch_distance(
-  img : @core.Image,
+/// 计算两个像素块之间的平方距离（使用预计算 Int 数组，内联边界检查）
+fn patch_distance_fast(
+  pixels : Array[Int],
   x1 : Int,
   y1 : Int,
   x2 : Int,
@@ -99,20 +108,53 @@ fn patch_distance(
   patch_d : Int,
 ) -> Int {
   let mut dist = 0
+  let w_max = w - 1
+  let h_max = h - 1
   for dy in -patch_d..<=patch_d {
     for dx in -patch_d..<=patch_d {
-      let px1 = (x1 + dx).clamp(min=0, max=w - 1)
-      let py1 = (y1 + dy).clamp(min=0, max=h - 1)
-      let px2 = (x2 + dx).clamp(min=0, max=w - 1)
-      let py2 = (y2 + dy).clamp(min=0, max=h - 1)
-      let v1 = img.data[(py1 * w + px1) * ch + c].to_int()
-      let v2 = img.data[(py2 * w + px2) * ch + c].to_int()
+      // 内联边界检查，避免 clamp 方法调用
+      let raw1x = x1 + dx
+      let raw1y = y1 + dy
+      let raw2x = x2 + dx
+      let raw2y = y2 + dy
+      let px1 = if raw1x < 0 {
+        0
+      } else if raw1x > w_max {
+        w_max
+      } else {
+        raw1x
+      }
+      let py1 = if raw1y < 0 {
+        0
+      } else if raw1y > h_max {
+        h_max
+      } else {
+        raw1y
+      }
+      let px2 = if raw2x < 0 {
+        0
+      } else if raw2x > w_max {
+        w_max
+      } else {
+        raw2x
+      }
+      let py2 = if raw2y < 0 {
+        0
+      } else if raw2y > h_max {
+        h_max
+      } else {
+        raw2y
+      }
+      let v1 = pixels[(py1 * w + px1) * ch + c]
+      let v2 = pixels[(py2 * w + px2) * ch + c]
       let diff = v1 - v2
       dist += diff * diff
     }
   }
   dist
 }
+
+///|
 
 ///|
 /// 快速 NLM 去噪（降采样搜索）。
@@ -154,6 +196,11 @@ pub fn nlm_denoise_fast(
   let patch_d = patch_size
   let search_d = search_size
   let patch_area = (2 * patch_d + 1) * (2 * patch_d + 1)
+  // 预计算像素 Int 数组
+  let pixels : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    pixels[i] = img.data[i].to_int()
+  }
   for y in 0..<h_img {
     for x in 0..<w {
       for c in 0..<ch {
@@ -163,23 +210,27 @@ pub fn nlm_denoise_fast(
         }
         let mut weight_sum = 0.0F
         let mut value_sum = 0.0F
-        let sy_start = (y - search_d).clamp(min=0, max=h_img - 1)
-        let sy_end = (y + search_d).clamp(min=0, max=h_img - 1)
-        let sx_start = (x - search_d).clamp(min=0, max=w - 1)
-        let sx_end = (x + search_d).clamp(min=0, max=w - 1)
+        let sy_start = if y - search_d < 0 { 0 } else { y - search_d }
+        let sy_end = if y + search_d > h_img - 1 {
+          h_img - 1
+        } else {
+          y + search_d
+        }
+        let sx_start = if x - search_d < 0 { 0 } else { x - search_d }
+        let sx_end = if x + search_d > w - 1 { w - 1 } else { x + search_d }
         let mut sy = sy_start
         while sy <= sy_end {
           let mut sx = sx_start
           while sx <= sx_end {
-            let dist = patch_distance(
-              img, x, y, sx, sy, w, h_img, ch, c, patch_d,
+            let dist = patch_distance_fast(
+              pixels, x, y, sx, sy, w, h_img, ch, c, patch_d,
             )
             let weight = @math.expf(
               Float::from_int(-dist) / Float::from_int(h_sq * patch_area),
             )
             weight_sum += weight
             value_sum += weight *
-              Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
+              Float::from_int(pixels[(sy * w + sx) * ch + c])
             sx += step
           }
           sy += step
@@ -187,7 +238,7 @@ pub fn nlm_denoise_fast(
         let val = if weight_sum > 0.0F {
           (value_sum / weight_sum).to_int()
         } else {
-          img.data[(y * w + x) * ch + c].to_int()
+          pixels[(y * w + x) * ch + c]
         }
         out[(y * w + x) * ch + c] = val.clamp(min=0, max=255).to_byte()
       }

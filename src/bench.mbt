@@ -394,3 +394,119 @@ test "bench: decode_any" (b : @bench.T) {
     }
   })
 }
+
+// 生成 64x64 渐变灰度图用于大图基准测试
+
+///|
+fn bench_make_gradient_64() -> @core.Image {
+  let w = 64
+  let h = 64
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x + y) % 256).to_byte()
+    }
+  }
+  @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+}
+
+///|
+test "bench: fft_2d 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let r = @process.fft_2d(img)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: ifft_2d 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  let fft = try! @process.fft_2d(img)[0]
+  b.bench(fn() {
+    let r = @process.ifft_2d(fft)
+    b.keep(r)
+  })
+}
+
+///|
+test "bench: watershed_auto 64x64" (b : @bench.T) {
+  let img = bench_make_gradient_64()
+  b.bench(fn() {
+    try {
+      let (labels, count) = @process.watershed_auto(img)
+      b.keep(labels)
+      b.keep(count)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: nlm_denoise 32x32" (b : @bench.T) {
+  // 32x32 渐变图（NLM 复杂度高，用较小尺寸）
+  let w = 32
+  let h = 32
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x * 4 + y * 4) % 256).to_byte()
+    }
+  }
+  let img = @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  b.bench(fn() {
+    try {
+      let r = @process.nlm_denoise(img, patch_size=2, search_size=5, h=10)
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}
+
+///|
+test "bench: nlm_denoise_fast 32x32" (b : @bench.T) {
+  let w = 32
+  let h = 32
+  let data : Array[Byte] = Array::make(w * h, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      data[y * w + x] = ((x * 4 + y * 4) % 256).to_byte()
+    }
+  }
+  let img = @core.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  b.bench(fn() {
+    try {
+      let r = @process.nlm_denoise_fast(
+        img,
+        patch_size=2,
+        search_size=5,
+        h=10,
+        step=2,
+      )
+      b.keep(r)
+    } catch {
+      _ => ()
+    }
+  })
+}

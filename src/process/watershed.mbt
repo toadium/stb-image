@@ -96,9 +96,11 @@ pub fn watershed(
         queue.push(idx)
       }
     }
-    // BFS 扩展
-    while queue.length() > 0 {
-      let idx = queue.remove(0)
+    // BFS 扩展（head 指针队列，O(1) dequeue 避免 remove(0) 的 O(n) 移压）
+    let mut q_head = 0
+    while q_head < queue.length() {
+      let idx = queue[q_head]
+      q_head += 1
       let x = idx % w
       let y = idx / w
       let mut label = 0

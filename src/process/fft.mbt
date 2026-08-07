@@ -38,35 +38,50 @@ fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
   let h = img.height
   let pw = next_pow2(w)
   let ph = next_pow2(h)
-  let data : Array[Complex] = Array::make(pw * ph, Complex::{
-    re: 0.0F,
-    im: 0.0F,
-  })
+  let n = pw * ph
+  // 分离实虚部数组，减少 Complex 对象分配，提升缓存局部性
+  let re : Array[Float] = Array::make(n, 0.0F)
+  let im : Array[Float] = Array::make(n, 0.0F)
   for y in 0..<h {
     for x in 0..<w {
-      let v = Float::from_int(img.data[(y * w + x) * ch + channel].to_int())
-      data[y * pw + x] = Complex::{ re: v, im: 0.0F }
+      re[y * pw + x] = Float::from_int(
+        img.data[(y * w + x) * ch + channel].to_int(),
+      )
     }
   }
-  let row = Array::make(pw, Complex::{ re: 0.0F, im: 0.0F })
+  // 行变换
+  let row_re : Array[Float] = Array::make(pw, 0.0F)
+  let row_im : Array[Float] = Array::make(pw, 0.0F)
   for y in 0..<ph {
+    let base = y * pw
     for x in 0..<pw {
-      row[x] = data[y * pw + x]
+      row_re[x] = re[base + x]
+      row_im[x] = im[base + x]
     }
-    fft_1d_inplace(row, false)
+    fft_1d_split(row_re, row_im, false)
     for x in 0..<pw {
-      data[y * pw + x] = row[x]
+      re[base + x] = row_re[x]
+      im[base + x] = row_im[x]
     }
   }
-  let col = Array::make(ph, Complex::{ re: 0.0F, im: 0.0F })
+  // 列变换
+  let col_re : Array[Float] = Array::make(ph, 0.0F)
+  let col_im : Array[Float] = Array::make(ph, 0.0F)
   for x in 0..<pw {
     for y in 0..<ph {
-      col[y] = data[y * pw + x]
+      col_re[y] = re[y * pw + x]
+      col_im[y] = im[y * pw + x]
     }
-    fft_1d_inplace(col, false)
+    fft_1d_split(col_re, col_im, false)
     for y in 0..<ph {
-      data[y * pw + x] = col[y]
+      re[y * pw + x] = col_re[y]
+      im[y * pw + x] = col_im[y]
     }
+  }
+  // 转换回 Array[Complex]
+  let data : Array[Complex] = Array::make(n, Complex::{ re: 0.0F, im: 0.0F })
+  for i in 0..<n {
+    data[i] = Complex::{ re: re[i], im: im[i] }
   }
   FFTResult::{ width: pw, height: ph, data }
 }
@@ -76,37 +91,47 @@ fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
 pub fn ifft_2d(fft : FFTResult) -> @core.Image {
   let pw = fft.width
   let ph = fft.height
-  let data : Array[Complex] = Array::make(pw * ph, Complex::{
-    re: 0.0F,
-    im: 0.0F,
-  })
-  for i in 0..<(pw * ph) {
-    data[i] = fft.data[i]
+  let n = pw * ph
+  // 分离实虚部数组
+  let re : Array[Float] = Array::make(n, 0.0F)
+  let im : Array[Float] = Array::make(n, 0.0F)
+  for i in 0..<n {
+    re[i] = fft.data[i].re
+    im[i] = fft.data[i].im
   }
-  let row = Array::make(pw, Complex::{ re: 0.0F, im: 0.0F })
+  // 行变换
+  let row_re : Array[Float] = Array::make(pw, 0.0F)
+  let row_im : Array[Float] = Array::make(pw, 0.0F)
   for y in 0..<ph {
+    let base = y * pw
     for x in 0..<pw {
-      row[x] = data[y * pw + x]
+      row_re[x] = re[base + x]
+      row_im[x] = im[base + x]
     }
-    fft_1d_inplace(row, true)
+    fft_1d_split(row_re, row_im, true)
     for x in 0..<pw {
-      data[y * pw + x] = row[x]
+      re[base + x] = row_re[x]
+      im[base + x] = row_im[x]
     }
   }
-  let col = Array::make(ph, Complex::{ re: 0.0F, im: 0.0F })
+  // 列变换
+  let col_re : Array[Float] = Array::make(ph, 0.0F)
+  let col_im : Array[Float] = Array::make(ph, 0.0F)
   for x in 0..<pw {
     for y in 0..<ph {
-      col[y] = data[y * pw + x]
+      col_re[y] = re[y * pw + x]
+      col_im[y] = im[y * pw + x]
     }
-    fft_1d_inplace(col, true)
+    fft_1d_split(col_re, col_im, true)
     for y in 0..<ph {
-      data[y * pw + x] = col[y]
+      re[y * pw + x] = col_re[y]
+      im[y * pw + x] = col_im[y]
     }
   }
-  let norm = Float::from_int(pw * ph)
-  let out : Array[Byte] = Array::make(pw * ph, b'\x00')
-  for i in 0..<(pw * ph) {
-    let v = data[i].re / norm
+  let norm = Float::from_int(n)
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let v = re[i] / norm
     let clamped = if v < 0.0F {
       0
     } else if v > 255.0F {
@@ -186,14 +211,14 @@ pub fn fft_shift(fft : FFTResult) -> FFTResult {
 }
 
 ///|
-/// 1D 原地 FFT（Cooley-Tukey radix-2）
+/// 1D 原地 FFT（Cooley-Tukey radix-2），分离实虚部数组版本
 /// inverse=true 时做逆变换（不含归一化，归一化由调用方负责）
-fn fft_1d_inplace(a : Array[Complex], inverse : Bool) -> Unit {
-  let n = a.length()
+fn fft_1d_split(re : Array[Float], im : Array[Float], inverse : Bool) -> Unit {
+  let n = re.length()
   if n <= 1 {
     return
   }
-  bit_reverse(a)
+  bit_reverse_split(re, im)
   let sign : Float = if inverse { 1.0F } else { -1.0F }
   let mut size = 2
   while size <= n {
@@ -208,10 +233,16 @@ fn fft_1d_inplace(a : Array[Complex], inverse : Bool) -> Unit {
       for j in 0..<half {
         let idx1 = i + j
         let idx2 = i + j + half
-        let tr = wr * a[idx2].re - wi * a[idx2].im
-        let ti = wr * a[idx2].im + wi * a[idx2].re
-        a[idx2] = Complex::{ re: a[idx1].re - tr, im: a[idx1].im - ti }
-        a[idx1] = Complex::{ re: a[idx1].re + tr, im: a[idx1].im + ti }
+        let a2_re = re[idx2]
+        let a2_im = im[idx2]
+        let tr = wr * a2_re - wi * a2_im
+        let ti = wr * a2_im + wi * a2_re
+        let a1_re = re[idx1]
+        let a1_im = im[idx1]
+        re[idx2] = a1_re - tr
+        im[idx2] = a1_im - ti
+        re[idx1] = a1_re + tr
+        im[idx1] = a1_im + ti
         let new_wr = wr * w_re - wi * w_im
         let new_wi = wr * w_im + wi * w_re
         wr = new_wr
@@ -224,15 +255,18 @@ fn fft_1d_inplace(a : Array[Complex], inverse : Bool) -> Unit {
 }
 
 ///|
-fn bit_reverse(a : Array[Complex]) -> Unit {
-  let n = a.length()
+fn bit_reverse_split(re : Array[Float], im : Array[Float]) -> Unit {
+  let n = re.length()
   let bits = log2_int(n)
   for i in 0..<n {
     let j = bit_reverse_int(i, bits)
     if j > i {
-      let tmp = a[i]
-      a[i] = a[j]
-      a[j] = tmp
+      let tmp_re = re[i]
+      let tmp_im = im[i]
+      re[i] = re[j]
+      im[i] = im[j]
+      re[j] = tmp_re
+      im[j] = tmp_im
     }
   }
 }

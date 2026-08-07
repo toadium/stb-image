@@ -2,6 +2,7 @@
 // 规范: https://qoiformat.org/qoi-specification.pdf
 
 // QOI 哈希函数: (r*3 + g*5 + b*7 + a*11) % 64
+
 ///|
 fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int {
   (r * 3 + g * 5 + b * 7 + a * 11) % 64

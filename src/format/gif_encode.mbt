@@ -2,6 +2,7 @@
 // 单帧 GIF89a，使用 3-3-2 均匀量化（256 色调色板）+ LZW 压缩
 
 // 3-3-2 量化: R 8 levels, G 8 levels, B 4 levels = 256 colors
+
 ///|
 fn quantize_332(r : Int, g : Int, b : Int) -> Int {
   let r_level = (r >> 5) & 0x07
