@@ -37,7 +37,7 @@ MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/
 ## 安装
 
 ```bash
-moon add MoonBit-Toadium/stb-image
+moon add toadium/stb-image
 ```
 
 ## 快速上手
