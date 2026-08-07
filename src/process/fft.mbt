@@ -160,7 +160,7 @@ pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @core.Image {
   for i in 0..<n {
     let re = fft.data[i].re
     let im = fft.data[i].im
-    let mag = @math.powf(re * re + im * im, 0.5F)
+    let mag = (re * re + im * im).sqrt()
     let m = if log_scale {
       Float::from_double(@math.log2(mag.to_double() + 1.0) * 0.6931471805599453)
     } else {

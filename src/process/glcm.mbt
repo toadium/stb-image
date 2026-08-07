@@ -124,8 +124,8 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
       var_j += p * (Float::from_int(j) - mean_j) * (Float::from_int(j) - mean_j)
     }
   }
-  let std_i = @math.powf(var_i, 0.5F)
-  let std_j = @math.powf(var_j, 0.5F)
+  let std_i = var_i.sqrt()
+  let std_j = var_j.sqrt()
   // 计算特征
   let mut contrast = 0.0F
   let mut correlation = 0.0F
@@ -156,7 +156,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
   GlcmFeatures::{
     contrast,
     correlation,
-    energy: @math.powf(asm_val, 0.5F),
+    energy: asm_val.sqrt(),
     homogeneity,
     entropy,
     asm_value: asm_val,

@@ -163,7 +163,7 @@ pub fn contour_perimeter(contour : Contour) -> Float {
     let j = (i + 1) % pts.length()
     let dx = pts[i].x - pts[j].x
     let dy = pts[i].y - pts[j].y
-    perim += @math.powf(Float::from_int(dx * dx + dy * dy), 0.5F)
+    perim += Float::from_int(dx * dx + dy * dy).sqrt()
   }
   perim
 }

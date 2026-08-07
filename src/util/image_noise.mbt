@@ -27,7 +27,7 @@ fn lcg_gaussian(rng : LCG) -> Float {
   let safe_u1 = if u1 < 0.0001F { 0.0001F } else { u1 }
   // ln(x) = log2(x) * ln(2), sqrt(x) = powf(x, 0.5)
   let ln_u1 = @math.log2(safe_u1.to_double()) * 0.6931471805599453
-  let r = @math.powf(Float::from_double(ln_u1 * -2.0), 0.5F)
+  let r = Float::from_double(ln_u1 * -2.0).sqrt()
   r * @math.cosf(2.0F * 3.14159265F * u2)
 }
 

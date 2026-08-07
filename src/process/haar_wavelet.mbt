@@ -18,13 +18,14 @@ pub fn haar_transform_1d(data : Array[Float]) -> Array[Float] {
     return data.copy()
   }
   let out = data.copy()
+  let sqrt2 = 2.0F.sqrt()
   let mut len = n
   while len > 1 {
     let half = len / 2
     let temp : Array[Float] = Array::make(len, 0.0F)
     for i in 0..<half {
-      temp[i] = (out[2 * i] + out[2 * i + 1]) / @math.powf(2.0F, 0.5F)
-      temp[half + i] = (out[2 * i] - out[2 * i + 1]) / @math.powf(2.0F, 0.5F)
+      temp[i] = (out[2 * i] + out[2 * i + 1]) / sqrt2
+      temp[half + i] = (out[2 * i] - out[2 * i + 1]) / sqrt2
     }
     for i in 0..<len {
       out[i] = temp[i]
@@ -42,14 +43,15 @@ pub fn haar_inverse_transform_1d(data : Array[Float]) -> Array[Float] {
     return data.copy()
   }
   let out = data.copy()
+  let sqrt2 = 2.0F.sqrt()
   // 从最小级别开始逆变换
   let mut len = 2
   while len <= n {
     let half = len / 2
     let temp : Array[Float] = Array::make(len, 0.0F)
     for i in 0..<half {
-      temp[2 * i] = (out[i] + out[half + i]) / @math.powf(2.0F, 0.5F)
-      temp[2 * i + 1] = (out[i] - out[half + i]) / @math.powf(2.0F, 0.5F)
+      temp[2 * i] = (out[i] + out[half + i]) / sqrt2
+      temp[2 * i + 1] = (out[i] - out[half + i]) / sqrt2
     }
     for i in 0..<len {
       out[i] = temp[i]

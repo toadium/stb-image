@@ -39,10 +39,7 @@ pub fn freq_filter(
     for i in 0..<n {
       let y = i / w
       let x = i % w
-      let dist = @math.powf(
-        Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)),
-        0.5F,
-      )
+      let dist = Float::from_int((x - cx) * (x - cx) + (y - cy) * (y - cy)).sqrt()
       let gain = filter_gain(filter_type, dist, cutoff, band_width)
       out_data[i] = Complex::{
         re: shifted.data[i].re * gain,

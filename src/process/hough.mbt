@@ -26,7 +26,7 @@ pub fn hough_lines(
   let ch = img.channels
   // 角度范围 0~180 度
   let n_theta = (180.0F / theta_resolution).to_int()
-  let diag = @math.powf(Float::from_int(w * w + h * h), 0.5F)
+  let diag = Float::from_int(w * w + h * h).sqrt()
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
   // 累加器
