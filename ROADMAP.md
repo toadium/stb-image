@@ -13,6 +13,7 @@
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
+- **五子包架构**：core（FFI+类型）/ process（图像处理）/ format（编解码）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
 
 **主要差距**（对比 5 个已有库）：
 | 缺失功能 | 已有此功能的库 | 实现路径 |
@@ -191,6 +192,22 @@
 
 ---
 
+## v1.10.1 — 子包重构 + 代码清理 ✅
+
+**目标**：将单包拆分为多子包，提升可维护性
+
+### 功能
+1. **五子包架构** — `core/`（FFI+类型+加载/写入/缩放+检测+ICO）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
+2. **reexport.mbt** — 根包 re-export 保持向后兼容 API（`pub let` 用于普通函数，`pub fn` 包装器用于带标签参数的函数）
+3. **双语 README** — `README.md`（英文）+ `README.zh.md`（中文），顶部语言切换链接
+4. **警告清理** — 删除未使用的 test_helpers，0 警告 0 错误
+
+### 交付物
+- 341 测试 + 29 基准测试，0 警告
+- 五子包 + reexport，向后兼容
+
+---
+
 ## v2.0 — 多目标支持（架构升级）
 
 **目标**：支持 wasm/js 目标，与 mizchi 拉平
@@ -257,6 +274,7 @@
 | **v1.8** | **更多 blend + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** | **中** |
 | **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** | **中** |
 | **v1.10** | **morphology + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** | **中** |
+| **v1.10.1** | **子包重构 + 双语README + 警告清理** | **341+29** | **中** |
 | v2.0 | 多目标支持 | — | 中 — 架构升级 |
 | v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
 
