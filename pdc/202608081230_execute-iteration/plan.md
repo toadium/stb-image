@@ -573,3 +573,52 @@
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @color（line 6，路径 `src/process/color` 无别名，引用前缀 `@color`）
 - `roundtrip_test.mbt` 现有 color 测试模式（line 270-271）：`@color.to_rgba` / `@color.to_rgb`，引用前缀 `@color`
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R27 PASSED v2.0 pure 包色彩转换（grayscale/rgb/rgba/premultiply，纯 MoonBit，全目标） [ID: T14]
+结果：在 `src/pure/` 新增 `color_convert.mbt`（5 个色彩转换函数 to_grayscale_pure/to_rgb_pure/to_rgba_pure/premultiply_alpha_pure/unpremultiply_alpha_pure，移植自 `src/process/color/color_convert.mbt:1-162`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `color_convert_test.mbt`（10 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 683/683 通过（668→683，+10 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R27 NEW v2.0 pure 包色彩调整（brightness/contrast/gamma/invert + HSV/HSL，纯 MoonBit，全目标） [ID: T15]
+任务：在 `src/pure/` 新增 `color_adjust.mbt`，移植 `src/process/color/color_adjust.mbt:1-264` 的 8 个色彩调整函数（adjust_brightness/adjust_contrast/adjust_gamma/invert/rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.powf` 保留（pure 包 moon.pkg 新增 `moonbitlang/core/math` import，全目标标准库可用）。新增 `src/pure/color_adjust_test.mbt` 10 个纯逻辑测试（全目标，覆盖 brightness delta=0/正常、contrast factor=1.0/正常、gamma=1.0/正常、invert 正常/二次反色=原色、HSV roundtrip、HSL roundtrip）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试（adjust_brightness/adjust_contrast/adjust_gamma/invert，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 683→697 通过。
+选择理由：
+- T14 已完成色彩转换（grayscale/rgb/rgba/premultiply），色彩调整（brightness/contrast/gamma/invert + HSV/HSL）是同主题自然延伸，pure 包图像处理能力逐步完整
+- `src/process/color/color_adjust.mbt:1-264` 的 8 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image 类型 + @math.powf，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用 + 新增 @math import，与 T13（几何变换移植）、T14（色彩转换移植）同构，技术风险极低
+- 色彩调整（亮度/对比度/gamma/反色 + HSV/HSL 色彩空间转换）是最常用图像操作，补齐后 pure 包从"编解码 + 几何变换 + 色彩转换"升级为"编解码 + 几何变换 + 色彩转换 + 色彩调整"，实用价值显著提升
+- `@math.powf` 是 moonbitlang/core 标准库全目标可用（adjust_gamma 用），pure 包 moon.pkg 新增 import 即可，无架构改动
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，色彩调整仅依赖 @types + @math，全目标可用
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（滤波/直方图等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8），全目标可用
+- T14 产出：pure 包色彩转换，native 683 测试通过
+- `src/process/color/color_adjust.mbt:18-41`：`pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image`，LUT 加速亮度调整，纯 MoonBit
+- `src/process/color/color_adjust.mbt:46-70`：`pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image`，以 128 为中心缩放，纯 MoonBit
+- `src/process/color/color_adjust.mbt:75-102`：`pub fn adjust_gamma(img : @core.Image, gamma : Float) -> @core.Image`，LUT + @math.powf，纯 MoonBit
+- `src/process/color/color_adjust.mbt:106-125`：`pub fn invert(img : @core.Image) -> @core.Image`，new=255-old，纯 MoonBit
+- `src/process/color/color_adjust.mbt:130-150`：`pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float)`，RGB→HSV，纯 MoonBit
+- `src/process/color/color_adjust.mbt:155-197`：`pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int)`，HSV→RGB，纯 MoonBit
+- `src/process/color/color_adjust.mbt:198-226`：`pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float)`，RGB→HSL，纯 MoonBit
+- `src/process/color/color_adjust.mbt:227-264`：`pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int)`，HSL→RGB，纯 MoonBit
+- `src/process/color/color_adjust.mbt:80`：`@math.powf(normalized, gamma)`，唯一 @math 引用，moonbitlang/core/math 全目标可用
+- `src/process/color/moon.pkg`：import core + math，supported_targets = "native"（color 包其他文件用 math，color_adjust.mbt 仅 adjust_gamma 用 @math.powf）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/math` import
+- pure 包解码器/编码器/变换/色彩转换签名惯例：`pub fn xxx_pure(...) -> @types.Image raise @types.LoadError` 或无 raise（BMP/QOI/TGA/PNM/PSD/GIF/crop/rotate/flip/grayscale/rgb/rgba/premultiply 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @color（line 6，路径 `src/process/color` 无别名，引用前缀 `@color`）
+- `roundtrip_test.mbt` 现有 pure vs color 对比测试模式（line 737-819）：`@core.load_from_path` 加载图像 → `@pure.xxx_pure` vs `@color.xxx` → 断言 width/height/channels/data 完全一致，引用前缀 `@color`
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R28 RETRY v2.0 pure 包色彩调整（brightness/contrast/gamma/invert + HSV/HSL，纯 MoonBit，全目标） [ID: T15]
+原因：计划审查 v15 r1 REJECTED，2 项问题
+- [一般] alpha 通道保留逻辑未测试：4 个 Image 级函数（adjust_brightness/adjust_contrast/adjust_gamma/invert）源码均有 alpha 保留分支 `if ch == 4 { out[i * ch + 3] = img.data[i * ch + 3] }`（`src/process/color/color_adjust.mbt:31-33,60-62,92-94,115-117`），task_v15.md 函数签名说明也明确声明"alpha 不变"。但 10 个 pure 包纯逻辑测试全部用 "2x2 RGB"（channels=3），4 个根包对比测试也用 `req_channels=Some(3)`，RGBA（channels=4）测试完全缺失，alpha 保留分支（`if ch == 4`）未被任何测试覆盖。与 T14 先例不一致：do_v14.md line 42-45 的 premultiply/unpremultiply 测试用 "2x2 RGBA" 覆盖 channels=4 逻辑。若 Doer 误将 alpha 保留实现为 `out[i*ch+3] = 0` 或遗漏该分支，测试不会发现，alpha 通道正确性无保证。按此前 RETRY 修正的测试覆盖标准（T6 R11 line 201、T8 R14 line 285、T9 R16 line 330、T10 R19 line 393 均因"实现中存在但测试未覆盖的分支"判 [一般]），此问题同类。
+- [轻微] HSV/HSL 边界值（黑/白/灰）测试缺失：测试 9-10 取 4 像素 (255,0,0)/(0,255,0)/(0,0,255)/(128,64,200)，未包含黑色 (0,0,0)、白色 (255,255,255)、灰色 (128,128,128)。`rgb_to_hsv`（`src/process/color/color_adjust.mbt:138-140`）和 `rgb_to_hsl`（line 206-212）对 delta==0（黑/白/灰）有特殊分支 `if delta == 0.0F { 0.0F }` 和 `if mx == 0.0F { 0.0F }`（黑色），4 像素均为彩色 delta!=0 不触发此分支。roundtrip 测试未覆盖 delta==0 路径，若 Doer 误删 delta==0 特殊处理，测试不会发现。严重程度低，因分支逻辑简单（h=0, s=0）且 (128,64,200) 已覆盖混合色路径。
+修正方向（已逐一核实源码论证，覆写 task_v15.md）：
+1. **新增 RGBA alpha 保留测试**：在 10 个 pure 包纯逻辑测试中新增测试 9 `invert_pure: RGBA alpha preserved`，构造 2x2 RGBA（channels=4），alpha 通道设 4 个不同值（255/128/0/64），调用 `invert_pure`（alpha 保留逻辑最直观，`new=255-old` 仅作用于颜色通道，alpha 通道 `out[i*4+3] = img.data[i*4+3]` 直接复制），逐像素验证颜色通道 `255-orig` 且 alpha 通道与原始完全一致（`assert_eq(out.data[i*4+3], orig.data[i*4+3])`），覆盖 `if ch == 4` alpha 保留分支（`src/process/color/color_adjust.mbt:115-117`）。原测试 9-10（HSV/HSL roundtrip）顺移为 10-11。测试数从 10 调整到 11。根包对比测试保持 4 个不变（alpha 保留已由 pure 包纯逻辑测试覆盖，对比测试主要验证 pure vs color 一致性，参照审查推荐方案）。
+2. **HSV/HSL 边界值补充**：测试 10-11（原 9-10）的 4 像素补充黑色 (0,0,0) 和白色 (255,255,255)，像素数从 4 调整到 6，覆盖 delta==0 / mx==0.0F 特殊分支（h=0, s=0），roundtrip 后黑色应返回 (0,0,0)、白色应返回 (255,255,255)（±1 误差内），测试数不变。
+3. **预期 native 测试数同步调整**：原"683→697（+10 pure 纯逻辑 + 4 根包对比）" → "683→698（+11 pure 纯逻辑 + 4 根包对比）"。
+选择理由：审查意见 2 项全部属实（已核实 `src/process/color/color_adjust.mbt:31-33,60-62,92-94,115-117` 确有 alpha 保留分支、`line 138-140,206-212` 确有 delta==0 特殊分支、do_v14.md line 42-45 确有 RGBA 测试先例），修正仅补充 1 个测试用例与 2 处像素补充不涉实现逻辑变更，风险极低，修正后 alpha 保留分支与 delta==0 特殊分支均有测试覆盖，与 T14 先例及此前 RETRY 修正的测试覆盖标准一致

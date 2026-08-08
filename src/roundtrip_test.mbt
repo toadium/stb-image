@@ -817,3 +817,71 @@ test "pure vs color: unpremultiply_alpha" {
   let _ = pure_out
   let _ = color_out
 }
+
+///|
+test "pure vs color: adjust_brightness" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.adjust_brightness_pure(img, 50)
+  let color_out = @color.adjust_brightness(img, 50)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: adjust_contrast" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.adjust_contrast_pure(img, 2.0F)
+  let color_out = @color.adjust_contrast(img, 2.0F)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: adjust_gamma" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.adjust_gamma_pure(img, 2.2F)
+  let color_out = @color.adjust_gamma(img, 2.2F)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: invert" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.invert_pure(img)
+  let color_out = @color.invert(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
