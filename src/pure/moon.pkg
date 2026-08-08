@@ -1,3 +1,4 @@
 import {
   "MoonBit-Toadium/stb-image/src/types",
+  "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }

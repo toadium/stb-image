@@ -350,3 +350,52 @@
 2. **未知 Extension label 处理明确声明**：line 17 补充"其他 Extension（含未知 label，如 0x00 或其他未定义值，按子块结构跳过以保持前向兼容）直接读子块跳过"，显式声明未知 label 按子块结构跳过
 3. **Image Descriptor left/top 处理明确声明**：line 31 输出要求补充"width/height 取 Image Descriptor 的 width/height，忽略 left/top（单帧 GIF 子图像定位无意义；`@format.encode_gif` 输出 left=top=0 且 Image w/h = Logical Screen w/h，对比测试不受影响；纯逻辑测试不构造 left/top 非 0 用例）"
 选择理由：审查意见 3 项全部属实（Plain Text Extension 8 字节 header 跳过是与"直接读子块"不同的实现分支，未测试则正确性无保证，与此前 RETRY 修正的"测试覆盖与实现要求一致"标准一致；未知 label 处理需显式声明以保持前向兼容；left/top 非 0 处理需明确避免行为未定义），修正仅补充 1 个测试用例与 2 处描述精确化不涉实现逻辑变更，风险极低，修正后测试覆盖完整、描述与规范一致、行为定义明确
+
+---
+
+## R18 PASSED v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
+结果：在 `src/pure/` 新增 `gif_decode.mbt`（`decode_gif_pure`，支持 GIF89a/GIF87a 单帧解码，含 LZW 解压、GCT/LCT、Extension 跳过含 Plain Text 8 字节 header 特殊处理）+ `gif_decode_test.mbt`（13 纯逻辑测试，5 正例 + 8 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only GIF pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611 通过（597→611，+13 pure 纯逻辑 + 1 根包对比）。
+检查：PASSED。GIF 解码器实现完整（Header/LSD/GCT/LCT/Blocks/LZW/颜色表查找优先级），Plain Text Extension 8 字节 header 跳过逻辑正确且有测试覆盖，未知 Extension label 按子块结构跳过保持前向兼容，输出 width/height 取 Image Descriptor 且忽略 left/top，8 条错误路径全部覆盖，13 纯逻辑测试 + 1 FFI 基准对比测试全部通过，v1.0 API 冻结保持，现有测试未破坏。
+
+## R18 NEW v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
+任务：在 `src/pure/` 新增 `qoi_encode.mbt`（移植 `src/format/qoi.mbt:121-231` 的 `encode_qoi` + `qoi_hash` 辅助函数，签名 `pub fn encode_qoi_pure(img : @types.Image) -> Bytes raise @types.LoadError`，支持 RGB channels=3 / RGBA channels=4）和 `pnm_encode.mbt`（移植 `src/format/pnm_encode.mbt` 的 `encode_ppm`/`encode_pgm`/`encode_pnm`，签名 `pub fn encode_ppm_pure(img : @types.Image) -> Bytes` / `encode_pgm_pure` / `encode_pnm_pure`），将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖保持（pure 包 moon.pkg 新增 `moonbitlang/core/encoding/utf8` import，全目标可用）。新增 `src/pure/qoi_encode_test.mbt`（5 纯逻辑测试：RGB 编码 + RGBA 编码 + run-length 编码 + 索引编码 + 错误路径 channels=2）和 `src/pure/pnm_encode_test.mbt`（5 纯逻辑测试：PPM RGB 编码 + PGM 灰度编码 + PNM 自动选择 + RGBA 丢弃 alpha + 灰度输入转 RGB），全目标仅依赖 @types/@pure。在根包 `src/roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI pure encode→pure decode + PPM pure encode→pure decode + PGM pure encode→pure decode，断言 roundtrip 后 width/height/channels/data 与原始图像一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611→624 通过（+10 pure 纯逻辑 + 3 根包 roundtrip）。
+选择理由：
+- T9 已完成 GIF 解码器，pure 包已有 6 种格式解码器（BMP/QOI/TGA/PNM/PSD/GIF），但仅有解码器无编码器，无法构成完整编解码能力
+- v2.0 后端选择层 `src/lib.mbt` 需要 pure 包具备与 native 对等的编解码能力，当前 pure 包只有解码是核心缺口
+- QOI 和 PNM 编码器移植技术风险极低：`src/format/qoi.mbt:121-231` 和 `src/format/pnm_encode.mbt` 均为纯 MoonBit 实现（无 FFI/C stub），仅需替换 @core→@types 类型引用，与 T5（QOI 解码器移植）同构
+- QOI 编码器需一并移植 `qoi_hash` 辅助函数（`src/format/qoi.mbt:7`，私有函数 `(r*3+g*5+b*7+a*11)%64`）
+- PNM 编码器依赖 `@encoding/utf8`（`src/format/pnm_encode.mbt:23` `@encoding/utf8.encode(header)`），该依赖为 moonbitlang/core 标准库全目标可用，pure 包 moon.pkg 新增 import 即可
+- 一轮完成 QOI + PNM 两个编码器合理：编码器比解码器简单（纯输出无解析），代码量小（encode_qoi 111 行 + pnm_encode 76 行），且使 pure 包立即具备 QOI 和 PNM 完整 roundtrip 能力
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，roundtrip 测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续后端选择层 `src/lib.mbt` 和 pure 包更多编码器（GIF/TGA/BMP）奠定基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），全目标可用
+- T9 产出：pure 包 BMP+QOI+TGA+PNM+PSD+GIF 六种解码器，native 611 测试通过
+- `src/format/qoi.mbt:7`：`fn qoi_hash(r,g,b,a) -> Int`，私有辅助 `(r*3+g*5+b*7+a*11)%64`
+- `src/format/qoi.mbt:121-231`：`pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError`，纯 MoonBit，支持 QOI_OP_INDEX/DIFF/LUMA/RUN/RGB/RGBA 编码，8 字节 header + 像素编码 + 8 字节 padding
+- `src/format/pnm_encode.mbt:6`：`pub fn encode_ppm(img : @core.Image) -> Bytes`，输出 "P6\n{w} {h}\n255\n" + RGB 像素
+- `src/format/pnm_encode.mbt:37`：`pub fn encode_pgm(img : @core.Image) -> Bytes`，输出 "P5\n{w} {h}\n255\n" + 灰度像素（BT.601）
+- `src/format/pnm_encode.mbt:70`：`pub fn encode_pnm(img : @core.Image) -> Bytes`，channels<=1 → PGM else → PPM
+- `src/format/moon.pkg:3`：import `moonbitlang/core/encoding/utf8` @encoding/utf8（全目标标准库）
+- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标；本轮新增 `@encoding/utf8` import
+- pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM/PSD/GIF 一致）
+- pure 包已有 `decode_qoi_pure`（T5）和 `decode_pnm_pure`（T7），可构成 roundtrip
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R19 RETRY v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
+原因：计划审查 v10 r1 REJECTED，4 项问题
+- [严重] qoi_hash 同包同名顶层函数冲突：task_v10.md 要求在 qoi_encode.mbt 新增 qoi_hash，但 `src/pure/qoi_decode.mbt:9` 已定义同名函数 `fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int`，MoonBit 中 `fn`（无 `pub`）是包私有而非文件私有，同包内同名顶层函数冲突，`moon check` 会报 duplicate definition（与 do_v9.md line 49 记录的 `read_u16_le` 命名冲突同类，v9 已遇并处理过此问题）
+- [一般] QOI 编码器纯逻辑测试缺失 DIFF 和 LUMA 标签覆盖：6 种编码标签仅覆盖 3-4 种（INDEX/RUN/RGBA），DIFF（0x40-0x7F，`src/format/qoi.mbt:185-188`）和 LUMA（0x80-0xBF，`src/format/qoi.mbt:189-196`）核心差分编码分支未测试，roundtrip 测试用全红图像不触发这些分支无法补救，与 T5 R9 RETRY 修正的"QOI_OP_LUMA 标签测试缺失"同类
+- [轻微] roundtrip 测试未明确 req_channels=Some(3)：与现有测试惯例不一致（`roundtrip_test.mbt` line 119, 138, 152, 325, 344 均显式 req_channels=Some(3)）
+- [轻微] roundtrip 测试 3 PGM data 验证描述不够具体 + QOI 编码器测试 3 run-length 构造描述模糊
+修正方向（已逐一修正，覆写 task_v10.md）：
+1. **qoi_hash 命名冲突**：qoi_encode.mbt 不重复定义 qoi_hash，直接复用 `qoi_decode.mbt:9` 已有的 qoi_hash（同包私有函数跨文件可见）。修正产出清单 line 14 和实现要求 line 25-27
+2. **DIFF/LUMA 标签测试补充**：新增 2 个测试用例：(a) DIFF 标签测试——2x2 RGB，像素 (10,20,30)/(11,21,31)/(12,22,32)/(13,23,33)，首像素与 prev (0,0,0,255) 差异过大走 RGB 标签，后续 3 像素差分 (1,1,1) ∈ [-2,1] 触发 DIFF 标签 0x7F；(b) LUMA 标签测试——2x2 RGB，像素 (100,100,100)/(105,110,105)/(100,100,100)/(105,110,105)，像素 1 差分 dr=5/dg=10/db=5，dg=10 ∈ [-32,31] 但 dr=5 ∉ [-2,1] 触发 LUMA 标签 0xAA+0x33。测试数从 5 调整到 7，预期 native 测试数从 611→624 调整为 611→626
+3. **roundtrip req_channels=Some(3) 明确**：3 个 roundtrip 测试均显式 `@core.load_from_path(path, req_channels=Some(3))`，与现有测试惯例一致
+4. **PGM data 验证描述具体化 + run-length 构造描述明确化**：PGM data 验证明确"对原始 RGB 像素 (r,g,b) 计算 (r*299+g*587+b*114)/1000，与 decode_pnm_pure 输出的 data 逐字节比较"；run-length 测试明确"4 像素均为 (0,0,0)，与 prev (0,0,0,255) 相同，全触发 RUN 编码，输出 1 个 RUN 标签 0xC3"
+选择理由：审查意见 4 项全部属实（已核实 `src/pure/qoi_decode.mbt:9` 确有 qoi_hash 定义、`src/format/qoi.mbt:185-196` 确有 DIFF/LUMA 分支、`roundtrip_test.mbt` 现有测试均显式 req_channels=Some(3)），修正仅消除命名冲突、补充测试覆盖、精确化描述不涉实现逻辑变更，风险极低，修正后计划可行性不再留待现场

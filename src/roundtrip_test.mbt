@@ -505,3 +505,62 @@ test "roundtrip: GIF RGB pure vs FFI" {
   let _ = pure_decoded
   let _ = ffi_decoded
 }
+
+///|
+test "roundtrip: QOI pure encode→decode" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let qoi_bytes = @pure.encode_qoi_pure(img)
+  let restored = @pure.decode_qoi_pure(qoi_bytes)
+  // pure 编码 → pure 解码 roundtrip
+  assert_eq(restored.width, img.width)
+  assert_eq(restored.height, img.height)
+  assert_eq(restored.channels, img.channels)
+  assert_eq(restored.data, img.data)
+  let _ = img
+  let _ = restored
+}
+
+///|
+test "roundtrip: PPM pure encode→decode" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let ppm_bytes = @pure.encode_ppm_pure(img)
+  let restored = @pure.decode_pnm_pure(ppm_bytes)
+  // pure 编码 → pure 解码 roundtrip
+  assert_eq(restored.width, img.width)
+  assert_eq(restored.height, img.height)
+  assert_eq(restored.channels, img.channels)
+  assert_eq(restored.data, img.data)
+  let _ = img
+  let _ = restored
+}
+
+///|
+test "roundtrip: PGM pure encode→decode" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pgm_bytes = @pure.encode_pgm_pure(img)
+  let restored = @pure.decode_pnm_pure(pgm_bytes)
+  // pure 编码 → pure 解码 roundtrip（RGB → 灰度转换）
+  assert_eq(restored.width, img.width)
+  assert_eq(restored.height, img.height)
+  assert_eq(restored.channels, 1)
+  // 逐像素验证 BT.601 灰度转换
+  let n = img.width * img.height
+  for i in 0..<n {
+    let r = img.data[i * 3].to_int()
+    let g = img.data[i * 3 + 1].to_int()
+    let b = img.data[i * 3 + 2].to_int()
+    let expected_gray = (r * 299 + g * 587 + b * 114) / 1000
+    assert_eq(restored.data[i].to_int(), expected_gray)
+  }
+  let _ = img
+  let _ = restored
+}
