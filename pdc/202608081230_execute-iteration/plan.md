@@ -204,3 +204,39 @@
 2. **line 26 测试数建议调整**：原"建议 7-9 个" → "建议 8-10 个"，并明确"含 3 个错误路径测试：数据过短 + 不支持 image type + 不支持 bpp"
 3. **line 38 预期 native 测试数同步调整**：原"建议 7-9 个，即预期 570-572" → "建议 8-10 个，即预期 571-573"
 选择理由：审查意见属实（line 16 与 line 25 同文档内不一致，"不支持的 bpp"错误路径测试缺失），修正仅补充测试覆盖建议不涉实现逻辑变更，风险极低，修正后 line 16 与 line 25 一致、测试覆盖完整
+
+---
+
+## R12 PASSED v2.0 pure 包 TGA 解码器（纯 MoonBit，全目标，含 RLE） [ID: T6]
+结果：在 `src/pure/` 新增 `tga_decode.mbt`（`decode_tga_pure`，支持 image type 2/10、24/32-bit、RLE 解压、bottom-up/top-down 行序、BGR(A)→RGB(A) 转换）+ `tga_decode_test.mbt`（9 纯逻辑测试，覆盖 type 2/type 10/24-bit/32-bit/行序/3 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only TGA pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572 通过（562→572，+9 pure 纯逻辑 + 1 根包对比）。
+检查：PASSED。TGA 解码器实现完整（18 字节 header 解析、RLE 解压、行序翻转、BGR→RGB 转换、5 错误路径），9 测试覆盖所有功能点含 3 错误路径测试，1 FFI 基准对比测试（stb_image C 库原生支持 TGA 读写），v1.0 API 冻结保持，现有测试不破坏。
+
+## R12 NEW v2.0 pure 包 PNM 解码器（纯 MoonBit，全目标） [ID: T7]
+任务：在 `src/pure/` 新增 `pnm_decode.mbt`，实现纯 MoonBit PNM 解码器 `pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 P5（PGM 二进制灰度，channels=1）和 P6（PPM 二进制 RGB，channels=3），8-bit（maxval < 256），含 header 解析（magic + width + height + maxval，处理注释行 `#` 和任意 whitespace）、像素读取、错误路径（数据过短、不支持的 magic 如 P1-P4 ASCII、不支持的 maxval ≥ 256）。新增 `src/pure/pnm_decode_test.mbt` 纯逻辑测试（全目标，手构造 PNM 字节流验证 P5/P6 解码、注释行、错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PNM 对比测试（PPM RGB + PGM 灰度，用 `@format.encode_ppm`/`encode_pgm` 生成 PNM 字节流 → `@pure.decode_pnm_pure` 纯解码 vs `@core.load_from_bytes` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572→581 通过。
+选择理由：
+- T6 已完成 TGA 解码器，pure 包当前 BMP+QOI+TGA 三种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
+- PNM（P5/P6 二进制）格式最简单（无压缩，header + 原始像素），实现风险极低，适合继续积累 pure 包格式覆盖
+- stb_image C 库原生支持 PNM 解码（`@core.load_from_bytes` 可加载 PPM/PGM，见 `pnm_encode_test.mbt:23,76`），对比验证为真正的 FFI 基准（非 QOI 的纯 MoonBit 交叉验证），价值高
+- `@format.encode_ppm`/`encode_pgm` 已有纯 MoonBit 编码（`src/format/pnm_encode.mbt:6,37`），可生成对比测试数据，基础设施完备
+- PNM 是项目已有格式（v1.5 PNM 编码），补齐 pure 包解码使格式覆盖更完整
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，PNM 解码器仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），全目标可用
+- T6 产出：pure 包 BMP+QOI+TGA 三种解码器，native 572 测试通过
+- PNM 二进制格式规格（P5/P6）：
+  - Header：magic(2 字节 "P5" 或 "P6") + whitespace + width(ASCII 十进制) + whitespace + height(ASCII 十进制) + whitespace + maxval(ASCII 十进制) + 单个 whitespace + 像素数据
+  - whitespace：space(0x20)/tab(0x09)/LF(0x0A)/CR(0x0D)，header 中 width/height/maxval 间任意 whitespace 分隔，maxval 后恰好 1 个 whitespace（通常 LF）
+  - 注释行：`#` 开头至行尾，可出现在 header 任意位置（magic 后）
+  - maxval < 256：每通道 1 字节；maxval ≥ 256：每通道 2 字节 big-endian（本轮不支持）
+  - P5：width*height 字节灰度像素；P6：width*height*3 字节 RGB 像素
+- `@format.encode_ppm` 签名（`src/format/pnm_encode.mbt:6`）：`pub fn encode_ppm(img : @core.Image) -> Bytes`，输出 "P6\n{w} {h}\n255\n" + RGB 像素
+- `@format.encode_pgm` 签名（`src/format/pnm_encode.mbt:37`）：`pub fn encode_pgm(img : @core.Image) -> Bytes`，输出 "P5\n{w} {h}\n255\n" + 灰度像素
+- `@core.load_from_bytes` 支持 PNM 解码（`pnm_encode_test.mbt:23,76` 现有 roundtrip 测试印证）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
+- `roundtrip_test.mbt` 现有 PNM 测试模式（line 148-174）：`@format.encode_ppm`/`encode_pgm` → `@core.load_from_bytes` → 断言 data 一致
+- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
