@@ -290,3 +290,63 @@
 3. **line 67 预期 native 测试数同步调整**：原"582→592（+8 pure 纯逻辑 + 2 根包对比）" → "582→597（+13 pure 纯逻辑 + 2 根包对比）"
 4. **line 47 测试数表述调整**：原"8 个测试用例" → "13 个测试用例（4 正例 + 9 错误路径）"
 选择理由：审查意见属实（line 32-41 列 9 种错误路径而 line 47-55 仅覆盖 4 种，同文档内不一致，与 T6 R11 RETRY 同类），修正仅补充测试覆盖不涉实现逻辑变更，风险极低，修正后 line 32-41 与 line 47-55 一致、测试覆盖完整
+
+---
+
+## R15 PASSED v2.0 pure 包 PSD 解码器（纯 MoonBit，全目标，无压缩 8-bit） [ID: T8]
+结果：在 `src/pure/` 新增 `psd_decode.mbt`（`decode_psd_pure`，支持 8-bit RGB/RGBA 无压缩，大端序读取 + 通道交错）+ `psd_decode_test.mbt`（13 纯逻辑测试，4 正例 + 9 错误路径），根包 `roundtrip_test.mbt` 新增 2 个 native-only PSD pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597 通过（582→597，+13 pure 纯逻辑 + 2 根包对比）。
+检查：PASSED。PSD 解码器实现完整（大端序解析 + 通道交错公式与规范一致，9 条错误路径全覆盖），13 纯逻辑测试 + 2 FFI 基准对比测试全部通过，三目标构建零错误零警告，v1.0 API 冻结保持，现有测试未破坏。
+
+## R15 NEW v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
+任务：在 `src/pure/` 新增 `gif_decode.mbt`，实现纯 MoonBit GIF 解码器 `pub fn decode_gif_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 GIF89a/GIF87a 单帧解码（RGB，channels=3），含 header + Logical Screen Descriptor + Global/Local Color Table + Extension block 跳过 + LZW 解压（变长码 LSB 优先 + 字典重建 + 子块结构），暂不支持 interlace。新增 `src/pure/gif_decode_test.mbt` 10 个纯逻辑测试（3 正例 + 7 错误路径，全目标）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only pure-FFI GIF 对比测试（`@format.encode_gif` 生成 GIF → `@pure.decode_gif_pure` vs `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597→608 通过。
+选择理由：
+- T8 已完成 PSD 解码器，pure 包当前 BMP+QOI+TGA+PNM+PSD 五种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
+- GIF 是最常用的图像格式之一（Web 早期标准格式），实用价值最高，补齐 GIF 解码使 pure 包格式覆盖更完整
+- stb_image C 库原生支持 GIF 解码（stbi__gif_load），`@core.load_from_bytes` 可解码 GIF，对比验证为真正的 FFI 基准
+- `@format.encode_gif` 已有纯 MoonBit 编码（`src/format/gif_encode.mbt:119`），可生成对比测试数据，基础设施完备
+- GIF LZW 解码是经典算法（变长码 + 字典重建），算法清晰，技术风险可控
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，GIF 解码器仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中
+- 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），全目标可用
+- T8 产出：pure 包 BMP+QOI+TGA+PNM+PSD 五种解码器，native 597 测试通过
+- GIF89a 格式：header(6) + LSD(7) + GCT(可选) + blocks(0x2C Image / 0x21 Extension / 0x3B Trailer)
+- LZW 解码：变长码 LSB 优先 + 字典重建 + 子块结构，code_width 上限 12
+- `@format.encode_gif`（`src/format/gif_encode.mbt:119`）：GIF89a，3-3-2 量化 256 色 GCT，LZW min code size=8，不使用交错
+- `@core.load_from_bytes` 支持 GIF 解码，`req_channels=Some(3)` 强制 3 通道
+- roundtrip_test.mbt 现有 GIF 测试模式（line 135-146）
+- pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
+- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R16 RETRY v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
+原因：计划审查 v9 r1 REJECTED，4 项问题
+- [一般] 纯逻辑测试缺少 Local Color Table（LCT）覆盖：3 个正例均使用 GCT，无 LCT 测试用例，`@format.encode_gif` 不输出 LCT（`src/format/gif_encode.mbt:167` packed=0x00，bit7=0）故根包对比测试也无法覆盖，LCT 解析和 LCT 优先于 GCT 查找逻辑未测试则正确性无保证，与 T6 R11 RETRY、T8 R14 RETRY 修正的测试覆盖标准不一致
+- [轻微] Plain Text Extension（0x01）跳过逻辑描述不完全正确：GIF89a 规范中 Plain Text Extension 在 label 之后有 8 字节固定 header（left/top/grid width/grid height/cell width/cell height/text fg/text bg），然后才是子块，原描述统一按子块跳过会误将 header 当子块 length 解析
+- [轻微] LZW min code size 有效范围与 GIF 规范不一致：原定义无效条件为"> 8 或 == 0"即接受 min code size=1，但 GIF89a 规范要求 min code size >= 2（即使颜色表仅 2 色也须为 2 以容纳 clear_code 和 end_code）
+- [轻微] interlace 错误路径未列入错误路径列表：实现要求 line 30 要求 interlace 时 raise LoadError，但 7 种错误路径列表未包含 interlace，该拒绝分支未被测试覆盖
+修正方向（已逐一修正，覆写 task_v9.md）：
+1. **新增 LCT 测试用例**：正例 4 含 Local Color Table 的 GIF（2x2，Image Descriptor packed bit7=1，LCT 4 色，GCT 2 色，LCT 索引与 GCT 不同），验证 LCT 解析正确且 LCT 优先于 GCT 查找
+2. **Plain Text Extension 跳过描述修正**：明确 Plain Text Extension（0x01）先跳过 8 字节固定 header，再读子块；其他 Extension 直接读子块跳过
+3. **LZW min code size 有效范围修正**：无效条件从"> 8 或 == 0"修正为"> 8 或 < 2"，与 GIF89a 规范一致
+4. **interlace 错误路径列入列表**：错误路径新增第 8 种"interlace 不支持"，测试数从 10 调整到 12（4 正例 + 8 错误路径），预期 native 测试数从 597→608 调整为 597→610
+选择理由：审查意见 4 项全部属实（LCT 是 GIF 格式核心可选功能未测试则实现正确性无保证；Plain Text Extension 8 字节 header 是 GIF89a 规范明确要求；LZW min code size >= 2 是 GIF89a 规范约束；interlace 拒绝分支未测试则健壮性无保证），修正仅补充测试覆盖与描述精确化不涉实现逻辑变更，风险极低，修正后测试覆盖完整、描述与规范一致
+
+---
+
+## R17 RETRY v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
+原因：计划审查 v9 r2 REJECTED，3 项问题
+- [一般] Plain Text Extension（0x01）跳过逻辑未测试覆盖：实现要求 line 17 明确区分 Plain Text Extension（0x01）的特殊跳过逻辑（先跳 8 字节固定 header，再读子块），与其他 Extension（直接读子块跳过）不同，但测试用例正例 3 仅覆盖 Graphic Control Extension（0xF9，属"其他 Extension"直接读子块分支），未覆盖 Plain Text Extension（0x01）的特殊跳过分支。若 Doer 误将所有 Extension 统一按子块跳过（忽略 Plain Text 的 8 字节 header），会误将 header 首字节当子块 length 解析，导致后续数据错位，但测试不会发现此错误
+- [轻微] 未知 Extension label 处理未明确：line 17 列出 4 种已知 label，但未明确遇到未知 label（如 0x00 或其他未定义值）时的处理方式。GIF89a 规范要求解码器跳过未知 Extension 以保持前向兼容
+- [轻微] Image Descriptor 的 left/top 非 0 情况处理未明确：line 15 解析 Image Descriptor 的 left/top 字段，但未说明 left/top 非 0 时如何处理（单帧 GIF 子图像定位）。输出要求 line 31 仅说 `@types.Image` with channels=3，未明确 width/height 取 Logical Screen Descriptor 的还是 Image Descriptor 的
+修正方向（已逐一修正，覆写 task_v9.md）：
+1. **新增 Plain Text Extension 测试用例**：正例 5 含 Plain Text Extension（0x01）的 GIF（1x1，字节流：header + LSD + GCT + 0x21 + 0x01 + 8 字节固定 header + 子块数据 + 0x2C Image Separator + Image Descriptor + LZW data + 0x3B），验证 Plain Text Extension 的 8 字节固定 header 被正确跳过且后续 Image Descriptor 正确解析。测试数从 12 调整到 13（5 正例 + 8 错误路径），预期 native 测试数从 597→610 调整为 597→611
+2. **未知 Extension label 处理明确声明**：line 17 补充"其他 Extension（含未知 label，如 0x00 或其他未定义值，按子块结构跳过以保持前向兼容）直接读子块跳过"，显式声明未知 label 按子块结构跳过
+3. **Image Descriptor left/top 处理明确声明**：line 31 输出要求补充"width/height 取 Image Descriptor 的 width/height，忽略 left/top（单帧 GIF 子图像定位无意义；`@format.encode_gif` 输出 left=top=0 且 Image w/h = Logical Screen w/h，对比测试不受影响；纯逻辑测试不构造 left/top 非 0 用例）"
+选择理由：审查意见 3 项全部属实（Plain Text Extension 8 字节 header 跳过是与"直接读子块"不同的实现分支，未测试则正确性无保证，与此前 RETRY 修正的"测试覆盖与实现要求一致"标准一致；未知 label 处理需显式声明以保持前向兼容；left/top 非 0 处理需明确避免行为未定义），修正仅补充 1 个测试用例与 2 处描述精确化不涉实现逻辑变更，风险极低，修正后测试覆盖完整、描述与规范一致、行为定义明确

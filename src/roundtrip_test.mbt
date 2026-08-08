@@ -486,3 +486,22 @@ test "roundtrip: PSD RGBA pure vs FFI" {
   let _ = pure_decoded
   let _ = ffi_decoded
 }
+
+///|
+test "roundtrip: GIF RGB pure vs FFI" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let gif_bytes = @format.encode_gif(img)
+  let pure_decoded = @pure.decode_gif_pure(gif_bytes)
+  let ffi_decoded = @core.load_from_bytes(gif_bytes, req_channels=Some(3))
+  // pure 包独立实现 vs stb_image C 库原生 FFI 基准对比
+  assert_eq(pure_decoded.width, ffi_decoded.width)
+  assert_eq(pure_decoded.height, ffi_decoded.height)
+  assert_eq(pure_decoded.channels, ffi_decoded.channels)
+  assert_eq(pure_decoded.data, ffi_decoded.data)
+  let _ = img
+  let _ = pure_decoded
+  let _ = ffi_decoded
+}
