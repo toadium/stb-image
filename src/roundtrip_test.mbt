@@ -646,3 +646,89 @@ test "lib vs format: QOI auto decode" {
   let _ = lib_decoded
   let _ = format_decoded
 }
+
+///|
+test "transform: crop pure vs process" {
+  // @pure.crop_pure（纯 MoonBit，全目标）vs @transform.crop（process 包基准）
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.crop_pure(img, 0, 0, 2, 2)
+  let proc_out = @transform.crop(img, 0, 0, 2, 2)
+  assert_eq(pure_out.width, proc_out.width)
+  assert_eq(pure_out.height, proc_out.height)
+  assert_eq(pure_out.channels, proc_out.channels)
+  assert_eq(pure_out.data, proc_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = proc_out
+}
+
+///|
+test "transform: rotate_90 pure vs process" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.rotate_90_pure(img)
+  let proc_out = @transform.rotate_90(img)
+  assert_eq(pure_out.width, proc_out.width)
+  assert_eq(pure_out.height, proc_out.height)
+  assert_eq(pure_out.channels, proc_out.channels)
+  assert_eq(pure_out.data, proc_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = proc_out
+}
+
+///|
+test "transform: rotate_180 pure vs process" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.rotate_180_pure(img)
+  let proc_out = @transform.rotate_180(img)
+  assert_eq(pure_out.width, proc_out.width)
+  assert_eq(pure_out.height, proc_out.height)
+  assert_eq(pure_out.channels, proc_out.channels)
+  assert_eq(pure_out.data, proc_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = proc_out
+}
+
+///|
+test "transform: rotate_270 pure vs process" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.rotate_270_pure(img)
+  let proc_out = @transform.rotate_270(img)
+  assert_eq(pure_out.width, proc_out.width)
+  assert_eq(pure_out.height, proc_out.height)
+  assert_eq(pure_out.channels, proc_out.channels)
+  assert_eq(pure_out.data, proc_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = proc_out
+}
+
+///|
+test "transform: flip_horizontal pure vs process" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.flip_horizontal_pure(img)
+  let proc_out = @transform.flip_horizontal(img)
+  assert_eq(pure_out.width, proc_out.width)
+  assert_eq(pure_out.height, proc_out.height)
+  assert_eq(pure_out.channels, proc_out.channels)
+  assert_eq(pure_out.data, proc_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = proc_out
+}

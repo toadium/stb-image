@@ -498,3 +498,46 @@
 6. **测试 3 PNM 边界补充**：测试 3 补充 P5/P6 检测为 `Pnm` + P4 检测为 `Unknown` 边界用例，验证检测范围收窄后 P1-P4 不再检测为 `Pnm`。
 7. **测试 5 GIF87a 补充**：测试 5 补充 "GIF87a" 开头字节流用例，验证 `detect_format` 返回 `ImageFormat::Gif`，覆盖 GIF87a/GIF89a 两种版本，验证未硬编码 "89a"。
 选择理由：审查意见 7 项全部属实（已核实 `src/format/qoi.mbt:13` `@format.decode_qoi` 存在、`src/pure/pnm_decode.mbt:71` 仅支持 P5/P6、`src/types/moon.pkg:2` import debug、`roundtrip_test.mbt:116-132` 现有 QOI pure vs format 测试模式印证推荐方案），修正采用审查推荐方案（测试 2 改用 @format.decode_qoi、PNM 检测收窄方案 (a)、补充分派/委托测试覆盖），仅精确化测试描述与补充测试覆盖不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、moon.pkg import 完整、检测范围与能力匹配、测试覆盖完整（5 格式分派 100% + 4 编码器委托验证）、边界覆盖（P4/P5/P6 + GIF87a/GIF89a），可行性不再留待现场。测试数从 10 调整到 17，预期 native 测试数从 636→648 调整为 636→655。
+
+---
+
+## R24 PASSED v2.0 后端选择层 `src/lib/` 包（pure 侧统一 API + 自动格式分派） [ID: T12]
+结果：创建 `src/lib/` 全目标包，实现 ImageFormat 枚举 + detect_format magic bytes 检测（BMP/QOI/PNM P5-P6/PSD/GIF）+ load_from_bytes_auto 自动分派 + 5 编码器委托（encode_qoi_auto/encode_pnm_auto/encode_ppm_auto/encode_pgm_auto/encode_gif_auto），17 个 @lib 纯逻辑测试 + 2 个根包 native-only 对比测试（lib vs core BMP、lib vs format QOI）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 655/655 通过（636→655，+17 @lib 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。PNM 检测收窄为 P5/P6 与 pure 能力匹配，GIF87a/GIF89a 双版本覆盖，5 格式分派 100% 覆盖，4 编码器委托验证。
+
+## R24 NEW v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
+任务：在 `src/pure/` 新增 `transform.mbt`，移植 `src/process/transform/transform.mbt:4-135` 的 5 个 8-bit Image 操作（crop/rotate_90/rotate_180/rotate_270/flip_horizontal），签名 `pub fn crop_pure(img : @types.Image, x : Int, y : Int, w : Int, h : Int) -> @types.Image raise @types.LoadError` / `pub fn rotate_90_pure(img : @types.Image) -> @types.Image` / `rotate_180_pure` / `rotate_270_pure` / `flip_horizontal_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，不移植 crop_16/cropf（Image16/ImageF 暂不在 pure 包支持范围）。新增 `src/pure/transform_test.mbt` 8 个纯逻辑测试（全目标，手构造 @types.Image 验证 crop 正常+越界 raises、rotate_90/180/270、flip_horizontal、1x1 边界）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure.crop_pure vs @process.transform.crop 等，用 @core.load_from_path 加载测试图像，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 655→668 通过。
+选择理由：
+- T12 已完成后端选择层 @lib 包，v2.0 核心架构（@types + @pure + @lib）已完成，pure 包有 6 解码器 + 3 编码器但无图像处理能力
+- v2.0 目标是"支持 wasm/js 目标"，仅编解码不够，用户需要基本的图像处理能力；crop/rotate/flip 是最基础最常用的图像操作，补齐后 pure 包从"仅编解码"升级为"编解码 + 基础处理"
+- `src/process/transform/transform.mbt:4-135` 的 crop/rotate_90/rotate_180/rotate_270/flip_horizontal 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用，与 T5（QOI 解码器移植）、T10（QOI+PNM 编码器移植）同构，技术风险极低
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，几何变换仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（色彩转换/滤波等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
+- T12 产出：@lib 后端选择层（pure 侧统一 API + 自动格式分派），native 655 测试通过
+- `src/process/transform/transform.mbt:4-36`：`pub fn crop(img : @core.Image, x, y, w, h) -> @core.Image raise @core.LoadError`，纯 MoonBit，区域越界检查 + 逐行复制
+- `src/process/transform/transform.mbt:40-62`：`pub fn rotate_90(img : @core.Image) -> @core.Image`，顺时针旋转 90 度，纯 MoonBit
+- `src/process/transform/transform.mbt:66-86`：`pub fn rotate_180(img : @core.Image) -> @core.Image`，旋转 180 度，纯 MoonBit
+- `src/process/transform/transform.mbt:90-112`：`pub fn rotate_270(img : @core.Image) -> @core.Image`，顺时针旋转 270 度，纯 MoonBit
+- `src/process/transform/transform.mbt:116-135`：`pub fn flip_horizontal(img : @core.Image) -> @core.Image`，水平翻转，纯 MoonBit
+- `src/process/transform/transform.mbt:139-203`：crop_16/cropf（Image16/ImageF），本轮不移植
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
+- pure 包解码器/编码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError` / `pub fn encode_xxx_pure(img : @types.Image) -> Bytes raise @types.LoadError`
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @process/transform（line 8）
+- `roundtrip_test.mbt` 现有测试模式：`@core.load_from_path` 加载图像 → 操作 → 断言 width/height/channels/data 一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R25 RETRY v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
+原因：计划审查 v13 r1 REJECTED，2 项问题
+- [严重] 对比测试 API 引用错误：task_v13.md line 29-33 的 5 个根包对比测试写 `@process.transform.crop` / `@process.transform.rotate_90` / `@process.transform.rotate_180` / `@process.transform.rotate_270` / `@process.transform.flip_horizontal`，但项目实际引用前缀是 `@transform`（`src/moon.pkg:8` import `"MoonBit-Toadium/stb-image/src/process/transform"` 无别名，MoonBit 引用前缀取路径最后一段即 `@transform`）。现有代码全部印证：`roundtrip_test.mbt:252-254` `@transform.crop` / `@transform.rotate_90` / `@transform.flip_horizontal`、`reexport.mbt:376` `@transform.crop`、`bench.mbt:244` `@transform.crop`、`util/image_util.mbt:112` `@transform.crop`、`process/filter/bilateral_filter.mbt:229` `@transform.pyr_down`（同属 process 下子包亦用 `@transform.`）。照搬 `@process.transform.crop` 会导致 `unbound package @process` 编译失败，违反"不破坏现有测试"约束，预期产出"655→668"无法达成。与 T5 R9 RETRY（plan.md line 157，`@core.encode_qoi` 不存在照搬致编译失败）同类错误。task_v13.md line 73 上下文"import @process/transform（line 8）"同步有误。
+- [轻微] 对比测试未显式 `req_channels`：task_v13.md line 29-33 的 5 个对比测试用 `@core.load_from_path("testdata/test_4x4_red.png")` 未指定 `req_channels`，而 `roundtrip_test.mbt` 现有测试（line 7, 22, 35, 249 等）均显式指定 `req_channels=Some(3)` 或 `Some(4)`。与现有测试惯例不一致。不影响正确性（crop/rotate/flip 保留 channels，pure 和 process 用同一 img 结果一致），仅风格不统一。
+修正方向（已逐一核实源码论证，覆写 task_v13.md）：
+1. **对比测试 API 引用修正**：line 29-33 的 5 个对比测试 API 引用全部修正：`@process.transform.crop` → `@transform.crop`、`@process.transform.rotate_90` → `@transform.rotate_90`、`@process.transform.rotate_180` → `@transform.rotate_180`、`@process.transform.rotate_270` → `@transform.rotate_270`、`@process.transform.flip_horizontal` → `@transform.flip_horizontal`。参照 `roundtrip_test.mbt:252-254` 现有代码先例。line 73 上下文"import @process/transform（line 8）"同步更正为"import @transform（line 8，路径 `src/process/transform` 无别名，引用前缀 `@transform`）"。
+2. **对比测试显式 req_channels=Some(3)**：5 个对比测试的 `@core.load_from_path` 均显式指定 `req_channels=Some(3)`，与 `roundtrip_test.mbt:247-250` 现有 transform 测试惯例一致（test_4x4_red.png 为 RGB 图像，用 Some(3)）。
+选择理由：审查意见 2 项全部属实（已核实 `src/moon.pkg:8` import 无别名、`roundtrip_test.mbt:252-254` 现有代码用 `@transform.` 前缀、`roundtrip_test.mbt:247-250` 现有 transform 测试显式 `req_channels=Some(3)`），修正仅更正 API 引用前缀与补充 req_channels 显式声明，不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、与现有测试惯例一致，可行性不再留待现场
