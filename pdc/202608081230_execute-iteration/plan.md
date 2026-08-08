@@ -447,3 +447,54 @@
 1. **测试 5 修正（采用审查推荐方案 b）**：明确给出量化后预期 data 并断言 roundtrip 结果与之一致。原"断言 width/height/channels/data 一致" → "断言 width=2, height=2, channels=3, data == [0,0,0, 36,36,0, 72,72,85, 108,108,85]"，并列出 4 像素量化后预期值的逐级计算（r_level/g_level/b_level → 调色板值），参照测试 7 给出 (252,252,255) 量化预期的先例，显式声明不与原始 data 比较因量化改变颜色
 2. **测试 2 修正**：明确完整数据流和比较双方。数据流补充 `@pure.decode_gif_pure` 步骤：orig_img = `@core.load_from_path(path, req_channels=Some(3))` → gif_bytes = `@pure.encode_gif_pure(orig_img)` → pure_img = `@pure.decode_gif_pure(gif_bytes)` + ffi_img = `@core.load_from_bytes(gif_bytes, req_channels=Some(3))`。断言改为 pure_img vs ffi_img 完全一致（width/height/channels/data），显式声明不与 orig_img 比较因 orig_img 未量化
 选择理由：审查意见 2 项全部属实（已核实 `src/format/gif_encode.mbt:7-12` 量化逻辑，3-3-2 量化确会改变颜色，roundtrip 后 data 与原始不一致；测试 2 数据流缺 pure decode 步骤致比较双方歧义），修正采用审查推荐方案 b（给出量化预期 data，与测试 7 先例一致）和补充数据流步骤，仅精确化测试描述不涉实现逻辑变更，风险极低，修正后测试 5/2 比较双方明确且技术可行
+
+---
+
+## R22 PASSED v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
+结果：在 `src/pure/` 新增 `gif_encode.mbt`（`encode_gif_pure`，含 `quantize_332` + `build_332_palette` + `lzw_compress` 辅助函数，移植自 `src/format/gif_encode.mbt:1-177`，仅替换 @core→@types 类型引用）+ `gif_encode_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 2 个 native-only 测试（pure roundtrip 稳定性 + pure encode vs FFI decode 对比）。pure 包由此具备 GIF 完整 roundtrip 能力（6 解码 + 3 编码）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 636/636 通过（626→636，+8 pure 纯逻辑 + 2 根包 roundtrip），v1.0 API 冻结保持，现有测试不破坏。
+
+## R22 NEW v2.0 后端选择层 `src/lib/` 包（pure 侧统一 API + 自动格式分派） [ID: T12]
+任务：创建 `src/lib/` 全目标包（import @types + @pure），实现 pure 后端统一 API 层：`detect_format`（magic bytes 检测，参照 `src/core/image_detect.mbt:18-82`，覆盖 pure 包支持的 5 种格式 BMP/QOI/PNM/PSD/GIF，TGA 无 magic 不自动分派）、`load_from_bytes_auto`（根据检测结果分派到 @pure 对应解码器，Unknown raise LoadError）、`encode_qoi_auto`/`encode_pnm_auto`/`encode_ppm_auto`/`encode_pgm_auto`/`encode_gif_auto`（委托 @pure 已有编码器）。新增 `src/lib/lib_test.mbt` 10 个纯逻辑测试（全目标，detect_format 各格式 + load_from_bytes_auto 各格式 + 错误路径 + encode 委托验证）。根包 `src/roundtrip_test.mbt` 新增 2 个 native-only 对比测试（@lib.load_from_bytes_auto vs @core.load_from_bytes，BMP + QOI 格式，断言 width/height/channels/data 完全一致）。根包 `src/moon.pkg` 新增 `@lib` 的 `for "test"` 依赖。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 636→648 通过。
+选择理由：
+- T11 已完成 GIF 编码器，pure 包当前 6 解码器 + 3 编码器（BMP/QOI/TGA/PNM/PSD/GIF 解码 + QOI/PNM/GIF 编码），格式覆盖已较完整，具备构建统一 API 层的基础
+- ROADMAP.md v2.0 交付物 `src/lib.mbt` 后端选择层是 v2.0 的关键交付物，pure 侧统一 API 是后端选择层的第一步
+- MoonBit 不支持目标条件依赖（`for "native"` 语法不存在，仅支持 `for "test"`/`for "wbtest"`，已查阅官方文档确认），无法在单包内条件 import @core（native-only）+ @pure（全目标）；故后端选择层分两步：本轮 pure 侧统一 API（@lib 全目标，仅依赖 @pure + @types），后续 native 侧统一 API（@core/reexport 已提供）+ 目标分派机制
+- `@core.detect_format`（`src/core/image_detect.mbt:18-82`）已有 magic bytes 检测逻辑先例，移植到 @lib 仅需覆盖 pure 包支持的格式子集，技术风险极低
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，@lib 包仅依赖 @pure + @types，全目标可用，无需架构改动
+- 风险可控：新增包不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 native 侧统一 API + 真正的后端选择（根据目标分派 native/pure）奠定基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
+- T11 产出：pure 包 6 解码器 + 3 编码器，native 636 测试通过
+- pure 包可用解码器：`decode_bmp_pure`/`decode_qoi_pure`/`decode_tga_pure`/`decode_pnm_pure`/`decode_psd_pure`/`decode_gif_pure`（签名 `pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`）
+- pure 包可用编码器：`encode_qoi_pure`/`encode_ppm_pure`/`encode_pgm_pure`/`encode_pnm_pure`/`encode_gif_pure`
+- `@core.detect_format`（`src/core/image_detect.mbt:18-82`）：magic bytes 检测，支持 PNG/JPEG/BMP/GIF/PSD/HDR/PNM/QOI，TGA 无 magic 标记 Unknown
+- magic bytes 对照：BMP "BM"(0x42,0x4D)、QOI "qoif"(0x71,0x6F,0x69,0x66)、PNM "P5"/"P6"(0x50,0x35/0x36)、PSD "8BPS"(0x38,0x42,0x50,0x53)、GIF "GIF87a"/"GIF89a"(0x47,0x49,0x46,...)
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
+- MoonBit 条件编译：文件级 `options(targets: {"file.mbt": ["native"]})` 支持，包级 `supported_targets` 支持，但 import 仅支持 `for "test"`/`for "wbtest"`，不支持目标条件依赖
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R23 RETRY v2.0 后端选择层 `src/lib/` 包（pure 侧统一 API + 自动格式分派） [ID: T12]
+原因：计划审查 v12 r1 REJECTED，7 项问题
+- [严重] 测试 2 "lib vs core: QOI auto decode" 用 `@core.load_from_bytes` 作为 QOI 解码基准，技术不可行。`@core.load_from_bytes` 是纯 FFI 调用 `stb_image_mbt_load_from_memory`，stb_image C 库不原生支持 QOI（T5 R9 RETRY 已确认），解码 QOI 字节流会返回 NULL → raise `LoadError::DecodeFailed`，测试运行时抛异常，违反"不破坏现有测试"约束，预期产出"636→648"无法达成。现有 QOI 测试（`roundtrip_test.mbt:90-124`）全部使用 `@format.decode_qoi`，印证此为项目 QOI 解码的正确调用方式。
+- [一般] `src/lib/moon.pkg` import 列表仅列 @types + @pure，未列 `moonbitlang/core/debug`，但 `ImageFormat` 枚举 `derive(Eq, @debug.Debug)` 需要此依赖。Doer 按产出规格生成 moon.pkg 会遗漏此 import，导致 `moon check` 报 `unbound package @debug` 编译失败。参照 `src/types/moon.pkg:2` 同样因 `derive(Eq, @debug.Debug)` import `moonbitlang/core/debug`。
+- [一般] `detect_format` 检测 PNM 范围为 P1-P6（`data[1]>=0x31 && data[1]<=0x36`），但 `load_from_bytes_auto` 对 `Pnm` 分派到 `@pure.decode_pnm_pure`，而 `decode_pnm_pure` 仅支持 P5/P6（`src/pure/pnm_decode.mbt:71` 拒绝 P1-P4）。`detect_format` 与 `load_from_bytes_auto` 能力不匹配：用户对 P1-P4 字节流调用 `detect_format` 返回 `Pnm`，再调用 `load_from_bytes_auto` 期望成功解码，实际 raise `LoadError::DecodeFailed`。此限制未在计划任何位置声明，行为不一致会误导用户。
+- [一般] `load_from_bytes_auto` 分派测试覆盖不足：10 个纯逻辑测试中仅测试 7 "BMP 分派"覆盖 1 种格式，缺 QOI/PNM/PSD/GIF 分派测试。5 种格式仅测 1 种（覆盖率 20%）。若 Doer 误将 QOI 分派到 `decode_bmp_pure`、PNM 分派到 `decode_qoi_pure` 等，纯逻辑测试不会发现，错误流入后续轮次。
+- [一般] 编码器委托验证不足：5 个编码器仅测试 `encode_qoi_auto` 和 `encode_gif_auto`（测试 9-10），缺 `encode_pnm_auto`/`encode_ppm_auto`/`encode_pgm_auto` 委托验证。5 个编码器仅测 2 个（覆盖率 40%）。PNM 3 个编码器逻辑相近，委托目标易混淆，未测试则正确性无保证。
+- [轻微] 测试 3 "detect_format: PNM" 仅构造 "P6" 开头字节流，未覆盖 P1-P4 边界。当前测试无法发现 `detect_format` 检测范围错误。
+- [轻微] 测试 5 "detect_format: GIF" 仅构造 "GIF89a" 开头字节流，未覆盖 "GIF87a"。仅测 GIF89a 无法发现 Doer 误增 `data[3]==0x38 && data[4]==0x39 && data[5]==0x61`（硬编码 "89a"）的错误。
+修正方向（已逐一修正，覆写 task_v12.md）：
+1. **测试 2 QOI 基准修正**：`@core.load_from_bytes` → `@format.decode_qoi`（`src/format/qoi.mbt:13`，纯 MoonBit 基准）。完整数据流：`orig_img = @core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `qoi_bytes = @format.encode_qoi(orig_img)` → `lib_img = @lib.load_from_bytes_auto(qoi_bytes)` + `format_img = @format.decode_qoi(qoi_bytes)` → 断言 `lib_img` vs `format_img` width/height/channels/data 完全一致。测试名改为 "lib vs format: QOI auto decode"（如实反映 format 包纯 MoonBit 基准，非 FFI 基准）。参照 T5 产出（plan.md line 171）及 `roundtrip_test.mbt:116-124` 现有 "roundtrip: QOI pure vs format" 测试模式。
+2. **moon.pkg import 列表补充 `moonbitlang/core/debug`**：`src/lib/moon.pkg` import 列表新增 `"moonbitlang/core/debug"`，与 `src/types/moon.pkg:2` 先例一致。修正后 moon.pkg import 三项：@types + @pure + `moonbitlang/core/debug`。
+3. **PNM 检测范围收窄为仅 P5/P6**（采用审查推荐方案 (a)）：`detect_format` PNM 检测从 `data[1]>=0x31 && data[1]<=0x36`（P1-P6）收窄为 `data[1]>=0x35 && data[1]<=0x36`（仅 P5/P6），与 `decode_pnm_pure` 能力匹配，P1-P4 检测为 `Unknown`，避免 `detect_format` 返回 `Pnm` 但 `load_from_bytes_auto` raise 错误的行为不一致。
+4. **`load_from_bytes_auto` 分派测试补充**：10 个测试基础上新增 4 个分派测试（QOI/PNM/PSD/GIF 各 1 个，测试 9-12），构造各格式最小有效字节流，`load_from_bytes_auto` 解码后断言 width/height/channels 符合预期，覆盖全部 5 种支持格式（覆盖率 100%）。
+5. **编码器委托验证补充**：新增 2 个测试验证 `encode_ppm_auto`/`encode_pgm_auto` 委托正确性（测试 15-16，构造 1x1 RGB Image，编码后断言 magic bytes "P6"/"P5" 与对应 `@pure.encode_xxx_pure` 结果一致）。`encode_pnm_auto` 通过 ppm/pgm 间接验证不单独测试（pnm_auto 对 RGB 委托 ppm、对灰度委托 pgm）。
+6. **测试 3 PNM 边界补充**：测试 3 补充 P5/P6 检测为 `Pnm` + P4 检测为 `Unknown` 边界用例，验证检测范围收窄后 P1-P4 不再检测为 `Pnm`。
+7. **测试 5 GIF87a 补充**：测试 5 补充 "GIF87a" 开头字节流用例，验证 `detect_format` 返回 `ImageFormat::Gif`，覆盖 GIF87a/GIF89a 两种版本，验证未硬编码 "89a"。
+选择理由：审查意见 7 项全部属实（已核实 `src/format/qoi.mbt:13` `@format.decode_qoi` 存在、`src/pure/pnm_decode.mbt:71` 仅支持 P5/P6、`src/types/moon.pkg:2` import debug、`roundtrip_test.mbt:116-132` 现有 QOI pure vs format 测试模式印证推荐方案），修正采用审查推荐方案（测试 2 改用 @format.decode_qoi、PNM 检测收窄方案 (a)、补充分派/委托测试覆盖），仅精确化测试描述与补充测试覆盖不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、moon.pkg import 完整、检测范围与能力匹配、测试覆盖完整（5 格式分派 100% + 4 编码器委托验证）、边界覆盖（P4/P5/P6 + GIF87a/GIF89a），可行性不再留待现场。测试数从 10 调整到 17，预期 native 测试数从 636→648 调整为 636→655。

@@ -15,6 +15,7 @@ import {
 
 import {
   "MoonBit-Toadium/stb-image/src/pure" @pure,
+  "MoonBit-Toadium/stb-image/src/lib" @lib,
 } for "test"
 
 supported_targets = "native"

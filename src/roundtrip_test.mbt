@@ -607,3 +607,42 @@ test "roundtrip: GIF pure encode vs FFI decode" {
   let _ = pure_img
   let _ = ffi_img
 }
+
+///|
+test "lib vs core: BMP auto decode" {
+  // @lib.load_from_bytes_auto（pure 侧自动分派）vs @core.load_from_bytes（FFI 基准）
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let bmp_bytes = @core.write_bmp_to_bytes(img)
+  let lib_decoded = @lib.load_from_bytes_auto(bmp_bytes)
+  let ffi_decoded = @core.load_from_bytes(bmp_bytes, req_channels=Some(3))
+  assert_eq(lib_decoded.width, ffi_decoded.width)
+  assert_eq(lib_decoded.height, ffi_decoded.height)
+  assert_eq(lib_decoded.channels, ffi_decoded.channels)
+  assert_eq(lib_decoded.data, ffi_decoded.data)
+  let _ = img
+  let _ = lib_decoded
+  let _ = ffi_decoded
+}
+
+///|
+test "lib vs format: QOI auto decode" {
+  // @lib.load_from_bytes_auto（pure 侧自动分派）vs @format.decode_qoi（format 包纯 MoonBit 基准）
+  // stb C 库不原生支持 QOI，@core.load_from_bytes 解码 QOI 会 raise LoadError，故用 @format.decode_qoi 作基准
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let qoi_bytes = @format.encode_qoi(img)
+  let lib_decoded = @lib.load_from_bytes_auto(qoi_bytes)
+  let format_decoded = @format.decode_qoi(qoi_bytes)
+  assert_eq(lib_decoded.width, format_decoded.width)
+  assert_eq(lib_decoded.height, format_decoded.height)
+  assert_eq(lib_decoded.channels, format_decoded.channels)
+  assert_eq(lib_decoded.data, format_decoded.data)
+  let _ = img
+  let _ = lib_decoded
+  let _ = format_decoded
+}

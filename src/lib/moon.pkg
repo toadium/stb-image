@@ -1,0 +1,5 @@
+import {
+  "MoonBit-Toadium/stb-image/src/types" @types,
+  "MoonBit-Toadium/stb-image/src/pure" @pure,
+  "moonbitlang/core/debug" @debug,
+}
