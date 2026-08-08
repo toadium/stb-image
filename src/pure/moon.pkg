@@ -1,0 +1,5 @@
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+}
+
+supported_targets = "native"
