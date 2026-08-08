@@ -86,3 +86,40 @@
 - 根包 `src/moon.pkg` 有 `options(targets: {"roundtrip_test.mbt": ["native"]})` 先例
 - pure 包测试：1-4 纯逻辑，5-6 对比验证（依赖 @core），7-8 错误路径
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R6 PASSED v2.0 pure 包全目标化（多目标编译） [ID: T3]
+结果：移除 `src/pure/moon.pkg` 的 `supported_targets = "native"`，采用方案 B 移除 2 个依赖 @core 的对比测试，pure 包完全脱离 @core 依赖（仅 import types，全目标）。保留 6 个纯逻辑测试（全目标可用）。`moon check`（全目标）0 errors 0 warnings，`moon test --target native` 552/552 通过，`moon test --target wasm`/`--target js` pure 包 6/6 通过。
+检查：PASSED。pure 包全目标化达成，wasm/js 可用，v1.0 API 冻结保持，对比验证留待后续移至根包 roundtrip_test.mbt。
+
+## R6 NEW v2.0 pure-FFI BMP 对比验证移至根包 [ID: T4]
+任务：将 T3 方案 B 移除的 pure-FFI BMP 对比验证测试移至根包 `src/roundtrip_test.mbt`（已 native-only），恢复纯 MoonBit 解码器与 FFI 解码器的一致性验证。具体：根包 `src/moon.pkg` 添加 `src/pure` 的 import（native 包依赖全目标包可行），在 `roundtrip_test.mbt` 新增 2 个对比测试——用 `@core.write_bmp_to_bytes` 生成 BMP 字节流，分别用 `@core.load_from_bytes`（FFI）和 `@pure.decode_bmp_pure`（纯 MoonBit）解码，断言 width/height/channels/data 完全一致（覆盖 24-bit RGB 与 32-bit RGBA 两种位深）。验证 `moon check --target native` 0 errors 0 warnings，`moon test --target native` 全量通过（预期 552→554，恢复 T3 移除的 2 测试）。
+选择理由：
+- T3 方案 B 移除 2 个对比测试，do_v3.md 明确规划"对比验证留待后续轮次移至根包 roundtrip_test.mbt"，本轮即执行此规划，属 T3 收尾
+- 根包 `roundtrip_test.mbt` 已 native-only（`options(targets: {"roundtrip_test.mbt": ["native"]})`），可自由依赖 @core + @pure，无方案 A 的全目标警告问题
+- 恢复对比验证能力（pure vs FFI）是质量保证关键：纯 MoonBit 解码器正确性需有 FFI 基准对照，否则 pure 包仅靠纯逻辑自证
+- 风险低：仅新增测试不改现有代码；根包 native-only import 全目标 pure 包语法合法（native 目标下全目标包可用）；测试模式已有先例（roundtrip_test.mbt 现有 `roundtrip: BMP RGB` 用 `@core.write_bmp_to_bytes`）
+- 为后续后端选择层 `src/lib.mbt` 和 pure 包格式扩展提供验证基础
+上下文：
+- T3 产出：pure 包全目标化（仅 import types），6 纯逻辑测试，对比测试已移除，native 552 测试通过
+- do_v3.md 规划：对比验证留待后续轮次移至根包 roundtrip_test.mbt（native-only）
+- 根包 `src/moon.pkg`：`supported_targets = "native"`，`options(targets: {"roundtrip_test.mbt": ["native"]})`，当前 import 列表含 core/process/format/meta/util，不含 pure
+- roundtrip_test.mbt 现有 `roundtrip: BMP RGB` 测试模式：`@core.load_from_path` → `@core.write_bmp_to_bytes` → `@core.load_from_bytes` → 断言 data 一致
+- pure 包 `decode_bmp_pure` 签名：`pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 24/32-bit 无压缩 BMP
+- core 包 re-export types：`@core.Image` 即 `@types.Image`，字段级比较直接可行
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R7 RETRY v2.0 pure-FFI BMP 对比验证移至根包 [ID: T4]
+原因：计划审查 v4 r1 REJECTED，2 项问题
+- [严重] 测试 2（32-bit RGBA）技术不可行：`@core.write_bmp_to_bytes` 对 4 通道写出 BITMAPV4HEADER（108 字节）+ BI_BITFIELDS（compression=3），`decode_bmp_pure` 仅支持 BITMAPINFOHEADER（40 字节）+ BI_RGB（compression=0），会拒绝解码（`bmp_decode.mbt:21,35`），测试 2 运行时抛异常，违反"不破坏现有测试"约束，预期产出"552→554"无法达成
+- [严重] 计划未论证 FFI 生成 BMP 与 pure 解码器能力范围的匹配性：计划改用 `@core.write_bmp_to_bytes` 生成路径（T3 原对比测试用手构造字节），未核实 stb_image_write 输出格式与 `decode_bmp_pure` 输入要求的兼容性
+修正方向（采用审查推荐方案 A，已逐一核实源码论证）：
+1. **FFI 生成 BMP 格式已核实**（`src/core/stb_image_write.h:492-510`）：`stbi_write_bmp_core` 对 `comp != 4`（24-bit RGB）写出 BITMAPINFOHEADER（40 字节）+ BI_RGB（compression=0）+ 24bpp（header `14+40`，DIB `40, x,y, 1,24, 0,...`）；对 `comp == 4`（32-bit RGBA）写出 BITMAPV4HEADER（108 字节）+ BI_BITFIELDS（compression=3）+ 32bpp（header `14+108`，DIB `108, x,y, 1,32, 3,...`）
+2. **pure 解码器能力范围已核实**（`src/pure/bmp_decode.mbt:21,35`）：`decode_bmp_pure` 仅接受 `dib_size == 40` && `compression == 0` && `bpp ∈ {24, 32}`，拒绝其他
+3. **兼容性匹配结论**：24-bit RGB 路径兼容（FFI 写出 40 字节 DIB + BI_RGB + 24bpp，pure 接受）；32-bit RGBA 路径不兼容（FFI 写出 108 字节 DIB + BI_BITFIELDS，pure 拒绝）
+4. **方案 A：仅保留 24-bit RGB 对比测试**，放弃 32-bit RGBA 对比测试。32-bit 对比验证需先扩展 pure 解码器支持 BITMAPV4HEADER（属后续轮次），不在本轮承担
+5. **预期测试数调整为 552→553**（仅新增 1 个 24-bit RGB 对比测试）
+选择理由：审查意见技术事实属实（已核实 stb_image_write.h 与 bmp_decode.mbt 源码），方案 A 为审查推荐路径，24-bit RGB 对比已能验证纯 MoonBit 解码器与 FFI 解码器在主要路径上的一致性，32-bit 对比验证留待后续扩展 pure 解码器后补充，风险最低
