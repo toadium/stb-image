@@ -732,3 +732,88 @@ test "transform: flip_horizontal pure vs process" {
   let _ = pure_out
   let _ = proc_out
 }
+
+///|
+test "pure vs color: to_grayscale" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.to_grayscale_pure(img)
+  let color_out = @color.to_grayscale(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: to_rgb" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
+  let pure_out = @pure.to_rgb_pure(img)
+  let color_out = @color.to_rgb(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: to_rgba" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.to_rgba_pure(img)
+  let color_out = @color.to_rgba(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: premultiply_alpha" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
+  let pure_out = @pure.premultiply_alpha_pure(img)
+  let color_out = @color.premultiply_alpha(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}
+
+///|
+test "pure vs color: unpremultiply_alpha" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
+  let pure_out = @pure.unpremultiply_alpha_pure(img)
+  let color_out = @color.unpremultiply_alpha(img)
+  assert_eq(pure_out.width, color_out.width)
+  assert_eq(pure_out.height, color_out.height)
+  assert_eq(pure_out.channels, color_out.channels)
+  assert_eq(pure_out.data, color_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = color_out
+}

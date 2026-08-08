@@ -541,3 +541,35 @@
 1. **对比测试 API 引用修正**：line 29-33 的 5 个对比测试 API 引用全部修正：`@process.transform.crop` → `@transform.crop`、`@process.transform.rotate_90` → `@transform.rotate_90`、`@process.transform.rotate_180` → `@transform.rotate_180`、`@process.transform.rotate_270` → `@transform.rotate_270`、`@process.transform.flip_horizontal` → `@transform.flip_horizontal`。参照 `roundtrip_test.mbt:252-254` 现有代码先例。line 73 上下文"import @process/transform（line 8）"同步更正为"import @transform（line 8，路径 `src/process/transform` 无别名，引用前缀 `@transform`）"。
 2. **对比测试显式 req_channels=Some(3)**：5 个对比测试的 `@core.load_from_path` 均显式指定 `req_channels=Some(3)`，与 `roundtrip_test.mbt:247-250` 现有 transform 测试惯例一致（test_4x4_red.png 为 RGB 图像，用 Some(3)）。
 选择理由：审查意见 2 项全部属实（已核实 `src/moon.pkg:8` import 无别名、`roundtrip_test.mbt:252-254` 现有代码用 `@transform.` 前缀、`roundtrip_test.mbt:247-250` 现有 transform 测试显式 `req_channels=Some(3)`），修正仅更正 API 引用前缀与补充 req_channels 显式声明，不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、与现有测试惯例一致，可行性不再留待现场
+
+---
+
+## R26 PASSED v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
+结果：在 `src/pure/` 新增 `transform.mbt`（crop_pure/rotate_90_pure/rotate_180_pure/rotate_270_pure/flip_horizontal_pure，移植自 `src/process/transform/transform.mbt:4-135`，仅替换 @core→@types 类型引用）+ `transform_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure vs @transform，req_channels=Some(3)）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 668/668 通过（655→668，+8 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R26 NEW v2.0 pure 包色彩转换（grayscale/rgb/rgba/premultiply，纯 MoonBit，全目标） [ID: T14]
+任务：在 `src/pure/` 新增 `color_convert.mbt`，移植 `src/process/color/color_convert.mbt:1-162` 的 5 个 8-bit Image 色彩转换函数（to_grayscale/to_rgb/to_rgba/premultiply_alpha/unpremultiply_alpha），签名 `pub fn to_grayscale_pure(img : @types.Image) -> @types.Image` / `to_rgb_pure` / `to_rgba_pure` / `pub fn premultiply_alpha_pure(img : @types.Image) -> @types.Image raise @types.LoadError` / `unpremultiply_alpha_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/color_convert_test.mbt` 10 个纯逻辑测试（全目标，手构造 @types.Image 验证 to_grayscale RGB→灰度/已灰度→自身、to_rgb RGBA→RGB/已RGB→自身/channels<3→自身、to_rgba RGB→RGBA/已RGBA→自身/灰度→RGBA、premultiply_alpha 正常/channels!=4 raises、unpremultiply_alpha 正常/alpha=0/channels!=4 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试（@pure.to_grayscale_pure vs @color.to_grayscale 等，用 @core.load_from_path 加载测试图像 req_channels=Some(3) 或 Some(4)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 668→683 通过。
+选择理由：
+- T13 已完成基础几何变换，pure 包当前 6 解码器 + 3 编码器 + 基础几何变换，但色彩转换是图像处理另一核心基础能力，缺则 pure 包图像处理能力不完整
+- `src/process/color/color_convert.mbt:1-162` 的 5 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13（基础几何变换移植）同构，技术风险极低
+- 色彩转换（灰度/RGB/RGBA 互转/alpha 预乘）是最常用图像操作，补齐后 pure 包从"编解码 + 几何变换"升级为"编解码 + 几何变换 + 色彩转换"，实用价值显著提升
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，色彩转换仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（色彩调整/滤波等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
+- T13 产出：pure 包基础几何变换，native 668 测试通过
+- `src/process/color/color_convert.mbt:6-30`：`pub fn to_grayscale(img : @core.Image) -> @core.Image`，BT.601 亮度公式 Y=(299R+587G+114B)/1000，纯 MoonBit
+- `src/process/color/color_convert.mbt:34-54`：`pub fn to_rgb(img : @core.Image) -> @core.Image`，RGBA→RGB 丢弃 alpha，纯 MoonBit
+- `src/process/color/color_convert.mbt:58-85`：`pub fn to_rgba(img : @core.Image) -> @core.Image`，RGB→RGBA alpha=255，纯 MoonBit
+- `src/process/color/color_convert.mbt:90-120`：`pub fn premultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError`，要求 channels=4，纯 MoonBit
+- `src/process/color/color_convert.mbt:125-162`：`pub fn unpremultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError`，要求 channels=4，alpha=0 时输出全 0，纯 MoonBit
+- `src/process/color/moon.pkg`：import core + math，supported_targets = "native"（color 包其他文件用 math，color_convert.mbt 未用）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包解码器/编码器/变换签名惯例：`pub fn xxx_pure(...) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM/PSD/GIF/crop/rotate/flip 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @color（line 6，路径 `src/process/color` 无别名，引用前缀 `@color`）
+- `roundtrip_test.mbt` 现有 color 测试模式（line 270-271）：`@color.to_rgba` / `@color.to_rgb`，引用前缀 `@color`
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
