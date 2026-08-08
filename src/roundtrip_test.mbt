@@ -376,3 +376,113 @@ test "roundtrip: PGM grayscale pure vs FFI" {
   let _ = pure_decoded
   let _ = ffi_decoded
 }
+
+///|
+/// 构造 PSD 字节流辅助：header(26) + 3 个空段 + image data(compression=0 + 按通道排列像素)
+fn make_psd_bytes(
+  channel_count : Int,
+  h : Int,
+  w : Int,
+  channels_data : Array[Array[Byte]],
+) -> Bytes {
+  let out : Array[Byte] = []
+  // signature "8BPS"
+  out.push(b'\x38')
+  out.push(b'\x42')
+  out.push(b'\x50')
+  out.push(b'\x53')
+  // version=1 (BE)
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // reserved 6 字节
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  // channelCount (BE)
+  out.push(((channel_count >> 8) & 0xFF).to_byte())
+  out.push((channel_count & 0xFF).to_byte())
+  // h (BE)
+  out.push(((h >> 24) & 0xFF).to_byte())
+  out.push(((h >> 16) & 0xFF).to_byte())
+  out.push(((h >> 8) & 0xFF).to_byte())
+  out.push((h & 0xFF).to_byte())
+  // w (BE)
+  out.push(((w >> 24) & 0xFF).to_byte())
+  out.push(((w >> 16) & 0xFF).to_byte())
+  out.push(((w >> 8) & 0xFF).to_byte())
+  out.push((w & 0xFF).to_byte())
+  // bitdepth=8 (BE)
+  out.push(b'\x00')
+  out.push(b'\x08')
+  // colorMode=3 (RGB, BE)
+  out.push(b'\x00')
+  out.push(b'\x03')
+  // 3 个空段
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  // compression=0 (BE)
+  out.push(b'\x00')
+  out.push(b'\x00')
+  // 按通道排列像素
+  for ch in channels_data {
+    for b in ch {
+      out.push(b)
+    }
+  }
+  Bytes::from_array(out)
+}
+
+///|
+test "roundtrip: PSD RGB pure vs FFI" {
+  // 2x2 3 通道 RGB PSD，像素值各不同
+  // R 通道 [10,20,30,40] G 通道 [50,60,70,80] B 通道 [90,100,110,120]
+  let r : Array[Byte] = [b'\x0A', b'\x14', b'\x1E', b'\x28']
+  let g : Array[Byte] = [b'\x32', b'\x3C', b'\x46', b'\x50']
+  let b : Array[Byte] = [b'\x5A', b'\x64', b'\x6E', b'\x78']
+  let psd_bytes = make_psd_bytes(3, 2, 2, [r, g, b])
+  let pure_decoded = @pure.decode_psd_pure(psd_bytes)
+  // req_channels=Some(3) 让 @core 返回 3 通道匹配 pure 输出
+  // stb_image PSD 内部输出 4 通道 RGBA，req_channels=3 强制转 3 通道
+  let ffi_decoded = @core.load_from_bytes(psd_bytes, req_channels=Some(3))
+  // pure 包独立实现 vs stb_image C 库原生 FFI 基准对比
+  assert_eq(pure_decoded.width, ffi_decoded.width)
+  assert_eq(pure_decoded.height, ffi_decoded.height)
+  assert_eq(pure_decoded.channels, ffi_decoded.channels)
+  assert_eq(pure_decoded.data, ffi_decoded.data)
+  let _ = pure_decoded
+  let _ = ffi_decoded
+}
+
+///|
+test "roundtrip: PSD RGBA pure vs FFI" {
+  // 2x2 4 通道 RGBA PSD，alpha 全为 255，避免 stb_image white matte removal 修改 RGB
+  // R 通道 [10,20,30,40] G 通道 [50,60,70,80] B 通道 [90,100,110,120] A 通道 [255,255,255,255]
+  let r : Array[Byte] = [b'\x0A', b'\x14', b'\x1E', b'\x28']
+  let g : Array[Byte] = [b'\x32', b'\x3C', b'\x46', b'\x50']
+  let b : Array[Byte] = [b'\x5A', b'\x64', b'\x6E', b'\x78']
+  let a : Array[Byte] = [b'\xFF', b'\xFF', b'\xFF', b'\xFF']
+  let psd_bytes = make_psd_bytes(4, 2, 2, [r, g, b, a])
+  let pure_decoded = @pure.decode_psd_pure(psd_bytes)
+  // 默认返回 4 通道，alpha=255 避免 white matte removal
+  let ffi_decoded = @core.load_from_bytes(psd_bytes)
+  // pure 包独立实现 vs stb_image C 库原生 FFI 基准对比
+  assert_eq(pure_decoded.width, ffi_decoded.width)
+  assert_eq(pure_decoded.height, ffi_decoded.height)
+  assert_eq(pure_decoded.channels, ffi_decoded.channels)
+  assert_eq(pure_decoded.data, ffi_decoded.data)
+  let _ = pure_decoded
+  let _ = ffi_decoded
+}

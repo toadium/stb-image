@@ -240,3 +240,53 @@
 - `roundtrip_test.mbt` 现有 PNM 测试模式（line 148-174）：`@format.encode_ppm`/`encode_pgm` → `@core.load_from_bytes` → 断言 data 一致
 - pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R8 PASSED v2.0 pure 包 PNM 解码器（纯 MoonBit，全目标） [ID: T7]
+结果：在 `src/pure/` 新增 `pnm_decode.mbt`（`decode_pnm_pure`，支持 P5/P6 8-bit，含注释行/任意 whitespace 解析）+ `pnm_decode_test.mbt`（8 纯逻辑测试），根包 `roundtrip_test.mbt` 新增 2 个 native-only PNM pure vs FFI 对比测试（PPM RGB + PGM grayscale）。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582 通过（572→582，+8 pure 纯逻辑 + 2 根包对比）。
+检查：PASSED。PNM 解码器实现完整（P5/P6 magic、注释行、whitespace、maxval 校验、错误路径），8 测试覆盖所有功能点含 3 错误路径，2 FFI 基准对比测试，v1.0 API 冻结保持，现有测试不破坏。
+
+## R8 NEW v2.0 pure 包 PSD 解码器（纯 MoonBit，全目标，无压缩 8-bit） [ID: T8]
+任务：在 `src/pure/` 新增 `psd_decode.mbt`，实现纯 MoonBit PSD 解码器 `pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 8-bit、RGB（channels=3）/RGBA（channels=4）、无压缩（compression=0）。解析 PSD header（大端序：signature "8BPS" + version=1 + reserved(6) + channels + h + w + depth=8 + colorMode=3），跳过 color mode data/image resources/layer and mask data（各含 4 字节 BE length 前缀），读取无压缩像素数据按通道交错（RRRGGGBBB → RGBRGBRGB），返回原始通道数。新增 `src/pure/psd_decode_test.mbt` 8 个纯逻辑测试（RGB/RGBA/交错验证/1x1/4 错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PSD 对比测试（3 通道 RGB 用 req_channels=Some(3) 匹配 + 4 通道 RGBA alpha=255 避免 white matte removal，手构造 PSD 字节流 → @pure.decode_psd_pure vs @core.load_from_bytes 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582→592 通过。
+选择理由：
+- T7 已完成 PNM 解码器，pure 包当前 BMP+QOI+TGA+PNM 四种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
+- PSD 是 stb-image 独家格式（ROADMAP.md "PSD/HDR/PNM 独家格式"），补齐 pure 包 PSD 解码使独家格式覆盖更完整，实用价值高
+- stb_image C 库原生支持 PSD 解码（`stb_image.h:6126 stbi__psd_load`，8/16-bit、RGB、raw/RLE），`@core.load_from_bytes` 可解码 PSD，对比验证为真正的 FFI 基准
+- PSD 无压缩 8-bit 格式简单（header + 跳过 3 个 length 前缀段 + 按通道排列像素），仅需大端序读取 + 通道交错，技术风险低
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，PSD 解码器仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），全目标可用
+- T7 产出：pure 包 BMP+QOI+TGA+PNM 四种解码器，native 582 测试通过
+- PSD 文件格式（大端序，参考 Adobe PSD 规范 + `stb_image.h:6126-6280` stbi__psd_load）：
+  - Header（26 字节）：signature(4 "8BPS" 0x38425053) + version(2 BE, =1) + reserved(6, =0) + channelCount(2 BE, 1-16) + h(4 BE) + w(4 BE) + bitdepth(2 BE, 8 or 16) + colorMode(2 BE, =3 RGB)
+  - Color mode data：length(4 BE) + data（RGB 模式 length=0）
+  - Image resources：length(4 BE) + data
+  - Layer and mask data：length(4 BE) + data
+  - Image data：compression(2 BE, 0=raw, 1=RLE) + 像素数据
+  - 无压缩 8-bit 像素：按通道排列（channel[0] 的 w*h 字节，channel[1] 的 w*h 字节，...），通道顺序 R(0)/G(1)/B(2)/A(3)
+  - 交错到 Image.data：`data[i*channels + c] = channel_data[c*w*h + i]`
+- stb_image PSD 解码行为（`stb_image.h:6126-6280`）：总是内部输出 4 通道 RGBA（channel >= channelCount 时填充默认值：channel 3 = 255，其他 = 0），channelCount >= 4 时做 white matte removal（alpha != 0 && alpha != 255 时修改 RGB）。@core.load_from_bytes 默认返回 4 通道，req_channels=Some(3) 返回 3 通道
+- 对比测试策略：3 通道 PSD 用 req_channels=Some(3) 匹配 pure 的 3 通道输出；4 通道 PSD alpha=255 避免 white matte removal（stb_image 不修改 RGB），pure 不实现 white matte removal
+- `@core.load_from_bytes` 签名（`src/core/image_load_native.mbt:3`）：`pub fn load_from_bytes(data : Bytes, req_channels~ : Option[Int] = None) -> Image raise LoadError`
+- pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`
+- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R14 RETRY v2.0 pure 包 PSD 解码器（纯 MoonBit，全目标，无压缩 8-bit） [ID: T8]
+原因：计划审查 v8 r1 REJECTED，2 项问题
+- [一般] 错误路径测试覆盖与实现要求不一致：task_v8.md line 32-41 列出 9 种错误路径，但 line 47-55 仅 8 测试覆盖 4 种错误路径（signature、too short、bitdepth、compression），遗漏 5 种（version、channelCount、colorMode、尺寸无效、像素数据不足）。4 正例 + 9 错误路径 = 13 测试 > 8，line 47 硬性限定"8 个测试用例"与 9 种错误路径无法兼容
+- [轻微] 预期测试数与错误路径测试扩充后不一致：line 67 预期 582→592 基于 8 测试，补充错误路径测试后需同步调整
+修正方向（已覆写 task_v8.md）：
+1. **pure 包纯逻辑测试数从 8 增加到 13**（4 正例 + 9 错误路径），覆盖 line 32-41 列出的全部 9 种错误路径。参考 T6 R11 RETRY 修正先例（plan.md line 202-205，测试数建议从 7-9 调整到 8-10）
+2. **line 47-55 测试用例补充 5 个错误路径测试**：bad version raises（version=2）、unsupported channelCount raises（channelCount=1 灰度）、unsupported colorMode raises（colorMode=1 Grayscale）、invalid dimensions raises（w=0）、pixel data insufficient raises（像素数据截断）
+3. **line 67 预期 native 测试数同步调整**：原"582→592（+8 pure 纯逻辑 + 2 根包对比）" → "582→597（+13 pure 纯逻辑 + 2 根包对比）"
+4. **line 47 测试数表述调整**：原"8 个测试用例" → "13 个测试用例（4 正例 + 9 错误路径）"
+选择理由：审查意见属实（line 32-41 列 9 种错误路径而 line 47-55 仅覆盖 4 种，同文档内不一致，与 T6 R11 RETRY 同类），修正仅补充测试覆盖不涉实现逻辑变更，风险极低，修正后 line 32-41 与 line 47-55 一致、测试覆盖完整
