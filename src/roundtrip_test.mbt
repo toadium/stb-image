@@ -885,3 +885,71 @@ test "pure vs color: invert" {
   let _ = pure_out
   let _ = color_out
 }
+
+///|
+test "pure vs filter: box_blur" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.box_blur_pure(img, 1)
+  let filter_out = @filter.box_blur(img, 1)
+  assert_eq(pure_out.width, filter_out.width)
+  assert_eq(pure_out.height, filter_out.height)
+  assert_eq(pure_out.channels, filter_out.channels)
+  assert_eq(pure_out.data, filter_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = filter_out
+}
+
+///|
+test "pure vs filter: gaussian_blur" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.gaussian_blur_pure(img, 2, 1.5F)
+  let filter_out = @filter.gaussian_blur(img, 2, 1.5F)
+  assert_eq(pure_out.width, filter_out.width)
+  assert_eq(pure_out.height, filter_out.height)
+  assert_eq(pure_out.channels, filter_out.channels)
+  assert_eq(pure_out.data, filter_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = filter_out
+}
+
+///|
+test "pure vs filter: sharpen" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.sharpen_pure(img, 0.5F)
+  let filter_out = @filter.sharpen(img, 0.5F)
+  assert_eq(pure_out.width, filter_out.width)
+  assert_eq(pure_out.height, filter_out.height)
+  assert_eq(pure_out.channels, filter_out.channels)
+  assert_eq(pure_out.data, filter_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = filter_out
+}
+
+///|
+test "pure vs filter: edge_detect_sobel" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.edge_detect_sobel_pure(img)
+  let filter_out = @filter.edge_detect_sobel(img)
+  assert_eq(pure_out.width, filter_out.width)
+  assert_eq(pure_out.height, filter_out.height)
+  assert_eq(pure_out.channels, filter_out.channels)
+  assert_eq(pure_out.data, filter_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = filter_out
+}

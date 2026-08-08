@@ -622,3 +622,47 @@
 2. **HSV/HSL 边界值补充**：测试 10-11（原 9-10）的 4 像素补充黑色 (0,0,0) 和白色 (255,255,255)，像素数从 4 调整到 6，覆盖 delta==0 / mx==0.0F 特殊分支（h=0, s=0），roundtrip 后黑色应返回 (0,0,0)、白色应返回 (255,255,255)（±1 误差内），测试数不变。
 3. **预期 native 测试数同步调整**：原"683→697（+10 pure 纯逻辑 + 4 根包对比）" → "683→698（+11 pure 纯逻辑 + 4 根包对比）"。
 选择理由：审查意见 2 项全部属实（已核实 `src/process/color/color_adjust.mbt:31-33,60-62,92-94,115-117` 确有 alpha 保留分支、`line 138-140,206-212` 确有 delta==0 特殊分支、do_v14.md line 42-45 确有 RGBA 测试先例），修正仅补充 1 个测试用例与 2 处像素补充不涉实现逻辑变更，风险极低，修正后 alpha 保留分支与 delta==0 特殊分支均有测试覆盖，与 T14 先例及此前 RETRY 修正的测试覆盖标准一致
+
+---
+
+## R28 PASSED v2.0 pure 包色彩调整（brightness/contrast/gamma/invert + HSV/HSL，纯 MoonBit，全目标） [ID: T15]
+结果：在 `src/pure/` 新增 `color_adjust.mbt`（8 个色彩调整函数 adjust_brightness/contrast/gamma/invert + rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb，移植自 `src/process/color/color_adjust.mbt:1-264`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.powf 保留）+ `color_adjust_test.mbt`（11 纯逻辑测试，全目标，含 RGBA alpha 保留 + 黑/白边界 HSV/HSL roundtrip），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试。`moon.pkg` 新增 `moonbitlang/core/math` import。执行中发现并修正 `adjust_gamma_pure: gamma=2.2` 测试预期值计算错误（原预期值与 @math.powf 实际结果不符，已更正）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 698/698 通过（683→698，+11 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R28 NEW v2.0 pure 包基础滤波（box_blur/gaussian_blur/sharpen/edge_detect_sobel，纯 MoonBit，全目标） [ID: T16]
+任务：在 `src/pure/` 新增 `filter.mbt`，移植 `src/process/filter/filter.mbt:1-365` 的 4 个 8-bit Image 滤波函数（box_blur/gaussian_blur/sharpen/edge_detect_sobel）+ 私有辅助函数 clamp_coord，签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.expf` 保留（@math 已在 pure 包 moon.pkg，T15 新增）。新增 `src/pure/filter_test.mbt` 12 个纯逻辑测试（全目标，覆盖 box_blur radius=0/正常/RGBA alpha 保留/均匀图/超出尺寸、gaussian_blur radius=0/均匀图、sharpen amount=0/均匀图/RGBA alpha 保留、edge_detect_sobel 均匀图无边缘/非均匀图检测边缘）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试（box_blur/gaussian_blur/sharpen/edge_detect_sobel，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 698→714 通过。
+选择理由：
+- T15 已完成色彩调整，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整，但缺滤波能力
+- 滤波（盒模糊/高斯模糊/锐化/Sobel 边缘检测）是图像处理核心能力，补齐后 pure 包从"编解码 + 几何变换 + 色彩处理"升级为"编解码 + 几何变换 + 色彩处理 + 滤波"，实用价值显著提升
+- `src/process/filter/filter.mbt:1-365` 的 4 个函数均为纯 MoonBit 实现（仅依赖 @core.Image 类型 + @math.expf，无 FFI/C stub/extern 调用，无 @transform 依赖），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13（几何变换移植）、T14（色彩转换移植）、T15（色彩调整移植）同构，技术风险极低
+- `@math.expf` 是 moonbitlang/core 标准库全目标可用（gaussian_blur 用），已在 pure 包 moon.pkg（T15 新增），无需新增依赖
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，滤波仅依赖 @types + @math，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（直方图/阈值/形态学等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8），全目标可用
+- T15 产出：pure 包色彩调整，native 698 测试通过，`@math` 已在 pure 包 moon.pkg
+- `src/process/filter/filter.mbt:5-13`：`fn clamp_coord(v, max)`，私有辅助（clamp 到 [0, max-1]）
+- `src/process/filter/filter.mbt:18-78`：`pub fn box_blur(img, radius) -> Image`，可分离滑动窗口盒模糊，alpha 保留分支 line 67-70
+- `src/process/filter/filter.mbt:83-210`：`pub fn gaussian_blur(img, radius, sigma) -> Image`，可分离高斯核 + @math.expf，alpha 保留分支 line 199-202
+- `src/process/filter/filter.mbt:215-283`：`pub fn sharpen(img, amount) -> Image`，拉普拉斯锐化，alpha 保留分支 line 272-275
+- `src/process/filter/filter.mbt:288-365`：`pub fn edge_detect_sobel(img) -> Image`，Sobel 边缘检测，输出 channels=1
+- `src/process/filter/moon.pkg`：import core + transform + math，supported_targets = "native"（filter.mbt 仅依赖 @core.Image + @math.expf，无 @transform 依赖）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math（T15 新增），无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @filter（line 4，路径 `src/process/filter` 无别名，引用前缀 `@filter`）
+- `roundtrip_test.mbt` 现有 filter 测试模式（line 293-304）：`@filter.box_blur`，引用前缀 `@filter`
+- `roundtrip_test.mbt` 现有 pure vs color 对比测试模式（line 822-887）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@color.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R29 RETRY v2.0 pure 包基础滤波（box_blur/gaussian_blur/sharpen/edge_detect_sobel，纯 MoonBit，全目标） [ID: T16]
+原因：计划审查 v16 r1 REJECTED，1 项问题
+- [一般] gaussian_blur 的 alpha 保留分支未被测试覆盖：`src/process/filter/filter.mbt:199-202` 有 alpha 保留分支 `if ch == 4 { for i in 0..<n { out[i * ch + 3] = img.data[i * ch + 3] } }`（已核实源码），task_v16.md 明确要求 3 个 Image 级滤波函数均"仅模糊颜色通道，alpha 不变"（line 9-10 注释），且测试 3 覆盖 box_blur 的 alpha 保留分支（line 23，`src/process/filter/filter.mbt:67-70`）、测试 10 覆盖 sharpen 的 alpha 保留分支（line 30，`src/process/filter/filter.mbt:272-275`），但 gaussian_blur 的 2 个测试（测试 6 `radius=0 is identity` 用 2x2 RGB、测试 7 `uniform image is unchanged` 用 3x3 灰度 channels=1）均为非 RGBA，gaussian_blur 的 alpha 保留分支（line 199-202）未被任何测试覆盖。与 T15 R28 RETRY（plan.md line 618）同类问题：T15 因"4 个 Image 级函数均有 alpha 保留分支但 10 个测试全用 RGB（channels=3），RGBA 测试完全缺失"判 [一般]，本轮 gaussian_blur 同样有 alpha 保留分支但无 RGBA 测试覆盖。若 Doer 误将 gaussian_blur 的 alpha 保留实现为 `out[i*ch+3] = 0` 或遗漏该分支，测试 6-7 不会发现（均 channels≠4），alpha 通道正确性无保证。gaussian_blur 是常用滤波，RGBA 图像高斯模糊时 alpha 通道应保持不变，未测试则该行为无保证。
+修正方向（已逐一核实源码论证，覆写 task_v16.md）：
+1. **新增 gaussian_blur RGBA alpha 保留测试**：在 12 个纯逻辑测试中新增测试 8 `gaussian_blur_pure: preserves alpha channel`，构造 2x2 RGBA（channels=4），alpha 通道设 4 个不同值（如 255/128/0/64），radius=1 sigma=1.0 模糊后验证 alpha 通道与原始完全一致（`assert_eq(out.data[i*4+3], orig.data[i*4+3])`），覆盖 `if ch == 4` alpha 保留分支（`src/process/filter/filter.mbt:199-202`）。原测试 8-12（sharpen/edge_detect_sobel）顺移为 9-13。测试数从 12 调整到 13。
+2. **预期 native 测试数同步调整**：原"698→714（+12 pure 纯逻辑 + 4 根包对比）" → "698→715（+13 pure 纯逻辑 + 4 根包对比）"。
+选择理由：审查意见属实（已核实 `src/process/filter/filter.mbt:199-202` 确有 alpha 保留分支、测试 3/11 覆盖 box_blur/sharpen 的 alpha 保留分支但 gaussian_blur 缺失、与 T15 R28 RETRY 同类），修正仅补充 1 个测试用例不涉实现逻辑变更，风险极低，修正后 3 个 Image 级滤波函数的 alpha 保留分支均有 RGBA 测试覆盖，与 T15 R28 RETRY 修正的测试覆盖标准一致
