@@ -114,7 +114,7 @@ test "decode_bmp_pure: invalid magic raises" {
     let _ = decode_bmp_pure(bad)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
@@ -126,7 +126,7 @@ test "decode_bmp_pure: too short raises" {
     let _ = decode_bmp_pure(short)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
