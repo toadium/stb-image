@@ -1,9 +1,3 @@
 import {
   "MoonBit-Toadium/stb-image/src/types",
 }
-
-import {
-  "MoonBit-Toadium/stb-image/src/core",
-} for "test"
-
-supported_targets = "native"

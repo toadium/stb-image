@@ -66,3 +66,23 @@
 3. **pure 包暂不移除 native 限制（选项 b）**：pure 包 `moon.pkg` 保留 `supported_targets = "native"`，同时 import core + types（主代码用 @types，测试用 @core 对比）。本轮核心价值是 types 包全目标可用 + core 包 re-export 机制验证 + pure 包主代码改用 types 验证 types 包可用；pure 包真正脱离 native（全目标编译）需确认 moon.pkg 条件依赖语法（主代码 import types 全目标 + 测试 `for "test"` import core native-only），留待下轮。明确声明：本轮 pure 包仍 native-only，多目标落地留待后续轮次。
 4. **types 包 import 列表**：仅 `moonbitlang/core/debug`（`derive(Eq, @debug.Debug)` 需要）；`Array[Image]`（GifAnimation.frames）用内置 Array，Int/Bytes/String 内置，无需显式 import。
 选择理由：审查意见属实，严重问题通过实验验证已消解（别名透明可行，core 包内裸引用无需修改），其余问题已逐一明确，修订后计划可行性不再留待现场
+
+---
+
+## R5 PASSED v2.0 core 包类型分离（多目标基础） [ID: T2]
+结果：创建 `src/types/` 全目标包，从 core 包提取 6 个类型定义（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError），core 包通过 `pub type X = @types.X` 别名 re-export 保持 `@core.Image` 等现有引用不变（69+ 处裸引用无需修改），pure 包主代码改用 @types。types 包全目标可用，core 包 native-only 保留 FFI，pure 包仍 native-only（主代码全目标就绪，测试依赖 @core 对比验证）。
+检查：`moon check --target native` 0 errors / 0 warnings；`moon test --target native` 554/554 通过，未破坏现有测试；别名透明性有效，re-export 机制保持向后兼容。
+
+## R5 NEW v2.0 pure 包全目标化（多目标编译） [ID: T3]
+任务：移除 `src/pure/moon.pkg` 的 `supported_targets = "native"` 限制，使 pure 包全目标编译（wasm/js 可用）。处理测试中对 @core 的依赖（对比测试 5-6 依赖 native-only 的 @core.load_from_bytes），优先方案 A：分离对比测试到 native-only 文件（参照根包 `options(targets:{...})` 先例）；fallback 方案 B：移除对比测试，对比验证留待后续移至根包 roundtrip_test。
+选择理由：
+- T2 已完成类型分离，pure 包主代码已只依赖 @types（全目标），但 moon.pkg 仍 `supported_targets = "native"`，是 pure 包全目标的唯一剩余障碍
+- T2 修正方向 3 明确声明"pure 包真正脱离 native 留待下轮"
+- pure 包全目标化是 v2.0 多目标支持（wasm/js）的关键里程碑，是后端选择层 `src/lib.mbt` 的前提
+- 风险可控：仅测试依赖 @core，处理测试依赖即可，主代码已全目标就绪
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`
+- T2 产出：types 包全目标，pure 包主代码用 @types，moon.pkg 仍 native-only
+- 根包 `src/moon.pkg` 有 `options(targets: {"roundtrip_test.mbt": ["native"]})` 先例
+- pure 包测试：1-4 纯逻辑，5-6 对比验证（依赖 @core），7-8 错误路径
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证

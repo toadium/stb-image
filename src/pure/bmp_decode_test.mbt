@@ -1,5 +1,6 @@
 // 纯 MoonBit BMP 解码器测试
-// 包含纯逻辑断言测试 + 与 @core.load_from_bytes 对比测试
+// 纯逻辑断言测试（全目标可用：native/wasm/js），不依赖 @core
+// 对比验证（@core.load_from_bytes）留待后续轮次移至根包 roundtrip_test.mbt（native-only）
 
 ///|
 // 1x1 24-bit BMP，红色像素 (R=255, G=0, B=0)
@@ -82,28 +83,6 @@ test "decode_bmp_pure: top-down row order (height < 0)" {
   assert_eq(img.data[3].to_int(), 0)
   assert_eq(img.data[4].to_int(), 255)
   assert_eq(img.data[5].to_int(), 0)
-}
-
-///|
-test "decode_bmp_pure: compare with @core.load_from_bytes (1x1)" {
-  let bmp = make_1x1_red_bmp_24()
-  let pure_img = decode_bmp_pure(bmp)
-  let ffi_img = @core.load_from_bytes(bmp, req_channels=Some(3))
-  assert_eq(pure_img.width, ffi_img.width)
-  assert_eq(pure_img.height, ffi_img.height)
-  assert_eq(pure_img.channels, ffi_img.channels)
-  assert_eq(pure_img.data, ffi_img.data)
-}
-
-///|
-test "decode_bmp_pure: compare with @core.load_from_bytes (2x2)" {
-  let bmp = make_2x2_colors_bmp_24()
-  let pure_img = decode_bmp_pure(bmp)
-  let ffi_img = @core.load_from_bytes(bmp, req_channels=Some(3))
-  assert_eq(pure_img.width, ffi_img.width)
-  assert_eq(pure_img.height, ffi_img.height)
-  assert_eq(pure_img.channels, ffi_img.channels)
-  assert_eq(pure_img.data, ffi_img.data)
 }
 
 ///|
