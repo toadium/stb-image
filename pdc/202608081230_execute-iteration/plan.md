@@ -123,3 +123,44 @@
 4. **方案 A：仅保留 24-bit RGB 对比测试**，放弃 32-bit RGBA 对比测试。32-bit 对比验证需先扩展 pure 解码器支持 BITMAPV4HEADER（属后续轮次），不在本轮承担
 5. **预期测试数调整为 552→553**（仅新增 1 个 24-bit RGB 对比测试）
 选择理由：审查意见技术事实属实（已核实 stb_image_write.h 与 bmp_decode.mbt 源码），方案 A 为审查推荐路径，24-bit RGB 对比已能验证纯 MoonBit 解码器与 FFI 解码器在主要路径上的一致性，32-bit 对比验证留待后续扩展 pure 解码器后补充，风险最低
+
+---
+
+## R8 PASSED v2.0 pure-FFI BMP 对比验证移至根包 [ID: T4]
+结果：将 24-bit RGB pure-FFI BMP 对比验证测试移至根包 `src/roundtrip_test.mbt`（native-only），新增 1 个测试 `roundtrip: BMP RGB pure vs FFI`。`src/moon.pkg` 以 `for "test"` 语法声明 `@pure` 测试专用依赖（普通 import 触发 `unused_package` 警告，`for "test"` 语义等价且消除警告）。32-bit RGBA 对比测试因 FFI 写出 BITMAPV4HEADER+BI_BITFIELDS 超出 pure 解码器能力范围而放弃，留待后续扩展 pure 解码器后补充。
+检查：`moon check --target native` 0 errors 0 warnings，全目标 `moon check` 0 errors 0 warnings，`moon test --target native` 553/553 通过（552→553，新增 1 测试），v1.0 API 冻结保持，现有测试不破坏。
+
+## R8 NEW v2.0 pure 包 QOI 解码器（纯 MoonBit，全目标） [ID: T5]
+任务：在 `src/pure/` 新增 `qoi_decode.mbt`，实现纯 MoonBit QOI 解码器 `pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 RGB（channels=3）和 RGBA（channels=4）。参考 `src/format/qoi.mbt` 的 `decode_qoi` 逻辑（已是纯 MoonBit，仅依赖 `@core.Image`/`@core.LoadError`，无 FFI），将类型引用替换为 `@types.Image`/`@types.LoadError`。新增 `src/pure/qoi_decode_test.mbt` 纯逻辑测试（全目标，手构造 QOI 字节流验证解码正确性，不依赖 @core）。在根包 `src/roundtrip_test.mbt` 新增 1 个 pure-FFI QOI 对比测试（native-only，用 `@core.load_from_path` 加载测试图像 → `@core.encode_qoi` 生成 QOI 字节流 → `@pure.decode_qoi_pure` 纯 MoonBit 解码 → `@core.decode_qoi` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check`（全目标）0 errors 0 warnings，`moon test --target native` 553→554 通过。
+选择理由：
+- T4 已完成 BMP 对比验证收尾，pure 包当前仅 BMP 解码器，格式覆盖不足，需扩展以推进 v2.0 多目标支持的实质功能
+- QOI 格式简单（无压缩，索引+差分编码），`src/format/qoi.mbt` 已有纯 MoonBit 解码实现（116 行），移植到 pure 包仅需替换类型引用，技术风险极低
+- QOI 是现代格式（qoiformat.org），实用价值高，且项目已有 QOI FFI 实现（`src/format/qoi.mbt`）可作对比基准
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，QOI 解码器仅依赖 @types，全目标可用，无需架构改动
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续后端选择层 `src/lib.mbt` 和 pure 包格式进一步扩展（PNG/JPEG）奠定基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），6 纯逻辑测试
+- T4 产出：根包 roundtrip_test.mbt 有 pure-FFI BMP 对比测试，`src/moon.pkg` 已 `for "test"` 声明 `@pure` 依赖
+- `src/format/qoi.mbt:13-116`：`decode_qoi` 纯 MoonBit 实现，签名 `pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError`，支持 QOI_OP_INDEX/DIFF/LUMA/RUN/RGB/RGBA 标签
+- `src/format/qoi.mbt:121-231`：`encode_qoi` 纯 MoonBit 实现，可用于对比测试生成 QOI 字节流
+- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R9 RETRY v2.0 pure 包 QOI 解码器（纯 MoonBit，全目标） [ID: T5]
+原因：计划审查 v5 r1 REJECTED，4 项问题
+- [严重] 对比测试 API 引用错误：`@core.encode_qoi`/`@core.decode_qoi` 不存在，core 包无此二函数（`src/format/qoi.mbt:13,121` 属 @format 包，`src/reexport.mbt:824,842` 以 `pub let` re-export 到根包级别非 @core 命名空间，`roundtrip_test.mbt:95,96` 现有用法用 `@format.encode_qoi`/`@format.decode_qoi`），照搬导致 `unbound function @core.encode_qoi` 编译失败
+- [严重] "FFI 基准解码"描述失实：`decode_qoi` 是纯 MoonBit（`src/format/qoi.mbt:13-116` 无 FFI/C stub），stb C 库不原生支持 QOI，对比实为"pure 包独立实现 vs format 包独立实现"交叉验证，非 FFI 基准对照
+- [一般] 预期 native 测试数遗漏 pure 包纯逻辑测试：pure 包全目标化（T3 已完成），native 必运行其测试，原"553→554（pure 包纯逻辑测试数另计）"表述与 T3 先例矛盾（T3 native 552 已含 pure 6 测试），Checker 按 554 验证会误判
+- [一般] QOI_OP_LUMA 标签测试缺失：明示"支持全部 6 种 QOI 标签"，测试却仅覆盖 5 种（缺 LUMA），LUMA 是最复杂双字节差分分支（`src/format/qoi.mbt:73-81`，dg/dr_dg/db_dg 二级差分），未测试则正确性无保证
+修正方向（已逐一核实源码论证）：
+1. **API 引用修正**：`@core.encode_qoi` → `@format.encode_qoi`、`@core.decode_qoi` → `@format.decode_qoi`。根包 `src/moon.pkg` 第 11 行已 import format，无需新增依赖。`roundtrip_test.mbt:95,96,108,109` 现有 QOI 测试均用 `@format.` 前缀，印证此为项目正确调用方式。
+2. **描述更正**："FFI 基准解码" → "format 包纯 MoonBit 基准解码（交叉验证）"，如实说明对比双方均为纯 MoonBit 独立实现、stb C 库不原生支持 QOI、对比价值为独立实现交叉校验（可发现移植错误）而非 FFI 基准对照。选择理由中"QOI FFI 实现"同步更正为"QOI 纯 MoonBit 实现"。
+3. **预期测试数修正**：pure 包新增 8 测试（5 正常标签 + LUMA + 2 错误路径），native 预期 553 + 1（根包对比）+ 8（pure 纯逻辑）= 562，不再使用"另计"模糊表述。
+4. **新增 QOI_OP_LUMA 测试用例**：在 pure 包测试中新增 1 个 2x2 RGB 含 LUMA 编码用例，覆盖 dg/dr_dg/db_dg 二级差分解码分支（`src/format/qoi.mbt:73-81`），使测试覆盖全部 6 种 QOI 标签。
+选择理由：审查意见 4 项全部属实（已核实 `src/format/qoi.mbt`、`src/reexport.mbt:824,842`、`src/roundtrip_test.mbt:95,96`、`src/moon.pkg:11` 源码），修正后计划 API 引用正确、描述如实、预期数准确、测试覆盖完整，可行性不再留待现场

@@ -113,6 +113,25 @@ test "roundtrip: QOI RGBA" {
 }
 
 ///|
+test "roundtrip: QOI pure vs format" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let qoi_bytes = @format.encode_qoi(img)
+  let pure_decoded = @pure.decode_qoi_pure(qoi_bytes)
+  let format_decoded = @format.decode_qoi(qoi_bytes)
+  // pure 包独立实现 vs format 包独立实现交叉验证
+  assert_eq(pure_decoded.width, format_decoded.width)
+  assert_eq(pure_decoded.height, format_decoded.height)
+  assert_eq(pure_decoded.channels, format_decoded.channels)
+  assert_eq(pure_decoded.data, format_decoded.data)
+  let _ = img
+  let _ = pure_decoded
+  let _ = format_decoded
+}
+
+///|
 test "roundtrip: GIF RGB" {
   let img = @core.load_from_path(
     "testdata/test_4x4_red.png",
