@@ -399,3 +399,51 @@
 3. **roundtrip req_channels=Some(3) 明确**：3 个 roundtrip 测试均显式 `@core.load_from_path(path, req_channels=Some(3))`，与现有测试惯例一致
 4. **PGM data 验证描述具体化 + run-length 构造描述明确化**：PGM data 验证明确"对原始 RGB 像素 (r,g,b) 计算 (r*299+g*587+b*114)/1000，与 decode_pnm_pure 输出的 data 逐字节比较"；run-length 测试明确"4 像素均为 (0,0,0)，与 prev (0,0,0,255) 相同，全触发 RUN 编码，输出 1 个 RUN 标签 0xC3"
 选择理由：审查意见 4 项全部属实（已核实 `src/pure/qoi_decode.mbt:9` 确有 qoi_hash 定义、`src/format/qoi.mbt:185-196` 确有 DIFF/LUMA 分支、`roundtrip_test.mbt` 现有测试均显式 req_channels=Some(3)），修正仅消除命名冲突、补充测试覆盖、精确化描述不涉实现逻辑变更，风险极低，修正后计划可行性不再留待现场
+
+---
+
+## R20 PASSED v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
+结果：在 `src/pure/` 新增 `qoi_encode.mbt`（`encode_qoi_pure`，复用 `qoi_decode.mbt` 的 `qoi_hash`，支持全部 6 种 QOI 标签）+ `pnm_encode.mbt`（`encode_ppm_pure`/`encode_pgm_pure`/`encode_pnm_pure`）+ 12 纯逻辑测试（7 QOI + 5 PNM，全目标），根包 `roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI/PPM/PGM pure encode→decode）。`moon.pkg` 新增 `@encoding/utf8` import。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 626 通过（611→626，+12 pure 纯逻辑 + 3 根包 roundtrip），v1.0 API 冻结保持，现有测试不破坏。
+
+## R21 NEW v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
+任务：在 `src/pure/` 新增 `gif_encode.mbt`，移植 `src/format/gif_encode.mbt:1-177` 的单帧 GIF 编码器（`quantize_332` + `build_332_palette` + `lzw_compress` + `encode_gif`），签名 `pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError`，将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖已在 pure 包 moon.pkg（T10 新增）。新增 `src/pure/gif_encode_test.mbt` 纯逻辑测试（全目标，覆盖 3-3-2 量化、LZW 压缩、RGB/RGBA 编码、header 结构、错误路径 channels=2）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only GIF pure roundtrip 测试（`@pure.encode_gif_pure` → `@pure.decode_gif_pure`，断言 width/height/channels/data 一致；另新增 1 个 pure encode vs FFI 对比测试 `@pure.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 626→636 通过。
+选择理由：
+- T10 已完成 QOI + PNM 编码器，pure 包当前 6 解码器 + 2 编码器（QOI/PNM），GIF 编码器是最后一个可低风险移植的编码器（BMP/TGA/PSD 编码器均为 FFI 实现无纯 MoonBit 版本可移植）
+- `src/format/gif_encode.mbt:1-177` 单帧 GIF 编码器为纯 MoonBit 实现（3-3-2 量化 + LZW 压缩，177 行），仅依赖 `@core.Image`/`@core.LoadError`/`@encoding/utf8`，移植到 pure 包仅需替换类型引用，与 T10（QOI+PNM 编码器移植）同构，技术风险极低
+- GIF 是 Web 早期标准格式，实用价值高，补齐 GIF 编码器使 pure 包具备 GIF 完整 roundtrip 能力（pure encode→pure decode + pure encode vs FFI 对比）
+- pure 包已有 `decode_gif_pure`（T9），移植 `encode_gif_pure` 后可构成 roundtrip 验证
+- `@encoding/utf8` 依赖已在 pure 包 moon.pkg（T10 新增），无需新增依赖
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，GIF 编码器仅依赖 @types + @encoding/utf8，全目标可用
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，roundtrip 测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续后端选择层 `src/lib.mbt` 积累更完整的 pure 包编解码能力（6 解码 + 3 编码）
+- 暂不移植 `encode_gif_animation`（多帧动画编码，line 184-291），单帧编码已能验证 GIF 编码核心逻辑（3-3-2 量化 + LZW 压缩），多帧动画编码留待后续轮次
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（仅 import types），全目标可用
+- T9 产出：pure 包 GIF 解码器 `decode_gif_pure`（单帧，GIF89a/GIF87a，LZW 解压，GCT/LCT）
+- T10 产出：pure 包 QOI+PNM 编码器，`@encoding/utf8` 依赖已在 pure 包 moon.pkg，native 626 测试通过
+- `src/format/gif_encode.mbt:1-177`：单帧 GIF 编码器，纯 MoonBit 实现
+  - `quantize_332(r,g,b)` (line 7-12)：3-3-2 量化，R 8 levels + G 8 levels + B 4 levels = 256 colors
+  - `build_332_palette()` (line 17-28)：构建 256 色 3-3-2 调色板（768 字节）
+  - `lzw_compress(indices, min_code_size)` (line 34-113)：LZW 压缩，变长码 + 字典 + sub-block 包装
+  - `encode_gif(img)` (line 119-177)：GIF89a header + LSD + GCT + Image Descriptor + LZW data + Trailer
+- `src/format/gif_encode.mbt:184-291`：`encode_gif_animation`（多帧动画编码），本轮暂不移植
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8（T10 新增），无 `supported_targets`，全目标
+- pure 包已有 `decode_gif_pure`（T9），可构成 roundtrip
+- 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
+- `roundtrip_test.mbt` 现有 GIF 测试模式（line 135-146）：`@format.encode_gif` → `@core.load_from_bytes` → 断言 data 一致
+- pure 包解码器/编码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError` / `pub fn encode_xxx_pure(img : @types.Image) -> Bytes raise @types.LoadError`
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R21 RETRY v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
+原因：计划审查 v11 r1 REJECTED，2 项严重问题
+- [严重] 测试 5 "data 一致" 比较双方不明确且技术不可行：测试 5 用 2x2 RGB 像素 (10,20,30)/(40,50,60)/(70,80,90)/(100,110,120)，`encode_gif_pure` → `decode_gif_pure` 后断言 "data 一致"。但 `encode_gif_pure` 内部做 3-3-2 量化（`src/format/gif_encode.mbt:154`），roundtrip 后 data 是量化后颜色而非原始颜色。经核实源码量化逻辑：(10,20,30)→(0,0,0)；(40,50,60)→(36,36,0)；(70,80,90)→(72,72,85)；(100,110,120)→(108,108,85)。roundtrip 后 data=[0,0,0,36,36,0,72,72,85,108,108,85] 与原始 [10,20,30,...] 不一致。描述未给出量化后预期 data 也未说明 "一致" 的比较双方，Doer 按 "与原始 data 一致" 实现则测试必然失败
+- [严重] 测试 2 "data 逐像素比较" 比较双方不明确且技术不可行：测试 2 数据流描述为 `@core.load_from_path` → `@pure.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))`，断言 "data 逐像素比较"。数据流中仅有 orig_img、gif_bytes、ffi_img 三个变量，"data 逐像素比较" 的双方未明确。若比较 ffi_img vs orig_img：(255,0,0) 经 3-3-2 量化为 (252,0,0) 不一致，测试失败。若比较 ffi_img vs pure_img：描述数据流缺少 `@pure.decode_gif_pure` 步骤，Doer 无法从描述推断此比较方向
+修正方向（已逐一修正，覆写 task_v11.md）：
+1. **测试 5 修正（采用审查推荐方案 b）**：明确给出量化后预期 data 并断言 roundtrip 结果与之一致。原"断言 width/height/channels/data 一致" → "断言 width=2, height=2, channels=3, data == [0,0,0, 36,36,0, 72,72,85, 108,108,85]"，并列出 4 像素量化后预期值的逐级计算（r_level/g_level/b_level → 调色板值），参照测试 7 给出 (252,252,255) 量化预期的先例，显式声明不与原始 data 比较因量化改变颜色
+2. **测试 2 修正**：明确完整数据流和比较双方。数据流补充 `@pure.decode_gif_pure` 步骤：orig_img = `@core.load_from_path(path, req_channels=Some(3))` → gif_bytes = `@pure.encode_gif_pure(orig_img)` → pure_img = `@pure.decode_gif_pure(gif_bytes)` + ffi_img = `@core.load_from_bytes(gif_bytes, req_channels=Some(3))`。断言改为 pure_img vs ffi_img 完全一致（width/height/channels/data），显式声明不与 orig_img 比较因 orig_img 未量化
+选择理由：审查意见 2 项全部属实（已核实 `src/format/gif_encode.mbt:7-12` 量化逻辑，3-3-2 量化确会改变颜色，roundtrip 后 data 与原始不一致；测试 2 数据流缺 pure decode 步骤致比较双方歧义），修正采用审查推荐方案 b（给出量化预期 data，与测试 7 先例一致）和补充数据流步骤，仅精确化测试描述不涉实现逻辑变更，风险极低，修正后测试 5/2 比较双方明确且技术可行

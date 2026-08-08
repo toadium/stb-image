@@ -564,3 +564,46 @@ test "roundtrip: PGM pure encode→decode" {
   let _ = img
   let _ = restored
 }
+
+///|
+test "roundtrip: GIF pure encode→decode" {
+  // 加载 PNG → pure encode GIF → pure decode GIF → 验证 roundtrip 稳定性
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let gif_bytes = @pure.encode_gif_pure(img)
+  let restored1 = @pure.decode_gif_pure(gif_bytes)
+  // GIF 3-3-2 量化后颜色可能变化，断言 roundtrip 稳定性：
+  // 再次 encode → decode 结果与第一次一致
+  let gif_bytes2 = @pure.encode_gif_pure(restored1)
+  let restored2 = @pure.decode_gif_pure(gif_bytes2)
+  assert_eq(restored1.width, restored2.width)
+  assert_eq(restored1.height, restored2.height)
+  assert_eq(restored1.channels, restored2.channels)
+  assert_eq(restored1.data, restored2.data)
+  let _ = img
+  let _ = restored1
+  let _ = restored2
+}
+
+///|
+test "roundtrip: GIF pure encode vs FFI decode" {
+  // pure encode → pure decode vs FFI decode 结果一致
+  let orig_img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let gif_bytes = @pure.encode_gif_pure(orig_img)
+  let pure_img = @pure.decode_gif_pure(gif_bytes)
+  let ffi_img = @core.load_from_bytes(gif_bytes, req_channels=Some(3))
+  // pure decode 与 FFI decode 结果一致：
+  // 两者均输出 GIF 调色板中的 3-3-2 量化后颜色，stb_image 解码 GIF 不做颜色变换故与 pure 量化结果一致
+  assert_eq(pure_img.width, ffi_img.width)
+  assert_eq(pure_img.height, ffi_img.height)
+  assert_eq(pure_img.channels, ffi_img.channels)
+  assert_eq(pure_img.data, ffi_img.data)
+  let _ = orig_img
+  let _ = pure_img
+  let _ = ffi_img
+}
