@@ -6,23 +6,23 @@
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// low_threshold 和 high_threshold 为双阈值（low 应 < high）。
 pub fn canny_edge(
-  img : @core.Image,
+  img : @types.Image,
   low_threshold? : Int = 50,
   high_threshold? : Int = 100,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("canny_edge 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("canny_edge 仅支持 channels=1/3/4")
   }
   if low_threshold < 0 || low_threshold > 255 {
-    raise @core.LoadError::DecodeFailed("low_threshold 必须在 0..255 之间")
+    raise @types.LoadError::DecodeFailed("low_threshold 必须在 0..255 之间")
   }
   if high_threshold < 0 || high_threshold > 255 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "high_threshold 必须在 0..255 之间",
     )
   }
   if low_threshold > high_threshold {
-    raise @core.LoadError::DecodeFailed("low_threshold 应 <= high_threshold")
+    raise @types.LoadError::DecodeFailed("low_threshold 应 <= high_threshold")
   }
   let w = img.width
   let h = img.height
@@ -147,7 +147,7 @@ pub fn canny_edge(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,

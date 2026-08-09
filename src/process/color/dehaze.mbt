@@ -7,22 +7,22 @@
 /// patch_size 为暗通道计算窗口半径（默认 7），omega 为去雾强度（默认 0.95），
 /// t0 为透射率下限（默认 0.1）。
 pub fn dehaze(
-  img : @core.Image,
+  img : @types.Image,
   patch_size? : Int = 7,
   omega? : Float = 0.95F,
   t0? : Float = 0.1F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("dehaze 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed("dehaze 需要 RGB/RGBA 图像")
   }
   if patch_size < 1 || patch_size > 30 {
-    raise @core.LoadError::DecodeFailed("patch_size 必须在 1..30 之间")
+    raise @types.LoadError::DecodeFailed("patch_size 必须在 1..30 之间")
   }
   if omega <= 0.0F || omega > 1.0F {
-    raise @core.LoadError::DecodeFailed("omega 必须在 (0, 1] 之间")
+    raise @types.LoadError::DecodeFailed("omega 必须在 (0, 1] 之间")
   }
   if t0 <= 0.0F || t0 > 1.0F {
-    raise @core.LoadError::DecodeFailed("t0 必须在 (0, 1] 之间")
+    raise @types.LoadError::DecodeFailed("t0 必须在 (0, 1] 之间")
   }
   let ch = img.channels
   let w = img.width
@@ -59,7 +59,7 @@ pub fn dehaze(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -70,7 +70,7 @@ pub fn dehaze(
 ///|
 /// 计算暗通道
 fn compute_dark_channel(
-  img : @core.Image,
+  img : @types.Image,
   w : Int,
   h : Int,
   ch : Int,
@@ -129,7 +129,7 @@ fn compute_dark_channel(
 ///|
 /// 估计大气光
 fn estimate_atmospheric_light(
-  img : @core.Image,
+  img : @types.Image,
   dark_channel : Array[Float],
   w : Int,
   h : Int,
@@ -170,13 +170,13 @@ fn estimate_atmospheric_light(
 /// 引导滤波（Guided Filter）用于优化透射率。
 /// 适用于灰度图（channels=1）作为引导图。
 pub fn guided_filter(
-  img : @core.Image,
+  img : @types.Image,
   input : Array[Float],
   radius? : Int = 20,
   eps? : Float = 0.001F,
-) -> Array[Float] raise @core.LoadError {
+) -> Array[Float] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "guided_filter 仅支持 channels=1/3/4",
     )
   }

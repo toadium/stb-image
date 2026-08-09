@@ -3,7 +3,7 @@
 ///|
 /// 编码为 PPM (P6 binary RGB) 格式。
 /// 灰度输入自动转为 RGB，RGBA 输入丢弃 alpha。
-pub fn encode_ppm(img : @core.Image) -> Bytes {
+pub fn encode_ppm(img : @types.Image) -> Bytes {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -34,7 +34,7 @@ pub fn encode_ppm(img : @core.Image) -> Bytes {
 ///|
 /// 编码为 PGM (P5 binary grayscale) 格式。
 /// RGB 输入自动转为灰度（BT.601），RGBA 丢弃 alpha。
-pub fn encode_pgm(img : @core.Image) -> Bytes {
+pub fn encode_pgm(img : @types.Image) -> Bytes {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -67,7 +67,7 @@ pub fn encode_pgm(img : @core.Image) -> Bytes {
 ///|
 /// 自动选择 PNM 格式编码。
 /// channels <= 1 → PGM (P5)，否则 → PPM (P6)。
-pub fn encode_pnm(img : @core.Image) -> Bytes {
+pub fn encode_pnm(img : @types.Image) -> Bytes {
   if img.channels <= 1 {
     encode_pgm(img)
   } else {

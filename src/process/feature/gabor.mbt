@@ -8,25 +8,25 @@
 /// ksize 为核大小（奇数），sigma 为标准差，theta 为方向（弧度），
 /// lambda 为波长，gamma 为空间纵横比（默认 0.5），phi 为相位偏移（默认 0）。
 pub fn gabor_filter(
-  img : @core.Image,
+  img : @types.Image,
   ksize : Int,
   sigma : Float,
   theta : Float,
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("gabor_filter 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("gabor_filter 仅支持 channels=1/3/4")
   }
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @core.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
+    raise @types.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
   }
   if sigma <= 0.0F {
-    raise @core.LoadError::DecodeFailed("sigma 必须 > 0")
+    raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
   }
   if lambda <= 0.0F {
-    raise @core.LoadError::DecodeFailed("lambda 必须 > 0")
+    raise @types.LoadError::DecodeFailed("lambda 必须 > 0")
   }
   let ch = img.channels
   let w = img.width
@@ -143,7 +143,7 @@ pub fn gabor_filter(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -157,20 +157,20 @@ pub fn gabor_filter(
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4）。
 /// num_orientations 为方向数（默认 4，即 0°/45°/90°/135°）。
 pub fn gabor_filter_bank(
-  img : @core.Image,
+  img : @types.Image,
   ksize : Int,
   sigma : Float,
   num_orientations? : Int = 4,
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "gabor_filter_bank 仅支持 channels=1/3/4",
     )
   }
   if num_orientations < 1 || num_orientations > 16 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "num_orientations 必须在 1..16 之间",
     )
   }
@@ -198,7 +198,7 @@ pub fn gabor_filter_bank(
     let val = (accum[j] / Float::from_int(num_orientations)).to_int()
     out[j] = val.clamp(min=0, max=255).to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -215,12 +215,12 @@ pub fn gabor_kernel(
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
-) -> Array[Array[Float]] raise @core.LoadError {
+) -> Array[Array[Float]] raise @types.LoadError {
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @core.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
+    raise @types.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
   }
   if sigma <= 0.0F {
-    raise @core.LoadError::DecodeFailed("sigma 必须 > 0")
+    raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
   }
   let half = ksize / 2
   let kernel : Array[Array[Float]] = Array::make(ksize, [])

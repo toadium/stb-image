@@ -5,16 +5,16 @@
 /// radius 为滤波半径，sigma_space 为空间高斯标准差，sigma_color 为值域高斯标准差。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn bilateral_filter(
-  img : @core.Image,
+  img : @types.Image,
   radius : Int,
   sigma_space : Float,
   sigma_color : Float,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if radius < 1 {
-    raise @core.LoadError::DecodeFailed("radius 必须 >= 1")
+    raise @types.LoadError::DecodeFailed("radius 必须 >= 1")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "bilateral_filter 仅支持 channels=1/3/4",
     )
   }
@@ -199,7 +199,7 @@ pub fn bilateral_filter(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -211,12 +211,12 @@ pub fn bilateral_filter(
 /// 快速双边滤波（使用降采样近似）。适用于大半径场景。
 /// downsample 为降采样倍数（1=不降采样，2=降采样到 1/2）。
 pub fn bilateral_filter_fast(
-  img : @core.Image,
+  img : @types.Image,
   radius : Int,
   sigma_space : Float,
   sigma_color : Float,
   downsample : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if downsample <= 1 {
     return bilateral_filter(img, radius, sigma_space, sigma_color)
   }
@@ -251,7 +251,7 @@ pub fn bilateral_filter_fast(
 }
 
 ///|
-fn crop_bilateral(img : @core.Image, w : Int, h : Int) -> @core.Image {
+fn crop_bilateral(img : @types.Image, w : Int, h : Int) -> @types.Image {
   let ch = img.channels
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for y in 0..<h {
@@ -261,7 +261,7 @@ fn crop_bilateral(img : @core.Image, w : Int, h : Int) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

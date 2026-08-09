@@ -3,7 +3,7 @@
 
 ///|
 /// 腐蚀。每个像素取 3x3 邻域最小值。分离内部/边界区域以消除热点 clamp 调用。
-pub fn erode(img : @core.Image) -> @core.Image {
+pub fn erode(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -73,7 +73,7 @@ pub fn erode(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -83,7 +83,7 @@ pub fn erode(img : @core.Image) -> @core.Image {
 
 ///|
 /// 膨胀。每个像素取 3x3 邻域最大值。分离内部/边界区域以消除热点 clamp 调用。
-pub fn dilate(img : @core.Image) -> @core.Image {
+pub fn dilate(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -153,7 +153,7 @@ pub fn dilate(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -163,13 +163,13 @@ pub fn dilate(img : @core.Image) -> @core.Image {
 
 ///|
 /// 开运算（先腐蚀后膨胀）。去除小的明亮噪点。
-pub fn morph_open(img : @core.Image) -> @core.Image {
+pub fn morph_open(img : @types.Image) -> @types.Image {
   dilate(erode(img))
 }
 
 ///|
 /// 闭运算（先膨胀后腐蚀）。填充小的暗洞。
-pub fn morph_close(img : @core.Image) -> @core.Image {
+pub fn morph_close(img : @types.Image) -> @types.Image {
   erode(dilate(img))
 }
 

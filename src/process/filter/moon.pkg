@@ -1,7 +1,17 @@
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
   "MoonBit-Toadium/stb-image/src/process/transform",
   "moonbitlang/core/math",
 }
 
-supported_targets = "native"
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+} for "test"
+
+options(
+  targets: {
+    "bilateral_filter_test.mbt": [ "native" ],
+    "filter_test.mbt": [ "native" ],
+    "nlm_denoise_test.mbt": [ "native" ],
+  },
+)

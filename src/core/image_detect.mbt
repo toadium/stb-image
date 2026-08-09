@@ -1,19 +1,4 @@
 ///|
-/// 图像格式枚举
-pub(all) enum ImageFormat {
-  Png
-  Jpeg
-  Bmp
-  Gif
-  Tga
-  Psd
-  Hdr
-  Pnm
-  Qoi
-  Unknown
-} derive(Eq, @debug.Debug)
-
-///|
 /// 通过 magic bytes 检测图像格式
 pub fn detect_format(data : Bytes) -> ImageFormat {
   let len = data.length()

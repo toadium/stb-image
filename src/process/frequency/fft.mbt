@@ -19,9 +19,9 @@ pub struct FFTResult {
 /// 2D 快速傅里叶变换。将图像变换到频域。
 /// 图像尺寸自动补零到 2 的幂次方。
 /// 对灰度图（channels=1）或 RGB 图（channels=3/4）每通道独立变换，返回各通道结果。
-pub fn fft_2d(img : @core.Image) -> Array[FFTResult] raise @core.LoadError {
+pub fn fft_2d(img : @types.Image) -> Array[FFTResult] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("fft_2d 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("fft_2d 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -33,7 +33,7 @@ pub fn fft_2d(img : @core.Image) -> Array[FFTResult] raise @core.LoadError {
 }
 
 ///|
-fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
+fn fft_2d_channel(img : @types.Image, channel : Int, ch : Int) -> FFTResult {
   let w = img.width
   let h = img.height
   let pw = next_pow2(w)
@@ -88,7 +88,7 @@ fn fft_2d_channel(img : @core.Image, channel : Int, ch : Int) -> FFTResult {
 
 ///|
 /// 2D 逆快速傅里叶变换。将频域结果变换回空域灰度图。
-pub fn ifft_2d(fft : FFTResult) -> @core.Image {
+pub fn ifft_2d(fft : FFTResult) -> @types.Image {
   let pw = fft.width
   let ph = fft.height
   let n = pw * ph
@@ -141,7 +141,7 @@ pub fn ifft_2d(fft : FFTResult) -> @core.Image {
     }
     out[i] = clamped.to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: pw,
     height: ph,
     channels: 1,
@@ -152,7 +152,7 @@ pub fn ifft_2d(fft : FFTResult) -> @core.Image {
 ///|
 /// 计算 FFT 幅度谱（用于可视化）。
 /// log_scale=true 时使用对数缩放 log(1+magnitude)。
-pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @core.Image {
+pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @types.Image {
   let n = fft.width * fft.height
   let out : Array[Byte] = Array::make(n, b'\x00')
   let mut max_mag = 0.0F
@@ -184,7 +184,7 @@ pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @core.Image {
       out[i] = clamped.to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: fft.width,
     height: fft.height,
     channels: 1,

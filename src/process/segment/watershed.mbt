@@ -7,17 +7,17 @@
 /// markers 为种子标记图（0=未标记，1..N=不同区域标记）。
 /// 返回分割结果，每个像素的标签对应其所属区域。
 pub fn watershed(
-  img : @core.Image,
+  img : @types.Image,
   markers : Array[Int],
-) -> Array[Int] raise @core.LoadError {
+) -> Array[Int] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("watershed 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("watershed 仅支持 channels=1/3/4")
   }
   let w = img.width
   let h = img.height
   let n = w * h
   if markers.length() != n {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "markers 长度必须等于 width * height",
     )
   }
@@ -164,10 +164,10 @@ pub fn watershed(
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// 返回标签图和区域数量。
 pub fn watershed_auto(
-  img : @core.Image,
-) -> (Array[Int], Int) raise @core.LoadError {
+  img : @types.Image,
+) -> (Array[Int], Int) raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "watershed_auto 仅支持 channels=1/3/4",
     )
   }

@@ -4,19 +4,19 @@
 ///|
 /// 裁剪 8-bit Image 的指定区域
 pub fn crop(
-  img : @core.Image,
+  img : @types.Image,
   x : Int,
   y : Int,
   w : Int,
   h : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if x < 0 ||
     y < 0 ||
     w <= 0 ||
     h <= 0 ||
     x + w > img.width ||
     y + h > img.height {
-    raise @core.LoadError::DecodeFailed("crop 区域越界")
+    raise @types.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
@@ -27,7 +27,7 @@ pub fn crop(
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -37,7 +37,7 @@ pub fn crop(
 
 ///|
 /// 顺时针旋转 90 度
-pub fn rotate_90(img : @core.Image) -> @core.Image {
+pub fn rotate_90(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let new_w = img.height
   let new_h = img.width
@@ -53,7 +53,7 @@ pub fn rotate_90(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -63,7 +63,7 @@ pub fn rotate_90(img : @core.Image) -> @core.Image {
 
 ///|
 /// 旋转 180 度
-pub fn rotate_180(img : @core.Image) -> @core.Image {
+pub fn rotate_180(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let out : Array[Byte] = Array::make(img.width * img.height * ch, b'\x00')
   for y in 0..<img.height {
@@ -77,7 +77,7 @@ pub fn rotate_180(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -87,7 +87,7 @@ pub fn rotate_180(img : @core.Image) -> @core.Image {
 
 ///|
 /// 顺时针旋转 270 度（逆时针 90 度）
-pub fn rotate_270(img : @core.Image) -> @core.Image {
+pub fn rotate_270(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let new_w = img.height
   let new_h = img.width
@@ -103,7 +103,7 @@ pub fn rotate_270(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -113,7 +113,7 @@ pub fn rotate_270(img : @core.Image) -> @core.Image {
 
 ///|
 /// 水平翻转（左右镜像）
-pub fn flip_horizontal(img : @core.Image) -> @core.Image {
+pub fn flip_horizontal(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let out : Array[Byte] = Array::make(img.width * img.height * ch, b'\x00')
   for y in 0..<img.height {
@@ -126,7 +126,7 @@ pub fn flip_horizontal(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -137,19 +137,19 @@ pub fn flip_horizontal(img : @core.Image) -> @core.Image {
 ///|
 /// 裁剪 16-bit Image16
 pub fn crop_16(
-  img : @core.Image16,
+  img : @types.Image16,
   x : Int,
   y : Int,
   w : Int,
   h : Int,
-) -> @core.Image16 raise @core.LoadError {
+) -> @types.Image16 raise @types.LoadError {
   if x < 0 ||
     y < 0 ||
     w <= 0 ||
     h <= 0 ||
     x + w > img.width ||
     y + h > img.height {
-    raise @core.LoadError::DecodeFailed("crop 区域越界")
+    raise @types.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
   let out : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
@@ -160,7 +160,7 @@ pub fn crop_16(
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.Image16::{
+  @types.Image16::{
     width: w,
     height: h,
     channels: ch,
@@ -171,19 +171,19 @@ pub fn crop_16(
 ///|
 /// 裁剪 float ImageF
 pub fn cropf(
-  img : @core.ImageF,
+  img : @types.ImageF,
   x : Int,
   y : Int,
   w : Int,
   h : Int,
-) -> @core.ImageF raise @core.LoadError {
+) -> @types.ImageF raise @types.LoadError {
   if x < 0 ||
     y < 0 ||
     w <= 0 ||
     h <= 0 ||
     x + w > img.width ||
     y + h > img.height {
-    raise @core.LoadError::DecodeFailed("crop 区域越界")
+    raise @types.LoadError::DecodeFailed("crop 区域越界")
   }
   let ch = img.channels
   let out : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
@@ -194,7 +194,7 @@ pub fn cropf(
       out[dst_off + i] = img.data[src_off + i]
     }
   }
-  @core.ImageF::{
+  @types.ImageF::{
     width: w,
     height: h,
     channels: ch,

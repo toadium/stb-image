@@ -3,7 +3,7 @@
 ///|
 /// 计算灰度直方图。返回 256 个 bin 的计数数组。
 /// 彩色图像先转灰度（BT.601）再计算。
-pub fn histogram(img : @core.Image) -> Array[Int] {
+pub fn histogram(img : @types.Image) -> Array[Int] {
   let hist : Array[Int] = Array::make(256, 0)
   let n = img.width * img.height
   let ch = img.channels
@@ -28,7 +28,7 @@ pub fn histogram(img : @core.Image) -> Array[Int] {
 ///|
 /// 直方图均衡化。基于灰度直方图计算映射 LUT，应用到所有颜色通道。
 /// alpha 通道不变。
-pub fn histogram_equalize(img : @core.Image) -> @core.Image {
+pub fn histogram_equalize(img : @types.Image) -> @types.Image {
   let hist = histogram(img)
   let n = img.width * img.height
   // 计算 CDF
@@ -73,7 +73,7 @@ pub fn histogram_equalize(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -84,7 +84,7 @@ pub fn histogram_equalize(img : @core.Image) -> @core.Image {
 ///|
 /// 直方图归一化（线性拉伸）。将像素值范围线性映射到 [0, 255]。
 /// alpha 通道不变。
-pub fn histogram_normalize(img : @core.Image) -> @core.Image {
+pub fn histogram_normalize(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
   let n = img.width * img.height
@@ -122,7 +122,7 @@ pub fn histogram_normalize(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,

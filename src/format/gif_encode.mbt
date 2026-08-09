@@ -116,9 +116,9 @@ fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
 /// 将 Image 编码为单帧 GIF89a 字节流
 /// 使用 3-3-2 均匀量化（256 色调色板）+ LZW 压缩
 /// 输入 channels 应为 3 (RGB) 或 4 (RGBA，alpha 忽略)
-pub fn encode_gif(img : @core.Image) -> Bytes raise @core.LoadError {
+pub fn encode_gif(img : @types.Image) -> Bytes raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
     )
   }
@@ -182,19 +182,19 @@ pub fn encode_gif(img : @core.Image) -> Bytes raise @core.LoadError {
 /// 所有帧应具有相同尺寸和 channels（3 或 4）。
 /// 使用 3-3-2 均匀量化 + LZW 压缩，无限循环。
 pub fn encode_gif_animation(
-  anim : @core.GifAnimation,
-) -> Bytes raise @core.LoadError {
+  anim : @types.GifAnimation,
+) -> Bytes raise @types.LoadError {
   let frames = anim.frames
   let delays = anim.delays
   if frames.length() == 0 {
-    raise @core.LoadError::DecodeFailed("GIF 动画至少需要 1 帧")
+    raise @types.LoadError::DecodeFailed("GIF 动画至少需要 1 帧")
   }
   if frames.length() != delays.length() {
-    raise @core.LoadError::DecodeFailed("frames 和 delays 长度不匹配")
+    raise @types.LoadError::DecodeFailed("frames 和 delays 长度不匹配")
   }
   let first = frames[0]
   if first.channels != 3 && first.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
     )
   }

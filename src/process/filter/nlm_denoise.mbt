@@ -8,22 +8,22 @@
 /// search_size 为搜索窗口半径（默认 7，即 15x15 窗口）。
 /// h 为滤波强度参数（默认 10），越大平滑越强。
 pub fn nlm_denoise(
-  img : @core.Image,
+  img : @types.Image,
   patch_size? : Int = 3,
   search_size? : Int = 7,
   h? : Int = 10,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("nlm_denoise 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("nlm_denoise 仅支持 channels=1/3/4")
   }
   if patch_size < 1 || patch_size > 10 {
-    raise @core.LoadError::DecodeFailed("patch_size 必须在 1..10 之间")
+    raise @types.LoadError::DecodeFailed("patch_size 必须在 1..10 之间")
   }
   if search_size < 1 || search_size > 20 {
-    raise @core.LoadError::DecodeFailed("search_size 必须在 1..20 之间")
+    raise @types.LoadError::DecodeFailed("search_size 必须在 1..20 之间")
   }
   if h < 1 {
-    raise @core.LoadError::DecodeFailed("h 必须 >= 1")
+    raise @types.LoadError::DecodeFailed("h 必须 >= 1")
   }
   let ch = img.channels
   let w = img.width
@@ -125,7 +125,7 @@ pub fn nlm_denoise(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h_img,
     channels: ch,
@@ -236,28 +236,28 @@ fn patch_distance_fast(
 /// 使用积分图加速块距离计算，搜索步长 > 1 以加速。
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4）。
 pub fn nlm_denoise_fast(
-  img : @core.Image,
+  img : @types.Image,
   patch_size? : Int = 3,
   search_size? : Int = 7,
   h? : Int = 10,
   step? : Int = 2,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "nlm_denoise_fast 仅支持 channels=1/3/4",
     )
   }
   if patch_size < 1 || patch_size > 10 {
-    raise @core.LoadError::DecodeFailed("patch_size 必须在 1..10 之间")
+    raise @types.LoadError::DecodeFailed("patch_size 必须在 1..10 之间")
   }
   if search_size < 1 || search_size > 20 {
-    raise @core.LoadError::DecodeFailed("search_size 必须在 1..20 之间")
+    raise @types.LoadError::DecodeFailed("search_size 必须在 1..20 之间")
   }
   if h < 1 {
-    raise @core.LoadError::DecodeFailed("h 必须 >= 1")
+    raise @types.LoadError::DecodeFailed("h 必须 >= 1")
   }
   if step < 1 || step > 5 {
-    raise @core.LoadError::DecodeFailed("step 必须在 1..5 之间")
+    raise @types.LoadError::DecodeFailed("step 必须在 1..5 之间")
   }
   let ch = img.channels
   let w = img.width
@@ -370,7 +370,7 @@ pub fn nlm_denoise_fast(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h_img,
     channels: ch,

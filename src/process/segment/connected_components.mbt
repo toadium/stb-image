@@ -18,14 +18,14 @@ pub struct ConnectedComponent {
 /// connectivity=4 为四连通，connectivity=8 为八连通。
 /// 返回标记图（每个像素的标签，0=背景，1..N=前景域）和连通域信息列表。
 pub fn connected_components(
-  img : @core.Image,
+  img : @types.Image,
   connectivity : Int,
-) -> (ConnectedComponentLabelImage, Array[ConnectedComponent]) raise @core.LoadError {
+) -> (ConnectedComponentLabelImage, Array[ConnectedComponent]) raise @types.LoadError {
   if connectivity != 4 && connectivity != 8 {
-    raise @core.LoadError::DecodeFailed("connectivity 必须为 4 或 8")
+    raise @types.LoadError::DecodeFailed("connectivity 必须为 4 或 8")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "connected_components 仅支持 channels=1/3/4",
     )
   }

@@ -13,13 +13,13 @@ pub(all) struct CornerPoint {
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// k 为 Harris 参数（默认 0.04），threshold 为响应阈值，min_distance 为角点间最小距离。
 pub fn harris_corners(
-  img : @core.Image,
+  img : @types.Image,
   k? : Float = 0.04F,
   threshold? : Float = 1000.0F,
   min_distance? : Int = 5,
-) -> Array[CornerPoint] raise @core.LoadError {
+) -> Array[CornerPoint] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "harris_corners 仅支持 channels=1/3/4",
     )
   }
@@ -187,13 +187,13 @@ fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
 ///|
 /// 在图像上绘制角点。
 pub fn draw_corners(
-  img : @core.Image,
+  img : @types.Image,
   corners : Array[CornerPoint],
   color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
   radius? : Int = 2,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("draw_corners 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("draw_corners 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let w = img.width
@@ -218,7 +218,7 @@ pub fn draw_corners(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

@@ -11,9 +11,9 @@ pub struct IntegralImage {
 
 ///|
 /// 计算积分图像。仅处理灰度图（channels=1）或 RGB 图（channels=3/4，取首通道）。
-pub fn integral_image(img : @core.Image) -> IntegralImage raise @core.LoadError {
+pub fn integral_image(img : @types.Image) -> IntegralImage raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "integral_image 仅支持 channels=1/3/4",
     )
   }
@@ -83,10 +83,10 @@ pub struct IntegralImageSq {
 ///|
 /// 计算平方积分图像。
 pub fn integral_image_sq(
-  img : @core.Image,
-) -> IntegralImageSq raise @core.LoadError {
+  img : @types.Image,
+) -> IntegralImageSq raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "integral_image_sq 仅支持 channels=1/3/4",
     )
   }

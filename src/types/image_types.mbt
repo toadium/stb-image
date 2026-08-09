@@ -47,3 +47,39 @@ pub(all) suberror LoadError {
   UnsupportedFormat(String)
   DecodeFailed(String)
 }
+
+///|
+/// 图像格式枚举
+pub(all) enum ImageFormat {
+  Png
+  Jpeg
+  Bmp
+  Gif
+  Tga
+  Psd
+  Hdr
+  Pnm
+  Qoi
+  Unknown
+} derive(Eq, @debug.Debug)
+
+///|
+/// resize 滤波器类型
+pub(all) enum ResizeFilter {
+  Default
+  Box
+  Triangle
+  CubicBSPline
+  CatmullROM
+  Mitchell
+  PointSample
+} derive(Eq, @debug.Debug)
+
+///|
+/// resize 边缘处理模式
+pub(all) enum ResizeEdge {
+  Clamp
+  Reflect
+  Wrap
+  Zero
+} derive(Eq, @debug.Debug)

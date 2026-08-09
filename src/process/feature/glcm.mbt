@@ -18,16 +18,16 @@ pub struct GlcmFeatures {
 /// dx, dy 为偏移量（如 (1,0) 为水平 0°，(0,1) 为垂直 90°）。
 /// levels 为量化级别数（默认 256，可降采样以加速）。
 pub fn compute_glcm(
-  img : @core.Image,
+  img : @types.Image,
   dx : Int,
   dy : Int,
   levels? : Int = 256,
-) -> Array[Array[Int]] raise @core.LoadError {
+) -> Array[Array[Int]] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("compute_glcm 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("compute_glcm 仅支持 channels=1/3/4")
   }
   if levels < 2 || levels > 256 {
-    raise @core.LoadError::DecodeFailed("levels 必须在 2..256 之间")
+    raise @types.LoadError::DecodeFailed("levels 必须在 2..256 之间")
   }
   let w = img.width
   let h = img.height
@@ -172,9 +172,9 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
 /// 计算多方向 GLCM 特征（0°, 45°, 90°, 135°）。
 /// 返回 4 个方向的纹理特征数组。
 pub fn glcm_features_multi_direction(
-  img : @core.Image,
+  img : @types.Image,
   levels? : Int = 256,
-) -> Array[GlcmFeatures] raise @core.LoadError {
+) -> Array[GlcmFeatures] raise @types.LoadError {
   let directions = [(1, 0), (1, 1), (0, 1), (-1, 1)]
   let result : Array[GlcmFeatures] = []
   for dir in directions {

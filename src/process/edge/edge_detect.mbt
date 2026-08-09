@@ -5,7 +5,7 @@
 /// Laplacian 边缘检测。使用 3x3 Laplacian 核：
 /// [0, 1, 0; 1, -4, 1; 0, 1, 0]
 /// 返回灰度图（channels=1）。
-pub fn edge_detect_laplacian(img : @core.Image) -> @core.Image {
+pub fn edge_detect_laplacian(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -58,7 +58,7 @@ pub fn edge_detect_laplacian(img : @core.Image) -> @core.Image {
       out[y * w + x] = clamp_b(lap.abs())
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,
@@ -71,7 +71,7 @@ pub fn edge_detect_laplacian(img : @core.Image) -> @core.Image {
 /// Gx = [-1, 0, 1; -1, 0, 1; -1, 0, 1]
 /// Gy = [-1, -1, -1; 0, 0, 0; 1, 1, 1]
 /// 返回灰度图（channels=1）。
-pub fn edge_detect_prewitt(img : @core.Image) -> @core.Image {
+pub fn edge_detect_prewitt(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -132,7 +132,7 @@ pub fn edge_detect_prewitt(img : @core.Image) -> @core.Image {
       out[y * w + x] = clamp_b(mag.to_int())
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,

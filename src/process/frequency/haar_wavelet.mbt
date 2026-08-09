@@ -66,16 +66,16 @@ pub fn haar_inverse_transform_1d(data : Array[Float]) -> Array[Float] {
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// levels 为分解层数。
 pub fn haar_transform_2d(
-  img : @core.Image,
+  img : @types.Image,
   levels? : Int = 1,
-) -> HaarWaveletResult raise @core.LoadError {
+) -> HaarWaveletResult raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "haar_transform_2d 仅支持 channels=1/3/4",
     )
   }
   if levels < 1 || levels > 10 {
-    raise @core.LoadError::DecodeFailed("levels 必须在 1..10 之间")
+    raise @types.LoadError::DecodeFailed("levels 必须在 1..10 之间")
   }
   let w = img.width
   let h = img.height
@@ -143,12 +143,12 @@ pub fn haar_transform_2d(
 
 ///|
 /// 二维 Haar 小波逆变换。
-pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
+pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @types.Image {
   let w = result.width
   let h = result.height
   let n = w * h
   if n == 0 {
-    return @core.Image::{
+    return @types.Image::{
       width: 0,
       height: 0,
       channels: 1,
@@ -201,7 +201,7 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
     let val = coeffs[i].to_int()
     out[i] = val.clamp(min=0, max=255).to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,
@@ -215,13 +215,13 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @core.Image {
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
 /// threshold 为阈值，soft=true 为软阈值，false 为硬阈值。
 pub fn haar_denoise(
-  img : @core.Image,
+  img : @types.Image,
   threshold? : Float = 10.0F,
   soft? : Bool = true,
   levels? : Int = 3,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("haar_denoise 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("haar_denoise 仅支持 channels=1/3/4")
   }
   let result = haar_transform_2d(img, levels~)
   let w = result.width

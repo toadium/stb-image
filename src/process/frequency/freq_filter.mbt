@@ -13,13 +13,13 @@ pub(all) enum FreqFilterType {
 /// 频域滤波。对灰度图做 FFT，应用指定滤波器，再做 IFFT 回空域。
 /// cutoff 为截止频率（像素数，从中心算起），band_width 为带宽（仅 BandPass/BandStop 使用）。
 pub fn freq_filter(
-  img : @core.Image,
+  img : @types.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
   band_width? : Float = 0.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("freq_filter 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("freq_filter 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -71,7 +71,7 @@ pub fn freq_filter(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: pw,
     height: ph,
     channels: ch,
@@ -114,13 +114,13 @@ fn filter_gain(
 ///|
 /// 高斯频域滤波。使用高斯传递函数而非理想滤波器，更平滑。
 pub fn freq_filter_gaussian(
-  img : @core.Image,
+  img : @types.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
   band_width? : Float = 0.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "freq_filter_gaussian 仅支持 channels=1/3/4",
     )
   }
@@ -174,7 +174,7 @@ pub fn freq_filter_gaussian(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: pw,
     height: ph,
     channels: ch,

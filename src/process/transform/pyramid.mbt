@@ -2,9 +2,9 @@
 
 ///|
 /// 高斯金字塔下采样。将图像尺寸减半（宽高各 /2），使用 2x2 均值滤波。
-pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn pyr_down(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("pyr_down 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("pyr_down 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let w = img.width
@@ -12,7 +12,7 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
   let new_w = w / 2
   let new_h = h / 2
   if new_w == 0 || new_h == 0 {
-    raise @core.LoadError::DecodeFailed("图像太小，无法下采样")
+    raise @types.LoadError::DecodeFailed("图像太小，无法下采样")
   }
   let data_int : Array[Int] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
@@ -38,7 +38,7 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -48,9 +48,9 @@ pub fn pyr_down(img : @core.Image) -> @core.Image raise @core.LoadError {
 
 ///|
 /// 拉普拉斯金字塔上采样。将图像尺寸加倍（宽高各 *2），使用双线性插值。
-pub fn pyr_up(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn pyr_up(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("pyr_up 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("pyr_up 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let w = img.width
@@ -115,7 +115,7 @@ pub fn pyr_up(img : @core.Image) -> @core.Image raise @core.LoadError {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -126,10 +126,10 @@ pub fn pyr_up(img : @core.Image) -> @core.Image raise @core.LoadError {
 ///|
 /// 构建高斯金字塔。返回各级图像（从原图到最小级），levels 为最大层数（0=自动到 1x1）。
 pub fn build_gaussian_pyramid(
-  img : @core.Image,
+  img : @types.Image,
   levels : Int,
-) -> Array[@core.Image] raise @core.LoadError {
-  let result : Array[@core.Image] = [img]
+) -> Array[@types.Image] raise @types.LoadError {
+  let result : Array[@types.Image] = [img]
   let mut current = img
   let max_levels = if levels == 0 { 100 } else { levels }
   for _ in 1..<max_levels {
@@ -146,11 +146,11 @@ pub fn build_gaussian_pyramid(
 /// 构建拉普拉斯金字塔。返回各级拉普拉斯图像（高斯金字塔相邻层之差）。
 /// 最后一层为高斯金字塔的最小级（不加差）。
 pub fn build_laplacian_pyramid(
-  img : @core.Image,
+  img : @types.Image,
   levels : Int,
-) -> Array[@core.Image] raise @core.LoadError {
+) -> Array[@types.Image] raise @types.LoadError {
   let gaussian = build_gaussian_pyramid(img, levels)
-  let result : Array[@core.Image] = []
+  let result : Array[@types.Image] = []
   for i in 0..<(gaussian.length() - 1) {
     let upsampled = pyr_up(gaussian[i + 1])
     let lap = laplacian_diff(gaussian[i], upsampled)
@@ -161,7 +161,7 @@ pub fn build_laplacian_pyramid(
 }
 
 ///|
-fn laplacian_diff(a : @core.Image, b : @core.Image) -> @core.Image {
+fn laplacian_diff(a : @types.Image, b : @types.Image) -> @types.Image {
   let ch = a.channels
   let w = a.width
   let h = a.height
@@ -189,7 +189,7 @@ fn laplacian_diff(a : @core.Image, b : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

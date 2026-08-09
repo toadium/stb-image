@@ -4,7 +4,7 @@
 /// 均方误差（MSE）。计算两幅图像对应像素的均方误差。
 /// 两幅图像必须具有相同的尺寸和通道数。
 /// 返回 Double 类型的 MSE 值。
-pub fn mse(img1 : @core.Image, img2 : @core.Image) -> Double {
+pub fn mse(img1 : @types.Image, img2 : @types.Image) -> Double {
   let n = img1.data.length()
   let mut sum : Int = 0
   for i in 0..<n {
@@ -18,7 +18,7 @@ pub fn mse(img1 : @core.Image, img2 : @core.Image) -> Double {
 /// 峰值信噪比（PSNR）。基于 MSE 计算 PSNR（单位 dB）。
 /// 若两幅图像完全相同（MSE=0），返回 Infinity。
 /// 两幅图像必须具有相同的尺寸和通道数。
-pub fn psnr(img1 : @core.Image, img2 : @core.Image) -> Double {
+pub fn psnr(img1 : @types.Image, img2 : @types.Image) -> Double {
   let m = mse(img1, img2)
   if m == 0.0 {
     return 1.0 / 0.0
@@ -30,7 +30,7 @@ pub fn psnr(img1 : @core.Image, img2 : @core.Image) -> Double {
 /// 结构相似性指数（SSIM）。在 8x8 局部窗口上计算 SSIM 均值。
 /// 两幅图像必须具有相同的尺寸和通道数。
 /// 返回 Double 类型的 SSIM 值，范围.围 [-1, 1]，越接近 1 越相似。
-pub fn ssim(img1 : @core.Image, img2 : @core.Image) -> Double {
+pub fn ssim(img1 : @types.Image, img2 : @types.Image) -> Double {
   let w = img1.width
   let h = img1.height
   let ch = img1.channels

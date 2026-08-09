@@ -6,15 +6,15 @@
 /// clip_limit 控制对比度增强强度，值越大增强越强（典型值 2.0~4.0）。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn clahe(
-  img : @core.Image,
+  img : @types.Image,
   tile_size : Int,
   clip_limit : Float,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if tile_size < 2 {
-    raise @core.LoadError::DecodeFailed("tile_size 必须 >= 2")
+    raise @types.LoadError::DecodeFailed("tile_size 必须 >= 2")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("clahe 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("clahe 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -28,7 +28,7 @@ pub fn clahe(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -38,7 +38,7 @@ pub fn clahe(
 
 ///|
 fn clahe_channel(
-  img : @core.Image,
+  img : @types.Image,
   out : Array[Byte],
   channel : Int,
   ch : Int,

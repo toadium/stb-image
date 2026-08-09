@@ -4,7 +4,7 @@
 /// Floyd-Steinberg 误差扩散抖动量化。
 /// levels 为每通道量化级别数（如 levels=2 → 0/255，levels=4 → 0/85/170/255）。
 /// 仅处理颜色通道，alpha 不变。
-pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
+pub fn floyd_steinberg(img : @types.Image, levels : Int) -> @types.Image {
   if levels < 2 {
     return img
   }
@@ -60,7 +60,7 @@ pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -72,7 +72,7 @@ pub fn floyd_steinberg(img : @core.Image, levels : Int) -> @core.Image {
 /// Median Cut 色彩量化。将图像量化为最多 num_colors 种颜色。
 /// 返回量化后的 RGB 图像（channels=3）。
 /// 算法：递归地沿最大方差通道在中位数处分割颜色空间。
-pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
+pub fn median_cut(img : @types.Image, num_colors : Int) -> @types.Image {
   if num_colors < 2 {
     return @color.to_rgb(img)
   }
@@ -167,7 +167,7 @@ pub fn median_cut(img : @core.Image, num_colors : Int) -> @core.Image {
     out[i * 3 + 1] = pg.to_byte()
     out[i * 3 + 2] = pb.to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 3,

@@ -18,3 +18,12 @@ pub type GifAnimation = @types.GifAnimation
 
 ///|
 pub type LoadError = @types.LoadError
+
+///|
+pub type ImageFormat = @types.ImageFormat
+
+///|
+pub type ResizeFilter = @types.ResizeFilter
+
+///|
+pub type ResizeEdge = @types.ResizeEdge

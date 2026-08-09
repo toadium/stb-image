@@ -6,16 +6,16 @@
 /// distance_type 为距离度量：1=城市距离(L1), 2=欧氏距离(L2近似), 3=棋盘距离(Linf)。
 /// 返回 Float 数组，背景像素距离为 0。
 pub fn distance_transform(
-  img : @core.Image,
+  img : @types.Image,
   distance_type? : Int = 2,
-) -> Array[Float] raise @core.LoadError {
+) -> Array[Float] raise @types.LoadError {
   if distance_type != 1 && distance_type != 2 && distance_type != 3 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "distance_type 必须为 1(L1), 2(L2), 3(Linf)",
     )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "distance_transform 仅支持 channels=1/3/4",
     )
   }
@@ -175,11 +175,11 @@ pub fn distance_transform_visualize(
   dist : Array[Float],
   w : Int,
   h : Int,
-) -> @core.Image {
+) -> @types.Image {
   let n = w * h
   let out : Array[Byte] = Array::make(n, b'\x00')
   if n == 0 {
-    return @core.Image::{
+    return @types.Image::{
       width: 0,
       height: 0,
       channels: 1,
@@ -198,7 +198,7 @@ pub fn distance_transform_visualize(
       out[i] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,
@@ -210,9 +210,9 @@ pub fn distance_transform_visualize(
 /// 骨架化（基于距离变换）。
 /// 提取二值图的骨架（中轴线）。
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，取首通道）。
-pub fn skeletonize(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn skeletonize(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("skeletonize 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("skeletonize 仅支持 channels=1/3/4")
   }
   let w = img.width
   let h = img.height
@@ -260,7 +260,7 @@ pub fn skeletonize(img : @core.Image) -> @core.Image raise @core.LoadError {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

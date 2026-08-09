@@ -1,6 +1,21 @@
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
   "moonbitlang/core/math",
 }
 
-supported_targets = "native"
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+} for "test"
+
+options(
+  targets: {
+    "adaptive_threshold_test.mbt": [ "native" ],
+    "clahe_test.mbt": [ "native" ],
+    "color_adjust_test.mbt": [ "native" ],
+    "color_convert_test.mbt": [ "native" ],
+    "color_segment_test.mbt": [ "native" ],
+    "dehaze_test.mbt": [ "native" ],
+    "retinex_test.mbt": [ "native" ],
+    "test_helpers_test.mbt": [ "native" ],
+  },
+)

@@ -15,7 +15,7 @@ fn clamp_byte(v : Int) -> Byte {
 ///|
 /// 亮度调整。delta ∈ [-255, 255]，正值变亮，负值变暗。
 /// 仅影响颜色通道（前 min(channels,3) 个），alpha 通道不变。
-pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image {
+pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -32,7 +32,7 @@ pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -43,7 +43,7 @@ pub fn adjust_brightness(img : @core.Image, delta : Int) -> @core.Image {
 ///|
 /// 对比度调整。factor=1.0 为原图，>1 增加对比度，<1 降低。
 /// 以 128 为中心缩放。仅影响颜色通道，alpha 不变。
-pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image {
+pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -61,7 +61,7 @@ pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -72,7 +72,7 @@ pub fn adjust_contrast(img : @core.Image, factor : Float) -> @core.Image {
 ///|
 /// Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 使用查找表加速。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma(img : @core.Image, gamma : Float) -> @core.Image {
+pub fn adjust_gamma(img : @types.Image, gamma : Float) -> @types.Image {
   // 预计算 256 项查找表
   let lut : Array[Byte] = Array::make(256, b'\x00')
   for i in 0..<256 {
@@ -93,7 +93,7 @@ pub fn adjust_gamma(img : @core.Image, gamma : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -103,7 +103,7 @@ pub fn adjust_gamma(img : @core.Image, gamma : Float) -> @core.Image {
 
 ///|
 /// 反色（负片）。new = 255 - old。仅影响颜色通道，alpha 不变。
-pub fn invert(img : @core.Image) -> @core.Image {
+pub fn invert(img : @types.Image) -> @types.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -116,7 +116,7 @@ pub fn invert(img : @core.Image) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,

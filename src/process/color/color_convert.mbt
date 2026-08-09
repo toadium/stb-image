@@ -3,7 +3,7 @@
 ///|
 /// 转为灰度图（channels=1）
 /// 使用 ITU-R BT.601 亮度公式: Y = 0.299R + 0.587G + 0.114B
-pub fn to_grayscale(img : @core.Image) -> @core.Image {
+pub fn to_grayscale(img : @types.Image) -> @types.Image {
   if img.channels == 1 {
     return img
   }
@@ -21,7 +21,7 @@ pub fn to_grayscale(img : @core.Image) -> @core.Image {
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 1,
@@ -31,7 +31,7 @@ pub fn to_grayscale(img : @core.Image) -> @core.Image {
 
 ///|
 /// 去除 alpha 通道（RGBA → RGB，channels=3）
-pub fn to_rgb(img : @core.Image) -> @core.Image {
+pub fn to_rgb(img : @types.Image) -> @types.Image {
   if img.channels == 3 {
     return img
   }
@@ -45,7 +45,7 @@ pub fn to_rgb(img : @core.Image) -> @core.Image {
     out[i * 3 + 1] = img.data[i * img.channels + 1]
     out[i * 3 + 2] = img.data[i * img.channels + 2]
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 3,
@@ -55,7 +55,7 @@ pub fn to_rgb(img : @core.Image) -> @core.Image {
 
 ///|
 /// 添加 alpha 通道（RGB → RGBA，channels=4，alpha=255）
-pub fn to_rgba(img : @core.Image) -> @core.Image {
+pub fn to_rgba(img : @types.Image) -> @types.Image {
   if img.channels == 4 {
     return img
   }
@@ -76,7 +76,7 @@ pub fn to_rgba(img : @core.Image) -> @core.Image {
     }
     out[i * 4 + 3] = b'\xFF'
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 4,
@@ -88,10 +88,10 @@ pub fn to_rgba(img : @core.Image) -> @core.Image {
 /// 预乘 alpha（RGBA → RGBA premultiplied）
 /// 要求 channels=4
 pub fn premultiply_alpha(
-  img : @core.Image,
-) -> @core.Image raise @core.LoadError {
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "premultiply_alpha 需要 channels=4 (RGBA)",
     )
   }
@@ -111,7 +111,7 @@ pub fn premultiply_alpha(
     out[i * 4 + 2] = (b * a / 255).to_byte()
     out[i * 4 + 3] = a.to_byte()
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 4,
@@ -123,10 +123,10 @@ pub fn premultiply_alpha(
 /// 反预乘 alpha（RGBA premA → RGBA unpremultiplied）
 /// 要求 channels=4
 pub fn unpremultiply_alpha(
-  img : @core.Image,
-) -> @core.Image raise @core.LoadError {
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "unpremultiply_alpha 需要 channels=4 (RGBA)",
     )
   }
@@ -153,7 +153,7 @@ pub fn unpremultiply_alpha(
       out[i * 4 + 3] = a.to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 4,

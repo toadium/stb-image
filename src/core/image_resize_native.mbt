@@ -1,25 +1,4 @@
 ///|
-/// resize 滤波器类型
-pub(all) enum ResizeFilter {
-  Default
-  Box
-  Triangle
-  CubicBSPline
-  CatmullROM
-  Mitchell
-  PointSample
-} derive(Eq, @debug.Debug)
-
-///|
-/// resize 边缘处理模式
-pub(all) enum ResizeEdge {
-  Clamp
-  Reflect
-  Wrap
-  Zero
-} derive(Eq, @debug.Debug)
-
-///|
 fn filter_to_int(f : ResizeFilter) -> Int {
   match f {
     Default => 0

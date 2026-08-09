@@ -4,9 +4,9 @@
 /// 基本局部二值模式（LBP）。对每个像素，与其 3x3 邻域的 8 个像素比较，
 /// 大于等于中心记 1，否则记 0，按顺时针顺序组成 8 位二进制数。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
-pub fn lbp(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn lbp(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("lbp 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -95,7 +95,7 @@ pub fn lbp(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -107,9 +107,9 @@ pub fn lbp(img : @core.Image) -> @core.Image raise @core.LoadError {
 /// 均匀局部二值模式（Uniform LBP）。
 /// 均匀模式指 0→1 和 1→0 跳变次数 <= 2 的模式，共有 58 种均匀模式。
 /// 非均匀模式统一映射为 59。输出范围 0~59。
-pub fn lbp_uniform(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn lbp_uniform(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("lbp_uniform 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_uniform 仅支持 channels=1/3/4")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -199,7 +199,7 @@ pub fn lbp_uniform(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

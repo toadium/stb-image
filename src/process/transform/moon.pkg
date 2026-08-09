@@ -1,6 +1,18 @@
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
   "moonbitlang/core/math",
 }
 
-supported_targets = "native"
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+} for "test"
+
+options(
+  targets: {
+    "draw_test.mbt": [ "native" ],
+    "geometry_test.mbt": [ "native" ],
+    "pyramid_test.mbt": [ "native" ],
+    "test_helpers_test.mbt": [ "native" ],
+    "transform_test.mbt": [ "native" ],
+  },
+)

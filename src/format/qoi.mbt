@@ -10,16 +10,16 @@ fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int {
 
 ///|
 /// 解码 QOI 字节流为 Image（channels=3 或 4）
-pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
+pub fn decode_qoi(data : Bytes) -> @types.Image raise @types.LoadError {
   let len = data.length()
   if len < 14 {
-    raise @core.LoadError::DecodeFailed("QOI 数据过短")
+    raise @types.LoadError::DecodeFailed("QOI 数据过短")
   }
   if data[0].to_int() != 0x71 ||
     data[1].to_int() != 0x6F ||
     data[2].to_int() != 0x69 ||
     data[3].to_int() != 0x66 {
-    raise @core.LoadError::DecodeFailed("QOI magic 不匹配")
+    raise @types.LoadError::DecodeFailed("QOI magic 不匹配")
   }
   let width = (data[4].to_int() << 24) |
     (data[5].to_int() << 16) |
@@ -31,7 +31,7 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
     data[11].to_int()
   let channels = data[12].to_int()
   if width <= 0 || height <= 0 {
-    raise @core.LoadError::DecodeFailed("QOI 尺寸无效")
+    raise @types.LoadError::DecodeFailed("QOI 尺寸无效")
   }
   let out_channels = if channels == 3 { 3 } else { 4 }
   let pixel_count = width * height
@@ -107,7 +107,7 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
     index_b[h] = px_b.val
     index_a[h] = px_a.val
   }
-  @core.Image::{
+  @types.Image::{
     width,
     height,
     channels: out_channels,
@@ -118,9 +118,9 @@ pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError {
 ///|
 /// 将 Image 编码为 QOI 字节流
 /// 输入 Image 的 channels 必须为 3 (RGB) 或 4 (RGBA)
-pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError {
+pub fn encode_qoi(img : @types.Image) -> Bytes raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "QOI 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
     )
   }

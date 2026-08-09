@@ -4,18 +4,18 @@
 /// 将 src 图像直接拷贝到 dst 的 (x, y) 位置
 /// 返回新的 Image，不修改原图。要求 dst 和 src channels 相同。
 pub fn draw_copy(
-  dst : @core.Image,
-  src : @core.Image,
+  dst : @types.Image,
+  src : @types.Image,
   x : Int,
   y : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if dst.channels != src.channels {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "draw_copy 要求 dst 和 src channels 相同",
     )
   }
   if x < 0 || y < 0 || x + src.width > dst.width || y + src.height > dst.height {
-    raise @core.LoadError::DecodeFailed("draw_copy 区域越界")
+    raise @types.LoadError::DecodeFailed("draw_copy 区域越界")
   }
   let ch = dst.channels
   let out : Array[Byte] = []
@@ -31,7 +31,7 @@ pub fn draw_copy(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: dst.width,
     height: dst.height,
     channels: ch,
@@ -45,18 +45,18 @@ pub fn draw_copy(
 /// 要求 dst 和 src 均为 RGBA (channels=4)
 /// 公式: result = src * src_a + dst * (1 - src_a)
 pub fn draw_over(
-  dst : @core.Image,
-  src : @core.Image,
+  dst : @types.Image,
+  src : @types.Image,
   x : Int,
   y : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if dst.channels != 4 || src.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "draw_over 要求 dst 和 src 均为 RGBA (channels=4)",
     )
   }
   if x < 0 || y < 0 || x + src.width > dst.width || y + src.height > dst.height {
-    raise @core.LoadError::DecodeFailed("draw_over 区域越界")
+    raise @types.LoadError::DecodeFailed("draw_over 区域越界")
   }
   let out : Array[Byte] = []
   for i in 0..<dst.data.length() {
@@ -90,7 +90,7 @@ pub fn draw_over(
       out[dst_off + 3] = ra.to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: dst.width,
     height: dst.height,
     channels: 4,

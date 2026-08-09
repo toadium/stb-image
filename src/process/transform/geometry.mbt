@@ -38,11 +38,11 @@ fn sample_bilinear(
 /// 使用双线性插值，超出边界的像素 clamp 到边缘。
 /// 输出尺寸为 new_w × new_h，通道数与输入相同。
 pub fn warp_affine(
-  img : @core.Image,
+  img : @types.Image,
   matrix : (Float, Float, Float, Float, Float, Float),
   new_w : Int,
   new_h : Int,
-) -> @core.Image {
+) -> @types.Image {
   let (a, b, c, d, e, f) = matrix
   let ch = img.channels
   let w = img.width
@@ -63,7 +63,7 @@ pub fn warp_affine(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -74,7 +74,7 @@ pub fn warp_affine(
 ///|
 /// 任意角度旋转（绕中心，保留原尺寸，角落填充黑色）。
 /// angle 单位为度，正值逆时针旋转。使用双线性插值。
-pub fn rotate(img : @core.Image, angle_degrees : Float) -> @core.Image {
+pub fn rotate(img : @types.Image, angle_degrees : Float) -> @types.Image {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -117,7 +117,7 @@ pub fn rotate(img : @core.Image, angle_degrees : Float) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

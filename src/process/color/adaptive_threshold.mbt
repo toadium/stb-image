@@ -4,15 +4,15 @@
 /// 自适应阈值（均值法）。以每个像素周围 block_size×block_size 区域的均值减去 C 作为局部阈值。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn adaptive_threshold_mean(
-  img : @core.Image,
+  img : @types.Image,
   block_size : Int,
   c : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
-    raise @core.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
+    raise @types.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "adaptive_threshold_mean 仅支持 channels=1/3/4",
     )
   }
@@ -86,7 +86,7 @@ pub fn adaptive_threshold_mean(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -97,15 +97,15 @@ pub fn adaptive_threshold_mean(
 ///|
 /// 自适应阈值（高斯加权法）。以每个像素周围 block_size×block_size 区域的高斯加权均值减去 C 作为局部阈值。
 pub fn adaptive_threshold_gaussian(
-  img : @core.Image,
+  img : @types.Image,
   block_size : Int,
   c : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
-    raise @core.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
+    raise @types.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "adaptive_threshold_gaussian 仅支持 channels=1/3/4",
     )
   }
@@ -193,7 +193,7 @@ pub fn adaptive_threshold_gaussian(
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -203,9 +203,9 @@ pub fn adaptive_threshold_gaussian(
 
 ///|
 /// Otsu 大津法自动阈值。自动计算最佳全局阈值并二值化。
-pub fn threshold_otsu(img : @core.Image) -> @core.Image raise @core.LoadError {
+pub fn threshold_otsu(img : @types.Image) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "threshold_otsu 仅支持 channels=1/3/4",
     )
   }
@@ -259,7 +259,7 @@ pub fn threshold_otsu(img : @core.Image) -> @core.Image raise @core.LoadError {
       out[i * 4 + 3] = img.data[i * 4 + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

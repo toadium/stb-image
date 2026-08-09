@@ -13,16 +13,16 @@ fn logf(x : Float) -> Float {
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4）。
 /// sigma 为高斯标准差，gain 为增益，offset 为偏移。
 pub fn ssr(
-  img : @core.Image,
+  img : @types.Image,
   sigma? : Float = 80.0F,
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("ssr 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("ssr 仅支持 channels=1/3/4")
   }
   if sigma <= 0.0F {
-    raise @core.LoadError::DecodeFailed("sigma 必须 > 0")
+    raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
   }
   let ch = img.channels
   let w = img.width
@@ -53,7 +53,7 @@ pub fn ssr(
       out[i * ch + c] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -68,20 +68,20 @@ pub fn ssr(
 /// sigmas 为高斯标准差数组（默认 [15, 80, 250]）。
 /// gain 为增益，offset 为偏移。
 pub fn msr(
-  img : @core.Image,
+  img : @types.Image,
   sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("msr 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("msr 仅支持 channels=1/3/4")
   }
   if sigmas.length() == 0 {
-    raise @core.LoadError::DecodeFailed("sigmas 不能为空")
+    raise @types.LoadError::DecodeFailed("sigmas 不能为空")
   }
   for s in sigmas {
     if s <= 0.0F {
-      raise @core.LoadError::DecodeFailed("sigma 必须 > 0")
+      raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
     }
   }
   let ch = img.channels
@@ -125,7 +125,7 @@ pub fn msr(
       out[i * ch + c] = val.clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -138,18 +138,18 @@ pub fn msr(
 /// 在 MSR 基础上恢复颜色信息。
 /// 适用于 RGB/RGBA 图（channels=3/4）。
 pub fn msrcr(
-  img : @core.Image,
+  img : @types.Image,
   sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
   alpha? : Float = 125.0F,
   beta? : Float = 46.0F,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("msrcr 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed("msrcr 需要 RGB/RGBA 图像")
   }
   if sigmas.length() == 0 {
-    raise @core.LoadError::DecodeFailed("sigmas 不能为空")
+    raise @types.LoadError::DecodeFailed("sigmas 不能为空")
   }
   let ch = img.channels
   let w = img.width
@@ -210,7 +210,7 @@ pub fn msrcr(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

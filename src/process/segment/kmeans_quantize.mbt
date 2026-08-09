@@ -5,15 +5,15 @@
 /// 适用于 RGB/RGBA 图像（channels=3/4），alpha 通道不变。
 /// max_iters 控制最大迭代次数（默认 20）。
 pub fn k_means_quantize(
-  img : @core.Image,
+  img : @types.Image,
   k : Int,
   max_iters : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if k < 1 || k > 256 {
-    raise @core.LoadError::DecodeFailed("k 必须在 1..256 之间")
+    raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "k_means_quantize 需要 RGB/RGBA 图像",
     )
   }
@@ -103,7 +103,7 @@ pub fn k_means_quantize(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,

@@ -13,13 +13,13 @@ pub(all) struct HoughLine {
 /// theta_resolution 为角度分辨率（度数，默认 1.0），rho_resolution 为极径分辨率（像素，默认 1.0）。
 /// threshold 为最小票数阈值，返回票数 >= threshold 的直线，按票数降序排列。
 pub fn hough_lines(
-  img : @core.Image,
+  img : @types.Image,
   threshold : Int,
   theta_resolution? : Float = 1.0F,
   rho_resolution? : Float = 1.0F,
-) -> Array[HoughLine] raise @core.LoadError {
+) -> Array[HoughLine] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("hough_lines 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("hough_lines 仅支持 channels=1/3/4")
   }
   let w = img.width
   let h = img.height

@@ -27,15 +27,15 @@ pub struct SegmentRegion {
 /// K-means 颜色分割。将图像像素按颜色聚为 k 类，返回标签图和区域信息。
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn kmeans_segment(
-  img : @core.Image,
+  img : @types.Image,
   k : Int,
   max_iters? : Int = 20,
-) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError {
+) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   if k < 1 || k > 256 {
-    raise @core.LoadError::DecodeFailed("k 必须在 1..256 之间")
+    raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("kmeans_segment 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed("kmeans_segment 需要 RGB/RGBA 图像")
   }
   let ch = img.channels
   let w = img.width
@@ -129,12 +129,12 @@ pub fn kmeans_segment(
 /// seeds 为种子点坐标数组 [(x, y), ...]。
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn region_growing_segment(
-  img : @core.Image,
+  img : @types.Image,
   seeds : Array[(Int, Int)],
   threshold? : Int = 30,
-) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError {
+) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "region_growing_segment 需要 RGB/RGBA 图像",
     )
   }
@@ -252,21 +252,21 @@ pub fn region_growing_segment(
 /// 用 fill_color 替换。返回填充后的图像。
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn flood_fill(
-  img : @core.Image,
+  img : @types.Image,
   seed_x : Int,
   seed_y : Int,
   fill_color : Array[Byte],
   threshold? : Int = 0,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed("flood_fill 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed("flood_fill 需要 RGB/RGBA 图像")
   }
   let ch = img.channels
   let w = img.width
   let h = img.height
   let n = w * h
   if seed_x < 0 || seed_x >= w || seed_y < 0 || seed_y >= h {
-    raise @core.LoadError::DecodeFailed("种子点越界")
+    raise @types.LoadError::DecodeFailed("种子点越界")
   }
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for i in 0..<(n * ch) {
@@ -313,7 +313,7 @@ pub fn flood_fill(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -323,7 +323,7 @@ pub fn flood_fill(
 
 ///|
 /// 将分割标签图可视化为彩色图像。每个标签分配一个不同颜色。
-pub fn segment_to_color(seg : SegmentLabelImage) -> @core.Image {
+pub fn segment_to_color(seg : SegmentLabelImage) -> @types.Image {
   let w = seg.width
   let h = seg.height
   let n = w * h
@@ -341,7 +341,7 @@ pub fn segment_to_color(seg : SegmentLabelImage) -> @core.Image {
       out[i * 3 + 2] = b.to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 3,

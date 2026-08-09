@@ -18,9 +18,9 @@ pub(all) struct Contour {
 /// 提取轮廓（Suzuki 边界跟踪简化版）。
 /// 对二值图（非零为前景）提取所有外轮廓。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4，取首通道）。
-pub fn find_contours(img : @core.Image) -> Array[Contour] raise @core.LoadError {
+pub fn find_contours(img : @types.Image) -> Array[Contour] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "find_contours 仅支持 channels=1/3/4",
     )
   }
@@ -113,12 +113,12 @@ fn trace_boundary(
 ///|
 /// 绘制轮廓到图像上。color 为绘制颜色数组（长度 >= channels）。
 pub fn draw_contours(
-  img : @core.Image,
+  img : @types.Image,
   contours : Array[Contour],
   color : Array[Byte],
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "draw_contours 仅支持 channels=1/3/4",
     )
   }
@@ -141,7 +141,7 @@ pub fn draw_contours(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,

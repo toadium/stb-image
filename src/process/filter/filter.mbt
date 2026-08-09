@@ -15,7 +15,7 @@ fn clamp_coord(v : Int, max : Int) -> Int {
 ///|
 /// 盒模糊（均值滤波）。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
+pub fn box_blur(img : @types.Image, radius : Int) -> @types.Image {
   if radius <= 0 {
     return img
   }
@@ -69,7 +69,7 @@ pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -81,10 +81,10 @@ pub fn box_blur(img : @core.Image, radius : Int) -> @core.Image {
 /// 高斯模糊。radius 为核半径，sigma 为标准差。
 /// 使用可分离高斯核，O(n*radius) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn gaussian_blur(
-  img : @core.Image,
+  img : @types.Image,
   radius : Int,
   sigma : Float,
-) -> @core.Image {
+) -> @types.Image {
   if radius <= 0 {
     return img
   }
@@ -201,7 +201,7 @@ pub fn gaussian_blur(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -212,7 +212,7 @@ pub fn gaussian_blur(
 ///|
 /// 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
 /// 使用拉普拉斯锐化卷积核。仅处理颜色通道，alpha 不变。
-pub fn sharpen(img : @core.Image, amount : Float) -> @core.Image {
+pub fn sharpen(img : @types.Image, amount : Float) -> @types.Image {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -274,7 +274,7 @@ pub fn sharpen(img : @core.Image, amount : Float) -> @core.Image {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -285,7 +285,7 @@ pub fn sharpen(img : @core.Image, amount : Float) -> @core.Image {
 ///|
 /// Sobel 边缘检测。先转灰度，然后计算梯度幅值。
 /// 输出为单通道灰度图（channels=1）。
-pub fn edge_detect_sobel(img : @core.Image) -> @core.Image {
+pub fn edge_detect_sobel(img : @types.Image) -> @types.Image {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -356,7 +356,7 @@ pub fn edge_detect_sobel(img : @core.Image) -> @core.Image {
       out[y * w + x] = (mag + 0.5F).to_int().clamp(min=0, max=255).to_byte()
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: 1,
