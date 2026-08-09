@@ -9,7 +9,7 @@ test "dehaze 基本功能" {
     data[i * 3 + 1] = b'\x80'
     data[i * 3 + 2] = b'\x80'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 3,
@@ -30,7 +30,7 @@ test "dehaze RGBA alpha 不变" {
     data[i * 4 + 2] = b'\x80'
     data[i * 4 + 3] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 4,
@@ -44,7 +44,7 @@ test "dehaze RGBA alpha 不变" {
 
 ///|
 test "dehaze 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -56,7 +56,7 @@ test "dehaze 错误参数" {
   } catch {
     _ => assert_true(true)
   }
-  let img2 = @core.Image::{
+  let img2 = @types.Image::{
     width: 1,
     height: 1,
     channels: 3,
@@ -90,7 +90,7 @@ test "dehaze 彩色图" {
     b'\x50', b'\x70', b'\x90', b'\x60', b'\x80', b'\xA0', b'\x70', b'\x90', b'\xB0',
     b'\x60', b'\x80', b'\xA0', b'\x70', b'\x90', b'\xB0', b'\x80', b'\xA0', b'\xC0',
   ])
-  let img = @core.Image::{ width: 3, height: 3, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 3, data }
   let out = dehaze(img, patch_size=1)
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -104,7 +104,7 @@ test "dehaze 彩色图" {
 ///|
 test "guided_filter 基本功能" {
   let data = Bytes::from_array(Array::make(9, b'\x80'))
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
   let input = Array::make(9, 0.5F)
   let out = guided_filter(img, input, radius=1, eps=0.001F)
   assert_eq(out.length(), 9)
@@ -115,7 +115,7 @@ test "guided_filter 基本功能" {
 
 ///|
 test "guided_filter 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

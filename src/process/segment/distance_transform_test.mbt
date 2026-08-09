@@ -4,7 +4,7 @@
 test "distance_transform 基本功能" {
   // 5x1 图像，中间为前景
   let data = Bytes::from_array([b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00'])
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let dist = distance_transform(img, distance_type=1)
   assert_eq(dist.length(), 5)
   // 背景像素距离为 0
@@ -22,7 +22,7 @@ test "distance_transform 基本功能" {
 ///|
 test "distance_transform L1 距离" {
   let data = Bytes::from_array([b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00'])
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let dist = distance_transform(img, distance_type=1)
   // L1 距离：[0, 1, 2, 1, 0]
   assert_eq(dist[0], 0.0F)
@@ -35,7 +35,7 @@ test "distance_transform L1 距离" {
 ///|
 test "distance_transform 棋盘距离" {
   let data = Bytes::from_array([b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00'])
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let dist = distance_transform(img, distance_type=3)
   // 一维情况下棋盘距离与 L1 相同
   assert_eq(dist[0], 0.0F)
@@ -48,7 +48,7 @@ test "distance_transform 棋盘距离" {
 ///|
 test "distance_transform 全前景" {
   let data = Bytes::from_array(Array::make(5, b'\xFF'))
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let dist = distance_transform(img, distance_type=1)
   // 全前景，没有背景，距离应保持很大
   for i in 0..<5 {
@@ -59,7 +59,7 @@ test "distance_transform 全前景" {
 ///|
 test "distance_transform 全背景" {
   let data = Bytes::from_array(Array::make(5, b'\x00'))
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let dist = distance_transform(img, distance_type=1)
   // 全背景，距离全为 0
   for i in 0..<5 {
@@ -73,7 +73,7 @@ test "distance_transform 2D 图" {
   let data = Bytes::from_array([
     b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00',
   ])
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
   let dist = distance_transform(img, distance_type=1)
   // 中心距离为 1
   assert_eq(dist[4], 1.0F)
@@ -81,7 +81,7 @@ test "distance_transform 2D 图" {
 
 ///|
 test "distance_transform 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -118,7 +118,7 @@ test "distance_transform_visualize 基本功能" {
 test "skeletonize 基本功能" {
   // 5x1 图像，中间为前景
   let data = Bytes::from_array([b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00'])
-  let img = @core.Image::{ width: 5, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 1, channels: 1, data }
   let out = skeletonize(img)
   assert_eq(out.width, 5)
   assert_eq(out.height, 1)
@@ -134,7 +134,7 @@ test "skeletonize 2D 图" {
       data[y * 5 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,

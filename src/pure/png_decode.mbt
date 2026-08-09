@@ -68,15 +68,17 @@ pub fn decode_png_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       data[pos + 1].to_int() * 65536 +
       data[pos + 2].to_int() * 256 +
       data[pos + 3].to_int()
-    let chunk_type = Bytes::to_string(
-      Bytes::from_array([data[pos + 4], data[pos + 5], data[pos + 6], data[pos + 7]]),
-    )
+    let chunk_key = data[pos + 4].to_int() * 16777216 +
+      data[pos + 5].to_int() * 65536 +
+      data[pos + 6].to_int() * 256 +
+      data[pos + 7].to_int()
     pos += 8
     if pos + chunk_len > len {
       raise @types.LoadError::DecodeFailed("PNG chunk 数据越界")
     }
-    match chunk_type {
-      "IHDR" => {
+    match chunk_key {
+      0x49484452 => {
+        // IHDR
         if chunk_len < 13 {
           raise @types.LoadError::DecodeFailed("PNG IHDR 过短")
         }
@@ -93,7 +95,8 @@ pub fn decode_png_pure(data : Bytes) -> @types.Image raise @types.LoadError {
         interlace = data[pos + 12].to_int()
         found_ihdr = true
       }
-      "PLTE" => {
+      0x504C5445 => {
+        // PLTE
         let num_colors = chunk_len / 3
         for i in 0..<num_colors {
           palette.push((
@@ -103,12 +106,14 @@ pub fn decode_png_pure(data : Bytes) -> @types.Image raise @types.LoadError {
           ))
         }
       }
-      "IDAT" => {
+      0x49444154 => {
+        // IDAT
         for i in 0..<chunk_len {
           idat_data.push(data[pos + i])
         }
       }
-      "IEND" => {
+      0x49454E44 => {
+        // IEND
         found_iend = true
       }
       _ => ()

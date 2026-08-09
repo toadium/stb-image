@@ -7,7 +7,7 @@ test "hough_lines: 检测水平直线" {
   for x in 0..<8 {
     data[2 * 8 + x] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 4,
     channels: 1,
@@ -26,7 +26,7 @@ test "hough_lines: 检测垂直直线" {
   for y in 0..<4 {
     data[y * 8 + 3] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 4,
     channels: 1,
@@ -40,7 +40,7 @@ test "hough_lines: 检测垂直直线" {
 ///|
 test "hough_lines: 空图像无直线" {
   let data = Bytes::from_array(Array::make(16, b'\x00'))
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let lines = hough_lines(img, 1)
   assert_eq(lines.length(), 0)
 }
@@ -54,7 +54,7 @@ test "hough_lines: 阈值过滤" {
   }
   data[4 * 8 + 0] = b'\xFF'
   data[5 * 8 + 1] = b'\xFF'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 1,
@@ -75,7 +75,7 @@ test "hough_lines: 按票数降序" {
   for y in 0..<4 {
     data[y * 8 + 0] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 1,
@@ -104,19 +104,19 @@ test "hough_lines_nms: 去除重复直线" {
 ///|
 test "hough_lines: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
-  let img = @core.Image::{ width: 1, height: 1, channels: 2, data }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data }
   try {
     let _ = hough_lines(img, 1)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
 
 ///|
 test "hough_lines 1x1 功能测试" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

@@ -230,7 +230,7 @@ pub fn decode_gif_animation_pure(
       }
       let label = data[pos].to_int()
       pos += 1
-      if label == 0xF9 && pos + 7 <= len {
+      if label == 0xF9 && pos + 6 <= len {
         // Graphics Control Extension
         let _block_size = data[pos].to_int()
         let gce_packed = data[pos + 1].to_int()
@@ -241,7 +241,7 @@ pub fn decode_gif_animation_pure(
           -1
         }
         gce_disposal = (gce_packed >> 2) & 0x07
-        pos += 7
+        pos += 6
       } else {
         // 跳过其他 extension
         while pos < len {

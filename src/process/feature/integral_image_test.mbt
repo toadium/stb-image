@@ -3,7 +3,7 @@
 ///|
 test "integral_image: 基本积分" {
   let data = Bytes::from_array([b'\x01', b'\x02', b'\x03', b'\x04'])
-  let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 1, data }
   let integral = integral_image(img)
   assert_eq(integral.width, 2)
   assert_eq(integral.height, 2)
@@ -22,7 +22,7 @@ test "integral_image: 基本积分" {
 ///|
 test "integral_image: 均匀图像" {
   let data = Bytes::from_array(Array::make(16, b'\x10'))
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let integral = integral_image(img)
   // 全图和 = 16 * 16 = 256
   assert_eq(integral_sum(integral, 0, 0, 4, 4), 256L)
@@ -36,7 +36,7 @@ test "integral_image: 均值计算" {
   let data = Bytes::from_array([
     b'\x0A', b'\x14', b'\x1E', b'\x28', b'\x32', b'\x3C', b'\x46', b'\x50', b'\x5A',
   ])
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
   let integral = integral_image(img)
   // 全图均值 = (10+20+...+90)/9 = 450/9 = 50
   let mean = integral_mean(integral, 0, 0, 3, 3)
@@ -46,12 +46,12 @@ test "integral_image: 均值计算" {
 ///|
 test "integral_image: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
-  let img = @core.Image::{ width: 1, height: 1, channels: 2, data }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data }
   try {
     let _ = integral_image(img)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
@@ -59,7 +59,7 @@ test "integral_image: 通道验证" {
 ///|
 test "integral_image_sq: 基本平方积分" {
   let data = Bytes::from_array([b'\x01', b'\x02', b'\x03', b'\x04'])
-  let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 1, data }
   let integral_sq = integral_image_sq(img)
   // 全图平方和 = 1+4+9+16 = 30
   assert_eq(integral_sum_sq(integral_sq, 0, 0, 2, 2), 30L)
@@ -71,7 +71,7 @@ test "integral_variance: 方差计算" {
     b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\x00',
     b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
   ])
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let integral = integral_image(img)
   let integral_sq = integral_image_sq(img)
   let variance = integral_variance(integral, integral_sq, 0, 0, 4, 4)
@@ -85,7 +85,7 @@ test "integral_image: RGB 图像取首通道" {
     b'\x0A', b'\xFF', b'\xFF', b'\x0B', b'\xFF', b'\xFF', b'\x0C', b'\xFF', b'\xFF',
     b'\x0D', b'\xFF', b'\xFF',
   ])
-  let img = @core.Image::{ width: 2, height: 2, channels: 3, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 3, data }
   let integral = integral_image(img)
   // 首通道和 = 10+11+12+13 = 46
   assert_eq(integral_sum(integral, 0, 0, 2, 2), 46L)
@@ -94,7 +94,7 @@ test "integral_image: RGB 图像取首通道" {
 ///|
 test "integral_image: 空区域" {
   let data = Bytes::from_array([b'\x10', b'\x20', b'\x30', b'\x40'])
-  let img = @core.Image::{ width: 2, height: 2, channels: 1, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 1, data }
   let integral = integral_image(img)
   assert_eq(integral_mean(integral, 0, 0, 0, 0), 0.0F)
   assert_eq(integral_mean(integral, 0, 0, 1, 0), 0.0F)
@@ -102,7 +102,7 @@ test "integral_image: 空区域" {
 
 ///|
 test "integral_image 1x1 功能测试" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

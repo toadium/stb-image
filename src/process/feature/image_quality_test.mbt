@@ -1,6 +1,6 @@
 ///|
 test "mse: identical images return 0" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -14,13 +14,13 @@ test "mse: identical images return 0" {
 test "mse: known value" {
   // img1 = [0, 0, 0, 0], img2 = [10, 10, 10, 10]
   // MSE = (100 + 100 + 100 + 100) / 4 = 100
-  let img1 = @core.Image::{
+  let img1 = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
     data: Array::make(4, b'\x00') |> Bytes::from_array,
   }
-  let img2 = @core.Image::{
+  let img2 = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -33,7 +33,7 @@ test "mse: known value" {
 
 ///|
 test "psnr: identical images return infinity" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -48,13 +48,13 @@ test "psnr: identical images return infinity" {
 ///|
 test "psnr: known value" {
   // MSE = 100, PSNR = 10 * log10(255^2 / 100) = 10 * log10(650.25) ≈ 28.13
-  let img1 = @core.Image::{
+  let img1 = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
     data: Array::make(4, b'\x00') |> Bytes::from_array,
   }
-  let img2 = @core.Image::{
+  let img2 = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -70,7 +70,7 @@ test "psnr: known value" {
 
 ///|
 test "ssim: identical images return ~1" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -84,13 +84,13 @@ test "ssim: identical images return ~1" {
 
 ///|
 test "ssim: range [-1, 1]" {
-  let img1 = @core.Image::{
+  let img1 = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
     data: Array::make(16, b'\x00') |> Bytes::from_array,
   }
-  let img2 = @core.Image::{
+  let img2 = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -105,14 +105,8 @@ test "ssim: range [-1, 1]" {
 
 ///|
 test "mse: works with RGB images" {
-  let img1 = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
-  let img2 = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img1 = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img2 = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   assert_eq(mse(img1, img2), 0.0)
   let _ = img1
   let _ = img2
@@ -120,19 +114,19 @@ test "mse: works with RGB images" {
 
 ///|
 test "psnr: higher for similar images" {
-  let img1 = @core.Image::{
+  let img1 = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
     data: Array::make(4, b'\x80') |> Bytes::from_array,
   }
-  let img_close = @core.Image::{
+  let img_close = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
     data: Array::make(4, b'\x82') |> Bytes::from_array,
   }
-  let img_far = @core.Image::{
+  let img_far = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,

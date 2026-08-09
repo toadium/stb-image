@@ -4,21 +4,16 @@ version = "2.0.0"
 
 license = "MIT"
 
-description = "MoonBit image library: native C FFI (stb_image) + pure MoonBit backend for wasm/js multi-target support."
+description = "MoonBit image library: pure MoonBit backend for native/wasm/js multi-target support."
 
 keywords = [
   "moonbit",
   "image",
-  "ffi",
-  "native",
-  "stb",
   "png",
   "jpeg",
   "bmp",
   "gif",
   "qoi",
-  "ico",
-  "icns",
   "resize",
   "hdr",
   "wasm",

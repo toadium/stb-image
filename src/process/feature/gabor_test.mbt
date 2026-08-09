@@ -8,7 +8,7 @@ test "gabor_filter 基本功能" {
     b'\x50', b'\x60', b'\x70', b'\x80', b'\x70', b'\x60', b'\x50', b'\x60', b'\x70',
     b'\x60', b'\x50', b'\x40', b'\x50', b'\x60', b'\x50', b'\x40',
   ])
-  let img = @core.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
   let out = gabor_filter(img, 3, 2.0F, 0.0F, lambda=5.0F)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
@@ -23,7 +23,7 @@ test "gabor_filter 基本功能" {
 ///|
 test "gabor_filter RGB 图" {
   let data = Bytes::from_array(Array::make(75, b'\x80'))
-  let img = @core.Image::{ width: 5, height: 5, channels: 3, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 3, data }
   let out = gabor_filter(img, 3, 2.0F, 0.0F, lambda=5.0F)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
@@ -39,7 +39,7 @@ test "gabor_filter RGBA alpha 不变" {
     data[i * 4 + 2] = b'\x80'
     data[i * 4 + 3] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 4,
@@ -58,7 +58,7 @@ test "gabor_filter 不同方向" {
     b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF',
     b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00',
   ])
-  let img = @core.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
   // 0° 方向
   let out0 = gabor_filter(img, 3, 2.0F, 0.0F, lambda=5.0F)
   // 90° 方向
@@ -69,7 +69,7 @@ test "gabor_filter 不同方向" {
 
 ///|
 test "gabor_filter 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -98,7 +98,7 @@ test "gabor_filter 错误参数" {
 ///|
 test "gabor_filter_bank 基本功能" {
   let data = Bytes::from_array(Array::make(25, b'\x80'))
-  let img = @core.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
   let out = gabor_filter_bank(img, 3, 2.0F, num_orientations=4, lambda=5.0F)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
@@ -107,7 +107,7 @@ test "gabor_filter_bank 基本功能" {
 
 ///|
 test "gabor_filter_bank 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -152,7 +152,7 @@ test "gabor_kernel 错误参数" {
 
 ///|
 test "gabor_filter 1x1 功能测试" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

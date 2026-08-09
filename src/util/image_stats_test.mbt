@@ -2,7 +2,7 @@
 
 ///|
 test "compute_stats: uniform image" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -19,7 +19,7 @@ test "compute_stats: uniform image" {
 
 ///|
 test "compute_stats: varied image" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 1,
     channels: 1,
@@ -36,7 +36,7 @@ test "compute_stats: varied image" {
 
 ///|
 test "mean_value: uniform" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,

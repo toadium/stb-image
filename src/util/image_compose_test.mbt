@@ -1,8 +1,8 @@
 // image_compose 测试：hstack / vstack / tile / flip_vertical / transpose
 
 ///|
-fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
-  @core.Image::{
+fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -32,7 +32,7 @@ test "hstack: raises on height mismatch" {
     let _ = hstack(a, b)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = a
@@ -61,7 +61,7 @@ test "vstack: raises on width mismatch" {
     let _ = vstack(a, b)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = a
@@ -90,7 +90,7 @@ test "tile: 1x1 x (1,1) is identity" {
 
 ///|
 test "flip_vertical: reverses rows" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -107,7 +107,7 @@ test "flip_vertical: reverses rows" {
 
 ///|
 test "flip_vertical: double flip is identity" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -121,7 +121,7 @@ test "flip_vertical: double flip is identity" {
 
 ///|
 test "transpose: swaps dimensions" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 3,
     channels: 1,

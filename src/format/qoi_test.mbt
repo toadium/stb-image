@@ -1,6 +1,6 @@
 ///|
 test "encode_qoi: 1x1 RGB image" {
-  let img = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(3))
   let qoi_bytes = encode_qoi(img)
   // QOI header: 14 bytes + end: 8 bytes = 22 bytes minimum
   assert_true(qoi_bytes.length() >= 22)
@@ -15,7 +15,7 @@ test "encode_qoi: 1x1 RGB image" {
 
 ///|
 test "decode_qoi: round-trip 1x1 RGB" {
-  let img = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(3))
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 1)
@@ -31,10 +31,7 @@ test "decode_qoi: round-trip 1x1 RGB" {
 
 ///|
 test "decode_qoi: round-trip 4x4 PNG" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)
@@ -47,10 +44,7 @@ test "decode_qoi: round-trip 4x4 PNG" {
 
 ///|
 test "decode_qoi: round-trip RGBA" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)
@@ -67,7 +61,7 @@ test "decode_qoi: invalid magic raises" {
     let _ = decode_qoi(bad)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
@@ -79,28 +73,28 @@ test "decode_qoi: too short raises" {
     let _ = decode_qoi(short)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
 
 ///|
 test "encode_qoi: invalid channels raises" {
-  let img = @core.Image::{ width: 1, height: 1, channels: 2, data: b"\x00\x00" }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data: b"\x00\x00" }
   try {
     let _ = encode_qoi(img)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
 
 ///|
 test "decode_qoi: detect_format recognizes QOI" {
-  let img = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(3))
   let qoi_bytes = encode_qoi(img)
-  assert_eq(@core.detect_format(qoi_bytes), @core.ImageFormat::Qoi)
+  assert_eq(@lib.detect_format(qoi_bytes), @types.ImageFormat::Qoi)
   let _ = img
   let _ = qoi_bytes
 }

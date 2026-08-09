@@ -1,6 +1,6 @@
 ///|
 test "edge_detect_laplacian: uniform image returns black" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -17,7 +17,7 @@ test "edge_detect_laplacian: uniform image returns black" {
 
 ///|
 test "edge_detect_prewitt: uniform image returns black" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -41,7 +41,7 @@ test "edge_detect_laplacian: detects edge in half-black image" {
       data[y * 4 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -65,7 +65,7 @@ test "edge_detect_prewitt: detects edge in half-black image" {
       data[y * 4 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -82,10 +82,7 @@ test "edge_detect_prewitt: detects edge in half-black image" {
 
 ///|
 test "edge_detect_laplacian: preserves dimensions" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = edge_detect_laplacian(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -96,10 +93,7 @@ test "edge_detect_laplacian: preserves dimensions" {
 
 ///|
 test "edge_detect_prewitt: preserves dimensions" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = edge_detect_prewitt(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -111,10 +105,7 @@ test "edge_detect_prewitt: preserves dimensions" {
 ///|
 test "edge_detect_laplacian: works with RGB image" {
   // 红色图像（均匀），边缘检测应返回全黑
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = edge_detect_laplacian(img)
   // 均匀红色图无边缘
   for i in 0..<16 {
@@ -126,7 +117,7 @@ test "edge_detect_laplacian: works with RGB image" {
 
 ///|
 test "edge_detect_prewitt: works with grayscale image" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,

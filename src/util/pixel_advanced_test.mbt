@@ -2,7 +2,7 @@
 
 ///|
 test "pixelate: block_size=1 is identity" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 1,
@@ -16,7 +16,7 @@ test "pixelate: block_size=1 is identity" {
 
 ///|
 test "pixelate: block_size=2 averages blocks" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -42,7 +42,7 @@ test "pixelate: raises on invalid block_size" {
     let _ = pixelate(img, 0)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -50,7 +50,7 @@ test "pixelate: raises on invalid block_size" {
 
 ///|
 test "replace_color: exact match" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 1,
     channels: 3,
@@ -73,7 +73,7 @@ test "replace_color: exact match" {
 
 ///|
 test "replace_color: with tolerance" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -97,7 +97,7 @@ test "convolve: identity kernel" {
 
 ///|
 test "convolve: box blur kernel" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -119,7 +119,7 @@ test "convolve: box blur kernel" {
 
 ///|
 test "swap_channels: swap R and B" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 3,
@@ -149,7 +149,7 @@ test "swap_channels: raises on out of bounds" {
     let _ = swap_channels(img, 0, 3)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -157,13 +157,13 @@ test "swap_channels: raises on out of bounds" {
 
 ///|
 test "blend_darken: takes minimum" {
-  let base = @core.Image::{
+  let base = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
     data: [b'\x80', b'\x40'] |> Bytes::from_array,
   }
-  let blend = @core.Image::{
+  let blend = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
@@ -179,13 +179,13 @@ test "blend_darken: takes minimum" {
 
 ///|
 test "blend_lighten: takes maximum" {
-  let base = @core.Image::{
+  let base = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
     data: [b'\x80', b'\x40'] |> Bytes::from_array,
   }
-  let blend = @core.Image::{
+  let blend = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
@@ -201,13 +201,13 @@ test "blend_lighten: takes maximum" {
 
 ///|
 test "blend_difference: absolute difference" {
-  let base = @core.Image::{
+  let base = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
     data: [b'\x80'] |> Bytes::from_array,
   }
-  let blend = @core.Image::{
+  let blend = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

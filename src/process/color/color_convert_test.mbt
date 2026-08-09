@@ -1,9 +1,6 @@
 ///|
 test "to_grayscale: RGB → 1 channel" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let gray = to_grayscale(img)
   assert_eq(gray.width, 4)
   assert_eq(gray.height, 4)
@@ -14,10 +11,7 @@ test "to_grayscale: RGB → 1 channel" {
 
 ///|
 test "to_grayscale: already grayscale is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(1),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(1))
   let gray = to_grayscale(img)
   assert_eq(gray.channels, 1)
   assert_eq(gray.data, img.data)
@@ -27,10 +21,7 @@ test "to_grayscale: already grayscale is identity" {
 
 ///|
 test "to_rgb: RGBA → RGB" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let rgb = to_rgb(img)
   assert_eq(rgb.channels, 3)
   assert_eq(rgb.data.length(), 4 * 4 * 3)
@@ -40,10 +31,7 @@ test "to_rgb: RGBA → RGB" {
 
 ///|
 test "to_rgb: already RGB is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let rgb = to_rgb(img)
   assert_eq(rgb.channels, 3)
   assert_eq(rgb.data, img.data)
@@ -53,10 +41,7 @@ test "to_rgb: already RGB is identity" {
 
 ///|
 test "to_rgba: RGB → RGBA" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let rgba = to_rgba(img)
   assert_eq(rgba.channels, 4)
   assert_eq(rgba.data.length(), 4 * 4 * 4)
@@ -68,10 +53,7 @@ test "to_rgba: RGB → RGBA" {
 
 ///|
 test "to_rgba: already RGBA is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let rgba = to_rgba(img)
   assert_eq(rgba.channels, 4)
   assert_eq(rgba.data, img.data)
@@ -81,10 +63,7 @@ test "to_rgba: already RGBA is identity" {
 
 ///|
 test "premultiply_alpha: full opacity is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let premul = premultiply_alpha(img)
   // alpha=255 → premultiply is identity
   assert_eq(premul.data, img.data)
@@ -94,10 +73,7 @@ test "premultiply_alpha: full opacity is identity" {
 
 ///|
 test "premultiply/unpremultiply round-trip" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let premul = premultiply_alpha(img)
   let restored = unpremultiply_alpha(premul)
   assert_eq(restored.width, 4)
@@ -108,15 +84,12 @@ test "premultiply/unpremultiply round-trip" {
 
 ///|
 test "premultiply_alpha: non-RGBA raises" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   try {
     let _ = premultiply_alpha(img)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -124,7 +97,7 @@ test "premultiply_alpha: non-RGBA raises" {
 
 ///|
 test "to_grayscale: red pixel luminance" {
-  let img = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(3))
   let gray = to_grayscale(img)
   // R=255, G=0, B=0 → Y = 0.299*255 = 76
   assert_eq(gray.data[0].to_int(), 76)

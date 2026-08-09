@@ -16,13 +16,11 @@ import {
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
-  "MoonBit-Toadium/stb-image/src/meta/path" @metapath,
+  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
 } for "test"
 
 options(
   targets: {
-    "roundtrip_test.mbt": [ "native" ],
     "README.mbt.md": [ "native" ],
   },
 )

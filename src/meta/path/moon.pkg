@@ -1,6 +1,0 @@
-import {
-  "MoonBit-Toadium/stb-image/src/core",
-  "MoonBit-Toadium/stb-image/src/meta" @meta,
-}
-
-supported_targets = "native"

@@ -85,6 +85,8 @@ pub fn dilate_pure(@types.Image) -> @types.Image
 
 pub fn edge_detect_sobel_pure(@types.Image) -> @types.Image
 
+pub fn encode_bmp_pure(@types.Image) -> Bytes
+
 pub fn encode_gif_pure(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_hdr_pure(@types.ImageF) -> Bytes raise @types.LoadError
@@ -100,6 +102,8 @@ pub fn encode_pnm_pure(@types.Image) -> Bytes
 pub fn encode_ppm_pure(@types.Image) -> Bytes
 
 pub fn encode_qoi_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tga_pure(@types.Image) -> Bytes
 
 pub fn erode_pure(@types.Image) -> @types.Image
 

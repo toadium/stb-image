@@ -4,7 +4,7 @@
 test "compute_glcm 基本功能" {
   // 3x1 灰度图
   let data = Bytes::from_array([b'\x00', b'\x01', b'\x02'])
-  let img = @core.Image::{ width: 3, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 1, channels: 1, data }
   let glcm = compute_glcm(img, 1, 0, levels=256)
   assert_eq(glcm.length(), 256)
   // (0,1) 和 (1,2) 各出现一次
@@ -16,7 +16,7 @@ test "compute_glcm 基本功能" {
 test "compute_glcm 垂直方向" {
   // 1x3 灰度图
   let data = Bytes::from_array([b'\x00', b'\x01', b'\x02'])
-  let img = @core.Image::{ width: 1, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 1, height: 3, channels: 1, data }
   let glcm = compute_glcm(img, 0, 1, levels=256)
   assert_eq(glcm.length(), 256)
   assert_eq(glcm[0][1], 1)
@@ -26,7 +26,7 @@ test "compute_glcm 垂直方向" {
 ///|
 test "compute_glcm 量化" {
   let data = Bytes::from_array([b'\x00', b'\x40', b'\x80', b'\xC0'])
-  let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 1, channels: 1, data }
   let glcm = compute_glcm(img, 1, 0, levels=4)
   assert_eq(glcm.length(), 4)
   // 0/64=0, 64/64=1, 128/64=2, 192/64=3
@@ -37,7 +37,7 @@ test "compute_glcm 量化" {
 
 ///|
 test "compute_glcm 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,
@@ -60,7 +60,7 @@ test "compute_glcm 错误参数" {
 ///|
 test "glcm_features 基本功能" {
   let data = Bytes::from_array([b'\x00', b'\x40', b'\x80', b'\xC0'])
-  let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 1, channels: 1, data }
   let glcm = compute_glcm(img, 1, 0, levels=256)
   let features = glcm_features(glcm)
   // 对比度应 > 0（因为相邻像素不同）
@@ -74,7 +74,7 @@ test "glcm_features 基本功能" {
 ///|
 test "glcm_features 常量图" {
   let data = Bytes::from_array(Array::make(4, b'\x80'))
-  let img = @core.Image::{ width: 4, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 1, channels: 1, data }
   let glcm = compute_glcm(img, 1, 0, levels=256)
   let features = glcm_features(glcm)
   // 常量图对比度应为 0
@@ -97,7 +97,7 @@ test "glcm_features_multi_direction 基本功能" {
   let data = Bytes::from_array([
     b'\x00', b'\x01', b'\x02', b'\x01', b'\x02', b'\x03', b'\x02', b'\x03', b'\x04',
   ])
-  let img = @core.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
   let features = glcm_features_multi_direction(img, levels=8)
   assert_eq(features.length(), 4)
   // 每个方向都应有有效特征
@@ -109,7 +109,7 @@ test "glcm_features_multi_direction 基本功能" {
 
 ///|
 test "compute_glcm 1x1 功能测试" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 1,

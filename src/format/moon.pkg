@@ -4,7 +4,9 @@ import {
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/pure" @pure,
+  "MoonBit-Toadium/stb-image/src/lib" @lib,
+  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
   "MoonBit-Toadium/stb-image/src/process/color",
 } for "test"
 

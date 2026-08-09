@@ -87,6 +87,73 @@ pub fn to_rgba_pure(img : @types.Image) -> @types.Image {
 }
 
 ///|
+/// 按 stb_image 语义转换通道数（纯 MoonBit，全目标可用）
+/// - 1: 灰度（BT.601 亮度公式）
+/// - 2: 灰度 + alpha（alpha=255 若源无 alpha）
+/// - 3: RGB（丢弃 alpha，灰度展开为 R=G=B）
+/// - 4: RGBA（alpha=255 若源无 alpha，灰度展开为 R=G=B）
+pub fn convert_channels_pure(
+  img : @types.Image,
+  req_channels : Int,
+) -> @types.Image raise @types.LoadError {
+  if req_channels == img.channels {
+    return img
+  }
+  let pixel_count = img.width * img.height
+  let src_ch = img.channels
+  match req_channels {
+    1 => to_grayscale_pure(img)
+    2 => {
+      let out : Array[Byte] = Array::make(pixel_count * 2, b'\x00')
+      for i in 0..<pixel_count {
+        let gray = if src_ch >= 3 {
+          let r = img.data[i * src_ch].to_int()
+          let g = img.data[i * src_ch + 1].to_int()
+          let b = img.data[i * src_ch + 2].to_int()
+          (r * 299 + g * 587 + b * 114) / 1000
+        } else {
+          img.data[i * src_ch].to_int()
+        }
+        let alpha = if src_ch == 2 || src_ch == 4 {
+          img.data[i * src_ch + src_ch - 1].to_int()
+        } else {
+          255
+        }
+        out[i * 2] = gray.to_byte()
+        out[i * 2 + 1] = alpha.to_byte()
+      }
+      @types.Image::{
+        width: img.width,
+        height: img.height,
+        channels: 2,
+        data: Bytes::from_array(out),
+      }
+    }
+    3 => {
+      if src_ch == 1 {
+        let out : Array[Byte] = Array::make(pixel_count * 3, b'\x00')
+        for i in 0..<pixel_count {
+          let v = img.data[i]
+          out[i * 3] = v
+          out[i * 3 + 1] = v
+          out[i * 3 + 2] = v
+        }
+        @types.Image::{
+          width: img.width,
+          height: img.height,
+          channels: 3,
+          data: Bytes::from_array(out),
+        }
+      } else {
+        to_rgb_pure(img)
+      }
+    }
+    4 => to_rgba_pure(img)
+    _ => raise @types.LoadError::DecodeFailed("不支持的 req_channels 值")
+  }
+}
+
+///|
 /// 预乘 alpha（RGBA → RGBA premultiplied，纯 MoonBit，全目标可用）
 /// 要求 channels=4
 pub fn premultiply_alpha_pure(

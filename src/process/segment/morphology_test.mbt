@@ -1,6 +1,6 @@
 ///|
 test "erode: uniform image is unchanged" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -16,7 +16,7 @@ test "erode: uniform image is unchanged" {
 
 ///|
 test "dilate: uniform image is unchanged" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -39,7 +39,7 @@ test "erode: shrinks bright region" {
       data[y * 5 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,
@@ -62,7 +62,7 @@ test "dilate: expands bright region" {
   // 5x5 图像，只有中心为白
   let data = Array::make(25, b'\x00')
   data[2 * 5 + 2] = b'\xFF'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,
@@ -87,7 +87,7 @@ test "morph_open: removes isolated bright pixel" {
   // 5x5 全黑，中心一个白点
   let data = Array::make(25, b'\x00')
   data[2 * 5 + 2] = b'\xFF'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,
@@ -107,7 +107,7 @@ test "morph_close: fills isolated dark pixel" {
   // 5x5 全白，中心一个黑点
   let data = Array::make(25, b'\xFF')
   data[2 * 5 + 2] = b'\x00'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,
@@ -124,10 +124,7 @@ test "morph_close: fills isolated dark pixel" {
 
 ///|
 test "erode: preserves dimensions" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = erode(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -138,10 +135,7 @@ test "erode: preserves dimensions" {
 
 ///|
 test "dilate: preserves dimensions" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = dilate(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -160,7 +154,7 @@ test "morph_open: idempotent" {
     }
   }
   data[2 * 5 + 2] = b'\x00'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,
@@ -179,7 +173,7 @@ test "morph_close: idempotent" {
   // 闭运算是幂等的：close(close(img)) == close(img)
   let data = Array::make(25, b'\xFF')
   data[2 * 5 + 2] = b'\x00'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 5,
     height: 5,
     channels: 1,

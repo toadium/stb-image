@@ -6,7 +6,7 @@ test "k_means_quantize: k=1 gives single color" {
     b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF',
     b'\xFF', b'\xFF', b'\x00',
   ]
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 3,
@@ -28,7 +28,7 @@ test "k_means_quantize: k=1 gives single color" {
 
 ///|
 test "k_means_quantize: preserves channels" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 3,
@@ -48,7 +48,7 @@ test "k_means_quantize: RGBA preserves alpha" {
   for i in 0..<4 {
     data[i * 4 + 3] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 4,
@@ -64,7 +64,7 @@ test "k_means_quantize: RGBA preserves alpha" {
 
 ///|
 test "k_means_quantize: raises on invalid k" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 3,
@@ -74,7 +74,7 @@ test "k_means_quantize: raises on invalid k" {
     let _ = k_means_quantize(img, 0, 10)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -86,7 +86,7 @@ test "k_means_quantize: two distinct colors with k=2" {
     b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF',
     b'\xFF', b'\xFF', b'\xFF',
   ]
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 2,
     channels: 3,

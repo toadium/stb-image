@@ -22,7 +22,7 @@ test "add_noise_gaussian: sigma=0 is identity" {
 
 ///|
 test "add_noise_gaussian: preserves alpha" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 4,

@@ -5,11 +5,8 @@ fn make_bytes(arr : Array[Byte]) -> Bytes {
 
 ///|
 test "draw_copy: copy 2x2 into 4x4" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
-  let src = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   let result = draw_copy(dst, src, 0, 0)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -20,16 +17,13 @@ test "draw_copy: copy 2x2 into 4x4" {
 
 ///|
 test "draw_copy: out of bounds raises" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
-  let src = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   try {
     let _ = draw_copy(dst, src, 4, 4)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = dst
@@ -38,16 +32,13 @@ test "draw_copy: out of bounds raises" {
 
 ///|
 test "draw_copy: channel mismatch raises" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
-  let src = @core.load_from_bytes(make_1x1_red_bmp(), req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   try {
     let _ = draw_copy(dst, src, 0, 0)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = dst
@@ -56,11 +47,8 @@ test "draw_copy: channel mismatch raises" {
 
 ///|
 test "draw_over: full opacity src overwrites dst" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
-  let src = @core.Image::{
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let src = @types.Image::{
     width: 1,
     height: 1,
     channels: 4,
@@ -79,11 +67,8 @@ test "draw_over: full opacity src overwrites dst" {
 
 ///|
 test "draw_over: zero opacity src preserves dst" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
-  let src = @core.Image::{
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let src = @types.Image::{
     width: 1,
     height: 1,
     channels: 4,
@@ -101,11 +86,8 @@ test "draw_over: zero opacity src preserves dst" {
 
 ///|
 test "draw_over: non-RGBA raises" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
-  let src = @core.Image::{
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let src = @types.Image::{
     width: 1,
     height: 1,
     channels: 3,
@@ -115,7 +97,7 @@ test "draw_over: non-RGBA raises" {
     let _ = draw_over(dst, src, 0, 0)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = dst
@@ -124,11 +106,8 @@ test "draw_over: non-RGBA raises" {
 
 ///|
 test "draw_over: out of bounds raises" {
-  let dst = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
-  let src = @core.Image::{
+  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let src = @types.Image::{
     width: 1,
     height: 1,
     channels: 4,
@@ -138,7 +117,7 @@ test "draw_over: out of bounds raises" {
     let _ = draw_over(dst, src, 4, 4)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = dst
@@ -147,13 +126,13 @@ test "draw_over: out of bounds raises" {
 
 ///|
 test "draw_copy: copy preserves src pixels" {
-  let dst = @core.Image::{
+  let dst = @types.Image::{
     width: 2,
     height: 2,
     channels: 3,
     data: Array::make(12, b'\x00') |> Bytes::from_array,
   }
-  let src = @core.Image::{
+  let src = @types.Image::{
     width: 1,
     height: 1,
     channels: 3,

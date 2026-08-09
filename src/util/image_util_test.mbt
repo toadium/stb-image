@@ -1,8 +1,8 @@
 // image_util 测试：pad / add_border / resize_to_cover / resize_to_contain
 
 ///|
-fn make_test_img(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
-  @core.Image::{
+fn make_test_img(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -40,7 +40,7 @@ test "pad: raises on negative padding" {
     let _ = pad(img, -1, 0, [b'\x00'])
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img

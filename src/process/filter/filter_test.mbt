@@ -1,9 +1,6 @@
 ///|
 test "box_blur: radius=0 is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = box_blur(img, 0)
   assert_eq(result.data, img.data)
   let _ = img
@@ -12,10 +9,7 @@ test "box_blur: radius=0 is identity" {
 
 ///|
 test "box_blur: radius=1 smooths image" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = box_blur(img, 1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -26,10 +20,7 @@ test "box_blur: radius=1 smooths image" {
 
 ///|
 test "box_blur: preserves alpha channel" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let result = box_blur(img, 1)
   // alpha 不变
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
@@ -40,7 +31,7 @@ test "box_blur: preserves alpha channel" {
 ///|
 test "box_blur: uniform image is unchanged" {
   // 全白图模糊后还是全白
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -56,10 +47,7 @@ test "box_blur: uniform image is unchanged" {
 
 ///|
 test "gaussian_blur: radius=0 is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = gaussian_blur(img, 0, 1.0F)
   assert_eq(result.data, img.data)
   let _ = img
@@ -68,10 +56,7 @@ test "gaussian_blur: radius=0 is identity" {
 
 ///|
 test "gaussian_blur: smooths image" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = gaussian_blur(img, 2, 1.5F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -81,7 +66,7 @@ test "gaussian_blur: smooths image" {
 
 ///|
 test "gaussian_blur: uniform image is unchanged" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -97,10 +82,7 @@ test "gaussian_blur: uniform image is unchanged" {
 
 ///|
 test "sharpen: amount=0 is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = sharpen(img, 0.0F)
   assert_eq(result.data, img.data)
   let _ = img
@@ -109,7 +91,7 @@ test "sharpen: amount=0 is identity" {
 
 ///|
 test "sharpen: uniform image is unchanged" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 3,
     channels: 1,
@@ -125,10 +107,7 @@ test "sharpen: uniform image is unchanged" {
 
 ///|
 test "sharpen: preserves alpha" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let result = sharpen(img, 0.5F)
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
   let _ = img
@@ -137,7 +116,7 @@ test "sharpen: preserves alpha" {
 
 ///|
 test "edge_detect_sobel: uniform image has no edges" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 3,
@@ -163,7 +142,7 @@ test "edge_detect_sobel: detects edges in non-uniform image" {
       }
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 3,
@@ -185,10 +164,7 @@ test "edge_detect_sobel: detects edges in non-uniform image" {
 
 ///|
 test "edge_detect_sobel: output dimensions match input" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = edge_detect_sobel(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -199,10 +175,7 @@ test "edge_detect_sobel: output dimensions match input" {
 
 ///|
 test "box_blur: radius exceeds image size" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = box_blur(img, 100)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -213,10 +186,7 @@ test "box_blur: radius exceeds image size" {
 
 ///|
 test "gaussian_blur: radius exceeds image size" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = gaussian_blur(img, 100, 1.5F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)

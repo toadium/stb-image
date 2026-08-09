@@ -2,7 +2,7 @@
 
 ///|
 test "apply_lut: identity lut" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 3,
     height: 1,
     channels: 1,
@@ -20,7 +20,7 @@ test "apply_lut: identity lut" {
 
 ///|
 test "apply_lut: invert lut" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
@@ -44,7 +44,7 @@ test "apply_lut: raises on short lut" {
     let _ = apply_lut(img, Array::make(10, b'\x00'))
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -68,7 +68,7 @@ test "gradient_map: raises on insufficient stops" {
     let _ = gradient_map(img, [(0, b'\x00', b'\x00', b'\x00')])
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -92,7 +92,7 @@ test "set_alpha: raises on non-RGBA" {
     let _ = set_alpha(img, b'\xFF')
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -100,7 +100,7 @@ test "set_alpha: raises on non-RGBA" {
 
 ///|
 test "fill_alpha: fills transparent pixels" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 1,
     channels: 4,

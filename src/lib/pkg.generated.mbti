@@ -9,15 +9,25 @@ import {
 // Values
 pub fn detect_format(Bytes) -> ImageFormat
 
+pub fn encode_bmp_auto(@types.Image) -> Bytes
+
 pub fn encode_gif_auto(@types.Image) -> Bytes raise @types.LoadError
 
+pub fn encode_hdr_auto(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_jpeg_auto(@types.Image) -> Bytes raise @types.LoadError
+
 pub fn encode_pgm_auto(@types.Image) -> Bytes
+
+pub fn encode_png_auto(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_pnm_auto(@types.Image) -> Bytes
 
 pub fn encode_ppm_auto(@types.Image) -> Bytes
 
 pub fn encode_qoi_auto(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tga_auto(@types.Image) -> Bytes
 
 pub fn load_from_bytes_auto(Bytes) -> @types.Image raise @types.LoadError
 
@@ -30,6 +40,9 @@ pub(all) enum ImageFormat {
   Pnm
   Psd
   Gif
+  Png
+  Jpeg
+  Tga
   Unknown
 } derive(Eq, @debug.Debug)
 

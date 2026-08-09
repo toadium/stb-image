@@ -1,8 +1,8 @@
 ///|
 /// 检查两个 Image 的像素值是否在 tolerance 范围内相等
 fn assert_image_approx(
-  actual : @core.Image,
-  expected : @core.Image,
+  actual : @types.Image,
+  expected : @types.Image,
   tolerance : Int,
 ) -> Unit raise {
   assert_eq(actual.width, expected.width)
@@ -17,10 +17,7 @@ fn assert_image_approx(
 
 ///|
 test "warp_affine: identity matrix is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = warp_affine(img, (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F), 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -31,10 +28,7 @@ test "warp_affine: identity matrix is identity" {
 
 ///|
 test "warp_affine: scale down 2x" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = warp_affine(img, (2.0F, 0.0F, 0.0F, 0.0F, 2.0F, 0.0F), 2, 2)
   assert_eq(result.width, 2)
   assert_eq(result.height, 2)
@@ -44,10 +38,7 @@ test "warp_affine: scale down 2x" {
 
 ///|
 test "warp_affine: translation" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = warp_affine(img, (1.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F), 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -57,10 +48,7 @@ test "warp_affine: translation" {
 
 ///|
 test "warp_affine: preserves channels" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let result = warp_affine(img, (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F), 4, 4)
   assert_eq(result.channels, 4)
   let _ = img
@@ -69,10 +57,7 @@ test "warp_affine: preserves channels" {
 
 ///|
 test "rotate: 0 degrees is identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = rotate(img, 0.0F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -83,10 +68,7 @@ test "rotate: 0 degrees is identity" {
 
 ///|
 test "rotate: 180 degrees approx matches rotate_180" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = rotate(img, 180.0F)
   let expected = rotate_180(img)
   // 允许浮点误差
@@ -98,10 +80,7 @@ test "rotate: 180 degrees approx matches rotate_180" {
 
 ///|
 test "rotate: 90 degrees approx matches rotate_90" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = rotate(img, 90.0F)
   let expected = rotate_90(img)
   assert_image_approx(result, expected, 5)
@@ -112,10 +91,7 @@ test "rotate: 90 degrees approx matches rotate_90" {
 
 ///|
 test "rotate: preserves dimensions" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
   let result = rotate(img, 45.0F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -126,10 +102,7 @@ test "rotate: preserves dimensions" {
 
 ///|
 test "rotate: 360 degrees approx identity" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = rotate(img, 360.0F)
   assert_image_approx(result, img, 5)
   let _ = img
@@ -138,10 +111,7 @@ test "rotate: 360 degrees approx identity" {
 
 ///|
 test "warp_affine: degenerate (zero) matrix maps all to origin" {
-  let img = @core.load_from_path(
-    "testdata/test_4x4_red.png",
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
   let result = warp_affine(img, (0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F), 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)

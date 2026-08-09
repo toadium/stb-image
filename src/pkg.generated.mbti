@@ -123,12 +123,6 @@ pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
 
-pub fn encode_icns(@types.Image) -> Bytes raise @types.LoadError
-
-pub fn encode_ico(@types.Image) -> Bytes raise @types.LoadError
-
-pub fn encode_ico_sizes(Array[@types.Image]) -> Bytes raise @types.LoadError
-
 pub fn encode_pgm(@types.Image) -> Bytes
 
 pub fn encode_pnm(@types.Image) -> Bytes
@@ -219,8 +213,6 @@ pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
 
 pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
-pub fn info_from_path(String) -> @types.ImageInfo?
-
 pub fn integral_image(@types.Image) -> @feature.IntegralImage raise @types.LoadError
 
 pub fn integral_image_sq(@types.Image) -> @feature.IntegralImageSq raise @types.LoadError
@@ -237,11 +229,7 @@ pub fn invert(@types.Image) -> @types.Image
 
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
-pub fn is_16_bit_from_path(String) -> Bool
-
 pub fn is_hdr_from_bytes(Bytes) -> Bool
-
-pub fn is_hdr_from_path(String) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
 
@@ -257,21 +245,11 @@ pub fn ldr_to_hdr_gamma(Float) -> Unit
 
 pub fn ldr_to_hdr_scale(Float) -> Unit
 
-pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
-
-pub fn load_16_from_path(String, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
-
 pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
-
-pub fn load_from_path(String, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
 pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> @types.GifAnimation raise @types.LoadError
 
-pub fn load_gif_from_path(String, req_channels? : Int?) -> @types.GifAnimation raise @types.LoadError
-
 pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @types.ImageF raise @types.LoadError
-
-pub fn loadf_from_path(String, req_channels? : Int?) -> @types.ImageF raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
 
@@ -307,13 +285,7 @@ pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
-pub fn read_exif_from_path(String) -> @meta.ExifInfo? raise @types.LoadError
-
-pub fn read_file_bytes(String) -> Bytes raise @types.LoadError
-
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
-
-pub fn read_png_text_chunks_from_path(String) -> Array[@meta.PngTextChunk] raise @types.LoadError
 
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
 
@@ -321,15 +293,9 @@ pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Imag
 
 pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
-pub fn resize_16(@types.Image16, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image16 raise @types.LoadError
-
-pub fn resize_srgb(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
-
 pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
 pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
-
-pub fn resizef(@types.ImageF, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.ImageF raise @types.LoadError
 
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
@@ -387,23 +353,13 @@ pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
 
 pub fn write_bmp_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn write_bmp_to_path(String, @types.Image) -> Unit raise @types.LoadError
-
 pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
-
-pub fn write_hdr_to_path(String, @types.ImageF) -> Unit raise @types.LoadError
 
 pub fn write_jpeg_to_bytes(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
-pub fn write_jpeg_to_path(String, @types.Image, quality? : Int) -> Unit raise @types.LoadError
-
 pub fn write_png_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn write_png_to_path(String, @types.Image) -> Unit raise @types.LoadError
-
 pub fn write_tga_to_bytes(@types.Image) -> Bytes raise @types.LoadError
-
-pub fn write_tga_to_path(String, @types.Image) -> Unit raise @types.LoadError
 
 // Errors
 

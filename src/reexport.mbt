@@ -99,17 +99,7 @@ pub fn decode_any(
 
 ///|
 pub fn detect_format(data : Bytes) -> @types.ImageFormat {
-  match @lib.detect_format(data) {
-    @lib.ImageFormat::Png => @types.ImageFormat::Png
-    @lib.ImageFormat::Jpeg => @types.ImageFormat::Jpeg
-    @lib.ImageFormat::Bmp => @types.ImageFormat::Bmp
-    @lib.ImageFormat::Gif => @types.ImageFormat::Gif
-    @lib.ImageFormat::Tga => @types.ImageFormat::Tga
-    @lib.ImageFormat::Psd => @types.ImageFormat::Psd
-    @lib.ImageFormat::Pnm => @types.ImageFormat::Pnm
-    @lib.ImageFormat::Qoi => @types.ImageFormat::Qoi
-    @lib.ImageFormat::Unknown => @types.ImageFormat::Unknown
-  }
+  @lib.detect_format(data)
 }
 
 ///|

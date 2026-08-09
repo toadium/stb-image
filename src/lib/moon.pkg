@@ -3,3 +3,7 @@ import {
   "MoonBit-Toadium/stb-image/src/pure" @pure,
   "moonbitlang/core/debug" @debug,
 }
+
+import {
+  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+} for "test"

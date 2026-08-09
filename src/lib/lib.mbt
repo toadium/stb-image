@@ -1,26 +1,15 @@
 ///|
-/// pure 侧支持的图像格式枚举
-pub(all) enum ImageFormat {
-  Bmp
-  Qoi
-  Pnm
-  Psd
-  Gif
-  Png
-  Jpeg
-  Tga
-  Unknown
-} derive(Eq, @debug.Debug)
+pub type ImageFormat = @types.ImageFormat
 
 ///|
 /// 通过 magic bytes 检测图像格式
 /// - BMP "BM"、QOI "qoif"、PNM "P5"/"P6"、PSD "8BPS"、GIF "GIF87a"/"GIF89a"
 /// - PNG 8字节签名、JPEG SOI 0xFF 0xD8
 /// - TGA 无固定 magic bytes，检测为 Unknown，需显式调用 @pure.decode_tga_pure
-pub fn detect_format(data : Bytes) -> ImageFormat {
+pub fn detect_format(data : Bytes) -> @types.ImageFormat {
   let len = data.length()
   if len < 2 {
-    return ImageFormat::Unknown
+    return @types.ImageFormat::Unknown
   }
   // PNG: 8字节签名
   if len >= 8 &&
@@ -32,15 +21,15 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
     data[5].to_int() == 0x0A &&
     data[6].to_int() == 0x1A &&
     data[7].to_int() == 0x0A {
-    return ImageFormat::Png
+    return @types.ImageFormat::Png
   }
   // JPEG: SOI marker
   if data[0].to_int() == 0xFF && data[1].to_int() == 0xD8 {
-    return ImageFormat::Jpeg
+    return @types.ImageFormat::Jpeg
   }
   // BMP: "BM"
   if data[0].to_int() == 0x42 && data[1].to_int() == 0x4D {
-    return ImageFormat::Bmp
+    return @types.ImageFormat::Bmp
   }
   // QOI: "qoif"
   if len >= 4 &&
@@ -48,11 +37,11 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
     data[1].to_int() == 0x6F &&
     data[2].to_int() == 0x69 &&
     data[3].to_int() == 0x66 {
-    return ImageFormat::Qoi
+    return @types.ImageFormat::Qoi
   }
   // PNM: "P5"/"P6"
   if data[0].to_int() == 0x50 && data[1].to_int() >= 0x35 && data[1].to_int() <= 0x36 {
-    return ImageFormat::Pnm
+    return @types.ImageFormat::Pnm
   }
   // PSD: "8BPS"
   if len >= 4 &&
@@ -60,16 +49,23 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
     data[1].to_int() == 0x42 &&
     data[2].to_int() == 0x50 &&
     data[3].to_int() == 0x53 {
-    return ImageFormat::Psd
+    return @types.ImageFormat::Psd
   }
   // GIF: "GIF87a" or "GIF89a"
   if len >= 6 &&
     data[0].to_int() == 0x47 &&
     data[1].to_int() == 0x49 &&
     data[2].to_int() == 0x46 {
-    return ImageFormat::Gif
+    return @types.ImageFormat::Gif
   }
-  ImageFormat::Unknown
+  // HDR: #?RADIANCE or #?RGBE
+  if len >= 10 &&
+    data[0].to_int() == 0x23 &&
+    data[1].to_int() == 0x3F &&
+    data[2].to_int() == 0x52 {
+    return @types.ImageFormat::Hdr
+  }
+  @types.ImageFormat::Unknown
 }
 
 ///|
@@ -77,18 +73,29 @@ pub fn detect_format(data : Bytes) -> ImageFormat {
 /// 根据 magic bytes 检测格式并委托对应 pure 解码器
 /// - 不支持 TGA 自动分派（无固定 magic bytes），需显式调用 @pure.decode_tga_pure
 /// - 未识别格式 raise LoadError::DecodeFailed
-pub fn load_from_bytes_auto(data : Bytes) -> @types.Image raise @types.LoadError {
-  match detect_format(data) {
-    ImageFormat::Png => @pure.decode_png_pure(data)
-    ImageFormat::Jpeg => @pure.decode_jpeg_pure(data)
-    ImageFormat::Bmp => @pure.decode_bmp_pure(data)
-    ImageFormat::Qoi => @pure.decode_qoi_pure(data)
-    ImageFormat::Pnm => @pure.decode_pnm_pure(data)
-    ImageFormat::Psd => @pure.decode_psd_pure(data)
-    ImageFormat::Gif => @pure.decode_gif_pure(data)
-    ImageFormat::Tga => @pure.decode_tga_pure(data)
-    ImageFormat::Unknown =>
+pub fn load_from_bytes_auto(
+  data : Bytes,
+  req_channels? : Int? = None,
+) -> @types.Image raise @types.LoadError {
+  let img = match detect_format(data) {
+    @types.ImageFormat::Png => @pure.decode_png_pure(data)
+    @types.ImageFormat::Jpeg => @pure.decode_jpeg_pure(data)
+    @types.ImageFormat::Bmp => @pure.decode_bmp_pure(data)
+    @types.ImageFormat::Qoi => @pure.decode_qoi_pure(data)
+    @types.ImageFormat::Pnm => @pure.decode_pnm_pure(data)
+    @types.ImageFormat::Psd => @pure.decode_psd_pure(data)
+    @types.ImageFormat::Gif => @pure.decode_gif_pure(data)
+    @types.ImageFormat::Hdr =>
+      raise @types.LoadError::DecodeFailed(
+        "HDR format requires decode_hdr_pure for float image",
+      )
+    @types.ImageFormat::Tga => @pure.decode_tga_pure(data)
+    @types.ImageFormat::Unknown =>
       raise @types.LoadError::DecodeFailed("unsupported or unrecognized format")
+  }
+  match req_channels {
+    Some(n) => @pure.convert_channels_pure(img, n)
+    None => img
   }
 }
 

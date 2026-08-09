@@ -2,7 +2,7 @@
 
 ///|
 test "clahe: grayscale uniform image produces uniform output" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 1,
@@ -20,7 +20,7 @@ test "clahe: grayscale uniform image produces uniform output" {
 
 ///|
 test "clahe: RGB image preserves channels" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 3,
@@ -40,7 +40,7 @@ test "clahe: RGBA preserves alpha" {
   for i in 0..<64 {
     data[i * 4 + 3] = b'\xFF'
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 4,
@@ -56,7 +56,7 @@ test "clahe: RGBA preserves alpha" {
 
 ///|
 test "clahe: raises on invalid tile_size" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -66,7 +66,7 @@ test "clahe: raises on invalid tile_size" {
     let _ = clahe(img, 1, 2.0)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -80,7 +80,7 @@ test "clahe: enhances contrast on gradient" {
       data[y * 8 + x] = (x * 32).to_byte()
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 8,
     channels: 1,

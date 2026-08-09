@@ -133,7 +133,12 @@ fn bit_reader_read_huffman(
 ///|
 /// DEFLATE inflate 解压缩（纯 MoonBit，全目标可用）
 pub fn zlib_inflate(data : Bytes) -> Bytes raise @types.LoadError {
+  // 跳过 zlib 2 字节头 (CMF, FLG)
+  if data.length() < 2 {
+    raise @types.LoadError::DecodeFailed("zlib 数据过短")
+  }
   let reader = bit_reader_new(data)
+  reader.pos = 2
   let output : Array[Byte] = []
   let mut done = false
   while !done {

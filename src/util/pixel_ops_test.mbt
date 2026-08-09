@@ -1,8 +1,8 @@
 // pixel_ops 测试：threshold / posterize / extract_channel / blend_*
 
 ///|
-fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
-  @core.Image::{
+fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -12,7 +12,7 @@ fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @core.Image {
 
 ///|
 test "threshold: 128 splits values" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 1,
     channels: 1,
@@ -27,7 +27,7 @@ test "threshold: 128 splits values" {
 
 ///|
 test "threshold: preserves alpha" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 1,
     height: 1,
     channels: 4,
@@ -41,7 +41,7 @@ test "threshold: preserves alpha" {
 
 ///|
 test "posterize: 2 levels equals binary" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 1,
     channels: 1,
@@ -61,7 +61,7 @@ test "posterize: raises on invalid levels" {
     let _ = posterize(img, 1)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -69,7 +69,7 @@ test "posterize: raises on invalid levels" {
 
 ///|
 test "extract_channel: extracts R from RGB" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 2,
     height: 1,
     channels: 3,
@@ -97,7 +97,7 @@ test "extract_channel: raises on out of bounds" {
     let _ = extract_channel(img, 3)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = img
@@ -168,7 +168,7 @@ test "blend: raises on size mismatch" {
     let _ = blend_multiply(base, blend)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
   let _ = base

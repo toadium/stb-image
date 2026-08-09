@@ -42,7 +42,7 @@ test "haar_transform_2d 基本功能" {
     b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
     b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let result = haar_transform_2d(img, levels=1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -56,7 +56,7 @@ test "haar_transform_2d 逆变换" {
     b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
     b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let result = haar_transform_2d(img, levels=1)
   let reconstructed = haar_inverse_transform_2d(result)
   assert_eq(reconstructed.width, 4)
@@ -74,7 +74,7 @@ test "haar_transform_2d 逆变换" {
 
 ///|
 test "haar_transform_2d 错误参数" {
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 4,
     height: 4,
     channels: 1,
@@ -100,7 +100,7 @@ test "haar_denoise 基本功能" {
     b'\x40', b'\x41', b'\x3F', b'\x40', b'\x40', b'\x3F', b'\x41', b'\x40', b'\x41',
     b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let out = haar_denoise(img, threshold=2.0F, soft=true, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)
@@ -118,7 +118,7 @@ test "haar_denoise 硬阈值" {
     b'\x40', b'\x41', b'\x3F', b'\x40', b'\x40', b'\x3F', b'\x41', b'\x40', b'\x41',
     b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let out = haar_denoise(img, threshold=5.0F, soft=false, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)
@@ -127,7 +127,7 @@ test "haar_denoise 硬阈值" {
 ///|
 test "haar_denoise RGB 图" {
   let data = Bytes::from_array(Array::make(48, b'\x40'))
-  let img = @core.Image::{ width: 4, height: 4, channels: 3, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 3, data }
   let out = haar_denoise(img, threshold=2.0F, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)

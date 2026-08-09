@@ -8,7 +8,7 @@ test "find_contours: 单个矩形" {
       data[y * 6 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 6,
     height: 6,
     channels: 1,
@@ -32,7 +32,7 @@ test "find_contours: 两个独立区域" {
   data[1 * 8 + 6] = b'\xFF'
   data[2 * 8 + 5] = b'\xFF'
   data[2 * 8 + 6] = b'\xFF'
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 8,
     height: 4,
     channels: 1,
@@ -45,7 +45,7 @@ test "find_contours: 两个独立区域" {
 ///|
 test "find_contours: 空图像" {
   let data = Bytes::from_array(Array::make(16, b'\x00'))
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let contours = find_contours(img)
   assert_eq(contours.length(), 0)
 }
@@ -53,7 +53,7 @@ test "find_contours: 空图像" {
 ///|
 test "find_contours: 全前景" {
   let data = Bytes::from_array(Array::make(16, b'\xFF'))
-  let img = @core.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
   let contours = find_contours(img)
   assert_true(contours.length() >= 1)
 }
@@ -66,7 +66,7 @@ test "draw_contours: 绘制到图像" {
       data[y * 6 + x] = b'\xFF'
     }
   }
-  let img = @core.Image::{
+  let img = @types.Image::{
     width: 6,
     height: 6,
     channels: 1,
@@ -125,12 +125,12 @@ test "contour_area: 三角形面积" {
 ///|
 test "find_contours: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
-  let img = @core.Image::{ width: 1, height: 1, channels: 2, data }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data }
   try {
     let _ = find_contours(img)
     assert_true(false)
   } catch {
-    @core.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }
