@@ -1,4 +1,4 @@
-# stb-image 迭代路线图
+# image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
 > 制定日期：2026-08-06 | 最后更新：2026-08-09 | 当前版本：v2.0.0
@@ -9,7 +9,7 @@
 
 ```mermaid
 gantt
-    title stb-image 版本演进
+    title image 版本演进
     dateFormat YYYY-MM-DD
     axisFormat %m/%d
 
@@ -60,7 +60,7 @@ flowchart LR
     class V10,V117,V20 milestone
 ```
 
-**stb-image v1.10.0 的独特优势**：
+**image v1.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
 - ASan 内存安全验证（独家）
@@ -382,7 +382,7 @@ flowchart LR
 
 ### 交付物（已完成）
 - `src/core/` — native 后端（现有 C FFI）
-- `src/pure/` — 纯 MoonBit 后端：6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/像素操作/色彩映射/图像拼接/统计/噪声/13 blend 混合模式
+- `src/pure/{codec,pixel,color,process,util}/` — 纯 MoonBit 后端：6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/像素操作/色彩映射/图像拼接/统计/噪声/13 blend 混合模式
 - `src/lib/` — pure 侧统一 API + 自动格式分派（T12），目录含 lib.mbt + lib_test.mbt + moon.pkg 3 文件
 - `src/types/` — 全目标类型包（T2）
 - 测试：native 847 + wasm 225 + js 225 通过

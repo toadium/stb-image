@@ -4,9 +4,9 @@
 NEW
 
 ## 任务描述
-在 `src/pure/` 新增纯 MoonBit PSD 解码器，扩展 pure 包格式覆盖（BMP+QOI+TGA+PNM → BMP+QOI+TGA+PNM+PSD），推进 v2.0 多目标支持。
+在 `src/pure/{codec,pixel,color,process,util}/` 新增纯 MoonBit PSD 解码器，扩展 pure 包格式覆盖（BMP+QOI+TGA+PNM → BMP+QOI+TGA+PNM+PSD），推进 v2.0 多目标支持。
 
-### 1. 解码器实现（`src/pure/psd_decode.mbt`）
+### 1. 解码器实现（`src/pure/{codec,pixel,color,process,util}/psd_decode.mbt`）
 - **公开签名**：`pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError`，遵循 pure 包解码器惯例（与 BMP/QOI/TGA/PNM 一致）
 - **支持范围**：8-bit、RGB（channelCount=3）/RGBA（channelCount=4）、无压缩（compression=0）
 - **PSD 文件格式（大端序）**：
@@ -40,7 +40,7 @@ NEW
   8. 尺寸无效（w=0 或 h=0）
   9. 像素数据不足（剩余字节 < channelCount * w * h）
 
-### 2. 纯逻辑测试（`src/pure/psd_decode_test.mbt`）
+### 2. 纯逻辑测试（`src/pure/{codec,pixel,color,process,util}/psd_decode_test.mbt`）
 - 全目标可用，不依赖 @core（仅依赖 @types 和 @pure）
 - 复用同包已有测试的辅助函数（如 `to_bytes`，参考 `pnm_decode_test.mbt`/`qoi_decode_test.mbt`）
 - 新增 PSD 字节流构造辅助函数（大端序写入：`push_be16`/`push_be32`）
@@ -61,8 +61,8 @@ NEW
 
 ### 3. FFI 基准对比测试（`src/roundtrip_test.mbt`，native-only）
 - 新增 2 个 native-only 测试，手构造 PSD 字节流，用 `@core.load_from_bytes` 作为 FFI 基准：
-  1. `roundtrip: PSD RGB pure vs FFI`：手构造 2x2 3 通道 RGB PSD（像素值各不同）→ `@pure.decode_psd_pure`（返回 3 通道）vs `@core.load_from_bytes(psd_bytes, req_channels=Some(3))`（强制 3 通道匹配 pure 输出）→ 断言 width/height/channels/data 完全一致
-  2. `roundtrip: PSD RGBA pure vs FFI`：手构造 2x2 4 通道 RGBA PSD（alpha 全为 255，避免 stb_image white matte removal 修改 RGB）→ `@pure.decode_psd_pure`（返回 4 通道）vs `@core.load_from_bytes(psd_bytes)`（默认返回 4 通道）→ 断言 width/height/channels/data 完全一致
+  1. `roundtrip: PSD RGB pure vs FFI`：手构造 2x2 3 通道 RGB PSD（像素值各不同）→ `@codec.decode_psd_pure`（返回 3 通道）vs `@core.load_from_bytes(psd_bytes, req_channels=Some(3))`（强制 3 通道匹配 pure 输出）→ 断言 width/height/channels/data 完全一致
+  2. `roundtrip: PSD RGBA pure vs FFI`：手构造 2x2 4 通道 RGBA PSD（alpha 全为 255，避免 stb_image white matte removal 修改 RGB）→ `@codec.decode_psd_pure`（返回 4 通道）vs `@core.load_from_bytes(psd_bytes)`（默认返回 4 通道）→ 断言 width/height/channels/data 完全一致
 - **关键**：stb_image PSD 解码总是内部输出 4 通道 RGBA（`stb_image.h:6249` 循环 `channel < 4`），channelCount >= 4 时做 white matte removal（alpha != 0 && alpha != 255 时修改 RGB，`stb_image.h:6282-6297`）。对比测试 1 用 req_channels=Some(3) 让 @core 返回 3 通道匹配 pure；对比测试 2 alpha=255 避免 white matte removal，pure 不实现 white matte removal
 
 ### 4. 构建验证
@@ -73,7 +73,7 @@ NEW
 
 ## 选择理由
 - T7 已完成 PNM 解码器，pure 包当前 BMP+QOI+TGA+PNM 四种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
-- PSD 是 stb-image 独家格式（ROADMAP.md "PSD/HDR/PNM 独家格式"），补齐 pure 包 PSD 解码使独家格式覆盖更完整，实用价值高
+- PSD 是 image 独家格式（ROADMAP.md "PSD/HDR/PNM 独家格式"），补齐 pure 包 PSD 解码使独家格式覆盖更完整，实用价值高
 - stb_image C 库原生支持 PSD 解码（`stb_image.h:6126 stbi__psd_load`），`@core.load_from_bytes` 可解码 PSD，对比验证为真正的 FFI 基准
 - PSD 无压缩 8-bit 格式简单（header + 跳过 3 个 length 前缀段 + 按通道排列像素），仅需大端序读取 + 通道交错，技术风险低
 - pure 包全目标化（T3）+ types 包全目标（T2）已就绪，PSD 解码器仅依赖 @types，全目标可用，无需架构改动
@@ -81,7 +81,7 @@ NEW
 - 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
 
 ## 任务上下文
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T7 产出：pure 包 BMP+QOI+TGA+PNM 四种解码器，native 582 测试通过
@@ -97,16 +97,16 @@ NEW
 - `@core.load_from_bytes` 签名（`src/core/image_load_native.mbt:3`）：`pub fn load_from_bytes(data : Bytes, req_channels~ : Option[Int] = None) -> Image raise LoadError`，默认返回 4 通道（PSD），req_channels=Some(3) 返回 3 通道
 - pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
 ## 已有产出上下文
-- `src/pure/bmp_decode.mbt`：BMP 解码器（24/32-bit 无压缩），`decode_bmp_pure`
-- `src/pure/qoi_decode.mbt`：QOI 解码器（6 种标签），`decode_qoi_pure`
-- `src/pure/tga_decode.mbt`：TGA 解码器（type 2/10，含 RLE），`decode_tga_pure`
-- `src/pure/pnm_decode.mbt`：PNM 解码器（P5/P6 8-bit），`decode_pnm_pure`
-- `src/pure/qoi_decode_test.mbt`：含 `to_bytes` 辅助函数（Array[Byte] → Bytes），可复用
-- `src/pure/pnm_decode_test.mbt`：含 `to_bytes` + `push_str` 辅助函数，可复用
+- `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`：BMP 解码器（24/32-bit 无压缩），`decode_bmp_pure`
+- `src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt`：QOI 解码器（6 种标签），`decode_qoi_pure`
+- `src/pure/{codec,pixel,color,process,util}/tga_decode.mbt`：TGA 解码器（type 2/10，含 RLE），`decode_tga_pure`
+- `src/pure/{codec,pixel,color,process,util}/pnm_decode.mbt`：PNM 解码器（P5/P6 8-bit），`decode_pnm_pure`
+- `src/pure/{codec,pixel,color,process,util}/qoi_decode_test.mbt`：含 `to_bytes` 辅助函数（Array[Byte] → Bytes），可复用
+- `src/pure/{codec,pixel,color,process,util}/pnm_decode_test.mbt`：含 `to_bytes` + `push_str` 辅助函数，可复用
 - `src/types/`：全目标类型包（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - `src/roundtrip_test.mbt`：native-only 对比测试文件，已有 BMP/QOI/TGA/PNM pure vs FFI 对比测试
 - 当前 native 测试数：582（T7 后）

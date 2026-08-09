@@ -1,6 +1,6 @@
 <div align="center">
 
-# stb-image
+# image
 
 **MoonBit 图像处理库** — 封装 stb 系列单头文件库，多目标支持
 
@@ -20,7 +20,7 @@
 
 MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
 
-**多目标架构**：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/`）。提供完整图像解码/编码/缩放/处理能力，847 测试 + 75 基准测试全部通过 AddressSanitizer。
+**多目标架构**：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/{codec,pixel,color,process,util}/`）。提供完整图像解码/编码/缩放/处理能力，847 测试 + 75 基准测试全部通过 AddressSanitizer。
 
 ---
 
@@ -29,7 +29,7 @@ MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/
 ### 安装
 
 ```bash
-moon add toadium/stb-image
+moon add toadium/image
 ```
 
 ### 最小示例
@@ -135,7 +135,7 @@ try {
 | 目标 | 后端 | 测试 |
 |------|------|------|
 | **native** | C FFI（stb_image） | 847 测试 + 75 基准测试 |
-| **wasm/js** | 纯 MoonBit 后端（`src/pure/`） | 225 测试 |
+| **wasm/js** | 纯 MoonBit 后端（`src/pure/{codec,pixel,color,process,util}/`） | 225 测试 |
 
 纯 MoonBit 后端含 6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 完整图像处理。
 

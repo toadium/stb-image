@@ -1,0 +1,60 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Toadium/image/src/pure/codec"
+
+import {
+  "Toadium/image/src/types",
+}
+
+// Values
+pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_gif_animation_pure(Bytes) -> @types.GifAnimation raise @types.LoadError
+
+pub fn decode_gif_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_hdr_pure(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn decode_jpeg_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_png_16_pure(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
+
+pub fn decode_png_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_pnm_16_pure(Bytes) -> @types.Image16 raise @types.LoadError
+
+pub fn decode_pnm_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_psd_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_qoi_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn encode_bmp_pure(@types.Image) -> Bytes
+
+pub fn encode_gif_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_hdr_pure(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_jpeg_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_pgm_pure(@types.Image) -> Bytes
+
+pub fn encode_png_pure(@types.Image) -> Bytes
+
+pub fn encode_pnm_pure(@types.Image) -> Bytes
+
+pub fn encode_ppm_pure(@types.Image) -> Bytes
+
+pub fn encode_qoi_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tga_pure(@types.Image) -> Bytes
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

@@ -1,22 +1,9 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
   "moonbitlang/core/math",
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
 } for "test"
-
-options(
-  targets: {
-    "gabor_test.mbt": [ "native" ],
-    "glcm_test.mbt": [ "native" ],
-    "harris_test.mbt": [ "native" ],
-    "histogram_test.mbt": [ "native" ],
-    "image_quality_test.mbt": [ "native" ],
-    "integral_image_test.mbt": [ "native" ],
-    "lbp_test.mbt": [ "native" ],
-  },
-)

@@ -6,12 +6,12 @@ APPROVED
 ## 发现
 
 ### 任务覆盖度
-- **[轻微]** 任务指令所有预期产出均已达成：`src/pure/moon.pkg` 不含 `supported_targets`（实际仅 `import types`）；`moon check`（全目标）0 errors 0 warnings（清理后重建 30 tasks 通过）；`moon test --target native` 552/552 通过；执行报告明确说明采用方案 B 及原因。
+- **[轻微]** 任务指令所有预期产出均已达成：`src/pure/{codec,pixel,color,process,util}/moon.pkg` 不含 `supported_targets`（实际仅 `import types`）；`moon check`（全目标）0 errors 0 warnings（清理后重建 30 tasks 通过）；`moon test --target native` 552/552 通过；执行报告明确说明采用方案 B 及原因。
 
 ### 产出正确性（实际产出 vs 执行报告声明）
-- **[轻微]** `src/pure/moon.pkg` 实际内容与报告一致：仅 `import "MoonBit-Toadium/stb-image/src/types"`，无 `supported_targets`，无 `@core` 依赖，无 `options`。
-- **[轻微]** `src/pure/bmp_decode_test.mbt` 实际含 6 个测试（4 个纯逻辑 + 2 个错误路径，均使用 `@types.LoadError`），无 `@core` 引用，与报告声明一致。文件头注释说明对比验证留待后续轮次移至根包 `roundtrip_test.mbt`。
-- **[轻微]** 方案 A 产物 `bmp_compare_test.mbt` 已删除（glob 确认 `src/pure/` 仅 3 个文件：`bmp_decode.mbt`、`bmp_decode_test.mbt`、`moon.pkg`）。
+- **[轻微]** `src/pure/{codec,pixel,color,process,util}/moon.pkg` 实际内容与报告一致：仅 `import "Toadium/image/src/types"`，无 `supported_targets`，无 `@core` 依赖，无 `options`。
+- **[轻微]** `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt` 实际含 6 个测试（4 个纯逻辑 + 2 个错误路径，均使用 `@types.LoadError`），无 `@core` 引用，与报告声明一致。文件头注释说明对比验证留待后续轮次移至根包 `roundtrip_test.mbt`。
+- **[轻微]** 方案 A 产物 `bmp_compare_test.mbt` 已删除（glob 确认 `src/pure/{codec,pixel,color,process,util}/` 仅 3 个文件：`bmp_decode.mbt`、`bmp_decode_test.mbt`、`moon.pkg`）。
 - **[轻微]** 独立构建验证复现报告声明：`moon clean && moon check` 30 tasks 通过无警告；`moon test --target native` 552/552；`moon test --target wasm` 6/6；`moon test --target js` 6/6。
 
 ### 约束遵守

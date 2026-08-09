@@ -1,11 +1,11 @@
-# 任务：执行 stb-image 迭代计划
+# 任务：执行 image 迭代计划
 
 ## 背景
 
-当前项目为 `MoonBit-Toadium/stb-image`（v1.17.0），MoonBit 图像处理库。
+当前项目为 `Toadium/image`（v1.17.0），MoonBit 图像处理库。
 
 上一轮已整理出迭代计划，位于：
-`D:\CodeWorkspace\forTraeCN\stb-image\pdc\202608081117_iteration-plan\iteration_plan.md`
+`D:\CodeWorkspace\forTraeCN\image\pdc\202608081117_iteration-plan\iteration_plan.md`
 
 该计划包含多个版本的规划（v1.18、v1.19、v2.0 等），每个版本包含具体的功能项、实现方式、工作量评估、优先级等。
 

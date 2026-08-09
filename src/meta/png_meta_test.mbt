@@ -19,7 +19,7 @@ test "read_png_text_chunks: empty bytes returns empty" {
 ///|
 test "read_png_text_chunks: PNG without text chunks returns empty" {
   // 读取测试 PNG 文件
-  let png = @pure.encode_png_pure(@types.Image::{
+  let png = @codec.encode_png_pure(@types.Image::{
     width: 1,
     height: 1,
     channels: 3,

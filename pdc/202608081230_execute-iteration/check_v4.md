@@ -6,10 +6,10 @@ PASSED
 ## 检查项
 | 检查项 | 方法 | 结果 |
 |--------|------|------|
-| `src/moon.pkg` 新增 `@pure` 依赖 | 读取文件内容 | 通过：第 16-18 行以 `for "test"` 语法声明 `MoonBit-Toadium/stb-image/src/pure @pure`，pure 包对根包测试可用 |
+| `src/moon.pkg` 新增 `@pure` 依赖 | 读取文件内容 | 通过：第 16-18 行以 `for "test"` 语法声明 `Toadium/image/src/pure @pure`，pure 包对根包测试可用 |
 | 依赖声明方式偏差合理性 | 对比任务指令步骤 1 与 do_v4.md 偏差说明 | 通过：任务指令原文"import 列表添加"，实际采用 `for "test"` 测试专用依赖语法。偏差原因合理——普通 import 触发 `unused_package` 警告（`@pure` 仅在 native-only 测试文件 `roundtrip_test.mbt` 中使用，`moon check` 不分析测试文件包引用），与预期产出"0 warnings"冲突。`for "test"` 是 MoonBit 官方测试专用依赖声明方式，语义等价，不改变任务意图 |
 | `src/roundtrip_test.mbt` 新增 24-bit RGB pure-FFI 对比测试 | 读取文件第 44-60 行 | 通过：新增 `roundtrip: BMP RGB pure vs FFI` 测试，共 1 个，符合"仅保留 24-bit RGB"方案 A |
-| 测试实现模式符合要求 | 逐行核对测试代码 | 通过：`@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@core.write_bmp_to_bytes(img)` → `@pure.decode_bmp_pure(bmp_bytes)` → `@core.load_from_bytes(bmp_bytes, req_channels=Some(3))` → 断言 width/height/channels/data 完全一致，与任务指令步骤 2 完全吻合 |
+| 测试实现模式符合要求 | 逐行核对测试代码 | 通过：`@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@core.write_bmp_to_bytes(img)` → `@codec.decode_bmp_pure(bmp_bytes)` → `@core.load_from_bytes(bmp_bytes, req_channels=Some(3))` → 断言 width/height/channels/data 完全一致，与任务指令步骤 2 完全吻合 |
 | 未新增 32-bit RGBA 对比测试 | 全文搜索 `roundtrip_test.mbt` | 通过：文件中仅 1 个 pure-FFI 对比测试（24-bit RGB），无 32-bit RGBA 测试，符合任务指令步骤 3 与方案 A |
 | `moon check --target native` 0 errors 0 warnings | `moon clean && moon check --target native` | 通过：输出 "Finished. moon: ran 30 tasks, now up to date"，无任何 error/warning |
 | 全目标 `moon check` 0 errors 0 warnings | `moon check` | 通过：输出 "no work to do"，无任何 error/warning |

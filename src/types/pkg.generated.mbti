@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "MoonBit-Toadium/stb-image/src/types"
+package "Toadium/image/src/types"
 
 import {
   "moonbitlang/core/debug",

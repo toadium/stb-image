@@ -1,6 +1,0 @@
-import {
-  "MoonBit-Toadium/stb-image/src/types",
-  "moonbitlang/core/encoding/utf8" @encoding/utf8,
-  "moonbitlang/core/math" @math,
-  "moonbitlang/core/debug",
-}

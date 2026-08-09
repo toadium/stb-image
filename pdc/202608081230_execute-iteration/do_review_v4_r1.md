@@ -17,7 +17,7 @@ APPROVED
    - `moon test --target native`：553/553 通过（552→553，新增 1 测试）✓
 3. **兼容性核实**：
    - FFI 24-bit 写出路径（`src/core/stb_image_write.h:492-510`）：comp!=4 → BITMAPINFOHEADER(40)+BI_RGB(0)+24bpp，与 pure 解码器兼容
-   - pure 解码器能力（`src/pure/bmp_decode.mbt:21,35`）：接受 dib_size==40 && compression==0 && bpp∈{24,32}，24-bit 路径兼容
+   - pure 解码器能力（`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt:21,35`）：接受 dib_size==40 && compression==0 && bpp∈{24,32}，24-bit 路径兼容
    - 测试实际通过（553/553）证明兼容性判断正确
 4. **产出质量**：测试代码风格与现有 `roundtrip: BMP RGB` 一致，断言完整（width/height/channels/data），变量命名清晰（pure_decoded/ffi_decoded），资源释放（let _ = ...）与现有测试一致
 5. **v1.0 API 冻结**：仅新增测试，不改现有代码签名 ✓

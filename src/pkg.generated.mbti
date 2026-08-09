@@ -1,15 +1,15 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "MoonBit-Toadium/stb-image/src"
+package "Toadium/image/src"
 
 import {
-  "MoonBit-Toadium/stb-image/src/meta",
-  "MoonBit-Toadium/stb-image/src/process/color",
-  "MoonBit-Toadium/stb-image/src/process/edge",
-  "MoonBit-Toadium/stb-image/src/process/feature",
-  "MoonBit-Toadium/stb-image/src/process/frequency",
-  "MoonBit-Toadium/stb-image/src/process/segment",
-  "MoonBit-Toadium/stb-image/src/types",
-  "MoonBit-Toadium/stb-image/src/util",
+  "Toadium/image/src/meta",
+  "Toadium/image/src/process/color",
+  "Toadium/image/src/process/edge",
+  "Toadium/image/src/process/feature",
+  "Toadium/image/src/process/frequency",
+  "Toadium/image/src/process/segment",
+  "Toadium/image/src/types",
+  "Toadium/image/src/util",
 }
 
 // Values
@@ -351,15 +351,15 @@ pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
 pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
 
-pub fn write_bmp_to_bytes(@types.Image) -> Bytes raise @types.LoadError
+pub fn write_bmp_to_bytes(@types.Image) -> Bytes
 
 pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
 
 pub fn write_jpeg_to_bytes(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
-pub fn write_png_to_bytes(@types.Image) -> Bytes raise @types.LoadError
+pub fn write_png_to_bytes(@types.Image) -> Bytes
 
-pub fn write_tga_to_bytes(@types.Image) -> Bytes raise @types.LoadError
+pub fn write_tga_to_bytes(@types.Image) -> Bytes
 
 // Errors
 

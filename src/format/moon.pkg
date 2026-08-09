@@ -1,21 +1,12 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
-  "MoonBit-Toadium/stb-image/src/process/color",
+  "Toadium/image/src/pure/codec",
+  "Toadium/image/src/pure/util",
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
+  "Toadium/image/src/process/color",
 } for "test"
-
-options(
-  targets: {
-    "gif_animation_test.mbt": [ "native" ],
-    "gif_encode_test.mbt": [ "native" ],
-    "pnm_encode_test.mbt": [ "native" ],
-    "qoi_test.mbt": [ "native" ],
-    "test_helpers_test.mbt": [ "native" ],
-  },
-)

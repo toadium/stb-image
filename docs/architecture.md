@@ -1,16 +1,16 @@
-# stb-image 架构文档
+# image 架构文档
 
 > 版本 v2.0.0 | 196 公开函数 + 27 类型 | 847 测试 + 75 基准测试
 
 ## 概述
 
-stb-image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用八子包架构（types, core, lib, pure, process, format, meta, util），根包 re-export 保持向后兼容 API。
+image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用八子包架构（types, core, lib, pure, process, format, meta, util），根包 re-export 保持向后兼容 API。
 
 ## 功能分类
 
 ```mermaid
 mindmap
-  root((stb-image))
+  root((image))
     格式 I/O
       解码 9 种格式
       编码 12 种格式
@@ -556,7 +556,7 @@ classDiagram
 ## 项目结构
 
 ```
-stb-image/
+image/
 ├── moon.mod                  # 模块配置 (v2.0.0, preferred_target = native)
 ├── README.md                 # 项目说明（中文）
 ├── docs/

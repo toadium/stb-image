@@ -5,5 +5,5 @@
 ### Added
 
 - 由 llm-wiki 自动生成
-- 知识来源：`MoonBit-Toadium/stb-image` 仓库
+- 知识来源：`Toadium/image` 仓库
 - 覆盖：概述、技术栈、架构、核心概念、API 参考、使用指南、约束限制

@@ -1,14 +1,14 @@
 # 执行报告（v1）
 
 ## 概述
-创建 `src/pure/` 目录结构，实现纯 MoonBit 的 BMP 解码器（24-bit/32-bit 无压缩），作为 v2.0 多目标支持的第一步概念验证。本轮 pure 包暂设为 native-only，复用 `@core.Image` 与 `@core.LoadError`，与现有 `src/format/qoi.mbt` 同构，不引入新架构不一致。
+创建 `src/pure/{codec,pixel,color,process,util}/` 目录结构，实现纯 MoonBit 的 BMP 解码器（24-bit/32-bit 无压缩），作为 v2.0 多目标支持的第一步概念验证。本轮 pure 包暂设为 native-only，复用 `@core.Image` 与 `@core.LoadError`，与现有 `src/format/qoi.mbt` 同构，不引入新架构不一致。
 
 ## 产出清单
 | 操作 | 文件路径 | 说明 |
 |------|---------|------|
-| 新建 | `src/pure/moon.pkg` | pure 包配置，import core，supported_targets = "native" |
-| 新建 | `src/pure/bmp_decode.mbt` | 纯 MoonBit BMP 解码器实现 |
-| 新建 | `src/pure/bmp_decode_test.mbt` | 8 个测试（纯逻辑断言 + 与 FFI 对比验证） |
+| 新建 | `src/pure/{codec,pixel,color,process,util}/moon.pkg` | pure 包配置，import core，supported_targets = "native" |
+| 新建 | `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt` | 纯 MoonBit BMP 解码器实现 |
+| 新建 | `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt` | 8 个测试（纯逻辑断言 + 与 FFI 对比验证） |
 
 ## 执行过程
 

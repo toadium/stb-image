@@ -1,22 +1,22 @@
 ---
-name: stb-image
-description: 基于 stb-image 自动生成的知识库 skill。Use when 查询 stb-image 知识、stb-image 文档、stb-image wiki、MoonBit 图像处理库。
+name: image
+description: 基于 image 自动生成的知识库 skill。Use when 查询 image 知识、image 文档、image wiki、MoonBit 图像处理库。
 version: "1.0.0"
 template: basic
 author: llm-wiki
 triggers:
-  - 查询 stb-image 知识
-  - stb-image 文档
-  - stb-image wiki
+  - 查询 image 知识
+  - image 文档
+  - image wiki
   - MoonBit 图像处理库
 allowed-tools: Read
 ---
 
-# stb-image 知识库
+# image 知识库
 
 ## Purpose
 
-基于 `MoonBit-Toadium/stb-image` 仓库自动生成的知识库，将 stb-image 的知识结构化为可检索的 Wiki 文档，供大模型高效检索领域知识。
+基于 `Toadium/image` 仓库自动生成的知识库，将 image 的知识结构化为可检索的 Wiki 文档，供大模型高效检索领域知识。
 
 ## 路由逻辑
 

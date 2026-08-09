@@ -11,7 +11,7 @@ APPROVED
 
 1. **FFI 24-bit BMP 写出格式已核实**（`src/core/stb_image_write.h:492-500`）：`stbi_write_bmp_core` 对 `comp != 4` 分支写出 BITMAPINFOHEADER（DIB 头 40 字节）+ BI_RGB（compression=0）+ 24bpp，文件头 `14+40`，data_offset=54。task_v4 引用准确。
 
-2. **pure 解码器能力范围已核实**（`src/pure/bmp_decode.mbt:21,31,35`）：`decode_bmp_pure` 显式校验 `dib_size == 40`（行 21）、`bpp ∈ {24, 32}`（行 31）、`compression == 0`（行 35），拒绝其他。24-bit 路径（dib_size=40, compression=0, bpp=24）兼容确认。
+2. **pure 解码器能力范围已核实**（`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt:21,31,35`）：`decode_bmp_pure` 显式校验 `dib_size == 40`（行 21）、`bpp ∈ {24, 32}`（行 31）、`compression == 0`（行 35），拒绝其他。24-bit 路径（dib_size=40, compression=0, bpp=24）兼容确认。
 
 3. **32-bit 路径不兼容已核实**（`src/core/stb_image_write.h:501-508`）：`comp == 4` 分支写出 BITMAPV4HEADER（108 字节）+ BI_BITFIELDS（compression=3）+ 32bpp，pure 解码器在行 21 拒绝（dib_size=108 != 40）。task_v4 放弃 32-bit 对比测试的决策正确。
 
@@ -19,17 +19,17 @@ APPROVED
    - `@core.load_from_path(path : String, req_channels? : Int? = None) -> Image raise LoadError`（`src/core/image_load_native.mbt:35`）— task_v4 调用 `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` 匹配
    - `@core.write_bmp_to_bytes(img : Image) -> Bytes raise LoadError`（`src/core/image_write_native.mbt:95`）— task_v4 调用 `@core.write_bmp_to_bytes(img)` 匹配，传入 `img.channels=3` 走 24-bit 分支
    - `@core.load_from_bytes(data : Bytes, req_channels? : Int? = None) -> Image raise LoadError`（`src/core/image_load_native.mbt:3`）— task_v4 调用 `@core.load_from_bytes(bmp_bytes, req_channels=Some(3))` 匹配
-   - `@pure.decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`（`src/pure/bmp_decode.mbt:8`）— 与 task_v4 描述一致
+   - `@codec.decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`（`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt:8`）— 与 task_v4 描述一致
 
 5. **`@types.Image` 字段已核实**（`src/types/image_types.mbt:3-8`）：`pub(all) struct Image { width : Int, height : Int, channels : Int, data : Bytes } derive(Eq, @debug.Debug)`。task_v4 断言 "width / height / channels / data 完全一致" 字段名正确，类型为 Int/Bytes，字段级 `assert_eq` 可行。
 
 6. **测试数据存在**：`testdata/test_4x4_red.png` 已确认存在。用 `req_channels=Some(3)` 加载后 `img.channels == 3`，`write_bmp_to_bytes` 走 24-bit 分支。
 
-7. **根包 import pure 包语法合法**：`src/moon.pkg` 当前 `supported_targets = "native"`，import 列表含 core/process/format/meta/util，不含 pure（已核实）。pure 包 `src/pure/moon.pkg` 仅 import types，无 `supported_targets`（全目标，已核实）。native 包依赖全目标包语法合法。
+7. **根包 import pure 包语法合法**：`src/moon.pkg` 当前 `supported_targets = "native"`，import 列表含 core/process/format/meta/util，不含 pure（已核实）。pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg` 仅 import types，无 `supported_targets`（全目标，已核实）。native 包依赖全目标包语法合法。
 
 8. **roundtrip_test.mbt native-only 已核实**：`src/moon.pkg` 第 22 行 `options(targets: {"roundtrip_test.mbt": ["native"]})`，roundtrip_test.mbt 仅 native 目标编译，可自由依赖 @core + @pure。
 
-9. **测试模式有先例**：`src/roundtrip_test.mbt:32-42` 现有 `roundtrip: BMP RGB` 测试，模式正是 `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@core.write_bmp_to_bytes(img)` → `@core.load_from_bytes(encoded, req_channels=Some(3))` → 断言 data 一致。task_v4 新增测试在此基础上增加 `@pure.decode_bmp_pure` 对比分支，模式成熟。
+9. **测试模式有先例**：`src/roundtrip_test.mbt:32-42` 现有 `roundtrip: BMP RGB` 测试，模式正是 `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@core.write_bmp_to_bytes(img)` → `@core.load_from_bytes(encoded, req_channels=Some(3))` → 断言 data 一致。task_v4 新增测试在此基础上增加 `@codec.decode_bmp_pure` 对比分支，模式成熟。
 
 10. **行 padding 与行序兼容性已核实**：24-bit BMP width=4，行数据 12 字节，4 字节对齐无 padding（pure `row_size=((4*3+3)/4)*4=12`，FFI `pad=(-4*3)&3=0`，一致）。stb_image_write 写出 height 为正（自下而上），pure 解码器 `bottom_up=true`（height>0）正确处理。两者 BGR→RGB 转换均正确，data 应一致。
 

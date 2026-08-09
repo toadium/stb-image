@@ -1,6 +1,6 @@
 # mooncakes.io image 库对比
 
-对比 mooncakes.io 上已有的 image 相关 MoonBit 包与本库 `moonbit-toadium/stb-image` 的功能差异。
+对比 mooncakes.io 上已有的 image 相关 MoonBit 包与本库 `Toadium/image` 的功能差异。
 
 > 数据来源：`moon update` 本地注册表索引 + 各仓库 README（2026-08-06 快照）
 
@@ -8,7 +8,7 @@
 
 | 库 | 版本 | 实现方式 | 目标 | 依赖 | 许可证 |
 |---|---|---|---|---|---|
-| **toadium/stb-image** | 1.0.0 | C FFI (stb_image.h) | native | 无 | MIT |
+| **toadium/image** | 1.0.0 | C FFI (stb_image.h) | native | 无 | MIT |
 | mizchi/image | 0.4.3 | 纯 MoonBit | js/native/wasm-gc | mizchi/zlib | Apache-2.0 |
 | bikallem/image | 0.1.0 | 纯 MoonBit (Go 移植) | ? | bikallem/compress, moonbitlang/x, bikallem/blit | Apache-2.0 |
 | gmlewis/image | 0.16.19 | 纯 MoonBit (Go 移植) | ? | gmlewis/flate, hash, io, zlib | Apache-2.0 |
@@ -19,7 +19,7 @@
 
 ### 解码（Decode）
 
-| 格式 | stb-image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
+| 格式 | image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
 |---|---|---|---|---|---|---|
 | PNG 8-bit | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | PNG 16-bit | ✅ | ❌ | ✅ | ? | ❌ | ❌ |
@@ -41,7 +41,7 @@
 
 ### 编码（Encode）
 
-| 格式 | stb-image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
+| 格式 | image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
 |---|---|---|---|---|---|---|
 | PNG | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 | BMP | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
@@ -56,7 +56,7 @@
 
 ## 像素深度支持
 
-| 特性 | stb-image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
+| 特性 | image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
 |---|---|---|---|---|---|---|
 | 8-bit | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 16-bit | ✅ | ❌ | ✅ | ? | ❌ | ❌ |
@@ -66,7 +66,7 @@
 
 ## 功能特性
 
-| 特性 | stb-image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
+| 特性 | image | mizchi | bikallem | gmlewis | Nanaloveyuki | shunge |
 |---|---|---|---|---|---|---|
 | 格式自动检测 | ✅ | ✅ (stream) | ✅ (sniff) | ? | ❌ | ✅ |
 | info (不解码) | ✅ | ❌ | ✅ (config) | ? | ❌ | ❌ |
@@ -86,7 +86,7 @@
 
 | 库 | 测试数 | 特殊验证 |
 |---|---|---|
-| stb-image | 61 | ASan (内存安全) |
+| image | 61 | ASan (内存安全) |
 | mizchi/image | ? | ? |
 | bikallem/image | ? | Go 对等测试 (parity) |
 | gmlewis/image | ? | ? |
@@ -95,7 +95,7 @@
 
 ## 定位差异
 
-### stb-image（本库）
+### image（本库）
 - **FFI 绑定**：通过 C 库 stb_image.h 提供，非纯 MoonBit
 - **格式覆盖广**：PSD/HDR/PNM 等独特格式，16-bit/float 深度
 - **native only**：不支持 wasm/js 目标
@@ -116,12 +116,12 @@
 
 ## 互补关系
 
-stb-image 与纯 MoonBit 库存在互补而非竞争关系：
+image 与纯 MoonBit 库存在互补而非竞争关系：
 
 | 需求 | 推荐库 |
 |---|---|
-| PSD/HDR/PNM 解码 | stb-image |
-| 16-bit/float 像素 | stb-image |
+| PSD/HDR/PNM 解码 | image |
+| 16-bit/float 像素 | image |
 | wasm/js 目标 | mizchi/image |
 | Go 风格 API | bikallem/image, gmlewis/image |
 | Icon 生成 (ICO/ICNS) | Nanaloveyuki/image |
@@ -131,4 +131,4 @@ stb-image 与纯 MoonBit 库存在互补而非竞争关系：
 | 零依赖 | shunge/image |
 | WebP/AVIF 编码 | mizchi/image |
 | 流式解码 | mizchi/image |
-| 内存安全验证 | stb-image (ASan) |
+| 内存安全验证 | image (ASan) |

@@ -4,7 +4,7 @@
 RETRY
 
 ## 任务描述
-创建 `src/pure/` 目录结构，实现纯 MoonBit 的 BMP 解码器，作为 v2.0 多目标支持的第一步概念验证。
+创建 `src/pure/{codec,pixel,color,process,util}/` 目录结构，实现纯 MoonBit 的 BMP 解码器，作为 v2.0 多目标支持的第一步概念验证。
 
 ### 架构决策（响应审查意见）
 
@@ -18,16 +18,16 @@ RETRY
 
 ### 具体要求
 
-1. **创建 `src/pure/` 目录结构**：
-   - 创建 `src/pure/moon.pkg`：
+1. **创建 `src/pure/{codec,pixel,color,process,util}/` 目录结构**：
+   - 创建 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：
      ```
      import {
-       "MoonBit-Toadium/stb-image/src/core",
+       "Toadium/image/src/core",
      }
      supported_targets = "native"
      ```
-   - 创建 `src/pure/bmp_decode.mbt`（BMP 解码实现）
-   - 创建 `src/pure/bmp_decode_test.mbt`（测试）
+   - 创建 `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`（BMP 解码实现）
+   - 创建 `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt`（测试）
 
 2. **实现纯 MoonBit 的 BMP 解码器**：
    - 函数签名：`pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`
@@ -52,9 +52,9 @@ RETRY
    - 不破坏现有 533 测试 + 29 基准测试
 
 ### 预期产出
-- `src/pure/moon.pkg`
-- `src/pure/bmp_decode.mbt`
-- `src/pure/bmp_decode_test.mbt`
+- `src/pure/{codec,pixel,color,process,util}/moon.pkg`
+- `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`
+- `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt`
 - 可能需要更新 `src/moon.pkg` 添加 pure 包依赖（若根包需要 re-export）
 
 ## 选择理由
@@ -62,7 +62,7 @@ RETRY
 - v2.0 路径 A（双后端）需要纯 MoonBit 解码逻辑，本轮先验证 BMP 可行性
 - BMP 格式简单（无压缩 24/32-bit），适合作为纯 MoonBit 解码起点
 - 复用 core 类型与 qoi 包同构，不引入新架构不一致，风险低
-- 放在新目录 `src/pure/`，不破坏现有五子包架构和 533 测试
+- 放在新目录 `src/pure/{codec,pixel,color,process,util}/`，不破坏现有五子包架构和 533 测试
 
 ## 任务上下文
 摘录自 task.md 和 ROADMAP.md 的直接相关需求/约束：
@@ -75,7 +75,7 @@ RETRY
 
 - **ROADMAP v2.0 目标**：支持 wasm/js 目标，与 mizchi 拉平
 - **ROADMAP v2.0 路径 A**：native 目标保持现有 C FFI 绑定，wasm/js 目标纯 MoonBit fallback
-- **ROADMAP v2.0 交付物**：`src/native/`（native 后端，现有 C FFI）+ `src/pure/`（纯 MoonBit 后端，wasm/js）+ `src/lib.mbt`（后端选择层）
+- **ROADMAP v2.0 交付物**：`src/native/`（native 后端，现有 C FFI）+ `src/pure/{codec,pixel,color,process,util}/`（纯 MoonBit 后端，wasm/js）+ `src/lib.mbt`（后端选择层）
 
 ## 已有产出上下文
 工作目录中暂无其他产出（首轮 PDC 循环，计划审查后修正重试）。

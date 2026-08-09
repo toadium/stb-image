@@ -6,7 +6,7 @@ REJECTED
 ## 发现
 
 - **[严重] 架构目标自相矛盾：pure 包的目标平台与 core 依赖冲突**
-  计划声称 `src/pure/` 是"v2.0 多目标支持（路径 A 双后端）的第一步概念验证"，目标是"wasm/js 目标纯 MoonBit fallback"。但 `src/core/moon.pkg` 设置 `supported_targets = "native"` 且通过 `options("native-stub": [ "wrapper.c" ])` 绑定 C stub，是 native-only 包。`src/moon.pkg` 根包同样 `supported_targets = "native"`。若 `src/pure/` 依赖 `@core`（复用 `Image` 类型或对比测试调用 `load_from_bytes`），则 pure 包被传染为 native-only，完全违背"wasm/js 后端"初衷。计划未说明 `src/pure/moon.pkg` 的 `supported_targets` 如何配置，也未说明如何在不依赖 core 的前提下达成 wasm/js 目标。
+  计划声称 `src/pure/{codec,pixel,color,process,util}/` 是"v2.0 多目标支持（路径 A 双后端）的第一步概念验证"，目标是"wasm/js 目标纯 MoonBit fallback"。但 `src/core/moon.pkg` 设置 `supported_targets = "native"` 且通过 `options("native-stub": [ "wrapper.c" ])` 绑定 C stub，是 native-only 包。`src/moon.pkg` 根包同样 `supported_targets = "native"`。若 `src/pure/{codec,pixel,color,process,util}/` 依赖 `@core`（复用 `Image` 类型或对比测试调用 `load_from_bytes`），则 pure 包被传染为 native-only，完全违背"wasm/js 后端"初衷。计划未说明 `src/pure/{codec,pixel,color,process,util}/moon.pkg` 的 `supported_targets` 如何配置，也未说明如何在不依赖 core 的前提下达成 wasm/js 目标。
 
 - **[严重] 类型依赖决策悬而未决，且两个选项都与目标冲突**
   task_v1.md 第 17 行写"复用 core 的 `Image` 类型，或定义等价类型"，将关键架构决策推给 Doer。两个选项均有问题：
@@ -28,7 +28,7 @@ REJECTED
 1. **[严重] 架构目标矛盾**：
    - 问题：pure 包声称服务 wasm/js 目标，但任何对 native-only 的 core 包的依赖都会把 pure 包锁死为 native-only，使目标不可达。
    - 为什么是问题：Doer 按当前指令实现后，要么产出一个名不副实的"pure"包（实际只能 native 运行，wasm/js 目标落空），要么在实现中自行做架构决策，偏离计划意图。
-   - 期望修正方向：计划必须明确 `src/pure/` 的 `supported_targets` 配置，并给出不依赖 core 的类型方案。若本轮确实只能在 native 下做概念验证，应明确声明"本轮 pure 包暂设为 native-only，仅验证解码逻辑正确性，wasm/js 目标平台解耦留待后续轮次"，并相应调整"为 wasm/js 后端奠定基础"的表述，避免误导。
+   - 期望修正方向：计划必须明确 `src/pure/{codec,pixel,color,process,util}/` 的 `supported_targets` 配置，并给出不依赖 core 的类型方案。若本轮确实只能在 native 下做概念验证，应明确声明"本轮 pure 包暂设为 native-only，仅验证解码逻辑正确性，wasm/js 目标平台解耦留待后续轮次"，并相应调整"为 wasm/js 后端奠定基础"的表述，避免误导。
 
 2. **[严重] 类型依赖决策未明确**：
    - 问题：复用 core.Image 与定义等价类型两条路径均与既定目标冲突，计划却未做选择。

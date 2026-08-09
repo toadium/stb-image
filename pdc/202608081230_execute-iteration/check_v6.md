@@ -6,7 +6,7 @@ PASSED
 ## 检查项
 | 检查项 | 方法 | 结果 |
 |--------|------|------|
-| 产出文件存在性 | `ls src/pure/` + 读取文件 | 通过：`tga_decode.mbt`（145 行）、`tga_decode_test.mbt`（198 行）新建，`roundtrip_test.mbt` 修改 |
+| 产出文件存在性 | `ls src/pure/{codec,pixel,color,process,util}/` + 读取文件 | 通过：`tga_decode.mbt`（145 行）、`tga_decode_test.mbt`（198 行）新建，`roundtrip_test.mbt` 修改 |
 | 解码器签名 | 读取 `tga_decode.mbt:9` | 通过：`pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError`，与 BMP/QOI 惯例一致 |
 | 18 字节 header 解析 | 读取 `tga_decode.mbt:11-21` | 通过：解析 ID length、color map type、image type、width/height（LE）、bpp、descriptor |
 | image type 2 支持 | 读取 `tga_decode.mbt:49-70` | 通过：未压缩逐像素读取 + BGR(A)→RGB(A) 转换 |
@@ -24,7 +24,7 @@ PASSED
 | 测试覆盖 - top-down 行序 | `tga_decode_test.mbt:144-160` | 通过：2x2 descriptor=0x10 行序保持验证 |
 | 测试覆盖 - 错误路径（3 个） | `tga_decode_test.mbt:163-198` | 通过：数据过短（3 字节）、不支持 image type（type 1）、不支持 bpp（bpp=16）各 1 个测试 |
 | FFI 基准对比测试 | 读取 `roundtrip_test.mbt:322-338` | 通过：`roundtrip: TGA pure vs FFI` 加载 PNG → `write_tga_to_bytes` → `decode_tga_pure` vs `load_from_bytes` → 断言 width/height/channels/data 完全一致 |
-| pure 包全目标可用 | 读取 `src/pure/moon.pkg` | 通过：仅 `import types`，无 `supported_targets` 限制，全目标可用 |
+| pure 包全目标可用 | 读取 `src/pure/{codec,pixel,color,process,util}/moon.pkg` | 通过：仅 `import types`，无 `supported_targets` 限制，全目标可用 |
 | 辅助函数复用 | grep `fn read_u16_le` | 通过：复用 `bmp_decode.mbt:100` 的私有函数（同包内） |
 | 构建验证 - moon check（全目标） | `moon clean && moon check` | 通过：ran 30 tasks，0 errors 0 warnings |
 | 构建验证 - moon test native | `moon test --target native` | 通过：Total 572, passed 572, failed 0 |
@@ -33,4 +33,4 @@ PASSED
 | v1.0 API 冻结 | 仅新增文件 + roundtrip_test 新增测试 | 通过：未修改任何已有签名 |
 
 ## 总结
-Doer 完整实现了任务 v6 的全部要求：在 `src/pure/` 新增纯 MoonBit TGA 解码器，支持 image type 2/10、24/32-bit、RLE 解压、bottom-up/top-down 行序、BGR(A)→RGB(A) 转换及全部错误路径；新增 9 个纯逻辑测试覆盖所有功能点（含 3 个错误路径测试）+ 1 个 FFI 基准对比测试。构建验证全目标 0 errors 0 warnings，native 全量 572 测试通过（562→572，+10 符合预期 571-573）。v1.0 API 冻结保持，五子包架构未破坏，现有测试全部通过。
+Doer 完整实现了任务 v6 的全部要求：在 `src/pure/{codec,pixel,color,process,util}/` 新增纯 MoonBit TGA 解码器，支持 image type 2/10、24/32-bit、RLE 解压、bottom-up/top-down 行序、BGR(A)→RGB(A) 转换及全部错误路径；新增 9 个纯逻辑测试覆盖所有功能点（含 3 个错误路径测试）+ 1 个 FFI 基准对比测试。构建验证全目标 0 errors 0 warnings，native 全量 572 测试通过（562→572，+10 符合预期 571-573）。v1.0 API 冻结保持，五子包架构未破坏，现有测试全部通过。

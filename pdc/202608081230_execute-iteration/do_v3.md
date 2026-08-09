@@ -1,19 +1,19 @@
 # 执行报告（v3）
 
 ## 概述
-移除 `src/pure/moon.pkg` 的 `supported_targets = "native"` 限制，使 pure 包成为全目标包（native/wasm/js 可用），完成 v2.0 多目标支持的关键里程碑。采用**方案 B**：移除 2 个依赖 `@core.load_from_bytes` 的对比测试，pure 包完全脱离 @core 依赖，只保留 6 个纯逻辑测试（全目标可用）。构建验证通过：`moon check`（全目标）0 errors / 0 warnings，`moon test --target native` 552/552 通过，`moon test --target wasm`/`--target js` pure 包 6/6 通过。
+移除 `src/pure/{codec,pixel,color,process,util}/moon.pkg` 的 `supported_targets = "native"` 限制，使 pure 包成为全目标包（native/wasm/js 可用），完成 v2.0 多目标支持的关键里程碑。采用**方案 B**：移除 2 个依赖 `@core.load_from_bytes` 的对比测试，pure 包完全脱离 @core 依赖，只保留 6 个纯逻辑测试（全目标可用）。构建验证通过：`moon check`（全目标）0 errors / 0 warnings，`moon test --target native` 552/552 通过，`moon test --target wasm`/`--target js` pure 包 6/6 通过。
 
 ## 产出清单
 | 操作 | 文件路径 | 说明 |
 |------|---------|------|
-| 修改 | `src/pure/moon.pkg` | 移除 `supported_targets = "native"`，移除 `@core` 的 `for "test"` 依赖，仅保留 `import types`（全目标） |
-| 修改 | `src/pure/bmp_decode_test.mbt` | 移除 2 个对比测试（原第 88-107 行，测试 5-6，依赖 `@core.load_from_bytes`），保留 6 个纯逻辑测试（测试 1-4, 7-8），更新文件头注释 |
+| 修改 | `src/pure/{codec,pixel,color,process,util}/moon.pkg` | 移除 `supported_targets = "native"`，移除 `@core` 的 `for "test"` 依赖，仅保留 `import types`（全目标） |
+| 修改 | `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt` | 移除 2 个对比测试（原第 88-107 行，测试 5-6，依赖 `@core.load_from_bytes`），保留 6 个纯逻辑测试（测试 1-4, 7-8），更新文件头注释 |
 
 ## 执行过程
 
 ### 1. 方案 A 尝试与放弃
 按任务指令优先级先尝试方案 A（保留对比测试，分离到 native-only 文件）：
-1. 创建 `src/pure/bmp_compare_test.mbt`，包含 2 个对比测试（`@core.load_from_bytes` 对比验证）
+1. 创建 `src/pure/{codec,pixel,color,process,util}/bmp_compare_test.mbt`，包含 2 个对比测试（`@core.load_from_bytes` 对比验证）
 2. 从 `bmp_decode_test.mbt` 移除对比测试（测试 5-6）
 3. `moon.pkg`：移除 `supported_targets`，增加 `options(targets: { "bmp_compare_test.mbt": ["native"] })`，保留 `@core` 的 `for "test"` 依赖
 

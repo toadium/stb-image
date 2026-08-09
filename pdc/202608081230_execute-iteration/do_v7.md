@@ -1,18 +1,18 @@
 # 执行报告（v7）
 
 ## 概述
-在 `src/pure/` 新增纯 MoonBit PNM 解码器 `decode_pnm_pure`，支持 P5（PGM 二进制灰度）和 P6（PPM 二进制 RGB）8-bit 格式，扩展 pure 包格式覆盖（BMP+QOI+TGA → BMP+QOI+TGA+PNM）。新增 8 个纯逻辑测试 + 2 个根包 FFI 基准对比测试，推进 v2.0 多目标支持。
+在 `src/pure/{codec,pixel,color,process,util}/` 新增纯 MoonBit PNM 解码器 `decode_pnm_pure`，支持 P5（PGM 二进制灰度）和 P6（PPM 二进制 RGB）8-bit 格式，扩展 pure 包格式覆盖（BMP+QOI+TGA → BMP+QOI+TGA+PNM）。新增 8 个纯逻辑测试 + 2 个根包 FFI 基准对比测试，推进 v2.0 多目标支持。
 
 ## 产出清单
 | 操作 | 文件路径 | 说明 |
 |------|---------|------|
-| 新建 | `src/pure/pnm_decode.mbt` | PNM 解码器，P5/P6 8-bit，含注释行/任意 whitespace 解析 |
-| 新建 | `src/pure/pnm_decode_test.mbt` | 8 个纯逻辑测试（全目标，不依赖 @core） |
+| 新建 | `src/pure/{codec,pixel,color,process,util}/pnm_decode.mbt` | PNM 解码器，P5/P6 8-bit，含注释行/任意 whitespace 解析 |
+| 新建 | `src/pure/{codec,pixel,color,process,util}/pnm_decode_test.mbt` | 8 个纯逻辑测试（全目标，不依赖 @core） |
 | 修改 | `src/roundtrip_test.mbt` | 新增 2 个 PNM pure vs FFI 对比测试（PPM RGB + PGM grayscale） |
 
 ## 执行过程
 
-### 1. 解码器实现（`src/pure/pnm_decode.mbt`）
+### 1. 解码器实现（`src/pure/{codec,pixel,color,process,util}/pnm_decode.mbt`）
 - **公开签名**：`pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError`，遵循 pure 包解码器惯例（与 BMP/QOI/TGA 一致）
 - **magic 校验**：仅接受 P5（0x50 0x35）和 P6（0x50 0x36），其他 magic（P1-P4 ASCII、P7 PAM 等）→ `DecodeFailed`
 - **Header 解析**：3 个辅助函数
@@ -23,7 +23,7 @@
 - **像素数据**：maxval 后恰好 1 个 whitespace，然后读取 `width*height*channels` 字节像素，直接拷贝（PNM 二进制像素顺序与 Image.data 一致：P6 RGB、P5 灰度）
 - **错误路径**：数据过短、不支持的 magic、不支持的 maxval、header 数字解析失败、尺寸无效、像素数据不足，均 `raise @types.LoadError::DecodeFailed`
 
-### 2. 纯逻辑测试（`src/pure/pnm_decode_test.mbt`）
+### 2. 纯逻辑测试（`src/pure/{codec,pixel,color,process,util}/pnm_decode_test.mbt`）
 - 复用同包 `qoi_decode_test.mbt` 的 `to_bytes` 辅助函数
 - 新增 `push_str` 辅助函数：将 ASCII 字符串逐字节 push 到 Array[Byte]
 - **8 个测试用例**：

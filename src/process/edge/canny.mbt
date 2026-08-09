@@ -14,7 +14,9 @@ pub fn canny_edge(
     raise @types.LoadError::DecodeFailed("canny_edge 仅支持 channels=1/3/4")
   }
   if low_threshold < 0 || low_threshold > 255 {
-    raise @types.LoadError::DecodeFailed("low_threshold 必须在 0..255 之间")
+    raise @types.LoadError::DecodeFailed(
+      "low_threshold 必须在 0..255 之间",
+    )
   }
   if high_threshold < 0 || high_threshold > 255 {
     raise @types.LoadError::DecodeFailed(

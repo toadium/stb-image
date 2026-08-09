@@ -1,16 +1,16 @@
-# stb-image Wiki
+# image Wiki
 
-> 基于 `MoonBit-Toadium/stb-image` 自动生成的知识库 skill
+> 基于 `Toadium/image` 自动生成的知识库 skill
 
 ## 这是什么
 
-由 llm-wiki 技能自动生成，将 stb-image 仓库的知识结构化为可检索的 Wiki 文档。
+由 llm-wiki 技能自动生成，将 image 仓库的知识结构化为可检索的 Wiki 文档。
 
 ## 触发方式
 
-- 查询 stb-image 知识
-- stb-image 文档
-- stb-image wiki
+- 查询 image 知识
+- image 文档
+- image wiki
 - MoonBit 图像处理库
 
 ## 知识覆盖

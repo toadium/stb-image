@@ -105,8 +105,14 @@ test "ssim: range [-1, 1]" {
 
 ///|
 test "mse: works with RGB images" {
-  let img1 = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
-  let img2 = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img1 = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
+  let img2 = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   assert_eq(mse(img1, img2), 0.0)
   let _ = img1
   let _ = img2

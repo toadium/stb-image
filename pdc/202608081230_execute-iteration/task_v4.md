@@ -7,11 +7,11 @@ RETRY
 将 T3 方案 B 移除的 pure-FFI BMP 对比验证测试移至根包 `src/roundtrip_test.mbt`（已 native-only），恢复纯 MoonBit 解码器与 FFI 解码器的一致性验证。**采用方案 A：仅保留 24-bit RGB 对比测试**（审查 v4 r1 推荐）。
 
 ### 具体步骤
-1. 根包 `src/moon.pkg` 的 import 列表添加 `"MoonBit-Toadium/stb-image/src/pure"`（native 包依赖全目标包合法）
+1. 根包 `src/moon.pkg` 的 import 列表添加 `"Toadium/image/src/pure"`（native 包依赖全目标包合法）
 2. 在 `src/roundtrip_test.mbt` 新增 **1 个** 24-bit RGB 对比测试：
    - 用 `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` 加载 24-bit RGB 图像
    - 用 `@core.write_bmp_to_bytes(img)` 生成 BMP 字节流（FFI 写出 BITMAPINFOHEADER 40 字节 + BI_RGB + 24bpp，`decode_bmp_pure` 可解码）
-   - 用 `@pure.decode_bmp_pure(bmp_bytes)` 解码（纯 MoonBit）
+   - 用 `@codec.decode_bmp_pure(bmp_bytes)` 解码（纯 MoonBit）
    - 用 `@core.load_from_bytes(bmp_bytes, req_channels=Some(3))` 解码（FFI 基准）
    - 断言两者 width / height / channels / data 完全一致
 3. **不新增 32-bit RGBA 对比测试**：`@core.write_bmp_to_bytes` 对 4 通道写出 BITMAPV4HEADER（108 字节）+ BI_BITFIELDS（compression=3），超出 `decode_bmp_pure` 能力范围（仅 BITMAPINFOHEADER 40 字节 + BI_RGB），32-bit 对比验证留待后续轮次扩展 pure 解码器后补充
@@ -37,14 +37,14 @@ RETRY
 - T3 产出：pure 包全目标化（仅 import types），6 纯逻辑测试，对比测试已移除，native 552 测试通过
 - 审查 v4 r1 修正要求：方案 A（推荐）仅保留 24-bit RGB，预期 552→553；或方案 B 32-bit 改用手构造字节（需额外验证 stb_image reader 支持 32-bit BI_RGB，复杂度高）。本轮采用方案 A
 - FFI 生成 BMP 格式（`src/core/stb_image_write.h:492-510`）：comp!=4 → BITMAPINFOHEADER(40)+BI_RGB(0)+24bpp；comp==4 → BITMAPV4HEADER(108)+BI_BITFIELDS(3)+32bpp
-- pure 解码器能力（`src/pure/bmp_decode.mbt:21,35`）：仅 dib_size==40 && compression==0 && bpp∈{24,32}
+- pure 解码器能力（`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt:21,35`）：仅 dib_size==40 && compression==0 && bpp∈{24,32}
 - 根包 `src/moon.pkg`：`supported_targets = "native"`，`options(targets: {"roundtrip_test.mbt": ["native"]})`，当前 import 列表含 core/process/format/meta/util，不含 pure
 - roundtrip_test.mbt 现有 `roundtrip: BMP RGB` 测试模式：`@core.load_from_path` → `@core.write_bmp_to_bytes` → `@core.load_from_bytes` → 断言 data 一致
 - pure 包 `decode_bmp_pure` 签名：`pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`
 - core 包 re-export types：`@core.Image` 即 `@types.Image`，字段级比较直接可行
 
 ## 已有产出上下文
-- T1（R3 PASSED）：`src/pure/` 包，纯 MoonBit BMP 解码器（24/32-bit 无压缩），8 测试
+- T1（R3 PASSED）：`src/pure/{codec,pixel,color,process,util}/` 包，纯 MoonBit BMP 解码器（24/32-bit 无压缩），8 测试
 - T2（R5 PASSED）：`src/types/` 全目标包，core 包 re-export types，pure 包主代码改用 @types
 - T3（R6 PASSED）：pure 包全目标化（移除 `supported_targets`，移除 2 个 @core 对比测试），6 纯逻辑测试，native 552 测试通过，wasm/js pure 包 6/6 通过
 - 当前 `src/moon.pkg` import 不含 pure，`src/roundtrip_test.mbt` 无 pure-FFI 对比测试

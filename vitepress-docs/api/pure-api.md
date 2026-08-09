@@ -1,6 +1,6 @@
 # Pure API（纯 MoonBit）
 
-路径：`src/pure/`（wasm/js 后端，依赖 types）
+路径：`src/pure/{codec,pixel,color,process,util}/`（wasm/js 后端，依赖 types）
 
 ## 编解码
 

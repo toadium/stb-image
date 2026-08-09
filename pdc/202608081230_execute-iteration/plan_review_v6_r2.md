@@ -22,8 +22,8 @@ APPROVED
    - RLE packet：`header = STBIW_UCHAR(len - 129)`，len∈[2,128] → header∈[0x81,0xFF]（bit7=1），run=(header&0x7F)+1 ✓
    - task_v6.md line 64-65 描述与源码一致
 6. **TGA header 结构**（18 字节）：task_v6.md line 67-81 与 TGA 规范一致
-7. **对比测试技术可行性**：`@core.write_tga_to_bytes` 对 3 通道图像输出 image type=10、bpp=24、descriptor=0、BGR 像素顺序，`@pure.decode_tga_pure` 支持 image type 10、24-bit、RLE、bottom-up、BGR→RGB，兼容匹配，可解码
-8. **pure 包全目标**：`src/pure/moon.pkg` 仅 `import types`，无 `supported_targets`，全目标 ✓
+7. **对比测试技术可行性**：`@core.write_tga_to_bytes` 对 3 通道图像输出 image type=10、bpp=24、descriptor=0、BGR 像素顺序，`@codec.decode_tga_pure` 支持 image type 10、24-bit、RLE、bottom-up、BGR→RGB，兼容匹配，可解码
+8. **pure 包全目标**：`src/pure/{codec,pixel,color,process,util}/moon.pkg` 仅 `import types`，无 `supported_targets`，全目标 ✓
 9. **根包依赖配置**：`src/moon.pkg:16-18` `for "test"` 声明 `@pure` 依赖，`src/moon.pkg:26` `roundtrip_test.mbt: ["native"]` ✓
 10. **签名惯例**：`decode_bmp_pure`（`bmp_decode.mbt:8`）、`decode_qoi_pure`（`qoi_decode.mbt:16`）均为 `pub fn decode_X_pure(data : Bytes) -> @types.Image raise @types.LoadError`，task_v6.md line 126 一致
 11. **r1 修正落实**：

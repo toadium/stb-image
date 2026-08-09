@@ -1,20 +1,20 @@
 # 任务计划
 
-任务描述：根据 ROADMAP.md 迭代路线图，逐步实现 stb-image 各版本功能。当前 v1.17.0 已完成，下一目标 v2.0 多目标支持（架构升级）。
-工作目录：D:\CodeWorkspace\forTraeCN\stb-image\pdc\202608081230_execute-iteration
+任务描述：根据 ROADMAP.md 迭代路线图，逐步实现 image 各版本功能。当前 v1.17.0 已完成，下一目标 v2.0 多目标支持（架构升级）。
+工作目录：D:\CodeWorkspace\forTraeCN\image\pdc\202608081230_execute-iteration
 
 ---
 
 ## R1 NEW v2.0 纯 MoonBit BMP 解码器（概念验证） [ID: T1]
-任务：创建 `src/pure/` 目录结构，实现纯 MoonBit 的 BMP 解码器（支持 24-bit/32-bit 无压缩 BMP），包含测试验证，作为 v2.0 多目标支持（路径 A 双后端）的第一步概念验证。
+任务：创建 `src/pure/{codec,pixel,color,process,util}/` 目录结构，实现纯 MoonBit 的 BMP 解码器（支持 24-bit/32-bit 无压缩 BMP），包含测试验证，作为 v2.0 多目标支持（路径 A 双后端）的第一步概念验证。
 选择理由：
 - v1.17 已完成，下一版本为 v2.0 多目标支持（架构升级）
 - v2.0 推荐路径 A（双后端）：native 保持 C FFI，wasm/js 用纯 MoonBit fallback
 - BMP 格式简单（无压缩 24/32-bit），适合作为纯 MoonBit 后端起点
-- 放在新目录 `src/pure/`，不破坏现有五子包架构和 533 测试
+- 放在新目录 `src/pure/{codec,pixel,color,process,util}/`，不破坏现有五子包架构和 533 测试
 - 可验证（有测试），风险低，为后续 wasm/js 后端奠定基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`
 - 执行约束：保持 v1.0 API 冻结、遵循五子包架构、不破坏现有测试、构建验证
 - 当前 `supported_targets = "native"`，v2.0 目标是扩展到 wasm/js
 
@@ -36,7 +36,7 @@
 ---
 
 ## R3 PASSED v2.0 纯 MoonBit BMP 解码器（概念验证） [ID: T1]
-结果：创建 `src/pure/` 包，实现纯 MoonBit BMP 解码器（24/32-bit 无压缩，行填充+行序处理），含 8 测试（纯逻辑断言 + 与 `@core.load_from_bytes` 对比验证），签名 `pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`
+结果：创建 `src/pure/{codec,pixel,color,process,util}/` 包，实现纯 MoonBit BMP 解码器（24/32-bit 无压缩，行填充+行序处理），含 8 测试（纯逻辑断言 + 与 `@core.load_from_bytes` 对比验证），签名 `pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`
 检查：`moon check --target native` 通过；`moon test --target native` 全量 554/554 通过（原有 546 + 新增 8），未破坏现有测试；pure 包 native-only 复用 @core 类型与 qoi 包同构
 
 ## R3 NEW v2.0 core 包类型分离（多目标基础） [ID: T2]
@@ -47,7 +47,7 @@
 - 风险可控：core 包 re-export 类型可保持 `@core.Image` 等现有引用不变，现有 554 测试应继续通过
 - 当前优先级最高，T1 概念验证已完成，架构重构是 v2.0 的关键基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T1 执行报告：wasm/js 解耦需先拆分 core 包（分离类型定义与 C stub FFI）
 - `src/core/image_types.mbt` 含 6 类型定义（无 FFI 依赖），与 FFI 同包 `supported_targets = "native"`
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
@@ -74,14 +74,14 @@
 检查：`moon check --target native` 0 errors / 0 warnings；`moon test --target native` 554/554 通过，未破坏现有测试；别名透明性有效，re-export 机制保持向后兼容。
 
 ## R5 NEW v2.0 pure 包全目标化（多目标编译） [ID: T3]
-任务：移除 `src/pure/moon.pkg` 的 `supported_targets = "native"` 限制，使 pure 包全目标编译（wasm/js 可用）。处理测试中对 @core 的依赖（对比测试 5-6 依赖 native-only 的 @core.load_from_bytes），优先方案 A：分离对比测试到 native-only 文件（参照根包 `options(targets:{...})` 先例）；fallback 方案 B：移除对比测试，对比验证留待后续移至根包 roundtrip_test。
+任务：移除 `src/pure/{codec,pixel,color,process,util}/moon.pkg` 的 `supported_targets = "native"` 限制，使 pure 包全目标编译（wasm/js 可用）。处理测试中对 @core 的依赖（对比测试 5-6 依赖 native-only 的 @core.load_from_bytes），优先方案 A：分离对比测试到 native-only 文件（参照根包 `options(targets:{...})` 先例）；fallback 方案 B：移除对比测试，对比验证留待后续移至根包 roundtrip_test。
 选择理由：
 - T2 已完成类型分离，pure 包主代码已只依赖 @types（全目标），但 moon.pkg 仍 `supported_targets = "native"`，是 pure 包全目标的唯一剩余障碍
 - T2 修正方向 3 明确声明"pure 包真正脱离 native 留待下轮"
 - pure 包全目标化是 v2.0 多目标支持（wasm/js）的关键里程碑，是后端选择层 `src/lib.mbt` 的前提
 - 风险可控：仅测试依赖 @core，处理测试依赖即可，主代码已全目标就绪
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`
 - T2 产出：types 包全目标，pure 包主代码用 @types，moon.pkg 仍 native-only
 - 根包 `src/moon.pkg` 有 `options(targets: {"roundtrip_test.mbt": ["native"]})` 先例
 - pure 包测试：1-4 纯逻辑，5-6 对比验证（依赖 @core），7-8 错误路径
@@ -90,11 +90,11 @@
 ---
 
 ## R6 PASSED v2.0 pure 包全目标化（多目标编译） [ID: T3]
-结果：移除 `src/pure/moon.pkg` 的 `supported_targets = "native"`，采用方案 B 移除 2 个依赖 @core 的对比测试，pure 包完全脱离 @core 依赖（仅 import types，全目标）。保留 6 个纯逻辑测试（全目标可用）。`moon check`（全目标）0 errors 0 warnings，`moon test --target native` 552/552 通过，`moon test --target wasm`/`--target js` pure 包 6/6 通过。
+结果：移除 `src/pure/{codec,pixel,color,process,util}/moon.pkg` 的 `supported_targets = "native"`，采用方案 B 移除 2 个依赖 @core 的对比测试，pure 包完全脱离 @core 依赖（仅 import types，全目标）。保留 6 个纯逻辑测试（全目标可用）。`moon check`（全目标）0 errors 0 warnings，`moon test --target native` 552/552 通过，`moon test --target wasm`/`--target js` pure 包 6/6 通过。
 检查：PASSED。pure 包全目标化达成，wasm/js 可用，v1.0 API 冻结保持，对比验证留待后续移至根包 roundtrip_test.mbt。
 
 ## R6 NEW v2.0 pure-FFI BMP 对比验证移至根包 [ID: T4]
-任务：将 T3 方案 B 移除的 pure-FFI BMP 对比验证测试移至根包 `src/roundtrip_test.mbt`（已 native-only），恢复纯 MoonBit 解码器与 FFI 解码器的一致性验证。具体：根包 `src/moon.pkg` 添加 `src/pure` 的 import（native 包依赖全目标包可行），在 `roundtrip_test.mbt` 新增 2 个对比测试——用 `@core.write_bmp_to_bytes` 生成 BMP 字节流，分别用 `@core.load_from_bytes`（FFI）和 `@pure.decode_bmp_pure`（纯 MoonBit）解码，断言 width/height/channels/data 完全一致（覆盖 24-bit RGB 与 32-bit RGBA 两种位深）。验证 `moon check --target native` 0 errors 0 warnings，`moon test --target native` 全量通过（预期 552→554，恢复 T3 移除的 2 测试）。
+任务：将 T3 方案 B 移除的 pure-FFI BMP 对比验证测试移至根包 `src/roundtrip_test.mbt`（已 native-only），恢复纯 MoonBit 解码器与 FFI 解码器的一致性验证。具体：根包 `src/moon.pkg` 添加 `src/pure` 的 import（native 包依赖全目标包可行），在 `roundtrip_test.mbt` 新增 2 个对比测试——用 `@core.write_bmp_to_bytes` 生成 BMP 字节流，分别用 `@core.load_from_bytes`（FFI）和 `@codec.decode_bmp_pure`（纯 MoonBit）解码，断言 width/height/channels/data 完全一致（覆盖 24-bit RGB 与 32-bit RGBA 两种位深）。验证 `moon check --target native` 0 errors 0 warnings，`moon test --target native` 全量通过（预期 552→554，恢复 T3 移除的 2 测试）。
 选择理由：
 - T3 方案 B 移除 2 个对比测试，do_v3.md 明确规划"对比验证留待后续轮次移至根包 roundtrip_test.mbt"，本轮即执行此规划，属 T3 收尾
 - 根包 `roundtrip_test.mbt` 已 native-only（`options(targets: {"roundtrip_test.mbt": ["native"]})`），可自由依赖 @core + @pure，无方案 A 的全目标警告问题
@@ -118,7 +118,7 @@
 - [严重] 计划未论证 FFI 生成 BMP 与 pure 解码器能力范围的匹配性：计划改用 `@core.write_bmp_to_bytes` 生成路径（T3 原对比测试用手构造字节），未核实 stb_image_write 输出格式与 `decode_bmp_pure` 输入要求的兼容性
 修正方向（采用审查推荐方案 A，已逐一核实源码论证）：
 1. **FFI 生成 BMP 格式已核实**（`src/core/stb_image_write.h:492-510`）：`stbi_write_bmp_core` 对 `comp != 4`（24-bit RGB）写出 BITMAPINFOHEADER（40 字节）+ BI_RGB（compression=0）+ 24bpp（header `14+40`，DIB `40, x,y, 1,24, 0,...`）；对 `comp == 4`（32-bit RGBA）写出 BITMAPV4HEADER（108 字节）+ BI_BITFIELDS（compression=3）+ 32bpp（header `14+108`，DIB `108, x,y, 1,32, 3,...`）
-2. **pure 解码器能力范围已核实**（`src/pure/bmp_decode.mbt:21,35`）：`decode_bmp_pure` 仅接受 `dib_size == 40` && `compression == 0` && `bpp ∈ {24, 32}`，拒绝其他
+2. **pure 解码器能力范围已核实**（`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt:21,35`）：`decode_bmp_pure` 仅接受 `dib_size == 40` && `compression == 0` && `bpp ∈ {24, 32}`，拒绝其他
 3. **兼容性匹配结论**：24-bit RGB 路径兼容（FFI 写出 40 字节 DIB + BI_RGB + 24bpp，pure 接受）；32-bit RGBA 路径不兼容（FFI 写出 108 字节 DIB + BI_BITFIELDS，pure 拒绝）
 4. **方案 A：仅保留 24-bit RGB 对比测试**，放弃 32-bit RGBA 对比测试。32-bit 对比验证需先扩展 pure 解码器支持 BITMAPV4HEADER（属后续轮次），不在本轮承担
 5. **预期测试数调整为 552→553**（仅新增 1 个 24-bit RGB 对比测试）
@@ -131,7 +131,7 @@
 检查：`moon check --target native` 0 errors 0 warnings，全目标 `moon check` 0 errors 0 warnings，`moon test --target native` 553/553 通过（552→553，新增 1 测试），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R8 NEW v2.0 pure 包 QOI 解码器（纯 MoonBit，全目标） [ID: T5]
-任务：在 `src/pure/` 新增 `qoi_decode.mbt`，实现纯 MoonBit QOI 解码器 `pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 RGB（channels=3）和 RGBA（channels=4）。参考 `src/format/qoi.mbt` 的 `decode_qoi` 逻辑（已是纯 MoonBit，仅依赖 `@core.Image`/`@core.LoadError`，无 FFI），将类型引用替换为 `@types.Image`/`@types.LoadError`。新增 `src/pure/qoi_decode_test.mbt` 纯逻辑测试（全目标，手构造 QOI 字节流验证解码正确性，不依赖 @core）。在根包 `src/roundtrip_test.mbt` 新增 1 个 pure-FFI QOI 对比测试（native-only，用 `@core.load_from_path` 加载测试图像 → `@core.encode_qoi` 生成 QOI 字节流 → `@pure.decode_qoi_pure` 纯 MoonBit 解码 → `@core.decode_qoi` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check`（全目标）0 errors 0 warnings，`moon test --target native` 553→554 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `qoi_decode.mbt`，实现纯 MoonBit QOI 解码器 `pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 RGB（channels=3）和 RGBA（channels=4）。参考 `src/format/qoi.mbt` 的 `decode_qoi` 逻辑（已是纯 MoonBit，仅依赖 `@core.Image`/`@core.LoadError`，无 FFI），将类型引用替换为 `@types.Image`/`@types.LoadError`。新增 `src/pure/{codec,pixel,color,process,util}/qoi_decode_test.mbt` 纯逻辑测试（全目标，手构造 QOI 字节流验证解码正确性，不依赖 @core）。在根包 `src/roundtrip_test.mbt` 新增 1 个 pure-FFI QOI 对比测试（native-only，用 `@core.load_from_path` 加载测试图像 → `@core.encode_qoi` 生成 QOI 字节流 → `@codec.decode_qoi_pure` 纯 MoonBit 解码 → `@core.decode_qoi` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check`（全目标）0 errors 0 warnings，`moon test --target native` 553→554 通过。
 选择理由：
 - T4 已完成 BMP 对比验证收尾，pure 包当前仅 BMP 解码器，格式覆盖不足，需扩展以推进 v2.0 多目标支持的实质功能
 - QOI 格式简单（无压缩，索引+差分编码），`src/format/qoi.mbt` 已有纯 MoonBit 解码实现（116 行），移植到 pure 包仅需替换类型引用，技术风险极低
@@ -140,13 +140,13 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续后端选择层 `src/lib.mbt` 和 pure 包格式进一步扩展（PNG/JPEG）奠定基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），6 纯逻辑测试
 - T4 产出：根包 roundtrip_test.mbt 有 pure-FFI BMP 对比测试，`src/moon.pkg` 已 `for "test"` 声明 `@pure` 依赖
 - `src/format/qoi.mbt:13-116`：`decode_qoi` 纯 MoonBit 实现，签名 `pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError`，支持 QOI_OP_INDEX/DIFF/LUMA/RUN/RGB/RGBA 标签
 - `src/format/qoi.mbt:121-231`：`encode_qoi` 纯 MoonBit 实现，可用于对比测试生成 QOI 字节流
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
@@ -168,11 +168,11 @@
 ---
 
 ## R10 PASSED v2.0 pure 包 QOI 解码器（纯 MoonBit，全目标） [ID: T5]
-结果：在 `src/pure/` 新增 `qoi_decode.mbt`（`decode_qoi_pure`，支持全部 6 种 QOI 标签 INDEX/DIFF/LUMA/RUN/RGB/RGBA）+ `qoi_decode_test.mbt`（8 纯逻辑测试，覆盖全部 6 标签 + 2 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only QOI pure vs format 交叉验证测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 562 通过（553→562，+8 pure 纯逻辑 + 1 根包对比）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `qoi_decode.mbt`（`decode_qoi_pure`，支持全部 6 种 QOI 标签 INDEX/DIFF/LUMA/RUN/RGB/RGBA）+ `qoi_decode_test.mbt`（8 纯逻辑测试，覆盖全部 6 标签 + 2 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only QOI pure vs format 交叉验证测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 562 通过（553→562，+8 pure 纯逻辑 + 1 根包对比）。
 检查：PASSED。QOI 解码器移植正确（仅 @core→@types 类型引用替换，逻辑与 `src/format/qoi.mbt` 一致），8 测试覆盖全部 6 标签 + 2 错误路径且编码值经手算验证，1 native-only 交叉验证测试使用正确的 `@format` API，v1.0 API 冻结保持，现有测试不破坏。
 
 ## R10 NEW v2.0 pure 包 TGA 解码器（纯 MoonBit，全目标，含 RLE） [ID: T6]
-任务：在 `src/pure/` 新增 `tga_decode.mbt`，实现纯 MoonBit TGA 解码器 `pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 image type 2（未压缩 RGB）和 type 10（RLE RGB），24-bit（comp=3）和 32-bit（comp=4），含 18 字节 header 解析、RLE 解压、bottom-up 行序翻转、BGR(A)→RGB(A) 转换。新增 `src/pure/tga_decode_test.mbt` 纯逻辑测试（全目标，手构造 TGA 字节流验证 type 2/type 10/24-bit/32-bit/行序/错误路径）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only pure-FFI TGA 对比测试（`@core.write_tga_to_bytes` 生成 RLE TGA → `@pure.decode_tga_pure` vs `@core.load_from_bytes` 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 全量通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `tga_decode.mbt`，实现纯 MoonBit TGA 解码器 `pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 image type 2（未压缩 RGB）和 type 10（RLE RGB），24-bit（comp=3）和 32-bit（comp=4），含 18 字节 header 解析、RLE 解压、bottom-up 行序翻转、BGR(A)→RGB(A) 转换。新增 `src/pure/{codec,pixel,color,process,util}/tga_decode_test.mbt` 纯逻辑测试（全目标，手构造 TGA 字节流验证 type 2/type 10/24-bit/32-bit/行序/错误路径）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only pure-FFI TGA 对比测试（`@core.write_tga_to_bytes` 生成 RLE TGA → `@codec.decode_tga_pure` vs `@core.load_from_bytes` 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 全量通过。
 选择理由：
 - T5 已完成 QOI 解码器，pure 包当前 BMP+QOI 两种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
 - TGA 格式简单（18 字节 header + RLE/无压缩像素），stb_image C 库原生支持 TGA 读写，对比验证为真正的 FFI 基准（非 QOI 的纯 MoonBit 交叉验证），价值更高
@@ -182,7 +182,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中
 - 为后续后端选择层 `src/lib.mbt` 积累格式覆盖基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），6 纯逻辑测试（BMP）
 - T5 产出：pure 包 QOI 解码器 + 8 纯逻辑测试，根包 QOI 对比测试，native 562 测试通过
@@ -208,11 +208,11 @@
 ---
 
 ## R12 PASSED v2.0 pure 包 TGA 解码器（纯 MoonBit，全目标，含 RLE） [ID: T6]
-结果：在 `src/pure/` 新增 `tga_decode.mbt`（`decode_tga_pure`，支持 image type 2/10、24/32-bit、RLE 解压、bottom-up/top-down 行序、BGR(A)→RGB(A) 转换）+ `tga_decode_test.mbt`（9 纯逻辑测试，覆盖 type 2/type 10/24-bit/32-bit/行序/3 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only TGA pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572 通过（562→572，+9 pure 纯逻辑 + 1 根包对比）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `tga_decode.mbt`（`decode_tga_pure`，支持 image type 2/10、24/32-bit、RLE 解压、bottom-up/top-down 行序、BGR(A)→RGB(A) 转换）+ `tga_decode_test.mbt`（9 纯逻辑测试，覆盖 type 2/type 10/24-bit/32-bit/行序/3 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only TGA pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572 通过（562→572，+9 pure 纯逻辑 + 1 根包对比）。
 检查：PASSED。TGA 解码器实现完整（18 字节 header 解析、RLE 解压、行序翻转、BGR→RGB 转换、5 错误路径），9 测试覆盖所有功能点含 3 错误路径测试，1 FFI 基准对比测试（stb_image C 库原生支持 TGA 读写），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R12 NEW v2.0 pure 包 PNM 解码器（纯 MoonBit，全目标） [ID: T7]
-任务：在 `src/pure/` 新增 `pnm_decode.mbt`，实现纯 MoonBit PNM 解码器 `pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 P5（PGM 二进制灰度，channels=1）和 P6（PPM 二进制 RGB，channels=3），8-bit（maxval < 256），含 header 解析（magic + width + height + maxval，处理注释行 `#` 和任意 whitespace）、像素读取、错误路径（数据过短、不支持的 magic 如 P1-P4 ASCII、不支持的 maxval ≥ 256）。新增 `src/pure/pnm_decode_test.mbt` 纯逻辑测试（全目标，手构造 PNM 字节流验证 P5/P6 解码、注释行、错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PNM 对比测试（PPM RGB + PGM 灰度，用 `@format.encode_ppm`/`encode_pgm` 生成 PNM 字节流 → `@pure.decode_pnm_pure` 纯解码 vs `@core.load_from_bytes` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572→581 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pnm_decode.mbt`，实现纯 MoonBit PNM 解码器 `pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 P5（PGM 二进制灰度，channels=1）和 P6（PPM 二进制 RGB，channels=3），8-bit（maxval < 256），含 header 解析（magic + width + height + maxval，处理注释行 `#` 和任意 whitespace）、像素读取、错误路径（数据过短、不支持的 magic 如 P1-P4 ASCII、不支持的 maxval ≥ 256）。新增 `src/pure/{codec,pixel,color,process,util}/pnm_decode_test.mbt` 纯逻辑测试（全目标，手构造 PNM 字节流验证 P5/P6 解码、注释行、错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PNM 对比测试（PPM RGB + PGM 灰度，用 `@format.encode_ppm`/`encode_pgm` 生成 PNM 字节流 → `@codec.decode_pnm_pure` 纯解码 vs `@core.load_from_bytes` FFI 基准解码 → 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 572→581 通过。
 选择理由：
 - T6 已完成 TGA 解码器，pure 包当前 BMP+QOI+TGA 三种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
 - PNM（P5/P6 二进制）格式最简单（无压缩，header + 原始像素），实现风险极低，适合继续积累 pure 包格式覆盖
@@ -223,7 +223,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T6 产出：pure 包 BMP+QOI+TGA 三种解码器，native 572 测试通过
@@ -238,27 +238,27 @@
 - `@core.load_from_bytes` 支持 PNM 解码（`pnm_encode_test.mbt:23,76` 现有 roundtrip 测试印证）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
 - `roundtrip_test.mbt` 现有 PNM 测试模式（line 148-174）：`@format.encode_ppm`/`encode_pgm` → `@core.load_from_bytes` → 断言 data 一致
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
 ---
 
 ## R8 PASSED v2.0 pure 包 PNM 解码器（纯 MoonBit，全目标） [ID: T7]
-结果：在 `src/pure/` 新增 `pnm_decode.mbt`（`decode_pnm_pure`，支持 P5/P6 8-bit，含注释行/任意 whitespace 解析）+ `pnm_decode_test.mbt`（8 纯逻辑测试），根包 `roundtrip_test.mbt` 新增 2 个 native-only PNM pure vs FFI 对比测试（PPM RGB + PGM grayscale）。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582 通过（572→582，+8 pure 纯逻辑 + 2 根包对比）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pnm_decode.mbt`（`decode_pnm_pure`，支持 P5/P6 8-bit，含注释行/任意 whitespace 解析）+ `pnm_decode_test.mbt`（8 纯逻辑测试），根包 `roundtrip_test.mbt` 新增 2 个 native-only PNM pure vs FFI 对比测试（PPM RGB + PGM grayscale）。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582 通过（572→582，+8 pure 纯逻辑 + 2 根包对比）。
 检查：PASSED。PNM 解码器实现完整（P5/P6 magic、注释行、whitespace、maxval 校验、错误路径），8 测试覆盖所有功能点含 3 错误路径，2 FFI 基准对比测试，v1.0 API 冻结保持，现有测试不破坏。
 
 ## R8 NEW v2.0 pure 包 PSD 解码器（纯 MoonBit，全目标，无压缩 8-bit） [ID: T8]
-任务：在 `src/pure/` 新增 `psd_decode.mbt`，实现纯 MoonBit PSD 解码器 `pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 8-bit、RGB（channels=3）/RGBA（channels=4）、无压缩（compression=0）。解析 PSD header（大端序：signature "8BPS" + version=1 + reserved(6) + channels + h + w + depth=8 + colorMode=3），跳过 color mode data/image resources/layer and mask data（各含 4 字节 BE length 前缀），读取无压缩像素数据按通道交错（RRRGGGBBB → RGBRGBRGB），返回原始通道数。新增 `src/pure/psd_decode_test.mbt` 8 个纯逻辑测试（RGB/RGBA/交错验证/1x1/4 错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PSD 对比测试（3 通道 RGB 用 req_channels=Some(3) 匹配 + 4 通道 RGBA alpha=255 避免 white matte removal，手构造 PSD 字节流 → @pure.decode_psd_pure vs @core.load_from_bytes 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582→592 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `psd_decode.mbt`，实现纯 MoonBit PSD 解码器 `pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 8-bit、RGB（channels=3）/RGBA（channels=4）、无压缩（compression=0）。解析 PSD header（大端序：signature "8BPS" + version=1 + reserved(6) + channels + h + w + depth=8 + colorMode=3），跳过 color mode data/image resources/layer and mask data（各含 4 字节 BE length 前缀），读取无压缩像素数据按通道交错（RRRGGGBBB → RGBRGBRGB），返回原始通道数。新增 `src/pure/{codec,pixel,color,process,util}/psd_decode_test.mbt` 8 个纯逻辑测试（RGB/RGBA/交错验证/1x1/4 错误路径）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure-FFI PSD 对比测试（3 通道 RGB 用 req_channels=Some(3) 匹配 + 4 通道 RGBA alpha=255 避免 white matte removal，手构造 PSD 字节流 → @codec.decode_psd_pure vs @core.load_from_bytes 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 582→592 通过。
 选择理由：
 - T7 已完成 PNM 解码器，pure 包当前 BMP+QOI+TGA+PNM 四种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
-- PSD 是 stb-image 独家格式（ROADMAP.md "PSD/HDR/PNM 独家格式"），补齐 pure 包 PSD 解码使独家格式覆盖更完整，实用价值高
+- PSD 是 image 独家格式（ROADMAP.md "PSD/HDR/PNM 独家格式"），补齐 pure 包 PSD 解码使独家格式覆盖更完整，实用价值高
 - stb_image C 库原生支持 PSD 解码（`stb_image.h:6126 stbi__psd_load`，8/16-bit、RGB、raw/RLE），`@core.load_from_bytes` 可解码 PSD，对比验证为真正的 FFI 基准
 - PSD 无压缩 8-bit 格式简单（header + 跳过 3 个 length 前缀段 + 按通道排列像素），仅需大端序读取 + 通道交错，技术风险低
 - pure 包全目标化（T3）+ types 包全目标（T2）已就绪，PSD 解码器仅依赖 @types，全目标可用，无需架构改动
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T7 产出：pure 包 BMP+QOI+TGA+PNM 四种解码器，native 582 测试通过
@@ -275,7 +275,7 @@
 - `@core.load_from_bytes` 签名（`src/core/image_load_native.mbt:3`）：`pub fn load_from_bytes(data : Bytes, req_channels~ : Option[Int] = None) -> Image raise LoadError`
 - pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
 ---
@@ -294,11 +294,11 @@
 ---
 
 ## R15 PASSED v2.0 pure 包 PSD 解码器（纯 MoonBit，全目标，无压缩 8-bit） [ID: T8]
-结果：在 `src/pure/` 新增 `psd_decode.mbt`（`decode_psd_pure`，支持 8-bit RGB/RGBA 无压缩，大端序读取 + 通道交错）+ `psd_decode_test.mbt`（13 纯逻辑测试，4 正例 + 9 错误路径），根包 `roundtrip_test.mbt` 新增 2 个 native-only PSD pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597 通过（582→597，+13 pure 纯逻辑 + 2 根包对比）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `psd_decode.mbt`（`decode_psd_pure`，支持 8-bit RGB/RGBA 无压缩，大端序读取 + 通道交错）+ `psd_decode_test.mbt`（13 纯逻辑测试，4 正例 + 9 错误路径），根包 `roundtrip_test.mbt` 新增 2 个 native-only PSD pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597 通过（582→597，+13 pure 纯逻辑 + 2 根包对比）。
 检查：PASSED。PSD 解码器实现完整（大端序解析 + 通道交错公式与规范一致，9 条错误路径全覆盖），13 纯逻辑测试 + 2 FFI 基准对比测试全部通过，三目标构建零错误零警告，v1.0 API 冻结保持，现有测试未破坏。
 
 ## R15 NEW v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
-任务：在 `src/pure/` 新增 `gif_decode.mbt`，实现纯 MoonBit GIF 解码器 `pub fn decode_gif_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 GIF89a/GIF87a 单帧解码（RGB，channels=3），含 header + Logical Screen Descriptor + Global/Local Color Table + Extension block 跳过 + LZW 解压（变长码 LSB 优先 + 字典重建 + 子块结构），暂不支持 interlace。新增 `src/pure/gif_decode_test.mbt` 10 个纯逻辑测试（3 正例 + 7 错误路径，全目标）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only pure-FFI GIF 对比测试（`@format.encode_gif` 生成 GIF → `@pure.decode_gif_pure` vs `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597→608 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `gif_decode.mbt`，实现纯 MoonBit GIF 解码器 `pub fn decode_gif_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持 GIF89a/GIF87a 单帧解码（RGB，channels=3），含 header + Logical Screen Descriptor + Global/Local Color Table + Extension block 跳过 + LZW 解压（变长码 LSB 优先 + 字典重建 + 子块结构），暂不支持 interlace。新增 `src/pure/{codec,pixel,color,process,util}/gif_decode_test.mbt` 10 个纯逻辑测试（3 正例 + 7 错误路径，全目标）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only pure-FFI GIF 对比测试（`@format.encode_gif` 生成 GIF → `@codec.decode_gif_pure` vs `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 597→608 通过。
 选择理由：
 - T8 已完成 PSD 解码器，pure 包当前 BMP+QOI+TGA+PNM+PSD 五种格式，需继续扩展格式覆盖以推进 v2.0 多目标支持实质功能
 - GIF 是最常用的图像格式之一（Web 早期标准格式），实用价值最高，补齐 GIF 解码使 pure 包格式覆盖更完整
@@ -309,7 +309,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中
 - 为后续后端选择层 `src/lib.mbt` 积累更多格式覆盖基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T8 产出：pure 包 BMP+QOI+TGA+PNM+PSD 五种解码器，native 597 测试通过
@@ -320,7 +320,7 @@
 - roundtrip_test.mbt 现有 GIF 测试模式（line 135-146）
 - pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
 ---
@@ -354,11 +354,11 @@
 ---
 
 ## R18 PASSED v2.0 pure 包 GIF 解码器（纯 MoonBit，全目标，单帧，LZW） [ID: T9]
-结果：在 `src/pure/` 新增 `gif_decode.mbt`（`decode_gif_pure`，支持 GIF89a/GIF87a 单帧解码，含 LZW 解压、GCT/LCT、Extension 跳过含 Plain Text 8 字节 header 特殊处理）+ `gif_decode_test.mbt`（13 纯逻辑测试，5 正例 + 8 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only GIF pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611 通过（597→611，+13 pure 纯逻辑 + 1 根包对比）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `gif_decode.mbt`（`decode_gif_pure`，支持 GIF89a/GIF87a 单帧解码，含 LZW 解压、GCT/LCT、Extension 跳过含 Plain Text 8 字节 header 特殊处理）+ `gif_decode_test.mbt`（13 纯逻辑测试，5 正例 + 8 错误路径），根包 `roundtrip_test.mbt` 新增 1 个 native-only GIF pure vs FFI 对比测试。`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611 通过（597→611，+13 pure 纯逻辑 + 1 根包对比）。
 检查：PASSED。GIF 解码器实现完整（Header/LSD/GCT/LCT/Blocks/LZW/颜色表查找优先级），Plain Text Extension 8 字节 header 跳过逻辑正确且有测试覆盖，未知 Extension label 按子块结构跳过保持前向兼容，输出 width/height 取 Image Descriptor 且忽略 left/top，8 条错误路径全部覆盖，13 纯逻辑测试 + 1 FFI 基准对比测试全部通过，v1.0 API 冻结保持，现有测试未破坏。
 
 ## R18 NEW v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
-任务：在 `src/pure/` 新增 `qoi_encode.mbt`（移植 `src/format/qoi.mbt:121-231` 的 `encode_qoi` + `qoi_hash` 辅助函数，签名 `pub fn encode_qoi_pure(img : @types.Image) -> Bytes raise @types.LoadError`，支持 RGB channels=3 / RGBA channels=4）和 `pnm_encode.mbt`（移植 `src/format/pnm_encode.mbt` 的 `encode_ppm`/`encode_pgm`/`encode_pnm`，签名 `pub fn encode_ppm_pure(img : @types.Image) -> Bytes` / `encode_pgm_pure` / `encode_pnm_pure`），将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖保持（pure 包 moon.pkg 新增 `moonbitlang/core/encoding/utf8` import，全目标可用）。新增 `src/pure/qoi_encode_test.mbt`（5 纯逻辑测试：RGB 编码 + RGBA 编码 + run-length 编码 + 索引编码 + 错误路径 channels=2）和 `src/pure/pnm_encode_test.mbt`（5 纯逻辑测试：PPM RGB 编码 + PGM 灰度编码 + PNM 自动选择 + RGBA 丢弃 alpha + 灰度输入转 RGB），全目标仅依赖 @types/@pure。在根包 `src/roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI pure encode→pure decode + PPM pure encode→pure decode + PGM pure encode→pure decode，断言 roundtrip 后 width/height/channels/data 与原始图像一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611→624 通过（+10 pure 纯逻辑 + 3 根包 roundtrip）。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `qoi_encode.mbt`（移植 `src/format/qoi.mbt:121-231` 的 `encode_qoi` + `qoi_hash` 辅助函数，签名 `pub fn encode_qoi_pure(img : @types.Image) -> Bytes raise @types.LoadError`，支持 RGB channels=3 / RGBA channels=4）和 `pnm_encode.mbt`（移植 `src/format/pnm_encode.mbt` 的 `encode_ppm`/`encode_pgm`/`encode_pnm`，签名 `pub fn encode_ppm_pure(img : @types.Image) -> Bytes` / `encode_pgm_pure` / `encode_pnm_pure`），将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖保持（pure 包 moon.pkg 新增 `moonbitlang/core/encoding/utf8` import，全目标可用）。新增 `src/pure/{codec,pixel,color,process,util}/qoi_encode_test.mbt`（5 纯逻辑测试：RGB 编码 + RGBA 编码 + run-length 编码 + 索引编码 + 错误路径 channels=2）和 `src/pure/{codec,pixel,color,process,util}/pnm_encode_test.mbt`（5 纯逻辑测试：PPM RGB 编码 + PGM 灰度编码 + PNM 自动选择 + RGBA 丢弃 alpha + 灰度输入转 RGB），全目标仅依赖 @types/@pure。在根包 `src/roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI pure encode→pure decode + PPM pure encode→pure decode + PGM pure encode→pure decode，断言 roundtrip 后 width/height/channels/data 与原始图像一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 611→624 通过（+10 pure 纯逻辑 + 3 根包 roundtrip）。
 选择理由：
 - T9 已完成 GIF 解码器，pure 包已有 6 种格式解码器（BMP/QOI/TGA/PNM/PSD/GIF），但仅有解码器无编码器，无法构成完整编解码能力
 - v2.0 后端选择层 `src/lib.mbt` 需要 pure 包具备与 native 对等的编解码能力，当前 pure 包只有解码是核心缺口
@@ -369,7 +369,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，roundtrip 测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续后端选择层 `src/lib.mbt` 和 pure 包更多编码器（GIF/TGA/BMP）奠定基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T9 产出：pure 包 BMP+QOI+TGA+PNM+PSD+GIF 六种解码器，native 611 测试通过
@@ -379,7 +379,7 @@
 - `src/format/pnm_encode.mbt:37`：`pub fn encode_pgm(img : @core.Image) -> Bytes`，输出 "P5\n{w} {h}\n255\n" + 灰度像素（BT.601）
 - `src/format/pnm_encode.mbt:70`：`pub fn encode_pnm(img : @core.Image) -> Bytes`，channels<=1 → PGM else → PPM
 - `src/format/moon.pkg:3`：import `moonbitlang/core/encoding/utf8` @encoding/utf8（全目标标准库）
-- pure 包 `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标；本轮新增 `@encoding/utf8` import
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标；本轮新增 `@encoding/utf8` import
 - pure 包解码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM/PSD/GIF 一致）
 - pure 包已有 `decode_qoi_pure`（T5）和 `decode_pnm_pure`（T7），可构成 roundtrip
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
@@ -389,7 +389,7 @@
 
 ## R19 RETRY v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
 原因：计划审查 v10 r1 REJECTED，4 项问题
-- [严重] qoi_hash 同包同名顶层函数冲突：task_v10.md 要求在 qoi_encode.mbt 新增 qoi_hash，但 `src/pure/qoi_decode.mbt:9` 已定义同名函数 `fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int`，MoonBit 中 `fn`（无 `pub`）是包私有而非文件私有，同包内同名顶层函数冲突，`moon check` 会报 duplicate definition（与 do_v9.md line 49 记录的 `read_u16_le` 命名冲突同类，v9 已遇并处理过此问题）
+- [严重] qoi_hash 同包同名顶层函数冲突：task_v10.md 要求在 qoi_encode.mbt 新增 qoi_hash，但 `src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt:9` 已定义同名函数 `fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int`，MoonBit 中 `fn`（无 `pub`）是包私有而非文件私有，同包内同名顶层函数冲突，`moon check` 会报 duplicate definition（与 do_v9.md line 49 记录的 `read_u16_le` 命名冲突同类，v9 已遇并处理过此问题）
 - [一般] QOI 编码器纯逻辑测试缺失 DIFF 和 LUMA 标签覆盖：6 种编码标签仅覆盖 3-4 种（INDEX/RUN/RGBA），DIFF（0x40-0x7F，`src/format/qoi.mbt:185-188`）和 LUMA（0x80-0xBF，`src/format/qoi.mbt:189-196`）核心差分编码分支未测试，roundtrip 测试用全红图像不触发这些分支无法补救，与 T5 R9 RETRY 修正的"QOI_OP_LUMA 标签测试缺失"同类
 - [轻微] roundtrip 测试未明确 req_channels=Some(3)：与现有测试惯例不一致（`roundtrip_test.mbt` line 119, 138, 152, 325, 344 均显式 req_channels=Some(3)）
 - [轻微] roundtrip 测试 3 PGM data 验证描述不够具体 + QOI 编码器测试 3 run-length 构造描述模糊
@@ -398,16 +398,16 @@
 2. **DIFF/LUMA 标签测试补充**：新增 2 个测试用例：(a) DIFF 标签测试——2x2 RGB，像素 (10,20,30)/(11,21,31)/(12,22,32)/(13,23,33)，首像素与 prev (0,0,0,255) 差异过大走 RGB 标签，后续 3 像素差分 (1,1,1) ∈ [-2,1] 触发 DIFF 标签 0x7F；(b) LUMA 标签测试——2x2 RGB，像素 (100,100,100)/(105,110,105)/(100,100,100)/(105,110,105)，像素 1 差分 dr=5/dg=10/db=5，dg=10 ∈ [-32,31] 但 dr=5 ∉ [-2,1] 触发 LUMA 标签 0xAA+0x33。测试数从 5 调整到 7，预期 native 测试数从 611→624 调整为 611→626
 3. **roundtrip req_channels=Some(3) 明确**：3 个 roundtrip 测试均显式 `@core.load_from_path(path, req_channels=Some(3))`，与现有测试惯例一致
 4. **PGM data 验证描述具体化 + run-length 构造描述明确化**：PGM data 验证明确"对原始 RGB 像素 (r,g,b) 计算 (r*299+g*587+b*114)/1000，与 decode_pnm_pure 输出的 data 逐字节比较"；run-length 测试明确"4 像素均为 (0,0,0)，与 prev (0,0,0,255) 相同，全触发 RUN 编码，输出 1 个 RUN 标签 0xC3"
-选择理由：审查意见 4 项全部属实（已核实 `src/pure/qoi_decode.mbt:9` 确有 qoi_hash 定义、`src/format/qoi.mbt:185-196` 确有 DIFF/LUMA 分支、`roundtrip_test.mbt` 现有测试均显式 req_channels=Some(3)），修正仅消除命名冲突、补充测试覆盖、精确化描述不涉实现逻辑变更，风险极低，修正后计划可行性不再留待现场
+选择理由：审查意见 4 项全部属实（已核实 `src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt:9` 确有 qoi_hash 定义、`src/format/qoi.mbt:185-196` 确有 DIFF/LUMA 分支、`roundtrip_test.mbt` 现有测试均显式 req_channels=Some(3)），修正仅消除命名冲突、补充测试覆盖、精确化描述不涉实现逻辑变更，风险极低，修正后计划可行性不再留待现场
 
 ---
 
 ## R20 PASSED v2.0 pure 包 QOI + PNM 编码器（纯 MoonBit，全目标） [ID: T10]
-结果：在 `src/pure/` 新增 `qoi_encode.mbt`（`encode_qoi_pure`，复用 `qoi_decode.mbt` 的 `qoi_hash`，支持全部 6 种 QOI 标签）+ `pnm_encode.mbt`（`encode_ppm_pure`/`encode_pgm_pure`/`encode_pnm_pure`）+ 12 纯逻辑测试（7 QOI + 5 PNM，全目标），根包 `roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI/PPM/PGM pure encode→decode）。`moon.pkg` 新增 `@encoding/utf8` import。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `qoi_encode.mbt`（`encode_qoi_pure`，复用 `qoi_decode.mbt` 的 `qoi_hash`，支持全部 6 种 QOI 标签）+ `pnm_encode.mbt`（`encode_ppm_pure`/`encode_pgm_pure`/`encode_pnm_pure`）+ 12 纯逻辑测试（7 QOI + 5 PNM，全目标），根包 `roundtrip_test.mbt` 新增 3 个 native-only roundtrip 测试（QOI/PPM/PGM pure encode→decode）。`moon.pkg` 新增 `@encoding/utf8` import。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 626 通过（611→626，+12 pure 纯逻辑 + 3 根包 roundtrip），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R21 NEW v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
-任务：在 `src/pure/` 新增 `gif_encode.mbt`，移植 `src/format/gif_encode.mbt:1-177` 的单帧 GIF 编码器（`quantize_332` + `build_332_palette` + `lzw_compress` + `encode_gif`），签名 `pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError`，将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖已在 pure 包 moon.pkg（T10 新增）。新增 `src/pure/gif_encode_test.mbt` 纯逻辑测试（全目标，覆盖 3-3-2 量化、LZW 压缩、RGB/RGBA 编码、header 结构、错误路径 channels=2）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only GIF pure roundtrip 测试（`@pure.encode_gif_pure` → `@pure.decode_gif_pure`，断言 width/height/channels/data 一致；另新增 1 个 pure encode vs FFI 对比测试 `@pure.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 626→636 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `gif_encode.mbt`，移植 `src/format/gif_encode.mbt:1-177` 的单帧 GIF 编码器（`quantize_332` + `build_332_palette` + `lzw_compress` + `encode_gif`），签名 `pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError`，将 `@core.Image`/`@core.LoadError` 引用替换为 `@types.Image`/`@types.LoadError`，`@encoding/utf8` 依赖已在 pure 包 moon.pkg（T10 新增）。新增 `src/pure/{codec,pixel,color,process,util}/gif_encode_test.mbt` 纯逻辑测试（全目标，覆盖 3-3-2 量化、LZW 压缩、RGB/RGBA 编码、header 结构、错误路径 channels=2）。在根包 `src/roundtrip_test.mbt` 新增 1 个 native-only GIF pure roundtrip 测试（`@codec.encode_gif_pure` → `@codec.decode_gif_pure`，断言 width/height/channels/data 一致；另新增 1 个 pure encode vs FFI 对比测试 `@codec.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))` 断言 width/height/channels/data 一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 626→636 通过。
 选择理由：
 - T10 已完成 QOI + PNM 编码器，pure 包当前 6 解码器 + 2 编码器（QOI/PNM），GIF 编码器是最后一个可低风险移植的编码器（BMP/TGA/PSD 编码器均为 FFI 实现无纯 MoonBit 版本可移植）
 - `src/format/gif_encode.mbt:1-177` 单帧 GIF 编码器为纯 MoonBit 实现（3-3-2 量化 + LZW 压缩，177 行），仅依赖 `@core.Image`/`@core.LoadError`/`@encoding/utf8`，移植到 pure 包仅需替换类型引用，与 T10（QOI+PNM 编码器移植）同构，技术风险极低
@@ -419,7 +419,7 @@
 - 为后续后端选择层 `src/lib.mbt` 积累更完整的 pure 包编解码能力（6 解码 + 3 编码）
 - 暂不移植 `encode_gif_animation`（多帧动画编码，line 184-291），单帧编码已能验证 GIF 编码核心逻辑（3-3-2 量化 + LZW 压缩），多帧动画编码留待后续轮次
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types），全目标可用
 - T9 产出：pure 包 GIF 解码器 `decode_gif_pure`（单帧，GIF89a/GIF87a，LZW 解压，GCT/LCT）
@@ -430,7 +430,7 @@
   - `lzw_compress(indices, min_code_size)` (line 34-113)：LZW 压缩，变长码 + 字典 + sub-block 包装
   - `encode_gif(img)` (line 119-177)：GIF89a header + LSD + GCT + Image Descriptor + LZW data + Trailer
 - `src/format/gif_encode.mbt:184-291`：`encode_gif_animation`（多帧动画编码），本轮暂不移植
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8（T10 新增），无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8（T10 新增），无 `supported_targets`，全目标
 - pure 包已有 `decode_gif_pure`（T9），可构成 roundtrip
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
 - `roundtrip_test.mbt` 现有 GIF 测试模式（line 135-146）：`@format.encode_gif` → `@core.load_from_bytes` → 断言 data 一致
@@ -442,16 +442,16 @@
 ## R21 RETRY v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
 原因：计划审查 v11 r1 REJECTED，2 项严重问题
 - [严重] 测试 5 "data 一致" 比较双方不明确且技术不可行：测试 5 用 2x2 RGB 像素 (10,20,30)/(40,50,60)/(70,80,90)/(100,110,120)，`encode_gif_pure` → `decode_gif_pure` 后断言 "data 一致"。但 `encode_gif_pure` 内部做 3-3-2 量化（`src/format/gif_encode.mbt:154`），roundtrip 后 data 是量化后颜色而非原始颜色。经核实源码量化逻辑：(10,20,30)→(0,0,0)；(40,50,60)→(36,36,0)；(70,80,90)→(72,72,85)；(100,110,120)→(108,108,85)。roundtrip 后 data=[0,0,0,36,36,0,72,72,85,108,108,85] 与原始 [10,20,30,...] 不一致。描述未给出量化后预期 data 也未说明 "一致" 的比较双方，Doer 按 "与原始 data 一致" 实现则测试必然失败
-- [严重] 测试 2 "data 逐像素比较" 比较双方不明确且技术不可行：测试 2 数据流描述为 `@core.load_from_path` → `@pure.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))`，断言 "data 逐像素比较"。数据流中仅有 orig_img、gif_bytes、ffi_img 三个变量，"data 逐像素比较" 的双方未明确。若比较 ffi_img vs orig_img：(255,0,0) 经 3-3-2 量化为 (252,0,0) 不一致，测试失败。若比较 ffi_img vs pure_img：描述数据流缺少 `@pure.decode_gif_pure` 步骤，Doer 无法从描述推断此比较方向
+- [严重] 测试 2 "data 逐像素比较" 比较双方不明确且技术不可行：测试 2 数据流描述为 `@core.load_from_path` → `@codec.encode_gif_pure` → `@core.load_from_bytes(req_channels=Some(3))`，断言 "data 逐像素比较"。数据流中仅有 orig_img、gif_bytes、ffi_img 三个变量，"data 逐像素比较" 的双方未明确。若比较 ffi_img vs orig_img：(255,0,0) 经 3-3-2 量化为 (252,0,0) 不一致，测试失败。若比较 ffi_img vs pure_img：描述数据流缺少 `@codec.decode_gif_pure` 步骤，Doer 无法从描述推断此比较方向
 修正方向（已逐一修正，覆写 task_v11.md）：
 1. **测试 5 修正（采用审查推荐方案 b）**：明确给出量化后预期 data 并断言 roundtrip 结果与之一致。原"断言 width/height/channels/data 一致" → "断言 width=2, height=2, channels=3, data == [0,0,0, 36,36,0, 72,72,85, 108,108,85]"，并列出 4 像素量化后预期值的逐级计算（r_level/g_level/b_level → 调色板值），参照测试 7 给出 (252,252,255) 量化预期的先例，显式声明不与原始 data 比较因量化改变颜色
-2. **测试 2 修正**：明确完整数据流和比较双方。数据流补充 `@pure.decode_gif_pure` 步骤：orig_img = `@core.load_from_path(path, req_channels=Some(3))` → gif_bytes = `@pure.encode_gif_pure(orig_img)` → pure_img = `@pure.decode_gif_pure(gif_bytes)` + ffi_img = `@core.load_from_bytes(gif_bytes, req_channels=Some(3))`。断言改为 pure_img vs ffi_img 完全一致（width/height/channels/data），显式声明不与 orig_img 比较因 orig_img 未量化
+2. **测试 2 修正**：明确完整数据流和比较双方。数据流补充 `@codec.decode_gif_pure` 步骤：orig_img = `@core.load_from_path(path, req_channels=Some(3))` → gif_bytes = `@codec.encode_gif_pure(orig_img)` → pure_img = `@codec.decode_gif_pure(gif_bytes)` + ffi_img = `@core.load_from_bytes(gif_bytes, req_channels=Some(3))`。断言改为 pure_img vs ffi_img 完全一致（width/height/channels/data），显式声明不与 orig_img 比较因 orig_img 未量化
 选择理由：审查意见 2 项全部属实（已核实 `src/format/gif_encode.mbt:7-12` 量化逻辑，3-3-2 量化确会改变颜色，roundtrip 后 data 与原始不一致；测试 2 数据流缺 pure decode 步骤致比较双方歧义），修正采用审查推荐方案 b（给出量化预期 data，与测试 7 先例一致）和补充数据流步骤，仅精确化测试描述不涉实现逻辑变更，风险极低，修正后测试 5/2 比较双方明确且技术可行
 
 ---
 
 ## R22 PASSED v2.0 pure 包 GIF 编码器（纯 MoonBit，全目标，单帧） [ID: T11]
-结果：在 `src/pure/` 新增 `gif_encode.mbt`（`encode_gif_pure`，含 `quantize_332` + `build_332_palette` + `lzw_compress` 辅助函数，移植自 `src/format/gif_encode.mbt:1-177`，仅替换 @core→@types 类型引用）+ `gif_encode_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 2 个 native-only 测试（pure roundtrip 稳定性 + pure encode vs FFI decode 对比）。pure 包由此具备 GIF 完整 roundtrip 能力（6 解码 + 3 编码）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `gif_encode.mbt`（`encode_gif_pure`，含 `quantize_332` + `build_332_palette` + `lzw_compress` 辅助函数，移植自 `src/format/gif_encode.mbt:1-177`，仅替换 @core→@types 类型引用）+ `gif_encode_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 2 个 native-only 测试（pure roundtrip 稳定性 + pure encode vs FFI decode 对比）。pure 包由此具备 GIF 完整 roundtrip 能力（6 解码 + 3 编码）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 636/636 通过（626→636，+8 pure 纯逻辑 + 2 根包 roundtrip），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R22 NEW v2.0 后端选择层 `src/lib/` 包（pure 侧统一 API + 自动格式分派） [ID: T12]
@@ -465,7 +465,7 @@
 - 风险可控：新增包不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 native 侧统一 API + 真正的后端选择（根据目标分派 native/pure）奠定基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
 - T11 产出：pure 包 6 解码器 + 3 编码器，native 636 测试通过
@@ -474,7 +474,7 @@
 - `@core.detect_format`（`src/core/image_detect.mbt:18-82`）：magic bytes 检测，支持 PNG/JPEG/BMP/GIF/PSD/HDR/PNM/QOI，TGA 无 magic 标记 Unknown
 - magic bytes 对照：BMP "BM"(0x42,0x4D)、QOI "qoif"(0x71,0x6F,0x69,0x66)、PNM "P5"/"P6"(0x50,0x35/0x36)、PSD "8BPS"(0x38,0x42,0x50,0x53)、GIF "GIF87a"/"GIF89a"(0x47,0x49,0x46,...)
 - 根包 `src/moon.pkg`：`for "test"` 已声明 `@pure` 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，第 11 行已 import format
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
 - MoonBit 条件编译：文件级 `options(targets: {"file.mbt": ["native"]})` 支持，包级 `supported_targets` 支持，但 import 仅支持 `for "test"`/`for "wbtest"`，不支持目标条件依赖
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
 
@@ -484,7 +484,7 @@
 原因：计划审查 v12 r1 REJECTED，7 项问题
 - [严重] 测试 2 "lib vs core: QOI auto decode" 用 `@core.load_from_bytes` 作为 QOI 解码基准，技术不可行。`@core.load_from_bytes` 是纯 FFI 调用 `stb_image_mbt_load_from_memory`，stb_image C 库不原生支持 QOI（T5 R9 RETRY 已确认），解码 QOI 字节流会返回 NULL → raise `LoadError::DecodeFailed`，测试运行时抛异常，违反"不破坏现有测试"约束，预期产出"636→648"无法达成。现有 QOI 测试（`roundtrip_test.mbt:90-124`）全部使用 `@format.decode_qoi`，印证此为项目 QOI 解码的正确调用方式。
 - [一般] `src/lib/moon.pkg` import 列表仅列 @types + @pure，未列 `moonbitlang/core/debug`，但 `ImageFormat` 枚举 `derive(Eq, @debug.Debug)` 需要此依赖。Doer 按产出规格生成 moon.pkg 会遗漏此 import，导致 `moon check` 报 `unbound package @debug` 编译失败。参照 `src/types/moon.pkg:2` 同样因 `derive(Eq, @debug.Debug)` import `moonbitlang/core/debug`。
-- [一般] `detect_format` 检测 PNM 范围为 P1-P6（`data[1]>=0x31 && data[1]<=0x36`），但 `load_from_bytes_auto` 对 `Pnm` 分派到 `@pure.decode_pnm_pure`，而 `decode_pnm_pure` 仅支持 P5/P6（`src/pure/pnm_decode.mbt:71` 拒绝 P1-P4）。`detect_format` 与 `load_from_bytes_auto` 能力不匹配：用户对 P1-P4 字节流调用 `detect_format` 返回 `Pnm`，再调用 `load_from_bytes_auto` 期望成功解码，实际 raise `LoadError::DecodeFailed`。此限制未在计划任何位置声明，行为不一致会误导用户。
+- [一般] `detect_format` 检测 PNM 范围为 P1-P6（`data[1]>=0x31 && data[1]<=0x36`），但 `load_from_bytes_auto` 对 `Pnm` 分派到 `@codec.decode_pnm_pure`，而 `decode_pnm_pure` 仅支持 P5/P6（`src/pure/{codec,pixel,color,process,util}/pnm_decode.mbt:71` 拒绝 P1-P4）。`detect_format` 与 `load_from_bytes_auto` 能力不匹配：用户对 P1-P4 字节流调用 `detect_format` 返回 `Pnm`，再调用 `load_from_bytes_auto` 期望成功解码，实际 raise `LoadError::DecodeFailed`。此限制未在计划任何位置声明，行为不一致会误导用户。
 - [一般] `load_from_bytes_auto` 分派测试覆盖不足：10 个纯逻辑测试中仅测试 7 "BMP 分派"覆盖 1 种格式，缺 QOI/PNM/PSD/GIF 分派测试。5 种格式仅测 1 种（覆盖率 20%）。若 Doer 误将 QOI 分派到 `decode_bmp_pure`、PNM 分派到 `decode_qoi_pure` 等，纯逻辑测试不会发现，错误流入后续轮次。
 - [一般] 编码器委托验证不足：5 个编码器仅测试 `encode_qoi_auto` 和 `encode_gif_auto`（测试 9-10），缺 `encode_pnm_auto`/`encode_ppm_auto`/`encode_pgm_auto` 委托验证。5 个编码器仅测 2 个（覆盖率 40%）。PNM 3 个编码器逻辑相近，委托目标易混淆，未测试则正确性无保证。
 - [轻微] 测试 3 "detect_format: PNM" 仅构造 "P6" 开头字节流，未覆盖 P1-P4 边界。当前测试无法发现 `detect_format` 检测范围错误。
@@ -497,7 +497,7 @@
 5. **编码器委托验证补充**：新增 2 个测试验证 `encode_ppm_auto`/`encode_pgm_auto` 委托正确性（测试 15-16，构造 1x1 RGB Image，编码后断言 magic bytes "P6"/"P5" 与对应 `@pure.encode_xxx_pure` 结果一致）。`encode_pnm_auto` 通过 ppm/pgm 间接验证不单独测试（pnm_auto 对 RGB 委托 ppm、对灰度委托 pgm）。
 6. **测试 3 PNM 边界补充**：测试 3 补充 P5/P6 检测为 `Pnm` + P4 检测为 `Unknown` 边界用例，验证检测范围收窄后 P1-P4 不再检测为 `Pnm`。
 7. **测试 5 GIF87a 补充**：测试 5 补充 "GIF87a" 开头字节流用例，验证 `detect_format` 返回 `ImageFormat::Gif`，覆盖 GIF87a/GIF89a 两种版本，验证未硬编码 "89a"。
-选择理由：审查意见 7 项全部属实（已核实 `src/format/qoi.mbt:13` `@format.decode_qoi` 存在、`src/pure/pnm_decode.mbt:71` 仅支持 P5/P6、`src/types/moon.pkg:2` import debug、`roundtrip_test.mbt:116-132` 现有 QOI pure vs format 测试模式印证推荐方案），修正采用审查推荐方案（测试 2 改用 @format.decode_qoi、PNM 检测收窄方案 (a)、补充分派/委托测试覆盖），仅精确化测试描述与补充测试覆盖不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、moon.pkg import 完整、检测范围与能力匹配、测试覆盖完整（5 格式分派 100% + 4 编码器委托验证）、边界覆盖（P4/P5/P6 + GIF87a/GIF89a），可行性不再留待现场。测试数从 10 调整到 17，预期 native 测试数从 636→648 调整为 636→655。
+选择理由：审查意见 7 项全部属实（已核实 `src/format/qoi.mbt:13` `@format.decode_qoi` 存在、`src/pure/{codec,pixel,color,process,util}/pnm_decode.mbt:71` 仅支持 P5/P6、`src/types/moon.pkg:2` import debug、`roundtrip_test.mbt:116-132` 现有 QOI pure vs format 测试模式印证推荐方案），修正采用审查推荐方案（测试 2 改用 @format.decode_qoi、PNM 检测收窄方案 (a)、补充分派/委托测试覆盖），仅精确化测试描述与补充测试覆盖不涉实现逻辑变更，风险极低，修正后计划 API 引用正确、moon.pkg import 完整、检测范围与能力匹配、测试覆盖完整（5 格式分派 100% + 4 编码器委托验证）、边界覆盖（P4/P5/P6 + GIF87a/GIF89a），可行性不再留待现场。测试数从 10 调整到 17，预期 native 测试数从 636→648 调整为 636→655。
 
 ---
 
@@ -506,7 +506,7 @@
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 655/655 通过（636→655，+17 @lib 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。PNM 检测收窄为 P5/P6 与 pure 能力匹配，GIF87a/GIF89a 双版本覆盖，5 格式分派 100% 覆盖，4 编码器委托验证。
 
 ## R24 NEW v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
-任务：在 `src/pure/` 新增 `transform.mbt`，移植 `src/process/transform/transform.mbt:4-135` 的 5 个 8-bit Image 操作（crop/rotate_90/rotate_180/rotate_270/flip_horizontal），签名 `pub fn crop_pure(img : @types.Image, x : Int, y : Int, w : Int, h : Int) -> @types.Image raise @types.LoadError` / `pub fn rotate_90_pure(img : @types.Image) -> @types.Image` / `rotate_180_pure` / `rotate_270_pure` / `flip_horizontal_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，不移植 crop_16/cropf（Image16/ImageF 暂不在 pure 包支持范围）。新增 `src/pure/transform_test.mbt` 8 个纯逻辑测试（全目标，手构造 @types.Image 验证 crop 正常+越界 raises、rotate_90/180/270、flip_horizontal、1x1 边界）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure.crop_pure vs @process.transform.crop 等，用 @core.load_from_path 加载测试图像，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 655→668 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `transform.mbt`，移植 `src/process/transform/transform.mbt:4-135` 的 5 个 8-bit Image 操作（crop/rotate_90/rotate_180/rotate_270/flip_horizontal），签名 `pub fn crop_pure(img : @types.Image, x : Int, y : Int, w : Int, h : Int) -> @types.Image raise @types.LoadError` / `pub fn rotate_90_pure(img : @types.Image) -> @types.Image` / `rotate_180_pure` / `rotate_270_pure` / `flip_horizontal_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，不移植 crop_16/cropf（Image16/ImageF 暂不在 pure 包支持范围）。新增 `src/pure/{codec,pixel,color,process,util}/transform_test.mbt` 8 个纯逻辑测试（全目标，手构造 @types.Image 验证 crop 正常+越界 raises、rotate_90/180/270、flip_horizontal、1x1 边界）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure.crop_pure vs @process.transform.crop 等，用 @core.load_from_path 加载测试图像，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 655→668 通过。
 选择理由：
 - T12 已完成后端选择层 @lib 包，v2.0 核心架构（@types + @pure + @lib）已完成，pure 包有 6 解码器 + 3 编码器但无图像处理能力
 - v2.0 目标是"支持 wasm/js 目标"，仅编解码不够，用户需要基本的图像处理能力；crop/rotate/flip 是最基础最常用的图像操作，补齐后 pure 包从"仅编解码"升级为"编解码 + 基础处理"
@@ -515,7 +515,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（色彩转换/滤波等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
 - T12 产出：@lib 后端选择层（pure 侧统一 API + 自动格式分派），native 655 测试通过
@@ -525,7 +525,7 @@
 - `src/process/transform/transform.mbt:90-112`：`pub fn rotate_270(img : @core.Image) -> @core.Image`，顺时针旋转 270 度，纯 MoonBit
 - `src/process/transform/transform.mbt:116-135`：`pub fn flip_horizontal(img : @core.Image) -> @core.Image`，水平翻转，纯 MoonBit
 - `src/process/transform/transform.mbt:139-203`：crop_16/cropf（Image16/ImageF），本轮不移植
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标
 - pure 包解码器/编码器签名惯例：`pub fn decode_xxx_pure(data : Bytes) -> @types.Image raise @types.LoadError` / `pub fn encode_xxx_pure(img : @types.Image) -> Bytes raise @types.LoadError`
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @process/transform（line 8）
 - `roundtrip_test.mbt` 现有测试模式：`@core.load_from_path` 加载图像 → 操作 → 断言 width/height/channels/data 一致
@@ -535,7 +535,7 @@
 
 ## R25 RETRY v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
 原因：计划审查 v13 r1 REJECTED，2 项问题
-- [严重] 对比测试 API 引用错误：task_v13.md line 29-33 的 5 个根包对比测试写 `@process.transform.crop` / `@process.transform.rotate_90` / `@process.transform.rotate_180` / `@process.transform.rotate_270` / `@process.transform.flip_horizontal`，但项目实际引用前缀是 `@transform`（`src/moon.pkg:8` import `"MoonBit-Toadium/stb-image/src/process/transform"` 无别名，MoonBit 引用前缀取路径最后一段即 `@transform`）。现有代码全部印证：`roundtrip_test.mbt:252-254` `@transform.crop` / `@transform.rotate_90` / `@transform.flip_horizontal`、`reexport.mbt:376` `@transform.crop`、`bench.mbt:244` `@transform.crop`、`util/image_util.mbt:112` `@transform.crop`、`process/filter/bilateral_filter.mbt:229` `@transform.pyr_down`（同属 process 下子包亦用 `@transform.`）。照搬 `@process.transform.crop` 会导致 `unbound package @process` 编译失败，违反"不破坏现有测试"约束，预期产出"655→668"无法达成。与 T5 R9 RETRY（plan.md line 157，`@core.encode_qoi` 不存在照搬致编译失败）同类错误。task_v13.md line 73 上下文"import @process/transform（line 8）"同步有误。
+- [严重] 对比测试 API 引用错误：task_v13.md line 29-33 的 5 个根包对比测试写 `@process.transform.crop` / `@process.transform.rotate_90` / `@process.transform.rotate_180` / `@process.transform.rotate_270` / `@process.transform.flip_horizontal`，但项目实际引用前缀是 `@transform`（`src/moon.pkg:8` import `"Toadium/image/src/process/transform"` 无别名，MoonBit 引用前缀取路径最后一段即 `@transform`）。现有代码全部印证：`roundtrip_test.mbt:252-254` `@transform.crop` / `@transform.rotate_90` / `@transform.flip_horizontal`、`reexport.mbt:376` `@transform.crop`、`bench.mbt:244` `@transform.crop`、`util/image_util.mbt:112` `@transform.crop`、`process/filter/bilateral_filter.mbt:229` `@transform.pyr_down`（同属 process 下子包亦用 `@transform.`）。照搬 `@process.transform.crop` 会导致 `unbound package @process` 编译失败，违反"不破坏现有测试"约束，预期产出"655→668"无法达成。与 T5 R9 RETRY（plan.md line 157，`@core.encode_qoi` 不存在照搬致编译失败）同类错误。task_v13.md line 73 上下文"import @process/transform（line 8）"同步有误。
 - [轻微] 对比测试未显式 `req_channels`：task_v13.md line 29-33 的 5 个对比测试用 `@core.load_from_path("testdata/test_4x4_red.png")` 未指定 `req_channels`，而 `roundtrip_test.mbt` 现有测试（line 7, 22, 35, 249 等）均显式指定 `req_channels=Some(3)` 或 `Some(4)`。与现有测试惯例不一致。不影响正确性（crop/rotate/flip 保留 channels，pure 和 process 用同一 img 结果一致），仅风格不统一。
 修正方向（已逐一核实源码论证，覆写 task_v13.md）：
 1. **对比测试 API 引用修正**：line 29-33 的 5 个对比测试 API 引用全部修正：`@process.transform.crop` → `@transform.crop`、`@process.transform.rotate_90` → `@transform.rotate_90`、`@process.transform.rotate_180` → `@transform.rotate_180`、`@process.transform.rotate_270` → `@transform.rotate_270`、`@process.transform.flip_horizontal` → `@transform.flip_horizontal`。参照 `roundtrip_test.mbt:252-254` 现有代码先例。line 73 上下文"import @process/transform（line 8）"同步更正为"import @transform（line 8，路径 `src/process/transform` 无别名，引用前缀 `@transform`）"。
@@ -545,11 +545,11 @@
 ---
 
 ## R26 PASSED v2.0 pure 包基础几何变换（crop/rotate/flip，纯 MoonBit，全目标） [ID: T13]
-结果：在 `src/pure/` 新增 `transform.mbt`（crop_pure/rotate_90_pure/rotate_180_pure/rotate_270_pure/flip_horizontal_pure，移植自 `src/process/transform/transform.mbt:4-135`，仅替换 @core→@types 类型引用）+ `transform_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure vs @transform，req_channels=Some(3)）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `transform.mbt`（crop_pure/rotate_90_pure/rotate_180_pure/rotate_270_pure/flip_horizontal_pure，移植自 `src/process/transform/transform.mbt:4-135`，仅替换 @core→@types 类型引用）+ `transform_test.mbt`（8 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs process 对比测试（@pure vs @transform，req_channels=Some(3)）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 668/668 通过（655→668，+8 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R26 NEW v2.0 pure 包色彩转换（grayscale/rgb/rgba/premultiply，纯 MoonBit，全目标） [ID: T14]
-任务：在 `src/pure/` 新增 `color_convert.mbt`，移植 `src/process/color/color_convert.mbt:1-162` 的 5 个 8-bit Image 色彩转换函数（to_grayscale/to_rgb/to_rgba/premultiply_alpha/unpremultiply_alpha），签名 `pub fn to_grayscale_pure(img : @types.Image) -> @types.Image` / `to_rgb_pure` / `to_rgba_pure` / `pub fn premultiply_alpha_pure(img : @types.Image) -> @types.Image raise @types.LoadError` / `unpremultiply_alpha_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/color_convert_test.mbt` 10 个纯逻辑测试（全目标，手构造 @types.Image 验证 to_grayscale RGB→灰度/已灰度→自身、to_rgb RGBA→RGB/已RGB→自身/channels<3→自身、to_rgba RGB→RGBA/已RGBA→自身/灰度→RGBA、premultiply_alpha 正常/channels!=4 raises、unpremultiply_alpha 正常/alpha=0/channels!=4 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试（@pure.to_grayscale_pure vs @color.to_grayscale 等，用 @core.load_from_path 加载测试图像 req_channels=Some(3) 或 Some(4)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 668→683 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `color_convert.mbt`，移植 `src/process/color/color_convert.mbt:1-162` 的 5 个 8-bit Image 色彩转换函数（to_grayscale/to_rgb/to_rgba/premultiply_alpha/unpremultiply_alpha），签名 `pub fn to_grayscale_pure(img : @types.Image) -> @types.Image` / `to_rgb_pure` / `to_rgba_pure` / `pub fn premultiply_alpha_pure(img : @types.Image) -> @types.Image raise @types.LoadError` / `unpremultiply_alpha_pure`，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/{codec,pixel,color,process,util}/color_convert_test.mbt` 10 个纯逻辑测试（全目标，手构造 @types.Image 验证 to_grayscale RGB→灰度/已灰度→自身、to_rgb RGBA→RGB/已RGB→自身/channels<3→自身、to_rgba RGB→RGBA/已RGBA→自身/灰度→RGBA、premultiply_alpha 正常/channels!=4 raises、unpremultiply_alpha 正常/alpha=0/channels!=4 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试（@color.to_grayscale_pure vs @color.to_grayscale 等，用 @core.load_from_path 加载测试图像 req_channels=Some(3) 或 Some(4)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 668→683 通过。
 选择理由：
 - T13 已完成基础几何变换，pure 包当前 6 解码器 + 3 编码器 + 基础几何变换，但色彩转换是图像处理另一核心基础能力，缺则 pure 包图像处理能力不完整
 - `src/process/color/color_convert.mbt:1-162` 的 5 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13（基础几何变换移植）同构，技术风险极低
@@ -558,7 +558,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（色彩调整/滤波等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（仅 import types + @encoding/utf8），全目标可用
 - T13 产出：pure 包基础几何变换，native 668 测试通过
@@ -568,7 +568,7 @@
 - `src/process/color/color_convert.mbt:90-120`：`pub fn premultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError`，要求 channels=4，纯 MoonBit
 - `src/process/color/color_convert.mbt:125-162`：`pub fn unpremultiply_alpha(img : @core.Image) -> @core.Image raise @core.LoadError`，要求 channels=4，alpha=0 时输出全 0，纯 MoonBit
 - `src/process/color/moon.pkg`：import core + math，supported_targets = "native"（color 包其他文件用 math，color_convert.mbt 未用）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包解码器/编码器/变换签名惯例：`pub fn xxx_pure(...) -> @types.Image raise @types.LoadError`（BMP/QOI/TGA/PNM/PSD/GIF/crop/rotate/flip 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @color（line 6，路径 `src/process/color` 无别名，引用前缀 `@color`）
 - `roundtrip_test.mbt` 现有 color 测试模式（line 270-271）：`@color.to_rgba` / `@color.to_rgb`，引用前缀 `@color`
@@ -577,11 +577,11 @@
 ---
 
 ## R27 PASSED v2.0 pure 包色彩转换（grayscale/rgb/rgba/premultiply，纯 MoonBit，全目标） [ID: T14]
-结果：在 `src/pure/` 新增 `color_convert.mbt`（5 个色彩转换函数 to_grayscale_pure/to_rgb_pure/to_rgba_pure/premultiply_alpha_pure/unpremultiply_alpha_pure，移植自 `src/process/color/color_convert.mbt:1-162`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `color_convert_test.mbt`（10 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `color_convert.mbt`（5 个色彩转换函数 to_grayscale_pure/to_rgb_pure/to_rgba_pure/premultiply_alpha_pure/unpremultiply_alpha_pure，移植自 `src/process/color/color_convert.mbt:1-162`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `color_convert_test.mbt`（10 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 5 个 native-only pure vs color 对比测试。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 683/683 通过（668→683，+10 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R27 NEW v2.0 pure 包色彩调整（brightness/contrast/gamma/invert + HSV/HSL，纯 MoonBit，全目标） [ID: T15]
-任务：在 `src/pure/` 新增 `color_adjust.mbt`，移植 `src/process/color/color_adjust.mbt:1-264` 的 8 个色彩调整函数（adjust_brightness/adjust_contrast/adjust_gamma/invert/rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.powf` 保留（pure 包 moon.pkg 新增 `moonbitlang/core/math` import，全目标标准库可用）。新增 `src/pure/color_adjust_test.mbt` 10 个纯逻辑测试（全目标，覆盖 brightness delta=0/正常、contrast factor=1.0/正常、gamma=1.0/正常、invert 正常/二次反色=原色、HSV roundtrip、HSL roundtrip）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试（adjust_brightness/adjust_contrast/adjust_gamma/invert，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 683→697 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `color_adjust.mbt`，移植 `src/process/color/color_adjust.mbt:1-264` 的 8 个色彩调整函数（adjust_brightness/adjust_contrast/adjust_gamma/invert/rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.powf` 保留（pure 包 moon.pkg 新增 `moonbitlang/core/math` import，全目标标准库可用）。新增 `src/pure/{codec,pixel,color,process,util}/color_adjust_test.mbt` 10 个纯逻辑测试（全目标，覆盖 brightness delta=0/正常、contrast factor=1.0/正常、gamma=1.0/正常、invert 正常/二次反色=原色、HSV roundtrip、HSL roundtrip）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试（adjust_brightness/adjust_contrast/adjust_gamma/invert，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 683→697 通过。
 选择理由：
 - T14 已完成色彩转换（grayscale/rgb/rgba/premultiply），色彩调整（brightness/contrast/gamma/invert + HSV/HSL）是同主题自然延伸，pure 包图像处理能力逐步完整
 - `src/process/color/color_adjust.mbt:1-264` 的 8 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image 类型 + @math.powf，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用 + 新增 @math import，与 T13（几何变换移植）、T14（色彩转换移植）同构，技术风险极低
@@ -591,7 +591,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（滤波/直方图等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8），全目标可用
 - T14 产出：pure 包色彩转换，native 683 测试通过
@@ -605,7 +605,7 @@
 - `src/process/color/color_adjust.mbt:227-264`：`pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int)`，HSL→RGB，纯 MoonBit
 - `src/process/color/color_adjust.mbt:80`：`@math.powf(normalized, gamma)`，唯一 @math 引用，moonbitlang/core/math 全目标可用
 - `src/process/color/moon.pkg`：import core + math，supported_targets = "native"（color 包其他文件用 math，color_adjust.mbt 仅 adjust_gamma 用 @math.powf）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/math` import
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/math` import
 - pure 包解码器/编码器/变换/色彩转换签名惯例：`pub fn xxx_pure(...) -> @types.Image raise @types.LoadError` 或无 raise（BMP/QOI/TGA/PNM/PSD/GIF/crop/rotate/flip/grayscale/rgb/rgba/premultiply 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @color（line 6，路径 `src/process/color` 无别名，引用前缀 `@color`）
 - `roundtrip_test.mbt` 现有 pure vs color 对比测试模式（line 737-819）：`@core.load_from_path` 加载图像 → `@pure.xxx_pure` vs `@color.xxx` → 断言 width/height/channels/data 完全一致，引用前缀 `@color`
@@ -626,11 +626,11 @@
 ---
 
 ## R28 PASSED v2.0 pure 包色彩调整（brightness/contrast/gamma/invert + HSV/HSL，纯 MoonBit，全目标） [ID: T15]
-结果：在 `src/pure/` 新增 `color_adjust.mbt`（8 个色彩调整函数 adjust_brightness/contrast/gamma/invert + rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb，移植自 `src/process/color/color_adjust.mbt:1-264`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.powf 保留）+ `color_adjust_test.mbt`（11 纯逻辑测试，全目标，含 RGBA alpha 保留 + 黑/白边界 HSV/HSL roundtrip），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试。`moon.pkg` 新增 `moonbitlang/core/math` import。执行中发现并修正 `adjust_gamma_pure: gamma=2.2` 测试预期值计算错误（原预期值与 @math.powf 实际结果不符，已更正）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `color_adjust.mbt`（8 个色彩调整函数 adjust_brightness/contrast/gamma/invert + rgb_to_hsv/hsv_to_rgb/rgb_to_hsl/hsl_to_rgb，移植自 `src/process/color/color_adjust.mbt:1-264`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.powf 保留）+ `color_adjust_test.mbt`（11 纯逻辑测试，全目标，含 RGBA alpha 保留 + 黑/白边界 HSV/HSL roundtrip），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs color 对比测试。`moon.pkg` 新增 `moonbitlang/core/math` import。执行中发现并修正 `adjust_gamma_pure: gamma=2.2` 测试预期值计算错误（原预期值与 @math.powf 实际结果不符，已更正）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 698/698 通过（683→698，+11 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R28 NEW v2.0 pure 包基础滤波（box_blur/gaussian_blur/sharpen/edge_detect_sobel，纯 MoonBit，全目标） [ID: T16]
-任务：在 `src/pure/` 新增 `filter.mbt`，移植 `src/process/filter/filter.mbt:1-365` 的 4 个 8-bit Image 滤波函数（box_blur/gaussian_blur/sharpen/edge_detect_sobel）+ 私有辅助函数 clamp_coord，签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.expf` 保留（@math 已在 pure 包 moon.pkg，T15 新增）。新增 `src/pure/filter_test.mbt` 12 个纯逻辑测试（全目标，覆盖 box_blur radius=0/正常/RGBA alpha 保留/均匀图/超出尺寸、gaussian_blur radius=0/均匀图、sharpen amount=0/均匀图/RGBA alpha 保留、edge_detect_sobel 均匀图无边缘/非均匀图检测边缘）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试（box_blur/gaussian_blur/sharpen/edge_detect_sobel，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 698→714 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `filter.mbt`，移植 `src/process/filter/filter.mbt:1-365` 的 4 个 8-bit Image 滤波函数（box_blur/gaussian_blur/sharpen/edge_detect_sobel）+ 私有辅助函数 clamp_coord，签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，`@math.expf` 保留（@math 已在 pure 包 moon.pkg，T15 新增）。新增 `src/pure/{codec,pixel,color,process,util}/filter_test.mbt` 12 个纯逻辑测试（全目标，覆盖 box_blur radius=0/正常/RGBA alpha 保留/均匀图/超出尺寸、gaussian_blur radius=0/均匀图、sharpen amount=0/均匀图/RGBA alpha 保留、edge_detect_sobel 均匀图无边缘/非均匀图检测边缘）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试（box_blur/gaussian_blur/sharpen/edge_detect_sobel，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 698→714 通过。
 选择理由：
 - T15 已完成色彩调整，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整，但缺滤波能力
 - 滤波（盒模糊/高斯模糊/锐化/Sobel 边缘检测）是图像处理核心能力，补齐后 pure 包从"编解码 + 几何变换 + 色彩处理"升级为"编解码 + 几何变换 + 色彩处理 + 滤波"，实用价值显著提升
@@ -640,7 +640,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（直方图/阈值/形态学等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8），全目标可用
 - T15 产出：pure 包色彩调整，native 698 测试通过，`@math` 已在 pure 包 moon.pkg
@@ -650,7 +650,7 @@
 - `src/process/filter/filter.mbt:215-283`：`pub fn sharpen(img, amount) -> Image`，拉普拉斯锐化，alpha 保留分支 line 272-275
 - `src/process/filter/filter.mbt:288-365`：`pub fn edge_detect_sobel(img) -> Image`，Sobel 边缘检测，输出 channels=1
 - `src/process/filter/moon.pkg`：import core + transform + math，supported_targets = "native"（filter.mbt 仅依赖 @core.Image + @math.expf，无 @transform 依赖）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math（T15 新增），无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math（T15 新增），无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @filter（line 4，路径 `src/process/filter` 无别名，引用前缀 `@filter`）
 - `roundtrip_test.mbt` 现有 filter 测试模式（line 293-304）：`@filter.box_blur`，引用前缀 `@filter`
@@ -670,11 +670,11 @@
 ---
 
 ## R29 PASSED v2.0 pure 包基础滤波（box_blur/gaussian_blur/sharpen/edge_detect_sobel，纯 MoonBit，全目标） [ID: T16]
-结果：在 `src/pure/` 新增 `filter.mbt`（4 个滤波函数 box_blur_pure/gaussian_blur_pure/sharpen_pure/edge_detect_sobel_pure + clamp_coord 私有辅助函数，移植自 `src/process/filter/filter.mbt:1-365`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.expf 保留）+ `filter_test.mbt`（13 纯逻辑测试，全目标，含 gaussian_blur RGBA alpha 保留测试覆盖 line 199-202 分支），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `filter.mbt`（4 个滤波函数 box_blur_pure/gaussian_blur_pure/sharpen_pure/edge_detect_sobel_pure + clamp_coord 私有辅助函数，移植自 `src/process/filter/filter.mbt:1-365`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.expf 保留）+ `filter_test.mbt`（13 纯逻辑测试，全目标，含 gaussian_blur RGBA alpha 保留测试覆盖 line 199-202 分支），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 715/715 通过（698→715，+13 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。3 个 Image 级滤波函数的 alpha 保留分支均有 RGBA 测试覆盖（RETRY r1 修正点落实）。
 
 ## R29 NEW v2.0 pure 包直方图（histogram/histogram_equalize/histogram_normalize，纯 MoonBit，全目标） [ID: T17]
-任务：在 `src/pure/` 新增 `histogram.mbt`，移植 `src/process/feature/histogram.mbt:1-131` 的 3 个直方图函数（histogram/histogram_equalize/histogram_normalize），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖（histogram.mbt 仅用内置 Array/Bytes/Int/Byte 操作）。新增 `src/pure/histogram_test.mbt` 10 个纯逻辑测试（全目标，覆盖 histogram 灰度/RGB/均匀图、histogram_equalize 均匀图不变/正常均衡化/RGBA alpha 保留/全相同像素返回原图、histogram_normalize 均匀图不变/正常归一化/RGBA alpha 保留）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试（histogram_equalize + histogram_normalize，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 715→727 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `histogram.mbt`，移植 `src/process/feature/histogram.mbt:1-131` 的 3 个直方图函数（histogram/histogram_equalize/histogram_normalize），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖（histogram.mbt 仅用内置 Array/Bytes/Int/Byte 操作）。新增 `src/pure/{codec,pixel,color,process,util}/histogram_test.mbt` 10 个纯逻辑测试（全目标，覆盖 histogram 灰度/RGB/均匀图、histogram_equalize 均匀图不变/正常均衡化/RGBA alpha 保留/全相同像素返回原图、histogram_normalize 均匀图不变/正常归一化/RGBA alpha 保留）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试（histogram_equalize + histogram_normalize，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 715→727 通过。
 选择理由：
 - T16 已完成基础滤波，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波，但缺直方图分析能力
 - 直方图是图像分析核心能力（直方图计算/均衡化/归一化），补齐后 pure 包从"编解码 + 几何变换 + 色彩处理 + 滤波"升级为"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图分析"，实用价值显著提升
@@ -683,7 +683,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像分析能力（阈值/形态学/图像质量评估等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
 - T16 产出：pure 包基础滤波，native 715 测试通过，@math 已在 pure 包 moon.pkg
@@ -691,7 +691,7 @@
 - `src/process/feature/histogram.mbt:31-82`：`pub fn histogram_equalize(img : @core.Image) -> @core.Image`，直方图均衡化（CDF + LUT），alpha 保留分支 line 72-74
 - `src/process/feature/histogram.mbt:87-131`：`pub fn histogram_normalize(img : @core.Image) -> @core.Image`，直方图归一化（线性拉伸），alpha 保留分支 line 121-123
 - `src/process/feature/moon.pkg`：import core + math，supported_targets = "native"（histogram.mbt 仅依赖 @core.Image，不使用 @math）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math（T15/T16 新增），无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math（T15/T16 新增），无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert/color_adjust/filter 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @feature（line 9，路径 `src/process/feature` 无别名，引用前缀 `@feature`）
 - `reexport.mbt:581,584,587`：`@feature.histogram` / `@feature.histogram_equalize` / `@feature.histogram_normalize`，引用前缀 `@feature`
@@ -710,11 +710,11 @@
 ---
 
 ## R30 PASSED v2.0 pure 包直方图（histogram/histogram_equalize/histogram_normalize，纯 MoonBit，全目标） [ID: T17]
-结果：在 `src/pure/` 新增 `histogram.mbt`（3 个直方图函数 histogram_pure/histogram_equalize_pure/histogram_normalize_pure，移植自 `src/process/feature/histogram.mbt:1-131`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，逻辑逐行一致）+ `histogram_test.mbt`（10 纯逻辑测试，全目标，覆盖 histogram 灰度/RGB/均匀图、equalize 均匀图不变/正常均衡化 [0,85,170,255]/RGBA alpha 保留/全相同像素返回原图、normalize 均匀图不变/正常归一化 [0,85,170,255]/RGBA alpha 保留），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试。测试 9 预期 data 已修正为 [0,85,170,255]（R30 RETRY 修正点落实）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `histogram.mbt`（3 个直方图函数 histogram_pure/histogram_equalize_pure/histogram_normalize_pure，移植自 `src/process/feature/histogram.mbt:1-131`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，逻辑逐行一致）+ `histogram_test.mbt`（10 纯逻辑测试，全目标，覆盖 histogram 灰度/RGB/均匀图、equalize 均匀图不变/正常均衡化 [0,85,170,255]/RGBA alpha 保留/全相同像素返回原图、normalize 均匀图不变/正常归一化 [0,85,170,255]/RGBA alpha 保留），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试。测试 9 预期 data 已修正为 [0,85,170,255]（R30 RETRY 修正点落实）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 727/727 通过（715→727，+10 pure 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R30 NEW v2.0 pure 包形态学操作（erode/dilate/morph_open/morph_close，纯 MoonBit，全目标） [ID: T18]
-任务：在 `src/pure/` 新增 `morphology.mbt`，移植 `src/process/segment/morphology.mbt:1-185` 的 4 个公开形态学函数（erode/dilate/morph_open/morph_close）+ 1 个私有辅助函数（clamp_i），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖。新增 `src/pure/morphology_test.mbt` 9 个纯逻辑测试（全目标，覆盖 erode/dilate 均匀图不变、erode 缩小亮区/dilate 扩大亮区、morph_open 去孤立白点/morph_close 填孤立黑点、morph_open/morph_close 幂等性、RGB 多通道逐通道处理）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试（erode/dilate/morph_open/morph_close，用 `@core.load_from_path` 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@segment`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 727→740 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `morphology.mbt`，移植 `src/process/segment/morphology.mbt:1-185` 的 4 个公开形态学函数（erode/dilate/morph_open/morph_close）+ 1 个私有辅助函数（clamp_i），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖。新增 `src/pure/{codec,pixel,color,process,util}/morphology_test.mbt` 9 个纯逻辑测试（全目标，覆盖 erode/dilate 均匀图不变、erode 缩小亮区/dilate 扩大亮区、morph_open 去孤立白点/morph_close 填孤立黑点、morph_open/morph_close 幂等性、RGB 多通道逐通道处理）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试（erode/dilate/morph_open/morph_close，用 `@core.load_from_path` 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@segment`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 727→740 通过。
 选择理由：
 - T17 已完成直方图，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图，但缺形态学操作能力
 - 形态学操作（腐蚀/膨胀/开闭运算）是图像分割/边缘检测的基础操作，补齐后 pure 包从"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图"升级为"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图 + 形态学"，实用价值显著提升
@@ -724,7 +724,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像分割能力（connected_components/distance_transform/watershed 等）奠定基础
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
 - T17 产出：pure 包直方图，native 727 测试通过，@math 已在 pure 包 moon.pkg
@@ -734,7 +734,7 @@
 - `src/process/segment/morphology.mbt:172-174`：`pub fn morph_close(img) -> @core.Image`，闭运算 `erode(dilate(img))`，纯 MoonBit
 - `src/process/segment/morphology.mbt:177-185`：`fn clamp_i(v, lo, hi)`，私有辅助函数
 - `src/process/segment/moon.pkg`：import core + color，supported_targets = "native"（morphology.mbt 仅依赖 @core.Image，不使用 @color）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert/color_adjust/filter/histogram 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @segment（line 10，路径 `src/process/segment` 无别名，引用前缀 `@segment`）
 - `reexport.mbt:408,426,669,672`：`@segment.dilate` / `@segment.erode` / `@segment.morph_close` / `@segment.morph_open`，引用前缀 `@segment`
@@ -744,13 +744,13 @@
 ---
 
 ## R31 PASSED v2.0 pure 包形态学操作（erode/dilate/morph_open/morph_close，纯 MoonBit，全目标） [ID: T18]
-结果：在 `src/pure/` 新增 `morphology.mbt`（4 个形态学函数 erode_pure/dilate_pure/morph_open_pure/morph_close_pure + clamp_i 私有辅助，移植自 `src/process/segment/morphology.mbt:1-185`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `morphology_test.mbt`（9 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `morphology.mbt`（4 个形态学函数 erode_pure/dilate_pure/morph_open_pure/morph_close_pure + clamp_i 私有辅助，移植自 `src/process/segment/morphology.mbt:1-185`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `morphology_test.mbt`（9 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 740/740 通过（727→740，+9 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ---
 
 ## R32 NEW v2.0 pure 包仿射变换 + 任意角度旋转（warp_affine/rotate，纯 MoonBit，全目标） [ID: T19]
-任务：在 `src/pure/` 新增 `geometry.mbt`，移植 `src/process/transform/geometry.mbt:1-126` 的 3 个函数（sample_bilinear 私有 + warp_affine_pure + rotate_pure）到 pure 包，实现纯 MoonBit 仿射变换 + 任意角度旋转（双线性插值，全目标可用）。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `geometry.mbt`，移植 `src/process/transform/geometry.mbt:1-126` 的 3 个函数（sample_bilinear 私有 + warp_affine_pure + rotate_pure）到 pure 包，实现纯 MoonBit 仿射变换 + 任意角度旋转（双线性插值，全目标可用）。
 
 ---
 
@@ -764,11 +764,11 @@
 ---
 
 ## R34 PASSED v2.0 pure 包仿射变换 + 任意角度旋转（warp_affine/rotate，纯 MoonBit，全目标） [ID: T19]
-结果：在 `src/pure/` 新增 `geometry.mbt`（3 个函数：sample_bilinear 私有 + warp_affine_pure + rotate_pure，移植自 `src/process/transform/geometry.mbt:1-126`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.cosf/sinf 保留）+ `geometry_test.mbt`（10 纯逻辑测试，全目标，含 identity/scale up/translation/RGBA alpha/1x1/0 degrees/180 degrees approx/360 degrees approx/RGBA alpha/1x1），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs transform 对比测试（warp_affine + rotate）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `geometry.mbt`（3 个函数：sample_bilinear 私有 + warp_affine_pure + rotate_pure，移植自 `src/process/transform/geometry.mbt:1-126`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.cosf/sinf 保留）+ `geometry_test.mbt`（10 纯逻辑测试，全目标，含 identity/scale up/translation/RGBA alpha/1x1/0 degrees/180 degrees approx/360 degrees approx/RGBA alpha/1x1），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs transform 对比测试（warp_affine + rotate）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 752/752 通过（740→752，+10 pure 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R34 NEW v2.0 pure 包基础像素操作 + 图像工具（threshold/posterize/extract_channel + pad/add_border，纯 MoonBit，全目标） [ID: T20]
-任务：在 `src/pure/` 新增 `pixel_ops.mbt`（移植 `src/util/pixel_ops.mbt:4-98` 的 clamp_byte_v 私有辅助 + threshold + posterize + extract_channel）和 `image_util.mbt`（移植 `src/util/image_util.mbt:6-91` 的 pad + add_border），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。不移植 resize_to_cover/resize_to_contain（依赖 @core.resize FFI + @transform.crop，非纯 MoonBit）。新增 `src/pure/pixel_ops_test.mbt`（8 纯逻辑测试：threshold 基础二值化 + RGBA alpha 保留 + 全低于阈值、posterize 基础量化 + RGBA alpha 保留 + 无效 levels raises、extract_channel 提取 R 通道 + channel 越界 raises）和 `src/pure/image_util_test.mbt`（5 纯逻辑测试：pad 基础填充 + 负数 raises + 空 pad_color raises、add_border 基础边框 + 负数 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs util 对比测试（threshold/posterize/extract_channel/pad/add_border，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 752→770 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pixel_ops.mbt`（移植 `src/util/pixel_ops.mbt:4-98` 的 clamp_byte_v 私有辅助 + threshold + posterize + extract_channel）和 `image_util.mbt`（移植 `src/util/image_util.mbt:6-91` 的 pad + add_border），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。不移植 resize_to_cover/resize_to_contain（依赖 @core.resize FFI + @transform.crop，非纯 MoonBit）。新增 `src/pure/{codec,pixel,color,process,util}/pixel_ops_test.mbt`（8 纯逻辑测试：threshold 基础二值化 + RGBA alpha 保留 + 全低于阈值、posterize 基础量化 + RGBA alpha 保留 + 无效 levels raises、extract_channel 提取 R 通道 + channel 越界 raises）和 `src/pure/{codec,pixel,color,process,util}/image_util_test.mbt`（5 纯逻辑测试：pad 基础填充 + 负数 raises + 空 pad_color raises、add_border 基础边框 + 负数 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs util 对比测试（threshold/posterize/extract_channel/pad/add_border，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 752→770 通过。
 选择理由：
 - T19 已完成仿射变换 + 任意角度旋转，pure 包当前 6 解码器 + 3 编码器 + 几何变换（crop/rotate_90/180/270/flip + warp_affine/rotate）+ 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学，但缺基础像素操作（二值化/色调分离/通道提取）和图像工具（填充/边框），这些是最常用图像操作，补齐后 pure 包图像处理能力更完整
 - `src/util/pixel_ops.mbt:4-98` 的 clamp_byte_v + threshold + posterize + extract_channel 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte/Float 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T19（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换移植）同构，技术风险极低
@@ -778,7 +778,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多像素操作（13 种 blend 混合模式 + pixelate/replace_color/convolve/swap_channels 等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
 - T19 产出：pure 包仿射变换 + 任意角度旋转，native 752 测试通过
@@ -789,7 +789,7 @@
 - `src/util/image_util.mbt:6-47`：`pub fn pad(img : @core.Image, px : Int, py : Int, pad_color : Array[Byte]) -> @core.Image raise @core.LoadError`，四周填充，px/py 非负，pad_color 非空
 - `src/util/image_util.mbt:51-91`：`pub fn add_border(img : @core.Image, top : Int, right : Int, bottom : Int, left : Int, border_color : Array[Byte]) -> @core.Image raise @core.LoadError`，添加边框，四边非负，border_color 非空
 - `src/util/moon.pkg`：import core + transform + debug + math，supported_targets = "native"（pixel_ops.mbt 仅依赖 @core.Image/@core.LoadError，image_util.mbt pad/add_border 仅依赖 @core.Image/@core.LoadError，resize_to_cover/contain 依赖 @core.resize + @transform.crop）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包已有辅助函数：`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178），`clamp_byte_v` 不同名无冲突
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
@@ -800,11 +800,11 @@
 ---
 
 ## R35 PASSED v2.0 pure 包基础像素操作 + 图像工具（threshold/posterize/extract_channel + pad/add_border，纯 MoonBit，全目标） [ID: T20]
-结果：在 `src/pure/` 新增 `pixel_ops.mbt`（clamp_byte_v + threshold_pure + posterize_pure + extract_channel_pure，移植自 `src/util/pixel_ops.mbt:4-98`）和 `image_util.mbt`（pad_pure + add_border_pure，移植自 `src/util/image_util.mbt:6-91`），仅依赖 @types，全目标可用 + 13 个 pure 纯逻辑测试 + 5 个根包 native-only pure vs util 对比测试。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pixel_ops.mbt`（clamp_byte_v + threshold_pure + posterize_pure + extract_channel_pure，移植自 `src/util/pixel_ops.mbt:4-98`）和 `image_util.mbt`（pad_pure + add_border_pure，移植自 `src/util/image_util.mbt:6-91`），仅依赖 @types，全目标可用 + 13 个 pure 纯逻辑测试 + 5 个根包 native-only pure vs util 对比测试。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 770/770 通过（752→770，+13 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R35 NEW v2.0 pure 包高级像素操作 + 色彩映射（pixelate/replace_color/convolve/swap_channels + apply_lut/gradient_map/set_alpha/fill_alpha，纯 MoonBit，全目标） [ID: T21]
-任务：在 `src/pure/` 新增 `pixel_advanced.mbt`（移植 `src/util/pixel_advanced.mbt:1-186` 的 clamp_b 私有辅助 + pixelate + replace_color + convolve + swap_channels + clamp_int 私有辅助 + check_color_match 私有辅助）和 `color_map.mbt`（移植 `src/util/color_map.mbt:1-174` 的 apply_lut + gradient_map + interp_gradient 私有辅助 + set_alpha + fill_alpha，interp_gradient 复用 pixel_advanced.mbt 的 clamp_b），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/pixel_advanced_test.mbt` 10 个纯逻辑测试（全目标，覆盖 pixelate 基础/无效 block_size raises、replace_color 精确匹配/容差匹配/颜色数组过短 raises、convolve 基础锐化/kernel 过短 raises/RGBA alpha 保留、swap_channels 交换 R-B/通道越界 raises）和 `src/pure/color_map_test.mbt` 8 个纯逻辑测试（全目标，覆盖 apply_lut 基础/lut 过短 raises/RGBA alpha 保留、gradient_map 基础/颜色点不足 raises、set_alpha 设置 alpha/非 RGBA raises、fill_alpha 填充 alpha）。在根包 `src/roundtrip_test.mbt` 新增 8 个 native-only pure vs util 对比测试（pixelate/replace_color/convolve/swap_channels/apply_lut/gradient_map 用 req_channels=Some(3)，set_alpha/fill_alpha 用 req_channels=Some(4)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 770→796 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pixel_advanced.mbt`（移植 `src/util/pixel_advanced.mbt:1-186` 的 clamp_b 私有辅助 + pixelate + replace_color + convolve + swap_channels + clamp_int 私有辅助 + check_color_match 私有辅助）和 `color_map.mbt`（移植 `src/util/color_map.mbt:1-174` 的 apply_lut + gradient_map + interp_gradient 私有辅助 + set_alpha + fill_alpha，interp_gradient 复用 pixel_advanced.mbt 的 clamp_b），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/{codec,pixel,color,process,util}/pixel_advanced_test.mbt` 10 个纯逻辑测试（全目标，覆盖 pixelate 基础/无效 block_size raises、replace_color 精确匹配/容差匹配/颜色数组过短 raises、convolve 基础锐化/kernel 过短 raises/RGBA alpha 保留、swap_channels 交换 R-B/通道越界 raises）和 `src/pure/{codec,pixel,color,process,util}/color_map_test.mbt` 8 个纯逻辑测试（全目标，覆盖 apply_lut 基础/lut 过短 raises/RGBA alpha 保留、gradient_map 基础/颜色点不足 raises、set_alpha 设置 alpha/非 RGBA raises、fill_alpha 填充 alpha）。在根包 `src/roundtrip_test.mbt` 新增 8 个 native-only pure vs util 对比测试（pixelate/replace_color/convolve/swap_channels/apply_lut/gradient_map 用 req_channels=Some(3)，set_alpha/fill_alpha 用 req_channels=Some(4)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 770→796 通过。
 选择理由：
 - T20 已完成基础像素操作（threshold/posterize/extract_channel）+ 图像工具（pad/add_border），pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 仿射变换 + 基础像素操作 + 图像工具，但缺高级像素操作（马赛克/颜色替换/卷积/通道交换）和色彩映射（LUT/渐变映射/alpha 操作），这些是常用图像操作，补齐后 pure 包图像处理能力更完整
 - `src/util/pixel_advanced.mbt:1-186` 和 `src/util/color_map.mbt:1-174` 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte/Float 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T20（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作移植）同构，技术风险极低
@@ -816,7 +816,7 @@
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（图像拼接/噪声/统计/混合模式等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
 - T20 产出：pure 包基础像素操作 + 图像工具，native 770 测试通过
@@ -833,7 +833,7 @@
 - `src/util/color_map.mbt:114-137`：`pub fn set_alpha(img, alpha) -> Image raise LoadError`，设置 alpha，要求 channels=4
 - `src/util/color_map.mbt:141-174`：`pub fn fill_alpha(img, threshold, fill_r, fill_g, fill_b) -> Image raise LoadError`，填充 alpha，要求 channels=4
 - `src/util/moon.pkg`：import core + transform + debug + math，supported_targets = "native"（pixel_advanced.mbt 和 color_map.mbt 仅依赖 @core.Image/@core.LoadError，不使用 @transform/@math）
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
 - pure 包已有辅助函数：`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）/`clamp_byte_v`（pixel_ops.mbt:4），`clamp_b`/`clamp_int`/`check_color_match`/`interp_gradient` 均不同名无冲突
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry/pixel_ops/image_util 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
@@ -844,31 +844,31 @@
 ---
 
 ## R36 PASSED v2.0 pure 包高级像素操作 + 色彩映射（pixelate/replace_color/convolve/swap_channels + apply_lut/gradient_map/set_alpha/fill_alpha，纯 MoonBit，全目标） [ID: T21]
-结果：在 `src/pure/` 新增 `pixel_advanced.mbt`（clamp_b + clamp_int + check_color_match 私有辅助 + pixelate_pure + replace_color_pure + convolve_pure + swap_channels_pure，移植自 `src/util/pixel_advanced.mbt:1-186`）和 `color_map.mbt`（interp_gradient 私有辅助复用 clamp_b + apply_lut_pure + gradient_map_pure + set_alpha_pure + fill_alpha_pure，移植自 `src/util/color_map.mbt:1-174`），仅依赖 @types，全目标可用 + 18 个 pure 纯逻辑测试 + 8 个根包 native-only pure vs util 对比测试。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `pixel_advanced.mbt`（clamp_b + clamp_int + check_color_match 私有辅助 + pixelate_pure + replace_color_pure + convolve_pure + swap_channels_pure，移植自 `src/util/pixel_advanced.mbt:1-186`）和 `color_map.mbt`（interp_gradient 私有辅助复用 clamp_b + apply_lut_pure + gradient_map_pure + set_alpha_pure + fill_alpha_pure，移植自 `src/util/color_map.mbt:1-174`），仅依赖 @types，全目标可用 + 18 个 pure 纯逻辑测试 + 8 个根包 native-only pure vs util 对比测试。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 796/796 通过（770→796，+18 pure 纯逻辑 + 8 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R36 NEW v2.0 pure 包图像拼接 + 统计 + 噪声（image_compose + image_stats + image_noise，纯 MoonBit，全目标） [ID: T22]
-任务：在 `src/pure/` 新增 `image_compose.mbt`（移植 `src/util/image_compose.mbt:1-151` 的 hstack/vstack/tile/flip_vertical/transpose，签名加 `_pure` 后缀）、`image_stats.mbt`（移植 `src/util/image_stats.mbt:1-47` 的 ImageStats 结构 + compute_stats/mean_value，ImageStats derive(Eq, @debug.Debug) 需 @debug 依赖，pure 包 moon.pkg 新增 `moonbitlang/core/debug` import）、`image_noise.mbt`（移植 `src/util/image_noise.mbt:1-100` 的 LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian/add_noise_salt_pepper，复用 pure 包已有 clamp_b（pixel_advanced.mbt:4），@math.cosf/log2 已在 pure 包），将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/image_compose_test.mbt`（6 纯逻辑测试：hstack 正常/维度不匹配 raises、vstack 正常、tile 平铺、flip_vertical 翻转、transpose 转置宽高互换）、`src/pure/image_stats_test.mbt`（3 纯逻辑测试：compute_stats 正常/均匀图、mean_value 正常）、`src/pure/image_noise_test.mbt`（5 纯逻辑测试：gaussian 基础/sigma=0 不变/RGBA alpha 保留、salt_pepper 基础/prob=0 不变），全目标仅依赖 @types/@math/@debug。在根包 `src/roundtrip_test.mbt` 新增 9 个 native-only pure vs util 对比测试（hstack/vstack/tile/flip_vertical/transpose/compute_stats/mean_value/add_noise_gaussian/add_noise_salt_pepper，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，compute_stats 字段级比较，噪声用相同种子，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 796→819 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `image_compose.mbt`（移植 `src/util/image_compose.mbt:1-151` 的 hstack/vstack/tile/flip_vertical/transpose，签名加 `_pure` 后缀）、`image_stats.mbt`（移植 `src/util/image_stats.mbt:1-47` 的 ImageStats 结构 + compute_stats/mean_value，ImageStats derive(Eq, @debug.Debug) 需 @debug 依赖，pure 包 moon.pkg 新增 `moonbitlang/core/debug` import）、`image_noise.mbt`（移植 `src/util/image_noise.mbt:1-100` 的 LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian/add_noise_salt_pepper，复用 pure 包已有 clamp_b（pixel_advanced.mbt:4），@math.cosf/log2 已在 pure 包），将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/{codec,pixel,color,process,util}/image_compose_test.mbt`（6 纯逻辑测试：hstack 正常/维度不匹配 raises、vstack 正常、tile 平铺、flip_vertical 翻转、transpose 转置宽高互换）、`src/pure/{codec,pixel,color,process,util}/image_stats_test.mbt`（3 纯逻辑测试：compute_stats 正常/均匀图、mean_value 正常）、`src/pure/{codec,pixel,color,process,util}/image_noise_test.mbt`（5 纯逻辑测试：gaussian 基础/sigma=0 不变/RGBA alpha 保留、salt_pepper 基础/prob=0 不变），全目标仅依赖 @types/@math/@debug。在根包 `src/roundtrip_test.mbt` 新增 9 个 native-only pure vs util 对比测试（hstack/vstack/tile/flip_vertical/transpose/compute_stats/mean_value/add_noise_gaussian/add_noise_salt_pepper，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，compute_stats 字段级比较，噪声用相同种子，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 796→819 通过。
 选择理由：
 - T21 已完成高级像素操作 + 色彩映射，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 基础像素操作 + 图像工具 + 高级像素操作 + 色彩映射，但缺图像拼接（hstack/vstack/tile/flip_vertical/transpose）、统计（compute_stats/mean_value）、噪声生成（add_noise_gaussian/salt_pepper），这些是 v1.8-v1.9 基础功能，补齐后 pure 包图像处理能力更完整
 - `src/util/image_compose.mbt:1-151`、`src/util/image_stats.mbt:1-47`、`src/util/image_noise.mbt:1-100` 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型 + @math.cosf/log2（image_noise 用），无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T21（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作/高级像素操作移植）同构，技术风险极低
-- `image_noise.mbt` 的 `clamp_b`（line 53 调用）复用 pure 包已有 `clamp_b`（`src/pure/pixel_advanced.mbt:4`，T21 移植），同包私有函数跨文件可见，不重复定义（与 T21 color_map.mbt 的 interp_gradient 复用 clamp_b 同构）
+- `image_noise.mbt` 的 `clamp_b`（line 53 调用）复用 pure 包已有 `clamp_b`（`src/pure/{codec,pixel,color,process,util}/pixel_advanced.mbt:4`，T21 移植），同包私有函数跨文件可见，不重复定义（与 T21 color_map.mbt 的 interp_gradient 复用 clamp_b 同构）
 - `image_stats.mbt` 的 `ImageStats` 结构 `derive(Eq, @debug.Debug)` 需要 @debug 依赖，pure 包 moon.pkg 新增 `moonbitlang/core/debug` import（参照 `src/types/moon.pkg:2` 先例），全目标标准库可用
 - `@math.cosf`/`@math.log2`（image_noise.mbt 用）已在 pure 包 moon.pkg（T15 新增 @math），无需新增依赖
 - pure 包全目标化（T3）+ types 包全目标（T2）已就绪，图像拼接 + 统计 + 噪声仅依赖 @types + @math + @debug，全目标可用
 - 风险可控：新增文件不修改现有代码（仅 moon.pkg 新增 import），v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像处理（绘图合成/图像金字塔/边缘检测扩展等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
 - T21 产出：pure 包高级像素操作 + 色彩映射，native 796 测试通过，@math 已在 pure 包 moon.pkg
 - `src/util/image_compose.mbt:5-151`：hstack/vstack/tile/flip_vertical/transpose，纯 MoonBit 仅依赖 @core.Image/@core.LoadError
 - `src/util/image_stats.mbt:5-47`：ImageStats 结构 + compute_stats/mean_value，纯 MoonBit 仅依赖 @core.Image，derive(Eq, @debug.Debug) 需 @debug
 - `src/util/image_noise.mbt:6-100`：LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian/add_noise_salt_pepper，纯 MoonBit 依赖 @math.cosf/log2 + clamp_b（util 包 pixel_advanced.mbt:4 定义）
-- `src/util/pixel_advanced.mbt:4-12`：`fn clamp_b(v : Int) -> Byte`，pure 包已有（T21 移植到 `src/pure/pixel_advanced.mbt:4`）
+- `src/util/pixel_advanced.mbt:4-12`：`fn clamp_b(v : Int) -> Byte`，pure 包已有（T21 移植到 `src/pure/{codec,pixel,color,process,util}/pixel_advanced.mbt:4`）
 - `src/types/moon.pkg:2`：import `moonbitlang/core/debug`（因 derive(Eq, @debug.Debug)），pure 包本轮新增同 import
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/debug` import
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/debug` import
 - pure 包已有辅助函数：`clamp_b`（pixel_advanced.mbt:4）/`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）/`clamp_byte_v`（pixel_ops.mbt:4），LCG/lcg_next/lcg_float/lcg_gaussian 均不同名无冲突
 - pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry/pixel_ops/image_util/pixel_advanced/color_map 一致）
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
@@ -879,26 +879,26 @@
 ---
 
 ## R37 PASSED v2.0 pure 包图像拼接 + 统计 + 噪声（image_compose + image_stats + image_noise，纯 MoonBit，全目标） [ID: T22]
-结果：在 `src/pure/` 新增 `image_compose.mbt`（hstack_pure/vstack_pure/tile_pure/flip_vertical_pure/transpose_pure，移植自 `src/util/image_compose.mbt:1-151`）+ `image_stats.mbt`（ImageStats 结构 derive(Eq, @debug.Debug) + compute_stats_pure/mean_value_pure，移植自 `src/util/image_stats.mbt:1-47`）+ `image_noise.mbt`（LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian_pure/add_noise_salt_pepper_pure，复用 pure 包已有 clamp_b，移植自 `src/util/image_noise.mbt:1-100`），仅依赖 @types + @math + @debug，全目标可用 + 14 个 pure 纯逻辑测试 + 9 个根包 native-only pure vs util 对比测试。`moon.pkg` 新增 `moonbitlang/core/debug` import。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `image_compose.mbt`（hstack_pure/vstack_pure/tile_pure/flip_vertical_pure/transpose_pure，移植自 `src/util/image_compose.mbt:1-151`）+ `image_stats.mbt`（ImageStats 结构 derive(Eq, @debug.Debug) + compute_stats_pure/mean_value_pure，移植自 `src/util/image_stats.mbt:1-47`）+ `image_noise.mbt`（LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian_pure/add_noise_salt_pepper_pure，复用 pure 包已有 clamp_b，移植自 `src/util/image_noise.mbt:1-100`），仅依赖 @types + @math + @debug，全目标可用 + 14 个 pure 纯逻辑测试 + 9 个根包 native-only pure vs util 对比测试。`moon.pkg` 新增 `moonbitlang/core/debug` import。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 819/819 通过（796→819，+14 pure 纯逻辑 + 9 根包对比），v1.0 API 冻结保持，现有测试不破坏。
 
 ## R37 NEW v2.0 pure 包 13 种 blend 混合模式（纯 MoonBit，全目标） [ID: T23]
-任务：在 `src/pure/` 新增 `blend.mbt`，移植 `src/util/pixel_ops.mbt:103-478` 的 13 个 blend 混合模式函数（blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，clamp_byte_v 复用 `src/pure/pixel_ops.mbt:6` 同包私有函数。新增 `src/pure/blend_test.mbt` 15 个纯逻辑测试（全目标，13 个 blend 函数基础测试 + 尺寸不匹配 raises + 通道不匹配 raises）。在根包 `src/roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（13 个 blend 函数各 1 个，用 @core.load_from_path 加载测试图像 req_channels=Some(3) → @color.adjust_brightness 生成混合对象 → @pure.blend_xxx_pure vs @util.blend_xxx 断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 819→847 通过。
+任务：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `blend.mbt`，移植 `src/util/pixel_ops.mbt:103-478` 的 13 个 blend 混合模式函数（blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，clamp_byte_v 复用 `src/pure/{codec,pixel,color,process,util}/pixel_ops.mbt:6` 同包私有函数。新增 `src/pure/{codec,pixel,color,process,util}/blend_test.mbt` 15 个纯逻辑测试（全目标，13 个 blend 函数基础测试 + 尺寸不匹配 raises + 通道不匹配 raises）。在根包 `src/roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（13 个 blend 函数各 1 个，用 @core.load_from_path 加载测试图像 req_channels=Some(3) → @color.adjust_brightness 生成混合对象 → @pure.blend_xxx_pure vs @util.blend_xxx 断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 819→847 通过。
 选择理由：
 - T22 已完成图像拼接 + 统计 + 噪声，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 仿射变换 + 基础像素操作 + 图像工具 + 高级像素操作 + 色彩映射 + 图像拼接 + 统计 + 噪声，但缺 13 种 blend 混合模式（v1.7-v1.8 功能，`src/util/pixel_ops.mbt:103-478`），这些是常用图像合成操作，补齐后 pure 包图像处理能力更完整
 - `src/util/pixel_ops.mbt:103-478` 的 13 个 blend 函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型 + clamp_byte_v 私有辅助，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T22（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作/高级像素操作/图像拼接/统计/噪声移植）同构，技术风险极低
-- `clamp_byte_v`（pixel_ops.mbt:4）已在 pure 包 `src/pure/pixel_ops.mbt:6`（T20 移植），同包私有函数跨文件可见，blend.mbt 直接复用，不重复定义（与 T22 image_noise.mbt 复用 clamp_b 同构）
+- `clamp_byte_v`（pixel_ops.mbt:4）已在 pure 包 `src/pure/{codec,pixel,color,process,util}/pixel_ops.mbt:6`（T20 移植），同包私有函数跨文件可见，blend.mbt 直接复用，不重复定义（与 T22 image_noise.mbt 复用 clamp_b 同构）
 - pure 包全目标化（T3）+ types 包全目标（T2）已就绪，blend 混合模式仅依赖 @types，全目标可用，无需新增依赖（@math/@debug 已在 pure 包 moon.pkg 但本轮不使用）
 - 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
 - 为后续 pure 包更多图像合成能力（绘图合成/图像金字塔等）奠定基础，使 pure 包逐步接近完整的图像库
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
 - T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math + @debug），全目标可用
 - T22 产出：pure 包图像拼接 + 统计 + 噪声，native 819 测试通过
 - `src/util/pixel_ops.mbt:103-478`：13 个 blend 混合模式函数，纯 MoonBit 仅依赖 @core.Image/@core.LoadError + clamp_byte_v
-- `src/pure/pixel_ops.mbt:6`：`fn clamp_byte_v(v : Int) -> Byte`，pure 包已有（T20 移植），blend.mbt 复用
-- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math + @debug，无 `supported_targets`，全目标；本轮无需新增依赖
+- `src/pure/{codec,pixel,color,process,util}/pixel_ops.mbt:6`：`fn clamp_byte_v(v : Int) -> Byte`，pure 包已有（T20 移植），blend.mbt 复用
+- pure 包 `src/pure/{codec,pixel,color,process,util}/moon.pkg`：import types + @encoding/utf8 + @math + @debug，无 `supported_targets`，全目标；本轮无需新增依赖
 - 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，引用前缀 `@util`），import @color（line 6，引用前缀 `@color`）
 - `roundtrip_test.mbt` 现有 pure vs util 对比测试模式（line 1189-1494）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
@@ -925,7 +925,7 @@
 ---
 
 ## R38 PASSED v2.0 pure 包 13 种 blend 混合模式（纯 MoonBit，全目标） [ID: T23]
-结果：在 `src/pure/` 新增 `blend.mbt`（13 个 blend 混合模式函数 blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn，移植自 `src/util/pixel_ops.mbt:103-478`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，clamp_byte_v 复用同包 `src/pure/pixel_ops.mbt:6`）+ `blend_test.mbt`（15 纯逻辑测试，13 basic + 2 mismatch raises，全目标），根包 `roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（blend_img 用 `@color.adjust_brightness(orig, 50)` 构造）。
+结果：在 `src/pure/{codec,pixel,color,process,util}/` 新增 `blend.mbt`（13 个 blend 混合模式函数 blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn，移植自 `src/util/pixel_ops.mbt:103-478`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，clamp_byte_v 复用同包 `src/pure/{codec,pixel,color,process,util}/pixel_ops.mbt:6`）+ `blend_test.mbt`（15 纯逻辑测试，13 basic + 2 mismatch raises，全目标），根包 `roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（blend_img 用 `@color.adjust_brightness(orig, 50)` 构造）。
 检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 847/847 通过（819→847，+15 pure 纯逻辑 + 13 根包对比），v1.0 API 冻结保持，现有测试不破坏。RETRY r1 修正的 6 项测试预期值错误全部按源码公式逐像素手算结果落实。
 
 ## R39 NEW v2.0 版本发布收尾（版本号 + 文档 + 多目标验证记录） [ID: T24]
@@ -936,7 +936,7 @@
 - 本轮为 v2.0 里程碑收尾，非功能实现，风险极低（仅文档/版本号更新，不改代码逻辑），完成后 v2.0 正式发布
 - 后续可进入 v2.1（WebP/stream/TIFF/APNG 远期格式）或继续扩展 pure 包高级算法（CLAHE/FFT/霍夫等），由下一轮 PDC 决策
 上下文：
-- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - T1-T23 产出：@types 全目标类型包（T2）+ @pure 纯 MoonBit 后端（6 解码器 + 3 编码器 + 完整图像处理）+ @lib pure 侧统一 API（T12）
 - 当前测试数：native 847 通过、wasm 225 通过、js 225 通过
 - 当前版本号：`moon.mod` version = "1.17.0"
@@ -951,7 +951,7 @@
 - [一般] task_v24.md 遗漏 README.md/README.zh.md 中 Usage 示例注释的测试数引用更新。已核实 README.md:113 `moon test --target native      # Run 546 tests` 与 README.zh.md:113 `moon test --target native      # 运行 546 个测试` 均含过时测试数 546，task_v24.md line 21 仅提及"底部测试数 `533 tests + 29 benchmarks`"更新，完全未提及 line 113 的 `# Run 546 tests` / `# 运行 546 个测试`。Doer 按 task 执行会遗漏这两处，导致文档内测试数引用不一致（badge 847、Testing 小节 847、Usage 注释仍 546）。
 - [一般] task_v24.md 遗漏 README.md/README.zh.md Limitations 小节"Multi-target"条目更新。已核实 README.md:122 `- **Multi-target**: native only. wasm/js support evaluated and deferred.` 与 README.zh.md:122 `- **多目标**：仅支持 native。wasm/js 支持已评估但暂缓。`。v2.0 多目标支持已完成，该条目已过时且与 task_v24.md 要求新增的"Multi-target support"Features 条目直接矛盾（Features 说支持多目标，Limitations 说 native only）。task_v24.md 完全未提及要更新这两行，Doer 按 task 执行会保留过时条目，导致文档自相矛盾。
 - [一般] task_v24.md 声称 wasm/js 各 225 测试通过（line 51、59），并要求在 ROADMAP.md 交付物中记录"测试：native 847 + wasm 225 + js 225 通过"（line 35），但构建验证（line 38-43）仅要求 `moon test --target native` 847 通过，不包含 `moon test --target wasm` 和 `moon test --target js`。文档将写入具体测试数 225 但未在本轮验证，task_v24.md 亦未声明 225 数据来源（如上一轮已验证）。若 225 数据不准确，ROADMAP.md 交付物记录将失实。
-- [一般] task_v24.md line 31 说"v2.0 章节末尾新增'### 交付物（已完成）'小节"，但已核实 ROADMAP.md:382-385 已有"### 交付物"小节（`src/native/` + `src/pure/` + `src/lib.mbt`）。按字面"新增"会在 v2.0 章节内并存两个交付物小节（现有"### 交付物" + 新增"### 交付物（已完成）"），导致结构重复混淆。应明确为"更新现有'### 交付物'小节为'### 交付物（已完成）'"或"替换"。此外，现有小节写 `src/lib.mbt`（文件），task_v24.md line 33 写 `src/lib/`（目录，line 71 确认实际为目录含 3 文件），task 未明确要求修正此差异。
+- [一般] task_v24.md line 31 说"v2.0 章节末尾新增'### 交付物（已完成）'小节"，但已核实 ROADMAP.md:382-385 已有"### 交付物"小节（`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`）。按字面"新增"会在 v2.0 章节内并存两个交付物小节（现有"### 交付物" + 新增"### 交付物（已完成）"），导致结构重复混淆。应明确为"更新现有'### 交付物'小节为'### 交付物（已完成）'"或"替换"。此外，现有小节写 `src/lib.mbt`（文件），task_v24.md line 33 写 `src/lib/`（目录，line 71 确认实际为目录含 3 文件），task 未明确要求修正此差异。
 修正方向（已逐一修正，覆写 task_v24.md）：
 1. **Usage 示例注释测试数更新**：README.md:113 `# Run 546 tests` → `# Run 847 tests`，README.zh.md:113 `# 运行 546 个测试` → `# 运行 847 个测试`。在 task_v24.md 具体工作第 2/3 项中补充这两处更新要求。
 2. **Limitations 小节 Multi-target 条目更新**：README.md:122 `native only. wasm/js support evaluated and deferred.` → `native (C FFI) + wasm/js (pure MoonBit backend).`，README.zh.md:122 `仅支持 native。wasm/js 支持已评估但暂缓。` → `native（C FFI）+ wasm/js（纯 MoonBit 后端）。`。在 task_v24.md 具体工作第 2/3 项中补充这两处更新要求。

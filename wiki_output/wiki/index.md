@@ -1,4 +1,4 @@
-# stb-image Wiki
+# image Wiki
 
 > MoonBit 图像处理库知识库
 

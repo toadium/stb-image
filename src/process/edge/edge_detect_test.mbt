@@ -82,7 +82,10 @@ test "edge_detect_prewitt: detects edge in half-black image" {
 
 ///|
 test "edge_detect_laplacian: preserves dimensions" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let result = edge_detect_laplacian(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -93,7 +96,10 @@ test "edge_detect_laplacian: preserves dimensions" {
 
 ///|
 test "edge_detect_prewitt: preserves dimensions" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let result = edge_detect_prewitt(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -105,7 +111,10 @@ test "edge_detect_prewitt: preserves dimensions" {
 ///|
 test "edge_detect_laplacian: works with RGB image" {
   // 红色图像（均匀），边缘检测应返回全黑
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let result = edge_detect_laplacian(img)
   // 均匀红色图无边缘
   for i in 0..<16 {

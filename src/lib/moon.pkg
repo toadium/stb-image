@@ -1,9 +1,5 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types" @types,
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "moonbitlang/core/debug" @debug,
+  "Toadium/image/src/types",
+  "Toadium/image/src/pure/codec",
+  "Toadium/image/src/pure/color",
 }
-
-import {
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
-} for "test"

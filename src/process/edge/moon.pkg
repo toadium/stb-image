@@ -1,19 +1,9 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
   "moonbitlang/core/math",
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
 } for "test"
-
-options(
-  targets: {
-    "canny_test.mbt": [ "native" ],
-    "contour_test.mbt": [ "native" ],
-    "edge_detect_test.mbt": [ "native" ],
-    "hough_test.mbt": [ "native" ],
-  },
-)

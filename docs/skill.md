@@ -1,15 +1,15 @@
 ---
-name: stb-image
+name: image
 description: MoonBit 图像处理库 — 封装 stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07，多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），完整图像解码/编码/缩放/处理能力，847 测试 + 75 基准测试，ASan 验证通过。
 ---
 
-# stb-image 包使用指南
+# image 包使用指南
 
 MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
 
 ## 用途
 
-将 C 单头文件库 `stb_image.h` / `stb_image_write.h` / `stb_image_resize2.h` 以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供完整的图像加载/写入/缩放/处理能力。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
+将 C 单头文件库 `stb_image.h` / `stb_image_write.h` / `stb_image_resize2.h` 以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供完整的图像加载/写入/缩放/处理能力。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/{codec,pixel,color,process,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
 
 ## 快速开始
 
@@ -147,7 +147,7 @@ try {
 
 ## 目标后端
 
-多目标支持：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端 `src/pure/`）。native 目标 847 测试 + 75 基准测试，wasm/js 目标 225 测试。
+多目标支持：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端 `src/pure/{codec,pixel,color,process,util}/`）。native 目标 847 测试 + 75 基准测试，wasm/js 目标 225 测试。
 
 ## 架构
 

@@ -5,7 +5,10 @@ fn make_bytes(arr : Array[Byte]) -> Bytes {
 
 ///|
 test "draw_copy: copy 2x2 into 4x4" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   let result = draw_copy(dst, src, 0, 0)
   assert_eq(result.width, 4)
@@ -17,7 +20,10 @@ test "draw_copy: copy 2x2 into 4x4" {
 
 ///|
 test "draw_copy: out of bounds raises" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   try {
     let _ = draw_copy(dst, src, 4, 4)
@@ -32,7 +38,10 @@ test "draw_copy: out of bounds raises" {
 
 ///|
 test "draw_copy: channel mismatch raises" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let src = @lib.load_from_bytes_auto(make_1x1_red_bmp(), req_channels=Some(4))
   try {
     let _ = draw_copy(dst, src, 0, 0)
@@ -47,7 +56,10 @@ test "draw_copy: channel mismatch raises" {
 
 ///|
 test "draw_over: full opacity src overwrites dst" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let src = @types.Image::{
     width: 1,
     height: 1,
@@ -67,7 +79,10 @@ test "draw_over: full opacity src overwrites dst" {
 
 ///|
 test "draw_over: zero opacity src preserves dst" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let src = @types.Image::{
     width: 1,
     height: 1,
@@ -86,7 +101,10 @@ test "draw_over: zero opacity src preserves dst" {
 
 ///|
 test "draw_over: non-RGBA raises" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let src = @types.Image::{
     width: 1,
     height: 1,
@@ -106,7 +124,10 @@ test "draw_over: non-RGBA raises" {
 
 ///|
 test "draw_over: out of bounds raises" {
-  let dst = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let dst = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let src = @types.Image::{
     width: 1,
     height: 1,

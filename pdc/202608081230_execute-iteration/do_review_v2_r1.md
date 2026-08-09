@@ -7,8 +7,8 @@ APPROVED
 
 ### 任务覆盖度
 - **[通过]** 创建 `src/types/` 包：`moon.pkg` import 仅 `moonbitlang/core/debug`、无 `supported_targets` 限制、无 C stub，`image_types.mbt` 完整迁移 6 个类型定义（`Image` / `Image16` / `ImageF` / `ImageInfo` / `GifAnimation` / `LoadError`），保持 `pub(all)` 可见性、`derive(Eq, @debug.Debug)`、文档注释。实测核对文件内容与任务指令逐项吻合。
-- **[通过]** 改造 `src/core/` 包：`moon.pkg` 增加 `import "MoonBit-Toadium/stb-image/src/types"`，`image_types.mbt` 已删除（git status 确认 `D`），新增 `image_types_reexport.mbt` 含 6 个 `pub type X = @types.X` 声明，语法与 `src/reexport.mbt` 先例一致。git diff 确认 core 包内其他 20+ 文件未修改，符合"69+ 处裸引用通过别名透明性继续编译"的预期。
-- **[通过]** 改造 `src/pure/` 包：`moon.pkg` 增加 import types，保留 `supported_targets = "native"`；`bmp_decode.mbt` 4 处 `@core.*` → `@types.*`（函数签名 1 + raise 构造 3）替换正确；`bmp_decode_test.mbt` 测试 7-8 错误路径 2 处 `@types.LoadError::DecodeFailed` 替换正确，测试 5-6 对比验证保留 `@core.load_from_bytes`。
+- **[通过]** 改造 `src/core/` 包：`moon.pkg` 增加 `import "Toadium/image/src/types"`，`image_types.mbt` 已删除（git status 确认 `D`），新增 `image_types_reexport.mbt` 含 6 个 `pub type X = @types.X` 声明，语法与 `src/reexport.mbt` 先例一致。git diff 确认 core 包内其他 20+ 文件未修改，符合"69+ 处裸引用通过别名透明性继续编译"的预期。
+- **[通过]** 改造 `src/pure/{codec,pixel,color,process,util}/` 包：`moon.pkg` 增加 import types，保留 `supported_targets = "native"`；`bmp_decode.mbt` 4 处 `@core.*` → `@types.*`（函数签名 1 + raise 构造 3）替换正确；`bmp_decode_test.mbt` 测试 7-8 错误路径 2 处 `@types.LoadError::DecodeFailed` 替换正确，测试 5-6 对比验证保留 `@core.load_from_bytes`。
 - **[通过]** 构建验证：`moon check --target native --deny-warn` 通过（清理 target 后重新构建，30 tasks，0 errors / 0 warnings）；`moon test --target native` 554/554 通过，0 失败，未破坏现有测试。
 
 ### 产出质量

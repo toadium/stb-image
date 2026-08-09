@@ -124,7 +124,10 @@ test "morph_close: fills isolated dark pixel" {
 
 ///|
 test "erode: preserves dimensions" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let result = erode(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -135,7 +138,10 @@ test "erode: preserves dimensions" {
 
 ///|
 test "dilate: preserves dimensions" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let result = dilate(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)

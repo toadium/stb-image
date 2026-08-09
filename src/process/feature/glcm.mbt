@@ -24,7 +24,9 @@ pub fn compute_glcm(
   levels? : Int = 256,
 ) -> Array[Array[Int]] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("compute_glcm 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm 仅支持 channels=1/3/4",
+    )
   }
   if levels < 2 || levels > 256 {
     raise @types.LoadError::DecodeFailed("levels 必须在 2..256 之间")

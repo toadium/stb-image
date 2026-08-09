@@ -27,12 +27,7 @@ fn lb_make_rgb_image(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{
-    width,
-    height,
-    channels: 3,
-    data: Bytes::from_array(data),
-  }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
 }
 
 ///|
@@ -51,9 +46,15 @@ fn lb_make_1x1_rgb_qoi() -> Bytes {
   out.push(b'\x69')
   out.push(b'\x66')
   // width=1 (big-endian)
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
   // height=1 (big-endian)
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
   // channels=3
   out.push(b'\x03')
   // colorspace=0
@@ -64,8 +65,14 @@ fn lb_make_1x1_rgb_qoi() -> Bytes {
   out.push(b'\x96') // 150
   out.push(b'\xC8') // 200
   // end marker
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00')
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
   lb_to_bytes(out)
 }
 
@@ -74,7 +81,9 @@ fn lb_make_1x1_rgb_qoi() -> Bytes {
 fn lb_make_1x1_rgb_pnm() -> Bytes {
   let out : Array[Byte] = []
   lb_push_str(out, "P6\n1 1\n255\n")
-  out.push(b'\xFF'); out.push(b'\x00'); out.push(b'\x00')
+  out.push(b'\xFF')
+  out.push(b'\x00')
+  out.push(b'\x00')
   lb_to_bytes(out)
 }
 
@@ -97,12 +106,19 @@ fn lb_push_be32(arr : Array[Byte], v : Int) -> Unit {
 fn lb_make_1x1_rgb_psd() -> Bytes {
   let out : Array[Byte] = []
   // signature "8BPS"
-  out.push(b'\x38'); out.push(b'\x42'); out.push(b'\x50'); out.push(b'\x53')
+  out.push(b'\x38')
+  out.push(b'\x42')
+  out.push(b'\x50')
+  out.push(b'\x53')
   // version=1
   lb_push_be16(out, 1)
   // reserved (6 字节)
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00')
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
   // channelCount=3
   lb_push_be16(out, 3)
   // h=1
@@ -195,23 +211,38 @@ fn lb_lzw_encode(indices : Array[Int], min_code_size : Int) -> Array[Byte] {
 fn lb_make_1x1_rgb_gif() -> Bytes {
   let out : Array[Byte] = []
   // GIF89a header
-  out.push(b'\x47'); out.push(b'\x49'); out.push(b'\x46')
-  out.push(b'\x38'); out.push(b'\x39'); out.push(b'\x61')
+  out.push(b'\x47')
+  out.push(b'\x49')
+  out.push(b'\x46')
+  out.push(b'\x38')
+  out.push(b'\x39')
+  out.push(b'\x61')
   // LSD: width=1, height=1
-  out.push(b'\x01'); out.push(b'\x00')
-  out.push(b'\x01'); out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
   // packed: GCT flag=1, size=0 (2 entries)
   out.push(b'\x80')
-  out.push(b'\x00'); out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
   // GCT: 2 entries (red, black)
-  out.push(b'\xFF'); out.push(b'\x00'); out.push(b'\x00')
-  out.push(b'\x00'); out.push(b'\x00'); out.push(b'\x00')
+  out.push(b'\xFF')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
   // Image Descriptor
   out.push(b'\x2C')
-  out.push(b'\x00'); out.push(b'\x00') // left
-  out.push(b'\x00'); out.push(b'\x00') // top
-  out.push(b'\x01'); out.push(b'\x00') // width=1
-  out.push(b'\x01'); out.push(b'\x00') // height=1
+  out.push(b'\x00')
+  out.push(b'\x00') // left
+  out.push(b'\x00')
+  out.push(b'\x00') // top
+  out.push(b'\x01')
+  out.push(b'\x00') // width=1
+  out.push(b'\x01')
+  out.push(b'\x00') // height=1
   out.push(b'\x00') // packed (no LCT)
   // LZW data: min_code_size=2
   out.push(b'\x02')
@@ -356,8 +387,8 @@ test "encode_qoi_auto 委托验证" {
   assert_eq(out[1].to_int(), 0x6F)
   assert_eq(out[2].to_int(), 0x69)
   assert_eq(out[3].to_int(), 0x66)
-  // 与 @pure.encode_qoi_pure 结果一致
-  assert_eq(out, @pure.encode_qoi_pure(img))
+  // 与 @codec.encode_qoi_pure 结果一致
+  assert_eq(out, @codec.encode_qoi_pure(img))
 }
 
 ///|
@@ -367,8 +398,8 @@ test "encode_ppm_auto 委托验证" {
   // 前 2 字节为 "P6"
   assert_eq(out[0].to_int(), 0x50)
   assert_eq(out[1].to_int(), 0x36)
-  // 与 @pure.encode_ppm_pure 结果一致
-  assert_eq(out, @pure.encode_ppm_pure(img))
+  // 与 @codec.encode_ppm_pure 结果一致
+  assert_eq(out, @codec.encode_ppm_pure(img))
 }
 
 ///|
@@ -378,8 +409,8 @@ test "encode_pgm_auto 委托验证" {
   // 前 2 字节为 "P5"
   assert_eq(out[0].to_int(), 0x50)
   assert_eq(out[1].to_int(), 0x35)
-  // 与 @pure.encode_pgm_pure 结果一致
-  assert_eq(out, @pure.encode_pgm_pure(img))
+  // 与 @codec.encode_pgm_pure 结果一致
+  assert_eq(out, @codec.encode_pgm_pure(img))
 }
 
 ///|
@@ -393,6 +424,6 @@ test "encode_gif_auto 委托验证" {
   assert_eq(out[3].to_int(), 0x38)
   assert_eq(out[4].to_int(), 0x39)
   assert_eq(out[5].to_int(), 0x61)
-  // 与 @pure.encode_gif_pure 结果一致
-  assert_eq(out, @pure.encode_gif_pure(img))
+  // 与 @codec.encode_gif_pure 结果一致
+  assert_eq(out, @codec.encode_gif_pure(img))
 }

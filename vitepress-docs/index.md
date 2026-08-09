@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "stb-image"
+  name: "image"
   text: "MoonBit 图像处理库"
   tagline: "封装 stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07，支持 native/wasm/js 多目标"
   actions:
@@ -14,7 +14,7 @@ hero:
       link: /api/
     - theme: alt
       text: GitHub
-      link: https://github.com/MoonBit-Toadium/stb-image
+      link: https://github.com/Toadium/image
 
 features:
   - title: 多目标支持
@@ -53,7 +53,7 @@ graph TD
     C --> E[C FFI]
     E --> F[stb_image.h]
     F --> G[memcpy → MoonBit Bytes]
-    D --> H[src/pure/]
+    D --> H[src/pure/{codec,pixel,color,process,util}/]
     H --> I[纯 MoonBit 编解码]
     G --> J[图像处理]
     I --> J

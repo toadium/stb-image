@@ -1,18 +1,4 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
   "moonbitlang/core/math",
 }
-
-import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
-} for "test"
-
-options(
-  targets: {
-    "fft_test.mbt": [ "native" ],
-    "freq_filter_test.mbt": [ "native" ],
-    "haar_wavelet_test.mbt": [ "native" ],
-  },
-)

@@ -12,7 +12,7 @@ moon test --target native
 
 ## Wasm/JS（纯 MoonBit）
 
-- 使用 `src/pure/` + `src/lib/` 纯 MoonBit 后端
+- 使用 `src/pure/{codec,pixel,color,process,util}/` + `src/lib/` 纯 MoonBit 后端
 - 支持 6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）
 - 图像处理功能子集
 
@@ -25,4 +25,4 @@ moon test --target js
 
 - `src/lib/lib.mbt` 提供格式自动检测 + 编解码委托
 - `src/reexport.mbt` 将 199 个函数 + 29 个类型重导出到根包
-- 用户可直接从 `toadium/stb-image` 导入所有 API
+- 用户可直接从 `toadium/image` 导入所有 API

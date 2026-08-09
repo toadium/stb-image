@@ -1,13 +1,12 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "MoonBit-Toadium/stb-image/src/lib"
+package "Toadium/image/src/lib"
 
 import {
-  "MoonBit-Toadium/stb-image/src/types",
-  "moonbitlang/core/debug",
+  "Toadium/image/src/types",
 }
 
 // Values
-pub fn detect_format(Bytes) -> ImageFormat
+pub fn detect_format(Bytes) -> @types.ImageFormat
 
 pub fn encode_bmp_auto(@types.Image) -> Bytes
 
@@ -19,7 +18,7 @@ pub fn encode_jpeg_auto(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_pgm_auto(@types.Image) -> Bytes
 
-pub fn encode_png_auto(@types.Image) -> Bytes raise @types.LoadError
+pub fn encode_png_auto(@types.Image) -> Bytes
 
 pub fn encode_pnm_auto(@types.Image) -> Bytes
 
@@ -29,24 +28,16 @@ pub fn encode_qoi_auto(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tga_auto(@types.Image) -> Bytes
 
-pub fn load_from_bytes_auto(Bytes) -> @types.Image raise @types.LoadError
+pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
+
+pub fn load_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
 // Errors
 
 // Types and methods
-pub(all) enum ImageFormat {
-  Bmp
-  Qoi
-  Pnm
-  Psd
-  Gif
-  Png
-  Jpeg
-  Tga
-  Unknown
-} derive(Eq, @debug.Debug)
 
 // Type aliases
+pub using @types {type ImageFormat}
 
 // Traits
 

@@ -25,4 +25,4 @@ moon test --target js
 
 - `src/lib/lib.mbt` 提供格式自动检测 + 编解码委托
 - `src/reexport.mbt` 将 199 个函数 + 29 个类型重导出到根包
-- 用户可直接从 `toadium/stb-image` 导入所有 API
+- 用户可直接从 `toadium/image` 导入所有 API

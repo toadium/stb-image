@@ -33,7 +33,7 @@ graph LR
     B -->|native| C[src/core/]
     B -->|wasm/js| D[src/lib/]
     C --> E[C FFI → stb_image.h]
-    D --> F[src/pure/ 纯 MoonBit]
+    D --> F[src/pure/{codec,pixel,color,process,util}/ 纯 MoonBit]
     E --> G[memcpy → Bytes]
     F --> G
     G --> H[图像处理]
@@ -41,7 +41,7 @@ graph LR
 
 ## 向后兼容
 
-`src/reexport.mbt`（969 行，由 `scripts/gen_reexport.py` 自动生成）将 199 个函数 + 29 个类型从子包重导出到根包，用户可直接从 `toadium/stb-image` 导入所有 API。
+`src/reexport.mbt`（969 行，由 `scripts/gen_reexport.py` 自动生成）将 199 个函数 + 29 个类型从子包重导出到根包，用户可直接从 `toadium/image` 导入所有 API。
 
 <ActionButton href="/api/" text="查看完整 API" type="brand" />
 <ActionButton href="/tech-stack" text="技术栈详情" type="alt" />

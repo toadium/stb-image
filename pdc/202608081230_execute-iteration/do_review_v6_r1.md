@@ -28,7 +28,7 @@ APPROVED
 - `roundtrip: TGA pure vs FFI`（`roundtrip_test.mbt:322-338`）正确实现：
   - `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` 加载测试图像 ✓
   - `@core.write_tga_to_bytes(img)` 生成 TGA 字节流（FFI 生成，默认 RLE 压缩，image type 10）✓
-  - `@pure.decode_tga_pure(tga_bytes)` 纯 MoonBit 解码 ✓
+  - `@codec.decode_tga_pure(tga_bytes)` 纯 MoonBit 解码 ✓
   - `@core.load_from_bytes(tga_bytes, req_channels=Some(3))` FFI 基准解码 ✓
   - 断言 width/height/channels/data 完全一致 ✓
 - 对比性质为真正的 FFI 基准对比（stb_image C 库原生支持 TGA 读写），非 QOI 的纯 MoonBit 交叉验证 ✓

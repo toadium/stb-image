@@ -6,7 +6,7 @@
 ## 发现
 
 ### 任务覆盖度
-- 14 项具体要求全部覆盖：目录结构（`src/pure/moon.pkg` + `bmp_decode.mbt` + `bmp_decode_test.mbt`）、函数签名 `pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`、24-bit/32-bit 无压缩支持、BMP 文件头(14B)+DIB 头(40B) 解析、行填充 4 字节对齐、height>0 自下而上 / height<0 自上而下、RGB/RGBA 输出、中文错误消息、4 类纯逻辑测试、与 `@core.load_from_bytes` 对比测试、构建验证。
+- 14 项具体要求全部覆盖：目录结构（`src/pure/{codec,pixel,color,process,util}/moon.pkg` + `bmp_decode.mbt` + `bmp_decode_test.mbt`）、函数签名 `pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`、24-bit/32-bit 无压缩支持、BMP 文件头(14B)+DIB 头(40B) 解析、行填充 4 字节对齐、height>0 自下而上 / height<0 自上而下、RGB/RGBA 输出、中文错误消息、4 类纯逻辑测试、与 `@core.load_from_bytes` 对比测试、构建验证。
 - 测试数量与 do_v1.md 声称一致：8 个测试（4 纯逻辑 + 2 对比 + 2 错误路径）。
 
 ### 构建与测试验证（独立复跑）
@@ -15,7 +15,7 @@
 - `load_from_bytes` 签名 `pub fn load_from_bytes(Bytes, req_channels? : Int?) -> Image raise LoadError` 与测试调用 `@core.load_from_bytes(bmp, req_channels=Some(3))` 匹配。
 
 ### 架构一致性
-- `src/pure/moon.pkg` 与 `src/format/moon.pkg` 同构：`import @core` + `supported_targets = "native"`，符合本轮"pure 包暂设 native-only"的范围声明。
+- `src/pure/{codec,pixel,color,process,util}/moon.pkg` 与 `src/format/moon.pkg` 同构：`import @core` + `supported_targets = "native"`，符合本轮"pure 包暂设 native-only"的范围声明。
 - 复用 `@core.Image` / `@core.LoadError`，与 `src/format/qoi.mbt` 模式一致，未引入新架构不一致。
 - 未修改 `src/moon.pkg`，pure 包作为独立包存在，符合任务"可能需要"的可选语义。
 

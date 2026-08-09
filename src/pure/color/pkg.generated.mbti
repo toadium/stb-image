@@ -1,0 +1,52 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Toadium/image/src/pure/color"
+
+import {
+  "Toadium/image/src/types",
+}
+
+// Values
+pub fn adjust_brightness_pure(@types.Image, Int) -> @types.Image
+
+pub fn adjust_contrast_pure(@types.Image, Float) -> @types.Image
+
+pub fn adjust_gamma_pure(@types.Image, Float) -> @types.Image
+
+pub fn apply_lut_pure(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn convert_channels_pure(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn fill_alpha_pure(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
+
+pub fn gradient_map_pure(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
+
+pub fn hsl_to_rgb_pure(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn hsv_to_rgb_pure(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn invert_pure(@types.Image) -> @types.Image
+
+pub fn premultiply_alpha_pure(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn rgb_to_hsl_pure(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_hsv_pure(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn set_alpha_pure(@types.Image, Byte) -> @types.Image raise @types.LoadError
+
+pub fn to_grayscale_pure(@types.Image) -> @types.Image
+
+pub fn to_rgb_pure(@types.Image) -> @types.Image
+
+pub fn to_rgba_pure(@types.Image) -> @types.Image
+
+pub fn unpremultiply_alpha_pure(@types.Image) -> @types.Image raise @types.LoadError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

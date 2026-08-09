@@ -87,7 +87,7 @@ src/
 
 2. **util：替代 @core.resize**
    - 在 @pure 中实现 `resize_pure`（最近邻 + 双线性插值）
-   - `util/image_util.mbt` 中 `@core.resize` → `@pure.resize_pure`
+   - `util/image_util.mbt` 中 `@core.resize` → `@util.resize_pure`
    - util 改为依赖 @types + @pure + @process/transform
    - 删除 `supported_targets = "native"`
 

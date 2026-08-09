@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "MoonBit-Toadium/stb-image/src/process/edge"
+package "Toadium/image/src/process/edge"
 
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
 }
 
 // Values

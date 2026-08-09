@@ -11,7 +11,7 @@ APPROVED
 ## 独立核实结论
 1. **`src/moon.pkg`**：第 16-18 行以 `for "test"` 语法声明 `@pure` 依赖，与 check_v4.md 第 9 项描述一致。
 2. **`src/roundtrip_test.mbt`**：第 44-60 行新增 `roundtrip: BMP RGB pure vs FFI` 测试，代码模式（load_from_path → write_bmp_to_bytes → decode_bmp_pure → load_from_bytes → 断言 width/height/channels/data）与任务指令步骤 2 完全吻合，文件中仅此 1 个 pure-FFI 对比测试，无 32-bit RGBA 测试。
-3. **`src/pure/bmp_decode.mbt`**：第 21 行 `dib_size != 40` 拒绝、第 35 行 `compression != 0` 拒绝，确认 pure 解码器仅支持 BITMAPINFOHEADER + BI_RGB，与任务上下文引用行号一致。
+3. **`src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`**：第 21 行 `dib_size != 40` 拒绝、第 35 行 `compression != 0` 拒绝，确认 pure 解码器仅支持 BITMAPINFOHEADER + BI_RGB，与任务上下文引用行号一致。
 4. **`moon check --target native`**：实际运行，"Finished. moon: ran 30 tasks, now up to date"，0 errors 0 warnings。
 5. **`moon test --target native`**：实际运行，"Total tests: 553, passed: 553, failed: 0"，符合预期 552→553。
 6. **`moon check`（全目标）**：实际运行，"Finished. moon: no work to do"，0 errors 0 warnings。

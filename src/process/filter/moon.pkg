@@ -1,19 +1,10 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
-  "MoonBit-Toadium/stb-image/src/process/transform",
+  "Toadium/image/src/types",
+  "Toadium/image/src/process/transform",
   "moonbitlang/core/math",
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
 } for "test"
-
-options(
-  targets: {
-    "bilateral_filter_test.mbt": [ "native" ],
-    "filter_test.mbt": [ "native" ],
-    "nlm_denoise_test.mbt": [ "native" ],
-  },
-)

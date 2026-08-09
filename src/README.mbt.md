@@ -1,4 +1,4 @@
-# stb-image
+# image
 
 MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 — decode/encode PNG/JPEG/BMP/GIF/WebP/TGA/PSD/HDR/PIC from file path or memory.
 

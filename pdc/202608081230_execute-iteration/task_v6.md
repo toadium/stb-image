@@ -4,9 +4,9 @@
 NEW
 
 ## 任务描述
-在 `src/pure/` 新增纯 MoonBit TGA 解码器，扩展 pure 包格式覆盖（从 BMP+QOI 扩展到 BMP+QOI+TGA），推进 v2.0 多目标支持的实质功能。具体产出：
+在 `src/pure/{codec,pixel,color,process,util}/` 新增纯 MoonBit TGA 解码器，扩展 pure 包格式覆盖（从 BMP+QOI 扩展到 BMP+QOI+TGA），推进 v2.0 多目标支持的实质功能。具体产出：
 
-1. **`src/pure/tga_decode.mbt`**：实现 `pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持：
+1. **`src/pure/{codec,pixel,color,process,util}/tga_decode.mbt`**：实现 `pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError`，支持：
    - image type 2（未压缩 RGB）和 type 10（RLE RGB）
    - 24-bit（comp=3，BGR→RGB）和 32-bit（comp=4，BGRA→RGBA）
    - 18 字节 TGA header 解析（ID length、color map type、image type、width/height LE、bpp、descriptor）
@@ -15,7 +15,7 @@ NEW
    - BGR(A)→RGB(A) 像素顺序转换
    - 错误路径：数据过短、不支持的 image type、不支持的 bpp → `raise @types.LoadError::DecodeFailed(...)`
 
-2. **`src/pure/tga_decode_test.mbt`**：纯逻辑测试（全目标，不依赖 @core，手构造 TGA 字节流验证），建议覆盖：
+2. **`src/pure/{codec,pixel,color,process,util}/tga_decode_test.mbt`**：纯逻辑测试（全目标，不依赖 @core，手构造 TGA 字节流验证），建议覆盖：
    - type 2 未压缩 24-bit RGB（1x1 或 2x2，验证 BGR→RGB 转换）
    - type 2 未压缩 32-bit RGBA（验证 BGRA→RGBA 转换）
    - type 10 RLE 24-bit RGB（手构造 RLE packet + raw packet，验证 RLE 解压）
@@ -28,7 +28,7 @@ NEW
 3. **`src/roundtrip_test.mbt`** 新增 1 个 native-only 对比测试 `roundtrip: TGA pure vs FFI`：
    - `@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` 加载测试图像
    - `@core.write_tga_to_bytes(img)` 生成 TGA 字节流（FFI 生成，默认 RLE 压缩，image type 10）
-   - `@pure.decode_tga_pure(tga_bytes)` 纯 MoonBit 解码
+   - `@codec.decode_tga_pure(tga_bytes)` 纯 MoonBit 解码
    - `@core.load_from_bytes(tga_bytes, req_channels=Some(3))` FFI 基准解码
    - 断言 width/height/channels/data 完全一致
    - 对比性质：真正的 FFI 基准对比（stb_image C 库原生支持 TGA 读写），非 QOI 的纯 MoonBit 交叉验证
@@ -50,7 +50,7 @@ NEW
 摘录与当前任务直接相关的需求/约束：
 
 **v2.0 多目标支持（ROADMAP.md）**：
-- 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- 交付物：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层）
 - 路径 A（双后端）：native 保持 C FFI，wasm/js 用纯 MoonBit fallback
 
 **stb_image_write TGA 输出格式（已核实源码 `src/core/stb_image_write.h:532-609,418-449`）**：
@@ -97,19 +97,19 @@ NEW
 - pure 包主代码用 @types，全目标可用
 
 **T3 产出（pure 包全目标化）**：
-- `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+- `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
 - pure 包 6 个 BMP 纯逻辑测试（全目标可用）
 
 **T5 产出（QOI 解码器）**：
-- `src/pure/qoi_decode.mbt`：`decode_qoi_pure`，支持全部 6 种 QOI 标签
-- `src/pure/qoi_decode_test.mbt`：8 纯逻辑测试
+- `src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt`：`decode_qoi_pure`，支持全部 6 种 QOI 标签
+- `src/pure/{codec,pixel,color,process,util}/qoi_decode_test.mbt`：8 纯逻辑测试
 - `src/roundtrip_test.mbt`：QOI pure vs format 交叉验证测试（line 116-132）
 - native 562 测试通过
 
 **pure 包现有文件**：
-- `src/pure/bmp_decode.mbt` + `bmp_decode_test.mbt`（T1）
-- `src/pure/qoi_decode.mbt` + `qoi_decode_test.mbt`（T5）
-- `src/pure/moon.pkg`：仅 `import { "MoonBit-Toadium/stb-image/src/types" }`
+- `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt` + `bmp_decode_test.mbt`（T1）
+- `src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt` + `qoi_decode_test.mbt`（T5）
+- `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import { "Toadium/image/src/types" }`
 
 **根包配置**：
 - `src/moon.pkg`：`supported_targets = "native"`，`for "test"` 声明 `@pure` 依赖（line 16-18），`options(targets: {"roundtrip_test.mbt": ["native"]})`（line 26）

@@ -1,23 +1,9 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
   "moonbitlang/core/math",
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
 } for "test"
-
-options(
-  targets: {
-    "adaptive_threshold_test.mbt": [ "native" ],
-    "clahe_test.mbt": [ "native" ],
-    "color_adjust_test.mbt": [ "native" ],
-    "color_convert_test.mbt": [ "native" ],
-    "color_segment_test.mbt": [ "native" ],
-    "dehaze_test.mbt": [ "native" ],
-    "retinex_test.mbt": [ "native" ],
-    "test_helpers_test.mbt": [ "native" ],
-  },
-)

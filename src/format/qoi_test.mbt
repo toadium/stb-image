@@ -31,7 +31,10 @@ test "decode_qoi: round-trip 1x1 RGB" {
 
 ///|
 test "decode_qoi: round-trip 4x4 PNG" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)
@@ -44,7 +47,10 @@ test "decode_qoi: round-trip 4x4 PNG" {
 
 ///|
 test "decode_qoi: round-trip RGBA" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let qoi_bytes = encode_qoi(img)
   let img2 = decode_qoi(qoi_bytes)
   assert_eq(img2.width, 4)
@@ -80,7 +86,12 @@ test "decode_qoi: too short raises" {
 
 ///|
 test "encode_qoi: invalid channels raises" {
-  let img = @types.Image::{ width: 1, height: 1, channels: 2, data: b"\x00\x00" }
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: b"\x00\x00",
+  }
   try {
     let _ = encode_qoi(img)
     assert_true(false)

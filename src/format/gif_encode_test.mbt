@@ -15,7 +15,10 @@ test "encode_gif: 1x1 RGB" {
 
 ///|
 test "encode_gif: 4x4 PNG → GIF round-trip" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
   let gif = encode_gif(img)
   // 用 load_from_bytes 解码回来
   let img2 = @lib.load_from_bytes_auto(gif)
@@ -28,7 +31,10 @@ test "encode_gif: 4x4 PNG → GIF round-trip" {
 
 ///|
 test "encode_gif: RGBA (alpha ignored)" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(4))
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(4),
+  )
   let gif = encode_gif(img)
   let img2 = @lib.load_from_bytes_auto(gif)
   assert_eq(img2.width, 4)
@@ -40,7 +46,12 @@ test "encode_gif: RGBA (alpha ignored)" {
 
 ///|
 test "encode_gif: invalid channels raises" {
-  let img = @types.Image::{ width: 1, height: 1, channels: 2, data: b"\x00\x00" }
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: b"\x00\x00",
+  }
   try {
     let _ = encode_gif(img)
     assert_true(false)
@@ -62,7 +73,10 @@ test "encode_gif: detect_format recognizes GIF" {
 
 ///|
 test "encode_gif: 2x2 colors" {
-  let img = @lib.load_from_bytes_auto(make_2x2_colors_bmp(), req_channels=Some(3))
+  let img = @lib.load_from_bytes_auto(
+    make_2x2_colors_bmp(),
+    req_channels=Some(3),
+  )
   let gif = encode_gif(img)
   let img2 = @lib.load_from_bytes_auto(gif)
   assert_eq(img2.width, 2)
@@ -74,8 +88,11 @@ test "encode_gif: 2x2 colors" {
 
 ///|
 test "encode_gif: larger image 32x32" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png, req_channels=Some(3))
-  let resized = @pure.resize_pure(
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
+  let resized = @util.resize_pure(
     img,
     32,
     32,

@@ -1,4 +1,4 @@
-name = "MoonBit-Toadium/stb-image"
+name = "Toadium/image"
 
 version = "2.0.0"
 

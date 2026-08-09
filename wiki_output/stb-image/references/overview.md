@@ -1,10 +1,10 @@
 # 概述
 
-## stb-image
+## image
 
 MoonBit 图像处理库，封装 stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07。
 
-- **模块名**：`MoonBit-Toadium/stb-image`（发布包 `toadium/stb-image`）
+- **模块名**：`Toadium/image`（发布包 `toadium/image`）
 - **版本**：2.0.0
 - **许可证**：MIT（stb 头文件属公共领域）
 

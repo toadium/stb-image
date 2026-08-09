@@ -203,7 +203,9 @@ pub fn adaptive_threshold_gaussian(
 
 ///|
 /// Otsu 大津法自动阈值。自动计算最佳全局阈值并二值化。
-pub fn threshold_otsu(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn threshold_otsu(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "threshold_otsu 仅支持 channels=1/3/4",

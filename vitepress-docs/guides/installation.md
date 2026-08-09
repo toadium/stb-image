@@ -3,7 +3,7 @@
 ## 添加依赖
 
 ```bash
-moon add toadium/stb-image
+moon add toadium/image
 ```
 
 ## 构建与测试

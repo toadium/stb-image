@@ -106,7 +106,7 @@ pub fn resize_to_cover(
   let scale = if scale_w > scale_h { scale_w } else { scale_h }
   let scaled_w = (Float::from_int(img.width) * scale).to_int()
   let scaled_h = (Float::from_int(img.height) * scale).to_int()
-  let scaled = @pure.resize_pure(img, scaled_w, scaled_h)
+  let scaled = @pure_util.resize_pure(img, scaled_w, scaled_h)
   let x = (scaled_w - target_w) / 2
   let y = (scaled_h - target_h) / 2
   @transform.crop(scaled, x, y, target_w, target_h)
@@ -128,7 +128,7 @@ pub fn resize_to_contain(
   let scale = if scale_w < scale_h { scale_w } else { scale_h }
   let scaled_w = (Float::from_int(img.width) * scale).to_int()
   let scaled_h = (Float::from_int(img.height) * scale).to_int()
-  let scaled = @pure.resize_pure(img, scaled_w, scaled_h)
+  let scaled = @pure_util.resize_pure(img, scaled_w, scaled_h)
   let px = (target_w - scaled_w) / 2
   let py = (target_h - scaled_h) / 2
   pad(scaled, px, py, fill_color)

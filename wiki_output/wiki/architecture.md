@@ -35,4 +35,4 @@
 
 ## 向后兼容
 
-`src/reexport.mbt`（969 行，由 `scripts/gen_reexport.py` 自动生成）将 199 个函数 + 29 个类型从子包重导出到根包，用户可直接从 `toadium/stb-image` 导入所有 API。
+`src/reexport.mbt`（969 行，由 `scripts/gen_reexport.py` 自动生成）将 199 个函数 + 29 个类型从子包重导出到根包，用户可直接从 `toadium/image` 导入所有 API。

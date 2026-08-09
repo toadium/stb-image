@@ -5,7 +5,7 @@ APPROVED
 
 ## 发现
 
-经独立读取 `src/pure/bmp_decode.mbt`、`src/pure/bmp_decode_test.mbt`、`src/pure/moon.pkg` 三个源文件，逐项核对检查报告中的行号引用与内容声明，确认全部准确：
+经独立读取 `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`、`src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt`、`src/pure/{codec,pixel,color,process,util}/moon.pkg` 三个源文件，逐项核对检查报告中的行号引用与内容声明，确认全部准确：
 
 - **行号引用核对**：`bmp_decode.mbt:8`（签名）、`:11-29`（文件头解析）、`:31-37`（位深/压缩分支）、`:45,58-62`（行序）、`:49`（行填充对齐公式）、`:67`（越界）、`:77-80`（32-bit Alpha 分支）均与实际源码一致；`bmp_decode_test.mbt:88-107`（对比测试）、`:110-132`（错误路径测试）亦一致。
 - **失败路径计数核对**：源码中 `raise @core.LoadError::DecodeFailed(...)` 共 7 处（行 12/16/22/32/36/40/67），消息全中文，与检查报告声明一致。

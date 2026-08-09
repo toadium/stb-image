@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "MoonBit-Toadium/stb-image/src/process/transform"
+package "Toadium/image/src/process/transform"
 
 import {
-  "MoonBit-Toadium/stb-image/src/types",
+  "Toadium/image/src/types",
 }
 
 // Values

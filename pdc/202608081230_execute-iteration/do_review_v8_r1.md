@@ -6,8 +6,8 @@ APPROVED
 ## 发现
 
 ### 任务覆盖度
-- **解码器实现**（`src/pure/psd_decode.mbt`）：公开签名 `pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError` 与 pure 包惯例一致；支持范围（8-bit RGB/RGBA、无压缩）符合任务要求；大端序解析流程正确（header 26 字节 → 跳过 3 个 length 前缀段 → image data compression + 像素）；通道交错公式 `interleaved[i * channel_count + c] = data[pos + c * w * h + i]` 与任务要求一致；9 条错误路径全部覆盖（数据过短/signature/version/channelCount/bitdepth/colorMode/compression/尺寸无效/像素不足）。
-- **纯逻辑测试**（`src/pure/psd_decode_test.mbt`）：13 个测试用例（4 正例 + 9 错误路径）全部存在且内容正确；复用同包 `to_bytes`，新增 `push_be16`/`push_be32` 大端序写入辅助；仅依赖 @types 和 @pure，全目标可用。测试 3 `channel interleave verify` 用 R=[10,20] G=[30,40] B=[50,60] 验证交错后 [10,30,50,20,40,60]，有效确保交错逻辑正确。
+- **解码器实现**（`src/pure/{codec,pixel,color,process,util}/psd_decode.mbt`）：公开签名 `pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError` 与 pure 包惯例一致；支持范围（8-bit RGB/RGBA、无压缩）符合任务要求；大端序解析流程正确（header 26 字节 → 跳过 3 个 length 前缀段 → image data compression + 像素）；通道交错公式 `interleaved[i * channel_count + c] = data[pos + c * w * h + i]` 与任务要求一致；9 条错误路径全部覆盖（数据过短/signature/version/channelCount/bitdepth/colorMode/compression/尺寸无效/像素不足）。
+- **纯逻辑测试**（`src/pure/{codec,pixel,color,process,util}/psd_decode_test.mbt`）：13 个测试用例（4 正例 + 9 错误路径）全部存在且内容正确；复用同包 `to_bytes`，新增 `push_be16`/`push_be32` 大端序写入辅助；仅依赖 @types 和 @pure，全目标可用。测试 3 `channel interleave verify` 用 R=[10,20] G=[30,40] B=[50,60] 验证交错后 [10,30,50,20,40,60]，有效确保交错逻辑正确。
 - **FFI 基准对比测试**（`src/roundtrip_test.mbt`）：新增 2 个 native-only 测试 + `make_psd_bytes` 辅助函数；测试 1 用 `req_channels=Some(3)` 强制 3 通道匹配 pure；测试 2 alpha 全 255 避免 stb_image white matte removal，与任务上下文 `stb_image.h:6126-6280` 行为适配正确。
 
 ### 产出质量

@@ -87,13 +87,14 @@ pub type CornerPoint = @feature.CornerPoint
 // From core/ (replaced with @pure/@lib — all-target pure MoonBit)
 
 ///|
-pub let convert_iphone_png_to_rgb : (Bool) -> Unit = @pure.convert_iphone_png_to_rgb_pure
+pub let convert_iphone_png_to_rgb : (Bool) -> Unit = @pure_util.convert_iphone_png_to_rgb_pure
 
 ///|
 pub fn decode_any(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.Image raise @types.LoadError {
+  ignore(req_channels)
   @lib.load_from_bytes_auto(arg0)
 }
 
@@ -103,25 +104,25 @@ pub fn detect_format(data : Bytes) -> @types.ImageFormat {
 }
 
 ///|
-pub let failure_reason : () -> String = @pure.failure_reason_pure
+pub let failure_reason : () -> String = @pure_util.failure_reason_pure
 
 ///|
-pub let flip_vertically_on_write : (Bool) -> Unit = @pure.flip_vertically_on_write_pure
+pub let flip_vertically_on_write : (Bool) -> Unit = @pure_util.flip_vertically_on_write_pure
 
 ///|
-pub let hdr_to_ldr_gamma : (Float) -> Unit = @pure.hdr_to_ldr_gamma_pure
+pub let hdr_to_ldr_gamma : (Float) -> Unit = @pure_util.hdr_to_ldr_gamma_pure
 
 ///|
-pub let hdr_to_ldr_scale : (Float) -> Unit = @pure.hdr_to_ldr_scale_pure
+pub let hdr_to_ldr_scale : (Float) -> Unit = @pure_util.hdr_to_ldr_scale_pure
 
 ///|
-pub let info_from_bytes : (Bytes) -> @types.ImageInfo? raise @types.LoadError = @pure.info_from_bytes_pure
+pub let info_from_bytes : (Bytes) -> @types.ImageInfo? raise @types.LoadError = @pure_util.info_from_bytes_pure
 
 ///|
-pub let is_16_bit_from_bytes : (Bytes) -> Bool = @pure.is_16_bit_from_bytes_pure
+pub let is_16_bit_from_bytes : (Bytes) -> Bool = @pure_util.is_16_bit_from_bytes_pure
 
 ///|
-pub let is_hdr_from_bytes : (Bytes) -> Bool = @pure.is_hdr_from_bytes_pure
+pub let is_hdr_from_bytes : (Bytes) -> Bool = @pure_util.is_hdr_from_bytes_pure
 
 ///|
 pub fn is_supported_format(data : Bytes) -> Bool {
@@ -129,16 +130,17 @@ pub fn is_supported_format(data : Bytes) -> Bool {
 }
 
 ///|
-pub let ldr_to_hdr_gamma : (Float) -> Unit = @pure.ldr_to_hdr_gamma_pure
+pub let ldr_to_hdr_gamma : (Float) -> Unit = @pure_util.ldr_to_hdr_gamma_pure
 
 ///|
-pub let ldr_to_hdr_scale : (Float) -> Unit = @pure.ldr_to_hdr_scale_pure
+pub let ldr_to_hdr_scale : (Float) -> Unit = @pure_util.ldr_to_hdr_scale_pure
 
 ///|
 pub fn load_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.Image raise @types.LoadError {
+  ignore(req_channels)
   @lib.load_from_bytes_auto(arg0)
 }
 
@@ -147,7 +149,8 @@ pub fn load_gif_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.GifAnimation raise @types.LoadError {
-  @pure.decode_gif_animation_pure(arg0)
+  ignore(req_channels)
+  @codec.decode_gif_animation_pure(arg0)
 }
 
 ///|
@@ -155,7 +158,8 @@ pub fn loadf_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.ImageF raise @types.LoadError {
-  @pure.decode_hdr_pure(arg0)
+  ignore(req_channels)
+  @codec.decode_hdr_pure(arg0)
 }
 
 ///|
@@ -166,37 +170,38 @@ pub fn resize(
   filter? : @types.ResizeFilter = Default,
   edge? : @types.ResizeEdge = Clamp,
 ) -> @types.Image raise @types.LoadError {
-  @pure.resize_pure(arg0, arg1, arg2, filter~, edge~)
+  @pure_util.resize_pure(arg0, arg1, arg2, filter~, edge~)
 }
 
 ///|
-pub let set_flip_vertically_on_load : (Bool) -> Unit = @pure.set_flip_vertically_on_load_pure
+pub let set_flip_vertically_on_load : (Bool) -> Unit = @pure_util.set_flip_vertically_on_load_pure
 
 ///|
-pub let set_unpremultiply_on_load : (Bool) -> Unit = @pure.set_unpremultiply_on_load_pure
+pub let set_unpremultiply_on_load : (Bool) -> Unit = @pure_util.set_unpremultiply_on_load_pure
 
 ///|
-pub fn write_bmp_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
-  @pure.encode_bmp_pure(img)
+pub fn write_bmp_to_bytes(img : @types.Image) -> Bytes {
+  @codec.encode_bmp_pure(img)
 }
 
 ///|
-pub let write_hdr_to_bytes : (@types.ImageF) -> Bytes raise @types.LoadError = @pure.encode_hdr_pure
+pub let write_hdr_to_bytes : (@types.ImageF) -> Bytes raise @types.LoadError = @codec.encode_hdr_pure
 
 ///|
 pub fn write_jpeg_to_bytes(
   arg0 : @types.Image,
   quality? : Int = 90,
 ) -> Bytes raise @types.LoadError {
-  @pure.encode_jpeg_pure(arg0)
+  ignore(quality)
+  @codec.encode_jpeg_pure(arg0)
 }
 
 ///|
-pub let write_png_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @pure.encode_png_pure
+pub let write_png_to_bytes : (@types.Image) -> Bytes = @codec.encode_png_pure
 
 ///|
-pub fn write_tga_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
-  @pure.encode_tga_pure(img)
+pub fn write_tga_to_bytes(img : @types.Image) -> Bytes {
+  @codec.encode_tga_pure(img)
 }
 
 // From process/

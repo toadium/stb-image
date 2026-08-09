@@ -9,7 +9,7 @@ const moonbitGrammar = JSON.parse(
 )
 
 export default defineConfig({
-  title: 'stb-image',
+  title: 'image',
   description: 'MoonBit 图像处理库文档',
   lang: 'zh-CN',
 
@@ -32,7 +32,7 @@ export default defineConfig({
       { text: '指南', link: '/guides/' },
       {
         text: 'GitHub',
-        link: 'https://github.com/MoonBit-Toadium/stb-image'
+        link: 'https://github.com/Toadium/image'
       }
     ],
 
@@ -84,7 +84,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/MoonBit-Toadium/stb-image' }
+      { icon: 'github', link: 'https://github.com/Toadium/image' }
     ],
 
     search: {
@@ -95,7 +95,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: '基于 MoonBit-Toadium/stb-image 生成',
+      message: '基于 Toadium/image 生成',
       copyright: 'MIT License'
     }
   }

@@ -1,12 +1,7 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/process/transform" @transform,
+  "Toadium/image/src/types",
+  "Toadium/image/src/pure/util" @pure_util,
+  "Toadium/image/src/process/transform",
   "moonbitlang/core/debug",
   "moonbitlang/core/math",
 }
-
-import {
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
-} for "test"

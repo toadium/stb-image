@@ -4,16 +4,16 @@
 NEW
 
 ## 任务描述
-在 `src/pure/` 新增纯 MoonBit QOI 解码器，扩展 pure 包格式覆盖（当前仅 BMP），推进 v2.0 多目标支持的实质功能。预期产出：
+在 `src/pure/{codec,pixel,color,process,util}/` 新增纯 MoonBit QOI 解码器，扩展 pure 包格式覆盖（当前仅 BMP），推进 v2.0 多目标支持的实质功能。预期产出：
 
-1. **`src/pure/qoi_decode.mbt`** — 实现 `pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError`
+1. **`src/pure/{codec,pixel,color,process,util}/qoi_decode.mbt`** — 实现 `pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError`
    - 支持 QOI 格式 RGB（channels=3）和 RGBA（channels=4）解码
    - 参考逻辑：`src/format/qoi.mbt` 的 `decode_qoi`（第 13-116 行），该实现已是纯 MoonBit（无 FFI 调用），仅将 `@core.Image` → `@types.Image`、`@core.LoadError` → `@types.LoadError`
    - 支持全部 QOI 标签：QOI_OP_INDEX(0x00-0x3F)、QOI_OP_DIFF(0x40-0x7F)、QOI_OP_LUMA(0x80-0xBF)、QOI_OP_RUN(0xC0-0xFF)、QOI_OP_RGB(0xFE)、QOI_OP_RGBA(0xFF)
    - QOI 哈希函数：`(r*3 + g*5 + b*7 + a*11) % 64`
    - 验证 magic "qoif"（0x71 0x6F 0x69 0x66）、宽高（大端）、channels、8 字节结束标记
 
-2. **`src/pure/qoi_decode_test.mbt`** — 纯逻辑测试（全目标，不依赖 @core）
+2. **`src/pure/{codec,pixel,color,process,util}/qoi_decode_test.mbt`** — 纯逻辑测试（全目标，不依赖 @core）
    - 手构造 QOI 字节流验证解码正确性（参考 QOI 规范 https://qoiformat.org/qoi-specification.pdf）
    - 测试用例（共 8 个，覆盖全部 6 种 QOI 标签 + 2 错误路径）：
      - 1x1 RGB 像素（QOI_OP_RGB 标签）
@@ -28,7 +28,7 @@ NEW
 
 3. **`src/roundtrip_test.mbt`** — 新增 1 个 pure-format QOI 交叉验证对比测试（native-only）
    - 测试名：`roundtrip: QOI pure vs format`
-   - 模式：`@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@format.encode_qoi(img)` 生成 QOI 字节流 → `@pure.decode_qoi_pure(qoi_bytes)` pure 包纯 MoonBit 解码 → `@format.decode_qoi(qoi_bytes)` format 包纯 MoonBit 基准解码（交叉验证） → 断言 width/height/channels/data 完全一致
+   - 模式：`@core.load_from_path("testdata/test_4x4_red.png", req_channels=Some(3))` → `@format.encode_qoi(img)` 生成 QOI 字节流 → `@codec.decode_qoi_pure(qoi_bytes)` pure 包纯 MoonBit 解码 → `@format.decode_qoi(qoi_bytes)` format 包纯 MoonBit 基准解码（交叉验证） → 断言 width/height/channels/data 完全一致
    - 覆盖 RGB 路径（channels=3）
    - **说明**：`@format.encode_qoi`/`@format.decode_qoi` 均为纯 MoonBit 实现（`src/format/qoi.mbt:13,121`，无 FFI/C stub），stb_image C 库不原生支持 QOI（QOI 为现代格式），故此对比为"pure 包独立实现 vs format 包独立实现"的交叉验证，非 FFI 基准对照。两实现虽同源移植，但独立构造可发现移植错误。根包 `src/moon.pkg` 已 import format（第 11 行），无需新增依赖。
 
@@ -47,7 +47,7 @@ NEW
 
 ## 任务上下文
 摘录与当前任务直接相关的需求/约束：
-- **ROADMAP.md v2.0 交付物**：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层），推荐路径 A（双后端：native 保持 C FFI，wasm/js 用纯 MoonBit fallback）
+- **ROADMAP.md v2.0 交付物**：`src/native/` + `src/pure/{codec,pixel,color,process,util}/` + `src/lib.mbt`（后端选择层），推荐路径 A（双后端：native 保持 C FFI，wasm/js 用纯 MoonBit fallback）
 - **执行约束**：
   1. 保持 v1.0 API 冻结原则：新增功能只添加，不修改已有签名
   2. 遵循五子包架构：core/process/format/meta/util + 新增 types/pure
@@ -59,14 +59,14 @@ NEW
 
 ## 已有产出上下文
 工作目录中已有的相关产出概述：
-- **T1（R3 PASSED）**：`src/pure/` 包创建，BMP 解码器 `decode_bmp_pure`（24/32-bit 无压缩），8 测试
+- **T1（R3 PASSED）**：`src/pure/{codec,pixel,color,process,util}/` 包创建，BMP 解码器 `decode_bmp_pure`（24/32-bit 无压缩），8 测试
 - **T2（R5 PASSED）**：`src/types/` 全目标包，6 类型定义（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError），core 包通过 `pub type X = @types.X` 别名 re-export
-- **T3（R6 PASSED）**：`src/pure/moon.pkg` 移除 `supported_targets = "native"`，pure 包全目标化（仅 import types），6 纯逻辑测试
+- **T3（R6 PASSED）**：`src/pure/{codec,pixel,color,process,util}/moon.pkg` 移除 `supported_targets = "native"`，pure 包全目标化（仅 import types），6 纯逻辑测试
 - **T4（R8 PASSED）**：`src/roundtrip_test.mbt` 新增 24-bit RGB pure-FFI BMP 对比测试，`src/moon.pkg` 以 `for "test"` 声明 `@pure` 依赖
 - **当前 pure 包结构**：
-  - `src/pure/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
-  - `src/pure/bmp_decode.mbt`：`pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`
-  - `src/pure/bmp_decode_test.mbt`：6 纯逻辑测试
+  - `src/pure/{codec,pixel,color,process,util}/moon.pkg`：仅 `import types`，无 `supported_targets`，全目标
+  - `src/pure/{codec,pixel,color,process,util}/bmp_decode.mbt`：`pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError`
+  - `src/pure/{codec,pixel,color,process,util}/bmp_decode_test.mbt`：6 纯逻辑测试
 - **QOI 参考实现**（均纯 MoonBit，无 FFI/C stub）：
   - `src/format/qoi.mbt:13-116`：`pub fn decode_qoi(data : Bytes) -> @core.Image raise @core.LoadError`
   - `src/format/qoi.mbt:121-231`：`pub fn encode_qoi(img : @core.Image) -> Bytes raise @core.LoadError`

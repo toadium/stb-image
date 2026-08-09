@@ -17,10 +17,14 @@ pub fn gabor_filter(
   phi? : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("gabor_filter 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter 仅支持 channels=1/3/4",
+    )
   }
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
+    raise @types.LoadError::DecodeFailed(
+      "ksize 必须为 3..31 之间的奇数",
+    )
   }
   if sigma <= 0.0F {
     raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
@@ -217,7 +221,9 @@ pub fn gabor_kernel(
   phi? : Float = 0.0F,
 ) -> Array[Array[Float]] raise @types.LoadError {
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("ksize 必须为 3..31 之间的奇数")
+    raise @types.LoadError::DecodeFailed(
+      "ksize 必须为 3..31 之间的奇数",
+    )
   }
   if sigma <= 0.0F {
     raise @types.LoadError::DecodeFailed("sigma 必须 > 0")

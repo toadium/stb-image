@@ -5,7 +5,7 @@ APPROVED
 
 ## 发现
 - **[轻微]** 检查报告未单独审查 `make_psd_bytes` 辅助函数（`src/roundtrip_test.mbt:386-446`）的实现正确性。该函数为 FFI 基准对比测试的 PSD 字节流构造辅助，虽非核心解码逻辑，但其大端序写入与段结构拼装正确性是对比测试有效的前提。鉴于两个 FFI 对比测试已实际通过（pure 输出与 FFI 输出逐字节一致），间接证明该函数实现正确，不影响结论可靠性。
-- **[轻微]** 检查报告未提及 ASan 验证。task.md 总体约束提到"FFI 部分需 ASan 验证"，但本任务 PSD 解码器为纯 MoonBit 实现（`src/pure/psd_decode.mbt` 仅依赖 @types），FFI 基准对比测试调用既有 `@core.load_from_bytes`（非新增 FFI 绑定），task_v8.md 亦未将 ASan 列为本轮验收项。不构成检查遗漏。
+- **[轻微]** 检查报告未提及 ASan 验证。task.md 总体约束提到"FFI 部分需 ASan 验证"，但本任务 PSD 解码器为纯 MoonBit 实现（`src/pure/{codec,pixel,color,process,util}/psd_decode.mbt` 仅依赖 @types），FFI 基准对比测试调用既有 `@core.load_from_bytes`（非新增 FFI 绑定），task_v8.md 亦未将 ASan 列为本轮验收项。不构成检查遗漏。
 - **[轻微]** 检查报告中 `moon check` 三目标结果以"30 tasks / 4 tasks"描述任务数，未明确是新鲜执行还是缓存命中。独立复现验证：`moon clean` 后 `moon check --target native` 输出 "ran 30 tasks"，`--target wasm`/`--target js` 均输出 "ran 4 tasks"，与检查报告数字完全一致，结论可靠。
 
 ## 独立验证摘要

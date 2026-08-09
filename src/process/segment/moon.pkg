@@ -1,21 +1,9 @@
 import {
-  "MoonBit-Toadium/stb-image/src/types",
-  "MoonBit-Toadium/stb-image/src/process/color",
+  "Toadium/image/src/types",
+  "Toadium/image/src/process/color",
 }
 
 import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-  "MoonBit-Toadium/stb-image/src/testdata" @testdata,
+  "Toadium/image/src/lib",
+  "Toadium/image/src/testdata",
 } for "test"
-
-options(
-  targets: {
-    "connected_components_test.mbt": [ "native" ],
-    "distance_transform_test.mbt": [ "native" ],
-    "kmeans_quantize_test.mbt": [ "native" ],
-    "morphology_test.mbt": [ "native" ],
-    "quantize_test.mbt": [ "native" ],
-    "watershed_test.mbt": [ "native" ],
-  },
-)

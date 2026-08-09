@@ -126,5 +126,3 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
   }
   result
 }
-
-

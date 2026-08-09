@@ -6,7 +6,7 @@ PASSED
 ## 检查项
 | 检查项 | 方法 | 结果 |
 |--------|------|------|
-| 产出文件存在性 | `ls src/pure/` + grep roundtrip_test.mbt | 通过：`pnm_decode.mbt`/`pnm_decode_test.mbt` 新建，`roundtrip_test.mbt` 已修改 |
+| 产出文件存在性 | `ls src/pure/{codec,pixel,color,process,util}/` + grep roundtrip_test.mbt | 通过：`pnm_decode.mbt`/`pnm_decode_test.mbt` 新建，`roundtrip_test.mbt` 已修改 |
 | 解码器公开签名 | 读取 `pnm_decode.mbt:63` | 通过：`pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError`，符合 pure 包惯例 |
 | P5/P6 magic 支持 | 读取 `pnm_decode.mbt:71` | 通过：仅接受 P5（0x50 0x35）和 P6（0x50 0x36），其他 magic 拒绝 |
 | 8-bit 限制 | 读取 `pnm_decode.mbt:86` | 通过：`maxval >= 256` → DecodeFailed；`maxval <= 0` → DecodeFailed |

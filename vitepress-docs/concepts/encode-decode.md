@@ -13,5 +13,5 @@
 ## 函数命名约定
 
 - Native 侧：`load_from_bytes`、`write_png_to_bytes` 等
-- Pure 侧：`@pure.decode_bmp_pure`、`@pure.encode_qoi_pure` 等
+- Pure 侧：`@codec.decode_bmp_pure`、`@codec.encode_qoi_pure` 等
 - 统一入口：`@lib.load_from_bytes_auto`（自动格式分派）

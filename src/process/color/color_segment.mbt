@@ -35,7 +35,9 @@ pub fn kmeans_segment(
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("kmeans_segment 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_segment 需要 RGB/RGBA 图像",
+    )
   }
   let ch = img.channels
   let w = img.width

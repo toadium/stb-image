@@ -6,7 +6,7 @@ PASSED
 ## 检查项
 | 检查项 | 方法 | 结果 |
 |--------|------|------|
-| 目录结构 `src/pure/` 创建 | `ls src/pure/` 列目录 | 通过：含 `moon.pkg`、`bmp_decode.mbt`、`bmp_decode_test.mbt` 三个文件 |
+| 目录结构 `src/pure/{codec,pixel,color,process,util}/` 创建 | `ls src/pure/{codec,pixel,color,process,util}/` 列目录 | 通过：含 `moon.pkg`、`bmp_decode.mbt`、`bmp_decode_test.mbt` 三个文件 |
 | `moon.pkg` 配置 | 读取文件内容对比任务要求 | 通过：`import @core` + `supported_targets = "native"`，与 `src/format/moon.pkg` 同构 |
 | 函数签名 | 读取 `bmp_decode.mbt:8` | 通过：`pub fn decode_bmp_pure(data : Bytes) -> @core.Image raise @core.LoadError`，与 `decode_qoi` 惯例一致 |
 | 24-bit 无压缩 BMP 支持 | 代码审查 `bmp_decode.mbt:31-37` + 测试 `1x1 24-bit`、`2x2 24-bit` | 通过：bpp=24 走 channels=3 分支，BGR→RGB 转换正确 |
