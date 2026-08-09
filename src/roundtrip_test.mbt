@@ -1184,3 +1184,159 @@ test "add_border: pure vs util" {
   let _ = pure_img
   let _ = util_img
 }
+
+///|
+test "pixelate: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.pixelate_pure(orig, 4)
+  let util_img = @util.pixelate(orig, 4)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "replace_color: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.replace_color_pure(
+    orig, [b'\xFF', b'\x00', b'\x00'], [b'\x00', b'\xFF', b'\x00'], 10,
+  )
+  let util_img = @util.replace_color(
+    orig, [b'\xFF', b'\x00', b'\x00'], [b'\x00', b'\xFF', b'\x00'], 10,
+  )
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "convolve: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let kernel = [
+    0.0F, -1.0F, 0.0F, -1.0F, 5.0F, -1.0F, 0.0F, -1.0F, 0.0F,
+  ]
+  let pure_img = @pure.convolve_pure(orig, kernel, 0.0F, 1.0F)
+  let util_img = @util.convolve(orig, kernel, 0.0F, 1.0F)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "swap_channels: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.swap_channels_pure(orig, 0, 2)
+  let util_img = @util.swap_channels(orig, 0, 2)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "apply_lut: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  // 构造反转 LUT（256 个 Byte，lut[v]=255-v）
+  let lut : Array[Byte] = Array::make(256, b'\x00')
+  for v in 0..<256 {
+    lut[v] = (255 - v).to_byte()
+  }
+  let pure_img = @pure.apply_lut_pure(orig, lut)
+  let util_img = @util.apply_lut(orig, lut)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+  let _ = lut
+}
+
+///|
+test "gradient_map: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  // color_stops=[(0,0,0,0),(128,255,0,0),(255,255,255,255)]
+  let stops : Array[(Int, Byte, Byte, Byte)] = [
+    (0, b'\x00', b'\x00', b'\x00'),
+    (128, b'\xFF', b'\x00', b'\x00'),
+    (255, b'\xFF', b'\xFF', b'\xFF'),
+  ]
+  let pure_img = @pure.gradient_map_pure(orig, stops)
+  let util_img = @util.gradient_map(orig, stops)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+  let _ = stops
+}
+
+///|
+test "set_alpha: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
+  let pure_img = @pure.set_alpha_pure(orig, b'\x80')
+  let util_img = @util.set_alpha(orig, b'\x80')
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "fill_alpha: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(4),
+  )
+  let pure_img = @pure.fill_alpha_pure(orig, 128, b'\x00', b'\x00', b'\x00')
+  let util_img = @util.fill_alpha(orig, 128, b'\x00', b'\x00', b'\x00')
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}

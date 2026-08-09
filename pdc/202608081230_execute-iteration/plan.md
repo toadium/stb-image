@@ -796,3 +796,47 @@
 - `reexport.mbt:861,918,936,942,960`：`@util.add_border`/`@util.extract_channel`/`@util.pad`/`@util.posterize`/`@util.threshold`，引用前缀 `@util`
 - `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-1101）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@transform.xxx`/`@color.xxx`/`@filter.xxx`/`@feature.xxx`/`@segment.xxx` → 断言 width/height/channels/data 完全一致
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R35 PASSED v2.0 pure 包基础像素操作 + 图像工具（threshold/posterize/extract_channel + pad/add_border，纯 MoonBit，全目标） [ID: T20]
+结果：在 `src/pure/` 新增 `pixel_ops.mbt`（clamp_byte_v + threshold_pure + posterize_pure + extract_channel_pure，移植自 `src/util/pixel_ops.mbt:4-98`）和 `image_util.mbt`（pad_pure + add_border_pure，移植自 `src/util/image_util.mbt:6-91`），仅依赖 @types，全目标可用 + 13 个 pure 纯逻辑测试 + 5 个根包 native-only pure vs util 对比测试。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 770/770 通过（752→770，+13 pure 纯逻辑 + 5 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R35 NEW v2.0 pure 包高级像素操作 + 色彩映射（pixelate/replace_color/convolve/swap_channels + apply_lut/gradient_map/set_alpha/fill_alpha，纯 MoonBit，全目标） [ID: T21]
+任务：在 `src/pure/` 新增 `pixel_advanced.mbt`（移植 `src/util/pixel_advanced.mbt:1-186` 的 clamp_b 私有辅助 + pixelate + replace_color + convolve + swap_channels + clamp_int 私有辅助 + check_color_match 私有辅助）和 `color_map.mbt`（移植 `src/util/color_map.mbt:1-174` 的 apply_lut + gradient_map + interp_gradient 私有辅助 + set_alpha + fill_alpha，interp_gradient 复用 pixel_advanced.mbt 的 clamp_b），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/pixel_advanced_test.mbt` 10 个纯逻辑测试（全目标，覆盖 pixelate 基础/无效 block_size raises、replace_color 精确匹配/容差匹配/颜色数组过短 raises、convolve 基础锐化/kernel 过短 raises/RGBA alpha 保留、swap_channels 交换 R-B/通道越界 raises）和 `src/pure/color_map_test.mbt` 8 个纯逻辑测试（全目标，覆盖 apply_lut 基础/lut 过短 raises/RGBA alpha 保留、gradient_map 基础/颜色点不足 raises、set_alpha 设置 alpha/非 RGBA raises、fill_alpha 填充 alpha）。在根包 `src/roundtrip_test.mbt` 新增 8 个 native-only pure vs util 对比测试（pixelate/replace_color/convolve/swap_channels/apply_lut/gradient_map 用 req_channels=Some(3)，set_alpha/fill_alpha 用 req_channels=Some(4)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 770→796 通过。
+选择理由：
+- T20 已完成基础像素操作（threshold/posterize/extract_channel）+ 图像工具（pad/add_border），pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 仿射变换 + 基础像素操作 + 图像工具，但缺高级像素操作（马赛克/颜色替换/卷积/通道交换）和色彩映射（LUT/渐变映射/alpha 操作），这些是常用图像操作，补齐后 pure 包图像处理能力更完整
+- `src/util/pixel_advanced.mbt:1-186` 和 `src/util/color_map.mbt:1-174` 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte/Float 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T20（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作移植）同构，技术风险极低
+- `clamp_b`（pixel_advanced.mbt:4）与 pure 包已有 `clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）/`clamp_byte_v`（pixel_ops.mbt:4）不同名，无命名冲突
+- `clamp_int`（pixel_advanced.mbt:161）与 pure 包已有 `clamp_i`（morphology.mbt:178）不同名，无命名冲突
+- `check_color_match`（pixel_advanced.mbt:172）/`interp_gradient`（color_map.mbt:83）pure 包无此名，无冲突
+- color_map.mbt 的 `interp_gradient` 调用 `clamp_b`（line 106），同包内私有函数跨文件可见，复用 pixel_advanced.mbt 的 `clamp_b` 即可，无需重复定义
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，高级像素操作 + 色彩映射仅依赖 @types，全目标可用，无需新增依赖（@math 已在 pure 包 moon.pkg 但本轮不使用）
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（图像拼接/噪声/统计/混合模式等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
+- T20 产出：pure 包基础像素操作 + 图像工具，native 770 测试通过
+- `src/util/pixel_advanced.mbt:4-12`：`fn clamp_b(v : Int) -> Byte`，私有辅助（clamp 到 [0,255]）
+- `src/util/pixel_advanced.mbt:16-44`：`pub fn pixelate(img, block_size) -> Image raise LoadError`，马赛克效果，block_size 正数检查
+- `src/util/pixel_advanced.mbt:49-80`：`pub fn replace_color(img, old_color, new_color, tolerance) -> Image raise LoadError`，颜色替换，精确/容差匹配
+- `src/util/pixel_advanced.mbt:85-125`：`pub fn convolve(img, kernel, bias, scale) -> Image raise LoadError`，3x3 卷积，alpha 保留分支 line 114-116
+- `src/util/pixel_advanced.mbt:129-158`：`pub fn swap_channels(img, ch1, ch2) -> Image raise LoadError`，通道交换，ch1==ch2 返回原图
+- `src/util/pixel_advanced.mbt:161-169`：`fn clamp_int(v, lo, hi) -> Int`，私有辅助
+- `src/util/pixel_advanced.mbt:172-186`：`fn check_color_match(data, off, ch, target, tolerance) -> Bool`，私有辅助
+- `src/util/color_map.mbt:8-33`：`pub fn apply_lut(img, lut) -> Image raise LoadError`，LUT 应用，alpha 保留分支 line 23-25
+- `src/util/color_map.mbt:39-80`：`pub fn gradient_map(img, color_stops) -> Image raise LoadError`，渐变映射，输出 channels=3
+- `src/util/color_map.mbt:83-110`：`fn interp_gradient(v, stops) -> (Byte, Byte, Byte)`，私有辅助，调用 clamp_b（line 106）
+- `src/util/color_map.mbt:114-137`：`pub fn set_alpha(img, alpha) -> Image raise LoadError`，设置 alpha，要求 channels=4
+- `src/util/color_map.mbt:141-174`：`pub fn fill_alpha(img, threshold, fill_r, fill_g, fill_b) -> Image raise LoadError`，填充 alpha，要求 channels=4
+- `src/util/moon.pkg`：import core + transform + debug + math，supported_targets = "native"（pixel_advanced.mbt 和 color_map.mbt 仅依赖 @core.Image/@core.LoadError，不使用 @transform/@math）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包已有辅助函数：`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）/`clamp_byte_v`（pixel_ops.mbt:4），`clamp_b`/`clamp_int`/`check_color_match`/`interp_gradient` 均不同名无冲突
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry/pixel_ops/image_util 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
+- `reexport.mbt:870,915,921,927,939,945,954,957`：`@util.apply_lut`/`@util.convolve`/`@util.fill_alpha`/`@util.gradient_map`/`@util.pixelate`/`@util.replace_color`/`@util.set_alpha`/`@util.swap_channels`，引用前缀 `@util`
+- `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-1101）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
