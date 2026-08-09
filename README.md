@@ -2,13 +2,16 @@
 
 # image
 
-**MoonBit 图像处理库** — 纯 MoonBit 实现，native/wasm-gc/js 三目标支持
+**纯 MoonBit 图像处理库** · 零 C 依赖 · 三目标原生支持
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MoonBit](https://img.shields.io/badge/MoonBit-native%2Bwasm%2Bjs-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-645%20passed%20%C3%973%20targets-brightgreen)]()
+[![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
+[![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js-success)]()
+[![Tests](https://img.shields.io/badge/tests-645%20%C3%97%203%20targets-brightgreen)]()
+[![Functions](https://img.shields.io/badge/API-196%20functions%20%2B%2027%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-2.0.0-orange)]()
 
-[快速上手](#-快速上手) · [功能特性](#-功能特性) · [文档](#-文档) · [构建测试](#-构建与测试)
+[亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [包结构](#-包结构) · [文档](#-文档)
 
 </div>
 
@@ -16,9 +19,41 @@
 
 ## 📖 简介
 
-纯 MoonBit 图像处理库，无 C FFI 依赖。支持 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM 等格式的解码与编码，以及完整的图像处理能力（几何变换、色彩调整、滤波、形态学、直方图、频域分析、特征检测等）。
+`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 10+ 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。
 
-**三目标支持**：native、wasm-gc、js 均编译通过，各 645 测试全部通过。
+> [!NOTE]
+> 三目标（native / wasm-gc / js）均使用同一套纯 MoonBit 代码，各 645 测试全部通过。
+
+---
+
+## ✨ 亮点
+
+| | 特性 | 说明 |
+|---|---|---|
+| 🟢 | **零 C 依赖** | 全部纯 MoonBit 实现，无需 C 编译器，部署极简 |
+| 🟢 | **三目标支持** | native / wasm-gc / js 共用同一代码库，无条件编译 |
+| 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM — 含独家 PSD、HDR |
+| 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
+| 🟢 | **196 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、Retinex 等高级算法 |
+| 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
+
+---
+
+## 🖼️ 格式支持
+
+| 格式 | 解码 | 编码 | 备注 |
+|:----:|:----:|:----:|------|
+| PNG | ✅ | ✅ | 8/16-bit，Adam7 隔行扫描 |
+| JPEG | ✅ | ✅ | baseline，可调质量 |
+| BMP | ✅ | ✅ | 1/4/8/16/24/32-bit |
+| GIF | ✅ | ✅ | 动画 GIF 解码/编码 |
+| QOI | ✅ | ✅ | Quite OK Image |
+| TGA | ✅ | ✅ | 含 RLE |
+| PSD | ✅ | — | Photoshop 文档（独家） |
+| HDR | ✅ | ✅ | IEEE 754 浮点（独家） |
+| PNM | ✅ | ✅ | PPM / PGM |
+| ICO | — | ✅ | 单尺寸/多尺寸 |
+| ICNS | — | ✅ | macOS 图标 |
 
 ---
 
@@ -40,7 +75,7 @@ println("width=\{img.width}, height=\{img.height}, channels=\{img.channels}")
 // 编码为 PNG 字节
 let out : Bytes = write_png_to_bytes(img)
 
-// 使用默认滤波器缩放
+// 缩放（7 种滤波器 × 4 种边缘模式）
 let resized : Image = resize(img, 128, 128)
 
 // 自动检测格式并解码
@@ -50,7 +85,7 @@ let any : Image = decode_any(data, req_channels=Some(3))
 let anim : GifAnimation = load_gif_from_bytes(gif_bytes)
 println("frames=\{anim.frames.length()}, delays=\{anim.delays}")
 
-// 查询图像信息（不解码）
+// 查询图像信息（不解码像素）
 let info : ImageInfo? = info_from_bytes(data)
 ```
 
@@ -68,63 +103,78 @@ try {
 
 ---
 
-## ✨ 功能特性
+## 🧰 功能一览
 
-### 基础能力
+<details>
+<summary><b>基础能力</b></summary>
 
 | 能力 | 说明 |
 |------|------|
-| **格式解码** | PNG、JPEG、BMP、GIF、PSD、TGA、HDR、PNM (PPM/PGM)、QOI |
-| **格式编码** | PNG、BMP、TGA、JPEG、HDR、QOI、GIF、PNM (PPM/PGM) |
-| **像素类型** | 8位 `Image`、16位 `Image16`、HDR浮点 `ImageF` |
-| **缩放** | 多种滤波器 × 边缘模式 |
-| **格式检测** | `detect_format` / `decode_any` |
-| **动画 GIF** | 多帧解码/编码，支持逐帧延迟 |
-| **元数据** | EXIF 读取、PNG 文本块 |
-| **信息查询** | 不解码像素即可获取尺寸 |
+| 格式检测 | `detect_format` / `decode_any` / `is_supported_format` |
+| 像素类型 | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
+| 缩放 | 7 种滤波器 × 4 种边缘模式，sRGB 色彩空间 |
+| 动画 GIF | 多帧解码/编码，支持逐帧延迟 |
+| 元数据 | EXIF 读取、PNG 文本块 |
+| 信息查询 | 不解码像素即可获取尺寸/通道/位深 |
 
-### 图像处理
+</details>
 
-| 类别 | 功能 |
-|------|------|
-| **几何变换** | 裁剪、旋转（90°/180°/270°/任意角度）、翻转、仿射变换 |
-| **色彩** | 亮度/对比度/伽马/反色调整、HSV/HSL 转换、灰度/RGB/RGBA 转换 |
-| **滤波器** | 方框模糊、高斯模糊、锐化、Sobel 边缘检测 |
-| **直方图** | 计算、均衡化、归一化 |
-| **形态学** | 腐蚀、膨胀、开运算、闭运算 |
-| **混合模式** | 13 种（正片叠底、滤色、叠加、变暗/变亮、差值、排除等） |
-| **质量评估** | MSE、PSNR、SSIM |
-
-### 高级分析
+<details>
+<summary><b>图像处理（119 函数）</b></summary>
 
 | 类别 | 功能 |
 |------|------|
-| **CLAHE** | 对比度受限自适应直方图均衡 |
-| **K-means** | 色彩量化、颜色分割、区域生长、泛洪填充 |
-| **FFT** | 频域变换、频域滤波 |
-| **自适应阈值** | 均值法、高斯加权法、Otsu 大津法 |
-| **连通域** | 4/8 连通标记 |
-| **积分图像** | O(1) 矩形区域求和/均值/方差查询 |
-| **霍夫变换** | 直线检测 |
-| **LBP** | 局部二值模式 |
-| **图像金字塔** | 高斯/拉普拉斯金字塔 |
-| **双边滤波** | 保边去噪 |
-| **Canny 边缘** | 高斯 → Sobel → 非极大值抑制 → 滞后连接 |
-| **分水岭** | 沉浸式分割 |
-| **GLCM 纹理** | 对比度/相关性/能量/同质性/熵 |
-| **Haar 小波** | 1D/2D 变换，多级分解 |
-| **Harris 角点** | 结构张量 + 非极大值抑制 |
-| **去雾** | 暗通道先验 + 引导滤波 |
-| **Retinex** | SSR、MSR、MSRCR |
-| **Gabor 滤波** | 多方向多尺度纹理分析 |
+| 几何变换 | 裁剪、旋转（90°/180°/270°/任意角度）、翻转、仿射变换 |
+| 色彩 | 亮度/对比度/伽马/反色、HSV/HSL 转换、灰度/RGB/RGBA、预乘 Alpha |
+| 滤波器 | 方框模糊、高斯模糊、锐化、Sobel/Laplacian/Prewitt 边缘检测 |
+| 直方图 | 计算、均衡化、归一化 |
+| 形态学 | 腐蚀、膨胀、开运算、闭运算、骨架化 |
+| 混合模式 | 13 种（正片叠底、滤色、叠加、变暗/变亮、差值、排除等） |
+| 质量评估 | MSE、PSNR、SSIM |
+| 绘制 | `draw_copy`、`draw_over`（Alpha 混合） |
 
-### 多目标支持
+</details>
 
-| 目标 | 后端 | 测试 |
-|------|------|------|
-| **native** | 纯 MoonBit | 645 passed |
-| **wasm-gc** | 纯 MoonBit | 645 passed |
-| **js** | 纯 MoonBit | 645 passed |
+<details>
+<summary><b>高级分析（76 函数）</b></summary>
+
+| 类别 | 功能 |
+|------|------|
+| CLAHE | 对比度受限自适应直方图均衡 |
+| K-means | 色彩量化、颜色分割、区域生长、泛洪填充 |
+| FFT | 2D 频域变换、频域滤波（理想/高斯，低通/高通/带通/带阻） |
+| 自适应阈值 | 均值法、高斯加权法、Otsu 大津法 |
+| 连通域 | 4/8 连通标记（Union-Find），含面积/边界框/质心 |
+| 积分图像 | O(1) 矩形区域求和/均值/方差查询 |
+| 霍夫变换 | 直线检测 + 非极大值抑制 |
+| LBP | 局部二值模式（基本 + 均匀 58 模式） |
+| 图像金字塔 | 高斯/拉普拉斯金字塔 |
+| 双边滤波 | 保边去噪（标准 + 快速降采样） |
+| NLM 去噪 | 非局部均值（标准 + 快速） |
+| Canny 边缘 | 高斯 → Sobel → 非极大值抑制 → 滞后连接 |
+| 分水岭 | 沉浸式分割（标记/自动） |
+| GLCM 纹理 | 对比度/相关性/能量/同质性/熵/ASM/不相似性 |
+| Haar 小波 | 1D/2D 变换，多级分解，软/硬阈值去噪 |
+| Harris 角点 | 结构张量 + 非极大值抑制 + 距离过滤 |
+| 去雾 | 暗通道先验 + 引导滤波 |
+| Retinex | SSR、MSR、MSRCR |
+| Gabor 滤波 | 多方向多尺度纹理分析 |
+| 距离变换 | L1/L2/Linf 距离，骨架化 |
+
+</details>
+
+---
+
+## 🎯 多目标支持
+
+| 目标 | 后端 | 测试 | 状态 |
+|:----:|:----:|:----:|:----:|
+| **native** | 纯 MoonBit | 645 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 645 | ✅ |
+| **js** | 纯 MoonBit | 645 | ✅ |
+
+> [!TIP]
+> 三目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
 
 ---
 
@@ -132,27 +182,20 @@ try {
 
 ```
 src/
-├── types/              # 基础类型 (Image, Image16, ImageF, LoadError 等)
-├── pure/               # 纯 MoonBit 实现 (无 C FFI)
-│   ├── codec/          # 格式编解码 (20 文件: BMP/GIF/JPEG/PNG/PNM/QOI/TGA/PSD/HDR)
-│   ├── pixel/          # 像素操作 (pixel_ops, pixel_advanced)
-│   ├── color/          # 颜色操作 (color_adjust, color_convert, color_map)
-│   ├── process/        # 图像处理 (filter, geometry, transform, morphology, blend 等)
-│   └── util/           # 工具 (config, image_info, resize, zlib)
+├── types/              # 全目标类型 (Image, Image16, ImageF, LoadError 等)
+├── pure/               # 纯 MoonBit 后端 (无 C FFI)
+│   ├── codec/          #   格式编解码 (20 文件)
+│   ├── pixel/          #   像素操作 (2 文件)
+│   ├── color/          #   颜色操作 (3 文件)
+│   ├── process/        #   图像处理 (10 文件)
+│   └── util/           #   工具 (4 文件)
 ├── lib/                # 高层封装 (自动格式分派)
-├── format/             # 格式扩展 (gif_animation, qoi, pnm 编码)
+├── core/               # 统一入口 + I/O
+├── format/             # 格式扩展 (GIF 动画, QOI, PNM 编码)
 ├── meta/               # 元数据 (EXIF, PNG meta)
-├── process/            # 高级图像处理算法
-│   ├── color/          # CLAHE, Retinex, 去雾, 颜色分割
-│   ├── edge/           # Canny, Hough, 轮廓提取
-│   ├── feature/        # Harris, LBP, GLCM, Gabor, 积分图像
-│   ├── filter/         # 双边滤波, NLM 去噪
-│   ├── frequency/      # FFT, Haar 小波
-│   ├── segment/        # K-means, 分水岭, 形态学
-│   └── transform/      # 几何变换, 绘制, 金字塔
+├── process/            # 高级图像处理算法 (7 子包)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
-├── testdata/           # 测试数据
-└── reexport.mbt        # 顶层 API re-export
+└── reexport.mbt        # 顶层 API re-export (196 pub fn)
 ```
 
 ---
@@ -161,31 +204,129 @@ src/
 
 | 文档 | 说明 |
 |------|------|
-| [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系 |
-| [docs/api_reference.md](docs/api_reference.md) | API 参考 |
+| [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（196 函数 + 27 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
-| [docs/comparison.md](docs/comparison.md) | 图像库对比 |
+| [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
+| [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
 
 ---
 
 ## 🔧 构建与测试
 
 ```bash
-moon check                       # 检查编译 (native 默认)
-moon check --target wasm-gc      # 检查 wasm-gc 编译
-moon check --target js           # 检查 js 编译
-moon test --target native        # 运行 native 测试 (645)
-moon test --target wasm-gc       # 运行 wasm-gc 测试 (645)
-moon test --target js            # 运行 js 测试 (645)
-moon info                        # 重新生成 API 接口
+# 编译检查（三目标）
+moon check
+moon check --target wasm-gc
+moon check --target js
+
+# 运行测试（三目标各 645）
+moon test --target native
+moon test --target wasm-gc
+moon test --target js
+
+# 重新生成 API 接口
+moon info
 ```
+
+---
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+<details>
+<summary><b>📋 开发环境</b></summary>
+
+```bash
+# 安装 MoonBit 工具链（需 0.1.20260713+）
+# 见 https://www.moonbitlang.com/download/
+
+# 克隆并验证
+git clone git@github.com:toadium/stb-image.git
+cd stb-image
+moon check                          # 编译检查
+moon test --target native           # 运行测试（应 645 通过）
+```
+
+</details>
+
+<details>
+<summary><b>🔧 开发流程</b></summary>
+
+1. **Fork** 仓库并克隆到本地
+2. **创建分支**：`git checkout -b feature/your-feature` 或 `fix/your-fix`
+3. **编写代码**，遵循下方代码规范
+4. **编写测试**，新功能必须有对应测试
+5. **三目标验证**：
+   ```bash
+   moon test --target native     # 必须通过
+   moon test --target wasm-gc    # 必须通过
+   moon test --target js         # 必须通过
+   ```
+6. **提交**：`git commit -m "功能: 简述你的改动"`
+7. **推送并发起 PR**，描述改动内容和动机
+
+</details>
+
+<details>
+<summary><b>📐 代码规范</b></summary>
+
+| 规范 | 要求 | 示例 |
+|------|------|------|
+| 命名 | `snake_case` | `gaussian_blur`、`clamp_byte_v` |
+| 函数分隔 | 每个顶层定义前用 `///\|` | `///\|` + 换行 + `pub fn ...` |
+| 文档注释 | `pub` 函数上方添加 `///` 注释 | `/// 二值化。像素 >= threshold 设为 255` |
+| 可见性 | 仅暴露必要函数为 `pub` | 内部辅助函数不加 `pub` |
+| 错误处理 | 使用 `raise @types.LoadError` | `raise LoadError::DecodeFailed("msg")` |
+| 测试命名 | `"函数名: 场景描述"` | `"threshold_pure: basic binarization"` |
+
+</details>
+
+<details>
+<summary><b>🚫 核心约束</b></summary>
+
+> [!WARNING]
+> 以下约束不可违反，否则 PR 将被拒绝：
+
+- **禁止引入 C FFI 依赖** — 所有代码必须纯 MoonBit 实现，确保三目标可用
+- **禁止破坏已有 API** — 新增功能只添加不修改已有签名，保持向后兼容
+- **禁止目标条件编译** — 不使用 `target == "native"` 等条件分支，三目标共用代码
+- **新增 `pub` 函数须在 `reexport.mbt` 注册** — 保持顶层 API 完整性
+
+</details>
+
+<details>
+<summary><b>📝 提交信息格式</b></summary>
+
+```
+<类型>: <简述>
+
+[可选正文，说明动机或细节]
+```
+
+**类型**：`功能`（新功能）| `修复`（bug 修复）| `文档`（文档更新）| `重构`（代码重构）| `测试`（测试补充）
+
+**示例**：
+```
+功能: 新增 WebP lossless 解码器
+
+基于 VP8L 格式规范实现，支持 8-bit RGBA 解码。
+新增 42 个测试，三目标均通过。
+```
+
+</details>
 
 ---
 
 ## 📄 许可证
 
-MIT 许可证 — 详见 [LICENSE](LICENSE)。
+[MIT](LICENSE) — 自由使用、修改、分发。
 
 ---
 
-如果对你有用，欢迎 Star ⭐，感谢支持！
+<div align="center">
+
+如果这个项目对你有帮助，欢迎 ⭐ Star 支持一下！
+
+</div>
