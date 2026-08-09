@@ -1055,3 +1055,47 @@ test "pure vs segment: morph_close" {
   let _ = pure_out
   let _ = segment_out
 }
+
+///|
+test "warp_affine: pure vs transform" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.warp_affine_pure(
+    orig,
+    (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F),
+    4,
+    4,
+  )
+  let ffi_img = @transform.warp_affine(
+    orig,
+    (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F),
+    4,
+    4,
+  )
+  assert_eq(pure_img.width, ffi_img.width)
+  assert_eq(pure_img.height, ffi_img.height)
+  assert_eq(pure_img.channels, ffi_img.channels)
+  assert_eq(pure_img.data, ffi_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = ffi_img
+}
+
+///|
+test "rotate: pure vs transform" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.rotate_pure(orig, 45.0F)
+  let ffi_img = @transform.rotate(orig, 45.0F)
+  assert_eq(pure_img.width, ffi_img.width)
+  assert_eq(pure_img.height, ffi_img.height)
+  assert_eq(pure_img.channels, ffi_img.channels)
+  assert_eq(pure_img.data, ffi_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = ffi_img
+}
