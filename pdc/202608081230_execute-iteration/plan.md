@@ -958,3 +958,14 @@
 3. **wasm/js 测试数验证**：在 task_v24.md 构建验证中增加 `moon test --target wasm` 225 通过、`moon test --target js` 225 通过，由 Checker 实际运行验证。
 4. **ROADMAP 交付物小节措辞修正**：task_v24.md line 31 "新增'### 交付物（已完成）'小节" → "更新现有'### 交付物'小节（ROADMAP.md:382-385）为'### 交付物（已完成）'"，并明确要求将现有 `src/lib.mbt` 更正为 `src/lib/`（目录）。
 选择理由：审查意见 4 项全部属实（已核实 README.md:113,122、README.zh.md:113,122、ROADMAP.md:382-385 源码），均为文档更新遗漏或措辞不一致，修正仅补充文档更新要求与构建验证项不涉代码逻辑变更，风险极低，修正后文档内测试数引用一致（badge/Usage/Testing 均为 847）、Features 与 Limitations 不矛盾、wasm/js 测试数由 Checker 实际验证、ROADMAP 交付物小节无重复且路径正确
+
+---
+
+## R41 PASSED v2.0 版本发布收尾（版本号 + 文档 + 多目标验证记录） [ID: T24]
+结果：更新 `moon.mod` 版本号 1.17.0 → 2.0.0 + description/keywords 反映多目标支持（新增 wasm/js/pure/multi-target 4 关键词）；同步更新 `README.md`/`README.zh.md`（badge tests-847 + MoonBit-native+wasm+js、顶部描述补充多目标说明、Features 新增 Multi-target support 条目、Build & Test 注释 546→847、Limitations Multi-target 条目改为已完成、底部测试数 847+29 native + 225 wasm/js）；更新 `ROADMAP.md` v2.0 标记 ✅ + 交付物小节改为"已完成"并更正 `src/lib.mbt` → `src/lib/`（目录含 3 文件）+ 记录 pure 包完整能力 + 三目标测试数 + 版本时间线表 v2.0 ✅ 已完成。
+检查：`moon check` 三目标（native/wasm/js）0 errors 0 warnings，`moon test --target native` 847/847 通过，`moon test --target wasm` 225/225 通过，`moon test --target js` 225/225 通过，v1.0 API 冻结保持，现有测试不破坏。RETRY r1 修正的 4 项文档更新遗漏（Usage 注释测试数 546→847、Limitations 多目标条目改为已完成、wasm/js 测试数由 Checker 实际验证、ROADMAP 交付物小节措辞与 `src/lib/` 更正）均已正确执行。v2.0 多目标支持正式发布，T1-T24 全部完成。
+
+---
+
+## R42 ALL_DONE
+v2.0 多目标支持（架构升级）全部完成。T1-T24 共 24 个子任务全部 PASSED，三目标构建 0 errors 0 warnings，native 847 + wasm 225 + js 225 测试全通过。ROADMAP.md v2.0 已标记 ✅，v2.1（WebP/stream/TIFF/APNG）为远期低优先级，无明确迭代计划文件，本轮 PDC 循环结束。
