@@ -1,12 +1,12 @@
 # stb-image 架构文档
 
-> 版本 v1.17.0 | 199 公开函数 + 29 类型 | 533 测试 + 29 基准测试
+> 版本 v2.0.0 | 196 公开函数 + 27 类型 | 847 测试 + 75 基准测试
 >
-> [English](README.md) | [中文](README.zh.md)
+> [English](ARCHITECTURE.en.md) | [中文](ARCHITECTURE.md)
 
 ## 概述
 
-stb-image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用五子包架构，根包 re-export 保持向后兼容 API。
+stb-image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用八子包架构（types, core, lib, pure, process, format, meta, util），根包 re-export 保持向后兼容 API。
 
 ## 功能分类
 
@@ -74,12 +74,16 @@ mindmap
 ```mermaid
 flowchart TB
     subgraph Root["根包 (src/)"]
-        RE["reexport.mbt<br/>199 pub fn + 29 types"]
-        Bench["bench.mbt (29 基准测试)"]
+        RE["reexport.mbt<br/>196 pub fn + 27 types"]
+        Bench["bench.mbt (75 基准测试)"]
         RT["roundtrip_test.mbt"]
     end
 
-    subgraph Core["core/ — FFI + 类型"]
+    subgraph TypesPkg["types/ — 全目标类型"]
+        TypeDef["image_types.mbt<br/>Image · Image16 · ImageF<br/>ImageInfo · GifAnimation · LoadError"]
+    end
+
+    subgraph Core["core/ — FFI + I/O (native)"]
         Types["image_types.mbt<br/>Image · Image16 · ImageF"]
         FFI["ffi.mbt + wrapper.c<br/>stb_image.h FFI"]
         Load["加载/写入/缩放<br/>8/16/float · GIF"]
@@ -115,11 +119,23 @@ flowchart TB
         Stats["image_stats · image_util"]
     end
 
+    subgraph Pure["pure/ — 纯 MoonBit 后端 (wasm/js)"]
+        PureDec["6 解码器 + 3 编码器"]
+        PureProc["色彩/滤波/几何/形态学/混合"]
+    end
+
+    subgraph Lib["lib/ — pure 侧统一 API"]
+        LibEntry["lib.mbt<br/>格式自动分派"]
+    end
+
     Core --> Root
     Process --> Root
     Format --> Root
     Meta --> Root
     Util --> Root
+    Pure --> Lib
+    Core -.-> TypesPkg
+    Pure -.-> TypesPkg
     Process -.-> Core
 ```
 
@@ -128,17 +144,24 @@ flowchart TB
 ```mermaid
 flowchart TB
     Root["根包 src/<br/>reexport.mbt · bench · roundtrip_test"]
-    Core["core/<br/>FFI + 类型 + 加载/写入/缩放"]
-    Process["process/<br/>图像处理（纯 MoonBit）"]
+    Types["types/<br/>全目标类型（纯 MoonBit）"]
+    Core["core/<br/>FFI + I/O（native only）"]
+    Process["process/<br/>图像处理（纯 MoonBit，7 子子包）"]
     Format["format/<br/>编解码（纯 MoonBit）"]
     Meta["meta/<br/>元数据（纯 MoonBit）"]
     Util["util/<br/>工具函数（纯 MoonBit）"]
+    Pure["pure/<br/>纯 MoonBit 后端（wasm/js）"]
+    Lib["lib/<br/>pure 侧统一 API + 格式分派"]
 
     Root --> Core
     Root --> Process
     Root --> Format
     Root --> Meta
     Root --> Util
+    Core --> Types
+    Pure --> Types
+    Lib --> Types
+    Lib --> Pure
     Process --> Core
     Format --> Core
     Meta --> Core
@@ -151,7 +174,7 @@ flowchart TB
     classDef pure fill:#e1f5fe,stroke:#01579b
     classDef ffi fill:#fff3e0,stroke:#e65100
     classDef ext fill:#f3e5f5,stroke:#4a148c
-    class Process,Format,Meta,Util pure
+    class Types,Process,Format,Meta,Util,Pure,Lib pure
     class Core ffi
     class Stb ext
 ```
@@ -224,42 +247,56 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph ProcPkg["process/ (纯 MoonBit)"]
+    subgraph ProcPkg["process/ (纯 MoonBit, 7 子子包)"]
         direction TB
-        Transform["transform.mbt<br/>crop · rotate_90/180/270 · flip_h"]
-        Geometry["geometry.mbt<br/>warp_affine · rotate"]
-        ColorCV["color_convert.mbt<br/>to_grayscale · to_rgb · to_rgba<br/>premultiply · unpremultiply"]
-        ColorAdj["color_adjust.mbt<br/>brightness · contrast · gamma · invert<br/>HSV · HSL"]
-        Filter["filter.mbt<br/>box_blur · gaussian_blur · sharpen<br/>sobel · laplacian · prewitt"]
-        Hist["histogram.mbt<br/>compute · equalize · normalize"]
-        Quant["quantize.mbt<br/>floyd_steinberg · median_cut"]
-        Draw["draw.mbt<br/>draw_copy · draw_over"]
-        Morph["morphology.mbt<br/>erode · dilate · open · close"]
-        Edge["edge_detect.mbt<br/>laplacian · prewitt"]
-        Quality["image_quality.mbt<br/>mse · psnr · ssim"]
-        ClaheP["clahe.mbt<br/>CLAHE"]
-        Kmeans["kmeans_quantize.mbt<br/>K-means 量化"]
-        FFT["fft.mbt<br/>fft_2d · ifft_2d · magnitude · shift"]
-        FreqF["freq_filter.mbt<br/>freq_filter · freq_filter_gaussian"]
-        AdaptT["adaptive_threshold.mbt<br/>mean · gaussian · otsu"]
-        CC["connected_components.mbt<br/>labeling + Union-Find"]
-        Integral["integral_image.mbt<br/>O(1) 矩形查询"]
-        Hough["hough.mbt<br/>直线检测 + NMS"]
-        LBP["lbp.mbt<br/>基本 + 均匀 LBP"]
-        Pyr["pyramid.mbt<br/>高斯/拉普拉斯金字塔"]
-        Bilat["bilateral_filter.mbt<br/>保边去噪"]
-        Contour["contour.mbt<br/>Moore 边界跟踪"]
-        Seg["color_segment.mbt<br/>K-means · 区域生长 · 泛洪填充"]
-        NLM["nlm_denoise.mbt<br/>非局部均值"]
-        Retinex["retinex.mbt<br/>SSR · MSR · MSRCR"]
-        Canny["canny.mbt<br/>Canny 边缘"]
-        Water["watershed.mbt<br/>分水岭分割"]
-        GLCM["glcm.mbt<br/>灰度共生矩阵"]
-        Haar["haar_wavelet.mbt<br/>Haar 小波"]
-        Harris["harris.mbt<br/>Harris 角点"]
-        Dehaze["dehaze.mbt<br/>暗通道先验去雾"]
-        DistT["distance_transform.mbt<br/>距离变换 · 骨架化"]
-        Gabor["gabor.mbt<br/>Gabor 滤波"]
+        subgraph TransformSub["transform/ — 几何变换"]
+            T1["transform.mbt<br/>crop · rotate_90/180/270 · flip_h"]
+            T2["geometry.mbt<br/>warp_affine · rotate"]
+            T3["draw.mbt<br/>draw_copy · draw_over"]
+            T4["pyramid.mbt<br/>高斯/拉普拉斯金字塔"]
+        end
+        subgraph ColorSub["color/ — 色彩处理"]
+            C1["color_convert.mbt<br/>to_grayscale · to_rgb · to_rgba<br/>premultiply · unpremultiply"]
+            C2["color_adjust.mbt<br/>brightness · contrast · gamma · invert<br/>HSV · HSL"]
+            C3["color_segment.mbt<br/>K-means · 区域生长 · 泛洪填充"]
+            C4["adaptive_threshold.mbt<br/>mean · gaussian · otsu"]
+            C5["clahe.mbt<br/>CLAHE"]
+            C6["dehaze.mbt<br/>暗通道先验去雾"]
+            C7["retinex.mbt<br/>SSR · MSR · MSRCR"]
+        end
+        subgraph EdgeSub["edge/ — 边缘检测"]
+            E1["edge_detect.mbt<br/>laplacian · prewitt"]
+            E2["canny.mbt<br/>Canny 边缘"]
+            E3["contour.mbt<br/>Moore 边界跟踪"]
+            E4["hough.mbt<br/>直线检测 + NMS"]
+        end
+        subgraph FeatureSub["feature/ — 特征提取"]
+            F1["histogram.mbt<br/>compute · equalize · normalize"]
+            F2["image_quality.mbt<br/>mse · psnr · ssim"]
+            F3["integral_image.mbt<br/>O(1) 矩形查询"]
+            F4["lbp.mbt<br/>基本 + 均匀 LBP"]
+            F5["gabor.mbt<br/>Gabor 滤波"]
+            F6["glcm.mbt<br/>灰度共生矩阵"]
+            F7["harris.mbt<br/>Harris 角点"]
+        end
+        subgraph FilterSub["filter/ — 滤波"]
+            Fi1["filter.mbt<br/>box_blur · gaussian_blur · sharpen<br/>sobel · laplacian · prewitt"]
+            Fi2["bilateral_filter.mbt<br/>保边去噪"]
+            Fi3["nlm_denoise.mbt<br/>非局部均值"]
+        end
+        subgraph FrequencySub["frequency/ — 频域"]
+            Fr1["fft.mbt<br/>fft_2d · ifft_2d · magnitude · shift"]
+            Fr2["freq_filter.mbt<br/>freq_filter · freq_filter_gaussian"]
+            Fr3["haar_wavelet.mbt<br/>Haar 小波"]
+        end
+        subgraph SegmentSub["segment/ — 分割"]
+            S1["morphology.mbt<br/>erode · dilate · open · close"]
+            S2["quantize.mbt<br/>floyd_steinberg · median_cut"]
+            S3["kmeans_quantize.mbt<br/>K-means 量化"]
+            S4["connected_components.mbt<br/>labeling + Union-Find"]
+            S5["distance_transform.mbt<br/>距离变换 · 骨架化"]
+            S6["watershed.mbt<br/>分水岭分割"]
+        end
     end
 ```
 
@@ -268,7 +305,7 @@ flowchart TB
 **关键设计**：
 - 仅依赖 `@core`（类型定义）和 `@math`（数学函数）
 - 所有函数接受 `Image` 返回 `Image`，支持函数组合
-- 29 个类型中 17 个定义在此包（`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...）
+- 27 个类型中 17 个定义在此包（`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...）
 
 ### format/ — 编解码
 
@@ -398,7 +435,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph IO["I/O (35 函数)"]
+    subgraph IO["I/O (41 函数)"]
         Load["加载 (8)"]
         Write["写入 (10)"]
         Resize["缩放 (4)"]
@@ -432,7 +469,7 @@ flowchart TB
         PNG["PNG 文本块 (2)"]
     end
 
-    Types["29 类型<br/>Image · Image16 · ImageF · ..."]
+    Types["27 类型<br/>Image · Image16 · ImageF · ..."]
 ```
 
 ## 类型体系
@@ -508,7 +545,7 @@ classDiagram
 
 ```
 stb-image/
-├── moon.mod                  # 模块配置 (v1.17.0, preferred_target = native)
+├── moon.mod                  # 模块配置 (v2.0.0, preferred_target = native)
 ├── ARCHITECTURE.md           # 架构文档（本文）
 ├── API.md                    # 完整 API 参考
 ├── CHANGELOG.md              # 版本历史
@@ -517,10 +554,13 @@ stb-image/
 ├── SKILL.md                  # 包使用指南
 ├── src/
 │   ├── moon.pkg              # 根包：re-export + 基准测试 + 往返测试
-│   ├── reexport.mbt          # 向后兼容API（199 pub fn + 29 类型）
-│   ├── bench.mbt             # 29个性能基准测试
+│   ├── reexport.mbt          # 向后兼容API（196 pub fn + 27 类型）
+│   ├── bench.mbt             # 75个性能基准测试
 │   ├── roundtrip_test.mbt    # 全格式往返测试
-│   ├── core/                 # 核心：类型 + FFI + 加载/写入/缩放 + 检测 + ICO
+│   ├── types/                # 全目标类型包（Image/Image16/ImageF/ImageInfo 等）
+│   │   ├── moon.pkg          # 依赖 @debug
+│   │   └── image_types.mbt   # 跨目标共享类型定义
+│   ├── core/                 # 核心：FFI + 加载/写入/缩放 + 检测 + ICO（native only）
 │   │   ├── moon.pkg          # native-stub: wrapper.c
 │   │   ├── image_types.mbt   # Image, Image16, ImageF, ImageInfo, GifAnimation, LoadError
 │   │   ├── ffi.mbt           # 私有 extern "c" 声明
@@ -530,20 +570,15 @@ stb-image/
 │   │   ├── image_detect.mbt  # detect_format/decode_any/is_supported_format
 │   │   ├── icon_encode.mbt   # encode_ico/encode_ico_sizes/encode_icns
 │   │   └── *_test.mbt        # 核心测试
-│   ├── process/              # 图像处理（纯MoonBit）
-│   │   ├── moon.pkg          # 导入 @core
-│   │   ├── transform.mbt     # crop/rotate_*/flip_horizontal
-│   │   ├── color_convert.mbt # to_grayscale/to_rgb/to_rgba/premultiply
-│   │   ├── color_adjust.mbt  # adjust_*/invert/rgb_to_hsv/hsv_to_rgb/...
-│   │   ├── filter.mbt        # box_blur/gaussian_blur/sharpen/edge_detect_sobel
-│   │   ├── geometry.mbt      # warp_affine/rotate
-│   │   ├── histogram.mbt     # histogram/equalize/normalize
-│   │   ├── quantize.mbt      # floyd_steinberg/median_cut
-│   │   ├── draw.mbt          # draw_copy/draw_over
-│   │   ├── morphology.mbt    # erode/dilate/morph_open/morph_close
-│   │   ├── edge_detect.mbt   # edge_detect_laplacian/edge_detect_prewitt
-│   │   ├── image_quality.mbt # mse/psnr/ssim
-│   │   └── *_test.mbt        # 处理测试
+│   ├── process/              # 图像处理（纯MoonBit，7 个子子包）
+│   │   ├── moon.pkg          # 空占位包
+│   │   ├── transform/        # 裁剪/旋转/翻转/金字塔/绘制
+│   │   ├── color/            # 色彩转换/调整/CLAHE/Retinex/去雾/分割/阈值
+│   │   ├── filter/           # 模糊/锐化/双边/NLM/Gabor
+│   │   ├── edge/             # Sobel/Laplacian/Prewitt/Canny/Hough/轮廓
+│   │   ├── frequency/        # FFT/频域滤波/Haar 小波
+│   │   ├── feature/          # 直方图/积分图像/GLCM/Harris/LBP/质量评估
+│   │   └── segment/          # 形态学/量化/连通域/分水岭/距离变换
 │   ├── format/               # 格式编解码（纯MoonBit）
 │   │   ├── moon.pkg          # 导入 @core
 │   │   ├── qoi.mbt           # decode_qoi/encode_qoi
@@ -555,16 +590,44 @@ stb-image/
 │   │   ├── exif.mbt          # read_exif_from_bytes/read_exif_from_path
 │   │   ├── png_meta.mbt      # read_png_text_chunks/...
 │   │   └── *_test.mbt        # 元数据测试
-│   └── util/                 # 工具函数（纯MoonBit）
-│       ├── moon.pkg          # 导入 @core, @process
-│       ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
-│       ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
-│       ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
-│       ├── image_stats.mbt   # compute_stats/mean_value
-│       ├── image_compose.mbt # hstack/vstack/tile/flip_vertical/transpose
-│       ├── image_noise.mbt   # add_noise_gaussian/add_noise_salt_pepper
-│       ├── color_map.mbt     # gradient_map/blend_*
-│       └── *_test.mbt        # 工具测试
+│   ├── util/                 # 工具函数（纯MoonBit）
+│   │   ├── moon.pkg          # 导入 @core, @process
+│   │   ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
+│   │   ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
+│   │   ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
+│   │   ├── image_stats.mbt   # compute_stats/mean_value
+│   │   ├── image_compose.mbt # hstack/vstack/tile/flip_vertical/transpose
+│   │   ├── image_noise.mbt   # add_noise_gaussian/add_noise_salt_pepper
+│   │   ├── color_map.mbt     # gradient_map/blend_*
+│   │   └── *_test.mbt        # 工具测试
+│   ├── pure/                 # 纯 MoonBit 后端（wasm/js 目标）
+│   │   ├── moon.pkg          # 依赖 @types, @math, @encoding/utf8, @debug
+│   │   ├── bmp_decode.mbt    # BMP 解码
+│   │   ├── qoi_decode.mbt    # QOI 解码/编码
+│   │   ├── tga_decode.mbt    # TGA 解码
+│   │   ├── pnm_decode.mbt    # PNM 解码/编码
+│   │   ├── psd_decode.mbt    # PSD 解码
+│   │   ├── gif_decode.mbt    # GIF 解码/编码
+│   │   ├── color_adjust.mbt  # 色彩调整
+│   │   ├── color_convert.mbt # 色彩转换
+│   │   ├── filter.mbt        # 滤波/边缘检测
+│   │   ├── geometry.mbt      # 几何变换
+│   │   ├── transform.mbt     # 旋转/翻转
+│   │   ├── histogram.mbt     # 直方图
+│   │   ├── morphology.mbt    # 形态学
+│   │   ├── pixel_ops.mbt     # 像素操作
+│   │   ├── pixel_advanced.mbt# 高级像素操作
+│   │   ├── image_compose.mbt # 图像合成
+│   │   ├── image_noise.mbt   # 噪声
+│   │   ├── image_stats.mbt   # 统计
+│   │   ├── image_util.mbt    # 工具
+│   │   ├── color_map.mbt     # 色彩映射
+│   │   ├── blend.mbt         # 13 种混合模式
+│   │   └── *_test.mbt        # pure 后端测试
+│   └── lib/                  # pure 侧统一 API + 自动格式分派
+│       ├── moon.pkg          # 依赖 @types, @pure
+│       ├── lib.mbt           # 统一入口 + 格式自动分派
+│       └── lib_test.mbt      # lib 测试
 ├── scripts/
 │   ├── prepare.py            # 第三方代码准备脚本
 │   ├── gen_testdata.py       # 测试图像生成器

@@ -54,7 +54,7 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 - **Info query**: dimensions without decoding pixels
 - **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
 - **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **847 tests + 29 benchmarks (native), 225 tests (wasm/js pure backend)**, all passing under AddressSanitizer
+- **847 tests + 75 benchmarks (native), 225 tests (wasm/js pure backend)**, all passing under AddressSanitizer
 
 ## Installation
 
@@ -127,7 +127,7 @@ moon info                      # Regenerate API interface
 | Document | Description |
 |----------|-------------|
 | [ARCHITECTURE.en.md](ARCHITECTURE.en.md) | Architecture diagrams, package dependencies, FFI boundary, data flow, design decisions |
-| [API.en.md](API.en.md) | Complete API reference (199 functions, 29 types) |
+| [API.en.md](API.en.md) | Complete API reference (196 functions, 27 types) |
 | [CHANGELOG.md](CHANGELOG.md) | Version history and upstream sources |
 | [ROADMAP.md](ROADMAP.md) | Iteration roadmap |
 | [COMPARISON.md](COMPARISON.md) | mooncakes.io image library comparison |

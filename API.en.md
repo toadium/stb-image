@@ -1,6 +1,6 @@
 # stb-image API Reference
 
-> 版本 v1.17.0 | 199 公开函数 + 29 类型 | 533 测试 + 29 基准测试
+> Version v2.0.0 | 196 public functions + 27 types | 847 tests + 75 benchmarks
 >
 > [English](API.en.md) | [中文](API.md)
 
@@ -552,4 +552,4 @@ All load functions accept an optional parameter `req_channels : Int?` (1=graysca
 | Utility — Noise | 2 | v1.9 |
 | Utility — Color Mapping | 2 | v1.8-v1.9 |
 | Utility — Statistics | 2 | v1.8 |
-| **Total** | **199** | |
+| **Total** | **196** | |

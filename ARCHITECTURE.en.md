@@ -1,12 +1,12 @@
 # stb-image Architecture
 
-> Version v1.17.0 | 199 public functions + 29 types | 533 tests + 29 benchmarks
+> Version v2.0.0 | 196 public functions + 27 types | 847 tests + 75 benchmarks
 >
 > [English](ARCHITECTURE.en.md) | [中文](ARCHITECTURE.md)
 
 ## Overview
 
-stb-image is a MoonBit native FFI binding library that wraps the [stb](https://github.com/nothings/stb) series of single-header libraries, providing full image decode/encode/resize/process capabilities. It adopts a five-subpackage architecture, with the root package re-exporting to maintain a backward-compatible API.
+stb-image is a MoonBit native FFI binding library that wraps the [stb](https://github.com/nothings/stb) series of single-header libraries, providing full image decode/encode/resize/process capabilities. It adopts an eight-subpackage architecture (types, core, lib, pure, process, format, meta, util), with the root package re-exporting to maintain a backward-compatible API.
 
 ## Feature Categories
 
@@ -74,12 +74,16 @@ mindmap
 ```mermaid
 flowchart TB
     subgraph Root["Root Package (src/)"]
-        RE["reexport.mbt<br/>199 pub fn + 29 types"]
-        Bench["bench.mbt (29 benchmarks)"]
+        RE["reexport.mbt<br/>196 pub fn + 27 types"]
+        Bench["bench.mbt (75 benchmarks)"]
         RT["roundtrip_test.mbt"]
     end
 
-    subgraph Core["core/ — FFI + Types"]
+    subgraph TypesPkg["types/ — Cross-target Types"]
+        TypeDef["image_types.mbt<br/>Image · Image16 · ImageF<br/>ImageInfo · GifAnimation · LoadError"]
+    end
+
+    subgraph Core["core/ — FFI + I/O (native)"]
         Types["image_types.mbt<br/>Image · Image16 · ImageF"]
         FFI["ffi.mbt + wrapper.c<br/>stb_image.h FFI"]
         Load["Load/Write/Resize<br/>8/16/float · GIF"]
@@ -115,11 +119,23 @@ flowchart TB
         Stats["image_stats · image_util"]
     end
 
+    subgraph Pure["pure/ — Pure MoonBit Backend (wasm/js)"]
+        PureDec["6 decoders + 3 encoders"]
+        PureProc["color/filter/geometry/morphology/blend"]
+    end
+
+    subgraph Lib["lib/ — Pure-side Unified API"]
+        LibEntry["lib.mbt<br/>auto format dispatch"]
+    end
+
     Core --> Root
     Process --> Root
     Format --> Root
     Meta --> Root
     Util --> Root
+    Pure --> Lib
+    Core -.-> TypesPkg
+    Pure -.-> TypesPkg
     Process -.-> Core
 ```
 
@@ -128,17 +144,24 @@ flowchart TB
 ```mermaid
 flowchart TB
     Root["Root package src/<br/>reexport.mbt · bench · roundtrip_test"]
-    Core["core/<br/>FFI + types + load/write/resize"]
-    Process["process/<br/>Image processing (pure MoonBit)"]
+    Types["types/<br/>Cross-target types (pure MoonBit)"]
+    Core["core/<br/>FFI + I/O (native only)"]
+    Process["process/<br/>Image processing (pure MoonBit, 7 subpackages)"]
     Format["format/<br/>Codec (pure MoonBit)"]
     Meta["meta/<br/>Metadata (pure MoonBit)"]
     Util["util/<br/>Utility functions (pure MoonBit)"]
+    Pure["pure/<br/>Pure MoonBit backend (wasm/js)"]
+    Lib["lib/<br/>Pure-side unified API + format dispatch"]
 
     Root --> Core
     Root --> Process
     Root --> Format
     Root --> Meta
     Root --> Util
+    Core --> Types
+    Pure --> Types
+    Lib --> Types
+    Lib --> Pure
     Process --> Core
     Format --> Core
     Meta --> Core
@@ -151,7 +174,7 @@ flowchart TB
     classDef pure fill:#e1f5fe,stroke:#01579b
     classDef ffi fill:#fff3e0,stroke:#e65100
     classDef ext fill:#f3e5f5,stroke:#4a148c
-    class Process,Format,Meta,Util pure
+    class Types,Process,Format,Meta,Util,Pure,Lib pure
     class Core ffi
     class Stb ext
 ```
@@ -224,42 +247,56 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph ProcPkg["process/ (pure MoonBit)"]
+    subgraph ProcPkg["process/ (pure MoonBit, 7 subpackages)"]
         direction TB
-        Transform["transform.mbt<br/>crop · rotate_90/180/270 · flip_h"]
-        Geometry["geometry.mbt<br/>warp_affine · rotate"]
-        ColorCV["color_convert.mbt<br/>to_grayscale · to_rgb · to_rgba<br/>premultiply · unpremultiply"]
-        ColorAdj["color_adjust.mbt<br/>brightness · contrast · gamma · invert<br/>HSV · HSL"]
-        Filter["filter.mbt<br/>box_blur · gaussian_blur · sharpen<br/>sobel · laplacian · prewitt"]
-        Hist["histogram.mbt<br/>compute · equalize · normalize"]
-        Quant["quantize.mbt<br/>floyd_steinberg · median_cut"]
-        Draw["draw.mbt<br/>draw_copy · draw_over"]
-        Morph["morphology.mbt<br/>erode · dilate · open · close"]
-        Edge["edge_detect.mbt<br/>laplacian · prewitt"]
-        Quality["image_quality.mbt<br/>mse · psnr · ssim"]
-        ClaheP["clahe.mbt<br/>CLAHE"]
-        Kmeans["kmeans_quantize.mbt<br/>K-means quantization"]
-        FFT["fft.mbt<br/>fft_2d · ifft_2d · magnitude · shift"]
-        FreqF["freq_filter.mbt<br/>freq_filter · freq_filter_gaussian"]
-        AdaptT["adaptive_threshold.mbt<br/>mean · gaussian · otsu"]
-        CC["connected_components.mbt<br/>labeling + Union-Find"]
-        Integral["integral_image.mbt<br/>O(1) rectangle query"]
-        Hough["hough.mbt<br/>line detection + NMS"]
-        LBP["lbp.mbt<br/>basic + uniform LBP"]
-        Pyr["pyramid.mbt<br/>Gaussian/Laplacian pyramid"]
-        Bilat["bilateral_filter.mbt<br/>edge-preserving denoise"]
-        Contour["contour.mbt<br/>Moore boundary tracing"]
-        Seg["color_segment.mbt<br/>K-means · region growing · flood fill"]
-        NLM["nlm_denoise.mbt<br/>non-local means"]
-        Retinex["retinex.mbt<br/>SSR · MSR · MSRCR"]
-        Canny["canny.mbt<br/>Canny edge"]
-        Water["watershed.mbt<br/>watershed segmentation"]
-        GLCM["glcm.mbt<br/>gray-level co-occurrence matrix"]
-        Haar["haar_wavelet.mbt<br/>Haar wavelet"]
-        Harris["harris.mbt<br/>Harris corners"]
-        Dehaze["dehaze.mbt<br/>dark channel prior dehaze"]
-        DistT["distance_transform.mbt<br/>distance transform · skeletonization"]
-        Gabor["gabor.mbt<br/>Gabor filtering"]
+        subgraph TransformSub["transform/ — Geometry"]
+            T1["transform.mbt<br/>crop · rotate_90/180/270 · flip_h"]
+            T2["geometry.mbt<br/>warp_affine · rotate"]
+            T3["draw.mbt<br/>draw_copy · draw_over"]
+            T4["pyramid.mbt<br/>Gaussian/Laplacian pyramid"]
+        end
+        subgraph ColorSub["color/ — Color Processing"]
+            C1["color_convert.mbt<br/>to_grayscale · to_rgb · to_rgba<br/>premultiply · unpremultiply"]
+            C2["color_adjust.mbt<br/>brightness · contrast · gamma · invert<br/>HSV · HSL"]
+            C3["color_segment.mbt<br/>K-means · region growing · flood fill"]
+            C4["adaptive_threshold.mbt<br/>mean · gaussian · otsu"]
+            C5["clahe.mbt<br/>CLAHE"]
+            C6["dehaze.mbt<br/>dark channel prior dehaze"]
+            C7["retinex.mbt<br/>SSR · MSR · MSRCR"]
+        end
+        subgraph EdgeSub["edge/ — Edge Detection"]
+            E1["edge_detect.mbt<br/>laplacian · prewitt"]
+            E2["canny.mbt<br/>Canny edge"]
+            E3["contour.mbt<br/>Moore boundary tracing"]
+            E4["hough.mbt<br/>line detection + NMS"]
+        end
+        subgraph FeatureSub["feature/ — Feature Extraction"]
+            F1["histogram.mbt<br/>compute · equalize · normalize"]
+            F2["image_quality.mbt<br/>mse · psnr · ssim"]
+            F3["integral_image.mbt<br/>O(1) rectangle query"]
+            F4["lbp.mbt<br/>basic + uniform LBP"]
+            F5["gabor.mbt<br/>Gabor filtering"]
+            F6["glcm.mbt<br/>gray-level co-occurrence matrix"]
+            F7["harris.mbt<br/>Harris corners"]
+        end
+        subgraph FilterSub["filter/ — Filtering"]
+            Fi1["filter.mbt<br/>box_blur · gaussian_blur · sharpen<br/>sobel · laplacian · prewitt"]
+            Fi2["bilateral_filter.mbt<br/>edge-preserving denoise"]
+            Fi3["nlm_denoise.mbt<br/>non-local means"]
+        end
+        subgraph FrequencySub["frequency/ — Frequency Domain"]
+            Fr1["fft.mbt<br/>fft_2d · ifft_2d · magnitude · shift"]
+            Fr2["freq_filter.mbt<br/>freq_filter · freq_filter_gaussian"]
+            Fr3["haar_wavelet.mbt<br/>Haar wavelet"]
+        end
+        subgraph SegmentSub["segment/ — Segmentation"]
+            S1["morphology.mbt<br/>erode · dilate · open · close"]
+            S2["quantize.mbt<br/>floyd_steinberg · median_cut"]
+            S3["kmeans_quantize.mbt<br/>K-means quantization"]
+            S4["connected_components.mbt<br/>labeling + Union-Find"]
+            S5["distance_transform.mbt<br/>distance transform · skeletonization"]
+            S6["watershed.mbt<br/>watershed segmentation"]
+        end
     end
 ```
 
@@ -268,7 +305,7 @@ flowchart TB
 **Key Designs**:
 - Only depends on `@core` (type definitions) and `@math` (math functions)
 - All functions accept `Image` and return `Image`, supporting function composition
-- 17 of the 29 types are defined in this package (`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...)
+- 17 of the 27 types are defined in this package (`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...)
 
 ### format/ — Codec
 
@@ -398,7 +435,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph IO["I/O (35 functions)"]
+    subgraph IO["I/O (41 functions)"]
         Load["Load (8)"]
         Write["Write (10)"]
         Resize["Resize (4)"]
@@ -432,7 +469,7 @@ flowchart TB
         PNG["PNG text chunks (2)"]
     end
 
-    Types["29 types<br/>Image · Image16 · ImageF · ..."]
+    Types["27 types<br/>Image · Image16 · ImageF · ..."]
 ```
 
 ## Type System
@@ -508,7 +545,7 @@ classDiagram
 
 ```
 stb-image/
-├── moon.mod                  # Module config (v1.17.0, preferred_target = native)
+├── moon.mod                  # Module config (v2.0.0, preferred_target = native)
 ├── ARCHITECTURE.md           # Architecture doc (Chinese)
 ├── ARCHITECTURE.en.md        # Architecture doc (English, this file)
 ├── API.md                    # Full API reference
@@ -518,10 +555,13 @@ stb-image/
 ├── SKILL.md                  # Package usage guide
 ├── src/
 │   ├── moon.pkg              # Root package: re-export + benchmarks + roundtrip tests
-│   ├── reexport.mbt          # Backward-compatible API (199 pub fn + 29 types)
-│   ├── bench.mbt             # 29 performance benchmarks
+│   ├── reexport.mbt          # Backward-compatible API (196 pub fn + 27 types)
+│   ├── bench.mbt             # 75 performance benchmarks
 │   ├── roundtrip_test.mbt    # Full-format roundtrip tests
-│   ├── core/                 # Core: types + FFI + load/write/resize + detect + ICO
+│   ├── types/                # Cross-target types (Image/Image16/ImageF/ImageInfo etc.)
+│   │   ├── moon.pkg          # imports @debug
+│   │   └── image_types.mbt   # Shared type definitions across targets
+│   ├── core/                 # Core: FFI + load/write/resize + detect + ICO (native only)
 │   │   ├── moon.pkg          # native-stub: wrapper.c
 │   │   ├── image_types.mbt   # Image, Image16, ImageF, ImageInfo, GifAnimation, LoadError
 │   │   ├── ffi.mbt           # private extern "c" declarations
@@ -531,20 +571,15 @@ stb-image/
 │   │   ├── image_detect.mbt  # detect_format/decode_any/is_supported_format
 │   │   ├── icon_encode.mbt   # encode_ico/encode_ico_sizes/encode_icns
 │   │   └── *_test.mbt        # Core tests
-│   ├── process/              # Image processing (pure MoonBit)
-│   │   ├── moon.pkg          # imports @core
-│   │   ├── transform.mbt     # crop/rotate_*/flip_horizontal
-│   │   ├── color_convert.mbt # to_grayscale/to_rgb/to_rgba/premultiply
-│   │   ├── color_adjust.mbt  # adjust_*/invert/rgb_to_hsv/hsv_to_rgb/...
-│   │   ├── filter.mbt        # box_blur/gaussian_blur/sharpen/edge_detect_sobel
-│   │   ├── geometry.mbt      # warp_affine/rotate
-│   │   ├── histogram.mbt     # histogram/equalize/normalize
-│   │   ├── quantize.mbt      # floyd_steinberg/median_cut
-│   │   ├── draw.mbt          # draw_copy/draw_over
-│   │   ├── morphology.mbt    # erode/dilate/morph_open/morph_close
-│   │   ├── edge_detect.mbt   # edge_detect_laplacian/edge_detect_prewitt
-│   │   ├── image_quality.mbt # mse/psnr/ssim
-│   │   └── *_test.mbt        # Processing tests
+│   ├── process/              # Image processing (pure MoonBit, 7 subpackages)
+│   │   ├── moon.pkg          # Empty placeholder package
+│   │   ├── transform/        # crop/rotate/flip/pyramid/draw
+│   │   ├── color/            # color convert/adjust/CLAHE/Retinex/dehaze/segment/threshold
+│   │   ├── filter/           # blur/sharpen/bilateral/NLM/Gabor
+│   │   ├── edge/             # Sobel/Laplacian/Prewitt/Canny/Hough/contour
+│   │   ├── frequency/        # FFT/frequency filter/Haar wavelet
+│   │   ├── feature/          # histogram/integral image/GLCM/Harris/LBP/quality
+│   │   └── segment/          # morphology/quantize/connected components/watershed/distance
 │   ├── format/               # Format codec (pure MoonBit)
 │   │   ├── moon.pkg          # imports @core
 │   │   ├── qoi.mbt           # decode_qoi/encode_qoi
@@ -556,16 +591,44 @@ stb-image/
 │   │   ├── exif.mbt          # read_exif_from_bytes/read_exif_from_path
 │   │   ├── png_meta.mbt      # read_png_text_chunks/...
 │   │   └── *_test.mbt        # Metadata tests
-│   └── util/                 # Utility functions (pure MoonBit)
-│       ├── moon.pkg          # imports @core, @process
-│       ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
-│       ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
-│       ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
-│       ├── image_stats.mbt   # compute_stats/mean_value
-│       ├── image_compose.mbt # hstack/vstack/tile/flip_vertical/transpose
-│       ├── image_noise.mbt   # add_noise_gaussian/add_noise_salt_pepper
-│       ├── color_map.mbt     # gradient_map/blend_*
-│       └── *_test.mbt        # Utility tests
+│   ├── util/                 # Utility functions (pure MoonBit)
+│   │   ├── moon.pkg          # imports @core, @process
+│   │   ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
+│   │   ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
+│   │   ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
+│   │   ├── image_stats.mbt   # compute_stats/mean_value
+│   │   ├── image_compose.mbt # hstack/vstack/tile/flip_vertical/transpose
+│   │   ├── image_noise.mbt   # add_noise_gaussian/add_noise_salt_pepper
+│   │   ├── color_map.mbt     # gradient_map/blend_*
+│   │   └── *_test.mbt        # Utility tests
+│   ├── pure/                 # Pure MoonBit backend (wasm/js targets)
+│   │   ├── moon.pkg          # imports @types, @math, @encoding/utf8, @debug
+│   │   ├── bmp_decode.mbt    # BMP decode
+│   │   ├── qoi_decode.mbt    # QOI decode/encode
+│   │   ├── tga_decode.mbt    # TGA decode
+│   │   ├── pnm_decode.mbt    # PNM decode/encode
+│   │   ├── psd_decode.mbt    # PSD decode
+│   │   ├── gif_decode.mbt    # GIF decode/encode
+│   │   ├── color_adjust.mbt  # color adjustment
+│   │   ├── color_convert.mbt # color conversion
+│   │   ├── filter.mbt        # filter/edge detect
+│   │   ├── geometry.mbt      # geometry transform
+│   │   ├── transform.mbt     # rotate/flip
+│   │   ├── histogram.mbt     # histogram
+│   │   ├── morphology.mbt    # morphology
+│   │   ├── pixel_ops.mbt     # pixel operations
+│   │   ├── pixel_advanced.mbt# advanced pixel ops
+│   │   ├── image_compose.mbt # image composition
+│   │   ├── image_noise.mbt   # noise
+│   │   ├── image_stats.mbt   # statistics
+│   │   ├── image_util.mbt    # utilities
+│   │   ├── color_map.mbt     # color mapping
+│   │   ├── blend.mbt         # 13 blend modes
+│   │   └── *_test.mbt        # pure backend tests
+│   └── lib/                  # Pure-side unified API + auto format dispatch
+│       ├── moon.pkg          # imports @types, @pure
+│       ├── lib.mbt           # unified entry + auto format dispatch
+│       └── lib_test.mbt      # lib tests
 ├── scripts/
 │   ├── prepare.py            # Third-party code preparation script
 │   ├── gen_testdata.py       # Test image generator

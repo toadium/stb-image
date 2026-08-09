@@ -54,7 +54,7 @@ MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/
 - **信息查询**：不解码像素即可获取尺寸
 - **可配置**：翻转、非预乘Alpha、iPhone PNG、HDR伽马/缩放
 - **错误诊断**：`failure_reason()` 获取 stb_image 内部错误字符串
-- **847 测试 + 29 基准测试 (native)，225 测试 (wasm/js 纯 MoonBit 后端)**，全部通过 AddressSanitizer
+- **847 测试 + 75 基准测试 (native)，225 测试 (wasm/js 纯 MoonBit 后端)**，全部通过 AddressSanitizer
 
 ## 安装
 
@@ -127,7 +127,7 @@ moon info                      # 重新生成 API 接口
 | 文档 | 说明 |
 |------|------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | 架构图、包依赖关系、FFI 边界、数据流、设计决策 |
-| [API.md](API.md) | 完整 API 参考（199 个函数，29 个类型） |
+| [API.md](API.md) | 完整 API 参考（196 个函数，27 个类型） |
 | [CHANGELOG.zh.md](CHANGELOG.zh.md) | 版本历史与上游来源 |
 | [ROADMAP.md](ROADMAP.md) | 迭代路线图 |
 | [COMPARISON.md](COMPARISON.md) | mooncakes.io 图像库对比 |
