@@ -1,0 +1,37 @@
+.VPHome .VPHero .container .actions .action .VPButton {
+  transition: all 0.25s ease;
+}
+
+.VPHome .VPHero .container .actions .action .VPButton:hover {
+  transform: translateY(-2px);
+}
+
+.VPFeature {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.VPFeature:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px var(--vp-c-brand-soft);
+}
+
+.vp-doc a {
+  transition: color 0.2s ease;
+}
+
+.vp-doc table {
+  margin: 16px 0;
+}
+
+.vp-doc table th {
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc table tr {
+  transition: background 0.2s ease;
+}
+
+.vp-doc table tbody tr:hover {
+  background: var(--vp-c-bg-soft);
+}

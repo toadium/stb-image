@@ -1,22 +1,16 @@
-export default function layout({ slots }) {
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MuJoCo Documentation</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-  </style>
-  ${slots.headOutput()}
-</head>
-<body>
-  ${slots.default()}
-  ${slots.Footer?.()}
-  ${slots.Layout.ready()}
-</body>
-</html>
-  `
-}
+import DefaultTheme from 'vitepress/theme'
+import type { Theme } from 'vitepress'
+import Card from './components/Card.vue'
+import CardGrid from './components/CardGrid.vue'
+import ActionButton from './components/ActionButton.vue'
+
+import './custom.css'
+
+export default {
+  extends: DefaultTheme,
+  enhanceApp({ app }) {
+    app.component('Card', Card)
+    app.component('CardGrid', CardGrid)
+    app.component('ActionButton', ActionButton)
+  }
+} satisfies Theme

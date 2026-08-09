@@ -20,3 +20,6 @@ scripts/fix_root_calls.py
 scripts/gen_reexport.py
 governances/
 pdc/
+vitepress-docs/node_modules/
+vitepress-docs/.vitepress/cache/
+vitepress-docs/.vitepress/dist/

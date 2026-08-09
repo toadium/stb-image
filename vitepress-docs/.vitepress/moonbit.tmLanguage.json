@@ -1,0 +1,196 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "source.moonbit",
+  "name": "MoonBit",
+  "fileTypes": ["mbt", "mbtp"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#string" },
+    { "include": "#number" },
+    { "include": "#keyword" },
+    { "include": "#type" },
+    { "include": "#function" },
+    { "include": "#variable" },
+    { "include": "#operator" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.moonbit",
+          "match": "//[^\\n]*"
+        },
+        {
+          "name": "comment.block.moonbit",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.moonbit",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.moonbit",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.interpolated.moonbit",
+          "begin": "#\"|\\$\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.moonbit",
+              "match": "\\\\."
+            },
+            {
+              "name": "meta.interpolation.moonbit",
+              "begin": "\\\\\\{",
+              "end": "\\}"
+            }
+          ]
+        },
+        {
+          "name": "string.other.multiline.moonbit",
+          "begin": "#\"\"\"",
+          "end": "\"\"\""
+        },
+        {
+          "name": "string.other.bytes.moonbit",
+          "match": "b\"[^\"]*\""
+        }
+      ]
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.moonbit",
+          "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?[fFdD]?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.moonbit",
+          "match": "\\b0[xX][0-9a-fA-F_]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.moonbit",
+          "match": "\\b0[oO][0-7_]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.moonbit",
+          "match": "\\b0[bB][01_]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.moonbit",
+          "match": "\\b[0-9][0-9_]*[uUlL]*\\b"
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        {
+          "name": "keyword.control.import.moonbit",
+          "match": "\\b(package|import)\\b"
+        },
+        {
+          "name": "keyword.control.conditional.moonbit",
+          "match": "\\b(if|else|match|guard)\\b"
+        },
+        {
+          "name": "keyword.control.repeat.moonbit",
+          "match": "\\b(while|loop|for|break|continue|in)\\b"
+        },
+        {
+          "name": "keyword.control.return.moonbit",
+          "match": "\\b(return)\\b"
+        },
+        {
+          "name": "keyword.control.exception.moonbit",
+          "match": "\\b(try|raise|catch|noraise|except)\\b"
+        },
+        {
+          "name": "keyword.coroutine.moonbit",
+          "match": "\\b(async)\\b"
+        },
+        {
+          "name": "keyword.function.moonbit",
+          "match": "\\b(fn|test|impl|fnalias|extend)\\b"
+        },
+        {
+          "name": "keyword.type.moonbit",
+          "match": "\\b(struct|enum|extenum|type|trait|typealias|traitalias|suberror)\\b"
+        },
+        {
+          "name": "keyword.modifier.moonbit",
+          "match": "\\b(pub|priv|readonly|all|open|extern|declare|mut)\\b"
+        },
+        {
+          "name": "keyword.other.moonbit",
+          "match": "\\b(let|letrec|and|const|with|as|is|using|where|defer|derive|longest|nobreak|lexscan)\\b"
+        }
+      ]
+    },
+    "type": {
+      "patterns": [
+        {
+          "name": "support.type.builtin.moonbit",
+          "match": "\\b(Unit|Bool|Byte|Int16|UInt16|Int|UInt|Int64|UInt64|Float|Double|FixedArray|Array|Bytes|String|Error|Self)\\b"
+        },
+        {
+          "name": "support.type.trait.moonbit",
+          "match": "\\b(Eq|Compare|Hash|Show|Default|ToJson|FromJson)\\b"
+        },
+        {
+          "name": "entity.name.type.moonbit",
+          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+    "function": {
+      "patterns": [
+        {
+          "name": "entity.name.function.moonbit",
+          "match": "\\b[a-z][A-Za-z0-9_]*\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "variable": {
+      "patterns": [
+        {
+          "name": "constant.language.moonbit",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "variable.other.member.moonbit",
+          "match": "\\.[a-z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+    "operator": {
+      "patterns": [
+        {
+          "name": "keyword.operator.moonbit",
+          "match": "(\\+|\\-|\\*|/|%|<<|>>|\\||&|\\^|=|\\+=|\\-=|\\*=|/=|%=|<|>|>=|<=|==|!=|&&|\\|\\||\\|>|<\\||<\\+|<\\?|=>|->|!|\\?|::|\\.\\.<|\\.\\.=|\\.\\.<="
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.moonbit",
+          "match": "[;,:.]"
+        },
+        {
+          "name": "punctuation.definition.bracket.moonbit",
+          "match": "[(){}\\[\\]]"
+        }
+      ]
+    }
+  }
+}
