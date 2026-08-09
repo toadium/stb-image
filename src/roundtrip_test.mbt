@@ -1340,3 +1340,155 @@ test "fill_alpha: pure vs util" {
   let _ = pure_img
   let _ = util_img
 }
+
+///|
+test "hstack: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.hstack_pure(orig, orig)
+  let util_img = @util.hstack(orig, orig)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "vstack: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.vstack_pure(orig, orig)
+  let util_img = @util.vstack(orig, orig)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "tile: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.tile_pure(orig, 2, 2)
+  let util_img = @util.tile(orig, 2, 2)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "flip_vertical: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.flip_vertical_pure(orig)
+  let util_img = @util.flip_vertical(orig)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "transpose: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.transpose_pure(orig)
+  let util_img = @util.transpose(orig)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "compute_stats: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_stats = @pure.compute_stats_pure(orig)
+  let util_stats = @util.compute_stats(orig)
+  // pure.ImageStats 与 util.ImageStats 是不同类型，字段级比较
+  assert_eq(pure_stats.mean, util_stats.mean)
+  assert_eq(pure_stats.stddev, util_stats.stddev)
+  assert_eq(pure_stats.min_val, util_stats.min_val)
+  assert_eq(pure_stats.max_val, util_stats.max_val)
+  let _ = orig
+  let _ = pure_stats
+  let _ = util_stats
+}
+
+///|
+test "mean_value: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_mean = @pure.mean_value_pure(orig)
+  let util_mean = @util.mean_value(orig)
+  // Float Eq 精确匹配因同算法同输入
+  assert_eq(pure_mean, util_mean)
+  let _ = orig
+  let _ = pure_mean
+  let _ = util_mean
+}
+
+///|
+test "add_noise_gaussian: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.add_noise_gaussian_pure(orig, 10.0F, 42U)
+  let util_img = @util.add_noise_gaussian(orig, 10.0F, 42U)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "add_noise_salt_pepper: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.add_noise_salt_pepper_pure(orig, 0.3F, 42U)
+  let util_img = @util.add_noise_salt_pepper(orig, 0.3F, 42U)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}

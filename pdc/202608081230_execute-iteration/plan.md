@@ -840,3 +840,38 @@
 - `reexport.mbt:870,915,921,927,939,945,954,957`：`@util.apply_lut`/`@util.convolve`/`@util.fill_alpha`/`@util.gradient_map`/`@util.pixelate`/`@util.replace_color`/`@util.set_alpha`/`@util.swap_channels`，引用前缀 `@util`
 - `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-1101）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R36 PASSED v2.0 pure 包高级像素操作 + 色彩映射（pixelate/replace_color/convolve/swap_channels + apply_lut/gradient_map/set_alpha/fill_alpha，纯 MoonBit，全目标） [ID: T21]
+结果：在 `src/pure/` 新增 `pixel_advanced.mbt`（clamp_b + clamp_int + check_color_match 私有辅助 + pixelate_pure + replace_color_pure + convolve_pure + swap_channels_pure，移植自 `src/util/pixel_advanced.mbt:1-186`）和 `color_map.mbt`（interp_gradient 私有辅助复用 clamp_b + apply_lut_pure + gradient_map_pure + set_alpha_pure + fill_alpha_pure，移植自 `src/util/color_map.mbt:1-174`），仅依赖 @types，全目标可用 + 18 个 pure 纯逻辑测试 + 8 个根包 native-only pure vs util 对比测试。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 796/796 通过（770→796，+18 pure 纯逻辑 + 8 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R36 NEW v2.0 pure 包图像拼接 + 统计 + 噪声（image_compose + image_stats + image_noise，纯 MoonBit，全目标） [ID: T22]
+任务：在 `src/pure/` 新增 `image_compose.mbt`（移植 `src/util/image_compose.mbt:1-151` 的 hstack/vstack/tile/flip_vertical/transpose，签名加 `_pure` 后缀）、`image_stats.mbt`（移植 `src/util/image_stats.mbt:1-47` 的 ImageStats 结构 + compute_stats/mean_value，ImageStats derive(Eq, @debug.Debug) 需 @debug 依赖，pure 包 moon.pkg 新增 `moonbitlang/core/debug` import）、`image_noise.mbt`（移植 `src/util/image_noise.mbt:1-100` 的 LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian/add_noise_salt_pepper，复用 pure 包已有 clamp_b（pixel_advanced.mbt:4），@math.cosf/log2 已在 pure 包），将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。新增 `src/pure/image_compose_test.mbt`（6 纯逻辑测试：hstack 正常/维度不匹配 raises、vstack 正常、tile 平铺、flip_vertical 翻转、transpose 转置宽高互换）、`src/pure/image_stats_test.mbt`（3 纯逻辑测试：compute_stats 正常/均匀图、mean_value 正常）、`src/pure/image_noise_test.mbt`（5 纯逻辑测试：gaussian 基础/sigma=0 不变/RGBA alpha 保留、salt_pepper 基础/prob=0 不变），全目标仅依赖 @types/@math/@debug。在根包 `src/roundtrip_test.mbt` 新增 9 个 native-only pure vs util 对比测试（hstack/vstack/tile/flip_vertical/transpose/compute_stats/mean_value/add_noise_gaussian/add_noise_salt_pepper，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，compute_stats 字段级比较，噪声用相同种子，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 796→819 通过。
+选择理由：
+- T21 已完成高级像素操作 + 色彩映射，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 基础像素操作 + 图像工具 + 高级像素操作 + 色彩映射，但缺图像拼接（hstack/vstack/tile/flip_vertical/transpose）、统计（compute_stats/mean_value）、噪声生成（add_noise_gaussian/salt_pepper），这些是 v1.8-v1.9 基础功能，补齐后 pure 包图像处理能力更完整
+- `src/util/image_compose.mbt:1-151`、`src/util/image_stats.mbt:1-47`、`src/util/image_noise.mbt:1-100` 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型 + @math.cosf/log2（image_noise 用），无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T21（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作/高级像素操作移植）同构，技术风险极低
+- `image_noise.mbt` 的 `clamp_b`（line 53 调用）复用 pure 包已有 `clamp_b`（`src/pure/pixel_advanced.mbt:4`，T21 移植），同包私有函数跨文件可见，不重复定义（与 T21 color_map.mbt 的 interp_gradient 复用 clamp_b 同构）
+- `image_stats.mbt` 的 `ImageStats` 结构 `derive(Eq, @debug.Debug)` 需要 @debug 依赖，pure 包 moon.pkg 新增 `moonbitlang/core/debug` import（参照 `src/types/moon.pkg:2` 先例），全目标标准库可用
+- `@math.cosf`/`@math.log2`（image_noise.mbt 用）已在 pure 包 moon.pkg（T15 新增 @math），无需新增依赖
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，图像拼接 + 统计 + 噪声仅依赖 @types + @math + @debug，全目标可用
+- 风险可控：新增文件不修改现有代码（仅 moon.pkg 新增 import），v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像处理（绘图合成/图像金字塔/边缘检测扩展等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
+- T21 产出：pure 包高级像素操作 + 色彩映射，native 796 测试通过，@math 已在 pure 包 moon.pkg
+- `src/util/image_compose.mbt:5-151`：hstack/vstack/tile/flip_vertical/transpose，纯 MoonBit 仅依赖 @core.Image/@core.LoadError
+- `src/util/image_stats.mbt:5-47`：ImageStats 结构 + compute_stats/mean_value，纯 MoonBit 仅依赖 @core.Image，derive(Eq, @debug.Debug) 需 @debug
+- `src/util/image_noise.mbt:6-100`：LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian/add_noise_salt_pepper，纯 MoonBit 依赖 @math.cosf/log2 + clamp_b（util 包 pixel_advanced.mbt:4 定义）
+- `src/util/pixel_advanced.mbt:4-12`：`fn clamp_b(v : Int) -> Byte`，pure 包已有（T21 移植到 `src/pure/pixel_advanced.mbt:4`）
+- `src/types/moon.pkg:2`：import `moonbitlang/core/debug`（因 derive(Eq, @debug.Debug)），pure 包本轮新增同 import
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮新增 `moonbitlang/core/debug` import
+- pure 包已有辅助函数：`clamp_b`（pixel_advanced.mbt:4）/`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）/`clamp_byte_v`（pixel_ops.mbt:4），LCG/lcg_next/lcg_float/lcg_gaussian 均不同名无冲突
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry/pixel_ops/image_util/pixel_advanced/color_map 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
+- `reexport.mbt:864,867,912,924,930,933,963,966,969`：`@util.add_noise_gaussian`/`@util.add_noise_salt_pepper`/`@util.compute_stats`/`@util.flip_vertical`/`@util.hstack`/`@util.mean_value`/`@util.tile`/`@util.transpose`/`@util.vstack`，引用前缀 `@util`
+- `roundtrip_test.mbt` 现有 pure vs util 对比测试模式（line 1189-1342，T21 新增）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
