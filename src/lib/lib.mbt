@@ -139,3 +139,15 @@ pub fn encode_jpeg_auto(img : @types.Image) -> Bytes raise @types.LoadError {
 pub fn encode_hdr_auto(img : @types.ImageF) -> Bytes raise @types.LoadError {
   @pure.encode_hdr_pure(img)
 }
+
+///|
+/// BMP 编码委托
+pub fn encode_bmp_auto(img : @types.Image) -> Bytes {
+  @pure.encode_bmp_pure(img)
+}
+
+///|
+/// TGA 编码委托
+pub fn encode_tga_auto(img : @types.Image) -> Bytes {
+  @pure.encode_tga_pure(img)
+}

@@ -266,7 +266,9 @@ pub let set_flip_vertically_on_load : (Bool) -> Unit = @pure.set_flip_vertically
 pub let set_unpremultiply_on_load : (Bool) -> Unit = @pure.set_unpremultiply_on_load_pure
 
 ///|
-pub let write_bmp_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @core.write_bmp_to_bytes
+pub fn write_bmp_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
+  @pure.encode_bmp_pure(img)
+}
 
 ///|
 pub let write_bmp_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_bmp_to_path
@@ -301,7 +303,9 @@ pub let write_png_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @p
 pub let write_png_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_png_to_path
 
 ///|
-pub let write_tga_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @core.write_tga_to_bytes
+pub fn write_tga_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
+  @pure.encode_tga_pure(img)
+}
 
 ///|
 pub let write_tga_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_tga_to_path
