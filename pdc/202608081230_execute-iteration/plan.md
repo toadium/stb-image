@@ -666,3 +666,43 @@
 1. **新增 gaussian_blur RGBA alpha 保留测试**：在 12 个纯逻辑测试中新增测试 8 `gaussian_blur_pure: preserves alpha channel`，构造 2x2 RGBA（channels=4），alpha 通道设 4 个不同值（如 255/128/0/64），radius=1 sigma=1.0 模糊后验证 alpha 通道与原始完全一致（`assert_eq(out.data[i*4+3], orig.data[i*4+3])`），覆盖 `if ch == 4` alpha 保留分支（`src/process/filter/filter.mbt:199-202`）。原测试 8-12（sharpen/edge_detect_sobel）顺移为 9-13。测试数从 12 调整到 13。
 2. **预期 native 测试数同步调整**：原"698→714（+12 pure 纯逻辑 + 4 根包对比）" → "698→715（+13 pure 纯逻辑 + 4 根包对比）"。
 选择理由：审查意见属实（已核实 `src/process/filter/filter.mbt:199-202` 确有 alpha 保留分支、测试 3/11 覆盖 box_blur/sharpen 的 alpha 保留分支但 gaussian_blur 缺失、与 T15 R28 RETRY 同类），修正仅补充 1 个测试用例不涉实现逻辑变更，风险极低，修正后 3 个 Image 级滤波函数的 alpha 保留分支均有 RGBA 测试覆盖，与 T15 R28 RETRY 修正的测试覆盖标准一致
+
+---
+
+## R29 PASSED v2.0 pure 包基础滤波（box_blur/gaussian_blur/sharpen/edge_detect_sobel，纯 MoonBit，全目标） [ID: T16]
+结果：在 `src/pure/` 新增 `filter.mbt`（4 个滤波函数 box_blur_pure/gaussian_blur_pure/sharpen_pure/edge_detect_sobel_pure + clamp_coord 私有辅助函数，移植自 `src/process/filter/filter.mbt:1-365`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.expf 保留）+ `filter_test.mbt`（13 纯逻辑测试，全目标，含 gaussian_blur RGBA alpha 保留测试覆盖 line 199-202 分支），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs filter 对比测试。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 715/715 通过（698→715，+13 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。3 个 Image 级滤波函数的 alpha 保留分支均有 RGBA 测试覆盖（RETRY r1 修正点落实）。
+
+## R29 NEW v2.0 pure 包直方图（histogram/histogram_equalize/histogram_normalize，纯 MoonBit，全目标） [ID: T17]
+任务：在 `src/pure/` 新增 `histogram.mbt`，移植 `src/process/feature/histogram.mbt:1-131` 的 3 个直方图函数（histogram/histogram_equalize/histogram_normalize），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖（histogram.mbt 仅用内置 Array/Bytes/Int/Byte 操作）。新增 `src/pure/histogram_test.mbt` 10 个纯逻辑测试（全目标，覆盖 histogram 灰度/RGB/均匀图、histogram_equalize 均匀图不变/正常均衡化/RGBA alpha 保留/全相同像素返回原图、histogram_normalize 均匀图不变/正常归一化/RGBA alpha 保留）。在根包 `src/roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试（histogram_equalize + histogram_normalize，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 715→727 通过。
+选择理由：
+- T16 已完成基础滤波，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波，但缺直方图分析能力
+- 直方图是图像分析核心能力（直方图计算/均衡化/归一化），补齐后 pure 包从"编解码 + 几何变换 + 色彩处理 + 滤波"升级为"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图分析"，实用价值显著提升
+- `src/process/feature/histogram.mbt:1-131` 的 3 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image 类型，无 FFI/C stub/extern/@math 调用，仅用内置 Array/Bytes/Int/Byte 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13（几何变换移植）、T14（色彩转换移植）、T15（色彩调整移植）、T16（滤波移植）同构，技术风险极低
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，直方图仅依赖 @types，全目标可用，无需新增依赖（@math 已在 pure 包 moon.pkg 但 histogram.mbt 不使用）
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像分析能力（阈值/形态学/图像质量评估等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
+- T16 产出：pure 包基础滤波，native 715 测试通过，@math 已在 pure 包 moon.pkg
+- `src/process/feature/histogram.mbt:6-26`：`pub fn histogram(img : @core.Image) -> Array[Int]`，灰度直方图（彩色先 BT.601 转灰度），纯 MoonBit
+- `src/process/feature/histogram.mbt:31-82`：`pub fn histogram_equalize(img : @core.Image) -> @core.Image`，直方图均衡化（CDF + LUT），alpha 保留分支 line 72-74
+- `src/process/feature/histogram.mbt:87-131`：`pub fn histogram_normalize(img : @core.Image) -> @core.Image`，直方图归一化（线性拉伸），alpha 保留分支 line 121-123
+- `src/process/feature/moon.pkg`：import core + math，supported_targets = "native"（histogram.mbt 仅依赖 @core.Image，不使用 @math）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math（T15/T16 新增），无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert/color_adjust/filter 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @feature（line 9，路径 `src/process/feature` 无别名，引用前缀 `@feature`）
+- `reexport.mbt:581,584,587`：`@feature.histogram` / `@feature.histogram_equalize` / `@feature.histogram_normalize`，引用前缀 `@feature`
+- `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-887）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@feature.xxx` / `@color.xxx` / `@filter.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R30 RETRY v2.0 pure 包直方图（histogram/histogram_equalize/histogram_normalize，纯 MoonBit，全目标） [ID: T17]
+原因：计划审查 v17 r1 REJECTED，1 项问题
+- [严重] 测试 9 `histogram_normalize_pure: normal normalization` 预期 data `[0,71,143,255]` 数值错误。task_v17.md line 25 明确给出公式 `scaled=(v-50)*255/150`（min=50, max=200, range=150），但按该公式手算：v=50→0, v=100→85, v=150→170, v=200→255，正确预期应为 `[0,85,170,255]`。已核实源码 `src/process/feature/histogram.mbt:118` 公式为 `let scaled = (v - min_val) * 255 / range`（整数除法），与 task 描述公式一致。Doer 按 task 错误预期 [0,71,143,255] 实现断言，测试运行时实际输出 [0,85,170,255] ≠ 预期，`assert_eq` 失败，违反"不破坏现有测试"约束，预期产出"715→727 通过"无法达成。注：[0,71,143,255] 无法由任何常见归一化公式从像素 [50,100,150,200] 推出（反推需 range≈179.6 与 range≈178.3 不一致），疑似笔误或套用了其他像素值的计算结果。
+修正方向（已覆写 task_v17.md）：
+1. **测试 9 预期 data 修正**：line 25 测试 9 的预期 data 从 `[0,71,143,255]` 修正为 `[0,85,170,255]`，与公式 `scaled=(v-50)*255/150` 的正确计算结果一致（v=50→0, v=100→85, v=150→170, v=200→255），并补充逐像素计算过程明示。修正后测试 9 与测试 5（`histogram_equalize_pure: normal equalization`，像素 [0,64,128,255]，预期同为 [0,85,170,255]）预期值相同但计算路径不同（线性拉伸 vs CDF 映射），属合理巧合（两组像素均为 4 个均匀间隔值），不构成测试冗余。
+选择理由：审查意见技术事实属实（已核实 `src/process/feature/histogram.mbt:118` 源码公式，逐像素手算确认正确预期为 [0,85,170,255]），修正仅更正测试预期值不涉实现逻辑变更，风险极低，修正后测试 9 断言与源码实际输出一致，可行性不再留待现场

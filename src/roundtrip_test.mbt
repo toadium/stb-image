@@ -953,3 +953,37 @@ test "pure vs filter: edge_detect_sobel" {
   let _ = pure_out
   let _ = filter_out
 }
+
+///|
+test "roundtrip: histogram_equalize pure vs feature" {
+  let orig_img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.histogram_equalize_pure(orig_img)
+  let feature_img = @feature.histogram_equalize(orig_img)
+  assert_eq(pure_img.width, feature_img.width)
+  assert_eq(pure_img.height, feature_img.height)
+  assert_eq(pure_img.channels, feature_img.channels)
+  assert_eq(pure_img.data, feature_img.data)
+  let _ = orig_img
+  let _ = pure_img
+  let _ = feature_img
+}
+
+///|
+test "roundtrip: histogram_normalize pure vs feature" {
+  let orig_img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.histogram_normalize_pure(orig_img)
+  let feature_img = @feature.histogram_normalize(orig_img)
+  assert_eq(pure_img.width, feature_img.width)
+  assert_eq(pure_img.height, feature_img.height)
+  assert_eq(pure_img.channels, feature_img.channels)
+  assert_eq(pure_img.data, feature_img.data)
+  let _ = orig_img
+  let _ = pure_img
+  let _ = feature_img
+}
