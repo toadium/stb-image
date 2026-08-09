@@ -1,6 +1,6 @@
 # image
 
-MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 — decode/encode PNG/JPEG/BMP/GIF/WebP/TGA/PSD/HDR/PIC from file path or memory.
+MoonBit pure image library — decode/encode PNG/JPEG/BMP/GIF/TGA/PSD/HDR/PNM/QOI from memory. Pure MoonBit implementation, no C FFI, supports native/wasm-gc/js targets.
 
 ## Quick Start
 
@@ -95,7 +95,7 @@ try {
 
 ## Backend
 
-Supports **native** target only. Multi-target (wasm/js) deferred — requires Emscripten + `extern "wasm"`/`extern "js"` FFI, evaluated as cost-prohibitive for v1.0.
+Supports **native/wasm-gc/js** targets. Pure MoonBit implementation, no C FFI dependency. 645 tests pass on all three targets.
 
 ## Version History
 

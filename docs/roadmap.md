@@ -54,7 +54,7 @@ flowchart LR
     V16 --> V110["v1.10<br/>341+29 测试<br/>128 函数"]
     V110 --> V114["v1.14<br/>433+29 测试<br/>164 函数"]
     V114 --> V117["v1.17<br/>533+29 测试<br/>199 函数"]
-    V117 --> V20["v2.0<br/>847+75 测试<br/>196 函数<br/>多目标"]
+    V117 --> V20["v2.0<br/>645×3 测试<br/>196 函数<br/>多目标"]
 
     classDef milestone fill:#e8f5e9,stroke:#2e7d32
     class V10,V117,V20 milestone

@@ -1,15 +1,15 @@
 ---
 name: image
-description: MoonBit 图像处理库 — 封装 stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07，多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），完整图像解码/编码/缩放/处理能力，847 测试 + 75 基准测试，ASan 验证通过。
+description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，645 测试 × 3 目标 (native/wasm-gc/js)，ASan 验证通过。
 ---
 
 # image 包使用指南
 
-MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
+纯 MoonBit 图像处理库，纯 MoonBit 实现，无 C FFI 依赖。
 
 ## 用途
 
-将 C 单头文件库 `stb_image.h` / `stb_image_write.h` / `stb_image_resize2.h` 以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供完整的图像加载/写入/缩放/处理能力。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/{codec,pixel,color,process,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
+纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：三目标 (native/wasm-gc/js) 均使用纯 MoonBit（`src/pure/{codec,pixel,color,process,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
 
 ## 快速开始
 
@@ -143,11 +143,11 @@ try {
 }
 ```
 
-`UnsupportedFormat` 与 `DecodeFailed` 不可精确区分，stb_image 返回 NULL 时默认归类为 `DecodeFailed`。可用 `failure_reason()` 获取 stb_image 内部失败原因字符串。
+`UnsupportedFormat` 与 `DecodeFailed` 不可精确区分，解码失败时 raise LoadError 时默认归类为 `DecodeFailed`。可用 `failure_reason()` 获取 stb_image 内部失败原因字符串。
 
 ## 目标后端
 
-多目标支持：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端 `src/pure/{codec,pixel,color,process,util}/`）。native 目标 847 测试 + 75 基准测试，wasm/js 目标 225 测试。
+多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,pixel,color,process,util}/`）。native 目标 645 测试 × 3 目标 (native/wasm-gc/js)，wasm/js 目标 645 测试。
 
 ## 架构
 
@@ -156,7 +156,7 @@ try {
 1. **Vendoring 层**：`scripts/prepare.py` 下载 pinned `stb_image.h` v2.30 + `stb_image_write.h` v1.16 + `stb_image_resize2.h` v2.07
 2. **FFI 边界层**：`wrapper.c`（ABI 归一化）+ `ffi.mbt`（私有 `extern "c"` 声明）
 3. **安全 API 层**：`types/`（全目标类型）+ `core/`（FFI+I/O）+ `lib/`（pure 统一 API）+ `pure/`（纯 MoonBit 后端）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
-4. **测试与文档层**：`*_test.mbt`（847 测试）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（75 基准测试）
+4. **测试与文档层**：`*_test.mbt`（645 测试）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（）
 
 ## 版本演进
 
@@ -172,7 +172,7 @@ try {
 - **v1.5**：PNM 编码 + GIF 动画 + EXIF 读取，229 测试
 - **v1.6**：PNG 元数据 + 往返测试 + 性能基准，254 测试 + 29 基准测试
 - **v1.7-v1.17**：高级图像处理（混合模式/FFT/自适应阈值/连通域/积分图像/霍夫变换/LBP/金字塔/双边滤波/轮廓/分割/NLM/Retinex/Canny/分水岭/GLCM/Haar小波/Harris角点/去雾/距离变换/Gabor滤波），533 测试 + 29 基准测试
-- **v2.0**：多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），八子包架构，847 测试 + 75 基准测试
+- **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，645 测试 × 3 目标 (native/wasm-gc/js)
 
 ## 限制
 

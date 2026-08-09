@@ -25,7 +25,7 @@
 | **v1.15** | **轮廓提取 + 颜色分割 + NLM 去噪 + Retinex** | **472+29** |
 | **v1.16** | **Canny 边缘 + 分水岭 + GLCM 纹理 + Haar 小波** | **501+29** |
 | **v1.17** | **Harris 角点 + 去雾 + 距离变换 + Gabor 滤波** | **533+29** |
-| **v2.0** | **多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），八子包架构（types/core/lib/pure/process/format/meta/util），196 函数 + 27 类型** | **847+75** |
+| **v2.0** | **多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构（types/pure/{codec,pixel,color,process,util}/lib/format/meta/process/util），纯 MoonBit 实现** | **645×3** |
 
 ## 上游
 

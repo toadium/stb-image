@@ -8,7 +8,7 @@
 
 | 库 | 版本 | 实现方式 | 目标 | 依赖 | 许可证 |
 |---|---|---|---|---|---|
-| **toadium/image** | 1.0.0 | C FFI (stb_image.h) | native | 无 | MIT |
+| **toadium/image** | 1.0.0 | 纯 MoonBit | native | 无 | MIT |
 | mizchi/image | 0.4.3 | 纯 MoonBit | js/native/wasm-gc | mizchi/zlib | Apache-2.0 |
 | bikallem/image | 0.1.0 | 纯 MoonBit (Go 移植) | ? | bikallem/compress, moonbitlang/x, bikallem/blit | Apache-2.0 |
 | gmlewis/image | 0.16.19 | 纯 MoonBit (Go 移植) | ? | gmlewis/flate, hash, io, zlib | Apache-2.0 |
@@ -96,7 +96,7 @@
 ## 定位差异
 
 ### image（本库）
-- **FFI 绑定**：通过 C 库 stb_image.h 提供，非纯 MoonBit
+- **纯 MoonBit 实现
 - **格式覆盖广**：PSD/HDR/PNM 等独特格式，16-bit/float 深度
 - **native only**：不支持 wasm/js 目标
 - **无图像处理**：不含 resize/crop/draw 等操作

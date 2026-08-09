@@ -1,10 +1,10 @@
 # image 架构文档
 
-> 版本 v2.0.0 | 196 公开函数 + 27 类型 | 847 测试 + 75 基准测试
+> 版本 v2.0.0 | 196 公开函数 + 27 类型 | 645 测试 × 3 目标 (native/wasm-gc/js)
 
 ## 概述
 
-image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用八子包架构（types, core, lib, pure, process, format, meta, util），根包 re-export 保持向后兼容 API。
+image 是 纯 MoonBit 图像处理库，封装 [stb](https://github.com/nothings/stb) 系列单头文件库，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, core, lib, pure, process, format, meta, util），根包 re-export 保持向后兼容 API。
 
 ## 功能分类
 
@@ -73,7 +73,7 @@ mindmap
 flowchart TB
     subgraph Root["根包 (src/)"]
         RE["reexport.mbt<br/>196 pub fn + 27 types"]
-        Bench["bench.mbt (75 基准测试)"]
+        Bench["bench.mbt ()"]
         RT["roundtrip_test.mbt"]
     end
 
@@ -655,7 +655,7 @@ image/
 
 ## 设计决策
 
-### 1. 八子包架构（v2.0）
+### 1. 多子包架构（v2.0）
 
 **问题**：单包超过 30 个源文件，编译慢、职责不清
 

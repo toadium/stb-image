@@ -227,4 +227,4 @@ src/
 6. `src/format/moon.pkg`：`@core` → `@types`，删除 `supported_targets = "native"`
 7. `src/format/*.mbt`：`@core.Image` → `@types.Image` 等全局替换
 8. 验证：`moon check --target native` + `moon check --target wasm`
-9. 验证：`moon test --target native`（847 测试仍通过）
+9. 验证：`moon test --target native`（645 测试仍通过）
