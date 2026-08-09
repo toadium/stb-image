@@ -1492,3 +1492,250 @@ test "add_noise_salt_pepper: pure vs util" {
   let _ = pure_img
   let _ = util_img
 }
+
+///|
+test "roundtrip: blend_multiply pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_multiply_pure(orig, blend_img)
+  let util_img = @util.blend_multiply(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_screen pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_screen_pure(orig, blend_img)
+  let util_img = @util.blend_screen(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_overlay pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_overlay_pure(orig, blend_img)
+  let util_img = @util.blend_overlay(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_darken pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_darken_pure(orig, blend_img)
+  let util_img = @util.blend_darken(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_lighten pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_lighten_pure(orig, blend_img)
+  let util_img = @util.blend_lighten(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_difference pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_difference_pure(orig, blend_img)
+  let util_img = @util.blend_difference(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_exclusion pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_exclusion_pure(orig, blend_img)
+  let util_img = @util.blend_exclusion(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_color_dodge pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_color_dodge_pure(orig, blend_img)
+  let util_img = @util.blend_color_dodge(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_color_burn pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_color_burn_pure(orig, blend_img)
+  let util_img = @util.blend_color_burn(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_hard_light pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_hard_light_pure(orig, blend_img)
+  let util_img = @util.blend_hard_light(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_soft_light pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_soft_light_pure(orig, blend_img)
+  let util_img = @util.blend_soft_light(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_linear_dodge pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_linear_dodge_pure(orig, blend_img)
+  let util_img = @util.blend_linear_dodge(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "roundtrip: blend_linear_burn pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let blend_img = @color.adjust_brightness(orig, 50)
+  let pure_img = @pure.blend_linear_burn_pure(orig, blend_img)
+  let util_img = @util.blend_linear_burn(orig, blend_img)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = blend_img
+  let _ = pure_img
+  let _ = util_img
+}

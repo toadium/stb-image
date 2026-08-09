@@ -875,3 +875,49 @@
 - `reexport.mbt:864,867,912,924,930,933,963,966,969`：`@util.add_noise_gaussian`/`@util.add_noise_salt_pepper`/`@util.compute_stats`/`@util.flip_vertical`/`@util.hstack`/`@util.mean_value`/`@util.tile`/`@util.transpose`/`@util.vstack`，引用前缀 `@util`
 - `roundtrip_test.mbt` 现有 pure vs util 对比测试模式（line 1189-1342，T21 新增）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R37 PASSED v2.0 pure 包图像拼接 + 统计 + 噪声（image_compose + image_stats + image_noise，纯 MoonBit，全目标） [ID: T22]
+结果：在 `src/pure/` 新增 `image_compose.mbt`（hstack_pure/vstack_pure/tile_pure/flip_vertical_pure/transpose_pure，移植自 `src/util/image_compose.mbt:1-151`）+ `image_stats.mbt`（ImageStats 结构 derive(Eq, @debug.Debug) + compute_stats_pure/mean_value_pure，移植自 `src/util/image_stats.mbt:1-47`）+ `image_noise.mbt`（LCG 私有结构 + lcg_next/lcg_float/lcg_gaussian 私有辅助 + add_noise_gaussian_pure/add_noise_salt_pepper_pure，复用 pure 包已有 clamp_b，移植自 `src/util/image_noise.mbt:1-100`），仅依赖 @types + @math + @debug，全目标可用 + 14 个 pure 纯逻辑测试 + 9 个根包 native-only pure vs util 对比测试。`moon.pkg` 新增 `moonbitlang/core/debug` import。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 819/819 通过（796→819，+14 pure 纯逻辑 + 9 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R37 NEW v2.0 pure 包 13 种 blend 混合模式（纯 MoonBit，全目标） [ID: T23]
+任务：在 `src/pure/` 新增 `blend.mbt`，移植 `src/util/pixel_ops.mbt:103-478` 的 13 个 blend 混合模式函数（blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`，clamp_byte_v 复用 `src/pure/pixel_ops.mbt:6` 同包私有函数。新增 `src/pure/blend_test.mbt` 15 个纯逻辑测试（全目标，13 个 blend 函数基础测试 + 尺寸不匹配 raises + 通道不匹配 raises）。在根包 `src/roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（13 个 blend 函数各 1 个，用 @core.load_from_path 加载测试图像 req_channels=Some(3) → @color.adjust_brightness 生成混合对象 → @pure.blend_xxx_pure vs @util.blend_xxx 断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 819→847 通过。
+选择理由：
+- T22 已完成图像拼接 + 统计 + 噪声，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学 + 仿射变换 + 基础像素操作 + 图像工具 + 高级像素操作 + 色彩映射 + 图像拼接 + 统计 + 噪声，但缺 13 种 blend 混合模式（v1.7-v1.8 功能，`src/util/pixel_ops.mbt:103-478`），这些是常用图像合成操作，补齐后 pure 包图像处理能力更完整
+- `src/util/pixel_ops.mbt:103-478` 的 13 个 blend 函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型 + clamp_byte_v 私有辅助，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T22（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/基础像素操作/高级像素操作/图像拼接/统计/噪声移植）同构，技术风险极低
+- `clamp_byte_v`（pixel_ops.mbt:4）已在 pure 包 `src/pure/pixel_ops.mbt:6`（T20 移植），同包私有函数跨文件可见，blend.mbt 直接复用，不重复定义（与 T22 image_noise.mbt 复用 clamp_b 同构）
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，blend 混合模式仅依赖 @types，全目标可用，无需新增依赖（@math/@debug 已在 pure 包 moon.pkg 但本轮不使用）
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像合成能力（绘图合成/图像金字塔等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math + @debug），全目标可用
+- T22 产出：pure 包图像拼接 + 统计 + 噪声，native 819 测试通过
+- `src/util/pixel_ops.mbt:103-478`：13 个 blend 混合模式函数，纯 MoonBit 仅依赖 @core.Image/@core.LoadError + clamp_byte_v
+- `src/pure/pixel_ops.mbt:6`：`fn clamp_byte_v(v : Int) -> Byte`，pure 包已有（T20 移植），blend.mbt 复用
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math + @debug，无 `supported_targets`，全目标；本轮无需新增依赖
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，引用前缀 `@util`），import @color（line 6，引用前缀 `@color`）
+- `roundtrip_test.mbt` 现有 pure vs util 对比测试模式（line 1189-1494）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@util.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R38 RETRY v2.0 pure 包 13 种 blend 混合模式（纯 MoonBit，全目标） [ID: T23]
+原因：计划审查 v23 r1 REJECTED，6 项严重问题（均为测试预期值计算错误，已逐一核实源码公式逐像素手算验证）
+- [严重] 测试 2 `blend_screen_pure` 预期 `[245,196,206,255]` 错误，正确 `[222,192,211,255]`（源码 `src/util/pixel_ops.mbt:147` 公式 `255-(255-b)*(255-l)/255`，3 值错误）
+- [严重] 测试 3 `blend_overlay_pure` 预期 `[156,137,137,100]` 错误，正确 `[156,128,167,100]`（源码 `line 176-180`，2 值错误）
+- [严重] 测试 7 `blend_exclusion_pure` 预期 `[143,132,172,155]` 错误，正确 `[144,133,172,205]`（源码 `line 292` 公式 `clamp_byte_v(b+l-2*b*l/255)`，3 值错误）
+- [严重] 测试 8 `blend_color_dodge_pure` 预期 `[131,255,255,255]` 错误，正确 `[164,255,255,255]`（源码 `line 320`，中间 25500/155=164 非 131，1 值错误）
+- [严重] 测试 10 `blend_hard_light_pure` 预期 `[78,173,231,19]` 错误，正确 `[78,169,232,19]`（源码 `line 380-384`，中间 22050/255=86 非 82、6050/255=23 非 24，2 值错误）
+- [严重] 测试 11 `blend_soft_light_pure` 预期 `[86,176,255,34]` 错误，正确 `[86,161,224,24]`（源码 `line 413-414`，`clamp_byte_v` 包裹整个加法表达式而非中间项，MoonBit 整数除法向零取整 -1012500/65025=-15 非 0，3 值错误 + 系统性误解 clamp_byte_v 作用范围）
+修正方向（已逐一核实源码公式逐像素手算验证，覆写 task_v23.md）：
+1. **测试 2 预期值修正**：`[245,196,206,255]` → `[222,192,211,255]`，逐像素计算：255-(255-100)*(255-200)/255=255-33=222、255-(255-150)*(255-100)/255=255-63=192、255-(255-200)*(255-50)/255=255-44=211、255-(255-50)*(255-255)/255=255
+2. **测试 3 预期值修正**：`[156,137,137,100]` → `[156,128,167,100]`，逐像素计算：base>=128 → 255-2*(255-150)*(255-100)/255=255-127=128、255-2*(255-200)*(255-50)/255=255-88=167
+3. **测试 7 预期值修正**：`[143,132,172,155]` → `[144,133,172,205]`，逐像素计算：100+200-2*100*200/255=300-156=144、150+100-2*150*100/255=250-117=133、50+255-2*50*255/255=305-100=205
+4. **测试 8 预期值修正**：`[131,255,255,255]` → `[164,255,255,255]`，逐像素计算：100*255/(255-100)=25500/155=164（task 中间 131 错误）
+5. **测试 10 预期值修正**：`[78,173,231,19]` → `[78,169,232,19]`，逐像素计算：255-2*(255-150)*(255-150)/255=255-86=169（中间 22050/255=86 非 82）、255-2*(255-200)*(255-200)/255=255-23=232（中间 6050/255=23 非 24）
+6. **测试 11 预期值修正**：`[86,176,255,34]` → `[86,161,224,24]`，关键修正 `clamp_byte_v` 作用范围说明：`clamp_byte_v` 包裹整个加法表达式 `(255-w)*b*b/(255*255) + w*b/255` 的最终结果，不是对中间项单独 clamp。MoonBit 整数除法向零取整，-1012500/65025=-15（不是 0）。逐像素计算：w=300, -15+176=161；w=400, -89+313=224；w=100, 5+19=24
+选择理由：审查意见 6 项全部属实（已核实 `src/util/pixel_ops.mbt:147,176-180,292,320,380-384,413-414` 源码公式，逐像素手算确认正确预期值），与 T17 R30 RETRY（plan.md line 705，测试 9 预期 data `[0,71,143,255]` 错误修正为 `[0,85,170,255]`）同类问题，修正仅更正测试预期值不涉实现逻辑变更，风险极低，修正后 6 项测试断言与源码实际输出一致，可行性不再留待现场
