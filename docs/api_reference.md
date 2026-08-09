@@ -133,7 +133,7 @@
 | `encode_ico_sizes` | `(Array[Image]) -> Bytes` | 编码多尺寸ICO |
 | `encode_icns` | `(Image) -> Bytes` | 编码ICNS（PNG载荷） |
 
-## 编解码 — GIF/PNM（4个函数）
+## 编解码 — GIF/PNM（5个函数）
 
 | 函数 | 签名 | 说明 |
 |------|------|------|
@@ -141,6 +141,7 @@
 | `encode_gif_animation` | `(GifAnimation) -> Bytes` | 编码多帧GIF89a |
 | `encode_ppm` | `(Image) -> Bytes` | 编码PPM (P6) |
 | `encode_pgm` | `(Image) -> Bytes` | 编码PGM (P5) |
+| `encode_pnm` | `(Image) -> Bytes` | 编码PNM（自动选择 PPM/PGM） |
 
 ---
 
@@ -265,7 +266,7 @@
 | `blend_linear_dodge` | `(Image, Image) -> Image` | 线性减淡 |
 | `blend_linear_burn` | `(Image, Image) -> Image` | 线性加深 |
 
-## 处理 — 高级处理（5个函数）
+## 处理 — 高级处理（4个函数）
 
 | 函数 | 签名 | 说明 |
 |------|------|------|
@@ -273,7 +274,6 @@
 | `k_means_quantize` | `(Image, Int, Int) -> Image` | K-means色彩量化（k, 最大迭代） |
 | `convolve` | `(Image, Array[Float], Float, Float) -> Image` | 通用卷积（核，除数，偏移） |
 | `pixelate` | `(Image, Int) -> Image` | 像素化效果（块大小） |
-| `replace_color` | `(Image, Array[Byte], Array[Byte], Int) -> Image` | 颜色替换（容差） |
 
 ## 处理 — FFT/频域（6个函数）
 
@@ -509,7 +509,7 @@
 | I/O — 文件 | 1 | v0.3 |
 | 编解码 — QOI | 2 | v1.2 |
 | 编解码 — ICO/ICNS | 3 | v1.2 |
-| 编解码 — GIF/PNM | 4 | v1.2-v1.5 |
+| 编解码 — GIF/PNM | 5 | v1.2-v1.5 |
 | 元数据 | 4 | v1.5-v1.6 |
 | 处理 — 变换 | 7 | v1.3 |
 | 处理 — 几何 | 2 | v1.4 |
@@ -522,7 +522,7 @@
 | 处理 — 绘制 | 2 | v1.3 |
 | 处理 — 质量评估 | 3 | v1.10 |
 | 处理 — 混合模式 | 13 | v1.7-v1.12 |
-| 处理 — 高级处理 | 5 | v1.8-v1.12 |
+| 处理 — 高级处理 | 4 | v1.8-v1.12 |
 | 处理 — FFT/频域 | 6 | v1.12-v1.13 |
 | 处理 — 自适应阈值 | 3 | v1.13 |
 | 处理 — 连通域 | 1 | v1.13 |

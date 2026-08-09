@@ -12,8 +12,8 @@ stb-image 是 MoonBit 原生 FFI 绑定库，封装 [stb](https://github.com/not
 mindmap
   root((stb-image))
     格式 I/O
-      解码 10+ 格式
-      编码 8 格式
+      解码 9 种格式
+      编码 12 种格式
       自动检测
       动画 GIF
     像素类型
@@ -118,7 +118,7 @@ flowchart TB
     end
 
     subgraph Pure["pure/ — 纯 MoonBit 后端 (wasm/js)"]
-        PureDec["6 解码器 + 3 编码器"]
+        PureDec["6 解码器 + 3 种编码格式"]
         PureProc["色彩/滤波/几何/形态学/混合"]
     end
 
@@ -131,7 +131,7 @@ flowchart TB
     Format --> Root
     Meta --> Root
     Util --> Root
-    Pure --> Lib
+    Lib --> Pure
     Core -.-> TypesPkg
     Pure -.-> TypesPkg
     Process -.-> Core
@@ -144,10 +144,10 @@ flowchart TB
     Root["根包 src/<br/>reexport.mbt · bench · roundtrip_test"]
     Types["types/<br/>全目标类型（纯 MoonBit）"]
     Core["core/<br/>FFI + I/O（native only）"]
-    Process["process/<br/>图像处理（纯 MoonBit，7 子子包）"]
-    Format["format/<br/>编解码（纯 MoonBit）"]
-    Meta["meta/<br/>元数据（纯 MoonBit）"]
-    Util["util/<br/>工具函数（纯 MoonBit）"]
+    Process["process/<br/>图像处理（纯 MoonBit, native only, 7 子子包）"]
+    Format["format/<br/>编解码（纯 MoonBit, native only）"]
+    Meta["meta/<br/>元数据（纯 MoonBit, native only）"]
+    Util["util/<br/>工具函数（纯 MoonBit, native only）"]
     Pure["pure/<br/>纯 MoonBit 后端（wasm/js）"]
     Lib["lib/<br/>pure 侧统一 API + 格式分派"]
 
@@ -172,7 +172,7 @@ flowchart TB
     classDef pure fill:#e1f5fe,stroke:#01579b
     classDef ffi fill:#fff3e0,stroke:#e65100
     classDef ext fill:#f3e5f5,stroke:#4a148c
-    class Types,Process,Format,Meta,Util,Pure,Lib pure
+    class Types,Pure,Lib pure
     class Core ffi
     class Stb ext
 ```
@@ -221,16 +221,19 @@ flowchart LR
 flowchart TB
     subgraph CorePkg["core/ (FFI 边界)"]
         direction TB
-        Types["image_types.mbt<br/>Image · Image16 · ImageF<br/>ImageInfo · GifAnimation · LoadError<br/>ImageFormat · ResizeFilter · ResizeEdge"]
+        Types["image_types_reexport.mbt<br/>从 @types re-export 类型别名"]
         FFI["ffi.mbt<br/>私有 extern \"c\" 声明"]
         Wrapper["wrapper.c<br/>C ABI 包装器"]
         Load["image_load_native.mbt<br/>load_from_path/bytes<br/>load_16_* · loadf_* · load_gif_*"]
-        Write["image_write_native.mbt<br/>write_png/bmp/tga/jpeg/hdr"]
+        Write["image_write_native.mbt<br/>write_png/bmp/tga/jpeg/hdr<br/>set_flip_vertically_on_load"]
         Resize["image_resize_native.mbt<br/>resize · resize_16 · resizef · resize_srgb"]
-        Info["image_info_native.mbt<br/>info_from_path/bytes<br/>is_16_bit · is_hdr"]
+        Info["image_info_native.mbt<br/>info_from_path/bytes<br/>is_16_bit · is_hdr<br/>set_unpremultiply · hdr_to_ldr_gamma/scale"]
         Detect["image_detect.mbt<br/>detect_format · decode_any<br/>is_supported_format"]
         Icon["icon_encode.mbt<br/>encode_ico · encode_icns"]
-        Config["image_config.mbt<br/>flip · unpremultiply · HDR gamma/scale"]
+        Gif["image_gif_native.mbt<br/>GIF 加载"]
+        Float["image_float_native.mbt<br/>HDR 浮点加载"]
+        Int16["image_16_native.mbt<br/>16位加载"]
+        FileIO["file_io_native.mbt<br/>read_file_bytes"]
     end
 ```
 
@@ -245,7 +248,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph ProcPkg["process/ (纯 MoonBit, 7 子子包)"]
+    subgraph ProcPkg["process/ (纯 MoonBit, native only, 7 子子包)"]
         direction TB
         subgraph TransformSub["transform/ — 几何变换"]
             T1["transform.mbt<br/>crop · rotate_90/180/270 · flip_h"]
@@ -298,18 +301,18 @@ flowchart TB
     end
 ```
 
-**职责**：所有纯 MoonBit 图像处理算法，无 FFI 依赖
+**职责**：所有纯 MoonBit 图像处理算法，无直接 FFI 依赖（但因依赖 @core 类型而仅支持 native 目标）
 
 **关键设计**：
 - 仅依赖 `@core`（类型定义）和 `@math`（数学函数）
 - 所有函数接受 `Image` 返回 `Image`，支持函数组合
-- 27 个类型中 17 个定义在此包（`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...）
+- 27 个类型中 15 个定义在此包（`Complex`, `FFTResult`, `FreqFilterType`, `ConnectedComponent`, ...）
 
 ### format/ — 编解码
 
 ```mermaid
 flowchart TB
-    subgraph FormatPkg["format/ (纯 MoonBit)"]
+    subgraph FormatPkg["format/ (纯 MoonBit, native only)"]
         QOI["qoi.mbt<br/>decode_qoi · encode_qoi"]
         GIF["gif_encode.mbt<br/>encode_gif · encode_gif_animation"]
         PNM["pnm_encode.mbt<br/>encode_ppm · encode_pgm · encode_pnm"]
@@ -322,7 +325,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph MetaPkg["meta/ (纯 MoonBit)"]
+    subgraph MetaPkg["meta/ (纯 MoonBit, native only)"]
         EXIF["exif.mbt<br/>read_exif_from_bytes/path<br/>ExifInfo (make, model, date_time, orientation)"]
         PNG["png_meta.mbt<br/>read_png_text_chunks<br/>PngTextChunk (keyword, text)"]
     end
@@ -334,7 +337,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph UtilPkg["util/ (纯 MoonBit)"]
+    subgraph UtilPkg["util/ (纯 MoonBit, native only)"]
         PixelOps["pixel_ops.mbt<br/>threshold · posterize · extract_channel"]
         PixelAdv["pixel_advanced.mbt<br/>set_alpha · fill_alpha · replace_color · apply_lut"]
         Compose["image_compose.mbt<br/>hstack · vstack · tile · flip_v · transpose"]
@@ -443,8 +446,8 @@ flowchart TB
         FileIO["文件 I/O (1)"]
     end
 
-    subgraph Proc["处理 (120 函数)"]
-        Color["色彩 (21)"]
+    subgraph Proc["处理 (119 函数)"]
+        Color["色彩 (26)"]
         Filter["滤波 (14)"]
         Geo["几何 (9)"]
         Edge["边缘/特征 (14)"]
@@ -453,13 +456,22 @@ flowchart TB
         Tex["纹理 (10)"]
         Morph["形态学 (6)"]
         Qual["质量 (9)"]
-        Util["工具 (14)"]
     end
 
-    subgraph Codec["编解码 (9 函数)"]
+    subgraph UtilFn["工具 (22 函数)"]
+        Pixel["像素操作 (3)"]
+        PixelAdv["高级像素 (4)"]
+        Compose["图像合成 (5)"]
+        Noise["噪声 (2)"]
+        ColorMap["色彩映射 (2)"]
+        Stats["统计 (2)"]
+        UtilMisc["图像工具 (4)"]
+    end
+
+    subgraph Codec["编解码 (10 函数)"]
         QOI["QOI (2)"]
         ICO["ICO/ICNS (3)"]
-        GIF["GIF/PNM (4)"]
+        GIF["GIF/PNM (5)"]
     end
 
     subgraph MetaFn["元数据 (4 函数)"]
@@ -539,6 +551,8 @@ classDiagram
     }
 ```
 
+> 上述仅展示 9 个核心类型。完整 27 个类型列表（含 `ExifInfo`、`PngTextChunk`、`ImageStats`、`Complex`、`FFTResult`、`ConnectedComponent`、`HoughLine`、`Contour`、`GlcmFeatures`、`HaarWaveletResult`、`CornerPoint` 等 18 个处理/元数据/工具类型）详见 [api_reference.md](api_reference.md)。
+
 ## 项目结构
 
 ```
@@ -562,11 +576,11 @@ stb-image/
 │   │   └── image_types.mbt   # 跨目标共享类型定义
 │   ├── core/                 # 核心：FFI + 加载/写入/缩放 + 检测 + ICO（native only）
 │   │   ├── moon.pkg          # native-stub: wrapper.c
-│   │   ├── image_types.mbt   # Image, Image16, ImageF, ImageInfo, GifAnimation, LoadError
+│   │   ├── image_types_reexport.mbt # 从 @types re-export 类型别名
 │   │   ├── ffi.mbt           # 私有 extern "c" 声明
 │   │   ├── wrapper.c         # C FFI 包装器（ABI标准化）
 │   │   ├── stb_image*.h      # 第三方上游头文件
-│   │   ├── image_*_native.mbt# load/write/resize/info/gif/16/float
+│   │   ├── image_*_native.mbt# load/write/resize/info/gif/16/float/file_io
 │   │   ├── image_detect.mbt  # detect_format/decode_any/is_supported_format
 │   │   ├── icon_encode.mbt   # encode_ico/encode_ico_sizes/encode_icns
 │   │   └── *_test.mbt        # 核心测试
@@ -591,7 +605,7 @@ stb-image/
 │   │   ├── png_meta.mbt      # read_png_text_chunks/...
 │   │   └── *_test.mbt        # 元数据测试
 │   ├── util/                 # 工具函数（纯MoonBit）
-│   │   ├── moon.pkg          # 导入 @core, @process
+│   │   ├── moon.pkg          # 导入 @core, @process/transform, @debug, @math
 │   │   ├── image_util.mbt    # pad/border/resize_to_cover/contain/pixelate/...
 │   │   ├── pixel_ops.mbt     # threshold/posterize/extract_channel/swap_channels
 │   │   ├── pixel_advanced.mbt# set_alpha/fill_alpha/replace_color/apply_lut
@@ -603,11 +617,14 @@ stb-image/
 │   ├── pure/                 # 纯 MoonBit 后端（wasm/js 目标）
 │   │   ├── moon.pkg          # 依赖 @types, @math, @encoding/utf8, @debug
 │   │   ├── bmp_decode.mbt    # BMP 解码
-│   │   ├── qoi_decode.mbt    # QOI 解码/编码
+│   │   ├── qoi_decode.mbt    # QOI 解码
+│   │   ├── qoi_encode.mbt    # QOI 编码
 │   │   ├── tga_decode.mbt    # TGA 解码
-│   │   ├── pnm_decode.mbt    # PNM 解码/编码
+│   │   ├── pnm_decode.mbt    # PNM 解码
+│   │   ├── pnm_encode.mbt    # PNM 编码
 │   │   ├── psd_decode.mbt    # PSD 解码
-│   │   ├── gif_decode.mbt    # GIF 解码/编码
+│   │   ├── gif_decode.mbt    # GIF 解码
+│   │   ├── gif_encode.mbt    # GIF 编码
 │   │   ├── color_adjust.mbt  # 色彩调整
 │   │   ├── color_convert.mbt # 色彩转换
 │   │   ├── filter.mbt        # 滤波/边缘检测
@@ -625,7 +642,7 @@ stb-image/
 │   │   ├── blend.mbt         # 13 种混合模式
 │   │   └── *_test.mbt        # pure 后端测试
 │   └── lib/                  # pure 侧统一 API + 自动格式分派
-│       ├── moon.pkg          # 依赖 @types, @pure
+│       ├── moon.pkg          # 依赖 @types, @pure, @debug
 │       ├── lib.mbt           # 统一入口 + 格式自动分派
 │       └── lib_test.mbt      # lib 测试
 ├── scripts/
@@ -638,13 +655,13 @@ stb-image/
 
 ## 设计决策
 
-### 1. 五子包架构（v1.10.1）
+### 1. 八子包架构（v2.0）
 
 **问题**：单包超过 30 个源文件，编译慢、职责不清
 
-**方案**：按职责拆分为 `core`（FFI）/ `process`（处理）/ `format`（编解码）/ `meta`（元数据）/ `util`（工具），根包 re-export 保持 API 兼容
+**方案**：按职责拆分为 `core`（FFI）/ `process`（处理）/ `format`（编解码）/ `meta`（元数据）/ `util`（工具），根包 re-export 保持 API 兼容。v2.0 升级为八子包：新增 `types`（全目标类型）、`pure`（纯 MoonBit 后端）、`lib`（pure 侧统一 API）
 
-**收益**：编译并行化、职责清晰、可独立测试
+**收益**：编译并行化、职责清晰、可独立测试、多目标支持
 
 ### 2. re-export 策略
 

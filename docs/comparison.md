@@ -8,7 +8,7 @@
 
 | 库 | 版本 | 实现方式 | 目标 | 依赖 | 许可证 |
 |---|---|---|---|---|---|
-| **moonbit-toadium/stb-image** | 1.0.0 | C FFI (stb_image.h) | native | 无 | MIT |
+| **toadium/stb-image** | 1.0.0 | C FFI (stb_image.h) | native | 无 | MIT |
 | mizchi/image | 0.4.3 | 纯 MoonBit | js/native/wasm-gc | mizchi/zlib | Apache-2.0 |
 | bikallem/image | 0.1.0 | 纯 MoonBit (Go 移植) | ? | bikallem/compress, moonbitlang/x, bikallem/blit | Apache-2.0 |
 | gmlewis/image | 0.16.19 | 纯 MoonBit (Go 移植) | ? | gmlewis/flate, hash, io, zlib | Apache-2.0 |
