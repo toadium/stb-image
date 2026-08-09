@@ -68,22 +68,22 @@ flowchart LR
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
-- **五子包架构**：core（FFI+类型）/ process（图像处理）/ format（编解码）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
+- **八子包架构**：types（全目标类型）/ pure（纯 MoonBit 后端，5 子包）/ lib（统一 API）/ process（图像处理）/ format（编解码）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
 
 **主要差距**（对比 5 个已有库）：
 | 缺失功能 | 已有此功能的库 | 实现路径 |
 |---|---|---|
 | WebP 编码 | mizchi | 纯 MoonBit (lossless) |
 | 流式解码 | mizchi | 纯 MoonBit (架构改动大) |
-| TIFF 解码 | — | 纯 MoonBit 或 FFI |
-| wasm/js 目标 | mizchi | 需要完全不同的 FFI 方案 |
+| TIFF 解码 | — | 纯 MoonBit |
+| ~~wasm/js 目标~~ | ~~mizchi~~ | ✅ 已完成（v2.0 纯 MoonBit 全目标） |
 
 ## 迭代原则
 
-1. **FFI 优先**：stb 库本身支持的功能优先通过 FFI 绑定（低成本、高质量、ASan 可验证）
-2. **纯 MoonBit 补齐**：stb 不支持的功能用纯 MoonBit 实现，放在单独包中
+1. **纯 MoonBit 优先**：所有功能用纯 MoonBit 实现，确保三目标 (native/wasm-gc/js) 支持
+2. **格式覆盖优先**：优先补齐常用格式，再考虑高级功能
 3. **不破坏 v1.0 API**：新增功能只添加，不修改已有签名
-4. **测试先行**：每个新功能必须有测试 + ASan 验证（FFI 部分）
+4. **测试先行**：每个新功能必须有测试，三目标均通过
 5. **差异化优先**：优先补齐其他库都有的功能，再考虑独特功能
 
 ---
@@ -252,7 +252,7 @@ flowchart LR
 **目标**：将单包拆分为多子包，提升可维护性
 
 ### 功能
-1. **五子包架构** — `core/`（FFI+类型+加载/写入/缩放+检测+ICO）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
+1. **八子包架构** — `types/`（全目标类型）+ `pure/{codec,pixel,color,process,util}/`（纯 MoonBit 后端）+ `lib/`（统一 API）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
 2. **reexport.mbt** — 根包 re-export 保持向后兼容 API（`pub let` 用于普通函数，`pub fn` 包装器用于带标签参数的函数）
 3. **中文 README** — `README.md`（中文），文档统一存放 `docs/` 目录
 4. **警告清理** — 删除未使用的 test_helpers，0 警告 0 错误
@@ -373,15 +373,14 @@ flowchart LR
 - 优点：native 性能保留
 - 缺点：维护两套代码
 
-**路径 B：全纯 MoonBit**
+**路径 B：全纯 MoonBit**（已选择 ✅）
 - 移除 C FFI，全部用纯 MoonBit 重写
 - 优点：单一代码库，全目标支持
 - 缺点：失去 stb 的格式覆盖（PSD/HDR/PNM）、失去 ASan 验证、工作量巨大
 
-**推荐路径 A**，但需要评估维护成本。
+**已选择路径 B**，v2.0 已完成全纯 MoonBit 实现，三目标各 645 测试通过。
 
 ### 交付物（已完成）
-- `src/core/` — native 后端（现有 C FFI）
 - `src/pure/{codec,pixel,color,process,util}/` — 纯 MoonBit 后端：6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/像素操作/色彩映射/图像拼接/统计/噪声/13 blend 混合模式
 - `src/lib/` — pure 侧统一 API + 自动格式分派（T12），目录含 lib.mbt + lib_test.mbt + moon.pkg 3 文件
 - `src/types/` — 全目标类型包（T2）
@@ -404,8 +403,8 @@ flowchart LR
    - `decode_bmp_stream(bytes, on_row~) -> StreamInfo`
    - 参考 mizchi/image
 
-3. **TIFF 解码**（纯 MoonBit 或 FFI）
-   - stb 不支持 TIFF，需要独立实现或绑定 libtiff
+3. **TIFF 解码**（纯 MoonBit）
+   - 需要独立实现 TIFF 解码器
 
 4. **APNG 解码**（纯 MoonBit）
    - Animated PNG 支持
@@ -442,6 +441,5 @@ flowchart LR
 以下功能明确不在计划内：
 
 - **AVIF 编码**：需要外部编解码器（libaom/svt-av1），与"零 C 依赖"理念冲突
-- **JPEG progressive 编码**：stb_image_write.h 不支持，纯 MoonBit 实现成本过高
-- **I/O callbacks**：MoonBit FFI 不支持闭包传递给 C（已评估）
+- **JPEG progressive 编码**：纯 MoonBit 实现成本过高
 - **Go 风格 API**：bikallem/gmlewis 已覆盖此定位，不重复

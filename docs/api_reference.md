@@ -95,7 +95,7 @@
 | `is_16_bit_from_bytes` | `(Bytes) -> Bool` | 检查是否16位 |
 | `is_hdr_from_path` | `(String) -> Bool` | 检查是否HDR |
 | `is_hdr_from_bytes` | `(Bytes) -> Bool` | 检查是否HDR |
-| `failure_reason` | `() -> String` | 获取上次stb_image失败原因 |
+| `failure_reason` | `() -> String` | 获取上次解码失败原因 |
 
 ## I/O — 配置（8个函数）
 

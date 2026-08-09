@@ -143,20 +143,20 @@ try {
 }
 ```
 
-`UnsupportedFormat` 与 `DecodeFailed` 不可精确区分，解码失败时 raise LoadError 时默认归类为 `DecodeFailed`。可用 `failure_reason()` 获取 stb_image 内部失败原因字符串。
+`UnsupportedFormat` 与 `DecodeFailed` 不可精确区分，解码失败时 raise LoadError 时默认归类为 `DecodeFailed`。可用 `failure_reason()` 获取解码失败原因字符串。
 
 ## 目标后端
 
-多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,pixel,color,process,util}/`）。native 目标 645 测试 × 3 目标 (native/wasm-gc/js)，wasm/js 目标 645 测试。
+多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,pixel,color,process,util}/`。三目标各 645 测试通过。
 
 ## 架构
 
 八子包分层架构，依赖单向向下：
 
-1. **Vendoring 层**：`scripts/prepare.py` 下载 pinned `stb_image.h` v2.30 + `stb_image_write.h` v1.16 + `stb_image_resize2.h` v2.07
-2. **FFI 边界层**：`wrapper.c`（ABI 归一化）+ `ffi.mbt`（私有 `extern "c"` 声明）
-3. **安全 API 层**：`types/`（全目标类型）+ `core/`（FFI+I/O）+ `lib/`（pure 统一 API）+ `pure/`（纯 MoonBit 后端）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
-4. **测试与文档层**：`*_test.mbt`（645 测试）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（）
+1. **类型层**：`types/`（全目标类型定义：Image/Image16/ImageF/ImageInfo 等）
+2. **纯 MoonBit 后端层**：`pure/{codec,pixel,color,process,util}/`（纯 MoonBit 实现，无 C FFI 依赖，三目标共用）
+3. **统一 API 层**：`lib/`（pure 侧统一 API + 格式自动分派）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
+4. **测试与文档层**：`*_test.mbt`（645 测试 × 3 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
 
 ## 版本演进
 
@@ -176,5 +176,5 @@ try {
 
 ## 限制
 
-- I/O 回调（`stbi_io_callbacks`）未实现：MoonBit FFI 不支持将闭包传递给 C 作为函数指针
-- 零拷贝未实现：当前所有加载路径通过 `memcpy` 从 C 缓冲区拷贝到 MoonBit `Bytes`
+- JPEG progressive 编码未实现：纯 MoonBit 实现成本过高
+- 零拷贝未实现：当前所有加载路径通过 Bytes 拷贝传递像素数据
