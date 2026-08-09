@@ -706,3 +706,37 @@
 修正方向（已覆写 task_v17.md）：
 1. **测试 9 预期 data 修正**：line 25 测试 9 的预期 data 从 `[0,71,143,255]` 修正为 `[0,85,170,255]`，与公式 `scaled=(v-50)*255/150` 的正确计算结果一致（v=50→0, v=100→85, v=150→170, v=200→255），并补充逐像素计算过程明示。修正后测试 9 与测试 5（`histogram_equalize_pure: normal equalization`，像素 [0,64,128,255]，预期同为 [0,85,170,255]）预期值相同但计算路径不同（线性拉伸 vs CDF 映射），属合理巧合（两组像素均为 4 个均匀间隔值），不构成测试冗余。
 选择理由：审查意见技术事实属实（已核实 `src/process/feature/histogram.mbt:118` 源码公式，逐像素手算确认正确预期为 [0,85,170,255]），修正仅更正测试预期值不涉实现逻辑变更，风险极低，修正后测试 9 断言与源码实际输出一致，可行性不再留待现场
+
+---
+
+## R30 PASSED v2.0 pure 包直方图（histogram/histogram_equalize/histogram_normalize，纯 MoonBit，全目标） [ID: T17]
+结果：在 `src/pure/` 新增 `histogram.mbt`（3 个直方图函数 histogram_pure/histogram_equalize_pure/histogram_normalize_pure，移植自 `src/process/feature/histogram.mbt:1-131`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，逻辑逐行一致）+ `histogram_test.mbt`（10 纯逻辑测试，全目标，覆盖 histogram 灰度/RGB/均匀图、equalize 均匀图不变/正常均衡化 [0,85,170,255]/RGBA alpha 保留/全相同像素返回原图、normalize 均匀图不变/正常归一化 [0,85,170,255]/RGBA alpha 保留），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs feature 对比测试。测试 9 预期 data 已修正为 [0,85,170,255]（R30 RETRY 修正点落实）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 727/727 通过（715→727，+10 pure 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R30 NEW v2.0 pure 包形态学操作（erode/dilate/morph_open/morph_close，纯 MoonBit，全目标） [ID: T18]
+任务：在 `src/pure/` 新增 `morphology.mbt`，移植 `src/process/segment/morphology.mbt:1-185` 的 4 个公开形态学函数（erode/dilate/morph_open/morph_close）+ 1 个私有辅助函数（clamp_i），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`，无 @math 依赖。新增 `src/pure/morphology_test.mbt` 9 个纯逻辑测试（全目标，覆盖 erode/dilate 均匀图不变、erode 缩小亮区/dilate 扩大亮区、morph_open 去孤立白点/morph_close 填孤立黑点、morph_open/morph_close 幂等性、RGB 多通道逐通道处理）。在根包 `src/roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试（erode/dilate/morph_open/morph_close，用 `@core.load_from_path` 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@segment`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 727→740 通过。
+选择理由：
+- T17 已完成直方图，pure 包当前 6 解码器 + 3 编码器 + 几何变换 + 色彩转换 + 色彩调整 + 滤波 + 直方图，但缺形态学操作能力
+- 形态学操作（腐蚀/膨胀/开闭运算）是图像分割/边缘检测的基础操作，补齐后 pure 包从"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图"升级为"编解码 + 几何变换 + 色彩处理 + 滤波 + 直方图 + 形态学"，实用价值显著提升
+- `src/process/segment/morphology.mbt:1-185` 的 4 个函数均为纯 MoonBit 实现（已核实：仅依赖 @core.Image 类型，无 FFI/C stub/extern/@math 调用，仅用内置 Array/Bytes/Int/Byte 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T17（几何变换/色彩转换/色彩调整/滤波/直方图移植）同构，技术风险极低
+- `clamp_i` 私有辅助函数与 pure 包已有函数不冲突（pure 包有 `clamp_coord`（filter.mbt:6）和 `clamp_byte`（color_adjust.mbt:6），但无 `clamp_i`）
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，形态学仅依赖 @types，全目标可用，无需新增依赖
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多图像分割能力（connected_components/distance_transform/watershed 等）奠定基础
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
+- T17 产出：pure 包直方图，native 727 测试通过，@math 已在 pure 包 moon.pkg
+- `src/process/segment/morphology.mbt:6-82`：`pub fn erode(img : @core.Image) -> @core.Image`，腐蚀，3x3 邻域最小值，分离内部/边界区域，纯 MoonBit
+- `src/process/segment/morphology.mbt:86-162`：`pub fn dilate(img : @core.Image) -> @core.Image`，膨胀，3x3 邻域最大值，纯 MoonBit
+- `src/process/segment/morphology.mbt:166-168`：`pub fn morph_open(img) -> @core.Image`，开运算 `dilate(erode(img))`，纯 MoonBit
+- `src/process/segment/morphology.mbt:172-174`：`pub fn morph_close(img) -> @core.Image`，闭运算 `erode(dilate(img))`，纯 MoonBit
+- `src/process/segment/morphology.mbt:177-185`：`fn clamp_i(v, lo, hi)`，私有辅助函数
+- `src/process/segment/moon.pkg`：import core + color，supported_targets = "native"（morphology.mbt 仅依赖 @core.Image，不使用 @color）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image`（无 raise，与 transform/color_convert/color_adjust/filter/histogram 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @segment（line 10，路径 `src/process/segment` 无别名，引用前缀 `@segment`）
+- `reexport.mbt:408,426,669,672`：`@segment.dilate` / `@segment.erode` / `@segment.morph_close` / `@segment.morph_open`，引用前缀 `@segment`
+- `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-989）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@segment.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证

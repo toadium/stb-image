@@ -987,3 +987,71 @@ test "roundtrip: histogram_normalize pure vs feature" {
   let _ = pure_img
   let _ = feature_img
 }
+
+///|
+test "pure vs segment: erode" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.erode_pure(img)
+  let segment_out = @segment.erode(img)
+  assert_eq(pure_out.width, segment_out.width)
+  assert_eq(pure_out.height, segment_out.height)
+  assert_eq(pure_out.channels, segment_out.channels)
+  assert_eq(pure_out.data, segment_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = segment_out
+}
+
+///|
+test "pure vs segment: dilate" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.dilate_pure(img)
+  let segment_out = @segment.dilate(img)
+  assert_eq(pure_out.width, segment_out.width)
+  assert_eq(pure_out.height, segment_out.height)
+  assert_eq(pure_out.channels, segment_out.channels)
+  assert_eq(pure_out.data, segment_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = segment_out
+}
+
+///|
+test "pure vs segment: morph_open" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.morph_open_pure(img)
+  let segment_out = @segment.morph_open(img)
+  assert_eq(pure_out.width, segment_out.width)
+  assert_eq(pure_out.height, segment_out.height)
+  assert_eq(pure_out.channels, segment_out.channels)
+  assert_eq(pure_out.data, segment_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = segment_out
+}
+
+///|
+test "pure vs segment: morph_close" {
+  let img = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_out = @pure.morph_close_pure(img)
+  let segment_out = @segment.morph_close(img)
+  assert_eq(pure_out.width, segment_out.width)
+  assert_eq(pure_out.height, segment_out.height)
+  assert_eq(pure_out.channels, segment_out.channels)
+  assert_eq(pure_out.data, segment_out.data)
+  let _ = img
+  let _ = pure_out
+  let _ = segment_out
+}
