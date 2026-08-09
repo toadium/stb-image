@@ -19,3 +19,4 @@ scripts/fix_test_calls.py
 scripts/fix_root_calls.py
 scripts/gen_reexport.py
 governances/
+pdc/

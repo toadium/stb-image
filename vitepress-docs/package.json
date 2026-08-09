@@ -1,0 +1,13 @@
+{
+  "name": "pycatia-docs",
+  "version": "1.0.0",
+  "description": "pycatia Documentation - CATIA V5 Python Automation",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "vitepress": "^1.6.3"
+  }
+}

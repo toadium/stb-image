@@ -358,7 +358,7 @@ flowchart LR
 
 ---
 
-## v2.0 — 多目标支持（架构升级）
+## v2.0 — 多目标支持（架构升级）✅
 
 **目标**：支持 wasm/js 目标，与 mizchi 拉平
 
@@ -379,10 +379,12 @@ flowchart LR
 
 **推荐路径 A**，但需要评估维护成本。
 
-### 交付物
+### 交付物（已完成）
 - `src/native/` — native 后端（现有 C FFI）
-- `src/pure/` — 纯 MoonBit 后端（wasm/js）
-- `src/lib.mbt` — 后端选择层
+- `src/pure/` — 纯 MoonBit 后端：6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/像素操作/色彩映射/图像拼接/统计/噪声/13 blend 混合模式
+- `src/lib/` — pure 侧统一 API + 自动格式分派（T12），目录含 lib.mbt + lib_test.mbt + moon.pkg 3 文件
+- `src/types/` — 全目标类型包（T2）
+- 测试：native 847 + wasm 225 + js 225 通过
 
 ---
 
@@ -431,7 +433,7 @@ flowchart LR
 | **v1.15** | **轮廓提取 + 颜色分割 + NLM 去噪 + Retinex** | **472+29** | **中** |
 | **v1.16** | **Canny 边缘 + 分水岭 + GLCM + Haar 小波** | **501+29** | **中** |
 | **v1.17** | **Harris 角点 + 去雾 + 距离变换 + Gabor 滤波** | **533+29** | **中** |
-| v2.0 | 多目标支持 | — | 中 — 架构升级 |
+| v2.0 | 多目标支持 | — | ✅ 已完成 |
 | v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
 
 ## 不做的事情
