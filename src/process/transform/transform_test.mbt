@@ -115,3 +115,26 @@ test "rotate_180: double rotation = identity" {
   let _ = img
   let _ = r
 }
+
+///|
+test "crop_16: 4x4 → 2x2" {
+  let img = @lib.load_16_from_bytes_auto(@testdata.test_4x4_red_png)
+  let cropped = crop_16(img, 1, 1, 2, 2)
+  assert_eq(cropped.width, 2)
+  assert_eq(cropped.height, 2)
+  let _ = img
+  let _ = cropped
+}
+
+///|
+test "crop_16: out of bounds raises" {
+  let img = @lib.load_16_from_bytes_auto(@testdata.test_4x4_red_png)
+  try {
+    let _ = crop_16(img, 3, 3, 2, 2)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}

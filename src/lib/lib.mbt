@@ -100,6 +100,26 @@ pub fn load_from_bytes_auto(
 }
 
 ///|
+/// 16-bit 自动格式分派解码（纯 MoonBit，全目标可用）
+/// 根据格式委托对应 16-bit 解码器，输出 Image16（little-endian uint16）
+/// - PNG: 支持 8-bit 上采样和原生 16-bit
+/// - PNM: 支持 8-bit 上采样和原生 16-bit
+/// - 其他格式不支持 16-bit
+pub fn load_16_from_bytes_auto(
+  data : Bytes,
+  req_channels? : Int? = None,
+) -> @types.Image16 raise @types.LoadError {
+  match detect_format(data) {
+    @types.ImageFormat::Png => @pure.decode_png_16_pure(data, req_channels~)
+    @types.ImageFormat::Pnm => @pure.decode_pnm_16_pure(data)
+    _ =>
+      raise @types.LoadError::DecodeFailed(
+        "16-bit 解码不支持此格式，仅支持 PNG 和 PNM",
+      )
+  }
+}
+
+///|
 /// QOI 编码委托
 pub fn encode_qoi_auto(img : @types.Image) -> Bytes raise @types.LoadError {
   @pure.encode_qoi_pure(img)

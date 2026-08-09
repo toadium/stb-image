@@ -2,8 +2,6 @@
 target/
 .mooncakes/
 _build/
-testdata/roundtrip_out.png
-testdata/roundtrip_out.hdr
 .pytest_cache/
 image-mbt/
 .codeartsdoer/
@@ -13,14 +11,9 @@ designs-tech/
 deliberations/
 instructions/
 requirements/
-scripts/fix_imports.py
-scripts/fix_double_prefix.py
-scripts/fix_test_calls.py
-scripts/fix_root_calls.py
-scripts/gen_reexport.py
+scripts/
 governances/
 pdc/
 vitepress-docs/node_modules/
-vitepress-docs/.vitepress/cache/
-vitepress-docs/.vitepress/dist/
 nul
+testdata/
