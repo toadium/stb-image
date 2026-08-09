@@ -1,15 +1,15 @@
 ---
 name: stb-image
-description: MoonBit native FFI bindings for stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07 — full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize), 254 tests + 29 benchmarks, ASan verified.
+description: MoonBit 图像处理库 — 封装 stb_image.h v2.30 + stb_image_write.h v1.16 + stb_image_resize2.h v2.07，多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），完整图像解码/编码/缩放/处理能力，847 测试 + 75 基准测试，ASan 验证通过。
 ---
 
-# stb-image
+# stb-image 包使用指南
 
-MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07.
+MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
 
 ## 用途
 
-将 C 单头文件库 `stb_image.h` / `stb_image_write.h` / `stb_image_resize2.h` 以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供完整的图像 load/write/resize/process 能力。支持 native 目标，覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及 crop/rotate/flip/color/filter/histogram/quantize 等图像处理操作。
+将 C 单头文件库 `stb_image.h` / `stb_image_write.h` / `stb_image_resize2.h` 以 MoonBit 原生 FFI 绑定形式暴露为 MoonBit 包，提供完整的图像加载/写入/缩放/处理能力。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
 
 ## 快速开始
 
@@ -24,7 +24,7 @@ let img2 : Image = load_from_bytes(png_bytes, req_channels=Some(4))
 // 编码为 PNG 字节
 let out : Bytes = write_png_to_bytes(img)
 
-// Resize
+// 缩放
 let resized : Image = resize(img, 128, 128)
 
 // 自动检测格式并解码
@@ -40,21 +40,21 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
 ## API 概览
 
-### 类型（11 个）
+### 类型（27 个）
 
 | 类型 | 说明 |
 |------|------|
-| `Image` | 8-bit 解码结果 `{ width, height, channels, data : Bytes }` |
-| `Image16` | 16-bit 解码结果（UInt16 little-endian） |
-| `ImageF` | HDR float 解码结果（IEEE 754 little-endian） |
+| `Image` | 8位解码结果 `{ width, height, channels, data : Bytes }` |
+| `Image16` | 16位解码结果（UInt16 little-endian） |
+| `ImageF` | HDR 浮点解码结果（IEEE 754 little-endian） |
 | `ImageInfo` | 图像信息 `{ width, height, channels }`，不含像素数据 |
 | `GifAnimation` | 动画 GIF `{ frames : Array[Image], delays : Array[Int] }` |
 | `LoadError` | 错误类型 `{ FileIO, UnsupportedFormat, DecodeFailed }` |
 | `ImageFormat` | 格式枚举 `{ Png, Jpeg, Bmp, Gif, Tga, Psd, Hdr, Pnm, Qoi, Unknown }` |
-| `ResizeFilter` | resize 滤波器 `{ Default, Box, Triangle, CubicBSPline, CatmullROM, Mitchell, PointSample }` |
-| `ResizeEdge` | resize 边缘模式 `{ Clamp, Reflect, Wrap, Zero }` |
+| `ResizeFilter` | 缩放滤波器 `{ Default, Box, Triangle, CubicBSPline, CatmullROM, Mitchell, PointSample }` |
+| `ResizeEdge` | 缩放边缘模式 `{ Clamp, Reflect, Wrap, Zero }` |
 | `ExifInfo` | EXIF 元数据 `{ make, model, date_time : String, orientation : Int }` |
-| `PngTextChunk` | PNG text chunk `{ keyword, text : String }` |
+| `PngTextChunk` | PNG 文本块 `{ keyword, text : String }` |
 
 ### 加载（8 函数）
 
@@ -64,7 +64,7 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
 `write_png/bmp/tga/jpeg_to_path/bytes` + `write_hdr_to_path/bytes` — JPEG 支持 `quality? : Int`（默认 90）
 
-### Resize（4 函数）
+### 缩放（4 函数）
 
 `resize` / `resize_srgb` / `resize_16` / `resizef` — 支持 `filter? : ResizeFilter` 和 `edge? : ResizeEdge` 可选参数
 
@@ -74,24 +74,24 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
 ### 编解码（11 函数）
 
-- QOI: `decode_qoi` / `encode_qoi`
-- ICO/ICNS: `encode_ico` / `encode_ico_sizes` / `encode_icns`
-- GIF: `encode_gif` / `encode_gif_animation`
-- PNM: `encode_ppm` / `encode_pgm` / `encode_pnm`
+- QOI：`decode_qoi` / `encode_qoi`
+- ICO/ICNS：`encode_ico` / `encode_ico_sizes` / `encode_icns`
+- GIF：`encode_gif` / `encode_gif_animation`
+- PNM：`encode_ppm` / `encode_pgm` / `encode_pnm`
 
-### 图像处理（19 函数）
+### 图像处理（19+ 函数）
 
-- Transform: `crop` / `crop_16` / `cropf` / `rotate_90` / `rotate_180` / `rotate_270` / `flip_horizontal`
-- Color: `to_grayscale` / `to_rgb` / `to_rgba` / `premultiply_alpha` / `unpremultiply_alpha`
-- Draw: `draw_copy` / `draw_over`
+- 变换：`crop` / `crop_16` / `cropf` / `rotate_90` / `rotate_180` / `rotate_270` / `flip_horizontal`
+- 色彩：`to_grayscale` / `to_rgb` / `to_rgba` / `premultiply_alpha` / `unpremultiply_alpha`
+- 绘制：`draw_copy` / `draw_over`
 
 ### 色彩调整（8 函数）
 
 `adjust_brightness` / `adjust_contrast` / `adjust_gamma` / `invert` / `rgb_to_hsv` / `hsv_to_rgb` / `rgb_to_hsl` / `hsl_to_rgb`
 
-### 滤波（4 函数）
+### 滤波（6 函数）
 
-`box_blur` / `gaussian_blur` / `sharpen` / `edge_detect_sobel`
+`box_blur` / `gaussian_blur` / `sharpen` / `edge_detect_sobel` / `edge_detect_laplacian` / `edge_detect_prewitt`
 
 ### 几何（2 函数）
 
@@ -147,33 +147,34 @@ try {
 
 ## 目标后端
 
-仅支持 **native** 目标。多目标（wasm/js）已评估并暂缓：需 Emscripten 构建链 + `extern "wasm"`/`extern "js"` FFI 机制，成本过高。类型定义（`Image`/`Image16`/`ImageF`/`ImageInfo`/`GifAnimation`/`LoadError`）全后端可用。
+多目标支持：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端 `src/pure/`）。native 目标 847 测试 + 75 基准测试，wasm/js 目标 225 测试。
 
 ## 架构
 
-四层分层架构，依赖单向向下：
+八子包分层架构，依赖单向向下：
 
 1. **Vendoring 层**：`scripts/prepare.py` 下载 pinned `stb_image.h` v2.30 + `stb_image_write.h` v1.16 + `stb_image_resize2.h` v2.07
 2. **FFI 边界层**：`wrapper.c`（ABI 归一化）+ `ffi.mbt`（私有 `extern "c"` 声明）
-3. **安全 API 层**：`image_types.mbt`（类型）+ `image_*_native.mbt`（FFI API）+ 纯 MoonBit 模块（transform/color/filter/geometry/histogram/quantize/draw/qoi/icon_encode/gif_encode/pnm_encode/exif/png_meta）
-4. **测试与文档层**：`*_test.mbt`（254 测试）+ `roundtrip_test.mbt`（全格式 roundtrip）+ `bench.mbt`（29 基准测试）+ `README.mbt.md`
+3. **安全 API 层**：`types/`（全目标类型）+ `core/`（FFI+I/O）+ `lib/`（pure 统一 API）+ `pure/`（纯 MoonBit 后端）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
+4. **测试与文档层**：`*_test.mbt`（847 测试）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（75 基准测试）
 
 ## 版本演进
 
-- **v0.1**：8-bit load（path + bytes），9 种格式
-- **v0.2**：write（PNG/BMP/TGA/JPEG）+ req_channels + flip
-- **v0.3**：16-bit/float load + info + is_16_bit/is_hdr + failure_reason + config
-- **v0.4**：HDR config + animated GIF
+- **v0.1**：8位加载（路径+内存），9 种格式
+- **v0.2**：写入（PNG/BMP/TGA/JPEG）+ req_channels + 翻转
+- **v0.3**：16位/浮点加载 + info + is_16_bit/is_hdr + failure_reason + 配置
+- **v0.4**：HDR 配置 + 动画 GIF
 - **v1.0**：API 冻结，完整文档，61 测试，ASan 验证通过
-- **v1.1**：HDR 写入 + resize（FFI stb_image_resize2.h），75 测试
+- **v1.1**：HDR 写入 + 缩放（FFI stb_image_resize2.h），75 测试
 - **v1.2**：QOI/ICO/ICNS/GIF 编码 + 格式自动检测，114 测试
-- **v1.3**：crop/rotate/flip + 色彩转换 + draw/compositing，145 测试
+- **v1.3**：裁剪/旋转/翻转 + 色彩转换 + 绘制/合成，145 测试
 - **v1.4**：色彩调整/滤波/几何变换/直方图/量化，206 测试
 - **v1.5**：PNM 编码 + GIF 动画 + EXIF 读取，229 测试
-- **v1.6**：PNG 元数据 + roundtrip 测试 + 性能基准，254 测试 + 29 基准测试
+- **v1.6**：PNG 元数据 + 往返测试 + 性能基准，254 测试 + 29 基准测试
+- **v1.7-v1.17**：高级图像处理（混合模式/FFT/自适应阈值/连通域/积分图像/霍夫变换/LBP/金字塔/双边滤波/轮廓/分割/NLM/Retinex/Canny/分水岭/GLCM/Haar小波/Harris角点/去雾/距离变换/Gabor滤波），533 测试 + 29 基准测试
+- **v2.0**：多目标支持（native C FFI + wasm/js 纯 MoonBit 后端），八子包架构，847 测试 + 75 基准测试
 
 ## 限制
 
-- I/O callbacks（`stbi_io_callbacks`）未实现：MoonBit FFI 不支持将闭包传递给 C 作为函数指针
-- 多目标支持暂缓：需 Emscripten + 不同 FFI 机制
-- 零拷贝未实现：当前所有 load 路径通过 `memcpy` 从 C 缓冲区拷贝到 MoonBit `Bytes`
+- I/O 回调（`stbi_io_callbacks`）未实现：MoonBit FFI 不支持将闭包传递给 C 作为函数指针
+- 零拷贝未实现：当前所有加载路径通过 `memcpy` 从 C 缓冲区拷贝到 MoonBit `Bytes`

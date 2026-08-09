@@ -1,8 +1,6 @@
 # stb-image 架构文档
 
 > 版本 v2.0.0 | 196 公开函数 + 27 类型 | 847 测试 + 75 基准测试
->
-> [English](ARCHITECTURE.en.md) | [中文](ARCHITECTURE.md)
 
 ## 概述
 
@@ -546,12 +544,14 @@ classDiagram
 ```
 stb-image/
 ├── moon.mod                  # 模块配置 (v2.0.0, preferred_target = native)
-├── ARCHITECTURE.md           # 架构文档（本文）
-├── API.md                    # 完整 API 参考
-├── CHANGELOG.md              # 版本历史
-├── ROADMAP.md                # 迭代路线图
-├── COMPARISON.md             # mooncakes.io 图像库对比
-├── SKILL.md                  # 包使用指南
+├── README.md                 # 项目说明（中文）
+├── docs/
+│   ├── architecture.md       # 架构文档（本文）
+│   ├── api_reference.md      # 完整 API 参考
+│   ├── changelog.md          # 版本历史
+│   ├── roadmap.md            # 迭代路线图
+│   ├── comparison.md         # mooncakes.io 图像库对比
+│   └── skill.md              # 包使用指南
 ├── src/
 │   ├── moon.pkg              # 根包：re-export + 基准测试 + 往返测试
 │   ├── reexport.mbt          # 向后兼容API（196 pub fn + 27 类型）

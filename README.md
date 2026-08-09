@@ -1,140 +1,138 @@
 # stb-image
 
-[English](README.md) | [中文](README.zh.md)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-native%2Bwasm%2Bjs-blue)](https://www.moonbitlang.com/)
 [![Tests](https://img.shields.io/badge/tests-847%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-75%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
-MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07. Multi-target support: native target uses C FFI (stb_image), wasm/js targets use pure MoonBit backend (`src/pure/`).
+MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/`）。
 
-Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize/morphology/edge detect/quality metrics), roundtrip tests, performance benchmarks.
+完整图像解码/编码/缩放/处理能力：8位/16位/浮点加载、动画GIF、信息查询、写入 PNG/BMP/TGA/JPEG/HDR、缩放、格式检测、QOI/ICO/ICNS/GIF/PNM 编解码、EXIF/PNG 元数据、图像处理（裁剪/旋转/翻转/色彩/滤波/直方图/量化/形态学/边缘检测/质量评估）、往返测试、性能基准测试。
 
-## Features
+## 功能特性
 
-- **10+ formats decode**: PNG, JPEG, BMP, GIF, PSD, TGA, HDR, PIC, WebP, PNM (PPM/PGM), QOI
-- **8 formats encode**: PNG, BMP, TGA, JPEG, HDR, QOI, GIF, PNM (PPM/PGM)
-- **3 pixel types**: 8-bit (`Image`), 16-bit (`Image16`), HDR float (`ImageF`)
-- **Resize**: 7 filters × 4 edge modes, 8-bit/16-bit/float/sRGB
-- **Format detection**: `detect_format` / `decode_any` / `is_supported_format`
-- **Image processing**: crop, rotate, flip, color convert, draw/compositing
-- **Color adjustment**: brightness, contrast, gamma, invert, HSV/HSL conversion
-- **Filters**: box blur, gaussian blur, sharpen, Sobel/Laplacian/Prewitt edge detect
-- **Geometry**: affine warp, arbitrary angle rotate
-- **Histogram**: compute, equalize, normalize
-- **Quantize**: Floyd-Steinberg dithering, median cut
-- **Morphology**: erode, dilate, open, close (3x3 structuring element)
-- **Quality metrics**: MSE, PSNR, SSIM
-- **Advanced processing**: CLAHE, K-means quantize, FFT frequency domain, frequency domain filtering (low/high/band pass)
-- **Adaptive thresholding**: mean, Gaussian-weighted, Otsu
-- **Connected components**: labeling with 4/8 connectivity, area/bbox/centroid
-- **Integral image**: O(1) rectangle sum/mean/variance query
-- **Hough transform**: line detection with NMS
-- **LBP**: local binary patterns (basic + uniform)
-- **Image pyramids**: Gaussian/Laplacian pyramid build/up/down
-- **Bilateral filter**: edge-preserving denoising
-- **Contour extraction**: Moore boundary tracking, perimeter, area
-- **Color segmentation**: K-means, region growing, flood fill
-- **NLM denoise**: non-local means (full + fast)
-- **Retinex**: SSR, MSR, MSRCR (multi-scale with color restoration)
-- **Canny edge**: Gaussian → Sobel → NMS → hysteresis
-- **Watershed**: immersion-based segmentation with auto seeds
-- **GLCM texture**: contrast, correlation, energy, homogeneity, entropy (4 directions)
-- **Haar wavelet**: 1D/2D transform, multi-level decomposition, denoise
-- **Harris corners**: structure tensor + NMS + distance filtering
-- **Dehaze**: dark channel prior + guided filter
-- **Distance transform**: L1/L2/Linf, skeletonize
-- **Gabor filter**: multi-orientation multi-scale texture analysis
-- **Blend modes**: 13 modes (multiply, screen, overlay, darken, lighten, difference, exclusion, color dodge, color burn, hard light, soft light, linear dodge, linear burn)
-- **Multi-target support**: native (C FFI stb_image) + wasm/js (pure MoonBit backend), 6 decoders + 3 encoders + image processing in pure MoonBit
-- **Metadata**: EXIF reading, PNG text chunks
-- **Animated GIF**: multi-frame decode/encode with per-frame delays
-- **Info query**: dimensions without decoding pixels
-- **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
-- **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **847 tests + 75 benchmarks (native), 225 tests (wasm/js pure backend)**, all passing under AddressSanitizer
+- **10+ 格式解码**：PNG、JPEG、BMP、GIF、PSD、TGA、HDR、PIC、WebP、PNM (PPM/PGM)、QOI
+- **8 格式编码**：PNG、BMP、TGA、JPEG、HDR、QOI、GIF、PNM (PPM/PGM)
+- **3 种像素类型**：8位 (`Image`)、16位 (`Image16`)、HDR浮点 (`ImageF`)
+- **缩放**：7种滤波器 × 4种边缘模式，支持8位/16位/浮点/sRGB
+- **格式检测**：`detect_format` / `decode_any` / `is_supported_format`
+- **图像处理**：裁剪、旋转、翻转、色彩转换、绘制/合成
+- **色彩调整**：亮度、对比度、伽马、反色、HSV/HSL 转换
+- **滤波器**：方框模糊、高斯模糊、锐化、Sobel/Laplacian/Prewitt 边缘检测
+- **几何变换**：仿射变换、任意角度旋转
+- **直方图**：计算、均衡化、归一化
+- **量化**：Floyd-Steinberg 抖动、中位切割
+- **形态学**：腐蚀、膨胀、开运算、闭运算（3x3 结构元素）
+- **质量评估**：MSE、PSNR、SSIM
+- **高级处理**：CLAHE（对比度受限自适应直方图均衡）、K-means 色彩量化、FFT 频域变换、频域滤波（低通/高通/带通/带阻）
+- **自适应阈值**：均值法、高斯加权法、Otsu 大津法
+- **连通域标记**：4/8 连通，含面积/边界框/质心
+- **积分图像**：O(1) 矩形区域求和/均值/方差查询
+- **霍夫变换**：直线检测，含非极大值抑制
+- **局部二值模式(LBP)**：基本 LBP + 均匀 LBP
+- **图像金字塔**：高斯/拉普拉斯金字塔构建与上下采样
+- **双边滤波**：保边去噪滤波
+- **轮廓提取**：Moore 边界跟踪，周长，面积
+- **颜色分割**：K-means、区域生长、泛洪填充
+- **NLM 去噪**：非局部均值（完整版 + 快速版）
+- **Retinex**：SSR、MSR、MSRCR（多尺度带颜色恢复）
+- **Canny 边缘**：高斯 → Sobel → 非极大值抑制 → 滞后连接
+- **分水岭**：沉浸式分割，自动寻找种子
+- **GLCM 纹理**：对比度/相关性/能量/同质性/熵（4 方向）
+- **Haar 小波**：1D/2D 变换，多级分解，去噪
+- **Harris 角点**：结构张量 + 非极大值抑制 + 距离过滤
+- **去雾**：暗通道先验 + 引导滤波
+- **距离变换**：L1/L2/Linf 距离，骨架化
+- **Gabor 滤波**：多方向多尺度纹理分析
+- **混合模式**：13种（正片叠底、滤色、叠加、变暗、变亮、差值、排除、颜色减淡、颜色加深、强光、柔光、线性减淡、线性加深）
+- **多目标支持**：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端），纯 MoonBit 后端含 6 解码器 + 3 编码器 + 图像处理
+- **元数据**：EXIF 读取、PNG 文本块
+- **动画GIF**：多帧解码/编码，支持逐帧延迟
+- **信息查询**：不解码像素即可获取尺寸
+- **可配置**：翻转、非预乘Alpha、iPhone PNG、HDR伽马/缩放
+- **错误诊断**：`failure_reason()` 获取 stb_image 内部错误字符串
+- **847 测试 + 75 基准测试 (native)，225 测试 (wasm/js 纯 MoonBit 后端)**，全部通过 AddressSanitizer
 
-## Installation
+## 安装
 
 ```bash
 moon add toadium/stb-image
 ```
 
-## Quick Start
+## 快速上手
 
 ```moonbit
-// Decode from file
+// 从文件解码
 let img : Image = load_from_path("photo.png")
 println("width=\{img.width}, height=\{img.height}, channels=\{img.channels}")
 
-// Decode from memory with forced RGBA
+// 从内存解码，强制 RGBA
 let img2 : Image = load_from_bytes(png_bytes, req_channels=Some(4))
 
-// Encode to PNG bytes
+// 编码为 PNG 字节
 let out : Bytes = write_png_to_bytes(img)
 
-// Resize with default filter
+// 使用默认滤波器缩放
 let resized : Image = resize(img, 128, 128)
 
-// Auto-detect format and decode
+// 自动检测格式并解码
 let any : Image = decode_any(data, req_channels=Some(3))
 
-// Load animated GIF
+// 加载动画 GIF
 let anim : GifAnimation = load_gif_from_path("animation.gif")
 println("frames=\{anim.frames.length()}, delays=\{anim.delays}")
 
-// Read EXIF metadata
+// 读取 EXIF 元数据
 let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
-// Query image info without decoding
+// 查询图像信息（不解码）
 let info : ImageInfo? = info_from_path("large.hdr")
 ```
 
-## Error Handling
+## 错误处理
 
 ```moonbit
 try {
   let img = load_from_bytes(data)
   // use img
 } catch {
-  LoadError::FileIO(msg) => println("file IO error: \{msg}")
-  LoadError::DecodeFailed(msg) => println("decode failed: \{msg}")
-  LoadError::UnsupportedFormat(msg) => println("unsupported format: \{msg}")
+  LoadError::FileIO(msg) => println("文件IO错误: \{msg}")
+  LoadError::DecodeFailed(msg) => println("解码失败: \{msg}")
+  LoadError::UnsupportedFormat(msg) => println("不支持的格式: \{msg}")
 }
 ```
 
-`UnsupportedFormat` and `DecodeFailed` are not precisely distinguishable; stb_image returning NULL defaults to `DecodeFailed`. Use `failure_reason()` for the internal stb_image error string.
+`UnsupportedFormat` 和 `DecodeFailed` 无法精确区分；stb_image 返回 NULL 时默认为 `DecodeFailed`。使用 `failure_reason()` 获取 stb_image 内部错误字符串。
 
-## Build & Test
+## 构建与测试
 
 ```bash
-moon check --target native     # Check compilation
-moon test --target native      # Run 847 tests
-moon bench --target native     # Run 75 benchmarks
-moon info                      # Regenerate API interface
+moon check --target native     # 检查编译
+moon test --target native      # 运行 847 个测试
+moon bench --target native     # 运行 75 个基准测试
+moon info                      # 重新生成 API 接口
 ```
 
-## Limitations
+## 限制
 
-- **I/O callbacks** (`stbi_io_callbacks`): not implemented. MoonBit FFI does not support passing closures as C function pointers.
-- **Zero-copy**: not implemented. All load paths copy pixel data from C buffer to MoonBit `Bytes` via `memcpy`.
-- **Multi-target**: native (C FFI) + wasm/js (pure MoonBit backend).
+- **I/O回调**（`stbi_io_callbacks`）：未实现。MoonBit FFI 不支持将闭包作为C函数指针传递。
+- **零拷贝**：未实现。所有加载路径通过 `memcpy` 将像素数据从C缓冲区复制到MoonBit `Bytes`。
+- **多目标**：native（C FFI）+ wasm/js（纯 MoonBit 后端）。
 
-## Documentation
+## 文档
 
-| Document | Description |
-|----------|-------------|
-| [ARCHITECTURE.en.md](ARCHITECTURE.en.md) | Architecture diagrams, package dependencies, FFI boundary, data flow, design decisions |
-| [API.en.md](API.en.md) | Complete API reference (196 functions, 27 types) |
-| [CHANGELOG.md](CHANGELOG.md) | Version history and upstream sources |
-| [ROADMAP.md](ROADMAP.md) | Iteration roadmap |
-| [COMPARISON.md](COMPARISON.md) | mooncakes.io image library comparison |
-| [SKILL.md](SKILL.md) | Package usage guide |
+| 文档 | 说明 |
+|------|------|
+| [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、FFI 边界、数据流、设计决策 |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（196 个函数，27 个类型） |
+| [docs/changelog.md](docs/changelog.md) | 版本历史与上游来源 |
+| [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
+| [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
+| [docs/skill.md](docs/skill.md) | 包使用指南 |
 
-## License
+## 许可证
 
-MIT License — see [LICENSE](LICENSE).
+MIT 许可证 — 详见 [LICENSE](LICENSE)。
 
-stb_image.h, stb_image_write.h, and stb_image_resize2.h are public domain (Sean Barrett).
+stb_image.h、stb_image_write.h 和 stb_image_resize2.h 属于公共领域（Sean Barrett）。

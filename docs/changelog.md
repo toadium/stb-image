@@ -1,7 +1,5 @@
 # 变更日志
 
-> [English](CHANGELOG.md) | [中文](CHANGELOG.zh.md)
-
 ## 版本历史
 
 | 版本 | 亮点 | 测试 |

@@ -1,6 +1,6 @@
 # stb-image 迭代路线图
 
-> 基于 mooncakes.io image 库对比（见 `COMPARISON.md`）制定的后续迭代计划。
+> 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
 > 制定日期：2026-08-06 | 最后更新：2026-08-09 | 当前版本：v2.0.0
 
 ## 现状定位
@@ -253,7 +253,7 @@ flowchart LR
 ### 功能
 1. **五子包架构** — `core/`（FFI+类型+加载/写入/缩放+检测+ICO）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
 2. **reexport.mbt** — 根包 re-export 保持向后兼容 API（`pub let` 用于普通函数，`pub fn` 包装器用于带标签参数的函数）
-3. **双语 README** — `README.md`（英文）+ `README.zh.md`（中文），顶部语言切换链接
+3. **中文 README** — `README.md`（中文），文档统一存放 `docs/` 目录
 4. **警告清理** — 删除未使用的 test_helpers，0 警告 0 错误
 
 ### 交付物
