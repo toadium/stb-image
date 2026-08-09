@@ -2,18 +2,13 @@
 package "MoonBit-Toadium/stb-image/src/meta"
 
 import {
-  "MoonBit-Toadium/stb-image/src/types",
   "moonbitlang/core/debug",
 }
 
 // Values
 pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
 
-pub fn read_exif_from_path(String) -> ExifInfo? raise @types.LoadError
-
 pub fn read_png_text_chunks(Bytes) -> Array[PngTextChunk]
-
-pub fn read_png_text_chunks_from_path(String) -> Array[PngTextChunk] raise @types.LoadError
 
 // Errors
 

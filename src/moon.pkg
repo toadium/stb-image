@@ -1,6 +1,9 @@
 import {
   "moonbitlang/core/bench",
+  "MoonBit-Toadium/stb-image/src/types" @types,
   "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/pure" @pure,
+  "MoonBit-Toadium/stb-image/src/lib" @lib,
   "MoonBit-Toadium/stb-image/src/process/filter",
   "MoonBit-Toadium/stb-image/src/process/edge",
   "MoonBit-Toadium/stb-image/src/process/color",
@@ -13,11 +16,6 @@ import {
   "MoonBit-Toadium/stb-image/src/meta/path" @metapath,
   "MoonBit-Toadium/stb-image/src/util",
 }
-
-import {
-  "MoonBit-Toadium/stb-image/src/pure" @pure,
-  "MoonBit-Toadium/stb-image/src/lib" @lib,
-} for "test"
 
 supported_targets = "native"
 

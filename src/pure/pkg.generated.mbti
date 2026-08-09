@@ -19,6 +19,8 @@ pub fn adjust_contrast_pure(@types.Image, Float) -> @types.Image
 
 pub fn adjust_gamma_pure(@types.Image, Float) -> @types.Image
 
+pub fn adler32(Bytes) -> Int
+
 pub fn apply_lut_pure(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
 pub fn blend_color_burn_pure(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
@@ -51,13 +53,25 @@ pub fn box_blur_pure(@types.Image, Int) -> @types.Image
 
 pub fn compute_stats_pure(@types.Image) -> ImageStats
 
+pub fn convert_iphone_png_to_rgb_pure(Bool) -> Unit
+
 pub fn convolve_pure(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
+
+pub fn crc32(Bytes) -> Int
 
 pub fn crop_pure(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn decode_gif_animation_pure(Bytes) -> @types.GifAnimation raise @types.LoadError
+
 pub fn decode_gif_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_hdr_pure(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn decode_jpeg_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_png_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_pnm_pure(Bytes) -> @types.Image raise @types.LoadError
 
@@ -73,7 +87,13 @@ pub fn edge_detect_sobel_pure(@types.Image) -> @types.Image
 
 pub fn encode_gif_pure(@types.Image) -> Bytes raise @types.LoadError
 
+pub fn encode_hdr_pure(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_jpeg_pure(@types.Image) -> Bytes raise @types.LoadError
+
 pub fn encode_pgm_pure(@types.Image) -> Bytes
+
+pub fn encode_png_pure(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_pnm_pure(@types.Image) -> Bytes
 
@@ -85,15 +105,39 @@ pub fn erode_pure(@types.Image) -> @types.Image
 
 pub fn extract_channel_pure(@types.Image, Int) -> @types.Image raise @types.LoadError
 
+pub fn failure_reason_pure() -> String
+
 pub fn fill_alpha_pure(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
 
 pub fn flip_horizontal_pure(@types.Image) -> @types.Image
 
 pub fn flip_vertical_pure(@types.Image) -> @types.Image
 
+pub fn flip_vertically_on_write_pure(Bool) -> Unit
+
 pub fn gaussian_blur_pure(@types.Image, Int, Float) -> @types.Image
 
+pub fn get_convert_iphone_png_to_rgb_pure() -> Bool
+
+pub fn get_flip_vertically_on_load_pure() -> Bool
+
+pub fn get_flip_vertically_on_write_pure() -> Bool
+
+pub fn get_hdr_to_ldr_gamma_pure() -> Float
+
+pub fn get_hdr_to_ldr_scale_pure() -> Float
+
+pub fn get_ldr_to_hdr_gamma_pure() -> Float
+
+pub fn get_ldr_to_hdr_scale_pure() -> Float
+
+pub fn get_unpremultiply_on_load_pure() -> Bool
+
 pub fn gradient_map_pure(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
+
+pub fn hdr_to_ldr_gamma_pure(Float) -> Unit
+
+pub fn hdr_to_ldr_scale_pure(Float) -> Unit
 
 pub fn histogram_equalize_pure(@types.Image) -> @types.Image
 
@@ -107,7 +151,17 @@ pub fn hstack_pure(@types.Image, @types.Image) -> @types.Image raise @types.Load
 
 pub fn hsv_to_rgb_pure(Float, Float, Float) -> (Int, Int, Int)
 
+pub fn info_from_bytes_pure(Bytes) -> @types.ImageInfo? raise @types.LoadError
+
 pub fn invert_pure(@types.Image) -> @types.Image
+
+pub fn is_16_bit_from_bytes_pure(Bytes) -> Bool
+
+pub fn is_hdr_from_bytes_pure(Bytes) -> Bool
+
+pub fn ldr_to_hdr_gamma_pure(Float) -> Unit
+
+pub fn ldr_to_hdr_scale_pure(Float) -> Unit
 
 pub fn mean_value_pure(@types.Image) -> Float
 
@@ -125,6 +179,8 @@ pub fn premultiply_alpha_pure(@types.Image) -> @types.Image raise @types.LoadErr
 
 pub fn replace_color_pure(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
+pub fn resize_pure(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
+
 pub fn rgb_to_hsl_pure(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv_pure(Int, Int, Int) -> (Float, Float, Float)
@@ -138,6 +194,10 @@ pub fn rotate_90_pure(@types.Image) -> @types.Image
 pub fn rotate_pure(@types.Image, Float) -> @types.Image
 
 pub fn set_alpha_pure(@types.Image, Byte) -> @types.Image raise @types.LoadError
+
+pub fn set_flip_vertically_on_load_pure(Bool) -> Unit
+
+pub fn set_unpremultiply_on_load_pure(Bool) -> Unit
 
 pub fn sharpen_pure(@types.Image, Float) -> @types.Image
 
@@ -161,9 +221,17 @@ pub fn vstack_pure(@types.Image, @types.Image) -> @types.Image raise @types.Load
 
 pub fn warp_affine_pure(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
 
+pub fn zlib_inflate(Bytes) -> Bytes raise @types.LoadError
+
 // Errors
 
 // Types and methods
+type BitReader
+
+type GifFrameContext
+
+type HuffmanTree
+
 pub(all) struct ImageStats {
   mean : Float
   stddev : Float

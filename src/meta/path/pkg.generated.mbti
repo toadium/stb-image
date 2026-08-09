@@ -1,0 +1,21 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/meta/path"
+
+import {
+  "MoonBit-Toadium/stb-image/src/meta",
+  "MoonBit-Toadium/stb-image/src/types",
+}
+
+// Values
+pub fn read_exif_from_path(String) -> @meta.ExifInfo? raise @types.LoadError
+
+pub fn read_png_text_chunks_from_path(String) -> Array[@meta.PngTextChunk] raise @types.LoadError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+
