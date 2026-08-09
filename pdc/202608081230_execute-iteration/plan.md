@@ -740,3 +740,59 @@
 - `reexport.mbt:408,426,669,672`：`@segment.dilate` / `@segment.erode` / `@segment.morph_close` / `@segment.morph_open`，引用前缀 `@segment`
 - `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-989）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@segment.xxx` → 断言 width/height/channels/data 完全一致
 - 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R31 PASSED v2.0 pure 包形态学操作（erode/dilate/morph_open/morph_close，纯 MoonBit，全目标） [ID: T18]
+结果：在 `src/pure/` 新增 `morphology.mbt`（4 个形态学函数 erode_pure/dilate_pure/morph_open_pure/morph_close_pure + clamp_i 私有辅助，移植自 `src/process/segment/morphology.mbt:1-185`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀）+ `morphology_test.mbt`（9 纯逻辑测试，全目标），根包 `roundtrip_test.mbt` 新增 4 个 native-only pure vs segment 对比测试。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 740/740 通过（727→740，+9 pure 纯逻辑 + 4 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+---
+
+## R32 NEW v2.0 pure 包仿射变换 + 任意角度旋转（warp_affine/rotate，纯 MoonBit，全目标） [ID: T19]
+任务：在 `src/pure/` 新增 `geometry.mbt`，移植 `src/process/transform/geometry.mbt:1-126` 的 3 个函数（sample_bilinear 私有 + warp_affine_pure + rotate_pure）到 pure 包，实现纯 MoonBit 仿射变换 + 任意角度旋转（双线性插值，全目标可用）。
+
+---
+
+## R33 RETRY v2.0 pure 包仿射变换 + 任意角度旋转（warp_affine/rotate，纯 MoonBit，全目标） [ID: T19]
+原因：计划审查 v19 r1 REJECTED，3 项问题
+- [严重] 测试 3 平移矩阵 (1,0,-1,0,1,-1) 使 src=dst+(-1,-1)，输出 [0,0] 采样 src (-1,-1) clamp 到 (0,0) 即 orig[0,0]，但描述称 "采样 src [1,1]" 并要求 "断言 out[0,0]==orig[1,1]"，矩阵与描述自相矛盾
+- [一般] 测试 2 描述 "四角像素与原始对应" 与缩放矩阵实际行为矛盾，4x4 输出四角中 (3,0)/(0,3)/(3,3) 的 src=1.5 非整数位置需双线性插值，"与原始对应" 表述模糊
+- [轻微] 测试 7 用严格 assert_eq 但未论证 @math.cosf(π)/@math.sinf(π) 浮点精度，且与测试 8 用容差比较标准不统一
+修正方向：测试 3 矩阵改为 (1,0,1,0,1,1) 使 src=dst+(1,1)；测试 2 明确四角 src 坐标和双线性插值手算预期值；测试 7 改用容差比较 diff <= 1 与测试 8 统一标准
+
+---
+
+## R34 PASSED v2.0 pure 包仿射变换 + 任意角度旋转（warp_affine/rotate，纯 MoonBit，全目标） [ID: T19]
+结果：在 `src/pure/` 新增 `geometry.mbt`（3 个函数：sample_bilinear 私有 + warp_affine_pure + rotate_pure，移植自 `src/process/transform/geometry.mbt:1-126`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀 + @math.cosf/sinf 保留）+ `geometry_test.mbt`（10 纯逻辑测试，全目标，含 identity/scale up/translation/RGBA alpha/1x1/0 degrees/180 degrees approx/360 degrees approx/RGBA alpha/1x1），根包 `roundtrip_test.mbt` 新增 2 个 native-only pure vs transform 对比测试（warp_affine + rotate）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 752/752 通过（740→752，+10 pure 纯逻辑 + 2 根包对比），v1.0 API 冻结保持，现有测试不破坏。
+
+## R34 NEW v2.0 pure 包基础像素操作 + 图像工具（threshold/posterize/extract_channel + pad/add_border，纯 MoonBit，全目标） [ID: T20]
+任务：在 `src/pure/` 新增 `pixel_ops.mbt`（移植 `src/util/pixel_ops.mbt:4-98` 的 clamp_byte_v 私有辅助 + threshold + posterize + extract_channel）和 `image_util.mbt`（移植 `src/util/image_util.mbt:6-91` 的 pad + add_border），签名加 `_pure` 后缀，将 `@core.Image`→`@types.Image`、`@core.LoadError`→`@types.LoadError`。不移植 resize_to_cover/resize_to_contain（依赖 @core.resize FFI + @transform.crop，非纯 MoonBit）。新增 `src/pure/pixel_ops_test.mbt`（8 纯逻辑测试：threshold 基础二值化 + RGBA alpha 保留 + 全低于阈值、posterize 基础量化 + RGBA alpha 保留 + 无效 levels raises、extract_channel 提取 R 通道 + channel 越界 raises）和 `src/pure/image_util_test.mbt`（5 纯逻辑测试：pad 基础填充 + 负数 raises + 空 pad_color raises、add_border 基础边框 + 负数 raises）。在根包 `src/roundtrip_test.mbt` 新增 5 个 native-only pure vs util 对比测试（threshold/posterize/extract_channel/pad/add_border，用 @core.load_from_path 加载测试图像 req_channels=Some(3)，断言 width/height/channels/data 完全一致，引用前缀 `@util`）。验证 `moon check` 全目标 0 errors 0 warnings，`moon test --target native` 752→770 通过。
+选择理由：
+- T19 已完成仿射变换 + 任意角度旋转，pure 包当前 6 解码器 + 3 编码器 + 几何变换（crop/rotate_90/180/270/flip + warp_affine/rotate）+ 色彩转换 + 色彩调整 + 滤波 + 直方图 + 形态学，但缺基础像素操作（二值化/色调分离/通道提取）和图像工具（填充/边框），这些是最常用图像操作，补齐后 pure 包图像处理能力更完整
+- `src/util/pixel_ops.mbt:4-98` 的 clamp_byte_v + threshold + posterize + extract_channel 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用，仅用内置 Array/Bytes/Int/Byte/Float 操作），移植到 pure 包仅需替换 @core→@types 类型引用，与 T13-T19（几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换移植）同构，技术风险极低
+- `src/util/image_util.mbt:6-91` 的 pad + add_border 均为纯 MoonBit 实现（已核实：仅依赖 @core.Image/@core.LoadError 类型，无 FFI/C stub/extern 调用），移植到 pure 包仅需替换 @core→@types 类型引用。resize_to_cover/resize_to_contain（line 96-135）依赖 @core.resize（FFI）+ @transform.crop，非纯 MoonBit，本轮不移植
+- `clamp_byte_v`（pixel_ops.mbt:4）与 pure 包已有 `clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178）不同名，无命名冲突
+- pure 包全目标化（T3）+ types 包全目标（T2）已就绪，像素操作 + 图像工具仅依赖 @types，全目标可用，无需新增依赖（@math 已在 pure 包 moon.pkg 但本轮不使用）
+- 风险可控：新增文件不修改现有代码，v1.0 API 冻结保持，对比测试在根包 native-only 文件中（无全目标警告问题）
+- 为后续 pure 包更多像素操作（13 种 blend 混合模式 + pixelate/replace_color/convolve/swap_channels 等）奠定基础，使 pure 包逐步接近完整的图像库
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T2 产出：types 包全目标（Image/Image16/ImageF/ImageInfo/GifAnimation/LoadError）
+- T3 产出：pure 包全目标化（import types + @encoding/utf8 + @math），全目标可用
+- T19 产出：pure 包仿射变换 + 任意角度旋转，native 752 测试通过
+- `src/util/pixel_ops.mbt:4-12`：`fn clamp_byte_v(v : Int) -> Byte`，私有辅助（clamp 到 [0,255]）
+- `src/util/pixel_ops.mbt:17-40`：`pub fn threshold(img : @core.Image, thresh : Int) -> @core.Image`，二值化，alpha 保留分支 line 30-32
+- `src/util/pixel_ops.mbt:45-75`：`pub fn posterize(img : @core.Image, levels : Int) -> @core.Image raise @core.LoadError`，色调分离，levels ∈ [2,256]，alpha 保留分支 line 65-67
+- `src/util/pixel_ops.mbt:80-98`：`pub fn extract_channel(img : @core.Image, channel : Int) -> @core.Image raise @core.LoadError`，提取单通道，返回 channels=1，无 alpha 保留
+- `src/util/image_util.mbt:6-47`：`pub fn pad(img : @core.Image, px : Int, py : Int, pad_color : Array[Byte]) -> @core.Image raise @core.LoadError`，四周填充，px/py 非负，pad_color 非空
+- `src/util/image_util.mbt:51-91`：`pub fn add_border(img : @core.Image, top : Int, right : Int, bottom : Int, left : Int, border_color : Array[Byte]) -> @core.Image raise @core.LoadError`，添加边框，四边非负，border_color 非空
+- `src/util/moon.pkg`：import core + transform + debug + math，supported_targets = "native"（pixel_ops.mbt 仅依赖 @core.Image/@core.LoadError，image_util.mbt pad/add_border 仅依赖 @core.Image/@core.LoadError，resize_to_cover/contain 依赖 @core.resize + @transform.crop）
+- pure 包 `src/pure/moon.pkg`：import types + @encoding/utf8 + @math，无 `supported_targets`，全目标；本轮无需新增依赖
+- pure 包已有辅助函数：`clamp_byte`（color_adjust.mbt:6）/`clamp_coord`（filter.mbt:6）/`clamp_i`（morphology.mbt:178），`clamp_byte_v` 不同名无冲突
+- pure 包函数签名惯例：`pub fn xxx_pure(...) -> @types.Image` 或 `-> @types.Image raise @types.LoadError`（与 transform/color_convert/color_adjust/filter/histogram/morphology/geometry 一致）
+- 根包 `src/moon.pkg`：`for "test"` 已声明 @pure + @lib 依赖，`options(targets: {"roundtrip_test.mbt": ["native"]})`，import @util（line 13，路径 `src/util` 无别名，引用前缀 `@util`）
+- `reexport.mbt:861,918,936,942,960`：`@util.add_border`/`@util.extract_channel`/`@util.pad`/`@util.posterize`/`@util.threshold`，引用前缀 `@util`
+- `roundtrip_test.mbt` 现有 pure vs process 对比测试模式（line 822-1101）：`@core.load_from_path(path, req_channels=Some(3))` → `@pure.xxx_pure` vs `@transform.xxx`/`@color.xxx`/`@filter.xxx`/`@feature.xxx`/`@segment.xxx` → 断言 width/height/channels/data 完全一致
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证

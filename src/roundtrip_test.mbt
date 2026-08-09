@@ -1099,3 +1099,88 @@ test "rotate: pure vs transform" {
   let _ = pure_img
   let _ = ffi_img
 }
+
+///|
+test "threshold: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.threshold_pure(orig, 128)
+  let util_img = @util.threshold(orig, 128)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "posterize: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.posterize_pure(orig, 4)
+  let util_img = @util.posterize(orig, 4)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "extract_channel: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.extract_channel_pure(orig, 0)
+  let util_img = @util.extract_channel(orig, 0)
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "pad: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.pad_pure(orig, 2, 2, [b'\x00', b'\x00', b'\x00'])
+  let util_img = @util.pad(orig, 2, 2, [b'\x00', b'\x00', b'\x00'])
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
+
+///|
+test "add_border: pure vs util" {
+  let orig = @core.load_from_path(
+    "testdata/test_4x4_red.png",
+    req_channels=Some(3),
+  )
+  let pure_img = @pure.add_border_pure(orig, 1, 1, 1, 1, [b'\xFF', b'\xFF', b'\xFF'])
+  let util_img = @util.add_border(orig, 1, 1, 1, 1, [b'\xFF', b'\xFF', b'\xFF'])
+  assert_eq(pure_img.width, util_img.width)
+  assert_eq(pure_img.height, util_img.height)
+  assert_eq(pure_img.channels, util_img.channels)
+  assert_eq(pure_img.data, util_img.data)
+  let _ = orig
+  let _ = pure_img
+  let _ = util_img
+}
