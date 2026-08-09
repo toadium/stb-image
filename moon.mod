@@ -1,10 +1,10 @@
 name = "MoonBit-Toadium/stb-image"
 
-version = "1.17.0"
+version = "2.0.0"
 
 license = "MIT"
 
-description = "MoonBit image library: FFI decode/encode/resize + pure MoonBit QOI/ICO/ICNS/GIF codec."
+description = "MoonBit image library: native C FFI (stb_image) + pure MoonBit backend for wasm/js multi-target support."
 
 keywords = [
   "moonbit",
@@ -21,6 +21,10 @@ keywords = [
   "icns",
   "resize",
   "hdr",
+  "wasm",
+  "js",
+  "pure",
+  "multi-target",
 ]
 
 preferred_target = "native"

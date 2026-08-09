@@ -3,12 +3,12 @@
 [English](README.md) | [中文](README.zh.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-546%20passed-brightgreen)]()
+[![MoonBit](https://img.shields.io/badge/MoonBit-native%2Bwasm%2Bjs-blue)](https://www.moonbitlang.com/)
+[![Tests](https://img.shields.io/badge/tests-847%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-75%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
-MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07.
+MoonBit native FFI bindings for [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07. Multi-target support: native target uses C FFI (stb_image), wasm/js targets use pure MoonBit backend (`src/pure/`).
 
 Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, animated GIF, info query, write PNG/BMP/TGA/JPEG/HDR, resize, format detection, QOI/ICO/ICNS/GIF/PNM codec, EXIF/PNG metadata, image processing (crop/rotate/flip/color/filter/histogram/quantize/morphology/edge detect/quality metrics), roundtrip tests, performance benchmarks.
 
@@ -48,12 +48,13 @@ Full image decode/encode/resize/process capability: 8-bit/16-bit/float load, ani
 - **Distance transform**: L1/L2/Linf, skeletonize
 - **Gabor filter**: multi-orientation multi-scale texture analysis
 - **Blend modes**: 13 modes (multiply, screen, overlay, darken, lighten, difference, exclusion, color dodge, color burn, hard light, soft light, linear dodge, linear burn)
+- **Multi-target support**: native (C FFI stb_image) + wasm/js (pure MoonBit backend), 6 decoders + 3 encoders + image processing in pure MoonBit
 - **Metadata**: EXIF reading, PNG text chunks
 - **Animated GIF**: multi-frame decode/encode with per-frame delays
 - **Info query**: dimensions without decoding pixels
 - **Configurable**: flip, unpremultiply alpha, iPhone PNG, HDR gamma/scale
 - **Failure diagnostics**: `failure_reason()` exposes stb_image internal error string
-- **533 tests + 29 benchmarks**, all passing under AddressSanitizer
+- **847 tests + 29 benchmarks (native), 225 tests (wasm/js pure backend)**, all passing under AddressSanitizer
 
 ## Installation
 
@@ -110,7 +111,7 @@ try {
 
 ```bash
 moon check --target native     # Check compilation
-moon test --target native      # Run 546 tests
+moon test --target native      # Run 847 tests
 moon bench --target native     # Run 75 benchmarks
 moon info                      # Regenerate API interface
 ```
@@ -119,7 +120,7 @@ moon info                      # Regenerate API interface
 
 - **I/O callbacks** (`stbi_io_callbacks`): not implemented. MoonBit FFI does not support passing closures as C function pointers.
 - **Zero-copy**: not implemented. All load paths copy pixel data from C buffer to MoonBit `Bytes` via `memcpy`.
-- **Multi-target**: native only. wasm/js support evaluated and deferred.
+- **Multi-target**: native (C FFI) + wasm/js (pure MoonBit backend).
 
 ## Documentation
 

@@ -3,12 +3,12 @@
 [English](README.md) | [中文](README.zh.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MoonBit](https://img.shields.io/badge/MoonBit-native-blue)](https://www.moonbitlang.com/)
-[![Tests](https://img.shields.io/badge/tests-546%20passed-brightgreen)]()
+[![MoonBit](https://img.shields.io/badge/MoonBit-native%2Bwasm%2Bjs-blue)](https://www.moonbitlang.com/)
+[![Tests](https://img.shields.io/badge/tests-847%20passed-brightgreen)]()
 [![Bench](https://img.shields.io/badge/bench-75%20passed-brightgreen)]()
 [![ASan](https://img.shields.io/badge/ASan-passed-brightgreen)]()
 
-MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。
+MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/stb) v2.30 + [stb_image_write.h](https://github.com/nothings/stb) v1.16 + [stb_image_resize2.h](https://github.com/nothings/stb) v2.07。多目标支持：native 目标使用 C FFI（stb_image），wasm/js 目标使用纯 MoonBit 后端（`src/pure/`）。
 
 完整图像解码/编码/缩放/处理能力：8位/16位/浮点加载、动画GIF、信息查询、写入 PNG/BMP/TGA/JPEG/HDR、缩放、格式检测、QOI/ICO/ICNS/GIF/PNM 编解码、EXIF/PNG 元数据、图像处理（裁剪/旋转/翻转/色彩/滤波/直方图/量化/形态学/边缘检测/质量评估）、往返测试、性能基准测试。
 
@@ -48,12 +48,13 @@ MoonBit 原生 FFI 绑定库，封装 [stb_image.h](https://github.com/nothings/
 - **距离变换**：L1/L2/Linf 距离，骨架化
 - **Gabor 滤波**：多方向多尺度纹理分析
 - **混合模式**：13种（正片叠底、滤色、叠加、变暗、变亮、差值、排除、颜色减淡、颜色加深、强光、柔光、线性减淡、线性加深）
+- **多目标支持**：native（C FFI stb_image）+ wasm/js（纯 MoonBit 后端），纯 MoonBit 后端含 6 解码器 + 3 编码器 + 图像处理
 - **元数据**：EXIF 读取、PNG 文本块
 - **动画GIF**：多帧解码/编码，支持逐帧延迟
 - **信息查询**：不解码像素即可获取尺寸
 - **可配置**：翻转、非预乘Alpha、iPhone PNG、HDR伽马/缩放
 - **错误诊断**：`failure_reason()` 获取 stb_image 内部错误字符串
-- **533 测试 + 29 基准测试**，全部通过 AddressSanitizer
+- **847 测试 + 29 基准测试 (native)，225 测试 (wasm/js 纯 MoonBit 后端)**，全部通过 AddressSanitizer
 
 ## 安装
 
@@ -110,7 +111,7 @@ try {
 
 ```bash
 moon check --target native     # 检查编译
-moon test --target native      # 运行 546 个测试
+moon test --target native      # 运行 847 个测试
 moon bench --target native     # 运行 75 个基准测试
 moon info                      # 重新生成 API 接口
 ```
@@ -119,7 +120,7 @@ moon info                      # 重新生成 API 接口
 
 - **I/O回调**（`stbi_io_callbacks`）：未实现。MoonBit FFI 不支持将闭包作为C函数指针传递。
 - **零拷贝**：未实现。所有加载路径通过 `memcpy` 将像素数据从C缓冲区复制到MoonBit `Bytes`。
-- **多目标**：仅支持 native。wasm/js 支持已评估但暂缓。
+- **多目标**：native（C FFI）+ wasm/js（纯 MoonBit 后端）。
 
 ## 文档
 

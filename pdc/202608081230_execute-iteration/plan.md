@@ -921,3 +921,40 @@
 5. **测试 10 预期值修正**：`[78,173,231,19]` → `[78,169,232,19]`，逐像素计算：255-2*(255-150)*(255-150)/255=255-86=169（中间 22050/255=86 非 82）、255-2*(255-200)*(255-200)/255=255-23=232（中间 6050/255=23 非 24）
 6. **测试 11 预期值修正**：`[86,176,255,34]` → `[86,161,224,24]`，关键修正 `clamp_byte_v` 作用范围说明：`clamp_byte_v` 包裹整个加法表达式 `(255-w)*b*b/(255*255) + w*b/255` 的最终结果，不是对中间项单独 clamp。MoonBit 整数除法向零取整，-1012500/65025=-15（不是 0）。逐像素计算：w=300, -15+176=161；w=400, -89+313=224；w=100, 5+19=24
 选择理由：审查意见 6 项全部属实（已核实 `src/util/pixel_ops.mbt:147,176-180,292,320,380-384,413-414` 源码公式，逐像素手算确认正确预期值），与 T17 R30 RETRY（plan.md line 705，测试 9 预期 data `[0,71,143,255]` 错误修正为 `[0,85,170,255]`）同类问题，修正仅更正测试预期值不涉实现逻辑变更，风险极低，修正后 6 项测试断言与源码实际输出一致，可行性不再留待现场
+
+---
+
+## R38 PASSED v2.0 pure 包 13 种 blend 混合模式（纯 MoonBit，全目标） [ID: T23]
+结果：在 `src/pure/` 新增 `blend.mbt`（13 个 blend 混合模式函数 blend_multiply/screen/overlay/darken/lighten/difference/exclusion/color_dodge/color_burn/hard_light/soft_light/linear_dodge/linear_burn，移植自 `src/util/pixel_ops.mbt:103-478`，仅替换 @core→@types 类型引用 + 加 `_pure` 后缀，clamp_byte_v 复用同包 `src/pure/pixel_ops.mbt:6`）+ `blend_test.mbt`（15 纯逻辑测试，13 basic + 2 mismatch raises，全目标），根包 `roundtrip_test.mbt` 新增 13 个 native-only pure vs util 对比测试（blend_img 用 `@color.adjust_brightness(orig, 50)` 构造）。
+检查：`moon check` 全目标 0 errors 0 warnings，`moon test --target native` 847/847 通过（819→847，+15 pure 纯逻辑 + 13 根包对比），v1.0 API 冻结保持，现有测试不破坏。RETRY r1 修正的 6 项测试预期值错误全部按源码公式逐像素手算结果落实。
+
+## R39 NEW v2.0 版本发布收尾（版本号 + 文档 + 多目标验证记录） [ID: T24]
+任务：更新 `moon.mod` 版本号 1.17.0 → 2.0.0 + description/keywords 反映多目标支持；更新 `README.md`/`README.zh.md` badge 测试数 546→847 + 顶部描述补充多目标说明 + Features 新增 Multi-target support 条目 + 底部测试数更新（native 847 + wasm/js 225）；更新 `ROADMAP.md` v2.0 标记 ✅ + 新增交付物小节记录 @types/@pure/@lib + 测试数 + 版本时间线表标记已完成。验证三目标 `moon check` 0 errors 0 warnings + `moon test --target native` 847 通过。
+选择理由：
+- T1-T23 已完成 v2.0 核心架构（@types 全目标类型包 + @pure 纯 MoonBit 后端 6 解码器+3 编码器+完整图像处理 + @lib pure 侧统一 API），wasm/js 各 225 测试通过，v2.0 多目标支持核心目标已达成
+- 版本号仍为 1.17.0，README badge 仍显示 546 测试（实际 847），ROADMAP v2.0 未标记完成，需收尾正式标记 v2.0 发布
+- 本轮为 v2.0 里程碑收尾，非功能实现，风险极低（仅文档/版本号更新，不改代码逻辑），完成后 v2.0 正式发布
+- 后续可进入 v2.1（WebP/stream/TIFF/APNG 远期格式）或继续扩展 pure 包高级算法（CLAHE/FFT/霍夫等），由下一轮 PDC 决策
+上下文：
+- ROADMAP.md v2.0 交付物：`src/native/` + `src/pure/` + `src/lib.mbt`（后端选择层）
+- T1-T23 产出：@types 全目标类型包（T2）+ @pure 纯 MoonBit 后端（6 解码器 + 3 编码器 + 完整图像处理）+ @lib pure 侧统一 API（T12）
+- 当前测试数：native 847 通过、wasm 225 通过、js 225 通过
+- 当前版本号：`moon.mod` version = "1.17.0"
+- 当前 README badge：tests-546 passed（过时，实际 847）
+- 当前 ROADMAP v2.0：未标记 ✅
+- 执行约束：保持 v1.0 API 冻结、不破坏现有测试、构建验证
+
+---
+
+## R40 RETRY v2.0 版本发布收尾（版本号 + 文档 + 多目标验证记录） [ID: T24]
+原因：计划审查 v24 r1 REJECTED，4 项问题（均为文档更新遗漏或措辞不一致）
+- [一般] task_v24.md 遗漏 README.md/README.zh.md 中 Usage 示例注释的测试数引用更新。已核实 README.md:113 `moon test --target native      # Run 546 tests` 与 README.zh.md:113 `moon test --target native      # 运行 546 个测试` 均含过时测试数 546，task_v24.md line 21 仅提及"底部测试数 `533 tests + 29 benchmarks`"更新，完全未提及 line 113 的 `# Run 546 tests` / `# 运行 546 个测试`。Doer 按 task 执行会遗漏这两处，导致文档内测试数引用不一致（badge 847、Testing 小节 847、Usage 注释仍 546）。
+- [一般] task_v24.md 遗漏 README.md/README.zh.md Limitations 小节"Multi-target"条目更新。已核实 README.md:122 `- **Multi-target**: native only. wasm/js support evaluated and deferred.` 与 README.zh.md:122 `- **多目标**：仅支持 native。wasm/js 支持已评估但暂缓。`。v2.0 多目标支持已完成，该条目已过时且与 task_v24.md 要求新增的"Multi-target support"Features 条目直接矛盾（Features 说支持多目标，Limitations 说 native only）。task_v24.md 完全未提及要更新这两行，Doer 按 task 执行会保留过时条目，导致文档自相矛盾。
+- [一般] task_v24.md 声称 wasm/js 各 225 测试通过（line 51、59），并要求在 ROADMAP.md 交付物中记录"测试：native 847 + wasm 225 + js 225 通过"（line 35），但构建验证（line 38-43）仅要求 `moon test --target native` 847 通过，不包含 `moon test --target wasm` 和 `moon test --target js`。文档将写入具体测试数 225 但未在本轮验证，task_v24.md 亦未声明 225 数据来源（如上一轮已验证）。若 225 数据不准确，ROADMAP.md 交付物记录将失实。
+- [一般] task_v24.md line 31 说"v2.0 章节末尾新增'### 交付物（已完成）'小节"，但已核实 ROADMAP.md:382-385 已有"### 交付物"小节（`src/native/` + `src/pure/` + `src/lib.mbt`）。按字面"新增"会在 v2.0 章节内并存两个交付物小节（现有"### 交付物" + 新增"### 交付物（已完成）"），导致结构重复混淆。应明确为"更新现有'### 交付物'小节为'### 交付物（已完成）'"或"替换"。此外，现有小节写 `src/lib.mbt`（文件），task_v24.md line 33 写 `src/lib/`（目录，line 71 确认实际为目录含 3 文件），task 未明确要求修正此差异。
+修正方向（已逐一修正，覆写 task_v24.md）：
+1. **Usage 示例注释测试数更新**：README.md:113 `# Run 546 tests` → `# Run 847 tests`，README.zh.md:113 `# 运行 546 个测试` → `# 运行 847 个测试`。在 task_v24.md 具体工作第 2/3 项中补充这两处更新要求。
+2. **Limitations 小节 Multi-target 条目更新**：README.md:122 `native only. wasm/js support evaluated and deferred.` → `native (C FFI) + wasm/js (pure MoonBit backend).`，README.zh.md:122 `仅支持 native。wasm/js 支持已评估但暂缓。` → `native（C FFI）+ wasm/js（纯 MoonBit 后端）。`。在 task_v24.md 具体工作第 2/3 项中补充这两处更新要求。
+3. **wasm/js 测试数验证**：在 task_v24.md 构建验证中增加 `moon test --target wasm` 225 通过、`moon test --target js` 225 通过，由 Checker 实际运行验证。
+4. **ROADMAP 交付物小节措辞修正**：task_v24.md line 31 "新增'### 交付物（已完成）'小节" → "更新现有'### 交付物'小节（ROADMAP.md:382-385）为'### 交付物（已完成）'"，并明确要求将现有 `src/lib.mbt` 更正为 `src/lib/`（目录）。
+选择理由：审查意见 4 项全部属实（已核实 README.md:113,122、README.zh.md:113,122、ROADMAP.md:382-385 源码），均为文档更新遗漏或措辞不一致，修正仅补充文档更新要求与构建验证项不涉代码逻辑变更，风险极低，修正后文档内测试数引用一致（badge/Usage/Testing 均为 847）、Features 与 Limitations 不矛盾、wasm/js 测试数由 Checker 实际验证、ROADMAP 交付物小节无重复且路径正确
