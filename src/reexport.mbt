@@ -84,7 +84,7 @@ pub type HaarWaveletResult = @frequency.HaarWaveletResult
 ///|
 pub type CornerPoint = @feature.CornerPoint
 
-// From core/
+// From core/ (replaced with @pure/@lib — all-target pure MoonBit)
 
 ///|
 pub let convert_iphone_png_to_rgb : (Bool) -> Unit = @pure.convert_iphone_png_to_rgb_pure
@@ -98,16 +98,19 @@ pub fn decode_any(
 }
 
 ///|
-pub let detect_format : (Bytes) -> @types.ImageFormat = @core.detect_format
-
-///|
-pub let encode_icns : (@types.Image) -> Bytes raise @types.LoadError = @core.encode_icns
-
-///|
-pub let encode_ico : (@types.Image) -> Bytes raise @types.LoadError = @core.encode_ico
-
-///|
-pub let encode_ico_sizes : (Array[@types.Image]) -> Bytes raise @types.LoadError = @core.encode_ico_sizes
+pub fn detect_format(data : Bytes) -> @types.ImageFormat {
+  match @lib.detect_format(data) {
+    @lib.ImageFormat::Png => @types.ImageFormat::Png
+    @lib.ImageFormat::Jpeg => @types.ImageFormat::Jpeg
+    @lib.ImageFormat::Bmp => @types.ImageFormat::Bmp
+    @lib.ImageFormat::Gif => @types.ImageFormat::Gif
+    @lib.ImageFormat::Tga => @types.ImageFormat::Tga
+    @lib.ImageFormat::Psd => @types.ImageFormat::Psd
+    @lib.ImageFormat::Pnm => @types.ImageFormat::Pnm
+    @lib.ImageFormat::Qoi => @types.ImageFormat::Qoi
+    @lib.ImageFormat::Unknown => @types.ImageFormat::Unknown
+  }
+}
 
 ///|
 pub let failure_reason : () -> String = @pure.failure_reason_pure
@@ -125,44 +128,21 @@ pub let hdr_to_ldr_scale : (Float) -> Unit = @pure.hdr_to_ldr_scale_pure
 pub let info_from_bytes : (Bytes) -> @types.ImageInfo? raise @types.LoadError = @pure.info_from_bytes_pure
 
 ///|
-pub let info_from_path : (String) -> @types.ImageInfo? = @core.info_from_path
-
-///|
 pub let is_16_bit_from_bytes : (Bytes) -> Bool = @pure.is_16_bit_from_bytes_pure
-
-///|
-pub let is_16_bit_from_path : (String) -> Bool = @core.is_16_bit_from_path
 
 ///|
 pub let is_hdr_from_bytes : (Bytes) -> Bool = @pure.is_hdr_from_bytes_pure
 
 ///|
-pub let is_hdr_from_path : (String) -> Bool = @core.is_hdr_from_path
-
-///|
-pub let is_supported_format : (Bytes) -> Bool = @core.is_supported_format
+pub fn is_supported_format(data : Bytes) -> Bool {
+  @lib.detect_format(data) != @lib.ImageFormat::Unknown
+}
 
 ///|
 pub let ldr_to_hdr_gamma : (Float) -> Unit = @pure.ldr_to_hdr_gamma_pure
 
 ///|
 pub let ldr_to_hdr_scale : (Float) -> Unit = @pure.ldr_to_hdr_scale_pure
-
-///|
-pub fn load_16_from_bytes(
-  arg0 : Bytes,
-  req_channels? : Int? = None,
-) -> @types.Image16 raise @types.LoadError {
-  @core.load_16_from_bytes(arg0, req_channels~)
-}
-
-///|
-pub fn load_16_from_path(
-  arg0 : String,
-  req_channels? : Int? = None,
-) -> @types.Image16 raise @types.LoadError {
-  @core.load_16_from_path(arg0, req_channels~)
-}
 
 ///|
 pub fn load_from_bytes(
@@ -173,27 +153,11 @@ pub fn load_from_bytes(
 }
 
 ///|
-pub fn load_from_path(
-  arg0 : String,
-  req_channels? : Int? = None,
-) -> @types.Image raise @types.LoadError {
-  @core.load_from_path(arg0, req_channels~)
-}
-
-///|
 pub fn load_gif_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.GifAnimation raise @types.LoadError {
-  @core.load_gif_from_bytes(arg0, req_channels~)
-}
-
-///|
-pub fn load_gif_from_path(
-  arg0 : String,
-  req_channels? : Int? = None,
-) -> @types.GifAnimation raise @types.LoadError {
-  @core.load_gif_from_path(arg0, req_channels~)
+  @pure.decode_gif_animation_pure(arg0)
 }
 
 ///|
@@ -201,19 +165,8 @@ pub fn loadf_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.ImageF raise @types.LoadError {
-  @core.loadf_from_bytes(arg0, req_channels~)
+  @pure.decode_hdr_pure(arg0)
 }
-
-///|
-pub fn loadf_from_path(
-  arg0 : String,
-  req_channels? : Int? = None,
-) -> @types.ImageF raise @types.LoadError {
-  @core.loadf_from_path(arg0, req_channels~)
-}
-
-///|
-pub let read_file_bytes : (String) -> Bytes raise @types.LoadError = @core.read_file_bytes
 
 ///|
 pub fn resize(
@@ -224,39 +177,6 @@ pub fn resize(
   edge? : @types.ResizeEdge = Clamp,
 ) -> @types.Image raise @types.LoadError {
   @pure.resize_pure(arg0, arg1, arg2, filter~, edge~)
-}
-
-///|
-pub fn resize_16(
-  arg0 : @types.Image16,
-  arg1 : Int,
-  arg2 : Int,
-  filter? : @types.ResizeFilter = Default,
-  edge? : @types.ResizeEdge = Clamp,
-) -> @types.Image16 raise @types.LoadError {
-  @core.resize_16(arg0, arg1, arg2, filter~, edge~)
-}
-
-///|
-pub fn resize_srgb(
-  arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  filter? : @types.ResizeFilter = Default,
-  edge? : @types.ResizeEdge = Clamp,
-) -> @types.Image raise @types.LoadError {
-  @core.resize_srgb(arg0, arg1, arg2, filter~, edge~)
-}
-
-///|
-pub fn resizef(
-  arg0 : @types.ImageF,
-  arg1 : Int,
-  arg2 : Int,
-  filter? : @types.ResizeFilter = Default,
-  edge? : @types.ResizeEdge = Clamp,
-) -> @types.ImageF raise @types.LoadError {
-  @core.resizef(arg0, arg1, arg2, filter~, edge~)
 }
 
 ///|
@@ -271,13 +191,7 @@ pub fn write_bmp_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
 }
 
 ///|
-pub let write_bmp_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_bmp_to_path
-
-///|
 pub let write_hdr_to_bytes : (@types.ImageF) -> Bytes raise @types.LoadError = @pure.encode_hdr_pure
-
-///|
-pub let write_hdr_to_path : (String, @types.ImageF) -> Unit raise @types.LoadError = @core.write_hdr_to_path
 
 ///|
 pub fn write_jpeg_to_bytes(
@@ -288,27 +202,12 @@ pub fn write_jpeg_to_bytes(
 }
 
 ///|
-pub fn write_jpeg_to_path(
-  arg0 : String,
-  arg1 : @types.Image,
-  quality? : Int = 90,
-) -> Unit raise @types.LoadError {
-  @core.write_jpeg_to_path(arg0, arg1, quality~)
-}
-
-///|
 pub let write_png_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @pure.encode_png_pure
-
-///|
-pub let write_png_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_png_to_path
 
 ///|
 pub fn write_tga_to_bytes(img : @types.Image) -> Bytes raise @types.LoadError {
   @pure.encode_tga_pure(img)
 }
-
-///|
-pub let write_tga_to_path : (String, @types.Image) -> Unit raise @types.LoadError = @core.write_tga_to_path
 
 // From process/
 
@@ -851,13 +750,7 @@ pub let encode_qoi : (@types.Image) -> Bytes raise @types.LoadError = @format.en
 pub let read_exif_from_bytes : (Bytes) -> @meta.ExifInfo? = @meta.read_exif_from_bytes
 
 ///|
-pub let read_exif_from_path : (String) -> @meta.ExifInfo? raise @types.LoadError = @metapath.read_exif_from_path
-
-///|
 pub let read_png_text_chunks : (Bytes) -> Array[@meta.PngTextChunk] = @meta.read_png_text_chunks
-
-///|
-pub let read_png_text_chunks_from_path : (String) -> Array[@meta.PngTextChunk] raise @types.LoadError = @metapath.read_png_text_chunks_from_path
 
 // From util/
 

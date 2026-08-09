@@ -1,7 +1,6 @@
 import {
   "moonbitlang/core/bench",
   "MoonBit-Toadium/stb-image/src/types" @types,
-  "MoonBit-Toadium/stb-image/src/core",
   "MoonBit-Toadium/stb-image/src/pure" @pure,
   "MoonBit-Toadium/stb-image/src/lib" @lib,
   "MoonBit-Toadium/stb-image/src/process/filter",
@@ -13,16 +12,16 @@ import {
   "MoonBit-Toadium/stb-image/src/process/segment",
   "MoonBit-Toadium/stb-image/src/format",
   "MoonBit-Toadium/stb-image/src/meta",
-  "MoonBit-Toadium/stb-image/src/meta/path" @metapath,
   "MoonBit-Toadium/stb-image/src/util",
 }
 
-supported_targets = "native"
+import {
+  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/meta/path" @metapath,
+} for "test"
 
 options(
   targets: {
-    "reexport.mbt": [ "native" ],
-    "bench.mbt": [ "native" ],
     "roundtrip_test.mbt": [ "native" ],
     "README.mbt.md": [ "native" ],
   },
