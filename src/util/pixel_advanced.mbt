@@ -14,11 +14,11 @@ fn clamp_b(v : Int) -> Byte {
 ///|
 /// 马赛克/像素化效果。将图像分成 block_size × block_size 的块，每块取左上角像素值。
 pub fn pixelate(
-  img : @core.Image,
+  img : @types.Image,
   block_size : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if block_size <= 0 {
-    raise @core.LoadError::DecodeFailed("block_size 必须为正数")
+    raise @types.LoadError::DecodeFailed("block_size 必须为正数")
   }
   let ch = img.channels
   let w = img.width
@@ -35,7 +35,7 @@ pub fn pixelate(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -47,14 +47,14 @@ pub fn pixelate(
 /// 颜色替换。将 old_color 替换为 new_color（精确匹配或容差匹配）。
 /// old_color 和 new_color 长度应等于 channels。
 pub fn replace_color(
-  img : @core.Image,
+  img : @types.Image,
   old_color : Array[Byte],
   new_color : Array[Byte],
   tolerance : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   let ch = img.channels
   if old_color.length() < ch || new_color.length() < ch {
-    raise @core.LoadError::DecodeFailed("颜色数组长度必须 >= channels")
+    raise @types.LoadError::DecodeFailed("颜色数组长度必须 >= channels")
   }
   let n = img.width * img.height
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
@@ -71,7 +71,7 @@ pub fn replace_color(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -83,13 +83,13 @@ pub fn replace_color(
 /// 通用卷积。kernel 为 3×3 卷积核（9 个 Float 值，行优先）。
 /// 边缘采用 clamp 策略。bias 为偏移量，scale 为缩放因子。
 pub fn convolve(
-  img : @core.Image,
+  img : @types.Image,
   kernel : Array[Float],
   bias : Float,
   scale : Float,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if kernel.length() < 9 {
-    raise @core.LoadError::DecodeFailed("kernel 必须为 9 个值（3x3）")
+    raise @types.LoadError::DecodeFailed("kernel 必须为 9 个值（3x3）")
   }
   let ch = img.channels
   let w = img.width
@@ -116,7 +116,7 @@ pub fn convolve(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -127,12 +127,12 @@ pub fn convolve(
 ///|
 /// 交换两个通道。例如 swap_channels(img, 0, 2) 交换 R 和 B。
 pub fn swap_channels(
-  img : @core.Image,
+  img : @types.Image,
   ch1 : Int,
   ch2 : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if ch1 < 0 || ch1 >= img.channels || ch2 < 0 || ch2 >= img.channels {
-    raise @core.LoadError::DecodeFailed("通道索引越界")
+    raise @types.LoadError::DecodeFailed("通道索引越界")
   }
   if ch1 == ch2 {
     return img
@@ -149,7 +149,7 @@ pub fn swap_channels(
     out[off + ch1] = out[off + ch2]
     out[off + ch2] = tmp
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,

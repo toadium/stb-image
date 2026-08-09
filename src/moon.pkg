@@ -10,6 +10,7 @@ import {
   "MoonBit-Toadium/stb-image/src/process/segment",
   "MoonBit-Toadium/stb-image/src/format",
   "MoonBit-Toadium/stb-image/src/meta",
+  "MoonBit-Toadium/stb-image/src/meta/path" @metapath,
   "MoonBit-Toadium/stb-image/src/util",
 }
 

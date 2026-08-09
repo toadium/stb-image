@@ -2,23 +2,23 @@
 package "MoonBit-Toadium/stb-image/src/format"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
 }
 
 // Values
-pub fn decode_qoi(Bytes) -> @core.Image raise @core.LoadError
+pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
 
-pub fn encode_gif(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_gif_animation(@core.GifAnimation) -> Bytes raise @core.LoadError
+pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
 
-pub fn encode_pgm(@core.Image) -> Bytes
+pub fn encode_pgm(@types.Image) -> Bytes
 
-pub fn encode_pnm(@core.Image) -> Bytes
+pub fn encode_pnm(@types.Image) -> Bytes
 
-pub fn encode_ppm(@core.Image) -> Bytes
+pub fn encode_ppm(@types.Image) -> Bytes
 
-pub fn encode_qoi(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 // Errors
 

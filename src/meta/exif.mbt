@@ -180,10 +180,4 @@ pub fn read_exif_from_bytes(data : Bytes) -> ExifInfo? {
   Some(ExifInfo::{ make, model, orientation, date_time })
 }
 
-///|
-/// 从 JPEG 文件读取 EXIF 元数据。
-/// 返回 None 如果文件不含 EXIF 数据。
-pub fn read_exif_from_path(path : String) -> ExifInfo? raise @core.LoadError {
-  let file_data = @core.read_file_bytes(path)
-  read_exif_from_bytes(file_data)
-}
+

@@ -2,25 +2,25 @@
 package "MoonBit-Toadium/stb-image/src/process/edge"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
 }
 
 // Values
-pub fn canny_edge(@core.Image, low_threshold? : Int, high_threshold? : Int) -> @core.Image raise @core.LoadError
+pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
 
 pub fn contour_area(Contour) -> Float
 
 pub fn contour_perimeter(Contour) -> Float
 
-pub fn draw_contours(@core.Image, Array[Contour], Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn draw_contours(@types.Image, Array[Contour], Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn edge_detect_laplacian(@core.Image) -> @core.Image
+pub fn edge_detect_laplacian(@types.Image) -> @types.Image
 
-pub fn edge_detect_prewitt(@core.Image) -> @core.Image
+pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
-pub fn find_contours(@core.Image) -> Array[Contour] raise @core.LoadError
+pub fn find_contours(@types.Image) -> Array[Contour] raise @types.LoadError
 
-pub fn hough_lines(@core.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[HoughLine] raise @core.LoadError
+pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[HoughLine] raise @types.LoadError
 
 pub fn hough_lines_nms(Array[HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[HoughLine]
 

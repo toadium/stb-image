@@ -2,31 +2,31 @@
 package "MoonBit-Toadium/stb-image/src/process/frequency"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
 }
 
 // Values
-pub fn fft_2d(@core.Image) -> Array[FFTResult] raise @core.LoadError
+pub fn fft_2d(@types.Image) -> Array[FFTResult] raise @types.LoadError
 
-pub fn fft_magnitude(FFTResult, Bool) -> @core.Image
+pub fn fft_magnitude(FFTResult, Bool) -> @types.Image
 
 pub fn fft_shift(FFTResult) -> FFTResult
 
-pub fn freq_filter(@core.Image, FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+pub fn freq_filter(@types.Image, FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
-pub fn freq_filter_gaussian(@core.Image, FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+pub fn freq_filter_gaussian(@types.Image, FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
-pub fn haar_denoise(@core.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @core.Image raise @core.LoadError
+pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
 
 pub fn haar_inverse_transform_1d(Array[Float]) -> Array[Float]
 
-pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @core.Image
+pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @types.Image
 
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
 
-pub fn haar_transform_2d(@core.Image, levels? : Int) -> HaarWaveletResult raise @core.LoadError
+pub fn haar_transform_2d(@types.Image, levels? : Int) -> HaarWaveletResult raise @types.LoadError
 
-pub fn ifft_2d(FFTResult) -> @core.Image
+pub fn ifft_2d(FFTResult) -> @types.Image
 
 // Errors
 

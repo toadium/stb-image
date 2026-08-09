@@ -1,0 +1,83 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "MoonBit-Toadium/stb-image/src/types"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror LoadError {
+  FileIO(String)
+  UnsupportedFormat(String)
+  DecodeFailed(String)
+}
+
+// Types and methods
+pub(all) struct GifAnimation {
+  frames : Array[Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Image {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Image16 {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageF {
+  width : Int
+  height : Int
+  channels : Int
+  data : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ImageFormat {
+  Png
+  Jpeg
+  Bmp
+  Gif
+  Tga
+  Psd
+  Hdr
+  Pnm
+  Qoi
+  Unknown
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageInfo {
+  width : Int
+  height : Int
+  channels : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ResizeEdge {
+  Clamp
+  Reflect
+  Wrap
+  Zero
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ResizeFilter {
+  Default
+  Box
+  Triangle
+  CubicBSPline
+  CatmullROM
+  Mitchell
+  PointSample
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

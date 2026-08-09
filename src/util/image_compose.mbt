@@ -3,11 +3,11 @@
 ///|
 /// 水平拼接。两图高度和通道数必须相同。
 pub fn hstack(
-  left : @core.Image,
-  right : @core.Image,
-) -> @core.Image raise @core.LoadError {
+  left : @types.Image,
+  right : @types.Image,
+) -> @types.Image raise @types.LoadError {
   if left.height != right.height || left.channels != right.channels {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "hstack 两图高度/通道数必须相同",
     )
   }
@@ -31,7 +31,7 @@ pub fn hstack(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: h,
     channels: ch,
@@ -42,11 +42,11 @@ pub fn hstack(
 ///|
 /// 垂直拼接。两图宽度和通道数必须相同。
 pub fn vstack(
-  top : @core.Image,
-  bottom : @core.Image,
-) -> @core.Image raise @core.LoadError {
+  top : @types.Image,
+  bottom : @types.Image,
+) -> @types.Image raise @types.LoadError {
   if top.width != bottom.width || top.channels != bottom.channels {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "vstack 两图宽度/通道数必须相同",
     )
   }
@@ -61,7 +61,7 @@ pub fn vstack(
   for i in 0..<(w * bottom.height * ch) {
     out[top_size + i] = bottom.data[i]
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: new_h,
     channels: ch,
@@ -72,12 +72,12 @@ pub fn vstack(
 ///|
 /// 平铺图像。将 img 在 x 方向重复 cols 次，y 方向重复 rows 次。
 pub fn tile(
-  img : @core.Image,
+  img : @types.Image,
   cols : Int,
   rows : Int,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if cols <= 0 || rows <= 0 {
-    raise @core.LoadError::DecodeFailed("tile cols/rows 必须为正数")
+    raise @types.LoadError::DecodeFailed("tile cols/rows 必须为正数")
   }
   let ch = img.channels
   let new_w = img.width * cols
@@ -94,7 +94,7 @@ pub fn tile(
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,
@@ -104,7 +104,7 @@ pub fn tile(
 
 ///|
 /// 垂直翻转。
-pub fn flip_vertical(img : @core.Image) -> @core.Image {
+pub fn flip_vertical(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -118,7 +118,7 @@ pub fn flip_vertical(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: w,
     height: h,
     channels: ch,
@@ -128,7 +128,7 @@ pub fn flip_vertical(img : @core.Image) -> @core.Image {
 
 ///|
 /// 转置（沿主对角线翻转）。宽高互换。
-pub fn transpose(img : @core.Image) -> @core.Image {
+pub fn transpose(img : @types.Image) -> @types.Image {
   let ch = img.channels
   let new_w = img.height
   let new_h = img.width
@@ -142,7 +142,7 @@ pub fn transpose(img : @core.Image) -> @core.Image {
       }
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: new_w,
     height: new_h,
     channels: ch,

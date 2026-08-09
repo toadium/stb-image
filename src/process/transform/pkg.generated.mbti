@@ -2,39 +2,39 @@
 package "MoonBit-Toadium/stb-image/src/process/transform"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
 }
 
 // Values
-pub fn build_gaussian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
-pub fn build_laplacian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
-pub fn crop(@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError
+pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn crop_16(@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError
+pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
-pub fn cropf(@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError
+pub fn cropf(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
 
-pub fn draw_copy(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn draw_copy(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn draw_over(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn draw_over(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn flip_horizontal(@core.Image) -> @core.Image
+pub fn flip_horizontal(@types.Image) -> @types.Image
 
-pub fn pyr_down(@core.Image) -> @core.Image raise @core.LoadError
+pub fn pyr_down(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn pyr_up(@core.Image) -> @core.Image raise @core.LoadError
+pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn rotate(@core.Image, Float) -> @core.Image
+pub fn rotate(@types.Image, Float) -> @types.Image
 
-pub fn rotate_180(@core.Image) -> @core.Image
+pub fn rotate_180(@types.Image) -> @types.Image
 
-pub fn rotate_270(@core.Image) -> @core.Image
+pub fn rotate_270(@types.Image) -> @types.Image
 
-pub fn rotate_90(@core.Image) -> @core.Image
+pub fn rotate_90(@types.Image) -> @types.Image
 
-pub fn warp_affine(@core.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @core.Image
+pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
 
 // Errors
 

@@ -2,80 +2,80 @@
 package "MoonBit-Toadium/stb-image/src"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
   "MoonBit-Toadium/stb-image/src/meta",
   "MoonBit-Toadium/stb-image/src/process/color",
   "MoonBit-Toadium/stb-image/src/process/edge",
   "MoonBit-Toadium/stb-image/src/process/feature",
   "MoonBit-Toadium/stb-image/src/process/frequency",
   "MoonBit-Toadium/stb-image/src/process/segment",
+  "MoonBit-Toadium/stb-image/src/types",
   "MoonBit-Toadium/stb-image/src/util",
 }
 
 // Values
-pub fn adaptive_threshold_gaussian(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn adaptive_threshold_gaussian(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn adaptive_threshold_mean(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn adaptive_threshold_mean(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn add_border(@core.Image, Int, Int, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn add_border(@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn add_noise_gaussian(@core.Image, Float, UInt) -> @core.Image
+pub fn add_noise_gaussian(@types.Image, Float, UInt) -> @types.Image
 
-pub fn add_noise_salt_pepper(@core.Image, Float, UInt) -> @core.Image
+pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
 
-pub fn adjust_brightness(@core.Image, Int) -> @core.Image
+pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
-pub fn adjust_contrast(@core.Image, Float) -> @core.Image
+pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
-pub fn adjust_gamma(@core.Image, Float) -> @core.Image
+pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
-pub fn apply_lut(@core.Image, Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn bilateral_filter(@core.Image, Int, Float, Float) -> @core.Image raise @core.LoadError
+pub fn bilateral_filter(@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError
 
-pub fn bilateral_filter_fast(@core.Image, Int, Float, Float, Int) -> @core.Image raise @core.LoadError
+pub fn bilateral_filter_fast(@types.Image, Int, Float, Float, Int) -> @types.Image raise @types.LoadError
 
-pub fn blend_color_burn(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_color_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_color_dodge(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_color_dodge(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_darken(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_darken(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_difference(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_difference(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_exclusion(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_exclusion(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_hard_light(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_hard_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_lighten(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_lighten(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_linear_burn(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_linear_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_linear_dodge(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_linear_dodge(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_multiply(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_multiply(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_overlay(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_overlay(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_screen(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_screen(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn blend_soft_light(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn box_blur(@core.Image, Int) -> @core.Image
+pub fn box_blur(@types.Image, Int) -> @types.Image
 
-pub fn build_gaussian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
-pub fn build_laplacian_pyramid(@core.Image, Int) -> Array[@core.Image] raise @core.LoadError
+pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
-pub fn canny_edge(@core.Image, low_threshold? : Int, high_threshold? : Int) -> @core.Image raise @core.LoadError
+pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
 
-pub fn clahe(@core.Image, Int, Float) -> @core.Image raise @core.LoadError
+pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
-pub fn compute_glcm(@core.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @core.LoadError
+pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
-pub fn compute_stats(@core.Image) -> @util.ImageStats
+pub fn compute_stats(@types.Image) -> @util.ImageStats
 
-pub fn connected_components(@core.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @core.LoadError
+pub fn connected_components(@types.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
 pub fn contour_area(@edge.Contour) -> Float
 
@@ -83,147 +83,147 @@ pub fn contour_perimeter(@edge.Contour) -> Float
 
 pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 
-pub fn convolve(@core.Image, Array[Float], Float, Float) -> @core.Image raise @core.LoadError
+pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
 
-pub fn crop(@core.Image, Int, Int, Int, Int) -> @core.Image raise @core.LoadError
+pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn crop_16(@core.Image16, Int, Int, Int, Int) -> @core.Image16 raise @core.LoadError
+pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
-pub fn cropf(@core.ImageF, Int, Int, Int, Int) -> @core.ImageF raise @core.LoadError
+pub fn cropf(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
 
-pub fn decode_any(Bytes, req_channels? : Int?) -> @core.Image raise @core.LoadError
+pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
-pub fn decode_qoi(Bytes) -> @core.Image raise @core.LoadError
+pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
 
-pub fn dehaze(@core.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @core.Image raise @core.LoadError
+pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
-pub fn detect_format(Bytes) -> @core.ImageFormat
+pub fn detect_format(Bytes) -> @types.ImageFormat
 
-pub fn dilate(@core.Image) -> @core.Image
+pub fn dilate(@types.Image) -> @types.Image
 
-pub fn distance_transform(@core.Image, distance_type? : Int) -> Array[Float] raise @core.LoadError
+pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
-pub fn distance_transform_visualize(Array[Float], Int, Int) -> @core.Image
+pub fn distance_transform_visualize(Array[Float], Int, Int) -> @types.Image
 
-pub fn draw_contours(@core.Image, Array[@edge.Contour], Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn draw_contours(@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn draw_copy(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn draw_copy(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn draw_corners(@core.Image, Array[@feature.CornerPoint], color? : Array[Byte], radius? : Int) -> @core.Image raise @core.LoadError
+pub fn draw_corners(@types.Image, Array[@feature.CornerPoint], color? : Array[Byte], radius? : Int) -> @types.Image raise @types.LoadError
 
-pub fn draw_over(@core.Image, @core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn draw_over(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn edge_detect_laplacian(@core.Image) -> @core.Image
+pub fn edge_detect_laplacian(@types.Image) -> @types.Image
 
-pub fn edge_detect_prewitt(@core.Image) -> @core.Image
+pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
-pub fn edge_detect_sobel(@core.Image) -> @core.Image
+pub fn edge_detect_sobel(@types.Image) -> @types.Image
 
-pub fn encode_gif(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_gif_animation(@core.GifAnimation) -> Bytes raise @core.LoadError
+pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
 
-pub fn encode_icns(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_icns(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_ico(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_ico(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_ico_sizes(Array[@core.Image]) -> Bytes raise @core.LoadError
+pub fn encode_ico_sizes(Array[@types.Image]) -> Bytes raise @types.LoadError
 
-pub fn encode_pgm(@core.Image) -> Bytes
+pub fn encode_pgm(@types.Image) -> Bytes
 
-pub fn encode_pnm(@core.Image) -> Bytes
+pub fn encode_pnm(@types.Image) -> Bytes
 
-pub fn encode_ppm(@core.Image) -> Bytes
+pub fn encode_ppm(@types.Image) -> Bytes
 
-pub fn encode_qoi(@core.Image) -> Bytes raise @core.LoadError
+pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn erode(@core.Image) -> @core.Image
+pub fn erode(@types.Image) -> @types.Image
 
-pub fn extract_channel(@core.Image, Int) -> @core.Image raise @core.LoadError
+pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn failure_reason() -> String
 
-pub fn fft_2d(@core.Image) -> Array[@frequency.FFTResult] raise @core.LoadError
+pub fn fft_2d(@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError
 
-pub fn fft_magnitude(@frequency.FFTResult, Bool) -> @core.Image
+pub fn fft_magnitude(@frequency.FFTResult, Bool) -> @types.Image
 
 pub fn fft_shift(@frequency.FFTResult) -> @frequency.FFTResult
 
-pub fn fill_alpha(@core.Image, Int, Byte, Byte, Byte) -> @core.Image raise @core.LoadError
+pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
 
-pub fn find_contours(@core.Image) -> Array[@edge.Contour] raise @core.LoadError
+pub fn find_contours(@types.Image) -> Array[@edge.Contour] raise @types.LoadError
 
-pub fn flip_horizontal(@core.Image) -> @core.Image
+pub fn flip_horizontal(@types.Image) -> @types.Image
 
-pub fn flip_vertical(@core.Image) -> @core.Image
+pub fn flip_vertical(@types.Image) -> @types.Image
 
 pub fn flip_vertically_on_write(Bool) -> Unit
 
-pub fn flood_fill(@core.Image, Int, Int, Array[Byte], threshold? : Int) -> @core.Image raise @core.LoadError
+pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
 
-pub fn floyd_steinberg(@core.Image, Int) -> @core.Image
+pub fn floyd_steinberg(@types.Image, Int) -> @types.Image
 
-pub fn freq_filter(@core.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+pub fn freq_filter(@types.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
-pub fn freq_filter_gaussian(@core.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @core.Image raise @core.LoadError
+pub fn freq_filter_gaussian(@types.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
-pub fn gabor_filter(@core.Image, Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> @core.Image raise @core.LoadError
+pub fn gabor_filter(@types.Image, Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> @types.Image raise @types.LoadError
 
-pub fn gabor_filter_bank(@core.Image, Int, Float, num_orientations? : Int, lambda? : Float, gamma? : Float) -> @core.Image raise @core.LoadError
+pub fn gabor_filter_bank(@types.Image, Int, Float, num_orientations? : Int, lambda? : Float, gamma? : Float) -> @types.Image raise @types.LoadError
 
-pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> Array[Array[Float]] raise @core.LoadError
+pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> Array[Array[Float]] raise @types.LoadError
 
-pub fn gaussian_blur(@core.Image, Int, Float) -> @core.Image
+pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
 
 pub fn glcm_features(Array[Array[Int]]) -> @feature.GlcmFeatures
 
-pub fn glcm_features_multi_direction(@core.Image, levels? : Int) -> Array[@feature.GlcmFeatures] raise @core.LoadError
+pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
 
-pub fn gradient_map(@core.Image, Array[(Int, Byte, Byte, Byte)]) -> @core.Image raise @core.LoadError
+pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
-pub fn guided_filter(@core.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @core.LoadError
+pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
 
-pub fn haar_denoise(@core.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @core.Image raise @core.LoadError
+pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
 
 pub fn haar_inverse_transform_1d(Array[Float]) -> Array[Float]
 
-pub fn haar_inverse_transform_2d(@frequency.HaarWaveletResult) -> @core.Image
+pub fn haar_inverse_transform_2d(@frequency.HaarWaveletResult) -> @types.Image
 
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
 
-pub fn haar_transform_2d(@core.Image, levels? : Int) -> @frequency.HaarWaveletResult raise @core.LoadError
+pub fn haar_transform_2d(@types.Image, levels? : Int) -> @frequency.HaarWaveletResult raise @types.LoadError
 
-pub fn harris_corners(@core.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @core.LoadError
+pub fn harris_corners(@types.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
 pub fn hdr_to_ldr_gamma(Float) -> Unit
 
 pub fn hdr_to_ldr_scale(Float) -> Unit
 
-pub fn histogram(@core.Image) -> Array[Int]
+pub fn histogram(@types.Image) -> Array[Int]
 
-pub fn histogram_equalize(@core.Image) -> @core.Image
+pub fn histogram_equalize(@types.Image) -> @types.Image
 
-pub fn histogram_normalize(@core.Image) -> @core.Image
+pub fn histogram_normalize(@types.Image) -> @types.Image
 
-pub fn hough_lines(@core.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[@edge.HoughLine] raise @core.LoadError
+pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[@edge.HoughLine] raise @types.LoadError
 
 pub fn hough_lines_nms(Array[@edge.HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[@edge.HoughLine]
 
 pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
-pub fn hstack(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
-pub fn ifft_2d(@frequency.FFTResult) -> @core.Image
+pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
 
-pub fn info_from_bytes(Bytes) -> @core.ImageInfo? raise @core.LoadError
+pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
-pub fn info_from_path(String) -> @core.ImageInfo?
+pub fn info_from_path(String) -> @types.ImageInfo?
 
-pub fn integral_image(@core.Image) -> @feature.IntegralImage raise @core.LoadError
+pub fn integral_image(@types.Image) -> @feature.IntegralImage raise @types.LoadError
 
-pub fn integral_image_sq(@core.Image) -> @feature.IntegralImageSq raise @core.LoadError
+pub fn integral_image_sq(@types.Image) -> @feature.IntegralImageSq raise @types.LoadError
 
 pub fn integral_mean(@feature.IntegralImage, Int, Int, Int, Int) -> Float
 
@@ -233,7 +233,7 @@ pub fn integral_sum_sq(@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64
 
 pub fn integral_variance(@feature.IntegralImage, @feature.IntegralImageSq, Int, Int, Int, Int) -> Float
 
-pub fn invert(@core.Image) -> @core.Image
+pub fn invert(@types.Image) -> @types.Image
 
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
@@ -245,165 +245,165 @@ pub fn is_hdr_from_path(String) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
 
-pub fn k_means_quantize(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn k_means_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn kmeans_segment(@core.Image, Int, max_iters? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @core.LoadError
+pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
 
-pub fn lbp(@core.Image) -> @core.Image raise @core.LoadError
+pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn lbp_uniform(@core.Image) -> @core.Image raise @core.LoadError
+pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn ldr_to_hdr_gamma(Float) -> Unit
 
 pub fn ldr_to_hdr_scale(Float) -> Unit
 
-pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> @core.Image16 raise @core.LoadError
+pub fn load_16_from_bytes(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
 
-pub fn load_16_from_path(String, req_channels? : Int?) -> @core.Image16 raise @core.LoadError
+pub fn load_16_from_path(String, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
 
-pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @core.Image raise @core.LoadError
+pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
-pub fn load_from_path(String, req_channels? : Int?) -> @core.Image raise @core.LoadError
+pub fn load_from_path(String, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
-pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> @core.GifAnimation raise @core.LoadError
+pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> @types.GifAnimation raise @types.LoadError
 
-pub fn load_gif_from_path(String, req_channels? : Int?) -> @core.GifAnimation raise @core.LoadError
+pub fn load_gif_from_path(String, req_channels? : Int?) -> @types.GifAnimation raise @types.LoadError
 
-pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @core.ImageF raise @core.LoadError
+pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @types.ImageF raise @types.LoadError
 
-pub fn loadf_from_path(String, req_channels? : Int?) -> @core.ImageF raise @core.LoadError
+pub fn loadf_from_path(String, req_channels? : Int?) -> @types.ImageF raise @types.LoadError
 
-pub fn mean_value(@core.Image) -> Float
+pub fn mean_value(@types.Image) -> Float
 
-pub fn median_cut(@core.Image, Int) -> @core.Image
+pub fn median_cut(@types.Image, Int) -> @types.Image
 
-pub fn morph_close(@core.Image) -> @core.Image
+pub fn morph_close(@types.Image) -> @types.Image
 
-pub fn morph_open(@core.Image) -> @core.Image
+pub fn morph_open(@types.Image) -> @types.Image
 
-pub fn mse(@core.Image, @core.Image) -> Double
+pub fn mse(@types.Image, @types.Image) -> Double
 
-pub fn msr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
-pub fn msrcr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @core.Image raise @core.LoadError
+pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
 
-pub fn nlm_denoise(@core.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @core.Image raise @core.LoadError
+pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @types.Image raise @types.LoadError
 
-pub fn nlm_denoise_fast(@core.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @core.Image raise @core.LoadError
+pub fn nlm_denoise_fast(@types.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @types.Image raise @types.LoadError
 
-pub fn pad(@core.Image, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn pixelate(@core.Image, Int) -> @core.Image raise @core.LoadError
+pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 
-pub fn posterize(@core.Image, Int) -> @core.Image raise @core.LoadError
+pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
 
-pub fn premultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn psnr(@core.Image, @core.Image) -> Double
+pub fn psnr(@types.Image, @types.Image) -> Double
 
-pub fn pyr_down(@core.Image) -> @core.Image raise @core.LoadError
+pub fn pyr_down(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn pyr_up(@core.Image) -> @core.Image raise @core.LoadError
+pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
-pub fn read_exif_from_path(String) -> @meta.ExifInfo? raise @core.LoadError
+pub fn read_exif_from_path(String) -> @meta.ExifInfo? raise @types.LoadError
 
-pub fn read_file_bytes(String) -> Bytes raise @core.LoadError
+pub fn read_file_bytes(String) -> Bytes raise @types.LoadError
 
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
 
-pub fn read_png_text_chunks_from_path(String) -> Array[@meta.PngTextChunk] raise @core.LoadError
+pub fn read_png_text_chunks_from_path(String) -> Array[@meta.PngTextChunk] raise @types.LoadError
 
-pub fn region_growing_segment(@core.Image, Array[(Int, Int)], threshold? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @core.LoadError
+pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
 
-pub fn replace_color(@core.Image, Array[Byte], Array[Byte], Int) -> @core.Image raise @core.LoadError
+pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
-pub fn resize(@core.Image, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image raise @core.LoadError
+pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
-pub fn resize_16(@core.Image16, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image16 raise @core.LoadError
+pub fn resize_16(@types.Image16, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image16 raise @types.LoadError
 
-pub fn resize_srgb(@core.Image, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.Image raise @core.LoadError
+pub fn resize_srgb(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
-pub fn resize_to_contain(@core.Image, Int, Int, Array[Byte]) -> @core.Image raise @core.LoadError
+pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn resize_to_cover(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn resizef(@core.ImageF, Int, Int, filter? : @core.ResizeFilter, edge? : @core.ResizeEdge) -> @core.ImageF raise @core.LoadError
+pub fn resizef(@types.ImageF, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.ImageF raise @types.LoadError
 
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
 
-pub fn rotate(@core.Image, Float) -> @core.Image
+pub fn rotate(@types.Image, Float) -> @types.Image
 
-pub fn rotate_180(@core.Image) -> @core.Image
+pub fn rotate_180(@types.Image) -> @types.Image
 
-pub fn rotate_270(@core.Image) -> @core.Image
+pub fn rotate_270(@types.Image) -> @types.Image
 
-pub fn rotate_90(@core.Image) -> @core.Image
+pub fn rotate_90(@types.Image) -> @types.Image
 
-pub fn segment_to_color(@color.SegmentLabelImage) -> @core.Image
+pub fn segment_to_color(@color.SegmentLabelImage) -> @types.Image
 
-pub fn set_alpha(@core.Image, Byte) -> @core.Image raise @core.LoadError
+pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 
 pub fn set_flip_vertically_on_load(Bool) -> Unit
 
 pub fn set_unpremultiply_on_load(Bool) -> Unit
 
-pub fn sharpen(@core.Image, Float) -> @core.Image
+pub fn sharpen(@types.Image, Float) -> @types.Image
 
-pub fn skeletonize(@core.Image) -> @core.Image raise @core.LoadError
+pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn ssim(@core.Image, @core.Image) -> Double
+pub fn ssim(@types.Image, @types.Image) -> Double
 
-pub fn ssr(@core.Image, sigma? : Float, gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
-pub fn swap_channels(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn threshold(@core.Image, Int) -> @core.Image
+pub fn threshold(@types.Image, Int) -> @types.Image
 
-pub fn threshold_otsu(@core.Image) -> @core.Image raise @core.LoadError
+pub fn threshold_otsu(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn tile(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn to_grayscale(@core.Image) -> @core.Image
+pub fn to_grayscale(@types.Image) -> @types.Image
 
-pub fn to_rgb(@core.Image) -> @core.Image
+pub fn to_rgb(@types.Image) -> @types.Image
 
-pub fn to_rgba(@core.Image) -> @core.Image
+pub fn to_rgba(@types.Image) -> @types.Image
 
-pub fn transpose(@core.Image) -> @core.Image
+pub fn transpose(@types.Image) -> @types.Image
 
-pub fn unpremultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn vstack(@core.Image, @core.Image) -> @core.Image raise @core.LoadError
+pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn warp_affine(@core.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @core.Image
+pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
 
-pub fn watershed(@core.Image, Array[Int]) -> Array[Int] raise @core.LoadError
+pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
-pub fn watershed_auto(@core.Image) -> (Array[Int], Int) raise @core.LoadError
+pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
 
-pub fn write_bmp_to_bytes(@core.Image) -> Bytes raise @core.LoadError
+pub fn write_bmp_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn write_bmp_to_path(String, @core.Image) -> Unit raise @core.LoadError
+pub fn write_bmp_to_path(String, @types.Image) -> Unit raise @types.LoadError
 
-pub fn write_hdr_to_bytes(@core.ImageF) -> Bytes raise @core.LoadError
+pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
 
-pub fn write_hdr_to_path(String, @core.ImageF) -> Unit raise @core.LoadError
+pub fn write_hdr_to_path(String, @types.ImageF) -> Unit raise @types.LoadError
 
-pub fn write_jpeg_to_bytes(@core.Image, quality? : Int) -> Bytes raise @core.LoadError
+pub fn write_jpeg_to_bytes(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
-pub fn write_jpeg_to_path(String, @core.Image, quality? : Int) -> Unit raise @core.LoadError
+pub fn write_jpeg_to_path(String, @types.Image, quality? : Int) -> Unit raise @types.LoadError
 
-pub fn write_png_to_bytes(@core.Image) -> Bytes raise @core.LoadError
+pub fn write_png_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn write_png_to_path(String, @core.Image) -> Unit raise @core.LoadError
+pub fn write_png_to_path(String, @types.Image) -> Unit raise @types.LoadError
 
-pub fn write_tga_to_bytes(@core.Image) -> Bytes raise @core.LoadError
+pub fn write_tga_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn write_tga_to_path(String, @core.Image) -> Unit raise @core.LoadError
+pub fn write_tga_to_path(String, @types.Image) -> Unit raise @types.LoadError
 
 // Errors
 
@@ -428,7 +428,7 @@ pub using @frequency {type FFTResult}
 
 pub using @frequency {type FreqFilterType}
 
-pub using @core {type GifAnimation}
+pub using @types {type GifAnimation}
 
 pub using @feature {type GlcmFeatures}
 
@@ -436,15 +436,15 @@ pub using @frequency {type HaarWaveletResult}
 
 pub using @edge {type HoughLine}
 
-pub using @core {type Image}
+pub using @types {type Image}
 
-pub using @core {type Image16}
+pub using @types {type Image16}
 
-pub using @core {type ImageF}
+pub using @types {type ImageF}
 
-pub using @core {type ImageFormat}
+pub using @types {type ImageFormat}
 
-pub using @core {type ImageInfo}
+pub using @types {type ImageInfo}
 
 pub using @util {type ImageStats}
 
@@ -452,13 +452,13 @@ pub using @feature {type IntegralImage}
 
 pub using @feature {type IntegralImageSq}
 
-pub using @core {type LoadError}
+pub using @types {type LoadError}
 
 pub using @meta {type PngTextChunk}
 
-pub using @core {type ResizeEdge}
+pub using @types {type ResizeEdge}
 
-pub using @core {type ResizeFilter}
+pub using @types {type ResizeFilter}
 
 pub using @color {type SegmentLabelImage}
 

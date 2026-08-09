@@ -847,13 +847,13 @@ pub let encode_qoi : (@core.Image) -> Bytes raise @core.LoadError = @format.enco
 pub let read_exif_from_bytes : (Bytes) -> @meta.ExifInfo? = @meta.read_exif_from_bytes
 
 ///|
-pub let read_exif_from_path : (String) -> @meta.ExifInfo? raise @core.LoadError = @meta.read_exif_from_path
+pub let read_exif_from_path : (String) -> @meta.ExifInfo? raise @core.LoadError = @metapath.read_exif_from_path
 
 ///|
 pub let read_png_text_chunks : (Bytes) -> Array[@meta.PngTextChunk] = @meta.read_png_text_chunks
 
 ///|
-pub let read_png_text_chunks_from_path : (String) -> Array[@meta.PngTextChunk] raise @core.LoadError = @meta.read_png_text_chunks_from_path
+pub let read_png_text_chunks_from_path : (String) -> Array[@meta.PngTextChunk] raise @core.LoadError = @metapath.read_png_text_chunks_from_path
 
 // From util/
 

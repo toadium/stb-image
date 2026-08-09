@@ -12,7 +12,7 @@ pub(all) struct ImageStats {
 ///|
 /// 计算图像统计信息（均值、标准差、最小值、最大值）。
 /// 统计所有通道的像素值。
-pub fn compute_stats(img : @core.Image) -> ImageStats {
+pub fn compute_stats(img : @types.Image) -> ImageStats {
   let n = img.width * img.height * img.channels
   let mut sum = 0
   let mut sum_sq = 0
@@ -37,7 +37,7 @@ pub fn compute_stats(img : @core.Image) -> ImageStats {
 
 ///|
 /// 计算图像均值（所有通道所有像素的平均值）。
-pub fn mean_value(img : @core.Image) -> Float {
+pub fn mean_value(img : @types.Image) -> Float {
   let n = img.width * img.height * img.channels
   let mut sum = 0
   for i in 0..<n {

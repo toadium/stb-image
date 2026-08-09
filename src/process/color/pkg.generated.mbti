@@ -2,61 +2,61 @@
 package "MoonBit-Toadium/stb-image/src/process/color"
 
 import {
-  "MoonBit-Toadium/stb-image/src/core",
+  "MoonBit-Toadium/stb-image/src/types",
 }
 
 // Values
-pub fn adaptive_threshold_gaussian(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn adaptive_threshold_gaussian(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn adaptive_threshold_mean(@core.Image, Int, Int) -> @core.Image raise @core.LoadError
+pub fn adaptive_threshold_mean(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn adjust_brightness(@core.Image, Int) -> @core.Image
+pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
-pub fn adjust_contrast(@core.Image, Float) -> @core.Image
+pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
-pub fn adjust_gamma(@core.Image, Float) -> @core.Image
+pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
-pub fn clahe(@core.Image, Int, Float) -> @core.Image raise @core.LoadError
+pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
-pub fn dehaze(@core.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @core.Image raise @core.LoadError
+pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
-pub fn flood_fill(@core.Image, Int, Int, Array[Byte], threshold? : Int) -> @core.Image raise @core.LoadError
+pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
 
-pub fn guided_filter(@core.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @core.LoadError
+pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
 
 pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
 pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
-pub fn invert(@core.Image) -> @core.Image
+pub fn invert(@types.Image) -> @types.Image
 
-pub fn kmeans_segment(@core.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError
+pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
-pub fn msr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
-pub fn msrcr(@core.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @core.Image raise @core.LoadError
+pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
 
-pub fn premultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn region_growing_segment(@core.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @core.LoadError
+pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
 
-pub fn segment_to_color(SegmentLabelImage) -> @core.Image
+pub fn segment_to_color(SegmentLabelImage) -> @types.Image
 
-pub fn ssr(@core.Image, sigma? : Float, gain? : Float, offset? : Float) -> @core.Image raise @core.LoadError
+pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
-pub fn threshold_otsu(@core.Image) -> @core.Image raise @core.LoadError
+pub fn threshold_otsu(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn to_grayscale(@core.Image) -> @core.Image
+pub fn to_grayscale(@types.Image) -> @types.Image
 
-pub fn to_rgb(@core.Image) -> @core.Image
+pub fn to_rgb(@types.Image) -> @types.Image
 
-pub fn to_rgba(@core.Image) -> @core.Image
+pub fn to_rgba(@types.Image) -> @types.Image
 
-pub fn unpremultiply_alpha(@core.Image) -> @core.Image raise @core.LoadError
+pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
 // Errors
 

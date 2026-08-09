@@ -6,11 +6,11 @@
 /// 应用查找表（LUT）。lut 为 256 个 Byte 的映射表，将每个像素值 v 替换为 lut[v]。
 /// 仅影响颜色通道，alpha 通道不变。
 pub fn apply_lut(
-  img : @core.Image,
+  img : @types.Image,
   lut : Array[Byte],
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if lut.length() < 256 {
-    raise @core.LoadError::DecodeFailed("LUT 必须有 256 个条目")
+    raise @types.LoadError::DecodeFailed("LUT 必须有 256 个条目")
   }
   let n = img.width * img.height
   let ch = img.channels
@@ -24,7 +24,7 @@ pub fn apply_lut(
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: ch,
@@ -37,11 +37,11 @@ pub fn apply_lut(
 /// color_stops 为渐变颜色点，每个点是 (position, r, g, b)，position ∈ [0, 255]。
 /// 返回 RGB 图像（channels=3）。
 pub fn gradient_map(
-  img : @core.Image,
+  img : @types.Image,
   color_stops : Array[(Int, Byte, Byte, Byte)],
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if color_stops.length() < 2 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "gradient_map 至少需要 2 个颜色点",
     )
   }
@@ -71,7 +71,7 @@ pub fn gradient_map(
     out[i * 3 + 1] = g
     out[i * 3 + 2] = b
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 3,
@@ -112,11 +112,11 @@ fn interp_gradient(
 ///|
 /// 设置所有像素的 alpha 通道为指定值。图像必须是 RGBA（channels=4）。
 pub fn set_alpha(
-  img : @core.Image,
+  img : @types.Image,
   alpha : Byte,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "set_alpha 需要 RGBA 图像（channels=4）",
     )
   }
@@ -128,7 +128,7 @@ pub fn set_alpha(
     out[i * 4 + 2] = img.data[i * 4 + 2]
     out[i * 4 + 3] = alpha
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 4,
@@ -139,14 +139,14 @@ pub fn set_alpha(
 ///|
 /// 用指定颜色填充 alpha 通道。将 alpha < threshold 的像素的 RGB 设为指定颜色。
 pub fn fill_alpha(
-  img : @core.Image,
+  img : @types.Image,
   threshold : Int,
   fill_r : Byte,
   fill_g : Byte,
   fill_b : Byte,
-) -> @core.Image raise @core.LoadError {
+) -> @types.Image raise @types.LoadError {
   if img.channels != 4 {
-    raise @core.LoadError::DecodeFailed(
+    raise @types.LoadError::DecodeFailed(
       "fill_alpha 需要 RGBA 图像（channels=4）",
     )
   }
@@ -165,7 +165,7 @@ pub fn fill_alpha(
     }
     out[i * 4 + 3] = img.data[i * 4 + 3]
   }
-  @core.Image::{
+  @types.Image::{
     width: img.width,
     height: img.height,
     channels: 4,
