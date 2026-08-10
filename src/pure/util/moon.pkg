@@ -1,3 +1,7 @@
 import {
   "Toadium/image/src/types",
 }
+
+import {
+  "Toadium/image/src/pure/codec",
+} for "test"

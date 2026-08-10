@@ -423,3 +423,153 @@ test "blend_multiply_pure: channel mismatch raises" {
   let _ = blend
   let _ = raised
 }
+
+///|
+// 尺寸不匹配的图像，用于测试所有 blend 函数的错误路径
+fn bl_mismatched_base() -> @types.Image {
+  bl_make_rgb_image(2, 2, [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)])
+}
+
+///|
+fn bl_mismatched_blend() -> @types.Image {
+  bl_make_rgb_image(3, 2, [
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+    (0, 0, 0),
+  ])
+}
+
+///|
+test "blend_screen_pure: mismatch raises" {
+  try {
+    let _ = blend_screen_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_overlay_pure: mismatch raises" {
+  try {
+    let _ = blend_overlay_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_darken_pure: mismatch raises" {
+  try {
+    let _ = blend_darken_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_lighten_pure: mismatch raises" {
+  try {
+    let _ = blend_lighten_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_difference_pure: mismatch raises" {
+  try {
+    let _ = blend_difference_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_exclusion_pure: mismatch raises" {
+  try {
+    let _ = blend_exclusion_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_color_dodge_pure: mismatch raises" {
+  try {
+    let _ = blend_color_dodge_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_color_burn_pure: mismatch raises" {
+  try {
+    let _ = blend_color_burn_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_hard_light_pure: mismatch raises" {
+  try {
+    let _ = blend_hard_light_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_soft_light_pure: mismatch raises" {
+  try {
+    let _ = blend_soft_light_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_linear_dodge_pure: mismatch raises" {
+  try {
+    let _ = blend_linear_dodge_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "blend_linear_burn_pure: mismatch raises" {
+  try {
+    let _ = blend_linear_burn_pure(bl_mismatched_base(), bl_mismatched_blend())
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}

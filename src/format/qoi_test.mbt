@@ -109,3 +109,78 @@ test "decode_qoi: detect_format recognizes QOI" {
   let _ = img
   let _ = qoi_bytes
 }
+
+///|
+test "decode_qoi: too short data raises" {
+  // 只有 4 字节，不足 14
+  let data = b"\x71\x6F\x69\x66"
+  try {
+    let _ = decode_qoi(data)
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "decode_qoi: bad magic raises" {
+  // 14 字节但 magic 错误
+  let data = b"\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01\x03\x00"
+  try {
+    let _ = decode_qoi(data)
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "decode_qoi: invalid dimensions raises" {
+  // QOI magic 正确但 width=0
+  let data = b"\x71\x6F\x69\x66\x00\x00\x00\x00\x00\x00\x00\x01\x03\x00"
+  try {
+    let _ = decode_qoi(data)
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "decode_qoi: round-trip 1x1 RGBA" {
+  // 1x1 RGBA 图像，覆盖 tag == 0xFF (QOI_OP_RGBA) 路径
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: b"\xFF\x00\x00\x80",
+  }
+  let qoi_bytes = encode_qoi(img)
+  let restored = decode_qoi(qoi_bytes)
+  assert_eq(restored.width, 1)
+  assert_eq(restored.height, 1)
+  assert_eq(restored.channels, 4)
+  assert_eq(restored.data[0].to_int(), 255)
+  assert_eq(restored.data[1].to_int(), 0)
+  assert_eq(restored.data[2].to_int(), 0)
+  assert_eq(restored.data[3].to_int(), 128)
+}
+
+///|
+test "decode_qoi: round-trip 2x2 RGBA" {
+  // 2x2 RGBA，覆盖多种 QOI 标签
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 4,
+    data: b"\xFF\x00\x00\xFF\x00\xFF\x00\x80\x00\x00\xFF\x40\xFF\xFF\x00\x20",
+  }
+  let qoi_bytes = encode_qoi(img)
+  let restored = decode_qoi(qoi_bytes)
+  assert_eq(restored.width, 2)
+  assert_eq(restored.height, 2)
+  assert_eq(restored.channels, 4)
+}

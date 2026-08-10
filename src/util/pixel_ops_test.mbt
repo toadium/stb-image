@@ -275,3 +275,33 @@ test "blend_linear_burn: subtracts and clamps" {
   let _ = blend
   let _ = result
 }
+
+///|
+test "posterize: RGBA preserves alpha" {
+  // 1x1 RGBA，posterize 应保留 alpha 通道
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: [b'\x80', b'\x40', b'\xC0', b'\xAA'] |> Bytes::from_array,
+  }
+  let result = posterize(img, 4)
+  assert_eq(result.channels, 4)
+  // alpha 应被保留
+  assert_eq(result.data[3], b'\xAA')
+  let _ = img
+  let _ = result
+}
+
+///|
+test "blend_screen: mismatched dimensions raises" {
+  let base = make_img(2, 2, 3, b'\x80')
+  let blend = make_img(3, 2, 3, b'\x80')
+  try {
+    let _ = blend_screen(base, blend)
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
