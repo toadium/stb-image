@@ -131,3 +131,80 @@ test "to_grayscale: red pixel luminance" {
   let _ = img
   let _ = gray
 }
+
+///|
+test "rgb_to_ycbcr: roundtrip" {
+  let (y, cb, cr) = rgb_to_ycbcr(100, 150, 200)
+  let (r, g, b) = ycbcr_to_rgb(y, cb, cr)
+  // 允许 ±2 误差（整数运算精度）
+  assert_true((r - 100).abs() <= 2)
+  assert_true((g - 150).abs() <= 2)
+  assert_true((b - 200).abs() <= 2)
+}
+
+///|
+test "rgb_to_ycbcr: gray pixel" {
+  let (y, cb, cr) = rgb_to_ycbcr(128, 128, 128)
+  assert_eq(y, 128)
+  assert_eq(cb, 128)
+  assert_eq(cr, 128)
+}
+
+///|
+test "rgb_to_xyz: black and white" {
+  let (x0, y0, z0) = rgb_to_xyz(0, 0, 0)
+  assert_true(x0 < 0.001F)
+  assert_true(y0 < 0.001F)
+  assert_true(z0 < 0.001F)
+  let (_x1, y1, _z1) = rgb_to_xyz(255, 255, 255)
+  // 白色 Y 应接近 1.0
+  assert_true((y1 - 1.0F).abs() < 0.01F)
+}
+
+///|
+test "rgb_to_lab: roundtrip" {
+  let (l, a, b) = rgb_to_lab(100, 150, 200)
+  let (r, g, bl) = lab_to_rgb(l, a, b)
+  // 允许 ±3 误差（浮点+gamma 精度）
+  assert_true((r - 100).abs() <= 3)
+  assert_true((g - 150).abs() <= 3)
+  assert_true((bl - 200).abs() <= 3)
+}
+
+///|
+test "rgb_to_lab: gray pixel" {
+  let (l, a, b) = rgb_to_lab(128, 128, 128)
+  // 灰色 a 和 b 应接近 0
+  assert_true(a.abs() < 1.0F)
+  assert_true(b.abs() < 1.0F)
+  // L 应在 50-60 之间
+  assert_true(l > 50.0F && l < 60.0F)
+}
+
+///|
+test "rgb_to_cmyk: roundtrip" {
+  let (c, m, y, k) = rgb_to_cmyk(100, 150, 200)
+  let (r, g, b) = cmyk_to_rgb(c, m, y, k)
+  // 允许 ±1 误差
+  assert_true((r - 100).abs() <= 1)
+  assert_true((g - 150).abs() <= 1)
+  assert_true((b - 200).abs() <= 1)
+}
+
+///|
+test "rgb_to_cmyk: black pixel" {
+  let (c, m, y, k) = rgb_to_cmyk(0, 0, 0)
+  assert_eq(k, 255)
+  assert_eq(c, 0)
+  assert_eq(m, 0)
+  assert_eq(y, 0)
+}
+
+///|
+test "rgb_to_cmyk: white pixel" {
+  let (c, m, y, k) = rgb_to_cmyk(255, 255, 255)
+  assert_eq(k, 0)
+  assert_eq(c, 0)
+  assert_eq(m, 0)
+  assert_eq(y, 0)
+}

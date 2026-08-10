@@ -192,3 +192,115 @@ test "morph_close: idempotent" {
   let _ = once
   let _ = twice
 }
+
+///|
+test "morph_gradient: uniform image is zero" {
+  let img = @types.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: Array::make(9, b'\x80') |> Bytes::from_array,
+  }
+  let result = morph_gradient(img)
+  for i in 0..<9 {
+    assert_eq(result.data[i].to_int(), 0)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "morph_gradient: detects edges" {
+  // 5x5 图像，左半白右半黑
+  let data = Array::make(25, b'\x00')
+  for y in 0..<5 {
+    for x in 0..<2 {
+      data[y * 5 + x] = b'\xFF'
+    }
+  }
+  let img = @types.Image::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  let result = morph_gradient(img)
+  // 边界处应有非零值
+  let mut has_nonzero = false
+  for i in 0..<25 {
+    if result.data[i].to_int() > 0 {
+      has_nonzero = true
+    }
+  }
+  assert_true(has_nonzero)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "morph_tophat: uniform image is zero" {
+  let img = @types.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: Array::make(9, b'\x80') |> Bytes::from_array,
+  }
+  let result = morph_tophat(img)
+  for i in 0..<9 {
+    assert_eq(result.data[i].to_int(), 0)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "morph_blackhat: uniform image is zero" {
+  let img = @types.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: Array::make(9, b'\x80') |> Bytes::from_array,
+  }
+  let result = morph_blackhat(img)
+  for i in 0..<9 {
+    assert_eq(result.data[i].to_int(), 0)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "morph_tophat: isolates bright peak" {
+  // 5x5 黑图，中心一个白点
+  let data = Array::make(25, b'\x00')
+  data[2 * 5 + 2] = b'\xFF'
+  let img = @types.Image::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  let result = morph_tophat(img)
+  // 中心白点应被保留（开运算去除了它）
+  assert_eq(result.data[2 * 5 + 2].to_int(), 255)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "morph_blackhat: isolates dark hole" {
+  // 5x5 白图，中心一个黑点
+  let data = Array::make(25, b'\xFF')
+  data[2 * 5 + 2] = b'\x00'
+  let img = @types.Image::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  let result = morph_blackhat(img)
+  // 中心黑点应被检测到（闭运算填充了它）
+  assert_eq(result.data[2 * 5 + 2].to_int(), 255)
+  let _ = img
+  let _ = result
+}

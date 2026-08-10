@@ -174,6 +174,64 @@ pub fn morph_close(img : @types.Image) -> @types.Image {
 }
 
 ///|
+/// 形态学梯度（dilate - erode）。提取边缘轮廓。
+pub fn morph_gradient(img : @types.Image) -> @types.Image {
+  let dilated = dilate(img)
+  let eroded = erode(img)
+  let ch = img.channels
+  let n = img.width * img.height * ch
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let v = dilated.data[i].to_int() - eroded.data[i].to_int()
+    out[i] = if v < 0 { b'\x00' } else { v.to_byte() }
+  }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 顶帽变换（original - open）。提取比结构元素小的明亮细节。
+pub fn morph_tophat(img : @types.Image) -> @types.Image {
+  let opened = morph_open(img)
+  let ch = img.channels
+  let n = img.width * img.height * ch
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let v = img.data[i].to_int() - opened.data[i].to_int()
+    out[i] = if v < 0 { b'\x00' } else { v.to_byte() }
+  }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 黑帽变换（close - original）。提取比结构元素小的暗细节。
+pub fn morph_blackhat(img : @types.Image) -> @types.Image {
+  let closed = morph_close(img)
+  let ch = img.channels
+  let n = img.width * img.height * ch
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  for i in 0..<n {
+    let v = closed.data[i].to_int() - img.data[i].to_int()
+    out[i] = if v < 0 { b'\x00' } else { v.to_byte() }
+  }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
 fn clamp_i(v : Int, lo : Int, hi : Int) -> Int {
   if v < lo {
     lo
@@ -182,4 +240,159 @@ fn clamp_i(v : Int, lo : Int, hi : Int) -> Int {
   } else {
     v
   }
+}
+
+///|
+/// 结构元素（核）。二维布尔数组，true 表示该位置属于结构元素。
+pub(all) struct StructuringElement {
+  width : Int
+  height : Int
+  data : Array[Bool] // height * width
+}
+
+///|
+/// 创建矩形结构元素（全为 true）。
+pub fn se_rect(width : Int, height : Int) -> StructuringElement {
+  StructuringElement::{ width, height, data: Array::make(width * height, true) }
+}
+
+///|
+/// 创建十字形结构元素（中心行+中心列）。
+pub fn se_cross(size : Int) -> StructuringElement {
+  let data : Array[Bool] = Array::make(size * size, false)
+  let cx = size / 2
+  for i in 0..<size {
+    data[cx * size + i] = true
+    data[i * size + cx] = true
+  }
+  StructuringElement::{ width: size, height: size, data }
+}
+
+///|
+/// 创建椭圆形结构元素。对于 size×size 的核，包含所有满足
+/// (dx/rx)² + (dy/ry)² ≤ 1 的位置。
+pub fn se_ellipse(size : Int) -> StructuringElement {
+  let data : Array[Bool] = Array::make(size * size, false)
+  let cx = (size - 1) / 2
+  let cy = (size - 1) / 2
+  let rx = Float::from_int(cx) + 0.5F
+  let ry = Float::from_int(cy) + 0.5F
+  for y in 0..<size {
+    for x in 0..<size {
+      let dx = (Float::from_int(x) - Float::from_int(cx)) / rx
+      let dy = (Float::from_int(y) - Float::from_int(cy)) / ry
+      if dx * dx + dy * dy <= 1.0F {
+        data[y * size + x] = true
+      }
+    }
+  }
+  StructuringElement::{ width: size, height: size, data }
+}
+
+///|
+/// 使用自定义结构元素进行腐蚀。
+pub fn erode_custom(
+  img : @types.Image,
+  se : StructuringElement,
+) -> @types.Image {
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let n = w * h
+  let src : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    src[i] = img.data[i].to_int()
+  }
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  let cx = se.width / 2
+  let cy = se.height / 2
+  for y in 0..<h {
+    for x in 0..<w {
+      for c in 0..<ch {
+        let mut min_v = 255
+        for sy in 0..<se.height {
+          for sx in 0..<se.width {
+            if se.data[sy * se.width + sx] {
+              let nx = clamp_i(x + sx - cx, 0, w - 1)
+              let ny = clamp_i(y + sy - cy, 0, h - 1)
+              let v = src[(ny * w + nx) * ch + c]
+              if v < min_v {
+                min_v = v
+              }
+            }
+          }
+        }
+        out[(y * w + x) * ch + c] = min_v.to_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 使用自定义结构元素进行膨胀。
+pub fn dilate_custom(
+  img : @types.Image,
+  se : StructuringElement,
+) -> @types.Image {
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let n = w * h
+  let src : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<(n * ch) {
+    src[i] = img.data[i].to_int()
+  }
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  let cx = se.width / 2
+  let cy = se.height / 2
+  for y in 0..<h {
+    for x in 0..<w {
+      for c in 0..<ch {
+        let mut max_v = 0
+        for sy in 0..<se.height {
+          for sx in 0..<se.width {
+            if se.data[sy * se.width + sx] {
+              let nx = clamp_i(x + sx - cx, 0, w - 1)
+              let ny = clamp_i(y + sy - cy, 0, h - 1)
+              let v = src[(ny * w + nx) * ch + c]
+              if v > max_v {
+                max_v = v
+              }
+            }
+          }
+        }
+        out[(y * w + x) * ch + c] = max_v.to_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 使用自定义结构元素进行开运算。
+pub fn morph_open_custom(
+  img : @types.Image,
+  se : StructuringElement,
+) -> @types.Image {
+  dilate_custom(erode_custom(img, se), se)
+}
+
+///|
+/// 使用自定义结构元素进行闭运算。
+pub fn morph_close_custom(
+  img : @types.Image,
+  se : StructuringElement,
+) -> @types.Image {
+  erode_custom(dilate_custom(img, se), se)
 }

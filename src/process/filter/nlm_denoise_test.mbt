@@ -191,7 +191,12 @@ test "nlm_denoise 大图像 RGBA alpha 保持" {
   for i in 0..<n {
     data[i * 4 + 3] = (i % 256).to_byte()
   }
-  let img = @types.Image::{ width: 25, height: 25, channels: 4, data: Bytes::from_array(data) }
+  let img = @types.Image::{
+    width: 25,
+    height: 25,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
   let out = nlm_denoise(img, patch_size=2, search_size=5, h=10)
   // alpha 通道应保持不变
   for i in 0..<n {

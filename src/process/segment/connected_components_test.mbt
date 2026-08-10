@@ -117,7 +117,12 @@ test "connected_components: RGB 图" {
   for x in 0..<3 {
     data[(1 * 3 + x) * 3] = b'\xFF'
   }
-  let img = @types.Image::{ width: 3, height: 3, channels: 3, data: Bytes::from_array(data) }
+  let img = @types.Image::{
+    width: 3,
+    height: 3,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
   let (_, comps) = connected_components(img, 4)
   assert_eq(comps.length(), 1)
   assert_eq(comps[0].area, 5)
@@ -131,7 +136,12 @@ test "connected_components: RGBA 图" {
   data[4] = b'\xFF'
   data[8] = b'\xFF'
   data[12] = b'\xFF'
-  let img = @types.Image::{ width: 2, height: 2, channels: 4, data: Bytes::from_array(data) }
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
   let (_, comps) = connected_components(img, 4)
   assert_eq(comps.length(), 1)
   assert_eq(comps[0].area, 4)
@@ -176,7 +186,12 @@ test "connected_components: 边界框验证" {
       data[y * 5 + x] = b'\xFF'
     }
   }
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data: Bytes::from_array(data) }
+  let img = @types.Image::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let (_, comps) = connected_components(img, 4)
   assert_eq(comps.length(), 1)
   assert_eq(comps[0].bbox_x, 1)

@@ -16,7 +16,11 @@ pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
+pub fn apply_colormap(@types.Image, Colormap) -> @types.Image
+
 pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
+
+pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int)
 
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
@@ -32,6 +36,8 @@ pub fn invert(@types.Image) -> @types.Image
 
 pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
+pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
 pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
 pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
@@ -40,9 +46,17 @@ pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
+pub fn rgb_to_cmyk(Int, Int, Int) -> (Int, Int, Int, Int)
+
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_lab(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_xyz(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_ycbcr(Int, Int, Int) -> (Int, Int, Int)
 
 pub fn segment_to_color(SegmentLabelImage) -> @types.Image
 
@@ -58,9 +72,22 @@ pub fn to_rgba(@types.Image) -> @types.Image
 
 pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn xyz_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn ycbcr_to_rgb(Int, Int, Int) -> (Int, Int, Int)
+
 // Errors
 
 // Types and methods
+pub(all) enum Colormap {
+  JET
+  HOT
+  COOL
+  GRAY
+  BONE
+  COPPER
+}
+
 pub(all) struct SegmentLabelImage {
   width : Int
   height : Int

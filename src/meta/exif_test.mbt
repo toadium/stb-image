@@ -140,7 +140,7 @@ fn build_exif_be_jpeg(
   // Assemble: SOI + APP1
   let result : Array[Byte] = [
     b'\xFF', b'\xD8', // SOI
-    b'\xFF', b'\xE1', // APP1
+     b'\xFF', b'\xE1', // APP1
   ]
   // APP1 length = 2 (Exif\0\0) + 8 (TIFF header) + len(entries) + len(str_data)
   let app1_payload = 6 + 8 + entries.length() + str_data.length()
@@ -249,9 +249,7 @@ fn build_exif_le_jpeg(
   entries.push(b'\x00')
   entries.push(b'\x00')
   entries.push(b'\x00')
-  let result : Array[Byte] = [
-    b'\xFF', b'\xD8', b'\xFF', b'\xE1',
-  ]
+  let result : Array[Byte] = [b'\xFF', b'\xD8', b'\xFF', b'\xE1']
   let app1_payload = 6 + 8 + entries.length() + str_data.length()
   let app1_len = app1_payload + 2
   result.push((app1_len >> 8).to_byte())
@@ -315,9 +313,7 @@ test "read_exif: little-endian EXIF with Make/Model/Orientation" {
 test "read_exif: short string inline (<=4 bytes)" {
   // For strings <= 4 bytes, the value is stored inline in the entry
   // Build a BE JPEG with Make="ABC" (3 chars + null = 4, fits inline)
-  let result : Array[Byte] = [
-    b'\xFF', b'\xD8', b'\xFF', b'\xE1',
-  ]
+  let result : Array[Byte] = [b'\xFF', b'\xD8', b'\xFF', b'\xE1']
   // APP1 payload: 6 (Exif\0\0) + 8 (TIFF header) + 2 (count) + 12 (entry) + 4 (next IFD) = 32
   let app1_len = 32 + 2 // +2 for length field itself
   result.push((app1_len >> 8).to_byte())
@@ -374,8 +370,8 @@ test "read_exif: short string inline (<=4 bytes)" {
 test "read_exif: JPEG with SOS before EXIF returns None" {
   // JPEG with SOI + SOS marker (0xFF 0xDA) before any APP1
   let data = Bytes::from_array([
-    b'\xFF', b'\xD8', b'\xFF', b'\xDA', b'\x00', b'\x04', b'\x01', b'\x00',
-    b'\xFF', b'\xD9',
+    b'\xFF', b'\xD8', b'\xFF', b'\xDA', b'\x00', b'\x04', b'\x01', b'\x00', b'\xFF',
+    b'\xD9',
   ])
   let result = read_exif_from_bytes(data)
   assert_eq(result, None)
@@ -385,8 +381,8 @@ test "read_exif: JPEG with SOS before EXIF returns None" {
 test "read_exif: APP1 without Exif signature returns None" {
   // APP1 with non-Exif data (e.g., XMP)
   let data : Array[Byte] = [
-    b'\xFF', b'\xD8', b'\xFF', b'\xE1', b'\x00', b'\x08',
-    b'\x3C', b'\x3F', b'\x78', b'\x70', b'\xFF', b'\xD9',
+    b'\xFF', b'\xD8', b'\xFF', b'\xE1', b'\x00', b'\x08', b'\x3C', b'\x3F', b'\x78',
+    b'\x70', b'\xFF', b'\xD9',
   ]
   let result = read_exif_from_bytes(Bytes::from_array(data))
   assert_eq(result, None)
@@ -396,10 +392,9 @@ test "read_exif: APP1 without Exif signature returns None" {
 test "read_exif: invalid TIFF byte order returns None" {
   // APP1 with Exif\0\0 but invalid byte order (not MM or II)
   let data : Array[Byte] = [
-    b'\xFF', b'\xD8', b'\xFF', b'\xE1', b'\x00', b'\x10',
-    b'\x45', b'\x78', b'\x69', b'\x66', b'\x00', b'\x00',
-    b'\x58', b'\x58', b'\x00', b'\x2A', b'\x00', b'\x00', b'\x00', b'\x08',
-    b'\xFF', b'\xD9',
+    b'\xFF', b'\xD8', b'\xFF', b'\xE1', b'\x00', b'\x10', b'\x45', b'\x78', b'\x69',
+    b'\x66', b'\x00', b'\x00', b'\x58', b'\x58', b'\x00', b'\x2A', b'\x00', b'\x00',
+    b'\x00', b'\x08', b'\xFF', b'\xD9',
   ]
   let result = read_exif_from_bytes(Bytes::from_array(data))
   assert_eq(result, None)
@@ -411,8 +406,7 @@ test "read_exif: skip other APP markers to find EXIF" {
   let exif_jpeg = build_exif_be_jpeg("Test", "Cam", 1, "2020:01:01 00:00:00")
   // Insert APP0 segment after SOI
   let app0 : Array[Byte] = [
-    b'\xFF', b'\xE0', b'\x00', b'\x10',
-    b'\x4A', b'\x46', b'\x49', b'\x46', b'\x00',
+    b'\xFF', b'\xE0', b'\x00', b'\x10', b'\x4A', b'\x46', b'\x49', b'\x46', b'\x00',
     b'\x01', b'\x01', b'\x00', b'\x00', b'\x01', b'\x00', b'\x01', b'\x00', b'\x00',
   ]
   let combined : Array[Byte] = [b'\xFF', b'\xD8']
@@ -447,9 +441,7 @@ test "read_exif: empty Make/Model strings" {
   let jpeg = build_exif_be_jpeg("", "", 1, "")
   let result = read_exif_from_bytes(jpeg)
   match result {
-    Some(info) => {
-      assert_eq(info.orientation, 1)
-    }
+    Some(info) => assert_eq(info.orientation, 1)
     None => assert_true(false)
   }
 }

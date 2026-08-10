@@ -6,7 +6,13 @@ import {
 }
 
 // Values
+pub fn ahash(@types.Image) -> Array[Int]
+
+pub fn compare_hist(Array[Int], Array[Int], HistCompareMethod) -> Float
+
 pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
+
+pub fn dhash(@types.Image) -> Array[Int]
 
 pub fn draw_corners(@types.Image, Array[CornerPoint], color? : Array[Byte], radius? : Int) -> @types.Image raise @types.LoadError
 
@@ -20,11 +26,15 @@ pub fn glcm_features(Array[Array[Int]]) -> GlcmFeatures
 
 pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[GlcmFeatures] raise @types.LoadError
 
+pub fn hamming_distance(Array[Int], Array[Int]) -> Int
+
 pub fn harris_corners(@types.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[CornerPoint] raise @types.LoadError
 
 pub fn histogram(@types.Image) -> Array[Int]
 
 pub fn histogram_equalize(@types.Image) -> @types.Image
+
+pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
 
 pub fn histogram_normalize(@types.Image) -> @types.Image
 
@@ -45,6 +55,8 @@ pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
 pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn mse(@types.Image, @types.Image) -> Double
+
+pub fn phash(@types.Image) -> Array[Int]
 
 pub fn psnr(@types.Image, @types.Image) -> Double
 
@@ -67,6 +79,12 @@ pub struct GlcmFeatures {
   entropy : Float
   asm_value : Float
   dissimilarity : Float
+}
+
+pub(all) enum HistCompareMethod {
+  Correlation
+  ChiSquare
+  Bhattacharyya
 }
 
 pub struct IntegralImage {

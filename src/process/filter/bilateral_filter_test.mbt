@@ -121,7 +121,12 @@ test "bilateral_filter: RGBA alpha 不变" {
   for i in 0..<n {
     data[i * 4 + 3] = (i % 256).to_byte()
   }
-  let img = @types.Image::{ width: 8, height: 8, channels: 4, data: Bytes::from_array(data) }
+  let img = @types.Image::{
+    width: 8,
+    height: 8,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
   let result = bilateral_filter(img, 2, 2.0F, 30.0F)
   // alpha 通道应保持不变
   for i in 0..<n {

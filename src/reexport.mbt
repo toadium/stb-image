@@ -76,6 +76,9 @@ pub type SegmentLabelImage = @color.SegmentLabelImage
 pub type SegmentRegion = @color.SegmentRegion
 
 ///|
+pub type Colormap = @color.Colormap
+
+///|
 pub type GlcmFeatures = @feature.GlcmFeatures
 
 ///|
@@ -309,6 +312,66 @@ pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
 pub let draw_copy : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_copy
 
 ///|
+pub fn draw_line(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Byte],
+  thickness? : Int = 1,
+) -> @types.Image {
+  @transform.draw_line(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
+}
+
+///|
+pub fn draw_rectangle(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_rectangle(
+    arg0,
+    arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    thickness~,
+    fill~,
+  )
+}
+
+///|
+pub fn draw_circle(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_circle(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
+}
+
+///|
+pub fn draw_polygon(
+  arg0 : @types.Image,
+  arg1 : Array[(Int, Int)],
+  arg2 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_polygon(arg0, arg1, arg2, thickness~, fill~)
+}
+
+///|
 pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_over
 
 ///|
@@ -449,6 +512,9 @@ pub fn gabor_kernel(
 pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image = @filter.gaussian_blur
 
 ///|
+pub let median_blur : (@types.Image, Int) -> @types.Image = @filter.median_blur
+
+///|
 pub let haar_inverse_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_inverse_transform_1d
 
 ///|
@@ -483,6 +549,27 @@ pub let histogram_equalize : (@types.Image) -> @types.Image = @feature.histogram
 
 ///|
 pub let histogram_normalize : (@types.Image) -> @types.Image = @feature.histogram_normalize
+
+///|
+pub let ahash : (@types.Image) -> Array[Int] = @feature.ahash
+
+///|
+pub let dhash : (@types.Image) -> Array[Int] = @feature.dhash
+
+///|
+pub let phash : (@types.Image) -> Array[Int] = @feature.phash
+
+///|
+pub let hamming_distance : (Array[Int], Array[Int]) -> Int = @feature.hamming_distance
+
+///|
+pub type HistCompareMethod = @feature.HistCompareMethod
+
+///|
+pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> Float = @feature.compare_hist
+
+///|
+pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image = @feature.histogram_matching
 
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
@@ -567,6 +654,39 @@ pub let median_cut : (@types.Image, Int) -> @types.Image = @segment.median_cut
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
 
 ///|
+pub let morph_gradient : (@types.Image) -> @types.Image = @segment.morph_gradient
+
+///|
+pub let morph_tophat : (@types.Image) -> @types.Image = @segment.morph_tophat
+
+///|
+pub let morph_blackhat : (@types.Image) -> @types.Image = @segment.morph_blackhat
+
+///|
+pub type StructuringElement = @segment.StructuringElement
+
+///|
+pub let se_rect : (Int, Int) -> @segment.StructuringElement = @segment.se_rect
+
+///|
+pub let se_cross : (Int) -> @segment.StructuringElement = @segment.se_cross
+
+///|
+pub let se_ellipse : (Int) -> @segment.StructuringElement = @segment.se_ellipse
+
+///|
+pub let erode_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.erode_custom
+
+///|
+pub let dilate_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.dilate_custom
+
+///|
+pub let morph_open_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_open_custom
+
+///|
+pub let morph_close_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_close_custom
+
+///|
 pub let morph_open : (@types.Image) -> @types.Image = @segment.morph_open
 
 ///|
@@ -598,6 +718,33 @@ pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hs
 
 ///|
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv
+
+///|
+pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) = @color.rgb_to_ycbcr
+
+///|
+pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) = @color.ycbcr_to_rgb
+
+///|
+pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz
+
+///|
+pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.xyz_to_rgb
+
+///|
+pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_lab
+
+///|
+pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rgb
+
+///|
+pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk
+
+///|
+pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb
+
+///|
+pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image = @color.apply_colormap
 
 ///|
 pub let rotate : (@types.Image, Float) -> @types.Image = @transform.rotate

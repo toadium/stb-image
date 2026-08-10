@@ -29,7 +29,13 @@ pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
+pub fn ahash(@types.Image) -> Array[Int]
+
+pub fn apply_colormap(@types.Image, @color.Colormap) -> @types.Image
+
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn bench_run() -> Unit
 
 pub fn bilateral_filter(@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError
 
@@ -71,6 +77,10 @@ pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> 
 
 pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
+pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int)
+
+pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float
+
 pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
 pub fn compute_stats(@types.Image) -> @util.ImageStats
@@ -99,11 +109,17 @@ pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @
 
 pub fn detect_format(Bytes) -> @types.ImageFormat
 
+pub fn dhash(@types.Image) -> Array[Int]
+
 pub fn dilate(@types.Image) -> @types.Image
+
+pub fn dilate_custom(@types.Image, @segment.StructuringElement) -> @types.Image
 
 pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
 pub fn distance_transform_visualize(Array[Float], Int, Int) -> @types.Image
+
+pub fn draw_circle(@types.Image, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
 pub fn draw_contours(@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError
 
@@ -111,7 +127,13 @@ pub fn draw_copy(@types.Image, @types.Image, Int, Int) -> @types.Image raise @ty
 
 pub fn draw_corners(@types.Image, Array[@feature.CornerPoint], color? : Array[Byte], radius? : Int) -> @types.Image raise @types.LoadError
 
+pub fn draw_line(@types.Image, Int, Int, Int, Int, Array[Byte], thickness? : Int) -> @types.Image
+
 pub fn draw_over(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn draw_polygon(@types.Image, Array[(Int, Int)], Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
+
+pub fn draw_rectangle(@types.Image, Int, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
 pub fn edge_detect_laplacian(@types.Image) -> @types.Image
 
@@ -132,6 +154,8 @@ pub fn encode_ppm(@types.Image) -> Bytes
 pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn erode(@types.Image) -> @types.Image
+
+pub fn erode_custom(@types.Image, @segment.StructuringElement) -> @types.Image
 
 pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -187,6 +211,8 @@ pub fn haar_transform_1d(Array[Float]) -> Array[Float]
 
 pub fn haar_transform_2d(@types.Image, levels? : Int) -> @frequency.HaarWaveletResult raise @types.LoadError
 
+pub fn hamming_distance(Array[Int], Array[Int]) -> Int
+
 pub fn harris_corners(@types.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
 pub fn hdr_to_ldr_gamma(Float) -> Unit
@@ -196,6 +222,8 @@ pub fn hdr_to_ldr_scale(Float) -> Unit
 pub fn histogram(@types.Image) -> Array[Int]
 
 pub fn histogram_equalize(@types.Image) -> @types.Image
+
+pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
 
 pub fn histogram_normalize(@types.Image) -> @types.Image
 
@@ -237,6 +265,8 @@ pub fn k_means_quantize(@types.Image, Int, Int) -> @types.Image raise @types.Loa
 
 pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
 
+pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
 pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
@@ -253,11 +283,23 @@ pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @types.ImageF raise @typ
 
 pub fn mean_value(@types.Image) -> Float
 
+pub fn median_blur(@types.Image, Int) -> @types.Image
+
 pub fn median_cut(@types.Image, Int) -> @types.Image
+
+pub fn morph_blackhat(@types.Image) -> @types.Image
 
 pub fn morph_close(@types.Image) -> @types.Image
 
+pub fn morph_close_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn morph_gradient(@types.Image) -> @types.Image
+
 pub fn morph_open(@types.Image) -> @types.Image
+
+pub fn morph_open_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn morph_tophat(@types.Image) -> @types.Image
 
 pub fn mse(@types.Image, @types.Image) -> Double
 
@@ -270,6 +312,8 @@ pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int
 pub fn nlm_denoise_fast(@types.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @types.Image raise @types.LoadError
 
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn phash(@types.Image) -> Array[Int]
 
 pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -297,9 +341,17 @@ pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image ra
 
 pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
+pub fn rgb_to_cmyk(Int, Int, Int) -> (Int, Int, Int, Int)
+
 pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_lab(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_xyz(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_ycbcr(Int, Int, Int) -> (Int, Int, Int)
 
 pub fn rotate(@types.Image, Float) -> @types.Image
 
@@ -308,6 +360,12 @@ pub fn rotate_180(@types.Image) -> @types.Image
 pub fn rotate_270(@types.Image) -> @types.Image
 
 pub fn rotate_90(@types.Image) -> @types.Image
+
+pub fn se_cross(Int) -> @segment.StructuringElement
+
+pub fn se_ellipse(Int) -> @segment.StructuringElement
+
+pub fn se_rect(Int, Int) -> @segment.StructuringElement
 
 pub fn segment_to_color(@color.SegmentLabelImage) -> @types.Image
 
@@ -361,11 +419,17 @@ pub fn write_png_to_bytes(@types.Image) -> Bytes
 
 pub fn write_tga_to_bytes(@types.Image) -> Bytes
 
+pub fn xyz_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn ycbcr_to_rgb(Int, Int, Int) -> (Int, Int, Int)
+
 // Errors
 
 // Types and methods
 
 // Type aliases
+pub using @color {type Colormap}
+
 pub using @frequency {type Complex}
 
 pub using @segment {type ConnectedComponent}
@@ -389,6 +453,8 @@ pub using @types {type GifAnimation}
 pub using @feature {type GlcmFeatures}
 
 pub using @frequency {type HaarWaveletResult}
+
+pub using @feature {type HistCompareMethod}
 
 pub using @edge {type HoughLine}
 
@@ -419,6 +485,8 @@ pub using @types {type ResizeFilter}
 pub using @color {type SegmentLabelImage}
 
 pub using @color {type SegmentRegion}
+
+pub using @segment {type StructuringElement}
 
 // Traits
 
