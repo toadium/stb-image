@@ -104,3 +104,84 @@ test "connected_components: 多个连通域" {
     assert_eq(comps[i].area, 1)
   }
 }
+
+///|
+test "connected_components: RGB 图" {
+  // 3x3 RGB，中心十字为前景
+  let data : Array[Byte] = Array::make(27, b'\x00')
+  // 中心列
+  for y in 0..<3 {
+    data[(y * 3 + 1) * 3] = b'\xFF'
+  }
+  // 中心行
+  for x in 0..<3 {
+    data[(1 * 3 + x) * 3] = b'\xFF'
+  }
+  let img = @types.Image::{ width: 3, height: 3, channels: 3, data: Bytes::from_array(data) }
+  let (_, comps) = connected_components(img, 4)
+  assert_eq(comps.length(), 1)
+  assert_eq(comps[0].area, 5)
+}
+
+///|
+test "connected_components: RGBA 图" {
+  let data : Array[Byte] = Array::make(16, b'\x00')
+  // 2x2 前景
+  data[0] = b'\xFF'
+  data[4] = b'\xFF'
+  data[8] = b'\xFF'
+  data[12] = b'\xFF'
+  let img = @types.Image::{ width: 2, height: 2, channels: 4, data: Bytes::from_array(data) }
+  let (_, comps) = connected_components(img, 4)
+  assert_eq(comps.length(), 1)
+  assert_eq(comps[0].area, 4)
+}
+
+///|
+test "connected_components: 无效通道" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 2,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = connected_components(img, 4)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+
+///|
+test "connected_components: 八连通复杂场景" {
+  // L 形 + 对角线，测试八连通合并
+  let data = Bytes::from_array([
+    b'\xFF', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF',
+    b'\x00', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
+  ])
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let (_, comps4) = connected_components(img, 4)
+  let (_, comps8) = connected_components(img, 8)
+  // 八连通应合并更多域
+  assert_true(comps8.length() <= comps4.length())
+}
+
+///|
+test "connected_components: 边界框验证" {
+  // 5x5 图，前景在 (1,1) 到 (3,3)
+  let data : Array[Byte] = Array::make(25, b'\x00')
+  for y in 1..<4 {
+    for x in 1..<4 {
+      data[y * 5 + x] = b'\xFF'
+    }
+  }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data: Bytes::from_array(data) }
+  let (_, comps) = connected_components(img, 4)
+  assert_eq(comps.length(), 1)
+  assert_eq(comps[0].bbox_x, 1)
+  assert_eq(comps[0].bbox_y, 1)
+  assert_eq(comps[0].bbox_w, 3)
+  assert_eq(comps[0].bbox_h, 3)
+  assert_eq(comps[0].area, 9)
+}

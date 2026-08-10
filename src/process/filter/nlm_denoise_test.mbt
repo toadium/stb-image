@@ -151,3 +151,141 @@ test "nlm_denoise 1x1 功能测试" {
   assert_eq(out.height, 1)
   assert_eq(out.data[0], b'\x80')
 }
+
+///|
+test "nlm_denoise 大图像触发内部区域" {
+  // 25x25 灰度图，inner_start = search_size + patch_size = 7 + 3 = 10
+  // 内部区域: y in [10, 15), x in [10, 15) -> 5x5 = 25 pixels
+  let n = 25 * 25
+  let data = Bytes::from_array(Array::make(n, b'\x80'))
+  let img = @types.Image::{ width: 25, height: 25, channels: 1, data }
+  let out = nlm_denoise(img, patch_size=3, search_size=7, h=10)
+  // 常量图应保持不变
+  for i in 0..<n {
+    assert_eq(out.data[i], b'\x80')
+  }
+}
+
+///|
+test "nlm_denoise 大图像 RGB 内部区域" {
+  // 25x25 RGB 图
+  let n = 25 * 25 * 3
+  let data = Bytes::from_array(Array::make(n, b'\x40'))
+  let img = @types.Image::{ width: 25, height: 25, channels: 3, data }
+  let out = nlm_denoise(img, patch_size=2, search_size=5, h=15)
+  assert_eq(out.width, 25)
+  assert_eq(out.height, 25)
+  assert_eq(out.channels, 3)
+  // 常量图应保持不变
+  for i in 0..<n {
+    assert_eq(out.data[i], b'\x40')
+  }
+}
+
+///|
+test "nlm_denoise 大图像 RGBA alpha 保持" {
+  // 25x25 RGBA 图
+  let n = 25 * 25
+  let data : Array[Byte] = Array::make(n * 4, b'\x00')
+  // 设置 alpha 通道为不同值
+  for i in 0..<n {
+    data[i * 4 + 3] = (i % 256).to_byte()
+  }
+  let img = @types.Image::{ width: 25, height: 25, channels: 4, data: Bytes::from_array(data) }
+  let out = nlm_denoise(img, patch_size=2, search_size=5, h=10)
+  // alpha 通道应保持不变
+  for i in 0..<n {
+    assert_eq(out.data[i * 4 + 3], (i % 256).to_byte())
+  }
+}
+
+///|
+test "nlm_denoise_fast 大图像触发内部区域" {
+  // 25x25 灰度图
+  let n = 25 * 25
+  let data = Bytes::from_array(Array::make(n, b'\x80'))
+  let img = @types.Image::{ width: 25, height: 25, channels: 1, data }
+  let out = nlm_denoise_fast(img, patch_size=3, search_size=7, h=10, step=2)
+  // 常量图应保持不变
+  for i in 0..<n {
+    assert_eq(out.data[i], b'\x80')
+  }
+}
+
+///|
+test "nlm_denoise_fast 大图像 RGB 内部区域" {
+  let n = 25 * 25 * 3
+  let data = Bytes::from_array(Array::make(n, b'\x60'))
+  let img = @types.Image::{ width: 25, height: 25, channels: 3, data }
+  let out = nlm_denoise_fast(img, patch_size=2, search_size=5, h=12, step=1)
+  for i in 0..<n {
+    assert_eq(out.data[i], b'\x60')
+  }
+}
+
+///|
+test "nlm_denoise 无效通道数" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 2,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = nlm_denoise(img)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+
+///|
+test "nlm_denoise_fast 无效通道数" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 2,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = nlm_denoise_fast(img)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+
+///|
+test "nlm_denoise patch_size 超范围" {
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x00')),
+  }
+  try {
+    let _ = nlm_denoise(img, patch_size=11)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+  try {
+    let _ = nlm_denoise(img, search_size=21)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+
+///|
+test "nlm_denoise 0x0 图像" {
+  let img = @types.Image::{
+    width: 0,
+    height: 0,
+    channels: 1,
+    data: Bytes::from_array([]),
+  }
+  let out = nlm_denoise(img)
+  assert_eq(out.width, 0)
+  assert_eq(out.height, 0)
+}

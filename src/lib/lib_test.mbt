@@ -427,3 +427,61 @@ test "encode_gif_auto 委托验证" {
   // 与 @codec.encode_gif_pure 结果一致
   assert_eq(out, @codec.encode_gif_pure(img))
 }
+
+///|
+test "detect_format: HDR RADIANCE" {
+  let data : Array[Byte] = [
+    b'\x23', b'\x3F', b'\x52', b'\x41', b'\x44', b'\x49', b'\x41', b'\x4E', b'\x43',
+    b'\x45',
+  ]
+  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Hdr)
+}
+
+///|
+test "load_from_bytes_auto: JPEG 分派" {
+  // 构造 2x2 RGB 图像，encode 为 JPEG，然后通过 load_from_bytes_auto 解码
+  let img = lb_make_rgb_image(2, 2, [
+    (128, 128, 128),
+    (64, 64, 64),
+    (192, 192, 192),
+    (32, 32, 32),
+  ])
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = load_from_bytes_auto(jpeg_bytes)
+  assert_eq(restored.width, 2)
+  assert_eq(restored.height, 2)
+  assert_eq(restored.channels, 3)
+}
+
+///|
+test "load_from_bytes_auto: HDR raises (needs decode_hdr_pure)" {
+  let data : Array[Byte] = [
+    b'\x23', b'\x3F', b'\x52', b'\x41', b'\x44', b'\x49', b'\x41', b'\x4E', b'\x43',
+    b'\x45', b'\x0A',
+  ]
+  try {
+    let _ = load_from_bytes_auto(lb_to_bytes(data))
+    fail("expected error")
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+}
+
+///|
+test "load_from_bytes_auto: TGA via explicit decode" {
+  // 构造 2x2 RGB 图像，encode 为 TGA，然后通过 load_from_bytes_auto 解码
+  // TGA 无固定 magic，detect_format 返回 Unknown，所以需要显式调用 decode_tga_pure
+  let img = lb_make_rgb_image(2, 2, [
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 255),
+  ])
+  let tga_bytes = @codec.encode_tga_pure(img)
+  let restored = @codec.decode_tga_pure(tga_bytes)
+  assert_eq(restored.width, 2)
+  assert_eq(restored.height, 2)
+  assert_eq(restored.channels, 3)
+  let _ = img
+}

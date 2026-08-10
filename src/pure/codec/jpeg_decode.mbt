@@ -281,15 +281,15 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     pos += 2
     match marker {
       0xC0 => {
-        // SOF0
-        if pos + 8 > len {
+        // SOF0: length(2) + precision(1) + height(2) + width(2) + num_components(1)
+        if pos + 9 > len {
           raise @types.LoadError::DecodeFailed("JPEG SOF0 过短")
         }
-        let _precision = data[pos + 1].to_int()
-        height = data[pos + 2].to_int() * 256 + data[pos + 3].to_int()
-        width = data[pos + 4].to_int() * 256 + data[pos + 5].to_int()
-        num_components = data[pos + 6].to_int()
-        pos += 7
+        let _precision = data[pos + 2].to_int()
+        height = data[pos + 3].to_int() * 256 + data[pos + 4].to_int()
+        width = data[pos + 5].to_int() * 256 + data[pos + 6].to_int()
+        num_components = data[pos + 7].to_int()
+        pos += 8
         for i in 0..<num_components {
           if pos + 3 > len {
             raise @types.LoadError::DecodeFailed("JPEG SOF0 component 过短")

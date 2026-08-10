@@ -55,17 +55,18 @@ fn parse_hdr_header(data : Bytes) -> (Int, Int, Int)? {
     pos += 1
   }
   pos += 1
-  // 跳过注释行和格式行
+  // 跳过 header 行（非尺寸行），尺寸行以 '-' 或 '+' 开头
   while pos < len {
-    if data[pos].to_int() == 0x23 {
-      // 注释行或格式行，跳过到行尾
-      while pos < len && data[pos].to_int() != 0x0A {
-        pos += 1
-      }
-      pos += 1
-    } else {
+    let b = data[pos].to_int()
+    if b == 0x2D || b == 0x2B {
+      // '-' 或 '+'，尺寸行开始
       break
     }
+    // 跳过当前行到行尾
+    while pos < len && data[pos].to_int() != 0x0A {
+      pos += 1
+    }
+    pos += 1
   }
   // 解析尺寸行: "-Y HEIGHT +X WIDTH\n" 或 "+X WIDTH -Y HEIGHT\n"
   let mut sign = 1

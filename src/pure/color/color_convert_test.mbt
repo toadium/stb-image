@@ -227,3 +227,140 @@ test "unpremultiply_alpha_pure: channels!=4 raises" {
   assert_true(raised)
   let _ = img
 }
+
+///|
+test "convert_channels_pure: same channels returns self" {
+  let img = cc_make_image(2, 2, 3, [
+    b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
+    b'\x00', b'\xFF', b'\x00',
+  ])
+  let out = convert_channels_pure(img, 3)
+  assert_eq(out.channels, 3)
+  assert_eq(out.data, img.data)
+}
+
+///|
+test "convert_channels_pure: RGB to gray (req=1)" {
+  let img = cc_make_image(2, 2, 3, [
+    b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
+    b'\x00', b'\xFF', b'\x00',
+  ])
+  let out = convert_channels_pure(img, 1)
+  assert_eq(out.channels, 1)
+  assert_eq(out.data[0].to_int(), 153)
+}
+
+///|
+test "convert_channels_pure: RGB to gray+alpha (req=2)" {
+  let img = cc_make_image(1, 1, 3, [b'\x64', b'\xC8', b'\x32'])
+  let out = convert_channels_pure(img, 2)
+  assert_eq(out.channels, 2)
+  // gray = (100*299+200*587+50*114)/1000 = 153
+  assert_eq(out.data[0].to_int(), 153)
+  // alpha = 255 (no source alpha)
+  assert_eq(out.data[1].to_int(), 255)
+}
+
+///|
+test "convert_channels_pure: RGBA to gray+alpha (req=2)" {
+  let img = cc_make_image(1, 1, 4, [b'\x64', b'\xC8', b'\x32', b'\x80'])
+  let out = convert_channels_pure(img, 2)
+  assert_eq(out.channels, 2)
+  assert_eq(out.data[0].to_int(), 153)
+  // alpha from source
+  assert_eq(out.data[1].to_int(), 128)
+}
+
+///|
+test "convert_channels_pure: gray to gray+alpha (req=2)" {
+  let img = cc_make_image(1, 1, 1, [b'\x80'])
+  let out = convert_channels_pure(img, 2)
+  assert_eq(out.channels, 2)
+  assert_eq(out.data[0].to_int(), 128)
+  assert_eq(out.data[1].to_int(), 255)
+}
+
+///|
+test "convert_channels_pure: gray+alpha to gray+alpha (req=2)" {
+  let img = cc_make_image(1, 1, 2, [b'\x80', b'\x40'])
+  let out = convert_channels_pure(img, 2)
+  assert_eq(out.channels, 2)
+  assert_eq(out.data[0].to_int(), 128)
+  assert_eq(out.data[1].to_int(), 64)
+}
+
+///|
+test "convert_channels_pure: gray to RGB (req=3)" {
+  let img = cc_make_image(2, 1, 1, [b'\x80', b'\x40'])
+  let out = convert_channels_pure(img, 3)
+  assert_eq(out.channels, 3)
+  // gray -> R=G=B
+  assert_eq(out.data[0].to_int(), 128)
+  assert_eq(out.data[1].to_int(), 128)
+  assert_eq(out.data[2].to_int(), 128)
+  assert_eq(out.data[3].to_int(), 64)
+  assert_eq(out.data[4].to_int(), 64)
+  assert_eq(out.data[5].to_int(), 64)
+}
+
+///|
+test "convert_channels_pure: RGBA to RGB (req=3)" {
+  let img = cc_make_image(1, 1, 4, [b'\x64', b'\xC8', b'\x32', b'\xFF'])
+  let out = convert_channels_pure(img, 3)
+  assert_eq(out.channels, 3)
+  assert_eq(out.data[0].to_int(), 100)
+  assert_eq(out.data[1].to_int(), 200)
+  assert_eq(out.data[2].to_int(), 50)
+}
+
+///|
+test "convert_channels_pure: gray to RGBA (req=4)" {
+  let img = cc_make_image(1, 1, 1, [b'\x80'])
+  let out = convert_channels_pure(img, 4)
+  assert_eq(out.channels, 4)
+  assert_eq(out.data[0].to_int(), 128)
+  assert_eq(out.data[1].to_int(), 0)
+  assert_eq(out.data[2].to_int(), 0)
+  assert_eq(out.data[3].to_int(), 255)
+}
+
+///|
+test "convert_channels_pure: RGB to RGBA (req=4)" {
+  let img = cc_make_image(1, 1, 3, [b'\x64', b'\xC8', b'\x32'])
+  let out = convert_channels_pure(img, 4)
+  assert_eq(out.channels, 4)
+  assert_eq(out.data[0].to_int(), 100)
+  assert_eq(out.data[1].to_int(), 200)
+  assert_eq(out.data[2].to_int(), 50)
+  assert_eq(out.data[3].to_int(), 255)
+}
+
+///|
+test "convert_channels_pure: invalid req_channels" {
+  let img = cc_make_image(1, 1, 1, [b'\x80'])
+  try {
+    let _ = convert_channels_pure(img, 5)
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+
+///|
+test "to_rgb_pure: channels < 3 returns self" {
+  let img = cc_make_image(1, 1, 1, [b'\x80'])
+  let out = to_rgb_pure(img)
+  assert_eq(out.channels, 1)
+  assert_eq(out.data, img.data)
+}
+
+///|
+test "to_rgba_pure: gray to RGBA" {
+  let img = cc_make_image(1, 1, 1, [b'\x80'])
+  let out = to_rgba_pure(img)
+  assert_eq(out.channels, 4)
+  assert_eq(out.data[0].to_int(), 128)
+  assert_eq(out.data[1].to_int(), 0)
+  assert_eq(out.data[2].to_int(), 0)
+  assert_eq(out.data[3].to_int(), 255)
+}
