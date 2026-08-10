@@ -10,6 +10,9 @@ pub type ExifInfo = @meta.ExifInfo
 pub type GifAnimation = @types.GifAnimation
 
 ///|
+pub type PngAnimation = @codec.PngAnimation
+
+///|
 pub type Image = @types.Image
 
 ///|
@@ -1004,6 +1007,39 @@ pub let encode_ppm : (@types.Image) -> Bytes = @format.encode_ppm
 
 ///|
 pub let encode_qoi : (@types.Image) -> Bytes raise @types.LoadError = @format.encode_qoi
+
+///|
+pub let decode_ico : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_ico_pure
+
+///|
+pub let encode_ico : (@types.Image) -> Bytes = @codec.encode_ico_pure
+
+///|
+pub let encode_ico_sizes : (Array[@types.Image]) -> Bytes = @codec.encode_ico_multi_pure
+
+///|
+pub let decode_cur : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_cur_pure
+
+///|
+pub let encode_cur : (@types.Image) -> Bytes = @codec.encode_cur_pure
+
+///|
+pub let decode_icns : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_icns_pure
+
+///|
+pub let encode_icns : (@types.Image) -> Bytes = @codec.encode_icns_pure
+
+///|
+pub let decode_tiff : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_tiff_pure
+
+///|
+pub let encode_tiff : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_tiff_pure
+
+///|
+pub let decode_apng : (Bytes) -> @codec.PngAnimation raise @types.LoadError = @codec.decode_apng_pure
+
+///|
+pub let encode_apng : (@codec.PngAnimation) -> Bytes raise @types.LoadError = @codec.encode_apng_pure
 
 // From meta/
 

@@ -9,6 +9,7 @@ import {
   "Toadium/image/src/process/frequency",
   "Toadium/image/src/process/segment",
   "Toadium/image/src/process/transform",
+  "Toadium/image/src/pure/codec",
   "Toadium/image/src/types",
   "Toadium/image/src/util",
 }
@@ -110,7 +111,17 @@ pub fn dct_2d(@types.Image) -> Array[Array[Double]]
 
 pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
+pub fn decode_apng(Bytes) -> @codec.PngAnimation raise @types.LoadError
+
+pub fn decode_cur(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_icns(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_ico(Bytes) -> @types.Image raise @types.LoadError
+
 pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_tiff(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
@@ -148,9 +159,19 @@ pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
 pub fn edge_detect_sobel(@types.Image) -> @types.Image
 
+pub fn encode_apng(@codec.PngAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_cur(@types.Image) -> Bytes
+
 pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_icns(@types.Image) -> Bytes
+
+pub fn encode_ico(@types.Image) -> Bytes
+
+pub fn encode_ico_sizes(Array[@types.Image]) -> Bytes
 
 pub fn encode_pgm(@types.Image) -> Bytes
 
@@ -159,6 +180,8 @@ pub fn encode_pnm(@types.Image) -> Bytes
 pub fn encode_ppm(@types.Image) -> Bytes
 
 pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tiff(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn erode(@types.Image) -> @types.Image
 
@@ -516,6 +539,8 @@ pub using @types {type LoadError}
 pub using @edge {type Moments}
 
 pub using @transform {type PerspectiveMatrix}
+
+pub using @codec {type PngAnimation}
 
 pub using @meta {type PngTextChunk}
 
