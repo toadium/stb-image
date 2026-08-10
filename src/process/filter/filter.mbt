@@ -363,3 +363,80 @@ pub fn edge_detect_sobel(img : @types.Image) -> @types.Image {
     data: Bytes::from_array(out),
   }
 }
+
+///|
+/// 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
+/// 对每个像素，取 ksize×ksize 邻域的中值。仅滤波颜色通道，alpha 不变。
+pub fn median_blur(img : @types.Image, ksize : Int) -> @types.Image {
+  if ksize <= 1 {
+    return img
+  }
+  let radius = ksize / 2
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let n = w * h
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  let buf : Array[Int] = Array::make(ksize * ksize, 0)
+  for y in 0..<h {
+    for x in 0..<w {
+      for c in 0..<color_ch {
+        let mut idx = 0
+        for dy in -radius..<=radius {
+          for dx in -radius..<=radius {
+            let sx = clamp_coord(x + dx, w)
+            let sy = clamp_coord(y + dy, h)
+            buf[idx] = img.data[(sy * w + sx) * ch + c].to_int()
+            idx += 1
+          }
+        }
+        // 部分排序找中值（不需要完整排序）
+        let mid = ksize * ksize / 2
+        let mut lo = 0
+        let mut hi = ksize * ksize - 1
+        while lo < hi {
+          let pivot = buf[(lo + hi) / 2]
+          let mut i = lo
+          let mut j = hi
+          while i <= j {
+            while buf[i] < pivot {
+              i += 1
+            }
+            while buf[j] > pivot {
+              j -= 1
+            }
+            if i <= j {
+              let tmp = buf[i]
+              buf[i] = buf[j]
+              buf[j] = tmp
+              i += 1
+              j -= 1
+            }
+          }
+          if mid <= j {
+            hi = j
+          } else if mid >= i {
+            lo = i
+          } else {
+            lo = mid
+            hi = mid
+          }
+        }
+        out[(y * w + x) * ch + c] = buf[mid].to_byte()
+      }
+    }
+  }
+  // 复制 alpha
+  if ch == 4 {
+    for i in 0..<n {
+      out[i * ch + 3] = img.data[i * ch + 3]
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}

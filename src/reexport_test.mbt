@@ -189,7 +189,12 @@ test "reexport: resize with filter and edge" {
 
 ///|
 test "reexport: write_png_to_bytes" {
-  let img = re_make_rgb(2, 2, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)])
+  let img = re_make_rgb(2, 2, [
+    (10, 20, 30),
+    (40, 50, 60),
+    (70, 80, 90),
+    (100, 110, 120),
+  ])
   let png_bytes = write_png_to_bytes(img)
   // PNG signature
   assert_eq(png_bytes[0].to_int(), 0x89)
@@ -211,7 +216,12 @@ test "reexport: write_hdr_to_bytes" {
   for i in 0..<4 {
     fdata.push(bb[i])
   }
-  let imgf = @types.ImageF::{ width: 1, height: 1, channels: 3, data: Bytes::from_array(fdata) }
+  let imgf = @types.ImageF::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array(fdata),
+  }
   let hdr_bytes = write_hdr_to_bytes(imgf)
   // HDR magic "#?RADIANCE"
   assert_eq(hdr_bytes[0].to_int(), 0x23)
@@ -221,7 +231,9 @@ test "reexport: write_hdr_to_bytes" {
 ///|
 test "reexport: load_gif_from_bytes" {
   // 构造最小 GIF 动画
-  let gif_bytes = @codec.encode_gif_pure(re_make_rgb(2, 2, [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255)]))
+  let gif_bytes = @codec.encode_gif_pure(
+    re_make_rgb(2, 2, [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255)]),
+  )
   let anim = load_gif_from_bytes(gif_bytes)
   assert_true(anim.frames.length() >= 1)
 }
@@ -229,10 +241,22 @@ test "reexport: load_gif_from_bytes" {
 ///|
 test "reexport: canny_edge" {
   let img = re_make_rgb(4, 4, [
-    (0, 0, 0), (255, 255, 255), (0, 0, 0), (255, 255, 255),
-    (255, 255, 255), (0, 0, 0), (255, 255, 255), (0, 0, 0),
-    (0, 0, 0), (255, 255, 255), (0, 0, 0), (255, 255, 255),
-    (255, 255, 255), (0, 0, 0), (255, 255, 255), (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
   ])
   let edges = canny_edge(img)
   assert_eq(edges.width, 4)
@@ -279,10 +303,22 @@ test "reexport: nlm_denoise_fast" {
 ///|
 test "reexport: harris_corner" {
   let img = re_make_rgb(4, 4, [
-    (0, 0, 0), (255, 255, 255), (0, 0, 0), (255, 255, 255),
-    (255, 255, 255), (0, 0, 0), (255, 255, 255), (0, 0, 0),
-    (0, 0, 0), (255, 255, 255), (0, 0, 0), (255, 255, 255),
-    (255, 255, 255), (0, 0, 0), (255, 255, 255), (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (255, 255, 255),
+    (0, 0, 0),
   ])
   let _ = harris_corners(img)
   assert_true(true)
@@ -339,10 +375,22 @@ test "reexport: haar_denoise" {
 ///|
 test "reexport: kmeans_segment" {
   let img = re_make_rgb(4, 4, [
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
   ])
   let (labels, regions) = kmeans_segment(img, 2)
   assert_eq(regions.length(), 2)
@@ -352,10 +400,22 @@ test "reexport: kmeans_segment" {
 ///|
 test "reexport: region_growing_segment" {
   let img = re_make_rgb(4, 4, [
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
-    (0, 0, 0), (0, 0, 0), (255, 255, 255), (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
+    (0, 0, 0),
+    (0, 0, 0),
+    (255, 255, 255),
+    (255, 255, 255),
   ])
   let (labels, regions) = region_growing_segment(img, [(0, 0), (0, 2)])
   assert_true(regions.length() >= 1)
@@ -416,7 +476,12 @@ test "reexport: draw_corners" {
 
 ///|
 test "reexport: decode_any with req_channels" {
-  let img = re_make_rgb(2, 2, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)])
+  let img = re_make_rgb(2, 2, [
+    (10, 20, 30),
+    (40, 50, 60),
+    (70, 80, 90),
+    (100, 110, 120),
+  ])
   let bmp_bytes = @codec.encode_bmp_pure(img)
   let restored = decode_any(bmp_bytes, req_channels=Some(3))
   assert_eq(restored.width, 2)

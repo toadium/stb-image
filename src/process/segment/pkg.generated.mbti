@@ -10,11 +10,15 @@ pub fn connected_components(@types.Image, Int) -> (ConnectedComponentLabelImage,
 
 pub fn dilate(@types.Image) -> @types.Image
 
+pub fn dilate_custom(@types.Image, StructuringElement) -> @types.Image
+
 pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
 pub fn distance_transform_visualize(Array[Float], Int, Int) -> @types.Image
 
 pub fn erode(@types.Image) -> @types.Image
+
+pub fn erode_custom(@types.Image, StructuringElement) -> @types.Image
 
 pub fn floyd_steinberg(@types.Image, Int) -> @types.Image
 
@@ -22,11 +26,29 @@ pub fn k_means_quantize(@types.Image, Int, Int) -> @types.Image raise @types.Loa
 
 pub fn median_cut(@types.Image, Int) -> @types.Image
 
+pub fn morph_blackhat(@types.Image) -> @types.Image
+
 pub fn morph_close(@types.Image) -> @types.Image
+
+pub fn morph_close_custom(@types.Image, StructuringElement) -> @types.Image
+
+pub fn morph_gradient(@types.Image) -> @types.Image
 
 pub fn morph_open(@types.Image) -> @types.Image
 
+pub fn morph_open_custom(@types.Image, StructuringElement) -> @types.Image
+
+pub fn morph_tophat(@types.Image) -> @types.Image
+
+pub fn se_cross(Int) -> StructuringElement
+
+pub fn se_ellipse(Int) -> StructuringElement
+
+pub fn se_rect(Int, Int) -> StructuringElement
+
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn slic(@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError
 
 pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
@@ -50,6 +72,12 @@ pub struct ConnectedComponentLabelImage {
   width : Int
   height : Int
   labels : Array[Int]
+}
+
+pub(all) struct StructuringElement {
+  width : Int
+  height : Int
+  data : Array[Bool]
 }
 
 // Type aliases

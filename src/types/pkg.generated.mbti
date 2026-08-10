@@ -77,6 +77,12 @@ pub(all) enum ResizeFilter {
   PointSample
 } derive(Eq, @debug.Debug)
 
+pub(all) struct SuperpixelResult {
+  labels : Array[Int]
+  centers : Array[(Int, Int)]
+  num_labels : Int
+} derive(Eq, @debug.Debug)
+
 // Type aliases
 
 // Traits

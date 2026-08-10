@@ -16,6 +16,8 @@ pub fn edge_detect_sobel(@types.Image) -> @types.Image
 
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
 
+pub fn median_blur(@types.Image, Int) -> @types.Image
+
 pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @types.Image raise @types.LoadError
 
 pub fn nlm_denoise_fast(@types.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @types.Image raise @types.LoadError

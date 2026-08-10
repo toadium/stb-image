@@ -66,9 +66,7 @@ fn build_chunk(chunk_type : Array[Byte], data : Array[Byte]) -> Array[Byte] {
 ///|
 /// 构建 PNG signature
 fn png_signature() -> Array[Byte] {
-  [
-    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A',
-  ]
+  [b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A']
 }
 
 ///|
@@ -76,8 +74,8 @@ fn png_signature() -> Array[Byte] {
 fn ihdr_data() -> Array[Byte] {
   // width=1 (4 BE), height=1 (4 BE), bit_depth=8, color_type=2, comp=0, filter=0, interlace=0
   [
-    b'\x00', b'\x00', b'\x00', b'\x01', b'\x00', b'\x00', b'\x00', b'\x01', b'\x08', b'\x02',
-    b'\x00', b'\x00', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'\x01', b'\x00', b'\x00', b'\x00', b'\x01', b'\x08',
+    b'\x02', b'\x00', b'\x00', b'\x00',
   ]
 }
 

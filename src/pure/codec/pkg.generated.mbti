@@ -3,16 +3,25 @@ package "Toadium/image/src/pure/codec"
 
 import {
   "Toadium/image/src/types",
+  "moonbitlang/core/debug",
 }
 
 // Values
+pub fn decode_apng_pure(Bytes) -> PngAnimation raise @types.LoadError
+
 pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_cur_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_gif_animation_pure(Bytes) -> @types.GifAnimation raise @types.LoadError
 
 pub fn decode_gif_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_hdr_pure(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn decode_icns_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_ico_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_jpeg_pure(Bytes) -> @types.Image raise @types.LoadError
 
@@ -30,11 +39,25 @@ pub fn decode_qoi_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn decode_tiff_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn encode_apng_pure(PngAnimation) -> Bytes raise @types.LoadError
+
 pub fn encode_bmp_pure(@types.Image) -> Bytes
+
+pub fn encode_cur_pure(@types.Image) -> Bytes
+
+pub fn encode_cur_with_hotspot_pure(@types.Image, Int, Int) -> Bytes
 
 pub fn encode_gif_pure(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_hdr_pure(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_icns_pure(@types.Image) -> Bytes
+
+pub fn encode_ico_multi_pure(Array[@types.Image]) -> Bytes
+
+pub fn encode_ico_pure(@types.Image) -> Bytes
 
 pub fn encode_jpeg_pure(@types.Image) -> Bytes raise @types.LoadError
 
@@ -50,9 +73,15 @@ pub fn encode_qoi_pure(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tga_pure(@types.Image) -> Bytes
 
+pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
+
 // Errors
 
 // Types and methods
+pub(all) struct PngAnimation {
+  frames : Array[@types.Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 

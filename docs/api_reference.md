@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v2.0.0 | 196 公开函数 + 27 类型 | 645 测试 × 3 目标 (native/wasm-gc/js)
+> 版本 v3.0.0 | 219 公开函数 + 28 类型 | 1056 测试 × 3 目标 (native/wasm-gc/js)
 
 ## 类型总览
 
@@ -17,6 +17,7 @@
 | `ResizeEdge` | core | `Clamp \| Reflect \| Wrap \| Zero` | 缩放边缘模式 |
 | `ExifInfo` | meta | `make, model, date_time : String; orientation : Int` | EXIF元数据 |
 | `PngTextChunk` | meta | `keyword, text : String` | PNG文本块 |
+| `SuperpixelResult` | core | `labels : Array[Int]; centers : Array[(Int,Int)]; num_labels : Int` | SLIC超像素结果 |
 | `ImageStats` | util | `min, max, mean, std_dev : Float; histogram : Array[Int]` | 图像统计 |
 | `Complex` | process | `re, im : Float` | 复数 |
 | `FFTResult` | process | `width, height : Int; data : Array[Complex]` | FFT结果 |
@@ -496,6 +497,49 @@
 
 ---
 
+## 元数据 — EXIF 写入（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `create_exif_segment` | `(ExifInfo) -> Bytes` | 构造 EXIF APP1 segment |
+| `write_exif_to_bytes` | `(ExifInfo, Bytes) -> Bytes` | 将 EXIF 写入 JPEG 字节流 |
+
+## 处理 — Seam Carving（6个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `seam_carve_resize` | `(Image, Int, Int) -> Image` | 内容感知缩放 |
+| `compute_energy` | `(Image) -> Array[Double]` | 计算 Sobel 能量图 |
+| `find_vertical_seam` | `(Array[Double], Int, Int) -> Array[Int]` | 找垂直最小能量 seam |
+| `remove_vertical_seam` | `(Image, Array[Int]) -> Image` | 移除垂直 seam |
+| `find_horizontal_seam` | `(Array[Double], Int, Int) -> Array[Int]` | 找水平最小能量 seam |
+| `remove_horizontal_seam` | `(Image, Array[Int]) -> Image` | 移除水平 seam |
+
+## 处理 — SLIC 超像素（1个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `slic` | `(Image, Int, Int, Int) -> SuperpixelResult` | SLIC 超像素分割（k, m, max_iters） |
+
+## 处理 — 16-bit/float 泛化（14个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `rotate_90_16` | `(Image16) -> Image16` | 16-bit 旋转 90° |
+| `rotate_90f` | `(ImageF) -> ImageF` | float 旋转 90° |
+| `rotate_180_16` | `(Image16) -> Image16` | 16-bit 旋转 180° |
+| `rotate_180f` | `(ImageF) -> ImageF` | float 旋转 180° |
+| `rotate_270_16` | `(Image16) -> Image16` | 16-bit 旋转 270° |
+| `rotate_270f` | `(ImageF) -> ImageF` | float 旋转 270° |
+| `flip_horizontal_16` | `(Image16) -> Image16` | 16-bit 水平翻转 |
+| `flip_horizontalf` | `(ImageF) -> ImageF` | float 水平翻转 |
+| `adjust_brightness_16` | `(Image16, Int) -> Image16` | 16-bit 亮度调整 |
+| `adjust_brightnessf` | `(ImageF, Float) -> ImageF` | float 亮度调整 |
+| `adjust_contrast_16` | `(Image16, Float) -> Image16` | 16-bit 对比度调整 |
+| `adjust_contrastf` | `(ImageF, Float) -> ImageF` | float 对比度调整 |
+
+---
+
 ## 函数统计
 
 | 分类 | 函数数 | 版本 |
@@ -543,6 +587,10 @@
 | 处理 — 去雾 | 2 | v1.17 |
 | 处理 — 距离变换 | 3 | v1.17 |
 | 处理 — Gabor滤波 | 3 | v1.17 |
+| 元数据 — EXIF写入 | 2 | v3.0 |
+| 处理 — Seam Carving | 6 | v3.0 |
+| 处理 — SLIC超像素 | 1 | v3.0 |
+| 处理 — 16-bit/float泛化 | 14 | v3.0 |
 | 工具 — 像素操作 | 3 | v1.7 |
 | 工具 — 高级像素操作 | 4 | v1.8-v1.9 |
 | 工具 — 图像工具 | 4 | v1.7-v1.8 |
@@ -550,4 +598,4 @@
 | 工具 — 噪声 | 2 | v1.9 |
 | 工具 — 色彩映射 | 2 | v1.8-v1.9 |
 | 工具 — 统计 | 2 | v1.8 |
-| **总计** | **196** | |
+| **总计** | **219** | |

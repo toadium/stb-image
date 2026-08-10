@@ -10,6 +10,9 @@ pub type ExifInfo = @meta.ExifInfo
 pub type GifAnimation = @types.GifAnimation
 
 ///|
+pub type PngAnimation = @codec.PngAnimation
+
+///|
 pub type Image = @types.Image
 
 ///|
@@ -74,6 +77,9 @@ pub type SegmentLabelImage = @color.SegmentLabelImage
 
 ///|
 pub type SegmentRegion = @color.SegmentRegion
+
+///|
+pub type Colormap = @color.Colormap
 
 ///|
 pub type GlcmFeatures = @feature.GlcmFeatures
@@ -210,7 +216,19 @@ pub fn write_tga_to_bytes(img : @types.Image) -> Bytes {
 pub let adjust_brightness : (@types.Image, Int) -> @types.Image = @color.adjust_brightness
 
 ///|
+pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 = @color.adjust_brightness_16
+
+///|
+pub let adjust_brightnessf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightnessf
+
+///|
 pub let adjust_contrast : (@types.Image, Float) -> @types.Image = @color.adjust_contrast
+
+///|
+pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_contrast_16
+
+///|
+pub let adjust_contrastf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrastf
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
@@ -309,6 +327,66 @@ pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
 pub let draw_copy : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_copy
 
 ///|
+pub fn draw_line(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Byte],
+  thickness? : Int = 1,
+) -> @types.Image {
+  @transform.draw_line(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
+}
+
+///|
+pub fn draw_rectangle(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_rectangle(
+    arg0,
+    arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    thickness~,
+    fill~,
+  )
+}
+
+///|
+pub fn draw_circle(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_circle(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
+}
+
+///|
+pub fn draw_polygon(
+  arg0 : @types.Image,
+  arg1 : Array[(Int, Int)],
+  arg2 : Array[Byte],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image {
+  @transform.draw_polygon(arg0, arg1, arg2, thickness~, fill~)
+}
+
+///|
 pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_over
 
 ///|
@@ -354,6 +432,12 @@ pub fn freq_filter_gaussian(
 
 ///|
 pub let flip_horizontal : (@types.Image) -> @types.Image = @transform.flip_horizontal
+
+///|
+pub let flip_horizontal_16 : (@types.Image16) -> @types.Image16 = @transform.flip_horizontal_16
+
+///|
+pub let flip_horizontalf : (@types.ImageF) -> @types.ImageF = @transform.flip_horizontalf
 
 ///|
 pub fn harris_corners(
@@ -449,6 +533,9 @@ pub fn gabor_kernel(
 pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image = @filter.gaussian_blur
 
 ///|
+pub let median_blur : (@types.Image, Int) -> @types.Image = @filter.median_blur
+
+///|
 pub let haar_inverse_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_inverse_transform_1d
 
 ///|
@@ -483,6 +570,59 @@ pub let histogram_equalize : (@types.Image) -> @types.Image = @feature.histogram
 
 ///|
 pub let histogram_normalize : (@types.Image) -> @types.Image = @feature.histogram_normalize
+
+///|
+pub let ahash : (@types.Image) -> Array[Int] = @feature.ahash
+
+///|
+pub let dhash : (@types.Image) -> Array[Int] = @feature.dhash
+
+///|
+pub let phash : (@types.Image) -> Array[Int] = @feature.phash
+
+///|
+pub let hamming_distance : (Array[Int], Array[Int]) -> Int = @feature.hamming_distance
+
+///|
+pub let dct_2d : (@types.Image) -> Array[Array[Double]] = @frequency.dct_2d
+
+///|
+pub let idct_2d : (Array[Array[Double]]) -> @types.Image = @frequency.idct_2d
+
+///|
+pub fn reinhard_tonemap(
+  imgf : @types.ImageF,
+  key? : Float = 0.18F,
+) -> @types.Image {
+  @color.reinhard_tonemap(imgf, key~)
+}
+
+///|
+pub let gamma_tonemap : (@types.ImageF, Float) -> @types.Image = @color.gamma_tonemap
+
+///|
+pub fn good_features_to_track(
+  img : @types.Image,
+  max_corners : Int,
+  quality_level : Float,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.good_features_to_track(
+    img,
+    max_corners,
+    quality_level,
+    min_distance~,
+  )
+}
+
+///|
+pub type HistCompareMethod = @feature.HistCompareMethod
+
+///|
+pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> Float = @feature.compare_hist
+
+///|
+pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image = @feature.histogram_matching
 
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
@@ -567,6 +707,39 @@ pub let median_cut : (@types.Image, Int) -> @types.Image = @segment.median_cut
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
 
 ///|
+pub let morph_gradient : (@types.Image) -> @types.Image = @segment.morph_gradient
+
+///|
+pub let morph_tophat : (@types.Image) -> @types.Image = @segment.morph_tophat
+
+///|
+pub let morph_blackhat : (@types.Image) -> @types.Image = @segment.morph_blackhat
+
+///|
+pub type StructuringElement = @segment.StructuringElement
+
+///|
+pub let se_rect : (Int, Int) -> @segment.StructuringElement = @segment.se_rect
+
+///|
+pub let se_cross : (Int) -> @segment.StructuringElement = @segment.se_cross
+
+///|
+pub let se_ellipse : (Int) -> @segment.StructuringElement = @segment.se_ellipse
+
+///|
+pub let erode_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.erode_custom
+
+///|
+pub let dilate_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.dilate_custom
+
+///|
+pub let morph_open_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_open_custom
+
+///|
+pub let morph_close_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_close_custom
+
+///|
 pub let morph_open : (@types.Image) -> @types.Image = @segment.morph_open
 
 ///|
@@ -600,6 +773,33 @@ pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hs
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv
 
 ///|
+pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) = @color.rgb_to_ycbcr
+
+///|
+pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) = @color.ycbcr_to_rgb
+
+///|
+pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz
+
+///|
+pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.xyz_to_rgb
+
+///|
+pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_lab
+
+///|
+pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rgb
+
+///|
+pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk
+
+///|
+pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb
+
+///|
+pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image = @color.apply_colormap
+
+///|
 pub let rotate : (@types.Image, Float) -> @types.Image = @transform.rotate
 
 ///|
@@ -610,6 +810,24 @@ pub let rotate_270 : (@types.Image) -> @types.Image = @transform.rotate_270
 
 ///|
 pub let rotate_90 : (@types.Image) -> @types.Image = @transform.rotate_90
+
+///|
+pub let rotate_90_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_90_16
+
+///|
+pub let rotate_90f : (@types.ImageF) -> @types.ImageF = @transform.rotate_90f
+
+///|
+pub let rotate_180_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_180_16
+
+///|
+pub let rotate_180f : (@types.ImageF) -> @types.ImageF = @transform.rotate_180f
+
+///|
+pub let rotate_270_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_270_16
+
+///|
+pub let rotate_270f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270f
 
 ///|
 pub let segment_to_color : (@color.SegmentLabelImage) -> @types.Image = @color.segment_to_color
@@ -696,6 +914,12 @@ pub let distance_transform_visualize : (Array[Float], Int, Int) -> @types.Image 
 pub let skeletonize : (@types.Image) -> @types.Image raise @types.LoadError = @segment.skeletonize
 
 ///|
+pub type SuperpixelResult = @types.SuperpixelResult
+
+///|
+pub let slic : (@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError = @segment.slic
+
+///|
 pub fn guided_filter(
   arg0 : @types.Image,
   arg1 : Array[Float],
@@ -715,6 +939,111 @@ pub fn flood_fill(
 ) -> @types.Image raise @types.LoadError {
   @color.flood_fill(arg0, arg1, arg2, arg3, threshold~)
 }
+
+///|
+pub type PerspectiveMatrix = @transform.PerspectiveMatrix
+
+///|
+pub type AffineMatrix = @transform.AffineMatrix
+
+///|
+pub type Moments = @edge.Moments
+
+///|
+pub type Circle = @edge.Circle
+
+///|
+pub let get_perspective_transform : (
+  Array[(Float, Float)],
+  Array[(Float, Float)],
+) -> @transform.PerspectiveMatrix? = @transform.get_perspective_transform
+
+///|
+pub let warp_perspective : (
+  @types.Image,
+  @transform.PerspectiveMatrix,
+  Int,
+  Int,
+) -> @types.Image = @transform.warp_perspective
+
+///|
+pub let get_affine_transform : (Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix? = @transform.get_affine_transform
+
+///|
+pub let get_rotation_matrix_2d : ((Float, Float), Float, Float) -> @transform.AffineMatrix = @transform.get_rotation_matrix_2d
+
+///|
+pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] = @edge.convex_hull
+
+///|
+pub fn approx_poly_dp(
+  points : Array[@edge.ContourPoint],
+  epsilon : Float,
+  closed? : Bool = true,
+) -> Array[@edge.ContourPoint] {
+  @edge.approx_poly_dp(points, epsilon, closed~)
+}
+
+///|
+pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments = @edge.image_moments
+
+///|
+pub let hu_moments : (@edge.Moments) -> Array[Double] = @edge.hu_moments
+
+///|
+pub let min_enclosing_circle : (Array[@edge.ContourPoint]) -> (
+  @edge.ContourPoint,
+  Float,
+) = @edge.min_enclosing_circle
+
+///|
+pub fn hough_circles(
+  img : @types.Image,
+  dp? : Int = 1,
+  min_dist? : Int = 10,
+  param1? : Int = 100,
+  param2? : Int = 30,
+  min_radius? : Int = 0,
+  max_radius? : Int = 0,
+) -> Array[@edge.Circle] raise @types.LoadError {
+  @edge.hough_circles(
+    img,
+    dp~,
+    min_dist~,
+    param1~,
+    param2~,
+    min_radius~,
+    max_radius~,
+  )
+}
+
+///|
+pub fn multi_band_blend(
+  img_a : @types.Image,
+  img_b : @types.Image,
+  mask : @types.Image,
+  num_bands? : Int = 5,
+) -> @types.Image raise @types.LoadError {
+  @transform.multi_band_blend(img_a, img_b, mask, num_bands~)
+}
+
+///|
+pub let compute_energy : (@types.Image) -> Array[Double] = @transform.compute_energy
+
+///|
+pub let find_vertical_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_vertical_seam
+
+///|
+pub let remove_vertical_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_vertical_seam
+
+///|
+pub let find_horizontal_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_horizontal_seam
+
+///|
+pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_horizontal_seam
+
+///|
+pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
 
 // From format/
 
@@ -739,10 +1068,49 @@ pub let encode_ppm : (@types.Image) -> Bytes = @format.encode_ppm
 ///|
 pub let encode_qoi : (@types.Image) -> Bytes raise @types.LoadError = @format.encode_qoi
 
+///|
+pub let decode_ico : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_ico_pure
+
+///|
+pub let encode_ico : (@types.Image) -> Bytes = @codec.encode_ico_pure
+
+///|
+pub let encode_ico_sizes : (Array[@types.Image]) -> Bytes = @codec.encode_ico_multi_pure
+
+///|
+pub let decode_cur : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_cur_pure
+
+///|
+pub let encode_cur : (@types.Image) -> Bytes = @codec.encode_cur_pure
+
+///|
+pub let decode_icns : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_icns_pure
+
+///|
+pub let encode_icns : (@types.Image) -> Bytes = @codec.encode_icns_pure
+
+///|
+pub let decode_tiff : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_tiff_pure
+
+///|
+pub let encode_tiff : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_tiff_pure
+
+///|
+pub let decode_apng : (Bytes) -> @codec.PngAnimation raise @types.LoadError = @codec.decode_apng_pure
+
+///|
+pub let encode_apng : (@codec.PngAnimation) -> Bytes raise @types.LoadError = @codec.encode_apng_pure
+
 // From meta/
 
 ///|
 pub let read_exif_from_bytes : (Bytes) -> @meta.ExifInfo? = @meta.read_exif_from_bytes
+
+///|
+pub let create_exif_segment : (@meta.ExifInfo) -> Bytes = @meta.create_exif_segment
+
+///|
+pub let write_exif_to_bytes : (@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadError = @meta.write_exif_to_bytes
 
 ///|
 pub let read_png_text_chunks : (Bytes) -> Array[@meta.PngTextChunk] = @meta.read_png_text_chunks
