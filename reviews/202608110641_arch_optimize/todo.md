@@ -1,0 +1,100 @@
+# 待办事项
+
+---
+
+- [ ] T1: reexport.mbt 中 `decode_any`/`load_from_bytes` 静默丢弃 `req_channels` 参数 — 来源：R1，位置：`src/reexport.mbt:99-105,145-151`
+- [ ] T2: `ImageStats` 类型在 `@util` 与 `@pure.process` 重复定义 — 来源：R1，位置：`src/util/image_stats.mbt:5-10`、`src/pure/process/image_stats.mbt:7-12`
+- [ ] T3: `src/util` 与 `src/pure/process` 之间存在大量重复实现（9+ 对函数） — 来源：R1，位置：`src/util/image_compose.mbt` 等
+- [ ] T4: `f` 后缀与 `_16` 后缀命名风格不一致，统一为 `_f`/`_16` — 来源：R1，位置：`src/reexport.mbt:222,231,321,440,818,824,830` 等
+- [ ] T5: `edge_detect_sobel` 应从 `process/filter` 迁移到 `process/edge` — 来源：R1，位置：`src/process/filter/filter.mbt:288`
+- [ ] T6: `PngAnimation` 应从 `@codec` 迁移到 `@types`，与 `GifAnimation` 归属一致 — 来源：R1，位置：`src/pure/codec/apng_codec.mbt:8`
+- [ ] T7: `load_gif_from_bytes`/`loadf_from_bytes`/`write_jpeg_to_bytes` 声明了未实现的参数 — 来源：R1，位置：`src/reexport.mbt:154-160,163-169,197-203`
+- [ ] T8: moon.mod 版本号 `2.0.0` 与文档 `3.0.0`/`v2.0.0` 矛盾，需统一 — 来源：R1，位置：`moon.mod:3`
+- [ ] T9: API 数量三处文档互相矛盾（197/219/实际 252），需以 mbti 为准更新 — 来源：R1，位置：`README.md:12`、`src/reexport.mbt:2`
+- [ ] T10: `docs/architecture.md` 引用不存在的 `core/` 包，应改为 `lib/` — 来源：R1，位置：`docs/architecture.md:84-88,148,196-214,363,551`
+- [ ] T11: reexport.mbt 顶部注释引用被 .gitignore 的 `scripts/gen_reexport.py` — 来源：R1，位置：`src/reexport.mbt:2`
+- [ ] T12: `is_supported_format` 经 `@lib.ImageFormat` 绕远引用，应改为 `@types.ImageFormat` — 来源：R1，位置：`src/reexport.mbt:135`
+- [ ] T13: `decode_any` 与 `load_from_bytes` 实现完全相同，需合并或标注别名 — 来源：R1，位置：`src/reexport.mbt:99-105,145-151`
+- [ ] T14: 功能特定类型归属策略不统一，`SuperpixelResult` 应迁移到 `@process/segment` — 来源：R1，位置：`src/types/image_types.mbt:89`
+- [ ] T15: `src/process/moon.pkg` 空文件无注释 — 来源：R1，位置：`src/process/moon.pkg`
+
+- [ ] T16: `pure/pixel` 与 `src/util` 像素操作大量重复，`pure/pixel` 高级 API 实为死代码 — 来源：R2，位置：`src/pure/pixel/pixel_ops.mbt:1-100`、`src/pure/pixel/pixel_advanced.mbt:1-188`
+- [ ] T17: encode 函数 raise 行为不一致（部分 raise LoadError，部分静默） — 来源：R2，位置：`src/pure/codec/pkg.generated.mbti:44-76`
+- [ ] T18: encode 错误统一用 `LoadError::DecodeFailed`，语义错误，应新增 `EncodeFailed` — 来源：R2，位置：`src/pure/codec/jpeg_encode.mbt:337` 等
+- [ ] T19: PNG 8-bit 解码无 `req_channels`，16-bit 有，签名不一致 — 来源：R2，位置：`src/pure/codec/png_decode.mbt:38`、`src/pure/codec/png_decode_16.mbt:10-13`
+- [ ] T20: pure/codec 文件命名 `_decode/_encode` vs `_codec` 不统一 — 来源：R2，位置：`src/pure/codec/` 目录
+- [ ] T21: `decode_png_pure` 强制丢弃 alpha，与 BMP/TGA/QOI 行为不一致 — 来源：R2，位置：`src/pure/codec/png_decode.mbt:227-232`
+- [ ] T22: `decode_ico_pure` 不校验 `icon_type`，CUR 可被当作 ICO 解码 — 来源：R2，位置：`src/pure/codec/ico_codec.mbt:205-223`
+- [ ] T23: 大端/小端字节读写函数在 6+ 文件重复定义 — 来源：R2，位置：`src/pure/codec/bmp_decode.mbt:92-102` 等
+- [ ] T24: `decode_gif_pure` 与 `decode_gif_animation_pure` 代码大量重复 — 来源：R2，位置：`src/pure/codec/gif_decode.mbt:110-279`、`src/pure/codec/gif_animation_decode.mbt:9-262`
+- [ ] T25: reexport 暴露的 `quality`/`req_channels` 参数被静默忽略 — 来源：R2，位置：`src/reexport.mbt:99-105,145-151,154-160,163-169,197-203`
+- [ ] T26: `pure/pixel` 职责模糊（底层 clamp 工具 + 高级像素操作） — 来源：R2，位置：`src/pure/pixel/pixel_ops.mbt`、`src/pure/pixel/pixel_advanced.mbt`
+- [ ] T27: `clamp_b` 与 `clamp_byte_v` 功能完全重复 — 来源：R2，位置：`src/pure/pixel/pixel_ops.mbt:6-14`、`src/pure/pixel/pixel_advanced.mbt:6-14`
+- [ ] T28: `encode_ico_multi_pure` vs `encode_cur_with_hotspot_pure` 扩展命名风格不一致 — 来源：R2，位置：`src/pure/codec/ico_codec.mbt:318,366`
+- [ ] T29: `decode_png_16_pure` 的 `req_channels=0` 会导致空数组，无校验 — 来源：R2，位置：`src/pure/codec/png_decode_16.mbt:151-154`
+- [ ] T30: `encode_png_pure` 通道推断存在死代码分支 — 来源：R2，位置：`src/pure/codec/png_encode.mbt:134-154`
+- [ ] T31: PNG signature 验证代码在 4 处重复 — 来源：R2，位置：`src/pure/codec/png_decode.mbt:41-50` 等
+- [ ] T32: `convolve_pure` kernel 长度校验不严格 — 来源：R2，位置：`src/pure/pixel/pixel_advanced.mbt:93-94`
+- [ ] T33: `encode_pnm_pure` 缺少 16-bit 版本，编解码不对称 — 来源：R2，位置：`src/pure/codec/pnm_decode_16.mbt:9`
+- [ ] T34: `encode_pnm_pure` 命名歧义（分派函数 vs 直接实现） — 来源：R2，位置：`src/pure/codec/pnm_encode.mbt:72-78`、`src/pure/codec/pnm_decode.mbt:63`
+- [ ] T35: pure/codec 部分文件过大（jpeg_decode 560 行等） — 来源：R2，位置：`src/pure/codec/jpeg_decode.mbt` 等
+- [ ] T36: `encode_apng_pure` 错误信息用 `DecodeFailed` — 来源：R2，位置：`src/pure/codec/apng_codec.mbt:336`
+
+- [ ] T37: `pure/process` 全部为死代码（35 函数+1类型），与 `src/process`+`src/util` 逐行重复 — 来源：R3，位置：`src/pure/process/` 全部
+- [ ] T38: `pure/color` 16/17 函数为死代码，仅 `convert_channels_pure` 被 `src/lib` 使用 — 来源：R3，位置：`src/pure/color/color_convert.mbt`、`color_map.mbt`、`color_adjust.mbt`
+- [ ] T39: `pure/color` 与 `src/process/color` 职责划分违背 scope.md 定位 — 来源：R3，位置：`src/pure/color/pkg.generated.mbti`、`src/process/color/pkg.generated.mbti`
+- [ ] T40: `pure/process` 文件命名风格不统一（`image_` 前缀 vs 功能名） — 来源：R3，位置：`src/pure/process/` 目录
+- [ ] T41: `pure/color/color_map.mbt` 与 `src/process/color/colormap.mbt` 文件命名不一致 — 来源：R3，位置：`src/pure/color/color_map.mbt`、`src/process/color/colormap.mbt`
+- [ ] T42: `pure/process` 包名与 `src/process` 目录同名，语义歧义 — 来源：R3，位置：`src/pure/process/`、`src/process/`
+- [ ] T43: 私有辅助函数在 pure/color、pure/process 与 src/process、src/util 间重复定义（6 组） — 来源：R3，位置：`src/pure/color/color_adjust.mbt:6` 等
+- [ ] T44: pure/color 与 pure/process 依赖关系合理但孤立（三个 pure 子包形成自闭环） — 来源：R3，位置：`src/pure/color/moon.pkg`、`src/pure/process/moon.pkg`
+- [ ] T45: `pure/process/image_stats.mbt` 的 ImageStats 重复（R1 已发现） — 来源：R3，位置：`src/pure/process/image_stats.mbt:7-12`
+- [ ] T46: `pure/color` 注释中"移植自"路径已过时 — 来源：R3，位置：`src/pure/color/color_convert.mbt:3` 等
+
+- [ ] T47: `src/format/` 与 `src/pure/codec/` 大规模重复实现（QOI/GIF/PNM） — 来源：R4，位置：`src/format/qoi.mbt`、`src/format/gif_encode.mbt`、`src/format/pnm_encode.mbt`
+- [ ] T48: `PngAnimation` 与 `GifAnimation` 类型归属不一致（确认 R1 T6） — 来源：R4，位置：`src/types/image_types.mbt:38`、`src/pure/codec/apng_codec.mbt:8`
+- [ ] T49: `encode_xxx_auto` 命名中 `auto` 后缀语义不一致（7 个无分派逻辑） — 来源：R4，位置：`src/lib/lib.mbt:126,150,156,162,168,174,180`
+- [ ] T50: `load_16_from_bytes_auto` 中 `req_channels` 参数传递不一致 — 来源：R4，位置：`src/lib/lib.mbt:115-116`
+- [ ] T51: `src/lib/` 包名语义模糊 — 来源：R4，位置：`src/lib/moon.pkg:1`
+- [ ] T52: `src/format/` 包名与职责不清，与 `pure/codec` 职责重叠 — 来源：R4，位置：`src/format/moon.pkg:1`
+- [ ] T53: `exif.mbt` 文件命名与 `exif_write.mbt` 不对称 — 来源：R4，位置：`src/meta/exif.mbt:1`、`src/meta/exif_write.mbt:1`
+- [ ] T54: 错误信息语言不一致（中文 vs 英文混用） — 来源：R4，位置：`src/lib/lib.mbt:119,92,96` 等
+- [ ] T55: `src/lib/` 中 `ImageFormat` 类型别名冗余 — 来源：R4，位置：`src/lib/lib.mbt:2`
+- [ ] T56: `png_meta.mbt` 命名风格与 exif 系列不一致 — 来源：R4，位置：`src/meta/png_meta.mbt:1`
+- [ ] T57: `load_from_bytes_auto` 中 HDR 与 TGA 处理路径不对称 — 来源：R4，位置：`src/lib/lib.mbt:90-96`
+
+- [ ] T58: `process/color` 与 `process/segment` 职责交叉错位（color 做分割，segment 做量化） — 来源：R5，位置：`src/process/color/color_segment.mbt`、`src/process/segment/quantize.mbt` 等
+- [ ] T59: `util` 依赖 `process/transform`，层次倒置 — 来源：R5，位置：`src/util/moon.pkg:4`、`src/util/image_util.mbt:112,131`
+- [ ] T60: K-means 命名风格不一致（`kmeans_segment` vs `k_means_quantize`） — 来源：R5，位置：`src/process/color/color_segment.mbt:29`、`src/process/segment/kmeans_quantize.mbt:7`
+- [ ] T61: `edge_detect_sobel` 在 filter 包，其余在 edge 包（确认 R1 T5） — 来源：R5，位置：`src/process/filter/filter.mbt:288`
+- [ ] T62: `flip_horizontal` 在 transform，`flip_vertical` 在 util — 来源：R5，位置：`src/process/transform/transform.mbt:116`、`src/util/image_compose.mbt:107`
+- [ ] T63: `process/feature` 职责过宽（特征提取+直方图+质量评估） — 来源：R5，位置：`src/process/feature/`
+- [ ] T64: `process/transform` 职责过宽（6 类功能混于一包） — 来源：R5，位置：`src/process/transform/`
+- [ ] T65: `util/convolve` 与 `process/filter` 职责重叠 — 来源：R5，位置：`src/util/pixel_advanced.mbt:85`
+- [ ] T66: clamp 辅助函数在 5+ 个子包重复定义且命名不统一 — 来源：R5，位置：`src/process/color/helpers.mbt:2` 等
+- [ ] T67: haar 变换命名风格与 fft/dct 不一致 — 来源：R5，位置：`src/process/frequency/haar_wavelet.mbt:15,40`
+- [ ] T68: `AffineMatrix` 在 `perspective.mbt` 中定义，文件命名与内容不符 — 来源：R5，位置：`src/process/transform/perspective.mbt:6,22`
+- [ ] T69: util 包内 clamp 函数重复定义且命名不同 — 来源：R5，位置：`src/util/pixel_ops.mbt:4`、`src/util/pixel_advanced.mbt:4`
+- [ ] T70: `SuperpixelResult` 在 types 包，其余功能类型在各 process 子包（确认 R1 T14） — 来源：R5，位置：`src/types/`、`src/process/segment/` 等
+- [ ] T71: `color_convert.mbt` 包含通道操作，文件名与内容不完全匹配 — 来源：R5，位置：`src/process/color/color_convert.mbt`
+- [ ] T72: `distance_transform_visualize` 命名过长且语序不一致 — 来源：R5，位置：`src/process/segment/distance_transform.mbt`
+
+- [ ] T73: README.md 徽章版本号 `3.0.0` 与 moon.mod `2.0.0` 不一致（确认 R1 T8） — 来源：R6，位置：`README.md:13`、`moon.mod:3`
+- [ ] T74: README.md 徽章 API 数量 `197+28` 严重失真，实际 `252+36`（确认 R1 T9） — 来源：R6，位置：`README.md:12`
+- [ ] T75: `docs/api_reference.md` 列出 19 个不存在的函数 — 来源：R6，位置：`docs/api_reference.md:48-70,76-79,93-99,154-157`
+- [ ] T76: `docs/api_reference.md` 缺失 54 个实际存在的函数 — 来源：R6，位置：`docs/api_reference.md` 全文
+- [ ] T77: `docs/architecture.md` 引用不存在的 `core/` 包（确认 R1 T10） — 来源：R6，位置：`docs/architecture.md:84,148,196,200,363,551`
+- [ ] T78: `docs/architecture.md` 引用不存在的 `scripts/` 和 `roundtrip_test.mbt` — 来源：R6，位置：`docs/architecture.md:77,146,547,599-604`
+- [ ] T79: `api_reference.md` 头部统计与实际不符 — 来源：R6，位置：`docs/api_reference.md:3`
+- [ ] T80: `architecture.md` 头部统计严重过时 — 来源：R6，位置：`docs/architecture.md:3`
+- [ ] T81: README.md 包结构文件数全部不准确 — 来源：R6，位置：`README.md:194-198`
+- [ ] T82: `ImageFormat` 枚举 9 种 vs 文档格式支持表 14 种 — 来源：R6，位置：`src/types/image_types.mbt:53-64`、`README.md:45-61`
+- [ ] T83: `changelog.md` 与 `roadmap.md` 测试数不一致 — 来源：R6，位置：`docs/changelog.md:28`、`docs/roadmap.md:606`
+- [ ] T84: README.md 安装命令大小写与 moon.mod 不一致 — 来源：R6，位置：`README.md:69`、`moon.mod:1`
+- [ ] T85: README.md 功能列表严重不完整 — 来源：R6，位置：`README.md:110-171`
+- [ ] T86: `src/README.mbt.md` API 数量与实际不符 — 来源：R6，位置：`src/README.mbt.md:8`
+- [ ] T87: `api_reference.md` 类型总览"包"列标注 `core` 不准确 — 来源：R6，位置：`docs/api_reference.md:9-20`
+- [ ] T88: AGENTS.md 未提及 reexport.mbt 注册约束 — 来源：R6，位置：`AGENTS.md`
+- [ ] T89: `src/README.mbt.md` 格式支持表未标注独家格式 — 来源：R6，位置：`src/README.mbt.md:47,48`
+- [ ] T90: `roadmap.md` v3.0 函数数标记为 ~248，状态"部分完成" — 来源：R6，位置：`docs/roadmap.md:610`
+- [ ] T91: `reexport.mbt` 拋留 `core/` 引用注释 — 来源：R6，位置：`src/reexport.mbt:93`
