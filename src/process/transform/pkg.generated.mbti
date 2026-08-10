@@ -10,6 +10,8 @@ pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @t
 
 pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
+pub fn compute_energy(@types.Image) -> Array[Double]
+
 pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
@@ -28,7 +30,15 @@ pub fn draw_polygon(@types.Image, Array[(Int, Int)], Array[Byte], thickness? : I
 
 pub fn draw_rectangle(@types.Image, Int, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
+pub fn find_horizontal_seam(Array[Double], Int, Int) -> Array[Int]
+
+pub fn find_vertical_seam(Array[Double], Int, Int) -> Array[Int]
+
 pub fn flip_horizontal(@types.Image) -> @types.Image
+
+pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
+
+pub fn flip_horizontalf(@types.ImageF) -> @types.ImageF
 
 pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> AffineMatrix?
 
@@ -42,13 +52,31 @@ pub fn pyr_down(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn remove_horizontal_seam(@types.Image, Array[Int]) -> @types.Image
+
+pub fn remove_vertical_seam(@types.Image, Array[Int]) -> @types.Image
+
 pub fn rotate(@types.Image, Float) -> @types.Image
 
 pub fn rotate_180(@types.Image) -> @types.Image
 
+pub fn rotate_180_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_180f(@types.ImageF) -> @types.ImageF
+
 pub fn rotate_270(@types.Image) -> @types.Image
 
+pub fn rotate_270_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_270f(@types.ImageF) -> @types.ImageF
+
 pub fn rotate_90(@types.Image) -> @types.Image
+
+pub fn rotate_90_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_90f(@types.ImageF) -> @types.ImageF
+
+pub fn seam_carve_resize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
 

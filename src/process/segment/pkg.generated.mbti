@@ -48,6 +48,8 @@ pub fn se_rect(Int, Int) -> StructuringElement
 
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn slic(@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError
+
 pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
 pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError

@@ -27,7 +27,15 @@ pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
 
 pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
+pub fn adjust_brightness_16(@types.Image16, Int) -> @types.Image16
+
+pub fn adjust_brightnessf(@types.ImageF, Float) -> @types.ImageF
+
 pub fn adjust_contrast(@types.Image, Float) -> @types.Image
+
+pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16
+
+pub fn adjust_contrastf(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
@@ -85,6 +93,8 @@ pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int)
 
 pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float
 
+pub fn compute_energy(@types.Image) -> Array[Double]
+
 pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
 pub fn compute_stats(@types.Image) -> @util.ImageStats
@@ -100,6 +110,8 @@ pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 pub fn convex_hull(Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint]
 
 pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
+
+pub fn create_exif_segment(@meta.ExifInfo) -> Bytes
 
 pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
@@ -201,7 +213,15 @@ pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @ty
 
 pub fn find_contours(@types.Image) -> Array[@edge.Contour] raise @types.LoadError
 
+pub fn find_horizontal_seam(Array[Double], Int, Int) -> Array[Int]
+
+pub fn find_vertical_seam(Array[Double], Int, Int) -> Array[Int]
+
 pub fn flip_horizontal(@types.Image) -> @types.Image
+
+pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
+
+pub fn flip_horizontalf(@types.ImageF) -> @types.ImageF
 
 pub fn flip_vertical(@types.Image) -> @types.Image
 
@@ -387,6 +407,10 @@ pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int)
 
 pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
 
+pub fn remove_horizontal_seam(@types.Image, Array[Int]) -> @types.Image
+
+pub fn remove_vertical_seam(@types.Image, Array[Int]) -> @types.Image
+
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
 pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
@@ -411,15 +435,29 @@ pub fn rotate(@types.Image, Float) -> @types.Image
 
 pub fn rotate_180(@types.Image) -> @types.Image
 
+pub fn rotate_180_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_180f(@types.ImageF) -> @types.ImageF
+
 pub fn rotate_270(@types.Image) -> @types.Image
 
+pub fn rotate_270_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_270f(@types.ImageF) -> @types.ImageF
+
 pub fn rotate_90(@types.Image) -> @types.Image
+
+pub fn rotate_90_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_90f(@types.ImageF) -> @types.ImageF
 
 pub fn se_cross(Int) -> @segment.StructuringElement
 
 pub fn se_ellipse(Int) -> @segment.StructuringElement
 
 pub fn se_rect(Int, Int) -> @segment.StructuringElement
+
+pub fn seam_carve_resize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn segment_to_color(@color.SegmentLabelImage) -> @types.Image
 
@@ -432,6 +470,8 @@ pub fn set_unpremultiply_on_load(Bool) -> Unit
 pub fn sharpen(@types.Image, Float) -> @types.Image
 
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn slic(@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError
 
 pub fn ssim(@types.Image, @types.Image) -> Double
 
@@ -466,6 +506,8 @@ pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
 
 pub fn write_bmp_to_bytes(@types.Image) -> Bytes
+
+pub fn write_exif_to_bytes(@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadError
 
 pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
 
@@ -553,6 +595,8 @@ pub using @color {type SegmentLabelImage}
 pub using @color {type SegmentRegion}
 
 pub using @segment {type StructuringElement}
+
+pub using @types {type SuperpixelResult}
 
 // Traits
 

@@ -3,9 +3,9 @@
 MoonBit 纯图像处理库 — 解码/编码 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM，提供从基础像素操作到高级计算机视觉算法的完整能力。纯 MoonBit 实现，零 C FFI 依赖，native/wasm-gc/js 三目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-872%20%C3%97%203%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1056%20%C3%97%203%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![API](https://img.shields.io/badge/API-174%20fn%20%2B%2027%20types-blueviolet)]()
+[![API](https://img.shields.io/badge/API-197%20fn%20%2B%2028%20types-blueviolet)]()
 
 ## Quick Start
 
@@ -47,8 +47,11 @@ let info : ImageInfo? = info_from_bytes(data)
 | PSD | ✅ | — | Photoshop document |
 | HDR | ✅ | ✅ | IEEE 754 float |
 | PNM | ✅ | ✅ | PPM / PGM |
-| ICO | — | ✅ | single/multi-size |
-| ICNS | — | ✅ | macOS icon |
+| TIFF | ✅ | ✅ | uncompressed/LZW/PackBits |
+| ICO | ✅ | ✅ | single/multi-size |
+| CUR | ✅ | ✅ | Windows cursor |
+| ICNS | ✅ | ✅ | macOS icon |
+| APNG | ✅ | ✅ | animated PNG |
 
 ## Types
 
@@ -59,6 +62,7 @@ let info : ImageInfo? = info_from_bytes(data)
 | `ImageF { width, height, channels, data : Bytes }` | HDR float decoded image (IEEE 754 little-endian) |
 | `ImageInfo { width, height, channels }` | Image info without pixel data |
 | `GifAnimation { frames : Array[Image], delays : Array[Int] }` | Animated GIF (frames + delays in ms) |
+| `SuperpixelResult { labels, centers, num_labels }` | SLIC superpixel segmentation result |
 | `LoadError { FileIO, UnsupportedFormat, DecodeFailed }` | Load failure error |
 
 ## Load API
@@ -118,13 +122,16 @@ Edge modes: `Zero`, `Clamp`, `Reflect`, `Wrap`
 | Morphology | `erode`, `dilate`, `morph_open`, `morph_close`, `skeletonize` |
 | Quality | `mse`, `psnr`, `ssim` |
 | Draw | `draw_copy`, `draw_over` |
+| EXIF | `read_exif_from_bytes`, `write_exif_to_bytes`, `create_exif_segment` |
+| Seam Carving | `seam_carve_resize`, `compute_energy`, `find_vertical_seam`, `remove_vertical_seam` |
+| 16-bit/float | `rotate_90_16`, `rotate_90f`, `flip_horizontal_16`, `flip_horizontalf`, `adjust_brightness_16`, `adjust_brightnessf` |
 
 ## Advanced Analysis API (selected)
 
 | Category | Functions |
 |----------|-----------|
 | CLAHE | `clahe` |
-| Segmentation | `k_means_quantize`, `region_growing_segment`, `flood_fill`, `watershed`, `watershed_auto` |
+| Segmentation | `k_means_quantize`, `region_growing_segment`, `flood_fill`, `watershed`, `watershed_auto`, `slic` |
 | FFT | `fft_2d`, `ifft_2d`, `fft_shift`, `fft_magnitude`, `freq_filter`, `freq_filter_gaussian` |
 | Edge | `canny_edge`, `hough_lines`, `hough_lines_nms`, `find_contours`, `harris_corners` |
 | Threshold | `adaptive_threshold_mean`, `adaptive_threshold_gaussian`, `threshold_otsu` |
@@ -166,7 +173,7 @@ try {
 
 ## Multi-Target Support
 
-Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FFI dependency. 872 tests pass on all three targets, 89.8% coverage.
+Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FFI dependency. 1056 tests pass on all three targets, 89.8% coverage.
 
 ## Version History
 
@@ -176,3 +183,7 @@ Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FF
 - **v0.4**: HDR config + animated GIF
 - **v1.0**: API freeze, complete documentation, 61 tests
 - **v2.0**: 纯 MoonBit 重构 — 移除所有 C FFI，三目标支持，pure 拆分为 5 子包，174 API + 27 类型，872 测试，89.8% 覆盖率
+- **v2.1**: 中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希
+- **v2.2**: 透视变换/轮廓分析/霍夫圆/DCT/色调映射
+- **v2.3**: TIFF/ICO/CUR/ICNS/APNG 格式扩展
+- **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，197 API + 28 类型，1056 测试

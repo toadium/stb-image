@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-10 | 当前版本：v2.0.0 | 测试：872×3 | 覆盖率：89.8%
+> 制定日期：2026-08-06 | 最后更新：2026-08-10 | 当前版本：v3.0.0 | 测试：1056×3 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -390,7 +390,7 @@ flowchart LR
 
 ---
 
-## v2.1 — 基础补齐（低难度高价值）
+## v2.1 — 基础补齐（低难度高价值）✅
 
 **目标**：补齐业界标配但缺失的低难度高价值功能，消除"基础短板"
 
@@ -448,7 +448,7 @@ flowchart LR
 
 ---
 
-## v2.2 — 几何与轮廓分析（中难度高价值）
+## v2.2 — 几何与轮廓分析（中难度高价值）✅
 
 **目标**：补齐几何变换和轮廓分析链路，达到 OpenCV 级分析能力
 
@@ -499,7 +499,7 @@ flowchart LR
 
 ---
 
-## v2.3 — 格式扩展
+## v2.3 — 格式扩展 ✅
 
 **目标**：补齐常用格式，消除"格式短板"
 
@@ -531,7 +531,7 @@ flowchart LR
 
 ---
 
-## v3.0 — 高级特性（长期）
+## v3.0 — 高级特性（长期）部分完成 ✅
 
 **目标**：差异化竞争力，对标 OpenCV 高级功能
 
@@ -541,14 +541,14 @@ flowchart LR
 - lossy 需 VP8，lossless 需 VP8L，纯实现工作量大
 - `decode_webp(bytes) -> Image` / `encode_webp(img, quality?) -> Bytes`
 
-#### 2. 16-bit/float 操作泛化（中难度·高价值）
+#### 2. 16-bit/float 操作泛化（中难度·高价值）✅
 - 现多数算法仅 8-bit，HDR/医学图像受限
-- 为 `Image16`/`ImageF` 补齐 filter/transform/segment/color 全操作
-- 工作量大但价值高
+- 为 `Image16`/`ImageF` 补齐 transform/color 操作（rotate/flip/brightness/contrast）
+- 已完成 14 个 API：rotate_90_16/rotate_90f, rotate_180_16/rotate_180f, rotate_270_16/rotate_270f, flip_horizontal_16/flip_horizontalf, adjust_brightness_16/adjust_brightnessf, adjust_contrast_16/adjust_contrastf
 
-#### 3. SLIC 超像素（中难度·高价值）
+#### 3. SLIC 超像素（中难度·高价值）✅
 - 现代分割预处理标配
-- `slic(img, num_superpixels, compactness?) -> SegmentLabelImage`
+- `slic(img, k, m, max_iters) -> SuperpixelResult`
 
 #### 4. ORB 特征匹配（高难度·高价值）
 - FAST+BRIEF+旋转不变，特征匹配标配
@@ -567,13 +567,13 @@ flowchart LR
 - Navier-Stokes / Telea 方法，去水印/修复
 - `inpaint(img, mask, radius, method?) -> Image`
 
-#### 8. 接缝裁剪 `seam_carving`（中难度·高价值）
+#### 8. 接缝裁剪 `seam_carving`（中难度·高价值）✅
 - 内容感知缩放，独特卖点
-- `seam_carve(img, target_w, target_h) -> Image`
+- `seam_carve_resize(img, new_w, new_h) -> Image` + 5 个辅助 API
 
-#### 9. EXIF 写入（中难度·高价值）
+#### 9. EXIF 写入（中难度·高价值）✅
 - 现仅读，写需完整 TIFF/IFD 构造
-- `write_exif(img, exif_info) -> Bytes`
+- `write_exif_to_bytes(info, jpeg_data) -> Bytes` + `create_exif_segment(info) -> Bytes`
 
 #### 10. 流式解码（中难度·中价值）
 - 大图内存友好
@@ -604,10 +604,10 @@ flowchart LR
 | v1.16 | Canny/分水岭/GLCM/Haar | 501+29 | 188 | ✅ |
 | v1.17 | Harris/去雾/距离/Gabor | 533+29 | 199 | ✅ |
 | **v2.0** | **纯 MoonBit 多目标重构** | **872×3** | **174** | **✅ 已完成** |
-| **v2.1** | **中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希** | **~960** | **~190** | **📋 计划中** |
-| **v2.2** | **透视变换/轮廓分析/霍夫圆/DCT/色调映射** | **~1050** | **~215** | **📋 计划中** |
-| **v2.3** | **TIFF/ICO/ICNS/APNG 格式扩展** | **~1150** | **~225** | **📋 计划中** |
-| **v3.0** | **WebP/16-bit泛化/SLIC/ORB/SIFT/grabCut/seam carving** | **—** | **—** | **📋 远期** |
+| **v2.1** | **中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希** | **927** | **~190** | **✅ 已完成** |
+| **v2.2** | **透视变换/轮廓分析/霍夫圆/DCT/色调映射** | **965** | **~215** | **✅ 已完成** |
+| **v2.3** | **TIFF/ICO/ICNS/APNG 格式扩展** | **995** | **~225** | **✅ 已完成** |
+| **v3.0** | **EXIF写入/seam carving/SLIC超像素/16-bit float泛化(部分)** | **1056×3** | **~248** | **✅ 部分完成** |
 
 ## 不做的事情
 

@@ -216,7 +216,19 @@ pub fn write_tga_to_bytes(img : @types.Image) -> Bytes {
 pub let adjust_brightness : (@types.Image, Int) -> @types.Image = @color.adjust_brightness
 
 ///|
+pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 = @color.adjust_brightness_16
+
+///|
+pub let adjust_brightnessf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightnessf
+
+///|
 pub let adjust_contrast : (@types.Image, Float) -> @types.Image = @color.adjust_contrast
+
+///|
+pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_contrast_16
+
+///|
+pub let adjust_contrastf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrastf
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
@@ -420,6 +432,12 @@ pub fn freq_filter_gaussian(
 
 ///|
 pub let flip_horizontal : (@types.Image) -> @types.Image = @transform.flip_horizontal
+
+///|
+pub let flip_horizontal_16 : (@types.Image16) -> @types.Image16 = @transform.flip_horizontal_16
+
+///|
+pub let flip_horizontalf : (@types.ImageF) -> @types.ImageF = @transform.flip_horizontalf
 
 ///|
 pub fn harris_corners(
@@ -794,6 +812,24 @@ pub let rotate_270 : (@types.Image) -> @types.Image = @transform.rotate_270
 pub let rotate_90 : (@types.Image) -> @types.Image = @transform.rotate_90
 
 ///|
+pub let rotate_90_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_90_16
+
+///|
+pub let rotate_90f : (@types.ImageF) -> @types.ImageF = @transform.rotate_90f
+
+///|
+pub let rotate_180_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_180_16
+
+///|
+pub let rotate_180f : (@types.ImageF) -> @types.ImageF = @transform.rotate_180f
+
+///|
+pub let rotate_270_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_270_16
+
+///|
+pub let rotate_270f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270f
+
+///|
 pub let segment_to_color : (@color.SegmentLabelImage) -> @types.Image = @color.segment_to_color
 
 ///|
@@ -876,6 +912,12 @@ pub let distance_transform_visualize : (Array[Float], Int, Int) -> @types.Image 
 
 ///|
 pub let skeletonize : (@types.Image) -> @types.Image raise @types.LoadError = @segment.skeletonize
+
+///|
+pub type SuperpixelResult = @types.SuperpixelResult
+
+///|
+pub let slic : (@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError = @segment.slic
 
 ///|
 pub fn guided_filter(
@@ -985,6 +1027,24 @@ pub fn multi_band_blend(
   @transform.multi_band_blend(img_a, img_b, mask, num_bands~)
 }
 
+///|
+pub let compute_energy : (@types.Image) -> Array[Double] = @transform.compute_energy
+
+///|
+pub let find_vertical_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_vertical_seam
+
+///|
+pub let remove_vertical_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_vertical_seam
+
+///|
+pub let find_horizontal_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_horizontal_seam
+
+///|
+pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_horizontal_seam
+
+///|
+pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
+
 // From format/
 
 ///|
@@ -1045,6 +1105,12 @@ pub let encode_apng : (@codec.PngAnimation) -> Bytes raise @types.LoadError = @c
 
 ///|
 pub let read_exif_from_bytes : (Bytes) -> @meta.ExifInfo? = @meta.read_exif_from_bytes
+
+///|
+pub let create_exif_segment : (@meta.ExifInfo) -> Bytes = @meta.create_exif_segment
+
+///|
+pub let write_exif_to_bytes : (@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadError = @meta.write_exif_to_bytes
 
 ///|
 pub let read_png_text_chunks : (Bytes) -> Array[@meta.PngTextChunk] = @meta.read_png_text_chunks

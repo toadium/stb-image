@@ -83,3 +83,11 @@ pub(all) enum ResizeEdge {
   Wrap
   Zero
 } derive(Eq, @debug.Debug)
+
+///|
+/// SLIC 超像素分割结果
+pub(all) struct SuperpixelResult {
+  labels : Array[Int]
+  centers : Array[(Int, Int)]
+  num_labels : Int
+} derive(Eq, @debug.Debug)

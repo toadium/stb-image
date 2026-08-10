@@ -12,7 +12,15 @@ pub fn adaptive_threshold_mean(@types.Image, Int, Int) -> @types.Image raise @ty
 
 pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
+pub fn adjust_brightness_16(@types.Image16, Int) -> @types.Image16
+
+pub fn adjust_brightnessf(@types.ImageF, Float) -> @types.ImageF
+
 pub fn adjust_contrast(@types.Image, Float) -> @types.Image
+
+pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16
+
+pub fn adjust_contrastf(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
