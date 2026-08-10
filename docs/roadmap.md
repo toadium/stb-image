@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-09 | 当前版本：v2.0.0
+> 制定日期：2026-08-06 | 最后更新：2026-08-10 | 当前版本：v2.0.0 | 测试：872×3 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -54,7 +54,7 @@ flowchart LR
     V16 --> V110["v1.10<br/>341+29 测试<br/>128 函数"]
     V110 --> V114["v1.14<br/>433+29 测试<br/>164 函数"]
     V114 --> V117["v1.17<br/>533+29 测试<br/>199 函数"]
-    V117 --> V20["v2.0<br/>645×3 测试<br/>196 函数<br/>多目标"]
+    V117 --> V20["v2.0<br/>872×3 测试<br/>174 函数<br/>89.8% 覆盖率"]
 
     classDef milestone fill:#e8f5e9,stroke:#2e7d32
     class V10,V117,V20 milestone
@@ -378,63 +378,236 @@ flowchart LR
 - 优点：单一代码库，全目标支持
 - 缺点：失去 stb 的格式覆盖（PSD/HDR/PNM）、失去 ASan 验证、工作量巨大
 
-**已选择路径 B**，v2.0 已完成全纯 MoonBit 实现，三目标各 645 测试通过。
+**已选择路径 B**，v2.0 已完成全纯 MoonBit 实现，三目标各 872 测试通过，覆盖率 89.8%。
 
 ### 交付物（已完成）
-- `src/pure/{codec,pixel,color,process,util}/` — 纯 MoonBit 后端：6 解码器（BMP/QOI/TGA/PNM/PSD/GIF）+ 3 编码器（QOI/PNM/GIF）+ 几何变换/色彩转换/色彩调整/滤波/直方图/形态学/仿射变换/像素操作/色彩映射/图像拼接/统计/噪声/13 blend 混合模式
-- `src/lib/` — pure 侧统一 API + 自动格式分派（T12），目录含 lib.mbt + lib_test.mbt + moon.pkg 3 文件
-- `src/types/` — 全目标类型包（T2）
-- 测试：native 847 + wasm 225 + js 225 通过
+- `src/pure/{codec,pixel,color,process,util}/` — 纯 MoonBit 后端：9 格式编解码 + 几何/色彩/滤波/直方图/形态学/仿射/像素/混合等
+- `src/process/{color,edge,feature,filter,frequency,segment,transform}/` — 高级算法 7 子包
+- `src/lib/` — pure 侧统一 API + 自动格式分派
+- `src/types/` — 全目标类型包
+- `src/bench.mbt` — 性能基准测试（编解码 + 滤波 + 色彩 + 几何）
+- 测试：三目标各 872 通过，覆盖率 89.8%，174 公开函数 + 27 类型
 
 ---
 
-## v2.1 — 高级格式（远期）
+## v2.1 — 基础补齐（低难度高价值）
 
-**目标**：进一步扩展格式覆盖
+**目标**：补齐业界标配但缺失的低难度高价值功能，消除"基础短板"
 
 ### 功能
 
-1. **WebP 编码**（纯 MoonBit，lossless only）
-   - `encode_webp(image) -> Bytes`
-   - 参考 mizchi/image
+#### 1. 中值滤波 `median_blur`（低难度·高价值）
+- 去椒盐噪声唯一有效手段，OpenCV/Pillow 标配
+- 滑动窗口 + 快速排序（直方图法 O(1) 更新）
+- `median_blur(img, ksize) -> Image`
 
-2. **流式解码**（纯 MoonBit）
-   - `decode_png_stream(bytes, on_row~) -> StreamInfo`
-   - `decode_bmp_stream(bytes, on_row~) -> StreamInfo`
-   - 参考 mizchi/image
+#### 2. 形态学衍生操作（低难度·高价值）
+- 已有 `erode`/`dilate`/`morph_open`/`morph_close`，补三个衍生操作各一行
+- `morph_gradient(img) -> Image` — dilate - erode，形态学梯度
+- `morph_tophat(img) -> Image` — original - open，顶帽变换
+- `morph_blackhat(img) -> Image` — close - original，黑帽变换
 
-3. **TIFF 解码**（纯 MoonBit）
-   - 需要独立实现 TIFF 解码器
+#### 3. 自定义结构元素 + 形态学参数化（低难度·高价值）
+- 现有形态学固定 3×3 核，严重限制实用性
+- `get_structuring_element(shape, ksize) -> StructElement` — 椭圆/十字/矩形
+- 更新 `erode`/`dilate` 等支持 `struct_element?` 和 `iterations?` 参数
 
-4. **APNG 解码**（纯 MoonBit）
-   - Animated PNG 支持
+#### 4. 色彩空间转换（低难度·高价值）
+- JPEG 内部已有 YCbCr，Lab 是 K-means/分割感知空间
+- `rgb_to_ycbcr` / `ycbcr_to_rgb` — 视频/JPEG 标准
+- `rgb_to_xyz` / `xyz_to_rgb` — 色彩转换枢纽（sRGB gamma 编解码）
+- `rgb_to_lab` / `lab_to_rgb` — CIELAB 感知均匀空间（经 XYZ 中转）
+- `rgb_to_cmyk` / `cmyk_to_rgb` — 印刷标准
+
+#### 5. 绘图原语（低难度·高价值）
+- 任何图像库标配，现有仅 draw_contours/corners
+- `draw_line(img, x1, y1, x2, y2, color, thickness?) -> Image` — Bresenham + 线宽
+- `draw_rectangle(img, x, y, w, h, color, thickness?, fill?) -> Image`
+- `draw_circle(img, cx, cy, r, color, thickness?, fill?) -> Image` — 中点画圆
+- `draw_polygon(img, points, color, thickness?, fill?) -> Image` — 多边形光栅化
+
+#### 6. 伪彩色映射 `apply_colormap`（低难度·高价值）
+- 可视化标配，查表实现，apply_lut 已有基础
+- `apply_colormap(img, colormap) -> Image` — 预设 LUT
+- `Colormap` 枚举：`JET` / `HOT` / `COOL` / `VIRIDIS` / `TURBO` / `GRAY` / `BONE` / `COPPER`
+
+#### 7. 感知哈希（低难度·高价值）
+- 图像去重/检索，MoonBit 生态稀缺
+- `phash(img) -> Array[Bit]` — pHash（DCT → 中值哈希）
+- `ahash(img) -> Array[Bit]` — aHash（均值哈希）
+- `dhash(img) -> Array[Bit]` — dHash（差值哈希）
+- `hamming_distance(h1, h2) -> Int` — 汉明距离
+
+#### 8. 直方图比较（低难度·高价值）
+- `compare_hist(h1, h2, method) -> Double` — 巴氏/相关性/交叉熵
+- `histogram_matching(img, target_hist) -> Image` — 直方图规定化
+
+### 交付物目标
+- ~960 测试（+88），~190 公开函数（+16）
+- 三目标 0 warning
+
+---
+
+## v2.2 — 几何与轮廓分析（中难度高价值）
+
+**目标**：补齐几何变换和轮廓分析链路，达到 OpenCV 级分析能力
+
+### 功能
+
+#### 1. 透视变换（中难度·高价值）
+- 文档/车牌/扫描矫正常规需求，已有 warp_affine 基础
+- `get_perspective_transform(src_points, dst_points) -> Matrix3x3` — 4 点求矩阵，解 8×8 线性方程组
+- `warp_perspective(img, matrix, dsize?) -> Image` — 透视变换 + 双线性插值
+- `get_affine_transform(src_points, dst_points) ->0 -> Matrix2x3` — 3 点求仿射矩阵
+- `get_rotation_matrix_2d(center, angle, scale) -> Matrix2x3` — 中心+角度+缩放
+
+#### 2. 轮廓分析完整链路（低-中难度·高价值）
+- 已有 `find_contours`，补后处理形成 OpenCV 级轮廓分析
+- `convex_hull(points) -> Array[Point]` — Graham 扫描凸包
+- `convexity_defects(contour, hull) -> Array[Defect]` — 凸缺陷
+- `approx_poly_dp(contour, epsilon, closed) -> Array[Point]` — Douglas-Peucker 多边形逼近
+- `image_moments(contour) -> Moments` — 空间矩/中心矩（m00/m10/m01/m20/m11/m02/...）
+- `hu_moments(moments) -> Array[Double]` — Hu 矩不变量（7 个）
+- `fit_ellipse(contour) -> Ellipse` — 最小二乘椭圆拟合
+- `min_area_rect(contour) -> RotatedRect` — 最小外接旋转矩形
+- `min_enclosing_circle(contour) -> (Point, Float)` — 最小外接圆
+
+#### 3. 霍夫圆检测（中难度·高价值）
+- 工业视觉/医学图像常用，已有直线霍夫基础
+- `hough_circles(img, dp, min_dist, param1?, param2?) -> Array[Circle]` — 梯度法降复杂度
+
+#### 4. Shi-Tomasi 角点（低难度·高价值）
+- Harris 替代，min eigenvalue，光流前置
+- `good_features_to_track(img, max_corners, quality_level, min_distance) -> Array[CornerPoint]`
+
+#### 5. DCT 公共 API（低难度·高价值）
+- JPEG 内部已有 DCT，暴露为公共 API
+- `dct_2d(img) -> Array[Array[Double]]` — 2D DCT-II
+- `idct_2d(coeffs) -> Image` — 2D IDCT-III
+
+#### 6. 色调映射（低难度·高价值）
+- 已有 HDR 编解码，补色调映射形成 HDR 全链路
+- `reinhard_tonemap(imgf, key?) -> Image` — Reinhard 全局色调映射
+- `gamma_tonemap(imgf, gamma) -> Image` — Gamma 色调映射
+
+#### 7. 拉普拉斯金字塔融合（中难度·高价值）
+- 已有拉普拉斯金字塔，拼接融合自然延伸
+- `multi_band_blend(img_a, img_b, mask, num_bands?) -> Image` — 多频带融合
+
+### 交付物目标
+- ~1050 测试（+90），~215 公开函数（+25）
+
+---
+
+## v2.3 — 格式扩展
+
+**目标**：补齐常用格式，消除"格式短板"
+
+### 功能
+
+#### 1. TIFF 解码/编码（高难度·高价值）
+- 业界极常用，格式复杂（多种压缩、tile/strip、多页）
+- 分阶段实现：uncompressed → LZW → PackBits → Deflate（复用 zlib）
+- `decode_tiff(bytes) -> Image raise LoadError`
+- `encode_tiff(img) -> Bytes`
+
+#### 2. ICO/CUR 解码与编码（低难度·中价值）
+- 曾实现后被移除，BMP/PNG 子图封装，简单
+- `decode_ico(bytes) -> Image`
+- `encode_ico(img) -> Bytes` / `encode_ico_sizes(images) -> Bytes`
+- `decode_cur(bytes) -> Image` / `encode_cur(img) -> Bytes`
+
+#### 3. ICNS 解码与编码（低难度·低价值）
+- macOS 图标格式，类似 ICO
+- `decode_icns(bytes) -> Image` / `encode_icns(img) -> Bytes`
+
+#### 4. APNG 解码/编码（中难度·中价值）
+- 动画 PNG，已有 PNG 基础
+- `decode_apng(bytes) -> PngAnimation raise LoadError`
+- `encode_apng(anim) -> Bytes`
+
+### 交付物目标
+- ~1150 测试（+100），~225 公开函数（+10）
+
+---
+
+## v3.0 — 高级特性（长期）
+
+**目标**：差异化竞争力，对标 OpenCV 高级功能
+
+### 功能
+
+#### 1. WebP 解码/编码（高难度·高价值）
+- lossy 需 VP8，lossless 需 VP8L，纯实现工作量大
+- `decode_webp(bytes) -> Image` / `encode_webp(img, quality?) -> Bytes`
+
+#### 2. 16-bit/float 操作泛化（中难度·高价值）
+- 现多数算法仅 8-bit，HDR/医学图像受限
+- 为 `Image16`/`ImageF` 补齐 filter/transform/segment/color 全操作
+- 工作量大但价值高
+
+#### 3. SLIC 超像素（中难度·高价值）
+- 现代分割预处理标配
+- `slic(img, num_superpixels, compactness?) -> SegmentLabelImage`
+
+#### 4. ORB 特征匹配（高难度·高价值）
+- FAST+BRIEF+旋转不变，特征匹配标配
+- `orb_detect(img) -> Array[KeyPoint]` + `orb_compute(img, keypoints) -> Array[Descriptor]`
+- `match_descriptors(d1, d2) -> Array[Match]`
+
+#### 5. SIFT 特征（高难度·高价值）
+- 尺度不变，DoG+描述子，专利已过期
+- `sift_detect(img) -> Array[KeyPoint]` + `sift_compute(img, keypoints) -> Array[Descriptor]`
+
+#### 6. grabCut 分割（高难度·高价值）
+- 交互式前景提取，GMM+max-flow
+- `grab_cut(img, rect, iter?) -> (Mask, Mask)`
+
+#### 7. 图像修复 `inpaint`（高难度·中价值）
+- Navier-Stokes / Telea 方法，去水印/修复
+- `inpaint(img, mask, radius, method?) -> Image`
+
+#### 8. 接缝裁剪 `seam_carving`（中难度·高价值）
+- 内容感知缩放，独特卖点
+- `seam_carve(img, target_w, target_h) -> Image`
+
+#### 9. EXIF 写入（中难度·高价值）
+- 现仅读，写需完整 TIFF/IFD 构造
+- `write_exif(img, exif_info) -> Bytes`
+
+#### 10. 流式解码（中难度·中价值）
+- 大图内存友好
+- `decode_png_stream(bytes, on_row~) -> StreamInfo`
 
 ---
 
 ## 版本时间线
 
-| 版本 | 内容 | 测试数 | 优先级 |
-|---|---|---|---|
-| v1.0 | API freeze, complete docs, ASan verified | 61 | 高 |
-| v1.1 | HDR write + resize (FFI) | 75 | 高 |
-| v1.2 | QOI/ICO/ICNS/GIF 编码 + auto-detect | 114 | 高 |
-| v1.3 | crop/rotate/color/draw | 145 | 中 |
-| v1.4 | 色彩调整/滤波/几何/直方图/量化 | 206 | 中 |
-| v1.5 | PNM/GIF 动画/EXIF | 229 | 中 |
-| **v1.6** | **PNG meta/roundtrip/bench** | **254+29** | **中** |
-| **v1.7** | **API 增强: pad/border/resize_to_cover/contain + threshold/posterize/extract_channel + blend** | **275+29** | **中** |
-| **v1.8** | **更多 blend + stats + pixelate/replace_color/convolve/swap_channels** | **292+29** | **中** |
-| **v1.9** | **hstack/vstack/tile/transpose + noise + LUT/gradient_map + alpha ops** | **315+29** | **中** |
-| **v1.10** | **morphology + Laplacian/Prewitt edge + MSE/PSNR/SSIM** | **341+29** | **中** |
-| **v1.10.1** | **子包重构 + 双语README + 警告清理** | **341+29** | **中** |
-| **v1.12** | **6 blend + CLAHE + K-means + FFT** | **369+29** | **中** |
-| **v1.13** | **频域滤波 + 自适应阈值 + 连通域 + 积分图像** | **402+29** | **中** |
-| **v1.14** | **霍夫变换 + LBP + 图像金字塔 + 双边滤波** | **433+29** | **中** |
-| **v1.15** | **轮廓提取 + 颜色分割 + NLM 去噪 + Retinex** | **472+29** | **中** |
-| **v1.16** | **Canny 边缘 + 分水岭 + GLCM + Haar 小波** | **501+29** | **中** |
-| **v1.17** | **Harris 角点 + 去雾 + 距离变换 + Gabor 滤波** | **533+29** | **中** |
-| v2.0 | 多目标支持 | 847 | ✅ 已完成 |
-| v2.1 | WebP/stream/TIFF/APNG | — | 低 — 远期 |
+| 版本 | 内容 | 测试数 | 函数数 | 状态 |
+|---|---|---|---|---|
+| v1.0 | API freeze, complete docs | 61 | — | ✅ |
+| v1.1 | HDR write + resize | 75 | — | ✅ |
+| v1.2 | QOI/ICO/ICNS/GIF + auto-detect | 114 | — | ✅ |
+| v1.3 | crop/rotate/color/draw | 145 | — | ✅ |
+| v1.4 | 色彩/滤波/几何/直方图/量化 | 206 | — | ✅ |
+| v1.5 | PNM/GIF 动画/EXIF | 229 | — | ✅ |
+| v1.6 | PNG meta/roundtrip/bench | 254+29 | 88 | ✅ |
+| v1.7 | API 增强 (pad/border/blend) | 275+29 | — | ✅ |
+| v1.8 | 更多 blend + stats + pixel ops | 292+29 | — | ✅ |
+| v1.9 | 拼接/噪声/色彩映射 | 315+29 | — | ✅ |
+| v1.10 | 形态学 + 边缘 + 质量评估 | 341+29 | 128 | ✅ |
+| v1.10.1 | 子包重构 + 警告清理 | 341+29 | — | ✅ |
+| v1.12 | CLAHE + K-means + FFT | 369+29 | 140 | ✅ |
+| v1.13 | 频域/阈值/连通域/积分图 | 402+29 | 152 | ✅ |
+| v1.14 | 霍夫/LBP/金字塔/双边 | 433+29 | 164 | ✅ |
+| v1.15 | 轮廓/分割/NLM/Retinex | 472+29 | 177 | ✅ |
+| v1.16 | Canny/分水岭/GLCM/Haar | 501+29 | 188 | ✅ |
+| v1.17 | Harris/去雾/距离/Gabor | 533+29 | 199 | ✅ |
+| **v2.0** | **纯 MoonBit 多目标重构** | **872×3** | **174** | **✅ 已完成** |
+| **v2.1** | **中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希** | **~960** | **~190** | **📋 计划中** |
+| **v2.2** | **透视变换/轮廓分析/霍夫圆/DCT/色调映射** | **~1050** | **~215** | **📋 计划中** |
+| **v2.3** | **TIFF/ICO/ICNS/APNG 格式扩展** | **~1150** | **~225** | **📋 计划中** |
+| **v3.0** | **WebP/16-bit泛化/SLIC/ORB/SIFT/grabCut/seam carving** | **—** | **—** | **📋 远期** |
 
 ## 不做的事情
 
@@ -442,4 +615,8 @@ flowchart LR
 
 - **AVIF 编码**：需要外部编解码器（libaom/svt-av1），与"零 C 依赖"理念冲突
 - **JPEG progressive 编码**：纯 MoonBit 实现成本过高
+- **JPEG2000 解码**：需小波变换+算术编码，纯实现极难且使用率低
 - **Go 风格 API**：bikallem/gmlewis 已覆盖此定位，不重复
+- **BM3D 去噪**：状态最优去噪，纯实现极复杂，性价比低
+- **超分辨率 (SRCNN/EDSR)**：深度学习类，纯 MoonBit 实现不现实
+- **光流 (Farneback/Lucas-Kanade)**：视频领域，纯图像库不做
