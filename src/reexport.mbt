@@ -563,6 +563,38 @@ pub let phash : (@types.Image) -> Array[Int] = @feature.phash
 pub let hamming_distance : (Array[Int], Array[Int]) -> Int = @feature.hamming_distance
 
 ///|
+pub let dct_2d : (@types.Image) -> Array[Array[Double]] = @frequency.dct_2d
+
+///|
+pub let idct_2d : (Array[Array[Double]]) -> @types.Image = @frequency.idct_2d
+
+///|
+pub fn reinhard_tonemap(
+  imgf : @types.ImageF,
+  key? : Float = 0.18F,
+) -> @types.Image {
+  @color.reinhard_tonemap(imgf, key~)
+}
+
+///|
+pub let gamma_tonemap : (@types.ImageF, Float) -> @types.Image = @color.gamma_tonemap
+
+///|
+pub fn good_features_to_track(
+  img : @types.Image,
+  max_corners : Int,
+  quality_level : Float,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.good_features_to_track(
+    img,
+    max_corners,
+    quality_level,
+    min_distance~,
+  )
+}
+
+///|
 pub type HistCompareMethod = @feature.HistCompareMethod
 
 ///|
@@ -861,6 +893,93 @@ pub fn flood_fill(
   threshold? : Int = 0,
 ) -> @types.Image raise @types.LoadError {
   @color.flood_fill(arg0, arg1, arg2, arg3, threshold~)
+}
+
+///|
+pub type PerspectiveMatrix = @transform.PerspectiveMatrix
+
+///|
+pub type AffineMatrix = @transform.AffineMatrix
+
+///|
+pub type Moments = @edge.Moments
+
+///|
+pub type Circle = @edge.Circle
+
+///|
+pub let get_perspective_transform : (
+  Array[(Float, Float)],
+  Array[(Float, Float)],
+) -> @transform.PerspectiveMatrix? = @transform.get_perspective_transform
+
+///|
+pub let warp_perspective : (
+  @types.Image,
+  @transform.PerspectiveMatrix,
+  Int,
+  Int,
+) -> @types.Image = @transform.warp_perspective
+
+///|
+pub let get_affine_transform : (Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix? = @transform.get_affine_transform
+
+///|
+pub let get_rotation_matrix_2d : ((Float, Float), Float, Float) -> @transform.AffineMatrix = @transform.get_rotation_matrix_2d
+
+///|
+pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] = @edge.convex_hull
+
+///|
+pub fn approx_poly_dp(
+  points : Array[@edge.ContourPoint],
+  epsilon : Float,
+  closed? : Bool = true,
+) -> Array[@edge.ContourPoint] {
+  @edge.approx_poly_dp(points, epsilon, closed~)
+}
+
+///|
+pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments = @edge.image_moments
+
+///|
+pub let hu_moments : (@edge.Moments) -> Array[Double] = @edge.hu_moments
+
+///|
+pub let min_enclosing_circle : (Array[@edge.ContourPoint]) -> (
+  @edge.ContourPoint,
+  Float,
+) = @edge.min_enclosing_circle
+
+///|
+pub fn hough_circles(
+  img : @types.Image,
+  dp? : Int = 1,
+  min_dist? : Int = 10,
+  param1? : Int = 100,
+  param2? : Int = 30,
+  min_radius? : Int = 0,
+  max_radius? : Int = 0,
+) -> Array[@edge.Circle] raise @types.LoadError {
+  @edge.hough_circles(
+    img,
+    dp~,
+    min_dist~,
+    param1~,
+    param2~,
+    min_radius~,
+    max_radius~,
+  )
+}
+
+///|
+pub fn multi_band_blend(
+  img_a : @types.Image,
+  img_b : @types.Image,
+  mask : @types.Image,
+  num_bands? : Int = 5,
+) -> @types.Image raise @types.LoadError {
+  @transform.multi_band_blend(img_a, img_b, mask, num_bands~)
 }
 
 // From format/

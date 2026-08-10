@@ -26,6 +26,8 @@ pub fn glcm_features(Array[Array[Int]]) -> GlcmFeatures
 
 pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[GlcmFeatures] raise @types.LoadError
 
+pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[CornerPoint] raise @types.LoadError
+
 pub fn hamming_distance(Array[Int], Array[Int]) -> Int
 
 pub fn harris_corners(@types.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[CornerPoint] raise @types.LoadError

@@ -8,6 +8,7 @@ import {
   "Toadium/image/src/process/feature",
   "Toadium/image/src/process/frequency",
   "Toadium/image/src/process/segment",
+  "Toadium/image/src/process/transform",
   "Toadium/image/src/types",
   "Toadium/image/src/util",
 }
@@ -34,6 +35,8 @@ pub fn ahash(@types.Image) -> Array[Int]
 pub fn apply_colormap(@types.Image, @color.Colormap) -> @types.Image
 
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn approx_poly_dp(Array[@edge.ContourPoint], Float, closed? : Bool) -> Array[@edge.ContourPoint]
 
 pub fn bench_run() -> Unit
 
@@ -93,6 +96,8 @@ pub fn contour_perimeter(@edge.Contour) -> Float
 
 pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 
+pub fn convex_hull(Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint]
+
 pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
 
 pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
@@ -100,6 +105,8 @@ pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadE
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
 pub fn cropf(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
+
+pub fn dct_2d(@types.Image) -> Array[Array[Double]]
 
 pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
@@ -191,11 +198,21 @@ pub fn gabor_filter_bank(@types.Image, Int, Float, num_orientations? : Int, lamb
 
 pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> Array[Array[Float]] raise @types.LoadError
 
+pub fn gamma_tonemap(@types.ImageF, Float) -> @types.Image
+
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
+
+pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix?
+
+pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.PerspectiveMatrix?
+
+pub fn get_rotation_matrix_2d((Float, Float), Float, Float) -> @transform.AffineMatrix
 
 pub fn glcm_features(Array[Array[Int]]) -> @feature.GlcmFeatures
 
 pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
+
+pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
 pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
@@ -227,6 +244,8 @@ pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
 
 pub fn histogram_normalize(@types.Image) -> @types.Image
 
+pub fn hough_circles(@types.Image, dp? : Int, min_dist? : Int, param1? : Int, param2? : Int, min_radius? : Int, max_radius? : Int) -> Array[@edge.Circle] raise @types.LoadError
+
 pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[@edge.HoughLine] raise @types.LoadError
 
 pub fn hough_lines_nms(Array[@edge.HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[@edge.HoughLine]
@@ -237,7 +256,13 @@ pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
+pub fn hu_moments(@edge.Moments) -> Array[Double]
+
+pub fn idct_2d(Array[Array[Double]]) -> @types.Image
+
 pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
+
+pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
 
 pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
@@ -287,6 +312,8 @@ pub fn median_blur(@types.Image, Int) -> @types.Image
 
 pub fn median_cut(@types.Image, Int) -> @types.Image
 
+pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
+
 pub fn morph_blackhat(@types.Image) -> @types.Image
 
 pub fn morph_close(@types.Image) -> @types.Image
@@ -306,6 +333,8 @@ pub fn mse(@types.Image, @types.Image) -> Double
 pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
 pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
+
+pub fn multi_band_blend(@types.Image, @types.Image, @types.Image, num_bands? : Int) -> @types.Image raise @types.LoadError
 
 pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @types.Image raise @types.LoadError
 
@@ -332,6 +361,8 @@ pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
 
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
+
+pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
 
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
@@ -405,6 +436,8 @@ pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
 
+pub fn warp_perspective(@types.Image, @transform.PerspectiveMatrix, Int, Int) -> @types.Image
+
 pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
 pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
@@ -428,6 +461,10 @@ pub fn ycbcr_to_rgb(Int, Int, Int) -> (Int, Int, Int)
 // Types and methods
 
 // Type aliases
+pub using @transform {type AffineMatrix}
+
+pub using @edge {type Circle}
+
 pub using @color {type Colormap}
 
 pub using @frequency {type Complex}
@@ -475,6 +512,10 @@ pub using @feature {type IntegralImage}
 pub using @feature {type IntegralImageSq}
 
 pub using @types {type LoadError}
+
+pub using @edge {type Moments}
+
+pub using @transform {type PerspectiveMatrix}
 
 pub using @meta {type PngTextChunk}
 

@@ -6,11 +6,15 @@ import {
 }
 
 // Values
+pub fn approx_poly_dp(Array[ContourPoint], Float, closed? : Bool) -> Array[ContourPoint]
+
 pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
 
 pub fn contour_area(Contour) -> Float
 
 pub fn contour_perimeter(Contour) -> Float
+
+pub fn convex_hull(Array[ContourPoint]) -> Array[ContourPoint]
 
 pub fn draw_contours(@types.Image, Array[Contour], Array[Byte]) -> @types.Image raise @types.LoadError
 
@@ -20,13 +24,28 @@ pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
 pub fn find_contours(@types.Image) -> Array[Contour] raise @types.LoadError
 
+pub fn hough_circles(@types.Image, dp? : Int, min_dist? : Int, param1? : Int, param2? : Int, min_radius? : Int, max_radius? : Int) -> Array[Circle] raise @types.LoadError
+
 pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[HoughLine] raise @types.LoadError
 
 pub fn hough_lines_nms(Array[HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[HoughLine]
 
+pub fn hu_moments(Moments) -> Array[Double]
+
+pub fn image_moments(Array[ContourPoint]) -> Moments
+
+pub fn min_enclosing_circle(Array[ContourPoint]) -> (ContourPoint, Float)
+
 // Errors
 
 // Types and methods
+pub(all) struct Circle {
+  x : Int
+  y : Int
+  radius : Int
+  votes : Int
+}
+
 pub(all) struct Contour {
   points : Array[ContourPoint]
   is_outer : Bool
@@ -41,6 +60,29 @@ pub(all) struct HoughLine {
   rho : Float
   theta : Float
   votes : Int
+}
+
+pub(all) struct Moments {
+  m00 : Double
+  m10 : Double
+  m01 : Double
+  m20 : Double
+  m11 : Double
+  m02 : Double
+  m30 : Double
+  m21 : Double
+  m12 : Double
+  m03 : Double
+  mu20 : Double
+  mu11 : Double
+  mu02 : Double
+  mu30 : Double
+  mu21 : Double
+  mu12 : Double
+  mu03 : Double
+  nu20 : Double
+  nu11 : Double
+  nu02 : Double
 }
 
 // Type aliases

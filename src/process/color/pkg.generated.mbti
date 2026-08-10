@@ -26,6 +26,8 @@ pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @
 
 pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
 
+pub fn gamma_tonemap(@types.ImageF, Float) -> @types.Image
+
 pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
 
 pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
@@ -45,6 +47,8 @@ pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Floa
 pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
+
+pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
 
 pub fn rgb_to_cmyk(Int, Int, Int) -> (Int, Int, Int, Int)
 

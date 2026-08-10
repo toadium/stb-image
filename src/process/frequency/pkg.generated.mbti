@@ -6,6 +6,8 @@ import {
 }
 
 // Values
+pub fn dct_2d(@types.Image) -> Array[Array[Double]]
+
 pub fn fft_2d(@types.Image) -> Array[FFTResult] raise @types.LoadError
 
 pub fn fft_magnitude(FFTResult, Bool) -> @types.Image
@@ -25,6 +27,8 @@ pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @types.Image
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
 
 pub fn haar_transform_2d(@types.Image, levels? : Int) -> HaarWaveletResult raise @types.LoadError
+
+pub fn idct_2d(Array[Array[Double]]) -> @types.Image
 
 pub fn ifft_2d(FFTResult) -> @types.Image
 
