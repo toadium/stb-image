@@ -70,6 +70,10 @@ pub fn psnr(@types.Image, @types.Image) -> Double
 
 pub fn ssim(@types.Image, @types.Image) -> Double
 
+pub fn template_match(@types.Image, @types.Image, match_method? : TemplateMatchMethod) -> Array[TemplateMatchResult] raise @types.LoadError
+
+pub fn template_match_best(@types.Image, @types.Image, match_method? : TemplateMatchMethod) -> TemplateMatchResult? raise @types.LoadError
+
 // Errors
 
 // Types and methods
@@ -123,6 +127,21 @@ pub(all) struct OrbKeyPoint {
   y : Int
   response : Float
   angle : Float
+}
+
+pub(all) enum TemplateMatchMethod {
+  SqDiff
+  CCorr
+  CCoeff
+  SqDiffNormed
+  CCorrNormed
+  CCoeffNormed
+}
+
+pub(all) struct TemplateMatchResult {
+  x : Int
+  y : Int
+  score : Float
 }
 
 // Type aliases

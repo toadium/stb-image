@@ -508,6 +508,10 @@ pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @typ
 
 pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
+pub fn template_match(@types.Image, @types.Image, match_method? : @feature.TemplateMatchMethod) -> Array[@feature.TemplateMatchResult] raise @types.LoadError
+
+pub fn template_match_best(@types.Image, @types.Image, match_method? : @feature.TemplateMatchMethod) -> @feature.TemplateMatchResult? raise @types.LoadError
+
 pub fn threshold(@types.Image, Int) -> @types.Image
 
 pub fn threshold_otsu(@types.Image) -> @types.Image raise @types.LoadError
@@ -636,6 +640,10 @@ pub using @segment {type SegmentRegion}
 pub using @segment {type StructuringElement}
 
 pub using @segment {type SuperpixelResult}
+
+pub using @feature {type TemplateMatchMethod}
+
+pub using @feature {type TemplateMatchResult}
 
 // Traits
 

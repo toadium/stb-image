@@ -102,6 +102,12 @@ pub type OrbDescriptor = @feature.OrbDescriptor
 ///|
 pub type DescriptorMatch = @feature.DescriptorMatch
 
+///|
+pub type TemplateMatchMethod = @feature.TemplateMatchMethod
+
+///|
+pub type TemplateMatchResult = @feature.TemplateMatchResult
+
 // From @lib/@pure (all-target pure MoonBit)
 
 ///|
@@ -479,6 +485,26 @@ pub fn orb_match(
   max_distance? : Int = 64,
 ) -> Array[@feature.DescriptorMatch] {
   @feature.orb_match(arg0, arg1, max_distance~)
+}
+
+///|
+/// 模板匹配
+pub fn template_match(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
+  @feature.template_match(arg0, arg1, match_method~)
+}
+
+///|
+/// 找到最佳模板匹配位置
+pub fn template_match_best(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> @feature.TemplateMatchResult? raise @types.LoadError {
+  @feature.template_match_best(arg0, arg1, match_method~)
 }
 
 ///|
