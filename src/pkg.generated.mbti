@@ -324,6 +324,10 @@ pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
 
 pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
+pub fn inpaint(@types.Image, @types.Image, iterations? : Int) -> @types.Image raise @types.LoadError
+
+pub fn inpaint_fast(@types.Image, @types.Image, radius? : Int) -> @types.Image raise @types.LoadError
+
 pub fn integral_image(@types.Image) -> @feature.IntegralImage raise @types.LoadError
 
 pub fn integral_image_sq(@types.Image) -> @feature.IntegralImageSq raise @types.LoadError

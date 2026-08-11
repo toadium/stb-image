@@ -1310,3 +1310,23 @@ pub let transpose : (@types.Image) -> @types.Image = @util.transpose
 
 ///|
 pub let vstack : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @util.vstack
+
+///|
+/// 图像修复（扩散法）
+pub fn inpaint(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  iterations? : Int = 100,
+) -> @types.Image raise @types.LoadError {
+  @filter.inpaint(arg0, arg1, iterations~)
+}
+
+///|
+/// 快速图像修复（距离加权平均）
+pub fn inpaint_fast(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  radius? : Int = 5,
+) -> @types.Image raise @types.LoadError {
+  @filter.inpaint_fast(arg0, arg1, radius~)
+}

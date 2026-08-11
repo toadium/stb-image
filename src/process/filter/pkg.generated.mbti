@@ -24,6 +24,10 @@ pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16
 
 pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF
 
+pub fn inpaint(@types.Image, @types.Image, iterations? : Int) -> @types.Image raise @types.LoadError
+
+pub fn inpaint_fast(@types.Image, @types.Image, radius? : Int) -> @types.Image raise @types.LoadError
+
 pub fn median_blur(@types.Image, Int) -> @types.Image
 
 pub fn median_blur_16(@types.Image16, Int) -> @types.Image16
