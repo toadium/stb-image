@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-10 | 当前版本：v3.0.0 | 测试：887×3 | 覆盖率：89.8%
+> 制定日期：2026-08-06 | 最后更新：2026-08-11 | 当前版本：v3.1.0 | 测试：887×3 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -60,15 +60,14 @@ flowchart LR
     class V10,V117,V20 milestone
 ```
 
-**image v1.10.0 的独特优势**：
+**image v3.1.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- ASan 内存安全验证（独家）
-- 128 公开函数 + 12 类型，341 测试 + 29 基准测试
+- 253 公开函数 + 36 类型，887 测试 × 3 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
-- **八子包架构**：types（全目标类型）/ pure（纯 MoonBit 后端，5 子包）/ lib（统一 API）/ process（图像处理）/ format（编解码）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
+- **多子包架构**：types（全目标类型）/ pure（纯 MoonBit 后端，3 子包：codec/color/util）/ lib（统一 API）/ process（图像处理，7 子包）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
 
 **主要差距**（对比 5 个已有库）：
 | 缺失功能 | 已有此功能的库 | 实现路径 |
@@ -381,7 +380,7 @@ flowchart LR
 **已选择路径 B**，v2.0 已完成全纯 MoonBit 实现，三目标各 872 测试通过，覆盖率 89.8%。
 
 ### 交付物（已完成）
-- `src/pure/{codec,pixel,color,process,util}/` — 纯 MoonBit 后端：9 格式编解码 + 几何/色彩/滤波/直方图/形态学/仿射/像素/混合等
+- `src/pure/{codec,color,util}/` — 纯 MoonBit 后端：9 格式编解码 + 几何/色彩/滤波/直方图/形态学/仿射/像素/混合等
 - `src/process/{color,edge,feature,filter,frequency,segment,transform}/` — 高级算法 7 子包
 - `src/lib/` — pure 侧统一 API + 自动格式分派
 - `src/types/` — 全目标类型包
@@ -608,6 +607,7 @@ flowchart LR
 | **v2.2** | **透视变换/轮廓分析/霍夫圆/DCT/色调映射** | **965** | **~215** | **✅ 已完成** |
 | **v2.3** | **TIFF/ICO/ICNS/APNG 格式扩展** | **995** | **~225** | **✅ 已完成** |
 | **v3.0** | **EXIF写入/seam carving/SLIC超像素/16-bit float泛化** | **887×3** | **253** | **✅ 已完成** |
+| **v3.1** | **架构优化：删除死代码+职责归位+命名统一+API设计修复** | **887×3** | **253** | **✅ 已完成** |
 
 ## 不做的事情
 

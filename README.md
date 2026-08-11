@@ -251,9 +251,7 @@ src/
 ├── types/              # 全目标类型 (Image, Image16, ImageF, LoadError 等)
 ├── pure/               # 纯 MoonBit 后端 (无 C FFI)
 │   ├── codec/          #   格式编解码
-│   ├── pixel/          #   像素操作
 │   ├── color/          #   颜色操作
-│   ├── process/        #   图像处理
 │   └── util/           #   工具
 ├── lib/                # 高层封装 (自动格式分派)
 ├── meta/               # 元数据 (EXIF, PNG meta)

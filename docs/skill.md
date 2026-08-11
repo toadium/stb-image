@@ -1,6 +1,6 @@
 ---
 name: image
-description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，645 测试 × 3 目标 (native/wasm-gc/js)，ASan 验证通过。
+description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，887 测试 × 3 目标 (native/wasm-gc/js)。
 ---
 
 # image 包使用指南
@@ -9,13 +9,13 @@ description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（
 
 ## 用途
 
-纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：三目标 (native/wasm-gc/js) 均使用纯 MoonBit（`src/pure/{codec,pixel,color,process,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PIC/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
+纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：三目标 (native/wasm-gc/js) 均使用纯 MoonBit（`src/pure/{codec,color,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
 
 ## 快速开始
 
 ```moonbit
-// 从文件路径加载
-let img : Image = load_from_path("photo.png")
+// 从内存字节加载
+let img : Image = load_from_bytes(png_bytes)
 println("width=\{img.width}, height=\{img.height}, channels=\{img.channels}")
 
 // 从内存字节加载，强制 RGBA
@@ -31,16 +31,16 @@ let resized : Image = resize(img, 128, 128)
 let any : Image = decode_any(data, req_channels=Some(3))
 
 // 加载动画 GIF
-let anim : GifAnimation = load_gif_from_path("animation.gif")
+let anim : GifAnimation = load_gif_from_bytes(gif_bytes)
 println("frames=\{anim.frames.length()}")
 
 // 读取 EXIF 元数据
-let exif : ExifInfo? = read_exif_from_path("photo.jpg")
+let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 ```
 
 ## API 概览
 
-### 类型（27 个）
+### 类型（36 个）
 
 | 类型 | 说明 |
 |------|------|
@@ -49,24 +49,24 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 | `ImageF` | HDR 浮点解码结果（IEEE 754 little-endian） |
 | `ImageInfo` | 图像信息 `{ width, height, channels }`，不含像素数据 |
 | `GifAnimation` | 动画 GIF `{ frames : Array[Image], delays : Array[Int] }` |
-| `LoadError` | 错误类型 `{ FileIO, UnsupportedFormat, DecodeFailed }` |
+| `LoadError` | 错误类型 `{ FileIO, UnsupportedFormat, DecodeFailed, EncodeFailed }` |
 | `ImageFormat` | 格式枚举 `{ Png, Jpeg, Bmp, Gif, Tga, Psd, Hdr, Pnm, Qoi, Unknown }` |
 | `ResizeFilter` | 缩放滤波器 `{ Default, Box, Triangle, CubicBSPline, CatmullROM, Mitchell, PointSample }` |
 | `ResizeEdge` | 缩放边缘模式 `{ Clamp, Reflect, Wrap, Zero }` |
 | `ExifInfo` | EXIF 元数据 `{ make, model, date_time : String, orientation : Int }` |
 | `PngTextChunk` | PNG 文本块 `{ keyword, text : String }` |
 
-### 加载（8 函数）
+### 加载（3 函数）
 
-`load_from_*`、`load_16_from_*`、`loadf_from_*`、`load_gif_from_*` — 均支持 `req_channels? : Int?` 可选参数
+`load_from_bytes`、`load_f_from_bytes`、`load_gif_from_bytes` — `load_from_bytes` 支持 `req_channels? : Int?` 可选参数
 
-### 写入（10 函数）
+### 写入（5 函数）
 
-`write_png/bmp/tga/jpeg_to_path/bytes` + `write_hdr_to_path/bytes` — JPEG 支持 `quality? : Int`（默认 90）
+`write_png_to_bytes` / `write_bmp_to_bytes` / `write_tga_to_bytes` / `write_jpeg_to_bytes` / `write_hdr_to_bytes`
 
-### 缩放（4 函数）
+### 缩放（1 函数）
 
-`resize` / `resize_srgb` / `resize_16` / `resizef` — 支持 `filter? : ResizeFilter` 和 `edge? : ResizeEdge` 可选参数
+`resize` — 支持 `filter? : ResizeFilter` 和 `edge? : ResizeEdge` 可选参数
 
 ### 格式检测（3 函数）
 
@@ -81,7 +81,7 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
 ### 图像处理（19+ 函数）
 
-- 变换：`crop` / `crop_16` / `cropf` / `rotate_90` / `rotate_180` / `rotate_270` / `flip_horizontal`
+- 变换：`crop` / `crop_16` / `crop_f` / `rotate_90` / `rotate_180` / `rotate_270` / `flip_horizontal`
 - 色彩：`to_grayscale` / `to_rgb` / `to_rgba` / `premultiply_alpha` / `unpremultiply_alpha`
 - 绘制：`draw_copy` / `draw_over`
 
@@ -107,19 +107,15 @@ let exif : ExifInfo? = read_exif_from_path("photo.jpg")
 
 ### 元数据（4 函数）
 
-`read_exif_from_bytes` / `read_exif_from_path` / `read_png_text_chunks` / `read_png_text_chunks_from_path`
+`read_exif_from_bytes` / `read_png_text_chunks` / `create_exif_segment` / `write_exif_to_bytes`
 
-### 查询（7 函数）
+### 查询（3 函数）
 
-`info_from_*`、`is_16_bit_from_*`、`is_hdr_from_*`、`failure_reason`
+`info_from_bytes`、`is_16_bit_from_bytes`、`is_hdr_from_bytes`、`failure_reason`
 
 ### 配置（8 函数）
 
 `set_flip_vertically_on_load`、`flip_vertically_on_write`、`set_unpremultiply_on_load`、`convert_iphone_png_to_rgb`、`hdr_to_ldr_gamma/scale`、`ldr_to_hdr_gamma/scale`
-
-### 文件 I/O（1 函数）
-
-`read_file_bytes`
 
 ## 最小示例
 
@@ -140,6 +136,7 @@ try {
   LoadError::FileIO(msg) => println("文件 IO 错误: \{msg}")
   LoadError::DecodeFailed(msg) => println("解码失败: \{msg}")
   LoadError::UnsupportedFormat(msg) => println("格式不支持: \{msg}")
+  LoadError::EncodeFailed(msg) => println("编码失败: \{msg}")
 }
 ```
 
@@ -147,16 +144,16 @@ try {
 
 ## 目标后端
 
-多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,pixel,color,process,util}/`。三目标各 645 测试通过。
+多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,color,util}/`。三目标各 887 测试通过。
 
 ## 架构
 
-八子包分层架构，依赖单向向下：
+多子包分层架构，依赖单向向下：
 
 1. **类型层**：`types/`（全目标类型定义：Image/Image16/ImageF/ImageInfo 等）
-2. **纯 MoonBit 后端层**：`pure/{codec,pixel,color,process,util}/`（纯 MoonBit 实现，无 C FFI 依赖，三目标共用）
-3. **统一 API 层**：`lib/`（pure 侧统一 API + 格式自动分派）+ `process/`（图像处理）+ `format/`（编解码）+ `meta/`（元数据）+ `util/`（工具函数）
-4. **测试与文档层**：`*_test.mbt`（645 测试 × 3 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
+2. **纯 MoonBit 后端层**：`pure/{codec,color,util}/`（纯 MoonBit 实现，无 C FFI 依赖，三目标共用）
+3. **统一 API 层**：`lib/`（pure 侧统一 API + 格式自动分派）+ `process/`（图像处理，7 子包）+ `meta/`（元数据）+ `util/`（工具函数）
+4. **测试与文档层**：`*_test.mbt`（887 测试 × 3 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
 
 ## 版本演进
 
@@ -164,15 +161,16 @@ try {
 - **v0.2**：写入（PNG/BMP/TGA/JPEG）+ req_channels + 翻转
 - **v0.3**：16位/浮点加载 + info + is_16_bit/is_hdr + failure_reason + 配置
 - **v0.4**：HDR 配置 + 动画 GIF
-- **v1.0**：API 冻结，完整文档，61 测试，ASan 验证通过
-- **v1.1**：HDR 写入 + 缩放（FFI stb_image_resize2.h），75 测试
+- **v1.0**：API 冻结，完整文档，61 测试
+- **v1.1**：HDR 写入 + 缩放，75 测试
 - **v1.2**：QOI/ICO/ICNS/GIF 编码 + 格式自动检测，114 测试
 - **v1.3**：裁剪/旋转/翻转 + 色彩转换 + 绘制/合成，145 测试
 - **v1.4**：色彩调整/滤波/几何变换/直方图/量化，206 测试
 - **v1.5**：PNM 编码 + GIF 动画 + EXIF 读取，229 测试
 - **v1.6**：PNG 元数据 + 往返测试 + 性能基准，254 测试 + 29 基准测试
 - **v1.7-v1.17**：高级图像处理（混合模式/FFT/自适应阈值/连通域/积分图像/霍夫变换/LBP/金字塔/双边滤波/轮廓/分割/NLM/Retinex/Canny/分水岭/GLCM/Haar小波/Harris角点/去雾/距离变换/Gabor滤波），533 测试 + 29 基准测试
-- **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，645 测试 × 3 目标 (native/wasm-gc/js)
+- **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，872 测试 × 3 目标 (native/wasm-gc/js)
+- **v3.0**：EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，887 测试 × 3 目标
 
 ## 限制
 

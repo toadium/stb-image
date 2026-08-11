@@ -65,7 +65,7 @@ let info : ImageInfo? = info_from_bytes(data)
 | `ImageInfo { width, height, channels }` | Image info without pixel data |
 | `GifAnimation { frames : Array[Image], delays : Array[Int] }` | Animated GIF (frames + delays in ms) |
 | `SuperpixelResult { labels, centers, num_labels }` | SLIC superpixel segmentation result |
-| `LoadError { FileIO, UnsupportedFormat, DecodeFailed }` | Load failure error |
+| `LoadError { FileIO, UnsupportedFormat, DecodeFailed, EncodeFailed }` | Load failure error |
 
 ## Load API
 
@@ -170,6 +170,7 @@ try {
   LoadError::FileIO(msg) => println("file io error: \{msg}")
   LoadError::DecodeFailed(msg) => println("decode failed: \{msg}")
   LoadError::UnsupportedFormat(msg) => println("unsupported: \{msg}")
+  LoadError::EncodeFailed(msg) => println("encode failed: \{msg}")
 }
 ```
 
@@ -189,3 +190,4 @@ Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FF
 - **v2.2**: 透视变换/轮廓分析/霍夫圆/DCT/色调映射
 - **v2.3**: TIFF/ICO/CUR/ICNS/APNG 格式扩展
 - **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，887 测试
+- **v3.1**: 架构优化重构（删除死代码、职责归位、命名统一、API 设计修复）

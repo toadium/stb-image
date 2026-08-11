@@ -12,7 +12,7 @@
 | `ImageInfo` | types | `width, height, channels : Int` | 图像信息（无像素数据） |
 | `GifAnimation` | types | `frames : Array[Image]; delays : Array[Int]` | 动画GIF |
 | `PngAnimation` | types | `frames : Array[Image]; delays : Array[Int]` | 动画PNG (APNG) |
-| `LoadError` | types | `FileIO(String) \| UnsupportedFormat(String) \| DecodeFailed(String)` | 加载失败错误 |
+| `LoadError` | types | `FileIO(String) \| UnsupportedFormat(String) \| DecodeFailed(String) \| EncodeFailed(String)` | 加载失败错误 |
 | `ImageFormat` | types | `Png \| Jpeg \| Bmp \| Gif \| Tga \| Psd \| Hdr \| Pnm \| Qoi \| Unknown` | 图像格式枚举 |
 | `ResizeFilter` | types | `Default \| Box \| Triangle \| CubicBSPline \| CatmullROM \| Mitchell \| PointSample` | 缩放滤波器 |
 | `ResizeEdge` | types | `Clamp \| Reflect \| Wrap \| Zero` | 缩放边缘模式 |

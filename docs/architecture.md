@@ -186,7 +186,7 @@ flowchart TB
 
 **关键设计**：
 - `Image.data : Bytes` — 像素数据存储在 MoonBit 管理的 `Bytes` 中
-- `LoadError` — 三种错误变体：`FileIO` / `UnsupportedFormat` / `DecodeFailed`
+- `LoadError` — 四种错误变体：`FileIO` / `UnsupportedFormat` / `DecodeFailed` / `EncodeFailed`
 - `req_channels` — 可选参数强制输出通道数（1=灰度, 2=灰度+Alpha, 3=RGB, 4=RGBA）
 
 ### pure/ — 纯 MoonBit 后端
@@ -474,6 +474,7 @@ classDiagram
         FileIO(String)
         UnsupportedFormat(String)
         DecodeFailed(String)
+        EncodeFailed(String)
     }
     class ImageFormat {
         <<enum>>
