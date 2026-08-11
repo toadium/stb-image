@@ -58,6 +58,12 @@ pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn mse(@types.Image, @types.Image) -> Double
 
+pub fn orb_detect(@types.Image, max_features? : Int, threshold? : Int) -> Array[OrbDescriptor] raise @types.LoadError
+
+pub fn orb_hamming(OrbDescriptor, OrbDescriptor) -> Int
+
+pub fn orb_match(Array[OrbDescriptor], Array[OrbDescriptor], max_distance? : Int) -> Array[DescriptorMatch]
+
 pub fn phash(@types.Image) -> Array[Int]
 
 pub fn psnr(@types.Image, @types.Image) -> Double
@@ -71,6 +77,12 @@ pub(all) struct CornerPoint {
   x : Int
   y : Int
   response : Float
+}
+
+pub(all) struct DescriptorMatch {
+  query_idx : Int
+  train_idx : Int
+  distance : Int
 }
 
 pub struct GlcmFeatures {
@@ -99,6 +111,18 @@ pub struct IntegralImageSq {
   width : Int
   height : Int
   data : Array[Int64]
+}
+
+pub(all) struct OrbDescriptor {
+  kp : OrbKeyPoint
+  data : Array[Int]
+}
+
+pub(all) struct OrbKeyPoint {
+  x : Int
+  y : Int
+  response : Float
+  angle : Float
 }
 
 // Type aliases

@@ -93,6 +93,15 @@ pub type HaarWaveletResult = @frequency.HaarWaveletResult
 ///|
 pub type CornerPoint = @feature.CornerPoint
 
+///|
+pub type OrbKeyPoint = @feature.OrbKeyPoint
+
+///|
+pub type OrbDescriptor = @feature.OrbDescriptor
+
+///|
+pub type DescriptorMatch = @feature.DescriptorMatch
+
 // From @lib/@pure (all-target pure MoonBit)
 
 ///|
@@ -446,6 +455,30 @@ pub fn harris_corners(
   min_distance? : Int = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.harris_corners(arg0, k~, threshold~, min_distance~)
+}
+
+///|
+/// ORB 特征检测
+pub fn orb_detect(
+  arg0 : @types.Image,
+  max_features? : Int = 500,
+  threshold? : Int = 20,
+) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
+  @feature.orb_detect(arg0, max_features~, threshold~)
+}
+
+///|
+/// ORB 描述子汉明距离
+pub let orb_hamming : (@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int = @feature.orb_hamming
+
+///|
+/// ORB 特征匹配
+pub fn orb_match(
+  arg0 : Array[@feature.OrbDescriptor],
+  arg1 : Array[@feature.OrbDescriptor],
+  max_distance? : Int = 64,
+) -> Array[@feature.DescriptorMatch] {
+  @feature.orb_match(arg0, arg1, max_distance~)
 }
 
 ///|

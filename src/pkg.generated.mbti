@@ -406,6 +406,12 @@ pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int
 
 pub fn nlm_denoise_fast(@types.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @types.Image raise @types.LoadError
 
+pub fn orb_detect(@types.Image, max_features? : Int, threshold? : Int) -> Array[@feature.OrbDescriptor] raise @types.LoadError
+
+pub fn orb_hamming(@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int
+
+pub fn orb_match(Array[@feature.OrbDescriptor], Array[@feature.OrbDescriptor], max_distance? : Int) -> Array[@feature.DescriptorMatch]
+
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
 pub fn phash(@types.Image) -> Array[Int]
@@ -569,6 +575,8 @@ pub using @edge {type ContourPoint}
 
 pub using @feature {type CornerPoint}
 
+pub using @feature {type DescriptorMatch}
+
 pub using @meta {type ExifInfo}
 
 pub using @frequency {type FFTResult}
@@ -606,6 +614,10 @@ pub using @feature {type IntegralImageSq}
 pub using @types {type LoadError}
 
 pub using @edge {type Moments}
+
+pub using @feature {type OrbDescriptor}
+
+pub using @feature {type OrbKeyPoint}
 
 pub using @transform {type PerspectiveMatrix}
 
