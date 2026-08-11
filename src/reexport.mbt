@@ -103,6 +103,9 @@ pub type OrbDescriptor = @feature.OrbDescriptor
 pub type DescriptorMatch = @feature.DescriptorMatch
 
 ///|
+pub type FlowResult = @feature.FlowResult
+
+///|
 pub type TemplateMatchMethod = @feature.TemplateMatchMethod
 
 ///|
@@ -505,6 +508,29 @@ pub fn template_match_best(
   match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> @feature.TemplateMatchResult? raise @types.LoadError {
   @feature.template_match_best(arg0, arg1, match_method~)
+}
+
+///|
+/// Lucas-Kanade 稀疏光流
+pub fn lucas_kanade(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  arg2 : Array[(Int, Int)],
+  window_size? : Int = 15,
+  max_iter? : Int = 20,
+) -> Array[@feature.FlowResult] raise @types.LoadError {
+  @feature.lucas_kanade(arg0, arg1, arg2, window_size~, max_iter~)
+}
+
+///|
+/// Horn-Schunck 密集光流
+pub fn horn_schunck(
+  arg0 : @types.Image,
+  arg1 : @types.Image,
+  alpha? : Float = 1.0F,
+  iterations? : Int = 100,
+) -> (Array[Float], Array[Float]) raise @types.LoadError {
+  @feature.horn_schunck(arg0, arg1, alpha~, iterations~)
 }
 
 ///|

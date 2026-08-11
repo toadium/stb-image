@@ -40,6 +40,8 @@ pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
 
 pub fn histogram_normalize(@types.Image) -> @types.Image
 
+pub fn horn_schunck(@types.Image, @types.Image, alpha? : Float, iterations? : Int) -> (Array[Float], Array[Float]) raise @types.LoadError
+
 pub fn integral_image(@types.Image) -> IntegralImage raise @types.LoadError
 
 pub fn integral_image_sq(@types.Image) -> IntegralImageSq raise @types.LoadError
@@ -55,6 +57,8 @@ pub fn integral_variance(IntegralImage, IntegralImageSq, Int, Int, Int, Int) -> 
 pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], window_size? : Int, max_iter? : Int) -> Array[FlowResult] raise @types.LoadError
 
 pub fn mse(@types.Image, @types.Image) -> Double
 
@@ -87,6 +91,14 @@ pub(all) struct DescriptorMatch {
   query_idx : Int
   train_idx : Int
   distance : Int
+}
+
+pub(all) struct FlowResult {
+  x : Float
+  y : Float
+  u : Float
+  v : Float
+  found : Bool
 }
 
 pub struct GlcmFeatures {

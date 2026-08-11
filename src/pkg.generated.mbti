@@ -300,6 +300,8 @@ pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
 
 pub fn histogram_normalize(@types.Image) -> @types.Image
 
+pub fn horn_schunck(@types.Image, @types.Image, alpha? : Float, iterations? : Int) -> (Array[Float], Array[Float]) raise @types.LoadError
+
 pub fn hough_circles(@types.Image, dp? : Int, min_dist? : Int, param1? : Int, param2? : Int, min_radius? : Int, max_radius? : Int) -> Array[@edge.Circle] raise @types.LoadError
 
 pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[@edge.HoughLine] raise @types.LoadError
@@ -367,6 +369,8 @@ pub fn load_f_from_bytes(Bytes) -> @types.ImageF raise @types.LoadError
 pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
 pub fn load_gif_from_bytes(Bytes) -> @types.GifAnimation raise @types.LoadError
+
+pub fn lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], window_size? : Int, max_iter? : Int) -> Array[@feature.FlowResult] raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
 
@@ -588,6 +592,8 @@ pub using @feature {type DescriptorMatch}
 pub using @meta {type ExifInfo}
 
 pub using @frequency {type FFTResult}
+
+pub using @feature {type FlowResult}
 
 pub using @frequency {type FreqFilterType}
 
