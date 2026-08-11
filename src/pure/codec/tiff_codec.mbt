@@ -23,9 +23,9 @@ priv struct TiffContext {
 /// 读取 16-bit 值（根据字节序）
 fn tiff_read_u16(ctx : TiffContext, offset : Int) -> Int {
   if ctx.little_endian {
-    ctx.data[offset].to_int() | (ctx.data[offset + 1].to_int() << 8)
+    read_u16_le(ctx.data, offset)
   } else {
-    (ctx.data[offset].to_int() << 8) | ctx.data[offset + 1].to_int()
+    read_u16_be(ctx.data, offset)
   }
 }
 
@@ -33,32 +33,10 @@ fn tiff_read_u16(ctx : TiffContext, offset : Int) -> Int {
 /// 读取 32-bit 值（根据字节序）
 fn tiff_read_u32(ctx : TiffContext, offset : Int) -> Int {
   if ctx.little_endian {
-    ctx.data[offset].to_int() |
-    (ctx.data[offset + 1].to_int() << 8) |
-    (ctx.data[offset + 2].to_int() << 16) |
-    (ctx.data[offset + 3].to_int() << 24)
+    read_u32_le(ctx.data, offset)
   } else {
-    (ctx.data[offset].to_int() << 24) |
-    (ctx.data[offset + 1].to_int() << 16) |
-    (ctx.data[offset + 2].to_int() << 8) |
-    ctx.data[offset + 3].to_int()
+    read_u32_be(ctx.data, offset)
   }
-}
-
-///|
-/// 写入 16-bit 小端
-fn tiff_write_u16_le(out : Array[Byte], val : Int) -> Unit {
-  out.push((val & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-}
-
-///|
-/// 写入 32-bit 小端
-fn tiff_write_u32_le(out : Array[Byte], val : Int) -> Unit {
-  out.push((val & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-  out.push(((val >> 16) & 0xFF).to_byte())
-  out.push(((val >> 24) & 0xFF).to_byte())
 }
 
 ///|
@@ -348,7 +326,7 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   let channels = img.channels
   let data = img.data
   if channels != 1 && channels != 3 && channels != 4 {
-    raise @types.LoadError::DecodeFailed(
+    raise @types.LoadError::EncodeFailed(
       "TIFF 编码需要 channels 为 1 (灰度)、3 (RGB) 或 4 (RGBA)",
     )
   }
@@ -356,8 +334,8 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   // TIFF Header (8 bytes)
   out.push(b'\x49') // 'I' little-endian
   out.push(b'\x49') // 'I'
-  tiff_write_u16_le(out, 42) // magic
-  tiff_write_u32_le(out, 8) // IFD offset (immediately after header)
+  write_u16_le(out, 42) // magic
+  write_u32_le(out, 8) // IFD offset (immediately after header)
   // IFD: count(2) + entries(12 each) + next IFD offset(4)
   // 需要的 tags:
   // 256 ImageWidth, 257 ImageLength, 258 BitsPerSample,
@@ -374,7 +352,7 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   let pixel_offset = bps_offset + bps_actual
   let pixel_size = width * height * channels
   // 写入 IFD
-  tiff_write_u16_le(out, num_entries)
+  write_u16_le(out, num_entries)
   // 辅助函数：写入 IFD 条目
   let write_entry = fn(
     tag : Int,
@@ -382,10 +360,10 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
     count : Int,
     value : Int,
   ) -> Unit {
-    tiff_write_u16_le(out, tag)
-    tiff_write_u16_le(out, type_id)
-    tiff_write_u32_le(out, count)
-    tiff_write_u32_le(out, value)
+    write_u16_le(out, tag)
+    write_u16_le(out, type_id)
+    write_u32_le(out, count)
+    write_u32_le(out, value)
   }
   // 256: ImageWidth (LONG)
   write_entry(256, 4, 1, width)
@@ -413,11 +391,11 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   // 279: StripByteCounts (LONG)
   write_entry(279, 4, 1, pixel_size)
   // Next IFD offset = 0 (无更多 IFD)
-  tiff_write_u32_le(out, 0)
+  write_u32_le(out, 0)
   // BitsPerSample 外部数据
   if bps_external {
     for _ in 0..<channels {
-      tiff_write_u16_le(out, 8)
+      write_u16_le(out, 8)
     }
   }
   // 像素数据

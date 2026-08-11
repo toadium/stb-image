@@ -120,7 +120,7 @@ fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
 /// 输入 channels 应为 3 (RGB) 或 4 (RGBA，alpha 忽略)
 pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed(
+    raise @types.LoadError::EncodeFailed(
       "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
     )
   }
@@ -172,6 +172,120 @@ pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   let lzw_data = lzw_compress(indices, 8)
   for i in 0..<lzw_data.length() {
     out.push(lzw_data[i])
+  }
+  // Trailer
+  out.push(b'\x3B')
+  Bytes::from_array(out)
+}
+
+///|
+/// 将多帧 Image 编码为动画 GIF89a 字节流。
+/// frames 为帧数组，delays 为每帧延迟（毫秒，将转换为 1/100 秒单位）。
+/// 所有帧应具有相同尺寸和 channels（3 或 4）。
+/// 使用 3-3-2 均匀量化 + LZW 压缩，无限循环。
+pub fn encode_gif_animation_pure(
+  anim : @types.GifAnimation,
+) -> Bytes raise @types.LoadError {
+  let frames = anim.frames
+  let delays = anim.delays
+  if frames.length() == 0 {
+    raise @types.LoadError::EncodeFailed("GIF 动画至少需要 1 帧")
+  }
+  if frames.length() != delays.length() {
+    raise @types.LoadError::EncodeFailed("frames 和 delays 长度不匹配")
+  }
+  let first = frames[0]
+  if first.channels != 3 && first.channels != 4 {
+    raise @types.LoadError::EncodeFailed(
+      "GIF 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
+    )
+  }
+  let w = first.width
+  let h = first.height
+  let out : Array[Byte] = []
+  // GIF89a header
+  out.push(b'\x47')
+  out.push(b'\x49')
+  out.push(b'\x46')
+  out.push(b'\x38')
+  out.push(b'\x39')
+  out.push(b'\x61')
+  // Logical Screen Descriptor
+  out.push((w & 0xFF).to_byte())
+  out.push(((w >> 8) & 0xFF).to_byte())
+  out.push((h & 0xFF).to_byte())
+  out.push(((h >> 8) & 0xFF).to_byte())
+  out.push(b'\xF7') // global color table flag, 256 colors
+  out.push(b'\x00') // background color index
+  out.push(b'\x00') // pixel aspect ratio
+  // Global Color Table (256 * 3 = 768 bytes)
+  let palette = build_332_palette()
+  for i in 0..<768 {
+    out.push(palette[i])
+  }
+  // Netscape Application Extension (无限循环)
+  out.push(b'\x21') // Extension Introducer
+  out.push(b'\xFF') // Application Extension Label
+  out.push(b'\x0B') // Block Size
+  // "NETSCAPE2.0"
+  out.push(b'\x4E')
+  out.push(b'\x45')
+  out.push(b'\x54')
+  out.push(b'\x53')
+  out.push(b'\x43')
+  out.push(b'\x41')
+  out.push(b'\x50')
+  out.push(b'\x45')
+  out.push(b'\x32')
+  out.push(b'\x2E')
+  out.push(b'\x30')
+  out.push(b'\x03') // Sub-block size
+  out.push(b'\x01') // Sub-block ID
+  out.push(b'\x00') // loop count LE (0 = infinite)
+  out.push(b'\x00')
+  out.push(b'\x00') // Block Terminator
+  // 每帧
+  for fi in 0..<frames.length() {
+    let frame = frames[fi]
+    // Graphic Control Extension
+    out.push(b'\x21') // Extension Introducer
+    out.push(b'\xF9') // Graphic Control Label
+    out.push(b'\x04') // Block Size
+    out.push(b'\x00') // packed: disposal=0, no user input, no transparency
+    // delay in 1/100 seconds (毫秒 / 10)
+    let delay = delays[fi] / 10
+    out.push((delay & 0xFF).to_byte())
+    out.push(((delay >> 8) & 0xFF).to_byte())
+    out.push(b'\x00') // transparent color index
+    out.push(b'\x00') // Block Terminator
+    // 量化像素
+    let indices : Array[Int] = Array::make(frame.width * frame.height, 0)
+    for y in 0..<frame.height {
+      for x in 0..<frame.width {
+        let idx = y * frame.width + x
+        let r = frame.data[idx * frame.channels].to_int()
+        let g = frame.data[idx * frame.channels + 1].to_int()
+        let b = frame.data[idx * frame.channels + 2].to_int()
+        indices[idx] = quantize_332(r, g, b)
+      }
+    }
+    // Image Descriptor
+    out.push(b'\x2C') // Image Separator
+    out.push(b'\x00') // left position LE
+    out.push(b'\x00')
+    out.push(b'\x00') // top position LE
+    out.push(b'\x00')
+    out.push((frame.width & 0xFF).to_byte())
+    out.push(((frame.width >> 8) & 0xFF).to_byte())
+    out.push((frame.height & 0xFF).to_byte())
+    out.push(((frame.height >> 8) & 0xFF).to_byte())
+    out.push(b'\x00') // packed: no local color table, not interlaced
+    // LZW Image Data
+    out.push(b'\x08') // LZW Minimum Code Size
+    let lzw_data = lzw_compress(indices, 8)
+    for i in 0..<lzw_data.length() {
+      out.push(lzw_data[i])
+    }
   }
   // Trailer
   out.push(b'\x3B')

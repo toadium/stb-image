@@ -1,4 +1,8 @@
-// 色彩模型转换（纯 MoonBit）
+// color_convert.mbt：色彩空间与通道操作
+// 本文件包含两类操作：
+//   1. 色彩空间转换：rgb_to_hsv/hsv_to_rgb、rgb_to_xyz/xyz_to_rgb、rgb_to_lab/lab_to_rgb、
+//      rgb_to_ycbcr/ycbcr_to_rgb、rgb_to_cmyk/cmyk_to_rgb 等
+//   2. 通道操作：to_grayscale/to_rgb/to_rgba、premultiply_alpha/unpremultiply_alpha 等
 
 ///|
 /// 转为灰度图（channels=1）

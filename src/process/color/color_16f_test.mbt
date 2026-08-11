@@ -85,18 +85,18 @@ test "adjust_brightness_16: clamps to 65535" {
 }
 
 ///|
-test "adjust_brightnessf: delta=0 is identity" {
+test "adjust_brightness_f: delta=0 is identity" {
   let img = make_imgf(3, 3, 3)
-  let result = adjust_brightnessf(img, 0.0F)
+  let result = adjust_brightness_f(img, 0.0F)
   assert_eq(result, img)
   let _ = img
   let _ = result
 }
 
 ///|
-test "adjust_brightnessf: preserves dimensions" {
+test "adjust_brightness_f: preserves dimensions" {
   let img = make_imgf(4, 3, 3)
-  let result = adjust_brightnessf(img, 0.1F)
+  let result = adjust_brightness_f(img, 0.1F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -125,9 +125,9 @@ test "adjust_contrast_16: preserves dimensions" {
 }
 
 ///|
-test "adjust_contrastf: factor=1.0 is identity" {
+test "adjust_contrast_f: factor=1.0 is identity" {
   let img = make_imgf(3, 3, 3)
-  let result = adjust_contrastf(img, 1.0F)
+  let result = adjust_contrast_f(img, 1.0F)
   assert_eq(result.width, 3)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -136,9 +136,9 @@ test "adjust_contrastf: factor=1.0 is identity" {
 }
 
 ///|
-test "adjust_contrastf: preserves dimensions" {
+test "adjust_contrast_f: preserves dimensions" {
   let img = make_imgf(4, 3, 3)
-  let result = adjust_contrastf(img, 2.0F)
+  let result = adjust_contrast_f(img, 2.0F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   let _ = img
@@ -156,9 +156,9 @@ test "adjust_brightness_16: grayscale image" {
 }
 
 ///|
-test "adjust_brightnessf: negative delta darkens" {
+test "adjust_brightness_f: negative delta darkens" {
   let img = make_imgf(2, 2, 3)
-  let result = adjust_brightnessf(img, -0.1F)
+  let result = adjust_brightness_f(img, -0.1F)
   assert_eq(result.width, 2)
   assert_eq(result.height, 2)
   let _ = img

@@ -4,44 +4,6 @@
 // 仅支持全尺寸帧（x_offset=0, y_offset=0, frame_w=width, frame_h=height）
 
 ///|
-/// APNG 动画解码结果
-pub(all) struct PngAnimation {
-  frames : Array[@types.Image]
-  delays : Array[Int] // 毫秒
-} derive(Eq, @debug.Debug)
-
-///|
-/// 读取 PNG chunk 的 4 字节大端长度
-fn apng_read_u32_be(data : Bytes, offset : Int) -> Int {
-  (data[offset].to_int() << 24) |
-  (data[offset + 1].to_int() << 16) |
-  (data[offset + 2].to_int() << 8) |
-  data[offset + 3].to_int()
-}
-
-///|
-/// 读取 2 字节大端
-fn apng_read_u16_be(data : Bytes, offset : Int) -> Int {
-  (data[offset].to_int() << 8) | data[offset + 1].to_int()
-}
-
-///|
-/// 写入 4 字节大端
-fn apng_write_u32_be(out : Array[Byte], val : Int) -> Unit {
-  out.push(((val >> 24) & 0xFF).to_byte())
-  out.push(((val >> 16) & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-  out.push((val & 0xFF).to_byte())
-}
-
-///|
-/// 写入 2 字节大端
-fn apng_write_u16_be(out : Array[Byte], val : Int) -> Unit {
-  out.push(((val >> 8) & 0xFF).to_byte())
-  out.push((val & 0xFF).to_byte())
-}
-
-///|
 /// 从 4 字节构造 chunk type 字符串
 fn apng_chunk_type(data : Bytes, offset : Int) -> String {
   let buf : Array[Byte] = [
@@ -71,20 +33,13 @@ fn apng_parse_chunks(data : Bytes) -> Array[PngChunk] raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("PNG/APNG 数据过短")
   }
   // 验证 PNG signature
-  if data[0].to_int() != 0x89 ||
-    data[1].to_int() != 0x50 ||
-    data[2].to_int() != 0x4E ||
-    data[3].to_int() != 0x47 ||
-    data[4].to_int() != 0x0D ||
-    data[5].to_int() != 0x0A ||
-    data[6].to_int() != 0x1A ||
-    data[7].to_int() != 0x0A {
+  if !is_png_signature(data, 0) {
     raise @types.LoadError::DecodeFailed("PNG signature 错误")
   }
   let chunks : Array[PngChunk] = []
   let mut pos = 8
   while pos + 8 <= len {
-    let chunk_len = apng_read_u32_be(data, pos)
+    let chunk_len = read_u32_be(data, pos)
     let chunk_type = apng_chunk_type(data, pos + 4)
     pos += 8
     if pos + chunk_len + 4 > len {
@@ -120,7 +75,7 @@ fn build_standalone_png(ihdr_data : Bytes, idat_data : Bytes) -> Bytes {
   out.push(b'\x1A')
   out.push(b'\x0A')
   // IHDR
-  apng_write_u32_be(out, ihdr_data.length())
+  write_u32_be(out, ihdr_data.length())
   out.push(b'\x49')
   out.push(b'\x48')
   out.push(b'\x44')
@@ -134,9 +89,9 @@ fn build_standalone_png(ihdr_data : Bytes, idat_data : Bytes) -> Bytes {
     crc_data.push(ihdr_data[i])
   }
   let ihdr_crc = @util.crc32(Bytes::from_array(crc_data))
-  apng_write_u32_be(out, ihdr_crc)
+  write_u32_be(out, ihdr_crc)
   // IDAT
-  apng_write_u32_be(out, idat_data.length())
+  write_u32_be(out, idat_data.length())
   out.push(b'\x49')
   out.push(b'\x44')
   out.push(b'\x41')
@@ -149,22 +104,24 @@ fn build_standalone_png(ihdr_data : Bytes, idat_data : Bytes) -> Bytes {
     idat_crc_data.push(idat_data[i])
   }
   let idat_crc = @util.crc32(Bytes::from_array(idat_crc_data))
-  apng_write_u32_be(out, idat_crc)
+  write_u32_be(out, idat_crc)
   // IEND
-  apng_write_u32_be(out, 0)
+  write_u32_be(out, 0)
   out.push(b'\x49')
   out.push(b'\x45')
   out.push(b'\x4E')
   out.push(b'\x44')
   let iend_crc = @util.crc32(b"\x49\x45\x4E\x44")
-  apng_write_u32_be(out, iend_crc)
+  write_u32_be(out, iend_crc)
   Bytes::from_array(out)
 }
 
 ///|
 /// 解码 APNG 字节流为 PngAnimation
 /// 如果不是 APNG（无 acTL chunk），则当作单帧 PNG 返回
-pub fn decode_apng_pure(data : Bytes) -> PngAnimation raise @types.LoadError {
+pub fn decode_apng_pure(
+  data : Bytes,
+) -> @types.PngAnimation raise @types.LoadError {
   let chunks = apng_parse_chunks(data)
   // 查找 IHDR
   let mut ihdr_data : Bytes = b""
@@ -190,7 +147,7 @@ pub fn decode_apng_pure(data : Bytes) -> PngAnimation raise @types.LoadError {
   if !has_actl {
     // 普通 PNG，当作单帧动画
     let img = decode_png_pure(data)
-    return PngAnimation::{ frames: [img], delays: [0] }
+    return @types.PngAnimation::{ frames: [img], delays: [0] }
   }
   // APNG: 收集所有帧
   let frames : Array[@types.Image] = []
@@ -225,8 +182,8 @@ pub fn decode_apng_pure(data : Bytes) -> PngAnimation raise @types.LoadError {
       // 解析 fcTL
       let fctl_data = apng_extract_chunk_data(data, chunks[i])
       // delay_num (2 bytes at offset 20), delay_den (2 bytes at offset 22)
-      let delay_num = apng_read_u16_be(fctl_data, 20)
-      let delay_den = apng_read_u16_be(fctl_data, 22)
+      let delay_num = read_u16_be(fctl_data, 20)
+      let delay_den = read_u16_be(fctl_data, 22)
       let delay_ms = if delay_den == 0 {
         0
       } else {
@@ -270,7 +227,7 @@ pub fn decode_apng_pure(data : Bytes) -> PngAnimation raise @types.LoadError {
   if frames.length() == 0 {
     raise @types.LoadError::DecodeFailed("APNG 无有效帧")
   }
-  PngAnimation::{ frames, delays }
+  @types.PngAnimation::{ frames, delays }
 }
 
 ///|
@@ -307,7 +264,7 @@ fn apng_write_chunk(
   chunk_type : String,
   chunk_data : Bytes,
 ) -> Unit {
-  apng_write_u32_be(out, chunk_data.length())
+  write_u32_be(out, chunk_data.length())
   let type_bytes = @encoding/utf8.encode(chunk_type)
   for i in 0..<4 {
     out.push(type_bytes[i])
@@ -324,16 +281,18 @@ fn apng_write_chunk(
     crc_data.push(chunk_data[i])
   }
   let crc = @util.crc32(Bytes::from_array(crc_data))
-  apng_write_u32_be(out, crc)
+  write_u32_be(out, crc)
 }
 
 ///|
 /// 将 PngAnimation 编码为 APNG 字节流
 /// 所有帧必须尺寸相同
-pub fn encode_apng_pure(anim : PngAnimation) -> Bytes raise @types.LoadError {
+pub fn encode_apng_pure(
+  anim : @types.PngAnimation,
+) -> Bytes raise @types.LoadError {
   let num_frames = anim.frames.length()
   if num_frames == 0 {
-    raise @types.LoadError::DecodeFailed("APNG 至少需要一帧")
+    raise @types.LoadError::EncodeFailed("APNG 至少需要一帧")
   }
   let first = anim.frames[0]
   let width = first.width
@@ -355,22 +314,22 @@ pub fn encode_apng_pure(anim : PngAnimation) -> Bytes raise @types.LoadError {
   apng_write_chunk(out, "IHDR", ihdr_data)
   // acTL chunk: num_frames + num_plays(0=无限)
   let actl : Array[Byte] = []
-  apng_write_u32_be(actl, num_frames)
-  apng_write_u32_be(actl, 0)
+  write_u32_be(actl, num_frames)
+  write_u32_be(actl, 0)
   apng_write_chunk(out, "acTL", Bytes::from_array(actl))
   // 序列号计数器
   let mut seq = 0
   // 第一帧 fcTL
   let fctl1 : Array[Byte] = []
-  apng_write_u32_be(fctl1, seq) // sequence_number
+  write_u32_be(fctl1, seq) // sequence_number
   seq += 1
-  apng_write_u32_be(fctl1, width) // width
-  apng_write_u32_be(fctl1, height) // height
-  apng_write_u32_be(fctl1, 0) // x_offset
-  apng_write_u32_be(fctl1, 0) // y_offset
+  write_u32_be(fctl1, width) // width
+  write_u32_be(fctl1, height) // height
+  write_u32_be(fctl1, 0) // x_offset
+  write_u32_be(fctl1, 0) // y_offset
   let delay1 = if anim.delays.length() > 0 { anim.delays[0] } else { 0 }
-  apng_write_u16_be(fctl1, delay1) // delay_num (ms)
-  apng_write_u16_be(fctl1, 1000) // delay_den
+  write_u16_be(fctl1, delay1) // delay_num (ms)
+  write_u16_be(fctl1, 1000) // delay_den
   fctl1.push(b'\x01') // dispose_op = APNG_DISPOSE_OP_BACKGROUND
   fctl1.push(b'\x00') // blend_op = APNG_BLEND_OP_SOURCE
   apng_write_chunk(out, "fcTL", Bytes::from_array(fctl1))
@@ -384,21 +343,21 @@ pub fn encode_apng_pure(anim : PngAnimation) -> Bytes raise @types.LoadError {
     let frame_idat = extract_idat_from_png(frame_png)
     // fcTL
     let fctl : Array[Byte] = []
-    apng_write_u32_be(fctl, seq) // sequence_number
+    write_u32_be(fctl, seq) // sequence_number
     seq += 1
-    apng_write_u32_be(fctl, frame.width)
-    apng_write_u32_be(fctl, frame.height)
-    apng_write_u32_be(fctl, 0) // x_offset
-    apng_write_u32_be(fctl, 0) // y_offset
+    write_u32_be(fctl, frame.width)
+    write_u32_be(fctl, frame.height)
+    write_u32_be(fctl, 0) // x_offset
+    write_u32_be(fctl, 0) // y_offset
     let delay = if i < anim.delays.length() { anim.delays[i] } else { 0 }
-    apng_write_u16_be(fctl, delay) // delay_num (ms)
-    apng_write_u16_be(fctl, 1000) // delay_den
+    write_u16_be(fctl, delay) // delay_num (ms)
+    write_u16_be(fctl, 1000) // delay_den
     fctl.push(b'\x01') // dispose_op
     fctl.push(b'\x00') // blend_op
     apng_write_chunk(out, "fcTL", Bytes::from_array(fctl))
     // fdAT: seq_num + IDAT data
     let fdat : Array[Byte] = []
-    apng_write_u32_be(fdat, seq) // sequence_number
+    write_u32_be(fdat, seq) // sequence_number
     seq += 1
     for j in 0..<frame_idat.length() {
       fdat.push(frame_idat[j])

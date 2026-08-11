@@ -136,68 +136,6 @@ test "sharpen: preserves alpha" {
 }
 
 ///|
-test "edge_detect_sobel: uniform image has no edges" {
-  let img = @types.Image::{
-    width: 4,
-    height: 4,
-    channels: 3,
-    data: Array::make(48, b'\x80') |> Bytes::from_array,
-  }
-  let result = edge_detect_sobel(img)
-  assert_eq(result.channels, 1)
-  for i in 0..<16 {
-    assert_eq(result.data[i].to_int(), 0)
-  }
-  let _ = img
-  let _ = result
-}
-
-///|
-test "edge_detect_sobel: detects edges in non-uniform image" {
-  // 左半黑右半白
-  let data : Array[Byte] = Array::make(4 * 4 * 3, b'\x00')
-  for y in 0..<4 {
-    for x in 2..<4 {
-      for c in 0..<3 {
-        data[(y * 4 + x) * 3 + c] = b'\xFF'
-      }
-    }
-  }
-  let img = @types.Image::{
-    width: 4,
-    height: 4,
-    channels: 3,
-    data: Bytes::from_array(data),
-  }
-  let result = edge_detect_sobel(img)
-  assert_eq(result.channels, 1)
-  // 中间列应该有边缘
-  let mut has_edge = false
-  for i in 0..<16 {
-    if result.data[i].to_int() > 0 {
-      has_edge = true
-    }
-  }
-  assert_true(has_edge)
-  let _ = img
-  let _ = result
-}
-
-///|
-test "edge_detect_sobel: output dimensions match input" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
-  let result = edge_detect_sobel(img)
-  assert_eq(result.width, 4)
-  assert_eq(result.height, 4)
-  assert_eq(result.channels, 1)
-  let _ = img
-  let _ = result
-}
-
-///|
 test "box_blur: radius exceeds image size" {
   let img = @lib.load_from_bytes_auto(
     @testdata.test_4x4_red_png,
@@ -287,6 +225,48 @@ test "median_blur: preserves alpha channel" {
   for i in 0..<9 {
     assert_eq(result.data[i * 4 + 3].to_int(), 128)
   }
+  let _ = img
+  let _ = result
+}
+
+///|
+fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Array::make(w * h * ch, v) |> Bytes::from_array,
+  }
+}
+
+///|
+test "convolve: identity kernel" {
+  let img = make_img(3, 3, 1, b'\x80')
+  let identity = [0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F]
+  let result = convolve(img, identity, 0.0F, 1.0F)
+  assert_eq(result.data[4], b'\x80')
+  let _ = img
+  let _ = result
+}
+
+///|
+test "convolve: box blur kernel" {
+  let img = @types.Image::{
+    width: 3,
+    height: 3,
+    channels: 1,
+    data: [
+      b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00',
+    ]
+    |> Bytes::from_array,
+  }
+  let blur = [
+    0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F,
+  ]
+  let result = convolve(img, blur, 0.0F, 1.0F)
+  // 中心像素应该被模糊（值降低）
+  let center = result.data[4].to_int()
+  assert_true(center > 0 && center < 255)
   let _ = img
   let _ = result
 }

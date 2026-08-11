@@ -1,4 +1,4 @@
-// image_compose 测试：hstack / vstack / tile / flip_vertical / transpose
+// image_compose 测试：hstack / vstack / tile / transpose
 
 ///|
 fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
@@ -83,37 +83,6 @@ test "tile: 2x2 x (2,3) = 4x6" {
 test "tile: 1x1 x (1,1) is identity" {
   let img = mk(1, 1, 1, b'\xFF')
   let result = tile(img, 1, 1)
-  assert_eq(result.data, img.data)
-  let _ = img
-  let _ = result
-}
-
-///|
-test "flip_vertical: reverses rows" {
-  let img = @types.Image::{
-    width: 2,
-    height: 2,
-    channels: 1,
-    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
-  }
-  let result = flip_vertical(img)
-  assert_eq(result.data[0], b'\x03')
-  assert_eq(result.data[1], b'\x04')
-  assert_eq(result.data[2], b'\x01')
-  assert_eq(result.data[3], b'\x02')
-  let _ = img
-  let _ = result
-}
-
-///|
-test "flip_vertical: double flip is identity" {
-  let img = @types.Image::{
-    width: 2,
-    height: 2,
-    channels: 1,
-    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
-  }
-  let result = flip_vertical(flip_vertical(img))
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result

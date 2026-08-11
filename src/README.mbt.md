@@ -3,9 +3,9 @@
 MoonBit 纯图像处理库 — 解码/编码 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM，提供从基础像素操作到高级计算机视觉算法的完整能力。纯 MoonBit 实现，零 C FFI 依赖，native/wasm-gc/js 三目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-1056%20%C3%97%203%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-887%20%C3%97%203%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![API](https://img.shields.io/badge/API-197%20fn%20%2B%2028%20types-blueviolet)]()
+[![API](https://img.shields.io/badge/API-253%20fn%20%2B%2036%20types-blueviolet)]()
 
 ## Quick Start
 
@@ -44,14 +44,16 @@ let info : ImageInfo? = info_from_bytes(data)
 | GIF | ✅ | ✅ | animated GIF decode/encode |
 | QOI | ✅ | ✅ | Quite OK Image |
 | TGA | ✅ | ✅ | with RLE |
-| PSD | ✅ | — | Photoshop document |
-| HDR | ✅ | ✅ | IEEE 754 float |
+| PSD | ✅ | — | Photoshop document (exclusive) |
+| HDR | ✅ | ✅ | IEEE 754 float (exclusive) |
 | PNM | ✅ | ✅ | PPM / PGM |
 | TIFF | ✅ | ✅ | uncompressed/LZW/PackBits |
 | ICO | ✅ | ✅ | single/multi-size |
 | CUR | ✅ | ✅ | Windows cursor |
 | ICNS | ✅ | ✅ | macOS icon |
 | APNG | ✅ | ✅ | animated PNG |
+
+> **Note**: `detect_format` only recognizes PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR via magic bytes. TIFF/ICO/CUR/ICNS/APNG/TGA require manual `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` calls.
 
 ## Types
 
@@ -71,7 +73,7 @@ let info : ImageInfo? = info_from_bytes(data)
 |----------|-------------|
 | `load_from_bytes(data, req_channels?) -> Image` | Load 8-bit from memory |
 | `load_16_from_bytes(data, req_channels?) -> Image16` | Load 16-bit from memory |
-| `loadf_from_bytes(data, req_channels?) -> ImageF` | Load HDR float from memory |
+| `load_f_from_bytes(data, req_channels?) -> ImageF` | Load HDR float from memory |
 | `load_gif_from_bytes(data, req_channels?) -> GifAnimation` | Load animated GIF from memory |
 | `decode_any(data, req_channels?) -> Image` | Auto-detect format and decode |
 | `detect_format(data) -> ImageFormat` | Detect image format |
@@ -124,14 +126,14 @@ Edge modes: `Zero`, `Clamp`, `Reflect`, `Wrap`
 | Draw | `draw_copy`, `draw_over` |
 | EXIF | `read_exif_from_bytes`, `write_exif_to_bytes`, `create_exif_segment` |
 | Seam Carving | `seam_carve_resize`, `compute_energy`, `find_vertical_seam`, `remove_vertical_seam` |
-| 16-bit/float | `rotate_90_16`, `rotate_90f`, `flip_horizontal_16`, `flip_horizontalf`, `adjust_brightness_16`, `adjust_brightnessf` |
+| 16-bit/float | `rotate_90_16`, `rotate_90_f`, `flip_horizontal_16`, `flip_horizontal_f`, `adjust_brightness_16`, `adjust_brightness_f` |
 
 ## Advanced Analysis API (selected)
 
 | Category | Functions |
 |----------|-----------|
 | CLAHE | `clahe` |
-| Segmentation | `k_means_quantize`, `region_growing_segment`, `flood_fill`, `watershed`, `watershed_auto`, `slic` |
+| Segmentation | `kmeans_quantize`, `region_growing_segment`, `flood_fill`, `watershed`, `watershed_auto`, `slic` |
 | FFT | `fft_2d`, `ifft_2d`, `fft_shift`, `fft_magnitude`, `freq_filter`, `freq_filter_gaussian` |
 | Edge | `canny_edge`, `hough_lines`, `hough_lines_nms`, `find_contours`, `harris_corners` |
 | Threshold | `adaptive_threshold_mean`, `adaptive_threshold_gaussian`, `threshold_otsu` |
@@ -173,7 +175,7 @@ try {
 
 ## Multi-Target Support
 
-Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FFI dependency. 1056 tests pass on all three targets, 89.8% coverage.
+Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FFI dependency. 887 tests pass on all three targets, 89.8% coverage.
 
 ## Version History
 
@@ -186,4 +188,4 @@ Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FF
 - **v2.1**: 中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希
 - **v2.2**: 透视变换/轮廓分析/霍夫圆/DCT/色调映射
 - **v2.3**: TIFF/ICO/CUR/ICNS/APNG 格式扩展
-- **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，197 API + 28 类型，1056 测试
+- **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，887 测试

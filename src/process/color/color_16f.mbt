@@ -61,7 +61,7 @@ pub fn adjust_brightness_16(
 
 ///|
 /// float 亮度调整。delta 为浮点偏移量
-pub fn adjust_brightnessf(img : @types.ImageF, delta : Float) -> @types.ImageF {
+pub fn adjust_brightness_f(img : @types.ImageF, delta : Float) -> @types.ImageF {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -129,7 +129,7 @@ pub fn adjust_contrast_16(
 
 ///|
 /// float 对比度调整。factor=1.0 为原图，以 0.5 为中心
-pub fn adjust_contrastf(img : @types.ImageF, factor : Float) -> @types.ImageF {
+pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }

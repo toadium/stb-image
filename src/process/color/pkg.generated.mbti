@@ -14,13 +14,13 @@ pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
 pub fn adjust_brightness_16(@types.Image16, Int) -> @types.Image16
 
-pub fn adjust_brightnessf(@types.ImageF, Float) -> @types.ImageF
+pub fn adjust_brightness_f(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
 pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16
 
-pub fn adjust_contrastf(@types.ImageF, Float) -> @types.ImageF
+pub fn adjust_contrast_f(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
@@ -32,7 +32,7 @@ pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int)
 
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
-pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
+pub fn floyd_steinberg(@types.Image, Int) -> @types.Image
 
 pub fn gamma_tonemap(@types.ImageF, Float) -> @types.Image
 
@@ -44,17 +44,17 @@ pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
 pub fn invert(@types.Image) -> @types.Image
 
-pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
+pub fn kmeans_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn median_cut(@types.Image, Int) -> @types.Image
 
 pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
 pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
 
 pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
-
-pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
 pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
 
@@ -69,8 +69,6 @@ pub fn rgb_to_lab(Int, Int, Int) -> (Float, Float, Float)
 pub fn rgb_to_xyz(Int, Int, Int) -> (Float, Float, Float)
 
 pub fn rgb_to_ycbcr(Int, Int, Int) -> (Int, Int, Int)
-
-pub fn segment_to_color(SegmentLabelImage) -> @types.Image
 
 pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
@@ -98,25 +96,6 @@ pub(all) enum Colormap {
   GRAY
   BONE
   COPPER
-}
-
-pub(all) struct SegmentLabelImage {
-  width : Int
-  height : Int
-  labels : Array[Int]
-  num_regions : Int
-}
-
-pub struct SegmentRegion {
-  label : Int
-  area : Int
-  mean_r : Int
-  mean_g : Int
-  mean_b : Int
-  bbox_x : Int
-  bbox_y : Int
-  bbox_w : Int
-  bbox_h : Int
 }
 
 // Type aliases

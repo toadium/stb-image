@@ -1,4 +1,4 @@
-// 颜色分割测试
+// 图像分割测试：kmeans_segment / region_growing_segment / flood_fill / segment_to_color
 
 ///|
 test "kmeans_segment 基本功能" {

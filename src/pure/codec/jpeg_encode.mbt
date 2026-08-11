@@ -334,7 +334,7 @@ pub fn encode_jpeg_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   let width = img.width
   let height = img.height
   if width <= 0 || height <= 0 {
-    raise @types.LoadError::DecodeFailed("JPEG 尺寸无效")
+    raise @types.LoadError::EncodeFailed("JPEG 尺寸无效")
   }
   let channels = img.channels
   let data = img.data

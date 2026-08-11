@@ -108,6 +108,37 @@ test "flip_horizontal: double flip = identity" {
 }
 
 ///|
+test "flip_vertical: reverses rows" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
+  }
+  let result = flip_vertical(img)
+  assert_eq(result.data[0], b'\x03')
+  assert_eq(result.data[1], b'\x04')
+  assert_eq(result.data[2], b'\x01')
+  assert_eq(result.data[3], b'\x02')
+  let _ = img
+  let _ = result
+}
+
+///|
+test "flip_vertical: double flip is identity" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: [b'\x01', b'\x02', b'\x03', b'\x04'] |> Bytes::from_array,
+  }
+  let result = flip_vertical(flip_vertical(img))
+  assert_eq(result.data, img.data)
+  let _ = img
+  let _ = result
+}
+
+///|
 test "rotate_180: double rotation = identity" {
   let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
   let r = rotate_180(rotate_180(img))

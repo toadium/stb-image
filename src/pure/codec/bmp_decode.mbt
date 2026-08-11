@@ -15,18 +15,18 @@ pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   if data[0].to_int() != 0x42 || data[1].to_int() != 0x4D {
     raise @types.LoadError::DecodeFailed("BMP magic 不匹配")
   }
-  let data_offset = read_i32_le(data, 10)
-  let dib_size = read_i32_le(data, 14)
+  let data_offset = read_u32_le(data, 10)
+  let dib_size = read_u32_le(data, 14)
   // 仅支持 BITMAPINFOHEADER（40 字节）
   if dib_size != 40 {
     raise @types.LoadError::DecodeFailed(
       "不支持的 BMP DIB 头大小，仅支持 BITMAPINFOHEADER（40 字节）",
     )
   }
-  let width = read_i32_le(data, 18)
-  let height = read_i32_le(data, 22)
+  let width = read_u32_le(data, 18)
+  let height = read_u32_le(data, 22)
   let bpp = read_u16_le(data, 28)
-  let compression = read_i32_le(data, 30)
+  let compression = read_u32_le(data, 30)
   // 仅支持 24-bit 和 32-bit
   if bpp != 24 && bpp != 32 {
     raise @types.LoadError::DecodeFailed(
@@ -86,17 +86,4 @@ pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     channels: out_channels,
     data: Bytes::from_array(pixels),
   }
-}
-
-///|
-fn read_i32_le(data : Bytes, offset : Int) -> Int {
-  data[offset].to_int() |
-  (data[offset + 1].to_int() << 8) |
-  (data[offset + 2].to_int() << 16) |
-  (data[offset + 3].to_int() << 24)
-}
-
-///|
-fn read_u16_le(data : Bytes, offset : Int) -> Int {
-  data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }

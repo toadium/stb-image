@@ -102,9 +102,9 @@ test "distance_transform 错误参数" {
 }
 
 ///|
-test "distance_transform_visualize 基本功能" {
+test "visualize_distance_transform 基本功能" {
   let dist = [0.0F, 1.0F, 2.0F, 1.0F, 0.0F]
-  let img = distance_transform_visualize(dist, 5, 1)
+  let img = visualize_distance_transform(dist, 5, 1)
   assert_eq(img.width, 5)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 1)

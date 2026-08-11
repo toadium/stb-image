@@ -3,6 +3,7 @@ package "Toadium/image/src/process/segment"
 
 import {
   "Toadium/image/src/types",
+  "moonbitlang/core/debug",
 }
 
 // Values
@@ -14,17 +15,13 @@ pub fn dilate_custom(@types.Image, StructuringElement) -> @types.Image
 
 pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
-pub fn distance_transform_visualize(Array[Float], Int, Int) -> @types.Image
-
 pub fn erode(@types.Image) -> @types.Image
 
 pub fn erode_custom(@types.Image, StructuringElement) -> @types.Image
 
-pub fn floyd_steinberg(@types.Image, Int) -> @types.Image
+pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
 
-pub fn k_means_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
-
-pub fn median_cut(@types.Image, Int) -> @types.Image
+pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
 pub fn morph_blackhat(@types.Image) -> @types.Image
 
@@ -40,15 +37,21 @@ pub fn morph_open_custom(@types.Image, StructuringElement) -> @types.Image
 
 pub fn morph_tophat(@types.Image) -> @types.Image
 
+pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
+
 pub fn se_cross(Int) -> StructuringElement
 
 pub fn se_ellipse(Int) -> StructuringElement
 
 pub fn se_rect(Int, Int) -> StructuringElement
 
+pub fn segment_to_color(SegmentLabelImage) -> @types.Image
+
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn slic(@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError
+pub fn slic(@types.Image, Int, Int, Int) -> SuperpixelResult raise @types.LoadError
+
+pub fn visualize_distance_transform(Array[Float], Int, Int) -> @types.Image
 
 pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
 
@@ -74,11 +77,36 @@ pub struct ConnectedComponentLabelImage {
   labels : Array[Int]
 }
 
+pub(all) struct SegmentLabelImage {
+  width : Int
+  height : Int
+  labels : Array[Int]
+  num_regions : Int
+}
+
+pub struct SegmentRegion {
+  label : Int
+  area : Int
+  mean_r : Int
+  mean_g : Int
+  mean_b : Int
+  bbox_x : Int
+  bbox_y : Int
+  bbox_w : Int
+  bbox_h : Int
+}
+
 pub(all) struct StructuringElement {
   width : Int
   height : Int
   data : Array[Bool]
 }
+
+pub(all) struct SuperpixelResult {
+  labels : Array[Int]
+  centers : Array[(Int, Int)]
+  num_labels : Int
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 

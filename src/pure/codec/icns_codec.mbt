@@ -16,22 +16,6 @@ priv struct IcnsChunk {
 }
 
 ///|
-fn icns_read_u32_be(data : Bytes, offset : Int) -> Int {
-  (data[offset].to_int() << 24) |
-  (data[offset + 1].to_int() << 16) |
-  (data[offset + 2].to_int() << 8) |
-  data[offset + 3].to_int()
-}
-
-///|
-fn icns_write_u32_be(out : Array[Byte], val : Int) -> Unit {
-  out.push(((val >> 24) & 0xFF).to_byte())
-  out.push(((val >> 16) & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-  out.push((val & 0xFF).to_byte())
-}
-
-///|
 /// 从 4 字节构造 type code 字符串
 fn icns_type_to_string(data : Bytes, offset : Int) -> String {
   let buf : Array[Byte] = [
@@ -98,13 +82,13 @@ fn parse_icns(data : Bytes) -> Array[IcnsChunk] raise @types.LoadError {
     data[3].to_int() != 0x73 {
     raise @types.LoadError::DecodeFailed("ICNS magic 不匹配")
   }
-  let file_size = icns_read_u32_be(data, 4)
+  let file_size = read_u32_be(data, 4)
   let chunks : Array[IcnsChunk] = []
   let mut pos = 8
   let end = if file_size < len { file_size } else { len }
   while pos + 8 <= end {
     let type_code = icns_type_to_string(data, pos)
-    let chunk_len = icns_read_u32_be(data, pos + 4)
+    let chunk_len = read_u32_be(data, pos + 4)
     if chunk_len < 8 || pos + chunk_len > end {
       break
     }
@@ -200,12 +184,12 @@ pub fn encode_icns_pure(img : @types.Image) -> Bytes {
   out.push(b'\x63') // 'c'
   out.push(b'\x6E') // 'n'
   out.push(b'\x73') // 's'
-  icns_write_u32_be(out, file_size)
+  write_u32_be(out, file_size)
   // chunk 头
   for i in 0..<4 {
     out.push(type_bytes[i])
   }
-  icns_write_u32_be(out, chunk_total_size)
+  write_u32_be(out, chunk_total_size)
   // chunk 数据（PNG）
   for i in 0..<chunk_data_size {
     out.push(png_data[i])

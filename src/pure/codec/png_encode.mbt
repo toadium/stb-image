@@ -136,12 +136,6 @@ pub fn encode_png_pure(img : @types.Image) -> Bytes {
         for c in 0..<ch {
           filtered.push(img.data[src_off + c])
         }
-      } else if ch == 3 && out_ch == 3 {
-        for c in 0..<3 {
-          filtered.push(img.data[src_off + c])
-        }
-      } else if ch == 1 && out_ch == 1 {
-        filtered.push(img.data[src_off])
       } else {
         // 通道数不匹配时，取前 out_ch 个通道
         for c in 0..<out_ch {

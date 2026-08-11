@@ -4,37 +4,6 @@
 // 规范: Adobe Photoshop PSD File Format + stb_image.h:6126-6280 stbi__psd_load
 
 ///|
-fn read_u16_be(
-  data : Bytes,
-  offset : Int,
-  len : Int,
-) -> Int raise @types.LoadError {
-  if offset + 2 > len {
-    raise @types.LoadError::DecodeFailed(
-      "PSD 数据过短：无法读取 2 字节 BE",
-    )
-  }
-  (data[offset].to_int() << 8) | data[offset + 1].to_int()
-}
-
-///|
-fn read_u32_be(
-  data : Bytes,
-  offset : Int,
-  len : Int,
-) -> Int raise @types.LoadError {
-  if offset + 4 > len {
-    raise @types.LoadError::DecodeFailed(
-      "PSD 数据过短：无法读取 4 字节 BE",
-    )
-  }
-  (data[offset].to_int() << 24) |
-  (data[offset + 1].to_int() << 16) |
-  (data[offset + 2].to_int() << 8) |
-  data[offset + 3].to_int()
-}
-
-///|
 /// 解码 PSD 字节流为 Image
 /// 支持 8-bit RGB（channelCount=3）/ RGBA（channelCount=4）、无压缩（compression=0）
 /// Header(26 字节) + Color mode data + Image resources + Layer and mask data + Image data
@@ -55,31 +24,31 @@ pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("PSD signature 错误，非 \"8BPS\"")
   }
   // version (2 字节 BE)，必须为 1
-  let version = read_u16_be(data, 4, len)
+  let version = read_u16_be(data, 4)
   if version != 1 {
     raise @types.LoadError::DecodeFailed("PSD version 错误，仅支持 1")
   }
   // reserved(6 字节) 跳过
   // channelCount (2 字节 BE)
-  let channel_count = read_u16_be(data, 12, len)
+  let channel_count = read_u16_be(data, 12)
   if channel_count != 3 && channel_count != 4 {
     raise @types.LoadError::DecodeFailed(
       "不支持的 PSD channelCount，仅支持 3（RGB）和 4（RGBA）",
     )
   }
   // h (4 字节 BE)
-  let h = read_u32_be(data, 14, len)
+  let h = read_u32_be(data, 14)
   // w (4 字节 BE)
-  let w = read_u32_be(data, 18, len)
+  let w = read_u32_be(data, 18)
   // bitdepth (2 字节 BE)，仅支持 8
-  let bitdepth = read_u16_be(data, 22, len)
+  let bitdepth = read_u16_be(data, 22)
   if bitdepth != 8 {
     raise @types.LoadError::DecodeFailed(
       "不支持的 PSD bitdepth，仅支持 8",
     )
   }
   // colorMode (2 字节 BE)，仅支持 3（RGB）
-  let color_mode = read_u16_be(data, 24, len)
+  let color_mode = read_u16_be(data, 24)
   if color_mode != 3 {
     raise @types.LoadError::DecodeFailed(
       "不支持的 PSD colorMode，仅支持 3（RGB）",
@@ -92,7 +61,12 @@ pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   // 跳过 3 个 length 前缀段（color mode data / image resources / layer and mask data）
   let mut pos = 26
   for _ in 0..<3 {
-    let seg_len = read_u32_be(data, pos, len)
+    if pos + 4 > len {
+      raise @types.LoadError::DecodeFailed(
+        "PSD 数据过短：无法读取 4 字节 BE",
+      )
+    }
+    let seg_len = read_u32_be(data, pos)
     pos += 4
     if pos + seg_len > len {
       raise @types.LoadError::DecodeFailed("PSD 段数据越界")
@@ -100,7 +74,12 @@ pub fn decode_psd_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     pos += seg_len
   }
   // Image data: compression (2 字节 BE)
-  let compression = read_u16_be(data, pos, len)
+  if pos + 2 > len {
+    raise @types.LoadError::DecodeFailed(
+      "PSD 数据过短：无法读取 2 字节 BE",
+    )
+  }
+  let compression = read_u16_be(data, pos)
   pos += 2
   if compression != 0 {
     raise @types.LoadError::DecodeFailed(

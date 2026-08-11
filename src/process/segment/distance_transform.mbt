@@ -171,7 +171,7 @@ pub fn distance_transform(
 
 ///|
 /// 距离变换可视化。将距离变换结果归一化到 [0, 255] 并返回灰度图。
-pub fn distance_transform_visualize(
+pub fn visualize_distance_transform(
   dist : Array[Float],
   w : Int,
   h : Int,

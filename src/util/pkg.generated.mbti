@@ -43,13 +43,9 @@ pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types
 
 pub fn compute_stats(@types.Image) -> ImageStats
 
-pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
-
 pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
-
-pub fn flip_vertical(@types.Image) -> @types.Image
 
 pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
@@ -64,10 +60,6 @@ pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
-
-pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
-
-pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 

@@ -9,7 +9,6 @@ import {
   "Toadium/image/src/process/frequency",
   "Toadium/image/src/process/segment",
   "Toadium/image/src/process/transform",
-  "Toadium/image/src/pure/codec",
   "Toadium/image/src/types",
   "Toadium/image/src/util",
 }
@@ -29,13 +28,13 @@ pub fn adjust_brightness(@types.Image, Int) -> @types.Image
 
 pub fn adjust_brightness_16(@types.Image16, Int) -> @types.Image16
 
-pub fn adjust_brightnessf(@types.ImageF, Float) -> @types.ImageF
+pub fn adjust_brightness_f(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_contrast(@types.Image, Float) -> @types.Image
 
 pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16
 
-pub fn adjust_contrastf(@types.ImageF, Float) -> @types.ImageF
+pub fn adjust_contrast_f(@types.ImageF, Float) -> @types.ImageF
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image
 
@@ -117,13 +116,13 @@ pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadE
 
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
-pub fn cropf(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
+pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
 
 pub fn dct_2d(@types.Image) -> Array[Array[Double]]
 
 pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
-pub fn decode_apng(Bytes) -> @codec.PngAnimation raise @types.LoadError
+pub fn decode_apng(Bytes) -> @types.PngAnimation raise @types.LoadError
 
 pub fn decode_cur(Bytes) -> @types.Image raise @types.LoadError
 
@@ -147,8 +146,6 @@ pub fn dilate_custom(@types.Image, @segment.StructuringElement) -> @types.Image
 
 pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
-pub fn distance_transform_visualize(Array[Float], Int, Int) -> @types.Image
-
 pub fn draw_circle(@types.Image, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
 pub fn draw_contours(@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError
@@ -171,7 +168,7 @@ pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
 pub fn edge_detect_sobel(@types.Image) -> @types.Image
 
-pub fn encode_apng(@codec.PngAnimation) -> Bytes raise @types.LoadError
+pub fn encode_apng(@types.PngAnimation) -> Bytes raise @types.LoadError
 
 pub fn encode_cur(@types.Image) -> Bytes
 
@@ -221,7 +218,7 @@ pub fn flip_horizontal(@types.Image) -> @types.Image
 
 pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
 
-pub fn flip_horizontalf(@types.ImageF) -> @types.ImageF
+pub fn flip_horizontal_f(@types.ImageF) -> @types.ImageF
 
 pub fn flip_vertical(@types.Image) -> @types.Image
 
@@ -263,8 +260,6 @@ pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) ->
 
 pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
 
-pub fn haar_inverse_transform_1d(Array[Float]) -> Array[Float]
-
 pub fn haar_inverse_transform_2d(@frequency.HaarWaveletResult) -> @types.Image
 
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
@@ -305,6 +300,8 @@ pub fn idct_2d(Array[Array[Double]]) -> @types.Image
 
 pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
 
+pub fn ihaar_transform_1d(Array[Float]) -> Array[Float]
+
 pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
 
 pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
@@ -329,9 +326,9 @@ pub fn is_hdr_from_bytes(Bytes) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
 
-pub fn k_means_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+pub fn kmeans_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
+pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
 
 pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int)
 
@@ -343,11 +340,11 @@ pub fn ldr_to_hdr_gamma(Float) -> Unit
 
 pub fn ldr_to_hdr_scale(Float) -> Unit
 
+pub fn load_f_from_bytes(Bytes) -> @types.ImageF raise @types.LoadError
+
 pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
-pub fn load_gif_from_bytes(Bytes, req_channels? : Int?) -> @types.GifAnimation raise @types.LoadError
-
-pub fn loadf_from_bytes(Bytes, req_channels? : Int?) -> @types.ImageF raise @types.LoadError
+pub fn load_gif_from_bytes(Bytes) -> @types.GifAnimation raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
 
@@ -403,7 +400,7 @@ pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
 
-pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError
+pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
 
 pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
 
@@ -437,19 +434,19 @@ pub fn rotate_180(@types.Image) -> @types.Image
 
 pub fn rotate_180_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_180f(@types.ImageF) -> @types.ImageF
+pub fn rotate_180_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_270(@types.Image) -> @types.Image
 
 pub fn rotate_270_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_270f(@types.ImageF) -> @types.ImageF
+pub fn rotate_270_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_90(@types.Image) -> @types.Image
 
 pub fn rotate_90_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_90f(@types.ImageF) -> @types.ImageF
+pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
 
 pub fn se_cross(Int) -> @segment.StructuringElement
 
@@ -459,7 +456,7 @@ pub fn se_rect(Int, Int) -> @segment.StructuringElement
 
 pub fn seam_carve_resize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn segment_to_color(@color.SegmentLabelImage) -> @types.Image
+pub fn segment_to_color(@segment.SegmentLabelImage) -> @types.Image
 
 pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 
@@ -471,7 +468,7 @@ pub fn sharpen(@types.Image, Float) -> @types.Image
 
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn slic(@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError
+pub fn slic(@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError
 
 pub fn ssim(@types.Image, @types.Image) -> Double
 
@@ -495,6 +492,8 @@ pub fn transpose(@types.Image) -> @types.Image
 
 pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn visualize_distance_transform(Array[Float], Int, Int) -> @types.Image
+
 pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
@@ -511,7 +510,7 @@ pub fn write_exif_to_bytes(@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadErro
 
 pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
 
-pub fn write_jpeg_to_bytes(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+pub fn write_jpeg_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn write_png_to_bytes(@types.Image) -> Bytes
 
@@ -582,7 +581,7 @@ pub using @edge {type Moments}
 
 pub using @transform {type PerspectiveMatrix}
 
-pub using @codec {type PngAnimation}
+pub using @types {type PngAnimation}
 
 pub using @meta {type PngTextChunk}
 
@@ -590,13 +589,13 @@ pub using @types {type ResizeEdge}
 
 pub using @types {type ResizeFilter}
 
-pub using @color {type SegmentLabelImage}
+pub using @segment {type SegmentLabelImage}
 
-pub using @color {type SegmentRegion}
+pub using @segment {type SegmentRegion}
 
 pub using @segment {type StructuringElement}
 
-pub using @types {type SuperpixelResult}
+pub using @segment {type SuperpixelResult}
 
 // Traits
 

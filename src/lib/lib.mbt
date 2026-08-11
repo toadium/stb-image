@@ -1,3 +1,8 @@
+// lib 包：统一分派入口（格式分派层）
+// 职责：通过 magic bytes 检测图像格式，并委托 pure/codec 进行解码、pure/color 进行通道转换
+// 注意：TGA 无固定 magic bytes，需显式调用 @codec.decode_tga_pure
+//       HDR 返回 ImageF（浮点图像），需显式调用 @codec.decode_hdr_pure
+
 ///|
 pub type ImageFormat = @types.ImageFormat
 
@@ -80,7 +85,7 @@ pub fn load_from_bytes_auto(
   req_channels? : Int? = None,
 ) -> @types.Image raise @types.LoadError {
   let img = match detect_format(data) {
-    @types.ImageFormat::Png => @codec.decode_png_pure(data)
+    @types.ImageFormat::Png => @codec.decode_png_pure(data, req_channels~)
     @types.ImageFormat::Jpeg => @codec.decode_jpeg_pure(data)
     @types.ImageFormat::Bmp => @codec.decode_bmp_pure(data)
     @types.ImageFormat::Qoi => @codec.decode_qoi_pure(data)
@@ -89,11 +94,13 @@ pub fn load_from_bytes_auto(
     @types.ImageFormat::Gif => @codec.decode_gif_pure(data)
     @types.ImageFormat::Hdr =>
       raise @types.LoadError::DecodeFailed(
-        "HDR format requires decode_hdr_pure for float image",
+        "HDR 格式需要显式调用 decode_hdr_pure",
       )
     @types.ImageFormat::Tga => @codec.decode_tga_pure(data)
     @types.ImageFormat::Unknown =>
-      raise @types.LoadError::DecodeFailed("unsupported or unrecognized format")
+      raise @types.LoadError::DecodeFailed(
+        "不支持或无法识别的格式（TGA 无 magic bytes，需显式调用 decode_tga_pure）",
+      )
   }
   match req_channels {
     Some(n) => @color.convert_channels_pure(img, n)
@@ -107,6 +114,7 @@ pub fn load_from_bytes_auto(
 /// - PNG: 支持 8-bit 上采样和原生 16-bit
 /// - PNM: 支持 8-bit 上采样和原生 16-bit
 /// - 其他格式不支持 16-bit
+/// 注意：req_channels 仅对 PNG 生效，PNM 分支不传递 req_channels
 pub fn load_16_from_bytes_auto(
   data : Bytes,
   req_channels? : Int? = None,
@@ -123,7 +131,7 @@ pub fn load_16_from_bytes_auto(
 
 ///|
 /// QOI 编码委托
-pub fn encode_qoi_auto(img : @types.Image) -> Bytes raise @types.LoadError {
+pub fn encode_qoi(img : @types.Image) -> Bytes raise @types.LoadError {
   @codec.encode_qoi_pure(img)
 }
 
@@ -147,36 +155,36 @@ pub fn encode_pgm_auto(img : @types.Image) -> Bytes {
 
 ///|
 /// GIF 编码委托
-pub fn encode_gif_auto(img : @types.Image) -> Bytes raise @types.LoadError {
+pub fn encode_gif(img : @types.Image) -> Bytes raise @types.LoadError {
   @codec.encode_gif_pure(img)
 }
 
 ///|
 /// PNG 编码委托
-pub fn encode_png_auto(img : @types.Image) -> Bytes {
+pub fn encode_png(img : @types.Image) -> Bytes {
   @codec.encode_png_pure(img)
 }
 
 ///|
 /// JPEG 编码委托
-pub fn encode_jpeg_auto(img : @types.Image) -> Bytes raise @types.LoadError {
+pub fn encode_jpeg(img : @types.Image) -> Bytes raise @types.LoadError {
   @codec.encode_jpeg_pure(img)
 }
 
 ///|
 /// HDR 编码委托
-pub fn encode_hdr_auto(img : @types.ImageF) -> Bytes raise @types.LoadError {
+pub fn encode_hdr(img : @types.ImageF) -> Bytes raise @types.LoadError {
   @codec.encode_hdr_pure(img)
 }
 
 ///|
 /// BMP 编码委托
-pub fn encode_bmp_auto(img : @types.Image) -> Bytes {
+pub fn encode_bmp(img : @types.Image) -> Bytes {
   @codec.encode_bmp_pure(img)
 }
 
 ///|
 /// TGA 编码委托
-pub fn encode_tga_auto(img : @types.Image) -> Bytes {
+pub fn encode_tga(img : @types.Image) -> Bytes {
   @codec.encode_tga_pure(img)
 }

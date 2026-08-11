@@ -99,7 +99,7 @@ test "reexport: load_from_bytes with req_channels" {
 }
 
 ///|
-test "reexport: loadf_from_bytes HDR" {
+test "reexport: load_f_from_bytes HDR" {
   // 构造 1x1 HDR ImageF
   let fdata : Array[Byte] = []
   let rb = 1.0F.to_le_bytes()
@@ -121,7 +121,7 @@ test "reexport: loadf_from_bytes HDR" {
     data: Bytes::from_array(fdata),
   }
   let hdr_bytes = @codec.encode_hdr_pure(imgf)
-  let restored = loadf_from_bytes(hdr_bytes)
+  let restored = load_f_from_bytes(hdr_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)

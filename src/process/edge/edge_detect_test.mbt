@@ -139,3 +139,65 @@ test "edge_detect_prewitt: works with grayscale image" {
   let _ = img
   let _ = result
 }
+
+///|
+test "edge_detect_sobel: uniform image has no edges" {
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 3,
+    data: Array::make(48, b'\x80') |> Bytes::from_array,
+  }
+  let result = edge_detect_sobel(img)
+  assert_eq(result.channels, 1)
+  for i in 0..<16 {
+    assert_eq(result.data[i].to_int(), 0)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "edge_detect_sobel: detects edges in non-uniform image" {
+  // 左半黑右半白
+  let data : Array[Byte] = Array::make(4 * 4 * 3, b'\x00')
+  for y in 0..<4 {
+    for x in 2..<4 {
+      for c in 0..<3 {
+        data[(y * 4 + x) * 3 + c] = b'\xFF'
+      }
+    }
+  }
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let result = edge_detect_sobel(img)
+  assert_eq(result.channels, 1)
+  // 中间列应该有边缘
+  let mut has_edge = false
+  for i in 0..<16 {
+    if result.data[i].to_int() > 0 {
+      has_edge = true
+    }
+  }
+  assert_true(has_edge)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "edge_detect_sobel: output dimensions match input" {
+  let img = @lib.load_from_bytes_auto(
+    @testdata.test_4x4_red_png,
+    req_channels=Some(3),
+  )
+  let result = edge_detect_sobel(img)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 4)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}

@@ -124,3 +124,72 @@ pub fn rotate(img : @types.Image, angle_degrees : Float) -> @types.Image {
     data: Bytes::from_array(out),
   }
 }
+
+///|
+/// 2×3 仿射变换矩阵 (a, b, c, d, e, f)
+/// x' = a*x + b*y + c
+/// y' = d*x + e*y + f
+pub(all) struct AffineMatrix {
+  a : Float
+  b : Float
+  c : Float
+  d : Float
+  e : Float
+  f : Float
+}
+
+///|
+/// 从 3 对源点→目标点计算 2×3 仿射变换矩阵。
+pub fn get_affine_transform(
+  src : Array[(Float, Float)],
+  dst : Array[(Float, Float)],
+) -> AffineMatrix? {
+  if src.length() != 3 || dst.length() != 3 {
+    return None
+  }
+  // 6×6 线性方程组
+  let a : Array[Array[Float]] = Array::make(6, [])
+  let b : Array[Float] = Array::make(6, 0.0F)
+  for i in 0..<3 {
+    let (sx, sy) = src[i]
+    let (dx, dy) = dst[i]
+    a[i * 2] = [sx, sy, 1.0F, 0.0F, 0.0F, 0.0F]
+    b[i * 2] = dx
+    a[i * 2 + 1] = [0.0F, 0.0F, 0.0F, sx, sy, 1.0F]
+    b[i * 2 + 1] = dy
+  }
+  let sol = solve_linear_system(a, b, 6)
+  match sol {
+    None => None
+    Some(v) =>
+      Some(AffineMatrix::{
+        a: v[0],
+        b: v[1],
+        c: v[2],
+        d: v[3],
+        e: v[4],
+        f: v[5],
+      })
+  }
+}
+
+///|
+/// 从中心点、角度和缩放计算 2×3 旋转矩阵。
+/// angle 为弧度，scale 为缩放因子。
+pub fn get_rotation_matrix_2d(
+  center : (Float, Float),
+  angle : Float,
+  scale : Float,
+) -> AffineMatrix {
+  let (cx, cy) = center
+  let alpha = scale * @math.cosf(angle)
+  let beta = scale * @math.sinf(angle)
+  AffineMatrix::{
+    a: alpha,
+    b: beta,
+    c: (1.0F - alpha) * cx - beta * cy,
+    d: -beta,
+    e: alpha,
+    f: beta * cx + (1.0F - alpha) * cy,
+  }
+}

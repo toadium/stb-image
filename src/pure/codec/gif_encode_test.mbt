@@ -192,7 +192,7 @@ test "encode_gif_pure: invalid channels raises" {
     let _ = encode_gif_pure(img)
     assert_true(false)
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }

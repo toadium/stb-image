@@ -90,53 +90,47 @@ test "encode_png_pure: RGB roundtrip 4x4" {
 }
 
 ///|
-test "encode_png_pure: RGBA roundtrip (alpha dropped by decode)" {
+test "encode_png_pure: RGBA roundtrip (alpha retained by decode)" {
   let pixels = [255, 0, 0, 255, 0, 255, 0, 128, 0, 0, 255, 64, 255, 255, 255, 0]
   let img = pe_make_image(2, 2, 4, pixels)
   let png_bytes = encode_png_pure(img)
   let restored = decode_png_pure(png_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
-  assert_eq(restored.channels, 3)
-  // decode 丢弃 alpha，只保留 RGB
-  let expected_rgb = [255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255]
-  for i in 0..<expected_rgb.length() {
-    assert_eq(restored.data[i].to_int(), expected_rgb[i])
+  assert_eq(restored.channels, 4)
+  // decode 保留 alpha，RGBA 完整往返
+  for i in 0..<pixels.length() {
+    assert_eq(restored.data[i].to_int(), pixels[i])
   }
 }
 
 ///|
-test "encode_png_pure: grayscale roundtrip (expanded to RGB)" {
+test "encode_png_pure: grayscale roundtrip (retained as gray)" {
   let pixels = [0, 64, 128, 192, 255, 32, 96, 160, 224]
   let img = pe_make_image(3, 3, 1, pixels)
   let png_bytes = encode_png_pure(img)
   let restored = decode_png_pure(png_bytes)
   assert_eq(restored.width, 3)
   assert_eq(restored.height, 3)
-  assert_eq(restored.channels, 3)
-  // 灰度被扩展为 RGB（每通道相同）
+  assert_eq(restored.channels, 1)
+  // 灰度保留为 channels=1
   for i in 0..<pixels.length() {
-    assert_eq(restored.data[i * 3].to_int(), pixels[i])
-    assert_eq(restored.data[i * 3 + 1].to_int(), pixels[i])
-    assert_eq(restored.data[i * 3 + 2].to_int(), pixels[i])
+    assert_eq(restored.data[i].to_int(), pixels[i])
   }
 }
 
 ///|
-test "encode_png_pure: gray+alpha roundtrip (alpha dropped)" {
+test "encode_png_pure: gray+alpha roundtrip (alpha retained)" {
   let pixels = [100, 255, 200, 128, 50, 0, 75, 200]
   let img = pe_make_image(2, 2, 2, pixels)
   let png_bytes = encode_png_pure(img)
   let restored = decode_png_pure(png_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
-  assert_eq(restored.channels, 3)
-  // gray+alpha → RGB (drop alpha, gray expanded)
-  let gray_vals = [100, 200, 50, 75]
-  for i in 0..<gray_vals.length() {
-    assert_eq(restored.data[i * 3].to_int(), gray_vals[i])
-    assert_eq(restored.data[i * 3 + 1].to_int(), gray_vals[i])
-    assert_eq(restored.data[i * 3 + 2].to_int(), gray_vals[i])
+  assert_eq(restored.channels, 2)
+  // gray+alpha 保留为 channels=2
+  for i in 0..<pixels.length() {
+    assert_eq(restored.data[i].to_int(), pixels[i])
   }
 }
 

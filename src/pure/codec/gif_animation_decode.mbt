@@ -25,8 +25,8 @@ pub fn decode_gif_animation_pure(
       "GIF signature 错误，非 \"GIF87a\"/\"GIF89a\"",
     )
   }
-  let screen_width = read_u16_le_safe(data, 6, len)
-  let screen_height = read_u16_le_safe(data, 8, len)
+  let screen_width = read_u16_le(data, 6)
+  let screen_height = read_u16_le(data, 8)
   let packed = data[10].to_int()
   let has_gct = (packed & 0x80) != 0
   let gct_size = 1 << ((packed & 0x07) + 1)
@@ -85,10 +85,10 @@ pub fn decode_gif_animation_pure(
           "GIF 数据过短：无法读取 Image Descriptor",
         )
       }
-      let left = read_u16_le_safe(data, pos, len)
-      let top = read_u16_le_safe(data, pos + 2, len)
-      let img_width = read_u16_le_safe(data, pos + 4, len)
-      let img_height = read_u16_le_safe(data, pos + 6, len)
+      let left = read_u16_le(data, pos)
+      let top = read_u16_le(data, pos + 2)
+      let img_width = read_u16_le(data, pos + 4)
+      let img_height = read_u16_le(data, pos + 6)
       let img_packed = data[pos + 8].to_int()
       pos += 9
       let has_lct = (img_packed & 0x80) != 0
@@ -161,7 +161,7 @@ pub fn decode_gif_animation_pure(
             continue
           }
           if idx >= color_table.length() {
-            continue
+            raise @types.LoadError::DecodeFailed("GIF 颜色表索引越界")
           }
           let (r, g, b) = color_table[idx]
           let canvas_off = (cy * screen_width + cx) * 3
@@ -226,7 +226,7 @@ pub fn decode_gif_animation_pure(
         // Graphics Control Extension
         let _block_size = data[pos].to_int()
         let gce_packed = data[pos + 1].to_int()
-        gce_delay = read_u16_le_safe(data, pos + 2, len) * 10
+        gce_delay = read_u16_le(data, pos + 2) * 10
         gce_transparent = if (gce_packed & 0x01) != 0 {
           data[pos + 4].to_int()
         } else {
@@ -234,6 +234,25 @@ pub fn decode_gif_animation_pure(
         }
         gce_disposal = (gce_packed >> 2) & 0x07
         pos += 6
+      } else if label == 0x01 {
+        // Plain Text Extension: 跳过 8 字节固定 header，再跳过子块
+        if pos + 8 > len {
+          raise @types.LoadError::DecodeFailed(
+            "GIF 数据过短：无法读取 Plain Text Extension header",
+          )
+        }
+        pos += 8
+        while pos < len {
+          let sub_len = data[pos].to_int()
+          pos += 1
+          if sub_len == 0 {
+            break
+          }
+          if pos + sub_len > len {
+            raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
+          }
+          pos += sub_len
+        }
       } else {
         // 跳过其他 extension
         while pos < len {

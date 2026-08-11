@@ -1,4 +1,4 @@
-// 图像几何增强（纯 MoonBit）：pad / resize_to_cover / resize_to_contain / add_border
+// 图像几何增强（纯 MoonBit）：pad / add_border
 
 ///|
 /// 在图像四周填充指定颜色，生成新尺寸 (width+2*px, height+2*py) 的新图像。
@@ -88,48 +88,4 @@ pub fn add_border(
     channels: ch,
     data: Bytes::from_array(out),
   }
-}
-
-///|
-/// Resize 并裁剪到精确尺寸（cover 模式）。
-/// 先按宽高比缩放使图像"覆盖"目标尺寸，然后居中裁剪多余部分。
-pub fn resize_to_cover(
-  img : @types.Image,
-  target_w : Int,
-  target_h : Int,
-) -> @types.Image raise @types.LoadError {
-  if target_w <= 0 || target_h <= 0 {
-    raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")
-  }
-  let scale_w = Float::from_int(target_w) / Float::from_int(img.width)
-  let scale_h = Float::from_int(target_h) / Float::from_int(img.height)
-  let scale = if scale_w > scale_h { scale_w } else { scale_h }
-  let scaled_w = (Float::from_int(img.width) * scale).to_int()
-  let scaled_h = (Float::from_int(img.height) * scale).to_int()
-  let scaled = @pure_util.resize_pure(img, scaled_w, scaled_h)
-  let x = (scaled_w - target_w) / 2
-  let y = (scaled_h - target_h) / 2
-  @transform.crop(scaled, x, y, target_w, target_h)
-}
-
-///|
-/// Resize 到目标尺寸内（contain 模式），保持宽高比，不足部分用 fill_color 填充。
-pub fn resize_to_contain(
-  img : @types.Image,
-  target_w : Int,
-  target_h : Int,
-  fill_color : Array[Byte],
-) -> @types.Image raise @types.LoadError {
-  if target_w <= 0 || target_h <= 0 {
-    raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")
-  }
-  let scale_w = Float::from_int(target_w) / Float::from_int(img.width)
-  let scale_h = Float::from_int(target_h) / Float::from_int(img.height)
-  let scale = if scale_w < scale_h { scale_w } else { scale_h }
-  let scaled_w = (Float::from_int(img.width) * scale).to_int()
-  let scaled_h = (Float::from_int(img.height) * scale).to_int()
-  let scaled = @pure_util.resize_pure(img, scaled_w, scaled_h)
-  let px = (target_w - scaled_w) / 2
-  let py = (target_h - scaled_h) / 2
-  pad(scaled, px, py, fill_color)
 }

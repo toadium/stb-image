@@ -1,5 +1,87 @@
-// 边缘检测扩展（纯 MoonBit）：edge_detect_laplacian / edge_detect_prewitt
+// 边缘检测扩展（纯 MoonBit）：edge_detect_laplacian / edge_detect_prewitt / edge_detect_sobel
 // clamp_b 来自 pixel_advanced.mbt，clamp_i 来自 morphology.mbt
+
+///|
+/// Sobel 边缘检测。先转灰度，然后计算梯度幅值。
+/// 输出为单通道灰度图（channels=1）。
+pub fn edge_detect_sobel(img : @types.Image) -> @types.Image {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  // 先转灰度
+  let gray : Array[Int] = Array::make(n, 0)
+  for i in 0..<n {
+    if ch == 1 {
+      gray[i] = img.data[i].to_int()
+    } else {
+      let r = img.data[i * ch].to_int()
+      let g = img.data[i * ch + 1].to_int()
+      let b = img.data[i * ch + 2].to_int()
+      gray[i] = (r * 299 + g * 587 + b * 114) / 1000
+    }
+  }
+  // Sobel 卷积
+  let out : Array[Byte] = Array::make(n, b'\x00')
+  // 内部区域：1 <= x < w-1 && 1 <= y < h-1，无需 clamp
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      let idx_l = idx - 1
+      let idx_r = idx + 1
+      let idx_t = idx - w
+      let idx_b = idx + w
+      // Gx = [-1 0 1; -2 0 2; -1 0 1]
+      let gx = -gray[idx_t - 1] +
+        gray[idx_t + 1] -
+        2 * gray[idx_l] +
+        2 * gray[idx_r] -
+        gray[idx_b - 1] +
+        gray[idx_b + 1]
+      // Gy = [-1 -2 -1; 0 0 0; 1 2 1]
+      let gy = -gray[idx_t - 1] -
+        2 * gray[idx_t] -
+        gray[idx_t + 1] +
+        gray[idx_b - 1] +
+        2 * gray[idx_b] +
+        gray[idx_b + 1]
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt()
+      out[idx] = (mag + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    }
+  }
+  // 边界区域
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
+      let x_l = clamp_i(x - 1, 0, w - 1)
+      let x_r = clamp_i(x + 1, 0, w - 1)
+      let y_t = clamp_i(y - 1, 0, h - 1)
+      let y_b = clamp_i(y + 1, 0, h - 1)
+      let gx = -gray[y_t * w + x_l] +
+        gray[y_t * w + x_r] -
+        2 * gray[y * w + x_l] +
+        2 * gray[y * w + x_r] -
+        gray[y_b * w + x_l] +
+        gray[y_b * w + x_r]
+      let gy = -gray[y_t * w + x_l] -
+        2 * gray[y_t * w + x] -
+        gray[y_t * w + x_r] +
+        gray[y_b * w + x_l] +
+        2 * gray[y_b * w + x] +
+        gray[y_b * w + x_r]
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt()
+      out[y * w + x] = (mag + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}
 
 ///|
 /// Laplacian 边缘检测。使用 3x3 Laplacian 核：

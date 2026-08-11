@@ -52,7 +52,7 @@ test "encode_hdr_pure: invalid channels raises" {
     let _ = encode_hdr_pure(img)
     fail("expected error")
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => fail("wrong error")
   }
 }

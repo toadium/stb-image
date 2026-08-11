@@ -10,7 +10,7 @@ pub type ExifInfo = @meta.ExifInfo
 pub type GifAnimation = @types.GifAnimation
 
 ///|
-pub type PngAnimation = @codec.PngAnimation
+pub type PngAnimation = @types.PngAnimation
 
 ///|
 pub type Image = @types.Image
@@ -73,10 +73,10 @@ pub type ContourPoint = @edge.ContourPoint
 pub type Contour = @edge.Contour
 
 ///|
-pub type SegmentLabelImage = @color.SegmentLabelImage
+pub type SegmentLabelImage = @segment.SegmentLabelImage
 
 ///|
-pub type SegmentRegion = @color.SegmentRegion
+pub type SegmentRegion = @segment.SegmentRegion
 
 ///|
 pub type Colormap = @color.Colormap
@@ -90,18 +90,19 @@ pub type HaarWaveletResult = @frequency.HaarWaveletResult
 ///|
 pub type CornerPoint = @feature.CornerPoint
 
-// From core/ (replaced with @pure/@lib — all-target pure MoonBit)
+// From @lib/@pure (all-target pure MoonBit)
 
 ///|
 pub let convert_iphone_png_to_rgb : (Bool) -> Unit = @pure_util.convert_iphone_png_to_rgb_pure
 
 ///|
+/// 自动格式分派解码（decode_any 的别名）
+/// 行为与 load_from_bytes 等价，两者均委托 @lib.load_from_bytes_auto
 pub fn decode_any(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.Image raise @types.LoadError {
-  ignore(req_channels)
-  @lib.load_from_bytes_auto(arg0)
+  @lib.load_from_bytes_auto(arg0, req_channels~)
 }
 
 ///|
@@ -132,7 +133,7 @@ pub let is_hdr_from_bytes : (Bytes) -> Bool = @pure_util.is_hdr_from_bytes_pure
 
 ///|
 pub fn is_supported_format(data : Bytes) -> Bool {
-  @lib.detect_format(data) != @lib.ImageFormat::Unknown
+  @lib.detect_format(data) != @types.ImageFormat::Unknown
 }
 
 ///|
@@ -142,31 +143,20 @@ pub let ldr_to_hdr_gamma : (Float) -> Unit = @pure_util.ldr_to_hdr_gamma_pure
 pub let ldr_to_hdr_scale : (Float) -> Unit = @pure_util.ldr_to_hdr_scale_pure
 
 ///|
+/// 自动格式分派解码（load_from_bytes 是 decode_any 的别名）
+/// 行为与 decode_any 等价，两者均委托 @lib.load_from_bytes_auto
 pub fn load_from_bytes(
   arg0 : Bytes,
   req_channels? : Int? = None,
 ) -> @types.Image raise @types.LoadError {
-  ignore(req_channels)
-  @lib.load_from_bytes_auto(arg0)
+  @lib.load_from_bytes_auto(arg0, req_channels~)
 }
 
 ///|
-pub fn load_gif_from_bytes(
-  arg0 : Bytes,
-  req_channels? : Int? = None,
-) -> @types.GifAnimation raise @types.LoadError {
-  ignore(req_channels)
-  @codec.decode_gif_animation_pure(arg0)
-}
+pub let load_gif_from_bytes : (Bytes) -> @types.GifAnimation raise @types.LoadError = @codec.decode_gif_animation_pure
 
 ///|
-pub fn loadf_from_bytes(
-  arg0 : Bytes,
-  req_channels? : Int? = None,
-) -> @types.ImageF raise @types.LoadError {
-  ignore(req_channels)
-  @codec.decode_hdr_pure(arg0)
-}
+pub let load_f_from_bytes : (Bytes) -> @types.ImageF raise @types.LoadError = @codec.decode_hdr_pure
 
 ///|
 pub fn resize(
@@ -194,13 +184,7 @@ pub fn write_bmp_to_bytes(img : @types.Image) -> Bytes {
 pub let write_hdr_to_bytes : (@types.ImageF) -> Bytes raise @types.LoadError = @codec.encode_hdr_pure
 
 ///|
-pub fn write_jpeg_to_bytes(
-  arg0 : @types.Image,
-  quality? : Int = 90,
-) -> Bytes raise @types.LoadError {
-  ignore(quality)
-  @codec.encode_jpeg_pure(arg0)
-}
+pub let write_jpeg_to_bytes : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_jpeg_pure
 
 ///|
 pub let write_png_to_bytes : (@types.Image) -> Bytes = @codec.encode_png_pure
@@ -219,7 +203,7 @@ pub let adjust_brightness : (@types.Image, Int) -> @types.Image = @color.adjust_
 pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 = @color.adjust_brightness_16
 
 ///|
-pub let adjust_brightnessf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightnessf
+pub let adjust_brightness_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightness_f
 
 ///|
 pub let adjust_contrast : (@types.Image, Float) -> @types.Image = @color.adjust_contrast
@@ -228,7 +212,7 @@ pub let adjust_contrast : (@types.Image, Float) -> @types.Image = @color.adjust_
 pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_contrast_16
 
 ///|
-pub let adjust_contrastf : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrastf
+pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrast_f
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
@@ -318,7 +302,7 @@ pub fn draw_corners(
 pub let crop_16 : (@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError = @transform.crop_16
 
 ///|
-pub let cropf : (@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.cropf
+pub let crop_f : (@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.crop_f
 
 ///|
 pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
@@ -396,7 +380,7 @@ pub let edge_detect_laplacian : (@types.Image) -> @types.Image = @edge.edge_dete
 pub let edge_detect_prewitt : (@types.Image) -> @types.Image = @edge.edge_detect_prewitt
 
 ///|
-pub let edge_detect_sobel : (@types.Image) -> @types.Image = @filter.edge_detect_sobel
+pub let edge_detect_sobel : (@types.Image) -> @types.Image = @edge.edge_detect_sobel
 
 ///|
 pub let erode : (@types.Image) -> @types.Image = @segment.erode
@@ -437,7 +421,7 @@ pub let flip_horizontal : (@types.Image) -> @types.Image = @transform.flip_horiz
 pub let flip_horizontal_16 : (@types.Image16) -> @types.Image16 = @transform.flip_horizontal_16
 
 ///|
-pub let flip_horizontalf : (@types.ImageF) -> @types.ImageF = @transform.flip_horizontalf
+pub let flip_horizontal_f : (@types.ImageF) -> @types.ImageF = @transform.flip_horizontal_f
 
 ///|
 pub fn harris_corners(
@@ -472,7 +456,7 @@ pub fn hough_lines_nms(
 pub let find_contours : (@types.Image) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours
 
 ///|
-pub let floyd_steinberg : (@types.Image, Int) -> @types.Image = @segment.floyd_steinberg
+pub let floyd_steinberg : (@types.Image, Int) -> @types.Image = @color.floyd_steinberg
 
 ///|
 pub let glcm_features : (Array[Array[Int]]) -> @feature.GlcmFeatures = @feature.glcm_features
@@ -536,7 +520,7 @@ pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image = @filter.gau
 pub let median_blur : (@types.Image, Int) -> @types.Image = @filter.median_blur
 
 ///|
-pub let haar_inverse_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_inverse_transform_1d
+pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_transform_1d
 
 ///|
 pub let haar_inverse_transform_2d : (@frequency.HaarWaveletResult) -> @types.Image = @frequency.haar_inverse_transform_2d
@@ -662,15 +646,15 @@ pub let integral_variance : (
 pub let invert : (@types.Image) -> @types.Image = @color.invert
 
 ///|
-pub let k_means_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @segment.k_means_quantize
+pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
 
 ///|
 pub fn kmeans_segment(
   arg0 : @types.Image,
   arg1 : Int,
   max_iters? : Int = 20,
-) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError {
-  @color.kmeans_segment(arg0, arg1, max_iters~)
+) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
+  @segment.kmeans_segment(arg0, arg1, max_iters~)
 }
 
 ///|
@@ -701,7 +685,7 @@ pub fn nlm_denoise_fast(
 }
 
 ///|
-pub let median_cut : (@types.Image, Int) -> @types.Image = @segment.median_cut
+pub let median_cut : (@types.Image, Int) -> @types.Image = @color.median_cut
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
@@ -762,8 +746,8 @@ pub fn region_growing_segment(
   arg0 : @types.Image,
   arg1 : Array[(Int, Int)],
   threshold? : Int = 30,
-) -> (@color.SegmentLabelImage, Array[@color.SegmentRegion]) raise @types.LoadError {
-  @color.region_growing_segment(arg0, arg1, threshold~)
+) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
+  @segment.region_growing_segment(arg0, arg1, threshold~)
 }
 
 ///|
@@ -815,22 +799,22 @@ pub let rotate_90 : (@types.Image) -> @types.Image = @transform.rotate_90
 pub let rotate_90_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_90_16
 
 ///|
-pub let rotate_90f : (@types.ImageF) -> @types.ImageF = @transform.rotate_90f
+pub let rotate_90_f : (@types.ImageF) -> @types.ImageF = @transform.rotate_90_f
 
 ///|
 pub let rotate_180_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_180_16
 
 ///|
-pub let rotate_180f : (@types.ImageF) -> @types.ImageF = @transform.rotate_180f
+pub let rotate_180_f : (@types.ImageF) -> @types.ImageF = @transform.rotate_180_f
 
 ///|
 pub let rotate_270_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_270_16
 
 ///|
-pub let rotate_270f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270f
+pub let rotate_270_f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270_f
 
 ///|
-pub let segment_to_color : (@color.SegmentLabelImage) -> @types.Image = @color.segment_to_color
+pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image = @segment.segment_to_color
 
 ///|
 pub let sharpen : (@types.Image, Float) -> @types.Image = @filter.sharpen
@@ -908,16 +892,16 @@ pub fn distance_transform(
 }
 
 ///|
-pub let distance_transform_visualize : (Array[Float], Int, Int) -> @types.Image = @segment.distance_transform_visualize
+pub let visualize_distance_transform : (Array[Float], Int, Int) -> @types.Image = @segment.visualize_distance_transform
 
 ///|
 pub let skeletonize : (@types.Image) -> @types.Image raise @types.LoadError = @segment.skeletonize
 
 ///|
-pub type SuperpixelResult = @types.SuperpixelResult
+pub type SuperpixelResult = @segment.SuperpixelResult
 
 ///|
-pub let slic : (@types.Image, Int, Int, Int) -> @types.SuperpixelResult raise @types.LoadError = @segment.slic
+pub let slic : (@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic
 
 ///|
 pub fn guided_filter(
@@ -937,7 +921,7 @@ pub fn flood_fill(
   arg3 : Array[Byte],
   threshold? : Int = 0,
 ) -> @types.Image raise @types.LoadError {
-  @color.flood_fill(arg0, arg1, arg2, arg3, threshold~)
+  @segment.flood_fill(arg0, arg1, arg2, arg3, threshold~)
 }
 
 ///|
@@ -1045,28 +1029,26 @@ pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @t
 ///|
 pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
 
-// From format/
+///|
+pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_qoi_pure
 
 ///|
-pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @format.decode_qoi
+pub let encode_gif : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_gif_pure
 
 ///|
-pub let encode_gif : (@types.Image) -> Bytes raise @types.LoadError = @format.encode_gif
+pub let encode_gif_animation : (@types.GifAnimation) -> Bytes raise @types.LoadError = @codec.encode_gif_animation_pure
 
 ///|
-pub let encode_gif_animation : (@types.GifAnimation) -> Bytes raise @types.LoadError = @format.encode_gif_animation
+pub let encode_pgm : (@types.Image) -> Bytes = @codec.encode_pgm_pure
 
 ///|
-pub let encode_pgm : (@types.Image) -> Bytes = @format.encode_pgm
+pub let encode_pnm : (@types.Image) -> Bytes = @codec.encode_pnm_pure
 
 ///|
-pub let encode_pnm : (@types.Image) -> Bytes = @format.encode_pnm
+pub let encode_ppm : (@types.Image) -> Bytes = @codec.encode_ppm_pure
 
 ///|
-pub let encode_ppm : (@types.Image) -> Bytes = @format.encode_ppm
-
-///|
-pub let encode_qoi : (@types.Image) -> Bytes raise @types.LoadError = @format.encode_qoi
+pub let encode_qoi : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_qoi_pure
 
 ///|
 pub let decode_ico : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_ico_pure
@@ -1075,7 +1057,7 @@ pub let decode_ico : (Bytes) -> @types.Image raise @types.LoadError = @codec.dec
 pub let encode_ico : (@types.Image) -> Bytes = @codec.encode_ico_pure
 
 ///|
-pub let encode_ico_sizes : (Array[@types.Image]) -> Bytes = @codec.encode_ico_multi_pure
+pub let encode_ico_sizes : (Array[@types.Image]) -> Bytes = @codec.encode_ico_with_sizes_pure
 
 ///|
 pub let decode_cur : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_cur_pure
@@ -1096,10 +1078,10 @@ pub let decode_tiff : (Bytes) -> @types.Image raise @types.LoadError = @codec.de
 pub let encode_tiff : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_tiff_pure
 
 ///|
-pub let decode_apng : (Bytes) -> @codec.PngAnimation raise @types.LoadError = @codec.decode_apng_pure
+pub let decode_apng : (Bytes) -> @types.PngAnimation raise @types.LoadError = @codec.decode_apng_pure
 
 ///|
-pub let encode_apng : (@codec.PngAnimation) -> Bytes raise @types.LoadError = @codec.encode_apng_pure
+pub let encode_apng : (@types.PngAnimation) -> Bytes raise @types.LoadError = @codec.encode_apng_pure
 
 // From meta/
 
@@ -1172,7 +1154,7 @@ pub let blend_linear_burn : (@types.Image, @types.Image) -> @types.Image raise @
 pub let compute_stats : (@types.Image) -> @util.ImageStats = @util.compute_stats
 
 ///|
-pub let convolve : (@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError = @util.convolve
+pub let convolve : (@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError = @filter.convolve
 
 ///|
 pub let extract_channel : (@types.Image, Int) -> @types.Image raise @types.LoadError = @util.extract_channel
@@ -1181,7 +1163,7 @@ pub let extract_channel : (@types.Image, Int) -> @types.Image raise @types.LoadE
 pub let fill_alpha : (@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError = @util.fill_alpha
 
 ///|
-pub let flip_vertical : (@types.Image) -> @types.Image = @util.flip_vertical
+pub let flip_vertical : (@types.Image) -> @types.Image = @transform.flip_vertical
 
 ///|
 pub let gradient_map : (@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError = @util.gradient_map
@@ -1205,10 +1187,10 @@ pub let posterize : (@types.Image, Int) -> @types.Image raise @types.LoadError =
 pub let replace_color : (@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError = @util.replace_color
 
 ///|
-pub let resize_to_contain : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.resize_to_contain
+pub let resize_to_contain : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @transform.resize_to_contain
 
 ///|
-pub let resize_to_cover : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @util.resize_to_cover
+pub let resize_to_cover : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.resize_to_cover
 
 ///|
 pub let set_alpha : (@types.Image, Byte) -> @types.Image raise @types.LoadError = @util.set_alpha

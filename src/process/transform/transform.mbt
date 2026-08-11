@@ -135,6 +135,30 @@ pub fn flip_horizontal(img : @types.Image) -> @types.Image {
 }
 
 ///|
+/// 垂直翻转（上下镜像）
+pub fn flip_vertical(img : @types.Image) -> @types.Image {
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      let src_off = ((h - 1 - y) * w + x) * ch
+      let dst_off = (y * w + x) * ch
+      for c in 0..<ch {
+        out[dst_off + c] = img.data[src_off + c]
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
 /// 裁剪 16-bit Image16
 pub fn crop_16(
   img : @types.Image16,
@@ -170,7 +194,7 @@ pub fn crop_16(
 
 ///|
 /// 裁剪 float ImageF
-pub fn cropf(
+pub fn crop_f(
   img : @types.ImageF,
   x : Int,
   y : Int,

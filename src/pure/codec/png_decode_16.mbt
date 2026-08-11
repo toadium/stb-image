@@ -11,16 +11,15 @@ pub fn decode_png_16_pure(
   data : Bytes,
   req_channels? : Int? = None,
 ) -> @types.Image16 raise @types.LoadError {
+  match req_channels {
+    Some(n) =>
+      if n < 1 || n > 4 {
+        raise @types.LoadError::DecodeFailed("req_channels 必须为 1-4")
+      }
+    None => ()
+  }
   let len = data.length()
-  if len < 8 ||
-    data[0].to_int() != 0x89 ||
-    data[1].to_int() != 0x50 ||
-    data[2].to_int() != 0x4E ||
-    data[3].to_int() != 0x47 ||
-    data[4].to_int() != 0x0D ||
-    data[5].to_int() != 0x0A ||
-    data[6].to_int() != 0x1A ||
-    data[7].to_int() != 0x0A {
+  if len < 8 || !is_png_signature(data, 0) {
     raise @types.LoadError::DecodeFailed("PNG signature 错误")
   }
   let mut pos = 8

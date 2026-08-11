@@ -12,6 +12,7 @@ pub(all) suberror LoadError {
   FileIO(String)
   UnsupportedFormat(String)
   DecodeFailed(String)
+  EncodeFailed(String)
 }
 
 // Types and methods
@@ -60,6 +61,11 @@ pub(all) struct ImageInfo {
   channels : Int
 } derive(Eq, @debug.Debug)
 
+pub(all) struct PngAnimation {
+  frames : Array[Image]
+  delays : Array[Int]
+} derive(Eq, @debug.Debug)
+
 pub(all) enum ResizeEdge {
   Clamp
   Reflect
@@ -75,12 +81,6 @@ pub(all) enum ResizeFilter {
   CatmullROM
   Mitchell
   PointSample
-} derive(Eq, @debug.Debug)
-
-pub(all) struct SuperpixelResult {
-  labels : Array[Int]
-  centers : Array[(Int, Int)]
-  num_labels : Int
 } derive(Eq, @debug.Debug)
 
 // Type aliases

@@ -1,4 +1,4 @@
-// 图像拼接与平铺（纯 MoonBit）：hstack / vstack / tile / flip_vertical / transpose
+// 图像拼接与平铺（纯 MoonBit）：hstack / vstack / tile / transpose
 
 ///|
 /// 水平拼接。两图高度和通道数必须相同。
@@ -97,30 +97,6 @@ pub fn tile(
   @types.Image::{
     width: new_w,
     height: new_h,
-    channels: ch,
-    data: Bytes::from_array(out),
-  }
-}
-
-///|
-/// 垂直翻转。
-pub fn flip_vertical(img : @types.Image) -> @types.Image {
-  let ch = img.channels
-  let w = img.width
-  let h = img.height
-  let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
-  for y in 0..<h {
-    for x in 0..<w {
-      let src_off = ((h - 1 - y) * w + x) * ch
-      let dst_off = (y * w + x) * ch
-      for c in 0..<ch {
-        out[dst_off + c] = img.data[src_off + c]
-      }
-    }
-  }
-  @types.Image::{
-    width: w,
-    height: h,
     channels: ch,
     data: Bytes::from_array(out),
   }

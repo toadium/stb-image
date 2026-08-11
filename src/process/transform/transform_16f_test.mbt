@@ -57,9 +57,9 @@ test "rotate_90_16: swaps width and height" {
 }
 
 ///|
-test "rotate_90f: swaps width and height" {
+test "rotate_90_f: swaps width and height" {
   let img = make_imagef(4, 3, 3)
-  let result = rotate_90f(img)
+  let result = rotate_90_f(img)
   assert_eq(result.width, 3)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -79,9 +79,9 @@ test "rotate_180_16: preserves dimensions" {
 }
 
 ///|
-test "rotate_180f: preserves dimensions" {
+test "rotate_180_f: preserves dimensions" {
   let img = make_imagef(4, 3, 2)
-  let result = rotate_180f(img)
+  let result = rotate_180_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 2)
@@ -100,9 +100,9 @@ test "rotate_270_16: swaps width and height" {
 }
 
 ///|
-test "rotate_270f: swaps width and height" {
+test "rotate_270_f: swaps width and height" {
   let img = make_imagef(4, 3, 1)
-  let result = rotate_270f(img)
+  let result = rotate_270_f(img)
   assert_eq(result.width, 3)
   assert_eq(result.height, 4)
   let _ = img
@@ -120,9 +120,9 @@ test "flip_horizontal_16: preserves dimensions" {
 }
 
 ///|
-test "flip_horizontalf: preserves dimensions" {
+test "flip_horizontal_f: preserves dimensions" {
   let img = make_imagef(4, 3, 3)
-  let result = flip_horizontalf(img)
+  let result = flip_horizontal_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   let _ = img
@@ -147,12 +147,12 @@ test "rotate_90_16: 4 rotations return to original" {
 }
 
 ///|
-test "rotate_90f: 4 rotations return to original" {
+test "rotate_90_f: 4 rotations return to original" {
   let img = make_imagef(3, 2, 3)
-  let r1 = rotate_90f(img)
-  let r2 = rotate_90f(r1)
-  let r3 = rotate_90f(r2)
-  let r4 = rotate_90f(r3)
+  let r1 = rotate_90_f(img)
+  let r2 = rotate_90_f(r1)
+  let r3 = rotate_90_f(r2)
+  let r4 = rotate_90_f(r3)
   assert_eq(r4.width, img.width)
   assert_eq(r4.height, img.height)
   assert_eq(r4, img)
@@ -175,10 +175,10 @@ test "flip_horizontal_16: double flip is identity" {
 }
 
 ///|
-test "flip_horizontalf: double flip is identity" {
+test "flip_horizontal_f: double flip is identity" {
   let img = make_imagef(4, 3, 3)
-  let r1 = flip_horizontalf(img)
-  let r2 = flip_horizontalf(r1)
+  let r1 = flip_horizontal_f(img)
+  let r2 = flip_horizontal_f(r1)
   assert_eq(r2, img)
   let _ = img
   let _ = r1

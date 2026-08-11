@@ -122,7 +122,7 @@ test "encode_jpeg_pure: invalid dimensions raises" {
     let _ = encode_jpeg_pure(img)
     fail("expected error")
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => fail("wrong error")
   }
 }
@@ -139,7 +139,7 @@ test "encode_jpeg_pure: invalid dimensions raises (negative)" {
     let _ = encode_jpeg_pure(img)
     fail("expected error")
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => fail("wrong error")
   }
 }

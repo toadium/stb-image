@@ -20,8 +20,6 @@ pub fn freq_filter_gaussian(@types.Image, FreqFilterType, Float, band_width? : F
 
 pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
 
-pub fn haar_inverse_transform_1d(Array[Float]) -> Array[Float]
-
 pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @types.Image
 
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
@@ -31,6 +29,8 @@ pub fn haar_transform_2d(@types.Image, levels? : Int) -> HaarWaveletResult raise
 pub fn idct_2d(Array[Array[Double]]) -> @types.Image
 
 pub fn ifft_2d(FFTResult) -> @types.Image
+
+pub fn ihaar_transform_1d(Array[Float]) -> Array[Float]
 
 // Errors
 

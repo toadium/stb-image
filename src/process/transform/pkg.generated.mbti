@@ -16,7 +16,7 @@ pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadE
 
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
-pub fn cropf(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
+pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
 
 pub fn draw_circle(@types.Image, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
@@ -38,7 +38,9 @@ pub fn flip_horizontal(@types.Image) -> @types.Image
 
 pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
 
-pub fn flip_horizontalf(@types.ImageF) -> @types.ImageF
+pub fn flip_horizontal_f(@types.ImageF) -> @types.ImageF
+
+pub fn flip_vertical(@types.Image) -> @types.Image
 
 pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> AffineMatrix?
 
@@ -56,25 +58,29 @@ pub fn remove_horizontal_seam(@types.Image, Array[Int]) -> @types.Image
 
 pub fn remove_vertical_seam(@types.Image, Array[Int]) -> @types.Image
 
+pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
 pub fn rotate(@types.Image, Float) -> @types.Image
 
 pub fn rotate_180(@types.Image) -> @types.Image
 
 pub fn rotate_180_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_180f(@types.ImageF) -> @types.ImageF
+pub fn rotate_180_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_270(@types.Image) -> @types.Image
 
 pub fn rotate_270_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_270f(@types.ImageF) -> @types.ImageF
+pub fn rotate_270_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_90(@types.Image) -> @types.Image
 
 pub fn rotate_90_16(@types.Image16) -> @types.Image16
 
-pub fn rotate_90f(@types.ImageF) -> @types.ImageF
+pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
 
 pub fn seam_carve_resize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 

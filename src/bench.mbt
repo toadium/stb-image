@@ -69,7 +69,7 @@ pub fn bench_run() -> Unit {
   b.bench(name="box_blur 128x128", () => ignore(@filter.box_blur(img128, 5)))
   b.bench(name="sharpen 128x128", () => ignore(@filter.sharpen(img128, 1.0F)))
   b.bench(name="edge_detect_sobel 128x128", () => {
-    ignore(@filter.edge_detect_sobel(img128))
+    ignore(@edge.edge_detect_sobel(img128))
   })
 
   // 色彩

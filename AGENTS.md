@@ -24,6 +24,12 @@ You can browse and install extra skills here:
 - Try to keep deprecated blocks in file called `deprecated.mbt` in each
   directory.
 
+- New `pub fn`/`pub let`/`pub type` must be re-exported in `src/reexport.mbt`
+  to keep the top-level API complete. Ordinary functions use `pub let` alias,
+  functions with labeled parameters use `pub fn` wrapper to preserve defaults.
+  After adding re-exports, run `moon info` to regenerate `.mbti` and verify the
+  new API surface is visible.
+
 ## Tooling
 
 - `moon fmt` is used to format your code properly.

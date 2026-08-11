@@ -13,49 +13,6 @@ priv struct IconDirEntry {
 }
 
 ///|
-fn ico_read_u16_le(data : Bytes, offset : Int) -> Int {
-  data[offset].to_int() | (data[offset + 1].to_int() << 8)
-}
-
-///|
-fn ico_read_i32_le(data : Bytes, offset : Int) -> Int {
-  data[offset].to_int() |
-  (data[offset + 1].to_int() << 8) |
-  (data[offset + 2].to_int() << 16) |
-  (data[offset + 3].to_int() << 24)
-}
-
-///|
-fn ico_write_u16_le(out : Array[Byte], val : Int) -> Unit {
-  out.push((val & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-}
-
-///|
-fn ico_write_i32_le(out : Array[Byte], val : Int) -> Unit {
-  out.push((val & 0xFF).to_byte())
-  out.push(((val >> 8) & 0xFF).to_byte())
-  out.push(((val >> 16) & 0xFF).to_byte())
-  out.push(((val >> 24) & 0xFF).to_byte())
-}
-
-///|
-/// 判断子图像数据是否为 PNG（8 字节签名）
-fn is_png_data(data : Bytes, offset : Int, len : Int) -> Bool {
-  if offset + 8 > len {
-    return false
-  }
-  data[offset].to_int() == 0x89 &&
-  data[offset + 1].to_int() == 0x50 &&
-  data[offset + 2].to_int() == 0x4E &&
-  data[offset + 3].to_int() == 0x47 &&
-  data[offset + 4].to_int() == 0x0D &&
-  data[offset + 5].to_int() == 0x0A &&
-  data[offset + 6].to_int() == 0x1A &&
-  data[offset + 7].to_int() == 0x0A
-}
-
-///|
 /// 解析 ICO/CUR 目录条目，返回 (icon_type, entries)
 fn parse_ico_header(
   data : Bytes,
@@ -64,8 +21,8 @@ fn parse_ico_header(
   if len < 6 {
     raise @types.LoadError::DecodeFailed("ICO/CUR 数据过短")
   }
-  let icon_type = ico_read_u16_le(data, 2)
-  let count = ico_read_u16_le(data, 4)
+  let icon_type = read_u16_le(data, 2)
+  let count = read_u16_le(data, 4)
   if icon_type != 1 && icon_type != 2 {
     raise @types.LoadError::DecodeFailed("ICO/CUR type 无效")
   }
@@ -80,8 +37,8 @@ fn parse_ico_header(
     let base = 6 + i * 16
     let w = data[base].to_int()
     let h = data[base + 1].to_int()
-    let byte_size = ico_read_i32_le(data, base + 8)
-    let offset = ico_read_i32_le(data, base + 12)
+    let byte_size = read_u32_le(data, base + 8)
+    let offset = read_u32_le(data, base + 12)
     entries.push(IconDirEntry::{
       width: if w == 0 {
         256
@@ -126,14 +83,14 @@ fn decode_ico_bmp_subimage(
   if offset + 40 > len {
     raise @types.LoadError::DecodeFailed("ICO BMP 子图像数据不完整")
   }
-  let dib_size = ico_read_i32_le(data, offset)
+  let dib_size = read_u32_le(data, offset)
   if dib_size < 40 {
     raise @types.LoadError::DecodeFailed("ICO BMP DIB 头过短")
   }
-  let width = ico_read_i32_le(data, offset + 4)
-  let height2 = ico_read_i32_le(data, offset + 8)
-  let bpp = ico_read_u16_le(data, offset + 14)
-  let compression = ico_read_i32_le(data, offset + 16)
+  let width = read_u32_le(data, offset + 4)
+  let height2 = read_u32_le(data, offset + 8)
+  let bpp = read_u16_le(data, offset + 14)
+  let compression = read_u32_le(data, offset + 16)
   if compression != 0 {
     raise @types.LoadError::DecodeFailed("ICO BMP 子图像不支持压缩")
   }
@@ -203,14 +160,17 @@ fn decode_ico_bmp_subimage(
 /// 解码 ICO 字节流为 Image（选择面积最大的子图像）
 /// 支持 BMP 子图像（24/32-bit）和 PNG 子图像
 pub fn decode_ico_pure(data : Bytes) -> @types.Image raise @types.LoadError {
-  let (_, entries) = parse_ico_header(data)
+  let (icon_type, entries) = parse_ico_header(data)
+  if icon_type != 1 {
+    raise @types.LoadError::DecodeFailed("ICO type 应为 1")
+  }
   let best = select_best_entry(entries)
   let entry = entries[best]
   let len = data.length()
   if entry.offset + entry.byte_size > len {
     raise @types.LoadError::DecodeFailed("ICO 子图像数据越界")
   }
-  if is_png_data(data, entry.offset, len) {
+  if is_png_signature(data, entry.offset) {
     // PNG 子图像：提取子字节流并委托 PNG 解码器
     let sub : Array[Byte] = []
     for i in 0..<entry.byte_size {
@@ -235,7 +195,7 @@ pub fn decode_cur_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   if entry.offset + entry.byte_size > len {
     raise @types.LoadError::DecodeFailed("CUR 子图像数据越界")
   }
-  if is_png_data(data, entry.offset, len) {
+  if is_png_signature(data, entry.offset) {
     let sub : Array[Byte] = []
     for i in 0..<entry.byte_size {
       sub.push(data[entry.offset + i])
@@ -256,18 +216,18 @@ fn encode_ico_bmp_subimage(img : @types.Image) -> (Array[Byte], Int, Int) {
   let data = img.data
   let out : Array[Byte] = []
   // BITMAPINFOHEADER (40 bytes)
-  ico_write_i32_le(out, 40) // biSize
-  ico_write_i32_le(out, width) // biWidth
-  ico_write_i32_le(out, height * 2) // biHeight = 2*h (XOR + AND)
-  ico_write_u16_le(out, 1) // biPlanes
-  ico_write_u16_le(out, 32) // biBitCount
-  ico_write_i32_le(out, 0) // biCompression = BI_RGB
+  write_u32_le(out, 40) // biSize
+  write_u32_le(out, width) // biWidth
+  write_u32_le(out, height * 2) // biHeight = 2*h (XOR + AND)
+  write_u16_le(out, 1) // biPlanes
+  write_u16_le(out, 32) // biBitCount
+  write_u32_le(out, 0) // biCompression = BI_RGB
   let xor_size = width * height * 4
-  ico_write_i32_le(out, xor_size) // biSizeImage
-  ico_write_i32_le(out, 0) // biXPelsPerMeter
-  ico_write_i32_le(out, 0) // biYPelsPerMeter
-  ico_write_i32_le(out, 0) // biClrUsed
-  ico_write_i32_le(out, 0) // biClrImportant
+  write_u32_le(out, xor_size) // biSizeImage
+  write_u32_le(out, 0) // biXPelsPerMeter
+  write_u32_le(out, 0) // biYPelsPerMeter
+  write_u32_le(out, 0) // biClrUsed
+  write_u32_le(out, 0) // biClrImportant
   // XOR 掩码：32-bit BGRA，自下而上
   for y in 0..<height {
     let ry = height - 1 - y
@@ -310,18 +270,18 @@ fn encode_ico_bmp_subimage(img : @types.Image) -> (Array[Byte], Int, Int) {
 ///|
 /// 将单个 Image 编码为 ICO 字节流（内嵌 32-bit BMP 子图像）
 pub fn encode_ico_pure(img : @types.Image) -> Bytes {
-  encode_ico_multi_pure([img])
+  encode_ico_with_sizes_pure([img])
 }
 
 ///|
 /// 将多个尺寸的 Image 编码为多分辨率 ICO 字节流
-pub fn encode_ico_multi_pure(images : Array[@types.Image]) -> Bytes {
+pub fn encode_ico_with_sizes_pure(images : Array[@types.Image]) -> Bytes {
   let count = images.length()
   let out : Array[Byte] = []
   // ICONDIR (6 bytes)
-  ico_write_u16_le(out, 0) // reserved
-  ico_write_u16_le(out, 1) // type = ICO
-  ico_write_u16_le(out, count)
+  write_u16_le(out, 0) // reserved
+  write_u16_le(out, 1) // type = ICO
+  write_u16_le(out, count)
   // 先编码所有子图像，收集偏移和大小
   let subimages : Array[(Array[Byte], Int, Int)] = []
   for i in 0..<count {
@@ -339,10 +299,10 @@ pub fn encode_ico_multi_pure(images : Array[@types.Image]) -> Bytes {
     out.push((if h == 256 { 0 } else { h }).to_byte()) // height
     out.push(b'\x00') // colors (0 for >256 colors)
     out.push(b'\x00') // reserved
-    ico_write_u16_le(out, 1) // planes
-    ico_write_u16_le(out, 32) // bit count
-    ico_write_i32_le(out, byte_size)
-    ico_write_i32_le(out, offset)
+    write_u16_le(out, 1) // planes
+    write_u16_le(out, 32) // bit count
+    write_u32_le(out, byte_size)
+    write_u32_le(out, offset)
     offset += byte_size
   }
   // 写入子图像数据
@@ -370,9 +330,9 @@ pub fn encode_cur_with_hotspot_pure(
 ) -> Bytes {
   let out : Array[Byte] = []
   // ICONDIR (6 bytes)
-  ico_write_u16_le(out, 0) // reserved
-  ico_write_u16_le(out, 2) // type = CUR
-  ico_write_u16_le(out, 1) // count
+  write_u16_le(out, 0) // reserved
+  write_u16_le(out, 2) // type = CUR
+  write_u16_le(out, 1) // count
   // 编码子图像
   let (sub, w, h) = encode_ico_bmp_subimage(img)
   let byte_size = sub.length()
@@ -382,10 +342,10 @@ pub fn encode_cur_with_hotspot_pure(
   out.push((if h == 256 { 0 } else { h }).to_byte())
   out.push(b'\x00') // colors
   out.push(b'\x00') // reserved
-  ico_write_u16_le(out, hotspot_x) // 热点 X
-  ico_write_u16_le(out, hotspot_y) // 热点 Y
-  ico_write_i32_le(out, byte_size)
-  ico_write_i32_le(out, offset)
+  write_u16_le(out, hotspot_x) // 热点 X
+  write_u16_le(out, hotspot_y) // 热点 Y
+  write_u32_le(out, byte_size)
+  write_u32_le(out, offset)
   // 子图像数据
   for i in 0..<sub.length() {
     out.push(sub[i])

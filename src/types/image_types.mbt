@@ -46,6 +46,7 @@ pub(all) suberror LoadError {
   FileIO(String)
   UnsupportedFormat(String)
   DecodeFailed(String)
+  EncodeFailed(String)
 }
 
 ///|
@@ -85,9 +86,8 @@ pub(all) enum ResizeEdge {
 } derive(Eq, @debug.Debug)
 
 ///|
-/// SLIC 超像素分割结果
-pub(all) struct SuperpixelResult {
-  labels : Array[Int]
-  centers : Array[(Int, Int)]
-  num_labels : Int
+/// APNG 动画解码结果
+pub(all) struct PngAnimation {
+  frames : Array[Image]
+  delays : Array[Int] // 毫秒
 } derive(Eq, @debug.Debug)

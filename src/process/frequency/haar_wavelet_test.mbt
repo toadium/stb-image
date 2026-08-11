@@ -13,7 +13,7 @@ test "haar_transform_1d 基本功能" {
 test "haar_transform_1d 逆变换" {
   let data = [1.0F, 2.0F, 3.0F, 4.0F]
   let transformed = haar_transform_1d(data)
-  let inversed = haar_inverse_transform_1d(transformed)
+  let inversed = ihaar_transform_1d(transformed)
   // 逆变换应恢复原始数据
   for i in 0..<4 {
     assert_true((inversed[i] - data[i]).abs() < 0.001F)

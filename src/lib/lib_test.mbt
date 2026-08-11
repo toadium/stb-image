@@ -379,9 +379,9 @@ test "load_from_bytes_auto: Unknown raises" {
 // ==================== 编码器委托验证测试（4 个） ====================
 
 ///|
-test "encode_qoi_auto 委托验证" {
+test "encode_qoi 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_qoi_auto(img)
+  let out = encode_qoi(img)
   // 前 4 字节为 "qoif"
   assert_eq(out[0].to_int(), 0x71)
   assert_eq(out[1].to_int(), 0x6F)
@@ -414,9 +414,9 @@ test "encode_pgm_auto 委托验证" {
 }
 
 ///|
-test "encode_gif_auto 委托验证" {
+test "encode_gif 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_gif_auto(img)
+  let out = encode_gif(img)
   // 前 6 字节为 "GIF89a"
   assert_eq(out[0].to_int(), 0x47)
   assert_eq(out[1].to_int(), 0x49)

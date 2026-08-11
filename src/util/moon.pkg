@@ -1,7 +1,5 @@
 import {
   "Toadium/image/src/types",
-  "Toadium/image/src/pure/util" @pure_util,
-  "Toadium/image/src/process/transform",
   "moonbitlang/core/debug",
   "moonbitlang/core/math",
 }

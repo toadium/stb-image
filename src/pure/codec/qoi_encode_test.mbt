@@ -190,7 +190,7 @@ test "encode_qoi_pure: invalid channels raises" {
     let _ = encode_qoi_pure(img)
     assert_true(false)
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }

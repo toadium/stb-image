@@ -12,7 +12,7 @@ pub fn bilateral_filter_fast(@types.Image, Int, Float, Float, Int) -> @types.Ima
 
 pub fn box_blur(@types.Image, Int) -> @types.Image
 
-pub fn edge_detect_sobel(@types.Image) -> @types.Image
+pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
 
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
 

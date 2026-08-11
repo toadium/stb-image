@@ -10,7 +10,7 @@
 /// 输出: 14 字节 header + 像素编码 + 8 字节 padding
 pub fn encode_qoi_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed(
+    raise @types.LoadError::EncodeFailed(
       "QOI 编码需要 channels 为 3 (RGB) 或 4 (RGBA)",
     )
   }

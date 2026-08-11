@@ -1,4 +1,4 @@
-// 高级像素操作（纯 MoonBit）：pixelate / replace_color / convolve / swap_channels
+// 高级像素操作（纯 MoonBit）：pixelate / replace_color / swap_channels
 
 ///|
 fn clamp_b(v : Int) -> Byte {
@@ -80,51 +80,6 @@ pub fn replace_color(
 }
 
 ///|
-/// 通用卷积。kernel 为 3×3 卷积核（9 个 Float 值，行优先）。
-/// 边缘采用 clamp 策略。bias 为偏移量，scale 为缩放因子。
-pub fn convolve(
-  img : @types.Image,
-  kernel : Array[Float],
-  bias : Float,
-  scale : Float,
-) -> @types.Image raise @types.LoadError {
-  if kernel.length() < 9 {
-    raise @types.LoadError::DecodeFailed("kernel 必须为 9 个值（3x3）")
-  }
-  let ch = img.channels
-  let w = img.width
-  let h = img.height
-  let color_ch = if ch >= 3 { 3 } else { ch }
-  let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
-  for y in 0..<h {
-    for x in 0..<w {
-      for c in 0..<color_ch {
-        let mut acc = 0.0F
-        for ky in 0..<3 {
-          for kx in 0..<3 {
-            let sx = clamp_int(x + kx - 1, 0, w - 1)
-            let sy = clamp_int(y + ky - 1, 0, h - 1)
-            let v = Float::from_int(img.data[(sy * w + sx) * ch + c].to_int())
-            acc += kernel[ky * 3 + kx] * v
-          }
-        }
-        let result = (acc * scale + bias).to_int()
-        out[(y * w + x) * ch + c] = clamp_b(result)
-      }
-      if ch == 4 {
-        out[(y * w + x) * ch + 3] = img.data[(y * w + x) * ch + 3]
-      }
-    }
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: ch,
-    data: Bytes::from_array(out),
-  }
-}
-
-///|
 /// 交换两个通道。例如 swap_channels(img, 0, 2) 交换 R 和 B。
 pub fn swap_channels(
   img : @types.Image,
@@ -154,17 +109,6 @@ pub fn swap_channels(
     height: img.height,
     channels: ch,
     data: Bytes::from_array(out),
-  }
-}
-
-///|
-fn clamp_int(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo {
-    lo
-  } else if v > hi {
-    hi
-  } else {
-    v
   }
 }
 

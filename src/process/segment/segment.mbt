@@ -1,4 +1,4 @@
-// 颜色分割（纯 MoonBit）
+// 图像分割（纯 MoonBit）：kmeans_segment / region_growing_segment / flood_fill / segment_to_color
 
 ///|
 /// 分割标签图
@@ -337,7 +337,7 @@ pub fn segment_to_color(seg : SegmentLabelImage) -> @types.Image {
       let hue = Float::from_int(
         label * 360 / (if num > 0 { num } else { 1 }) % 360,
       )
-      let (r, g, b) = hsv_to_rgb(hue, 1.0F, 1.0F)
+      let (r, g, b) = @color.hsv_to_rgb(hue, 1.0F, 1.0F)
       out[i * 3] = r.to_byte()
       out[i * 3 + 1] = g.to_byte()
       out[i * 3 + 2] = b.to_byte()

@@ -56,7 +56,7 @@ fn rle_encode_scanline_channel(
 /// 输入 ImageF（32-bit float 像素数据），返回 HDR 格式字节流。
 pub fn encode_hdr_pure(img : @types.ImageF) -> Bytes raise @types.LoadError {
   if img.channels != 3 {
-    raise @types.LoadError::DecodeFailed(
+    raise @types.LoadError::EncodeFailed(
       "HDR 编码需要 3 通道 float 图像",
     )
   }

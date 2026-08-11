@@ -83,7 +83,7 @@ test "encode_tiff_pure: 不支持的 channels 报错" {
     let _ = encode_tiff_pure(img)
     assert_true(false)
   } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    @types.LoadError::EncodeFailed(_) => assert_true(true)
     _ => assert_true(false)
   }
 }

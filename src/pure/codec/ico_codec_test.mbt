@@ -96,7 +96,7 @@ test "encode_ico_pure: ICO 文件头正确" {
 }
 
 ///|
-test "encode_ico_multi_pure: 多尺寸 ICO" {
+test "encode_ico_with_sizes_pure: 多尺寸 ICO" {
   let img1 = @types.Image::{
     width: 1,
     height: 1,
@@ -104,7 +104,7 @@ test "encode_ico_multi_pure: 多尺寸 ICO" {
     data: b"\xFF\x00\x00\xFF",
   }
   let img2 = make_2x2_rgba_image()
-  let ico = encode_ico_multi_pure([img1, img2])
+  let ico = encode_ico_with_sizes_pure([img1, img2])
   // count=2
   assert_eq(ico[4].to_int(), 2)
   assert_eq(ico[5].to_int(), 0)

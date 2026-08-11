@@ -8,25 +8,25 @@ import {
 // Values
 pub fn detect_format(Bytes) -> @types.ImageFormat
 
-pub fn encode_bmp_auto(@types.Image) -> Bytes
+pub fn encode_bmp(@types.Image) -> Bytes
 
-pub fn encode_gif_auto(@types.Image) -> Bytes raise @types.LoadError
+pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_hdr_auto(@types.ImageF) -> Bytes raise @types.LoadError
+pub fn encode_hdr(@types.ImageF) -> Bytes raise @types.LoadError
 
-pub fn encode_jpeg_auto(@types.Image) -> Bytes raise @types.LoadError
+pub fn encode_jpeg(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_pgm_auto(@types.Image) -> Bytes
 
-pub fn encode_png_auto(@types.Image) -> Bytes
+pub fn encode_png(@types.Image) -> Bytes
 
 pub fn encode_pnm_auto(@types.Image) -> Bytes
 
 pub fn encode_ppm_auto(@types.Image) -> Bytes
 
-pub fn encode_qoi_auto(@types.Image) -> Bytes raise @types.LoadError
+pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_tga_auto(@types.Image) -> Bytes
+pub fn encode_tga(@types.Image) -> Bytes
 
 pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
 

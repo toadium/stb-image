@@ -35,18 +35,14 @@ fn paeth_predict(a : Int, b : Int, c : Int) -> Int {
 /// PNG 解码（纯 MoonBit，全目标可用）。
 /// 支持 8-bit gray/RGB/RGBA/gray+alpha/palette。
 /// 不支持 interlace。
-pub fn decode_png_pure(data : Bytes) -> @types.Image raise @types.LoadError {
+/// req_channels: None=原色（保留 alpha）, 1=灰度, 2=灰度+alpha, 3=RGB, 4=RGBA
+pub fn decode_png_pure(
+  data : Bytes,
+  req_channels? : Int? = None,
+) -> @types.Image raise @types.LoadError {
   let len = data.length()
   // 验证 PNG signature
-  if len < 8 ||
-    data[0].to_int() != 0x89 ||
-    data[1].to_int() != 0x50 ||
-    data[2].to_int() != 0x4E ||
-    data[3].to_int() != 0x47 ||
-    data[4].to_int() != 0x0D ||
-    data[5].to_int() != 0x0A ||
-    data[6].to_int() != 0x1A ||
-    data[7].to_int() != 0x0A {
+  if len < 8 || !is_png_signature(data, 0) {
     raise @types.LoadError::DecodeFailed("PNG signature 错误")
   }
   let mut pos = 8
@@ -177,57 +173,86 @@ pub fn decode_png_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       unfiltered[y * stride + x] = val.to_byte()
     }
   }
-  // 转换为 Image
+  // 转换为 Image（保留 alpha，根据 req_channels 决定输出通道数）
   let pixel_count = width * height
-  let rgb_data : Array[Byte] = Array::make(pixel_count * 3, b'\x00')
-  if color_type == 3 {
-    // palette
-    if palette.length() == 0 {
-      raise @types.LoadError::DecodeFailed("PNG palette 缺失")
-    }
-    for i in 0..<pixel_count {
+  let out_ch = match req_channels {
+    Some(n) => n
+    None => ch // 默认保留原色（含 alpha）
+  }
+  if color_type == 3 && palette.length() == 0 {
+    raise @types.LoadError::DecodeFailed("PNG palette 缺失")
+  }
+  let out_data : Array[Byte] = Array::make(pixel_count * out_ch, b'\x00')
+  for i in 0..<pixel_count {
+    let (r, g, b, a) = if color_type == 3 {
+      // palette
       let idx = unfiltered[i].to_int()
       if idx >= palette.length() {
         raise @types.LoadError::DecodeFailed("PNG palette 索引越界")
       }
       let (r, g, b) = palette[idx]
-      rgb_data[i * 3] = r.to_byte()
-      rgb_data[i * 3 + 1] = g.to_byte()
-      rgb_data[i * 3 + 2] = b.to_byte()
+      (r, g, b, 255)
+    } else if color_type == 0 {
+      // gray
+      let v = unfiltered[i].to_int()
+      (v, v, v, 255)
+    } else if color_type == 2 {
+      // RGB
+      (
+        unfiltered[i * 3].to_int(),
+        unfiltered[i * 3 + 1].to_int(),
+        unfiltered[i * 3 + 2].to_int(),
+        255,
+      )
+    } else if color_type == 4 {
+      // gray + alpha
+      let v = unfiltered[i * 2].to_int()
+      let a = unfiltered[i * 2 + 1].to_int()
+      (v, v, v, a)
+    } else {
+      // RGBA
+      (
+        unfiltered[i * 4].to_int(),
+        unfiltered[i * 4 + 1].to_int(),
+        unfiltered[i * 4 + 2].to_int(),
+        unfiltered[i * 4 + 3].to_int(),
+      )
     }
-  } else if color_type == 0 {
-    // gray → RGB
-    for i in 0..<pixel_count {
-      let v = unfiltered[i]
-      rgb_data[i * 3] = v
-      rgb_data[i * 3 + 1] = v
-      rgb_data[i * 3 + 2] = v
+    let (or, og, ob, oa) = match out_ch {
+      1 => {
+        let gray = (r * 299 + g * 587 + b * 114) / 1000
+        (gray, gray, gray, 255)
+      }
+      2 => {
+        let gray = (r * 299 + g * 587 + b * 114) / 1000
+        (gray, gray, gray, a)
+      }
+      3 => (r, g, b, 255)
+      _ => (r, g, b, a)
     }
-  } else if color_type == 2 {
-    // RGB
-    for i in 0..<(pixel_count * 3) {
-      rgb_data[i] = unfiltered[i]
-    }
-  } else if color_type == 4 {
-    // gray + alpha → RGB (drop alpha)
-    for i in 0..<pixel_count {
-      let v = unfiltered[i * 2]
-      rgb_data[i * 3] = v
-      rgb_data[i * 3 + 1] = v
-      rgb_data[i * 3 + 2] = v
-    }
-  } else {
-    // RGBA → RGB (drop alpha)
-    for i in 0..<pixel_count {
-      rgb_data[i * 3] = unfiltered[i * 4]
-      rgb_data[i * 3 + 1] = unfiltered[i * 4 + 1]
-      rgb_data[i * 3 + 2] = unfiltered[i * 4 + 2]
+    match out_ch {
+      1 => out_data[i] = or.to_byte()
+      2 => {
+        out_data[i * 2] = or.to_byte()
+        out_data[i * 2 + 1] = oa.to_byte()
+      }
+      3 => {
+        out_data[i * 3] = or.to_byte()
+        out_data[i * 3 + 1] = og.to_byte()
+        out_data[i * 3 + 2] = ob.to_byte()
+      }
+      _ => {
+        out_data[i * 4] = or.to_byte()
+        out_data[i * 4 + 1] = og.to_byte()
+        out_data[i * 4 + 2] = ob.to_byte()
+        out_data[i * 4 + 3] = oa.to_byte()
+      }
     }
   }
   @types.Image::{
     width,
     height,
-    channels: 3,
-    data: Bytes::from_array(rgb_data),
+    channels: out_ch,
+    data: Bytes::from_array(out_data),
   }
 }

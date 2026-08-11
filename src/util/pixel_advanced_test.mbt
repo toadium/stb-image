@@ -1,4 +1,4 @@
-// pixel_advanced 测试：pixelate / replace_color / convolve / swap_channels
+// pixel_advanced 测试：pixelate / replace_color / swap_channels
 
 ///|
 test "pixelate: block_size=1 is identity" {
@@ -81,38 +81,6 @@ test "replace_color: with tolerance" {
   }
   let result = replace_color(img, [b'\x7F'], [b'\x00'], 2)
   assert_eq(result.data[0], b'\x00')
-  let _ = img
-  let _ = result
-}
-
-///|
-test "convolve: identity kernel" {
-  let img = make_img(3, 3, 1, b'\x80')
-  let identity = [0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F]
-  let result = convolve(img, identity, 0.0F, 1.0F)
-  assert_eq(result.data[4], b'\x80')
-  let _ = img
-  let _ = result
-}
-
-///|
-test "convolve: box blur kernel" {
-  let img = @types.Image::{
-    width: 3,
-    height: 3,
-    channels: 1,
-    data: [
-      b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00',
-    ]
-    |> Bytes::from_array,
-  }
-  let blur = [
-    0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F, 0.111F,
-  ]
-  let result = convolve(img, blur, 0.0F, 1.0F)
-  // 中心像素应该被模糊（值降低）
-  let center = result.data[4].to_int()
-  assert_true(center > 0 && center < 255)
   let _ = img
   let _ = result
 }

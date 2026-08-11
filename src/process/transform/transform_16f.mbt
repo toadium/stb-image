@@ -28,7 +28,7 @@ pub fn rotate_90_16(img : @types.Image16) -> @types.Image16 {
 }
 
 ///|
-pub fn rotate_90f(img : @types.ImageF) -> @types.ImageF {
+pub fn rotate_90_f(img : @types.ImageF) -> @types.ImageF {
   let ch = img.channels
   let new_w = img.height
   let new_h = img.width
@@ -78,7 +78,7 @@ pub fn rotate_180_16(img : @types.Image16) -> @types.Image16 {
 }
 
 ///|
-pub fn rotate_180f(img : @types.ImageF) -> @types.ImageF {
+pub fn rotate_180_f(img : @types.ImageF) -> @types.ImageF {
   let ch = img.channels
   let bpp = ch * 4
   let out : Array[Byte] = Array::make(img.width * img.height * bpp, b'\x00')
@@ -128,7 +128,7 @@ pub fn rotate_270_16(img : @types.Image16) -> @types.Image16 {
 }
 
 ///|
-pub fn rotate_270f(img : @types.ImageF) -> @types.ImageF {
+pub fn rotate_270_f(img : @types.ImageF) -> @types.ImageF {
   let ch = img.channels
   let new_w = img.height
   let new_h = img.width
@@ -177,7 +177,7 @@ pub fn flip_horizontal_16(img : @types.Image16) -> @types.Image16 {
 }
 
 ///|
-pub fn flip_horizontalf(img : @types.ImageF) -> @types.ImageF {
+pub fn flip_horizontal_f(img : @types.ImageF) -> @types.ImageF {
   let ch = img.channels
   let bpp = ch * 4
   let out : Array[Byte] = Array::make(img.width * img.height * bpp, b'\x00')

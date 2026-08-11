@@ -37,7 +37,7 @@ pub fn haar_transform_1d(data : Array[Float]) -> Array[Float] {
 
 ///|
 /// 一维 Haar 小波逆变换。
-pub fn haar_inverse_transform_1d(data : Array[Float]) -> Array[Float] {
+pub fn ihaar_transform_1d(data : Array[Float]) -> Array[Float] {
   let n = data.length()
   if n < 2 {
     return data.copy()
@@ -178,7 +178,7 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @types.Image {
       for y in 0..<cur_h {
         col[y] = coeffs[y * w + x]
       }
-      let inversed = haar_inverse_transform_1d(col)
+      let inversed = ihaar_transform_1d(col)
       for y in 0..<cur_h {
         coeffs[y * w + x] = inversed[y]
       }
@@ -189,7 +189,7 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @types.Image {
       for x in 0..<cur_w {
         row[x] = coeffs[y * w + x]
       }
-      let inversed = haar_inverse_transform_1d(row)
+      let inversed = ihaar_transform_1d(row)
       for x in 0..<cur_w {
         coeffs[y * w + x] = inversed[x]
       }

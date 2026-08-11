@@ -2,6 +2,14 @@
 // 纯 MoonBit 实现，基于 Achanta et al. 2012
 
 ///|
+/// SLIC 超像素分割结果
+pub(all) struct SuperpixelResult {
+  labels : Array[Int]
+  centers : Array[(Int, Int)]
+  num_labels : Int
+} derive(Eq, @debug.Debug)
+
+///|
 fn sqrt_d(x : Double) -> Double {
   if x <= 0.0 {
     return 0.0
@@ -21,7 +29,7 @@ pub fn slic(
   k : Int,
   m : Int,
   max_iters : Int,
-) -> @types.SuperpixelResult raise @types.LoadError {
+) -> SuperpixelResult raise @types.LoadError {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -146,5 +154,5 @@ pub fn slic(
   for k_idx in 0..<num_centers {
     centers.push((centers_x[k_idx], centers_y[k_idx]))
   }
-  @types.SuperpixelResult::{ labels, centers, num_labels: num_centers }
+  SuperpixelResult::{ labels, centers, num_labels: num_centers }
 }
