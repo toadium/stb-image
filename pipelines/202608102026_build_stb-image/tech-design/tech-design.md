@@ -111,5 +111,5 @@ pub fn box_blurf(img : ImageF, ksize : Int) -> ImageF
 ## 测试策略
 - 每个功能新增对应 `_test.mbt` 文件
 - 测试覆盖：正常输入、边界条件、错误情况、roundtrip 验证
-- 三目标测试：`moon test`（默认 native）+ `moon test --target wasm-gc` + `moon test --target js`
+- 四目标测试：`moon test`（默认 native）+ `moon test --target wasm-gc` + `moon test --target js` + `moon test --target wasm`
 - 最终运行 `moon info && moon fmt` 更新接口和格式化

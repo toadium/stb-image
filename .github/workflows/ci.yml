@@ -22,10 +22,18 @@ jobs:
         run: moon version
 
       - name: Check compilation
-        run: moon check --target native
+        run: |
+          moon check --target native
+          moon check --target wasm-gc
+          moon check --target js
+          moon check --target wasm
 
       - name: Run tests
-        run: moon test --target native
+        run: |
+          moon test --target native
+          moon test --target wasm-gc
+          moon test --target js
+          moon test --target wasm
 
       - name: Run benchmarks
         run: moon bench --target native

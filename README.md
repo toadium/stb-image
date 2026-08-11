@@ -26,7 +26,7 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 三目标（native / wasm-gc / js）均使用同一套纯 MoonBit 代码，各 907 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 935 测试全部通过，覆盖率 89.8%。
 
 ---
 
@@ -35,10 +35,10 @@
 | | 特性 | 说明 |
 |---|---|---|
 | 🟢 | **零 C 依赖** | 全部纯 MoonBit 实现，无需 C 编译器，部署极简 |
-| 🟢 | **三目标支持** | native / wasm-gc / js 共用同一代码库，无条件编译 |
+| 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / APNG — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **253 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、Seam Carving 等高级算法 |
+| 🟢 | **266 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、Seam Carving 等高级算法 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -160,15 +160,17 @@ src/
 ## 🔧 构建与测试
 
 ```bash
-# 编译检查（三目标）
+# 编译检查（四目标）
 moon check
 moon check --target wasm-gc
 moon check --target js
+moon check --target wasm
 
-# 运行测试（三目标各 907）
+# 运行测试（四目标各 935）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
+moon test --target wasm
 
 # 运行性能基准测试
 moon run --target native
@@ -194,7 +196,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-    moon test --target native           # 运行测试（应 907 通过）
+    moon test --target native           # 运行测试（应 935 通过）
 ```
 
 </details>
@@ -206,11 +208,12 @@ moon check                          # 编译检查
 2. **创建分支**：`git checkout -b feature/your-feature` 或 `fix/your-fix`
 3. **编写代码**，遵循下方代码规范
 4. **编写测试**，新功能必须有对应测试
-5. **三目标验证**：
+5. **四目标验证**：
    ```bash
-    moon test --target native     # 必须通过
-    moon test --target wasm-gc    # 必须通过
-    moon test --target js         # 必须通过
+     moon test --target native     # 必须通过
+     moon test --target wasm-gc    # 必须通过
+     moon test --target js         # 必须通过
+     moon test --target wasm       # 必须通过
 </details>
 
 <details>
@@ -233,9 +236,9 @@ moon check                          # 编译检查
 > [!WARNING]
 > 以下约束不可违反，否则 PR 将被拒绝：
 
-- **禁止引入 C FFI 依赖** — 所有代码必须纯 MoonBit 实现，确保三目标可用
+- **禁止引入 C FFI 依赖** — 所有代码必须纯 MoonBit 实现，确保四目标可用
 - **禁止破坏已有 API** — 新增功能只添加不修改已有签名，保持向后兼容
-- **禁止目标条件编译** — 不使用 `target == "native"` 等条件分支，三目标共用代码
+- **禁止目标条件编译** — 不使用 `target == "native"` 等条件分支，四目标共用代码
 - **新增 `pub` 函数须在 `reexport.mbt` 注册** — 保持顶层 API 完整性
 
 </details>

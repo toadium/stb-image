@@ -1,6 +1,6 @@
 ---
 name: image
-description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，907 测试 × 3 目标 (native/wasm-gc/js)。
+description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js/wasm 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，935 测试 × 4 目标 (native/wasm-gc/js/wasm)。
 ---
 
 # image 包使用指南
@@ -9,7 +9,7 @@ description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（
 
 ## 用途
 
-纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：三目标 (native/wasm-gc/js) 均使用纯 MoonBit（`src/pure/{codec,color,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
+纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit（`src/pure/{codec,color,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
 
 ## 快速开始
 
@@ -144,16 +144,16 @@ try {
 
 ## 目标后端
 
-多目标支持：native/wasm-gc/js 均使用纯 MoonBit `src/pure/{codec,color,util}/`。三目标各 907 测试通过。
+多目标支持：native/wasm-gc/js/wasm 均使用纯 MoonBit `src/pure/{codec,color,util}/`。四目标各 935 测试通过。
 
 ## 架构
 
 多子包分层架构，依赖单向向下：
 
 1. **类型层**：`types/`（全目标类型定义：Image/Image16/ImageF/ImageInfo 等）
-2. **纯 MoonBit 后端层**：`pure/{codec,color,util}/`（纯 MoonBit 实现，无 C FFI 依赖，三目标共用）
+2. **纯 MoonBit 后端层**：`pure/{codec,color,util}/`（纯 MoonBit 实现，无 C FFI 依赖，四目标共用）
 3. **统一 API 层**：`lib/`（pure 侧统一 API + 格式自动分派）+ `process/`（图像处理，7 子包）+ `meta/`（元数据）+ `util/`（工具函数）
-4. **测试与文档层**：`*_test.mbt`（907 测试 × 3 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
+4. **测试与文档层**：`*_test.mbt`（935 测试 × 4 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
 
 ## 版本演进
 
@@ -171,6 +171,7 @@ try {
 - **v1.7-v1.17**：高级图像处理（混合模式/FFT/自适应阈值/连通域/积分图像/霍夫变换/LBP/金字塔/双边滤波/轮廓/分割/NLM/Retinex/Canny/分水岭/GLCM/Haar小波/Harris角点/去雾/距离变换/Gabor滤波），533 测试 + 29 基准测试
 - **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，872 测试 × 3 目标 (native/wasm-gc/js)
 - **v3.0**：EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，907 测试 × 3 目标
+- **v3.1+**：DCT O(N³) 优化 + 16-bit/float 滤波/边缘检测/统计泛化，wasm 目标支持，266 API + 37 类型，935 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 限制
 

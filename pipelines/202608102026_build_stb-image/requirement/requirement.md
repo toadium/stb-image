@@ -35,7 +35,7 @@
 - **约束**：按现有 `crop_16`/`cropf` 模式，pure 后端 + reexport 转发
 
 ## 非功能需求
-- 纯 MoonBit 实现（无 C FFI），三目标（native/wasm-gc/js）均通过
+- 纯 MoonBit 实现（无 C FFI），四目标（native/wasm-gc/js/wasm）均通过
 - 每个新功能必须有测试，测试覆盖正常/边界/错误情况
 - 不破坏 v1.0 API 冻结，新增功能只添加不修改
 - 命名遵循 snake_case，Image16 变体用 `_16` 后缀，ImageF 变体用 `f` 后缀

@@ -24,6 +24,10 @@ pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
 pub fn edge_detect_sobel(@types.Image) -> @types.Image
 
+pub fn edge_detect_sobel_16(@types.Image16) -> @types.Image16
+
+pub fn edge_detect_sobel_f(@types.ImageF) -> @types.ImageF
+
 pub fn find_contours(@types.Image) -> Array[Contour] raise @types.LoadError
 
 pub fn hough_circles(@types.Image, dp? : Int, min_dist? : Int, param1? : Int, param2? : Int, min_radius? : Int, max_radius? : Int) -> Array[Circle] raise @types.LoadError

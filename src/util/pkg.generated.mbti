@@ -43,6 +43,10 @@ pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types
 
 pub fn compute_stats(@types.Image) -> ImageStats
 
+pub fn compute_stats_16(@types.Image16) -> ImageStats
+
+pub fn compute_stats_f(@types.ImageF) -> ImageStatsF
+
 pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
@@ -52,6 +56,10 @@ pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Imag
 pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
+
+pub fn mean_value_16(@types.Image16) -> Float
+
+pub fn mean_value_f(@types.ImageF) -> Float
 
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
@@ -81,6 +89,13 @@ pub(all) struct ImageStats {
   stddev : Float
   min_val : Int
   max_val : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ImageStatsF {
+  mean : Float
+  stddev : Float
+  min_val : Float
+  max_val : Float
 } derive(Eq, @debug.Debug)
 
 // Type aliases

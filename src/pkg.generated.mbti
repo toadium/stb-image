@@ -80,6 +80,10 @@ pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types
 
 pub fn box_blur(@types.Image, Int) -> @types.Image
 
+pub fn box_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn box_blur_f(@types.ImageF, Int) -> @types.ImageF
+
 pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
 pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
@@ -97,6 +101,10 @@ pub fn compute_energy(@types.Image) -> Array[Double]
 pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
 pub fn compute_stats(@types.Image) -> @util.ImageStats
+
+pub fn compute_stats_16(@types.Image16) -> @util.ImageStats
+
+pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
 
 pub fn connected_components(@types.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
@@ -167,6 +175,10 @@ pub fn edge_detect_laplacian(@types.Image) -> @types.Image
 pub fn edge_detect_prewitt(@types.Image) -> @types.Image
 
 pub fn edge_detect_sobel(@types.Image) -> @types.Image
+
+pub fn edge_detect_sobel_16(@types.Image16) -> @types.Image16
+
+pub fn edge_detect_sobel_f(@types.ImageF) -> @types.ImageF
 
 pub fn encode_apng(@types.PngAnimation) -> Bytes raise @types.LoadError
 
@@ -241,6 +253,10 @@ pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : F
 pub fn gamma_tonemap(@types.ImageF, Float) -> @types.Image
 
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
+
+pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16
+
+pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF
 
 pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix?
 
@@ -348,7 +364,15 @@ pub fn load_gif_from_bytes(Bytes) -> @types.GifAnimation raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
 
+pub fn mean_value_16(@types.Image16) -> Float
+
+pub fn mean_value_f(@types.ImageF) -> Float
+
 pub fn median_blur(@types.Image, Int) -> @types.Image
+
+pub fn median_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn median_blur_f(@types.ImageF, Int) -> @types.ImageF
 
 pub fn median_cut(@types.Image, Int) -> @types.Image
 
@@ -570,6 +594,8 @@ pub using @types {type ImageFormat}
 pub using @types {type ImageInfo}
 
 pub using @util {type ImageStats}
+
+pub using @util {type ImageStatsF}
 
 pub using @feature {type IntegralImage}
 

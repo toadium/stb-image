@@ -31,6 +31,9 @@ pub type ImageInfo = @types.ImageInfo
 pub type ImageStats = @util.ImageStats
 
 ///|
+pub type ImageStatsF = @util.ImageStatsF
+
+///|
 pub type LoadError = @types.LoadError
 
 ///|
@@ -233,6 +236,12 @@ pub let bilateral_filter_fast : (@types.Image, Int, Float, Float, Int) -> @types
 pub let box_blur : (@types.Image, Int) -> @types.Image = @filter.box_blur
 
 ///|
+pub let box_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.box_blur_16
+
+///|
+pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF = @filter.box_blur_f
+
+///|
 pub let build_gaussian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
 
 ///|
@@ -383,6 +392,12 @@ pub let edge_detect_prewitt : (@types.Image) -> @types.Image = @edge.edge_detect
 pub let edge_detect_sobel : (@types.Image) -> @types.Image = @edge.edge_detect_sobel
 
 ///|
+pub let edge_detect_sobel_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_sobel_16
+
+///|
+pub let edge_detect_sobel_f : (@types.ImageF) -> @types.ImageF = @edge.edge_detect_sobel_f
+
+///|
 pub let erode : (@types.Image) -> @types.Image = @segment.erode
 
 ///|
@@ -517,7 +532,19 @@ pub fn gabor_kernel(
 pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image = @filter.gaussian_blur
 
 ///|
+pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 = @filter.gaussian_blur_16
+
+///|
+pub let gaussian_blur_f : (@types.ImageF, Int, Float) -> @types.ImageF = @filter.gaussian_blur_f
+
+///|
 pub let median_blur : (@types.Image, Int) -> @types.Image = @filter.median_blur
+
+///|
+pub let median_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.median_blur_16
+
+///|
+pub let median_blur_f : (@types.ImageF, Int) -> @types.ImageF = @filter.median_blur_f
 
 ///|
 pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_transform_1d
@@ -1154,6 +1181,12 @@ pub let blend_linear_burn : (@types.Image, @types.Image) -> @types.Image raise @
 pub let compute_stats : (@types.Image) -> @util.ImageStats = @util.compute_stats
 
 ///|
+pub let compute_stats_16 : (@types.Image16) -> @util.ImageStats = @util.compute_stats_16
+
+///|
+pub let compute_stats_f : (@types.ImageF) -> @util.ImageStatsF = @util.compute_stats_f
+
+///|
 pub let convolve : (@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError = @filter.convolve
 
 ///|
@@ -1173,6 +1206,12 @@ pub let hstack : (@types.Image, @types.Image) -> @types.Image raise @types.LoadE
 
 ///|
 pub let mean_value : (@types.Image) -> Float = @util.mean_value
+
+///|
+pub let mean_value_16 : (@types.Image16) -> Float = @util.mean_value_16
+
+///|
+pub let mean_value_f : (@types.ImageF) -> Float = @util.mean_value_f
 
 ///|
 pub let pad : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.pad

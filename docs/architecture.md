@@ -1,10 +1,10 @@
 # image 架构文档
 
-> 版本 v3.0.0 | 253 公开函数 + 36 类型 | 907 测试 × 3 目标 (native/wasm-gc/js)
+> 版本 v3.0.0 | 266 公开函数 + 37 类型 | 935 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 概述
 
-image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。三目标 (native/wasm-gc/js) 均使用纯 MoonBit 实现，各 907 测试通过。
+image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit 实现，各 935 测试通过。
 
 ## 功能分类
 
@@ -168,7 +168,7 @@ flowchart LR
 
 **架构约束**：
 - 所有代码纯 MoonBit 实现，无 C FFI 依赖
-- 三目标 (native/wasm-gc/js) 共用同一套代码
+- 四目标 (native/wasm-gc/js/wasm) 共用同一套代码
 - 像素数据存储在 MoonBit 管理的 `Bytes` 中，无跨语言内存边界
 
 ## 子包详解
@@ -587,7 +587,7 @@ image/
 
 **问题**：C FFI 仅支持 native 目标，wasm/js 无法使用
 
-**方案**：v2.0 移除所有 C FFI 依赖，全部用纯 MoonBit 重写。像素数据存储在 MoonBit `Bytes` 中，无跨语言内存边界。三目标 (native/wasm-gc/js) 共用同一套代码
+**方案**：v2.0 移除所有 C FFI 依赖，全部用纯 MoonBit 重写。像素数据存储在 MoonBit `Bytes` 中，无跨语言内存边界。四目标 (native/wasm-gc/js/wasm) 共用同一套代码
 
 ### 4. pure 子包拆分
 

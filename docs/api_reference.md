@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v3.0.0 | 253 公开函数 + 36 类型 | 907 测试 × 3 目标 (native/wasm-gc/js)
+> 版本 v3.0.0 | 266 公开函数 + 37 类型 | 935 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 类型总览
 

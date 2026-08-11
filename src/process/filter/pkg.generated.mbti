@@ -12,11 +12,23 @@ pub fn bilateral_filter_fast(@types.Image, Int, Float, Float, Int) -> @types.Ima
 
 pub fn box_blur(@types.Image, Int) -> @types.Image
 
+pub fn box_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn box_blur_f(@types.ImageF, Int) -> @types.ImageF
+
 pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
 
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
 
+pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16
+
+pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF
+
 pub fn median_blur(@types.Image, Int) -> @types.Image
+
+pub fn median_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn median_blur_f(@types.ImageF, Int) -> @types.ImageF
 
 pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @types.Image raise @types.LoadError
 

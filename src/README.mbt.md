@@ -1,11 +1,11 @@
 # image
 
-MoonBit 纯图像处理库 — 解码/编码 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM，提供从基础像素操作到高级计算机视觉算法的完整能力。纯 MoonBit 实现，零 C FFI 依赖，native/wasm-gc/js 三目标共用同一代码库。
+MoonBit 纯图像处理库 — 解码/编码 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM，提供从基础像素操作到高级计算机视觉算法的完整能力。纯 MoonBit 实现，零 C FFI 依赖，native/wasm-gc/js/wasm 四目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-887%20%C3%97%203%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-935%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![API](https://img.shields.io/badge/API-253%20fn%20%2B%2036%20types-blueviolet)]()
+[![API](https://img.shields.io/badge/API-266%20fn%20%2B%2037%20types-blueviolet)]()
 
 ## Quick Start
 
@@ -176,7 +176,7 @@ try {
 
 ## Multi-Target Support
 
-Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FFI dependency. 887 tests pass on all three targets, 89.8% coverage.
+Supports **native / wasm-gc / js / wasm** targets. Pure MoonBit implementation, no C FFI dependency. 935 tests pass on all four targets, 89.8% coverage.
 
 ## Version History
 
@@ -189,5 +189,5 @@ Supports **native / wasm-gc / js** targets. Pure MoonBit implementation, no C FF
 - **v2.1**: 中值滤波/形态学补全/色彩空间/绘图/伪彩色/哈希
 - **v2.2**: 透视变换/轮廓分析/霍夫圆/DCT/色调映射
 - **v2.3**: TIFF/ICO/CUR/ICNS/APNG 格式扩展
-- **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，887 测试
+- **v3.0**: EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，907 测试
 - **v3.1**: 架构优化重构（删除死代码、职责归位、命名统一、API 设计修复）

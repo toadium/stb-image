@@ -63,7 +63,7 @@ flowchart LR
 - **image v3.0.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 253 公开函数 + 36 类型，907 测试 × 3 目标
+- 266 公开函数 + 37 类型，935 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -79,7 +79,7 @@ flowchart LR
 
 ## 迭代原则
 
-1. **纯 MoonBit 优先**：所有功能用纯 MoonBit 实现，确保三目标 (native/wasm-gc/js) 支持
+1. **纯 MoonBit 优先**：所有功能用纯 MoonBit 实现，确保四目标 (native/wasm-gc/js/wasm) 支持
 2. **格式覆盖优先**：优先补齐常用格式，再考虑高级功能
 3. **不破坏 v1.0 API**：新增功能只添加，不修改已有签名
 4. **测试先行**：每个新功能必须有测试，三目标均通过
