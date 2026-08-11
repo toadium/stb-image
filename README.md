@@ -2,14 +2,14 @@
 
 # image
 
-**纯 MoonBit 图像处理库** · 零 C 依赖 · 三目标原生支持
+**纯 MoonBit 图像处理库** · 零 C 依赖 · 四目标原生支持
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
-[![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js-success)]()
-[![Tests](https://img.shields.io/badge/tests-907%20%C3%97%203%20targets-brightgreen)]()
+[![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
+[![Tests](https://img.shields.io/badge/tests-935%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-253%20functions%20%2B%2036%20types-blueviolet)]()
+[![Functions](https://img.shields.io/badge/API-266%20functions%20%2B%2037%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-3.0.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [包结构](#-包结构) · [文档](#-文档)
@@ -116,12 +116,13 @@ try {
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 907 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 907 | ✅ |
-| **js** | 纯 MoonBit | 907 | ✅ |
+| **native** | 纯 MoonBit | 935 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 935 | ✅ |
+| **js** | 纯 MoonBit | 935 | ✅ |
+| **wasm** | 纯 MoonBit | 935 | ✅ |
 
 > [!TIP]
-> 三目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
+> 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
 
 ---
 
@@ -139,7 +140,7 @@ src/
 ├── process/            # 高级图像处理算法 (7 子包)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试 (编解码 + 滤波 + 色彩 + 几何)
-└── reexport.mbt        # 顶层 API re-export (253 pub fn + 36 pub type)
+└── reexport.mbt        # 顶层 API re-export (266 pub fn + 37 pub type)
 ```
 
 ---
@@ -149,7 +150,7 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（253 函数 + 36 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（266 函数 + 37 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
@@ -259,7 +260,7 @@ moon check                          # 编译检查
 功能: 新增 WebP lossless 解码器
 
 基于 VP8L 格式规范实现，支持 8-bit RGBA 解码。
-新增 42 个测试，三目标均通过。
+新增 42 个测试，四目标均通过。
 ```
 
 </details>
