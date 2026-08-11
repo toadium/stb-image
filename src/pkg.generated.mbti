@@ -142,6 +142,8 @@ pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_tiff(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn decode_webp(Bytes) -> @types.Image raise @types.LoadError
+
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
 pub fn detect_format(Bytes) -> @types.ImageFormat

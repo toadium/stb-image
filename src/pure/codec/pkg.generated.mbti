@@ -40,6 +40,8 @@ pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_tiff_pure(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn decode_webp_pure(Bytes) -> @types.Image raise @types.LoadError
+
 pub fn encode_apng_pure(@types.PngAnimation) -> Bytes raise @types.LoadError
 
 pub fn encode_bmp_pure(@types.Image) -> Bytes

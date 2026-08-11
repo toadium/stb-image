@@ -72,6 +72,18 @@ pub fn detect_format(data : Bytes) -> @types.ImageFormat {
     data[2].to_int() == 0x52 {
     return @types.ImageFormat::Hdr
   }
+  // WebP: RIFF....WEBP
+  if len >= 12 &&
+    data[0].to_int() == 0x52 &&
+    data[1].to_int() == 0x49 &&
+    data[2].to_int() == 0x46 &&
+    data[3].to_int() == 0x46 &&
+    data[8].to_int() == 0x57 &&
+    data[9].to_int() == 0x45 &&
+    data[10].to_int() == 0x42 &&
+    data[11].to_int() == 0x50 {
+    return @types.ImageFormat::Webp
+  }
   @types.ImageFormat::Unknown
 }
 
@@ -92,6 +104,7 @@ pub fn load_from_bytes_auto(
     @types.ImageFormat::Pnm => @codec.decode_pnm_pure(data)
     @types.ImageFormat::Psd => @codec.decode_psd_pure(data)
     @types.ImageFormat::Gif => @codec.decode_gif_pure(data)
+    @types.ImageFormat::Webp => @codec.decode_webp_pure(data)
     @types.ImageFormat::Hdr =>
       raise @types.LoadError::DecodeFailed(
         "HDR 格式需要显式调用 decode_hdr_pure",

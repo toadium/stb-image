@@ -61,6 +61,7 @@ pub(all) enum ImageFormat {
   Hdr
   Pnm
   Qoi
+  Webp
   Unknown
 } derive(Eq, @debug.Debug)
 

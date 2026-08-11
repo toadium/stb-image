@@ -1060,6 +1060,9 @@ pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @type
 pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_qoi_pure
 
 ///|
+pub let decode_webp : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_webp_pure
+
+///|
 pub let encode_gif : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_gif_pure
 
 ///|
