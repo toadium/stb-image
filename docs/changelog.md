@@ -29,8 +29,7 @@
 | **v2.1** | **形态学衍生/中值滤波/色彩空间(YCbCr/XYZ/Lab/CMYK)/绘图原语/伪彩色/感知哈希/直方图比较/自定义结构元素** | **927** |
 | **v2.2** | **透视变换/轮廓分析(凸包/逼近/Hu矩)/霍夫圆/Shi-Tomasi角点/DCT/色调映射/拉普拉斯金字塔融合** | **965** |
 | **v2.3** | **TIFF/ICO/CUR/ICNS/APNG 格式编解码，新增12个公开API** | **995** |
-| **v3.0** | **EXIF写入/seam carving(内容感知缩放)/SLIC超像素/16-bit float操作泛化(rotate/flip/brightness/contrast)，新增23个API+1类型** | **887×3** |
-| **v3.1** | **架构优化：删除pure/process+pure/pixel+src/format死代码，职责归位(color/segment交换)，命名统一(_f后缀/kmeans/ihaar/EncodeFailed)，API设计修复(req_channels传递/alpha保留)，文档同步** | **887×3** |
+| **v3.0** | **EXIF写入/seam carving(内容感知缩放)/SLIC超像素/16-bit float操作泛化(rotate/flip/brightness/contrast)，新增23个API+1类型** | **907×3** |
 
 ## 上游
 
