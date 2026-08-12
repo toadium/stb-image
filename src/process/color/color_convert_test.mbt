@@ -270,7 +270,7 @@ test "rgb_to_cmyk: k from min(c,y) when c < m and c < y" {
 }
 
 ///|
-test "rgb_to_ycbcr: roundtrip" {
+test "rgb_to_ycbcr: roundtrip with color" {
   let (y, cb, cr) = rgb_to_ycbcr(100, 150, 200)
   let (r, g, b) = ycbcr_to_rgb(y, cb, cr)
   assert_true((r - 100).abs() <= 2)
