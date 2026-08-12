@@ -12,7 +12,7 @@
 [![Functions](https://img.shields.io/badge/API-282%20functions%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-4.7.0-orange)]()
 
-[亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [包结构](#-包结构) · [文档](#-文档)
+[亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
 </div>
 
@@ -28,6 +28,9 @@
 > [!NOTE]
 > 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1010 测试全部通过，覆盖率 89.8%。
 
+> [!TIP]
+> **v4.7 最新更新** — SIFT 特征检测 · SIFT 匹配 + RANSAC 单应性估计 · grabCut 分割 · 流式解码（逐行/分块/指定通道）
+
 ---
 
 ## ✨ 亮点
@@ -38,7 +41,8 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **282 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、grabCut、RANSAC、流式解码、光流、模板匹配等高级算法 |
+| 🟢 | **282 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配等高级算法 |
+| 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调，大图处理零内存峰值 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -95,6 +99,11 @@ println("frames=\{anim.frames.length()}, delays=\{anim.delays}")
 
 // 查询图像信息（不解码像素）
 let info : ImageInfo? = info_from_bytes(data)
+
+// 流式解码：逐行回调，大图零内存峰值
+decode_stream(data, fn(row, y) {
+  // 处理第 y 行像素 row : Array[Array[Int]]
+})
 ```
 
 ### 错误处理
@@ -109,21 +118,38 @@ try {
 }
 ```
 
+### 高级示例：SIFT 特征匹配
+
+```moonbit
+// 检测 SIFT 特征
+let kp1 = sift_detect(img1)
+let kp2 = sift_detect(img2)
+
+// L2 距离 + Lowe 比率测试匹配
+let matches = sift_match(kp1, kp2, ratio_threshold=0.75)
+
+// RANSAC 鲁棒单应性估计
+let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
+```
+
 ---
 
 ## 🧰 功能一览
 
 | 分类 | 关键函数 | 说明 |
 |------|---------|------|
-| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
+| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any`, `decode_stream` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
+| **流式解码** | `decode_stream`, `decode_stream_chunked`, `decode_stream_channels` | 逐行 / 分块 / 指定通道回调，大图零内存峰值 |
 | **几何变换** | `resize`, `crop`, `rotate`, `warp_affine`, `warp_perspective` | 缩放/裁剪/旋转/仿射/透视，7 种滤波器 × 4 种边缘模式 |
 | **色彩** | `to_grayscale`, `adjust_gamma`, `rgb_to_hsv`, `clahe` | 色彩转换/调整/空间变换/CLAHE |
 | **滤波** | `gaussian_blur`, `bilateral_filter`, `nlm_denoise`, `inpaint` | 高斯/双边/NLM 去噪/图像修复 |
 | **边缘** | `canny_edge`, `hough_lines`, `hough_circles`, `find_contours` | Canny/霍夫直线圆/轮廓提取 |
-| **特征** | `harris_corners`, `orb_detect`, `template_match`, `lucas_kanade` | Harris/ORB/模板匹配/光流 |
-| **分割** | `watershed`, `slic`, `kmeans_segment`, `connected_components` | 分水岭/SLIC/K-means/连通域 |
-| **频域** | `fft_2d`, `dct_2d`, `haar_transform_2d`, `freq_filter` | FFT/DCT/Haar 小波/频率滤波 |
+| **特征** | `harris_corners`, `orb_detect`, `sift_detect`, `template_match` | Harris/ORB/SIFT/模板匹配 |
+| **特征匹配** | `sift_match`, `ransac_homography` | L2 距离 + Lowe 比率测试 / RANSAC + DLT 单应性估计 |
+| **光流** | `lucas_kanade` | Lucas-Kanade 稀疏光流 |
+| **分割** | `watershed`, `slic`, `kmeans_segment`, `grab_cut`, `connected_components` | 分水岭/SLIC/K-means/grabCut/连通域 |
 | **形态学** | `erode`, `dilate`, `morph_open`, `skeletonize` | 腐蚀/膨胀/开闭运算/骨架化 |
+| **频域** | `fft_2d`, `dct_2d`, `haar_transform_2d`, `freq_filter` | FFT/DCT/Haar 小波/频率滤波 |
 | **质量** | `mse`, `psnr`, `ssim`, `compute_stats` | MSE/PSNR/SSIM/统计 |
 
 ## 🎯 多目标支持
