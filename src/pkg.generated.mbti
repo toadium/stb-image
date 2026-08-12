@@ -438,6 +438,8 @@ pub fn pyr_down(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]?
+
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
@@ -509,6 +511,8 @@ pub fn set_unpremultiply_on_load(Bool) -> Unit
 pub fn sharpen(@types.Image, Float) -> @types.Image
 
 pub fn sift_detect(@types.Image, max_features? : Int, contrast_threshold? : Float) -> Array[@feature.SiftDescriptor] raise @types.LoadError
+
+pub fn sift_match(Array[@feature.SiftDescriptor], Array[@feature.SiftDescriptor], max_distance? : Float, ratio_test? : Float) -> Array[@feature.SiftMatch]
 
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -654,6 +658,8 @@ pub using @segment {type SegmentRegion}
 pub using @feature {type SiftDescriptor}
 
 pub using @feature {type SiftKeyPoint}
+
+pub using @feature {type SiftMatch}
 
 pub using @segment {type StructuringElement}
 

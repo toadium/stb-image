@@ -72,7 +72,11 @@ pub fn phash(@types.Image) -> Array[Int]
 
 pub fn psnr(@types.Image, @types.Image) -> Double
 
+pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]?
+
 pub fn sift_detect(@types.Image, max_features? : Int, contrast_threshold? : Float) -> Array[SiftDescriptor] raise @types.LoadError
+
+pub fn sift_match(Array[SiftDescriptor], Array[SiftDescriptor], max_distance? : Float, ratio_test? : Float) -> Array[SiftMatch]
 
 pub fn ssim(@types.Image, @types.Image) -> Double
 
@@ -156,6 +160,12 @@ pub(all) struct SiftKeyPoint {
   sigma : Float
   response : Float
   angle : Float
+}
+
+pub(all) struct SiftMatch {
+  query_idx : Int
+  train_idx : Int
+  distance : Float
 }
 
 pub(all) enum TemplateMatchMethod {

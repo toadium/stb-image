@@ -117,6 +117,9 @@ pub type SiftKeyPoint = @feature.SiftKeyPoint
 ///|
 pub type SiftDescriptor = @feature.SiftDescriptor
 
+///|
+pub type SiftMatch = @feature.SiftMatch
+
 // From @lib/@pure (all-target pure MoonBit)
 
 ///|
@@ -547,6 +550,27 @@ pub fn sift_detect(
   contrast_threshold? : Float = 0.04F,
 ) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
   @feature.sift_detect(arg0, max_features~, contrast_threshold~)
+}
+
+///|
+/// SIFT 描述子匹配
+pub fn sift_match(
+  arg0 : Array[@feature.SiftDescriptor],
+  arg1 : Array[@feature.SiftDescriptor],
+  max_distance? : Float = 300.0F,
+  ratio_test? : Float = 0.75F,
+) -> Array[@feature.SiftMatch] {
+  @feature.sift_match(arg0, arg1, max_distance~, ratio_test~)
+}
+
+///|
+/// RANSAC 单应性矩阵估计
+pub fn ransac_homography(
+  arg0 : Array[((Float, Float), (Float, Float))],
+  iterations? : Int = 1000,
+  threshold? : Float = 3.0F,
+) -> Array[Float]? {
+  @feature.ransac_homography(arg0, iterations~, threshold~)
 }
 
 ///|
