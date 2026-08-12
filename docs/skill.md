@@ -40,7 +40,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 ## API 概览
 
-### 类型（43 个）
+### 类型（47 个）
 
 | 类型 | 说明 |
 |------|------|
@@ -55,6 +55,10 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 | `ResizeEdge` | 缩放边缘模式 `{ Clamp, Reflect, Wrap, Zero }` |
 | `ExifInfo` | EXIF 元数据 `{ make, model, date_time : String, orientation : Int }` |
 | `PngTextChunk` | PNG 文本块 `{ keyword, text : String }` |
+| `SiftKeypoint` | SIFT 关键点 `{ x, y, octave, layer, scale, angle }` |
+| `SiftDescriptor` | SIFT 描述子 `{ keypoint, descriptor : Array[Float] }`（128 维） |
+| `SiftMatch` | SIFT 匹配结果 `{ idx1, idx2, distance }` |
+| `StreamInfo` | 流式解码信息 `{ width, height, channels }` |
 
 ### 加载（3 函数）
 
@@ -72,7 +76,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `detect_format` / `decode_any` / `is_supported_format`
 
-### 编解码（12 函数）
+### 编解码（17 函数）
 
 - QOI：`decode_qoi` / `encode_qoi`
 - ICO/ICNS/CUR：`encode_ico` / `encode_ico_sizes` / `encode_icns` / `decode_cur` / `encode_cur`
@@ -154,7 +158,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `read_exif_from_bytes` / `read_png_text_chunks` / `create_exif_segment` / `write_exif_to_bytes`
 
-### 查询（3 函数）
+### 查询（4 函数）
 
 `info_from_bytes`、`is_16_bit_from_bytes`、`is_hdr_from_bytes`、`failure_reason`
 

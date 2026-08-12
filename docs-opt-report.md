@@ -47,7 +47,7 @@
 | 修改项 | 说明 |
 |--------|------|
 | 导航栏扩展 | 新增多目标/构建/贡献锚点链接 |
-| 亮点表格 | 新增流式解码行，API 描述补充 SIFT 匹配/RANSAC 单应性 |
+| 亮点表格 | 新增流式解码行，API 描述补充 SIFT 匹配/RANSAC 单应性，格式列表补全 ICO/CUR/ICNS |
 | 最新更新提示 | 新增 v4.7 TIP callout，列出 SIFT/SIFT 匹配/RANSAC/grabCut/流式解码 |
 | 功能一览表 | 新增流式解码/特征匹配/光流 3 行，特征行补充 SIFT，分割行补充 grabCut |
 | 流式解码示例 | 快速上手新增 `decode_stream` 逐行回调示例 |
@@ -57,6 +57,10 @@
 
 | 修改项 | 说明 |
 |--------|------|
+| 类型计数修正 | 43 → 47（新增 SiftKeypoint/SiftDescriptor/SiftMatch/StreamInfo） |
+| 查询计数修正 | 3 → 4（info_from_bytes/is_16_bit/is_hdr/failure_reason） |
+| 编解码计数修正 | 12 → 17（QOI×2 + ICO/ICNS/CUR×5 + GIF×2 + PNM×3 + TIFF×2 + APNG×2 + WebP×1） |
+| 类型表补全 | 新增 SiftKeypoint/SiftDescriptor/SiftMatch/StreamInfo 4 行 |
 | 新增流式解码章节 | decode_stream/decode_stream_chunked/decode_stream_channels 函数描述 |
 
 ### docs-opt-report.md
@@ -64,7 +68,7 @@
 | 修改项 | 说明 |
 |--------|------|
 | 版本更新 | v4.5.0 → v4.7.0 |
-| 测试数量 | 994 → 1010 |
+| 测试数量 | 994 → 1054 |
 | API 数量 | 277 → 282 |
 | 类型数量 | 45 → 47 |
 
@@ -79,7 +83,7 @@
 | v4.4 | SIFT 特征检测 | 987×4 |
 | v4.5 | grabCut 分割 | 994×4 |
 | v4.6 | SIFT 匹配 + RANSAC | 1003×4 |
-| v4.7 | 流式解码 | 1054×4 |
+| v4.7 | 流式解码 | 1010×4（+44 覆盖测试 → 1054×4） |
 
 ## 结论
 
