@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-12 | 当前版本：v4.6.0 | 测试：1003×4 | 覆盖率：89.8%
+> 制定日期：2026-08-06 | 最后更新：2026-08-12 | 当前版本：v4.7.0 | 测试：1010×4 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -60,10 +60,10 @@ flowchart LR
     class V10,V117,V20 milestone
 ```
 
-- **image v4.6.0 的独特优势**：
+- **image v4.7.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 279 公开函数 + 46 类型，1003 测试 × 4 目标
+- 282 公开函数 + 47 类型，1010 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -575,9 +575,9 @@ flowchart LR
 - 现仅读，写需完整 TIFF/IFD 构造
 - `write_exif_to_bytes(info, jpeg_data) -> Bytes` + `create_exif_segment(info) -> Bytes`
 
-#### 10. 流式解码（中难度·中价值）
+#### 10. 流式解码（中难度·中价值）✅
 - 大图内存友好
-- `decode_png_stream(bytes, on_row~) -> StreamInfo`
+- `decode_stream(bytes, on_row~) -> StreamInfo` + 分块/指定通道变体
 
 ---
 

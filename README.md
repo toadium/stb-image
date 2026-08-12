@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1003%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1010%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-279%20functions%20%2B%2046%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-4.6.0-orange)]()
+[![Functions](https://img.shields.io/badge/API-282%20functions%20%2B%2047%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-4.7.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [包结构](#-包结构) · [文档](#-文档)
 
@@ -26,7 +26,7 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1003 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1010 测试全部通过，覆盖率 89.8%。
 
 ---
 
@@ -38,7 +38,7 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **279 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、grabCut、RANSAC、光流、模板匹配等高级算法 |
+| 🟢 | **282 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、grabCut、RANSAC、流式解码、光流、模板匹配等高级算法 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -130,10 +130,10 @@ try {
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1003 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1003 | ✅ |
-| **js** | 纯 MoonBit | 1003 | ✅ |
-| **wasm** | 纯 MoonBit | 1003 | ✅ |
+| **native** | 纯 MoonBit | 1010 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1010 | ✅ |
+| **js** | 纯 MoonBit | 1010 | ✅ |
+| **wasm** | 纯 MoonBit | 1010 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -161,7 +161,7 @@ src/
 │   └── transform/      #   几何变换/透视/Seam Carving/金字塔
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
-└── reexport.mbt        # 顶层 API re-export (279 pub fn + 46 pub type)
+└── reexport.mbt        # 顶层 API re-export (282 pub fn + 47 pub type)
 ```
 
 ---
@@ -171,7 +171,7 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（279 函数 + 46 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（282 函数 + 47 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
@@ -188,7 +188,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1003）
+# 运行测试（四目标各 1010）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -218,7 +218,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1003 通过）
+moon test --target native           # 运行测试（应 1010 通过）
 ```
 
 </details>

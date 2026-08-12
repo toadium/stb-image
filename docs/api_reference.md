@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v4.6.0 | 279 公开函数 + 46 类型 | 1003 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.7.0 | 282 公开函数 + 47 类型 | 1010 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 类型总览
 
@@ -44,6 +44,7 @@
 | `SiftKeyPoint` | feature | `x, y, sigma, response, angle : Float; octave, layer : Int` | SIFT关键点 |
 | `SiftDescriptor` | feature | `kp : SiftKeyPoint; data : Array[Float]` | SIFT 128维描述子 |
 | `SiftMatch` | feature | `query_idx, train_idx : Int; distance : Float` | SIFT匹配结果 |
+| `StreamInfo` | lib | `width, height, channels : Int` | 流式解码信息 |
 | `GlcmFeatures` | feature | `contrast, correlation, energy, homogeneity, entropy, asm, dissimilarity : Float` | GLCM特征 |
 | `HistCompareMethod` | feature | `Correlation \| ChiSquare \| Intersection \| Bhattacharyya` | 直方图比较方法 |
 | `IntegralImage` | feature | `width, height : Int; data : Array[Int64]` | 积分图像 |
@@ -700,6 +701,16 @@
 
 ---
 
+## I/O — 流式解码（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `decode_stream` | `(Bytes, (Int, Array[Byte]) -> Unit) -> StreamInfo` | 逐行回调流式解码 |
+| `decode_stream_chunked` | `(Bytes, Int, (Int, Image) -> Unit) -> StreamInfo` | 分块回调流式解码 |
+| `decode_stream_channels` | `(Bytes, Int, (Int, Array[Byte]) -> Unit) -> StreamInfo` | 流式解码（指定通道数） |
+
+---
+
 ## 函数统计
 
 | 分类 | 函数数 | 版本 |
@@ -765,6 +776,7 @@
 | 处理 — SIFT特征检测 | 1 | v4.4 |
 | 处理 — grabCut分割 | 1 | v4.5 |
 | 处理 — SIFT匹配+RANSAC | 2 | v4.6 |
+| I/O — 流式解码 | 3 | v4.7 |
 | 工具 — 像素操作 | 3 | v1.7 |
 | 工具 — 高级像素操作 | 4 | v1.8-v1.9 |
 | 工具 — 图像工具 | 4 | v1.7-v1.8 |
@@ -772,4 +784,4 @@
 | 工具 — 噪声 | 2 | v1.9 |
 | 工具 — 色彩映射 | 2 | v1.8-v1.9 |
 | 工具 — 统计 | 2 | v1.8 |
-| **总计** | **279** | |
+| **总计** | **282** | |
