@@ -154,10 +154,10 @@ src/
 ├── process/            # 高级图像处理算法 (7 子包)
 │   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值
 │   ├── edge/           #   边缘检测/Canny/霍夫/轮廓
-│   ├── feature/        #   特征检测: Harris/ORB/模板匹配/光流/GLCM/LBP
+│   ├── feature/        #   特征检测: Harris/ORB/SIFT/模板匹配/光流/GLCM/LBP
 │   ├── filter/         #   滤波/去噪/图像修复
 │   ├── frequency/      #   FFT/DCT/Haar 小波/频率滤波
-│   ├── segment/        #   分水岭/SLIC/形态学/连通域
+│   ├── segment/        #   分水岭/SLIC/grabCut/形态学/连通域
 │   └── transform/      #   几何变换/透视/Seam Carving/金字塔
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试

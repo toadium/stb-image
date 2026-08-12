@@ -124,11 +124,19 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `lucas_kanade`（稀疏光流，特征点跟踪）/ `horn_schunck`（密集光流场）
 
+### SIFT 特征检测（1 函数）
+
+`sift_detect`（DoG金字塔+128维描述子，尺度不变特征）
+
+### grabCut 分割（1 函数）
+
+`grab_cut`（交互式前景提取，GMM+ICM优化）
+
 ### 高级算法（40+ 函数）
 
 - 边缘：`canny_edge` / `hough_lines` / `hough_circles` / `find_contours`
 - 特征：`harris_corners` / `good_features_to_track` / `gabor_filter` / `lbp`
-- 分割：`watershed` / `slic` / `kmeans_segment` / `connected_components`
+- 分割：`watershed` / `slic` / `kmeans_segment` / `connected_components` / `grab_cut`
 - 频域：`fft_2d` / `dct_2d` / `haar_transform_2d` / `freq_filter`
 - 形态学：`erode` / `dilate` / `morph_open` / `morph_close` / `skeletonize`
 - 去噪：`bilateral_filter` / `nlm_denoise` / `haar_denoise` / `dehaze`
