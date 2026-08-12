@@ -228,3 +228,127 @@ test "hsl round-trip" {
   assert_true((g - 150).abs() <= 1)
   assert_true((b - 200).abs() <= 1)
 }
+
+// ==================== RGBA alpha 保留测试 ====================
+
+///|
+test "adjust_contrast: preserves alpha (RGBA)" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array([b'\x80', b'\x40', b'\x20', b'\xC0']),
+  }
+  let result = adjust_contrast(img, 2.0)
+  assert_eq(result.channels, 4)
+  assert_eq(result.data[3], b'\xC0')
+}
+
+///|
+test "adjust_gamma: preserves alpha (RGBA)" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array([b'\x80', b'\x40', b'\x20', b'\xC0']),
+  }
+  let result = adjust_gamma(img, 2.2)
+  assert_eq(result.channels, 4)
+  assert_eq(result.data[3], b'\xC0')
+}
+
+///|
+test "invert: preserves alpha (RGBA)" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array([b'\x80', b'\x40', b'\x20', b'\xC0']),
+  }
+  let result = invert(img)
+  assert_eq(result.channels, 4)
+  assert_eq(result.data[3], b'\xC0')
+}
+
+// ==================== HSV/HSL 边界测试 ====================
+
+///|
+test "hsv_to_rgb: h >= 360 normalization" {
+  // h=420 should be same as h=60 (yellow)
+  let (r1, g1, b1) = hsv_to_rgb(420.0, 1.0, 1.0)
+  let (r2, g2, b2) = hsv_to_rgb(60.0, 1.0, 1.0)
+  assert_eq(r1, r2)
+  assert_eq(g1, g2)
+  assert_eq(b1, b2)
+}
+
+///|
+test "hsv_to_rgb: h < 0 normalization" {
+  // h=-60 should be same as h=300 (magenta)
+  let (r1, g1, b1) = hsv_to_rgb(-60.0, 1.0, 1.0)
+  let (r2, g2, b2) = hsv_to_rgb(300.0, 1.0, 1.0)
+  assert_eq(r1, r2)
+  assert_eq(g1, g2)
+  assert_eq(b1, b2)
+}
+
+///|
+test "hsv_to_rgb: hp in [5,6) magenta-red" {
+  // h=330 → hp=5.5, tests the hp >= 5.0 branch
+  let (r, g, b) = hsv_to_rgb(330.0, 1.0, 1.0)
+  assert_true(r > 200)
+  assert_true(g < 50)
+  assert_true(b > 100)
+}
+
+///|
+test "rgb_to_hsl: green max" {
+  // Green is max → tests mx == gf branch
+  let (h, _s, _l) = rgb_to_hsl(0, 255, 128)
+  assert_true(h > 100.0 && h < 180.0)
+}
+
+///|
+test "hsl_to_rgb: h >= 360 normalization" {
+  let (r1, g1, b1) = hsl_to_rgb(420.0, 1.0, 0.5)
+  let (r2, g2, b2) = hsl_to_rgb(60.0, 1.0, 0.5)
+  assert_eq(r1, r2)
+  assert_eq(g1, g2)
+  assert_eq(b1, b2)
+}
+
+///|
+test "hsl_to_rgb: h < 0 normalization" {
+  let (r1, g1, b1) = hsl_to_rgb(-60.0, 1.0, 0.5)
+  let (r2, g2, b2) = hsl_to_rgb(300.0, 1.0, 0.5)
+  assert_eq(r1, r2)
+  assert_eq(g1, g2)
+  assert_eq(b1, b2)
+}
+
+///|
+test "hsl_to_rgb: hp in [2,3) range" {
+  // h=150 → hp=2.5, tests hp < 3.0 branch
+  let (r, g, b) = hsl_to_rgb(150.0, 1.0, 0.5)
+  assert_true(r < 50)
+  assert_true(g > 200)
+  assert_true(b > 50)
+}
+
+///|
+test "hsl_to_rgb: hp in [3,4) range" {
+  // h=210 → hp=3.5, tests hp < 4.0 branch
+  let (r, g, b) = hsl_to_rgb(210.0, 1.0, 0.5)
+  assert_true(r < 50)
+  assert_true(g > 50)
+  assert_true(b > 200)
+}
+
+///|
+test "hsl_to_rgb: hp in [5,6) range" {
+  // h=330 → hp=5.5, tests hp >= 5.0 branch
+  let (r, g, b) = hsl_to_rgb(330.0, 1.0, 0.5)
+  assert_true(r > 200)
+  assert_true(g < 50)
+  assert_true(b > 100)
+}

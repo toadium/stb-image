@@ -128,3 +128,49 @@ test "guided_filter 错误参数" {
     _ => assert_true(true)
   }
 }
+
+// ==================== dehaze 错误路径补充测试 ====================
+
+///|
+test "dehaze: empty image returns self" {
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let out = dehaze(img)
+  assert_eq(out.width, 0)
+  assert_eq(out.height, 0)
+}
+
+///|
+test "dehaze: invalid channels raises" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: Bytes::from_array([b'\x80', b'\x80']),
+  }
+  try {
+    let _ = dehaze(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "dehaze: transmission clamped to t0" {
+  // Very bright image → transmission may be < t0, should be clamped
+  let data : Array[Byte] = Array::make(75, b'\xFF')
+  let img = @types.Image::{
+    width: 5,
+    height: 5,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let out = dehaze(img, patch_size=1, omega=0.95F, t0=0.5F)
+  assert_eq(out.width, 5)
+  assert_eq(out.height, 5)
+  for i in 0..<75 {
+    let v = out.data[i].to_int()
+    assert_true(v >= 0 && v <= 255)
+  }
+}

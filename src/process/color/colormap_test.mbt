@@ -70,3 +70,27 @@ test "apply_colormap: works on RGB input (converts to gray first)" {
   assert_eq(result.data[1].to_int(), 255)
   assert_eq(result.data[2].to_int(), 255)
 }
+
+///|
+test "apply_colormap: BONE produces valid output" {
+  let img = make_gray_2x2()
+  let result = apply_colormap(img, Colormap::BONE)
+  assert_eq(result.channels, 3)
+  for i in 0..<12 {
+    let v = result.data[i].to_int()
+    assert_true(v >= 0 && v <= 255)
+  }
+}
+
+///|
+test "apply_colormap: COPPER produces valid output" {
+  let img = make_gray_2x2()
+  let result = apply_colormap(img, Colormap::COPPER)
+  assert_eq(result.channels, 3)
+  // COPPER: (t*1.25, t*0.78, t*0.5) — R > G > B for mid-range
+  let r = result.data[3].to_int()
+  let g = result.data[4].to_int()
+  let b = result.data[5].to_int()
+  assert_true(r >= g)
+  assert_true(g >= b)
+}

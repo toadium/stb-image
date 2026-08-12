@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1028%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1054%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-282%20functions%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-4.7.0-orange)]()
@@ -26,7 +26,7 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1028 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1054 测试全部通过，覆盖率 89.8%。
 
 > [!TIP]
 > **v4.7 最新更新** — SIFT 特征检测 · SIFT 匹配 + RANSAC 单应性估计 · grabCut 分割 · 流式解码（逐行/分块/指定通道）
@@ -156,10 +156,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1028 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1028 | ✅ |
-| **js** | 纯 MoonBit | 1028 | ✅ |
-| **wasm** | 纯 MoonBit | 1028 | ✅ |
+| **native** | 纯 MoonBit | 1054 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1054 | ✅ |
+| **js** | 纯 MoonBit | 1054 | ✅ |
+| **wasm** | 纯 MoonBit | 1054 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -214,7 +214,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1028）
+# 运行测试（四目标各 1054）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -244,7 +244,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1028 通过）
+moon test --target native           # 运行测试（应 1054 通过）
 ```
 
 </details>

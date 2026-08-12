@@ -193,3 +193,47 @@ test "msrcr 错误参数" {
     _ => assert_true(true)
   }
 }
+
+// ==================== 错误路径补充测试 ====================
+
+///|
+test "ssr: invalid channels raises" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: Bytes::from_array([b'\x80', b'\x80']),
+  }
+  try {
+    let _ = ssr(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "ssr: empty image returns self" {
+  let img = @types.Image::{ width: 0, height: 0, channels: 1, data: b"" }
+  let out = ssr(img, sigma=2.0F)
+  assert_eq(out.width, 0)
+  assert_eq(out.height, 0)
+}
+
+///|
+test "msr: invalid channels raises" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: Bytes::from_array([b'\x80', b'\x80']),
+  }
+  try {
+    let _ = msr(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

@@ -208,3 +208,72 @@ test "rgb_to_cmyk: white pixel" {
   assert_eq(m, 0)
   assert_eq(y, 0)
 }
+
+// ==================== 错误路径 + 边界测试 ====================
+
+///|
+test "unpremultiply_alpha: invalid channels raises" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array([b'\x80', b'\x40', b'\x20']),
+  }
+  try {
+    let _ = unpremultiply_alpha(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "unpremultiply_alpha: zero alpha pixel" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array([b'\x80', b'\x40', b'\x20', b'\x00']),
+  }
+  let result = unpremultiply_alpha(img)
+  // alpha=0 → all zeros
+  assert_eq(result.data[0], b'\x00')
+  assert_eq(result.data[1], b'\x00')
+  assert_eq(result.data[2], b'\x00')
+  assert_eq(result.data[3], b'\x00')
+}
+
+///|
+test "rgb_to_xyz: roundtrip" {
+  let (x, y, z) = rgb_to_xyz(100, 150, 200)
+  let (r, g, b) = xyz_to_rgb(x, y, z)
+  assert_true((r - 100).abs() <= 2)
+  assert_true((g - 150).abs() <= 2)
+  assert_true((b - 200).abs() <= 2)
+}
+
+///|
+test "rgb_to_lab: dark pixel (f(t) <= 0.008856)" {
+  // Very dark pixel tests the linear branch of Lab f(t)
+  let (l, a, b) = rgb_to_lab(5, 5, 5)
+  assert_true(l < 10.0F)
+  assert_true(a.abs() < 5.0F)
+  assert_true(b.abs() < 5.0F)
+}
+
+///|
+test "rgb_to_cmyk: k from min(c,y) when c < m and c < y" {
+  // R=200, G=50, B=100 → R'=55, G'=205, B'=155 → c is min → k=55
+  let (_c, _m, _y, k) = rgb_to_cmyk(200, 50, 100)
+  assert_true(k > 0)
+}
+
+///|
+test "rgb_to_ycbcr: roundtrip" {
+  let (y, cb, cr) = rgb_to_ycbcr(100, 150, 200)
+  let (r, g, b) = ycbcr_to_rgb(y, cb, cr)
+  assert_true((r - 100).abs() <= 2)
+  assert_true((g - 150).abs() <= 2)
+  assert_true((b - 200).abs() <= 2)
+}
