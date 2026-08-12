@@ -9,7 +9,7 @@ description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（
 
 ## 用途
 
-纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit（`src/pure/{codec,color,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PNM 等 10+ 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化等图像处理操作。
+纯 MoonBit 图像处理库，提供完整的图像加载/写入/缩放/处理能力。多目标支持：四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit（`src/pure/{codec,color,util}/`）。覆盖 PNG/JPEG/BMP/GIF/QOI/ICO/ICNS/TGA/PSD/HDR/PNM/TIFF/APNG/WebP 等 15 种格式，以及裁剪/旋转/翻转/色彩/滤波/直方图/量化/ORB/模板匹配/光流/图像修复等图像处理操作。
 
 ## 快速开始
 
@@ -40,7 +40,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 ## API 概览
 
-### 类型（36 个）
+### 类型（43 个）
 
 | 类型 | 说明 |
 |------|------|
@@ -50,7 +50,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 | `ImageInfo` | 图像信息 `{ width, height, channels }`，不含像素数据 |
 | `GifAnimation` | 动画 GIF `{ frames : Array[Image], delays : Array[Int] }` |
 | `LoadError` | 错误类型 `{ FileIO, UnsupportedFormat, DecodeFailed, EncodeFailed }` |
-| `ImageFormat` | 格式枚举 `{ Png, Jpeg, Bmp, Gif, Tga, Psd, Hdr, Pnm, Qoi, Unknown }` |
+| `ImageFormat` | 格式枚举 `{ Png, Jpeg, Bmp, Gif, Tga, Psd, Hdr, Pnm, Qoi, Webp, Unknown }` |
 | `ResizeFilter` | 缩放滤波器 `{ Default, Box, Triangle, CubicBSPline, CatmullROM, Mitchell, PointSample }` |
 | `ResizeEdge` | 缩放边缘模式 `{ Clamp, Reflect, Wrap, Zero }` |
 | `ExifInfo` | EXIF 元数据 `{ make, model, date_time : String, orientation : Int }` |
@@ -72,12 +72,15 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `detect_format` / `decode_any` / `is_supported_format`
 
-### 编解码（11 函数）
+### 编解码（12 函数）
 
 - QOI：`decode_qoi` / `encode_qoi`
-- ICO/ICNS：`encode_ico` / `encode_ico_sizes` / `encode_icns`
+- ICO/ICNS/CUR：`encode_ico` / `encode_ico_sizes` / `encode_icns` / `decode_cur` / `encode_cur`
 - GIF：`encode_gif` / `encode_gif_animation`
 - PNM：`encode_ppm` / `encode_pgm` / `encode_pnm`
+- TIFF：`decode_tiff` / `encode_tiff`
+- APNG：`decode_apng` / `encode_apng`
+- WebP：`decode_webp`（lossless VP8L）
 
 ### 图像处理（19+ 函数）
 
@@ -104,6 +107,32 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 ### 量化（2 函数）
 
 `floyd_steinberg`（误差扩散抖动）/ `median_cut`（中位切分量化）
+
+### ORB 特征检测（3 函数）
+
+`orb_detect`（FAST-9 + rBRIEF 256位描述子）/ `orb_hamming`（汉明距离）/ `orb_match`（特征匹配）
+
+### 模板匹配（2 函数）
+
+`template_match`（6种方法：SqDiff/CCorr/CCoeff + 归一化）/ `template_match_best`（最佳匹配）
+
+### 图像修复（2 函数）
+
+`inpaint`（扩散法，Laplace方程迭代）/ `inpaint_fast`（距离加权快速法）
+
+### 光流（2 函数）
+
+`lucas_kanade`（稀疏光流，特征点跟踪）/ `horn_schunck`（密集光流场）
+
+### 高级算法（40+ 函数）
+
+- 边缘：`canny_edge` / `hough_lines` / `hough_circles` / `find_contours`
+- 特征：`harris_corners` / `good_features_to_track` / `gabor_filter` / `lbp`
+- 分割：`watershed` / `slic` / `kmeans_segment` / `connected_components`
+- 频域：`fft_2d` / `dct_2d` / `haar_transform_2d` / `freq_filter`
+- 形态学：`erode` / `dilate` / `morph_open` / `morph_close` / `skeletonize`
+- 去噪：`bilateral_filter` / `nlm_denoise` / `haar_denoise` / `dehaze`
+- 质量：`mse` / `psnr` / `ssim` / `compute_glcm`
 
 ### 元数据（4 函数）
 
@@ -170,8 +199,9 @@ try {
 - **v1.6**：PNG 元数据 + 往返测试 + 性能基准，254 测试 + 29 基准测试
 - **v1.7-v1.17**：高级图像处理（混合模式/FFT/自适应阈值/连通域/积分图像/霍夫变换/LBP/金字塔/双边滤波/轮廓/分割/NLM/Retinex/Canny/分水岭/GLCM/Haar小波/Harris角点/去雾/距离变换/Gabor滤波），533 测试 + 29 基准测试
 - **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，872 测试 × 3 目标 (native/wasm-gc/js)
-- **v3.0**：EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，253 API + 36 类型，907 测试 × 3 目标
-- **v4.3**：ORB特征检测 + 模板匹配 + 图像修复 + 光流(LK+HS) + WebP lossless解码，275 API + 43 类型，979 测试 × 4 目标 (native/wasm-gc/js/wasm)
+- **v3.0**：EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，266 API + 37 类型，907 测试 × 3 目标
+- **v3.1-v3.2**：DCT O(N³) 优化 + 16-bit/float 滤波泛化 + wasm 目标 + WebP lossless 解码，942 测试 × 4 目标
+- **v4.0-v4.3**：ORB 特征检测 + 模板匹配 + 图像修复 + 光流(LK+HS)，275 API + 43 类型，979 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 限制
 

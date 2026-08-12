@@ -113,6 +113,19 @@ try {
 
 ## 🧰 功能一览
 
+| 分类 | 关键函数 | 说明 |
+|------|---------|------|
+| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
+| **几何变换** | `resize`, `crop`, `rotate`, `warp_affine`, `warp_perspective` | 缩放/裁剪/旋转/仿射/透视，7 种滤波器 × 4 种边缘模式 |
+| **色彩** | `to_grayscale`, `adjust_gamma`, `rgb_to_hsv`, `clahe` | 色彩转换/调整/空间变换/CLAHE |
+| **滤波** | `gaussian_blur`, `bilateral_filter`, `nlm_denoise`, `inpaint` | 高斯/双边/NLM 去噪/图像修复 |
+| **边缘** | `canny_edge`, `hough_lines`, `hough_circles`, `find_contours` | Canny/霍夫直线圆/轮廓提取 |
+| **特征** | `harris_corners`, `orb_detect`, `template_match`, `lucas_kanade` | Harris/ORB/模板匹配/光流 |
+| **分割** | `watershed`, `slic`, `kmeans_segment`, `connected_components` | 分水岭/SLIC/K-means/连通域 |
+| **频域** | `fft_2d`, `dct_2d`, `haar_transform_2d`, `freq_filter` | FFT/DCT/Haar 小波/频率滤波 |
+| **形态学** | `erode`, `dilate`, `morph_open`, `skeletonize` | 腐蚀/膨胀/开闭运算/骨架化 |
+| **质量** | `mse`, `psnr`, `ssim`, `compute_stats` | MSE/PSNR/SSIM/统计 |
+
 ## 🎯 多目标支持
 
 | 目标 | 后端 | 测试 | 状态 |
@@ -133,14 +146,21 @@ try {
 src/
 ├── types/              # 全目标类型 (Image, Image16, ImageF, LoadError 等)
 ├── pure/               # 纯 MoonBit 后端 (无 C FFI)
-│   ├── codec/          #   格式编解码
+│   ├── codec/          #   格式编解码 (15 种格式)
 │   ├── color/          #   颜色操作
 │   └── util/           #   工具
 ├── lib/                # 高层封装 (自动格式分派)
 ├── meta/               # 元数据 (EXIF, PNG meta)
 ├── process/            # 高级图像处理算法 (7 子包)
+│   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值
+│   ├── edge/           #   边缘检测/Canny/霍夫/轮廓
+│   ├── feature/        #   特征检测: Harris/ORB/模板匹配/光流/GLCM/LBP
+│   ├── filter/         #   滤波/去噪/图像修复
+│   ├── frequency/      #   FFT/DCT/Haar 小波/频率滤波
+│   ├── segment/        #   分水岭/SLIC/形态学/连通域
+│   └── transform/      #   几何变换/透视/Seam Carving/金字塔
 ├── util/               # 工具函数 (基于 pure 的上层封装)
-├── bench.mbt           # 性能基准测试 (编解码 + 滤波 + 色彩 + 几何)
+├── bench.mbt           # 性能基准测试
 └── reexport.mbt        # 顶层 API re-export (275 pub fn + 43 pub type)
 ```
 
@@ -198,7 +218,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-    moon test --target native           # 运行测试（应 979 通过）
+moon test --target native           # 运行测试（应 979 通过）
 ```
 
 </details>
@@ -212,10 +232,11 @@ moon check                          # 编译检查
 4. **编写测试**，新功能必须有对应测试
 5. **四目标验证**：
    ```bash
-     moon test --target native     # 必须通过
-     moon test --target wasm-gc    # 必须通过
-     moon test --target js         # 必须通过
-     moon test --target wasm       # 必须通过
+   moon test --target native     # 必须通过
+   moon test --target wasm-gc    # 必须通过
+   moon test --target js         # 必须通过
+   moon test --target wasm       # 必须通过
+   ```
 </details>
 
 <details>
@@ -271,6 +292,14 @@ moon check                          # 编译检查
 ## 📄 许可证
 
 [MIT](LICENSE) — 自由使用、修改、分发。
+
+---
+
+## 🙏 致谢
+
+- **[stb](https://github.com/nothings/stb)** — 原始 C 实现的参考基础
+- **[MoonBit](https://www.moonbitlang.com/)** — 纯 MoonBit 语言与工具链
+- **[OpenCV](https://opencv.org/)** — 高级算法参考（ORB/Canny/Harris/光流等）
 
 ---
 
