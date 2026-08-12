@@ -485,3 +485,152 @@ test "load_from_bytes_auto: TGA via explicit decode" {
   assert_eq(restored.channels, 3)
   let _ = img
 }
+
+// ==================== 编码器委托补充测试（6 个） ====================
+
+///|
+test "encode_png 委托验证" {
+  let img = lb_make_rgb_image(2, 2, [
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 255),
+  ])
+  let out = encode_png(img)
+  // PNG signature: 89 50 4E 47 0D 0A 1A 0A
+  assert_eq(out[0].to_int(), 0x89)
+  assert_eq(out[1].to_int(), 0x50)
+  assert_eq(out[2].to_int(), 0x4E)
+  assert_eq(out[3].to_int(), 0x47)
+  assert_eq(out, @codec.encode_png_pure(img))
+}
+
+///|
+test "encode_jpeg 委托验证" {
+  let img = lb_make_rgb_image(2, 2, [
+    (128, 128, 128),
+    (64, 64, 64),
+    (192, 192, 192),
+    (32, 32, 32),
+  ])
+  let out = encode_jpeg(img)
+  // JPEG SOI marker: FF D8
+  assert_eq(out[0].to_int(), 0xFF)
+  assert_eq(out[1].to_int(), 0xD8)
+  assert_eq(out, @codec.encode_jpeg_pure(img))
+}
+
+///|
+test "encode_bmp 委托验证" {
+  let img = lb_make_rgb_image(2, 2, [
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 255),
+  ])
+  let out = encode_bmp(img)
+  // BMP signature: "BM"
+  assert_eq(out[0].to_int(), 0x42)
+  assert_eq(out[1].to_int(), 0x4D)
+  assert_eq(out, @codec.encode_bmp_pure(img))
+}
+
+///|
+test "encode_tga 委托验证" {
+  let img = lb_make_rgb_image(2, 2, [
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 255),
+  ])
+  let out = encode_tga(img)
+  assert_eq(out, @codec.encode_tga_pure(img))
+}
+
+///|
+test "encode_pnm_auto 委托验证" {
+  let img = lb_make_rgb_image(1, 1, [(100, 150, 200)])
+  let out = encode_pnm_auto(img)
+  // RGB image → PPM format "P6"
+  assert_eq(out[0].to_int(), 0x50)
+  assert_eq(out[1].to_int(), 0x36)
+  assert_eq(out, @codec.encode_pnm_pure(img))
+}
+
+///|
+test "encode_hdr 委托验证" {
+  let data : Array[Byte] = []
+  let vals = [1.0F, 0.5F, 0.0F]
+  for v in vals {
+    let vb = v.to_le_bytes()
+    for i in 0..<4 {
+      data.push(vb[i])
+    }
+  }
+  let img = @types.ImageF::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let out = encode_hdr(img)
+  // HDR signature: "#?RADIANCE"
+  assert_eq(out[0].to_int(), 0x23)
+  assert_eq(out[1].to_int(), 0x3F)
+  assert_eq(out[2].to_int(), 0x52)
+  assert_eq(out, @codec.encode_hdr_pure(img))
+}
+
+// ==================== 格式检测补充测试 ====================
+
+///|
+test "detect_format: WebP RIFF" {
+  // RIFF....WEBP
+  let data : Array[Byte] = [
+    b'\x52', b'\x49', b'\x46', b'\x46', // "RIFF"
+     b'\x00', b'\x00', b'\x00', b'\x00', // file size
+     b'\x57', b'\x45', b'\x42', b'\x50', // "WEBP"
+  ]
+  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Webp)
+}
+
+///|
+test "load_from_bytes_auto: TGA 分派 (Unknown → error)" {
+  // TGA has no magic bytes, detect_format returns Unknown
+  let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
+  let tga_bytes = @codec.encode_tga_pure(img)
+  try {
+    let _ = load_from_bytes_auto(tga_bytes)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "load_16_from_bytes_auto: PNM 16-bit 分派" {
+  // Construct a 16-bit PNM (PGM P5)
+  let data : Array[Byte] = [
+    b'\x50', b'\x35', b'\x0A', // "P5\n"
+     b'\x32', b'\x20', b'\x31', b'\x0A', // "2 1\n"
+     b'\x31', b'\x30', b'\x32', b'\x33', b'\x0A', // "1023\n"
+     b'\x03', b'\xFF', b'\x00', b'\x00', // pixel 0: 1023, pixel 1: 0
+  ]
+  let img = load_16_from_bytes_auto(lb_to_bytes(data))
+  assert_eq(img.width, 2)
+  assert_eq(img.height, 1)
+}
+
+///|
+test "load_16_from_bytes_auto: unsupported format → error" {
+  // BMP is not supported for 16-bit decode
+  let bmp = lb_make_1x1_red_bmp()
+  try {
+    let _ = load_16_from_bytes_auto(bmp)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

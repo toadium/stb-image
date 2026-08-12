@@ -95,3 +95,20 @@ test "clahe: enhances contrast on gradient" {
   let _ = img
   let _ = result
 }
+
+///|
+test "clahe: raises on invalid channels" {
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 2,
+    data: Array::make(16, b'\x80') |> Bytes::from_array,
+  }
+  try {
+    let _ = clahe(img, 4, 2.0)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
