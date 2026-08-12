@@ -136,6 +136,10 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `grab_cut`（交互式前景提取，GMM+ICM优化）
 
+### 流式解码（3 函数）
+
+`decode_stream`（逐行回调）/ `decode_stream_chunked`（分块回调）/ `decode_stream_channels`（指定通道）
+
 ### 高级算法（40+ 函数）
 
 - 边缘：`canny_edge` / `hough_lines` / `hough_circles` / `find_contours`
