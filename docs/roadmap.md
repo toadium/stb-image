@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-12 | 当前版本：v4.3.0 | 测试：979×4 | 覆盖率：89.8%
+> 制定日期：2026-08-06 | 最后更新：2026-08-12 | 当前版本：v4.4.0 | 测试：987×4 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -60,14 +60,14 @@ flowchart LR
     class V10,V117,V20 milestone
 ```
 
-- **image v4.3.0 的独特优势**：
+- **image v4.4.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 275 公开函数 + 43 类型，979 测试 × 4 目标
+- 276 公开函数 + 45 类型，987 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
-- ORB特征检测 + 模板匹配 + 光流 + 图像修复（独家）
+- ORB特征检测 + SIFT特征检测 + 模板匹配 + 光流 + 图像修复（独家）
 - **多子包架构**：types（全目标类型）/ pure（纯 MoonBit 后端，3 子包：codec/color/util）/ lib（统一 API）/ process（图像处理，7 子包）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
 
 **主要差距**（对比 5 个已有库）：
@@ -550,21 +550,21 @@ flowchart LR
 - 现代分割预处理标配
 - `slic(img, k, m, max_iters) -> SuperpixelResult`
 
-#### 4. ORB 特征匹配（高难度·高价值）
+#### 4. ORB 特征匹配（高难度·高价值）✅
 - FAST+BRIEF+旋转不变，特征匹配标配
 - `orb_detect(img) -> Array[KeyPoint]` + `orb_compute(img, keypoints) -> Array[Descriptor]`
 - `match_descriptors(d1, d2) -> Array[Match]`
 
-#### 5. SIFT 特征（高难度·高价值）
+#### 5. SIFT 特征（高难度·高价值）✅
 - 尺度不变，DoG+描述子，专利已过期
-- `sift_detect(img) -> Array[KeyPoint]` + `sift_compute(img, keypoints) -> Array[Descriptor]`
+- `sift_detect(img) -> Array[SiftDescriptor]`（128维描述子）
 
 #### 6. grabCut 分割（高难度·高价值）
 - 交互式前景提取，GMM+max-flow
 - `grab_cut(img, rect, iter?) -> (Mask, Mask)`
 
-#### 7. 图像修复 `inpaint`（高难度·中价值）
-- Navier-Stokes / Telea 方法，去水印/修复
+#### 7. 图像修复 `inpaint`（高难度·中价值）✅
+- 扩散法 / 距离加权快速法，去水印/修复
 - `inpaint(img, mask, radius, method?) -> Image`
 
 #### 8. 接缝裁剪 `seam_carving`（中难度·高价值）✅

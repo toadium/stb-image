@@ -1,10 +1,10 @@
 # image 架构文档
 
-> 版本 v4.3.0 | 275 公开函数 + 43 类型 | 979 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.4.0 | 276 公开函数 + 45 类型 | 987 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 概述
 
-image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit 实现，各 979 测试通过。
+image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit 实现，各 987 测试通过。
 
 ## 功能分类
 
@@ -514,7 +514,7 @@ classDiagram
 
 ```
 image/
-├── moon.mod                  # 模块配置 (v4.3.0, preferred_target = native)
+├── moon.mod                  # 模块配置 (v4.4.0, preferred_target = native)
 ├── README.md                 # 项目说明（中文）
 ├── docs/
 │   ├── architecture.md       # 架构文档（本文）

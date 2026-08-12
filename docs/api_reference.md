@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v4.3.0 | 275 公开函数 + 43 类型 | 979 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.4.0 | 276 公开函数 + 45 类型 | 987 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 类型总览
 
@@ -41,6 +41,8 @@
 | `TemplateMatchMethod` | feature | `SqDiff \| CCorr \| CCoeff \| SqDiffNormed \| CCorrNormed \| CCoeffNormed` | 模板匹配方法 |
 | `TemplateMatchResult` | feature | `x, y : Int; score : Float` | 模板匹配结果 |
 | `FlowResult` | feature | `x, y, u, v : Float; found : Bool` | 光流结果 |
+| `SiftKeyPoint` | feature | `x, y, sigma, response, angle : Float; octave, layer : Int` | SIFT关键点 |
+| `SiftDescriptor` | feature | `kp : SiftKeyPoint; data : Array[Float]` | SIFT 128维描述子 |
 | `GlcmFeatures` | feature | `contrast, correlation, energy, homogeneity, entropy, asm, dissimilarity : Float` | GLCM特征 |
 | `HistCompareMethod` | feature | `Correlation \| ChiSquare \| Intersection \| Bhattacharyya` | 直方图比较方法 |
 | `IntegralImage` | feature | `width, height : Int; data : Array[Int64]` | 积分图像 |
@@ -672,6 +674,14 @@
 
 ---
 
+## 处理 — SIFT特征检测（1个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `sift_detect` | `(Image, max_features?: Int, contrast_threshold?: Float) -> Array[SiftDescriptor]` | SIFT尺度不变特征检测（128维描述子） |
+
+---
+
 ## 函数统计
 
 | 分类 | 函数数 | 版本 |
@@ -734,6 +744,7 @@
 | 处理 — 模板匹配 | 2 | v4.1 |
 | 处理 — 图像修复 | 2 | v4.2 |
 | 处理 — 光流 | 2 | v4.3 |
+| 处理 — SIFT特征检测 | 1 | v4.4 |
 | 工具 — 像素操作 | 3 | v1.7 |
 | 工具 — 高级像素操作 | 4 | v1.8-v1.9 |
 | 工具 — 图像工具 | 4 | v1.7-v1.8 |
@@ -741,4 +752,4 @@
 | 工具 — 噪声 | 2 | v1.9 |
 | 工具 — 色彩映射 | 2 | v1.8-v1.9 |
 | 工具 — 统计 | 2 | v1.8 |
-| **总计** | **275** | |
+| **总计** | **276** | |
