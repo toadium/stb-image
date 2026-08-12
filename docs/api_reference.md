@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v3.0.0 | 266 公开函数 + 37 类型 | 935 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.3.0 | 275 公开函数 + 43 类型 | 979 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 类型总览
 
@@ -13,7 +13,7 @@
 | `GifAnimation` | types | `frames : Array[Image]; delays : Array[Int]` | 动画GIF |
 | `PngAnimation` | types | `frames : Array[Image]; delays : Array[Int]` | 动画PNG (APNG) |
 | `LoadError` | types | `FileIO(String) \| UnsupportedFormat(String) \| DecodeFailed(String) \| EncodeFailed(String)` | 加载失败错误 |
-| `ImageFormat` | types | `Png \| Jpeg \| Bmp \| Gif \| Tga \| Psd \| Hdr \| Pnm \| Qoi \| Unknown` | 图像格式枚举 |
+| `ImageFormat` | types | `Png \| Jpeg \| Bmp \| Gif \| Tga \| Psd \| Hdr \| Pnm \| Qoi \| Webp \| Unknown` | 图像格式枚举 |
 | `ResizeFilter` | types | `Default \| Box \| Triangle \| CubicBSPline \| CatmullROM \| Mitchell \| PointSample` | 缩放滤波器 |
 | `ResizeEdge` | types | `Clamp \| Reflect \| Wrap \| Zero` | 缩放边缘模式 |
 | `ExifInfo` | meta | `make, model, date_time : String; orientation : Int` | EXIF元数据 |
@@ -35,6 +35,12 @@
 | `Moments` | edge | 空间矩/中心矩 | 图像矩 |
 | `Circle` | edge | `cx, cy : Int; r : Float` | 霍夫圆 |
 | `CornerPoint` | feature | `x, y : Int; response : Float` | 角点 |
+| `OrbKeyPoint` | feature | `x, y : Int; response, angle : Float` | ORB关键点 |
+| `OrbDescriptor` | feature | `kp : OrbKeyPoint; data : Array[Int]` | ORB描述子（256位=32Int） |
+| `DescriptorMatch` | feature | `query_idx, train_idx, distance : Int` | 特征匹配结果 |
+| `TemplateMatchMethod` | feature | `SqDiff \| CCorr \| CCoeff \| SqDiffNormed \| CCorrNormed \| CCoeffNormed` | 模板匹配方法 |
+| `TemplateMatchResult` | feature | `x, y : Int; score : Float` | 模板匹配结果 |
+| `FlowResult` | feature | `x, y, u, v : Float; found : Bool` | 光流结果 |
 | `GlcmFeatures` | feature | `contrast, correlation, energy, homogeneity, entropy, asm, dissimilarity : Float` | GLCM特征 |
 | `HistCompareMethod` | feature | `Correlation \| ChiSquare \| Intersection \| Bhattacharyya` | 直方图比较方法 |
 | `IntegralImage` | feature | `width, height : Int; data : Array[Int64]` | 积分图像 |
@@ -142,7 +148,7 @@
 | `encode_pgm` | `(Image) -> Bytes` | 编码PGM (P5) |
 | `encode_pnm` | `(Image) -> Bytes` | 编码PNM（自动选择 PPM/PGM） |
 
-## 编解码 — TIFF/APNG（4个函数）
+## 编解码 — TIFF/APNG/WebP（5个函数）
 
 | 函数 | 签名 | 说明 |
 |------|------|------|
@@ -150,6 +156,7 @@
 | `encode_tiff` | `(Image) -> Bytes` | 编码TIFF格式 |
 | `decode_apng` | `(Bytes) -> PngAnimation` | 解码动画PNG |
 | `encode_apng` | `(PngAnimation) -> Bytes` | 编码动画PNG |
+| `decode_webp` | `(Bytes) -> Image` | 解码WebP lossless (VP8L) |
 
 ---
 
@@ -617,6 +624,54 @@
 
 ---
 
+## 处理 — 16-bit/float 滤波/边缘/统计（9个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `box_blur_16` | `(Image16, Int) -> Image16` | 16-bit 方框模糊 |
+| `box_blur_f` | `(ImageF, Int) -> ImageF` | float 方框模糊 |
+| `gaussian_blur_16` | `(Image16, Int, Float) -> Image16` | 16-bit 高斯模糊 |
+| `gaussian_blur_f` | `(ImageF, Int, Float) -> ImageF` | float 高斯模糊 |
+| `median_blur_16` | `(Image16, Int) -> Image16` | 16-bit 中值模糊 |
+| `median_blur_f` | `(ImageF, Int) -> ImageF` | float 中值模糊 |
+| `edge_detect_sobel_16` | `(Image16) -> Image16` | 16-bit Sobel边缘检测 |
+| `edge_detect_sobel_f` | `(ImageF) -> ImageF` | float Sobel边缘检测 |
+| `compute_stats_16` | `(Image16) -> ImageStatsF` | 16-bit 图像统计 |
+| `compute_stats_f` | `(ImageF) -> ImageStatsF` | float 图像统计 |
+| `mean_value_16` | `(Image16) -> Float` | 16-bit 平均值 |
+| `mean_value_f` | `(ImageF) -> Float` | float 平均值 |
+
+## 处理 — ORB特征检测（3个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `orb_detect` | `(Image, max_features?: Int, threshold?: Int) -> Array[OrbDescriptor]` | ORB特征检测（FAST-9 + rBRIEF） |
+| `orb_hamming` | `(OrbDescriptor, OrbDescriptor) -> Int` | ORB描述子汉明距离 |
+| `orb_match` | `(Array[OrbDescriptor], Array[OrbDescriptor], max_distance?: Int) -> Array[DescriptorMatch]` | ORB特征匹配 |
+
+## 处理 — 模板匹配（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `template_match` | `(Image, Image, match_method?: TemplateMatchMethod) -> Array[TemplateMatchResult]` | 模板匹配（6种方法） |
+| `template_match_best` | `(Image, Image, match_method?: TemplateMatchMethod) -> TemplateMatchResult?` | 最佳匹配位置 |
+
+## 处理 — 图像修复（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `inpaint` | `(Image, Image, iterations?: Int) -> Image` | 图像修复（扩散法，Laplace方程） |
+| `inpaint_fast` | `(Image, Image, radius?: Int) -> Image` | 快速图像修复（距离加权平均） |
+
+## 处理 — 光流（2个函数）
+
+| 函数 | 签名 | 说明 |
+|------|------|------|
+| `lucas_kanade` | `(Image, Image, Array[(Int,Int)], window_size?: Int, max_iter?: Int) -> Array[FlowResult]` | Lucas-Kanade稀疏光流 |
+| `horn_schunck` | `(Image, Image, alpha?: Float, iterations?: Int) -> (Array[Float], Array[Float])` | Horn-Schunck密集光流 |
+
+---
+
 ## 函数统计
 
 | 分类 | 函数数 | 版本 |
@@ -631,7 +686,7 @@
 | 编解码 — QOI | 2 | v1.2 |
 | 编解码 — ICO/ICNS/CUR | 7 | v1.2-v2.3 |
 | 编解码 — GIF/PNM | 5 | v1.2-v1.5 |
-| 编解码 — TIFF/APNG | 4 | v2.3 |
+| 编解码 — TIFF/APNG/WebP | 5 | v2.3-v3.2 |
 | 元数据 | 4 | v1.5-v3.0 |
 | 处理 — 变换 | 9 | v1.3 |
 | 处理 — 几何 | 2 | v1.4 |
@@ -674,6 +729,11 @@
 | 处理 — Seam Carving | 6 | v3.0 |
 | 处理 — SLIC超像素 | 1 | v3.0 |
 | 处理 — 16-bit/float泛化 | 12 | v3.0 |
+| 处理 — 16-bit/float滤波/边缘/统计 | 12 | v3.1 |
+| 处理 — ORB特征检测 | 3 | v4.0 |
+| 处理 — 模板匹配 | 2 | v4.1 |
+| 处理 — 图像修复 | 2 | v4.2 |
+| 处理 — 光流 | 2 | v4.3 |
 | 工具 — 像素操作 | 3 | v1.7 |
 | 工具 — 高级像素操作 | 4 | v1.8-v1.9 |
 | 工具 — 图像工具 | 4 | v1.7-v1.8 |
@@ -681,4 +741,4 @@
 | 工具 — 噪声 | 2 | v1.9 |
 | 工具 — 色彩映射 | 2 | v1.8-v1.9 |
 | 工具 — 统计 | 2 | v1.8 |
-| **总计** | **253** | |
+| **总计** | **275** | |

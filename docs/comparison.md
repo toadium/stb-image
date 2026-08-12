@@ -89,7 +89,7 @@
 
 | 库 | 测试数 | 特殊验证 |
 |---|---|---|
-| image | 907×3 | 纯 MoonBit, 多目标 |
+| image | 979×4 | 纯 MoonBit, 多目标 |
 | mizchi/image | ? | ? |
 | bikallem/image | ? | Go 对等测试 (parity) |
 | gmlewis/image | ? | ? |
@@ -101,8 +101,8 @@
 ### image（本库）
 - **纯 MoonBit 实现**：无 C FFI 依赖，四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit
 - **格式覆盖广**：PSD/HDR/PNM/QOI 等独特格式，16-bit/float 深度
-- **多目标支持**：native/wasm-gc/js/wasm 全目标通过 935 测试
-- **完整图像处理**：resize/crop/rotate/draw/滤波/色彩/分割/频域等 253 公开函数
+- **多目标支持**：native/wasm-gc/js/wasm 全目标通过 979 测试
+- **完整图像处理**：resize/crop/rotate/draw/滤波/色彩/分割/频域/ORB/光流/模板匹配等 275 公开函数
 - **编码器扩展**：QOI/ICO/ICNS/GIF/PNM 编码
 
 ### 纯 MoonBit 库的共同优势

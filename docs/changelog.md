@@ -31,6 +31,11 @@
 | **v2.3** | **TIFF/ICO/CUR/ICNS/APNG 格式编解码，新增12个公开API** | **995** |
 | **v3.0** | **EXIF写入/seam carving(内容感知缩放)/SLIC超像素/16-bit float操作泛化(rotate/flip/brightness/contrast)，新增23个API+1类型** | **907×3** |
 | **v3.1+** | **DCT O(N³)优化+16-bit/float滤波/边缘检测/统计泛化+wasm目标支持，新增13 API+1类型** | **935×4** |
+| **v3.2** | **WebP lossless (VP8L) 解码器 + ImageFormat::Webp，新增1 API+1枚举值** | **942×4** |
+| **v4.0** | **ORB特征检测 (FAST-9 + rBRIEF + 汉明匹配)，新增3 API+3类型** | **954×4** |
+| **v4.1** | **模板匹配 (SqDiff/CCorr/CCoeff + 归一化变体)，新增2 API+2类型** | **963×4** |
+| **v4.2** | **图像修复 inpaint (扩散法 + 距离加权快速法)，新增2 API** | **971×4** |
+| **v4.3** | **光流 (Lucas-Kanade稀疏 + Horn-Schunck密集)，新增2 API+1类型** | **979×4** |
 
 ## 上游
 

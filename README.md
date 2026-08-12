@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-935%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-979%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-266%20functions%20%2B%2037%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-3.0.0-orange)]()
+[![Functions](https://img.shields.io/badge/API-275%20functions%20%2B%2043%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-4.3.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [包结构](#-包结构) · [文档](#-文档)
 
@@ -20,13 +20,13 @@
 
 ## 📖 简介
 
-`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 14 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。
+`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 15 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。
 
 > [!NOTE]
-> `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
+> `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 935 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 979 测试全部通过，覆盖率 89.8%。
 
 ---
 
@@ -36,9 +36,9 @@
 |---|---|---|
 | 🟢 | **零 C 依赖** | 全部纯 MoonBit 实现，无需 C 编译器，部署极简 |
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
-| 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / APNG — 含独家 PSD、HDR |
+| 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **266 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、Seam Carving 等高级算法 |
+| 🟢 | **275 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、光流、模板匹配等高级算法 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -61,6 +61,7 @@
 | CUR | ✅ | ✅ | Windows 光标 |
 | ICNS | ✅ | ✅ | macOS 图标 |
 | APNG | ✅ | ✅ | 动画 PNG |
+| WebP | ✅ | — | lossless (VP8L) |
 
 ---
 
@@ -116,10 +117,10 @@ try {
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 935 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 935 | ✅ |
-| **js** | 纯 MoonBit | 935 | ✅ |
-| **wasm** | 纯 MoonBit | 935 | ✅ |
+| **native** | 纯 MoonBit | 979 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 979 | ✅ |
+| **js** | 纯 MoonBit | 979 | ✅ |
+| **wasm** | 纯 MoonBit | 979 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -140,7 +141,7 @@ src/
 ├── process/            # 高级图像处理算法 (7 子包)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试 (编解码 + 滤波 + 色彩 + 几何)
-└── reexport.mbt        # 顶层 API re-export (266 pub fn + 37 pub type)
+└── reexport.mbt        # 顶层 API re-export (275 pub fn + 43 pub type)
 ```
 
 ---
@@ -150,7 +151,7 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（266 函数 + 37 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（275 函数 + 43 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
@@ -167,7 +168,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 935）
+# 运行测试（四目标各 979）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -197,7 +198,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-    moon test --target native           # 运行测试（应 935 通过）
+    moon test --target native           # 运行测试（应 979 通过）
 ```
 
 </details>
