@@ -111,6 +111,12 @@ pub type TemplateMatchMethod = @feature.TemplateMatchMethod
 ///|
 pub type TemplateMatchResult = @feature.TemplateMatchResult
 
+///|
+pub type SiftKeyPoint = @feature.SiftKeyPoint
+
+///|
+pub type SiftDescriptor = @feature.SiftDescriptor
+
 // From @lib/@pure (all-target pure MoonBit)
 
 ///|
@@ -531,6 +537,16 @@ pub fn horn_schunck(
   iterations? : Int = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   @feature.horn_schunck(arg0, arg1, alpha~, iterations~)
+}
+
+///|
+/// SIFT 特征检测
+pub fn sift_detect(
+  arg0 : @types.Image,
+  max_features? : Int = 500,
+  contrast_threshold? : Float = 0.04F,
+) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
+  @feature.sift_detect(arg0, max_features~, contrast_threshold~)
 }
 
 ///|
