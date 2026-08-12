@@ -120,6 +120,9 @@ pub type SiftDescriptor = @feature.SiftDescriptor
 ///|
 pub type SiftMatch = @feature.SiftMatch
 
+///|
+pub type StreamInfo = @lib.StreamInfo
+
 // From @lib/@pure (all-target pure MoonBit)
 
 ///|
@@ -571,6 +574,35 @@ pub fn ransac_homography(
   threshold? : Float = 3.0F,
 ) -> Array[Float]? {
   @feature.ransac_homography(arg0, iterations~, threshold~)
+}
+
+///|
+/// 流式解码：逐行回调处理
+pub fn decode_stream(
+  arg0 : Bytes,
+  arg1 : (Int, Array[Byte]) -> Unit,
+) -> @lib.StreamInfo raise @types.LoadError {
+  @lib.decode_stream(arg0, arg1)
+}
+
+///|
+/// 分块流式解码
+pub fn decode_stream_chunked(
+  arg0 : Bytes,
+  arg1 : Int,
+  arg2 : (Int, @types.Image) -> Unit,
+) -> @lib.StreamInfo raise @types.LoadError {
+  @lib.decode_stream_chunked(arg0, arg1, arg2)
+}
+
+///|
+/// 流式解码（带 req_channels）
+pub fn decode_stream_channels(
+  arg0 : Bytes,
+  arg1 : Int,
+  arg2 : (Int, Array[Byte]) -> Unit,
+) -> @lib.StreamInfo raise @types.LoadError {
+  @lib.decode_stream_channels(arg0, arg1, arg2)
 }
 
 ///|

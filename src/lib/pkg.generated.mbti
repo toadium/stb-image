@@ -6,6 +6,12 @@ import {
 }
 
 // Values
+pub fn decode_stream(Bytes, (Int, Array[Byte]) -> Unit) -> StreamInfo raise @types.LoadError
+
+pub fn decode_stream_channels(Bytes, Int, (Int, Array[Byte]) -> Unit) -> StreamInfo raise @types.LoadError
+
+pub fn decode_stream_chunked(Bytes, Int, (Int, @types.Image) -> Unit) -> StreamInfo raise @types.LoadError
+
 pub fn detect_format(Bytes) -> @types.ImageFormat
 
 pub fn encode_bmp(@types.Image) -> Bytes
@@ -35,6 +41,11 @@ pub fn load_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image raise @
 // Errors
 
 // Types and methods
+pub(all) struct StreamInfo {
+  width : Int
+  height : Int
+  channels : Int
+}
 
 // Type aliases
 pub using @types {type ImageFormat}

@@ -2,6 +2,7 @@
 package "Toadium/image/src"
 
 import {
+  "Toadium/image/src/lib",
   "Toadium/image/src/meta",
   "Toadium/image/src/process/color",
   "Toadium/image/src/process/edge",
@@ -139,6 +140,12 @@ pub fn decode_icns(Bytes) -> @types.Image raise @types.LoadError
 pub fn decode_ico(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_stream(Bytes, (Int, Array[Byte]) -> Unit) -> @lib.StreamInfo raise @types.LoadError
+
+pub fn decode_stream_channels(Bytes, Int, (Int, Array[Byte]) -> Unit) -> @lib.StreamInfo raise @types.LoadError
+
+pub fn decode_stream_chunked(Bytes, Int, (Int, @types.Image) -> Unit) -> @lib.StreamInfo raise @types.LoadError
 
 pub fn decode_tiff(Bytes) -> @types.Image raise @types.LoadError
 
@@ -660,6 +667,8 @@ pub using @feature {type SiftDescriptor}
 pub using @feature {type SiftKeyPoint}
 
 pub using @feature {type SiftMatch}
+
+pub using @lib {type StreamInfo}
 
 pub using @segment {type StructuringElement}
 
