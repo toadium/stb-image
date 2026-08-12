@@ -272,6 +272,8 @@ pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[@feat
 
 pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
+pub fn grab_cut(@types.Image, Int, Int, Int, Int, iterations? : Int) -> @types.Image raise @types.LoadError
+
 pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
 pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError

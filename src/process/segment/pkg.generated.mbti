@@ -21,6 +21,8 @@ pub fn erode_custom(@types.Image, StructuringElement) -> @types.Image
 
 pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
 
+pub fn grab_cut(@types.Image, Int, Int, Int, Int, iterations? : Int) -> @types.Image raise @types.LoadError
+
 pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError
 
 pub fn morph_blackhat(@types.Image) -> @types.Image

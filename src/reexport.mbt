@@ -1053,6 +1053,19 @@ pub fn flood_fill(
 }
 
 ///|
+/// grabCut 交互式前景提取
+pub fn grab_cut(
+  arg0 : @types.Image,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  iterations? : Int = 5,
+) -> @types.Image raise @types.LoadError {
+  @segment.grab_cut(arg0, arg1, arg2, arg3, arg4, iterations~)
+}
+
+///|
 pub type PerspectiveMatrix = @transform.PerspectiveMatrix
 
 ///|
