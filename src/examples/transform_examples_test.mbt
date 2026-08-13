@@ -3,10 +3,7 @@
 
 ///|
 test "example_04: resize image with different filters" {
-  let img = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   // 使用默认滤波器缩放
   let resized_default = @img.resize(img, 8, 8)
   assert_eq(resized_default.width, 8)

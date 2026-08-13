@@ -6,5 +6,4 @@ import {
 
 import {
   "Toadium/image/src/lib",
-  "Toadium/image/src/testdata",
 } for "test"

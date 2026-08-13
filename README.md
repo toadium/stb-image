@@ -7,8 +7,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1139%20%C3%97%204%20targets-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1177%20%C3%97%204%20targets-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-283%20functions%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-4.8.0-orange)]()
 
@@ -26,7 +26,7 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1139 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1177 测试全部通过，覆盖率 90.4%。
 
 > [!TIP]
 > **v4.8 最新更新** — WebP lossy (VP8) 编码 · PNG/TIFF 整数溢出安全修复 · 44 项 fuzzing 安全审计 · 22 项错误路径测试 · 性能基准报告
@@ -175,10 +175,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1139 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1139 | ✅ |
-| **js** | 纯 MoonBit | 1139 | ✅ |
-| **wasm** | 纯 MoonBit | 1139 | ✅ |
+| **native** | 纯 MoonBit | 1177 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1177 | ✅ |
+| **js** | 纯 MoonBit | 1177 | ✅ |
+| **wasm** | 纯 MoonBit | 1177 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -235,7 +235,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1139）
+# 运行测试（四目标各 1177）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -265,7 +265,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1139 通过）
+moon test --target native           # 运行测试（应 1177 通过）
 ```
 
 </details>
@@ -339,6 +339,52 @@ moon test --target native           # 运行测试（应 1139 通过）
 ## 📄 许可证
 
 [MIT](LICENSE) — 自由使用、修改、分发。
+
+---
+
+## 🔗 移植说明
+
+### 原项目信息
+
+| 属性 | 值 |
+|------|-----|
+| 原项目 | [stb](https://github.com/nothings/stb) — `stb_image.h` |
+| 原作者 | Sean Barrett (@nothings) |
+| 原许可证 | MIT / Public Domain |
+| 原语言 | C (单头文件库) |
+| 移植目标 | MoonBit (纯语言，零 C FFI) |
+
+### 移植范围
+
+本项目以 `stb_image.h` 为参考基础，将其核心图像编解码能力用纯 MoonBit 重新实现：
+
+- **格式编解码**：PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 15 种格式
+- **像素深度**：8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF`
+- **基础操作**：缩放 / 裁剪 / 旋转 / 翻转 / 色彩转换 / 通道操作 / 绘制 / 合成
+
+### 超越原项目的扩展
+
+在移植基础上，本项目新增了大量**原 `stb_image.h` 不具备**的高级能力：
+
+- **流式解码** — 逐行 / 分块回调，大图零内存峰值
+- **计算机视觉算法** — Canny / Harris / ORB / SIFT / 模板匹配 / 光流 / RANSAC / grabCut
+- **频域分析** — FFT / DCT / Haar 小波 / 频率滤波
+- **图像分割** — 分水岭 / SLIC 超像素 / K-means / 连通域
+- **高级滤波** — 双边 / NLM 去噪 / CLAHE / Retinex / 去雾 / 图像修复
+- **特征描述** — LBP / GLCM 纹理 / Hu 矩 / 感知哈希
+- **WebP lossy (VP8) 编码** — 原项目不支持 WebP
+
+### 与原项目的差异
+
+| 方面 | stb_image.h | 本项目 |
+|------|-------------|--------|
+| 语言 | C | MoonBit |
+| 依赖 | C 编译器 | 零 C 依赖 |
+| 目标 | native | native / wasm-gc / js / wasm |
+| 格式数 | 7 | 15 |
+| API 数 | ~30 | 283 |
+| 高级算法 | 无 | 50+ |
+| 内存安全 | 手动 | GC 管理 |
 
 ---
 

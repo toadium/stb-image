@@ -10,7 +10,7 @@
 | 语言 | MoonBit |
 | 规模 | 大型（11 个 .md 文档 + docs/ 目录 + CI） |
 | 版本 | v4.8.0 |
-| 测试 | 1139 × 4 目标 |
+| 测试 | 1177 × 4 目标 |
 | API | 283 公开函数 + 47 类型 |
 | 格式 | 15 种编解码 |
 
@@ -26,7 +26,7 @@
 | docs/comparison.md | ✅ 已更新 |
 | docs/skill.md | ✅ 已优化 |
 | docs/performance_report.md | ✅ 已更新（v4.8.0 版本号） |
-| docs/plan-full-backend.md | ✅ 已更新（归档，v4.8.0/1139） |
+| docs/plan-full-backend.md | ✅ 已更新（归档，v4.8.0/1177） |
 | AGENTS.md | ✅ 无需修改 |
 | src/README.mbt.md | ✅ 已更新（徽章/格式表/版本历史） |
 
@@ -35,7 +35,7 @@
 | 检查项 | 结果 | 详情 |
 |--------|------|------|
 | 版本号一致性 | ✅ 通过 | 所有文件统一为 v4.8.0 |
-| 测试数量一致性 | ✅ 通过 | 所有文件统一为 1139×4 |
+| 测试数量一致性 | ✅ 通过 | 所有文件统一为 1177×4 |
 | API 数量一致性 | ✅ 通过 | 所有文件统一为 283 函数 + 47 类型 |
 | 格式数量一致性 | ✅ 通过 | 15 种格式 |
 | 功能列表完整性 | ✅ 通过 | WebP lossy编码/安全审计/fuzzing/错误路径测试 均已列出 |
@@ -123,7 +123,7 @@
 | v4.5 | grabCut 分割 | 994×4 |
 | v4.6 | SIFT 匹配 + RANSAC | 1003×4 |
 | v4.7 | 流式解码 | 1054×4 |
-| v4.8 | WebP lossy编码 + 安全修复 + fuzzing + 错误路径测试 + 性能报告 + 32个示例代码 | 1139×4 |
+| v4.8 | WebP lossy编码 + 安全修复 + fuzzing + 错误路径测试 + 性能报告 + 32个示例代码 + 38项边界测试 | 1177×4 |
 
 ## 结论
 
@@ -167,3 +167,35 @@
 | docs/comparison.md | 测试数 1126→1139 |
 | docs/plan-full-backend.md | 归档描述测试数 1126→1139 |
 | src/README.mbt.md | 徽章/版本历史 测试数 1126→1139 |
+
+## 五次扫描修复（v4.8.0 边界测试补充）
+
+新增 38 个边界测试，测试总数 1139→1177，覆盖率 89.8%→90.4%（未覆盖行 664→626）。全文档同步更新：
+
+| 新增文件 | 测试数 | 覆盖内容 |
+|---------|--------|---------|
+| src/pure/codec/gif_animation_test.mbt | 10 | GIF 动画 encode/decode roundtrip + 错误路径 + LZW 增长 |
+| src/pure/codec/tiff_error_test.mbt | 8 | TIFF 缺字段/不支持压缩/16-bit/无效通道/截断/零尺寸 |
+| src/pure/codec/png_error_test.mbt | 10 | PNG 无效签名/截断/interlace/无效色彩/16-bit/chunk 越界 |
+| src/pure/util/zlib_advanced_test.mbt | 10 | zlib fixed Huffman + 错误路径 + CRC32/Adler32 向量 |
+
+## 六次扫描修复（合规性修复 — mooncakes.io 发布）
+
+### 修复内容
+
+| 修复项 | 详情 |
+|--------|------|
+| moon.mod 版本号 | `3.0.0` → `0.4.8`（mooncakes.io 要求 `0.x.y` 格式） |
+| testdata 依赖重构 | 将 `src/testdata` 从 `for "test"` 导入改为各包内联，解决 `moon publish` 排除问题 |
+| examples 重构 | `*.mbt` → `*_test.mbt`（12 文件），testdata 内联至 `helpers_test.mbt` |
+| process 包重构 | 6 个子包（color/edge/feature/filter/segment/transform）内联 `test_4x4_red_png` |
+| README 移植说明 | 新增「移植说明」章节：原项目/链接/许可证/移植范围/差异对比 |
+| PROPOSAL.md | 新增一页申报书：现有基础/计划内容/预期目标/技术路线/移植说明 |
+
+### 验证结果
+
+- `moon publish --dry-run` — ✅ 包验证通过（403 仅为命名空间所有权，非包问题）
+- `moon test --target native` — ✅ 1177 passed
+- `moon test --target wasm-gc` — ✅ 1177 passed
+- `moon test --target js` — ✅ 1177 passed
+- `moon test --target wasm` — ✅ 1177 passed

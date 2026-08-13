@@ -12,10 +12,10 @@ You can browse and install extra skills here:
 | 属性 | 值 |
 |------|-----|
 | 版本 | v4.8.0 |
-| 测试 | 1139 × 4 目标 (native/wasm-gc/js/wasm) |
+| 测试 | 1177 × 4 目标 (native/wasm-gc/js/wasm) |
 | API | 283 公开函数 + 47 类型 |
 | 格式 | 15 种编解码 (PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP) |
-| 覆盖率 | 89.8% |
+| 覆盖率 | 90.4% |
 
 ## Project Structure
 
@@ -136,7 +136,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1139）
+# 运行测试（四目标各 1177）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js

@@ -2,10 +2,7 @@
 
 ///|
 test "floyd_steinberg: levels=2 produces binary image" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = floyd_steinberg(img, 2)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -20,10 +17,7 @@ test "floyd_steinberg: levels=2 produces binary image" {
 
 ///|
 test "floyd_steinberg: levels=1 is identity" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = floyd_steinberg(img, 1)
   assert_eq(result.data, img.data)
   let _ = img
@@ -32,10 +26,7 @@ test "floyd_steinberg: levels=1 is identity" {
 
 ///|
 test "floyd_steinberg: preserves alpha" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(4))
   let result = floyd_steinberg(img, 4)
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
   let _ = img
@@ -62,10 +53,7 @@ test "floyd_steinberg: uniform image produces valid levels" {
 
 ///|
 test "median_cut: produces RGB output" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = median_cut(img, 8)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -76,10 +64,7 @@ test "median_cut: produces RGB output" {
 
 ///|
 test "median_cut: num_colors=2 reduces colors" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = median_cut(img, 2)
   // 最多 2 种不同颜色
   let colors : Array[(Int, Int, Int)] = []

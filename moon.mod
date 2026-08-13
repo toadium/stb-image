@@ -1,6 +1,6 @@
 name = "Toadium/image"
 
-version = "3.0.0"
+version = "0.4.8"
 
 license = "MIT"
 

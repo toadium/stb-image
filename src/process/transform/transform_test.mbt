@@ -1,6 +1,6 @@
 ///|
 test "crop: 4x4 → 2x2 from (1,1)" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let cropped = crop(img, 1, 1, 2, 2)
   assert_eq(cropped.width, 2)
   assert_eq(cropped.height, 2)
@@ -11,7 +11,7 @@ test "crop: 4x4 → 2x2 from (1,1)" {
 
 ///|
 test "crop: full image crop is identity" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let cropped = crop(img, 0, 0, 4, 4)
   assert_eq(cropped.width, 4)
   assert_eq(cropped.height, 4)
@@ -22,7 +22,7 @@ test "crop: full image crop is identity" {
 
 ///|
 test "crop: out of bounds raises" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   try {
     let _ = crop(img, 3, 3, 2, 2)
     assert_true(false)
@@ -35,7 +35,7 @@ test "crop: out of bounds raises" {
 
 ///|
 test "rotate_90: 4x4 → 4x4 dimensions" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = rotate_90(img)
   assert_eq(r.width, 4)
   assert_eq(r.height, 4)
@@ -45,7 +45,7 @@ test "rotate_90: 4x4 → 4x4 dimensions" {
 
 ///|
 test "rotate_90: non-square 2x4 → 4x2" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let cropped = crop(img, 0, 0, 2, 4)
   let r = rotate_90(cropped)
   assert_eq(r.width, 4)
@@ -57,7 +57,7 @@ test "rotate_90: non-square 2x4 → 4x2" {
 
 ///|
 test "rotate_180: 4x4 dimensions preserved" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = rotate_180(img)
   assert_eq(r.width, 4)
   assert_eq(r.height, 4)
@@ -67,7 +67,7 @@ test "rotate_180: 4x4 dimensions preserved" {
 
 ///|
 test "rotate_270: non-square 2x4 → 4x2" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let cropped = crop(img, 0, 0, 2, 4)
   let r = rotate_270(cropped)
   assert_eq(r.width, 4)
@@ -79,7 +79,7 @@ test "rotate_270: non-square 2x4 → 4x2" {
 
 ///|
 test "rotate: 4 rotations = identity" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = rotate_90(rotate_90(rotate_90(rotate_90(img))))
   assert_eq(r.width, 4)
   assert_eq(r.height, 4)
@@ -90,7 +90,7 @@ test "rotate: 4 rotations = identity" {
 
 ///|
 test "flip_horizontal: 4x4 dimensions preserved" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = flip_horizontal(img)
   assert_eq(r.width, 4)
   assert_eq(r.height, 4)
@@ -100,7 +100,7 @@ test "flip_horizontal: 4x4 dimensions preserved" {
 
 ///|
 test "flip_horizontal: double flip = identity" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = flip_horizontal(flip_horizontal(img))
   assert_eq(r.data, img.data)
   let _ = img
@@ -140,7 +140,7 @@ test "flip_vertical: double flip is identity" {
 
 ///|
 test "rotate_180: double rotation = identity" {
-  let img = @lib.load_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png)
   let r = rotate_180(rotate_180(img))
   assert_eq(r.data, img.data)
   let _ = img
@@ -149,7 +149,7 @@ test "rotate_180: double rotation = identity" {
 
 ///|
 test "crop_16: 4x4 → 2x2" {
-  let img = @lib.load_16_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_16_from_bytes_auto(test_4x4_red_png)
   let cropped = crop_16(img, 1, 1, 2, 2)
   assert_eq(cropped.width, 2)
   assert_eq(cropped.height, 2)
@@ -159,7 +159,7 @@ test "crop_16: 4x4 → 2x2" {
 
 ///|
 test "crop_16: out of bounds raises" {
-  let img = @lib.load_16_from_bytes_auto(@testdata.test_4x4_red_png)
+  let img = @lib.load_16_from_bytes_auto(test_4x4_red_png)
   try {
     let _ = crop_16(img, 3, 3, 2, 2)
     assert_true(false)

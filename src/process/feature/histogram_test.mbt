@@ -1,9 +1,6 @@
 ///|
 test "histogram: returns 256 bins" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let hist = histogram(img)
   assert_eq(hist.length(), 256)
   // 总和 = 像素数
@@ -31,10 +28,7 @@ test "histogram: uniform image has single bin" {
 
 ///|
 test "histogram_equalize: preserves dimensions" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = histogram_equalize(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -59,10 +53,7 @@ test "histogram_equalize: uniform image is unchanged" {
 
 ///|
 test "histogram_equalize: preserves alpha" {
-  let img = @lib.load_from_bytes_auto(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(4),
-  )
+  let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(4))
   let result = histogram_equalize(img)
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
   let _ = img

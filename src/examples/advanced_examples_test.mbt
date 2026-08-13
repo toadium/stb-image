@@ -2,10 +2,7 @@
 
 ///|
 test "example_25: image inpainting (watermark removal)" {
-  let img = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   let mask_data : Array[Byte] = Array::make(img.width * img.height, b'\x00')
   for y in 1..<3 {
     for x in 1..<3 {
@@ -41,10 +38,7 @@ test "example_26: Lucas-Kanade optical flow" {
 
 ///|
 test "example_27: grabCut segmentation" {
-  let img = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   let result = @img.grab_cut(img, 0, 0, img.width, img.height)
   assert_eq(result.width, img.width)
   assert_eq(result.height, img.height)
@@ -53,10 +47,7 @@ test "example_27: grabCut segmentation" {
 
 ///|
 test "example_28: multi-scale Retinex (MSR)" {
-  let img = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   let scales : Array[Float] = [15.0, 80.0, 250.0]
   let result = @img.msr(img, sigmas=scales)
   assert_eq(result.width, img.width)
@@ -68,10 +59,7 @@ test "example_28: multi-scale Retinex (MSR)" {
 
 ///|
 test "example_29: dehaze (dark channel prior)" {
-  let img = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   let dehazed = @img.dehaze(img)
   assert_eq(dehazed.width, img.width)
   assert_eq(dehazed.height, img.height)

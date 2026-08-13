@@ -25,14 +25,8 @@ test "example_30: FFT 2D and frequency filtering" {
 
 ///|
 test "example_31: image quality assessment (MSE/PSNR/SSIM)" {
-  let img1 = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
-  let img2 = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let img1 = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
+  let img2 = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   // MSE（均方误差）
   let mse_val = @img.mse(img1, img2)
   // 相同图像 MSE 应为 0
@@ -51,7 +45,7 @@ test "example_31: image quality assessment (MSE/PSNR/SSIM)" {
 test "example_32: safe decoding of corrupted data" {
   // 安全解码：损坏的 PNG 应返回错误而非 panic
   try {
-    let _ = @img.load_from_bytes(@testdata.corrupt_truncated_png)
+    let _ = @img.load_from_bytes(corrupt_truncated_png)
   } catch {
     @types.LoadError::DecodeFailed(_) => ()
     @types.LoadError::UnsupportedFormat(_) => ()
@@ -62,7 +56,7 @@ test "example_32: safe decoding of corrupted data" {
   }
   // 随机二进制数据应返回 UnsupportedFormat
   try {
-    let _ = @img.load_from_bytes(@testdata.corrupt_random_bin)
+    let _ = @img.load_from_bytes(corrupt_random_bin)
   } catch {
     @types.LoadError::DecodeFailed(_) => ()
     @types.LoadError::UnsupportedFormat(_) => ()

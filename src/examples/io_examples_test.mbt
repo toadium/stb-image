@@ -4,7 +4,7 @@
 ///|
 test "example_01: load PNG and re-encode to BMP/JPEG/TGA" {
   // 从嵌入的测试数据加载 4x4 红色 PNG
-  let img = @img.load_from_bytes(@testdata.test_4x4_red_png)
+  let img = @img.load_from_bytes(test_4x4_red_png)
   assert_eq(img.width, 4)
   assert_eq(img.height, 4)
   // 编码为 BMP
@@ -26,37 +26,25 @@ test "example_01: load PNG and re-encode to BMP/JPEG/TGA" {
 ///|
 test "example_02: detect image format from magic bytes" {
   // PNG: \x89PNG
-  assert_true(
-    @img.detect_format(@testdata.test_4x4_red_png) is @types.ImageFormat::Png,
-  )
+  assert_true(@img.detect_format(test_4x4_red_png) is @types.ImageFormat::Png)
   // BMP: BM
-  assert_true(
-    @img.detect_format(@testdata.test_4x4_red_bmp) is @types.ImageFormat::Bmp,
-  )
+  assert_true(@img.detect_format(test_4x4_red_bmp) is @types.ImageFormat::Bmp)
   // GIF: GIF87a
-  assert_true(
-    @img.detect_format(@testdata.test_4x4_red_gif) is @types.ImageFormat::Gif,
-  )
+  assert_true(@img.detect_format(test_4x4_red_gif) is @types.ImageFormat::Gif)
   // JPEG: \xFF\xD8\xFF
-  assert_true(
-    @img.detect_format(@testdata.test_4x4_red_jpg) is @types.ImageFormat::Jpeg,
-  )
+  assert_true(@img.detect_format(test_4x4_red_jpg) is @types.ImageFormat::Jpeg)
   // 无效数据
   assert_true(
-    @img.detect_format(@testdata.corrupt_random_bin)
-    is @types.ImageFormat::Unknown,
+    @img.detect_format(corrupt_random_bin) is @types.ImageFormat::Unknown,
   )
   // is_supported_format 便捷函数
-  assert_true(@img.is_supported_format(@testdata.test_4x4_red_png))
-  assert_false(@img.is_supported_format(@testdata.corrupt_random_bin))
+  assert_true(@img.is_supported_format(test_4x4_red_png))
+  assert_false(@img.is_supported_format(corrupt_random_bin))
 }
 
 ///|
 test "example_03: format conversion round-trip PNG -> BMP -> PNG" {
-  let original = @img.load_from_bytes(
-    @testdata.test_4x4_red_png,
-    req_channels=Some(3),
-  )
+  let original = @img.load_from_bytes(test_4x4_red_png, req_channels=Some(3))
   // PNG -> BMP bytes
   let bmp_bytes = @img.write_bmp_to_bytes(original)
   // BMP -> Image
