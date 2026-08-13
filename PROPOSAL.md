@@ -11,7 +11,7 @@
 - **测试覆盖**：1177 × 4 = 4708 个测试，覆盖率 90.4%
 - **高级算法**：50+ 计算机视觉算法（Canny/Harris/ORB/SIFT/模板匹配/光流/RANSAC/grabCut/分水岭/SLIC/FFT/DCT/Haar小波/Retinex/去雾/图像修复等）
 - **CI/CD**：GitHub Actions 四目标 check + test + bench
-- **mooncakes.io 发布**：`moon publish --dry-run` 验证通过（walkzzz/image 0.4.8，mooncakes 早期阶段要求 0.x.y 格式；对应功能迭代版本 v4.8.0）
+- **mooncakes.io 发布**：`moon publish --dry-run` 验证通过（walkzzz/image 0.4.9，mooncakes 早期阶段要求 0.x.y 格式；对应功能迭代版本 v4.8.0）
 - **许可证**：MIT
 - **提交记录**：131 次，开发过程完整可追踪
 
@@ -19,7 +19,7 @@
 
 本次 8 月黑客松期间，在已有基础上完成以下合规性优化和功能完善：
 
-1. **mooncakes.io 发布合规** — 统一 mooncakes 命名空间至个人账户 `walkzzz/image`，包版本 `0.4.8`（mooncakes 要求 0.x.y 格式），重构 testdata 依赖使 `moon publish --dry-run` 通过
+1. **mooncakes.io 发布合规** — 统一 mooncakes 命名空间至个人账户 `walkzzz/image`，包版本 `0.4.9`（mooncakes 要求 0.x.y 格式），重构 testdata 依赖使 `moon publish --dry-run` 通过
 2. **边界测试补充** — 新增 38 个边界/错误路径测试（GIF 动画 roundtrip、TIFF/PNG 错误路径、zlib fixed Huffman），覆盖率从 88.x% 提升至 90.4%
 3. **示例代码完善** — 新增 13 个示例测试覆盖 WebP/流式/SIFT/ORB/修复/光流/grabCut/Retinex/去雾/FFT/质量评估/安全解码
 4. **文档优化** — README 补充移植说明章节，所有文档同步更新至 1177 测试
@@ -68,7 +68,7 @@
 | 示例 | ✅ 已完成 | 32 个示例测试 |
 | CI/CD | ✅ 已完成 | GitHub Actions 四目标 |
 | 文档 | ✅ 已完成 | README + 8 个文档 + API 参考 |
-| mooncakes.io 发布 | ✅ 已验证 | `moon publish --dry-run` 通过（walkzzz/image 0.4.8） |
+| mooncakes.io 发布 | ✅ 已验证 | `moon publish --dry-run` 通过（walkzzz/image 0.4.9） |
 
 ## 五、移植说明
 
