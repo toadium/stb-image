@@ -25,10 +25,10 @@
 | docs/roadmap.md | ✅ 已更新 |
 | docs/comparison.md | ✅ 已更新 |
 | docs/skill.md | ✅ 已优化 |
-| docs/performance_report.md | ✅ 新增（v4.8 性能基准报告） |
-| docs/plan-full-backend.md | ✅ 已更新（归档） |
+| docs/performance_report.md | ✅ 已更新（v4.8.0 版本号） |
+| docs/plan-full-backend.md | ✅ 已更新（归档，v4.8.0/1126） |
 | AGENTS.md | ✅ 无需修改 |
-| src/README.mbt.md | ✅ 无需修改 |
+| src/README.mbt.md | ✅ 已更新（徽章/格式表/版本历史） |
 
 ## 一致性检查
 
@@ -128,3 +128,16 @@
 ## 结论
 
 文档质量良好，所有一致性检查通过。v4.8.0 新增 WebP lossy 编码、PNG/TIFF 安全修复、44 项 fuzzing 审计、22 项错误路径测试及性能基准报告，均已完整反映到所有文档中。
+
+## 二次扫描修复（v4.8.0 深度优化）
+
+首轮更新后进行全文档扫描，发现并修复以下遗漏：
+
+| 文件 | 修复内容 |
+|------|---------|
+| src/README.mbt.md | 徽章 935→1126、266→283，格式表新增 WebP，版本历史补充 v4.0-v4.8 |
+| docs/performance_report.md | 版本号 v4.7.0 → v4.8.0 |
+| docs/plan-full-backend.md | 归档描述 v4.7.0→v4.8.0、1054→1126 |
+| docs/architecture.md | API 分类图编解码 18→20、TIFF/APNG→TIFF/APNG/WebP(6)、类型 36→47、reexport 253→283、codec 列表补 WebP、编码 13→14 种 |
+| docs/skill.md | 限制章节新增 WebP lossy 基础实现说明 |
+| README.md | 文档表新增 performance_report.md 链接 |

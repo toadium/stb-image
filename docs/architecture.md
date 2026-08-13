@@ -13,7 +13,7 @@ mindmap
   root((image))
     格式 I/O
       解码 15 种格式
-      编码 13 种格式
+      编码 14 种格式
       自动检测
       动画 GIF/APNG
     像素类型
@@ -76,7 +76,7 @@ mindmap
 ```mermaid
 flowchart TB
     subgraph Root["根包 (src/)"]
-        RE["reexport.mbt<br/>253 pub fn + 36 types"]
+        RE["reexport.mbt<br/>283 pub fn + 47 types"]
         Bench["bench.mbt ()"]
     end
 
@@ -199,7 +199,7 @@ flowchart TB
             PC1["PNG · JPEG · BMP · GIF"]
             PC2["QOI · TGA · PSD · HDR"]
             PC3["PNM · TIFF · ICO · CUR"]
-            PC4["ICNS · APNG"]
+            PC4["ICNS · APNG · WebP"]
         end
         subgraph ColorSub["color/ — 色彩处理"]
             PC5["color_adjust · color_convert<br/>color_map · color_segment"]
@@ -423,11 +423,11 @@ flowchart TB
         UtilMisc["图像工具 (4)"]
     end
 
-    subgraph Codec["编解码 (18 函数)"]
+    subgraph Codec["编解码 (20 函数)"]
         QOI["QOI (2)"]
         ICO["ICO/ICNS/CUR (7)"]
         GIF["GIF/PNM (5)"]
-        TIFF["TIFF/APNG (4)"]
+        TIFF["TIFF/APNG/WebP (6)"]
     end
 
     subgraph MetaFn["元数据 (4 函数)"]
@@ -435,7 +435,7 @@ flowchart TB
         PNG["PNG 文本块 (1)"]
     end
 
-    Types["36 类型<br/>Image · Image16 · ImageF · ..."]
+    Types["47 类型<br/>Image · Image16 · ImageF · ..."]
 ```
 
 ## 类型体系
@@ -508,7 +508,7 @@ classDiagram
     }
 ```
 
-> 上述仅展示 9 个核心类型。完整 36 个类型列表（含 `PngAnimation`、`ExifInfo`、`PngTextChunk`、`ImageStats`、`Complex`、`FFTResult`、`ConnectedComponent`、`HoughLine`、`Contour`、`GlcmFeatures`、`HaarWaveletResult`、`CornerPoint`、`HistCompareMethod`、`StructuringElement`、`PerspectiveMatrix`、`AffineMatrix`、`Moments`、`Circle`、`Colormap`、`SuperpixelResult` 等 27 个处理/元数据/工具类型）详见 [api_reference.md](api_reference.md)。
+> 上述仅展示 9 个核心类型。完整 47 个类型列表（含 `PngAnimation`、`ExifInfo`、`PngTextChunk`、`ImageStats`、`Complex`、`FFTResult`、`ConnectedComponent`、`HoughLine`、`Contour`、`GlcmFeatures`、`HaarWaveletResult`、`CornerPoint`、`HistCompareMethod`、`StructuringElement`、`PerspectiveMatrix`、`AffineMatrix`、`Moments`、`Circle`、`Colormap`、`SuperpixelResult`、`SiftKeyPoint`、`SiftDescriptor`、`SiftMatch`、`StreamInfo`、`OrbKeyPoint`、`OrbDescriptor`、`DescriptorMatch`、`TemplateMatchMethod`、`TemplateMatchResult`、`FlowResult` 等 38 个处理/元数据/工具类型）详见 [api_reference.md](api_reference.md)。
 
 ## 项目结构
 
@@ -525,14 +525,14 @@ image/
 │   └── skill.md              # 包使用指南
 ├── src/
 │   ├── moon.pkg              # 根包：re-export + 基准测试
-│   ├── reexport.mbt          # 向后兼容API（253 pub fn + 36 类型）
+│   ├── reexport.mbt          # 向后兼容API（283 pub fn + 47 类型）
 │   ├── reexport_test.mbt     # re-export 测试
 │   ├── bench.mbt             # 性能基准测试
 │   ├── types/                # 全目标类型包（Image/Image16/ImageF/ImageInfo 等）
 │   │   ├── moon.pkg          # 依赖 @debug
 │   │   └── image_types.mbt   # 跨目标共享类型定义
 │   ├── pure/                 # 纯 MoonBit 后端（全目标，3 子包）
-│   │   ├── codec/            # 编解码：BMP/QOI/TGA/PNM/PSD/GIF/PNG/JPEG/HDR/TIFF/ICO/CUR/ICNS/APNG
+│   │   ├── codec/            # 编解码：BMP/QOI/TGA/PNM/PSD/GIF/PNG/JPEG/HDR/TIFF/ICO/CUR/ICNS/APNG/WebP
 │   │   ├── color/            # 色彩：color_adjust, color_convert, color_map
 │   │   ├── util/             # 工具：config, image_info, resize, zlib
 │   │   └── */*_test.mbt      # pure 后端测试
@@ -592,7 +592,7 @@ image/
 ### 4. pure 子包拆分
 
 **原则**：
-- `pure/codec/` — 所有格式编解码（BMP/QOI/TGA/PNM/PSD/GIF/PNG/JPEG/HDR/TIFF/ICO/CUR/ICNS/APNG）
+- `pure/codec/` — 所有格式编解码（BMP/QOI/TGA/PNM/PSD/GIF/PNG/JPEG/HDR/TIFF/ICO/CUR/ICNS/APNG/WebP）
 - `pure/color/` — 色彩调整/转换/映射
 - `pure/util/` — 工具（配置/信息/缩放/zlib inflate）
 

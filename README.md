@@ -200,6 +200,7 @@ src/
 | [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（283 函数 + 47 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
+| [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（14 项基准） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
 
