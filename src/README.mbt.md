@@ -3,7 +3,7 @@
 MoonBit 纯图像处理库 — 解码/编码 PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM，提供从基础像素操作到高级计算机视觉算法的完整能力。纯 MoonBit 实现，零 C FFI 依赖，native/wasm-gc/js/wasm 四目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-1126%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1139%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
 [![API](https://img.shields.io/badge/API-283%20fn%20%2B%2047%20types-blueviolet)]()
 
@@ -177,7 +177,7 @@ try {
 
 ## Multi-Target Support
 
-Supports **native / wasm-gc / js / wasm** targets. Pure MoonBit implementation, no C FFI dependency. 1126 tests pass on all four targets, 89.8% coverage.
+Supports **native / wasm-gc / js / wasm** targets. Pure MoonBit implementation, no C FFI dependency. 1139 tests pass on all four targets, 89.8% coverage.
 
 ## Version History
 
@@ -195,4 +195,4 @@ Supports **native / wasm-gc / js / wasm** targets. Pure MoonBit implementation, 
 - **v4.0-v4.3**: ORB 特征检测 + 模板匹配 + 图像修复 + 光流 (Lucas-Kanade + Horn-Schunck)
 - **v4.4-v4.6**: SIFT 特征检测 + SIFT 匹配 + RANSAC 单应性估计 + grabCut 分割
 - **v4.7**: 流式解码（逐行/分块/指定通道回调），1054 测试
-- **v4.8**: WebP lossy (VP8) 编码 + PNG/TIFF 安全修复 + fuzzing 审计 + 性能报告，1126 测试，283 API + 47 类型
+- **v4.8**: WebP lossy (VP8) 编码 + PNG/TIFF 安全修复 + fuzzing 审计 + 性能报告 + 32 个示例代码，1139 测试，283 API + 47 类型

@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1126%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1139%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-283%20functions%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-4.8.0-orange)]()
@@ -26,7 +26,7 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1126 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1139 测试全部通过，覆盖率 89.8%。
 
 > [!TIP]
 > **v4.8 最新更新** — WebP lossy (VP8) 编码 · PNG/TIFF 整数溢出安全修复 · 44 项 fuzzing 安全审计 · 22 项错误路径测试 · 性能基准报告
@@ -132,6 +132,25 @@ let matches = sift_match(kp1, kp2, ratio_threshold=0.75)
 let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 ```
 
+### 完整示例集
+
+`src/examples/` 包含 **32 个示例**，覆盖全部 API 场景：
+
+| 示例 | 覆盖内容 |
+|------|---------|
+| example_01~03 | I/O：加载/编码/格式检测 |
+| example_04~06 | 变换：缩放/裁剪/旋转 |
+| example_07~09 | 色彩：灰度/伽马/HSV |
+| example_10~12 | 滤波：高斯/双边/NLM |
+| example_13~14 | 形态学：腐蚀/膨胀/骨架化 |
+| example_15~16 | 绘制：矩形/圆/线条 |
+| example_17~18 | 分析：直方图/统计/质量评估 |
+| example_19~20 | 合成：混合模式/拼接 |
+| example_21~22 | WebP lossy 编码 + 流式解码 |
+| example_23~24 | SIFT/ORB 特征检测与匹配 |
+| example_25~29 | 图像修复/光流/grabCut/Retinex/去雾 |
+| example_30~32 | FFT/频域滤波/质量评估/安全解码 |
+
 ---
 
 ## 🧰 功能一览
@@ -156,10 +175,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1126 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1126 | ✅ |
-| **js** | 纯 MoonBit | 1126 | ✅ |
-| **wasm** | 纯 MoonBit | 1126 | ✅ |
+| **native** | 纯 MoonBit | 1139 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1139 | ✅ |
+| **js** | 纯 MoonBit | 1139 | ✅ |
+| **wasm** | 纯 MoonBit | 1139 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -185,6 +204,7 @@ src/
 │   ├── frequency/      #   FFT/DCT/Haar 小波/频率滤波
 │   ├── segment/        #   分水岭/SLIC/grabCut/形态学/连通域
 │   └── transform/      #   几何变换/透视/Seam Carving/金字塔
+├── examples/           # 示例代码 (32 个示例，覆盖全部 API)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
 └── reexport.mbt        # 顶层 API re-export (283 pub fn + 47 pub type)
@@ -215,7 +235,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1126）
+# 运行测试（四目标各 1139）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -245,7 +265,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1126 通过）
+moon test --target native           # 运行测试（应 1139 通过）
 ```
 
 </details>
