@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1054%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1126%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-89.8%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-282%20functions%20%2B%2047%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-4.7.0-orange)]()
+[![Functions](https://img.shields.io/badge/API-283%20functions%20%2B%2047%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-4.8.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
@@ -26,10 +26,10 @@
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1054 测试全部通过，覆盖率 89.8%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1126 测试全部通过，覆盖率 89.8%。
 
 > [!TIP]
-> **v4.7 最新更新** — SIFT 特征检测 · SIFT 匹配 + RANSAC 单应性估计 · grabCut 分割 · 流式解码（逐行/分块/指定通道）
+> **v4.8 最新更新** — WebP lossy (VP8) 编码 · PNG/TIFF 整数溢出安全修复 · 44 项 fuzzing 安全审计 · 22 项错误路径测试 · 性能基准报告
 
 ---
 
@@ -41,7 +41,7 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **282 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配等高级算法 |
+| 🟢 | **283 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
 | 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调，大图处理零内存峰值 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
@@ -65,7 +65,7 @@
 | CUR | ✅ | ✅ | Windows 光标 |
 | ICNS | ✅ | ✅ | macOS 图标 |
 | APNG | ✅ | ✅ | 动画 PNG |
-| WebP | ✅ | — | lossless (VP8L) |
+| WebP | ✅ | ✅ | lossless (VP8L) 解码 + lossy (VP8) 编码 |
 
 ---
 
@@ -138,7 +138,7 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 分类 | 关键函数 | 说明 |
 |------|---------|------|
-| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any`, `decode_stream` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
+| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any`, `decode_stream`, `encode_webp_lossy` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
 | **流式解码** | `decode_stream`, `decode_stream_chunked`, `decode_stream_channels` | 逐行 / 分块 / 指定通道回调，大图零内存峰值 |
 | **几何变换** | `resize`, `crop`, `rotate`, `warp_affine`, `warp_perspective` | 缩放/裁剪/旋转/仿射/透视，7 种滤波器 × 4 种边缘模式 |
 | **色彩** | `to_grayscale`, `adjust_gamma`, `rgb_to_hsv`, `clahe` | 色彩转换/调整/空间变换/CLAHE |
@@ -156,10 +156,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1054 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1054 | ✅ |
-| **js** | 纯 MoonBit | 1054 | ✅ |
-| **wasm** | 纯 MoonBit | 1054 | ✅ |
+| **native** | 纯 MoonBit | 1126 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1126 | ✅ |
+| **js** | 纯 MoonBit | 1126 | ✅ |
+| **wasm** | 纯 MoonBit | 1126 | ✅ |
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
@@ -187,7 +187,7 @@ src/
 │   └── transform/      #   几何变换/透视/Seam Carving/金字塔
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
-└── reexport.mbt        # 顶层 API re-export (282 pub fn + 47 pub type)
+└── reexport.mbt        # 顶层 API re-export (283 pub fn + 47 pub type)
 ```
 
 ---
@@ -197,7 +197,7 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（282 函数 + 47 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（283 函数 + 47 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
@@ -214,7 +214,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1054）
+# 运行测试（四目标各 1126）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -244,7 +244,7 @@ moon info
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1054 通过）
+moon test --target native           # 运行测试（应 1126 通过）
 ```
 
 </details>

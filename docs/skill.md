@@ -1,6 +1,6 @@
 ---
 name: image
-description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js/wasm 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，1054 测试 × 4 目标 (native/wasm-gc/js/wasm)。
+description: MoonBit 图像处理库 — 纯 MoonBit 实现，多目标支持（native/wasm-gc/js/wasm 均使用纯 MoonBit），完整图像解码/编码/缩放/处理能力，1126 测试 × 4 目标 (native/wasm-gc/js/wasm)。
 ---
 
 # image 包使用指南
@@ -76,7 +76,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 
 `detect_format` / `decode_any` / `is_supported_format`
 
-### 编解码（17 函数）
+### 编解码（18 函数）
 
 - QOI：`decode_qoi` / `encode_qoi`
 - ICO/ICNS/CUR：`encode_ico` / `encode_ico_sizes` / `encode_icns` / `decode_cur` / `encode_cur`
@@ -84,7 +84,7 @@ let exif : ExifInfo? = read_exif_from_bytes(jpeg_bytes)
 - PNM：`encode_ppm` / `encode_pgm` / `encode_pnm`
 - TIFF：`decode_tiff` / `encode_tiff`
 - APNG：`decode_apng` / `encode_apng`
-- WebP：`decode_webp`（lossless VP8L）
+- WebP：`decode_webp`（lossless VP8L）/ `encode_webp_lossy`（lossy VP8）
 
 ### 图像处理（19+ 函数）
 
@@ -193,7 +193,7 @@ try {
 
 ## 目标后端
 
-多目标支持：native/wasm-gc/js/wasm 均使用纯 MoonBit `src/pure/{codec,color,util}/`。四目标各 1054 测试通过。
+多目标支持：native/wasm-gc/js/wasm 均使用纯 MoonBit `src/pure/{codec,color,util}/`。四目标各 1126 测试通过。
 
 ## 架构
 
@@ -202,7 +202,7 @@ try {
 1. **类型层**：`types/`（全目标类型定义：Image/Image16/ImageF/ImageInfo 等）
 2. **纯 MoonBit 后端层**：`pure/{codec,color,util}/`（纯 MoonBit 实现，无 C FFI 依赖，四目标共用）
 3. **统一 API 层**：`lib/`（pure 侧统一 API + 格式自动分派）+ `process/`（图像处理，7 子包）+ `meta/`（元数据）+ `util/`（工具函数）
-4. **测试与文档层**：`*_test.mbt`（1054 测试 × 4 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
+4. **测试与文档层**：`*_test.mbt`（1126 测试 × 4 目标）+ `roundtrip_test.mbt`（全格式往返）+ `bench.mbt`（性能基准）
 
 ## 版本演进
 
@@ -221,7 +221,7 @@ try {
 - **v2.0**：多目标支持（native/wasm-gc/js 均使用纯 MoonBit），多子包架构，872 测试 × 3 目标 (native/wasm-gc/js)
 - **v3.0**：EXIF 写入/seam carving/SLIC 超像素/16-bit float 操作泛化，266 API + 37 类型，907 测试 × 3 目标
 - **v3.1-v3.2**：DCT O(N³) 优化 + 16-bit/float 滤波泛化 + wasm 目标 + WebP lossless 解码，942 测试 × 4 目标
-- **v4.0-v4.7**：ORB + SIFT 特征检测 + SIFT匹配 + RANSAC单应性估计 + grabCut分割 + 流式解码 + 模板匹配 + 图像修复 + 光流(LK+HS)，282 API + 47 类型，1054 测试 × 4 目标 (native/wasm-gc/js/wasm)
+- **v4.0-v4.8**：ORB + SIFT 特征检测 + SIFT匹配 + RANSAC单应性估计 + grabCut分割 + 流式解码 + 模板匹配 + 图像修复 + 光流(LK+HS) + WebP lossy(VP8)编码 + PNG/TIFF安全修复 + fuzzing审计，283 API + 47 类型，1126 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 限制
 

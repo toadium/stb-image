@@ -1,6 +1,6 @@
 # 文档优化报告
 
-> 生成时间：2026-08-12 | 版本：v4.7.0 | 工具：github-docs-opt
+> 生成时间：2026-08-13 | 版本：v4.8.0 | 工具：github-docs-opt
 
 ## 项目概况
 
@@ -9,9 +9,9 @@
 | 项目 | stb-image (Toadium/image) |
 | 语言 | MoonBit |
 | 规模 | 大型（11 个 .md 文档 + docs/ 目录 + CI） |
-| 版本 | v4.7.0 |
-| 测试 | 1054 × 4 目标 |
-| API | 282 公开函数 + 47 类型 |
+| 版本 | v4.8.0 |
+| 测试 | 1126 × 4 目标 |
+| API | 283 公开函数 + 47 类型 |
 | 格式 | 15 种编解码 |
 
 ## 扫描结果
@@ -25,6 +25,7 @@
 | docs/roadmap.md | ✅ 已更新 |
 | docs/comparison.md | ✅ 已更新 |
 | docs/skill.md | ✅ 已优化 |
+| docs/performance_report.md | ✅ 新增（v4.8 性能基准报告） |
 | docs/plan-full-backend.md | ✅ 已更新（归档） |
 | AGENTS.md | ✅ 无需修改 |
 | src/README.mbt.md | ✅ 无需修改 |
@@ -33,44 +34,82 @@
 
 | 检查项 | 结果 | 详情 |
 |--------|------|------|
-| 版本号一致性 | ✅ 通过 | 所有文件统一为 v4.7.0 |
-| 测试数量一致性 | ✅ 通过 | 所有文件统一为 1054×4 |
-| API 数量一致性 | ✅ 通过 | 所有文件统一为 282 函数 + 47 类型 |
+| 版本号一致性 | ✅ 通过 | 所有文件统一为 v4.8.0 |
+| 测试数量一致性 | ✅ 通过 | 所有文件统一为 1126×4 |
+| API 数量一致性 | ✅ 通过 | 所有文件统一为 283 函数 + 47 类型 |
 | 格式数量一致性 | ✅ 通过 | 15 种格式 |
-| 功能列表完整性 | ✅ 通过 | ORB/SIFT/SIFT匹配/RANSAC/grabCut/流式解码/模板匹配/光流/修复 均已列出 |
+| 功能列表完整性 | ✅ 通过 | WebP lossy编码/安全审计/fuzzing/错误路径测试 均已列出 |
 | 链接有效性 | ✅ 通过 | 文档间交叉链接有效 |
 
-## 本次优化内容
+## 本次优化内容（v4.8.0）
 
 ### README.md
 
 | 修改项 | 说明 |
 |--------|------|
-| 导航栏扩展 | 新增多目标/构建/贡献锚点链接 |
-| 亮点表格 | 新增流式解码行，API 描述补充 SIFT 匹配/RANSAC 单应性，格式列表补全 ICO/CUR/ICNS |
-| 最新更新提示 | 新增 v4.7 TIP callout，列出 SIFT/SIFT 匹配/RANSAC/grabCut/流式解码 |
-| 功能一览表 | 新增流式解码/特征匹配/光流 3 行，特征行补充 SIFT，分割行补充 grabCut |
-| 流式解码示例 | 快速上手新增 `decode_stream` 逐行回调示例 |
-| SIFT 匹配示例 | 新增高级示例：SIFT 检测 → 匹配 → RANSAC 单应性估计 |
+| 版本徽章 | v4.7.0 → v4.8.0，测试 1054 → 1126，API 282 → 283 |
+| 最新更新提示 | 新增 v4.8 TIP callout：WebP lossy 编码/安全修复/fuzzing审计/错误路径测试/性能基准 |
+| 亮点表格 | API 描述补充 WebP lossy 编码 |
+| 格式支持表 | WebP 编码 — → ✅ (lossy VP8) |
+| 功能一览表 | 编解码行补充 encode_webp_lossy |
+| 多目标表 | 测试数 1054 → 1126 |
+| 包结构 | re-export 282 → 283 |
+| 文档链接 | API 参考 282 → 283 |
+| 构建测试 | 测试数 1054 → 1126 |
 
 ### docs/skill.md
 
 | 修改项 | 说明 |
 |--------|------|
-| 类型计数修正 | 43 → 47（新增 SiftKeypoint/SiftDescriptor/SiftMatch/StreamInfo） |
-| 查询计数修正 | 3 → 4（info_from_bytes/is_16_bit/is_hdr/failure_reason） |
-| 编解码计数修正 | 12 → 17（QOI×2 + ICO/ICNS/CUR×5 + GIF×2 + PNM×3 + TIFF×2 + APNG×2 + WebP×1） |
-| 类型表补全 | 新增 SiftKeypoint/SiftDescriptor/SiftMatch/StreamInfo 4 行 |
-| 新增流式解码章节 | decode_stream/decode_stream_chunked/decode_stream_channels 函数描述 |
+| description | 测试数 1054 → 1126 |
+| 编解码章节 | 17 → 18 函数，新增 encode_webp_lossy（lossy VP8） |
+| 目标后端 | 测试数 1054 → 1126 |
+| 测试与文档层 | 测试数 1054 → 1126 |
+| 版本演进 | v4.0-v4.7 → v4.0-v4.8，282→283 API，1054→1126 测试 |
 
-### docs-opt-report.md
+### docs/changelog.md
 
 | 修改项 | 说明 |
 |--------|------|
-| 版本更新 | v4.5.0 → v4.7.0 |
-| 测试数量 | 994 → 1054 |
-| API 数量 | 277 → 282 |
-| 类型数量 | 45 → 47 |
+| 新增 v4.8 行 | WebP lossy(VP8)编码 + PNG/TIFF安全修复 + fuzzing审计 + 错误路径测试 + 性能报告，1126×4 |
+
+### docs/api_reference.md
+
+| 修改项 | 说明 |
+|--------|------|
+| 版本头 | v4.7.0 → v4.8.0，282→283，1054→1126 |
+| TIFF/APNG/WebP 章节 | 5 → 6 函数，新增 encode_webp_lossy |
+| API 分类统计 | TIFF/APNG/WebP 5→6，版本 v2.3-v3.2 → v2.3-v4.8 |
+| 总计 | 282 → 283 |
+
+### docs/roadmap.md
+
+| 修改项 | 说明 |
+|--------|------|
+| 头部 | v4.7.0 → v4.8.0，1054→1126，日期 08-12 → 08-13 |
+| 独特优势 | v4.7.0 → v4.8.0，282→283 API，1054→1126 测试，新增 WebP lossy 编码 + 安全审计 |
+| 主要差距 | WebP lossy 编码标记为已完成 |
+| 版本时间线 | 新增 v4.8 行 |
+
+### docs/comparison.md
+
+| 修改项 | 说明 |
+|--------|------|
+| 概览表 | 版本 4.7.0 → 4.8.0 |
+| 解码矩阵 | WebP 描述更新为 lossless解码 + lossy编码 |
+| 编码矩阵 | WebP 描述更新为 lossy VP8 + lossless解码 |
+| 测试与质量 | 1054×4 → 1126×4，新增 fuzzing审计 |
+| 定位差异 | 测试数/API数/功能列表更新，新增安全审计 + WebP lossy编码 |
+| 互补关系 | WebP/AVIF 编码推荐更新 |
+
+### docs/architecture.md
+
+| 修改项 | 说明 |
+|--------|------|
+| 版本头 | v4.7.0 → v4.8.0，282→283，1054→1126 |
+| 概述 | 测试数 1054 → 1126 |
+| 功能分类 | 编码 12 → 13 种格式 |
+| 项目结构 | moon.mod v4.7.0 → v4.8.0 |
 
 ## 版本演进总结
 
@@ -83,8 +122,9 @@
 | v4.4 | SIFT 特征检测 | 987×4 |
 | v4.5 | grabCut 分割 | 994×4 |
 | v4.6 | SIFT 匹配 + RANSAC | 1003×4 |
-| v4.7 | 流式解码 | 1010×4（+44 覆盖测试 → 1054×4） |
+| v4.7 | 流式解码 | 1054×4 |
+| v4.8 | WebP lossy编码 + 安全修复 + fuzzing + 错误路径测试 + 性能报告 | 1126×4 |
 
 ## 结论
 
-文档质量良好，所有一致性检查通过。roadmap 中所有计划功能均已实现并文档化。
+文档质量良好，所有一致性检查通过。v4.8.0 新增 WebP lossy 编码、PNG/TIFF 安全修复、44 项 fuzzing 审计、22 项错误路径测试及性能基准报告，均已完整反映到所有文档中。

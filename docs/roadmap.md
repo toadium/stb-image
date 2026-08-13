@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-08-12 | 当前版本：v4.7.0 | 测试：1054×4 | 覆盖率：89.8%
+> 制定日期：2026-08-06 | 最后更新：2026-08-13 | 当前版本：v4.8.0 | 测试：1126×4 | 覆盖率：89.8%
 
 ## 现状定位
 
@@ -60,20 +60,21 @@ flowchart LR
     class V10,V117,V20 milestone
 ```
 
-- **image v4.7.0 的独特优势**：
+- **image v4.8.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 282 公开函数 + 47 类型，1054 测试 × 4 目标
+- 283 公开函数 + 47 类型，1126 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
-- ORB特征检测 + SIFT特征检测 + SIFT匹配 + RANSAC单应性估计 + grabCut分割 + 模板匹配 + 光流 + 图像修复（独家）
+- ORB特征检测 + SIFT特征检测 + SIFT匹配 + RANSAC单应性估计 + grabCut分割 + 模板匹配 + 光流 + 图像修复 + WebP lossy编码（独家）
+- **安全审计**：PNG/TIFF 整数溢出修复 + 44 项 fuzzing 测试覆盖所有解码器
 - **多子包架构**：types（全目标类型）/ pure（纯 MoonBit 后端，3 子包：codec/color/util）/ lib（统一 API）/ process（图像处理，7 子包）/ meta（元数据）/ util（工具函数），根包 re-export 保持向后兼容
 
 **主要差距**（对比 5 个已有库）：
 | 缺失功能 | 已有此功能的库 | 实现路径 |
 |---|---|---|
-| WebP lossy 编码 | mizchi | 纯 MoonBit (VP8 有损编码，复杂度极高) |
+| ~~WebP lossy 编码~~ | ~~mizchi~~ | ✅ 已完成（v4.8 VP8 基础编码器） |
 | ~~WebP lossless 解码/编码~~ | ~~mizchi~~ | ✅ 已完成（v3.2 VP8L） |
 | ~~流式解码~~ | ~~mizchi~~ | ✅ 已完成（v4.7 逐行/分块/指定通道） |
 | ~~wasm/js 目标~~ | ~~mizchi~~ | ✅ 已完成（v2.0 纯 MoonBit 全目标） |
@@ -616,6 +617,7 @@ flowchart LR
 | **v4.5** | **grabCut 分割** | **994×4** | **277** | **✅ 已完成** |
 | **v4.6** | **SIFT 匹配 + RANSAC 单应性** | **1003×4** | **279** | **✅ 已完成** |
 | **v4.7** | **流式解码** | **1054×4** | **282** | **✅ 已完成** |
+| **v4.8** | **WebP lossy编码 + 安全修复 + fuzzing审计** | **1126×4** | **283** | **✅ 已完成** |
 
 ## 不做的事情
 

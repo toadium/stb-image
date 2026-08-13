@@ -1,6 +1,6 @@
 # image API 参考
 
-> 版本 v4.7.0 | 282 公开函数 + 47 类型 | 1054 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.8.0 | 283 公开函数 + 47 类型 | 1126 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 类型总览
 
@@ -152,7 +152,7 @@
 | `encode_pgm` | `(Image) -> Bytes` | 编码PGM (P5) |
 | `encode_pnm` | `(Image) -> Bytes` | 编码PNM（自动选择 PPM/PGM） |
 
-## 编解码 — TIFF/APNG/WebP（5个函数）
+## 编解码 — TIFF/APNG/WebP（6个函数）
 
 | 函数 | 签名 | 说明 |
 |------|------|------|
@@ -161,6 +161,7 @@
 | `decode_apng` | `(Bytes) -> PngAnimation` | 解码动画PNG |
 | `encode_apng` | `(PngAnimation) -> Bytes` | 编码动画PNG |
 | `decode_webp` | `(Bytes) -> Image` | 解码WebP lossless (VP8L) |
+| `encode_webp_lossy` | `(Image, quality?: Int) -> Bytes` | 编码WebP lossy (VP8)，quality 1-100 |
 
 ---
 
@@ -725,7 +726,7 @@
 | 编解码 — QOI | 2 | v1.2 |
 | 编解码 — ICO/ICNS/CUR | 7 | v1.2-v2.3 |
 | 编解码 — GIF/PNM | 5 | v1.2-v1.5 |
-| 编解码 — TIFF/APNG/WebP | 5 | v2.3-v3.2 |
+| 编解码 — TIFF/APNG/WebP | 6 | v2.3-v4.8 |
 | 元数据 | 4 | v1.5-v3.0 |
 | 处理 — 变换 | 9 | v1.3 |
 | 处理 — 几何 | 2 | v1.4 |
@@ -784,4 +785,4 @@
 | 工具 — 噪声 | 2 | v1.9 |
 | 工具 — 色彩映射 | 2 | v1.8-v1.9 |
 | 工具 — 统计 | 2 | v1.8 |
-| **总计** | **282** | |
+| **总计** | **283** | |
