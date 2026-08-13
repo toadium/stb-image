@@ -127,42 +127,13 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ### 完整示例集
 
-`src/examples/` 包含 **32 个示例**，覆盖全部 API 场景：
-
-| 示例 | 覆盖内容 |
-|------|---------|
-| example_01~03 | I/O：加载/编码/格式检测 |
-| example_04~06 | 变换：缩放/裁剪/旋转 |
-| example_07~09 | 色彩：灰度/伽马/HSV |
-| example_10~12 | 滤波：高斯/双边/NLM |
-| example_13~14 | 形态学：腐蚀/膨胀/骨架化 |
-| example_15~16 | 绘制：矩形/圆/线条 |
-| example_17~18 | 分析：直方图/统计/质量评估 |
-| example_19~20 | 合成：混合模式/拼接 |
-| example_21~22 | WebP lossy 编码 + 流式解码 |
-| example_23~24 | SIFT/ORB 特征检测与匹配 |
-| example_25~29 | 图像修复/光流/grabCut/Retinex/去雾 |
-| example_30~32 | FFT/频域滤波/质量评估/安全解码 |
+`src/examples/` 包含 **32 个示例**，覆盖全部 API 场景。详见 [docs/examples.md](docs/examples.md)。
 
 ---
 
 ## 🧰 功能一览
 
-| 分类 | 关键函数 | 说明 |
-|------|---------|------|
-| **编解码** | `load_from_bytes`, `write_png_to_bytes`, `decode_any`, `decode_stream`, `encode_webp_lossy` | 15 种格式：PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP |
-| **流式解码** | `decode_stream`, `decode_stream_chunked`, `decode_stream_channels` | 逐行 / 分块 / 指定通道回调，大图零内存峰值 |
-| **几何变换** | `resize`, `crop`, `rotate`, `warp_affine`, `warp_perspective` | 缩放/裁剪/旋转/仿射/透视，7 种滤波器 × 4 种边缘模式 |
-| **色彩** | `to_grayscale`, `adjust_gamma`, `rgb_to_hsv`, `clahe` | 色彩转换/调整/空间变换/CLAHE |
-| **滤波** | `gaussian_blur`, `bilateral_filter`, `nlm_denoise`, `inpaint` | 高斯/双边/NLM 去噪/图像修复 |
-| **边缘** | `canny_edge`, `hough_lines`, `hough_circles`, `find_contours` | Canny/霍夫直线圆/轮廓提取 |
-| **特征** | `harris_corners`, `orb_detect`, `sift_detect`, `template_match` | Harris/ORB/SIFT/模板匹配 |
-| **特征匹配** | `sift_match`, `ransac_homography` | L2 距离 + Lowe 比率测试 / RANSAC + DLT 单应性估计 |
-| **光流** | `lucas_kanade` | Lucas-Kanade 稀疏光流 |
-| **分割** | `watershed`, `slic`, `kmeans_segment`, `grab_cut`, `connected_components` | 分水岭/SLIC/K-means/grabCut/连通域 |
-| **形态学** | `erode`, `dilate`, `morph_open`, `skeletonize` | 腐蚀/膨胀/开闭运算/骨架化 |
-| **频域** | `fft_2d`, `dct_2d`, `haar_transform_2d`, `freq_filter` | FFT/DCT/Haar 小波/频率滤波 |
-| **质量** | `mse`, `psnr`, `ssim`, `compute_stats` | MSE/PSNR/SSIM/统计 |
+283 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
 
 ## 🎯 多目标支持
 
@@ -212,6 +183,8 @@ src/
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（31 项基准） |
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
+| [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
+| [docs/features.md](docs/features.md) | 功能一览（283 API 分类概览） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
 
