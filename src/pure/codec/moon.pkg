@@ -1,6 +1,6 @@
 import {
-  "Toadium/image/src/types",
-  "Toadium/image/src/pure/util",
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/pure/util",
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
   "moonbitlang/core/math",

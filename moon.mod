@@ -1,4 +1,4 @@
-name = "Toadium/image"
+name = "walkzzz/image"
 
 version = "0.4.8"
 

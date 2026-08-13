@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "Toadium/image/src/process/transform"
+package "walkzzz/image/src/process/transform"
 
 import {
-  "Toadium/image/src/types",
+  "walkzzz/image/src/types",
 }
 
 // Values

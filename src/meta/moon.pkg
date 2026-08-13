@@ -1,9 +1,9 @@
 import {
-  "Toadium/image/src/types",
+  "walkzzz/image/src/types",
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }
 
 import {
-  "Toadium/image/src/pure/codec",
+  "walkzzz/image/src/pure/codec",
 } for "test"

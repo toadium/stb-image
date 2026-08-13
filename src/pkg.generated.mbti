@@ -1,17 +1,17 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "Toadium/image/src"
+package "walkzzz/image/src"
 
 import {
-  "Toadium/image/src/lib",
-  "Toadium/image/src/meta",
-  "Toadium/image/src/process/color",
-  "Toadium/image/src/process/edge",
-  "Toadium/image/src/process/feature",
-  "Toadium/image/src/process/frequency",
-  "Toadium/image/src/process/segment",
-  "Toadium/image/src/process/transform",
-  "Toadium/image/src/types",
-  "Toadium/image/src/util",
+  "walkzzz/image/src/lib",
+  "walkzzz/image/src/meta",
+  "walkzzz/image/src/process/color",
+  "walkzzz/image/src/process/edge",
+  "walkzzz/image/src/process/feature",
+  "walkzzz/image/src/process/frequency",
+  "walkzzz/image/src/process/segment",
+  "walkzzz/image/src/process/transform",
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/util",
 }
 
 // Values

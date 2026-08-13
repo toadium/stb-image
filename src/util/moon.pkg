@@ -1,5 +1,5 @@
 import {
-  "Toadium/image/src/types",
+  "walkzzz/image/src/types",
   "moonbitlang/core/debug",
   "moonbitlang/core/math",
 }

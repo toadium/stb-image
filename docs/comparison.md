@@ -1,6 +1,6 @@
 # mooncakes.io image 库对比
 
-对比 mooncakes.io 上已有的 image 相关 MoonBit 包与本库 `Toadium/image` 的功能差异。
+对比 mooncakes.io 上已有的 image 相关 MoonBit 包与本库 `walkzzz/image` 的功能差异。
 
 > 数据来源：`moon update` 本地注册表索引 + 各仓库 README（2026-08-06 快照）
 
@@ -8,7 +8,7 @@
 
 | 库 | 版本 | 实现方式 | 目标 | 依赖 | 许可证 |
 |---|---|---|---|---|---|
-| **toadium/image** | 4.8.0 | 纯 MoonBit | native/wasm-gc/js/wasm | 无 | MIT |
+| **walkzzz/image** | 0.4.8 | 纯 MoonBit | native/wasm-gc/js/wasm | 无 | MIT |
 | mizchi/image | 0.4.3 | 纯 MoonBit | js/native/wasm-gc | mizchi/zlib | Apache-2.0 |
 | bikallem/image | 0.1.0 | 纯 MoonBit (Go 移植) | ? | bikallem/compress, moonbitlang/x, bikallem/blit | Apache-2.0 |
 | gmlewis/image | 0.16.19 | 纯 MoonBit (Go 移植) | ? | gmlewis/flate, hash, io, zlib | Apache-2.0 |

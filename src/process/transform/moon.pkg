@@ -1,9 +1,9 @@
 import {
-  "Toadium/image/src/types",
-  "Toadium/image/src/pure/util" @pure_util,
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/pure/util" @pure_util,
   "moonbitlang/core/math",
 }
 
 import {
-  "Toadium/image/src/lib",
+  "walkzzz/image/src/lib",
 } for "test"

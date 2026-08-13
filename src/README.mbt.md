@@ -195,4 +195,4 @@ Supports **native / wasm-gc / js / wasm** targets. Pure MoonBit implementation, 
 - **v4.0-v4.3**: ORB 特征检测 + 模板匹配 + 图像修复 + 光流 (Lucas-Kanade + Horn-Schunck)
 - **v4.4-v4.6**: SIFT 特征检测 + SIFT 匹配 + RANSAC 单应性估计 + grabCut 分割
 - **v4.7**: 流式解码（逐行/分块/指定通道回调），1054 测试
-- **v4.8**: WebP lossy (VP8) 编码 + PNG/TIFF 安全修复 + fuzzing 审计 + 性能报告 + 32 个示例代码 + 38 项边界测试，1177 测试，283 API + 47 类型
+- **v4.8.0**: WebP lossy (VP8) 编码 + PNG/TIFF 安全修复 + fuzzing 审计 + 性能报告 + 32 个示例代码 + 38 项边界测试，1177 测试，283 API + 47 类型

@@ -1,9 +1,9 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "Toadium/image/src/util"
+package "walkzzz/image/src/util"
 
 import {
-  "Toadium/image/src/types",
   "moonbitlang/core/debug",
+  "walkzzz/image/src/types",
 }
 
 // Values

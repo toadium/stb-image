@@ -10,7 +10,7 @@
 [![Tests](https://img.shields.io/badge/tests-1177%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-283%20functions%20%2B%2047%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-4.8.0-orange)]()
+[![Version](https://img.shields.io/badge/version-0.4.8-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
@@ -21,6 +21,9 @@
 ## 📖 简介
 
 `image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 15 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。
+
+> [!NOTE]
+> 包版本 `0.4.8`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v4.8.0`。安装：`moon add walkzzz/image`。
 
 > [!NOTE]
 > `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
@@ -74,7 +77,7 @@
 ### 安装
 
 ```bash
-moon add Toadium/image
+moon add walkzzz/image
 ```
 
 ### 最小示例

@@ -1,10 +1,10 @@
 import {
-  "Toadium/image/src/types",
-  "Toadium/image/src/process/color",
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/process/color",
   "moonbitlang/core/math",
   "moonbitlang/core/debug",
 }
 
 import {
-  "Toadium/image/src/lib",
+  "walkzzz/image/src/lib",
 } for "test"

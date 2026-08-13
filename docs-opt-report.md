@@ -6,7 +6,7 @@
 
 | 属性 | 值 |
 |------|-----|
-| 项目 | stb-image (Toadium/image) |
+| 项目 | stb-image (walkzzz/image) |
 | 语言 | MoonBit |
 | 规模 | 大型（11 个 .md 文档 + docs/ 目录 + CI） |
 | 版本 | v4.8.0 |

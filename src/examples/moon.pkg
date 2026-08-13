@@ -1,4 +1,4 @@
 import {
-  "Toadium/image/src" @img,
-  "Toadium/image/src/types",
+  "walkzzz/image/src" @img,
+  "walkzzz/image/src/types",
 } for "test"
