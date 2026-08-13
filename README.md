@@ -20,19 +20,9 @@
 
 ## 📖 简介
 
-`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 15 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。
+`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 15 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。安装：`moon add walkzzz/image`。
 
-> [!NOTE]
-> 包版本 `0.4.9`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v4.8.0`。安装：`moon add walkzzz/image`。
-
-> [!NOTE]
-> `detect_format` 仅通过 magic bytes 识别 PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP。TIFF/ICO/CUR/ICNS/APNG/TGA 需手动调用 `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` 等函数。
-
-> [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1177 测试全部通过，覆盖率 90.4%。
-
-> [!TIP]
-> **v4.8 最新更新** — WebP lossy (VP8) 编码 · PNG/TIFF 整数溢出安全修复 · 44 项 fuzzing 安全审计 · 22 项错误路径测试 · 性能基准报告
+> 详细说明（版本映射、格式检测、多目标、核心约束）见 [docs/notes.md](docs/notes.md)。
 
 ---
 
@@ -183,9 +173,6 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 | **js** | 纯 MoonBit | 1177 | ✅ |
 | **wasm** | 纯 MoonBit | 1177 | ✅ |
 
-> [!TIP]
-> 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
-
 ---
 
 ## 📦 包结构
@@ -223,7 +210,8 @@ src/
 | [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（283 函数 + 47 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
-| [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（14 项基准） |
+| [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（31 项基准） |
+| [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
 
@@ -306,13 +294,7 @@ moon test --target native           # 运行测试（应 1177 通过）
 <details>
 <summary><b>🚫 核心约束</b></summary>
 
-> [!WARNING]
-> 以下约束不可违反，否则 PR 将被拒绝：
-
-- **禁止引入 C FFI 依赖** — 所有代码必须纯 MoonBit 实现，确保四目标可用
-- **禁止破坏已有 API** — 新增功能只添加不修改已有签名，保持向后兼容
-- **禁止目标条件编译** — 不使用 `target == "native"` 等条件分支，四目标共用代码
-- **新增 `pub` 函数须在 `reexport.mbt` 注册** — 保持顶层 API 完整性
+核心约束详见 [docs/notes.md](docs/notes.md#核心约束)。
 
 </details>
 
