@@ -5,7 +5,7 @@
 ## 版本与安装
 
 > [!NOTE]
-> 包版本 `0.4.9`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v4.8.0`。安装：`moon add walkzzz/image`。
+> 包版本 `0.4.10`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v4.8.0`。安装：`moon add walkzzz/image`。
 
 ## 格式检测
 

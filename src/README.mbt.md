@@ -104,4 +104,4 @@ native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional comp
 
 ---
 
-License: MIT · [GitHub](https://github.com/toadium/stb-image) · Package version `0.4.9` (functional version v4.8.0)
+License: MIT · [GitHub](https://github.com/toadium/stb-image) · Package version `0.4.10` (functional version v4.8.0)
