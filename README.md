@@ -185,6 +185,7 @@ src/
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
 | [docs/features.md](docs/features.md) | 功能一览（283 API 分类概览） |
+| [docs/contributing.md](docs/contributing.md) | 贡献指南（开发环境/流程/规范） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
 
@@ -216,81 +217,7 @@ moon info
 
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request！
-
-<details>
-<summary><b>📋 开发环境</b></summary>
-
-```bash
-# 安装 MoonBit 工具链（需 0.1.20260713+）
-# 见 https://www.moonbitlang.com/download/
-
-# 克隆并验证
-git clone git@github.com:toadium/stb-image.git
-cd stb-image
-moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1177 通过）
-```
-
-</details>
-
-<details>
-<summary><b>🔧 开发流程</b></summary>
-
-1. **Fork** 仓库并克隆到本地
-2. **创建分支**：`git checkout -b feature/your-feature` 或 `fix/your-fix`
-3. **编写代码**，遵循下方代码规范
-4. **编写测试**，新功能必须有对应测试
-5. **四目标验证**：
-   ```bash
-   moon test --target native     # 必须通过
-   moon test --target wasm-gc    # 必须通过
-   moon test --target js         # 必须通过
-   moon test --target wasm       # 必须通过
-   ```
-</details>
-
-<details>
-<summary><b>📐 代码规范</b></summary>
-
-| 规范 | 要求 | 示例 |
-|------|------|------|
-| 命名 | `snake_case` | `gaussian_blur`、`clamp_byte_v` |
-| 函数分隔 | 每个顶层定义前用 `///\|` | `///\|` + 换行 + `pub fn ...` |
-| 文档注释 | `pub` 函数上方添加 `///` 注释 | `/// 二值化。像素 >= threshold 设为 255` |
-| 可见性 | 仅暴露必要函数为 `pub` | 内部辅助函数不加 `pub` |
-| 错误处理 | 使用 `raise @types.LoadError` | `raise LoadError::DecodeFailed("msg")` |
-| 测试命名 | `"函数名: 场景描述"` | `"threshold_pure: basic binarization"` |
-
-</details>
-
-<details>
-<summary><b>🚫 核心约束</b></summary>
-
-核心约束详见 [docs/notes.md](docs/notes.md#核心约束)。
-
-</details>
-
-<details>
-<summary><b>📝 提交信息格式</b></summary>
-
-```
-<类型>: <简述>
-
-[可选正文，说明动机或细节]
-```
-
-**类型**：`功能`（新功能）| `修复`（bug 修复）| `文档`（文档更新）| `重构`（代码重构）| `测试`（测试补充）
-
-**示例**：
-```
-功能: 新增 WebP lossless 解码器
-
-基于 VP8L 格式规范实现，支持 8-bit RGBA 解码。
-新增 42 个测试，四目标均通过。
-```
-
-</details>
+欢迎提交 Issue 和 Pull Request！详见 [docs/contributing.md](docs/contributing.md)。
 
 ---
 
