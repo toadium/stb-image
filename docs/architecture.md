@@ -16,6 +16,7 @@ mindmap
       编码 14 种格式
       自动检测
       动画 GIF/APNG
+      流式解码
     像素类型
       8位 Image
       16位 Image16
@@ -24,29 +25,41 @@ mindmap
       7 种滤波器
       4 种边缘模式
       sRGB 色彩空间
+      Seam Carving
     色彩
       HSV HSL 转换
       YCbCr XYZ Lab CMYK
       亮度 对比度 伽马
       CLAHE
       Retinex SSR MSR MSRCR
+      去雾
     滤波
       方框 高斯 中值 双边
       Gabor 滤波器组
       NLM 去噪
       Haar 小波去噪
+      图像修复 inpaint
     边缘检测
       Sobel Laplacian Prewitt
       Canny
       Harris 角点
       Hough 变换
+      轮廓提取
+    特征检测
+      ORB FAST+BRIEF
+      SIFT DoG 128维
+      模板匹配
+      光流 LK+HS
+    特征匹配
+      SIFT 匹配 Lowe比率
+      RANSAC 单应性
     分割
       K-means
       区域生长
       分水岭
-      轮廓提取
       泛洪填充
       SLIC 超像素
+      grabCut
     纹理
       LBP
       GLCM
@@ -69,6 +82,9 @@ mindmap
     元数据
       EXIF 读写
       PNG 文本块
+    安全
+      fuzzing 审计
+      整数溢出防护
 ```
 
 ## 包结构概览
@@ -323,13 +339,13 @@ flowchart LR
 
     subgraph Proc["处理流水线 (可组合)"]
         direction TB
-        P1["色彩调整<br/>亮度 · 对比度 · 伽马 · CLAHE"]
-        P2["滤波<br/>模糊 · 锐化 · 双边 · NLM · Gabor"]
-        P3["几何<br/>裁剪 · 旋转 · 仿射 · 透视 · 缩放"]
-        P4["边缘/特征<br/>Sobel · Canny · Harris · Hough · LBP"]
-        P5["分割<br/>K-means · 分水岭 · 轮廓 · SLIC · 泛洪填充"]
+        P1["色彩调整<br/>亮度 · 对比度 · 伽马 · CLAHE · Retinex · 去雾"]
+        P2["滤波<br/>模糊 · 锐化 · 双边 · NLM · Gabor · 修复"]
+        P3["几何<br/>裁剪 · 旋转 · 仿射 · 透视 · 缩放 · Seam Carving"]
+        P4["边缘/特征<br/>Sobel · Canny · Harris · Hough · ORB · SIFT"]
+        P5["分割<br/>K-means · 分水岭 · 轮廓 · SLIC · grabCut"]
         P6["频域<br/>FFT · DCT · 滤波 · Haar 小波"]
-        P7["质量<br/>MSE · PSNR · SSIM · 直方图"]
+        P7["质量<br/>MSE · PSNR · SSIM · 直方图 · 光流"]
     end
 
     Img -.-> Meta["元数据<br/>EXIF · PNG 文本块"]
@@ -370,7 +386,7 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    Input["输入 Bytes"] --> Magic["检查魔数字节<br/>PNG: 89 50 4E 47<br/>JPEG: FF D8<br/>BMP: 42 4D<br/>GIF: 47 49 46<br/>QOI: 71 6F 69 66<br/>..."]
+    Input["输入 Bytes"] --> Magic["检查魔数字节<br/>PNG: 89 50 4E 47<br/>JPEG: FF D8<br/>BMP: 42 4D<br/>GIF: 47 49 46<br/>QOI: 71 6F 69 66<br/>WebP: 52 49 46 46<br/>..."]
     Magic --> Format{"格式识别"}
     Format -->|PNG| PNG["纯 MoonBit<br/>PNG 解码"]
     Format -->|JPEG| JPEG["纯 MoonBit<br/>JPEG 解码"]
@@ -378,6 +394,8 @@ flowchart TB
     Format -->|GIF| GIF["纯 MoonBit<br/>GIF 解码"]
     Format -->|QOI| QOI["纯 MoonBit<br/>QOI 解码"]
     Format -->|PNM| PNM["纯 MoonBit<br/>PNM 解码"]
+    Format -->|WebP| WebP["纯 MoonBit<br/>WebP 解码"]
+    Format -->|PSD/HDR| Other["纯 MoonBit<br/>PSD/HDR 解码"]
     Format -->|未知| Err["UnsupportedFormat"]
     PNG --> Image["Image"]
     JPEG --> Image
@@ -385,6 +403,8 @@ flowchart TB
     GIF --> Image
     QOI --> Image
     PNM --> Image
+    WebP --> Image
+    Other --> Image
 ```
 
 ## API 分类
@@ -401,14 +421,14 @@ flowchart TB
         FileIO["其他 (2)"]
     end
 
-    subgraph Proc["处理 (160+ 函数)"]
-        Color["色彩 (26)"]
-        Filter["滤波 (14)"]
+    subgraph Proc["处理 (210+ 函数)"]
+        Color["色彩 (40+)"]
+        Filter["滤波 (18)"]
         Geo["几何 (15)"]
-        Edge["边缘/特征 (20)"]
+        Edge["边缘/特征 (25+)"]
         Seg["分割 (20)"]
         Freq["频域 (13)"]
-        Tex["纹理 (10)"]
+        Tex["纹理 (14)"]
         Morph["形态学 (15)"]
         Qual["质量 (8)"]
     end

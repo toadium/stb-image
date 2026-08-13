@@ -141,3 +141,12 @@
 | docs/architecture.md | API 分类图编解码 18→20、TIFF/APNG→TIFF/APNG/WebP(6)、类型 36→47、reexport 253→283、codec 列表补 WebP、编码 13→14 种 |
 | docs/skill.md | 限制章节新增 WebP lossy 基础实现说明 |
 | README.md | 文档表新增 performance_report.md 链接 |
+
+## 三次扫描修复（v4.8.0 架构图完善）
+
+| 文件 | 修复内容 |
+|------|---------|
+| docs/architecture.md | mindmap 新增特征检测/特征匹配/安全分支，流式解码/Seam Carving/去雾/修复/grabCut 等节点 |
+| docs/architecture.md | API 分类图处理 160+→210+，子分类数值更新 |
+| docs/architecture.md | 处理流水线图补充 Retinex/去雾/修复/Seam Carving/ORB/SIFT/grabCut/光流 |
+| docs/architecture.md | 格式检测流程图补充 WebP/PSD/HDR 分支 |
