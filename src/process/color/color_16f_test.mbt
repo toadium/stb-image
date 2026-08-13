@@ -164,3 +164,142 @@ test "adjust_brightness_f: negative delta darkens" {
   let _ = img
   let _ = result
 }
+
+///|
+test "adjust_brightness_16: negative delta clamps to 0" {
+  let data = Array::make(2 * 2 * 3 * 2, b'\x00')
+  for i in 0..<12 {
+    data[i * 2] = b'\x10'
+    data[i * 2 + 1] = b'\x00'
+  }
+  let img = @types.Image16::{
+    width: 2,
+    height: 2,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_brightness_16(img, -100)
+  for i in 0..<12 {
+    let val = result.data[i * 2].to_int() +
+      result.data[i * 2 + 1].to_int() * 256
+    assert_eq(val, 0)
+  }
+  let _ = data
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_brightness_16: RGBA preserves alpha" {
+  let data : Array[Byte] = Array::make(1 * 1 * 4 * 2, b'\x00')
+  data[0] = b'\x80'
+  data[1] = b'\x00'
+  data[2] = b'\x40'
+  data[3] = b'\x00'
+  data[4] = b'\x20'
+  data[5] = b'\x00'
+  data[6] = b'\xFF'
+  data[7] = b'\xFF'
+  let img = @types.Image16::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_brightness_16(img, 100)
+  assert_eq(result.data[6], b'\xFF')
+  assert_eq(result.data[7], b'\xFF')
+  let _ = data
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_brightness_f: RGBA preserves alpha" {
+  let data : Array[Byte] = Array::make(1 * 1 * 4 * 4, b'\x00')
+  let alpha_bits = 0.5F.reinterpret_as_int()
+  data[12] = (alpha_bits & 0xFF).to_byte()
+  data[13] = ((alpha_bits >> 8) & 0xFF).to_byte()
+  data[14] = ((alpha_bits >> 16) & 0xFF).to_byte()
+  data[15] = ((alpha_bits >> 24) & 0xFF).to_byte()
+  let img = @types.ImageF::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_brightness_f(img, 0.1F)
+  assert_eq(result.data[12], data[12])
+  assert_eq(result.data[13], data[13])
+  assert_eq(result.data[14], data[14])
+  assert_eq(result.data[15], data[15])
+  let _ = data
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_contrast_16: high factor clamps to 65535" {
+  let data = Array::make(1 * 1 * 3 * 2, b'\x00')
+  data[0] = b'\xFF'
+  data[1] = b'\xFF'
+  data[2] = b'\x00'
+  data[3] = b'\x80'
+  data[4] = b'\x00'
+  data[5] = b'\x00'
+  let img = @types.Image16::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_contrast_16(img, 10.0F)
+  let v0 = result.data[0].to_int() + result.data[1].to_int() * 256
+  assert_eq(v0, 65535)
+  let _ = data
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_contrast_16: RGBA preserves alpha" {
+  let data : Array[Byte] = Array::make(1 * 1 * 4 * 2, b'\x00')
+  data[6] = b'\xAA'
+  data[7] = b'\xBB'
+  let img = @types.Image16::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_contrast_16(img, 2.0F)
+  assert_eq(result.data[6], b'\xAA')
+  assert_eq(result.data[7], b'\xBB')
+  let _ = data
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_contrast_f: RGBA preserves alpha" {
+  let data : Array[Byte] = Array::make(1 * 1 * 4 * 4, b'\x00')
+  let alpha_bits = 0.7F.reinterpret_as_int()
+  data[12] = (alpha_bits & 0xFF).to_byte()
+  data[13] = ((alpha_bits >> 8) & 0xFF).to_byte()
+  data[14] = ((alpha_bits >> 16) & 0xFF).to_byte()
+  data[15] = ((alpha_bits >> 24) & 0xFF).to_byte()
+  let img = @types.ImageF::{
+    width: 1,
+    height: 1,
+    channels: 4,
+    data: Bytes::from_array(data),
+  }
+  let result = adjust_contrast_f(img, 2.0F)
+  assert_eq(result.data[12], data[12])
+  assert_eq(result.data[13], data[13])
+  assert_eq(result.data[14], data[14])
+  assert_eq(result.data[15], data[15])
+  let _ = data
+  let _ = img
+  let _ = result
+}

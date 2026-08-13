@@ -192,6 +192,9 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("TIFF magic 无效")
   }
   let ifd_offset = tiff_read_u32(ctx, 4)
+  if ifd_offset < 0 || ifd_offset >= len {
+    raise @types.LoadError::DecodeFailed("TIFF IFD 偏移无效")
+  }
   let entries = tiff_parse_ifd(ctx, ifd_offset)
   // 读取必要字段
   let width = match tiff_get_value(entries, ctx, 256) {

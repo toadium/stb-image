@@ -59,3 +59,67 @@ test "canny_edge 水平边缘" {
   }
   assert_true(has_edge)
 }
+
+///|
+test "canny_edge: invalid channels raises" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 2,
+    data: Bytes::from_array(Array::make(8, b'\x80')),
+  }
+  try {
+    let _ = canny_edge(img)
+    fail("expected error for channels=2")
+  } catch {
+    _ => ()
+  }
+}
+
+///|
+test "canny_edge: invalid low_threshold raises" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: Bytes::from_array(Array::make(4, b'\x80')),
+  }
+  try {
+    let _ = canny_edge(img, low_threshold=300)
+    fail("expected error for low_threshold=300")
+  } catch {
+    _ => ()
+  }
+}
+
+///|
+test "canny_edge: invalid high_threshold raises" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: Bytes::from_array(Array::make(4, b'\x80')),
+  }
+  try {
+    let _ = canny_edge(img, high_threshold=300)
+    fail("expected error for high_threshold=300")
+  } catch {
+    _ => ()
+  }
+}
+
+///|
+test "canny_edge: low > high raises" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: Bytes::from_array(Array::make(4, b'\x80')),
+  }
+  try {
+    let _ = canny_edge(img, low_threshold=100, high_threshold=50)
+    fail("expected error for low > high")
+  } catch {
+    _ => ()
+  }
+}

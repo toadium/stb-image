@@ -64,6 +64,9 @@ pub fn decode_png_pure(
       data[pos + 1].to_int() * 65536 +
       data[pos + 2].to_int() * 256 +
       data[pos + 3].to_int()
+    if chunk_len < 0 {
+      raise @types.LoadError::DecodeFailed("PNG chunk 长度无效")
+    }
     let chunk_key = data[pos + 4].to_int() * 16777216 +
       data[pos + 5].to_int() * 65536 +
       data[pos + 6].to_int() * 256 +

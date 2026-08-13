@@ -112,3 +112,22 @@ test "clahe: raises on invalid channels" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "clahe: 1x1 with large tile_size (tile_pixels=0)" {
+  // 1x1 image with tile_size=8 → tile covers 1x1 but ntx=1, nty=1
+  // tile_pixels = (1-0)*(1-0) = 1, not 0. Need tile_size > image dim
+  // Actually tile_pixels can't be 0 for valid images. Let's test 1x1 edge case.
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array([b'\x80']),
+  }
+  let result = clahe(img, 8, 2.0)
+  assert_eq(result.width, 1)
+  assert_eq(result.height, 1)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}

@@ -217,3 +217,22 @@ test "kmeans_quantize: two distinct colors with k=2" {
   let _ = img
   let _ = result
 }
+
+///|
+test "median_cut: num_colors < 2 returns to_rgb" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 3,
+    data: Bytes::from_array([
+      b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
+      b'\xA0', b'\xB0', b'\xC0',
+    ]),
+  }
+  let result = median_cut(img, 1)
+  assert_eq(result.channels, 3)
+  assert_eq(result.width, 2)
+  assert_eq(result.height, 2)
+  let _ = img
+  let _ = result
+}

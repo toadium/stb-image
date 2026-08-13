@@ -277,3 +277,28 @@ test "rgb_to_ycbcr: roundtrip with color" {
   assert_true((g - 150).abs() <= 2)
   assert_true((b - 200).abs() <= 2)
 }
+
+///|
+test "xyz_to_rgb: srgb linear branch (small values)" {
+  // Very small XYZ values trigger the linear branch: c <= 0.0031308
+  let (r, g, b) = xyz_to_rgb(0.001F, 0.001F, 0.001F)
+  assert_true(r >= 0 && r <= 255)
+  assert_true(g >= 0 && g <= 255)
+  assert_true(b >= 0 && b <= 255)
+}
+
+///|
+test "lab_to_rgb: f_inv small branch (low L)" {
+  // Very low L triggers f_inv small branch: powf(t,3) <= 0.008856
+  let (r, g, b) = lab_to_rgb(1.0F, 0.0F, 0.0F)
+  assert_true(r >= 0 && r <= 255)
+  assert_true(g >= 0 && g <= 255)
+  assert_true(b >= 0 && b <= 255)
+}
+
+///|
+test "rgb_to_cmyk: k from m when m < c and m < y" {
+  // R=50, G=200, B=100 → c=205, m=55, y=155 → m is min → k=55
+  let (_c, _m, _y, k) = rgb_to_cmyk(50, 200, 100)
+  assert_true(k > 0)
+}

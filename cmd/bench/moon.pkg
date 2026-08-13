@@ -1,0 +1,5 @@
+import {
+  "Toadium/image/src",
+}
+
+pkgtype(kind: "executable")

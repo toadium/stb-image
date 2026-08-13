@@ -237,3 +237,33 @@ test "msr: invalid channels raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "msr: empty image returns self" {
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let out = msr(img)
+  assert_eq(out.width, 0)
+  assert_eq(out.height, 0)
+}
+
+///|
+test "msr: RGBA alpha preserved" {
+  let data = Bytes::from_array([
+    b'\x40', b'\x80', b'\xC0', b'\xAA', b'\x60', b'\xA0', b'\xE0', b'\xBB', b'\x20',
+    b'\x50', b'\x90', b'\xCC', b'\x10', b'\x20', b'\x30', b'\xDD',
+  ])
+  let img = @types.Image::{ width: 2, height: 2, channels: 4, data }
+  let out = msr(img, sigmas=[10.0F])
+  assert_eq(out.data[3], b'\xAA')
+  assert_eq(out.data[7], b'\xBB')
+  assert_eq(out.data[11], b'\xCC')
+  assert_eq(out.data[15], b'\xDD')
+}
+
+///|
+test "msrcr: empty image returns self" {
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let out = msrcr(img)
+  assert_eq(out.width, 0)
+  assert_eq(out.height, 0)
+}

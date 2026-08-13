@@ -78,6 +78,8 @@ pub fn encode_tga_pure(@types.Image) -> Bytes
 
 pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
 
+pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+
 // Errors
 
 // Types and methods

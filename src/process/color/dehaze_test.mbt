@@ -174,3 +174,34 @@ test "dehaze: transmission clamped to t0" {
     assert_true(v >= 0 && v <= 255)
   }
 }
+
+///|
+test "guided_filter: invalid channels raises" {
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 2,
+    data: Bytes::from_array([b'\x80', b'\x80']),
+  }
+  try {
+    let _ = guided_filter(img, [0.5F], radius=1)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "guided_filter: RGB guide computation" {
+  let data = Bytes::from_array([
+    b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
+  ])
+  let img = @types.Image::{ width: 3, height: 1, channels: 3, data }
+  let input = Array::make(3, 0.5F)
+  let out = guided_filter(img, input, radius=1, eps=0.001F)
+  assert_eq(out.length(), 3)
+  let _ = data
+  let _ = img
+  let _ = out
+}

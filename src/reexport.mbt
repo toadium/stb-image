@@ -1233,6 +1233,14 @@ pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.dec
 pub let decode_webp : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_webp_pure
 
 ///|
+pub fn encode_webp_lossy(
+  img : @types.Image,
+  quality? : Int = 75,
+) -> Bytes raise @types.LoadError {
+  @codec.encode_webp_lossy_pure(img, quality~)
+}
+
+///|
 pub let encode_gif : (@types.Image) -> Bytes raise @types.LoadError = @codec.encode_gif_pure
 
 ///|

@@ -73,3 +73,47 @@ test "gamma_tonemap: all-zero input" {
   assert_eq(result.data[1].to_int(), 0)
   assert_eq(result.data[2].to_int(), 0)
 }
+
+///|
+fn tm_make_imagef_rgba(
+  width : Int,
+  height : Int,
+  pixels : Array[(Float, Float, Float, Float)],
+) -> @types.ImageF {
+  let data : Array[Byte] = []
+  for p in pixels {
+    let rb = p.0.to_le_bytes()
+    let gb = p.1.to_le_bytes()
+    let bb = p.2.to_le_bytes()
+    let ab = p.3.to_le_bytes()
+    for i in 0..<4 {
+      data.push(rb[i])
+    }
+    for i in 0..<4 {
+      data.push(gb[i])
+    }
+    for i in 0..<4 {
+      data.push(bb[i])
+    }
+    for i in 0..<4 {
+      data.push(ab[i])
+    }
+  }
+  @types.ImageF::{ width, height, channels: 4, data: Bytes::from_array(data) }
+}
+
+///|
+test "reinhard_tonemap: RGBA alpha set to 255" {
+  let imgf = tm_make_imagef_rgba(1, 1, [(0.5F, 0.5F, 0.5F, 0.3F)])
+  let result = reinhard_tonemap(imgf)
+  assert_eq(result.channels, 4)
+  assert_eq(result.data[3].to_int(), 255)
+}
+
+///|
+test "gamma_tonemap: RGBA alpha set to 255" {
+  let imgf = tm_make_imagef_rgba(1, 1, [(0.5F, 0.5F, 0.5F, 0.3F)])
+  let result = gamma_tonemap(imgf, 2.2F)
+  assert_eq(result.channels, 4)
+  assert_eq(result.data[3].to_int(), 255)
+}

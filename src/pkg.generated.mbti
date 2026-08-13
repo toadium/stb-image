@@ -213,6 +213,8 @@ pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tiff(@types.Image) -> Bytes raise @types.LoadError
 
+pub fn encode_webp_lossy(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+
 pub fn erode(@types.Image) -> @types.Image
 
 pub fn erode_custom(@types.Image, @segment.StructuringElement) -> @types.Image

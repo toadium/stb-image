@@ -84,5 +84,5 @@ pub fn bench_run() -> Unit {
   })
   b.bench(name="rotate_90 128x128", () => ignore(@transform.rotate_90(img128)))
 
-  ignore(b.dump_summaries())
+  println(b.dump_summaries().to_string())
 }
