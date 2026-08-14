@@ -3,6 +3,157 @@
 // 仅依赖 @types，不依赖 @core/FFI
 
 ///|
+/// 读取 GIF 颜色表
+fn gif_read_color_table(
+  data : Bytes,
+  pos : Int,
+  size : Int,
+  len : Int,
+) -> (Array[(Int, Int, Int)], Int) raise @types.LoadError {
+  if pos + size * 3 > len {
+    raise @types.LoadError::DecodeFailed(
+      "GIF 数据过短：无法读取 Color Table",
+    )
+  }
+  let table : Array[(Int, Int, Int)] = []
+  let mut p = pos
+  for _ in 0..<size {
+    let r = data[p].to_int()
+    let g = data[p + 1].to_int()
+    let b = data[p + 2].to_int()
+    table.push((r, g, b))
+    p += 3
+  }
+  (table, p)
+}
+
+///|
+/// 读取 GIF 子块数据（收集模式）
+fn gif_read_sub_blocks(
+  data : Bytes,
+  pos : Int,
+  len : Int,
+) -> (Array[Byte], Int) raise @types.LoadError {
+  let result : Array[Byte] = []
+  let mut p = pos
+  while p < len {
+    let sub_len = data[p].to_int()
+    p += 1
+    if sub_len == 0 {
+      break
+    }
+    if p + sub_len > len {
+      raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
+    }
+    for i in 0..<sub_len {
+      result.push(data[p + i])
+    }
+    p += sub_len
+  }
+  (result, p)
+}
+
+///|
+/// 跳过 GIF 子块（不收集数据）
+fn gif_skip_sub_blocks(
+  data : Bytes,
+  pos : Int,
+  len : Int,
+) -> Int raise @types.LoadError {
+  let mut p = pos
+  while p < len {
+    let sub_len = data[p].to_int()
+    p += 1
+    if sub_len == 0 {
+      break
+    }
+    if p + sub_len > len {
+      raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
+    }
+    p += sub_len
+  }
+  p
+}
+
+///|
+/// 处理 GIF disposal 方法
+fn gif_apply_disposal(
+  disposal : Int,
+  canvas : Array[Byte],
+  prev_canvas : Array[Byte],
+  left : Int,
+  top : Int,
+  img_width : Int,
+  img_height : Int,
+  screen_width : Int,
+  screen_height : Int,
+  bg_r : Int,
+  bg_g : Int,
+  bg_b : Int,
+) -> Unit {
+  match disposal {
+    2 =>
+      // restore to background
+      for y in 0..<img_height {
+        for x in 0..<img_width {
+          let cx = left + x
+          let cy = top + y
+          if cx >= screen_width || cy >= screen_height {
+            continue
+          }
+          let canvas_off = (cy * screen_width + cx) * 3
+          canvas[canvas_off] = bg_r.to_byte()
+          canvas[canvas_off + 1] = bg_g.to_byte()
+          canvas[canvas_off + 2] = bg_b.to_byte()
+        }
+      }
+    3 =>
+      // restore to previous
+      for i in 0..<(screen_width * screen_height * 3) {
+        canvas[i] = prev_canvas[i]
+      }
+    _ => ()
+  }
+}
+
+///|
+/// 将 GIF 帧像素写入 canvas
+fn gif_write_frame_pixels(
+  indices : Array[Int],
+  color_table : Array[(Int, Int, Int)],
+  left : Int,
+  top : Int,
+  img_width : Int,
+  img_height : Int,
+  screen_width : Int,
+  screen_height : Int,
+  gce_transparent : Int,
+  canvas : Array[Byte],
+) -> Unit raise @types.LoadError {
+  for y in 0..<img_height {
+    for x in 0..<img_width {
+      let idx = indices[y * img_width + x]
+      let cx = left + x
+      let cy = top + y
+      if cx >= screen_width || cy >= screen_height {
+        continue
+      }
+      if gce_transparent >= 0 && idx == gce_transparent {
+        continue
+      }
+      if idx >= color_table.length() {
+        raise @types.LoadError::DecodeFailed("GIF 颜色表索引越界")
+      }
+      let (r, g, b) = color_table[idx]
+      let canvas_off = (cy * screen_width + cx) * 3
+      canvas[canvas_off] = r.to_byte()
+      canvas[canvas_off + 1] = g.to_byte()
+      canvas[canvas_off + 2] = b.to_byte()
+    }
+  }
+}
+
+///|
 /// 解码 GIF 动画为 GifAnimation（纯 MoonBit，全目标可用）。
 /// 支持多帧动画、延迟时间、基本 disposal 方法。
 /// 不支持 interlace。
@@ -32,31 +183,20 @@ pub fn decode_gif_animation_pure(
   let gct_size = 1 << ((packed & 0x07) + 1)
   let bg_idx = data[11].to_int()
   let mut pos = 13
-  let gct : Array[(Int, Int, Int)] = []
-  if has_gct {
-    if pos + gct_size * 3 > len {
-      raise @types.LoadError::DecodeFailed(
-        "GIF 数据过短：无法读取 Global Color Table",
-      )
-    }
-    for _ in 0..<gct_size {
-      let r = data[pos].to_int()
-      let g = data[pos + 1].to_int()
-      let b = data[pos + 2].to_int()
-      gct.push((r, g, b))
-      pos += 3
-    }
+  let gct : Array[(Int, Int, Int)] = if has_gct {
+    let (table, new_pos) = gif_read_color_table(data, pos, gct_size, len)
+    pos = new_pos
+    table
+  } else {
+    []
   }
-  // 背景色
   let (bg_r, bg_g, bg_b) = if bg_idx < gct.length() {
     gct[bg_idx]
   } else {
     (0, 0, 0)
   }
-  // 帧列表
   let frames : Array[@types.Image] = []
   let delays : Array[Int] = []
-  // canvas 像素（用于累积帧）
   let canvas : Array[Byte] = Array::make(
     screen_width * screen_height * 3,
     bg_r.to_byte(),
@@ -66,12 +206,10 @@ pub fn decode_gif_animation_pure(
     canvas[i * 3 + 1] = bg_g.to_byte()
     canvas[i * 3 + 2] = bg_b.to_byte()
   }
-  // 保存上一帧 canvas（用于 disposal=3 restore to previous）
   let prev_canvas : Array[Byte] = Array::make(
     screen_width * screen_height * 3,
     b'\x00',
   )
-  // 当前 GCE 状态
   let mut gce_delay = 0
   let mut gce_transparent = -1
   let mut gce_disposal = 0
@@ -97,20 +235,14 @@ pub fn decode_gif_animation_pure(
       if is_interlaced {
         raise @types.LoadError::DecodeFailed("GIF interlace 不支持")
       }
-      let lct : Array[(Int, Int, Int)] = []
-      if has_lct {
-        if pos + lct_size_val * 3 > len {
-          raise @types.LoadError::DecodeFailed(
-            "GIF 数据过短：无法读取 Local Color Table",
-          )
-        }
-        for _ in 0..<lct_size_val {
-          let r = data[pos].to_int()
-          let g = data[pos + 1].to_int()
-          let b = data[pos + 2].to_int()
-          lct.push((r, g, b))
-          pos += 3
-        }
+      let lct : Array[(Int, Int, Int)] = if has_lct {
+        let (table, new_pos) = gif_read_color_table(
+          data, pos, lct_size_val, len,
+        )
+        pos = new_pos
+        table
+      } else {
+        []
       }
       if pos >= len {
         raise @types.LoadError::DecodeFailed(
@@ -122,55 +254,20 @@ pub fn decode_gif_animation_pure(
       if lzw_min_code_size < 2 || lzw_min_code_size > 8 {
         raise @types.LoadError::DecodeFailed("GIF LZW minimum code size 无效")
       }
-      let lzw_data : Array[Byte] = []
-      while pos < len {
-        let sub_len = data[pos].to_int()
-        pos += 1
-        if sub_len == 0 {
-          break
-        }
-        if pos + sub_len > len {
-          raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
-        }
-        for i in 0..<sub_len {
-          lzw_data.push(data[pos + i])
-        }
-        pos += sub_len
-      }
-      // LZW 解码
+      let (lzw_data, new_pos) = gif_read_sub_blocks(data, pos, len)
+      pos = new_pos
       let indices = lzw_decode(lzw_data, lzw_min_code_size)
       let color_table = if lct.length() > 0 { lct } else { gct }
       if color_table.length() == 0 {
         raise @types.LoadError::DecodeFailed("GIF 无颜色表可用")
       }
-      // 保存当前 canvas（用于 disposal=3）
       for i in 0..<(screen_width * screen_height * 3) {
         prev_canvas[i] = canvas[i]
       }
-      // 将帧像素写入 canvas
-      for y in 0..<img_height {
-        for x in 0..<img_width {
-          let idx = indices[y * img_width + x]
-          let cx = left + x
-          let cy = top + y
-          if cx >= screen_width || cy >= screen_height {
-            continue
-          }
-          // 跳过透明像素
-          if gce_transparent >= 0 && idx == gce_transparent {
-            continue
-          }
-          if idx >= color_table.length() {
-            raise @types.LoadError::DecodeFailed("GIF 颜色表索引越界")
-          }
-          let (r, g, b) = color_table[idx]
-          let canvas_off = (cy * screen_width + cx) * 3
-          canvas[canvas_off] = r.to_byte()
-          canvas[canvas_off + 1] = g.to_byte()
-          canvas[canvas_off + 2] = b.to_byte()
-        }
-      }
-      // 复制 canvas 为当前帧
+      gif_write_frame_pixels(
+        indices, color_table, left, top, img_width, img_height, screen_width, screen_height,
+        gce_transparent, canvas,
+      )
       let frame_data : Array[Byte] = Array::make(
         screen_width * screen_height * 3,
         b'\x00',
@@ -185,31 +282,10 @@ pub fn decode_gif_animation_pure(
         data: Bytes::from_array(frame_data),
       })
       delays.push(gce_delay)
-      // 处理 disposal
-      match gce_disposal {
-        2 =>
-          // restore to background：清除帧区域为背景色
-          for y in 0..<img_height {
-            for x in 0..<img_width {
-              let cx = left + x
-              let cy = top + y
-              if cx >= screen_width || cy >= screen_height {
-                continue
-              }
-              let canvas_off = (cy * screen_width + cx) * 3
-              canvas[canvas_off] = bg_r.to_byte()
-              canvas[canvas_off + 1] = bg_g.to_byte()
-              canvas[canvas_off + 2] = bg_b.to_byte()
-            }
-          }
-        3 =>
-          // restore to previous
-          for i in 0..<(screen_width * screen_height * 3) {
-            canvas[i] = prev_canvas[i]
-          }
-        _ => () // 0=none, 1=leave: 不做处理
-      }
-      // 重置 GCE
+      gif_apply_disposal(
+        gce_disposal, canvas, prev_canvas, left, top, img_width, img_height, screen_width,
+        screen_height, bg_r, bg_g, bg_b,
+      )
       gce_delay = 0
       gce_transparent = -1
       gce_disposal = 0
@@ -235,40 +311,18 @@ pub fn decode_gif_animation_pure(
         gce_disposal = (gce_packed >> 2) & 0x07
         pos += 6
       } else if label == 0x01 {
-        // Plain Text Extension: 跳过 8 字节固定 header，再跳过子块
+        // Plain Text Extension
         if pos + 8 > len {
           raise @types.LoadError::DecodeFailed(
             "GIF 数据过短：无法读取 Plain Text Extension header",
           )
         }
         pos += 8
-        while pos < len {
-          let sub_len = data[pos].to_int()
-          pos += 1
-          if sub_len == 0 {
-            break
-          }
-          if pos + sub_len > len {
-            raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
-          }
-          pos += sub_len
-        }
+        pos = gif_skip_sub_blocks(data, pos, len)
       } else {
-        // 跳过其他 extension
-        while pos < len {
-          let sub_len = data[pos].to_int()
-          pos += 1
-          if sub_len == 0 {
-            break
-          }
-          if pos + sub_len > len {
-            raise @types.LoadError::DecodeFailed("GIF 子块长度越界")
-          }
-          pos += sub_len
-        }
+        pos = gif_skip_sub_blocks(data, pos, len)
       }
     } else if block_type == 0x3B {
-      // Trailer
       break
     } else {
       raise @types.LoadError::DecodeFailed("GIF 未知 block type")
