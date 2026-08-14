@@ -47,4 +47,3 @@ pub fn sharpen(@types.Image, Float) -> @types.Image
 // Type aliases
 
 // Traits
-

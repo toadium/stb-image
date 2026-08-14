@@ -87,4 +87,3 @@ pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @type
 // Type aliases
 
 // Traits
-

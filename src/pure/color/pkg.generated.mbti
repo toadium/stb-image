@@ -25,4 +25,3 @@ pub fn unpremultiply_alpha_pure(@types.Image) -> @types.Image raise @types.LoadE
 // Type aliases
 
 // Traits
-
