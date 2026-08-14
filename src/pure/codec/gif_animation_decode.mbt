@@ -216,116 +216,119 @@ pub fn decode_gif_animation_pure(
   while pos < len {
     let block_type = data[pos].to_int()
     pos += 1
-    if block_type == 0x2C {
-      // Image Descriptor
-      if pos + 9 > len {
-        raise @types.LoadError::DecodeFailed(
-          "GIF 数据过短：无法读取 Image Descriptor",
-        )
-      }
-      let left = read_u16_le(data, pos)
-      let top = read_u16_le(data, pos + 2)
-      let img_width = read_u16_le(data, pos + 4)
-      let img_height = read_u16_le(data, pos + 6)
-      let img_packed = data[pos + 8].to_int()
-      pos += 9
-      let has_lct = (img_packed & 0x80) != 0
-      let is_interlaced = (img_packed & 0x40) != 0
-      let lct_size_val = 1 << ((img_packed & 0x07) + 1)
-      if is_interlaced {
-        raise @types.LoadError::DecodeFailed("GIF interlace 不支持")
-      }
-      let lct : Array[(Int, Int, Int)] = if has_lct {
-        let (table, new_pos) = gif_read_color_table(
-          data, pos, lct_size_val, len,
-        )
-        pos = new_pos
-        table
-      } else {
-        []
-      }
-      if pos >= len {
-        raise @types.LoadError::DecodeFailed(
-          "GIF 数据过短：无法读取 LZW min code size",
-        )
-      }
-      let lzw_min_code_size = data[pos].to_int()
-      pos += 1
-      if lzw_min_code_size < 2 || lzw_min_code_size > 8 {
-        raise @types.LoadError::DecodeFailed("GIF LZW minimum code size 无效")
-      }
-      let (lzw_data, new_pos) = gif_read_sub_blocks(data, pos, len)
-      pos = new_pos
-      let indices = lzw_decode(lzw_data, lzw_min_code_size)
-      let color_table = if lct.length() > 0 { lct } else { gct }
-      if color_table.length() == 0 {
-        raise @types.LoadError::DecodeFailed("GIF 无颜色表可用")
-      }
-      for i in 0..<(screen_width * screen_height * 3) {
-        prev_canvas[i] = canvas[i]
-      }
-      gif_write_frame_pixels(
-        indices, color_table, left, top, img_width, img_height, screen_width, screen_height,
-        gce_transparent, canvas,
-      )
-      let frame_data : Array[Byte] = Array::make(
-        screen_width * screen_height * 3,
-        b'\x00',
-      )
-      for i in 0..<(screen_width * screen_height * 3) {
-        frame_data[i] = canvas[i]
-      }
-      frames.push(@types.Image::{
-        width: screen_width,
-        height: screen_height,
-        channels: 3,
-        data: Bytes::from_array(frame_data),
-      })
-      delays.push(gce_delay)
-      gif_apply_disposal(
-        gce_disposal, canvas, prev_canvas, left, top, img_width, img_height, screen_width,
-        screen_height, bg_r, bg_g, bg_b,
-      )
-      gce_delay = 0
-      gce_transparent = -1
-      gce_disposal = 0
-    } else if block_type == 0x21 {
-      // Extension
-      if pos >= len {
-        raise @types.LoadError::DecodeFailed(
-          "GIF 数据过短：无法读取 Extension label",
-        )
-      }
-      let label = data[pos].to_int()
-      pos += 1
-      if label == 0xF9 && pos + 6 <= len {
-        // Graphics Control Extension
-        let _block_size = data[pos].to_int()
-        let gce_packed = data[pos + 1].to_int()
-        gce_delay = read_u16_le(data, pos + 2) * 10
-        gce_transparent = if (gce_packed & 0x01) != 0 {
-          data[pos + 4].to_int()
-        } else {
-          -1
-        }
-        gce_disposal = (gce_packed >> 2) & 0x07
-        pos += 6
-      } else if label == 0x01 {
-        // Plain Text Extension
-        if pos + 8 > len {
+    match block_type {
+      0x2C => {
+        // Image Descriptor
+        if pos + 9 > len {
           raise @types.LoadError::DecodeFailed(
-            "GIF 数据过短：无法读取 Plain Text Extension header",
+            "GIF 数据过短：无法读取 Image Descriptor",
           )
         }
-        pos += 8
-        pos = gif_skip_sub_blocks(data, pos, len)
-      } else {
-        pos = gif_skip_sub_blocks(data, pos, len)
+        let left = read_u16_le(data, pos)
+        let top = read_u16_le(data, pos + 2)
+        let img_width = read_u16_le(data, pos + 4)
+        let img_height = read_u16_le(data, pos + 6)
+        let img_packed = data[pos + 8].to_int()
+        pos += 9
+        let has_lct = (img_packed & 0x80) != 0
+        let is_interlaced = (img_packed & 0x40) != 0
+        let lct_size_val = 1 << ((img_packed & 0x07) + 1)
+        if is_interlaced {
+          raise @types.LoadError::DecodeFailed("GIF interlace 不支持")
+        }
+        let lct : Array[(Int, Int, Int)] = if has_lct {
+          let (table, new_pos) = gif_read_color_table(
+            data, pos, lct_size_val, len,
+          )
+          pos = new_pos
+          table
+        } else {
+          []
+        }
+        if pos >= len {
+          raise @types.LoadError::DecodeFailed(
+            "GIF 数据过短：无法读取 LZW min code size",
+          )
+        }
+        let lzw_min_code_size = data[pos].to_int()
+        pos += 1
+        if lzw_min_code_size < 2 || lzw_min_code_size > 8 {
+          raise @types.LoadError::DecodeFailed(
+            "GIF LZW minimum code size 无效",
+          )
+        }
+        let (lzw_data, new_pos) = gif_read_sub_blocks(data, pos, len)
+        pos = new_pos
+        let indices = lzw_decode(lzw_data, lzw_min_code_size)
+        let color_table = if lct.length() > 0 { lct } else { gct }
+        if color_table.length() == 0 {
+          raise @types.LoadError::DecodeFailed("GIF 无颜色表可用")
+        }
+        for i in 0..<(screen_width * screen_height * 3) {
+          prev_canvas[i] = canvas[i]
+        }
+        gif_write_frame_pixels(
+          indices, color_table, left, top, img_width, img_height, screen_width, screen_height,
+          gce_transparent, canvas,
+        )
+        let frame_data : Array[Byte] = Array::make(
+          screen_width * screen_height * 3,
+          b'\x00',
+        )
+        for i in 0..<(screen_width * screen_height * 3) {
+          frame_data[i] = canvas[i]
+        }
+        frames.push(@types.Image::{
+          width: screen_width,
+          height: screen_height,
+          channels: 3,
+          data: Bytes::from_array(frame_data),
+        })
+        delays.push(gce_delay)
+        gif_apply_disposal(
+          gce_disposal, canvas, prev_canvas, left, top, img_width, img_height, screen_width,
+          screen_height, bg_r, bg_g, bg_b,
+        )
+        gce_delay = 0
+        gce_transparent = -1
+        gce_disposal = 0
       }
-    } else if block_type == 0x3B {
-      break
-    } else {
-      raise @types.LoadError::DecodeFailed("GIF 未知 block type")
+      0x21 => {
+        // Extension
+        if pos >= len {
+          raise @types.LoadError::DecodeFailed(
+            "GIF 数据过短：无法读取 Extension label",
+          )
+        }
+        let label = data[pos].to_int()
+        pos += 1
+        if label == 0xF9 && pos + 6 <= len {
+          // Graphics Control Extension
+          let _block_size = data[pos].to_int()
+          let gce_packed = data[pos + 1].to_int()
+          gce_delay = read_u16_le(data, pos + 2) * 10
+          gce_transparent = if (gce_packed & 0x01) != 0 {
+            data[pos + 4].to_int()
+          } else {
+            -1
+          }
+          gce_disposal = (gce_packed >> 2) & 0x07
+          pos += 6
+        } else if label == 0x01 {
+          // Plain Text Extension
+          if pos + 8 > len {
+            raise @types.LoadError::DecodeFailed(
+              "GIF 数据过短：无法读取 Plain Text Extension header",
+            )
+          }
+          pos += 8
+          pos = gif_skip_sub_blocks(data, pos, len)
+        } else {
+          pos = gif_skip_sub_blocks(data, pos, len)
+        }
+      }
+      0x3B => break
+      _ => raise @types.LoadError::DecodeFailed("GIF 未知 block type")
     }
   }
   if frames.length() == 0 {

@@ -187,39 +187,43 @@ pub fn decode_png_pure(
   }
   let out_data : Array[Byte] = Array::make(pixel_count * out_ch, b'\x00')
   for i in 0..<pixel_count {
-    let (r, g, b, a) = if color_type == 3 {
-      // palette
-      let idx = unfiltered[i].to_int()
-      if idx >= palette.length() {
-        raise @types.LoadError::DecodeFailed("PNG palette 索引越界")
+    let (r, g, b, a) = match color_type {
+      3 => {
+        // palette
+        let idx = unfiltered[i].to_int()
+        if idx >= palette.length() {
+          raise @types.LoadError::DecodeFailed("PNG palette 索引越界")
+        }
+        let (r, g, b) = palette[idx]
+        (r, g, b, 255)
       }
-      let (r, g, b) = palette[idx]
-      (r, g, b, 255)
-    } else if color_type == 0 {
-      // gray
-      let v = unfiltered[i].to_int()
-      (v, v, v, 255)
-    } else if color_type == 2 {
-      // RGB
-      (
-        unfiltered[i * 3].to_int(),
-        unfiltered[i * 3 + 1].to_int(),
-        unfiltered[i * 3 + 2].to_int(),
-        255,
-      )
-    } else if color_type == 4 {
-      // gray + alpha
-      let v = unfiltered[i * 2].to_int()
-      let a = unfiltered[i * 2 + 1].to_int()
-      (v, v, v, a)
-    } else {
-      // RGBA
-      (
-        unfiltered[i * 4].to_int(),
-        unfiltered[i * 4 + 1].to_int(),
-        unfiltered[i * 4 + 2].to_int(),
-        unfiltered[i * 4 + 3].to_int(),
-      )
+      0 => {
+        // gray
+        let v = unfiltered[i].to_int()
+        (v, v, v, 255)
+      }
+      2 =>
+        // RGB
+        (
+          unfiltered[i * 3].to_int(),
+          unfiltered[i * 3 + 1].to_int(),
+          unfiltered[i * 3 + 2].to_int(),
+          255,
+        )
+      4 => {
+        // gray + alpha
+        let v = unfiltered[i * 2].to_int()
+        let a = unfiltered[i * 2 + 1].to_int()
+        (v, v, v, a)
+      }
+      _ =>
+        // RGBA
+        (
+          unfiltered[i * 4].to_int(),
+          unfiltered[i * 4 + 1].to_int(),
+          unfiltered[i * 4 + 2].to_int(),
+          unfiltered[i * 4 + 3].to_int(),
+        )
     }
     let (or, og, ob, oa) = match out_ch {
       1 => {
