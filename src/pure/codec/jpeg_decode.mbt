@@ -246,10 +246,28 @@ fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
 }
 
 ///|
-/// JPEG 解码（纯 MoonBit，全目标可用）。
-/// 支持 baseline JPEG (SOF0), 8-bit, YCbCr 3 通道。
-/// 不支持 progressive (SOF2)、CMYK、arithmetic coding。
-pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
+/// JPEG 解码头部信息
+priv struct JpegHeader {
+  width : Int
+  height : Int
+  num_components : Int
+  quant_tables : Array[Array[Int]]
+  huff_dc : Array[JpegHuffmanTable]
+  huff_ac : Array[JpegHuffmanTable]
+  component_h : Array[Int]
+  component_v : Array[Int]
+  component_qt : Array[Int]
+  restart_interval : Int
+  scan_comp_idx : Array[Int]
+  scan_dc_table : Array[Int]
+  scan_ac_table : Array[Int]
+  scan_ns : Int
+  entropy_start : Int
+}
+
+///|
+/// 解析 JPEG 标记段（SOF0/DQT/DHT/DRI/SOS），返回头部信息
+fn jpeg_parse_header(data : Bytes) -> JpegHeader raise @types.LoadError {
   let len = data.length()
   if len < 2 || data[0].to_int() != 0xFF || data[1].to_int() != 0xD8 {
     raise @types.LoadError::DecodeFailed("JPEG SOI marker 错误")
@@ -403,24 +421,130 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
         }
     }
   }
-  if width <= 0 || height <= 0 {
-    raise @types.LoadError::DecodeFailed("JPEG 尺寸无效")
+  JpegHeader::{
+    width,
+    height,
+    num_components,
+    quant_tables,
+    huff_dc,
+    huff_ac,
+    component_h,
+    component_v,
+    component_qt,
+    restart_interval,
+    scan_comp_idx,
+    scan_dc_table,
+    scan_ac_table,
+    scan_ns,
+    entropy_start,
   }
+}
+
+///|
+/// 写入单个 MCU 的像素到输出缓冲
+fn jpeg_write_mcu_pixels(
+  header : JpegHeader,
+  comp_data : Array[Array[Int]],
+  mx : Int,
+  my : Int,
+  max_h : Int,
+  max_v : Int,
+  mcu_width : Int,
+  mcu_height : Int,
+  out_channels : Int,
+  rgb_data : Array[Byte],
+) -> Unit {
+  let width = header.width
+  let height = header.height
+  let num_components = header.num_components
+  let scan_comp_idx = header.scan_comp_idx
+  let component_h = header.component_h
+  let component_v = header.component_v
+  for py in 0..<mcu_height {
+    for px in 0..<mcu_width {
+      let ox = mx * mcu_width + px
+      let oy = my * mcu_height + py
+      if ox >= width || oy >= height {
+        continue
+      }
+      if num_components == 1 {
+        let ci = scan_comp_idx[0]
+        let hi = component_h[ci]
+        let vi = component_v[ci]
+        let cx = px * hi / max_h
+        let cy = py * vi / max_v
+        let bx = cx / 8
+        let by = cy / 8
+        let ix = by * hi * 64 + bx * 64 + cy % 8 * 8 + cx % 8
+        let y_val = comp_data[ci][ix]
+        let oidx = oy * width * out_channels + ox * out_channels
+        let yb = y_val.to_byte()
+        rgb_data[oidx] = yb
+        rgb_data[oidx + 1] = yb
+        rgb_data[oidx + 2] = yb
+      } else {
+        let y_ci = scan_comp_idx[0]
+        let cb_ci = scan_comp_idx[1]
+        let cr_ci = scan_comp_idx[2]
+        let y_hi = component_h[y_ci]
+        let y_vi = component_v[y_ci]
+        let ycx = px * y_hi / max_h
+        let ycy = py * y_vi / max_v
+        let ybx = ycx / 8
+        let yby = ycy / 8
+        let y_idx = yby * y_hi * 64 + ybx * 64 + ycy % 8 * 8 + ycx % 8
+        let y_val = comp_data[y_ci][y_idx]
+        let cb_hi = component_h[cb_ci]
+        let cb_vi = component_v[cb_ci]
+        let cbcx = px * cb_hi / max_h
+        let cbcy = py * cb_vi / max_v
+        let cbbx = cbcx / 8
+        let cbby = cbcy / 8
+        let cb_idx = cbby * cb_hi * 64 + cbbx * 64 + cbcy % 8 * 8 + cbcx % 8
+        let cb_val = comp_data[cb_ci][cb_idx]
+        let cr_hi = component_h[cr_ci]
+        let cr_vi = component_v[cr_ci]
+        let crcx = px * cr_hi / max_h
+        let crcy = py * cr_vi / max_v
+        let crbx = crcx / 8
+        let crby = crcy / 8
+        let cr_idx = crby * cr_hi * 64 + crbx * 64 + crcy % 8 * 8 + crcx % 8
+        let cr_val = comp_data[cr_ci][cr_idx]
+        let (r, g, b) = ycbcr_to_rgb(y_val, cb_val, cr_val)
+        let oidx = oy * width * out_channels + ox * out_channels
+        rgb_data[oidx] = r.to_byte()
+        rgb_data[oidx + 1] = g.to_byte()
+        rgb_data[oidx + 2] = b.to_byte()
+      }
+    }
+  }
+}
+
+///|
+/// 解码 JPEG 扫描数据（MCU 循环），返回 RGB 像素
+fn jpeg_decode_scan(
+  header : JpegHeader,
+  data : Bytes,
+) -> @types.Image raise @types.LoadError {
+  let width = header.width
+  let height = header.height
+  let num_components = header.num_components
+  let zz = zigzag()
   let reader = JpegBitReader::{
     data,
-    len,
-    pos: entropy_start,
+    len: data.length(),
+    pos: header.entropy_start,
     bit_buf: 0,
     bit_cnt: 0,
   }
   let mut max_h = 1
   let mut max_v = 1
   for i in 0..<num_components {
-    if component_h[i] > max_h {
-      max_h = component_h[i]
+    if header.component_h[i] > max_h {
+      max_h = header.component_h[i]
     }
-    if component_v[i] > max_v {
-      max_v = component_v[i]
+    if header.component_v[i] > max_v {
+      max_v = header.component_v[i]
     }
   }
   let mcu_width = max_h * 8
@@ -441,9 +565,9 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     for _mx in 0..<mcus_x {
       let my = _my
       let mx = _mx
-      if restart_interval > 0 &&
+      if header.restart_interval > 0 &&
         mcu_count > 0 &&
-        mcu_count % restart_interval == 0 {
+        mcu_count % header.restart_interval == 0 {
         for i in 0..<num_components {
           dc_pred[i].val = 0
         }
@@ -462,14 +586,14 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       for _ in 0..<num_components {
         comp_data.push(Array::make(256, 0))
       }
-      for si in 0..<scan_ns {
-        let ci = scan_comp_idx[si]
-        let hi = component_h[ci]
-        let vi = component_v[ci]
+      for si in 0..<header.scan_ns {
+        let ci = header.scan_comp_idx[si]
+        let hi = header.component_h[ci]
+        let vi = header.component_v[ci]
         let nblocks = hi * vi
-        let dc_tab = huff_dc[scan_dc_table[si]]
-        let ac_tab = huff_ac[scan_ac_table[si]]
-        let qt = quant_tables[component_qt[ci]]
+        let dc_tab = header.huff_dc[header.scan_dc_table[si]]
+        let ac_tab = header.huff_ac[header.scan_ac_table[si]]
+        let qt = header.quant_tables[header.component_qt[ci]]
         for bi in 0..<nblocks {
           let block = jpeg_decode_block(
             reader,
@@ -490,64 +614,10 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
           }
         }
       }
-      for py in 0..<mcu_height {
-        for px in 0..<mcu_width {
-          let ox = mx * mcu_width + px
-          let oy = my * mcu_height + py
-          if ox >= width || oy >= height {
-            continue
-          }
-          if num_components == 1 {
-            let ci = scan_comp_idx[0]
-            let hi = component_h[ci]
-            let vi = component_v[ci]
-            let cx = px * hi / max_h
-            let cy = py * vi / max_v
-            let bx = cx / 8
-            let by = cy / 8
-            let ix = by * hi * 64 + bx * 64 + cy % 8 * 8 + cx % 8
-            let y_val = comp_data[ci][ix]
-            let oidx = oy * width * out_channels + ox * out_channels
-            let yb = y_val.to_byte()
-            rgb_data[oidx] = yb
-            rgb_data[oidx + 1] = yb
-            rgb_data[oidx + 2] = yb
-          } else {
-            let y_ci = scan_comp_idx[0]
-            let cb_ci = scan_comp_idx[1]
-            let cr_ci = scan_comp_idx[2]
-            let y_hi = component_h[y_ci]
-            let y_vi = component_v[y_ci]
-            let ycx = px * y_hi / max_h
-            let ycy = py * y_vi / max_v
-            let ybx = ycx / 8
-            let yby = ycy / 8
-            let y_idx = yby * y_hi * 64 + ybx * 64 + ycy % 8 * 8 + ycx % 8
-            let y_val = comp_data[y_ci][y_idx]
-            let cb_hi = component_h[cb_ci]
-            let cb_vi = component_v[cb_ci]
-            let cbcx = px * cb_hi / max_h
-            let cbcy = py * cb_vi / max_v
-            let cbbx = cbcx / 8
-            let cbby = cbcy / 8
-            let cb_idx = cbby * cb_hi * 64 + cbbx * 64 + cbcy % 8 * 8 + cbcx % 8
-            let cb_val = comp_data[cb_ci][cb_idx]
-            let cr_hi = component_h[cr_ci]
-            let cr_vi = component_v[cr_ci]
-            let crcx = px * cr_hi / max_h
-            let crcy = py * cr_vi / max_v
-            let crbx = crcx / 8
-            let crby = crcy / 8
-            let cr_idx = crby * cr_hi * 64 + crbx * 64 + crcy % 8 * 8 + crcx % 8
-            let cr_val = comp_data[cr_ci][cr_idx]
-            let (r, g, b) = ycbcr_to_rgb(y_val, cb_val, cr_val)
-            let oidx = oy * width * out_channels + ox * out_channels
-            rgb_data[oidx] = r.to_byte()
-            rgb_data[oidx + 1] = g.to_byte()
-            rgb_data[oidx + 2] = b.to_byte()
-          }
-        }
-      }
+      jpeg_write_mcu_pixels(
+        header, comp_data, mx, my, max_h, max_v, mcu_width, mcu_height, out_channels,
+        rgb_data,
+      )
       mcu_count += 1
     }
   }
@@ -557,4 +627,16 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     channels: out_channels,
     data: Bytes::from_array(rgb_data),
   }
+}
+
+///|
+/// JPEG 解码（纯 MoonBit，全目标可用）。
+/// 支持 baseline JPEG (SOF0), 8-bit, YCbCr 3 通道。
+/// 不支持 progressive (SOF2)、CMYK、arithmetic coding。
+pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
+  let header = jpeg_parse_header(data)
+  if header.width <= 0 || header.height <= 0 {
+    raise @types.LoadError::DecodeFailed("JPEG 尺寸无效")
+  }
+  jpeg_decode_scan(header, data)
 }
