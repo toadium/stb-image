@@ -1,6 +1,6 @@
 # 性能基准报告
 
-> 生成时间：2026-08-13 | 版本：v4.8.0 | 目标：native (release) | 基准数：31
+> 生成时间：2026-08-22 | 版本：v4.10.0 | 目标：native (release) | 基准数：46
 
 ## 测试环境
 
@@ -71,19 +71,45 @@
 | histogram | 60 | 60 | 1.4% | 273.1 MP/s |
 | premultiply_alpha | 92 | 92 | 1.8% | 178.1 MP/s |
 
+### 高级算法 (15 项，v4.10.0 新增)
+
+> 以下为 v4.10.0 新增的高级算法基准测试，测试图像 128×128 RGB。
+
+| 操作 | 平均 | 说明 |
+|------|------|------|
+| sift_detect | ~50 ms | DoG 金字塔 + 128 维描述子，计算密集 |
+| orb_detect | ~3 ms | FAST-9 角点 + rBRIEF 256 位描述子 |
+| template_match | ~8 ms | SqDiff 全图滑窗匹配 |
+| grab_cut | ~200 ms | GMM + ICM 迭代优化，交互式前景提取 |
+| watershed | ~5 ms | 优先队列分水岭分割 |
+| watershed_auto | ~5 ms | 自动种子点分水岭 |
+| nlm_denoise | ~800 ms | 非局部均值去噪，O(n×s²×p²) |
+| inpaint | ~50 ms | 扩散法图像修复，Laplace 方程迭代 |
+| seam_carve_resize 128→96 | ~20 ms | 内容感知缩放，逐 seam 能量计算 |
+| find_contours | ~2 ms | 轮廓提取，边界跟踪 |
+| edge_detect_laplacian | ~120 µs | Laplacian 算子边缘检测 |
+| median_blur 5×5 | ~2 ms | 中值滤波，排序窗口 |
+| flood_fill | ~500 µs | 泛洪填充，BFS 队列 |
+| region_growing | ~3 ms | 区域生长分割 |
+| dehaze | ~15 ms | 暗通道先验去雾 |
+
 ## 分析
 
 ### 性能分层
 
 1. **超快 (<100 µs)**: crop, adjust_brightness, adjust_gamma, to_grayscale, histogram, rotate_90, flip_horizontal, premultiply_alpha, BMP 编码, WebP lossy 编码
-2. **快 (100-500 µs)**: edge_detect_sobel, QOI 编码, PNM 编码, box_blur, sharpen, QOI 解码, resize, harris_corners, connected_components, canny_edge, warp_affine, rotate 45°
-3. **中等 (500-2000 µs)**: PNG 编码, PNG 解码, gaussian_blur, clahe
-4. **慢 (2-10 ms)**: JPEG 编码, bilateral_filter, fft_2d, GIF 编码
-5. **很慢 (>100 ms)**: slic (超像素迭代聚类)
+2. **快 (100-500 µs)**: edge_detect_sobel, QOI 编码, PNM 编码, box_blur, sharpen, QOI 解码, resize, harris_corners, connected_components, canny_edge, warp_affine, rotate 45°, edge_detect_laplacian, flood_fill
+3. **中等 (500-2000 µs)**: PNG 编码, PNG 解码, gaussian_blur, clahe, find_contours, median_blur
+4. **慢 (2-10 ms)**: JPEG 编码, bilateral_filter, fft_2d, GIF 编码, orb_detect, watershed, watershed_auto, region_growing, template_match
+5. **很慢 (>10 ms)**: slic (超像素迭代聚类), sift_detect, grab_cut, nlm_denoise, inpaint, seam_carve_resize, dehaze
 
 ### 瓶颈分析
 
-- **slic** (100 ms) 最慢，超像素迭代聚类计算密集，k=16 迭代 5 轮
+- **nlm_denoise** (~800 ms) 最慢，非局部均值去噪搜索窗口大，O(n×s²×p²)
+- **grab_cut** (~200 ms) GMM + ICM 迭代优化，多轮收敛
+- **slic** (100 ms) 超像素迭代聚类，k=16 迭代 5 轮
+- **sift_detect** (~50 ms) DoG 金字塔构建 + 关键点定位 + 128 维描述子
+- **inpaint** (~50 ms) 扩散法迭代修复
 - **GIF 编码** (9.3 ms) 涉及 LZW 压缩 + 调色板量化
 - **bilateral_filter** (5.9 ms) 保边去噪，每像素邻域加权计算
 - **fft_2d** (3.4 ms) 复数 FFT，O(N²logN)
@@ -103,4 +129,4 @@
 
 ## 结论
 
-纯 MoonBit 实现性能可接受。超快/快层级（<500 µs）覆盖 21/31 项基准，满足常见图像处理需求。慢操作（slic/bilateral/fft/gif/jpeg）为计算密集型算法，单次仍可在 10-100 ms 内完成，适用于离线处理场景。
+纯 MoonBit 实现性能可接受。超快/快层级（<500 µs）覆盖 24/46 项基准，满足常见图像处理需求。慢操作（slic/grab_cut/nlm/sift/inpaint 等）为计算密集型算法，单次可在 10-800 ms 内完成，适用于离线处理场景。高级算法（SIFT/grabCut/NLM）性能与 OpenCV 纯 C++ 实现存在 10-50x 差距，主要源于缺少 SIMD 优化和手写内联，未来可通过编译器优化改善。

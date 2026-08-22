@@ -12,7 +12,7 @@
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1177 通过）
+moon test --target native           # 运行测试（应 1196 通过）
 ```
 
 ## 🔧 开发流程
@@ -39,6 +39,7 @@ moon test --target native           # 运行测试（应 1177 通过）
 | 可见性 | 仅暴露必要函数为 `pub` | 内部辅助函数不加 `pub` |
 | 错误处理 | 使用 `raise @types.LoadError` | `raise LoadError::DecodeFailed("msg")` |
 | 测试命名 | `"函数名: 场景描述"` | `"threshold_pure: basic binarization"` |
+| 解码器安全 | 入口调用 `check_dims` 校验 | `@types.check_dims(w, h, ch)` |
 
 ## 🚫 核心约束
 

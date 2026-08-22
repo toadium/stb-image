@@ -1,10 +1,10 @@
 # image 架构文档
 
-> 版本 v4.8.0 | 283 公开函数 + 47 类型 | 1177 测试 × 4 目标 (native/wasm-gc/js/wasm)
+> 版本 v4.10.0 | 286 公开函数 + 1 常量 + 47 类型 | 1196 测试 × 4 目标 (native/wasm-gc/js/wasm)
 
 ## 概述
 
-image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit 实现，各 1177 测试通过。
+image 是 纯 MoonBit 图像处理库，无 C FFI 依赖，提供完整的图像解码/编码/缩放/处理能力。采用多子包架构（types, pure, lib, process, meta, util），根包 re-export 保持向后兼容 API。四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit 实现，各 1196 测试通过。
 
 ## 功能分类
 
@@ -421,7 +421,7 @@ flowchart TB
         FileIO["其他 (2)"]
     end
 
-    subgraph Proc["处理 (210+ 函数)"]
+    subgraph Proc["处理 (213+ 函数)"]
         Color["色彩 (40+)"]
         Filter["滤波 (18)"]
         Geo["几何 (15)"]
@@ -434,6 +434,11 @@ flowchart TB
     end
 
     subgraph UtilFn["工具 (21 函数)"]
+    end
+    subgraph Safety["安全 (3+1)"]
+        CheckDims["check_dims"]
+        SafeMul["safe_mul / safe_mul3"]
+        MaxDim["MAX_IMAGE_DIMENSION"]
         Pixel["像素操作 (3)"]
         PixelAdv["高级像素 (4)"]
         Compose["图像合成 (4)"]
@@ -621,6 +626,25 @@ image/
 **问题**：测试中需要构造 struct 实例
 
 **方案**：需要外部构造的类型用 `pub(all) struct`（如 `HoughLine`, `Contour`, `CornerPoint`），仅内部使用的用 `pub struct`
+
+## 安全机制 (v4.10.0)
+
+### 维度溢出守卫
+
+**问题**：恶意图像可声明超大 width/height 导致 OOM 或整数溢出（width × height × channels 溢出后分配小缓冲区，写入越界）
+
+**方案**：
+- `MAX_IMAGE_DIMENSION = 65535` — 单边像素上限，覆盖所有常见格式最大尺寸
+- `check_dims(width, height, channels)` — 所有解码器入口调用，校验三重条件：
+  1. width/height/channels 均为正数
+  2. width/height 不超过 MAX_IMAGE_DIMENSION
+  3. width × height × channels 不超过 Int 最大值（防溢出）
+- `safe_mul` / `safe_mul3` — 溢出安全乘法，返回 `Int?`，溢出时返回 `None`
+
+**覆盖范围**：PNG / BMP / GIF / TIFF / WebP / JPEG / HDR / QOI / TGA / PNM 全部 10 种解码器
+
+**测试**：19 项安全测试（safety_test.mbt）+ 5 项大尺寸溢出测试（overflow_test.mbt）
+
 
 ## 性能特征
 

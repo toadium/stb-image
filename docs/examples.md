@@ -17,4 +17,6 @@
 | example_25~29 | 图像修复/光流/grabCut/Retinex/去雾 |
 | example_30~32 | FFT/频域滤波/质量评估/安全解码 |
 
+> **安全 API**（v4.10.0）：`check_dims`、`safe_mul`、`safe_mul3`、`MAX_IMAGE_DIMENSION` 已集成到所有解码器入口，无需手动调用。用户也可直接调用 `check_dims(w, h, ch)` 在自定义代码中校验维度。
+
 源码：[src/examples/](https://github.com/toadium/stb-image/tree/main/src/examples)

@@ -7,9 +7,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1177%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1196%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-283%20functions%20%2B%2047%20types-blueviolet)]()
+[![Functions](https://img.shields.io/badge/API-286%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-0.4.10-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
@@ -34,8 +34,9 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **283 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
-| 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，未来支持增量解码） |
+| | 🟢 | **287 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
+| 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，v5.0 计划增量解码） |
+| 🟢 | **安全加固** | MAX_IMAGE_DIMENSION(65535) 维度守卫 + check_dims 全解码器入口校验 + safe_mul 溢出保护 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -133,16 +134,16 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 功能一览
 
-283 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
+287 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
 
 ## 🎯 多目标支持
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1177 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1177 | ✅ |
-| **js** | 纯 MoonBit | 1177 | ✅ |
-| **wasm** | 纯 MoonBit | 1177 | ✅ |
+| **native** | 纯 MoonBit | 1196 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1196 | ✅ |
+| **js** | 纯 MoonBit | 1196 | ✅ |
+| **wasm** | 纯 MoonBit | 1196 | ✅ |
 
 ---
 
@@ -178,13 +179,13 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（283 函数 + 47 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（286 函数 + 1 常量 + 47 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
-| [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（31 项基准） |
+| [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（46 项基准） |
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
-| [docs/features.md](docs/features.md) | 功能一览（283 API 分类概览） |
+| [docs/features.md](docs/features.md) | 功能一览（287 API 分类概览） |
 | [docs/contributing.md](docs/contributing.md) | 贡献指南（开发环境/流程/规范） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
@@ -200,7 +201,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1177）
+# 运行测试（四目标各 1196）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -258,6 +259,7 @@ moon info
 - **高级滤波** — 双边 / NLM 去噪 / CLAHE / Retinex / 去雾 / 图像修复
 - **特征描述** — LBP / GLCM 纹理 / Hu 矩 / 感知哈希
 - **WebP lossy (VP8) 编码** — 原项目不支持 WebP
+- **安全加固** — 维度溢出守卫（check_dims + MAX_IMAGE_DIMENSION）+ 溢出安全乘法（safe_mul）+ 全解码器入口校验
 
 ### 与原项目的差异
 
@@ -267,7 +269,7 @@ moon info
 | 依赖 | C 编译器 | 零 C 依赖 |
 | 目标 | native | native / wasm-gc / js / wasm |
 | 格式数 | 7 | 15 |
-| API 数 | ~30 | 283 |
+| API 数 | ~30 | 287 |
 | 高级算法 | 无 | 50+ |
 | 内存安全 | 手动 | GC 管理 |
 
