@@ -43,6 +43,7 @@ pub fn decode_tga_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   }
   let bytes_per_pixel = bpp / 8
   let out_channels = bytes_per_pixel
+  @types.check_dims(width, height, out_channels)
   // 行序：descriptor bit4=0 bottom-up, bit4=1 top-down
   let bottom_up = (descriptor & 0x10) == 0
   // 像素数据起始位置

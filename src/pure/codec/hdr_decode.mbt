@@ -171,6 +171,7 @@ pub fn decode_hdr_pure(data : Bytes) -> @types.ImageF raise @types.LoadError {
     None => raise @types.LoadError::DecodeFailed("invalid HDR header")
   }
   let len = data.length()
+  @types.check_dims(width, height, 3)
   let pixel_count = width * height
   // RGBE 数据：每像素 4 字节
   let rgbe : Array[Byte] = Array::make(pixel_count * 4, b'\x00')

@@ -53,6 +53,7 @@ pub fn decode_bmp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   let row_size = (abs_width * bytes_per_pixel + 3) / 4 * 4
   // 输出 channels
   let out_channels = bytes_per_pixel
+  @types.check_dims(abs_width, abs_height, out_channels)
   // 输出像素数据
   let pixel_count = abs_width * abs_height
   let pixels : Array[Byte] = Array::make(pixel_count * out_channels, b'\x00')

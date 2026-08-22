@@ -29,7 +29,7 @@ let anim : GifAnimation = load_gif_from_bytes(gif_bytes)
 // Query image info without decoding pixels
 let info : ImageInfo? = info_from_bytes(data)
 
-// Streaming decode (line-by-line, zero memory peak)
+// Streaming decode (line-by-line callback; currently decodes fully then dispatches row by row)
 decode_stream(data, fn(row, y) {
   // process row y : Array[Array[Int]]
 })
@@ -53,7 +53,7 @@ decode_stream(data, fn(row, y) {
 | CUR | ✅ | ✅ | Windows cursor |
 | ICNS | ✅ | ✅ | macOS icon |
 | APNG | ✅ | ✅ | animated PNG |
-| WebP | ✅ | ✅ | lossless (VP8L) decode + lossy (VP8) encode |
+| WebP | ✅ (lossless) | ✅ (lossy VP8) | lossless (VP8L) decode + lossy (VP8) encode; note: lossy encode output cannot be decoded by this library |
 
 > `detect_format` recognizes PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP via magic bytes. TIFF/ICO/CUR/ICNS/APNG/TGA require manual `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` calls.
 

@@ -60,17 +60,11 @@ pub fn decode_png_pure(
     if pos + 8 > len {
       raise @types.LoadError::DecodeFailed("PNG chunk 头部过短")
     }
-    let chunk_len = data[pos].to_int() * 16777216 +
-      data[pos + 1].to_int() * 65536 +
-      data[pos + 2].to_int() * 256 +
-      data[pos + 3].to_int()
+    let chunk_len = read_u32_be(data, pos)
     if chunk_len < 0 {
       raise @types.LoadError::DecodeFailed("PNG chunk 长度无效")
     }
-    let chunk_key = data[pos + 4].to_int() * 16777216 +
-      data[pos + 5].to_int() * 65536 +
-      data[pos + 6].to_int() * 256 +
-      data[pos + 7].to_int()
+    let chunk_key = read_u32_be(data, pos + 4)
     pos += 8
     if pos + chunk_len > len {
       raise @types.LoadError::DecodeFailed("PNG chunk 数据越界")
@@ -81,14 +75,8 @@ pub fn decode_png_pure(
         if chunk_len < 13 {
           raise @types.LoadError::DecodeFailed("PNG IHDR 过短")
         }
-        width = data[pos].to_int() * 16777216 +
-          data[pos + 1].to_int() * 65536 +
-          data[pos + 2].to_int() * 256 +
-          data[pos + 3].to_int()
-        height = data[pos + 4].to_int() * 16777216 +
-          data[pos + 5].to_int() * 65536 +
-          data[pos + 6].to_int() * 256 +
-          data[pos + 7].to_int()
+        width = read_u32_be(data, pos)
+        height = read_u32_be(data, pos + 4)
         bit_depth = data[pos + 8].to_int()
         color_type = data[pos + 9].to_int()
         interlace = data[pos + 12].to_int()
@@ -135,6 +123,7 @@ pub fn decode_png_pure(
     Some(c) => c
     None => raise @types.LoadError::DecodeFailed("PNG 无效 color type")
   }
+  @types.check_dims(width, height, ch)
   // zlib inflate IDAT 数据
   let raw = @util.zlib_inflate(Bytes::from_array(idat_data))
   // unfilter scanlines

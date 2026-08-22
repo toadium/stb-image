@@ -255,6 +255,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       "TIFF 仅支持 1/3/4 samples per pixel",
     )
   }
+  @types.check_dims(width, height, out_channels)
   // 读取像素数据
   let pixel_count = width * height
   let pixels : Array[Byte] = Array::make(pixel_count * out_channels, b'\x00')

@@ -37,6 +37,7 @@ pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("QOI 尺寸无效")
   }
   let out_channels = if channels == 3 { 3 } else { 4 }
+  @types.check_dims(width, height, out_channels)
   let pixel_count = width * height
   let pixels : Array[Byte] = Array::make(pixel_count * out_channels, b'\x00')
   let index_r : Array[Int] = Array::make(64, 0)

@@ -44,6 +44,7 @@ pub fn decode_pnm_16_pure(
     raise @types.LoadError::DecodeFailed("PNM maxval 后分隔符无效")
   }
   pos.val += 1
+  @types.check_dims(width, height, channels)
   let pixel_count = width * height
   let is_16bit = maxval >= 256
   let out_data : Array[Byte] = Array::make(pixel_count * channels * 2, b'\x00')

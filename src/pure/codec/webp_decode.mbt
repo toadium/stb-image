@@ -492,6 +492,7 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   }
   // Convert ARGB pixels to Image
   let channels = if alpha_used == 1 { 4 } else { 3 }
+  @types.check_dims(width, height, channels)
   let out : Array[Byte] = Array::make(n * channels, b'\x00')
   for i in 0..<n {
     let argb = pixels[i]

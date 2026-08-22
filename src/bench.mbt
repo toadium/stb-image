@@ -149,6 +149,53 @@ pub fn bench_run() -> Unit {
       ),
     )
   })
+  // === 高级算法 ===
+  b.bench(name="sift_detect 128x128", () => {
+    ignore(@feature.sift_detect(img128) catch { _ => [] })
+  })
+  b.bench(name="orb_detect 128x128", () => {
+    ignore(@feature.orb_detect(img128) catch { _ => [] })
+  })
+  b.bench(name="template_match 128x128", () => {
+    ignore(@feature.template_match(img128, img128) catch { _ => [] })
+  })
+  b.bench(name="grab_cut 128x128", () => {
+    ignore(@segment.grab_cut(img128, 64, 64, 64, 64) catch { _ => img128 })
+  })
+  b.bench(name="watershed 128x128", () => {
+    ignore(@segment.watershed(img128, Array::make(128 * 128, 0)) catch { _ => [] })
+  })
+  b.bench(name="watershed_auto 128x128", () => {
+    ignore(@segment.watershed_auto(img128) catch { _ => ([], 0) })
+  })
+  b.bench(name="nlm_denoise 128x128", () => {
+    ignore(@filter.nlm_denoise(img128) catch { _ => img128 })
+  })
+  b.bench(name="inpaint 128x128", () => {
+    ignore(@filter.inpaint(img128, img128) catch { _ => img128 })
+  })
+  b.bench(name="seam_carve_resize 128->96", () => {
+    ignore(@transform.seam_carve_resize(img128, 96, 96) catch { _ => img128 })
+  })
+  b.bench(name="find_contours 128x128", () => {
+    ignore(@edge.find_contours(img128) catch { _ => [] })
+  })
+  b.bench(name="edge_detect_laplacian 128x128", () => {
+    ignore(@edge.edge_detect_laplacian(img128))
+  })
+  b.bench(name="median_blur 128x128", () => {
+    ignore(@filter.median_blur(img128, 5))
+  })
+  b.bench(name="flood_fill 128x128", () => {
+    ignore(@segment.flood_fill(img128, 64, 64, [b'\xFF', b'\xFF', b'\xFF']) catch { _ => img128 })
+  })
+  b.bench(name="region_growing 128x128", () => {
+    ignore(@segment.region_growing_segment(img128, [(64, 64)]) catch { _ => (@segment.SegmentLabelImage::{ width: 0, height: 0, labels: [], num_regions: 0 }, []) })
+  })
+  b.bench(name="dehaze 128x128", () => {
+    ignore(@color.dehaze(img128) catch { _ => img128 })
+  })
+
 
   println(b.dump_summaries().to_string())
 }

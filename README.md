@@ -35,7 +35,7 @@
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
 | 🟢 | **283 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
-| 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调，大图处理零内存峰值 |
+| 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，未来支持增量解码） |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
@@ -58,7 +58,7 @@
 | CUR | ✅ | ✅ | Windows 光标 |
 | ICNS | ✅ | ✅ | macOS 图标 |
 | APNG | ✅ | ✅ | 动画 PNG |
-| WebP | ✅ | ✅ | lossless (VP8L) 解码 + lossy (VP8) 编码 |
+| WebP | ✅ (lossless) | ✅ (lossy VP8) | lossless (VP8L) 解码 + lossy (VP8) 编码；注意：lossy 编码结果不可被本库解码 |
 
 ---
 
@@ -93,7 +93,7 @@ println("frames=\{anim.frames.length()}, delays=\{anim.delays}")
 // 查询图像信息（不解码像素）
 let info : ImageInfo? = info_from_bytes(data)
 
-// 流式解码：逐行回调，大图零内存峰值
+// 流式解码：逐行回调（当前为全量解码后逐行分发）
 decode_stream(data, fn(row, y) {
   // 处理第 y 行像素 row : Array[Array[Int]]
 })
@@ -251,7 +251,7 @@ moon info
 
 在移植基础上，本项目新增了大量**原 `stb_image.h` 不具备**的高级能力：
 
-- **流式解码** — 逐行 / 分块回调，大图零内存峰值
+- **流式解码** — 逐行 / 分块回调接口（当前为全量解码后逐行分发）
 - **计算机视觉算法** — Canny / Harris / ORB / SIFT / 模板匹配 / 光流 / RANSAC / grabCut
 - **频域分析** — FFT / DCT / Haar 小波 / 频率滤波
 - **图像分割** — 分水岭 / SLIC 超像素 / K-means / 连通域

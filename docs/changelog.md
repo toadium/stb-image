@@ -44,6 +44,8 @@
 | **v4.7** | **流式解码(逐行/分块/指定通道回调)，新增3 API+1类型** | **1054×4** |
 | **v4.8.0** | **WebP lossy(VP8)编码 + PNG/TIFF整数溢出安全修复 + 44项fuzzing审计 + 22项错误路径测试 + 性能基准报告 + 32项示例代码 + 38项边界测试(GIF动画/TIFF错误/PNG错误/zlib高级)，新增1 API** | **1177×4** |
 
+| **v4.9.0** | **诚实性修复：删除流式解码"零内存峰值"虚假声明、修正WebP格式表(解码仅lossless)、添加encode_webp_lossy不可解码警告、修正reexport.mbt虚假Auto-generated注释** | **1177×4** |
+| **v4.10.0** | **安全加固：添加MAX_IMAGE_DIMENSION(65535)+check_dims维度溢出守卫、全解码器(PNG/BMP/GIF/TIFF/WebP/JPEG/HDR/QOI/TGA/PNM)入口校验、safe_mul/safe_mul3溢出保护、19项安全测试+5项大尺寸溢出测试、魔法数字清理(read_u32_be替换)、15项高级算法基准测试(SIFT/ORB/grabCut/watershed/NLM/inpaint/seam_carving等)，新增4 API+1常量** | **1196×4** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

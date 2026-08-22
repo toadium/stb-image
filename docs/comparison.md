@@ -34,7 +34,7 @@
 | HDR (HDR/EXR) | ✅ (float) | ❌ | ❌ | ❌ | ❌ | ❌ |
 | PNM (PPM/PGM) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | QOI | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| WebP | ✅ (lossless解码 + lossy编码) | ❌ | ❌ | ❌ | ❌ | ❌ |
+| WebP | ✅ (lossless VP8L only) | ❌ | ❌ | ❌ | ❌ | ❌ |
 | ICO | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | CUR | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | ICNS | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -51,7 +51,7 @@
 | JPEG | ✅ (quality) | ✅ (quality) | ✅ (quality) | ✅ | ❌ | ❌ |
 | TGA | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | GIF | ✅ (动画) | ✅ (单帧) | ✅ (动画) | ✅ | ❌ | ❌ |
-| WebP | ✅ (lossy VP8 + lossless解码) | ✅ (lossless) | ❌ | ❌ | ❌ | ❌ |
+| WebP | ✅ (lossless VP8L only) | ✅ (lossy VP8) | ❌ | ❌ | ❌ | ❌ |
 | ICO | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
 | ICNS | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | AVIF | ❌ | ✅ (js) | ❌ | ❌ | ❌ | ❌ |

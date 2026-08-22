@@ -178,6 +178,7 @@ pub fn decode_gif_animation_pure(
   }
   let screen_width = read_u16_le(data, 6)
   let screen_height = read_u16_le(data, 8)
+  @types.check_dims(screen_width, screen_height, 3)
   let packed = data[10].to_int()
   let has_gct = (packed & 0x80) != 0
   let gct_size = 1 << ((packed & 0x07) + 1)

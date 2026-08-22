@@ -155,6 +155,8 @@ fn build_vp8_frame_header(
 /// WebP lossy 编码（纯 MoonBit，全目标可用）
 /// 实现: VP8 key frame, DC-only 预测, 固定量化
 /// quality: 1-100 (越高越好质量，文件越大)
+/// ⚠️ 注意：本库的 WebP 解码器仅支持 lossless (VP8L)，无法解码此函数的 lossy (VP8) 输出。
+/// 编码结果可用于外部工具（如浏览器、libwebp）解码，但 decode_webp_pure 会失败。
 pub fn encode_webp_lossy_pure(
   img : @types.Image,
   quality? : Int = 75,

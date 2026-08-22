@@ -638,5 +638,6 @@ pub fn decode_jpeg_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   if header.width <= 0 || header.height <= 0 {
     raise @types.LoadError::DecodeFailed("JPEG 尺寸无效")
   }
+  @types.check_dims(header.width, header.height, header.num_components)
   jpeg_decode_scan(header, data)
 }

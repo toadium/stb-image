@@ -109,6 +109,7 @@ pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   }
   pos.val += 1
   // 像素数据
+  @types.check_dims(width, height, channels)
   let pixel_count = width * height
   let pixel_bytes = pixel_count * channels
   if pos.val + pixel_bytes > len {
