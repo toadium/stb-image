@@ -18,3 +18,4 @@ vitepress-docs/node_modules/
 nul
 testdata/
 coverage_report*.txt
+.codegraph/
