@@ -4,13 +4,15 @@
 
 **纯 MoonBit 图像处理库** · 零 C 依赖 · 四目标原生支持
 
+[English](README.en.md) · 简体中文
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1196%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1203%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-286%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-0.4.10-orange)]()
+[![Version](https://img.shields.io/badge/version-0.4.11-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
@@ -140,10 +142,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1196 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1196 | ✅ |
-| **js** | 纯 MoonBit | 1196 | ✅ |
-| **wasm** | 纯 MoonBit | 1196 | ✅ |
+| **native** | 纯 MoonBit | 1203 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 1203 | ✅ |
+| **js** | 纯 MoonBit | 1203 | ✅ |
+| **wasm** | 纯 MoonBit | 1203 | ✅ |
 
 ---
 
@@ -201,7 +203,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1196）
+# 运行测试（四目标各 1203）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js

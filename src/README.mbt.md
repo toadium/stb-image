@@ -3,7 +3,7 @@
 MoonBit 纯图像处理库 — 15 种格式编解码 + 50+ 计算机视觉算法。零 C FFI 依赖，native/wasm-gc/js/wasm 四目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-1177%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1203%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![API](https://img.shields.io/badge/API-283%20fn%20%2B%2047%20types-blueviolet)]()
 

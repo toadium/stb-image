@@ -15,6 +15,8 @@ import {
 }
 
 // Values
+pub const MAX_IMAGE_DIMENSION : Int = 65535
+
 pub fn adaptive_threshold_gaussian(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn adaptive_threshold_mean(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
@@ -90,6 +92,8 @@ pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @t
 pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
 pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
+
+pub fn check_dims(Int, Int, Int) -> Unit raise @types.LoadError
 
 pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
@@ -500,6 +504,10 @@ pub fn rotate_90(@types.Image) -> @types.Image
 pub fn rotate_90_16(@types.Image16) -> @types.Image16
 
 pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
+
+pub fn safe_mul(Int, Int) -> Int?
+
+pub fn safe_mul3(Int, Int, Int) -> Int?
 
 pub fn se_cross(Int) -> @segment.StructuringElement
 

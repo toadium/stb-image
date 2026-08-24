@@ -175,3 +175,35 @@ test "segment_to_color 空标签" {
   // 标签 0 越界（num_regions=0），应保持黑色
   assert_eq(out.data[0], b'\x00')
 }
+
+///|
+test "kmeans_segment k 超范围" {
+  let img = @types.Image::{
+    width: 2,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array(Array::make(6, b'\x80')),
+  }
+  try {
+    let _ = kmeans_segment(img, 0)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  try {
+    let _ = kmeans_segment(img, 300)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "kmeans_segment 空图像" {
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let (seg, regions) = kmeans_segment(img, 2)
+  assert_eq(seg.width, 0)
+  assert_eq(regions.length(), 0)
+}

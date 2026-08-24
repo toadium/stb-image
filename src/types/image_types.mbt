@@ -124,7 +124,9 @@ pub fn check_dims(
   // 先算 width * height，再乘 channels
   let max_int = 2147483647
   if width > max_int / height {
-    raise LoadError::DecodeFailed("图像像素总数溢出: \{width} * \{height}")
+    raise LoadError::DecodeFailed(
+      "图像像素总数溢出: \{width} * \{height}",
+    )
   }
   let pixel_count = width * height
   if pixel_count > max_int / channels {

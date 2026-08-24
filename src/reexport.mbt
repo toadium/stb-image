@@ -49,7 +49,11 @@ pub type ResizeFilter = @types.ResizeFilter
 pub const MAX_IMAGE_DIMENSION : Int = @types.MAX_IMAGE_DIMENSION
 
 ///|
-pub fn check_dims(width : Int, height : Int, channels : Int) -> Unit raise LoadError {
+pub fn check_dims(
+  width : Int,
+  height : Int,
+  channels : Int,
+) -> Unit raise LoadError {
   @types.check_dims(width, height, channels)
 }
 

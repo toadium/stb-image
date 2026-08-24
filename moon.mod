@@ -1,6 +1,6 @@
 name = "walkzzz/image"
 
-version = "0.4.10"
+version = "0.4.11"
 
 license = "MIT"
 

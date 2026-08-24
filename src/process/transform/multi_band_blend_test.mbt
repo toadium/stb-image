@@ -101,3 +101,61 @@ test "multi_band_blend: preserves dimensions" {
   assert_eq(result.height, 2)
   assert_eq(result.channels, 3)
 }
+
+///|
+test "multi_band_blend: mismatched img dimensions raises error" {
+  let img_a = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x80')),
+  }
+  let img_b = @types.Image::{
+    width: 3,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(12, b'\x80')),
+  }
+  let mask = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x80')),
+  }
+  try {
+    let _ = multi_band_blend(img_a, img_b, mask, num_bands=2)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "multi_band_blend: mismatched mask dimensions raises error" {
+  let img_a = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x80')),
+  }
+  let img_b = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(16, b'\x80')),
+  }
+  let mask = @types.Image::{
+    width: 3,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(12, b'\x80')),
+  }
+  try {
+    let _ = multi_band_blend(img_a, img_b, mask, num_bands=2)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

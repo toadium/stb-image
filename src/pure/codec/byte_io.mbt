@@ -24,8 +24,8 @@ fn read_u16_be(data : Bytes, offset : Int) -> Int {
 
 ///|
 /// 读取 4 字节大端无符号整数
-///|
 
+///|
 fn read_u32_be(data : Bytes, offset : Int) -> Int {
   (data[offset].to_int() << 24) |
   (data[offset + 1].to_int() << 16) |

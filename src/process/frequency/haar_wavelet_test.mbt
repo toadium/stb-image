@@ -133,3 +133,17 @@ test "haar_denoise RGB 图" {
   assert_eq(out.height, 4)
   assert_eq(out.channels, 1)
 }
+
+///|
+test "ihaar_transform_1d 单元素" {
+  let data = [5.0F]
+  let result = ihaar_transform_1d(data)
+  assert_eq(result[0], 5.0F)
+}
+
+///|
+test "ihaar_transform_1d 空数组" {
+  let data : Array[Float] = []
+  let result = ihaar_transform_1d(data)
+  assert_eq(result.length(), 0)
+}

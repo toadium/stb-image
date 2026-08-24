@@ -87,3 +87,20 @@ test "watershed 1x1 输入" {
   assert_eq(labels.length(), 1)
   assert_eq(labels[0], 1)
 }
+
+///|
+test "watershed 不支持通道数" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 2,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = watershed(img, [1, 0, 0, 0])
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

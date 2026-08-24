@@ -7,20 +7,18 @@ test "overflow PNG: huge dimensions in IHDR rejected gracefully" {
   let data : Array[Byte] = [
     b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A',
     // IHDR chunk: length=13
-    b'\x00', b'\x00', b'\x00', b'\x0D',
-    b'\x49', b'\x48', b'\x44', b'\x52',
+     b'\x00', b'\x00', b'\x00', b'\x0D', b'\x49', b'\x48', b'\x44', b'\x52',
     // width=65535 (0x00FFFF)
-    b'\x00', b'\x00', b'\xFF', b'\xFF',
+     b'\x00', b'\x00', b'\xFF', b'\xFF',
     // height=65535
-    b'\x00', b'\x00', b'\xFF', b'\xFF',
+     b'\x00', b'\x00', b'\xFF', b'\xFF',
     // bit_depth=8, color_type=2 (RGB), compression=0, filter=0, interlace=0
-    b'\x08', b'\x02', b'\x00', b'\x00', b'\x00',
+     b'\x08', b'\x02', b'\x00', b'\x00', b'\x00',
     // CRC (dummy)
-    b'\x00', b'\x00', b'\x00', b'\x00',
+     b'\x00', b'\x00', b'\x00', b'\x00',
     // IEND
-    b'\x00', b'\x00', b'\x00', b'\x00',
-    b'\x49', b'\x45', b'\x4E', b'\x44',
-    b'\xAE', b'\x42', b'\x60', b'\x82',
+     b'\x00', b'\x00', b'\x00', b'\x00', b'\x49', b'\x45', b'\x4E', b'\x44', b'\xAE',
+    b'\x42', b'\x60', b'\x82',
   ]
   try {
     let _ = @codec.decode_png_pure(Bytes::from_array(data))
@@ -35,22 +33,21 @@ test "overflow BMP: huge dimensions rejected gracefully" {
   // BMP with width=100000 and height=100000 (exceeds MAX_IMAGE_DIMENSION)
   let data : Array[Byte] = [
     b'\x42', b'\x4D', // BM
-    b'\x36', b'\x00', b'\x00', b'\x00', // file size
-    b'\x00', b'\x00', b'\x00', b'\x00', // reserved
-    b'\x36', b'\x00', b'\x00', b'\x00', // data offset
-    b'\x28', b'\x00', b'\x00', b'\x00', // header size
+     b'\x36', b'\x00', b'\x00', b'\x00', // file size
+     b'\x00', b'\x00', b'\x00', b'\x00', // reserved
+     b'\x36', b'\x00', b'\x00', b'\x00', // data offset
+     b'\x28', b'\x00', b'\x00', b'\x00', // header size
     // width=100000 (0x000186A0) little-endian
-    b'\xA0', b'\x86', b'\x01', b'\x00',
+     b'\xA0', b'\x86', b'\x01', b'\x00',
     // height=100000
-    b'\xA0', b'\x86', b'\x01', b'\x00',
-    b'\x01', b'\x00', // planes
-    b'\x18', b'\x00', // bpp=24
-    b'\x00', b'\x00', b'\x00', b'\x00', // compression
-    b'\x00', b'\x00', b'\x00', b'\x00', // image size
-    b'\x00', b'\x00', b'\x00', b'\x00', // x ppm
-    b'\x00', b'\x00', b'\x00', b'\x00', // y ppm
-    b'\x00', b'\x00', b'\x00', b'\x00', // colors used
-    b'\x00', b'\x00', b'\x00', b'\x00', // important colors
+     b'\xA0', b'\x86', b'\x01', b'\x00', b'\x01', b'\x00', // planes
+     b'\x18', b'\x00', // bpp=24
+     b'\x00', b'\x00', b'\x00', b'\x00', // compression
+     b'\x00', b'\x00', b'\x00', b'\x00', // image size
+     b'\x00', b'\x00', b'\x00', b'\x00', // x ppm
+     b'\x00', b'\x00', b'\x00', b'\x00', // y ppm
+     b'\x00', b'\x00', b'\x00', b'\x00', // colors used
+     b'\x00', b'\x00', b'\x00', b'\x00', // important colors
   ]
   try {
     let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
@@ -67,13 +64,12 @@ test "overflow QOI: huge dimensions rejected gracefully" {
   let data : Array[Byte] = [
     b'\x71', b'\x6F', b'\x69', b'\x66', // "qoif"
     // width=100000 big-endian (0x000186A0)
-    b'\x00', b'\x01', b'\x86', b'\xA0',
+     b'\x00', b'\x01', b'\x86', b'\xA0',
     // height=100000
-    b'\x00', b'\x01', b'\x86', b'\xA0',
-    b'\x03', // channels=3
-    b'\x00', // colorspace=0
+     b'\x00', b'\x01', b'\x86', b'\xA0', b'\x03', // channels=3
+     b'\x00', // colorspace=0
     // end marker
-    b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x01',
+     b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x01',
   ]
   try {
     let _ = @codec.decode_qoi_pure(Bytes::from_array(data))
@@ -102,13 +98,13 @@ test "overflow GIF: huge dimensions rejected gracefully" {
   // but will fail later due to missing data
   let data : Array[Byte] = [
     b'\x47', b'\x49', b'\x46', b'\x38', b'\x39', b'\x61', // GIF89a
-    b'\xFF', b'\xFF', // width=65535
-    b'\xFF', b'\xFF', // height=65535
-    b'\x00', // packed (no GCT)
-    b'\x00', // bg color
-    b'\x00', // aspect ratio
+     b'\xFF', b'\xFF', // width=65535
+     b'\xFF', b'\xFF', // height=65535
+     b'\x00', // packed (no GCT)
+     b'\x00', // bg color
+     b'\x00', // aspect ratio
     // trailer
-    b'\x3B',
+     b'\x3B',
   ]
   try {
     let _ = @codec.decode_gif_pure(Bytes::from_array(data))
