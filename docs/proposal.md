@@ -74,6 +74,10 @@
 
 https://github.com/toadium/stb-image
 
-## 9. mooncakes.io 发布
+## 9. Gitlink 仓库
+
+https://www.gitlink.org.cn/walkzzz/stb-image
+
+## 10. mooncakes.io 发布
 
 `moon add walkzzz/image`
