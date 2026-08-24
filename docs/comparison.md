@@ -8,7 +8,7 @@
 
 | 库 | 版本 | 实现方式 | 目标 | 依赖 | 许可证 |
 |---|---|---|---|---|---|
-| **walkzzz/image** | 0.4.10 | 纯 MoonBit | native/wasm-gc/js/wasm | 无 | MIT |
+| **walkzzz/image** | 0.4.11 | 纯 MoonBit | native/wasm-gc/js/wasm | 无 | MIT |
 | mizchi/image | 0.4.3 | 纯 MoonBit | js/native/wasm-gc | mizchi/zlib | Apache-2.0 |
 | bikallem/image | 0.1.0 | 纯 MoonBit (Go 移植) | ? | bikallem/compress, moonbitlang/x, bikallem/blit | Apache-2.0 |
 | gmlewis/image | 0.16.19 | 纯 MoonBit (Go 移植) | ? | gmlewis/flate, hash, io, zlib | Apache-2.0 |
@@ -89,7 +89,7 @@
 
 | 库 | 测试数 | 特殊验证 |
 |---|---|---|
-| image | 1196×4 | 纯 MoonBit, 多目标, fuzzing审计 |
+| image | 1203×4 | 纯 MoonBit, 多目标, fuzzing审计 |
 | mizchi/image | ? | ? |
 | bikallem/image | ? | Go 对等测试 (parity) |
 | gmlewis/image | ? | ? |
@@ -101,8 +101,8 @@
 ### image（本库）
 - **纯 MoonBit 实现**：无 C FFI 依赖，四目标 (native/wasm-gc/js/wasm) 均使用纯 MoonBit
 - **格式覆盖广**：PSD/HDR/PNM/QOI 等独特格式，16-bit/float 深度
-- **多目标支持**：native/wasm-gc/js/wasm 全目标通过 1196 测试
-- **完整图像处理**：resize/crop/rotate/draw/滤波/色彩/分割/频域/ORB/SIFT/SIFT匹配/RANSAC/grabCut/流式解码/光流/模板匹配/WebP lossy编码等 287 公开函数
+- **多目标支持**：native/wasm-gc/js/wasm 全目标通过 1203 测试
+- **完整图像处理**：resize/crop/rotate/draw/滤波/色彩/分割/频域/ORB/SIFT/SIFT匹配/RANSAC/grabCut/流式解码/光流/模板匹配/WebP lossy编码等 286 公开函数
 - **安全加固**：MAX_IMAGE_DIMENSION(65535) + check_dims 维度守卫 + safe_mul/safe_mul3 溢出保护 + 全解码器入口校验 + PNG/TIFF 整数溢出修复 + 44 项 fuzzing 测试 + 19 项安全测试 + 5 项溢出测试
 - **编码器扩展**：QOI/ICO/ICNS/GIF/PNM/WebP lossy 编码
 

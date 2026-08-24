@@ -7,7 +7,8 @@
 [English](README.en.md) · 简体中文
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
+[![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
+[![OSC2026](https://img.shields.io/badge/OSC2026-参赛项目-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
 [![Tests](https://img.shields.io/badge/tests-1203%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
@@ -26,6 +27,10 @@
 
 > 详细说明（版本映射、格式检测、多目标、核心约束）见 [docs/notes.md](docs/notes.md)。
 
+## 🏆 OSC 2026 参赛声明
+
+本项目参与 **2026 MoonBit 国产基础软件开源大赛（OSC 2026）**。AI 辅助说明：本项目在开发过程中使用了 AI 编程助手辅助完成代码生成、测试编写、文档撰写和重构工作。所有 AI 生成代码均经过人工审查、测试验证和逻辑确认，确保代码质量、正确性和可维护性。详细 AI 使用范围见 [docs/skill.md](docs/skill.md)。
+
 ---
 
 ## ✨ 亮点
@@ -36,7 +41,7 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| | 🟢 | **287 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
+| | 🟢 | **286 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
 | 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，v5.0 计划增量解码） |
 | 🟢 | **安全加固** | MAX_IMAGE_DIMENSION(65535) 维度守卫 + check_dims 全解码器入口校验 + safe_mul 溢出保护 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
@@ -136,7 +141,7 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 功能一览
 
-287 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
+286 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
 
 ## 🎯 多目标支持
 
@@ -187,7 +192,7 @@ src/
 | [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（46 项基准） |
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
-| [docs/features.md](docs/features.md) | 功能一览（287 API 分类概览） |
+| [docs/features.md](docs/features.md) | 功能一览（286 API 分类概览） |
 | [docs/contributing.md](docs/contributing.md) | 贡献指南（开发环境/流程/规范） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
@@ -271,7 +276,7 @@ moon info
 | 依赖 | C 编译器 | 零 C 依赖 |
 | 目标 | native | native / wasm-gc / js / wasm |
 | 格式数 | 7 | 15 |
-| API 数 | ~30 | 287 |
+| API 数 | ~30 | 286 |
 | 高级算法 | 无 | 50+ |
 | 内存安全 | 手动 | GC 管理 |
 

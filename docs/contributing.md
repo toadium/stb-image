@@ -12,7 +12,7 @@
 git clone git@github.com:toadium/stb-image.git
 cd stb-image
 moon check                          # 编译检查
-moon test --target native           # 运行测试（应 1196 通过）
+moon test --target native           # 运行测试（应 1203 通过）
 ```
 
 ## 🔧 开发流程

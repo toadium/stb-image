@@ -5,7 +5,8 @@
 **Pure MoonBit Image Library** · Zero C Dependencies · Four-Target Native Support
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260713-blue)](https://www.moonbitlang.com/)
+[![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
+[![OSC2026](https://img.shields.io/badge/OSC2026-Contest%20Project-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
 [![Tests](https://img.shields.io/badge/tests-1203%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
@@ -24,6 +25,10 @@
 
 > For detailed notes (version mapping, format detection, multi-target, core constraints), see [docs/notes.md](docs/notes.md).
 
+## 🏆 OSC 2026 Contest Declaration
+
+This project participates in the **2026 MoonBit Domestic Open Source Ecosystem Competition (OSC 2026)**. AI usage disclosure: AI programming assistants were used during development for code generation, test writing, documentation, and refactoring. All AI-generated code has been manually reviewed, tested, and verified for correctness and maintainability. See [docs/skill.md](docs/skill.md) for detailed AI usage scope.
+
 ---
 
 ## ✨ Highlights
@@ -34,7 +39,7 @@
 | 🟢 | **Four targets** | native / wasm-gc / js / wasm share one codebase, no conditional compilation |
 | 🟢 | **Broad format coverage** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — includes exclusive PSD, HDR |
 | 🟢 | **Full pixel depth** | 8-bit `Image`, 16-bit `Image16`, HDR float `ImageF` |
-| | 🟢 | **287 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy encoding |
+| | 🟢 | **286 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy encoding |
 | 🟢 | **Streaming decode** | Row-by-row / chunked / channel-specified callbacks (currently full decode then row dispatch; incremental decode planned for v5.0) |
 | 🟢 | **Safety hardening** | MAX_IMAGE_DIMENSION(65535) guard + check_dims validation at all decoder entry points + safe_mul overflow protection |
 | 🟢 | **Multi-package architecture** | 8 sub-packages with clear responsibilities, parallel compilation, independent testing |
@@ -134,7 +139,7 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 Features
 
-287 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
+286 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
 
 ## 🎯 Multi-Target Support
 
@@ -185,7 +190,7 @@ src/
 | [docs/performance_report.md](docs/performance_report.md) | Performance benchmark report (46 benchmarks) |
 | [docs/notes.md](docs/notes.md) | Usage notes and core constraints |
 | [docs/examples.md](docs/examples.md) | Complete examples (32 examples) |
-| [docs/features.md](docs/features.md) | Feature overview (287 APIs by category) |
+| [docs/features.md](docs/features.md) | Feature overview (286 APIs by category) |
 | [docs/contributing.md](docs/contributing.md) | Contributing guide (dev setup/workflow/conventions) |
 | [docs/changelog.md](docs/changelog.md) | Version changelog |
 
@@ -271,7 +276,7 @@ On top of the port, this project adds many advanced capabilities **not in `stb_i
 | Dependencies | C compiler | Zero C deps |
 | Targets | native | native / wasm-gc / js / wasm |
 | Formats | 7 | 15 |
-| APIs | ~30 | 287 |
+| APIs | ~30 | 286 |
 | Advanced algorithms | None | 50+ |
 | Memory safety | Manual | GC managed |
 

@@ -5,7 +5,7 @@
 ## 版本与安装
 
 > [!NOTE]
-> 包版本 `0.4.10`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v4.10.0`。安装：`moon add walkzzz/image`。
+> 包版本 `0.4.11`（mooncakes，要求 0.x.y 格式）对应功能迭代版本 `v5.3.0`。安装：`moon add walkzzz/image`。
 
 ## 格式检测
 
@@ -15,7 +15,7 @@
 ## 多目标测试
 
 > [!NOTE]
-> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1196 测试全部通过，覆盖率 90.4%。
+> 四目标（native / wasm-gc / js / wasm）均使用同一套纯 MoonBit 代码，各 1203 测试全部通过，覆盖率 90.4%。
 
 > [!TIP]
 > 四目标共用 `src/pure/` 下的同一套代码，无任何条件编译或目标分支。
