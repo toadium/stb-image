@@ -1,0 +1,691 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src"
+
+import {
+  "walkzzz/image/src/lib",
+  "walkzzz/image/src/meta",
+  "walkzzz/image/src/process/color",
+  "walkzzz/image/src/process/edge",
+  "walkzzz/image/src/process/feature",
+  "walkzzz/image/src/process/frequency",
+  "walkzzz/image/src/process/segment",
+  "walkzzz/image/src/process/transform",
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/util",
+}
+
+// Values
+pub const MAX_IMAGE_DIMENSION : Int = 65535
+
+pub fn adaptive_threshold_gaussian(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn adaptive_threshold_mean(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn add_border(@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn add_noise_gaussian(@types.Image, Float, UInt) -> @types.Image
+
+pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
+
+pub fn adjust_brightness(@types.Image, Int) -> @types.Image
+
+pub fn adjust_brightness_16(@types.Image16, Int) -> @types.Image16
+
+pub fn adjust_brightness_f(@types.ImageF, Float) -> @types.ImageF
+
+pub fn adjust_contrast(@types.Image, Float) -> @types.Image
+
+pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16
+
+pub fn adjust_contrast_f(@types.ImageF, Float) -> @types.ImageF
+
+pub fn adjust_gamma(@types.Image, Float) -> @types.Image
+
+pub fn ahash(@types.Image) -> Array[Int]
+
+pub fn apply_colormap(@types.Image, @color.Colormap) -> @types.Image
+
+pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn approx_poly_dp(Array[@edge.ContourPoint], Float, closed? : Bool) -> Array[@edge.ContourPoint]
+
+pub fn bench_run() -> Unit
+
+pub fn bilateral_filter(@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError
+
+pub fn bilateral_filter_fast(@types.Image, Int, Float, Float, Int) -> @types.Image raise @types.LoadError
+
+pub fn blend_color_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_color_dodge(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_darken(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_difference(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_exclusion(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_hard_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_lighten(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_linear_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_linear_dodge(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_multiply(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_overlay(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_screen(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn box_blur(@types.Image, Int) -> @types.Image
+
+pub fn box_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn box_blur_f(@types.ImageF, Int) -> @types.ImageF
+
+pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
+
+pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
+
+pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
+
+pub fn check_dims(Int, Int, Int) -> Unit raise @types.LoadError
+
+pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
+
+pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int)
+
+pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float
+
+pub fn compute_energy(@types.Image) -> Array[Double]
+
+pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
+
+pub fn compute_stats(@types.Image) -> @util.ImageStats
+
+pub fn compute_stats_16(@types.Image16) -> @util.ImageStats
+
+pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
+
+pub fn connected_components(@types.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
+
+pub fn contour_area(@edge.Contour) -> Float
+
+pub fn contour_perimeter(@edge.Contour) -> Float
+
+pub fn convert_iphone_png_to_rgb(Bool) -> Unit
+
+pub fn convex_hull(Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint]
+
+pub fn convolve(@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError
+
+pub fn create_exif_segment(@meta.ExifInfo) -> Bytes
+
+pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
+
+pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
+
+pub fn dct_2d(@types.Image) -> Array[Array[Double]]
+
+pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
+
+pub fn decode_apng(Bytes) -> @types.PngAnimation raise @types.LoadError
+
+pub fn decode_cur(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_icns(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_ico(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_qoi(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_stream(Bytes, (Int, Array[Byte]) -> Unit) -> @lib.StreamInfo raise @types.LoadError
+
+pub fn decode_stream_channels(Bytes, Int, (Int, Array[Byte]) -> Unit) -> @lib.StreamInfo raise @types.LoadError
+
+pub fn decode_stream_chunked(Bytes, Int, (Int, @types.Image) -> Unit) -> @lib.StreamInfo raise @types.LoadError
+
+pub fn decode_tiff(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_webp(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
+
+pub fn detect_format(Bytes) -> @types.ImageFormat
+
+pub fn dhash(@types.Image) -> Array[Int]
+
+pub fn dilate(@types.Image) -> @types.Image
+
+pub fn dilate_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
+
+pub fn draw_circle(@types.Image, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
+
+pub fn draw_contours(@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn draw_copy(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn draw_corners(@types.Image, Array[@feature.CornerPoint], color? : Array[Byte], radius? : Int) -> @types.Image raise @types.LoadError
+
+pub fn draw_line(@types.Image, Int, Int, Int, Int, Array[Byte], thickness? : Int) -> @types.Image
+
+pub fn draw_over(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn draw_polygon(@types.Image, Array[(Int, Int)], Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
+
+pub fn draw_rectangle(@types.Image, Int, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
+
+pub fn edge_detect_laplacian(@types.Image) -> @types.Image
+
+pub fn edge_detect_prewitt(@types.Image) -> @types.Image
+
+pub fn edge_detect_sobel(@types.Image) -> @types.Image
+
+pub fn edge_detect_sobel_16(@types.Image16) -> @types.Image16
+
+pub fn edge_detect_sobel_f(@types.ImageF) -> @types.ImageF
+
+pub fn encode_apng(@types.PngAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_cur(@types.Image) -> Bytes
+
+pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_icns(@types.Image) -> Bytes
+
+pub fn encode_ico(@types.Image) -> Bytes
+
+pub fn encode_ico_sizes(Array[@types.Image]) -> Bytes
+
+pub fn encode_pgm(@types.Image) -> Bytes
+
+pub fn encode_pnm(@types.Image) -> Bytes
+
+pub fn encode_ppm(@types.Image) -> Bytes
+
+pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tiff(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_webp_lossy(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+
+pub fn erode(@types.Image) -> @types.Image
+
+pub fn erode_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn failure_reason() -> String
+
+pub fn fft_2d(@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError
+
+pub fn fft_magnitude(@frequency.FFTResult, Bool) -> @types.Image
+
+pub fn fft_shift(@frequency.FFTResult) -> @frequency.FFTResult
+
+pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
+
+pub fn find_contours(@types.Image) -> Array[@edge.Contour] raise @types.LoadError
+
+pub fn find_horizontal_seam(Array[Double], Int, Int) -> Array[Int]
+
+pub fn find_vertical_seam(Array[Double], Int, Int) -> Array[Int]
+
+pub fn flip_horizontal(@types.Image) -> @types.Image
+
+pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
+
+pub fn flip_horizontal_f(@types.ImageF) -> @types.ImageF
+
+pub fn flip_vertical(@types.Image) -> @types.Image
+
+pub fn flip_vertically_on_write(Bool) -> Unit
+
+pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
+
+pub fn floyd_steinberg(@types.Image, Int) -> @types.Image
+
+pub fn freq_filter(@types.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
+
+pub fn freq_filter_gaussian(@types.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
+
+pub fn gabor_filter(@types.Image, Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> @types.Image raise @types.LoadError
+
+pub fn gabor_filter_bank(@types.Image, Int, Float, num_orientations? : Int, lambda? : Float, gamma? : Float) -> @types.Image raise @types.LoadError
+
+pub fn gabor_kernel(Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> Array[Array[Float]] raise @types.LoadError
+
+pub fn gamma_tonemap(@types.ImageF, Float) -> @types.Image
+
+pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image
+
+pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16
+
+pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF
+
+pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix?
+
+pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.PerspectiveMatrix?
+
+pub fn get_rotation_matrix_2d((Float, Float), Float, Float) -> @transform.AffineMatrix
+
+pub fn glcm_features(Array[Array[Int]]) -> @feature.GlcmFeatures
+
+pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
+
+pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
+
+pub fn grab_cut(@types.Image, Int, Int, Int, Int, iterations? : Int) -> @types.Image raise @types.LoadError
+
+pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
+
+pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
+
+pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
+
+pub fn haar_inverse_transform_2d(@frequency.HaarWaveletResult) -> @types.Image
+
+pub fn haar_transform_1d(Array[Float]) -> Array[Float]
+
+pub fn haar_transform_2d(@types.Image, levels? : Int) -> @frequency.HaarWaveletResult raise @types.LoadError
+
+pub fn hamming_distance(Array[Int], Array[Int]) -> Int
+
+pub fn harris_corners(@types.Image, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
+
+pub fn hdr_to_ldr_gamma(Float) -> Unit
+
+pub fn hdr_to_ldr_scale(Float) -> Unit
+
+pub fn histogram(@types.Image) -> Array[Int]
+
+pub fn histogram_equalize(@types.Image) -> @types.Image
+
+pub fn histogram_matching(@types.Image, @types.Image) -> @types.Image
+
+pub fn histogram_normalize(@types.Image) -> @types.Image
+
+pub fn horn_schunck(@types.Image, @types.Image, alpha? : Float, iterations? : Int) -> (Array[Float], Array[Float]) raise @types.LoadError
+
+pub fn hough_circles(@types.Image, dp? : Int, min_dist? : Int, param1? : Int, param2? : Int, min_radius? : Int, max_radius? : Int) -> Array[@edge.Circle] raise @types.LoadError
+
+pub fn hough_lines(@types.Image, Int, theta_resolution? : Float, rho_resolution? : Float) -> Array[@edge.HoughLine] raise @types.LoadError
+
+pub fn hough_lines_nms(Array[@edge.HoughLine], rho_threshold? : Float, theta_threshold? : Float) -> Array[@edge.HoughLine]
+
+pub fn hsl_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn hsv_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn hu_moments(@edge.Moments) -> Array[Double]
+
+pub fn idct_2d(Array[Array[Double]]) -> @types.Image
+
+pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
+
+pub fn ihaar_transform_1d(Array[Float]) -> Array[Float]
+
+pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
+
+pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
+
+pub fn inpaint(@types.Image, @types.Image, iterations? : Int) -> @types.Image raise @types.LoadError
+
+pub fn inpaint_fast(@types.Image, @types.Image, radius? : Int) -> @types.Image raise @types.LoadError
+
+pub fn integral_image(@types.Image) -> @feature.IntegralImage raise @types.LoadError
+
+pub fn integral_image_sq(@types.Image) -> @feature.IntegralImageSq raise @types.LoadError
+
+pub fn integral_mean(@feature.IntegralImage, Int, Int, Int, Int) -> Float
+
+pub fn integral_sum(@feature.IntegralImage, Int, Int, Int, Int) -> Int64
+
+pub fn integral_sum_sq(@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64
+
+pub fn integral_variance(@feature.IntegralImage, @feature.IntegralImageSq, Int, Int, Int, Int) -> Float
+
+pub fn invert(@types.Image) -> @types.Image
+
+pub fn is_16_bit_from_bytes(Bytes) -> Bool
+
+pub fn is_hdr_from_bytes(Bytes) -> Bool
+
+pub fn is_supported_format(Bytes) -> Bool
+
+pub fn kmeans_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn kmeans_segment(@types.Image, Int, max_iters? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
+
+pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn lbp_uniform(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn ldr_to_hdr_gamma(Float) -> Unit
+
+pub fn ldr_to_hdr_scale(Float) -> Unit
+
+pub fn load_f_from_bytes(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
+
+pub fn load_gif_from_bytes(Bytes) -> @types.GifAnimation raise @types.LoadError
+
+pub fn lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], window_size? : Int, max_iter? : Int) -> Array[@feature.FlowResult] raise @types.LoadError
+
+pub fn mean_value(@types.Image) -> Float
+
+pub fn mean_value_16(@types.Image16) -> Float
+
+pub fn mean_value_f(@types.ImageF) -> Float
+
+pub fn median_blur(@types.Image, Int) -> @types.Image
+
+pub fn median_blur_16(@types.Image16, Int) -> @types.Image16
+
+pub fn median_blur_f(@types.ImageF, Int) -> @types.ImageF
+
+pub fn median_cut(@types.Image, Int) -> @types.Image
+
+pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
+
+pub fn morph_blackhat(@types.Image) -> @types.Image
+
+pub fn morph_close(@types.Image) -> @types.Image
+
+pub fn morph_close_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn morph_gradient(@types.Image) -> @types.Image
+
+pub fn morph_open(@types.Image) -> @types.Image
+
+pub fn morph_open_custom(@types.Image, @segment.StructuringElement) -> @types.Image
+
+pub fn morph_tophat(@types.Image) -> @types.Image
+
+pub fn mse(@types.Image, @types.Image) -> Double
+
+pub fn msr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
+
+pub fn msrcr(@types.Image, sigmas? : Array[Float], gain? : Float, offset? : Float, alpha? : Float, beta? : Float) -> @types.Image raise @types.LoadError
+
+pub fn multi_band_blend(@types.Image, @types.Image, @types.Image, num_bands? : Int) -> @types.Image raise @types.LoadError
+
+pub fn nlm_denoise(@types.Image, patch_size? : Int, search_size? : Int, h? : Int) -> @types.Image raise @types.LoadError
+
+pub fn nlm_denoise_fast(@types.Image, patch_size? : Int, search_size? : Int, h? : Int, step? : Int) -> @types.Image raise @types.LoadError
+
+pub fn orb_detect(@types.Image, max_features? : Int, threshold? : Int) -> Array[@feature.OrbDescriptor] raise @types.LoadError
+
+pub fn orb_hamming(@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int
+
+pub fn orb_match(Array[@feature.OrbDescriptor], Array[@feature.OrbDescriptor], max_distance? : Int) -> Array[@feature.DescriptorMatch]
+
+pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn phash(@types.Image) -> Array[Int]
+
+pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn psnr(@types.Image, @types.Image) -> Double
+
+pub fn pyr_down(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]?
+
+pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
+
+pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
+
+pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
+
+pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image
+
+pub fn remove_horizontal_seam(@types.Image, Array[Int]) -> @types.Image
+
+pub fn remove_vertical_seam(@types.Image, Array[Int]) -> @types.Image
+
+pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
+
+pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
+
+pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn rgb_to_cmyk(Int, Int, Int) -> (Int, Int, Int, Int)
+
+pub fn rgb_to_hsl(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_hsv(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_lab(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_xyz(Int, Int, Int) -> (Float, Float, Float)
+
+pub fn rgb_to_ycbcr(Int, Int, Int) -> (Int, Int, Int)
+
+pub fn rotate(@types.Image, Float) -> @types.Image
+
+pub fn rotate_180(@types.Image) -> @types.Image
+
+pub fn rotate_180_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_180_f(@types.ImageF) -> @types.ImageF
+
+pub fn rotate_270(@types.Image) -> @types.Image
+
+pub fn rotate_270_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_270_f(@types.ImageF) -> @types.ImageF
+
+pub fn rotate_90(@types.Image) -> @types.Image
+
+pub fn rotate_90_16(@types.Image16) -> @types.Image16
+
+pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
+
+pub fn safe_mul(Int, Int) -> Int?
+
+pub fn safe_mul3(Int, Int, Int) -> Int?
+
+pub fn se_cross(Int) -> @segment.StructuringElement
+
+pub fn se_ellipse(Int) -> @segment.StructuringElement
+
+pub fn se_rect(Int, Int) -> @segment.StructuringElement
+
+pub fn seam_carve_resize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn segment_to_color(@segment.SegmentLabelImage) -> @types.Image
+
+pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
+
+pub fn set_flip_vertically_on_load(Bool) -> Unit
+
+pub fn set_unpremultiply_on_load(Bool) -> Unit
+
+pub fn sharpen(@types.Image, Float) -> @types.Image
+
+pub fn sift_detect(@types.Image, max_features? : Int, contrast_threshold? : Float) -> Array[@feature.SiftDescriptor] raise @types.LoadError
+
+pub fn sift_match(Array[@feature.SiftDescriptor], Array[@feature.SiftDescriptor], max_distance? : Float, ratio_test? : Float) -> Array[@feature.SiftMatch]
+
+pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn slic(@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError
+
+pub fn ssim(@types.Image, @types.Image) -> Double
+
+pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
+
+pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn template_match(@types.Image, @types.Image, match_method? : @feature.TemplateMatchMethod) -> Array[@feature.TemplateMatchResult] raise @types.LoadError
+
+pub fn template_match_best(@types.Image, @types.Image, match_method? : @feature.TemplateMatchMethod) -> @feature.TemplateMatchResult? raise @types.LoadError
+
+pub fn threshold(@types.Image, Int) -> @types.Image
+
+pub fn threshold_otsu(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn to_grayscale(@types.Image) -> @types.Image
+
+pub fn to_rgb(@types.Image) -> @types.Image
+
+pub fn to_rgba(@types.Image) -> @types.Image
+
+pub fn transpose(@types.Image) -> @types.Image
+
+pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn visualize_distance_transform(Array[Float], Int, Int) -> @types.Image
+
+pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn warp_affine(@types.Image, (Float, Float, Float, Float, Float, Float), Int, Int) -> @types.Image
+
+pub fn warp_perspective(@types.Image, @transform.PerspectiveMatrix, Int, Int) -> @types.Image
+
+pub fn watershed(@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError
+
+pub fn watershed_auto(@types.Image) -> (Array[Int], Int) raise @types.LoadError
+
+pub fn write_bmp_to_bytes(@types.Image) -> Bytes
+
+pub fn write_exif_to_bytes(@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadError
+
+pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn write_jpeg_to_bytes(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn write_png_to_bytes(@types.Image) -> Bytes
+
+pub fn write_tga_to_bytes(@types.Image) -> Bytes
+
+pub fn xyz_to_rgb(Float, Float, Float) -> (Int, Int, Int)
+
+pub fn ycbcr_to_rgb(Int, Int, Int) -> (Int, Int, Int)
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+pub using @transform {type AffineMatrix}
+
+pub using @edge {type Circle}
+
+pub using @color {type Colormap}
+
+pub using @frequency {type Complex}
+
+pub using @segment {type ConnectedComponent}
+
+pub using @segment {type ConnectedComponentLabelImage}
+
+pub using @edge {type Contour}
+
+pub using @edge {type ContourPoint}
+
+pub using @feature {type CornerPoint}
+
+pub using @feature {type DescriptorMatch}
+
+pub using @meta {type ExifInfo}
+
+pub using @frequency {type FFTResult}
+
+pub using @feature {type FlowResult}
+
+pub using @frequency {type FreqFilterType}
+
+pub using @types {type GifAnimation}
+
+pub using @feature {type GlcmFeatures}
+
+pub using @frequency {type HaarWaveletResult}
+
+pub using @feature {type HistCompareMethod}
+
+pub using @edge {type HoughLine}
+
+pub using @types {type Image}
+
+pub using @types {type Image16}
+
+pub using @types {type ImageF}
+
+pub using @types {type ImageFormat}
+
+pub using @types {type ImageInfo}
+
+pub using @util {type ImageStats}
+
+pub using @util {type ImageStatsF}
+
+pub using @feature {type IntegralImage}
+
+pub using @feature {type IntegralImageSq}
+
+pub using @types {type LoadError}
+
+pub using @edge {type Moments}
+
+pub using @feature {type OrbDescriptor}
+
+pub using @feature {type OrbKeyPoint}
+
+pub using @transform {type PerspectiveMatrix}
+
+pub using @types {type PngAnimation}
+
+pub using @meta {type PngTextChunk}
+
+pub using @types {type ResizeEdge}
+
+pub using @types {type ResizeFilter}
+
+pub using @segment {type SegmentLabelImage}
+
+pub using @segment {type SegmentRegion}
+
+pub using @feature {type SiftDescriptor}
+
+pub using @feature {type SiftKeyPoint}
+
+pub using @feature {type SiftMatch}
+
+pub using @lib {type StreamInfo}
+
+pub using @segment {type StructuringElement}
+
+pub using @segment {type SuperpixelResult}
+
+pub using @feature {type TemplateMatchMethod}
+
+pub using @feature {type TemplateMatchResult}
+
+// Traits
