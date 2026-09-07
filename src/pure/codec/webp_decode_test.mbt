@@ -173,10 +173,9 @@ test "decode_webp_pure: wrong RIFF magic raises" {
 test "decode_webp_pure: lossy VP8 raises" {
   // Construct minimal RIFF + WEBP + VP8 (lossy, not VP8L)
   let data : Array[Byte] = [
-    b'R', b'I', b'F', b'F', 0x10, 0x00, 0x00, 0x00, b'W', b'E', b'B', b'P',
-    b'V', b'P', b'8', b' ', 0x08, 0x00, 0x00, 0x00,
-    0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,
+    b'R', b'I', b'F', b'F', 0x10, 0x00, 0x00, 0x00, b'W', b'E', b'B', b'P', b'V',
+    b'P', b'8', b' ', 0x08, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   ]
   try {
     let _ = decode_webp_pure(Bytes::from_array(data))
@@ -192,18 +191,17 @@ test "decode_webp_pure: VP8L with transform skips" {
   // Construct a VP8L with a predictor transform (type 0)
   let vp8l_data : Array[Int] = [
     0x2F, // VP8L signature
-    0x00, 0x00, // width=1, height=1 (14-bit: 0,0)
-    0x00, // alpha=0, version=0
-    0x01, // has_transform=1
-    0x00, // transform_type=0 (predictor)
-    0x08, // predictor bits=3 (unused)
-    0x00, // no_transforms_after
-    0x00, // no_color_cache
-    0x00, // no_meta
-    0x00, // simple_huffman: is_simple=1, max_bits=0
+     0x00, 0x00, // width=1, height=1 (14-bit: 0,0)
+     0x00, // alpha=0, version=0
+     0x01, // has_transform=1
+     0x00, // transform_type=0 (predictor)
+     0x08, // predictor bits=3 (unused)
+     0x00, // no_transforms_after
+     0x00, // no_color_cache
+     0x00, // no_meta
+     0x00, // simple_huffman: is_simple=1, max_bits=0
     // Literal green=0, R=0, B=0, A=255
-    0x00, 0xFF, 0x00, 0xFF,
-    0x00, 0x00, 0x00, // EOB + padding
+     0x00, 0xFF, 0x00, 0xFF, 0x00, 0x00, 0x00, // EOB + padding
   ]
   let vp8l_len = vp8l_data.length()
   let riff_size = 4 + 4 + 4 + vp8l_len
@@ -216,13 +214,19 @@ test "decode_webp_pure: VP8L with transform skips" {
   result.push(((riff_size >> 8) & 0xFF).to_byte())
   result.push(((riff_size >> 16) & 0xFF).to_byte())
   result.push(((riff_size >> 24) & 0xFF).to_byte())
-  for b in [b'W', b'E', b'B', b'P'] { result.push(b) }
-  for b in [b'V', b'P', b'8', b'L'] { result.push(b) }
+  for b in [b'W', b'E', b'B', b'P'] {
+    result.push(b)
+  }
+  for b in [b'V', b'P', b'8', b'L'] {
+    result.push(b)
+  }
   result.push((vp8l_len & 0xFF).to_byte())
   result.push(((vp8l_len >> 8) & 0xFF).to_byte())
   result.push(((vp8l_len >> 16) & 0xFF).to_byte())
   result.push(((vp8l_len >> 24) & 0xFF).to_byte())
-  for v in vp8l_data { result.push(v.to_byte()) }
+  for v in vp8l_data {
+    result.push(v.to_byte())
+  }
   try {
     let _ = decode_webp_pure(Bytes::from_array(result))
     assert_true(true)
