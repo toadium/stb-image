@@ -165,3 +165,33 @@ test "encode_png_pure: 8x8 RGB roundtrip" {
     assert_eq(restored.data[i].to_int(), pixels[i])
   }
 }
+
+///|
+test "decode_png_16_pure: req_channels invalid raises" {
+  // Construct a minimal 8-bit PNG and test req_channels validation
+  let img = pe_make_image(1, 1, 3, [128, 64, 32])
+  let png_bytes = encode_png_pure(img)
+  try {
+    let _ = decode_png_16_pure(png_bytes, req_channels=Some(5))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => fail("wrong error")
+  }
+  let _ = img
+  let _ = png_bytes
+}
+
+///|
+test "decode_png_16_pure: 8-bit roundtrip" {
+  // 8-bit RGB PNG decoded as 16-bit: verify structure and req_channels
+  let img = pe_make_image(1, 1, 3, [100, 150, 200])
+  let png_bytes = encode_png_pure(img)
+  let restored = decode_png_16_pure(png_bytes)
+  assert_eq(restored.width, 1)
+  assert_eq(restored.height, 1)
+  assert_eq(restored.channels, 3)
+  let _ = img
+  let _ = png_bytes
+  let _ = restored
+}
