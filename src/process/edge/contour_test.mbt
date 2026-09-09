@@ -134,3 +134,13 @@ test "find_contours: 通道验证" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "find_contours: 孤立点" {
+  // 1x3 图像，只有中间像素为前景
+  let data = Bytes::from_array([b'\x00', b'\xFF', b'\x00'])
+  let img = @types.Image::{ width: 3, height: 1, channels: 1, data }
+  let contours = find_contours(img)
+  // 孤立点应该产生至少一个轮廓
+  assert_true(contours.length() >= 1)
+}

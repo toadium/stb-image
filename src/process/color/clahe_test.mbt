@@ -131,3 +131,25 @@ test "clahe: 1x1 with large tile_size (tile_pixels=0)" {
   let _ = img
   let _ = result
 }
+
+///|
+test "clahe: clamp_i bounds (below lo and above hi)" {
+  // Test that clamp_i correctly clamps values below lo and above hi
+  // This covers the lo and hi branches in clamp_i helper
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array([
+      b'\x00', b'\x01', b'\x02', b'\x03',
+      b'\x04', b'\x05', b'\x06', b'\x07',
+      b'\x08', b'\x09', b'\x0A', b'\x0B',
+      b'\x0C', b'\x0D', b'\x0E', b'\x0F',
+    ]),
+  }
+  // Use a large clip_limit to ensure CDF values can exceed bounds
+  let result = clahe(img, 2, 10.0)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 4)
+  assert_eq(result.channels, 1)
+}

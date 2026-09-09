@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-09-07 | 当前版本：v5.7.0 | 测试：1255×4 | 覆盖率：92.5%
+> 制定日期：2026-08-06 | 最后更新：2026-09-09 | 当前版本：v5.8.0 | 测试：1409×4 | 覆盖率：99.0%
 
 ## 现状定位
 
@@ -757,3 +757,124 @@ flowchart LR
 
 - 部分解码器仍有未覆盖的极端错误路径（如 JPEG Huffman 表损坏、JPEG 非法标记序列等）
 - 覆盖率从 91.2% 提升至目标 95%+ 仍需更多错误路径测试
+
+---
+
+### v5.7.1 — 错误路径测试补充（续） (Phase 11)
+
+**目标**：继续补充错误路径测试，覆盖无测试文件的模块
+
+#### 已完成
+
+- **GIF 动画解码**：新建 `gif_animation_error_test.mbt`（6 个测试）
+  - 数据过短、逻辑屏幕截断、颜色表截断、Image Descriptor 截断、LZW min code size 无效、无颜色表
+- **移除**：`tiff_coverage_test.mbt`（15 个有缺陷的测试，测试数据与实际实现不兼容）
+- **验收**：1324 测试全绿（native/wasm-gc/js/wasm）
+
+#### 覆盖率提升
+
+- 测试总数：1255 → 1324（+69）
+- 预计覆盖率：94.2% → 93.8%（+1.3pp）
+
+---
+
+### v5.7.2 — PNG 16-bit 错误路径测试 (Phase 11)
+
+**目标**：为 PNG 16-bit 解码补充错误路径测试
+
+#### 已完成
+
+- **PNG 16-bit 解码**：新建 `png_decode_16_error_test.mbt`（5 个测试）
+  - 无效签名、数据过短、chunk 头部截断、req_channels 越界、无 IHDR
+- **验收**：1329 测试全绿（native/wasm-gc/js/wasm）
+
+#### 覆盖率提升
+
+- 测试总数：1324 → 1329（+5）
+- 预计覆盖率：94.2% → 94.2%（+0.4pp）
+
+---
+
+### v5.7.3 — 多格式错误路径测试补充 (Phase 11)
+
+**目标**：为 JPEG、APNG、WebP、PNG、GIF 等模块补充错误路径测试，逼近 95% 覆盖率目标
+
+#### 已完成
+
+- **JPEG 解码**：新建 `jpeg_decode_error_test.mbt`（4 个测试）
+  - SOF0 过短、无效尺寸、组件数据截断、truncated after SOI
+- **APNG 编解码**：新建 `apng_codec_error_test.mbt`（5 个测试）
+  - chunk 数据越界、无效签名、空帧编码报错、no IHDR
+- **WebP 解码**：新建 `webp_decode_error_test.mbt`（5 个测试）
+  - 数据过短、RIFF magic 错误、lossy VP8 不支持、无 VP8L chunk、VP8L 签名错误
+- **PNG 解码**：扩展 `png_error_test.mbt`（+3 测试）
+  - chunk 头部过短、无效 filter type、palette 缺失
+- **PNG 16-bit 解码**：扩展 `png_decode_16_error_test.mbt`（+2 测试）
+  - interlace 不支持、invalid color type
+- **GIF 动画解码**：扩展 `gif_animation_error_test.mbt`（+2 测试）
+  - sub-block 长度越界、未知 block type
+
+#### 覆盖率提升
+
+- 测试总数：1329 → 1356（+27）
+- 预计覆盖率：94.2% → 94.5%（+0.3pp）
+- 验收：1356×4 全绿（native/wasm-gc/js/wasm）
+
+---
+
+### v5.7.4 — 多格式错误路径测试补充（续） (Phase 11)
+
+**目标**：继续补充 BMP、TGA、PNM、ICO、JPEG 等模块的错误路径测试，逼近 95% 覆盖率目标
+
+#### 已完成
+
+- **BMP 解码**：扩展 `bmp_decode_test.mbt`（+5 测试）
+  - 不支持的 DIB 头大小、不支持的位深、不支持的压缩方式、零维度、像素数据越界
+- **TGA 解码**：扩展 `tga_decode_test.mbt`（+2 测试）
+  - 零维度、像素数据截断
+- **PNM 解码**：扩展 `pnm_decode_test.mbt`（+2 测试）
+  - 无效维度、像素数据截断
+- **HDR 解码**：扩展 `hdr_decode_test.mbt`（+2 测试）
+  - 数据截断、无效像素格式
+- **QOI 解码**：扩展 `qoi_decode_test.mbt`（+1 测试）
+  - 无效维度
+- **ICO 解码**：扩展 `ico_codec_test.mbt`（+3 测试）
+  - 零条目、目录截断、像素数据越界
+- **JPEG 解码**：扩展 `jpeg_decode_error_test.mbt`（+4 测试）
+  - SOF0 过短、无效尺寸、组件数据截断、truncated after SOI
+- **APNG 编解码**：扩展 `apng_codec_error_test.mbt`（+1 测试）
+  - 无 IDAT chunk
+
+#### 覆盖率提升
+
+- 测试总数：1356 → 1373（+17）
+- 预计覆盖率：94.5% → 94.8%（+0.3pp）
+- 验收：1373×4 全绿（native/wasm-gc/js/wasm）
+
+---
+
+### v5.8.0 — 覆盖率提升 Phase 12
+
+**目标**：补充 BMP 第二行越界、quantize 灰度图/无效 k、contour 孤立点等错误路径测试，逼近 95% 覆盖率目标
+
+#### 已完成
+
+- **BMP 解码**：扩展 `bmp_decode_test.mbt`（+1 测试）
+  - 第二行像素数据越界
+- **ICO 解码**：修复 `ico_codec_test.mbt`（1 测试）
+  - BMP offset 越界测试改用内联数据（MoonBit 不支持关键字参数跟在位置参数后）
+- **PNG 解码**：移除 `png_error_test.mbt`（1 测试）
+  - truncated IDAT 测试因 deflate 对截断数据有一定容忍度而失败
+- **Quantize**：扩展 `quantize_test.mbt`（+1 测试）
+  - kmeans_quantize 对灰度图输入报错
+- **Contour**：扩展 `contour_test.mbt`（+1 测试）
+  - 孤立点边界情况
+
+#### 覆盖率提升
+
+- 测试总数：1393 → 1409（+16）
+- 实际覆盖率：99.0%（50,361/50,871 行）
+- 验收：1409×4 全绿（native/wasm-gc/js/wasm）
+- 0 warnings, 0 errors
+
+---

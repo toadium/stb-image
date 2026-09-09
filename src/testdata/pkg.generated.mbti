@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/testdata"
+
+// Values
+pub let corrupt_random_bin : Bytes
+
+pub let corrupt_truncated_png : Bytes
+
+pub let test_4x4_red_bmp : Bytes
+
+pub let test_4x4_red_gif : Bytes
+
+pub let test_4x4_red_jpg : Bytes
+
+pub let test_4x4_red_png : Bytes
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

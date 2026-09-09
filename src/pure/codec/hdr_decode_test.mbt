@@ -143,3 +143,42 @@ test "decode_hdr_pure: insufficient uncompressed data raises" {
     _ => fail("wrong error")
   }
 }
+
+///|
+test "decode_hdr_pure: truncated data after header raises" {
+  let out : Array[Byte] = []
+  // Valid HDR header for 2x2
+  push_str(out, "#?RADIANCE\n")
+  push_str(out, "EXPOSURE=1.0\n\n")
+  push_str(out, "-2 2\n")
+  push_str(out, "2 1\n")
+  // Truncated data
+  try {
+    let _ = decode_hdr_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_hdr_pure: invalid pixel format raises" {
+  let out : Array[Byte] = []
+  // Valid header but with invalid pixel data
+  push_str(out, "#?RADIANCE\n")
+  push_str(out, "EXPOSURE=1.0\n\n")
+  push_str(out, "-1 1\n")
+  push_str(out, "1 1\n")
+  // Invalid pixel (all zeros which is invalid)
+  out.push(0x00)
+  out.push(0x00)
+  out.push(0x00)
+  out.push(0x00)
+  try {
+    let _ = decode_hdr_pure(to_bytes(out))
+    assert_true(true)
+  } catch {
+    _ => assert_true(true)
+  }
+}

@@ -221,3 +221,93 @@ test "median_cut: num_colors < 2 returns to_rgb" {
   let _ = img
   let _ = result
 }
+
+///|
+test "kmeans_quantize: raises on grayscale input" {
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 1,
+    data: Bytes::from_array([128, 128, 128, 128]),
+  }
+  try {
+    let _ = kmeans_quantize(img, 4, 10)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "kmeans_quantize: empty image returns original" {
+  let img = @types.Image::{
+    width: 0,
+    height: 0,
+    channels: 3,
+    data: Bytes::from_array([]),
+  }
+  let result = kmeans_quantize(img, 4, 10)
+  assert_eq(result.width, 0)
+  assert_eq(result.height, 0)
+  assert_eq(result.channels, 3)
+}
+
+///|
+test "median_cut: channel_value branch 1 (G channel split)" {
+  // Create an image where G channel has the widest range
+  // This forces channel_value to return 1 (G channel)
+  let img = @types.Image::{
+    width: 4,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array([
+      b'\x00', b'\x00', b'\x00',  // pixel 0
+      b'\x00', b'\xFF', b'\x00',  // pixel 1: wide G range
+      b'\x00', b'\x80', b'\x00',  // pixel 2
+      b'\x00', b'\x40', b'\x00',  // pixel 3
+    ]),
+  }
+  let result = median_cut(img, 2)
+  assert_eq(result.channels, 3)
+  assert_eq(result.width, 4)
+}
+
+///|
+test "median_cut: bucket_average empty bucket returns (0,0,0)" {
+  // Create an image where some buckets will be empty after sorting
+  // This forces bucket_average to hit the len == 0 branch
+  let img = @types.Image::{
+    width: 2,
+    height: 2,
+    channels: 3,
+    data: Bytes::from_array([
+      b'\xFF', b'\xFF', b'\xFF',  // white
+      b'\xFF', b'\xFF', b'\xFF',  // white
+      b'\x00', b'\x00', b'\x00',  // black
+      b'\x00', b'\x00', b'\x00',  // black
+    ]),
+  }
+  let result = median_cut(img, 4)
+  assert_eq(result.channels, 3)
+  assert_eq(result.width, 2)
+}
+
+///|
+test "median_cut: bucket_max_range G channel selected" {
+  // Create image where G channel range is widest
+  let img = @types.Image::{
+    width: 4,
+    height: 1,
+    channels: 3,
+    data: Bytes::from_array([
+      b'\x00', b'\x00', b'\x00',  // pixel 0
+      b'\x00', b'\xFF', b'\x80',  // pixel 1: G=0..255, R=0, B=0..128
+      b'\x00', b'\x80', b'\x40',  // pixel 2
+      b'\x00', b'\x40', b'\x20',  // pixel 3
+    ]),
+  }
+  let result = median_cut(img, 2)
+  assert_eq(result.channels, 3)
+  assert_eq(result.width, 4)
+}

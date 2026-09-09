@@ -437,3 +437,30 @@ test "decode_gif_pure: interlace not supported raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "decode_gif_pure: truncated LZW data raises" {
+  let out = make_gif_header_gct(1, 1, [(0xFF, 0x00, 0x00), (0x00, 0x00, 0x00)])
+  out.push(b'\x2C')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x02')
+  // Truncated: says 2 bytes but only 1 follows
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x3B')
+  try {
+    let _ = decode_gif_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

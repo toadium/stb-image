@@ -196,3 +196,30 @@ test "decode_tga_pure: unsupported bpp raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "decode_tga_pure: zero dimensions raises" {
+  let out = make_tga_header(0, 0, 24, 0, 0)
+  try {
+    let _ = decode_tga_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_tga_pure: truncated pixel data raises" {
+  let out = make_tga_header(1, 1, 24, 0, 0)
+  // Append only partial pixel data (need 3 bytes for 24-bit)
+  out.push(b'\xFF')
+  out.push(b'\x00')
+  try {
+    let _ = decode_tga_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

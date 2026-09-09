@@ -47,6 +47,7 @@
 | **v4.9.0** | **诚实性修复：删除流式解码"零内存峰值"虚假声明、修正WebP格式表(解码仅lossless)、添加encode_webp_lossy不可解码警告、修正reexport.mbt虚假Auto-generated注释** | **1177×4** |
 | **v4.10.0** | **安全加固：添加MAX_IMAGE_DIMENSION(65535)+check_dims维度溢出守卫、全解码器(PNG/BMP/GIF/TIFF/WebP/JPEG/HDR/QOI/TGA/PNM)入口校验、safe_mul/safe_mul3溢出保护、19项安全测试+5项大尺寸溢出测试、魔法数字清理(read_u32_be替换)、15项高级算法基准测试(SIFT/ORB/grabCut/watershed/NLM/inpaint/seam_carving等)，新增4 API+1常量** | **1196×4** |
 | **v5.3.0** | **质量收尾工程：英文README(README.en.md)国际化文档 + CI增强(coverage报告+moon info验证) + 7项错误路径测试补充(multi_band_blend/watershed/kmeans_segment/ihaar_transform_1d) + 语言切换链接** | **1203×4** |
+| **v5.8.0** | **覆盖率提升：BMP第二行越界测试+TIFF PackBits扩展模式+PNG palette缺失测试+quantize灰度图/无效k测试+contour孤立点测试+EXIF非APP1标记扫描+PNG无效UTF-8序列测试，新增20项错误路径测试** | **1409×4** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

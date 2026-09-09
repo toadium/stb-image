@@ -408,7 +408,7 @@ test "info_from_bytes_pure: GIF too short returns None" {
 }
 
 ///|
-test "info_from_bytes_pure: PNG too short returns None" {
+test "info_from_bytes_pure: PNG truncated IHDR returns None" {
   // PNG signature but only 16 bytes (< 26)
   let data = b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A\x00\x00\x00\x00\x00\x00\x00\x00"
   let info = info_from_bytes_pure(data)
@@ -517,8 +517,51 @@ test "info_from_bytes_pure: PSD with zero dimensions returns None" {
 }
 
 ///|
+test "info_from_bytes_pure: PSD zero channels returns None" {
+  // "8BPS" with channels=0
+  let out : Array[Byte] = Array::make(16, b'\x00')
+  out[0] = b'\x38'
+  out[1] = b'\x42'
+  out[2] = b'\x50'
+  out[3] = b'\x53'
+  // channels=0 at offset 4 (BE u16)
+  // height=1 at offset 6, width=1 at offset 10
+  let data = Bytes::from_array(out)
+  let result = info_from_bytes_pure(data)
+  assert_true(result is None)
+}
+
+///|
+test "info_from_bytes_pure: PSD with channels>0 returns Some" {
+  let data = ii_make_psd_header(3, 100, 200)
+  let info = info_from_bytes_pure(data)
+  guard info is Some(i) else { fail("expected Some") }
+  assert_eq(i.width, 200)
+  assert_eq(i.height, 100)
+  assert_eq(i.channels, 3)
+}
+
+///|
 test "info_from_bytes_pure: GIF with zero dimensions returns None" {
   let data = b"\x47\x49\x46\x38\x39\x61\x00\x00\x01\x00"
   let result = info_from_bytes_pure(data)
   assert_true(result is None)
+}
+
+///|
+test "info_from_bytes_pure: JPEG truncated SOF returns None" {
+  // SOI + SOF0 where total data is exactly 11 bytes
+  // pos=2, so pos+9=11 >= len=11 → hits truncation guard
+  let out : Array[Byte] = [
+    b'\xFF', b'\xD8', // SOI
+    b'\xFF', b'\xC0', // SOF0
+    b'\x00', b'\x08', // length=8
+    b'\x08', // precision
+    b'\x00', b'\x01', // height=1
+    b'\x00', b'\x01', // width=1
+    // num_components byte missing → pos+9=11 >= len=11
+  ]
+  let data = Bytes::from_array(out)
+  let info = info_from_bytes_pure(data)
+  assert_true(info is None)
 }

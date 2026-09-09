@@ -168,3 +168,32 @@ test "decode_pnm_pure: unsupported maxval raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "decode_pnm_pure: invalid dimensions raises" {
+  let out : Array[Byte] = []
+  push_str(out, "P6\n0 0\n255\n")
+  try {
+    let _ = decode_pnm_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_pnm_pure: truncated pixel data raises" {
+  let out : Array[Byte] = []
+  push_str(out, "P6\n2 2\n255\n")
+  // Only provide 2 bytes (need 16 for 2x2 RGB)
+  out.push(b'\xFF')
+  out.push(b'\x00')
+  try {
+    let _ = decode_pnm_pure(to_bytes(out))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

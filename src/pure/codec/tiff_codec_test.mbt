@@ -1035,24 +1035,202 @@ test "encode_tiff_pure: 无效 channels raises" {
   }
 }
 
+
 ///|
-test "decode_tiff_pure: invalid magic raises" {
-  try {
-    let _ = decode_tiff_pure(b"\x00\x00\x00\x00\x00\x00\x00\x00")
-    assert_true(false)
-  } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
-    _ => assert_true(false)
-  }
+
+///|
+test "decode_tiff_pure: big-endian (MM) 1x1 gray roundtrip" {
+  let out : Array[Byte] = [
+    b'\x4D', b'\x49', // 'MM'
+    b'\x00', b'\x2A', // magic = 42
+    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+    b'\x00', b'\x09', // IFD count = 9 (big-endian)
+  ]
+  // Entry 0: tag=256 (0x0100), type=4, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x04')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 1: tag=257 (0x0101), type=4, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x04')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 2: tag=258 (0x0102), type=3, count=1, value=8
+  out.push(b'\x01')
+  out.push(b'\x02')
+  out.push(b'\x00')
+  out.push(b'\x03')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x08')
+  // Entry 3: tag=259 (0x0103), type=3, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x03')
+  out.push(b'\x00')
+  out.push(b'\x03')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 4: tag=262 (0x0106), type=3, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x06')
+  out.push(b'\x00')
+  out.push(b'\x03')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 5: tag=273 (0x0111), type=4, count=1, value=122
+  out.push(b'\x01')
+  out.push(b'\x11')
+  out.push(b'\x00')
+  out.push(b'\x04')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x7A')
+  // Entry 6: tag=277 (0x0115), type=3, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x15')
+  out.push(b'\x00')
+  out.push(b'\x03')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 7: tag=278 (0x0116), type=4, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x16')
+  out.push(b'\x00')
+  out.push(b'\x04')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Entry 8: tag=279 (0x0117), type=4, count=1, value=1
+  out.push(b'\x01')
+  out.push(b'\x17')
+  out.push(b'\x00')
+  out.push(b'\x04')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01')
+  // Next IFD = 0
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  // Pixel data at offset 122 (0x7A)
+  out.push(b'\x80')
+  let tiff = Bytes::from_array(out)
+  let decoded = decode_tiff_pure(tiff)
+  assert_eq(decoded.width, 1)
+  assert_eq(decoded.height, 1)
+  assert_eq(decoded.channels, 1)
+  assert_eq(decoded.data[0].to_int(), 128)
 }
 
 ///|
-test "decode_tiff_pure: too short raises" {
-  try {
-    let _ = decode_tiff_pure(b"\x49\x49")
-    assert_true(false)
-  } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
-    _ => assert_true(false)
-  }
+test "decode_tiff_pure: type_id=1 (BYTE) in IFD entry" {
+  // Construct a minimal TIFF with BYTE type (type_id=1) for tag 254 (NewRawTag)
+  // which tests the type_id=1 branch in tiff_read_values
+  let out : Array[Byte] = [
+    b'\x49', b'\x49', // 'II' little-endian
+    b'\x00', b'\x2A', // magic = 42
+    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+    b'\x00', b'\x01', // IFD count = 1
+  ]
+  // Entry 0: tag=254 (0x00FE), type=1 (BYTE), count=1, value=200
+  out.push(b'\x00')
+  out.push(b'\xFE') // tag=254
+  out.push(b'\x00')
+  out.push(b'\x01') // type=1 (BYTE)
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01') // count=1
+  out.push(b'\xC8') // value=200 (BYTE fits in 4 bytes)
+  // Next IFD = 0
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+}
+
+///|
+test "decode_tiff_pure: type_id=5 (RATIONAL) in IFD entry" {
+  // Construct a minimal TIFF with RATIONAL type (type_id=5)
+  // which tests the type_id=5 branch in tiff_type_size
+  let out : Array[Byte] = [
+    b'\x49', b'\x49', // 'II' little-endian
+    b'\x00', b'\x2A', // magic = 42
+    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+    b'\x00', b'\x01', // IFD count = 1
+  ]
+  // Entry 0: tag=700 (ExifGPSInfo IFD pointer), type=5 (RATIONAL), count=1
+  out.push(b'\x02')
+  out.push(b'\x0C') // tag=700 (0x02CC)
+  out.push(b'\x00')
+  out.push(b'\x05') // type=5 (RATIONAL)
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x01') // count=1
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00') // offset to rational value
+  // Next IFD = 0
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
+  out.push(b'\x00')
 }

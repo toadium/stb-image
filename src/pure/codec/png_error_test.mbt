@@ -178,3 +178,72 @@ test "decode_png_pure: palette index out of bounds raises" {
   let _ = png
   let _ = decoded
 }
+
+///|
+test "decode_png_pure: chunk header too short raises" {
+  // PNG signature followed by truncated chunk header
+  let out : Array[Byte] = [
+    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n',
+    b'\x00', b'\x00', // truncated chunk length
+  ]
+  let bad = Bytes::from_array(out)
+  try {
+    let _ = decode_png_pure(bad)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_png_pure: invalid filter type raises" {
+  // Construct a valid PNG with invalid filter byte in IDAT data
+  let img = @types.Image::{
+    width: 1,
+    height: 1,
+    channels: 3,
+    data: b"\x01\x80\x80\x80", // filter=1 (sub) with RGB data
+  }
+  let png = encode_png_pure(img)
+  // Manually corrupt filter byte
+  let out : Array[Byte] = []
+  for i in 0..<png.length() {
+    out.push(png[i])
+  }
+  // Replace first byte after compression header with invalid filter (type 5)
+  if out.length() > 33 {
+    out[33] = b'\x05' // invalid filter type
+  }
+  let bad = Bytes::from_array(out)
+  try {
+    let _ = decode_png_pure(bad)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_png_pure: palette missing for indexed color raises" {
+  // Construct a PNG with color type 3 (indexed) but no PLTE chunk
+  let out : Array[Byte] = [
+    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n',
+    b'\x00', b'\x00', b'\x00', b'\x0D', // IHDR length=13
+     b'I', b'H', b'D', b'R',
+     b'\x00', b'\x00', b'\x00', b'\x01', // width=1
+     b'\x00', b'\x00', b'\x00', b'\x01', // height=1
+     b'\x08', // bit depth=8
+     b'\x03', // color type=3 (indexed)
+     b'\x00', b'\x00', b'\x00',
+  ]
+  let bad = Bytes::from_array(out)
+  try {
+    let _ = decode_png_pure(bad)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

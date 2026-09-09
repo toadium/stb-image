@@ -265,3 +265,41 @@ test "decode_qoi_pure: too short raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "decode_qoi_pure: invalid dimensions raises" {
+  let data : Array[Byte] = [
+    0x1A, 0x0B, 0xFE, 0x44, // magic "QOI"
+    0x00, 0x00, 0x00, 0x00, // width=0
+     0x00, 0x00, 0x00, 0x01, // height=1
+     0x03, // channels=3 (RGB)
+     0x00, // colorspace=0 (sRGB)
+  ]
+  try {
+    let _ = decode_qoi_pure(Bytes::from_array(data))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
+///|
+test "decode_qoi_pure: truncated pixel data raises" {
+  let data : Array[Byte] = [
+    0x1A, 0x0B, 0xFE, 0x44, // magic "QOI"
+    0x00, 0x00, 0x00, 0x01, // width=1
+     0x00, 0x00, 0x00, 0x01, // height=1
+     0x03, // channels=3 (RGB)
+     0x00, // colorspace=0 (sRGB)
+    // Only 2 bytes instead of full pixel data
+    0x01, 0xFF,
+  ]
+  try {
+    let _ = decode_qoi_pure(Bytes::from_array(data))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}

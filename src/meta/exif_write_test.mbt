@@ -201,3 +201,28 @@ test "write_exif_to_bytes: orientation values 1-8 roundtrip" {
     }
   }
 }
+
+///|
+test "write_exif_to_bytes: non-ASCII string replaces with ?" {
+  // string_to_exif_bytes should replace bytes >= 128 with '?'
+  let info = ExifInfo::{
+    make: "Test\x80\xFF",
+    model: "X",
+    orientation: 1,
+    date_time: "",
+  }
+  let jpeg = Bytes::from_array([b'\xFF', b'\xD8', b'\xFF', b'\xD9'])
+  let result = write_exif_to_bytes(info, jpeg)
+  // Verify the EXIF was written (has APP1 marker)
+  assert_eq(result[2].to_int(), 0xFF)
+  assert_eq(result[3].to_int(), 0xE1)
+  // Read back and verify non-ASCII was replaced
+  let read_back = read_exif_from_bytes(result)
+  match read_back {
+    Some(r) => {
+      // Non-ASCII bytes should be replaced with '?'
+      assert_true(r.make.contains("?"))
+    }
+    None => assert_true(false)
+  }
+}

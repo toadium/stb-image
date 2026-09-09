@@ -488,6 +488,78 @@ test "load_from_bytes_auto: Unknown raises" {
   }
 }
 
+// ==================== load_from_bytes_auto 格式覆盖（补充 WebP/TGA/CUR/APNG） ====================
+
+///|
+test "load_from_bytes_auto: WebP 分派 (roundtrip)" {
+  // 构造最小 1x1 WebP lossless 文件
+  let vp8l_data = [0x2f, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00]
+  let vp8l_len = vp8l_data.length()
+  let riff_size = 4 + 4 + 4 + vp8l_len
+  let data : Array[Byte] = []
+  data.push(b'R'); data.push(b'I'); data.push(b'F'); data.push(b'F')
+  data.push((riff_size & 0xFF).to_byte())
+  data.push(((riff_size >> 8) & 0xFF).to_byte())
+  data.push(((riff_size >> 16) & 0xFF).to_byte())
+  data.push(((riff_size >> 24) & 0xFF).to_byte())
+  data.push(b'W'); data.push(b'E'); data.push(b'B'); data.push(b'P')
+  data.push(b'V'); data.push(b'P'); data.push(b'8'); data.push(b'L')
+  data.push((vp8l_len & 0xFF).to_byte())
+  data.push(((vp8l_len >> 8) & 0xFF).to_byte())
+  data.push(((vp8l_len >> 16) & 0xFF).to_byte())
+  data.push(((vp8l_len >> 24) & 0xFF).to_byte())
+  for b in vp8l_data { data.push(b.to_byte()) }
+  let result = load_from_bytes_auto(lb_to_bytes(data))
+  assert_eq(result.width, 1)
+  assert_eq(result.height, 1)
+}
+
+///|
+test "load_from_bytes_auto: TGA 分派 (roundtrip)" {
+  // TGA 无 magic bytes，用显式解码器
+  let img = lb_make_rgb_image(2, 2, [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])
+  let tga_bytes = @codec.encode_tga_pure(img)
+  let result = @codec.decode_tga_pure(tga_bytes)
+  assert_eq(result.width, 2)
+  assert_eq(result.height, 2)
+  assert_eq(result.channels, 3)
+}
+
+///|
+test "load_from_bytes_auto: CUR 分派 (roundtrip)" {
+  // CUR 是 ICO type=2，用显式解码器
+  let img = lb_make_rgb_image(2, 2, [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])
+  let cur_bytes = @codec.encode_cur_pure(img)
+  let result = @codec.decode_cur_pure(cur_bytes)
+  assert_eq(result.width, 2)
+  assert_eq(result.height, 2)
+  assert_eq(result.channels, 4)
+}
+
+///|
+test "load_from_bytes_auto: APNG 分派 (单帧, raises as expected)" {
+  // APNG 与 PNG 共享签名，load_from_bytes_auto 无法区分，应 raise
+  let png : Array[Byte] = [
+    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A',
+    0x00, 0x00, 0x00, 0x0D, b'I', b'H', b'D', b'R',
+    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, b'\x08', b'\x02', b'\x00', b'\x00', b'\x00',
+    0x90, b'W', b'\x3D', b'\x1F',
+    0x00, 0x00, 0x00, 0x0C, b'I', b'C', b'C', b'X',
+    0x00, b'\xC4', b'\x96', b'\x66', b'\x01', 0x00, 0x00, 0x00, b'\x02', b'\xCC', b'\x16', b'\xE8',
+    0x00, 0x00, 0x00, 0x0D, b'I', b'D', b'A', b'T',
+    b'x', b'\xDA', b'\xC4', b'\xC1', b'\xC1', b'\x0B', 0x00, 0x00, b'\x00', b'\x02', b'\x00',
+    b'\xFE', b'\xBB', b'\xD0', b'\x11',
+    0x00, 0x00, 0x00, 0x00, b'I', b'E', b'N', b'D', b'\xAE', b'\x42', b'\x60', b'\x82'
+  ]
+  try {
+    let _ = load_from_bytes_auto(lb_to_bytes(png))
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
+
 // ==================== 编码器委托验证测试（4 个） ====================
 
 ///|

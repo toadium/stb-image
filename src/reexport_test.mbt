@@ -188,6 +188,41 @@ test "reexport: resize with filter and edge" {
 }
 
 ///|
+test "reexport: resize with PointSample filter" {
+  // PointSample filter exercises resize_sample_nearest
+  let img = re_make_rgb(4, 4, Array::make(16, (100, 150, 200)))
+  let resized = resize(img, 8, 8, filter=@types.ResizeFilter::PointSample)
+  assert_eq(resized.width, 8)
+  assert_eq(resized.height, 8)
+}
+
+///|
+test "reexport: resize with zero dimensions raises" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 128, 128)))
+  try {
+    let _ = resize(img, 0, 4)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "reexport: resize with zero height raises" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 128, 128)))
+  try {
+    let _ = resize(img, 4, 0)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
 test "reexport: write_png_to_bytes" {
   let img = re_make_rgb(2, 2, [
     (10, 20, 30),
@@ -645,5 +680,96 @@ test "reexport: hough_circles empty image" {
   let img = re_make_rgb(1, 1, [(128, 128, 128)])
   let circles = hough_circles(img)
   assert_true(circles.length() >= 0)
+  let _ = img
+}
+
+///|
+test "reexport: template_match" {
+  let img = re_make_rgb(4, 4, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120),
+                               (130, 140, 150), (160, 170, 180), (20, 30, 40), (50, 60, 70),
+                               (80, 90, 100), (110, 120, 130), (140, 150, 160), (180, 190, 200),
+                               (30, 40, 50), (60, 70, 80), (90, 100, 110), (120, 130, 140)])
+  let tpl = re_make_rgb(2, 2, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)])
+  let results = template_match(img, tpl)
+  assert_true(results.length() > 0)
+  let _ = img
+  let _ = tpl
+}
+
+///|
+test "reexport: template_match_best" {
+  let img = re_make_rgb(4, 4, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120),
+                               (130, 140, 150), (160, 170, 180), (20, 30, 40), (50, 60, 70),
+                               (80, 90, 100), (110, 120, 130), (140, 150, 160), (180, 190, 200),
+                               (30, 40, 50), (60, 70, 80), (90, 100, 110), (120, 130, 140)])
+  let tpl = re_make_rgb(2, 2, [(10, 20, 30), (40, 50, 60), (70, 80, 90), (100, 110, 120)])
+  let result = template_match_best(img, tpl)
+  assert_true(result is Some(_))
+  let _ = img
+  let _ = tpl
+}
+
+///|
+test "reexport: horn_schunck" {
+  let img1 = re_make_rgb(4, 4, [(100, 110, 120), (130, 140, 150), (160, 170, 180), (200, 210, 220),
+                                (110, 120, 130), (140, 150, 160), (170, 180, 190), (210, 220, 230),
+                                (120, 130, 140), (150, 160, 170), (180, 190, 200), (220, 230, 240),
+                                (130, 140, 150), (160, 170, 180), (190, 200, 210), (230, 240, 250)])
+  let img2 = re_make_rgb(4, 4, [(105, 115, 125), (135, 145, 155), (165, 175, 185), (205, 215, 225),
+                                (115, 125, 135), (145, 155, 165), (175, 185, 195), (215, 225, 235),
+                                (125, 135, 145), (155, 165, 175), (185, 195, 205), (225, 235, 245),
+                                (135, 145, 155), (165, 175, 185), (195, 205, 215), (235, 245, 255)])
+  let (u, v) = horn_schunck(img1, img2)
+  assert_true(u.length() == 16)
+  assert_true(v.length() == 16)
+  let _ = img1
+  let _ = img2
+}
+
+///|
+test "reexport: good_features_to_track" {
+  // Use a larger image to avoid edge effects in Sobel gradient computation
+  let data : Array[Byte] = []
+  for i in 0..<400 {
+    data.push((i * 7 % 256).to_byte())
+    data.push((i * 11 % 256).to_byte())
+    data.push((i * 13 % 256).to_byte())
+  }
+  let img = @types.Image::{
+    width: 20,
+    height: 20,
+    channels: 3,
+    data: Bytes::from_array(data),
+  }
+  let corners = good_features_to_track(img, 10, 0.001F)
+  assert_true(corners.length() >= 0)
+  let _ = img
+}
+
+///|
+test "reexport: distance_transform" {
+  let img = @types.Image::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: [b'\x00', b'\xFF', b'\xFF', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
+           b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\x00', b'\xFF', b'\xFF', b'\x00']
+    |> Bytes::from_array,
+  }
+  let result = distance_transform(img)
+  assert_true(result.length() == 16)
+  let _ = img
+}
+
+///|
+test "reexport: guided_filter" {
+  let img = re_make_rgb(4, 4, [(100, 110, 120), (130, 140, 150), (160, 170, 180), (200, 210, 220),
+                               (110, 120, 130), (140, 150, 160), (170, 180, 190), (210, 220, 230),
+                               (120, 130, 140), (150, 160, 170), (180, 190, 200), (220, 230, 240),
+                               (130, 140, 150), (160, 170, 180), (190, 200, 210), (230, 240, 250)])
+  let input : Array[Float] = [0.1F, 0.2F, 0.3F, 0.4F, 0.5F, 0.6F, 0.7F, 0.8F,
+                              0.9F, 1.0F, 1.1F, 1.2F, 1.3F, 1.4F, 1.5F, 1.6F]
+  let result = guided_filter(img, input)
+  assert_true(result.length() == 16)
   let _ = img
 }

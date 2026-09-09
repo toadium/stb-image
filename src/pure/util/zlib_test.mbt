@@ -124,3 +124,17 @@ test "zlib: zlib_inflate stored block out of bounds raises" {
     _ => assert_true(false)
   }
 }
+
+///|
+test "zlib: zlib_inflate stored block data too short raises" {
+  // 构造只有 6 字节的 stored block：header(2) + 3 bits + 3 字节
+  // 检查 pos + 4 > len → 3 + 4 = 7 > 6 → 触发 "DEFLATE stored block 数据过短"
+  let bad = b"\x78\x01\x01\x00\x00\x00"
+  try {
+    let _ = zlib_inflate(bad)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+}
