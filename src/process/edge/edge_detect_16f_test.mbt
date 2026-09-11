@@ -141,3 +141,47 @@ test "edge_detect_sobel_f: uniform image has zero edges" {
   let _ = img
   let _ = result
 }
+
+///|
+test "edge_detect_laplacian_16: output is single channel" {
+  let img = make_image16_e(5, 5, 3)
+  let result = edge_detect_laplacian_16(img)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "edge_detect_laplacian_f: output is single channel" {
+  let img = make_imagef_e(5, 5, 3)
+  let result = edge_detect_laplacian_f(img)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "edge_detect_prewitt_16: output is single channel" {
+  let img = make_image16_e(5, 5, 3)
+  let result = edge_detect_prewitt_16(img)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "edge_detect_prewitt_f: output is single channel" {
+  let img = make_imagef_e(5, 5, 3)
+  let result = edge_detect_prewitt_f(img)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}

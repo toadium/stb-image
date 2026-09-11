@@ -155,3 +155,181 @@ pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF {
     data: Bytes::from_array(out),
   }
 }
+
+///|
+/// 16-bit Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
+/// 以 65535 为满量程。仅影响颜色通道，alpha 不变。
+pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 {
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let bpp = ch * 2
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let offset = i * bpp + c * 2
+      let val = read_u16_le_c(img.data, offset)
+      let normalized = Float::from_int(val) / 65535.0F
+      let corrected = @math.powf(normalized, gamma)
+      let new_val = (corrected * 65535.0F + 0.5F).to_int()
+      let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+      write_u16_le_c(out, offset, clamped)
+    }
+    if ch == 4 {
+      let alpha_off = i * bpp + 6
+      out[alpha_off] = img.data[alpha_off]
+      out[alpha_off + 1] = img.data[alpha_off + 1]
+    }
+  }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// float Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
+/// 以 1.0 为满量程。仅影响颜色通道，alpha 不变。
+pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF {
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let bpp = ch * 4
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let offset = i * bpp + c * 4
+      let val = read_float_le(img.data, offset)
+      let corrected = if val < 0.0F { 0.0F } else if val > 1.0F { 1.0F } else { @math.powf(val, gamma) }
+      write_f32_le(out, offset, corrected)
+    }
+    if ch == 4 {
+      let alpha_off = i * bpp + 12
+      for b in 0..<4 {
+        out[alpha_off + b] = img.data[alpha_off + b]
+      }
+    }
+  }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 16-bit 反色（负片）。new = 65535 - old。仅影响颜色通道，alpha 不变。
+pub fn invert_16(img : @types.Image16) -> @types.Image16 {
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let bpp = ch * 2
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let offset = i * bpp + c * 2
+      let val = read_u16_le_c(img.data, offset)
+      write_u16_le_c(out, offset, 65535 - val)
+    }
+    if ch == 4 {
+      let alpha_off = i * bpp + 6
+      out[alpha_off] = img.data[alpha_off]
+      out[alpha_off + 1] = img.data[alpha_off + 1]
+    }
+  }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// float 反色（负片）。new = 1.0 - old。仅影响颜色通道，alpha 不变。
+pub fn invert_f(img : @types.ImageF) -> @types.ImageF {
+  let n = img.width * img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let bpp = ch * 4
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let offset = i * bpp + c * 4
+      let val = read_float_le(img.data, offset)
+      write_f32_le(out, offset, 1.0F - val)
+    }
+    if ch == 4 {
+      let alpha_off = i * bpp + 12
+      for b in 0..<4 {
+        out[alpha_off + b] = img.data[alpha_off + b]
+      }
+    }
+  }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 16-bit 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
+/// 输出 channels=1 的 16-bit 灰度图。
+pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 {
+  let n = img.width * img.height
+  let ch = img.channels
+  let bpp = ch * 2
+  let out : Array[Byte] = Array::make(n * 2, b'\x00')
+  for i in 0..<n {
+    if ch >= 3 {
+      let r = read_u16_le_c(img.data, i * bpp)
+      let g = read_u16_le_c(img.data, i * bpp + 2)
+      let b = read_u16_le_c(img.data, i * bpp + 4)
+      let y = (Float::from_int(r) * 0.299F + Float::from_int(g) * 0.587F + Float::from_int(b) * 0.114F + 0.5F).to_int()
+      let clamped = if y < 0 { 0 } else if y > 65535 { 65535 } else { y }
+      write_u16_le_c(out, i * 2, clamped)
+    } else {
+      let val = read_u16_le_c(img.data, i * bpp)
+      write_u16_le_c(out, i * 2, val)
+    }
+  }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// float 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
+/// 输出 channels=1 的 float 灰度图。
+pub fn to_grayscale_f(img : @types.ImageF) -> @types.ImageF {
+  let n = img.width * img.height
+  let ch = img.channels
+  let bpp = ch * 4
+  let out : Array[Byte] = Array::make(n * 4, b'\x00')
+  for i in 0..<n {
+    if ch >= 3 {
+      let r = read_float_le(img.data, i * bpp)
+      let g = read_float_le(img.data, i * bpp + 4)
+      let b = read_float_le(img.data, i * bpp + 8)
+      let y = r * 0.299F + g * 0.587F + b * 0.114F
+      write_f32_le(out, i * 4, y)
+    } else {
+      let val = read_float_le(img.data, i * bpp)
+      write_f32_le(out, i * 4, val)
+    }
+  }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}

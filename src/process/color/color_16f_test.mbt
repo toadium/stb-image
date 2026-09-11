@@ -303,3 +303,93 @@ test "adjust_contrast_f: RGBA preserves alpha" {
   let _ = img
   let _ = result
 }
+
+///|
+test "adjust_gamma_16: gamma=1.0 is identity" {
+  let img = make_img16(4, 3, 3)
+  let result = adjust_gamma_16(img, 1.0F)
+  assert_eq(result, img)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "adjust_gamma_f: gamma=1.0 is identity" {
+  let img = make_imgf(4, 3, 3)
+  let result = adjust_gamma_f(img, 1.0F)
+  // 浮点数精度：powf(x, 1.0) 近似等于 x
+  for i in 0..<(4 * 3 * 3) {
+    let offset = i * 4
+    let b0 = img.data[offset].to_int()
+    let b1 = img.data[offset + 1].to_int()
+    let b2 = img.data[offset + 2].to_int()
+    let b3 = img.data[offset + 3].to_int()
+    let v_orig = Float::reinterpret_from_int(b0 | (b1 << 8) | (b2 << 16) | (b3 << 24))
+    let c0 = result.data[offset].to_int()
+    let c1 = result.data[offset + 1].to_int()
+    let c2 = result.data[offset + 2].to_int()
+    let c3 = result.data[offset + 3].to_int()
+    let v_new = Float::reinterpret_from_int(c0 | (c1 << 8) | (c2 << 16) | (c3 << 24))
+    assert_true((v_orig - v_new).abs() < 0.0001F)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "invert_16: double invert is identity" {
+  let img = make_img16(4, 3, 3)
+  let r1 = invert_16(img)
+  let r2 = invert_16(r1)
+  assert_eq(r2, img)
+  let _ = img
+  let _ = r1
+  let _ = r2
+}
+
+///|
+test "invert_f: double invert is identity" {
+  let img = make_imgf(4, 3, 3)
+  let r1 = invert_f(img)
+  let r2 = invert_f(r1)
+  // 浮点数精度：1.0 - (1.0 - x) 近似等于 x
+  for i in 0..<(4 * 3 * 3) {
+    let offset = i * 4
+    let b0 = img.data[offset].to_int()
+    let b1 = img.data[offset + 1].to_int()
+    let b2 = img.data[offset + 2].to_int()
+    let b3 = img.data[offset + 3].to_int()
+    let v_orig = Float::reinterpret_from_int(b0 | (b1 << 8) | (b2 << 16) | (b3 << 24))
+    let c0 = r2.data[offset].to_int()
+    let c1 = r2.data[offset + 1].to_int()
+    let c2 = r2.data[offset + 2].to_int()
+    let c3 = r2.data[offset + 3].to_int()
+    let v_new = Float::reinterpret_from_int(c0 | (c1 << 8) | (c2 << 16) | (c3 << 24))
+    assert_true((v_orig - v_new).abs() < 0.0001F)
+  }
+  let _ = img
+  let _ = r1
+  let _ = r2
+}
+
+///|
+test "to_grayscale_16: output channels=1" {
+  let img = make_img16(4, 3, 3)
+  let result = to_grayscale_16(img)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 3)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "to_grayscale_f: output channels=1" {
+  let img = make_imgf(4, 3, 3)
+  let result = to_grayscale_f(img)
+  assert_eq(result.width, 4)
+  assert_eq(result.height, 3)
+  assert_eq(result.channels, 1)
+  let _ = img
+  let _ = result
+}

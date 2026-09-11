@@ -184,3 +184,69 @@ test "flip_horizontal_f: double flip is identity" {
   let _ = r1
   let _ = r2
 }
+
+///|
+test "flip_vertical_16: double flip is identity" {
+  let img = make_image16(4, 3, 3)
+  let r1 = flip_vertical_16(img)
+  let r2 = flip_vertical_16(r1)
+  assert_eq(r2, img)
+  let _ = img
+  let _ = r1
+  let _ = r2
+}
+
+///|
+test "flip_vertical_f: double flip is identity" {
+  let img = make_imagef(4, 3, 3)
+  let r1 = flip_vertical_f(img)
+  let r2 = flip_vertical_f(r1)
+  assert_eq(r2, img)
+  let _ = img
+  let _ = r1
+  let _ = r2
+}
+
+///|
+test "transpose_16: swaps width and height" {
+  let img = make_image16(4, 3, 3)
+  let r = transpose_16(img)
+  assert_eq(r.width, 3)
+  assert_eq(r.height, 4)
+  assert_eq(r.channels, 3)
+  let _ = img
+  let _ = r
+}
+
+///|
+test "transpose_16: double transpose is identity" {
+  let img = make_image16(4, 3, 3)
+  let r1 = transpose_16(img)
+  let r2 = transpose_16(r1)
+  assert_eq(r2, img)
+  let _ = img
+  let _ = r1
+  let _ = r2
+}
+
+///|
+test "transpose_f: swaps width and height" {
+  let img = make_imagef(4, 3, 3)
+  let r = transpose_f(img)
+  assert_eq(r.width, 3)
+  assert_eq(r.height, 4)
+  assert_eq(r.channels, 3)
+  let _ = img
+  let _ = r
+}
+
+///|
+test "transpose_f: double transpose is identity" {
+  let img = make_imagef(4, 3, 3)
+  let r1 = transpose_f(img)
+  let r2 = transpose_f(r1)
+  assert_eq(r2, img)
+  let _ = img
+  let _ = r1
+  let _ = r2
+}

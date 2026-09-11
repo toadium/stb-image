@@ -194,3 +194,285 @@ pub fn edge_detect_sobel_f(img : @types.ImageF) -> @types.ImageF {
     data: Bytes::from_array(out),
   }
 }
+
+///|
+/// 16-bit Laplacian 边缘检测。使用 3x3 Laplacian 核：
+/// [0, 1, 0; 1, -4, 1; 0, 1, 0]
+/// 输出单通道灰度图（channels=1）的 Image16，值为梯度绝对值。
+pub fn edge_detect_laplacian_16(img : @types.Image16) -> @types.Image16 {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  let bpp = ch * 2
+  // 先转灰度
+  let gray : Array[Int] = Array::make(n, 0)
+  for i in 0..<n {
+    if ch == 1 {
+      gray[i] = read_u16_le_e(img.data, i * bpp)
+    } else {
+      let r = read_u16_le_e(img.data, i * bpp)
+      let g = read_u16_le_e(img.data, i * bpp + 2)
+      let b = read_u16_le_e(img.data, i * bpp + 4)
+      gray[i] = (r * 77 + g * 150 + b * 29) / 256
+    }
+  }
+  let out : Array[Byte] = Array::make(n * 2, b'\x00')
+  // 内部区域
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      let center = gray[idx]
+      let u = gray[idx - w]
+      let d = gray[idx + w]
+      let l = gray[idx - 1]
+      let r = gray[idx + 1]
+      let lap = u + d + l + r - 4 * center
+      let val = lap.abs()
+      let clamped = if val > 65535 { 65535 } else { val }
+      write_u16_le_e(out, idx * 2, clamped)
+    }
+  }
+  // 边界区域
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
+      let cx = clamp_i(x, 0, w - 1)
+      let cy = clamp_i(y, 0, h - 1)
+      let up = clamp_i(y - 1, 0, h - 1)
+      let down = clamp_i(y + 1, 0, h - 1)
+      let left = clamp_i(x - 1, 0, w - 1)
+      let right = clamp_i(x + 1, 0, w - 1)
+      let center = gray[cy * w + cx]
+      let u = gray[up * w + cx]
+      let d = gray[down * w + cx]
+      let l = gray[cy * w + left]
+      let r = gray[cy * w + right]
+      let lap = u + d + l + r - 4 * center
+      let val = lap.abs()
+      let clamped = if val > 65535 { 65535 } else { val }
+      write_u16_le_e(out, (y * w + x) * 2, clamped)
+    }
+  }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// float Laplacian 边缘检测。使用 3x3 Laplacian 核：
+/// [0, 1, 0; 1, -4, 1; 0, 1, 0]
+/// 输出单通道灰度图（channels=1）的 ImageF，值为梯度绝对值。
+pub fn edge_detect_laplacian_f(img : @types.ImageF) -> @types.ImageF {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  let bpp = ch * 4
+  // 先转灰度
+  let gray : Array[Float] = Array::make(n, 0.0F)
+  for i in 0..<n {
+    if ch == 1 {
+      gray[i] = read_f32_le_e(img.data, i * bpp)
+    } else {
+      let r = read_f32_le_e(img.data, i * bpp)
+      let g = read_f32_le_e(img.data, i * bpp + 4)
+      let b = read_f32_le_e(img.data, i * bpp + 8)
+      gray[i] = r * 0.299F + g * 0.587F + b * 0.114F
+    }
+  }
+  let out : Array[Byte] = Array::make(n * 4, b'\x00')
+  // 内部区域
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      let center = gray[idx]
+      let u = gray[idx - w]
+      let d = gray[idx + w]
+      let l = gray[idx - 1]
+      let r = gray[idx + 1]
+      let lap = u + d + l + r - 4.0F * center
+      write_f32_le_e(out, idx * 4, lap.abs())
+    }
+  }
+  // 边界区域
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
+      let cx = clamp_i(x, 0, w - 1)
+      let cy = clamp_i(y, 0, h - 1)
+      let up = clamp_i(y - 1, 0, h - 1)
+      let down = clamp_i(y + 1, 0, h - 1)
+      let left = clamp_i(x - 1, 0, w - 1)
+      let right = clamp_i(x + 1, 0, w - 1)
+      let center = gray[cy * w + cx]
+      let u = gray[up * w + cx]
+      let d = gray[down * w + cx]
+      let l = gray[cy * w + left]
+      let r = gray[cy * w + right]
+      let lap = u + d + l + r - 4.0F * center
+      write_f32_le_e(out, (y * w + x) * 4, lap.abs())
+    }
+  }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// 16-bit Prewitt 边缘检测。使用两个 3x3 Prewitt 核计算梯度幅值。
+/// Gx = [-1, 0, 1; -1, 0, 1; -1, 0, 1]
+/// Gy = [-1, -1, -1; 0, 0, 0; 1, 1, 1]
+/// 输出单通道灰度图（channels=1）的 Image16。
+pub fn edge_detect_prewitt_16(img : @types.Image16) -> @types.Image16 {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  let bpp = ch * 2
+  // 先转灰度
+  let gray : Array[Int] = Array::make(n, 0)
+  for i in 0..<n {
+    if ch == 1 {
+      gray[i] = read_u16_le_e(img.data, i * bpp)
+    } else {
+      let r = read_u16_le_e(img.data, i * bpp)
+      let g = read_u16_le_e(img.data, i * bpp + 2)
+      let b = read_u16_le_e(img.data, i * bpp + 4)
+      gray[i] = (r * 77 + g * 150 + b * 29) / 256
+    }
+  }
+  let out : Array[Byte] = Array::make(n * 2, b'\x00')
+  // 内部区域
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      let ul = gray[idx - w - 1]
+      let ur = gray[idx - w + 1]
+      let ll = gray[idx + w - 1]
+      let lr = gray[idx + w + 1]
+      let l = gray[idx - 1]
+      let r = gray[idx + 1]
+      let u = gray[idx - w]
+      let d = gray[idx + w]
+      let gx = ur + r + lr - ul - l - ll
+      let gy = ll + d + lr - ul - u - ur
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt().to_int()
+      let clamped = if mag > 65535 { 65535 } else { mag }
+      write_u16_le_e(out, idx * 2, clamped)
+    }
+  }
+  // 边界区域
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
+      let up = clamp_i(y - 1, 0, h - 1)
+      let down = clamp_i(y + 1, 0, h - 1)
+      let left = clamp_i(x - 1, 0, w - 1)
+      let right = clamp_i(x + 1, 0, w - 1)
+      let ul = gray[up * w + left]
+      let ur = gray[up * w + right]
+      let ll = gray[down * w + left]
+      let lr = gray[down * w + right]
+      let l = gray[y * w + left]
+      let r = gray[y * w + right]
+      let u = gray[up * w + x]
+      let d = gray[down * w + x]
+      let gx = ur + r + lr - ul - l - ll
+      let gy = ll + d + lr - ul - u - ur
+      let mag = Float::from_int(gx * gx + gy * gy).sqrt().to_int()
+      let clamped = if mag > 65535 { 65535 } else { mag }
+      write_u16_le_e(out, (y * w + x) * 2, clamped)
+    }
+  }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}
+
+///|
+/// float Prewitt 边缘检测。使用两个 3x3 Prewitt 核计算梯度幅值。
+/// 输出单通道灰度图（channels=1）的 ImageF。
+pub fn edge_detect_prewitt_f(img : @types.ImageF) -> @types.ImageF {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  let bpp = ch * 4
+  // 先转灰度
+  let gray : Array[Float] = Array::make(n, 0.0F)
+  for i in 0..<n {
+    if ch == 1 {
+      gray[i] = read_f32_le_e(img.data, i * bpp)
+    } else {
+      let r = read_f32_le_e(img.data, i * bpp)
+      let g = read_f32_le_e(img.data, i * bpp + 4)
+      let b = read_f32_le_e(img.data, i * bpp + 8)
+      gray[i] = r * 0.299F + g * 0.587F + b * 0.114F
+    }
+  }
+  let out : Array[Byte] = Array::make(n * 4, b'\x00')
+  // 内部区域
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      let ul = gray[idx - w - 1]
+      let ur = gray[idx - w + 1]
+      let ll = gray[idx + w - 1]
+      let lr = gray[idx + w + 1]
+      let l = gray[idx - 1]
+      let r = gray[idx + 1]
+      let u = gray[idx - w]
+      let d = gray[idx + w]
+      let gx = ur + r + lr - ul - l - ll
+      let gy = ll + d + lr - ul - u - ur
+      let mag = (gx * gx + gy * gy).sqrt()
+      write_f32_le_e(out, idx * 4, mag)
+    }
+  }
+  // 边界区域
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
+      let up = clamp_i(y - 1, 0, h - 1)
+      let down = clamp_i(y + 1, 0, h - 1)
+      let left = clamp_i(x - 1, 0, w - 1)
+      let right = clamp_i(x + 1, 0, w - 1)
+      let ul = gray[up * w + left]
+      let ur = gray[up * w + right]
+      let ll = gray[down * w + left]
+      let lr = gray[down * w + right]
+      let l = gray[y * w + left]
+      let r = gray[y * w + right]
+      let u = gray[up * w + x]
+      let d = gray[down * w + x]
+      let gx = ur + r + lr - ul - l - ll
+      let gy = ll + d + lr - ul - u - ur
+      let mag = (gx * gx + gy * gy).sqrt()
+      write_f32_le_e(out, (y * w + x) * 4, mag)
+    }
+  }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
+}

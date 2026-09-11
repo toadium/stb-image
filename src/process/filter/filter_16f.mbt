@@ -562,3 +562,128 @@ pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF {
     data: Bytes::from_array(out),
   }
 }
+
+///|
+/// 16-bit 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
+pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let n = w * h
+  let bpp = ch * 2
+  let center = 1.0F + 4.0F * amount
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  let px : Array[Int] = Array::make(n * ch, 0)
+  for i in 0..<n {
+    for c in 0..<ch {
+      px[i * ch + c] = read_u16_le_f(img.data, i * bpp + c * 2)
+    }
+  }
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      for c in 0..<color_ch {
+        let cx = px[idx * ch + c]
+        let left = px[(idx - 1) * ch + c]
+        let right = px[(idx + 1) * ch + c]
+        let top = px[(idx - w) * ch + c]
+        let bottom = px[(idx + w) * ch + c]
+        let val = Float::from_int(cx) * center - amount * Float::from_int(left + right + top + bottom)
+        let new_val = (val + 0.5F).to_int()
+        let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        write_u16_le_f(out, idx * bpp + c * 2, clamped)
+      }
+    }
+  }
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 { continue }
+      let idx = y * w + x
+      let x_l = clamp_coord_f(x - 1, w)
+      let x_r = clamp_coord_f(x + 1, w)
+      let y_t = clamp_coord_f(y - 1, h)
+      let y_b = clamp_coord_f(y + 1, h)
+      for c in 0..<color_ch {
+        let cx = px[idx * ch + c]
+        let left = px[(y * w + x_l) * ch + c]
+        let right = px[(y * w + x_r) * ch + c]
+        let top = px[(y_t * w + x) * ch + c]
+        let bottom = px[(y_b * w + x) * ch + c]
+        let val = Float::from_int(cx) * center - amount * Float::from_int(left + right + top + bottom)
+        let new_val = (val + 0.5F).to_int()
+        let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        write_u16_le_f(out, idx * bpp + c * 2, clamped)
+      }
+    }
+  }
+  if ch == 4 {
+    for i in 0..<n {
+      let alpha_off = i * bpp + 6
+      out[alpha_off] = img.data[alpha_off]
+      out[alpha_off + 1] = img.data[alpha_off + 1]
+    }
+  }
+  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+}
+
+///|
+/// float 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
+pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF {
+  let w = img.width
+  let h = img.height
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let n = w * h
+  let bpp = ch * 4
+  let center = 1.0F + 4.0F * amount
+  let out : Array[Byte] = Array::make(n * bpp, b'\x00')
+  let px : Array[Float] = Array::make(n * ch, 0.0F)
+  for i in 0..<n {
+    for c in 0..<ch {
+      px[i * ch + c] = read_f32_le_f(img.data, i * bpp + c * 4)
+    }
+  }
+  for y in 1..<(h - 1) {
+    for x in 1..<(w - 1) {
+      let idx = y * w + x
+      for c in 0..<color_ch {
+        let cx = px[idx * ch + c]
+        let left = px[(idx - 1) * ch + c]
+        let right = px[(idx + 1) * ch + c]
+        let top = px[(idx - w) * ch + c]
+        let bottom = px[(idx + w) * ch + c]
+        let val = cx * center - amount * (left + right + top + bottom)
+        write_f32_le_f(out, idx * bpp + c * 4, val)
+      }
+    }
+  }
+  for y in 0..<h {
+    for x in 0..<w {
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 { continue }
+      let idx = y * w + x
+      let x_l = clamp_coord_f(x - 1, w)
+      let x_r = clamp_coord_f(x + 1, w)
+      let y_t = clamp_coord_f(y - 1, h)
+      let y_b = clamp_coord_f(y + 1, h)
+      for c in 0..<color_ch {
+        let cx = px[idx * ch + c]
+        let left = px[(y * w + x_l) * ch + c]
+        let right = px[(y * w + x_r) * ch + c]
+        let top = px[(y_t * w + x) * ch + c]
+        let bottom = px[(y_b * w + x) * ch + c]
+        let val = cx * center - amount * (left + right + top + bottom)
+        write_f32_le_f(out, idx * bpp + c * 4, val)
+      }
+    }
+  }
+  if ch == 4 {
+    for i in 0..<n {
+      let alpha_off = i * bpp + 12
+      for b in 0..<4 {
+        out[alpha_off + b] = img.data[alpha_off + b]
+      }
+    }
+  }
+  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+}

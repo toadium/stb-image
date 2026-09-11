@@ -291,3 +291,57 @@ test "median_blur_f: uniform image is unchanged" {
   let _ = img
   let _ = result
 }
+
+///|
+test "sharpen_16: amount=0.0 is identity" {
+  let img = make_image16_f(5, 5, 3)
+  let result = sharpen_16(img, 0.0F)
+  assert_eq(result, img)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "sharpen_16: output preserves dimensions" {
+  let img = make_image16_f(5, 5, 3)
+  let result = sharpen_16(img, 1.0F)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 3)
+  let _ = img
+  let _ = result
+}
+
+///|
+test "sharpen_f: amount=0.0 is identity" {
+  let img = make_imagef_f(5, 5, 3)
+  let result = sharpen_f(img, 0.0F)
+  // 浮点数精度：amount=0 时 center=1.0，近似恒等
+  for i in 0..<(5 * 5 * 3) {
+    let offset = i * 4
+    let b0 = img.data[offset].to_int()
+    let b1 = img.data[offset + 1].to_int()
+    let b2 = img.data[offset + 2].to_int()
+    let b3 = img.data[offset + 3].to_int()
+    let v_orig = Float::reinterpret_from_int(b0 | (b1 << 8) | (b2 << 16) | (b3 << 24))
+    let c0 = result.data[offset].to_int()
+    let c1 = result.data[offset + 1].to_int()
+    let c2 = result.data[offset + 2].to_int()
+    let c3 = result.data[offset + 3].to_int()
+    let v_new = Float::reinterpret_from_int(c0 | (c1 << 8) | (c2 << 16) | (c3 << 24))
+    assert_true((v_orig - v_new).abs() < 0.0001F)
+  }
+  let _ = img
+  let _ = result
+}
+
+///|
+test "sharpen_f: output preserves dimensions" {
+  let img = make_imagef_f(5, 5, 3)
+  let result = sharpen_f(img, 1.0F)
+  assert_eq(result.width, 5)
+  assert_eq(result.height, 5)
+  assert_eq(result.channels, 3)
+  let _ = img
+  let _ = result
+}

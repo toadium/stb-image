@@ -271,6 +271,8 @@ pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF = @color.adj
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
+pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_gamma_16
+pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_gamma_f
 
 ///|
 pub let adaptive_threshold_mean : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
@@ -436,9 +438,13 @@ pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise
 
 ///|
 pub let edge_detect_laplacian : (@types.Image) -> @types.Image = @edge.edge_detect_laplacian
+pub let edge_detect_laplacian_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_laplacian_16
+pub let edge_detect_laplacian_f : (@types.ImageF) -> @types.ImageF = @edge.edge_detect_laplacian_f
 
 ///|
 pub let edge_detect_prewitt : (@types.Image) -> @types.Image = @edge.edge_detect_prewitt
+pub let edge_detect_prewitt_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_prewitt_16
+pub let edge_detect_prewitt_f : (@types.ImageF) -> @types.ImageF = @edge.edge_detect_prewitt_f
 
 ///|
 pub let edge_detect_sobel : (@types.Image) -> @types.Image = @edge.edge_detect_sobel
@@ -850,6 +856,8 @@ pub let integral_variance : (
 
 ///|
 pub let invert : (@types.Image) -> @types.Image = @color.invert
+pub let invert_16 : (@types.Image16) -> @types.Image16 = @color.invert_16
+pub let invert_f : (@types.ImageF) -> @types.ImageF = @color.invert_f
 
 ///|
 pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
@@ -1024,6 +1032,8 @@ pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image = @segme
 
 ///|
 pub let sharpen : (@types.Image, Float) -> @types.Image = @filter.sharpen
+pub let sharpen_16 : (@types.Image16, Float) -> @types.Image16 = @filter.sharpen_16
+pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF = @filter.sharpen_f
 
 ///|
 pub fn ssr(
@@ -1065,6 +1075,8 @@ pub let threshold_otsu : (@types.Image) -> @types.Image raise @types.LoadError =
 
 ///|
 pub let to_grayscale : (@types.Image) -> @types.Image = @color.to_grayscale
+pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 = @color.to_grayscale_16
+pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF = @color.to_grayscale_f
 
 ///|
 pub let to_rgb : (@types.Image) -> @types.Image = @color.to_rgb
@@ -1400,6 +1412,8 @@ pub let fill_alpha : (@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise
 
 ///|
 pub let flip_vertical : (@types.Image) -> @types.Image = @transform.flip_vertical
+pub let flip_vertical_16 : (@types.Image16) -> @types.Image16 = @transform.flip_vertical_16
+pub let flip_vertical_f : (@types.ImageF) -> @types.ImageF = @transform.flip_vertical_f
 
 ///|
 pub let gradient_map : (@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError = @util.gradient_map
@@ -1448,6 +1462,8 @@ pub let tile : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError =
 
 ///|
 pub let transpose : (@types.Image) -> @types.Image = @util.transpose
+pub let transpose_16 : (@types.Image16) -> @types.Image16 = @transform.transpose_16
+pub let transpose_f : (@types.ImageF) -> @types.ImageF = @transform.transpose_f
 
 ///|
 pub let vstack : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @util.vstack

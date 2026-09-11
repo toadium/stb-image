@@ -878,3 +878,38 @@ flowchart LR
 - 0 warnings, 0 errors
 
 ---
+
+### v5.9.0 — 16-bit/float 泛化扩展 (Phase 13)
+
+**目标**：继续推进 v5.1.0 16-bit/float 全面泛化目标，为常用图像处理算法补充 Image16/ImageF 变体。
+
+#### 已完成
+
+- **色彩调整**（6 API）：
+  - `adjust_gamma_16` / `adjust_gamma_f` — Gamma 校正（16-bit 以 65535 为满量程，float 以 1.0 为满量程）
+  - `invert_16` / `invert_f` — 反色（负片）
+  - `to_grayscale_16` / `to_grayscale_f` — 转灰度（ITU-R BT.601，输出单通道）
+- **边缘检测**（4 API）：
+  - `edge_detect_laplacian_16` / `edge_detect_laplacian_f` — Laplacian 边缘检测（3x3 核，输出绝对值）
+  - `edge_detect_prewitt_16` / `edge_detect_prewitt_f` — Prewitt 边缘检测（梯度幅值）
+- **滤波**（2 API）：
+  - `sharpen_16` / `sharpen_f` — 拉普拉斯锐化（amount 控制强度）
+- **几何变换**（4 API）：
+  - `flip_vertical_16` / `flip_vertical_f` — 垂直翻转
+  - `transpose_16` / `transpose_f` — 转置（交换宽高）
+- **re-export**：全部 16 个新 API 已在根包 re-export
+- **测试**：新增 20 个测试（color 8 + edge 4 + filter 4 + transform 4）
+- **验收**：1437×4 全绿（native/wasm-gc/js/wasm）
+- 0 warnings, 0 errors
+
+#### 16-bit/float API 覆盖进度
+
+| 类别 | 8-bit API 数 | 已有 16/f 变体 | 本次新增 | 覆盖率 |
+|------|-------------|----------------|---------|--------|
+| 色彩调整 | 8 | 4 → 10 | +6 | 100% (brightness/contrast/gamma/invert/grayscale) |
+| 边缘检测 | 3 | 1 → 5 | +4 | 100% (sobel/laplacian/prewitt) |
+| 滤波 | 5 | 3 → 5 | +2 | 100% (box/gaussian/median/sharpen) |
+| 几何变换 | 6 | 5 → 9 | +4 | 100% (crop/rotate90/180/270/flip_h/flip_v/transpose) |
+| **合计** | **22** | **13 → 29** | **+16** | **100%** |
+
+---
