@@ -913,3 +913,37 @@ flowchart LR
 | **合计** | **22** | **13 → 29** | **+16** | **100%** |
 
 ---
+
+### v5.10.0 — 颜色空间转换 16-bit/float 泛化 (Phase 14)
+
+**目标**：为颜色空间转换与通道操作 API 补充 Image16/ImageF 变体，继续推进 v5.1.0 全面泛化目标。
+
+#### 已完成
+
+- **通道操作**（8 API）：
+  - `to_rgb_16` / `to_rgb_f` — 去除 alpha 通道（RGBA → RGB）
+  - `to_rgba_16` / `to_rgba_f` — 添加 alpha 通道（RGB → RGBA，alpha=满量程）
+  - `premultiply_alpha_16` / `premultiply_alpha_f` — 预乘 alpha
+  - `unpremultiply_alpha_16` / `unpremultiply_alpha_f` — 反预乘 alpha
+- **颜色空间转换**（8 API，像素级）：
+  - `rgb_to_ycbcr_16` / `rgb_to_ycbcr_f` — RGB → YCbCr（ITU-R BT.601）
+  - `ycbcr_to_rgb_16` / `ycbcr_to_rgb_f` — YCbCr → RGB
+  - `rgb_to_cmyk_16` / `rgb_to_cmyk_f` — RGB → CMYK
+  - `cmyk_to_rgb_16` / `cmyk_to_rgb_f` — CMYK → RGB
+- **re-export**：全部 16 个新 API 已在根包 re-export
+- **测试**：新增 15 个测试（通道操作 8 + 颜色空间往返 4 + 边界条件 3）
+- **验收**：1452 测试全绿
+- 新增代码 0 warnings, 0 errors
+
+#### 16-bit/float API 覆盖进度（累计）
+
+| 类别 | 8-bit API 数 | 已有 16/f 变体 | 本次新增 | 覆盖率 |
+|------|-------------|----------------|---------|--------|
+| 色彩调整 | 5 | 10 | 0 | 100% |
+| 边缘检测 | 3 | 5 | 0 | 100% |
+| 滤波 | 4 | 5 | 0 | 100% |
+| 几何变换 | 7 | 9 | 0 | 100% |
+| 颜色空间/通道 | 12 | 0 → 16 | +16 | 67% (to_rgb/to_rgba/premultiply/unpremultiply/ycbcr/cmyk) |
+| **合计** | **31** | **29 → 45** | **+16** | **—** |
+
+---

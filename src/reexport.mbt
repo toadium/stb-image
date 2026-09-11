@@ -945,6 +945,8 @@ pub let mse : (@types.Image, @types.Image) -> Double = @feature.mse
 
 ///|
 pub let premultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.premultiply_alpha
+pub let premultiply_alpha_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.premultiply_alpha_16
+pub let premultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.premultiply_alpha_f
 
 ///|
 pub let psnr : (@types.Image, @types.Image) -> Double = @feature.psnr
@@ -972,9 +974,13 @@ pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hs
 
 ///|
 pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) = @color.rgb_to_ycbcr
+pub let rgb_to_ycbcr_16 : (Int, Int, Int) -> (Int, Int, Int) = @color.rgb_to_ycbcr_16
+pub let rgb_to_ycbcr_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_ycbcr_f
 
 ///|
 pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) = @color.ycbcr_to_rgb
+pub let ycbcr_to_rgb_16 : (Int, Int, Int) -> (Int, Int, Int) = @color.ycbcr_to_rgb_16
+pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.ycbcr_to_rgb_f
 
 ///|
 pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz
@@ -990,9 +996,13 @@ pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rg
 
 ///|
 pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk
+pub let rgb_to_cmyk_16 : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk_16
+pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) = @color.rgb_to_cmyk_f
 
 ///|
 pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb
+pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb_16
+pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) = @color.cmyk_to_rgb_f
 
 ///|
 pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image = @color.apply_colormap
@@ -1080,12 +1090,18 @@ pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF = @color.to_grayscale_
 
 ///|
 pub let to_rgb : (@types.Image) -> @types.Image = @color.to_rgb
+pub let to_rgb_16 : (@types.Image16) -> @types.Image16 = @color.to_rgb_16
+pub let to_rgb_f : (@types.ImageF) -> @types.ImageF = @color.to_rgb_f
 
 ///|
 pub let to_rgba : (@types.Image) -> @types.Image = @color.to_rgba
+pub let to_rgba_16 : (@types.Image16) -> @types.Image16 = @color.to_rgba_16
+pub let to_rgba_f : (@types.ImageF) -> @types.ImageF = @color.to_rgba_f
 
 ///|
 pub let unpremultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.unpremultiply_alpha
+pub let unpremultiply_alpha_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.unpremultiply_alpha_16
+pub let unpremultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.unpremultiply_alpha_f
 
 ///|
 pub let warp_affine : (
