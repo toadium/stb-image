@@ -442,7 +442,7 @@ test "load_from_bytes_auto: ICO 分派 (roundtrip)" {
 }
 
 ///|
-test "load_from_bytes_auto: CUR 分派 (roundtrip)" {
+test "detect_format: ICO 检测 + decode_ico_pure roundtrip" {
   // 使用 encode_ico_pure 编码，因为 CUR 解码器需要完整目录条目
   let img = lb_make_1x1_red_bmp() |> @codec.decode_bmp_pure
   let ico_bytes = @codec.encode_ico_pure(img)

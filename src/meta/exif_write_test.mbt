@@ -206,7 +206,7 @@ test "write_exif_to_bytes: orientation values 1-8 roundtrip" {
 test "write_exif_to_bytes: non-ASCII string replaces with ?" {
   // string_to_exif_bytes should replace bytes >= 128 with '?'
   let info = ExifInfo::{
-    make: "Test\x80\xFF",
+    make: "Test\u{80}\u{FF}",
     model: "X",
     orientation: 1,
     date_time: "",
