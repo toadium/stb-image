@@ -663,6 +663,26 @@ pub fn harris_corners(
 }
 
 ///|
+pub fn harris_corners_16(
+  arg0 : @types.Image16,
+  k? : Float = 0.04F,
+  threshold? : Float = 1000.0F,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.harris_corners_16(arg0, k~, threshold~, min_distance~)
+}
+
+///|
+pub fn harris_corners_f(
+  arg0 : @types.ImageF,
+  k? : Float = 0.04F,
+  threshold? : Float = 1000.0F,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.harris_corners_f(arg0, k~, threshold~, min_distance~)
+}
+
+///|
 /// ORB 特征检测
 pub fn orb_detect(
   arg0 : @types.Image,
@@ -670,6 +690,24 @@ pub fn orb_detect(
   threshold? : Int = 20,
 ) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
   @feature.orb_detect(arg0, max_features~, threshold~)
+}
+
+///|
+pub fn orb_detect_16(
+  arg0 : @types.Image16,
+  max_features? : Int = 500,
+  threshold? : Int = 20,
+) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
+  @feature.orb_detect_16(arg0, max_features~, threshold~)
+}
+
+///|
+pub fn orb_detect_f(
+  arg0 : @types.ImageF,
+  max_features? : Int = 500,
+  threshold? : Int = 20,
+) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
+  @feature.orb_detect_f(arg0, max_features~, threshold~)
 }
 
 ///|
@@ -737,6 +775,24 @@ pub fn sift_detect(
   contrast_threshold? : Float = 0.04F,
 ) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
   @feature.sift_detect(arg0, max_features~, contrast_threshold~)
+}
+
+///|
+pub fn sift_detect_16(
+  arg0 : @types.Image16,
+  max_features? : Int = 500,
+  contrast_threshold? : Float = 0.04F,
+) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
+  @feature.sift_detect_16(arg0, max_features~, contrast_threshold~)
+}
+
+///|
+pub fn sift_detect_f(
+  arg0 : @types.ImageF,
+  max_features? : Int = 500,
+  contrast_threshold? : Float = 0.04F,
+) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
+  @feature.sift_detect_f(arg0, max_features~, contrast_threshold~)
 }
 
 ///|
@@ -1008,6 +1064,36 @@ pub fn good_features_to_track(
   min_distance? : Int = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.good_features_to_track(
+    img,
+    max_corners,
+    quality_level,
+    min_distance~,
+  )
+}
+
+///|
+pub fn good_features_to_track_16(
+  img : @types.Image16,
+  max_corners : Int,
+  quality_level : Float,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.good_features_to_track_16(
+    img,
+    max_corners,
+    quality_level,
+    min_distance~,
+  )
+}
+
+///|
+pub fn good_features_to_track_f(
+  img : @types.ImageF,
+  max_corners : Int,
+  quality_level : Float,
+  min_distance? : Int = 5,
+) -> Array[@feature.CornerPoint] raise @types.LoadError {
+  @feature.good_features_to_track_f(
     img,
     max_corners,
     quality_level,
