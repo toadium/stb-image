@@ -50,6 +50,7 @@
 | **v5.8.0** | **覆盖率提升：BMP第二行越界测试+TIFF PackBits扩展模式+PNG palette缺失测试+quantize灰度图/无效k测试+contour孤立点测试+EXIF非APP1标记扫描+PNG无效UTF-8序列测试，新增20项错误路径测试** | **1409×4** |
 | **v5.9.0** | **16-bit/float 泛化扩展：新增16个 Image16/ImageF 变体 API（adjust_gamma/invert/to_grayscale/edge_detect_laplacian/edge_detect_prewitt/sharpen/flip_vertical/transpose），色彩调整/边缘检测/滤波/几何变换四类16-bit/float覆盖率达100%，新增20项测试** | **1437×4** |
 | **v5.10.0** | **颜色空间转换16-bit/float泛化：新增16个 Image16/ImageF 变体 API（to_rgb/to_rgba/premultiply_alpha/unpremultiply_alpha 图像级 + rgb_to_ycbcr/ycbcr_to_rgb/rgb_to_cmyk/cmyk_to_rgb 像素级），新增15项测试** | **1452** |
+| **v5.11.0** | **阈值处理16-bit/float泛化：新增6个 Image16/ImageF 变体 API（adaptive_threshold_mean_16/f、adaptive_threshold_gaussian_16/f、threshold_otsu_16/f），输出二值图像，新增10项测试** | **1462** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

@@ -276,9 +276,13 @@ pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust
 
 ///|
 pub let adaptive_threshold_mean : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
+pub let adaptive_threshold_mean_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_mean_16
+pub let adaptive_threshold_mean_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_mean_f
 
 ///|
 pub let adaptive_threshold_gaussian : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_gaussian
+pub let adaptive_threshold_gaussian_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_gaussian_16
+pub let adaptive_threshold_gaussian_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_gaussian_f
 
 ///|
 pub let bilateral_filter : (@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError = @filter.bilateral_filter
@@ -1082,6 +1086,8 @@ pub let ssim : (@types.Image, @types.Image) -> Double = @feature.ssim
 
 ///|
 pub let threshold_otsu : (@types.Image) -> @types.Image raise @types.LoadError = @color.threshold_otsu
+pub let threshold_otsu_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.threshold_otsu_16
+pub let threshold_otsu_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.threshold_otsu_f
 
 ///|
 pub let to_grayscale : (@types.Image) -> @types.Image = @color.to_grayscale
