@@ -1203,12 +1203,18 @@ pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF = @feature.hist
 
 ///|
 pub let ahash : (@types.Image) -> Array[Int] = @feature.ahash
+pub let ahash_16 : (@types.Image16) -> Array[Int] = @feature.ahash_16
+pub let ahash_f : (@types.ImageF) -> Array[Int] = @feature.ahash_f
 
 ///|
 pub let dhash : (@types.Image) -> Array[Int] = @feature.dhash
+pub let dhash_16 : (@types.Image16) -> Array[Int] = @feature.dhash_16
+pub let dhash_f : (@types.ImageF) -> Array[Int] = @feature.dhash_f
 
 ///|
 pub let phash : (@types.Image) -> Array[Int] = @feature.phash
+pub let phash_16 : (@types.Image16) -> Array[Int] = @feature.phash_16
+pub let phash_f : (@types.ImageF) -> Array[Int] = @feature.phash_f
 
 ///|
 pub let hamming_distance : (Array[Int], Array[Int]) -> Int = @feature.hamming_distance
@@ -1303,9 +1309,13 @@ pub let ifft_2d_f : (@frequency.FFTResult) -> @types.ImageF = @frequency.ifft_2d
 
 ///|
 pub let integral_image : (@types.Image) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image
+pub let integral_image_16 : (@types.Image16) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image_16
+pub let integral_image_f : (@types.ImageF) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image_f
 
 ///|
 pub let integral_image_sq : (@types.Image) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq
+pub let integral_image_sq_16 : (@types.Image16) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_16
+pub let integral_image_sq_f : (@types.ImageF) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_f
 
 ///|
 pub let integral_mean : (@feature.IntegralImage, Int, Int, Int, Int) -> Float = @feature.integral_mean
@@ -1496,6 +1506,8 @@ pub let morph_open_f : (@types.ImageF) -> @types.ImageF = @segment.morph_open_f
 
 ///|
 pub let mse : (@types.Image, @types.Image) -> Double = @feature.mse
+pub let mse_16 : (@types.Image16, @types.Image16) -> Double = @feature.mse_16
+pub let mse_f : (@types.ImageF, @types.ImageF) -> Double = @feature.mse_f
 
 ///|
 pub let premultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.premultiply_alpha
@@ -1504,6 +1516,8 @@ pub let premultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.Load
 
 ///|
 pub let psnr : (@types.Image, @types.Image) -> Double = @feature.psnr
+pub let psnr_16 : (@types.Image16, @types.Image16) -> Double = @feature.psnr_16
+pub let psnr_f : (@types.ImageF, @types.ImageF) -> Double = @feature.psnr_f
 
 ///|
 pub let pyr_down : (@types.Image) -> @types.Image raise @types.LoadError = @transform.pyr_down
@@ -1633,6 +1647,8 @@ pub fn msrcr(
 
 ///|
 pub let ssim : (@types.Image, @types.Image) -> Double = @feature.ssim
+pub let ssim_16 : (@types.Image16, @types.Image16) -> Double = @feature.ssim_16
+pub let ssim_f : (@types.ImageF, @types.ImageF) -> Double = @feature.ssim_f
 
 ///|
 pub let threshold_otsu : (@types.Image) -> @types.Image raise @types.LoadError = @color.threshold_otsu
