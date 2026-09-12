@@ -292,9 +292,13 @@ pub let adaptive_threshold_gaussian_f : (@types.ImageF, Int, Float) -> @types.Im
 
 ///|
 pub let bilateral_filter : (@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError = @filter.bilateral_filter
+pub let bilateral_filter_16 : (@types.Image16, Int, Float, Float) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_16
+pub let bilateral_filter_f : (@types.ImageF, Int, Float, Float) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_f
 
 ///|
 pub let bilateral_filter_fast : (@types.Image, Int, Float, Float, Int) -> @types.Image raise @types.LoadError = @filter.bilateral_filter_fast
+pub let bilateral_filter_fast_16 : (@types.Image16, Int, Float, Float, Int) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_fast_16
+pub let bilateral_filter_fast_f : (@types.ImageF, Int, Float, Float, Int) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_fast_f
 
 ///|
 pub let box_blur : (@types.Image, Int) -> @types.Image = @filter.box_blur
@@ -2041,6 +2045,8 @@ pub let compute_stats_f : (@types.ImageF) -> @util.ImageStatsF = @util.compute_s
 
 ///|
 pub let convolve : (@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError = @filter.convolve
+pub let convolve_16 : (@types.Image16, Array[Float], Float, Float) -> @types.Image16 raise @types.LoadError = @filter.convolve_16
+pub let convolve_f : (@types.ImageF, Array[Float], Float, Float) -> @types.ImageF raise @types.LoadError = @filter.convolve_f
 
 ///|
 pub let extract_channel : (@types.Image, Int) -> @types.Image raise @types.LoadError = @util.extract_channel
