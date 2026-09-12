@@ -48,10 +48,182 @@ fn Vp8BitReader::read_bit(self : Vp8BitReader) -> Int {
 
 ///|
 fn Vp8BitReader::read_bool(self : Vp8BitReader, prob : Int) -> Int {
-  // VP8 布尔解码器：基于概率的算术解码简化版
-  // 简化实现：直接读取 bit，prob 用于统计
+  // 简化版：用于帧头解析，prob 暂不使用
   ignore(prob)
   self.read_bit()
+}
+
+// ==================== VP8 Bool Decoder ====================
+// VP8 使用基于概率的布尔算术编码
+
+///|
+priv struct Vp8BoolDecoder {
+  data : Bytes
+  mut pos : Int
+  mut bit_count : Int
+  mut range : Int
+  mut value : Int
+}
+
+///|
+fn Vp8BoolDecoder::new(data : Bytes, start : Int) -> Vp8BoolDecoder {
+  let bd = Vp8BoolDecoder::{
+    data,
+    pos: start,
+    bit_count: 0,
+    range: 255,
+    value: 0,
+  }
+  // 初始化：读取前两个字节
+  bd.value = if bd.pos < bd.data.length() { bd.data[bd.pos].to_int() } else { 0 }
+  bd.pos += 1
+  bd.value = (bd.value << 8) | (if bd.pos < bd.data.length() { bd.data[bd.pos].to_int() } else { 0 })
+  bd.pos += 1
+  bd.bit_count = 16
+  bd
+}
+
+///|
+fn Vp8BoolDecoder::read_bool(self : Vp8BoolDecoder, prob : Int) -> Int {
+  // VP8 布尔解码器核心算法
+  let split = 1 + (((self.range - 1) * prob) >> 8)
+  let bigsplit = split << 8
+  let mut bit = 0
+  if self.value >= bigsplit {
+    self.range -= split
+    self.value -= bigsplit
+    bit = 1
+  } else {
+    self.range = split
+  }
+  // 归一化
+  while self.range < 128 {
+    self.range = self.range << 1
+    self.value = self.value << 1
+    self.bit_count -= 1
+    if self.bit_count == 0 {
+      self.bit_count = 8
+      if self.pos < self.data.length() {
+        self.value = self.value | self.data[self.pos].to_int()
+        self.pos += 1
+      }
+    }
+  }
+  bit
+}
+
+///|
+fn Vp8BoolDecoder::read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
+  // 读取指定位数的字面值（概率 128）
+  let mut v = 0
+  for i in 0..<num_bits {
+    v = (v << 1) | self.read_bool(128)
+  }
+  v
+}
+
+// ==================== VP8 Residual Coefficient Parsing ====================
+// VP8 残差系数解析：token 解析 + zig-zag 扫描
+
+///|
+/// VP8 系数概率模型（简化版，使用默认概率）
+priv struct Vp8CoeffProbs {
+  // 每个位置的 base token 概率（简化为单一概率）
+  base_prob : Int
+  // 额外位的概率
+  extra_prob : Int
+}
+
+///|
+fn Vp8CoeffProbs::new() -> Vp8CoeffProbs {
+  Vp8CoeffProbs::{
+    base_prob: 150,
+    extra_prob: 140,
+  }
+}
+
+///|
+/// VP8 zig-zag 扫描顺序（4x4 块）
+fn vp8_zigzag_4x4() -> Array[Int] {
+  [
+    0, 1, 4, 8,
+    5, 2, 3, 6,
+    9, 12, 13, 10,
+    7, 11, 14, 15,
+  ]
+}
+
+///|
+/// 解析一个 4x4 块的残差系数
+/// 返回 16 个系数（行优先顺序）
+fn vp8_parse_residual_4x4(
+  bd : Vp8BoolDecoder,
+  probs : Vp8CoeffProbs,
+  is_dc : Bool,
+) -> Array[Int] {
+  let coeffs = Array::make(16, 0)
+  let zigzag = vp8_zigzag_4x4()
+  let mut eob = false // end of block
+  for i in 0..<16 {
+    if eob {
+      break
+    }
+    let pos = zigzag[i]
+    // 解析 base token
+    // token 0: 零系数
+    // token 1: 一个系数（±1）
+    // token 2+: 多个系数（需要额外位）
+    let is_zero = bd.read_bool(probs.base_prob) == 1
+    if is_zero {
+      // 检查是否是 EOB（块结束）
+      if i > 0 {
+        let is_eob = bd.read_bool(100) == 1
+        if is_eob {
+          eob = true
+        }
+      }
+      continue
+    }
+    // 非零系数：解析符号和值
+    let is_one = bd.read_bool(170) == 1
+    let mut value = 0
+    if is_one {
+      value = 1
+    } else {
+      // 解析额外位
+      let mut extra = 1
+      let mut continue_read = true
+      while continue_read {
+        let read_more = bd.read_bool(probs.extra_prob) == 1
+        if read_more {
+          extra = (extra << 1) | bd.read_bool(128)
+          if extra > 2047 {
+            continue_read = false
+          }
+        } else {
+          continue_read = false
+        }
+      }
+      value = extra + 1
+    }
+    // 解析符号
+    let sign = bd.read_bool(128)
+    if sign == 1 {
+      value = -value
+    }
+    coeffs[pos] = value
+  }
+  coeffs
+}
+
+///|
+/// 解析一个 16x16 块的 DC 系数（4x4 块的 DC 系数组成）
+fn vp8_parse_dc_coeffs_16x16(
+  bd : Vp8BoolDecoder,
+  probs : Vp8CoeffProbs,
+) -> Array[Int] {
+  // 16x16 块的 DC 系数是一个 4x4 块，使用 WHT 变换
+  vp8_parse_residual_4x4(bd, probs, true)
 }
 
 // ==================== VP8 Frame Header ====================
@@ -490,8 +662,12 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   let u_plane : Array[Int] = Array::make((w / 2) * (h / 2), base_u)
   let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), base_v)
 
-  // 帧内预测 + IDCT 残差（简化实现）
-  // 对每个 16x16 宏块使用 I16x16 帧内预测
+  // 帧内预测 + 残差系数解析 + IDCT 反变换
+  // 创建布尔解码器用于残差系数解析
+  let bd = Vp8BoolDecoder::new(data, offset + 10)
+  let coeff_probs = Vp8CoeffProbs::new()
+
+  // 对每个 16x16 宏块使用 I16x16 帧内预测 + 残差解析
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
   for mb_y in 0..<mb_h {
@@ -508,20 +684,34 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
         _ => Vp8I16x16Mode::I16x16VPred
       }
       let pred = vp8_intra_predict_16x16(mode, above, left, above_left)
-      // 生成 IDCT 残差（基于量化参数的简化残差）
-      let residual_coeffs : Array[Int] = Array::make(16, 0)
-      residual_coeffs[0] = quant.y_dc / 2
-      let residual = vp8_idct_4x4(residual_coeffs)
-      // 将预测和残差相加
-      for y in 0..<16 {
-        for x in 0..<16 {
-          let px = mb_x * 16 + x
-          let py = mb_y * 16 + y
-          if px < w && py < h {
-            let mut val = pred[y * 16 + x] + residual[(y % 4) * 4 + (x % 4)]
-            if val < 0 { val = 0 }
-            if val > 255 { val = 255 }
-            y_plane[py * w + px] = val
+
+      // 解析 DC 系数（16x16 块的 DC 系数组成 4x4 块）
+      let dc_coeffs = vp8_parse_dc_coeffs_16x16(bd, coeff_probs)
+      let dc_residual = vp8_wht_4x4(dc_coeffs)
+
+      // 对每个 4x4 子块解析 AC 系数并进行 IDCT
+      for sub_y in 0..<4 {
+        for sub_x in 0..<4 {
+          // 解析 AC 系数
+          let ac_coeffs = vp8_parse_residual_4x4(bd, coeff_probs, false)
+          // 将 DC 系数添加到 AC 系数中
+          ac_coeffs[0] = ac_coeffs[0] + dc_residual[sub_y * 4 + sub_x]
+          // IDCT 反变换
+          let residual = vp8_idct_4x4(ac_coeffs)
+          // 将预测和残差相加
+          for y in 0..<4 {
+            for x in 0..<4 {
+              let px = mb_x * 16 + sub_x * 4 + x
+              let py = mb_y * 16 + sub_y * 4 + y
+              if px < w && py < h {
+                let pred_y = sub_y * 4 + y
+                let pred_x = sub_x * 4 + x
+                let mut val = pred[pred_y * 16 + pred_x] + residual[y * 4 + x]
+                if val < 0 { val = 0 }
+                if val > 255 { val = 255 }
+                y_plane[py * w + px] = val
+              }
+            }
           }
         }
       }
