@@ -2007,6 +2007,48 @@ pub fn hough_circles(
 }
 
 ///|
+pub fn hough_circles_16(
+  img : @types.Image16,
+  dp? : Int = 1,
+  min_dist? : Int = 10,
+  param1? : Int = 100,
+  param2? : Int = 30,
+  min_radius? : Int = 0,
+  max_radius? : Int = 0,
+) -> Array[@edge.Circle] raise @types.LoadError {
+  @edge.hough_circles_16(
+    img,
+    dp~,
+    min_dist~,
+    param1~,
+    param2~,
+    min_radius~,
+    max_radius~,
+  )
+}
+
+///|
+pub fn hough_circles_f(
+  img : @types.ImageF,
+  dp? : Int = 1,
+  min_dist? : Int = 10,
+  param1? : Int = 100,
+  param2? : Int = 30,
+  min_radius? : Int = 0,
+  max_radius? : Int = 0,
+) -> Array[@edge.Circle] raise @types.LoadError {
+  @edge.hough_circles_f(
+    img,
+    dp~,
+    min_dist~,
+    param1~,
+    param2~,
+    min_radius~,
+    max_radius~,
+  )
+}
+
+///|
 pub fn multi_band_blend(
   img_a : @types.Image,
   img_b : @types.Image,
