@@ -1308,6 +1308,184 @@ fn vp8_loop_filter_mb(
   }
 }
 
+// ==================== VP8 Inter Prediction (Frame间预测) ====================
+// VP8 非关键帧支持：运动估计/运动补偿、参考帧管理
+
+///|
+/// 运动向量（整数像素精度）
+priv struct Vp8MotionVector {
+  mut mv_x : Int  // 水平运动向量（像素单位）
+  mut mv_y : Int  // 垂直运动向量（像素单位）
+}
+
+///|
+fn Vp8MotionVector::new() -> Vp8MotionVector {
+  Vp8MotionVector::{ mv_x: 0, mv_y: 0 }
+}
+
+///|
+/// 宏块类型（帧内/帧间）
+enum Vp8MbType {
+  MbIntra    // 帧内预测
+  MbInter    // 帧间预测（运动补偿）
+  MbSkip     // 跳过宏块（使用零运动向量，无残差）
+}
+
+///|
+/// 参考帧管理
+/// VP8 使用 3 个参考帧：last（前向）、golden（黄金帧）、altref（备用参考帧）
+priv struct Vp8ReferenceFrames {
+  last_y : Array[Int]     // 前向参考帧 Y 平面
+  last_u : Array[Int]     // 前向参考帧 U 平面
+  last_v : Array[Int]     // 前向参考帧 V 平面
+  golden_y : Array[Int]   // 黄金帧 Y 平面
+  golden_u : Array[Int]   // 黄金帧 U 平面
+  golden_v : Array[Int]   // 黄金帧 V 平面
+  altref_y : Array[Int]   // 备用参考帧 Y 平面
+  altref_u : Array[Int]   // 备用参考帧 U 平面
+  altref_v : Array[Int]   // 备用参考帧 V 平面
+  width : Int
+  height : Int
+}
+
+///|
+fn Vp8ReferenceFrames::new(width : Int, height : Int) -> Vp8ReferenceFrames {
+  let y_size = width * height
+  let uv_size = (width / 2) * (height / 2)
+  Vp8ReferenceFrames::{
+    last_y: Array::make(y_size, 128),
+    last_u: Array::make(uv_size, 128),
+    last_v: Array::make(uv_size, 128),
+    golden_y: Array::make(y_size, 128),
+    golden_u: Array::make(uv_size, 128),
+    golden_v: Array::make(uv_size, 128),
+    altref_y: Array::make(y_size, 128),
+    altref_u: Array::make(uv_size, 128),
+    altref_v: Array::make(uv_size, 128),
+    width: width,
+    height: height,
+  }
+}
+
+///|
+/// 更新参考帧（将当前帧复制到 last 参考帧）
+fn Vp8ReferenceFrames::update(
+  self : Vp8ReferenceFrames,
+  y_plane : Array[Int],
+  u_plane : Array[Int],
+  v_plane : Array[Int],
+) -> Unit {
+  let y_size = self.width * self.height
+  let uv_size = (self.width / 2) * (self.height / 2)
+  for i in 0..<y_size {
+    self.last_y[i] = y_plane[i]
+  }
+  for i in 0..<uv_size {
+    self.last_u[i] = u_plane[i]
+    self.last_v[i] = v_plane[i]
+  }
+}
+
+///|
+/// 运动补偿（整数像素精度）
+/// 从参考帧中获取 16x16 宏块的预测像素
+fn vp8_motion_compensate_16x16(
+  ref_y : Array[Int],
+  ref_u : Array[Int],
+  ref_v : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  mv : Vp8MotionVector,
+  width : Int,
+  height : Int,
+) -> (Array[Int], Array[Int], Array[Int]) {
+  let pred_y = Array::make(256, 128)  // 16x16 = 256
+  let pred_u = Array::make(64, 128)   // 8x8 = 64
+  let pred_v = Array::make(64, 128)   // 8x8 = 64
+
+  // 计算参考位置（加上运动向量）
+  let ref_x = mb_x * 16 + mv.mv_x
+  let ref_y_pos = mb_y * 16 + mv.mv_y
+
+  // Y 平面运动补偿（16x16）
+  for y in 0..<16 {
+    for x in 0..<16 {
+      let sx = ref_x + x
+      let sy = ref_y_pos + y
+      // 边界钳制
+      let cx = if sx < 0 { 0 } else if sx >= width { width - 1 } else { sx }
+      let cy = if sy < 0 { 0 } else if sy >= height { height - 1 } else { sy }
+      pred_y[y * 16 + x] = ref_y[cy * width + cx]
+    }
+  }
+
+  // U/V 平面运动补偿（8x8，运动向量减半）
+  let uv_width = width / 2
+  let uv_height = height / 2
+  let uv_ref_x = (ref_x + 1) / 2
+  let uv_ref_y = (ref_y_pos + 1) / 2
+  for y in 0..<8 {
+    for x in 0..<8 {
+      let sx = uv_ref_x + x
+      let sy = uv_ref_y + y
+      let cx = if sx < 0 { 0 } else if sx >= uv_width { uv_width - 1 } else { sx }
+      let cy = if sy < 0 { 0 } else if sy >= uv_height { uv_height - 1 } else { sy }
+      pred_u[y * 8 + x] = ref_u[cy * uv_width + cx]
+      pred_v[y * 8 + x] = ref_v[cy * uv_width + cx]
+    }
+  }
+
+  (pred_y, pred_u, pred_v)
+}
+
+///|
+/// 解析运动向量（简化实现，使用默认概率）
+/// VP8 运动向量使用 1/4 像素精度，这里简化为整数精度
+fn vp8_parse_motion_vector(
+  bd : Vp8BoolDecoder,
+  pred_mv : Vp8MotionVector,
+) -> Vp8MotionVector {
+  let mv = Vp8MotionVector::new()
+  // 简化实现：使用预测运动向量 + 小的残差
+  // 完整实现需要解析运动向量残差（使用 Golomb 编码）
+  mv.mv_x = pred_mv.mv_x
+  mv.mv_y = pred_mv.mv_y
+  mv
+}
+
+///|
+/// 运动向量预测（使用相邻宏块的运动向量中值）
+fn vp8_predict_motion_vector(
+  left_mv : Vp8MotionVector,
+  above_mv : Vp8MotionVector,
+  above_left_mv : Vp8MotionVector,
+) -> Vp8MotionVector {
+  let pred = Vp8MotionVector::new()
+  // 中值预测
+  let xs = [left_mv.mv_x, above_mv.mv_x, above_left_mv.mv_x]
+  let ys = [left_mv.mv_y, above_mv.mv_y, above_left_mv.mv_y]
+  // 简单排序取中值
+  let mut x_median = xs[0]
+  if (xs[1] - xs[0]) * (xs[2] - xs[0]) <= 0 {
+    x_median = xs[0]
+  } else if (xs[0] - xs[1]) * (xs[2] - xs[1]) <= 0 {
+    x_median = xs[1]
+  } else {
+    x_median = xs[2]
+  }
+  let mut y_median = ys[0]
+  if (ys[1] - ys[0]) * (ys[2] - ys[0]) <= 0 {
+    y_median = ys[0]
+  } else if (ys[0] - ys[1]) * (ys[2] - ys[1]) <= 0 {
+    y_median = ys[1]
+  } else {
+    y_median = ys[2]
+  }
+  pred.mv_x = x_median
+  pred.mv_y = y_median
+  pred
+}
+
 // ==================== VP8 Decoder ====================
 
 ///|
