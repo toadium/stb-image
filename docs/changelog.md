@@ -52,6 +52,7 @@
 | **v5.10.0** | **颜色空间转换16-bit/float泛化：新增16个 Image16/ImageF 变体 API（to_rgb/to_rgba/premultiply_alpha/unpremultiply_alpha 图像级 + rgb_to_ycbcr/ycbcr_to_rgb/rgb_to_cmyk/cmyk_to_rgb 像素级），新增15项测试** | **1452** |
 | **v5.11.0** | **阈值处理16-bit/float泛化：新增6个 Image16/ImageF 变体 API（adaptive_threshold_mean_16/f、adaptive_threshold_gaussian_16/f、threshold_otsu_16/f），输出二值图像，新增10项测试** | **1462** |
 | **v5.12.0** | **形态学操作16-bit/float泛化：新增22个 Image16/ImageF 变体 API（erode/dilate/morph_open/morph_close/morph_gradient/morph_tophat/morph_blackhat + 自定义结构元素版本），新增20项测试** | **1482** |
+| **v5.13.0** | **直方图操作16-bit/float泛化：新增8个 Image16/ImageF 变体 API（histogram/histogram_equalize/histogram_normalize/histogram_matching），新增13项测试** | **1495** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
