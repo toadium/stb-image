@@ -1369,6 +1369,8 @@ pub let invert_f : (@types.ImageF) -> @types.ImageF = @color.invert_f
 
 ///|
 pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
+pub let kmeans_quantize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.kmeans_quantize_16
+pub let kmeans_quantize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @color.kmeans_quantize_f
 
 ///|
 pub fn kmeans_segment(
