@@ -318,6 +318,24 @@ pub fn canny_edge(
 }
 
 ///|
+pub fn canny_edge_16(
+  arg0 : @types.Image16,
+  low_threshold? : Int = 12800,
+  high_threshold? : Int = 25600,
+) -> @types.Image16 raise @types.LoadError {
+  @edge.canny_edge_16(arg0, low_threshold~, high_threshold~)
+}
+
+///|
+pub fn canny_edge_f(
+  arg0 : @types.ImageF,
+  low_threshold? : Float = 0.2F,
+  high_threshold? : Float = 0.4F,
+) -> @types.ImageF raise @types.LoadError {
+  @edge.canny_edge_f(arg0, low_threshold~, high_threshold~)
+}
+
+///|
 pub let connected_components : (@types.Image, Int) -> (
   @segment.ConnectedComponentLabelImage,
   Array[@segment.ConnectedComponent],
@@ -889,9 +907,13 @@ pub fn kmeans_segment(
 
 ///|
 pub let lbp : (@types.Image) -> @types.Image raise @types.LoadError = @feature.lbp
+pub let lbp_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.lbp_16
+pub let lbp_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.lbp_f
 
 ///|
 pub let lbp_uniform : (@types.Image) -> @types.Image raise @types.LoadError = @feature.lbp_uniform
+pub let lbp_uniform_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.lbp_uniform_16
+pub let lbp_uniform_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.lbp_uniform_f
 
 ///|
 pub fn nlm_denoise(
