@@ -8,9 +8,9 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-Contest%20Project-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1462-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1482-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-423%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
+[![Functions](https://img.shields.io/badge/API-445%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-0.4.11-orange)]()
 
 [Highlights](#-highlights) · [Format Support](#-format-support) · [Quick Start](#-quick-start) · [Features](#-features) · [Multi-Target](#-multi-target-support) · [Package Structure](#-package-structure) · [Docs](#-documentation) · [Build](#-build--test) · [Contributing](#-contributing)
@@ -39,7 +39,7 @@ This project participates in the **2026 MoonBit Domestic Open Source Ecosystem C
 | 🟢 | **Four targets** | native / wasm-gc / js / wasm share one codebase, no conditional compilation |
 | 🟢 | **Broad format coverage** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — includes exclusive PSD, HDR |
 | 🟢 | **Full pixel depth** | 8-bit `Image`, 16-bit `Image16`, HDR float `ImageF` |
-| | 🟢 | **423 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy encoding |
+| | 🟢 | **445 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy encoding |
 | 🟢 | **Streaming decode** | Row-by-row / chunked / channel-specified callbacks (currently full decode then row dispatch; incremental decode planned for v5.0) |
 | 🟢 | **Safety hardening** | MAX_IMAGE_DIMENSION(65535) guard + check_dims validation at all decoder entry points + safe_mul overflow protection |
 | 🟢 | **Multi-package architecture** | 8 sub-packages with clear responsibilities, parallel compilation, independent testing |
@@ -139,16 +139,16 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 Features
 
-423 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
+445 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
 
 ## 🎯 Multi-Target Support
 
 | Target | Backend | Tests | Status |
 |:------:|:-------:|:-----:|:------:|
-| **native** | Pure MoonBit | 1462 | ✅ |
-| **wasm-gc** | Pure MoonBit | 1462 | ✅ |
-| **js** | Pure MoonBit | 1462 | ✅ |
-| **wasm** | Pure MoonBit | 1462 | ✅ |
+| **native** | Pure MoonBit | 1482 | ✅ |
+| **wasm-gc** | Pure MoonBit | 1482 | ✅ |
+| **js** | Pure MoonBit | 1482 | ✅ |
+| **wasm** | Pure MoonBit | 1482 | ✅ |
 
 ---
 
@@ -174,7 +174,7 @@ src/
 ├── examples/           # Example code (32 examples, all API coverage)
 ├── util/               # Utility functions (built on pure)
 ├── bench.mbt           # Performance benchmarks
-└── reexport.mbt        # Top-level API re-export (420 pub fn + 47 pub type)
+└── reexport.mbt        # Top-level API re-export (442 pub fn + 47 pub type)
 ```
 
 ---
@@ -184,13 +184,13 @@ src/
 | Document | Description |
 |----------|-------------|
 | [docs/architecture.md](docs/architecture.md) | Architecture diagram, package dependencies, design decisions |
-| [docs/api_reference.md](docs/api_reference.md) | Full API reference (423 functions + 1 const + 47 types) |
+| [docs/api_reference.md](docs/api_reference.md) | Full API reference (445 functions + 1 const + 47 types) |
 | [docs/roadmap.md](docs/roadmap.md) | Iteration roadmap |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io image library comparison |
 | [docs/performance_report.md](docs/performance_report.md) | Performance benchmark report (46 benchmarks) |
 | [docs/notes.md](docs/notes.md) | Usage notes and core constraints |
 | [docs/examples.md](docs/examples.md) | Complete examples (32 examples) |
-| [docs/features.md](docs/features.md) | Feature overview (423 APIs by category) |
+| [docs/features.md](docs/features.md) | Feature overview (445 APIs by category) |
 | [docs/contributing.md](docs/contributing.md) | Contributing guide (dev setup/workflow/conventions) |
 | [docs/changelog.md](docs/changelog.md) | Version changelog |
 
@@ -205,7 +205,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# Run tests (1462)
+# Run tests (1482)
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -276,7 +276,7 @@ On top of the port, this project adds many advanced capabilities **not in `stb_i
 | Dependencies | C compiler | Zero C deps |
 | Targets | native | native / wasm-gc / js / wasm |
 | Formats | 7 | 15 |
-| APIs | ~30 | 423 |
+| APIs | ~30 | 445 |
 | Advanced algorithms | None | 50+ |
 | Memory safety | Manual | GC managed |
 

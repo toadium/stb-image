@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-09-12 | 当前版本：v5.11.0 | 测试：1462 | 覆盖率：99.0%
+> 制定日期：2026-08-06 | 最后更新：2026-09-12 | 当前版本：v5.12.0 | 测试：1482 | 覆盖率：99.0%
 
 ## 现状定位
 
@@ -979,5 +979,45 @@ flowchart LR
 | 颜色空间/通道 | 12 | 16 | 0 | 67% |
 | 阈值处理 | 3 | 0 → 6 | +6 | 100% |
 | **合计** | **34** | **45 → 51** | **+6** | **—** |
+
+---
+
+### v5.12.0 — 形态学操作 16-bit/float 泛化 (Phase 16)
+
+**目标**：为形态学操作 API 补充 Image16/ImageF 变体，继续推进 v5.1.0 全面泛化目标。
+
+#### 已完成
+
+- **基础操作**（4 API）：
+  - `erode_16` / `erode_f` — 腐蚀（3x3 邻域最小值）
+  - `dilate_16` / `dilate_f` — 膨胀（3x3 邻域最大值）
+- **组合操作**（10 API）：
+  - `morph_open_16` / `morph_open_f` — 开运算（先腐蚀后膨胀）
+  - `morph_close_16` / `morph_close_f` — 闭运算（先膨胀后腐蚀）
+  - `morph_gradient_16` / `morph_gradient_f` — 形态学梯度（dilate - erode）
+  - `morph_tophat_16` / `morph_tophat_f` — 顶帽变换（original - open）
+  - `morph_blackhat_16` / `morph_blackhat_f` — 黑帽变换（close - original）
+- **自定义结构元素**（8 API）：
+  - `erode_custom_16` / `erode_custom_f` — 自定义 SE 腐蚀
+  - `dilate_custom_16` / `dilate_custom_f` — 自定义 SE 膨胀
+  - `morph_open_custom_16` / `morph_open_custom_f` — 自定义 SE 开运算
+  - `morph_close_custom_16` / `morph_close_custom_f` — 自定义 SE 闭运算
+- **re-export**：全部 22 个新 API 已在根包 re-export
+- **测试**：新增 20 个测试（基础操作 6 + 组合操作 7 + 自定义 SE 5 + 多通道 2）
+- **验收**：1482 测试全绿
+- 新增代码 0 warnings, 0 errors
+
+#### 16-bit/float API 覆盖进度（累计）
+
+| 类别 | 8-bit API 数 | 已有 16/f 变体 | 本次新增 | 覆盖率 |
+|------|-------------|----------------|---------|--------|
+| 色彩调整 | 5 | 10 | 0 | 100% |
+| 边缘检测 | 3 | 5 | 0 | 100% |
+| 滤波 | 4 | 5 | 0 | 100% |
+| 几何变换 | 7 | 9 | 0 | 100% |
+| 颜色空间/通道 | 12 | 16 | 0 | 67% |
+| 阈值处理 | 3 | 6 | 0 | 100% |
+| 形态学操作 | 11 | 0 → 22 | +22 | 100% |
+| **合计** | **45** | **51 → 73** | **+22** | **—** |
 
 ---

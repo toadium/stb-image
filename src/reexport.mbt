@@ -373,6 +373,8 @@ pub let crop_f : (@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @typ
 
 ///|
 pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
+pub let dilate_16 : (@types.Image16) -> @types.Image16 = @segment.dilate_16
+pub let dilate_f : (@types.ImageF) -> @types.ImageF = @segment.dilate_f
 
 ///|
 pub let draw_copy : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_copy
@@ -461,6 +463,8 @@ pub let edge_detect_sobel_f : (@types.ImageF) -> @types.ImageF = @edge.edge_dete
 
 ///|
 pub let erode : (@types.Image) -> @types.Image = @segment.erode
+pub let erode_16 : (@types.Image16) -> @types.Image16 = @segment.erode_16
+pub let erode_f : (@types.ImageF) -> @types.ImageF = @segment.erode_f
 
 ///|
 pub let fft_2d : (@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d
@@ -907,15 +911,23 @@ pub let median_cut : (@types.Image, Int) -> @types.Image = @color.median_cut
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
+pub let morph_close_16 : (@types.Image16) -> @types.Image16 = @segment.morph_close_16
+pub let morph_close_f : (@types.ImageF) -> @types.ImageF = @segment.morph_close_f
 
 ///|
 pub let morph_gradient : (@types.Image) -> @types.Image = @segment.morph_gradient
+pub let morph_gradient_16 : (@types.Image16) -> @types.Image16 = @segment.morph_gradient_16
+pub let morph_gradient_f : (@types.ImageF) -> @types.ImageF = @segment.morph_gradient_f
 
 ///|
 pub let morph_tophat : (@types.Image) -> @types.Image = @segment.morph_tophat
+pub let morph_tophat_16 : (@types.Image16) -> @types.Image16 = @segment.morph_tophat_16
+pub let morph_tophat_f : (@types.ImageF) -> @types.ImageF = @segment.morph_tophat_f
 
 ///|
 pub let morph_blackhat : (@types.Image) -> @types.Image = @segment.morph_blackhat
+pub let morph_blackhat_16 : (@types.Image16) -> @types.Image16 = @segment.morph_blackhat_16
+pub let morph_blackhat_f : (@types.ImageF) -> @types.ImageF = @segment.morph_blackhat_f
 
 ///|
 pub type StructuringElement = @segment.StructuringElement
@@ -931,18 +943,28 @@ pub let se_ellipse : (Int) -> @segment.StructuringElement = @segment.se_ellipse
 
 ///|
 pub let erode_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.erode_custom
+pub let erode_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.erode_custom_16
+pub let erode_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.erode_custom_f
 
 ///|
 pub let dilate_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.dilate_custom
+pub let dilate_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.dilate_custom_16
+pub let dilate_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.dilate_custom_f
 
 ///|
 pub let morph_open_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_open_custom
+pub let morph_open_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.morph_open_custom_16
+pub let morph_open_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.morph_open_custom_f
 
 ///|
 pub let morph_close_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_close_custom
+pub let morph_close_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.morph_close_custom_16
+pub let morph_close_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.morph_close_custom_f
 
 ///|
 pub let morph_open : (@types.Image) -> @types.Image = @segment.morph_open
+pub let morph_open_16 : (@types.Image16) -> @types.Image16 = @segment.morph_open_16
+pub let morph_open_f : (@types.ImageF) -> @types.ImageF = @segment.morph_open_f
 
 ///|
 pub let mse : (@types.Image, @types.Image) -> Double = @feature.mse
