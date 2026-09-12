@@ -54,6 +54,7 @@
 | **v5.12.0** | **形态学操作16-bit/float泛化：新增22个 Image16/ImageF 变体 API（erode/dilate/morph_open/morph_close/morph_gradient/morph_tophat/morph_blackhat + 自定义结构元素版本），新增20项测试** | **1482** |
 | **v5.13.0** | **直方图操作16-bit/float泛化：新增8个 Image16/ImageF 变体 API（histogram/histogram_equalize/histogram_normalize/histogram_matching），新增13项测试** | **1495** |
 | **v5.14.0** | **特征检测16-bit/float泛化：新增6个 Image16/ImageF 变体 API（lbp/lbp_uniform/canny_edge），LBP输出纹理编码，Canny输出二值边缘，新增13项测试** | **1508** |
+| **v5.15.0** | **频域变换16-bit/float泛化：新增17个 Image16/ImageF 变体 API（fft_2d/ifft_2d/fft_magnitude + dct_2d/idct_2d + haar_transform_2d/haar_inverse_transform_2d/haar_denoise），新增17项测试** | **1525** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

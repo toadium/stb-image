@@ -486,9 +486,13 @@ pub let erode_f : (@types.ImageF) -> @types.ImageF = @segment.erode_f
 
 ///|
 pub let fft_2d : (@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d
+pub let fft_2d_16 : (@types.Image16) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d_16
+pub let fft_2d_f : (@types.ImageF) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d_f
 
 ///|
 pub let fft_magnitude : (@frequency.FFTResult, Bool) -> @types.Image = @frequency.fft_magnitude
+pub let fft_magnitude_16 : (@frequency.FFTResult, Bool) -> @types.Image16 = @frequency.fft_magnitude_16
+pub let fft_magnitude_f : (@frequency.FFTResult, Bool) -> @types.ImageF = @frequency.fft_magnitude_f
 
 ///|
 pub let fft_shift : (@frequency.FFTResult) -> @frequency.FFTResult = @frequency.fft_shift
@@ -762,6 +766,8 @@ pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_t
 
 ///|
 pub let haar_inverse_transform_2d : (@frequency.HaarWaveletResult) -> @types.Image = @frequency.haar_inverse_transform_2d
+pub let haar_inverse_transform_2d_16 : (@frequency.HaarWaveletResult) -> @types.Image16 = @frequency.haar_inverse_transform_2d_16
+pub let haar_inverse_transform_2d_f : (@frequency.HaarWaveletResult) -> @types.ImageF = @frequency.haar_inverse_transform_2d_f
 
 ///|
 pub let haar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_transform_1d
@@ -775,6 +781,22 @@ pub fn haar_transform_2d(
 }
 
 ///|
+pub fn haar_transform_2d_16(
+  arg0 : @types.Image16,
+  levels? : Int = 1,
+) -> @frequency.HaarWaveletResult raise @types.LoadError {
+  @frequency.haar_transform_2d_16(arg0, levels~)
+}
+
+///|
+pub fn haar_transform_2d_f(
+  arg0 : @types.ImageF,
+  levels? : Int = 1,
+) -> @frequency.HaarWaveletResult raise @types.LoadError {
+  @frequency.haar_transform_2d_f(arg0, levels~)
+}
+
+///|
 pub fn haar_denoise(
   arg0 : @types.Image,
   threshold? : Float = 10.0F,
@@ -782,6 +804,26 @@ pub fn haar_denoise(
   levels? : Int = 3,
 ) -> @types.Image raise @types.LoadError {
   @frequency.haar_denoise(arg0, threshold~, soft~, levels~)
+}
+
+///|
+pub fn haar_denoise_16(
+  arg0 : @types.Image16,
+  threshold? : Float = 10.0F,
+  soft? : Bool = true,
+  levels? : Int = 3,
+) -> @types.Image16 raise @types.LoadError {
+  @frequency.haar_denoise_16(arg0, threshold~, soft~, levels~)
+}
+
+///|
+pub fn haar_denoise_f(
+  arg0 : @types.ImageF,
+  threshold? : Float = 10.0F,
+  soft? : Bool = true,
+  levels? : Int = 3,
+) -> @types.ImageF raise @types.LoadError {
+  @frequency.haar_denoise_f(arg0, threshold~, soft~, levels~)
 }
 
 ///|
@@ -813,9 +855,13 @@ pub let hamming_distance : (Array[Int], Array[Int]) -> Int = @feature.hamming_di
 
 ///|
 pub let dct_2d : (@types.Image) -> Array[Array[Double]] = @frequency.dct_2d
+pub let dct_2d_16 : (@types.Image16) -> Array[Array[Double]] = @frequency.dct_2d_16
+pub let dct_2d_f : (@types.ImageF) -> Array[Array[Double]] = @frequency.dct_2d_f
 
 ///|
 pub let idct_2d : (Array[Array[Double]]) -> @types.Image = @frequency.idct_2d
+pub let idct_2d_16 : (Array[Array[Double]]) -> @types.Image16 = @frequency.idct_2d_16
+pub let idct_2d_f : (Array[Array[Double]]) -> @types.ImageF = @frequency.idct_2d_f
 
 ///|
 pub fn reinhard_tonemap(
@@ -862,6 +908,8 @@ pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsv_to_rg
 
 ///|
 pub let ifft_2d : (@frequency.FFTResult) -> @types.Image = @frequency.ifft_2d
+pub let ifft_2d_16 : (@frequency.FFTResult) -> @types.Image16 = @frequency.ifft_2d_16
+pub let ifft_2d_f : (@frequency.FFTResult) -> @types.ImageF = @frequency.ifft_2d_f
 
 ///|
 pub let integral_image : (@types.Image) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image
