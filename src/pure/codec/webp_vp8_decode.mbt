@@ -745,6 +745,212 @@ fn vp8_intra_predict_4x4(
   result
 }
 
+// ==================== VP8 Macroblock Prediction Mode Parsing ====================
+// VP8 宏块层预测模式解析：从 bitstream 解析每个宏块的预测模式
+
+///|
+/// 宏块预测模式概率模型
+priv struct Vp8MbModeProbs {
+  // I16x16 预测模式概率（4种模式）
+  i16x16_prob : Array[Int]
+  // I4x4 预测模式概率（10种模式，每个子块）
+  i4x4_prob : Array[Int]
+  // 色度预测模式概率（4种模式）
+  uv_prob : Array[Int]
+  // 子宏块类型概率（I16x16 vs I4x4）
+  mut submb_type_prob : Int
+  // 统计计数器（用于概率更新）
+  i16x16_count : Array[Int]
+  i4x4_count : Array[Int]
+  uv_count : Array[Int]
+  mut submb_type_count : Int
+  mut total_mbs : Int
+}
+
+///|
+fn Vp8MbModeProbs::new() -> Vp8MbModeProbs {
+  // VP8 默认预测模式概率
+  Vp8MbModeProbs::{
+    i16x16_prob: [180, 120, 100, 140],
+    i4x4_prob: [160, 100, 120, 140, 80, 90, 70, 60, 50, 40],
+    uv_prob: [180, 120, 100, 140],
+    submb_type_prob: 150,
+    i16x16_count: Array::make(4, 0),
+    i4x4_count: Array::make(10, 0),
+    uv_count: Array::make(4, 0),
+    submb_type_count: 0,
+    total_mbs: 0,
+  }
+}
+
+///|
+/// 解析 I16x16 预测模式（4种模式）
+fn vp8_parse_i16x16_mode(
+  bd : Vp8BoolDecoder,
+  probs : Vp8MbModeProbs,
+) -> Vp8I16x16Mode {
+  // 使用概率模型解析预测模式
+  // VP8 使用树形概率解析：先判断是否是 DC，然后判断剩余模式
+  let is_dc = bd.read_bool(probs.i16x16_prob[0]) == 1
+  if is_dc {
+    probs.i16x16_count[0] += 1
+    return Vp8I16x16Mode::I16x16DcPred
+  }
+  let is_tm = bd.read_bool(probs.i16x16_prob[1]) == 1
+  if is_tm {
+    probs.i16x16_count[1] += 1
+    return Vp8I16x16Mode::I16x16TrueMotionPred
+  }
+  let is_h = bd.read_bool(probs.i16x16_prob[2]) == 1
+  if is_h {
+    probs.i16x16_count[2] += 1
+    return Vp8I16x16Mode::I16x16HPred
+  }
+  probs.i16x16_count[3] += 1
+  Vp8I16x16Mode::I16x16VPred
+}
+
+///|
+/// 解析 I4x4 预测模式（10种模式）
+fn vp8_parse_i4x4_mode(
+  bd : Vp8BoolDecoder,
+  probs : Vp8MbModeProbs,
+) -> Vp8I4x4Mode {
+  // 使用概率模型解析预测模式
+  let is_dc = bd.read_bool(probs.i4x4_prob[0]) == 1
+  if is_dc {
+    probs.i4x4_count[0] += 1
+    return Vp8I4x4Mode::I4x4DcPred
+  }
+  let is_tm = bd.read_bool(probs.i4x4_prob[1]) == 1
+  if is_tm {
+    probs.i4x4_count[1] += 1
+    return Vp8I4x4Mode::I4x4TrueMotionPred
+  }
+  let is_h = bd.read_bool(probs.i4x4_prob[2]) == 1
+  if is_h {
+    probs.i4x4_count[2] += 1
+    return Vp8I4x4Mode::I4x4HPred
+  }
+  let is_v = bd.read_bool(probs.i4x4_prob[3]) == 1
+  if is_v {
+    probs.i4x4_count[3] += 1
+    return Vp8I4x4Mode::I4x4VPred
+  }
+  let is_ld = bd.read_bool(probs.i4x4_prob[4]) == 1
+  if is_ld {
+    probs.i4x4_count[4] += 1
+    return Vp8I4x4Mode::I4x4LeftDownPred
+  }
+  let is_rd = bd.read_bool(probs.i4x4_prob[5]) == 1
+  if is_rd {
+    probs.i4x4_count[5] += 1
+    return Vp8I4x4Mode::I4x4RightDownPred
+  }
+  let is_ru = bd.read_bool(probs.i4x4_prob[6]) == 1
+  if is_ru {
+    probs.i4x4_count[6] += 1
+    return Vp8I4x4Mode::I4x4RightUpPred
+  }
+  let is_lu = bd.read_bool(probs.i4x4_prob[7]) == 1
+  if is_lu {
+    probs.i4x4_count[7] += 1
+    return Vp8I4x4Mode::I4x4LeftUpPred
+  }
+  let is_vr = bd.read_bool(probs.i4x4_prob[8]) == 1
+  if is_vr {
+    probs.i4x4_count[8] += 1
+    return Vp8I4x4Mode::I4x4VertRightPred
+  }
+  probs.i4x4_count[9] += 1
+  Vp8I4x4Mode::I4x4HorizDownPred
+}
+
+///|
+/// 解析色度预测模式（4种模式，与 I16x16 相同）
+fn vp8_parse_uv_mode(
+  bd : Vp8BoolDecoder,
+  probs : Vp8MbModeProbs,
+) -> Vp8I16x16Mode {
+  let is_dc = bd.read_bool(probs.uv_prob[0]) == 1
+  if is_dc {
+    probs.uv_count[0] += 1
+    return Vp8I16x16Mode::I16x16DcPred
+  }
+  let is_tm = bd.read_bool(probs.uv_prob[1]) == 1
+  if is_tm {
+    probs.uv_count[1] += 1
+    return Vp8I16x16Mode::I16x16TrueMotionPred
+  }
+  let is_h = bd.read_bool(probs.uv_prob[2]) == 1
+  if is_h {
+    probs.uv_count[2] += 1
+    return Vp8I16x16Mode::I16x16HPred
+  }
+  probs.uv_count[3] += 1
+  Vp8I16x16Mode::I16x16VPred
+}
+
+///|
+/// 解析子宏块类型（I16x16 vs I4x4）
+/// 返回 true 表示使用 I16x16，false 表示使用 I4x4
+fn vp8_parse_submb_type(
+  bd : Vp8BoolDecoder,
+  probs : Vp8MbModeProbs,
+) -> Bool {
+  let use_i16x16 = bd.read_bool(probs.submb_type_prob) == 1
+  if use_i16x16 {
+    probs.submb_type_count += 1
+  }
+  use_i16x16
+}
+
+///|
+/// 更新宏块预测模式概率（EMA）
+fn Vp8MbModeProbs::update(self : Vp8MbModeProbs) -> Unit {
+  self.total_mbs += 1
+  // 每 16 个宏块更新一次概率
+  if self.total_mbs % 16 != 0 {
+    return
+  }
+
+  // 更新 I16x16 概率
+  let i16_total = self.i16x16_count[0] + self.i16x16_count[1] +
+    self.i16x16_count[2] + self.i16x16_count[3] + 1
+  for i in 0..<4 {
+    let observed = (self.i16x16_count[i] * 256) / i16_total
+    self.i16x16_prob[i] = (self.i16x16_prob[i] * 7 + observed) / 8
+    self.i16x16_count[i] = self.i16x16_count[i] / 2
+  }
+
+  // 更新 I4x4 概率
+  let i4_total = self.i4x4_count[0] + self.i4x4_count[1] +
+    self.i4x4_count[2] + self.i4x4_count[3] +
+    self.i4x4_count[4] + self.i4x4_count[5] +
+    self.i4x4_count[6] + self.i4x4_count[7] +
+    self.i4x4_count[8] + self.i4x4_count[9] + 1
+  for i in 0..<10 {
+    let observed = (self.i4x4_count[i] * 256) / i4_total
+    self.i4x4_prob[i] = (self.i4x4_prob[i] * 7 + observed) / 8
+    self.i4x4_count[i] = self.i4x4_count[i] / 2
+  }
+
+  // 更新 UV 概率
+  let uv_total = self.uv_count[0] + self.uv_count[1] +
+    self.uv_count[2] + self.uv_count[3] + 1
+  for i in 0..<4 {
+    let observed = (self.uv_count[i] * 256) / uv_total
+    self.uv_prob[i] = (self.uv_prob[i] * 7 + observed) / 8
+    self.uv_count[i] = self.uv_count[i] / 2
+  }
+
+  // 更新子宏块类型概率
+  let submb_total = self.total_mbs + 1
+  let observed_submb = (self.submb_type_count * 256) / submb_total
+  self.submb_type_prob = (self.submb_type_prob * 7 + observed_submb) / 8
+  self.submb_type_count = self.submb_type_count / 2
+}
+
 // ==================== VP8 Loop Filter ====================
 // VP8 环路去块滤波（简化实现）
 
@@ -842,11 +1048,12 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), base_v)
 
   // 帧内预测 + 残差系数解析 + IDCT 反变换
-  // 创建布尔解码器用于残差系数解析
+  // 创建布尔解码器用于残差系数解析和预测模式解析
   let bd = Vp8BoolDecoder::new(data, offset + 10)
   let coeff_probs = Vp8AdaptiveProbs::new()
+  let mb_mode_probs = Vp8MbModeProbs::new()
 
-  // 对每个 16x16 宏块使用 I16x16 帧内预测 + 残差解析
+  // 对每个 16x16 宏块：解析预测模式 + 残差解析
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
   for mb_y in 0..<mb_h {
@@ -855,13 +1062,14 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
       let above : Array[Int] = Array::make(16, 128)
       let left : Array[Int] = Array::make(16, 128)
       let above_left = 128
-      // 根据宏块位置选择预测模式
-      let mode = match (mb_x + mb_y) % 4 {
-        0 => Vp8I16x16Mode::I16x16DcPred
-        1 => Vp8I16x16Mode::I16x16TrueMotionPred
-        2 => Vp8I16x16Mode::I16x16HPred
-        _ => Vp8I16x16Mode::I16x16VPred
-      }
+
+      // 从 bitstream 解析 I16x16 预测模式（使用自适应概率模型）
+      let mode = vp8_parse_i16x16_mode(bd, mb_mode_probs)
+
+      // 解析色度预测模式（UV 平面）
+      let uv_mode = vp8_parse_uv_mode(bd, mb_mode_probs)
+      ignore(uv_mode) // 色度预测暂未完全实现，UV 平面使用基础值
+
       let pred = vp8_intra_predict_16x16(mode, above, left, above_left)
 
       // 解析 DC 系数（16x16 块的 DC 系数组成 4x4 块）
@@ -894,6 +1102,8 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
           }
         }
       }
+      // 更新宏块预测模式概率（EMA）
+      mb_mode_probs.update()
     }
   }
 
