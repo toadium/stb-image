@@ -236,3 +236,131 @@ pub fn kmeans_quantize_f(
     data: Bytes::from_array(out),
   }
 }
+
+// ========== Floyd-Steinberg 抖动 16-bit ==========
+
+///|
+/// Floyd-Steinberg 误差扩散抖动量化 16-bit 版本。
+pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 {
+  if levels < 2 {
+    return img
+  }
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let w = img.width
+  let h = img.height
+  let n = w * h
+  let buf : Array[Int] = Array::make(n * color_ch, 0)
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      buf[i * color_ch + c] = read_u16_q(img.data, (i * ch + c) * 2)
+    }
+  }
+  let step = 65535 / (levels - 1)
+  let half_step = step / 2
+  for y in 0..<h {
+    for x in 0..<w {
+      for c in 0..<color_ch {
+        let idx = (y * w + x) * color_ch + c
+        let old_val = if buf[idx] < 0 { 0 } else if buf[idx] > 65535 { 65535 } else { buf[idx] }
+        let new_val = ((old_val + half_step) / step * step)
+        let new_val_clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        buf[idx] = new_val_clamped
+        let err = old_val - new_val_clamped
+        if x + 1 < w {
+          buf[(y * w + x + 1) * color_ch + c] += err * 7 / 16
+        }
+        if y + 1 < h {
+          if x > 0 {
+            buf[((y + 1) * w + x - 1) * color_ch + c] += err * 3 / 16
+          }
+          buf[((y + 1) * w + x) * color_ch + c] += err * 5 / 16
+          if x + 1 < w {
+            buf[((y + 1) * w + x + 1) * color_ch + c] += err / 16
+          }
+        }
+      }
+    }
+  }
+  let out : Array[Byte] = Array::make(n * ch * 2, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let v = if buf[i * color_ch + c] < 0 { 0 } else if buf[i * color_ch + c] > 65535 { 65535 } else { buf[i * color_ch + c] }
+      write_u16_q(out, (i * ch + c) * 2, v)
+    }
+    if ch == 4 {
+      let v = read_u16_q(img.data, (i * ch + 3) * 2)
+      write_u16_q(out, (i * ch + 3) * 2, v)
+    }
+  }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+// ========== Floyd-Steinberg 抖动 float ==========
+
+///|
+/// Floyd-Steinberg 误差扩散抖动量化 float 版本。
+pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF {
+  if levels < 2 {
+    return img
+  }
+  let ch = img.channels
+  let color_ch = if ch >= 3 { 3 } else { ch }
+  let w = img.width
+  let h = img.height
+  let n = w * h
+  let buf : Array[Float] = Array::make(n * color_ch, 0.0F)
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      buf[i * color_ch + c] = read_f32_q(img.data, (i * ch + c) * 4)
+    }
+  }
+  let step = 1.0F / Float::from_int(levels - 1)
+  let half_step = step / 2.0F
+  for y in 0..<h {
+    for x in 0..<w {
+      for c in 0..<color_ch {
+        let idx = (y * w + x) * color_ch + c
+        let old_val = if buf[idx] < 0.0F { 0.0F } else if buf[idx] > 1.0F { 1.0F } else { buf[idx] }
+        let new_val = Float::from_int(((old_val + half_step) / step).to_int()) * step
+        let new_val_clamped = if new_val < 0.0F { 0.0F } else if new_val > 1.0F { 1.0F } else { new_val }
+        buf[idx] = new_val_clamped
+        let err = old_val - new_val_clamped
+        if x + 1 < w {
+          buf[(y * w + x + 1) * color_ch + c] += err * 7.0F / 16.0F
+        }
+        if y + 1 < h {
+          if x > 0 {
+            buf[((y + 1) * w + x - 1) * color_ch + c] += err * 3.0F / 16.0F
+          }
+          buf[((y + 1) * w + x) * color_ch + c] += err * 5.0F / 16.0F
+          if x + 1 < w {
+            buf[((y + 1) * w + x + 1) * color_ch + c] += err / 16.0F
+          }
+        }
+      }
+    }
+  }
+  let out : Array[Byte] = Array::make(n * ch * 4, b'\x00')
+  for i in 0..<n {
+    for c in 0..<color_ch {
+      let v = if buf[i * color_ch + c] < 0.0F { 0.0F } else if buf[i * color_ch + c] > 1.0F { 1.0F } else { buf[i * color_ch + c] }
+      write_f32_q(out, (i * ch + c) * 4, v)
+    }
+    if ch == 4 {
+      let v = read_f32_q(img.data, (i * ch + 3) * 4)
+      write_f32_q(out, (i * ch + 3) * 4, v)
+    }
+  }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}

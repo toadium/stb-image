@@ -971,6 +971,8 @@ pub let find_contours : (@types.Image) -> Array[@edge.Contour] raise @types.Load
 
 ///|
 pub let floyd_steinberg : (@types.Image, Int) -> @types.Image = @color.floyd_steinberg
+pub let floyd_steinberg_16 : (@types.Image16, Int) -> @types.Image16 = @color.floyd_steinberg_16
+pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF = @color.floyd_steinberg_f
 
 ///|
 pub let glcm_features : (Array[Array[Int]]) -> @feature.GlcmFeatures = @feature.glcm_features

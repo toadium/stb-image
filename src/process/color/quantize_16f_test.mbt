@@ -74,3 +74,31 @@ test "kmeans_quantize_f k=4" {
   let out = @color.kmeans_quantize_f(img, 4, 5)
   assert_eq(out.width, 4)
 }
+
+test "floyd_steinberg_16 basic" {
+  let img = make_img16_q(4, 4, 3, 128)
+  let out = @color.floyd_steinberg_16(img, 2)
+  assert_eq(out.width, 4)
+  assert_eq(out.height, 4)
+  assert_eq(out.channels, 3)
+}
+
+test "floyd_steinberg_f basic" {
+  let img = make_imgf_q(4, 4, 3, 0.5F)
+  let out = @color.floyd_steinberg_f(img, 2)
+  assert_eq(out.width, 4)
+  assert_eq(out.height, 4)
+  assert_eq(out.channels, 3)
+}
+
+test "floyd_steinberg_16 rgba" {
+  let img = make_img16_q(4, 4, 4, 128)
+  let out = @color.floyd_steinberg_16(img, 4)
+  assert_eq(out.channels, 4)
+}
+
+test "floyd_steinberg_f levels=4" {
+  let img = make_imgf_q(4, 4, 3, 0.5F)
+  let out = @color.floyd_steinberg_f(img, 4)
+  assert_eq(out.width, 4)
+}
