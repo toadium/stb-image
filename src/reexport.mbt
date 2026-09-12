@@ -1997,6 +1997,26 @@ pub fn multi_band_blend(
 }
 
 ///|
+pub fn multi_band_blend_16(
+  img_a : @types.Image16,
+  img_b : @types.Image16,
+  mask : @types.Image16,
+  num_bands? : Int = 5,
+) -> @types.Image16 raise @types.LoadError {
+  @transform.multi_band_blend_16(img_a, img_b, mask, num_bands~)
+}
+
+///|
+pub fn multi_band_blend_f(
+  img_a : @types.ImageF,
+  img_b : @types.ImageF,
+  mask : @types.ImageF,
+  num_bands? : Int = 5,
+) -> @types.ImageF raise @types.LoadError {
+  @transform.multi_band_blend_f(img_a, img_b, mask, num_bands~)
+}
+
+///|
 pub let compute_energy : (@types.Image) -> Array[Double] = @transform.compute_energy
 
 ///|

@@ -226,3 +226,173 @@ fn collapse_laplacian_pyramid_f(
   }
   current
 }
+
+// ========== multi_band_blend 16-bit ==========
+
+///|
+/// 多频带融合 16-bit 版本。
+pub fn multi_band_blend_16(
+  img_a : @types.Image16,
+  img_b : @types.Image16,
+  mask : @types.Image16,
+  num_bands? : Int = 5,
+) -> @types.Image16 raise @types.LoadError {
+  if img_a.width != img_b.width || img_a.height != img_b.height {
+    raise @types.LoadError::DecodeFailed("img_a 和 img_b 尺寸需相同")
+  }
+  if mask.width != img_a.width || mask.height != img_a.height {
+    raise @types.LoadError::DecodeFailed("mask 尺寸需与输入图像相同")
+  }
+  let w = img_a.width
+  let h = img_a.height
+  let ch = img_a.channels
+  let n = w * h
+  let mask_f : Array[Float] = Array::make(n, 0.0F)
+  for i in 0..<n {
+    let v = mask.data[i * 2].to_int() | (mask.data[i * 2 + 1].to_int() << 8)
+    mask_f[i] = Float::from_int(v) / 65535.0F
+  }
+  let a_f : Array[Float] = Array::make(n * ch, 0.0F)
+  let b_f : Array[Float] = Array::make(n * ch, 0.0F)
+  for i in 0..<(n * ch) {
+    let va = img_a.data[i * 2].to_int() | (img_a.data[i * 2 + 1].to_int() << 8)
+    let vb = img_b.data[i * 2].to_int() | (img_b.data[i * 2 + 1].to_int() << 8)
+    a_f[i] = Float::from_int(va)
+    b_f[i] = Float::from_int(vb)
+  }
+  let levels = if num_bands > 0 { num_bands } else { 5 }
+  let mask_pyr : Array[Array[Float]] = [mask_f]
+  for _l in 1..<levels {
+    let prev = mask_pyr[mask_pyr.length() - 1]
+    let pw = get_w_from_n(prev.length(), w, h)
+    let ph = prev.length() / pw
+    mask_pyr.push(blur_downsample(prev, pw, ph))
+  }
+  let out : Array[Float] = Array::make(n * ch, 0.0F)
+  for c in 0..<ch {
+    let a_chan : Array[Float] = Array::make(n, 0.0F)
+    let b_chan : Array[Float] = Array::make(n, 0.0F)
+    for i in 0..<n {
+      a_chan[i] = a_f[i * ch + c]
+      b_chan[i] = b_f[i * ch + c]
+    }
+    let a_pyr = build_laplacian_pyramid_f(a_chan, w, h, levels)
+    let b_pyr = build_laplacian_pyramid_f(b_chan, w, h, levels)
+    let blended : Array[Array[Float]] = []
+    for l in 0..<a_pyr.length() {
+      let a_l = a_pyr[l]
+      let b_l = b_pyr[l]
+      let m_l = mask_pyr[l]
+      let blended_l : Array[Float] = Array::make(a_l.length(), 0.0F)
+      for i in 0..<a_l.length() {
+        let m = if i < m_l.length() { m_l[i] } else { 0.5F }
+        blended_l[i] = m * a_l[i] + (1.0F - m) * b_l[i]
+      }
+      blended.push(blended_l)
+    }
+    let reconstructed = collapse_laplacian_pyramid_f(blended, w, h)
+    for i in 0..<n {
+      out[i * ch + c] = reconstructed[i]
+    }
+  }
+  let out_bytes : Array[Byte] = Array::make(n * ch * 2, b'\x00')
+  for i in 0..<(n * ch) {
+    let v = (out[i] + 0.5F).to_int()
+    let clamped = if v < 0 { 0 } else if v > 65535 { 65535 } else { v }
+    out_bytes[i * 2] = (clamped & 0xFF).to_byte()
+    out_bytes[i * 2 + 1] = ((clamped >> 8) & 0xFF).to_byte()
+  }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out_bytes),
+  }
+}
+
+// ========== multi_band_blend float ==========
+
+///|
+/// 多频带融合 float 版本。
+pub fn multi_band_blend_f(
+  img_a : @types.ImageF,
+  img_b : @types.ImageF,
+  mask : @types.ImageF,
+  num_bands? : Int = 5,
+) -> @types.ImageF raise @types.LoadError {
+  if img_a.width != img_b.width || img_a.height != img_b.height {
+    raise @types.LoadError::DecodeFailed("img_a 和 img_b 尺寸需相同")
+  }
+  if mask.width != img_a.width || mask.height != img_a.height {
+    raise @types.LoadError::DecodeFailed("mask 尺寸需与输入图像相同")
+  }
+  let w = img_a.width
+  let h = img_a.height
+  let ch = img_a.channels
+  let n = w * h
+  let mask_f : Array[Float] = Array::make(n, 0.0F)
+  for i in 0..<n {
+    let bits = mask.data[i * 4].to_int() | (mask.data[i * 4 + 1].to_int() << 8) |
+      (mask.data[i * 4 + 2].to_int() << 16) | (mask.data[i * 4 + 3].to_int() << 24)
+    mask_f[i] = Float::reinterpret_from_int(bits)
+  }
+  let a_f : Array[Float] = Array::make(n * ch, 0.0F)
+  let b_f : Array[Float] = Array::make(n * ch, 0.0F)
+  for i in 0..<(n * ch) {
+    let bits_a = img_a.data[i * 4].to_int() | (img_a.data[i * 4 + 1].to_int() << 8) |
+      (img_a.data[i * 4 + 2].to_int() << 16) | (img_a.data[i * 4 + 3].to_int() << 24)
+    let bits_b = img_b.data[i * 4].to_int() | (img_b.data[i * 4 + 1].to_int() << 8) |
+      (img_b.data[i * 4 + 2].to_int() << 16) | (img_b.data[i * 4 + 3].to_int() << 24)
+    a_f[i] = Float::reinterpret_from_int(bits_a)
+    b_f[i] = Float::reinterpret_from_int(bits_b)
+  }
+  let levels = if num_bands > 0 { num_bands } else { 5 }
+  let mask_pyr : Array[Array[Float]] = [mask_f]
+  for _l in 1..<levels {
+    let prev = mask_pyr[mask_pyr.length() - 1]
+    let pw = get_w_from_n(prev.length(), w, h)
+    let ph = prev.length() / pw
+    mask_pyr.push(blur_downsample(prev, pw, ph))
+  }
+  let out : Array[Float] = Array::make(n * ch, 0.0F)
+  for c in 0..<ch {
+    let a_chan : Array[Float] = Array::make(n, 0.0F)
+    let b_chan : Array[Float] = Array::make(n, 0.0F)
+    for i in 0..<n {
+      a_chan[i] = a_f[i * ch + c]
+      b_chan[i] = b_f[i * ch + c]
+    }
+    let a_pyr = build_laplacian_pyramid_f(a_chan, w, h, levels)
+    let b_pyr = build_laplacian_pyramid_f(b_chan, w, h, levels)
+    let blended : Array[Array[Float]] = []
+    for l in 0..<a_pyr.length() {
+      let a_l = a_pyr[l]
+      let b_l = b_pyr[l]
+      let m_l = mask_pyr[l]
+      let blended_l : Array[Float] = Array::make(a_l.length(), 0.0F)
+      for i in 0..<a_l.length() {
+        let m = if i < m_l.length() { m_l[i] } else { 0.5F }
+        blended_l[i] = m * a_l[i] + (1.0F - m) * b_l[i]
+      }
+      blended.push(blended_l)
+    }
+    let reconstructed = collapse_laplacian_pyramid_f(blended, w, h)
+    for i in 0..<n {
+      out[i * ch + c] = reconstructed[i]
+    }
+  }
+  let out_bytes : Array[Byte] = Array::make(n * ch * 4, b'\x00')
+  for i in 0..<(n * ch) {
+    let bits = out[i].reinterpret_as_int()
+    out_bytes[i * 4] = (bits & 0xFF).to_byte()
+    out_bytes[i * 4 + 1] = ((bits >> 8) & 0xFF).to_byte()
+    out_bytes[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
+    out_bytes[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
+  }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out_bytes),
+  }
+}
