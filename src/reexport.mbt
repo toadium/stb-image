@@ -954,6 +954,24 @@ pub fn kmeans_segment(
 }
 
 ///|
+pub fn kmeans_segment_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  max_iters? : Int = 20,
+) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
+  @segment.kmeans_segment_16(arg0, arg1, max_iters~)
+}
+
+///|
+pub fn kmeans_segment_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  max_iters? : Int = 20,
+) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
+  @segment.kmeans_segment_f(arg0, arg1, max_iters~)
+}
+
+///|
 pub let lbp : (@types.Image) -> @types.Image raise @types.LoadError = @feature.lbp
 pub let lbp_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.lbp_16
 pub let lbp_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.lbp_f
@@ -1219,9 +1237,13 @@ pub let warp_affine : (
 
 ///|
 pub let watershed : (@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed
+pub let watershed_16 : (@types.Image16, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_16
+pub let watershed_f : (@types.ImageF, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_f
 
 ///|
 pub let watershed_auto : (@types.Image) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto
+pub let watershed_auto_16 : (@types.Image16) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_16
+pub let watershed_auto_f : (@types.ImageF) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_f
 
 ///|
 pub fn distance_transform(
@@ -1242,6 +1264,8 @@ pub type SuperpixelResult = @segment.SuperpixelResult
 
 ///|
 pub let slic : (@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic
+pub let slic_16 : (@types.Image16, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_16
+pub let slic_f : (@types.ImageF, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_f
 
 ///|
 pub fn guided_filter(
