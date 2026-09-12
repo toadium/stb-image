@@ -1662,6 +1662,26 @@ pub fn ssr(
 }
 
 ///|
+pub fn ssr_16(
+  arg0 : @types.Image16,
+  sigma? : Float = 80.0F,
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+) -> @types.Image16 raise @types.LoadError {
+  @color.ssr_16(arg0, sigma~, gain~, offset~)
+}
+
+///|
+pub fn ssr_f(
+  arg0 : @types.ImageF,
+  sigma? : Float = 80.0F,
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+) -> @types.ImageF raise @types.LoadError {
+  @color.ssr_f(arg0, sigma~, gain~, offset~)
+}
+
+///|
 pub fn msr(
   arg0 : @types.Image,
   sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
@@ -1669,6 +1689,26 @@ pub fn msr(
   offset? : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @color.msr(arg0, sigmas~, gain~, offset~)
+}
+
+///|
+pub fn msr_16(
+  arg0 : @types.Image16,
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+) -> @types.Image16 raise @types.LoadError {
+  @color.msr_16(arg0, sigmas~, gain~, offset~)
+}
+
+///|
+pub fn msr_f(
+  arg0 : @types.ImageF,
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+) -> @types.ImageF raise @types.LoadError {
+  @color.msr_f(arg0, sigmas~, gain~, offset~)
 }
 
 ///|
@@ -1681,6 +1721,30 @@ pub fn msrcr(
   beta? : Float = 46.0F,
 ) -> @types.Image raise @types.LoadError {
   @color.msrcr(arg0, sigmas~, gain~, offset~, alpha~, beta~)
+}
+
+///|
+pub fn msrcr_16(
+  arg0 : @types.Image16,
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+  alpha? : Float = 125.0F,
+  beta? : Float = 46.0F,
+) -> @types.Image16 raise @types.LoadError {
+  @color.msrcr_16(arg0, sigmas~, gain~, offset~, alpha~, beta~)
+}
+
+///|
+pub fn msrcr_f(
+  arg0 : @types.ImageF,
+  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain? : Float = 1.0F,
+  offset? : Float = 0.0F,
+  alpha? : Float = 125.0F,
+  beta? : Float = 46.0F,
+) -> @types.ImageF raise @types.LoadError {
+  @color.msrcr_f(arg0, sigmas~, gain~, offset~, alpha~, beta~)
 }
 
 ///|

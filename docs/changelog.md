@@ -66,6 +66,7 @@
 | **v5.24.0** | **卷积+双边滤波 16-bit/float泛化：新增6个 Image16/ImageF 变体 API（convolve + bilateral_filter/bilateral_filter_fast），新增8项测试** | **1619** |
 | **v5.25.0** | **颜色空间转换 16-bit/float泛化：新增16个像素级变体 API（rgb_to_hsl/hsl_to_rgb + rgb_to_hsv/hsv_to_rgb + rgb_to_xyz/xyz_to_rgb + rgb_to_lab/lab_to_rgb），新增18项测试** | **1637** |
 | **v5.26.0** | **色调映射 16-bit/float泛化：新增4个变体 API（gamma_tonemap_16/f + reinhard_tonemap_16/f），输入 ImageF 输出 Image16/ImageF，新增8项测试** | **1645** |
+| **v5.27.0** | **多尺度Retinex 16-bit/float泛化：新增6个变体 API（ssr_16/f + msr_16/f + msrcr_16/f），新增8项测试** | **1653** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
