@@ -69,6 +69,7 @@
 | **v5.27.0** | **多尺度Retinex 16-bit/float泛化：新增6个变体 API（ssr_16/f + msr_16/f + msrcr_16/f），新增8项测试** | **1653** |
 | **v5.28.0** | **色彩量化 16-bit/float泛化：新增2个变体 API（kmeans_quantize_16/f），新增6项测试** | **1659** |
 | **v5.29.0** | **Floyd-Steinberg抖动 16-bit/float泛化：新增2个变体 API（floyd_steinberg_16/f），新增4项测试** | **1663** |
+| **v5.30.0** | **金字塔操作 16-bit/float泛化：新增4个变体 API（pyr_down_16/f + pyr_up_16/f），新增6项测试** | **1669** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

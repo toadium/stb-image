@@ -1551,9 +1551,13 @@ pub let psnr_f : (@types.ImageF, @types.ImageF) -> Double = @feature.psnr_f
 
 ///|
 pub let pyr_down : (@types.Image) -> @types.Image raise @types.LoadError = @transform.pyr_down
+pub let pyr_down_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @transform.pyr_down_16
+pub let pyr_down_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @transform.pyr_down_f
 
 ///|
 pub let pyr_up : (@types.Image) -> @types.Image raise @types.LoadError = @transform.pyr_up
+pub let pyr_up_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @transform.pyr_up_16
+pub let pyr_up_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @transform.pyr_up_f
 
 ///|
 pub fn region_growing_segment(
