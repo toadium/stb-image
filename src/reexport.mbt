@@ -364,6 +364,26 @@ pub fn compute_glcm(
 }
 
 ///|
+pub fn compute_glcm_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Int,
+  levels? : Int = 256,
+) -> Array[Array[Int]] raise @types.LoadError {
+  @feature.compute_glcm_16(arg0, arg1, arg2, levels~)
+}
+
+///|
+pub fn compute_glcm_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Int,
+  levels? : Int = 256,
+) -> Array[Array[Int]] raise @types.LoadError {
+  @feature.compute_glcm_f(arg0, arg1, arg2, levels~)
+}
+
+///|
 pub let crop : (@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError = @transform.crop
 
 ///|
@@ -793,6 +813,28 @@ pub fn lucas_kanade(
 }
 
 ///|
+pub fn lucas_kanade_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  arg2 : Array[(Int, Int)],
+  window_size? : Int = 15,
+  max_iter? : Int = 20,
+) -> Array[@feature.FlowResult] raise @types.LoadError {
+  @feature.lucas_kanade_16(arg0, arg1, arg2, window_size~, max_iter~)
+}
+
+///|
+pub fn lucas_kanade_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  arg2 : Array[(Int, Int)],
+  window_size? : Int = 15,
+  max_iter? : Int = 20,
+) -> Array[@feature.FlowResult] raise @types.LoadError {
+  @feature.lucas_kanade_f(arg0, arg1, arg2, window_size~, max_iter~)
+}
+
+///|
 /// Horn-Schunck 密集光流
 pub fn horn_schunck(
   arg0 : @types.Image,
@@ -801,6 +843,26 @@ pub fn horn_schunck(
   iterations? : Int = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   @feature.horn_schunck(arg0, arg1, alpha~, iterations~)
+}
+
+///|
+pub fn horn_schunck_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  alpha? : Float = 1.0F,
+  iterations? : Int = 100,
+) -> (Array[Float], Array[Float]) raise @types.LoadError {
+  @feature.horn_schunck_16(arg0, arg1, alpha~, iterations~)
+}
+
+///|
+pub fn horn_schunck_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  alpha? : Float = 1.0F,
+  iterations? : Int = 100,
+) -> (Array[Float], Array[Float]) raise @types.LoadError {
+  @feature.horn_schunck_f(arg0, arg1, alpha~, iterations~)
 }
 
 ///|
@@ -915,6 +977,22 @@ pub fn glcm_features_multi_direction(
   levels? : Int = 256,
 ) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
   @feature.glcm_features_multi_direction(arg0, levels~)
+}
+
+///|
+pub fn glcm_features_multi_direction_16(
+  arg0 : @types.Image16,
+  levels? : Int = 256,
+) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
+  @feature.glcm_features_multi_direction_16(arg0, levels~)
+}
+
+///|
+pub fn glcm_features_multi_direction_f(
+  arg0 : @types.ImageF,
+  levels? : Int = 256,
+) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
+  @feature.glcm_features_multi_direction_f(arg0, levels~)
 }
 
 ///|
