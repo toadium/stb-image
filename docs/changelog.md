@@ -56,6 +56,7 @@
 | **v5.14.0** | **特征检测16-bit/float泛化：新增6个 Image16/ImageF 变体 API（lbp/lbp_uniform/canny_edge），LBP输出纹理编码，Canny输出二值边缘，新增13项测试** | **1508** |
 | **v5.15.0** | **频域变换16-bit/float泛化：新增17个 Image16/ImageF 变体 API（fft_2d/ifft_2d/fft_magnitude + dct_2d/idct_2d + haar_transform_2d/haar_inverse_transform_2d/haar_denoise），新增17项测试** | **1525** |
 | **v5.16.0** | **图像分割16-bit/float泛化：新增10个 Image16/ImageF 变体 API（watershed/watershed_auto + kmeans_segment + slic），输出标签图像/超像素结果，新增10项测试** | **1535** |
+| **v5.17.0** | **高级算法16-bit/float泛化：新增12个 Image16/ImageF 变体 API（inpaint/inpaint_fast + nlm_denoise/nlm_denoise_fast + dehaze + guided_filter），新增17项测试** | **1552** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

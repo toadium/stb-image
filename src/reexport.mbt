@@ -371,6 +371,26 @@ pub fn dehaze(
 }
 
 ///|
+pub fn dehaze_16(
+  arg0 : @types.Image16,
+  patch_size? : Int = 7,
+  omega? : Float = 0.95F,
+  t0? : Float = 0.1F,
+) -> @types.Image16 raise @types.LoadError {
+  @color.dehaze_16(arg0, patch_size~, omega~, t0~)
+}
+
+///|
+pub fn dehaze_f(
+  arg0 : @types.ImageF,
+  patch_size? : Int = 7,
+  omega? : Float = 0.95F,
+  t0? : Float = 0.1F,
+) -> @types.ImageF raise @types.LoadError {
+  @color.dehaze_f(arg0, patch_size~, omega~, t0~)
+}
+
+///|
 pub let draw_contours : (@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError = @edge.draw_contours
 
 ///|
@@ -1003,6 +1023,48 @@ pub fn nlm_denoise_fast(
 }
 
 ///|
+pub fn nlm_denoise_16(
+  arg0 : @types.Image16,
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
+) -> @types.Image16 raise @types.LoadError {
+  @filter.nlm_denoise_16(arg0, patch_size~, search_size~, h~)
+}
+
+///|
+pub fn nlm_denoise_fast_16(
+  arg0 : @types.Image16,
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
+  step? : Int = 2,
+) -> @types.Image16 raise @types.LoadError {
+  @filter.nlm_denoise_fast_16(arg0, patch_size~, search_size~, h~, step~)
+}
+
+///|
+pub fn nlm_denoise_f(
+  arg0 : @types.ImageF,
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
+) -> @types.ImageF raise @types.LoadError {
+  @filter.nlm_denoise_f(arg0, patch_size~, search_size~, h~)
+}
+
+///|
+pub fn nlm_denoise_fast_f(
+  arg0 : @types.ImageF,
+  patch_size? : Int = 3,
+  search_size? : Int = 7,
+  h? : Int = 10,
+  step? : Int = 2,
+) -> @types.ImageF raise @types.LoadError {
+  @filter.nlm_denoise_fast_f(arg0, patch_size~, search_size~, h~, step~)
+}
+
+///|
 pub let median_cut : (@types.Image, Int) -> @types.Image = @color.median_cut
 
 ///|
@@ -1275,6 +1337,26 @@ pub fn guided_filter(
   eps? : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   @color.guided_filter(arg0, arg1, radius~, eps~)
+}
+
+///|
+pub fn guided_filter_16(
+  arg0 : @types.Image16,
+  arg1 : Array[Float],
+  radius? : Int = 20,
+  eps? : Float = 0.001F,
+) -> Array[Float] raise @types.LoadError {
+  @color.guided_filter_16(arg0, arg1, radius~, eps~)
+}
+
+///|
+pub fn guided_filter_f(
+  arg0 : @types.ImageF,
+  arg1 : Array[Float],
+  radius? : Int = 20,
+  eps? : Float = 0.001F,
+) -> Array[Float] raise @types.LoadError {
+  @color.guided_filter_f(arg0, arg1, radius~, eps~)
 }
 
 ///|
@@ -1632,4 +1714,40 @@ pub fn inpaint_fast(
   radius? : Int = 5,
 ) -> @types.Image raise @types.LoadError {
   @filter.inpaint_fast(arg0, arg1, radius~)
+}
+
+///|
+pub fn inpaint_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  iterations? : Int = 100,
+) -> @types.Image16 raise @types.LoadError {
+  @filter.inpaint_16(arg0, arg1, iterations~)
+}
+
+///|
+pub fn inpaint_fast_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  radius? : Int = 5,
+) -> @types.Image16 raise @types.LoadError {
+  @filter.inpaint_fast_16(arg0, arg1, radius~)
+}
+
+///|
+pub fn inpaint_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  iterations? : Int = 100,
+) -> @types.ImageF raise @types.LoadError {
+  @filter.inpaint_f(arg0, arg1, iterations~)
+}
+
+///|
+pub fn inpaint_fast_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  radius? : Int = 5,
+) -> @types.ImageF raise @types.LoadError {
+  @filter.inpaint_fast_f(arg0, arg1, radius~)
 }
