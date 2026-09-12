@@ -60,6 +60,7 @@
 | **v5.18.0** | **绘制函数16-bit/float泛化：新增8个 Image16/ImageF 变体 API（draw_line/draw_rectangle/draw_circle/draw_polygon），Bresenham直线/中点圆/扫描线填充，新增12项测试** | **1564** |
 | **v5.19.0** | **高级几何变换16-bit/float泛化：新增6个 Image16/ImageF 变体 API（warp_affine/warp_perspective/resize），双线性插值，新增9项测试** | **1573** |
 | **v5.20.0** | **特征检测高级16-bit/float泛化：新增8个 Image16/ImageF 变体 API（harris_corners/sift_detect/orb_detect/good_features_to_track），新增10项测试** | **1583** |
+| **v5.21.0** | **Gabor滤波+模板匹配16-bit/float泛化：新增8个 Image16/ImageF 变体 API（gabor_filter/gabor_filter_bank + template_match/template_match_best），新增8项测试** | **1591** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

@@ -735,6 +735,24 @@ pub fn template_match(
 }
 
 ///|
+pub fn template_match_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
+  @feature.template_match_16(arg0, arg1, match_method~)
+}
+
+///|
+pub fn template_match_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
+  @feature.template_match_f(arg0, arg1, match_method~)
+}
+
+///|
 /// 找到最佳模板匹配位置
 pub fn template_match_best(
   arg0 : @types.Image,
@@ -742,6 +760,24 @@ pub fn template_match_best(
   match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> @feature.TemplateMatchResult? raise @types.LoadError {
   @feature.template_match_best(arg0, arg1, match_method~)
+}
+
+///|
+pub fn template_match_best_16(
+  arg0 : @types.Image16,
+  arg1 : @types.Image16,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> @feature.TemplateMatchResult? raise @types.LoadError {
+  @feature.template_match_best_16(arg0, arg1, match_method~)
+}
+
+///|
+pub fn template_match_best_f(
+  arg0 : @types.ImageF,
+  arg1 : @types.ImageF,
+  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+) -> @feature.TemplateMatchResult? raise @types.LoadError {
+  @feature.template_match_best_f(arg0, arg1, match_method~)
 }
 
 ///|
@@ -895,6 +931,32 @@ pub fn gabor_filter(
 }
 
 ///|
+pub fn gabor_filter_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Float,
+  arg3 : Float,
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+  phi? : Float = 0.0F,
+) -> @types.Image16 raise @types.LoadError {
+  @feature.gabor_filter_16(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
+}
+
+///|
+pub fn gabor_filter_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Float,
+  arg3 : Float,
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+  phi? : Float = 0.0F,
+) -> @types.ImageF raise @types.LoadError {
+  @feature.gabor_filter_f(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
+}
+
+///|
 pub fn gabor_filter_bank(
   arg0 : @types.Image,
   arg1 : Int,
@@ -904,6 +966,44 @@ pub fn gabor_filter_bank(
   gamma? : Float = 0.5F,
 ) -> @types.Image raise @types.LoadError {
   @feature.gabor_filter_bank(
+    arg0,
+    arg1,
+    arg2,
+    num_orientations~,
+    lambda~,
+    gamma~,
+  )
+}
+
+///|
+pub fn gabor_filter_bank_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Float,
+  num_orientations? : Int = 4,
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+) -> @types.Image16 raise @types.LoadError {
+  @feature.gabor_filter_bank_16(
+    arg0,
+    arg1,
+    arg2,
+    num_orientations~,
+    lambda~,
+    gamma~,
+  )
+}
+
+///|
+pub fn gabor_filter_bank_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Float,
+  num_orientations? : Int = 4,
+  lambda? : Float = 10.0F,
+  gamma? : Float = 0.5F,
+) -> @types.ImageF raise @types.LoadError {
+  @feature.gabor_filter_bank_f(
     arg0,
     arg1,
     arg2,
