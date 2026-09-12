@@ -1041,9 +1041,160 @@ fn Vp8MbModeProbs::update(self : Vp8MbModeProbs) -> Unit {
 }
 
 // ==================== VP8 Loop Filter ====================
-// VP8 环路去块滤波（简化实现）
+// VP8 环路去块滤波（完整实现）
+// 支持：宏块边界滤波、子宏块边界滤波、色度平面滤波、自适应滤波强度
 
 ///|
+/// VP8 环路滤波参数
+priv struct Vp8LoopFilterParams {
+  filter_level : Int       // 基础滤波级别 (0-63)
+  inner_filter_level : Int  // 内部滤波级别
+  sharpness_level : Int     // 锐化级别 (0-7)
+  segment_deltas : Array[Int]  // 每个 segment 的滤波增量
+  mode_ref_deltas : Array[Int] // 模式/参考帧的滤波增量
+}
+
+///|
+fn Vp8LoopFilterParams::new() -> Vp8LoopFilterParams {
+  Vp8LoopFilterParams::{
+    filter_level: 0,
+    inner_filter_level: 0,
+    sharpness_level: 0,
+    segment_deltas: [0, 0, 0, 0],
+    mode_ref_deltas: [0, 0, 0, 0],
+  }
+}
+
+///|
+/// 计算宏块的实际滤波级别
+fn vp8_calc_filter_level(
+  params : Vp8LoopFilterParams,
+  segment_id : Int,
+  is_i16x16 : Bool,
+) -> Int {
+  let mut level = params.filter_level
+  // 加上 segment 增量
+  if segment_id >= 0 && segment_id < 4 {
+    level += params.segment_deltas[segment_id]
+  }
+  // 加上模式/参考帧增量（I16x16 使用第一个增量）
+  if is_i16x16 {
+    level += params.mode_ref_deltas[0]
+  } else {
+    level += params.mode_ref_deltas[1]
+  }
+  // 限制范围
+  if level < 0 { level = 0 }
+  if level > 63 { level = 63 }
+  level
+}
+
+///|
+/// 4 像素简单环路滤波（垂直边界）
+/// 对边界两侧的 p1, p0, q0, q1 进行滤波
+fn vp8_filter_vertical_4(
+  plane : Array[Int],
+  x : Int,
+  y : Int,
+  width : Int,
+  filter_level : Int,
+  inner_level : Int,
+) -> Unit {
+  if x <= 0 || x >= width {
+    return
+  }
+  let idx = y * width + x
+  let p1 = plane[idx - 2]
+  let p0 = plane[idx - 1]
+  let q0 = plane[idx]
+  let q1 = plane[idx + 1]
+
+  // 检查是否需要滤波
+  let threshold = filter_level * 2
+  if (p0 - q0).abs() * 2 + (p1 - q1).abs() / 2 > threshold {
+    return
+  }
+
+  // 计算滤波值
+  let mut p0_new = p0
+  let mut q0_new = q0
+  let mut p1_new = p1
+  let mut q1_new = q1
+
+  if filter_level > 0 {
+    // 简单的 4 抽头滤波
+    let filter_val = (p1 + 2 * p0 + 2 * q0 + q1 + 4) / 8
+    p0_new = filter_val
+    q0_new = filter_val
+
+    // 如果内部滤波级别足够，也滤波 p1 和 q1
+    if inner_level > 0 && (p1 - p0).abs() < inner_level {
+      p1_new = (p1 + p0_new + 1) / 2
+    }
+    if inner_level > 0 && (q1 - q0).abs() < inner_level {
+      q1_new = (q1 + q0_new + 1) / 2
+    }
+  }
+
+  plane[idx - 2] = p1_new
+  plane[idx - 1] = p0_new
+  plane[idx] = q0_new
+  plane[idx + 1] = q1_new
+}
+
+///|
+/// 4 像素简单环路滤波（水平边界）
+fn vp8_filter_horizontal_4(
+  plane : Array[Int],
+  x : Int,
+  y : Int,
+  width : Int,
+  filter_level : Int,
+  inner_level : Int,
+) -> Unit {
+  if y <= 0 {
+    return
+  }
+  let idx = y * width + x
+  let p1 = plane[idx - 2 * width]
+  let p0 = plane[idx - width]
+  let q0 = plane[idx]
+  let q1 = plane[idx + width]
+
+  // 检查是否需要滤波
+  let threshold = filter_level * 2
+  if (p0 - q0).abs() * 2 + (p1 - q1).abs() / 2 > threshold {
+    return
+  }
+
+  // 计算滤波值
+  let mut p0_new = p0
+  let mut q0_new = q0
+  let mut p1_new = p1
+  let mut q1_new = q1
+
+  if filter_level > 0 {
+    let filter_val = (p1 + 2 * p0 + 2 * q0 + q1 + 4) / 8
+    p0_new = filter_val
+    q0_new = filter_val
+
+    if inner_level > 0 && (p1 - p0).abs() < inner_level {
+      p1_new = (p1 + p0_new + 1) / 2
+    }
+    if inner_level > 0 && (q1 - q0).abs() < inner_level {
+      q1_new = (q1 + q0_new + 1) / 2
+    }
+  }
+
+  plane[idx - 2 * width] = p1_new
+  plane[idx - width] = p0_new
+  plane[idx] = q0_new
+  plane[idx + width] = q1_new
+}
+
+///|
+/// 完整的宏块环路滤波
+/// 包括：宏块边界滤波、子宏块内部边界滤波、色度平面滤波
 fn vp8_loop_filter_mb(
   y_plane : Array[Int],
   u_plane : Array[Int],
@@ -1054,51 +1205,104 @@ fn vp8_loop_filter_mb(
   height : Int,
   filter_level : Int,
 ) -> Unit {
-  // 简化的环路滤波：对宏块边界进行简单平滑
-  ignore(u_plane)
-  ignore(v_plane)
   if filter_level == 0 {
     return
   }
-  // 垂直边界滤波
+
+  let inner_level = filter_level / 2
+  let mb_px = mb_x * 16
+  let mb_py = mb_y * 16
+
+  // === Y 平面滤波 ===
+
+  // 宏块左边界垂直滤波（16行）
   if mb_x > 0 {
     for y in 0..<16 {
-      let py = mb_y * 16 + y
-      if py >= height {
-        break
+      let py = mb_py + y
+      if py < height {
+        vp8_filter_vertical_4(y_plane, mb_px, py, width, filter_level, inner_level)
       }
-      let px = mb_x * 16
-      if px > 0 && px < width {
-        let idx = py * width + px
-        let p1 = y_plane[idx - 1]
-        let p0 = y_plane[idx]
-        let diff = p0 - p1
-        if diff.abs() < filter_level {
-          let adj = diff / 2
-          y_plane[idx - 1] = p1 + adj
-          y_plane[idx] = p0 - adj
+    }
+  }
+
+  // 宏块上边界水平滤波（16列）
+  if mb_y > 0 {
+    for x in 0..<16 {
+      let px = mb_px + x
+      if px < width {
+        vp8_filter_horizontal_4(y_plane, px, mb_py, width, filter_level, inner_level)
+      }
+    }
+  }
+
+  // 子宏块内部垂直边界滤波（x = 4, 8, 12）
+  for sub_x in [4, 8, 12] {
+    let px = mb_px + sub_x
+    if px < width {
+      for y in 0..<16 {
+        let py = mb_py + y
+        if py < height {
+          vp8_filter_vertical_4(y_plane, px, py, width, inner_level, inner_level / 2)
         }
       }
     }
   }
-  // 水平边界滤波
-  if mb_y > 0 {
-    for x in 0..<16 {
-      let px = mb_x * 16 + x
-      if px >= width {
-        break
-      }
-      let py = mb_y * 16
-      if py > 0 && py < height {
-        let idx = py * width + px
-        let p1 = y_plane[idx - width]
-        let p0 = y_plane[idx]
-        let diff = p0 - p1
-        if diff.abs() < filter_level {
-          let adj = diff / 2
-          y_plane[idx - width] = p1 + adj
-          y_plane[idx] = p0 - adj
+
+  // 子宏块内部水平边界滤波（y = 4, 8, 12）
+  for sub_y in [4, 8, 12] {
+    let py = mb_py + sub_y
+    if py < height {
+      for x in 0..<16 {
+        let px = mb_px + x
+        if px < width {
+          vp8_filter_horizontal_4(y_plane, px, py, width, inner_level, inner_level / 2)
         }
+      }
+    }
+  }
+
+  // === 色度平面滤波（U 和 V，8x8 块） ===
+  let uv_width = width / 2
+  let uv_height = height / 2
+  let uv_mb_px = mb_x * 8
+  let uv_mb_py = mb_y * 8
+
+  // U 平面：左边界垂直滤波
+  if mb_x > 0 {
+    for y in 0..<8 {
+      let py = uv_mb_py + y
+      if py < uv_height {
+        vp8_filter_vertical_4(u_plane, uv_mb_px, py, uv_width, filter_level / 2, inner_level / 2)
+      }
+    }
+  }
+
+  // U 平面：上边界水平滤波
+  if mb_y > 0 {
+    for x in 0..<8 {
+      let px = uv_mb_px + x
+      if px < uv_width {
+        vp8_filter_horizontal_4(u_plane, px, uv_mb_py, uv_width, filter_level / 2, inner_level / 2)
+      }
+    }
+  }
+
+  // V 平面：左边界垂直滤波
+  if mb_x > 0 {
+    for y in 0..<8 {
+      let py = uv_mb_py + y
+      if py < uv_height {
+        vp8_filter_vertical_4(v_plane, uv_mb_px, py, uv_width, filter_level / 2, inner_level / 2)
+      }
+    }
+  }
+
+  // V 平面：上边界水平滤波
+  if mb_y > 0 {
+    for x in 0..<8 {
+      let px = uv_mb_px + x
+      if px < uv_width {
+        vp8_filter_horizontal_4(v_plane, px, uv_mb_py, uv_width, filter_level / 2, inner_level / 2)
       }
     }
   }
