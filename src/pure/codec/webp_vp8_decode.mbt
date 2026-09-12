@@ -680,7 +680,14 @@ fn vp8_intra_predict_16x16(
 }
 
 ///|
-/// I4x4 帧内预测（简化实现，支持主要模式）
+/// I4x4 帧内预测（完整实现 10 种模式）
+/// 参考像素布局：
+///   above_left  above[0]  above[1]  above[2]  above[3]  above[4..7]
+///   left[0]     P[0][0]   P[0][1]   P[0][2]   P[0][3]
+///   left[1]     P[1][0]   P[1][1]   P[1][2]   P[1][3]
+///   left[2]     P[2][0]   P[2][1]   P[2][2]   P[2][3]
+///   left[3]     P[3][0]   P[3][1]   P[3][2]   P[3][3]
+///   left[4..7]
 fn vp8_intra_predict_4x4(
   mode : Vp8I4x4Mode,
   above : Array[Int],
@@ -689,8 +696,9 @@ fn vp8_intra_predict_4x4(
 ) -> Array[Int] {
   let result = Array::make(16, 0)
   match mode {
+    // 0: DC 预测 - 上方和左方像素的平均值
     I4x4DcPred => {
-      let mut sum = above_left
+      let mut sum = 0
       for i in 0..<4 {
         sum += above[i]
         sum += left[i]
@@ -700,21 +708,22 @@ fn vp8_intra_predict_4x4(
         result[i] = dc
       }
     }
+
+    // 1: TrueMotion 预测 - 基于水平和垂直梯度
+    // P[y][x] = clip(above[x] + left[y] - above_left, 0, 255)
     I4x4TrueMotionPred => {
       for y in 0..<4 {
         for x in 0..<4 {
-          let mut sum = 0
-          for i in 0..<(x + 1) {
-            sum += above[i]
-          }
-          for i in 0..<(y + 1) {
-            sum += left[i]
-          }
-          sum += above_left
-          result[y * 4 + x] = (sum + (x + y + 2) / 2) / (x + y + 2)
+          let mut pred = above[x] + left[y] - above_left
+          if pred < 0 { pred = 0 }
+          if pred > 255 { pred = 255 }
+          result[y * 4 + x] = pred
         }
       }
     }
+
+    // 2: 水平预测 - 使用左方像素
+    // P[y][x] = left[y]
     I4x4HPred => {
       for y in 0..<4 {
         for x in 0..<4 {
@@ -722,6 +731,9 @@ fn vp8_intra_predict_4x4(
         }
       }
     }
+
+    // 3: 垂直预测 - 使用上方像素
+    // P[y][x] = above[x]
     I4x4VPred => {
       for y in 0..<4 {
         for x in 0..<4 {
@@ -729,16 +741,93 @@ fn vp8_intra_predict_4x4(
         }
       }
     }
-    // 其他模式简化为 DC 预测
-    _ => {
-      let mut sum = above_left
-      for i in 0..<4 {
-        sum += above[i]
-        sum += left[i]
+
+    // 4: LeftDown 预测（左下/对角线，斜率 1）
+    // 从左上到右下的对角线预测
+    // P[y][x] = (above[x+y] + above[x+y+1] + 1) >> 1  (x+y <= 6)
+    // P[y][x] = above[7]  (x+y == 7)
+    I4x4LeftDownPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          let idx = x + y
+          if idx <= 6 {
+            result[y * 4 + x] = (above[idx] + above[idx + 1] + 1) >> 1
+          } else {
+            result[y * 4 + x] = above[7]
+          }
+        }
       }
-      let dc = (sum + 4) >> 3
-      for i in 0..<16 {
-        result[i] = dc
+    }
+
+    // 5: RightDown 预测（右下/对角线，斜率 -1）
+    // 从右上到左下的对角线预测
+    // 如果 x >= y: P[y][x] = (above[x-y] + above[x-y+1] + 1) >> 1
+    // 如果 x < y:  P[y][x] = (left[y-x-1] + left[y-x] + 1) >> 1
+    I4x4RightDownPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          if x >= y {
+            let idx = x - y
+            result[y * 4 + x] = (above[idx] + above[idx + 1] + 1) >> 1
+          } else {
+            let idx = y - x - 1
+            result[y * 4 + x] = (left[idx] + left[idx + 1] + 1) >> 1
+          }
+        }
+      }
+    }
+
+    // 6: RightUp 预测（右上/垂直-右组合）
+    // 垂直预测为主，向右下方倾斜
+    // P[y][x] = (above[x] + above[x+1] + left[y] + 1) >> 2
+    I4x4RightUpPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          result[y * 4 + x] = (above[x] + above[x + 1] + left[y] + 1) >> 2
+        }
+      }
+    }
+
+    // 7: LeftUp 预测（左上/水平-上组合）
+    // 水平预测为主，向右上方倾斜
+    // P[y][x] = (left[y] + left[y+1] + above[x] + 1) >> 2
+    I4x4LeftUpPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          result[y * 4 + x] = (left[y] + left[y + 1] + above[x] + 1) >> 2
+        }
+      }
+    }
+
+    // 8: VertRight 预测（垂直-右）
+    // 垂直预测 + 对角线修正
+    // P[y][x] = (above[x] + above[x+1] + 1) >> 1  (y == 0)
+    // P[y][x] = (above[x] + left[y-1] + 1) >> 1    (y > 0)
+    I4x4VertRightPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          if y == 0 {
+            result[y * 4 + x] = (above[x] + above[x + 1] + 1) >> 1
+          } else {
+            result[y * 4 + x] = (above[x] + left[y - 1] + 1) >> 1
+          }
+        }
+      }
+    }
+
+    // 9: HorizDown 预测（水平-下）
+    // 水平预测 + 对角线修正
+    // P[y][x] = (left[y] + left[y+1] + 1) >> 1  (x == 0)
+    // P[y][x] = (left[y] + above[x-1] + 1) >> 1  (x > 0)
+    I4x4HorizDownPred => {
+      for y in 0..<4 {
+        for x in 0..<4 {
+          if x == 0 {
+            result[y * 4 + x] = (left[y] + left[y + 1] + 1) >> 1
+          } else {
+            result[y * 4 + x] = (left[y] + above[x - 1] + 1) >> 1
+          }
+        }
       }
     }
   }

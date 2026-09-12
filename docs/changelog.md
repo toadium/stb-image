@@ -82,6 +82,7 @@
 | **v5.40.0** | **VP8 残差系数解析：实现完整布尔算术解码器（BoolDecoder）、token 解析、zig-zag 扫描、DC/AC 系数分离、概率模型（简化版），集成到解码器完整流水线** | **1700** |
 | **v5.41.0** | **VP8 自适应概率模型：实现按系数位置（16个）和 token 类型（零/一/EOB/额外位/符号）的独立概率表、统计计数器、指数加权平均（EMA）概率更新、每8块更新一次、计数器半衰机制** | **1700** |
 | **v5.42.0** | **VP8 宏块层预测模式解析：实现 I16x16 预测模式解析（4种）、I4x4 预测模式解析（10种）、色度预测模式解析（4种）、子宏块类型解析、预测模式自适应概率模型（EMA更新），从 bitstream 解析预测模式而非根据位置选择** | **1700** |
+| **v5.43.0** | **VP8 I4x4 帧内预测完整实现：完整实现 10 种预测模式（DC/TrueMotion/H/V/LeftDown/RightDown/RightUp/LeftUp/VertRight/HorizDown），每种模式独立的预测公式，支持对角线/组合预测，移除简化实现** | **1700** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
