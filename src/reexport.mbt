@@ -1476,6 +1476,8 @@ pub fn nlm_denoise_fast_f(
 
 ///|
 pub let median_cut : (@types.Image, Int) -> @types.Image = @color.median_cut
+pub let median_cut_16 : (@types.Image16, Int) -> @types.Image16 = @color.median_cut_16
+pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF = @color.median_cut_f
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close

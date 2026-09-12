@@ -102,3 +102,31 @@ test "floyd_steinberg_f levels=4" {
   let out = @color.floyd_steinberg_f(img, 4)
   assert_eq(out.width, 4)
 }
+
+test "median_cut_16 basic" {
+  let img = make_img16_q(4, 4, 3, 128)
+  let out = @color.median_cut_16(img, 4)
+  assert_eq(out.width, 4)
+  assert_eq(out.height, 4)
+  assert_eq(out.channels, 3)
+}
+
+test "median_cut_f basic" {
+  let img = make_imgf_q(4, 4, 3, 0.5F)
+  let out = @color.median_cut_f(img, 4)
+  assert_eq(out.width, 4)
+  assert_eq(out.height, 4)
+  assert_eq(out.channels, 3)
+}
+
+test "median_cut_16 k=2" {
+  let img = make_img16_q(4, 4, 3, 128)
+  let out = @color.median_cut_16(img, 2)
+  assert_eq(out.channels, 3)
+}
+
+test "median_cut_f k=8" {
+  let img = make_imgf_q(4, 4, 3, 0.5F)
+  let out = @color.median_cut_f(img, 8)
+  assert_eq(out.width, 4)
+}
