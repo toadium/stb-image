@@ -296,8 +296,8 @@ fn apply_subtract_green_inverse(pixels : Array[Int], n : Int) -> Unit {
 // ==================== VP8L Decoder ====================
 
 ///|
-/// 解码 WebP lossless 字节流为 Image（channels=3 或 4）
-/// 支持 VP8L (lossless) 格式，不支持 VP8 (lossy)
+/// 解码 WebP 字节流为 Image（channels=3 或 4）
+/// 支持 VP8L (lossless) 和 VP8 (lossy) 格式
 pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   let len = data.length()
   if len < 12 {
@@ -317,9 +317,10 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     data[11].to_int() != 0x50 {
     raise @types.LoadError::DecodeFailed("WEBP magic 不匹配")
   }
-  // Find VP8L chunk
+  // Find VP8L or VP8 chunk
   let mut pos = 12
   let mut vp8l_data_start = -1
+  let mut vp8_data_start = -1
   while pos + 8 <= len {
     let chunk_id = data[pos].to_int() |
       (data[pos + 1].to_int() << 8) |
@@ -337,17 +338,21 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     }
     // "VP8 " = 0x20385056 (lossy)
     if chunk_id == 0x20385056 {
-      raise @types.LoadError::DecodeFailed(
-        "WebP lossy (VP8) 不支持，仅支持 lossless (VP8L)",
-      )
+      vp8_data_start = pos + 8
+      let _ = chunk_size
+      break
     }
     pos += 8 + chunk_size
     if chunk_size % 2 == 1 {
       pos += 1 // padding
     }
   }
+  // VP8 lossy 解码
+  if vp8_data_start >= 0 {
+    return decode_vp8_frame(data, vp8_data_start)
+  }
   if vp8l_data_start < 0 {
-    raise @types.LoadError::DecodeFailed("未找到 VP8L chunk")
+    raise @types.LoadError::DecodeFailed("未找到 VP8L 或 VP8 chunk")
   }
   // VP8L signature
   if data[vp8l_data_start].to_int() != 0x2F {

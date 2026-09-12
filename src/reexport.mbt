@@ -2113,6 +2113,7 @@ pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.dec
 
 ///|
 pub let decode_webp : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_webp_pure
+pub let decode_vp8_frame : (Bytes, Int) -> @types.Image raise @types.LoadError = @codec.decode_vp8_frame
 
 ///|
 pub fn encode_webp_lossy(
