@@ -225,6 +225,12 @@ pub fn resize(
 }
 
 ///|
+pub let resize_16 : (@types.Image16, Int, Int) -> @types.Image16 = @transform.resize_16
+
+///|
+pub let resize_f : (@types.ImageF, Int, Int) -> @types.ImageF = @transform.resize_f
+
+///|
 pub let set_flip_vertically_on_load : (Bool) -> Unit = @pure_util.set_flip_vertically_on_load_pure
 
 ///|
@@ -1396,6 +1402,18 @@ pub let warp_affine : (
   Int,
   Int,
 ) -> @types.Image = @transform.warp_affine
+pub let warp_affine_16 : (
+  @types.Image16,
+  (Float, Float, Float, Float, Float, Float),
+  Int,
+  Int,
+) -> @types.Image16 = @transform.warp_affine_16
+pub let warp_affine_f : (
+  @types.ImageF,
+  (Float, Float, Float, Float, Float, Float),
+  Int,
+  Int,
+) -> @types.ImageF = @transform.warp_affine_f
 
 ///|
 pub let watershed : (@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed
@@ -1508,6 +1526,18 @@ pub let warp_perspective : (
   Int,
   Int,
 ) -> @types.Image = @transform.warp_perspective
+pub let warp_perspective_16 : (
+  @types.Image16,
+  @transform.PerspectiveMatrix,
+  Int,
+  Int,
+) -> @types.Image16 = @transform.warp_perspective_16
+pub let warp_perspective_f : (
+  @types.ImageF,
+  @transform.PerspectiveMatrix,
+  Int,
+  Int,
+) -> @types.ImageF = @transform.warp_perspective_f
 
 ///|
 pub let get_affine_transform : (Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix? = @transform.get_affine_transform

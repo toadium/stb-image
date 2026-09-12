@@ -58,6 +58,7 @@
 | **v5.16.0** | **图像分割16-bit/float泛化：新增10个 Image16/ImageF 变体 API（watershed/watershed_auto + kmeans_segment + slic），输出标签图像/超像素结果，新增10项测试** | **1535** |
 | **v5.17.0** | **高级算法16-bit/float泛化：新增12个 Image16/ImageF 变体 API（inpaint/inpaint_fast + nlm_denoise/nlm_denoise_fast + dehaze + guided_filter），新增17项测试** | **1552** |
 | **v5.18.0** | **绘制函数16-bit/float泛化：新增8个 Image16/ImageF 变体 API（draw_line/draw_rectangle/draw_circle/draw_polygon），Bresenham直线/中点圆/扫描线填充，新增12项测试** | **1564** |
+| **v5.19.0** | **高级几何变换16-bit/float泛化：新增6个 Image16/ImageF 变体 API（warp_affine/warp_perspective/resize），双线性插值，新增9项测试** | **1573** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
