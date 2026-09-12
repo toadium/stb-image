@@ -2099,6 +2099,14 @@ pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @t
 
 ///|
 pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
+pub let compute_energy_16 : (@types.Image16) -> Array[Double] = @transform.compute_energy_16
+pub let compute_energy_f : (@types.ImageF) -> Array[Double] = @transform.compute_energy_f
+pub let remove_vertical_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_vertical_seam_16
+pub let remove_vertical_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_vertical_seam_f
+pub let remove_horizontal_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_horizontal_seam_16
+pub let remove_horizontal_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_horizontal_seam_f
+pub let seam_carve_resize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @transform.seam_carve_resize_16
+pub let seam_carve_resize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.seam_carve_resize_f
 
 ///|
 pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_qoi_pure
