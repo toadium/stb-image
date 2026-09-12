@@ -1302,9 +1302,13 @@ pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF =
 
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
+pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb_16
+pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsl_to_rgb_f
 
 ///|
 pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsv_to_rgb
+pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.hsv_to_rgb_16
+pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsv_to_rgb_f
 
 ///|
 pub let ifft_2d : (@frequency.FFTResult) -> @types.Image = @frequency.ifft_2d
@@ -1540,9 +1544,13 @@ pub fn region_growing_segment(
 
 ///|
 pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsl
+pub let rgb_to_hsl_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsl_16
+pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsl_f
 
 ///|
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv
+pub let rgb_to_hsv_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv_16
+pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsv_f
 
 ///|
 pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) = @color.rgb_to_ycbcr
@@ -1556,15 +1564,23 @@ pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color
 
 ///|
 pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz
+pub let rgb_to_xyz_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz_16
+pub let rgb_to_xyz_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_xyz_f
 
 ///|
 pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.xyz_to_rgb
+pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.xyz_to_rgb_16
+pub let xyz_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.xyz_to_rgb_f
 
 ///|
 pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_lab
+pub let rgb_to_lab_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_lab_16
+pub let rgb_to_lab_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_lab_f
 
 ///|
 pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rgb
+pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rgb_16
+pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.lab_to_rgb_f
 
 ///|
 pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk

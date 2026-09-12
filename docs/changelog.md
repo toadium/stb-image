@@ -64,6 +64,7 @@
 | **v5.22.0** | **光流+GLCM 16-bit/float泛化：新增8个 Image16/ImageF 变体 API（lucas_kanade/horn_schunck + compute_glcm/glcm_features_multi_direction），新增8项测试** | **1599** |
 | **v5.23.0** | **图像哈希+图像质量+积分图像 16-bit/float泛化：新增16个 Image16/ImageF 变体 API（ahash/dhash/phash + mse/psnr/ssim + integral_image/integral_image_sq），新增12项测试** | **1611** |
 | **v5.24.0** | **卷积+双边滤波 16-bit/float泛化：新增6个 Image16/ImageF 变体 API（convolve + bilateral_filter/bilateral_filter_fast），新增8项测试** | **1619** |
+| **v5.25.0** | **颜色空间转换 16-bit/float泛化：新增16个像素级变体 API（rgb_to_hsl/hsl_to_rgb + rgb_to_hsv/hsv_to_rgb + rgb_to_xyz/xyz_to_rgb + rgb_to_lab/lab_to_rgb），新增18项测试** | **1637** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
