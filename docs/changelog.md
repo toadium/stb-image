@@ -75,6 +75,7 @@
 | **v5.33.0** | **多频带融合 16-bit/float泛化：新增2个变体 API（multi_band_blend_16/f），新增4项测试** | **1681** |
 | **v5.34.0** | **霍夫直线变换 16-bit/float泛化：新增2个变体 API（hough_lines_16/f），新增4项测试** | **1685** |
 | **v5.35.0** | **霍夫圆检测 16-bit/float泛化：新增2个变体 API（hough_circles_16/f），新增4项测试** | **1689** |
+| **v5.36.0** | **轮廓提取与绘制 16-bit/float泛化：新增4个变体 API（find_contours_16/f + draw_contours_16/f），新增4项测试** | **1693** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

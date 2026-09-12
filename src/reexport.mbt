@@ -426,6 +426,8 @@ pub fn dehaze_f(
 
 ///|
 pub let draw_contours : (@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError = @edge.draw_contours
+pub let draw_contours_16 : (@types.Image16, Array[@edge.Contour], Array[Int]) -> @types.Image16 raise @types.LoadError = @edge.draw_contours_16
+pub let draw_contours_f : (@types.ImageF, Array[@edge.Contour], Array[Float]) -> @types.ImageF raise @types.LoadError = @edge.draw_contours_f
 
 ///|
 pub fn draw_corners(
@@ -992,6 +994,8 @@ pub fn hough_lines_nms(
 
 ///|
 pub let find_contours : (@types.Image) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours
+pub let find_contours_16 : (@types.Image16) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_16
+pub let find_contours_f : (@types.ImageF) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_f
 
 ///|
 pub let floyd_steinberg : (@types.Image, Int) -> @types.Image = @color.floyd_steinberg
