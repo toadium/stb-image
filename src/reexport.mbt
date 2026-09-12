@@ -478,6 +478,106 @@ pub fn draw_polygon(
 }
 
 ///|
+pub fn draw_line_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Int],
+  thickness? : Int = 1,
+) -> @types.Image16 {
+  @transform.draw_line_16(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
+}
+
+///|
+pub fn draw_rectangle_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Int],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image16 {
+  @transform.draw_rectangle_16(arg0, arg1, arg2, arg3, arg4, arg5, thickness~, fill~)
+}
+
+///|
+pub fn draw_circle_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Array[Int],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.Image16 {
+  @transform.draw_circle_16(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
+}
+
+///|
+pub fn draw_polygon_16(
+  arg0 : @types.Image16,
+  arg1 : Array[(Int, Int)],
+  arg2 : Array[Int],
+  thickness? : Int = 1,
+) -> @types.Image16 {
+  @transform.draw_polygon_16(arg0, arg1, arg2, thickness~)
+}
+
+///|
+pub fn draw_line_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Float],
+  thickness? : Int = 1,
+) -> @types.ImageF {
+  @transform.draw_line_f(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
+}
+
+///|
+pub fn draw_rectangle_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Int,
+  arg5 : Array[Float],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.ImageF {
+  @transform.draw_rectangle_f(arg0, arg1, arg2, arg3, arg4, arg5, thickness~, fill~)
+}
+
+///|
+pub fn draw_circle_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  arg2 : Int,
+  arg3 : Int,
+  arg4 : Array[Float],
+  thickness? : Int = 1,
+  fill? : Bool = false,
+) -> @types.ImageF {
+  @transform.draw_circle_f(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
+}
+
+///|
+pub fn draw_polygon_f(
+  arg0 : @types.ImageF,
+  arg1 : Array[(Int, Int)],
+  arg2 : Array[Float],
+  thickness? : Int = 1,
+) -> @types.ImageF {
+  @transform.draw_polygon_f(arg0, arg1, arg2, thickness~)
+}
+
+///|
 pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_over
 
 ///|
