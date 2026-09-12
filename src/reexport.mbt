@@ -962,6 +962,26 @@ pub fn hough_lines(
 }
 
 ///|
+pub fn hough_lines_16(
+  arg0 : @types.Image16,
+  arg1 : Int,
+  theta_resolution? : Float = 1.0F,
+  rho_resolution? : Float = 1.0F,
+) -> Array[@edge.HoughLine] raise @types.LoadError {
+  @edge.hough_lines_16(arg0, arg1, theta_resolution~, rho_resolution~)
+}
+
+///|
+pub fn hough_lines_f(
+  arg0 : @types.ImageF,
+  arg1 : Int,
+  theta_resolution? : Float = 1.0F,
+  rho_resolution? : Float = 1.0F,
+) -> Array[@edge.HoughLine] raise @types.LoadError {
+  @edge.hough_lines_f(arg0, arg1, theta_resolution~, rho_resolution~)
+}
+
+///|
 pub fn hough_lines_nms(
   arg0 : Array[@edge.HoughLine],
   rho_threshold? : Float = 5.0F,
