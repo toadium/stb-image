@@ -122,25 +122,194 @@ fn Vp8BoolDecoder::read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
   v
 }
 
-// ==================== VP8 Residual Coefficient Parsing ====================
-// VP8 残差系数解析：token 解析 + zig-zag 扫描
+// ==================== VP8 Adaptive Probability Model ====================
+// VP8 自适应概率模型：按系数位置和 token 类型维护独立概率
+// 概率更新：使用指数加权平均（EMA）根据已解析 token 更新
 
 ///|
-/// VP8 系数概率模型（简化版，使用默认概率）
-priv struct Vp8CoeffProbs {
-  // 每个位置的 base token 概率（简化为单一概率）
-  base_prob : Int
-  // 额外位的概率
-  extra_prob : Int
+/// VP8 自适应系数概率模型
+priv struct Vp8AdaptiveProbs {
+  // 每个系数位置（0-15，zig-zag 顺序）的概率
+  prob_zero : Array[Int]      // 零系数概率
+  prob_one : Array[Int]       // 单系数（值为±1）概率
+  prob_eob : Array[Int]       // EOB（块结束）概率
+  prob_extra : Array[Int]     // 额外位概率
+  mut prob_sign : Int              // 符号位概率（所有位置共用）
+
+  // 统计计数器（用于概率更新）
+  count_zero : Array[Int]
+  count_one : Array[Int]
+  count_eob : Array[Int]
+  count_extra : Array[Int]
+  mut count_sign_pos : Int         // 正符号计数
+  mut count_sign_neg : Int         // 负符号计数
+  mut total_blocks : Int           // 已解析块数
 }
 
 ///|
-fn Vp8CoeffProbs::new() -> Vp8CoeffProbs {
-  Vp8CoeffProbs::{
-    base_prob: 150,
-    extra_prob: 140,
+fn Vp8AdaptiveProbs::new() -> Vp8AdaptiveProbs {
+  // VP8 默认概率（基于统计）
+  let default_zero = [200, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40]
+  let default_one = [180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40, 30]
+  let default_eob = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250]
+  let default_extra = [140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140]
+
+  Vp8AdaptiveProbs::{
+    prob_zero: default_zero,
+    prob_one: default_one,
+    prob_eob: default_eob,
+    prob_extra: default_extra,
+    prob_sign: 128,
+    count_zero: Array::make(16, 0),
+    count_one: Array::make(16, 0),
+    count_eob: Array::make(16, 0),
+    count_extra: Array::make(16, 0),
+    count_sign_pos: 0,
+    count_sign_neg: 0,
+    total_blocks: 0,
   }
 }
+
+///|
+/// 记录零系数统计
+fn Vp8AdaptiveProbs::record_zero(self : Vp8AdaptiveProbs, pos : Int) -> Unit {
+  if pos >= 0 && pos < 16 {
+    self.count_zero[pos] += 1
+  }
+}
+
+///|
+/// 记录单系数统计
+fn Vp8AdaptiveProbs::record_one(self : Vp8AdaptiveProbs, pos : Int) -> Unit {
+  if pos >= 0 && pos < 16 {
+    self.count_one[pos] += 1
+  }
+}
+
+///|
+/// 记录 EOB 统计
+fn Vp8AdaptiveProbs::record_eob(self : Vp8AdaptiveProbs, pos : Int) -> Unit {
+  if pos >= 0 && pos < 16 {
+    self.count_eob[pos] += 1
+  }
+}
+
+///|
+/// 记录额外位统计
+fn Vp8AdaptiveProbs::record_extra(self : Vp8AdaptiveProbs, pos : Int) -> Unit {
+  if pos >= 0 && pos < 16 {
+    self.count_extra[pos] += 1
+  }
+}
+
+///|
+/// 记录符号统计
+fn Vp8AdaptiveProbs::record_sign(self : Vp8AdaptiveProbs, is_positive : Bool) -> Unit {
+  if is_positive {
+    self.count_sign_pos += 1
+  } else {
+    self.count_sign_neg += 1
+  }
+}
+
+///|
+/// 更新概率（指数加权平均 EMA）
+/// 在解析每个块后调用，使用最近的统计信息更新概率
+fn Vp8AdaptiveProbs::update(self : Vp8AdaptiveProbs) -> Unit {
+  self.total_blocks += 1
+  // 每 8 个块更新一次概率（减少计算量）
+  if self.total_blocks % 8 != 0 {
+    return
+  }
+
+  // EMA 更新：new_prob = old_prob * 7/8 + observed_prob * 1/8
+  for i in 0..<16 {
+    let total = self.count_zero[i] + self.count_one[i] + 1
+    // 更新零系数概率
+    if total > 0 {
+      let observed_zero = (self.count_zero[i] * 256) / total
+      self.prob_zero[i] = (self.prob_zero[i] * 7 + observed_zero) / 8
+    }
+    // 更新单系数概率
+    let non_zero = self.count_one[i] + 1
+    if non_zero > 0 {
+      let observed_one = (self.count_one[i] * 256) / non_zero
+      self.prob_one[i] = (self.prob_one[i] * 7 + observed_one) / 8
+    }
+    // 更新 EOB 概率
+    let eob_total = self.count_eob[i] + 1
+    if eob_total > 0 {
+      let observed_eob = (self.count_eob[i] * 256) / eob_total
+      self.prob_eob[i] = (self.prob_eob[i] * 7 + observed_eob) / 8
+    }
+    // 更新额外位概率
+    let extra_total = self.count_extra[i] + 1
+    if extra_total > 0 {
+      let observed_extra = (self.count_extra[i] * 256) / extra_total
+      self.prob_extra[i] = (self.prob_extra[i] * 7 + observed_extra) / 8
+    }
+  }
+
+  // 更新符号概率
+  let sign_total = self.count_sign_pos + self.count_sign_neg + 1
+  if sign_total > 0 {
+    let observed_sign = (self.count_sign_pos * 256) / sign_total
+    self.prob_sign = (self.prob_sign * 7 + observed_sign) / 8
+  }
+
+  // 重置计数器（保留部分历史）
+  for i in 0..<16 {
+    self.count_zero[i] = self.count_zero[i] / 2
+    self.count_one[i] = self.count_one[i] / 2
+    self.count_eob[i] = self.count_eob[i] / 2
+    self.count_extra[i] = self.count_extra[i] / 2
+  }
+  self.count_sign_pos = self.count_sign_pos / 2
+  self.count_sign_neg = self.count_sign_neg / 2
+}
+
+///|
+/// 获取指定位置的零系数概率
+fn Vp8AdaptiveProbs::get_zero_prob(self : Vp8AdaptiveProbs, pos : Int) -> Int {
+  if pos >= 0 && pos < 16 {
+    self.prob_zero[pos]
+  } else {
+    150
+  }
+}
+
+///|
+/// 获取指定位置的单系数概率
+fn Vp8AdaptiveProbs::get_one_prob(self : Vp8AdaptiveProbs, pos : Int) -> Int {
+  if pos >= 0 && pos < 16 {
+    self.prob_one[pos]
+  } else {
+    170
+  }
+}
+
+///|
+/// 获取指定位置的 EOB 概率
+fn Vp8AdaptiveProbs::get_eob_prob(self : Vp8AdaptiveProbs, pos : Int) -> Int {
+  if pos >= 0 && pos < 16 {
+    self.prob_eob[pos]
+  } else {
+    100
+  }
+}
+
+///|
+/// 获取指定位置的额外位概率
+fn Vp8AdaptiveProbs::get_extra_prob(self : Vp8AdaptiveProbs, pos : Int) -> Int {
+  if pos >= 0 && pos < 16 {
+    self.prob_extra[pos]
+  } else {
+    140
+  }
+}
+
+// ==================== VP8 Residual Coefficient Parsing ====================
+// VP8 残差系数解析：token 解析 + zig-zag 扫描 + 自适应概率
 
 ///|
 /// VP8 zig-zag 扫描顺序（4x4 块）
@@ -154,13 +323,14 @@ fn vp8_zigzag_4x4() -> Array[Int] {
 }
 
 ///|
-/// 解析一个 4x4 块的残差系数
+/// 解析一个 4x4 块的残差系数（使用自适应概率模型）
 /// 返回 16 个系数（行优先顺序）
 fn vp8_parse_residual_4x4(
   bd : Vp8BoolDecoder,
-  probs : Vp8CoeffProbs,
+  probs : Vp8AdaptiveProbs,
   is_dc : Bool,
 ) -> Array[Int] {
+  ignore(is_dc)
   let coeffs = Array::make(16, 0)
   let zigzag = vp8_zigzag_4x4()
   let mut eob = false // end of block
@@ -169,32 +339,37 @@ fn vp8_parse_residual_4x4(
       break
     }
     let pos = zigzag[i]
-    // 解析 base token
-    // token 0: 零系数
-    // token 1: 一个系数（±1）
-    // token 2+: 多个系数（需要额外位）
-    let is_zero = bd.read_bool(probs.base_prob) == 1
+    // 使用自适应概率解析 base token
+    let zero_prob = probs.get_zero_prob(i)
+    let is_zero = bd.read_bool(zero_prob) == 1
     if is_zero {
+      probs.record_zero(i)
       // 检查是否是 EOB（块结束）
       if i > 0 {
-        let is_eob = bd.read_bool(100) == 1
+        let eob_prob = probs.get_eob_prob(i)
+        let is_eob = bd.read_bool(eob_prob) == 1
         if is_eob {
+          probs.record_eob(i)
           eob = true
         }
       }
       continue
     }
     // 非零系数：解析符号和值
-    let is_one = bd.read_bool(170) == 1
+    let one_prob = probs.get_one_prob(i)
+    let is_one = bd.read_bool(one_prob) == 1
     let mut value = 0
     if is_one {
+      probs.record_one(i)
       value = 1
     } else {
       // 解析额外位
+      let extra_prob = probs.get_extra_prob(i)
+      probs.record_extra(i)
       let mut extra = 1
       let mut continue_read = true
       while continue_read {
-        let read_more = bd.read_bool(probs.extra_prob) == 1
+        let read_more = bd.read_bool(extra_prob) == 1
         if read_more {
           extra = (extra << 1) | bd.read_bool(128)
           if extra > 2047 {
@@ -206,13 +381,17 @@ fn vp8_parse_residual_4x4(
       }
       value = extra + 1
     }
-    // 解析符号
-    let sign = bd.read_bool(128)
-    if sign == 1 {
+    // 解析符号（使用自适应符号概率）
+    let sign = bd.read_bool(probs.prob_sign)
+    let is_positive = sign == 0
+    probs.record_sign(is_positive)
+    if !is_positive {
       value = -value
     }
     coeffs[pos] = value
   }
+  // 更新自适应概率
+  probs.update()
   coeffs
 }
 
@@ -220,7 +399,7 @@ fn vp8_parse_residual_4x4(
 /// 解析一个 16x16 块的 DC 系数（4x4 块的 DC 系数组成）
 fn vp8_parse_dc_coeffs_16x16(
   bd : Vp8BoolDecoder,
-  probs : Vp8CoeffProbs,
+  probs : Vp8AdaptiveProbs,
 ) -> Array[Int] {
   // 16x16 块的 DC 系数是一个 4x4 块，使用 WHT 变换
   vp8_parse_residual_4x4(bd, probs, true)
@@ -665,7 +844,7 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   // 帧内预测 + 残差系数解析 + IDCT 反变换
   // 创建布尔解码器用于残差系数解析
   let bd = Vp8BoolDecoder::new(data, offset + 10)
-  let coeff_probs = Vp8CoeffProbs::new()
+  let coeff_probs = Vp8AdaptiveProbs::new()
 
   // 对每个 16x16 宏块使用 I16x16 帧内预测 + 残差解析
   let mb_w = (w + 15) / 16

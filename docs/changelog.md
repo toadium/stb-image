@@ -80,6 +80,7 @@
 | **v5.38.0** | **WebP lossy VP8 解码：实现 VP8 bitstream 解析、帧头解析、量化参数解析、环路去块滤波、YUV420转RGB，补齐 WebP 全格式支持（lossless VP8L + lossy VP8），新增3项测试** | **1700** |
 | **v5.39.0** | **VP8 解码核心算法完善：实现 4x4 IDCT 反变换、16x16 WHT 变换、I16x16 帧内预测（4种模式）、I4x4 帧内预测（10种模式），集成到解码器中** | **1700** |
 | **v5.40.0** | **VP8 残差系数解析：实现完整布尔算术解码器（BoolDecoder）、token 解析、zig-zag 扫描、DC/AC 系数分离、概率模型（简化版），集成到解码器完整流水线** | **1700** |
+| **v5.41.0** | **VP8 自适应概率模型：实现按系数位置（16个）和 token 类型（零/一/EOB/额外位/符号）的独立概率表、统计计数器、指数加权平均（EMA）概率更新、每8块更新一次、计数器半衰机制** | **1700** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
