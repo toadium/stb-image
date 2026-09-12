@@ -311,9 +311,13 @@ pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF = @filter.box_blur_f
 
 ///|
 pub let build_gaussian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
+pub let build_gaussian_pyramid_16 : (@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError = @transform.build_gaussian_pyramid_16
+pub let build_gaussian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_gaussian_pyramid_f
 
 ///|
 pub let build_laplacian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_laplacian_pyramid
+pub let build_laplacian_pyramid_16 : (@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError = @transform.build_laplacian_pyramid_16
+pub let build_laplacian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_laplacian_pyramid_float
 
 ///|
 pub let clahe : (@types.Image, Int, Float) -> @types.Image raise @types.LoadError = @color.clahe

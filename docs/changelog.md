@@ -71,6 +71,7 @@
 | **v5.29.0** | **Floyd-Steinberg抖动 16-bit/float泛化：新增2个变体 API（floyd_steinberg_16/f），新增4项测试** | **1663** |
 | **v5.30.0** | **金字塔操作 16-bit/float泛化：新增4个变体 API（pyr_down_16/f + pyr_up_16/f），新增6项测试** | **1669** |
 | **v5.31.0** | **Median Cut色彩量化 16-bit/float泛化：新增2个变体 API（median_cut_16/f），新增4项测试** | **1673** |
+| **v5.32.0** | **构建金字塔 16-bit/float泛化：新增4个变体 API（build_gaussian_pyramid_16/f + build_laplacian_pyramid_16/f），新增4项测试** | **1677** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

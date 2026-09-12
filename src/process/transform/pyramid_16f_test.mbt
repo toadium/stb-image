@@ -66,3 +66,37 @@ test "pyr_up_f grayscale" {
   let out = @transform.pyr_up_f(img)
   assert_eq(out.channels, 1)
 }
+
+test "build_gaussian_pyramid_16 basic" {
+  let img = make_img16_p(8, 8, 3, 128)
+  let pyr = @transform.build_gaussian_pyramid_16(img, 3)
+  assert_eq(pyr.length(), 3)
+  assert_eq(pyr[0].width, 8)
+  assert_eq(pyr[1].width, 4)
+  assert_eq(pyr[2].width, 2)
+}
+
+test "build_gaussian_pyramid_f basic" {
+  let img = make_imgf_p(8, 8, 3, 0.5F)
+  let pyr = @transform.build_gaussian_pyramid_f(img, 3)
+  assert_eq(pyr.length(), 3)
+  assert_eq(pyr[0].width, 8)
+  assert_eq(pyr[1].width, 4)
+  assert_eq(pyr[2].width, 2)
+}
+
+test "build_laplacian_pyramid_16 basic" {
+  let img = make_img16_p(8, 8, 3, 128)
+  let pyr = @transform.build_laplacian_pyramid_16(img, 3)
+  assert_eq(pyr.length(), 3)
+  assert_eq(pyr[0].width, 8)
+  assert_eq(pyr[2].width, 2)
+}
+
+test "build_laplacian_pyramid_f basic" {
+  let img = make_imgf_p(8, 8, 3, 0.5F)
+  let pyr = @transform.build_laplacian_pyramid_float(img, 3)
+  assert_eq(pyr.length(), 3)
+  assert_eq(pyr[0].width, 8)
+  assert_eq(pyr[2].width, 2)
+}

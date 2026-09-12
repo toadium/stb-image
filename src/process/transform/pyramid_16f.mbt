@@ -278,3 +278,158 @@ pub fn pyr_up_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
     data: Bytes::from_array(out),
   }
 }
+
+// ========== laplacian_diff 16-bit ==========
+
+fn laplacian_diff_p16(a : @types.Image16, b : @types.Image16) -> @types.Image16 {
+  let ch = a.channels
+  let w = a.width
+  let h = a.height
+  let a_int : Array[Int] = Array::make(w * h * ch, 0)
+  for i in 0..<(w * h * ch) {
+    a_int[i] = read_u16_p(a.data, i * 2)
+  }
+  let bw = b.width
+  let bh = b.height
+  let b_int : Array[Int] = Array::make(bw * bh * ch, 0)
+  for i in 0..<(bw * bh * ch) {
+    b_int[i] = read_u16_p(b.data, i * 2)
+  }
+  let out : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
+  for y in 0..<h {
+    let by = y * bh / h
+    for x in 0..<w {
+      let bx = x * bw / w
+      for c in 0..<ch {
+        let va = a_int[(y * w + x) * ch + c]
+        let vb = b_int[(by * bw + bx) * ch + c]
+        let diff = va - vb + 32768
+        let clamped = if diff < 0 { 0 } else if diff > 65535 { 65535 } else { diff }
+        write_u16_p(out, ((y * w + x) * ch + c) * 2, clamped)
+      }
+    }
+  }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+// ========== laplacian_diff float ==========
+
+fn laplacian_diff_pf(a : @types.ImageF, b : @types.ImageF) -> @types.ImageF {
+  let ch = a.channels
+  let w = a.width
+  let h = a.height
+  let a_f : Array[Float] = Array::make(w * h * ch, 0.0F)
+  for i in 0..<(w * h * ch) {
+    a_f[i] = read_f32_p(a.data, i * 4)
+  }
+  let bw = b.width
+  let bh = b.height
+  let b_f : Array[Float] = Array::make(bw * bh * ch, 0.0F)
+  for i in 0..<(bw * bh * ch) {
+    b_f[i] = read_f32_p(b.data, i * 4)
+  }
+  let out : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
+  for y in 0..<h {
+    let by = y * bh / h
+    for x in 0..<w {
+      let bx = x * bw / w
+      for c in 0..<ch {
+        let va = a_f[(y * w + x) * ch + c]
+        let vb = b_f[(by * bw + bx) * ch + c]
+        let diff = va - vb + 0.5F
+        write_f32_p(out, ((y * w + x) * ch + c) * 4, diff)
+      }
+    }
+  }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
+}
+
+// ========== build_gaussian_pyramid 16-bit ==========
+
+///|
+/// 构建高斯金字塔 16-bit 版本。
+pub fn build_gaussian_pyramid_16(
+  img : @types.Image16,
+  levels : Int,
+) -> Array[@types.Image16] raise @types.LoadError {
+  let result : Array[@types.Image16] = [img]
+  let mut current = img
+  let max_levels = if levels == 0 { 100 } else { levels }
+  for _ in 1..<max_levels {
+    if current.width < 2 || current.height < 2 {
+      break
+    }
+    current = pyr_down_16(current)
+    result.push(current)
+  }
+  result
+}
+
+// ========== build_gaussian_pyramid float ==========
+
+///|
+/// 构建高斯金字塔 float 版本。
+pub fn build_gaussian_pyramid_f(
+  img : @types.ImageF,
+  levels : Int,
+) -> Array[@types.ImageF] raise @types.LoadError {
+  let result : Array[@types.ImageF] = [img]
+  let mut current = img
+  let max_levels = if levels == 0 { 100 } else { levels }
+  for _ in 1..<max_levels {
+    if current.width < 2 || current.height < 2 {
+      break
+    }
+    current = pyr_down_f(current)
+    result.push(current)
+  }
+  result
+}
+
+// ========== build_laplacian_pyramid 16-bit ==========
+
+///|
+/// 构建拉普拉斯金字塔 16-bit 版本。
+pub fn build_laplacian_pyramid_16(
+  img : @types.Image16,
+  levels : Int,
+) -> Array[@types.Image16] raise @types.LoadError {
+  let gaussian = build_gaussian_pyramid_16(img, levels)
+  let result : Array[@types.Image16] = []
+  for i in 0..<(gaussian.length() - 1) {
+    let upsampled = pyr_up_16(gaussian[i + 1])
+    let lap = laplacian_diff_p16(gaussian[i], upsampled)
+    result.push(lap)
+  }
+  result.push(gaussian[gaussian.length() - 1])
+  result
+}
+
+// ========== build_laplacian_pyramid float ==========
+
+///|
+/// 构建拉普拉斯金字塔 float 版本。
+pub fn build_laplacian_pyramid_float(
+  img : @types.ImageF,
+  levels : Int,
+) -> Array[@types.ImageF] raise @types.LoadError {
+  let gaussian = build_gaussian_pyramid_f(img, levels)
+  let result : Array[@types.ImageF] = []
+  for i in 0..<(gaussian.length() - 1) {
+    let upsampled = pyr_up_f(gaussian[i + 1])
+    let lap = laplacian_diff_pf(gaussian[i], upsampled)
+    result.push(lap)
+  }
+  result.push(gaussian[gaussian.length() - 1])
+  result
+}
