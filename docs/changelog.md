@@ -99,3 +99,4 @@
 | **v5.53.0** | **图像统计信息扩展：在 @util 包中扩展图像统计功能，新增 variance_value（方差）、entropy_value（熵，基于直方图）、median_value（中位数，基于直方图近似）、contrast_value（对比度，基于标准差）、brightness_value（亮度，基于均值），全部在根包 re-export** | **1700** |
 | **v5.54.0** | **图像混合与翻转：新增 alpha_blend（Alpha 混合，可调节混合比例）、mask_blend（掩码混合，基于单通道灰度掩码），全部在根包 re-export** | **1700** |
 | **v5.55.0** | **色彩调整扩展：新增 adjust_saturation（饱和度调整，0=灰度/1=原始/>1=增强）、adjust_hue（色相调整，基于 HSL 色彩空间，0-360度偏移），全部在根包 re-export** | **1700** |
+| **v6.0.0** | **正式发布：16-bit/float 全面泛化（252+ API）、WebP lossy VP8 编解码器（解码+编码）、图像统计信息扩展（方差/熵/中位数/对比度/亮度）、图像混合（alpha_blend/mask_blend）、色彩调整扩展（饱和度/色相）、VP8 编码器完善（I16x16 4种预测模式/环路滤波/自适应概率模型/Segment 支持）、523 个公开 API、1700 测试全绿** | **1700** |
