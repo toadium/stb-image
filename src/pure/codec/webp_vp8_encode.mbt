@@ -511,6 +511,102 @@ fn vp8_encode_block_tokens(
   }
 }
 
+// ==================== Segment Support (Encoder) ====================
+
+///|
+/// 编码器端 Segment 参数（简化版）
+struct Vp8EncSegmentParams {
+  segmentation_enabled : Bool
+  // 每个 segment 的量化器增量（4 个 segment）
+  quantizer_delta : Array[Int]
+  // 每个 segment 的滤波级别增量（4 个 segment）
+  filter_level_delta : Array[Int]
+  // 每个宏块的 segment ID
+  segment_id_map : Array[Int]
+}
+
+///|
+/// 创建 Segment 参数（基于图像复杂度自动分配 segment）
+fn vp8_enc_segment_params_new(
+  y_plane : Array[Int],
+  width : Int,
+  height : Int,
+  base_quant : Int,
+) -> Vp8EncSegmentParams {
+  let mb_w = (width + 15) / 16
+  let mb_h = (height + 15) / 16
+  let total_mbs = mb_w * mb_h
+  let segment_id_map : Array[Int] = Array::make(total_mbs, 0)
+  // 计算每个宏块的复杂度（方差）
+  let complexities : Array[Int] = Array::make(total_mbs, 0)
+  for mb_y in 0..<mb_h {
+    for mb_x in 0..<mb_w {
+      let mut sum = 0
+      let mut sum_sq = 0
+      let mut count = 0
+      for y in 0..<16 {
+        for x in 0..<16 {
+          let px = mb_x * 16 + x
+          let py = mb_y * 16 + y
+          if px < width && py < height {
+            let val = y_plane[py * width + px]
+            sum += val
+            sum_sq += val * val
+            count += 1
+          }
+        }
+      }
+      if count > 0 {
+        let mean = sum / count
+        let variance = sum_sq / count - mean * mean
+        complexities[mb_y * mb_w + mb_x] = variance
+      }
+    }
+  }
+  // 根据复杂度分配 segment（0=低复杂度, 3=高复杂度）
+  let mut max_complexity = 1
+  for c in complexities {
+    if c > max_complexity {
+      max_complexity = c
+    }
+  }
+  for i in 0..<total_mbs {
+    let ratio = complexities[i] * 4 / max_complexity
+    segment_id_map[i] = ratio.clamp(min=0, max=3)
+  }
+  // 量化器增量（高复杂度 segment 使用更小的量化增量，即更高质量）
+  let quantizer_delta = [0, -4, -8, -12]
+  // 滤波级别增量（高复杂度 segment 使用更强的滤波）
+  let filter_level_delta = [0, 2, 4, 6]
+  Vp8EncSegmentParams::{
+    segmentation_enabled: true,
+    quantizer_delta,
+    filter_level_delta,
+    segment_id_map,
+  }
+}
+
+///|
+/// 获取指定宏块的量化参数（考虑 segment）
+fn vp8_enc_get_mb_quant(
+  segment : Vp8EncSegmentParams,
+  mb_x : Int,
+  mb_y : Int,
+  mb_w : Int,
+  base_quant : Int,
+) -> Int {
+  if !segment.segmentation_enabled {
+    return base_quant
+  }
+  let idx = mb_y * mb_w + mb_x
+  if idx >= 0 && idx < segment.segment_id_map.length() {
+    let seg_id = segment.segment_id_map[idx]
+    let delta = segment.quantizer_delta[seg_id]
+    return (base_quant + delta).clamp(min=1, max=127)
+  }
+  base_quant
+}
+
 // ==================== Loop Filter (Encoder) ====================
 
 ///|
@@ -774,6 +870,8 @@ pub fn encode_webp_lossy_full(
   let enc = Vp8BoolEncoder::new()
   // 自适应概率模型
   let adaptive_probs = vp8_enc_adaptive_probs_new()
+  // Segment 参数（基于图像复杂度自动分配）
+  let segment = vp8_enc_segment_params_new(y_plane, w, h, quant.y_ac)
   // 重建的 Y 平面（用于环路滤波和后续预测）
   let recon_y : Array[Int] = Array::make(w * h, 128)
   for i in 0..<(w * h) {
@@ -824,9 +922,12 @@ pub fn encode_webp_lossy_full(
         }
       }
 
+      // 获取当前宏块的量化参数（考虑 segment）
+      let mb_quant = vp8_enc_get_mb_quant(segment, mb_x, mb_y, mb_w, quant.y_ac)
+
       // WHT 变换 DC 系数
       let dc_transformed = vp8_fwht_4x4(dc_block)
-      let dc_quantized = vp8_quantize_4x4(dc_transformed, quant.y_dc * 2)
+      let dc_quantized = vp8_quantize_4x4(dc_transformed, mb_quant * 2)
 
       // 编码 DC 系数
       vp8_encode_block_tokens(enc, dc_quantized, true)
@@ -845,8 +946,8 @@ pub fn encode_webp_lossy_full(
           let transformed = vp8_fdct_4x4(block)
           // DC 系数已经在 WHT 中处理，这里置 0
           transformed[0] = 0
-          // 量化
-          let quantized = vp8_quantize_4x4(transformed, quant.y_ac)
+          // 量化（使用 segment 调整后的量化参数）
+          let quantized = vp8_quantize_4x4(transformed, mb_quant)
           // 编码
           vp8_encode_block_tokens(enc, quantized, false)
         }

@@ -95,3 +95,4 @@
 - [stb_image_resize2.h](https://github.com/nothings/stb/blob/master/stb_image_resize2.h) — v2.07| **v5.49.0** | **VP8 编码器完善 - I16x16 4种预测模式：实现 DC/TrueMotion/H/V 四种 I16x16 帧内预测模式、基于 SAD 代价的预测模式选择（vp8_select_i16x16_mode）、预测模式编码（2 bits）、集成到主编码流程** | **1700** |
 | **v5.50.0** | **VP8 编码器环路滤波：实现编码器端环路滤波（宏块边界垂直/水平滤波）、重建 Y 平面管理（用于后续预测和环路滤波）、基于量化参数的自适应滤波强度、集成到主编码流程** | **1700** |
 | **v5.51.0** | **VP8 编码器自适应概率模型：实现编码器端自适应概率模型（Vp8EncAdaptiveProbs）、token 概率表（16位置×4token）、预测模式概率表、统计计数器、EMA 概率更新（每8块更新一次）、预测模式统计记录、集成到主编码流程** | **1700** |
+| **v5.52.0** | **VP8 编码器 Segment 支持：实现编码器端 Segment 参数（Vp8EncSegmentParams）、基于图像复杂度的自动 segment 分配（方差计算）、4个 segment 的量化器增量和滤波级别增量、宏块级自适应量化参数（vp8_enc_get_mb_quant）、集成到主编码流程** | **1700** |
