@@ -7,21 +7,20 @@
 ///|
 /// 转为灰度图（channels=1）
 /// 使用 ITU-R BT.601 亮度公式: Y = 0.299R + 0.587G + 0.114B
+/// 优化：直接从 Bytes 读取，避免额外数组分配
 pub fn to_grayscale(img : @types.Image) -> @types.Image {
   if img.channels == 1 {
     return img
   }
   let pixel_count = img.width * img.height
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(pixel_count * ch, 0)
-  for i in 0..<(pixel_count * ch) {
-    data_int[i] = img.data[i].to_int()
-  }
   let out : Array[Byte] = Array::make(pixel_count, b'\x00')
+  let data = img.data
   for i in 0..<pixel_count {
-    let r = data_int[i * ch]
-    let g = data_int[i * ch + 1]
-    let b = data_int[i * ch + 2]
+    let base = i * ch
+    let r = data[base].to_int()
+    let g = data[base + 1].to_int()
+    let b = data[base + 2].to_int()
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }

@@ -3,21 +3,20 @@
 ///|
 /// 计算灰度直方图。返回 256 个 bin 的计数数组。
 /// 彩色图像先转灰度（BT.601）再计算。
+/// 优化：直接从 Bytes 读取，避免额外数组分配
 pub fn histogram(img : @types.Image) -> Array[Int] {
   let hist : Array[Int] = Array::make(256, 0)
   let n = img.width * img.height
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(n * ch, 0)
-  for i in 0..<(n * ch) {
-    data_int[i] = img.data[i].to_int()
-  }
+  let data = img.data
   for i in 0..<n {
+    let base = i * ch
     let v = if ch == 1 {
-      data_int[i]
+      data[base].to_int()
     } else {
-      let r = data_int[i * ch]
-      let g = data_int[i * ch + 1]
-      let b = data_int[i * ch + 2]
+      let r = data[base].to_int()
+      let g = data[base + 1].to_int()
+      let b = data[base + 2].to_int()
       (r * 299 + g * 587 + b * 114) / 1000
     }
     hist[v] += 1

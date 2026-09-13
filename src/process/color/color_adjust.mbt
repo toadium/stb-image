@@ -43,6 +43,7 @@ pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image {
 ///|
 /// 对比度调整。factor=1.0 为原图，>1 增加对比度，<1 降低。
 /// 以 128 为中心缩放。仅影响颜色通道，alpha 不变。
+/// 优化：直接处理所有像素，避免内层循环
 pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image {
   let n = img.width * img.height
   let ch = img.channels
@@ -52,13 +53,30 @@ pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image {
     let adjusted = (Float::from_int(i - 128) * factor + 128.0F).to_int()
     lut[i] = clamp_byte(adjusted)
   }
-  let out : Array[Byte] = Array::make(n * ch, b'\x00')
-  for i in 0..<n {
-    for c in 0..<color_ch {
-      out[i * ch + c] = lut[img.data[i * ch + c].to_int()]
+  let total = n * ch
+  let out : Array[Byte] = Array::make(total, b'\x00')
+  let data = img.data
+  if ch == 4 {
+    // RGBA：处理 RGB，保留 A
+    for i in 0..<n {
+      let base = i * 4
+      out[base] = lut[data[base].to_int()]
+      out[base + 1] = lut[data[base + 1].to_int()]
+      out[base + 2] = lut[data[base + 2].to_int()]
+      out[base + 3] = data[base + 3]
     }
-    if ch == 4 {
-      out[i * ch + 3] = img.data[i * ch + 3]
+  } else if ch == 3 {
+    // RGB
+    for i in 0..<n {
+      let base = i * 3
+      out[base] = lut[data[base].to_int()]
+      out[base + 1] = lut[data[base + 1].to_int()]
+      out[base + 2] = lut[data[base + 2].to_int()]
+    }
+  } else {
+    // 单通道
+    for i in 0..<n {
+      out[i] = lut[data[i].to_int()]
     }
   }
   @types.Image::{
