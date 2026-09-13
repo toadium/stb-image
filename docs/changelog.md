@@ -93,3 +93,4 @@
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
 - [stb_image_write.h](https://github.com/nothings/stb/blob/master/stb_image_write.h) — 同一提交 (v1.16)
 - [stb_image_resize2.h](https://github.com/nothings/stb/blob/master/stb_image_resize2.h) — v2.07| **v5.49.0** | **VP8 编码器完善 - I16x16 4种预测模式：实现 DC/TrueMotion/H/V 四种 I16x16 帧内预测模式、基于 SAD 代价的预测模式选择（vp8_select_i16x16_mode）、预测模式编码（2 bits）、集成到主编码流程** | **1700** |
+| **v5.50.0** | **VP8 编码器环路滤波：实现编码器端环路滤波（宏块边界垂直/水平滤波）、重建 Y 平面管理（用于后续预测和环路滤波）、基于量化参数的自适应滤波强度、集成到主编码流程** | **1700** |

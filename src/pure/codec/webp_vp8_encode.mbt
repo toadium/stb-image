@@ -511,6 +511,69 @@ fn vp8_encode_block_tokens(
   }
 }
 
+// ==================== Loop Filter (Encoder) ====================
+
+///|
+/// 编码器端环路滤波（简化版，对重建的 Y 平面进行宏块边界滤波）
+fn vp8_encoder_loop_filter(
+  y_plane : Array[Int],
+  width : Int,
+  height : Int,
+  filter_level : Int,
+) -> Unit {
+  if filter_level == 0 {
+    return
+  }
+  let mb_w = (width + 15) / 16
+  let mb_h = (height + 15) / 16
+  // 宏块边界垂直滤波
+  for mb_y in 0..<mb_h {
+    for mb_x in 1..<mb_w {
+      for y in 0..<16 {
+        let py = mb_y * 16 + y
+        if py >= height {
+          break
+        }
+        let px = mb_x * 16
+        if px > 0 && px < width {
+          let idx = py * width + px
+          let p1 = y_plane[idx - 1]
+          let p0 = y_plane[idx]
+          let diff = p0 - p1
+          if diff.abs() < filter_level {
+            let adj = diff / 2
+            y_plane[idx - 1] = p1 + adj
+            y_plane[idx] = p0 - adj
+          }
+        }
+      }
+    }
+  }
+  // 宏块边界水平滤波
+  for mb_y in 1..<mb_h {
+    for mb_x in 0..<mb_w {
+      for x in 0..<16 {
+        let px = mb_x * 16 + x
+        if px >= width {
+          break
+        }
+        let py = mb_y * 16
+        if py > 0 && py < height {
+          let idx = py * width + px
+          let p1 = y_plane[idx - width]
+          let p0 = y_plane[idx]
+          let diff = p0 - p1
+          if diff.abs() < filter_level {
+            let adj = diff / 2
+            y_plane[idx - width] = p1 + adj
+            y_plane[idx] = p0 - adj
+          }
+        }
+      }
+    }
+  }
+}
+
 // ==================== VP8 Frame Header ====================
 
 ///|
@@ -626,11 +689,16 @@ pub fn encode_webp_lossy_full(
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
   let enc = Vp8BoolEncoder::new()
+  // 重建的 Y 平面（用于环路滤波和后续预测）
+  let recon_y : Array[Int] = Array::make(w * h, 128)
+  for i in 0..<(w * h) {
+    recon_y[i] = y_plane[i]
+  }
 
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
       // 选择最佳 I16x16 预测模式（基于 SAD 代价）
-      let pred_mode = vp8_select_i16x16_mode(y_plane, mb_x, mb_y, w, h)
+      let pred_mode = vp8_select_i16x16_mode(recon_y, mb_x, mb_y, w, h)
       // 编码预测模式（简化：固定概率）
       let mode_idx = match pred_mode {
         Vp8I16x16PredMode::I16x16DcPred => 0
@@ -641,7 +709,7 @@ pub fn encode_webp_lossy_full(
       enc.encode_uint(mode_idx, 2)
 
       // 获取预测像素
-      let pred = vp8_get_i16x16_prediction(pred_mode, y_plane, mb_x, mb_y, w, h)
+      let pred = vp8_get_i16x16_prediction(pred_mode, recon_y, mb_x, mb_y, w, h)
 
       // 计算残差
       let residual : Array[Int] = Array::make(256, 0)
@@ -698,6 +766,10 @@ pub fn encode_webp_lossy_full(
       }
     }
   }
+
+  // 3.5 环路滤波（对重建的 Y 平面进行宏块边界滤波）
+  let filter_level = (quant.y_ac / 4).clamp(min=0, max=63)
+  vp8_encoder_loop_filter(recon_y, w, h, filter_level)
 
   // 4. 完成编码
   let token_data = enc.finish()
