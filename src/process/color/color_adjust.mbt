@@ -262,3 +262,63 @@ pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) {
     ((b1 + m) * 255.0F + 0.5F).to_int(),
   )
 }
+
+///|
+/// 饱和度调整。factor: 0.0 = 灰度, 1.0 = 原始, >1.0 = 增强饱和度
+pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image {
+  let n = img.width * img.height
+  let ch = img.channels
+  if ch < 3 {
+    return img
+  }
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  let f = factor.clamp(min=0.0F, max=10.0F)
+  for i in 0..<n {
+    let r = img.data[i * ch].to_int().to_float() / 255.0F
+    let g = img.data[i * ch + 1].to_int().to_float() / 255.0F
+    let b = img.data[i * ch + 2].to_int().to_float() / 255.0F
+    let gray = 0.299F * r + 0.587F * g + 0.114F * b
+    let nr = (gray + (r - gray) * f).clamp(min=0.0F, max=1.0F)
+    let ng = (gray + (g - gray) * f).clamp(min=0.0F, max=1.0F)
+    let nb = (gray + (b - gray) * f).clamp(min=0.0F, max=1.0F)
+    out[i * ch] = (nr * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    out[i * ch + 1] = (ng * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    out[i * ch + 2] = (nb * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    if ch == 4 {
+      out[i * ch + 3] = img.data[i * ch + 3]
+    }
+  }
+  @types.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+}
+
+///|
+/// 色相调整。delta: 色相偏移量（度，0-360）
+pub fn adjust_hue(img : @types.Image, delta : Float) -> @types.Image {
+  let n = img.width * img.height
+  let ch = img.channels
+  if ch < 3 {
+    return img
+  }
+  let out : Array[Byte] = Array::make(n * ch, b'\x00')
+  for i in 0..<n {
+    let r = img.data[i * ch].to_int()
+    let g = img.data[i * ch + 1].to_int()
+    let b = img.data[i * ch + 2].to_int()
+    let (h, s, l) = rgb_to_hsl(r, g, b)
+    let mut nh = h + delta
+    while nh >= 360.0F {
+      nh = nh - 360.0F
+    }
+    while nh < 0.0F {
+      nh = nh + 360.0F
+    }
+    let (nr, ng, nb) = hsl_to_rgb(nh, s, l)
+    out[i * ch] = nr.clamp(min=0, max=255).to_byte()
+    out[i * ch + 1] = ng.clamp(min=0, max=255).to_byte()
+    out[i * ch + 2] = nb.clamp(min=0, max=255).to_byte()
+    if ch == 4 {
+      out[i * ch + 3] = img.data[i * ch + 3]
+    }
+  }
+  @types.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+}

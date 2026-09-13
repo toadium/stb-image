@@ -276,6 +276,12 @@ pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 = @color.
 pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrast_f
 
 ///|
+pub let adjust_saturation : (@types.Image, Float) -> @types.Image = @color.adjust_saturation
+
+///|
+pub let adjust_hue : (@types.Image, Float) -> @types.Image = @color.adjust_hue
+
+///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
 pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_gamma_16
 pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_gamma_f
