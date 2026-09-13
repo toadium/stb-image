@@ -2401,3 +2401,122 @@ pub fn inpaint_fast_f(
 ) -> @types.ImageF raise @types.LoadError {
   @filter.inpaint_fast_f(arg0, arg1, radius~)
 }
+
+// ==================== OCR 预处理模块 ====================
+
+///|
+pub type TextRegion = @ocr.TextRegion
+
+///|
+pub type TextRegionType = @ocr.TextRegionType
+
+///|
+pub type TextLine = @ocr.TextLine
+
+///|
+pub fn ocr_preprocess(
+  img : @types.Image,
+  binarization_method? : String = "sauvola",
+) -> @types.Image raise @types.LoadError {
+  @ocr.ocr_preprocess(img, binarization_method~)
+}
+
+///|
+pub fn document_enhance(img : @types.Image) -> @types.Image {
+  @ocr.document_enhance(img)
+}
+
+///|
+pub fn shadow_removal(
+  img : @types.Image,
+  kernel_size? : Int = 51,
+) -> @types.Image raise @types.LoadError {
+  @ocr.shadow_removal(img, kernel_size~)
+}
+
+///|
+pub fn background_normalization(
+  img : @types.Image,
+  kernel_size? : Int = 31,
+) -> @types.Image raise @types.LoadError {
+  @ocr.background_normalization(img, kernel_size~)
+}
+
+///|
+pub fn deskew(img : @types.Image) -> @types.Image raise @types.LoadError {
+  @ocr.deskew(img)
+}
+
+///|
+pub fn detect_skew_angle(img : @types.Image) -> Double raise @types.LoadError {
+  @ocr.detect_skew_angle(img)
+}
+
+///|
+pub fn rotate_document(
+  img : @types.Image,
+  angle : Double,
+) -> @types.Image {
+  @ocr.rotate_document(img, angle)
+}
+
+///|
+pub fn sauvola_threshold(
+  img : @types.Image,
+  window_size? : Int = 15,
+  k? : Double = 0.5,
+  r? : Double = 128.0,
+) -> @types.Image raise @types.LoadError {
+  @ocr.sauvola_threshold(img, window_size~, k~, r~)
+}
+
+///|
+pub fn niblack_threshold(
+  img : @types.Image,
+  window_size? : Int = 15,
+  k? : Double = -0.2,
+) -> @types.Image raise @types.LoadError {
+  @ocr.niblack_threshold(img, window_size~, k~)
+}
+
+///|
+pub fn adaptive_threshold_ocr(
+  img : @types.Image,
+  block_size? : Int = 15,
+  c? : Int = 10,
+) -> @types.Image raise @types.LoadError {
+  @ocr.adaptive_threshold_ocr(img, block_size~, c~)
+}
+
+///|
+pub fn otsu_threshold(img : @types.Image) -> @types.Image raise @types.LoadError {
+  @ocr.otsu_threshold(img)
+}
+
+///|
+pub fn detect_text_regions(
+  img : @types.Image,
+) -> Array[@ocr.TextRegion] raise @types.LoadError {
+  @ocr.detect_text_regions(img)
+}
+
+///|
+pub fn segment_page(
+  img : @types.Image,
+) -> Array[@ocr.TextRegion] raise @types.LoadError {
+  @ocr.segment_page(img)
+}
+
+///|
+pub fn detect_columns(
+  img : @types.Image,
+) -> (Int, Array[(Int, Int)]) raise @types.LoadError {
+  @ocr.detect_columns(img)
+}
+
+///|
+pub fn extract_text_lines(
+  img : @types.Image,
+) -> Array[@types.Image] raise @types.LoadError {
+  @ocr.extract_text_lines(img)
+}

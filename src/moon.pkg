@@ -11,6 +11,7 @@ import {
   "walkzzz/image/src/process/transform",
   "walkzzz/image/src/process/feature",
   "walkzzz/image/src/process/segment",
+  "walkzzz/image/src/process/ocr",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
