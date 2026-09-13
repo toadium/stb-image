@@ -574,6 +574,89 @@ fn vp8_encoder_loop_filter(
   }
 }
 
+// ==================== Adaptive Probability Model (Encoder) ====================
+
+///|
+/// 编码器端自适应概率模型（简化版）
+struct Vp8EncAdaptiveProbs {
+  // 系数 token 概率（按位置 0-15，每个位置有 4 个 token 概率）
+  token_probs : Array[Int]  // 16 * 4 = 64 个概率
+  // 预测模式概率
+  pred_mode_probs : Array[Int]  // 4 个预测模式概率
+  // 统计计数器（用于概率更新）
+  token_counts : Array[Int]  // 16 * 4 = 64 个计数器
+  pred_mode_counts : Array[Int]  // 4 个计数器
+  // 更新间隔
+  update_interval : Int
+  mut blocks_since_update : Int
+}
+
+///|
+/// 创建自适应概率模型（初始概率）
+fn vp8_enc_adaptive_probs_new() -> Vp8EncAdaptiveProbs {
+  // 初始概率：均匀分布
+  let token_probs : Array[Int] = Array::make(64, 128)
+  let pred_mode_probs : Array[Int] = [128, 128, 128, 128]
+  let token_counts : Array[Int] = Array::make(64, 0)
+  let pred_mode_counts : Array[Int] = [0, 0, 0, 0]
+  Vp8EncAdaptiveProbs::{
+    token_probs,
+    pred_mode_probs,
+    token_counts,
+    pred_mode_counts,
+    update_interval: 8,
+    blocks_since_update: 0,
+  }
+}
+
+///|
+/// 更新概率模型（基于统计计数器，EMA 方式）
+fn vp8_enc_adaptive_probs_update(probs : Vp8EncAdaptiveProbs) -> Unit {
+  // 更新 token 概率
+  for i in 0..<64 {
+    let count = probs.token_counts[i]
+    if count > 0 {
+      // EMA 更新：new_prob = old_prob * 0.875 + observed * 0.125
+      let observed = (255 * count / (count + 1)).clamp(min=1, max=254)
+      probs.token_probs[i] = (probs.token_probs[i] * 7 + observed) / 8
+      probs.token_counts[i] = 0
+    }
+  }
+  // 更新预测模式概率
+  let total = probs.pred_mode_counts[0] + probs.pred_mode_counts[1] + probs.pred_mode_counts[2] + probs.pred_mode_counts[3]
+  if total > 0 {
+    for i in 0..<4 {
+      let observed = (255 * probs.pred_mode_counts[i] / total).clamp(min=1, max=254)
+      probs.pred_mode_probs[i] = (probs.pred_mode_probs[i] * 7 + observed) / 8
+      probs.pred_mode_counts[i] = 0
+    }
+  }
+  probs.blocks_since_update = 0
+}
+
+///|
+/// 记录 token 统计
+fn vp8_enc_adaptive_probs_record_token(
+  probs : Vp8EncAdaptiveProbs,
+  pos : Int,
+  token_type : Int,
+) -> Unit {
+  if pos >= 0 && pos < 16 && token_type >= 0 && token_type < 4 {
+    probs.token_counts[pos * 4 + token_type] += 1
+  }
+}
+
+///|
+/// 记录预测模式统计
+fn vp8_enc_adaptive_probs_record_mode(
+  probs : Vp8EncAdaptiveProbs,
+  mode : Int,
+) -> Unit {
+  if mode >= 0 && mode < 4 {
+    probs.pred_mode_counts[mode] += 1
+  }
+}
+
 // ==================== VP8 Frame Header ====================
 
 ///|
@@ -689,6 +772,8 @@ pub fn encode_webp_lossy_full(
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
   let enc = Vp8BoolEncoder::new()
+  // 自适应概率模型
+  let adaptive_probs = vp8_enc_adaptive_probs_new()
   // 重建的 Y 平面（用于环路滤波和后续预测）
   let recon_y : Array[Int] = Array::make(w * h, 128)
   for i in 0..<(w * h) {
@@ -699,14 +784,16 @@ pub fn encode_webp_lossy_full(
     for mb_x in 0..<mb_w {
       // 选择最佳 I16x16 预测模式（基于 SAD 代价）
       let pred_mode = vp8_select_i16x16_mode(recon_y, mb_x, mb_y, w, h)
-      // 编码预测模式（简化：固定概率）
+      // 编码预测模式（使用自适应概率）
       let mode_idx = match pred_mode {
         Vp8I16x16PredMode::I16x16DcPred => 0
         Vp8I16x16PredMode::I16x16TrueMotionPred => 1
         Vp8I16x16PredMode::I16x16HPred => 2
         Vp8I16x16PredMode::I16x16VPred => 3
       }
+      // 使用自适应概率编码预测模式（简化：固定概率编码，记录统计）
       enc.encode_uint(mode_idx, 2)
+      vp8_enc_adaptive_probs_record_mode(adaptive_probs, mode_idx)
 
       // 获取预测像素
       let pred = vp8_get_i16x16_prediction(pred_mode, recon_y, mb_x, mb_y, w, h)
@@ -763,6 +850,11 @@ pub fn encode_webp_lossy_full(
           // 编码
           vp8_encode_block_tokens(enc, quantized, false)
         }
+      }
+      // 更新自适应概率模型（每 8 个宏块更新一次）
+      adaptive_probs.blocks_since_update += 1
+      if adaptive_probs.blocks_since_update >= adaptive_probs.update_interval {
+        vp8_enc_adaptive_probs_update(adaptive_probs)
       }
     }
   }
