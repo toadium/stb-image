@@ -2282,6 +2282,21 @@ pub let mean_value_16 : (@types.Image16) -> Float = @util.mean_value_16
 pub let mean_value_f : (@types.ImageF) -> Float = @util.mean_value_f
 
 ///|
+pub let variance_value : (@types.Image) -> Float = @util.variance_value
+
+///|
+pub let entropy_value : (@types.Image) -> Float = @util.entropy_value
+
+///|
+pub let median_value : (@types.Image) -> Int = @util.median_value
+
+///|
+pub let contrast_value : (@types.Image) -> Float = @util.contrast_value
+
+///|
+pub let brightness_value : (@types.Image) -> Float = @util.brightness_value
+
+///|
 pub let pad : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.pad
 
 ///|
