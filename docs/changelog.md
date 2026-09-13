@@ -97,3 +97,4 @@
 | **v5.51.0** | **VP8 编码器自适应概率模型：实现编码器端自适应概率模型（Vp8EncAdaptiveProbs）、token 概率表（16位置×4token）、预测模式概率表、统计计数器、EMA 概率更新（每8块更新一次）、预测模式统计记录、集成到主编码流程** | **1700** |
 | **v5.52.0** | **VP8 编码器 Segment 支持：实现编码器端 Segment 参数（Vp8EncSegmentParams）、基于图像复杂度的自动 segment 分配（方差计算）、4个 segment 的量化器增量和滤波级别增量、宏块级自适应量化参数（vp8_enc_get_mb_quant）、集成到主编码流程** | **1700** |
 | **v5.53.0** | **图像统计信息扩展：在 @util 包中扩展图像统计功能，新增 variance_value（方差）、entropy_value（熵，基于直方图）、median_value（中位数，基于直方图近似）、contrast_value（对比度，基于标准差）、brightness_value（亮度，基于均值），全部在根包 re-export** | **1700** |
+| **v5.54.0** | **图像混合与翻转：新增 alpha_blend（Alpha 混合，可调节混合比例）、mask_blend（掩码混合，基于单通道灰度掩码），全部在根包 re-export** | **1700** |

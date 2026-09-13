@@ -2297,6 +2297,12 @@ pub let contrast_value : (@types.Image) -> Float = @util.contrast_value
 pub let brightness_value : (@types.Image) -> Float = @util.brightness_value
 
 ///|
+pub let alpha_blend : (@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError = @util.alpha_blend
+
+///|
+pub let mask_blend : (@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError = @util.mask_blend
+
+///|
 pub let pad : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.pad
 
 ///|
