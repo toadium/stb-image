@@ -274,6 +274,172 @@ fn vp8_predict_i16x16_dc(
   pred
 }
 
+///|
+/// I16x16 TrueMotion 预测（编码器端）
+fn vp8_predict_i16x16_tm(
+  y_plane : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  width : Int,
+  height : Int,
+) -> Array[Int] {
+  let pred = Array::make(256, 128)
+  // 获取上方像素、左方像素、左上方像素
+  let above : Array[Int] = Array::make(16, 128)
+  let left : Array[Int] = Array::make(16, 128)
+  let mut above_left = 128
+  if mb_y > 0 {
+    for x in 0..<16 {
+      let px = mb_x * 16 + x
+      if px < width {
+        above[x] = y_plane[(mb_y * 16 - 1) * width + px]
+      }
+    }
+    if mb_x > 0 {
+      above_left = y_plane[(mb_y * 16 - 1) * width + mb_x * 16 - 1]
+    }
+  }
+  if mb_x > 0 {
+    for y in 0..<16 {
+      let py = mb_y * 16 + y
+      if py < height {
+        left[y] = y_plane[py * width + mb_x * 16 - 1]
+      }
+    }
+  }
+  // TrueMotion: P[y][x] = above[x] + left[y] - above_left
+  for y in 0..<16 {
+    for x in 0..<16 {
+      let mut val = above[x] + left[y] - above_left
+      if val < 0 { val = 0 }
+      if val > 255 { val = 255 }
+      pred[y * 16 + x] = val
+    }
+  }
+  pred
+}
+
+///|
+/// I16x16 水平预测（编码器端）
+fn vp8_predict_i16x16_h(
+  y_plane : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  width : Int,
+  height : Int,
+) -> Array[Int] {
+  let pred = Array::make(256, 128)
+  if mb_x > 0 {
+    for y in 0..<16 {
+      let py = mb_y * 16 + y
+      if py < height {
+        let left_val = y_plane[py * width + mb_x * 16 - 1]
+        for x in 0..<16 {
+          pred[y * 16 + x] = left_val
+        }
+      }
+    }
+  }
+  pred
+}
+
+///|
+/// I16x16 垂直预测（编码器端）
+fn vp8_predict_i16x16_v(
+  y_plane : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  width : Int,
+  height : Int,
+) -> Array[Int] {
+  let pred = Array::make(256, 128)
+  if mb_y > 0 {
+    for x in 0..<16 {
+      let px = mb_x * 16 + x
+      if px < width {
+        let above_val = y_plane[(mb_y * 16 - 1) * width + px]
+        for y in 0..<16 {
+          pred[y * 16 + x] = above_val
+        }
+      }
+    }
+  }
+  pred
+}
+
+///|
+/// I16x16 预测模式枚举
+enum Vp8I16x16PredMode {
+  I16x16DcPred
+  I16x16TrueMotionPred
+  I16x16HPred
+  I16x16VPred
+}
+
+///|
+/// 选择最佳 I16x16 预测模式（基于 SAD 代价）
+fn vp8_select_i16x16_mode(
+  y_plane : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  width : Int,
+  height : Int,
+) -> Vp8I16x16PredMode {
+  // 计算每种预测模式的 SAD（Sum of Absolute Differences）
+  let modes = [
+    Vp8I16x16PredMode::I16x16DcPred,
+    Vp8I16x16PredMode::I16x16TrueMotionPred,
+    Vp8I16x16PredMode::I16x16HPred,
+    Vp8I16x16PredMode::I16x16VPred,
+  ]
+  let mut best_mode = Vp8I16x16PredMode::I16x16DcPred
+  let mut best_sad = 1000000
+  for mode in modes {
+    let pred = match mode {
+      Vp8I16x16PredMode::I16x16DcPred => vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16TrueMotionPred => vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16HPred => vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16VPred => vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
+    }
+    // 计算 SAD
+    let mut sad = 0
+    for y in 0..<16 {
+      for x in 0..<16 {
+        let px = mb_x * 16 + x
+        let py = mb_y * 16 + y
+        if px < width && py < height {
+          let orig = y_plane[py * width + px]
+          let p = pred[y * 16 + x]
+          sad += (orig - p).abs()
+        }
+      }
+    }
+    if sad < best_sad {
+      best_sad = sad
+      best_mode = mode
+    }
+  }
+  best_mode
+}
+
+///|
+/// 根据预测模式获取预测像素
+fn vp8_get_i16x16_prediction(
+  mode : Vp8I16x16PredMode,
+  y_plane : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  width : Int,
+  height : Int,
+) -> Array[Int] {
+  match mode {
+    Vp8I16x16PredMode::I16x16DcPred => vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16TrueMotionPred => vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16HPred => vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16VPred => vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
+  }
+}
+
 // ==================== Token Encoding ====================
 
 ///|
@@ -463,8 +629,19 @@ pub fn encode_webp_lossy_full(
 
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
-      // I16x16 DC 预测
-      let pred = vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, w, h)
+      // 选择最佳 I16x16 预测模式（基于 SAD 代价）
+      let pred_mode = vp8_select_i16x16_mode(y_plane, mb_x, mb_y, w, h)
+      // 编码预测模式（简化：固定概率）
+      let mode_idx = match pred_mode {
+        Vp8I16x16PredMode::I16x16DcPred => 0
+        Vp8I16x16PredMode::I16x16TrueMotionPred => 1
+        Vp8I16x16PredMode::I16x16HPred => 2
+        Vp8I16x16PredMode::I16x16VPred => 3
+      }
+      enc.encode_uint(mode_idx, 2)
+
+      // 获取预测像素
+      let pred = vp8_get_i16x16_prediction(pred_mode, y_plane, mb_x, mb_y, w, h)
 
       // 计算残差
       let residual : Array[Int] = Array::make(256, 0)
