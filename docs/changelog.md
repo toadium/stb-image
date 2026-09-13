@@ -86,6 +86,7 @@
 | **v5.44.0** | **VP8 环路去块滤波完善：实现完整的环路滤波算法，包括宏块边界滤波（4抽头滤波）、子宏块内部边界滤波（4x4块边界）、色度平面滤波（U/V 8x8块）、自适应滤波强度（基于segment和模式的增量）、滤波阈值判断、内部滤波级别** | **1700** |
 | **v5.45.0** | **VP8 非关键帧支持基础框架：实现运动向量结构（Vp8MotionVector）、宏块类型枚举（Intra/Inter/Skip）、参考帧管理（Vp8ReferenceFrames：last/golden/altref）、运动补偿函数（整数像素精度，16x16 Y + 8x8 UV）、运动向量预测（相邻宏块中值）、运动向量解析框架** | **1700** |
 | **v5.46.0** | **VP8 非关键帧完整集成：实现亚像素运动补偿（1/4像素精度，6抽头半像素插值+双线性四分之一像素插值）、运动向量残差解析（Exp-Golomb编码）、参考帧选择（last/golden/altref）、完整非关键帧解码函数（decode_vp8_inter_frame，支持帧内/帧间宏块混合、运动补偿+残差、参考帧更新）、Vp8ReferenceFrames改为公开类型** | **1700** |
+| **v5.47.0** | **VP8 Segment 解析：实现完整的 segmentation 特性解析（segmentation_enabled/update_map/update_features/feature_mode）、每个segment的量化器增量和滤波级别增量、宏块segment ID树解析（3个概率的二叉树）、基于segment的自适应量化参数计算、基于segment的自适应滤波级别计算、集成到主解码流程（segment_id_map保存每个宏块的segment ID）** | **1700** |
 ## 上游
 
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)

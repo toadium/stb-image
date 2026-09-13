@@ -505,6 +505,173 @@ fn parse_quantization(br : Vp8BitReader) -> Vp8QuantParams {
   Vp8QuantParams::{ y_ac, y_dc, uv_ac, uv_dc }
 }
 
+// ==================== VP8 Segment ====================
+// VP8 segmentation：将宏块分成 4 个 segment，每个 segment 可有不同的量化和滤波参数
+
+///|
+/// VP8 Segment 参数
+priv struct Vp8SegmentParams {
+  mut enabled : Bool                    // 是否启用 segmentation
+  mut update_map : Bool                 // 是否更新宏块 segment 映射
+  mut update_features : Bool            // 是否更新 segment 特征数据
+  mut feature_mode : Int                // 特征模式：0=delta，1=absolute
+  quantizer_deltas : Array[Int]        // 每个 segment 的量化器增量（4个）
+  filter_deltas : Array[Int]           // 每个 segment 的滤波级别增量（4个）
+  mb_segment_tree_probs : Array[Int]   // 宏块 segment 树概率（3个）
+}
+
+///|
+fn Vp8SegmentParams::new() -> Vp8SegmentParams {
+  Vp8SegmentParams::{
+    enabled: false,
+    update_map: false,
+    update_features: false,
+    feature_mode: 0,
+    quantizer_deltas: [0, 0, 0, 0],
+    filter_deltas: [0, 0, 0, 0],
+    mb_segment_tree_probs: [255, 255, 255],
+  }
+}
+
+///|
+/// 解析 VP8 segment 参数
+fn parse_segmentation(br : Vp8BitReader) -> Vp8SegmentParams {
+  let params = Vp8SegmentParams::new()
+
+  // segmentation_enabled
+  params.enabled = br.read_bool(255) == 1
+  if !params.enabled {
+    return params
+  }
+
+  // update_mb_segmentation_map
+  params.update_map = br.read_bool(255) == 1
+
+  // update_segment_feature_data
+  params.update_features = br.read_bool(255) == 1
+
+  if params.update_features {
+    // segment_feature_mode：0=delta，1=absolute
+    params.feature_mode = br.read_bool(255)
+
+    // 解析每个 segment 的量化器增量
+    for i in 0..<4 {
+      if br.read_bool(255) == 1 {
+        let mut delta = br.read_bits(7)
+        if delta > 63 {
+          delta -= 128
+        }
+        params.quantizer_deltas[i] = delta
+      }
+    }
+
+    // 解析每个 segment 的滤波级别增量
+    for i in 0..<4 {
+      if br.read_bool(255) == 1 {
+        let mut delta = br.read_bits(6)
+        if delta > 31 {
+          delta -= 64
+        }
+        params.filter_deltas[i] = delta
+      }
+    }
+  }
+
+  if params.update_map {
+    // 解析宏块 segment 树概率（3个）
+    for i in 0..<3 {
+      if br.read_bool(255) == 1 {
+        params.mb_segment_tree_probs[i] = br.read_bits(8)
+      } else {
+        params.mb_segment_tree_probs[i] = 255
+      }
+    }
+  }
+
+  params
+}
+
+///|
+/// 解析宏块的 segment ID（使用树概率）
+fn vp8_parse_mb_segment_id(
+  bd : Vp8BoolDecoder,
+  probs : Array[Int],
+) -> Int {
+  // VP8 segment ID 使用二叉树解析
+  // 树结构：
+  //       0
+  //      / \
+  //     0   1
+  //    / \ / \
+  //   0  1 2  3
+  if bd.read_bool(probs[0]) == 0 {
+    // 左子树：0 或 1
+    if bd.read_bool(probs[1]) == 0 {
+      0
+    } else {
+      1
+    }
+  } else {
+    // 右子树：2 或 3
+    if bd.read_bool(probs[2]) == 0 {
+      2
+    } else {
+      3
+    }
+  }
+}
+
+///|
+/// 根据 segment ID 计算实际量化参数
+fn vp8_get_quant_for_segment(
+  base_quant : Vp8QuantParams,
+  segment : Vp8SegmentParams,
+  segment_id : Int,
+) -> Vp8QuantParams {
+  if !segment.enabled || segment_id < 0 || segment_id >= 4 {
+    return base_quant
+  }
+  let delta = segment.quantizer_deltas[segment_id]
+  if segment.feature_mode == 0 {
+    // delta 模式
+    Vp8QuantParams::{
+      y_ac: base_quant.y_ac + delta,
+      y_dc: base_quant.y_dc + delta,
+      uv_ac: base_quant.uv_ac + delta,
+      uv_dc: base_quant.uv_dc + delta,
+    }
+  } else {
+    // absolute 模式
+    Vp8QuantParams::{
+      y_ac: delta,
+      y_dc: delta,
+      uv_ac: delta,
+      uv_dc: delta,
+    }
+  }
+}
+
+///|
+/// 根据 segment ID 计算实际滤波级别
+fn vp8_get_filter_level_for_segment(
+  base_level : Int,
+  segment : Vp8SegmentParams,
+  segment_id : Int,
+) -> Int {
+  if !segment.enabled || segment_id < 0 || segment_id >= 4 {
+    return base_level
+  }
+  let delta = segment.filter_deltas[segment_id]
+  let mut level = if segment.feature_mode == 0 {
+    base_level + delta
+  } else {
+    delta
+  }
+  if level < 0 { level = 0 }
+  if level > 63 { level = 63 }
+  level
+}
+
 // ==================== VP8 IDCT ====================
 // VP8 使用 4x4 DCT 变换和 16x16 Walsh-Hadamard 变换
 
@@ -1771,6 +1938,9 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   // 解析量化参数
   let quant = parse_quantization(br)
 
+  // 解析 segment 参数
+  let segment = parse_segmentation(br)
+
   // 简化实现：创建一个纯色图像（灰色）
   // 完整的 VP8 解码需要解析残差系数、进行 IDCT、帧内预测等
   // 这里先实现基础框架，后续迭代完善
@@ -1790,8 +1960,21 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   // 对每个 16x16 宏块：解析预测模式 + 残差解析
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
+  // 保存每个宏块的 segment ID（用于环路滤波）
+  let segment_id_map : Array[Int] = Array::make(mb_w * mb_h, 0)
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
+      // 解析宏块的 segment ID
+      let segment_id = if segment.enabled && segment.update_map {
+        vp8_parse_mb_segment_id(bd, segment.mb_segment_tree_probs)
+      } else {
+        0
+      }
+      segment_id_map[mb_y * mb_w + mb_x] = segment_id
+
+      // 根据 segment ID 计算实际量化参数
+      let mb_quant = vp8_get_quant_for_segment(quant, segment, segment_id)
+
       // 生成参考像素
       let above : Array[Int] = Array::make(16, 128)
       let left : Array[Int] = Array::make(16, 128)
@@ -1841,11 +2024,13 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
     }
   }
 
-  // 简化的环路滤波
-  let filter_level = quant.y_ac / 4
+  // 环路滤波（基于 segment 的自适应滤波强度）
+  let base_filter_level = quant.y_ac / 4
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
-      vp8_loop_filter_mb(y_plane, u_plane, v_plane, mb_x, mb_y, w, h, filter_level)
+      let segment_id = segment_id_map[mb_y * mb_w + mb_x]
+      let mb_filter_level = vp8_get_filter_level_for_segment(base_filter_level, segment, segment_id)
+      vp8_loop_filter_mb(y_plane, u_plane, v_plane, mb_x, mb_y, w, h, mb_filter_level)
     }
   }
 
