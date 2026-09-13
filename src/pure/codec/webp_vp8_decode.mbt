@@ -1334,7 +1334,7 @@ enum Vp8MbType {
 ///|
 /// 参考帧管理
 /// VP8 使用 3 个参考帧：last（前向）、golden（黄金帧）、altref（备用参考帧）
-priv struct Vp8ReferenceFrames {
+pub struct Vp8ReferenceFrames {
   last_y : Array[Int]     // 前向参考帧 Y 平面
   last_u : Array[Int]     // 前向参考帧 U 平面
   last_v : Array[Int]     // 前向参考帧 V 平面
@@ -1436,6 +1436,269 @@ fn vp8_motion_compensate_16x16(
   }
 
   (pred_y, pred_u, pred_v)
+}
+
+///|
+/// VP8 6 抽头插值滤波器（用于半像素插值）
+/// 系数：[1, -5, 20, 20, -5, 1]，右移 6 位
+fn vp8_interpolate_6tap(
+  p0 : Int, p1 : Int, p2 : Int, p3 : Int, p4 : Int, p5 : Int,
+) -> Int {
+  let sum = p0 - 5 * p1 + 20 * p2 + 20 * p3 - 5 * p4 + p5
+  let result = (sum + 32) >> 6
+  if result < 0 { 0 } else if result > 255 { 255 } else { result }
+}
+
+///|
+/// 获取参考像素（带边界钳制）
+fn vp8_get_ref_pixel(
+  ref_plane : Array[Int],
+  x : Int,
+  y : Int,
+  width : Int,
+  height : Int,
+) -> Int {
+  let cx = if x < 0 { 0 } else if x >= width { width - 1 } else { x }
+  let cy = if y < 0 { 0 } else if y >= height { height - 1 } else { y }
+  ref_plane[cy * width + cx]
+}
+
+///|
+/// 亚像素插值（1/4 像素精度）
+/// mv_x_q4, mv_y_q4：1/4 像素单位的运动向量（即实际像素 * 4）
+fn vp8_interpolate_subpixel(
+  ref_plane : Array[Int],
+  base_x : Int,
+  base_y : Int,
+  mv_x_q4 : Int,
+  mv_y_q4 : Int,
+  width : Int,
+  height : Int,
+) -> Int {
+  // 整数部分和小数部分
+  let int_x = mv_x_q4 >> 2
+  let frac_x = mv_x_q4 & 3
+  let int_y = mv_y_q4 >> 2
+  let frac_y = mv_y_q4 & 3
+
+  let px = base_x + int_x
+  let py = base_y + int_y
+
+  // 如果是整数像素，直接返回
+  if frac_x == 0 && frac_y == 0 {
+    return vp8_get_ref_pixel(ref_plane, px, py, width, height)
+  }
+
+  // 半像素插值（使用 6 抽头滤波器）
+  // 先进行水平插值得到半像素
+  let h_samples : Array[Int] = Array::make(6, 0)
+  for i in 0..<6 {
+    h_samples[i] = vp8_get_ref_pixel(ref_plane, px - 2 + i, py, width, height)
+  }
+  let half_x = if frac_x >= 2 {
+    vp8_interpolate_6tap(h_samples[0], h_samples[1], h_samples[2], h_samples[3], h_samples[4], h_samples[5])
+  } else {
+    h_samples[2]
+  }
+
+  // 进行垂直插值得到半像素
+  let v_samples : Array[Int] = Array::make(6, 0)
+  for i in 0..<6 {
+    v_samples[i] = vp8_get_ref_pixel(ref_plane, px, py - 2 + i, width, height)
+  }
+  let half_y = if frac_y >= 2 {
+    vp8_interpolate_6tap(v_samples[0], v_samples[1], v_samples[2], v_samples[3], v_samples[4], v_samples[5])
+  } else {
+    v_samples[2]
+  }
+
+  // 双线性插值（四分之一像素）
+  if frac_x == 0 {
+    // 只有垂直偏移
+    let t = frac_y
+    return (half_x * (4 - t) + half_y * t + 2) >> 2
+  }
+  if frac_y == 0 {
+    // 只有水平偏移
+    let t = frac_x
+    return (half_y * (4 - t) + half_x * t + 2) >> 2
+  }
+  // 双向偏移：使用四个角的双线性插值
+  let h00 = vp8_get_ref_pixel(ref_plane, px, py, width, height)
+  let h10 = half_x
+  let h01 = half_y
+  // 计算对角半像素（先水平后垂直，或先垂直后水平，取平均）
+  let diag_samples_h : Array[Int] = Array::make(6, 0)
+  for i in 0..<6 {
+    diag_samples_h[i] = vp8_get_ref_pixel(ref_plane, px - 2 + i, py + 1, width, height)
+  }
+  let h11 = vp8_interpolate_6tap(diag_samples_h[0], diag_samples_h[1], diag_samples_h[2], diag_samples_h[3], diag_samples_h[4], diag_samples_h[5])
+
+  let tx = frac_x
+  let ty = frac_y
+  let a = h00 * (4 - tx) * (4 - ty)
+  let b = h10 * tx * (4 - ty)
+  let c = h01 * (4 - tx) * ty
+  let d = h11 * tx * ty
+  (a + b + c + d + 8) >> 4
+}
+
+///|
+/// 亚像素运动补偿（1/4 像素精度）
+/// mv_x_q4, mv_y_q4：1/4 像素单位的运动向量
+fn vp8_motion_compensate_16x4_subpixel(
+  ref_y : Array[Int],
+  ref_u : Array[Int],
+  ref_v : Array[Int],
+  mb_x : Int,
+  mb_y : Int,
+  mv_x_q4 : Int,
+  mv_y_q4 : Int,
+  width : Int,
+  height : Int,
+) -> (Array[Int], Array[Int], Array[Int]) {
+  let pred_y = Array::make(256, 128)
+  let pred_u = Array::make(64, 128)
+  let pred_v = Array::make(64, 128)
+
+  // Y 平面：16x16，1/4 像素精度
+  for y in 0..<16 {
+    for x in 0..<16 {
+      pred_y[y * 16 + x] = vp8_interpolate_subpixel(
+        ref_y, mb_x * 16 + x, mb_y * 16 + y,
+        mv_x_q4, mv_y_q4, width, height,
+      )
+    }
+  }
+
+  // U/V 平面：8x8，运动向量减半（1/4 像素 → 1/2 像素）
+  let uv_width = width / 2
+  let uv_height = height / 2
+  let uv_mv_x_q4 = mv_x_q4 / 2
+  let uv_mv_y_q4 = mv_y_q4 / 2
+  for y in 0..<8 {
+    for x in 0..<8 {
+      pred_u[y * 8 + x] = vp8_interpolate_subpixel(
+        ref_u, mb_x * 8 + x, mb_y * 8 + y,
+        uv_mv_x_q4, uv_mv_y_q4, uv_width, uv_height,
+      )
+      pred_v[y * 8 + x] = vp8_interpolate_subpixel(
+        ref_v, mb_x * 8 + x, mb_y * 8 + y,
+        uv_mv_x_q4, uv_mv_y_q4, uv_width, uv_height,
+      )
+    }
+  }
+
+  (pred_y, pred_u, pred_v)
+}
+
+///|
+/// 解析 Exp-Golomb 编码的无符号整数
+/// VP8 运动向量残差使用 Exp-Golomb 编码
+fn vp8_read_ue_golomb(bd : Vp8BoolDecoder) -> Int {
+  let mut leading_zeros = 0
+  while bd.read_bool(128) == 0 {
+    leading_zeros += 1
+    if leading_zeros > 31 {
+      return 0
+    }
+  }
+  if leading_zeros == 0 {
+    return 0
+  }
+  let mut value = 1
+  for _ in 0..<leading_zeros {
+    value = (value << 1) | bd.read_bool(128)
+  }
+  value - 1
+}
+
+///|
+/// 解析 Exp-Golomb 编码的有符号整数
+fn vp8_read_se_golomb(bd : Vp8BoolDecoder) -> Int {
+  let value = vp8_read_ue_golomb(bd)
+  if value == 0 {
+    return 0
+  }
+  if value % 2 == 1 {
+    (value + 1) / 2
+  } else {
+    -(value / 2)
+  }
+}
+
+///|
+/// 解析运动向量残差（1/4 像素单位）
+/// VP8 使用简化的 Golomb 编码解析运动向量差
+fn vp8_parse_mv_residual(
+  bd : Vp8BoolDecoder,
+  prob : Int,
+) -> Int {
+  ignore(prob)
+  // 简化实现：使用 Exp-Golomb 编码
+  // 完整 VP8 使用更复杂的运动向量残差编码
+  let residual = vp8_read_se_golomb(bd)
+  residual * 4  // 转换为 1/4 像素单位
+}
+
+///|
+/// 参考帧选择
+/// VP8 支持 3 个参考帧：last（0）、golden（1）、altref（2）
+enum Vp8RefFrame {
+  RefLast
+  RefGolden
+  RefAltref
+}
+
+///|
+/// 解析参考帧选择
+fn vp8_parse_ref_frame(
+  bd : Vp8BoolDecoder,
+  ref_prob : Int,
+) -> Vp8RefFrame {
+  // 简化实现：使用概率选择参考帧
+  let is_last = bd.read_bool(ref_prob) == 1
+  if is_last {
+    return Vp8RefFrame::RefLast
+  }
+  let is_golden = bd.read_bool(128) == 1
+  if is_golden {
+    Vp8RefFrame::RefGolden
+  } else {
+    Vp8RefFrame::RefAltref
+  }
+}
+
+///|
+/// 获取参考帧的 Y/U/V 平面
+fn vp8_get_ref_planes(
+  refs : Vp8ReferenceFrames,
+  ref_frame : Vp8RefFrame,
+) -> (Array[Int], Array[Int], Array[Int]) {
+  match ref_frame {
+    Vp8RefFrame::RefLast => (refs.last_y, refs.last_u, refs.last_v)
+    Vp8RefFrame::RefGolden => (refs.golden_y, refs.golden_u, refs.golden_v)
+    Vp8RefFrame::RefAltref => (refs.altref_y, refs.altref_u, refs.altref_v)
+  }
+}
+
+///|
+/// 完整的运动向量解析（预测 + 残差）
+/// 返回 1/4 像素单位的运动向量
+fn vp8_parse_full_motion_vector(
+  bd : Vp8BoolDecoder,
+  pred_mv : Vp8MotionVector,
+  mv_prob : Int,
+) -> (Int, Int) {
+  // 解析是否使用预测运动向量
+  let use_pred = bd.read_bool(mv_prob) == 1
+  if use_pred {
+    return (pred_mv.mv_x * 4, pred_mv.mv_y * 4)
+  }
+  // 解析运动向量残差
+  let dx = vp8_parse_mv_residual(bd, 128)
+  let dy = vp8_parse_mv_residual(bd, 128)
+  (pred_mv.mv_x * 4 + dx, pred_mv.mv_y * 4 + dy)
 }
 
 ///|
@@ -1623,4 +1886,247 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
     channels: 3,
     data: Bytes::from_array(out),
   }
+}
+
+///|
+/// 解码 VP8 非关键帧（支持帧间预测）
+/// refs：参考帧管理（包含 last/golden/altref）
+/// 返回解码后的图像和更新后的参考帧
+pub fn decode_vp8_inter_frame(
+  data : Bytes,
+  offset : Int,
+  refs : Vp8ReferenceFrames,
+) -> (@types.Image, Vp8ReferenceFrames) raise @types.LoadError {
+  let br = Vp8BitReader::new(data, offset)
+  let header = parse_vp8_frame_header(br)
+
+  if header.key_frame {
+    // 关键帧：使用常规解码并更新参考帧
+    let img = decode_vp8_frame(data, offset)
+    // 将关键帧复制到参考帧
+    let w = img.width
+    let h = img.height
+    let y_size = w * h
+    let uv_size = (w / 2) * (h / 2)
+    let new_refs = Vp8ReferenceFrames::new(w, h)
+    // 从 RGB 转换回 YUV（简化：使用亮度作为 Y，UV 固定为 128）
+    for i in 0..<y_size {
+      let r = img.data[i * 3].to_int()
+      let g = img.data[i * 3 + 1].to_int()
+      let b = img.data[i * 3 + 2].to_int()
+      let y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16
+      new_refs.last_y[i] = y
+      new_refs.golden_y[i] = y
+      new_refs.altref_y[i] = y
+    }
+    for i in 0..<uv_size {
+      new_refs.last_u[i] = 128
+      new_refs.last_v[i] = 128
+      new_refs.golden_u[i] = 128
+      new_refs.golden_v[i] = 128
+      new_refs.altref_u[i] = 128
+      new_refs.altref_v[i] = 128
+    }
+    return (img, new_refs)
+  }
+
+  // 非关键帧：使用帧间预测
+  let w = header.width
+  let h = header.height
+
+  if w == 0 || h == 0 {
+    raise @types.LoadError::DecodeFailed("VP8 帧尺寸无效")
+  }
+
+  // 解析量化参数
+  let quant = parse_quantization(br)
+
+  let y_plane : Array[Int] = Array::make(w * h, 128)
+  let u_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
+  let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
+
+  // 创建布尔解码器
+  let bd = Vp8BoolDecoder::new(data, offset + 10)
+  let coeff_probs = Vp8AdaptiveProbs::new()
+  let mb_mode_probs = Vp8MbModeProbs::new()
+
+  // 运动向量预测缓存（用于相邻宏块的运动向量预测）
+  let mb_w = (w + 15) / 16
+  let mb_h = (h + 15) / 16
+  let mv_cache : Array[Vp8MotionVector] = Array::make(mb_w * mb_h, Vp8MotionVector::new())
+
+  // 对每个宏块进行解码
+  for mb_y in 0..<mb_h {
+    for mb_x in 0..<mb_w {
+      // 解析宏块类型（帧内/帧间/跳过）
+      let is_intra = bd.read_bool(180) == 1
+
+      if is_intra {
+        // 帧内预测宏块
+        let above : Array[Int] = Array::make(16, 128)
+        let left : Array[Int] = Array::make(16, 128)
+        let above_left = 128
+        let mode = vp8_parse_i16x16_mode(bd, mb_mode_probs)
+        let uv_mode = vp8_parse_uv_mode(bd, mb_mode_probs)
+        ignore(uv_mode)
+        let pred = vp8_intra_predict_16x16(mode, above, left, above_left)
+
+        // 解析 DC 系数
+        let dc_coeffs = vp8_parse_dc_coeffs_16x16(bd, coeff_probs)
+        let dc_residual = vp8_wht_4x4(dc_coeffs)
+
+        // 解析 AC 系数并进行 IDCT
+        for sub_y in 0..<4 {
+          for sub_x in 0..<4 {
+            let ac_coeffs = vp8_parse_residual_4x4(bd, coeff_probs, false)
+            ac_coeffs[0] = ac_coeffs[0] + dc_residual[sub_y * 4 + sub_x]
+            let residual = vp8_idct_4x4(ac_coeffs)
+            for y in 0..<4 {
+              for x in 0..<4 {
+                let px = mb_x * 16 + sub_x * 4 + x
+                let py = mb_y * 16 + sub_y * 4 + y
+                if px < w && py < h {
+                  let pred_y = sub_y * 4 + y
+                  let pred_x = sub_x * 4 + x
+                  let mut val = pred[pred_y * 16 + pred_x] + residual[y * 4 + x]
+                  if val < 0 { val = 0 }
+                  if val > 255 { val = 255 }
+                  y_plane[py * w + px] = val
+                }
+              }
+            }
+          }
+        }
+      } else {
+        // 帧间预测宏块（运动补偿）
+        // 解析参考帧选择
+        let ref_frame = vp8_parse_ref_frame(bd, 200)
+        let (ref_y, ref_u, ref_v) = vp8_get_ref_planes(refs, ref_frame)
+
+        // 运动向量预测（使用相邻宏块的中值）
+        let left_mv = if mb_x > 0 { mv_cache[mb_y * mb_w + mb_x - 1] } else { Vp8MotionVector::new() }
+        let above_mv = if mb_y > 0 { mv_cache[(mb_y - 1) * mb_w + mb_x] } else { Vp8MotionVector::new() }
+        let above_left_mv = if mb_x > 0 && mb_y > 0 { mv_cache[(mb_y - 1) * mb_w + mb_x - 1] } else { Vp8MotionVector::new() }
+        let pred_mv = vp8_predict_motion_vector(left_mv, above_mv, above_left_mv)
+
+        // 解析完整运动向量（预测 + 残差），1/4 像素精度
+        let (mv_x_q4, mv_y_q4) = vp8_parse_full_motion_vector(bd, pred_mv, 150)
+
+        // 保存运动向量到缓存
+        let cur_mv = Vp8MotionVector::new()
+        cur_mv.mv_x = mv_x_q4 / 4
+        cur_mv.mv_y = mv_y_q4 / 4
+        mv_cache[mb_y * mb_w + mb_x] = cur_mv
+
+        // 亚像素运动补偿（1/4 像素精度）
+        let (pred_y, pred_u, pred_v) = vp8_motion_compensate_16x4_subpixel(
+          ref_y, ref_u, ref_v,
+          mb_x, mb_y,
+          mv_x_q4, mv_y_q4,
+          w, h,
+        )
+
+        // 解析残差系数（帧间宏块可能有残差）
+        let has_residual = bd.read_bool(128) == 1
+        if has_residual {
+          // 解析 4x4 子块的残差系数
+          for sub_y in 0..<4 {
+            for sub_x in 0..<4 {
+              let ac_coeffs = vp8_parse_residual_4x4(bd, coeff_probs, false)
+              let residual = vp8_idct_4x4(ac_coeffs)
+              for y in 0..<4 {
+                for x in 0..<4 {
+                  let px = mb_x * 16 + sub_x * 4 + x
+                  let py = mb_y * 16 + sub_y * 4 + y
+                  if px < w && py < h {
+                    let pred_idx = (sub_y * 4 + y) * 16 + (sub_x * 4 + x)
+                    let mut val = pred_y[pred_idx] + residual[y * 4 + x]
+                    if val < 0 { val = 0 }
+                    if val > 255 { val = 255 }
+                    y_plane[py * w + px] = val
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          // 无残差：直接使用运动补偿预测
+          for y in 0..<16 {
+            for x in 0..<16 {
+              let px = mb_x * 16 + x
+              let py = mb_y * 16 + y
+              if px < w && py < h {
+                y_plane[py * w + px] = pred_y[y * 16 + x]
+              }
+            }
+          }
+        }
+
+        // 复制 U/V 预测
+        for y in 0..<8 {
+          for x in 0..<8 {
+            let px = mb_x * 8 + x
+            let py = mb_y * 8 + y
+            if px < w / 2 && py < h / 2 {
+              u_plane[py * (w / 2) + px] = pred_u[y * 8 + x]
+              v_plane[py * (w / 2) + px] = pred_v[y * 8 + x]
+            }
+          }
+        }
+      }
+
+      // 更新宏块预测模式概率
+      mb_mode_probs.update()
+    }
+  }
+
+  // 环路滤波
+  let filter_level = quant.y_ac / 4
+  for mb_y in 0..<mb_h {
+    for mb_x in 0..<mb_w {
+      vp8_loop_filter_mb(y_plane, u_plane, v_plane, mb_x, mb_y, w, h, filter_level)
+    }
+  }
+
+  // 更新参考帧（将当前帧复制到 last）
+  refs.update(y_plane, u_plane, v_plane)
+
+  // YUV420 转 RGB
+  let out : Array[Byte] = Array::make(w * h * 3, b'\x00')
+  for y in 0..<h {
+    for x in 0..<w {
+      let y_val = y_plane[y * w + x]
+      let u_val = u_plane[(y / 2) * (w / 2) + (x / 2)]
+      let v_val = v_plane[(y / 2) * (w / 2) + (x / 2)]
+
+      let c = y_val - 16
+      let d = u_val - 128
+      let e = v_val - 128
+
+      let mut r = (298 * c + 409 * e + 128) >> 8
+      let mut g = (298 * c - 100 * d - 208 * e + 128) >> 8
+      let mut b = (298 * c + 516 * d + 128) >> 8
+
+      if r < 0 { r = 0 }
+      if r > 255 { r = 255 }
+      if g < 0 { g = 0 }
+      if g > 255 { g = 255 }
+      if b < 0 { b = 0 }
+      if b > 255 { b = 255 }
+
+      let idx = (y * w + x) * 3
+      out[idx] = r.to_byte()
+      out[idx + 1] = g.to_byte()
+      out[idx + 2] = b.to_byte()
+    }
+  }
+
+  let img = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
+
+  (img, refs)
 }
