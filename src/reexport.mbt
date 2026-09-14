@@ -2865,3 +2865,35 @@ pub fn normalize_features(features : Array[Double]) -> Array[Double] {
 pub fn standardize_features(features : Array[Double]) -> Array[Double] {
   @ocr.standardize_features(features)
 }
+
+// ==================== OCR 数字识别（v7.5.0） ====================
+
+///|
+pub type OcrResult = @ocr.OcrResult
+
+///|
+pub type OcrCharResult = @ocr.OcrCharResult
+
+///|
+pub type DigitOcrConfig = @ocr.DigitOcrConfig
+
+///|
+pub fn digit_ocr_default_config() -> @ocr.DigitOcrConfig {
+  @ocr.digit_ocr_default_config()
+}
+
+///|
+pub fn generate_digit_templates() -> Array[(String, Array[Double])] {
+  @ocr.generate_digit_templates()
+}
+
+///|
+pub fn recognize_digits(
+  img : @types.Image,
+  config? : @ocr.DigitOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_digits(img, config=c)
+    None => @ocr.recognize_digits(img)
+  }
+}
