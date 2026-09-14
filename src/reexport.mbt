@@ -3779,3 +3779,83 @@ pub fn decode_barcode(
     None => @barcode.decode_barcode(img)
   }
 }
+
+// ==================== 图像拼接/全景图（v11.1.0） ====================
+
+///|
+pub type FeaturePoint = @stitch.FeaturePoint
+
+///|
+pub type MatchPair = @stitch.MatchPair
+
+///|
+pub type Homography = @stitch.Homography
+
+///|
+pub type StitchConfig = @stitch.StitchConfig
+
+///|
+pub fn stitch_default_config() -> @stitch.StitchConfig {
+  @stitch.stitch_default_config()
+}
+
+///|
+pub fn identity_homography() -> @stitch.Homography {
+  @stitch.identity_homography()
+}
+
+///|
+pub fn apply_homography(
+  h : @stitch.Homography,
+  x : Double,
+  y : Double,
+) -> (Double, Double) {
+  @stitch.apply_homography(h, x, y)
+}
+
+///|
+pub fn invert_homography(
+  h : @stitch.Homography,
+) -> @stitch.Homography? {
+  @stitch.invert_homography(h)
+}
+
+///|
+pub fn detect_features_simple(
+  img : @types.Image,
+  max_features? : Int = 500,
+) -> Array[@stitch.FeaturePoint] {
+  @stitch.detect_features_simple(img, max_features~)
+}
+
+///|
+pub fn match_features(
+  query : Array[@stitch.FeaturePoint],
+  train : Array[@stitch.FeaturePoint],
+  ratio_threshold? : Double = 0.75,
+) -> Array[@stitch.MatchPair] {
+  @stitch.match_features(query, train, ratio_threshold~)
+}
+
+///|
+pub fn estimate_homography_ransac(
+  matches : Array[@stitch.MatchPair],
+  query_points : Array[@stitch.FeaturePoint],
+  train_points : Array[@stitch.FeaturePoint],
+  iterations? : Int = 1000,
+  threshold? : Double = 3.0,
+) -> (@stitch.Homography?, Array[@stitch.MatchPair]) {
+  @stitch.estimate_homography_ransac(matches, query_points, train_points, iterations~, threshold~)
+}
+
+///|
+pub fn stitch_images(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  config? : @stitch.StitchConfig,
+) -> @types.Image? {
+  match config {
+    Some(c) => @stitch.stitch_images(img1, img2, config=c)
+    None => @stitch.stitch_images(img1, img2)
+  }
+}
