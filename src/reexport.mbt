@@ -4254,3 +4254,45 @@ pub fn denoise(
 ) -> @types.Image {
   @enhance.denoise(img, method)
 }
+
+// ==================== 图像分割（v12.2.0） ====================
+
+///|
+pub type SegmentationResult = @segment.SegmentationResult
+
+///|
+pub type WatershedConfig = @segment.WatershedConfig
+
+///|
+pub fn watershed_default_config() -> @segment.WatershedConfig {
+  @segment.watershed_default_config()
+}
+
+///|
+pub fn watershed_segment(
+  img : @types.Image,
+  config? : @segment.WatershedConfig,
+) -> @segment.SegmentationResult {
+  match config {
+    Some(c) => @segment.watershed_segment(img, config=c)
+    None => @segment.watershed_segment(img)
+  }
+}
+
+///|
+pub fn region_growing(
+  img : @types.Image,
+  seeds : Array[(Int, Int)],
+  threshold? : Double = 30.0,
+) -> @segment.SegmentationResult {
+  @segment.region_growing(img, seeds, threshold~)
+}
+
+///|
+pub fn segmentation_to_color(
+  result : @segment.SegmentationResult,
+  width : Int,
+  height : Int,
+) -> @types.Image {
+  @segment.segmentation_to_color(result, width, height)
+}
