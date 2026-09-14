@@ -2925,3 +2925,86 @@ pub fn recognize_english(
     None => @ocr.recognize_english(img)
   }
 }
+
+// ==================== OCR 后处理（v8.1.0） ====================
+
+///|
+pub type PostProcessConfig = @ocr.PostProcessConfig
+
+///|
+pub type Dictionary = @ocr.Dictionary
+
+///|
+pub type NgramModel = @ocr.NgramModel
+
+///|
+pub fn postprocess_default_config() -> @ocr.PostProcessConfig {
+  @ocr.postprocess_default_config()
+}
+
+///|
+pub fn dictionary_create(words : Array[String]) -> @ocr.Dictionary {
+  @ocr.dictionary_create(words)
+}
+
+///|
+pub fn dictionary_create_common_english() -> @ocr.Dictionary {
+  @ocr.dictionary_create_common_english()
+}
+
+///|
+pub fn edit_distance(s1 : String, s2 : String) -> Int {
+  @ocr.edit_distance(s1, s2)
+}
+
+///|
+pub fn dictionary_match(
+  word : String,
+  dictionary : @ocr.Dictionary,
+  max_distance? : Int = 2,
+) -> Array[(String, Int)] {
+  @ocr.dictionary_match(word, dictionary, max_distance~)
+}
+
+///|
+pub fn ngram_create(
+  texts : Array[String],
+  n? : Int = 2,
+) -> @ocr.NgramModel {
+  @ocr.ngram_create(texts, n~)
+}
+
+///|
+pub fn ngram_score(
+  text : String,
+  model : @ocr.NgramModel,
+) -> Double {
+  @ocr.ngram_score(text, model)
+}
+
+///|
+pub fn ocr_postprocess(
+  result : @ocr.OcrResult,
+  config? : @ocr.PostProcessConfig,
+  dictionary? : @ocr.Dictionary,
+  ngram_model? : @ocr.NgramModel,
+) -> @ocr.OcrResult {
+  match config {
+    Some(c) => match dictionary {
+      Some(d) => match ngram_model {
+        Some(n) => @ocr.ocr_postprocess(result, config=c, dictionary=d, ngram_model=n)
+        None => @ocr.ocr_postprocess(result, config=c, dictionary=d)
+      }
+      None => @ocr.ocr_postprocess(result, config=c)
+    }
+    None => @ocr.ocr_postprocess(result)
+  }
+}
+
+///|
+pub fn calibrate_confidence(
+  result : @ocr.OcrResult,
+  factor? : Double = 1.0,
+) -> @ocr.OcrResult {
+  @ocr.calibrate_confidence(result, factor~)
+}
