@@ -2520,3 +2520,106 @@ pub fn extract_text_lines(
 ) -> Array[@types.Image] raise @types.LoadError {
   @ocr.extract_text_lines(img)
 }
+
+// ==================== OCR 文本检测模块（v7.1.0） ====================
+
+///|
+pub type OcrConnectedComponent = @ocr.OcrConnectedComponent
+
+///|
+pub type OcrConnectedComponentsResult = @ocr.OcrConnectedComponentsResult
+
+///|
+pub type ProjectionResult = @ocr.ProjectionResult
+
+///|
+pub type TextLineInfo = @ocr.TextLineInfo
+
+///|
+pub type CharSegment = @ocr.CharSegment
+
+///|
+pub fn connected_components_analysis(
+  img : @types.Image,
+  connectivity? : Int = 8,
+) -> @ocr.OcrConnectedComponentsResult raise @types.LoadError {
+  @ocr.connected_components_analysis(img, connectivity~)
+}
+
+///|
+pub fn filter_components_by_area(
+  result : @ocr.OcrConnectedComponentsResult,
+  min_area : Int,
+  max_area : Int,
+) -> Array[@ocr.OcrConnectedComponent] {
+  @ocr.filter_components_by_area(result, min_area, max_area)
+}
+
+///|
+pub fn filter_components_by_aspect_ratio(
+  result : @ocr.OcrConnectedComponentsResult,
+  min_ratio : Double,
+  max_ratio : Double,
+) -> Array[@ocr.OcrConnectedComponent] {
+  @ocr.filter_components_by_aspect_ratio(result, min_ratio, max_ratio)
+}
+
+///|
+pub fn merge_adjacent_components(
+  components : Array[@ocr.OcrConnectedComponent],
+  max_gap : Int,
+) -> Array[@ocr.OcrConnectedComponent] {
+  @ocr.merge_adjacent_components(components, max_gap)
+}
+
+///|
+pub fn horizontal_projection(
+  img : @types.Image,
+) -> @ocr.ProjectionResult raise @types.LoadError {
+  @ocr.horizontal_projection(img)
+}
+
+///|
+pub fn vertical_projection(
+  img : @types.Image,
+) -> @ocr.ProjectionResult raise @types.LoadError {
+  @ocr.vertical_projection(img)
+}
+
+///|
+pub fn detect_text_lines_projection(
+  img : @types.Image,
+  min_height? : Int = 5,
+  max_gap? : Int = 3,
+) -> Array[@ocr.TextLineInfo] raise @types.LoadError {
+  @ocr.detect_text_lines_projection(img, min_height~, max_gap~)
+}
+
+///|
+pub fn segment_chars_projection(
+  img : @types.Image,
+  line : @ocr.TextLineInfo,
+  min_width? : Int = 2,
+  max_gap? : Int = 2,
+) -> Array[@ocr.CharSegment] raise @types.LoadError {
+  @ocr.segment_chars_projection(img, line, min_width~, max_gap~)
+}
+
+///|
+pub fn extract_text_line_image(
+  img : @types.Image,
+  line : @ocr.TextLineInfo,
+  padding? : Int = 2,
+) -> @types.Image {
+  @ocr.extract_text_line_image(img, line, padding~)
+}
+
+///|
+pub fn extract_char_image(
+  img : @types.Image,
+  char : @ocr.CharSegment,
+  target_size? : Int = 32,
+  padding? : Int = 2,
+) -> @types.Image {
+  @ocr.extract_char_image(img, char, target_size~, padding~)
+}
