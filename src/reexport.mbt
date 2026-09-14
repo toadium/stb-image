@@ -3143,3 +3143,72 @@ pub fn recognize_chinese_advanced(
     None => @ocr.recognize_chinese_advanced(img)
   }
 }
+
+// ==================== OCR 准确率提升（v9.1.0） ====================
+
+///|
+pub type TrainingDataset = @ocr.TrainingDataset
+
+///|
+pub type EnsembleConfig = @ocr.EnsembleConfig
+
+///|
+pub fn ensemble_default_config() -> @ocr.EnsembleConfig {
+  @ocr.ensemble_default_config()
+}
+
+///|
+pub fn dataset_create() -> @ocr.TrainingDataset {
+  @ocr.dataset_create()
+}
+
+///|
+pub fn dataset_add_sample(
+  dataset : @ocr.TrainingDataset,
+  features : Array[Double],
+  label : String,
+) -> @ocr.TrainingDataset {
+  @ocr.dataset_add_sample(dataset, features, label)
+}
+
+///|
+pub fn dataset_stats(
+  dataset : @ocr.TrainingDataset,
+) -> (Int, Int, Array[(String, Int)]) {
+  @ocr.dataset_stats(dataset)
+}
+
+///|
+pub fn augment_features(
+  features : Array[Double],
+  noise_level? : Double = 0.05,
+) -> Array[Double] {
+  @ocr.augment_features(features, noise_level~)
+}
+
+///|
+pub fn hu_moments_features(
+  img : @types.Image,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.hu_moments_features(img)
+}
+
+///|
+pub fn ensemble_predict(
+  features : Array[Double],
+  knn_classifier : @ocr.KnnClassifier,
+  templates : Array[(String, Array[Double])],
+  config? : @ocr.EnsembleConfig,
+) -> @ocr.ClassificationResult {
+  match config {
+    Some(c) => @ocr.ensemble_predict(features, knn_classifier, templates, config=c)
+    None => @ocr.ensemble_predict(features, knn_classifier, templates)
+  }
+}
+
+///|
+pub fn extract_combined_ocr_features(
+  img : @types.Image,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.extract_combined_ocr_features(img)
+}
