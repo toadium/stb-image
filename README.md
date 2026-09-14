@@ -266,6 +266,8 @@ moon info
 - **高级滤波** — 双边 / NLM 去噪 / CLAHE / Retinex / 去雾 / 图像修复
 - **特征描述** — LBP / GLCM 纹理 / Hu 矩 / 感知哈希
 - **WebP lossy (VP8) 编码** — 原项目不支持 WebP
+- **OCR 全链路** — 预处理/文本检测/字符分割/特征提取/分类器/数字OCR/英文OCR/中文OCR/表格识别/后处理
+- **OCR 扩展** — 完善中文OCR(500+字)/准确率提升(Hu矩/集成学习)/文档理解/手写体识别/多语言混合识别
 - **安全加固** — 维度溢出守卫（check_dims + MAX_IMAGE_DIMENSION）+ 溢出安全乘法（safe_mul）+ 全解码器入口校验
 
 ### 与原项目的差异
@@ -276,7 +278,7 @@ moon info
 | 依赖 | C 编译器 | 零 C 依赖 |
 | 目标 | native | native / wasm-gc / js / wasm |
 | 格式数 | 7 | 15 |
-| API 数 | ~30 | 675 |
+| API 数 | ~30 | 900+ |
 | 高级算法 | 无 | 50+ |
 | 内存安全 | 手动 | GC 管理 |
 
