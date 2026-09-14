@@ -4030,3 +4030,71 @@ pub fn stylize(
     None => @stylize.stylize(img, style)
   }
 }
+
+// ==================== 图像去雾（v11.6.0） ====================
+
+///|
+pub type DehazeConfig = @enhance.DehazeConfig
+
+///|
+pub fn dehaze_default_config() -> @enhance.DehazeConfig {
+  @enhance.dehaze_default_config()
+}
+
+///|
+pub fn dark_channel(
+  img : @types.Image,
+  patch_size? : Int = 15,
+) -> @types.Image {
+  @enhance.dark_channel(img, patch_size~)
+}
+
+///|
+pub fn estimate_atmospheric_light(
+  img : @types.Image,
+  dark : @types.Image,
+  top_percent? : Int = 1000,
+) -> Array[Int] {
+  @enhance.estimate_atmospheric_light(img, dark, top_percent~)
+}
+
+///|
+pub fn estimate_transmission(
+  img : @types.Image,
+  atmospheric : Array[Int],
+  omega? : Double = 0.95,
+  patch_size? : Int = 15,
+) -> @types.Image {
+  @enhance.estimate_transmission(img, atmospheric, omega~, patch_size~)
+}
+
+///|
+pub fn guided_filter_image(
+  input : @types.Image,
+  guide : @types.Image,
+  radius? : Int = 20,
+  eps? : Double = 0.0001,
+) -> @types.Image {
+  @enhance.guided_filter_image(input, guide, radius~, eps~)
+}
+
+///|
+pub fn dehaze_recover(
+  img : @types.Image,
+  transmission : @types.Image,
+  atmospheric : Array[Int],
+  t_min? : Double = 0.1,
+) -> @types.Image {
+  @enhance.dehaze_recover(img, transmission, atmospheric, t_min~)
+}
+
+///|
+pub fn dehaze_advanced(
+  img : @types.Image,
+  config? : @enhance.DehazeConfig,
+) -> @types.Image {
+  match config {
+    Some(c) => @enhance.dehaze_advanced(img, config=c)
+    None => @enhance.dehaze_advanced(img)
+  }
+}

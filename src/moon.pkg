@@ -16,6 +16,7 @@ import {
   "walkzzz/image/src/process/stitch",
   "walkzzz/image/src/process/superres",
   "walkzzz/image/src/process/stylize",
+  "walkzzz/image/src/process/enhance",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
