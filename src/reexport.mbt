@@ -4157,3 +4157,53 @@ pub fn hdr_process(
     None => @enhance.hdr_process(images)
   }
 }
+
+// ==================== 图像修复（v12.0.0） ====================
+
+///|
+pub type InpaintConfig = @enhance.InpaintConfig
+
+///|
+pub fn inpaint_default_config() -> @enhance.InpaintConfig {
+  @enhance.inpaint_default_config()
+}
+
+///|
+pub fn inpaint_advanced(
+  img : @types.Image,
+  mask : @types.Image,
+  radius? : Int = 5,
+) -> @types.Image {
+  @enhance.inpaint_advanced(img, mask, radius~)
+}
+
+///|
+pub fn create_rect_mask(
+  width : Int,
+  height : Int,
+  x : Int,
+  y : Int,
+  rect_w : Int,
+  rect_h : Int,
+) -> @types.Image {
+  @enhance.create_rect_mask(width, height, x, y, rect_w, rect_h)
+}
+
+///|
+pub fn remove_small_objects(
+  img : @types.Image,
+  max_size? : Int = 100,
+) -> @types.Image {
+  @enhance.remove_small_objects(img, max_size~)
+}
+
+///|
+pub fn remove_watermark(
+  img : @types.Image,
+  x : Int,
+  y : Int,
+  width : Int,
+  height : Int,
+) -> @types.Image {
+  @enhance.remove_watermark(img, x, y, width, height)
+}
