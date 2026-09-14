@@ -5134,3 +5134,81 @@ pub fn batch_photo_enhance(
 ) -> Array[@types.Image] {
   @photo_enhance.batch_photo_enhance(images, method)
 }
+
+// ==================== 扫描版文档 OCR 增强（v12.16.0） ====================
+
+///|
+pub type ScanOCRConfig = @ocr.ScanOCRConfig
+
+///|
+pub type ScanQuality = @ocr.ScanQuality
+
+///|
+pub type TextBlock = @ocr.TextBlock
+
+///|
+pub type OCRPageResult = @ocr.OCRPageResult
+
+///|
+pub fn scan_ocr_default_config() -> @ocr.ScanOCRConfig {
+  @ocr.scan_ocr_default_config()
+}
+
+///|
+pub fn evaluate_scan_quality(
+  img : @types.Image,
+) -> @ocr.ScanQuality {
+  @ocr.evaluate_scan_quality(img)
+}
+
+///|
+pub fn scan_document_preprocess(
+  img : @types.Image,
+  config : @ocr.ScanOCRConfig,
+) -> @types.Image {
+  @ocr.scan_document_preprocess(img, config)
+}
+
+///|
+pub fn analyze_layout_scan(
+  binary_img : @types.Image,
+) -> Array[@ocr.TextBlock] {
+  @ocr.analyze_layout_scan(binary_img)
+}
+
+///|
+pub fn scan_ocr_recognize(
+  img : @types.Image,
+  config : @ocr.ScanOCRConfig,
+) -> @ocr.OCRPageResult {
+  @ocr.scan_ocr_recognize(img, config)
+}
+
+///|
+pub fn batch_scan_ocr(
+  images : Array[@types.Image],
+  config : @ocr.ScanOCRConfig,
+) -> Array[@ocr.OCRPageResult] {
+  @ocr.batch_scan_ocr(images, config)
+}
+
+///|
+pub fn ocr_result_to_text(
+  result : @ocr.OCRPageResult,
+) -> String {
+  @ocr.ocr_result_to_text(result)
+}
+
+///|
+pub fn ocr_result_to_hocr(
+  result : @ocr.OCRPageResult,
+) -> String {
+  @ocr.ocr_result_to_hocr(result)
+}
+
+///|
+pub fn ocr_result_to_json(
+  result : @ocr.OCRPageResult,
+) -> String {
+  @ocr.ocr_result_to_json(result)
+}
