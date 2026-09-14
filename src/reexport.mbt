@@ -4750,3 +4750,94 @@ pub fn measure_area(
 ) -> Double {
   @medical.measure_area(mask, pixel_area~)
 }
+
+// ==================== 遥感图像处理（v12.11.0） ====================
+
+///|
+pub type MultispectralImage = @remote_sensing.MultispectralImage
+
+///|
+pub fn multispectral_new(
+  width : Int,
+  height : Int,
+  bands : Array[@types.Image],
+  band_names? : Array[String] = [],
+) -> @remote_sensing.MultispectralImage {
+  @remote_sensing.multispectral_new(width, height, bands, band_names=band_names)
+}
+
+///|
+pub fn compute_ndvi(
+  nir : @types.Image,
+  red : @types.Image,
+) -> @types.Image {
+  @remote_sensing.compute_ndvi(nir, red)
+}
+
+///|
+pub fn compute_ndwi(
+  green : @types.Image,
+  nir : @types.Image,
+) -> @types.Image {
+  @remote_sensing.compute_ndwi(green, nir)
+}
+
+///|
+pub fn compute_ndbi(
+  swir : @types.Image,
+  nir : @types.Image,
+) -> @types.Image {
+  @remote_sensing.compute_ndbi(swir, nir)
+}
+
+///|
+pub fn compute_evi(
+  nir : @types.Image,
+  red : @types.Image,
+  blue : @types.Image,
+) -> @types.Image {
+  @remote_sensing.compute_evi(nir, red, blue)
+}
+
+///|
+pub fn false_color_composite(
+  nir : @types.Image,
+  red : @types.Image,
+  green : @types.Image,
+) -> @types.Image {
+  @remote_sensing.false_color_composite(nir, red, green)
+}
+
+///|
+pub fn true_color_composite(
+  red : @types.Image,
+  green : @types.Image,
+  blue : @types.Image,
+) -> @types.Image {
+  @remote_sensing.true_color_composite(red, green, blue)
+}
+
+///|
+pub fn vegetation_coverage(
+  ndvi : @types.Image,
+  ndvi_soil? : Double = 0.2,
+  ndvi_veg? : Double = 0.8,
+) -> @types.Image {
+  @remote_sensing.vegetation_coverage(ndvi, ndvi_soil~, ndvi_veg~)
+}
+
+///|
+pub fn land_cover_classification(
+  ndvi : @types.Image,
+  ndwi : @types.Image,
+  ndbi : @types.Image,
+) -> @types.Image {
+  @remote_sensing.land_cover_classification(ndvi, ndwi, ndbi)
+}
+
+///|
+pub fn classification_colormap(
+  classification : @types.Image,
+) -> @types.Image {
+  @remote_sensing.classification_colormap(classification)
+}
