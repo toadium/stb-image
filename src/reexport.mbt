@@ -4296,3 +4296,44 @@ pub fn segmentation_to_color(
 ) -> @types.Image {
   @segment.segmentation_to_color(result, width, height)
 }
+
+// ==================== 目标检测基础（v12.4.0） ====================
+
+///|
+pub type BoundingBox = @detection.BoundingBox
+
+///|
+pub fn bbox_new(
+  x : Int,
+  y : Int,
+  width : Int,
+  height : Int,
+  score? : Double = 0.0,
+  class_id? : Int = 0,
+) -> @detection.BoundingBox {
+  @detection.bbox_new(x, y, width, height, score~, class_id~)
+}
+
+///|
+pub fn bbox_iou(
+  a : @detection.BoundingBox,
+  b : @detection.BoundingBox,
+) -> Double {
+  @detection.bbox_iou(a, b)
+}
+
+///|
+pub fn nms(
+  boxes : Array[@detection.BoundingBox],
+  iou_threshold? : Double = 0.5,
+) -> Array[@detection.BoundingBox] {
+  @detection.nms(boxes, iou_threshold~)
+}
+
+///|
+pub fn draw_detections(
+  img : @types.Image,
+  boxes : Array[@detection.BoundingBox],
+) -> @types.Image {
+  @detection.draw_detections(img, boxes)
+}
