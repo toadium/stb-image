@@ -3036,3 +3036,69 @@ pub fn recognize_chinese(
     None => @ocr.recognize_chinese(img)
   }
 }
+
+// ==================== OCR 表格识别（v8.3.0） ====================
+
+///|
+pub type TableLine = @ocr.TableLine
+
+///|
+pub type TableLineType = @ocr.TableLineType
+
+///|
+pub type TableCell = @ocr.TableCell
+
+///|
+pub type TableStructure = @ocr.TableStructure
+
+///|
+pub fn detect_horizontal_lines(
+  img : @types.Image,
+  min_length? : Int = 20,
+  max_gap? : Int = 2,
+) -> Array[@ocr.TableLine] raise @types.LoadError {
+  @ocr.detect_horizontal_lines(img, min_length~, max_gap~)
+}
+
+///|
+pub fn detect_vertical_lines(
+  img : @types.Image,
+  min_length? : Int = 20,
+  max_gap? : Int = 2,
+) -> Array[@ocr.TableLine] raise @types.LoadError {
+  @ocr.detect_vertical_lines(img, min_length~, max_gap~)
+}
+
+///|
+pub fn analyze_table_structure(
+  horizontal_lines : Array[@ocr.TableLine],
+  vertical_lines : Array[@ocr.TableLine],
+) -> @ocr.TableStructure {
+  @ocr.analyze_table_structure(horizontal_lines, vertical_lines)
+}
+
+///|
+pub fn recognize_table(
+  img : @types.Image,
+  min_line_length? : Int = 20,
+) -> @ocr.TableStructure raise @types.LoadError {
+  @ocr.recognize_table(img, min_line_length~)
+}
+
+///|
+pub fn extract_cell_image(
+  img : @types.Image,
+  cell : @ocr.TableCell,
+  padding? : Int = 1,
+) -> @types.Image {
+  @ocr.extract_cell_image(img, cell, padding~)
+}
+
+///|
+pub fn extract_all_cells(
+  img : @types.Image,
+  structure : @ocr.TableStructure,
+  padding? : Int = 1,
+) -> Array[@types.Image] {
+  @ocr.extract_all_cells(img, structure, padding~)
+}
