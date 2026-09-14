@@ -3420,3 +3420,85 @@ pub fn recognize_enhanced_chinese(
     None => @ocr.recognize_enhanced_chinese(img)
   }
 }
+
+// ==================== OCR 准确率提升增强版（v10.1.0） ====================
+
+///|
+pub type OcrAccuracyEnhancedConfig = @ocr.OcrAccuracyEnhancedConfig
+
+///|
+pub fn ocr_accuracy_enhanced_default_config() -> @ocr.OcrAccuracyEnhancedConfig {
+  @ocr.ocr_accuracy_enhanced_default_config()
+}
+
+///|
+pub fn extract_zernike_moments(
+  char_img : @types.Image,
+  max_order? : Int = 4,
+) -> Array[Double] {
+  @ocr.extract_zernike_moments(char_img, max_order~)
+}
+
+///|
+pub fn extract_gabor_ocr_features(
+  char_img : @types.Image,
+  num_orientations? : Int = 4,
+  num_frequencies? : Int = 2,
+) -> Array[Double] {
+  @ocr.extract_gabor_ocr_features(char_img, num_orientations~, num_frequencies~)
+}
+
+///|
+pub fn extract_directional_features(
+  char_img : @types.Image,
+) -> Array[Double] {
+  @ocr.extract_directional_features(char_img)
+}
+
+///|
+pub fn weighted_knn_classify(
+  features : Array[Double],
+  training_data : Array[(String, Array[Double])],
+  k? : Int = 5,
+  distance_metric? : String = "euclidean",
+) -> (String, Double, Array[(String, Double)]) {
+  @ocr.weighted_knn_classify(features, training_data, k~, distance_metric~)
+}
+
+///|
+pub fn calibrate_confidence_enhanced(
+  raw_confidence : Double,
+  distance_distribution : Array[Double],
+) -> Double {
+  @ocr.calibrate_confidence_enhanced(raw_confidence, distance_distribution)
+}
+
+///|
+pub fn multi_scale_recognize(
+  char_img : @types.Image,
+  templates : Array[(String, Array[Double])],
+  scales : Array[Int],
+  distance_metric? : String = "euclidean",
+) -> (String, Double) {
+  @ocr.multi_scale_recognize(char_img, templates, scales, distance_metric~)
+}
+
+///|
+pub fn extract_combined_enhanced_features(
+  char_img : @types.Image,
+  config : @ocr.OcrAccuracyEnhancedConfig,
+) -> Array[Double] {
+  @ocr.extract_combined_enhanced_features(char_img, config)
+}
+
+///|
+pub fn recognize_ocr_enhanced(
+  img : @types.Image,
+  templates : Array[(String, Array[Double])],
+  config? : @ocr.OcrAccuracyEnhancedConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_ocr_enhanced(img, templates, config=c)
+    None => @ocr.recognize_ocr_enhanced(img, templates)
+  }
+}
