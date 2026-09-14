@@ -3286,3 +3286,39 @@ pub fn understand_document(
 ) -> @ocr.DocumentStructure raise @types.LoadError {
   @ocr.understand_document(img)
 }
+
+// ==================== 手写体识别（v9.3.0） ====================
+
+///|
+pub type HandwritingOcrConfig = @ocr.HandwritingOcrConfig
+
+///|
+pub fn handwriting_ocr_default_config() -> @ocr.HandwritingOcrConfig {
+  @ocr.handwriting_ocr_default_config()
+}
+
+///|
+pub fn generate_handwriting_templates(
+  char_set? : String = "digits",
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_handwriting_templates(char_set~)
+}
+
+///|
+pub fn correct_slant(
+  img : @types.Image,
+  max_slant? : Double = 15.0,
+) -> @types.Image {
+  @ocr.correct_slant(img, max_slant~)
+}
+
+///|
+pub fn recognize_handwriting(
+  img : @types.Image,
+  config? : @ocr.HandwritingOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_handwriting(img, config=c)
+    None => @ocr.recognize_handwriting(img)
+  }
+}
