@@ -21,6 +21,7 @@ import {
   "walkzzz/image/src/process/quality",
   "walkzzz/image/src/process/fusion",
   "walkzzz/image/src/process/registration",
+  "walkzzz/image/src/process/video",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

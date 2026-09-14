@@ -4524,3 +4524,94 @@ pub fn align_images(
 ) -> (@types.Image, @registration.RegistrationResult) {
   @registration.align_images(img1, img2)
 }
+
+// ==================== 视频处理基础（v12.8.0） ====================
+
+///|
+pub type VideoFrames = @video.VideoFrames
+
+///|
+pub fn video_frames_new(
+  frames : Array[@types.Image],
+  fps? : Double = 30.0,
+) -> @video.VideoFrames {
+  @video.video_frames_new(frames, fps~)
+}
+
+///|
+pub fn video_frame_count(
+  video : @video.VideoFrames,
+) -> Int {
+  @video.video_frame_count(video)
+}
+
+///|
+pub fn video_get_frame(
+  video : @video.VideoFrames,
+  index : Int,
+) -> @types.Image? {
+  @video.video_get_frame(video, index)
+}
+
+///|
+pub fn interpolate_frames(
+  frame1 : @types.Image,
+  frame2 : @types.Image,
+  num_frames? : Int = 1,
+) -> Array[@types.Image] {
+  @video.interpolate_frames(frame1, frame2, num_frames~)
+}
+
+///|
+pub fn video_fade_in(
+  video : @video.VideoFrames,
+  duration_frames? : Int = 30,
+) -> @video.VideoFrames {
+  @video.video_fade_in(video, duration_frames~)
+}
+
+///|
+pub fn video_fade_out(
+  video : @video.VideoFrames,
+  duration_frames? : Int = 30,
+) -> @video.VideoFrames {
+  @video.video_fade_out(video, duration_frames~)
+}
+
+///|
+pub fn video_sample(
+  video : @video.VideoFrames,
+  interval? : Int = 2,
+) -> @video.VideoFrames {
+  @video.video_sample(video, interval~)
+}
+
+///|
+pub fn video_reverse(
+  video : @video.VideoFrames,
+) -> @video.VideoFrames {
+  @video.video_reverse(video)
+}
+
+///|
+pub fn video_concat(
+  video1 : @video.VideoFrames,
+  video2 : @video.VideoFrames,
+) -> @video.VideoFrames {
+  @video.video_concat(video1, video2)
+}
+
+///|
+pub fn create_animation(
+  frames : Array[@types.Image],
+  fps? : Double = 10.0,
+) -> @video.VideoFrames {
+  @video.create_animation(frames, fps~)
+}
+
+///|
+pub fn video_frame_average(
+  video : @video.VideoFrames,
+) -> @types.Image {
+  @video.video_frame_average(video)
+}
