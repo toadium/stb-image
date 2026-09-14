@@ -22,6 +22,7 @@ import {
   "walkzzz/image/src/process/fusion",
   "walkzzz/image/src/process/registration",
   "walkzzz/image/src/process/video",
+  "walkzzz/image/src/process/stereo3d",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

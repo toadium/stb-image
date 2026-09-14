@@ -4615,3 +4615,60 @@ pub fn video_frame_average(
 ) -> @types.Image {
   @video.video_frame_average(video)
 }
+
+// ==================== 3D 视觉基础（v12.9.0） ====================
+
+///|
+pub type PointCloud = @stereo3d.PointCloud
+
+///|
+pub fn point_cloud_new() -> @stereo3d.PointCloud {
+  @stereo3d.point_cloud_new()
+}
+
+///|
+pub fn depth_to_colormap(
+  depth : @types.Image,
+  colormap? : String = "jet",
+) -> @types.Image {
+  @stereo3d.depth_to_colormap(depth, colormap~)
+}
+
+///|
+pub fn depth_to_pointcloud(
+  depth : @types.Image,
+  fx? : Double = 500.0,
+  fy? : Double = 500.0,
+  cx? : Double = 0.0,
+  cy? : Double = 0.0,
+  scale? : Double = 1.0,
+) -> @stereo3d.PointCloud {
+  @stereo3d.depth_to_pointcloud(depth, fx~, fy~, cx~, cy~, scale~)
+}
+
+///|
+pub fn pointcloud_voxel_downsample(
+  cloud : @stereo3d.PointCloud,
+  voxel_size? : Double = 1.0,
+) -> @stereo3d.PointCloud {
+  @stereo3d.pointcloud_voxel_downsample(cloud, voxel_size~)
+}
+
+///|
+pub fn compute_disparity(
+  left : @types.Image,
+  right : @types.Image,
+  max_disparity? : Int = 64,
+  block_size? : Int = 7,
+) -> @types.Image {
+  @stereo3d.compute_disparity(left, right, max_disparity~, block_size~)
+}
+
+///|
+pub fn disparity_to_depth(
+  disparity : @types.Image,
+  baseline? : Double = 1.0,
+  focal_length? : Double = 500.0,
+) -> @types.Image {
+  @stereo3d.disparity_to_depth(disparity, baseline~, focal_length~)
+}
