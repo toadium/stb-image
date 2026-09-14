@@ -18,6 +18,7 @@ import {
   "walkzzz/image/src/process/stylize",
   "walkzzz/image/src/process/enhance",
   "walkzzz/image/src/process/detection",
+  "walkzzz/image/src/process/quality",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

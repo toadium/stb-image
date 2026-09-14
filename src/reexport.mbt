@@ -4337,3 +4337,64 @@ pub fn draw_detections(
 ) -> @types.Image {
   @detection.draw_detections(img, boxes)
 }
+
+// ==================== 图像质量评估（v12.5.0） ====================
+
+///|
+pub type QualityMetrics = @quality.QualityMetrics
+
+///|
+pub fn compute_mse(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @quality.compute_mse(img1, img2)
+}
+
+///|
+pub fn compute_mae(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @quality.compute_mae(img1, img2)
+}
+
+///|
+pub fn compute_psnr(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @quality.compute_psnr(img1, img2)
+}
+
+///|
+pub fn compute_ssim(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @quality.compute_ssim(img1, img2)
+}
+
+///|
+pub fn compute_quality_metrics(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> @quality.QualityMetrics {
+  @quality.compute_quality_metrics(img1, img2)
+}
+
+///|
+pub fn images_equal(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Bool {
+  @quality.images_equal(img1, img2)
+}
+
+///|
+pub fn compute_diff_image(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> @types.Image {
+  @quality.compute_diff_image(img1, img2)
+}
