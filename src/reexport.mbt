@@ -3212,3 +3212,77 @@ pub fn extract_combined_ocr_features(
 ) -> Array[Double] raise @types.LoadError {
   @ocr.extract_combined_ocr_features(img)
 }
+
+// ==================== 文档理解（v9.2.0） ====================
+
+///|
+pub type DocumentElementType = @ocr.DocumentElementType
+
+///|
+pub type DocumentElement = @ocr.DocumentElement
+
+///|
+pub type DocumentStructure = @ocr.DocumentStructure
+
+///|
+pub fn analyze_document_layout(
+  img : @types.Image,
+) -> @ocr.DocumentStructure raise @types.LoadError {
+  @ocr.analyze_document_layout(img)
+}
+
+///|
+pub fn compute_reading_order(
+  elements : Array[@ocr.DocumentElement],
+) -> Array[Int] {
+  @ocr.compute_reading_order(elements)
+}
+
+///|
+pub fn extract_title(
+  structure : @ocr.DocumentStructure,
+) -> String {
+  @ocr.extract_title(structure)
+}
+
+///|
+pub fn extract_headings(
+  structure : @ocr.DocumentStructure,
+) -> Array[@ocr.DocumentElement] {
+  @ocr.extract_headings(structure)
+}
+
+///|
+pub fn extract_paragraphs(
+  structure : @ocr.DocumentStructure,
+) -> Array[@ocr.DocumentElement] {
+  @ocr.extract_paragraphs(structure)
+}
+
+///|
+pub fn get_elements_in_reading_order(
+  structure : @ocr.DocumentStructure,
+) -> Array[@ocr.DocumentElement] {
+  @ocr.get_elements_in_reading_order(structure)
+}
+
+///|
+pub fn document_structure_stats(
+  structure : @ocr.DocumentStructure,
+) -> (Int, Int, Int, Int, Int) {
+  @ocr.document_structure_stats(structure)
+}
+
+///|
+pub fn detect_document_columns(
+  img : @types.Image,
+) -> Int raise @types.LoadError {
+  @ocr.detect_document_columns(img)
+}
+
+///|
+pub fn understand_document(
+  img : @types.Image,
+) -> @ocr.DocumentStructure raise @types.LoadError {
+  @ocr.understand_document(img)
+}
