@@ -4098,3 +4098,62 @@ pub fn dehaze_advanced(
     None => @enhance.dehaze_advanced(img)
   }
 }
+
+// ==================== HDR 高动态范围（v11.7.0） ====================
+
+///|
+pub type HdrConfig = @enhance.HdrConfig
+
+///|
+pub fn hdr_default_config() -> @enhance.HdrConfig {
+  @enhance.hdr_default_config()
+}
+
+///|
+pub fn hdr_fusion_average(
+  images : Array[@types.Image],
+) -> @types.Image? {
+  @enhance.hdr_fusion_average(images)
+}
+
+///|
+pub fn hdr_fusion_weighted(
+  images : Array[@types.Image],
+) -> @types.Image? {
+  @enhance.hdr_fusion_weighted(images)
+}
+
+///|
+pub fn tone_mapping_reinhard(
+  img : @types.Image,
+  key? : Double = 0.18,
+) -> @types.Image {
+  @enhance.tone_mapping_reinhard(img, key~)
+}
+
+///|
+pub fn tone_mapping_gamma(
+  img : @types.Image,
+  gamma? : Double = 0.4545,
+) -> @types.Image {
+  @enhance.tone_mapping_gamma(img, gamma~)
+}
+
+///|
+pub fn tone_mapping_sigmoid(
+  img : @types.Image,
+  strength? : Double = 5.0,
+) -> @types.Image {
+  @enhance.tone_mapping_sigmoid(img, strength~)
+}
+
+///|
+pub fn hdr_process(
+  images : Array[@types.Image],
+  config? : @enhance.HdrConfig,
+) -> @types.Image? {
+  match config {
+    Some(c) => @enhance.hdr_process(images, config=c)
+    None => @enhance.hdr_process(images)
+  }
+}
