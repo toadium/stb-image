@@ -2897,3 +2897,31 @@ pub fn recognize_digits(
     None => @ocr.recognize_digits(img)
   }
 }
+
+// ==================== OCR 英文识别（v8.0.0） ====================
+
+///|
+pub type EnglishOcrConfig = @ocr.EnglishOcrConfig
+
+///|
+pub fn english_ocr_default_config() -> @ocr.EnglishOcrConfig {
+  @ocr.english_ocr_default_config()
+}
+
+///|
+pub fn generate_english_templates(
+  case_sensitive? : Bool = false,
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_english_templates(case_sensitive~)
+}
+
+///|
+pub fn recognize_english(
+  img : @types.Image,
+  config? : @ocr.EnglishOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_english(img, config=c)
+    None => @ocr.recognize_english(img)
+  }
+}
