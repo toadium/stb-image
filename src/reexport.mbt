@@ -4911,3 +4911,76 @@ pub fn batch_embed_watermark(
 ) -> Array[@types.Image] {
   @watermark.batch_embed_watermark(images, watermark, key~)
 }
+
+// ==================== 图像检索（v12.13.0） ====================
+
+///|
+pub type ImageFeature = @retrieval.ImageFeature
+
+///|
+pub type SearchResult = @retrieval.SearchResult
+
+///|
+pub type ImageDatabase = @retrieval.ImageDatabase
+
+///|
+pub fn image_database_new() -> @retrieval.ImageDatabase {
+  @retrieval.image_database_new()
+}
+
+///|
+pub fn extract_image_features(
+  img : @types.Image,
+  image_id : String,
+) -> @retrieval.ImageFeature {
+  @retrieval.extract_image_features(img, image_id)
+}
+
+///|
+pub fn database_add_image(
+  db : @retrieval.ImageDatabase,
+  feature : @retrieval.ImageFeature,
+) -> @retrieval.ImageDatabase {
+  @retrieval.database_add_image(db, feature)
+}
+
+///|
+pub fn database_remove_image(
+  db : @retrieval.ImageDatabase,
+  image_id : String,
+) -> @retrieval.ImageDatabase {
+  @retrieval.database_remove_image(db, image_id)
+}
+
+///|
+pub fn search_similar_images(
+  db : @retrieval.ImageDatabase,
+  query : @retrieval.ImageFeature,
+  top_k? : Int = 5,
+  method? : String = "cosine",
+) -> Array[@retrieval.SearchResult] {
+  @retrieval.search_similar_images(db, query, top_k~, method~)
+}
+
+///|
+pub fn image_similarity(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  method? : String = "cosine",
+) -> Double {
+  @retrieval.image_similarity(img1, img2, method~)
+}
+
+///|
+pub fn batch_extract_features(
+  images : Array[(@types.Image, String)],
+) -> Array[@retrieval.ImageFeature] {
+  @retrieval.batch_extract_features(images)
+}
+
+///|
+pub fn database_size(
+  db : @retrieval.ImageDatabase,
+) -> Int {
+  @retrieval.database_size(db)
+}
