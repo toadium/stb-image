@@ -3102,3 +3102,44 @@ pub fn extract_all_cells(
 ) -> Array[@types.Image] {
   @ocr.extract_all_cells(img, structure, padding~)
 }
+
+// ==================== 完善中文 OCR（v9.0.0） ====================
+
+///|
+pub type AdvancedChineseOcrConfig = @ocr.AdvancedChineseOcrConfig
+
+///|
+pub type ChineseRadical = @ocr.ChineseRadical
+
+///|
+pub type ChineseCharStructure = @ocr.ChineseCharStructure
+
+///|
+pub fn advanced_chinese_ocr_default_config() -> @ocr.AdvancedChineseOcrConfig {
+  @ocr.advanced_chinese_ocr_default_config()
+}
+
+///|
+pub fn generate_3500_chinese_templates(
+  char_set? : String = "common3500",
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_3500_chinese_templates(char_set~)
+}
+
+///|
+pub fn decompose_chinese_char(
+  char : String,
+) -> @ocr.ChineseCharStructure {
+  @ocr.decompose_chinese_char(char)
+}
+
+///|
+pub fn recognize_chinese_advanced(
+  img : @types.Image,
+  config? : @ocr.AdvancedChineseOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_chinese_advanced(img, config=c)
+    None => @ocr.recognize_chinese_advanced(img)
+  }
+}
