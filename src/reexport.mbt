@@ -2686,3 +2686,69 @@ pub fn complete_char_segmentation(
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   @ocr.complete_char_segmentation(img, min_char_width~, max_char_width~)
 }
+
+// ==================== OCR 特征提取（v7.3.0） ====================
+
+///|
+pub type HogFeatures = @ocr.HogFeatures
+
+///|
+pub type LbpFeatures = @ocr.LbpFeatures
+
+///|
+pub type ProjectionFeatures = @ocr.ProjectionFeatures
+
+///|
+pub type GridFeatures = @ocr.GridFeatures
+
+///|
+pub type StatisticalFeatures = @ocr.StatisticalFeatures
+
+///|
+pub fn hog_features(
+  img : @types.Image,
+  cell_size? : Int = 8,
+  num_bins? : Int = 9,
+) -> @ocr.HogFeatures raise @types.LoadError {
+  @ocr.hog_features(img, cell_size~, num_bins~)
+}
+
+///|
+pub fn lbp_features(
+  img : @types.Image,
+  radius? : Int = 1,
+  num_points? : Int = 8,
+  num_bins? : Int = 256,
+) -> @ocr.LbpFeatures raise @types.LoadError {
+  @ocr.lbp_features(img, radius~, num_points~, num_bins~)
+}
+
+///|
+pub fn projection_features(
+  img : @types.Image,
+) -> @ocr.ProjectionFeatures raise @types.LoadError {
+  @ocr.projection_features(img)
+}
+
+///|
+pub fn grid_features(
+  img : @types.Image,
+  grid_rows? : Int = 4,
+  grid_cols? : Int = 4,
+) -> @ocr.GridFeatures raise @types.LoadError {
+  @ocr.grid_features(img, grid_rows~, grid_cols~)
+}
+
+///|
+pub fn statistical_features(
+  img : @types.Image,
+) -> @ocr.StatisticalFeatures raise @types.LoadError {
+  @ocr.statistical_features(img)
+}
+
+///|
+pub fn combined_features(
+  img : @types.Image,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.combined_features(img)
+}
