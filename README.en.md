@@ -10,8 +10,8 @@
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
 [![Tests](https://img.shields.io/badge/tests-1700-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-675%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-0.4.11-orange)]()
+[![Functions](https://img.shields.io/badge/API-900%2B%20functions%20%2B%20187%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-0.6.0-orange)]()
 
 [Highlights](#-highlights) · [Format Support](#-format-support) · [Quick Start](#-quick-start) · [Features](#-features) · [Multi-Target](#-multi-target-support) · [Package Structure](#-package-structure) · [Docs](#-documentation) · [Build](#-build--test) · [Contributing](#-contributing)
 
@@ -39,7 +39,8 @@ This project participates in the **2026 MoonBit Domestic Open Source Ecosystem C
 | 🟢 | **Four targets** | native / wasm-gc / js / wasm share one codebase, no conditional compilation |
 | 🟢 | **Broad format coverage** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — includes exclusive PSD, HDR |
 | 🟢 | **Full pixel depth** | 8-bit `Image`, 16-bit `Image16`, HDR float `ImageF` |
-| | 🟢 | **675 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy encoding |
+| 🟢 | **900+ APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy codec, full OCR pipeline (digit/English/Chinese/table/handwriting/multilingual) |
+| 🟢 | **Full OCR pipeline** | Preprocessing→text detection→char segmentation→feature extraction→classifier→digit/English/Chinese OCR→table recognition→postprocessing→document understanding→handwriting→multilingual, 19 module files |
 | 🟢 | **Streaming decode** | Row-by-row / chunked / channel-specified callbacks (currently full decode then row dispatch; incremental decode planned for v5.0) |
 | 🟢 | **Safety hardening** | MAX_IMAGE_DIMENSION(65535) guard + check_dims validation at all decoder entry points + safe_mul overflow protection |
 | 🟢 | **Multi-package architecture** | 8 sub-packages with clear responsibilities, parallel compilation, independent testing |
@@ -139,7 +140,26 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 Features
 
-675 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
+900+ public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
+
+### OCR Features (v7.0 - v9.4)
+
+| Module | Features | Version |
+|--------|----------|---------|
+| **Preprocessing** | Sauvola/Niblack/Otsu binarization, document enhancement, deskew, layout analysis | v7.0 |
+| **Text Detection** | Connected components, projection analysis, text line detection, char segmentation | v7.1 |
+| **Char Segmentation** | Drop fall algorithm, touching char detection, connected component segmentation | v7.2 |
+| **Feature Extraction** | HOG, LBP, projection features, grid features, statistical features, combined features | v7.3 |
+| **Classifier** | KNN, template matching, 4 distance metrics, feature normalization/standardization | v7.4 |
+| **Digit OCR** | 0-9 digit recognition, 7-segment display templates | v7.5 |
+| **English OCR** | Digits+uppercase+lowercase, 36+ char templates | v8.0 |
+| **Postprocessing** | Dictionary matching, N-gram language model, spell correction, confusion correction | v8.1 |
+| **Chinese OCR** | 100 common chars basic, 500+ common chars advanced, radical decomposition | v8.2/v9.0 |
+| **Table Recognition** | Table line detection, structure analysis, cell extraction | v8.3 |
+| **Accuracy Boost** | Hu moments, training data management, feature augmentation, ensemble learning | v9.1 |
+| **Document Understanding** | Layout analysis, reading order, heading/body classification, 14 element types | v9.2 |
+| **Handwriting OCR** | Multi-variant templates, flexible segmentation, slant correction, variant voting | v9.3 |
+| **Multilingual** | Language detection, Chinese-English mixed, 50+ punctuation templates, auto detection | v9.4 |
 
 ## 🎯 Multi-Target Support
 
@@ -163,18 +183,25 @@ src/
 │   └── util/           #   Utilities
 ├── lib/                # High-level wrapper (auto format dispatch)
 ├── meta/               # Metadata (EXIF, PNG meta)
-├── process/            # Advanced image processing (7 sub-packages)
+├── process/            # Advanced image processing (8 sub-packages)
 │   ├── color/          #   Color conversion/adjust/CLAHE/adaptive threshold/Retinex/dehaze
 │   ├── edge/           #   Edge detection/Canny/Hough/contours
 │   ├── feature/        #   Feature detection: Harris/ORB/SIFT/template matching/optical flow/GLCM/LBP
 │   ├── filter/         #   Filtering/denoising/inpainting
 │   ├── frequency/      #   FFT/DCT/Haar wavelet/frequency filtering
 │   ├── segment/        #   Watershed/SLIC/grabCut/morphology/connected components
-│   └── transform/      #   Geometric transforms/perspective/Seam Carving/pyramids
+│   ├── transform/      #   Geometric transforms/perspective/Seam Carving/pyramids
+│   └── ocr/            #   Full OCR pipeline (19 modules)
+│       ├── preprocess  #     binarization/document_enhance/deskew/layout_analysis
+│       ├── detection   #     connected_components/projection_analysis/char_segmentation
+│       ├── features    #     feature_extraction/classifier
+│       ├── recognition #     digit_ocr/english_ocr/chinese_ocr/advanced_chinese_ocr
+│       ├── postprocess #     postprocess/table_recognition/document_understanding
+│       └── extension   #     ocr_accuracy/handwriting_ocr/multilingual_ocr
 ├── examples/           # Example code (32 examples, all API coverage)
 ├── util/               # Utility functions (built on pure)
 ├── bench.mbt           # Performance benchmarks
-└── reexport.mbt        # Top-level API re-export (442 pub fn + 47 pub type)
+└── reexport.mbt        # Top-level API re-export (231 pub fn + 187 pub type)
 ```
 
 ---
@@ -184,13 +211,13 @@ src/
 | Document | Description |
 |----------|-------------|
 | [docs/architecture.md](docs/architecture.md) | Architecture diagram, package dependencies, design decisions |
-| [docs/api_reference.md](docs/api_reference.md) | Full API reference (675 functions + 1 const + 47 types) |
+| [docs/api_reference.md](docs/api_reference.md) | Full API reference (900+ functions + 187 types) |
 | [docs/roadmap.md](docs/roadmap.md) | Iteration roadmap |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io image library comparison |
 | [docs/performance_report.md](docs/performance_report.md) | Performance benchmark report (46 benchmarks) |
 | [docs/notes.md](docs/notes.md) | Usage notes and core constraints |
 | [docs/examples.md](docs/examples.md) | Complete examples (32 examples) |
-| [docs/features.md](docs/features.md) | Feature overview (675 APIs by category) |
+| [docs/features.md](docs/features.md) | Feature overview (900+ APIs by category) |
 | [docs/contributing.md](docs/contributing.md) | Contributing guide (dev setup/workflow/conventions) |
 | [docs/changelog.md](docs/changelog.md) | Version changelog |
 
@@ -266,6 +293,8 @@ On top of the port, this project adds many advanced capabilities **not in `stb_i
 - **Advanced filtering** — Bilateral / NLM denoising / CLAHE / Retinex / dehazing / inpainting
 - **Feature descriptors** — LBP / GLCM texture / Hu moments / perceptual hash
 - **WebP lossy (VP8) encoding** — Original does not support WebP
+- **Full OCR pipeline** — Preprocessing/text detection/char segmentation/feature extraction/classifier/digit OCR/English OCR/Chinese OCR/table recognition/postprocessing
+- **OCR extensions** — Advanced Chinese OCR (500+ chars)/accuracy boost (Hu moments/ensemble learning)/document understanding/handwriting recognition/multilingual mixed recognition
 - **Safety hardening** — Dimension overflow guards + overflow-safe multiplication + decoder entry validation
 
 ### Differences from Original
@@ -276,7 +305,7 @@ On top of the port, this project adds many advanced capabilities **not in `stb_i
 | Dependencies | C compiler | Zero C deps |
 | Targets | native | native / wasm-gc / js / wasm |
 | Formats | 7 | 15 |
-| APIs | ~30 | 675 |
+| APIs | ~30 | 900+ |
 | Advanced algorithms | None | 50+ |
 | Memory safety | Manual | GC managed |
 

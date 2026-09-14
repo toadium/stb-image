@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v5.3.0）演进历史。mooncakes **包版本**为 `0.4.11`（要求 0.x.y 格式），对应最新功能版本 v5.3.0。
+> 下表为**功能迭代版本**（v0.1 → v9.4.0）演进历史。mooncakes **包版本**为 `0.6.0`（要求 0.x.y 格式），对应最新功能版本 v9.4.0。
 
 ## 版本历史
 
@@ -88,11 +88,7 @@
 | **v5.46.0** | **VP8 非关键帧完整集成：实现亚像素运动补偿（1/4像素精度，6抽头半像素插值+双线性四分之一像素插值）、运动向量残差解析（Exp-Golomb编码）、参考帧选择（last/golden/altref）、完整非关键帧解码函数（decode_vp8_inter_frame，支持帧内/帧间宏块混合、运动补偿+残差、参考帧更新）、Vp8ReferenceFrames改为公开类型** | **1700** |
 | **v5.47.0** | **VP8 Segment 解析：实现完整的 segmentation 特性解析（segmentation_enabled/update_map/update_features/feature_mode）、每个segment的量化器增量和滤波级别增量、宏块segment ID树解析（3个概率的二叉树）、基于segment的自适应量化参数计算、基于segment的自适应滤波级别计算、集成到主解码流程（segment_id_map保存每个宏块的segment ID）** | **1700** |
 | **v5.48.0** | **VP8 编码器完整实现：实现完整的 WebP lossy (VP8) 编码器，包括 RGB→YUV420 转换、4x4 DCT 正向变换（VP8特定变换矩阵）、16x16 WHT 正向变换（DC系数）、量化（基于quality的量化参数）、I16x16 DC 帧内预测、布尔算术编码器（Vp8BoolEncoder）、token编码（零/一/EOB/额外位/符号位）、完整VP8 frame header构建、WebP RIFF容器构建、新增公开API encode_webp_lossy_full** | **1700** |
-## 上游
-
-- [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
-- [stb_image_write.h](https://github.com/nothings/stb/blob/master/stb_image_write.h) — 同一提交 (v1.16)
-- [stb_image_resize2.h](https://github.com/nothings/stb/blob/master/stb_image_resize2.h) — v2.07| **v5.49.0** | **VP8 编码器完善 - I16x16 4种预测模式：实现 DC/TrueMotion/H/V 四种 I16x16 帧内预测模式、基于 SAD 代价的预测模式选择（vp8_select_i16x16_mode）、预测模式编码（2 bits）、集成到主编码流程** | **1700** |
+| **v5.49.0** | **VP8 编码器完善 - I16x16 4种预测模式：实现 DC/TrueMotion/H/V 四种 I16x16 帧内预测模式、基于 SAD 代价的预测模式选择（vp8_select_i16x16_mode）、预测模式编码（2 bits）、集成到主编码流程** | **1700** |
 | **v5.50.0** | **VP8 编码器环路滤波：实现编码器端环路滤波（宏块边界垂直/水平滤波）、重建 Y 平面管理（用于后续预测和环路滤波）、基于量化参数的自适应滤波强度、集成到主编码流程** | **1700** |
 | **v5.51.0** | **VP8 编码器自适应概率模型：实现编码器端自适应概率模型（Vp8EncAdaptiveProbs）、token 概率表（16位置×4token）、预测模式概率表、统计计数器、EMA 概率更新（每8块更新一次）、预测模式统计记录、集成到主编码流程** | **1700** |
 | **v5.52.0** | **VP8 编码器 Segment 支持：实现编码器端 Segment 参数（Vp8EncSegmentParams）、基于图像复杂度的自动 segment 分配（方差计算）、4个 segment 的量化器增量和滤波级别增量、宏块级自适应量化参数（vp8_enc_get_mb_quant）、集成到主编码流程** | **1700** |
@@ -116,3 +112,9 @@
 | **v9.2.0** | **文档理解：新增版面分析（文本块检测/元素分类）、阅读顺序计算（从上到下/从左到右）、标题/正文分类（基于字体大小）、文档结构提取（标题/小标题/正文/页眉页脚）、多栏检测、完整文档理解流水线。新增 10+ 公开 API，1700 测试全绿** | **1700** |
 | **v9.3.0** | **手写体识别：新增手写体专用模板（多变体，每字符3种写法）、灵活的字符分割（宽松宽高比）、手写体倾斜校正（基于垂直投影方差）、手写体识别配置（灵活性参数）、多变体投票识别。新增 5+ 公开 API，1700 测试全绿** | **1700** |
 | **v9.4.0** | **多语言混合识别：新增语言检测（基于字符宽高比）、中英混排识别、标点符号优化（50+中英文标点模板）、多语言识别配置、自动语言检测、多语言识别流水线。新增 6+ 公开 API，1700 测试全绿。至此 v9.x 扩展方向全部完成** | **1700** |
+
+## 上游
+
+- [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
+- [stb_image_write.h](https://github.com/nothings/stb/blob/master/stb_image_write.h) — 同一提交 (v1.16)
+- [stb_image_resize2.h](https://github.com/nothings/stb/blob/master/stb_image_resize2.h) — v2.07

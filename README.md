@@ -12,8 +12,8 @@
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
 [![Tests](https://img.shields.io/badge/tests-1700-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-675%20functions%20%2B%201%20const%20%2B%2047%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-0.4.11-orange)]()
+[![Functions](https://img.shields.io/badge/API-900%2B%20functions%20%2B%20187%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-0.6.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
@@ -41,7 +41,8 @@
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| | 🟢 | **675 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编码等高级算法 |
+| 🟢 | **900+ 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编解码、OCR 全链路（数字/英文/中文/表格/手写体/多语言混合）等高级算法 |
+| 🟢 | **OCR 全链路** | 预处理→文本检测→字符分割→特征提取→分类器→数字/英文/中文OCR→表格识别→后处理→文档理解→手写体→多语言混合，19 个模块文件 |
 | 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，v5.0 计划增量解码） |
 | 🟢 | **安全加固** | MAX_IMAGE_DIMENSION(65535) 维度守卫 + check_dims 全解码器入口校验 + safe_mul 溢出保护 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
@@ -141,7 +142,26 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 功能一览
 
-675 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
+900+ 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
+
+### OCR 功能（v7.0 - v9.4）
+
+| 模块 | 功能 | 版本 |
+|------|------|------|
+| **预处理** | Sauvola/Niblack/Otsu 二值化、文档增强、倾斜校正、版面分析 | v7.0 |
+| **文本检测** | 连通域分析、投影分析、文本行检测、字符分割 | v7.1 |
+| **字符分割** | 滴水算法、粘连字符检测、连通域分割、后处理 | v7.2 |
+| **特征提取** | HOG、LBP、投影特征、网格特征、统计特征、组合特征 | v7.3 |
+| **分类器** | KNN、模板匹配、4种距离度量、特征归一化/标准化 | v7.4 |
+| **数字 OCR** | 0-9 数字识别、7段显示模板 | v7.5 |
+| **英文 OCR** | 数字+大写字母+小写字母、36+字符模板 | v8.0 |
+| **后处理** | 词典匹配、N-gram 语言模型、拼写纠错、混淆字符纠错 | v8.1 |
+| **中文 OCR** | 100 常用字基础、500+ 常用字完善、部件分解 | v8.2/v9.0 |
+| **表格识别** | 表格线检测、结构分析、单元格提取 | v8.3 |
+| **准确率提升** | Hu 矩、训练数据管理、特征增广、集成学习 | v9.1 |
+| **文档理解** | 版面分析、阅读顺序、标题正文分类、14种元素类型 | v9.2 |
+| **手写体识别** | 多变体模板、灵活分割、倾斜校正、多变体投票 | v9.3 |
+| **多语言混合** | 语言检测、中英混排、50+标点模板、自动语言检测 | v9.4 |
 
 ## 🎯 多目标支持
 
@@ -165,18 +185,25 @@ src/
 │   └── util/           #   工具
 ├── lib/                # 高层封装 (自动格式分派)
 ├── meta/               # 元数据 (EXIF, PNG meta)
-├── process/            # 高级图像处理算法 (7 子包)
-│   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值
+├── process/            # 高级图像处理算法 (8 子包)
+│   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值/Retinex/去雾
 │   ├── edge/           #   边缘检测/Canny/霍夫/轮廓
 │   ├── feature/        #   特征检测: Harris/ORB/SIFT/模板匹配/光流/GLCM/LBP
 │   ├── filter/         #   滤波/去噪/图像修复
 │   ├── frequency/      #   FFT/DCT/Haar 小波/频率滤波
 │   ├── segment/        #   分水岭/SLIC/grabCut/形态学/连通域
-│   └── transform/      #   几何变换/透视/Seam Carving/金字塔
+│   ├── transform/      #   几何变换/透视/Seam Carving/金字塔
+│   └── ocr/            #   OCR 全链路 (19 个模块)
+│       ├── 预处理      #     binarization/document_enhance/deskew/layout_analysis
+│       ├── 检测分割    #     connected_components/projection_analysis/char_segmentation
+│       ├── 特征分类    #     feature_extraction/classifier
+│       ├── 识别引擎    #     digit_ocr/english_ocr/chinese_ocr/advanced_chinese_ocr
+│       ├── 后处理      #     postprocess/table_recognition/document_understanding
+│       └── 扩展        #     ocr_accuracy/handwriting_ocr/multilingual_ocr
 ├── examples/           # 示例代码 (32 个示例，覆盖全部 API)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
-└── reexport.mbt        # 顶层 API re-export (420 pub fn + 47 pub type)
+└── reexport.mbt        # 顶层 API re-export (231 pub fn + 187 pub type)
 ```
 
 ---
@@ -186,13 +213,13 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（675 函数 + 1 常量 + 47 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（900+ 函数 + 187 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（46 项基准） |
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
-| [docs/features.md](docs/features.md) | 功能一览（675 API 分类概览） |
+| [docs/features.md](docs/features.md) | 功能一览（900+ API 分类概览） |
 | [docs/contributing.md](docs/contributing.md) | 贡献指南（开发环境/流程/规范） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
