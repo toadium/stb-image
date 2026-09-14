@@ -20,6 +20,7 @@ import {
   "walkzzz/image/src/process/detection",
   "walkzzz/image/src/process/quality",
   "walkzzz/image/src/process/fusion",
+  "walkzzz/image/src/process/registration",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

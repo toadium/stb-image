@@ -4444,3 +4444,83 @@ pub fn fuse_images(
     None => @fusion.fuse_images(img1, img2)
   }
 }
+
+// ==================== 图像配准（v12.7.0） ====================
+
+///|
+pub type RegistrationResult = @registration.RegistrationResult
+
+///|
+pub type AffineTransform = @registration.AffineTransform
+
+///|
+pub fn affine_identity() -> @registration.AffineTransform {
+  @registration.affine_identity()
+}
+
+///|
+pub fn affine_translation(
+  dx : Double,
+  dy : Double,
+) -> @registration.AffineTransform {
+  @registration.affine_translation(dx, dy)
+}
+
+///|
+pub fn affine_rotation(
+  angle : Double,
+) -> @registration.AffineTransform {
+  @registration.affine_rotation(angle)
+}
+
+///|
+pub fn affine_scale(
+  sx : Double,
+  sy : Double,
+) -> @registration.AffineTransform {
+  @registration.affine_scale(sx, sy)
+}
+
+///|
+pub fn affine_compose(
+  t1 : @registration.AffineTransform,
+  t2 : @registration.AffineTransform,
+) -> @registration.AffineTransform {
+  @registration.affine_compose(t1, t2)
+}
+
+///|
+pub fn affine_apply(
+  t : @registration.AffineTransform,
+  x : Double,
+  y : Double,
+) -> (Double, Double) {
+  @registration.affine_apply(t, x, y)
+}
+
+///|
+pub fn estimate_translation(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  max_offset? : Int = 20,
+) -> @registration.RegistrationResult {
+  @registration.estimate_translation(img1, img2, max_offset~)
+}
+
+///|
+pub fn warp_affine_transform(
+  img : @types.Image,
+  transform : @registration.AffineTransform,
+  out_width? : Int = 0,
+  out_height? : Int = 0,
+) -> @types.Image {
+  @registration.warp_affine_transform(img, transform, out_width~, out_height~)
+}
+
+///|
+pub fn align_images(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> (@types.Image, @registration.RegistrationResult) {
+  @registration.align_images(img1, img2)
+}
