@@ -3954,3 +3954,23 @@ pub fn decode_linear_barcode(
 ) -> Array[@barcode.BarcodeResult] {
   @barcode.decode_linear_barcode(img)
 }
+
+// ==================== QR Code 完整解码（v11.4.0） ====================
+
+///|
+pub type QrDecodeResult = @barcode.QrDecodeResult
+
+///|
+pub fn decode_qrcode_full(
+  img : @types.Image,
+) -> @barcode.QrDecodeResult? {
+  @barcode.decode_qrcode_full(img)
+}
+
+///|
+pub fn reed_solomon_decode(
+  data : Array[Int],
+  ec_bytes : Int,
+) -> (Array[Int], Int) {
+  @barcode.reed_solomon_decode(data, ec_bytes)
+}
