@@ -4398,3 +4398,49 @@ pub fn compute_diff_image(
 ) -> @types.Image {
   @quality.compute_diff_image(img1, img2)
 }
+
+// ==================== 图像融合（v12.6.0） ====================
+
+///|
+pub type FusionConfig = @fusion.FusionConfig
+
+///|
+pub fn fusion_default_config() -> @fusion.FusionConfig {
+  @fusion.fusion_default_config()
+}
+
+///|
+pub fn fuse_alpha(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  alpha? : Double = 0.5,
+) -> @types.Image {
+  @fusion.fuse_alpha(img1, img2, alpha~)
+}
+
+///|
+pub fn fuse_multifocus(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> @types.Image {
+  @fusion.fuse_multifocus(img1, img2)
+}
+
+///|
+pub fn fuse_exposure(
+  images : Array[@types.Image],
+) -> @types.Image {
+  @fusion.fuse_exposure(images)
+}
+
+///|
+pub fn fuse_images(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  config? : @fusion.FusionConfig,
+) -> @types.Image {
+  match config {
+    Some(c) => @fusion.fuse_images(img1, img2, config=c)
+    None => @fusion.fuse_images(img1, img2)
+  }
+}
