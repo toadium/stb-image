@@ -3322,3 +3322,49 @@ pub fn recognize_handwriting(
     None => @ocr.recognize_handwriting(img)
   }
 }
+
+// ==================== 多语言混合识别（v9.4.0） ====================
+
+///|
+pub type LanguageType = @ocr.LanguageType
+
+///|
+pub type MultilingualOcrConfig = @ocr.MultilingualOcrConfig
+
+///|
+pub type PunctuationTemplate = @ocr.PunctuationTemplate
+
+///|
+pub fn multilingual_ocr_default_config() -> @ocr.MultilingualOcrConfig {
+  @ocr.multilingual_ocr_default_config()
+}
+
+///|
+pub fn generate_punctuation_templates() -> Array[@ocr.PunctuationTemplate] {
+  @ocr.generate_punctuation_templates()
+}
+
+///|
+pub fn detect_char_language(
+  char_img : @types.Image,
+) -> @ocr.LanguageType {
+  @ocr.detect_char_language(char_img)
+}
+
+///|
+pub fn detect_document_language(
+  img : @types.Image,
+) -> @ocr.LanguageType raise @types.LoadError {
+  @ocr.detect_document_language(img)
+}
+
+///|
+pub fn recognize_multilingual(
+  img : @types.Image,
+  config? : @ocr.MultilingualOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_multilingual(img, config=c)
+    None => @ocr.recognize_multilingual(img)
+  }
+}
