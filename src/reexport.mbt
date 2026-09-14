@@ -2752,3 +2752,116 @@ pub fn combined_features(
 ) -> Array[Double] raise @types.LoadError {
   @ocr.combined_features(img)
 }
+
+// ==================== OCR 简单分类器（v7.4.0） ====================
+
+///|
+pub type ClassificationResult = @ocr.ClassificationResult
+
+///|
+pub type TrainingSample = @ocr.TrainingSample
+
+///|
+pub type KnnClassifier = @ocr.KnnClassifier
+
+///|
+pub type TemplateMatcher = @ocr.TemplateMatcher
+
+///|
+pub type DistanceMetric = @ocr.DistanceMetric
+
+///|
+pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double {
+  @ocr.euclidean_distance(a, b)
+}
+
+///|
+pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double {
+  @ocr.manhattan_distance(a, b)
+}
+
+///|
+pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double {
+  @ocr.cosine_distance(a, b)
+}
+
+///|
+pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double {
+  @ocr.chebyshev_distance(a, b)
+}
+
+///|
+pub fn compute_distance(
+  a : Array[Double],
+  b : Array[Double],
+  metric : @ocr.DistanceMetric,
+) -> Double {
+  @ocr.compute_distance(a, b, metric)
+}
+
+///|
+pub fn knn_create(
+  k? : Int = 3,
+  distance_metric? : String = "euclidean",
+) -> @ocr.KnnClassifier {
+  @ocr.knn_create(k~, distance_metric~)
+}
+
+///|
+pub fn knn_add_sample(
+  classifier : @ocr.KnnClassifier,
+  features : Array[Double],
+  label : String,
+) -> @ocr.KnnClassifier {
+  @ocr.knn_add_sample(classifier, features, label)
+}
+
+///|
+pub fn knn_add_samples(
+  classifier : @ocr.KnnClassifier,
+  samples : Array[(Array[Double], String)],
+) -> @ocr.KnnClassifier {
+  @ocr.knn_add_samples(classifier, samples)
+}
+
+///|
+pub fn knn_predict(
+  classifier : @ocr.KnnClassifier,
+  features : Array[Double],
+) -> @ocr.ClassificationResult {
+  @ocr.knn_predict(classifier, features)
+}
+
+///|
+pub fn template_matcher_create(
+  distance_metric? : String = "euclidean",
+) -> @ocr.TemplateMatcher {
+  @ocr.template_matcher_create(distance_metric~)
+}
+
+///|
+pub fn template_matcher_add(
+  matcher : @ocr.TemplateMatcher,
+  label : String,
+  template : Array[Double],
+) -> @ocr.TemplateMatcher {
+  @ocr.template_matcher_add(matcher, label, template)
+}
+
+///|
+pub fn template_matcher_predict(
+  matcher : @ocr.TemplateMatcher,
+  features : Array[Double],
+) -> @ocr.ClassificationResult {
+  @ocr.template_matcher_predict(matcher, features)
+}
+
+///|
+pub fn normalize_features(features : Array[Double]) -> Array[Double] {
+  @ocr.normalize_features(features)
+}
+
+///|
+pub fn standardize_features(features : Array[Double]) -> Array[Double] {
+  @ocr.standardize_features(features)
+}
