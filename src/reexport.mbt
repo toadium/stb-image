@@ -4672,3 +4672,81 @@ pub fn disparity_to_depth(
 ) -> @types.Image {
   @stereo3d.disparity_to_depth(disparity, baseline~, focal_length~)
 }
+
+// ==================== 医学图像处理（v12.10.0） ====================
+
+///|
+pub type WindowLevel = @medical.WindowLevel
+
+///|
+pub fn window_level_lung() -> @medical.WindowLevel {
+  @medical.window_level_lung()
+}
+
+///|
+pub fn window_level_mediastinum() -> @medical.WindowLevel {
+  @medical.window_level_mediastinum()
+}
+
+///|
+pub fn window_level_bone() -> @medical.WindowLevel {
+  @medical.window_level_bone()
+}
+
+///|
+pub fn window_level_brain() -> @medical.WindowLevel {
+  @medical.window_level_brain()
+}
+
+///|
+pub fn apply_window_level(
+  img : @types.Image,
+  config : @medical.WindowLevel,
+) -> @types.Image {
+  @medical.apply_window_level(img, config)
+}
+
+///|
+pub fn medical_colormap(
+  img : @types.Image,
+  colormap? : String = "hot",
+) -> @types.Image {
+  @medical.medical_colormap(img, colormap~)
+}
+
+///|
+pub fn medical_contrast_enhance(
+  img : @types.Image,
+  clip_limit? : Double = 2.0,
+  tile_size? : Int = 8,
+) -> @types.Image {
+  @medical.medical_contrast_enhance(img, clip_limit~, tile_size~)
+}
+
+///|
+pub fn medical_denoise(
+  img : @types.Image,
+  iterations? : Int = 5,
+  kappa? : Double = 30.0,
+) -> @types.Image {
+  @medical.medical_denoise(img, iterations~, kappa~)
+}
+
+///|
+pub fn measure_distance(
+  x1 : Int,
+  y1 : Int,
+  x2 : Int,
+  y2 : Int,
+  pixel_spacing? : Double = 1.0,
+) -> Double {
+  @medical.measure_distance(x1, y1, x2, y2, pixel_spacing~)
+}
+
+///|
+pub fn measure_area(
+  mask : @types.Image,
+  pixel_area? : Double = 1.0,
+) -> Double {
+  @medical.measure_area(mask, pixel_area~)
+}
