@@ -3720,3 +3720,62 @@ pub fn recognize_multilingual_enhanced(
     None => @ocr.recognize_multilingual_enhanced(img)
   }
 }
+
+// ==================== 条形码/二维码识别（v11.0.0） ====================
+
+///|
+pub type BarcodeType = @barcode.BarcodeType
+
+///|
+pub type BarcodeResult = @barcode.BarcodeResult
+
+///|
+pub type BarcodeConfig = @barcode.BarcodeConfig
+
+///|
+pub type QrFinderPattern = @barcode.QrFinderPattern
+
+///|
+pub fn barcode_default_config() -> @barcode.BarcodeConfig {
+  @barcode.barcode_default_config()
+}
+
+///|
+pub fn decode_ean13(
+  img : @types.Image,
+  config? : @barcode.BarcodeConfig,
+) -> @barcode.BarcodeResult? {
+  match config {
+    Some(c) => @barcode.decode_ean13(img, config=c)
+    None => @barcode.decode_ean13(img)
+  }
+}
+
+///|
+pub fn detect_qr_finder_patterns(
+  img : @types.Image,
+) -> Array[@barcode.QrFinderPattern] {
+  @barcode.detect_qr_finder_patterns(img)
+}
+
+///|
+pub fn decode_qrcode(
+  img : @types.Image,
+  config? : @barcode.BarcodeConfig,
+) -> @barcode.BarcodeResult? {
+  match config {
+    Some(c) => @barcode.decode_qrcode(img, config=c)
+    None => @barcode.decode_qrcode(img)
+  }
+}
+
+///|
+pub fn decode_barcode(
+  img : @types.Image,
+  config? : @barcode.BarcodeConfig,
+) -> Array[@barcode.BarcodeResult] {
+  match config {
+    Some(c) => @barcode.decode_barcode(img, config=c)
+    None => @barcode.decode_barcode(img)
+  }
+}
