@@ -3368,3 +3368,55 @@ pub fn recognize_multilingual(
     None => @ocr.recognize_multilingual(img)
   }
 }
+
+// ==================== 中文 OCR 增强版（v10.0.0） ====================
+
+///|
+pub type EnhancedChineseOcrConfig = @ocr.EnhancedChineseOcrConfig
+
+///|
+pub type ChineseCharInfo = @ocr.ChineseCharInfo
+
+///|
+pub fn enhanced_chinese_ocr_default_config() -> @ocr.EnhancedChineseOcrConfig {
+  @ocr.enhanced_chinese_ocr_default_config()
+}
+
+///|
+pub fn generate_chinese_char_info_db() -> Array[@ocr.ChineseCharInfo] {
+  @ocr.generate_chinese_char_info_db()
+}
+
+///|
+pub fn generate_enhanced_chinese_templates(
+  char_set_size? : Int = 1000,
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_enhanced_chinese_templates(char_set_size~)
+}
+
+///|
+pub fn structure_based_filter(
+  char_img : @types.Image,
+  char_db : Array[@ocr.ChineseCharInfo],
+  max_candidates? : Int = 50,
+) -> Array[@ocr.ChineseCharInfo] {
+  @ocr.structure_based_filter(char_img, char_db, max_candidates~)
+}
+
+///|
+pub fn extract_stroke_features(
+  char_img : @types.Image,
+) -> Array[Double] {
+  @ocr.extract_stroke_features(char_img)
+}
+
+///|
+pub fn recognize_enhanced_chinese(
+  img : @types.Image,
+  config? : @ocr.EnhancedChineseOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_enhanced_chinese(img, config=c)
+    None => @ocr.recognize_enhanced_chinese(img)
+  }
+}

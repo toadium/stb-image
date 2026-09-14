@@ -118,3 +118,4 @@
 - [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) — 提交 `013ac3beddff3dbffafd5177e7972067cd2b5083` (v2.30)
 - [stb_image_write.h](https://github.com/nothings/stb/blob/master/stb_image_write.h) — 同一提交 (v1.16)
 - [stb_image_resize2.h](https://github.com/nothings/stb/blob/master/stb_image_resize2.h) — v2.07
+| **v10.0.0** | **中文 OCR 增强版：新增 1000 常用字模板（改进的4层哈希算法）、汉字结构信息数据库（200字详细结构：部首/笔画/结构类型/复杂度/常用等级）、基于结构的预筛选（减少匹配范围）、笔画特征提取（水平/垂直投影密度、重心、总密度）、增强识别流水线（结构预筛选+模板匹配+笔画特征）。新增 7+ 公开 API，1700 测试全绿** | **1700** |
