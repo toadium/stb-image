@@ -5071,3 +5071,66 @@ pub fn batch_encrypt(
 ) -> Array[@types.Image] {
   @encryption.batch_encrypt(images, key)
 }
+
+// ==================== 计算摄影增强（v12.15.0） ====================
+
+///|
+pub type LowLightConfig = @photo_enhance.LowLightConfig
+
+///|
+pub fn low_light_default_config() -> @photo_enhance.LowLightConfig {
+  @photo_enhance.low_light_default_config()
+}
+
+///|
+pub fn low_light_enhance(
+  img : @types.Image,
+  config? : @photo_enhance.LowLightConfig,
+) -> @types.Image {
+  match config {
+    Some(cfg) => @photo_enhance.low_light_enhance(img, config=cfg)
+    None => @photo_enhance.low_light_enhance(img)
+  }
+}
+
+///|
+pub fn deblur_motion(
+  img : @types.Image,
+  kernel_size? : Int = 15,
+  angle? : Double = 0.0,
+) -> @types.Image {
+  @photo_enhance.deblur_motion(img, kernel_size~, angle~)
+}
+
+///|
+pub fn color_enhance(
+  img : @types.Image,
+  saturation? : Double = 1.3,
+  contrast? : Double = 1.1,
+) -> @types.Image {
+  @photo_enhance.color_enhance(img, saturation~, contrast~)
+}
+
+///|
+pub fn clahe_enhance(
+  img : @types.Image,
+  clip_limit? : Double = 2.0,
+  tile_size? : Int = 8,
+) -> @types.Image {
+  @photo_enhance.clahe_enhance(img, clip_limit~, tile_size~)
+}
+
+///|
+pub fn white_balance(
+  img : @types.Image,
+) -> @types.Image {
+  @photo_enhance.white_balance(img)
+}
+
+///|
+pub fn batch_photo_enhance(
+  images : Array[@types.Image],
+  method : String,
+) -> Array[@types.Image] {
+  @photo_enhance.batch_photo_enhance(images, method)
+}

@@ -28,6 +28,7 @@ import {
   "walkzzz/image/src/process/watermark",
   "walkzzz/image/src/process/retrieval",
   "walkzzz/image/src/process/encryption",
+  "walkzzz/image/src/process/photo_enhance",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
