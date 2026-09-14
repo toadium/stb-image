@@ -4841,3 +4841,73 @@ pub fn classification_colormap(
 ) -> @types.Image {
   @remote_sensing.classification_colormap(classification)
 }
+
+// ==================== 数字水印（v12.12.0） ====================
+
+///|
+pub type WatermarkConfig = @watermark.WatermarkConfig
+
+///|
+pub fn watermark_default_config() -> @watermark.WatermarkConfig {
+  @watermark.watermark_default_config()
+}
+
+///|
+pub fn embed_watermark_lsb(
+  cover : @types.Image,
+  watermark : @types.Image,
+  key? : Int = 42,
+) -> @types.Image {
+  @watermark.embed_watermark_lsb(cover, watermark, key~)
+}
+
+///|
+pub fn extract_watermark_lsb(
+  stego : @types.Image,
+) -> @types.Image {
+  @watermark.extract_watermark_lsb(stego)
+}
+
+///|
+pub fn embed_text_watermark(
+  cover : @types.Image,
+  text : String,
+  key? : Int = 42,
+) -> @types.Image {
+  @watermark.embed_text_watermark(cover, text, key~)
+}
+
+///|
+pub fn extract_text_watermark(
+  stego : @types.Image,
+  length : Int,
+  key? : Int = 42,
+) -> String {
+  @watermark.extract_text_watermark(stego, length, key~)
+}
+
+///|
+pub fn watermark_psnr(
+  original : @types.Image,
+  watermarked : @types.Image,
+) -> Double {
+  @watermark.watermark_psnr(original, watermarked)
+}
+
+///|
+pub fn watermark_robustness_test(
+  watermarked : @types.Image,
+  original_watermark : @types.Image,
+  noise_level? : Double = 10.0,
+) -> Double {
+  @watermark.watermark_robustness_test(watermarked, original_watermark, noise_level~)
+}
+
+///|
+pub fn batch_embed_watermark(
+  images : Array[@types.Image],
+  watermark : @types.Image,
+  key? : Int = 42,
+) -> Array[@types.Image] {
+  @watermark.batch_embed_watermark(images, watermark, key~)
+}

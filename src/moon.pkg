@@ -25,6 +25,7 @@ import {
   "walkzzz/image/src/process/stereo3d",
   "walkzzz/image/src/process/medical",
   "walkzzz/image/src/process/remote_sensing",
+  "walkzzz/image/src/process/watermark",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
