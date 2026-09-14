@@ -3590,3 +3590,69 @@ pub fn understand_document_enhanced(
     None => @ocr.understand_document_enhanced(img)
   }
 }
+
+// ==================== 手写体识别增强版（v10.3.0） ====================
+
+///|
+pub type HandwritingOcrEnhancedConfig = @ocr.HandwritingOcrEnhancedConfig
+
+///|
+pub type HandwritingStrokeFeatures = @ocr.HandwritingStrokeFeatures
+
+///|
+pub fn handwriting_ocr_enhanced_default_config() -> @ocr.HandwritingOcrEnhancedConfig {
+  @ocr.handwriting_ocr_enhanced_default_config()
+}
+
+///|
+pub fn generate_enhanced_handwriting_templates(
+  char_set? : String = "digits+letters",
+  num_variants? : Int = 5,
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_enhanced_handwriting_templates(char_set~, num_variants~)
+}
+
+///|
+pub fn extract_handwriting_stroke_features(
+  char_img : @types.Image,
+) -> @ocr.HandwritingStrokeFeatures {
+  @ocr.extract_handwriting_stroke_features(char_img)
+}
+
+///|
+pub fn elastic_match(
+  features : Array[Double],
+  template : Array[Double],
+  elasticity? : Double = 0.5,
+  grid_size? : Int = 16,
+) -> Double {
+  @ocr.elastic_match(features, template, elasticity~, grid_size~)
+}
+
+///|
+pub fn segment_cursive_chars(
+  img : @types.Image,
+  min_char_width? : Int = 8,
+  max_char_width? : Int = 80,
+) -> Array[(Int, Int, Int, Int)] {
+  @ocr.segment_cursive_chars(img, min_char_width~, max_char_width~)
+}
+
+///|
+pub fn handwriting_postprocess(
+  text : String,
+  confidence : Double,
+) -> (String, Double) {
+  @ocr.handwriting_postprocess(text, confidence)
+}
+
+///|
+pub fn recognize_handwriting_enhanced(
+  img : @types.Image,
+  config? : @ocr.HandwritingOcrEnhancedConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_handwriting_enhanced(img, config=c)
+    None => @ocr.recognize_handwriting_enhanced(img)
+  }
+}
