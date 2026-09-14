@@ -4984,3 +4984,90 @@ pub fn database_size(
 ) -> Int {
   @retrieval.database_size(db)
 }
+
+// ==================== 图像加密（v12.14.0） ====================
+
+///|
+pub type EncryptionConfig = @encryption.EncryptionConfig
+
+///|
+pub type EncryptionQuality = @encryption.EncryptionQuality
+
+///|
+pub fn encryption_default_config() -> @encryption.EncryptionConfig {
+  @encryption.encryption_default_config()
+}
+
+///|
+pub fn encrypt_image_logistic(
+  img : @types.Image,
+  key? : Double = 0.123456789,
+  mu? : Double = 3.99,
+) -> @types.Image {
+  @encryption.encrypt_image_logistic(img, key~, mu~)
+}
+
+///|
+pub fn decrypt_image_logistic(
+  img : @types.Image,
+  key? : Double = 0.123456789,
+  mu? : Double = 3.99,
+) -> @types.Image {
+  @encryption.decrypt_image_logistic(img, key~, mu~)
+}
+
+///|
+pub fn encrypt_image_xor(
+  img : @types.Image,
+  key : String,
+) -> @types.Image {
+  @encryption.encrypt_image_xor(img, key)
+}
+
+///|
+pub fn decrypt_image_xor(
+  img : @types.Image,
+  key : String,
+) -> @types.Image {
+  @encryption.decrypt_image_xor(img, key)
+}
+
+///|
+pub fn histogram_entropy(
+  img : @types.Image,
+) -> Double {
+  @encryption.histogram_entropy(img)
+}
+
+///|
+pub fn adjacent_correlation(
+  img : @types.Image,
+  direction? : String = "horizontal",
+) -> Double {
+  @encryption.adjacent_correlation(img, direction~)
+}
+
+///|
+pub fn evaluate_encryption_quality(
+  original : @types.Image,
+  encrypted : @types.Image,
+) -> @encryption.EncryptionQuality {
+  @encryption.evaluate_encryption_quality(original, encrypted)
+}
+
+///|
+pub fn key_sensitivity_test(
+  img : @types.Image,
+  key : Double,
+  delta? : Double = 0.0000001,
+) -> Double {
+  @encryption.key_sensitivity_test(img, key, delta~)
+}
+
+///|
+pub fn batch_encrypt(
+  images : Array[@types.Image],
+  key : Double,
+) -> Array[@types.Image] {
+  @encryption.batch_encrypt(images, key)
+}

@@ -27,6 +27,7 @@ import {
   "walkzzz/image/src/process/remote_sensing",
   "walkzzz/image/src/process/watermark",
   "walkzzz/image/src/process/retrieval",
+  "walkzzz/image/src/process/encryption",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
