@@ -3008,3 +3008,31 @@ pub fn calibrate_confidence(
 ) -> @ocr.OcrResult {
   @ocr.calibrate_confidence(result, factor~)
 }
+
+// ==================== OCR 中文识别（v8.2.0） ====================
+
+///|
+pub type ChineseOcrConfig = @ocr.ChineseOcrConfig
+
+///|
+pub fn chinese_ocr_default_config() -> @ocr.ChineseOcrConfig {
+  @ocr.chinese_ocr_default_config()
+}
+
+///|
+pub fn generate_chinese_templates(
+  char_set? : String = "common",
+) -> Array[(String, Array[Double])] {
+  @ocr.generate_chinese_templates(char_set~)
+}
+
+///|
+pub fn recognize_chinese(
+  img : @types.Image,
+  config? : @ocr.ChineseOcrConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_chinese(img, config=c)
+    None => @ocr.recognize_chinese(img)
+  }
+}
