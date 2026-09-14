@@ -3974,3 +3974,59 @@ pub fn reed_solomon_decode(
 ) -> (Array[Int], Int) {
   @barcode.reed_solomon_decode(data, ec_bytes)
 }
+
+// ==================== 图像风格化（v11.5.0） ====================
+
+///|
+pub type StylizeConfig = @stylize.StylizeConfig
+
+///|
+pub fn stylize_default_config() -> @stylize.StylizeConfig {
+  @stylize.stylize_default_config()
+}
+
+///|
+pub fn oil_paint(
+  img : @types.Image,
+  radius? : Int = 3,
+  intensity? : Int = 20,
+) -> @types.Image {
+  @stylize.oil_paint(img, radius~, intensity~)
+}
+
+///|
+pub fn sketch(
+  img : @types.Image,
+  blend? : Double = 0.7,
+) -> @types.Image {
+  @stylize.sketch(img, blend~)
+}
+
+///|
+pub fn watercolor(
+  img : @types.Image,
+  blur_radius? : Int = 5,
+) -> @types.Image {
+  @stylize.watercolor(img, blur_radius~)
+}
+
+///|
+pub fn cartoon(
+  img : @types.Image,
+  levels? : Int = 8,
+  edge_threshold? : Double = 30.0,
+) -> @types.Image {
+  @stylize.cartoon(img, levels~, edge_threshold~)
+}
+
+///|
+pub fn stylize(
+  img : @types.Image,
+  style : String,
+  config? : @stylize.StylizeConfig,
+) -> @types.Image {
+  match config {
+    Some(c) => @stylize.stylize(img, style, config=c)
+    None => @stylize.stylize(img, style)
+  }
+}
