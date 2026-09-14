@@ -3656,3 +3656,67 @@ pub fn recognize_handwriting_enhanced(
     None => @ocr.recognize_handwriting_enhanced(img)
   }
 }
+
+// ==================== 多语言混合识别增强版（v10.4.0） ====================
+
+///|
+pub type MultilingualOcrEnhancedConfig = @ocr.MultilingualOcrEnhancedConfig
+
+///|
+pub type LanguageDetectionResult = @ocr.LanguageDetectionResult
+
+///|
+pub fn multilingual_ocr_enhanced_default_config() -> @ocr.MultilingualOcrEnhancedConfig {
+  @ocr.multilingual_ocr_enhanced_default_config()
+}
+
+///|
+pub fn detect_language_enhanced(
+  char_img : @types.Image,
+) -> @ocr.LanguageDetectionResult {
+  @ocr.detect_language_enhanced(char_img)
+}
+
+///|
+pub fn smart_segment_chars(
+  img : @types.Image,
+  config : @ocr.MultilingualOcrEnhancedConfig,
+) -> Array[(Int, Int, Int, Int, String)] {
+  @ocr.smart_segment_chars(img, config)
+}
+
+///|
+pub fn smart_spacing_process(
+  text : String,
+  char_languages : Array[String],
+) -> String {
+  @ocr.smart_spacing_process(text, char_languages)
+}
+
+///|
+pub fn normalize_punctuation(
+  text : String,
+  char_languages : Array[String],
+) -> String {
+  @ocr.normalize_punctuation(text, char_languages)
+}
+
+///|
+pub fn language_model_postprocess(
+  text : String,
+  char_languages : Array[String],
+  confidences : Array[Double],
+) -> (String, Array[Double]) {
+  @ocr.language_model_postprocess(text, char_languages, confidences)
+}
+
+///|
+pub fn recognize_multilingual_enhanced(
+  img : @types.Image,
+  config? : @ocr.MultilingualOcrEnhancedConfig,
+) -> @ocr.OcrResult raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.recognize_multilingual_enhanced(img, config=c)
+    None => @ocr.recognize_multilingual_enhanced(img)
+  }
+}
