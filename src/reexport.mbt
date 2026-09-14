@@ -3921,3 +3921,36 @@ pub fn upscale_4x(
 ) -> @types.Image {
   @superres.upscale_4x(img)
 }
+
+// ==================== 更多一维码支持（v11.3.0） ====================
+
+///|
+pub type Code128Charset = @barcode.Code128Charset
+
+///|
+pub fn decode_code128(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? {
+  @barcode.decode_code128(img)
+}
+
+///|
+pub fn decode_upca(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? {
+  @barcode.decode_upca(img)
+}
+
+///|
+pub fn decode_code39(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? {
+  @barcode.decode_code39(img)
+}
+
+///|
+pub fn decode_linear_barcode(
+  img : @types.Image,
+) -> Array[@barcode.BarcodeResult] {
+  @barcode.decode_linear_barcode(img)
+}
