@@ -3859,3 +3859,65 @@ pub fn stitch_images(
     None => @stitch.stitch_images(img1, img2)
   }
 }
+
+// ==================== 超分辨率（v11.2.0） ====================
+
+///|
+pub type SuperResolutionConfig = @superres.SuperResolutionConfig
+
+///|
+pub fn sr_default_config() -> @superres.SuperResolutionConfig {
+  @superres.sr_default_config()
+}
+
+///|
+pub fn super_resolution_bicubic(
+  img : @types.Image,
+  scale : Double,
+) -> @types.Image {
+  @superres.super_resolution_bicubic(img, scale)
+}
+
+///|
+pub fn super_resolution_lanczos(
+  img : @types.Image,
+  scale : Double,
+  a? : Int = 3,
+) -> @types.Image {
+  @superres.super_resolution_lanczos(img, scale, a~)
+}
+
+///|
+pub fn super_resolution_edge_preserving(
+  img : @types.Image,
+  scale : Double,
+  edge_threshold? : Double = 30.0,
+  sharpen_amount? : Double = 0.5,
+) -> @types.Image {
+  @superres.super_resolution_edge_preserving(img, scale, edge_threshold~, sharpen_amount~)
+}
+
+///|
+pub fn super_resolution(
+  img : @types.Image,
+  config? : @superres.SuperResolutionConfig,
+) -> @types.Image {
+  match config {
+    Some(c) => @superres.super_resolution(img, config=c)
+    None => @superres.super_resolution(img)
+  }
+}
+
+///|
+pub fn upscale_2x(
+  img : @types.Image,
+) -> @types.Image {
+  @superres.upscale_2x(img)
+}
+
+///|
+pub fn upscale_4x(
+  img : @types.Image,
+) -> @types.Image {
+  @superres.upscale_4x(img)
+}

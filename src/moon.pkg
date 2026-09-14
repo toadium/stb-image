@@ -14,6 +14,7 @@ import {
   "walkzzz/image/src/process/ocr",
   "walkzzz/image/src/process/barcode",
   "walkzzz/image/src/process/stitch",
+  "walkzzz/image/src/process/superres",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
