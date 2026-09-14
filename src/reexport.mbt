@@ -4207,3 +4207,50 @@ pub fn remove_watermark(
 ) -> @types.Image {
   @enhance.remove_watermark(img, x, y, width, height)
 }
+
+// ==================== 图像去噪（v12.1.0） ====================
+
+///|
+pub type NlmConfig = @enhance.NlmConfig
+
+///|
+pub fn nlm_default_config() -> @enhance.NlmConfig {
+  @enhance.nlm_default_config()
+}
+
+///|
+pub fn denoise_nlm(
+  img : @types.Image,
+  config? : @enhance.NlmConfig,
+) -> @types.Image {
+  match config {
+    Some(c) => @enhance.denoise_nlm(img, config=c)
+    None => @enhance.denoise_nlm(img)
+  }
+}
+
+///|
+pub fn denoise_bilateral(
+  img : @types.Image,
+  diameter? : Int = 9,
+  sigma_color? : Double = 75.0,
+  sigma_space? : Double = 75.0,
+) -> @types.Image {
+  @enhance.denoise_bilateral(img, diameter~, sigma_color~, sigma_space~)
+}
+
+///|
+pub fn denoise_median(
+  img : @types.Image,
+  kernel_size? : Int = 3,
+) -> @types.Image {
+  @enhance.denoise_median(img, kernel_size~)
+}
+
+///|
+pub fn denoise(
+  img : @types.Image,
+  method : String,
+) -> @types.Image {
+  @enhance.denoise(img, method)
+}
