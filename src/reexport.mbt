@@ -3502,3 +3502,91 @@ pub fn recognize_ocr_enhanced(
     None => @ocr.recognize_ocr_enhanced(img, templates)
   }
 }
+
+// ==================== 文档理解增强版（v10.2.0） ====================
+
+///|
+pub type DocumentBlockType = @ocr.DocumentBlockType
+
+///|
+pub type DocumentBlock = @ocr.DocumentBlock
+
+///|
+pub type DocumentTreeNode = @ocr.DocumentTreeNode
+
+///|
+pub type DocumentUnderstandingEnhancedConfig = @ocr.DocumentUnderstandingEnhancedConfig
+
+///|
+pub fn document_understanding_enhanced_default_config() -> @ocr.DocumentUnderstandingEnhancedConfig {
+  @ocr.document_understanding_enhanced_default_config()
+}
+
+///|
+pub fn analyze_layout_enhanced(
+  img : @types.Image,
+  config? : @ocr.DocumentUnderstandingEnhancedConfig,
+) -> Array[@ocr.DocumentBlock] raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.analyze_layout_enhanced(img, config=c)
+    None => @ocr.analyze_layout_enhanced(img)
+  }
+}
+
+///|
+pub fn optimize_reading_order(
+  blocks : Array[@ocr.DocumentBlock],
+  num_columns : Int,
+) -> Array[Int] {
+  @ocr.optimize_reading_order(blocks, num_columns)
+}
+
+///|
+pub fn detect_paragraphs(
+  blocks : Array[@ocr.DocumentBlock],
+  max_line_spacing_ratio? : Double = 2.0,
+) -> Array[Array[Int]] {
+  @ocr.detect_paragraphs(blocks, max_line_spacing_ratio~)
+}
+
+///|
+pub fn detect_titles(
+  blocks : Array[@ocr.DocumentBlock],
+  title_font_size_threshold? : Int = 24,
+) -> Array[Int] {
+  @ocr.detect_titles(blocks, title_font_size_threshold~)
+}
+
+///|
+pub fn build_document_structure_tree(
+  blocks : Array[@ocr.DocumentBlock],
+) -> Array[@ocr.DocumentTreeNode] {
+  @ocr.build_document_structure_tree(blocks)
+}
+
+///|
+pub fn extract_document_text(
+  blocks : Array[@ocr.DocumentBlock],
+  include_headers? : Bool = true,
+  include_footers? : Bool = false,
+) -> String {
+  @ocr.extract_document_text(blocks, include_headers~, include_footers~)
+}
+
+///|
+pub fn document_statistics_enhanced(
+  blocks : Array[@ocr.DocumentBlock],
+) -> (Int, Int, Int, Int, Int, Int, Int) {
+  @ocr.document_statistics_enhanced(blocks)
+}
+
+///|
+pub fn understand_document_enhanced(
+  img : @types.Image,
+  config? : @ocr.DocumentUnderstandingEnhancedConfig,
+) -> (Array[@ocr.DocumentBlock], Array[@ocr.DocumentTreeNode], String) raise @types.LoadError {
+  match config {
+    Some(c) => @ocr.understand_document_enhanced(img, config=c)
+    None => @ocr.understand_document_enhanced(img)
+  }
+}
