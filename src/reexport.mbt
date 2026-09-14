@@ -2623,3 +2623,66 @@ pub fn extract_char_image(
 ) -> @types.Image {
   @ocr.extract_char_image(img, char, target_size~, padding~)
 }
+
+// ==================== OCR 字符分割完善（v7.2.0） ====================
+
+///|
+pub type SplitPoint = @ocr.SplitPoint
+
+///|
+pub type DropFallResult = @ocr.DropFallResult
+
+///|
+pub fn drop_fall_segmentation(
+  img : @types.Image,
+  start_x? : Int = -1,
+) -> @ocr.DropFallResult raise @types.LoadError {
+  @ocr.drop_fall_segmentation(img, start_x~)
+}
+
+///|
+pub fn detect_touching_chars(
+  img : @types.Image,
+  min_char_width? : Int = 8,
+  max_char_width? : Int = 50,
+) -> Array[Int] raise @types.LoadError {
+  @ocr.detect_touching_chars(img, min_char_width~, max_char_width~)
+}
+
+///|
+pub fn segment_by_connected_components(
+  img : @types.Image,
+  min_area? : Int = 5,
+  max_area? : Int = 10000,
+) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  @ocr.segment_by_connected_components(img, min_area~, max_area~)
+}
+
+///|
+pub fn merge_small_segments(
+  segments : Array[(Int, Int, Int, Int)],
+  min_width : Int,
+  min_height : Int,
+) -> Array[(Int, Int, Int, Int)] {
+  @ocr.merge_small_segments(segments, min_width, min_height)
+}
+
+///|
+pub fn filter_noise_segments(
+  segments : Array[(Int, Int, Int, Int)],
+  img_width : Int,
+  img_height : Int,
+  min_area_ratio? : Double = 0.001,
+  max_area_ratio? : Double = 0.5,
+) -> Array[(Int, Int, Int, Int)] {
+  @ocr.filter_noise_segments(segments, img_width, img_height, min_area_ratio~, max_area_ratio~)
+}
+
+///|
+pub fn complete_char_segmentation(
+  img : @types.Image,
+  min_char_width? : Int = 5,
+  max_char_width? : Int = 60,
+) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  @ocr.complete_char_segmentation(img, min_char_width~, max_char_width~)
+}
