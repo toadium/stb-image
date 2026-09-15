@@ -5657,3 +5657,94 @@ pub fn calculate_accuracy_improvement(
 ) -> (Double, Double, Double) {
   @ocr.calculate_accuracy_improvement(before_results, expected_texts)
 }
+
+// ==================== 中文字库管理与部件分解识别（v12.23.0 P2 中文增强） ====================
+
+///|
+pub type DictCharStructure = @ocr.DictCharStructure
+
+///|
+pub type DictComponent = @ocr.DictComponent
+
+///|
+pub type DictCharEntry = @ocr.DictCharEntry
+
+///|
+pub type DictChineseDict = @ocr.DictChineseDict
+
+///|
+pub type DictComponentResult = @ocr.DictComponentResult
+
+///|
+pub type DictCharMatch = @ocr.DictCharMatch
+
+///|
+pub fn create_default_chinese_dictionary() -> @ocr.DictChineseDict {
+  @ocr.create_default_chinese_dictionary()
+}
+
+///|
+pub fn lookup_by_radical(
+  dict : @ocr.DictChineseDict,
+  radical : String,
+) -> Array[@ocr.DictCharEntry] {
+  @ocr.lookup_by_radical(dict, radical)
+}
+
+///|
+pub fn lookup_by_pinyin(
+  dict : @ocr.DictChineseDict,
+  pinyin : String,
+) -> Array[@ocr.DictCharEntry] {
+  @ocr.lookup_by_pinyin(dict, pinyin)
+}
+
+///|
+pub fn lookup_by_structure(
+  dict : @ocr.DictChineseDict,
+  structure : @ocr.DictCharStructure,
+) -> Array[@ocr.DictCharEntry] {
+  @ocr.lookup_by_structure(dict, structure)
+}
+
+///|
+pub fn calculate_chinese_similarity(
+  char1 : @ocr.DictCharEntry,
+  char2 : @ocr.DictCharEntry,
+) -> Double {
+  @ocr.calculate_chinese_similarity(char1, char2)
+}
+
+///|
+pub fn find_similar_chinese_chars(
+  dict : @ocr.DictChineseDict,
+  target_char : String,
+  top_n? : Int = 5,
+) -> Array[@ocr.DictCharMatch] {
+  @ocr.find_similar_chinese_chars(dict, target_char, top_n~)
+}
+
+///|
+pub fn lookup_char(
+  dict : @ocr.DictChineseDict,
+  char : String,
+) -> Option[@ocr.DictCharEntry] {
+  @ocr.lookup_char(dict, char)
+}
+
+///|
+pub fn recognize_by_components(
+  dict : @ocr.DictChineseDict,
+  detected_structure : @ocr.DictCharStructure,
+  detected_components : Array[String],
+  stroke_count_hint? : Int = 0,
+) -> Array[(String, Double)] {
+  @ocr.recognize_by_components(dict, detected_structure, detected_components, stroke_count_hint~)
+}
+
+///|
+pub fn generate_chinese_dictionary_report(
+  dict : @ocr.DictChineseDict,
+) -> String {
+  @ocr.generate_chinese_dictionary_report(dict)
+}
