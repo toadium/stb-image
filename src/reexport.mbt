@@ -5425,3 +5425,80 @@ pub fn enhanced_element_distribution(
 ) -> Array[(String, Int)] {
   @ocr.enhanced_element_distribution(doc)
 }
+
+// ==================== 表格识别增强与图片提取（v12.20.0） ====================
+
+///|
+pub type TableDetectionResult = @ocr.TableDetectionResult
+
+///|
+pub type TableCellContent = @ocr.TableCellContent
+
+///|
+pub type EnhancedTableResult = @ocr.EnhancedTableResult
+
+///|
+pub type ExtractedImage = @ocr.ExtractedImage
+
+///|
+pub fn detect_horizontal_table_lines(
+  binary_img : @types.Image,
+  min_length? : Int = 50,
+  max_gap? : Int = 3,
+) -> Array[(Int, Int, Int)] {
+  @ocr.detect_horizontal_table_lines(binary_img, min_length~, max_gap~)
+}
+
+///|
+pub fn detect_vertical_table_lines(
+  binary_img : @types.Image,
+  min_length? : Int = 50,
+  max_gap? : Int = 3,
+) -> Array[(Int, Int, Int)] {
+  @ocr.detect_vertical_table_lines(binary_img, min_length~, max_gap~)
+}
+
+///|
+pub fn find_line_intersections(
+  h_lines : Array[(Int, Int, Int)],
+  v_lines : Array[(Int, Int, Int)],
+) -> Array[(Int, Int)] {
+  @ocr.find_line_intersections(h_lines, v_lines)
+}
+
+///|
+pub fn detect_table_enhanced(
+  binary_img : @types.Image,
+  min_table_size? : Int = 100,
+) -> Array[@ocr.EnhancedTableResult] {
+  @ocr.detect_table_enhanced(binary_img, min_table_size~)
+}
+
+///|
+pub fn enhanced_table_to_markdown(
+  table : @ocr.EnhancedTableResult,
+) -> String {
+  @ocr.enhanced_table_to_markdown(table)
+}
+
+///|
+pub fn extract_images_enhanced(
+  binary_img : @types.Image,
+  min_area? : Int = 500,
+) -> Array[@ocr.ExtractedImage] {
+  @ocr.extract_images_enhanced(binary_img, min_area~)
+}
+
+///|
+pub fn generate_image_extraction_report(
+  images : Array[@ocr.ExtractedImage],
+) -> String {
+  @ocr.generate_image_extraction_report(images)
+}
+
+///|
+pub fn analyze_table_results(
+  tables : Array[@ocr.EnhancedTableResult],
+) -> Array[(String, Int)] {
+  @ocr.analyze_table_results(tables)
+}

@@ -240,13 +240,108 @@ def classify_element_enhanced(block, avg_font_size=16, avg_x=0):
     return 'paragraph'
 
 
-def detect_tables(binary_img_path):
-    """检测表格区域"""
-    return []
+def detect_tables_enhanced(binary_img_path):
+    """增强版表格检测：基于表格线检测"""
+    img = Image.open(binary_img_path).convert('L')
+    arr = np.array(img)
+    w, h = img.size
+    
+    # 检测水平线
+    h_lines = []
+    for y in range(h):
+        row = arr[y, :]
+        black_pixels = np.where(row < 128)[0]
+        if len(black_pixels) > w * 0.3:
+            # 找连续线段
+            start = black_pixels[0]
+            end = black_pixels[0]
+            for i in range(1, len(black_pixels)):
+                if black_pixels[i] - end <= 3:
+                    end = black_pixels[i]
+                else:
+                    if end - start > 50:
+                        h_lines.append((y, start, end))
+                    start = black_pixels[i]
+                    end = black_pixels[i]
+            if end - start > 50:
+                h_lines.append((y, start, end))
+    
+    # 合并相近的水平线
+    merged_h = []
+    for line in h_lines:
+        found = False
+        for i, (my, msx, mex) in enumerate(merged_h):
+            if abs(line[0] - my) <= 3:
+                merged_h[i] = ((line[0] + my) // 2, min(line[1], msx), max(line[2], mex))
+                found = True
+                break
+        if not found:
+            merged_h.append(line)
+    
+    # 检测垂直线
+    v_lines = []
+    for x in range(w):
+        col = arr[:, x]
+        black_pixels = np.where(col < 128)[0]
+        if len(black_pixels) > h * 0.2:
+            start = black_pixels[0]
+            end = black_pixels[0]
+            for i in range(1, len(black_pixels)):
+                if black_pixels[i] - end <= 3:
+                    end = black_pixels[i]
+                else:
+                    if end - start > 50:
+                        v_lines.append((x, start, end))
+                    start = black_pixels[i]
+                    end = black_pixels[i]
+            if end - start > 50:
+                v_lines.append((x, start, end))
+    
+    # 合并相近的垂直线
+    merged_v = []
+    for line in v_lines:
+        found = False
+        for i, (mx, msy, mey) in enumerate(merged_v):
+            if abs(line[0] - mx) <= 3:
+                merged_v[i] = ((line[0] + mx) // 2, min(line[1], msy), max(line[2], mey))
+                found = True
+                break
+        if not found:
+            merged_v.append(line)
+    
+    # 判断是否为表格（至少2条水平线和2条垂直线）
+    tables = []
+    if len(merged_h) >= 2 and len(merged_v) >= 2:
+        row_ys = sorted(set([l[0] for l in merged_h]))
+        col_xs = sorted(set([l[0] for l in merged_v]))
+        
+        if len(row_ys) >= 2 and len(col_xs) >= 2:
+            table_x = col_xs[0]
+            table_y = row_ys[0]
+            table_w = col_xs[-1] - table_x
+            table_h = row_ys[-1] - table_y
+            
+            if table_w > 100 and table_h > 50:
+                num_rows = len(row_ys) - 1
+                num_cols = len(col_xs) - 1
+                tables.append({
+                    'x': table_x,
+                    'y': table_y,
+                    'width': table_w,
+                    'height': table_h,
+                    'rows': num_rows,
+                    'cols': num_cols,
+                    'h_lines': merged_h,
+                    'v_lines': merged_v,
+                    'has_header': True,
+                    'confidence': 0.85
+                })
+    
+    return tables
 
 
-def detect_images(binary_img_path, min_area=500):
-    """检测图片区域"""
+def detect_images_enhanced(binary_img_path, min_area=500):
+    """增强版图片区域检测：支持多种图片类型判断"""
     img = Image.open(binary_img_path).convert('L')
     arr = np.array(img)
     from scipy import ndimage
@@ -261,16 +356,53 @@ def detect_images(binary_img_path, min_area=500):
             height = y_max - y_min + 1
             if width > 20 and height > 20:
                 fill_ratio = len(ys) / (width * height)
-                image_type = 'diagram' if fill_ratio > 0.8 else ('chart' if fill_ratio > 0.5 else 'photo')
+                aspect_ratio = width / height if height > 0 else 1
+                
+                # 边缘密度
+                region = arr[y_min:y_max+1, x_min:x_max+1]
+                if region.shape[0] > 2 and region.shape[1] > 2:
+                    from scipy import ndimage as ndi
+                    edges = ndi.sobel(region)
+                    edge_density = np.sum(edges > 50) / edges.size
+                else:
+                    edge_density = 0
+                
+                # 图片类型判断
+                if fill_ratio > 0.9 and 0.8 < aspect_ratio < 1.2:
+                    image_type = 'logo'
+                elif fill_ratio > 0.8:
+                    image_type = 'diagram'
+                elif fill_ratio > 0.5 and edge_density > 0.3:
+                    image_type = 'chart'
+                elif aspect_ratio > 2.0 or aspect_ratio < 0.5:
+                    image_type = 'signature'
+                else:
+                    image_type = 'photo'
+                
+                file_name = f'image_{len(images)}.png'
                 images.append({
                     'x': x_min,
                     'y': y_min,
                     'width': width,
                     'height': height,
                     'type': image_type,
-                    'confidence': 0.7
+                    'confidence': 0.75,
+                    'aspect_ratio': aspect_ratio,
+                    'fill_ratio': fill_ratio,
+                    'edge_density': edge_density,
+                    'file_name': file_name
                 })
     return images
+
+
+def extract_image_region(image_path, img_info, output_path):
+    """裁剪并保存图片区域"""
+    img = Image.open(image_path)
+    region = img.crop((img_info['x'], img_info['y'], 
+                       img_info['x'] + img_info['width'], 
+                       img_info['y'] + img_info['height']))
+    region.save(output_path)
+    return output_path
 
 
 def smart_reading_order_enhanced(elements, layout_type='single', page_width=1654):
@@ -408,12 +540,12 @@ def pdf_to_markdown(pdf_path, output_path, dpi=200, first_page=None, last_page=N
         
         # 6. 表格检测
         print(f"[6/10] 表格检测")
-        tables = detect_tables(preprocessed_path)
+        tables = detect_tables_enhanced(preprocessed_path)
         print(f"  检测到 {len(tables)} 个表格")
         
         # 7. 图片检测
         print(f"[7/10] 图片区域检测")
-        images_regions = detect_images(preprocessed_path)
+        images_regions = detect_images_enhanced(preprocessed_path)
         print(f"  检测到 {len(images_regions)} 个图片区域")
         for i, img_region in enumerate(images_regions[:3]):
             print(f"    图片 {i+1}: {img_region['type']} ({img_region['width']}x{img_region['height']})")
