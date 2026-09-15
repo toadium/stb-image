@@ -7239,3 +7239,153 @@ pub fn encryption_report_to_string_enc(
 ) -> String {
   @encryption.encryption_report_to_string(encryption, watermark, quality)
 }
+
+// ==================== 图像检索增强（v22.0.0） ====================
+
+///|
+pub type FeatureType = @retrieval.FeatureType
+
+///|
+pub type CBIRImageFeature = @retrieval.CBIRImageFeature
+
+///|
+pub type CBIRRetrievalResult = @retrieval.CBIRRetrievalResult
+
+///|
+pub type CBIRRetrievalResultList = @retrieval.CBIRRetrievalResultList
+
+///|
+pub type CBIRImageIndex = @retrieval.CBIRImageIndex
+
+///|
+pub type SimilarityMetric = @retrieval.SimilarityMetric
+
+///|
+pub type ColorHistogramConfig = @retrieval.ColorHistogramConfig
+
+///|
+pub type LBPConfig = @retrieval.LBPConfig
+
+///|
+pub type HOGConfig = @retrieval.HOGConfig
+
+///|
+pub type GaborConfig = @retrieval.GaborConfig
+
+///|
+pub fn create_default_color_histogram_config_cbir() -> @retrieval.ColorHistogramConfig {
+  @retrieval.create_default_color_histogram_config()
+}
+
+///|
+pub fn create_default_lbp_config_cbir() -> @retrieval.LBPConfig {
+  @retrieval.create_default_lbp_config()
+}
+
+///|
+pub fn create_default_hog_config_cbir() -> @retrieval.HOGConfig {
+  @retrieval.create_default_hog_config()
+}
+
+///|
+pub fn extract_color_histogram_cbir(
+  img : @types.Image,
+  config : @retrieval.ColorHistogramConfig,
+) -> @retrieval.CBIRImageFeature {
+  @retrieval.extract_color_histogram(img, config)
+}
+
+///|
+pub fn extract_lbp_feature_cbir(
+  img : @types.Image,
+  config : @retrieval.LBPConfig,
+) -> @retrieval.CBIRImageFeature {
+  @retrieval.extract_lbp_feature(img, config)
+}
+
+///|
+pub fn extract_hog_feature_cbir(
+  img : @types.Image,
+  config : @retrieval.HOGConfig,
+) -> @retrieval.CBIRImageFeature {
+  @retrieval.extract_hog_feature(img, config)
+}
+
+///|
+pub fn cosine_similarity_cbir_api(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+) -> Double {
+  @retrieval.cosine_similarity_cbir(feat1, feat2)
+}
+
+///|
+pub fn euclidean_distance_cbir_api(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+) -> Double {
+  @retrieval.euclidean_distance_cbir(feat1, feat2)
+}
+
+///|
+pub fn manhattan_distance_cbir_api(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+) -> Double {
+  @retrieval.manhattan_distance_cbir(feat1, feat2)
+}
+
+///|
+pub fn histogram_intersection_cbir_api(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+) -> Double {
+  @retrieval.histogram_intersection_cbir(feat1, feat2)
+}
+
+///|
+pub fn calculate_similarity_cbir(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+  metric : @retrieval.SimilarityMetric,
+) -> Double {
+  @retrieval.calculate_similarity(feat1, feat2, metric)
+}
+
+///|
+pub fn create_image_index_cbir() -> @retrieval.CBIRImageIndex {
+  @retrieval.create_image_index()
+}
+
+///|
+pub fn add_to_index_cbir(
+  index : @retrieval.CBIRImageIndex,
+  feature : @retrieval.CBIRImageFeature,
+) -> @retrieval.CBIRImageIndex {
+  @retrieval.add_to_index(index, feature)
+}
+
+///|
+pub fn retrieve_images_cbir(
+  query_feature : @retrieval.CBIRImageFeature,
+  index : @retrieval.CBIRImageIndex,
+  num_results : Int,
+  metric : @retrieval.SimilarityMetric,
+) -> @retrieval.CBIRRetrievalResultList {
+  @retrieval.retrieve_images(query_feature, index, num_results, metric)
+}
+
+///|
+pub fn extract_combined_features_cbir(
+  img : @types.Image,
+) -> @retrieval.CBIRImageFeature {
+  @retrieval.extract_combined_features(img)
+}
+
+///|
+pub fn retrieval_report_to_string_cbir(
+  results : @retrieval.CBIRRetrievalResultList,
+  query_feature : @retrieval.CBIRImageFeature,
+) -> String {
+  @retrieval.retrieval_report_to_string(results, query_feature)
+}
