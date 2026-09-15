@@ -6479,3 +6479,99 @@ pub fn stabilize_video(
 ) -> Array[@types.Image] {
   @video.stabilize_video(frames, config)
 }
+
+// ==================== 计算摄影增强（v15.0.0） ====================
+
+///|
+pub type ExposureType = @photo_enhance.ExposureType
+
+///|
+pub type HdrImage = @photo_enhance.HdrImage
+
+///|
+pub type ToneMappingType = @photo_enhance.ToneMappingType
+
+///|
+pub type ToneMappingConfig = @photo_enhance.ToneMappingConfig
+
+///|
+pub type PanoramaConfig = @photo_enhance.PanoramaConfig
+
+///|
+pub type PanoramaResult = @photo_enhance.PanoramaResult
+
+///|
+pub type DepthOfFieldConfig = @photo_enhance.DepthOfFieldConfig
+
+///|
+pub type NightEnhanceConfig = @photo_enhance.NightEnhanceConfig
+
+///|
+pub fn create_default_hdr_config() -> @photo_enhance.ToneMappingConfig {
+  @photo_enhance.create_default_hdr_config()
+}
+
+///|
+pub fn create_default_panorama_config() -> @photo_enhance.PanoramaConfig {
+  @photo_enhance.create_default_panorama_config()
+}
+
+///|
+pub fn create_default_dof_config(width : Int, height : Int) -> @photo_enhance.DepthOfFieldConfig {
+  @photo_enhance.create_default_dof_config(width, height)
+}
+
+///|
+pub fn create_default_night_config() -> @photo_enhance.NightEnhanceConfig {
+  @photo_enhance.create_default_night_config()
+}
+
+///|
+pub fn detect_exposure_type(img : @types.Image) -> (@photo_enhance.ExposureType, Double) {
+  @photo_enhance.detect_exposure_type(img)
+}
+
+///|
+pub fn hdr_merge(
+  images : Array[@types.Image],
+  exposures : Array[Double],
+) -> @photo_enhance.HdrImage {
+  @photo_enhance.hdr_merge(images, exposures)
+}
+
+///|
+pub fn tone_map(hdr : @photo_enhance.HdrImage, config : @photo_enhance.ToneMappingConfig) -> @types.Image {
+  @photo_enhance.tone_map(hdr, config)
+}
+
+///|
+pub fn stitch_panorama(
+  images : Array[@types.Image],
+  config : @photo_enhance.PanoramaConfig,
+) -> @photo_enhance.PanoramaResult {
+  @photo_enhance.stitch_panorama(images, config)
+}
+
+///|
+pub fn apply_depth_of_field(
+  img : @types.Image,
+  config : @photo_enhance.DepthOfFieldConfig,
+) -> @types.Image {
+  @photo_enhance.apply_depth_of_field(img, config)
+}
+
+///|
+pub fn enhance_night(
+  img : @types.Image,
+  config : @photo_enhance.NightEnhanceConfig,
+) -> @types.Image {
+  @photo_enhance.enhance_night(img, config)
+}
+
+///|
+pub fn computational_photography_report(
+  hdr : @photo_enhance.HdrImage,
+  panorama : @photo_enhance.PanoramaResult,
+) -> String {
+  @photo_enhance.computational_photography_report(hdr, panorama)
+}
