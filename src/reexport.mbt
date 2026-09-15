@@ -6877,3 +6877,109 @@ pub fn vision_3d_report_to_string(
 ) -> String {
   @stereo3d.vision_3d_report_to_string(cloud, depth, registration)
 }
+
+// ==================== 医学图像增强（v19.0.0） ====================
+
+///|
+pub type MedicalImageType = @medical.MedicalImageType
+
+///|
+pub type MedicalImage = @medical.MedicalImage
+
+///|
+pub type RegionOfInterest = @medical.RegionOfInterest
+
+///|
+pub type Lesion = @medical.Lesion
+
+///|
+pub type MedicalRegistrationResult = @medical.MedicalRegistrationResult
+
+///|
+pub type MedicalSegmentationConfig = @medical.MedicalSegmentationConfig
+
+///|
+pub type WindowLevelConfig = @medical.WindowLevelConfig
+
+///|
+pub type MedicalImageQuality = @medical.MedicalImageQuality
+
+///|
+pub fn create_default_medical_segmentation_config() -> @medical.MedicalSegmentationConfig {
+  @medical.create_default_medical_segmentation_config()
+}
+
+///|
+pub fn create_default_window_level_medical(preset : String) -> @medical.WindowLevelConfig {
+  @medical.create_default_window_level(preset)
+}
+
+///|
+pub fn apply_window_level_medical(
+  image : @medical.MedicalImage,
+  config : @medical.WindowLevelConfig,
+) -> @types.Image {
+  @medical.apply_window_level_medical(image, config)
+}
+
+///|
+pub fn medical_threshold_segmentation_medical(
+  image : @medical.MedicalImage,
+  lower : Double,
+  upper : Double,
+) -> Array[Bool] {
+  @medical.medical_threshold_segmentation(image, lower, upper)
+}
+
+///|
+pub fn region_growing_segmentation_medical(
+  image : @medical.MedicalImage,
+  seed_x : Int,
+  seed_y : Int,
+  seed_z : Int,
+  threshold : Double,
+) -> Array[Bool] {
+  @medical.region_growing_segmentation(image, seed_x, seed_y, seed_z, threshold)
+}
+
+///|
+pub fn calculate_roi_stats_medical(
+  image : @medical.MedicalImage,
+  mask : Array[Bool],
+) -> (Double, Double, Int) {
+  @medical.calculate_roi_stats(image, mask)
+}
+
+///|
+pub fn detect_lesions_simple_medical(
+  image : @medical.MedicalImage,
+  min_diameter : Double,
+  max_diameter : Double,
+) -> Array[@medical.Lesion] {
+  @medical.detect_lesions_simple(image, min_diameter, max_diameter)
+}
+
+///|
+pub fn medical_image_registration_medical(
+  fixed : @medical.MedicalImage,
+  moving : @medical.MedicalImage,
+  max_iterations : Int,
+) -> @medical.MedicalRegistrationResult {
+  @medical.medical_image_registration(fixed, moving, max_iterations)
+}
+
+///|
+pub fn calculate_medical_image_quality_medical(
+  image : @medical.MedicalImage,
+) -> @medical.MedicalImageQuality {
+  @medical.calculate_medical_image_quality(image)
+}
+
+///|
+pub fn medical_image_report_to_string_medical(
+  image : @medical.MedicalImage,
+  lesions : Array[@medical.Lesion],
+  quality : @medical.MedicalImageQuality,
+) -> String {
+  @medical.medical_image_report_to_string(image, lesions, quality)
+}
