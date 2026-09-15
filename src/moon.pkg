@@ -33,6 +33,7 @@ import {
   "walkzzz/image/src/process/style_transfer",
   "walkzzz/image/src/process/inpainting",
   "walkzzz/image/src/process/fusion_enhanced",
+  "walkzzz/image/src/process/forensics",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

@@ -7830,3 +7830,107 @@ pub fn fusion_report_to_string_fe(
 ) -> String {
   @fusion_enhanced.fusion_report_to_string(result, quality)
 }
+
+// ==================== 图像来源鉴定（v27.0.0） ====================
+
+///|
+pub type ImageSourceType = @forensics.ImageSourceType
+
+///|
+pub type SourceVerificationResult = @forensics.SourceVerificationResult
+
+///|
+pub type SourceVerificationFeatures = @forensics.SourceVerificationFeatures
+
+///|
+pub type SourceVerificationConfig = @forensics.SourceVerificationConfig
+
+///|
+pub type NoiseAnalysisResult = @forensics.NoiseAnalysisResult
+
+///|
+pub type FrequencyAnalysisResult = @forensics.FrequencyAnalysisResult
+
+///|
+pub type ColorAnalysisResult = @forensics.ColorAnalysisResult
+
+///|
+pub type TextureAnalysisResult = @forensics.TextureAnalysisResult
+
+///|
+pub type EdgeAnalysisResult = @forensics.EdgeAnalysisResult
+
+///|
+pub type CompressionAnalysisResult = @forensics.CompressionAnalysisResult
+
+///|
+pub type DetailAnalysisResult = @forensics.DetailAnalysisResult
+
+///|
+pub fn create_default_source_verification_config_fs() -> @forensics.SourceVerificationConfig {
+  @forensics.create_default_source_verification_config()
+}
+
+///|
+pub fn analyze_noise_pattern_fs(
+  img : @types.Image,
+) -> @forensics.NoiseAnalysisResult {
+  @forensics.analyze_noise_pattern(img)
+}
+
+///|
+pub fn analyze_frequency_domain_fs(
+  img : @types.Image,
+) -> @forensics.FrequencyAnalysisResult {
+  @forensics.analyze_frequency_domain(img)
+}
+
+///|
+pub fn analyze_color_distribution_fs(
+  img : @types.Image,
+) -> @forensics.ColorAnalysisResult {
+  @forensics.analyze_color_distribution(img)
+}
+
+///|
+pub fn analyze_texture_fs(
+  img : @types.Image,
+) -> @forensics.TextureAnalysisResult {
+  @forensics.analyze_texture(img)
+}
+
+///|
+pub fn analyze_edges_fs(
+  img : @types.Image,
+) -> @forensics.EdgeAnalysisResult {
+  @forensics.analyze_edges(img)
+}
+
+///|
+pub fn analyze_compression_artifacts_fs(
+  img : @types.Image,
+) -> @forensics.CompressionAnalysisResult {
+  @forensics.analyze_compression_artifacts(img)
+}
+
+///|
+pub fn analyze_details_fs(
+  img : @types.Image,
+) -> @forensics.DetailAnalysisResult {
+  @forensics.analyze_details(img)
+}
+
+///|
+pub fn verify_image_source_fs(
+  img : @types.Image,
+  config : @forensics.SourceVerificationConfig,
+) -> @forensics.SourceVerificationResult {
+  @forensics.verify_image_source(img, config)
+}
+
+///|
+pub fn source_verification_report_to_string_fs(
+  result : @forensics.SourceVerificationResult,
+) -> String {
+  @forensics.source_verification_report_to_string(result)
+}
