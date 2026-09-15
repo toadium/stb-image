@@ -6661,3 +6661,114 @@ pub fn detection_report_to_string(
 ) -> String {
   @detection.detection_report_to_string(result, metrics)
 }
+
+// ==================== 图像分割增强（v17.0.0） ====================
+
+///|
+pub type SegmentationLabel = @segmentation.SegmentationLabel
+
+///|
+pub type SemanticSegmentationResult = @segmentation.SemanticSegmentationResult
+
+///|
+pub type InstanceSegmentationResult = @segmentation.InstanceSegmentationResult
+
+///|
+pub type Superpixel = @segmentation.Superpixel
+
+///|
+pub type KMeansConfig = @segmentation.KMeansConfig
+
+///|
+pub type GrabCutConfig = @segmentation.GrabCutConfig
+
+///|
+pub type SegmentationMetrics = @segmentation.SegmentationMetrics
+
+///|
+pub fn create_default_watershed_config() -> @segmentation.WatershedConfig {
+  @segmentation.create_default_watershed_config()
+}
+
+///|
+pub fn create_default_kmeans_config() -> @segmentation.KMeansConfig {
+  @segmentation.create_default_kmeans_config()
+}
+
+///|
+pub fn create_default_grabcut_config() -> @segmentation.GrabCutConfig {
+  @segmentation.create_default_grabcut_config()
+}
+
+///|
+pub fn threshold_segmentation(
+  img : @types.Image,
+  threshold : Double,
+) -> @segmentation.SemanticSegmentationResult {
+  @segmentation.threshold_segmentation(img, threshold)
+}
+
+///|
+pub fn otsu_threshold_value(img : @types.Image) -> Double {
+  @segmentation.otsu_threshold_value(img)
+}
+
+///|
+pub fn kmeans_segmentation(
+  img : @types.Image,
+  config : @segmentation.KMeansConfig,
+) -> @segmentation.SemanticSegmentationResult {
+  @segmentation.kmeans_segmentation(img, config)
+}
+
+///|
+pub fn superpixel_segmentation(
+  img : @types.Image,
+  num_superpixels : Int,
+) -> @segmentation.SuperpixelResult {
+  @segmentation.superpixel_segmentation(img, num_superpixels)
+}
+
+///|
+pub fn watershed_segmentation(
+  img : @types.Image,
+  config : @segmentation.WatershedConfig,
+) -> @segmentation.SemanticSegmentationResult {
+  @segmentation.watershed_segmentation(img, config)
+}
+
+///|
+pub fn grabcut_segmentation(
+  img : @types.Image,
+  rect_x : Int,
+  rect_y : Int,
+  rect_w : Int,
+  rect_h : Int,
+  config : @segmentation.GrabCutConfig,
+) -> @segmentation.SemanticSegmentationResult {
+  @segmentation.grabcut_segmentation(img, rect_x, rect_y, rect_w, rect_h, config)
+}
+
+///|
+pub fn calculate_segmentation_metrics(
+  prediction : Array[Int],
+  ground_truth : Array[Int],
+  num_classes : Int,
+) -> @segmentation.SegmentationMetrics {
+  @segmentation.calculate_segmentation_metrics(prediction, ground_truth, num_classes)
+}
+
+///|
+pub fn segmentation_to_image(
+  result : @segmentation.SemanticSegmentationResult,
+) -> @types.Image {
+  @segmentation.segmentation_to_image(result)
+}
+
+///|
+pub fn segmentation_report_to_string(
+  result : @segmentation.SemanticSegmentationResult,
+  metrics : @segmentation.SegmentationMetrics,
+) -> String {
+  @segmentation.segmentation_report_to_string(result, metrics)
+}
