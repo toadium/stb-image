@@ -5748,3 +5748,72 @@ pub fn generate_chinese_dictionary_report(
 ) -> String {
   @ocr.generate_chinese_dictionary_report(dict)
 }
+
+// ==================== 扫描质量自适应与鲁棒性增强（v12.24.0 P3 鲁棒性） ====================
+
+///|
+pub type ScanQualityLevel = @ocr.ScanQualityLevel
+
+///|
+pub type AdaptivePreprocessConfig = @ocr.AdaptivePreprocessConfig
+
+///|
+pub type DistortionType = @ocr.DistortionType
+
+///|
+pub type DistortionDetectionResult = @ocr.DistortionDetectionResult
+
+///|
+pub type ComplexLayoutType = @ocr.ComplexLayoutType
+
+///|
+pub type ComplexLayoutAnalysis = @ocr.ComplexLayoutAnalysis
+
+///|
+pub type RobustnessReport = @ocr.RobustnessReport
+
+///|
+pub fn select_adaptive_config(
+  quality : @ocr.ScanQuality,
+) -> @ocr.AdaptivePreprocessConfig {
+  @ocr.select_adaptive_config(quality)
+}
+
+///|
+pub fn detect_skew_angle_robust(
+  binary_img : @types.Image,
+) -> Double {
+  @ocr.detect_skew_angle_robust(binary_img)
+}
+
+///|
+pub fn detect_distortions(
+  img : @types.Image,
+) -> Array[@ocr.DistortionDetectionResult] {
+  @ocr.detect_distortions(img)
+}
+
+///|
+pub fn analyze_complex_layout(
+  text_blocks : Array[@ocr.TextBlock],
+  page_width : Int,
+  page_height : Int,
+) -> @ocr.ComplexLayoutAnalysis {
+  @ocr.analyze_complex_layout(text_blocks, page_width, page_height)
+}
+
+///|
+pub fn generate_robustness_report(
+  quality : @ocr.ScanQuality,
+  distortions : Array[@ocr.DistortionDetectionResult],
+  layout : @ocr.ComplexLayoutAnalysis,
+) -> @ocr.RobustnessReport {
+  @ocr.generate_robustness_report(quality, distortions, layout)
+}
+
+///|
+pub fn robustness_report_to_string(
+  report : @ocr.RobustnessReport,
+) -> String {
+  @ocr.robustness_report_to_string(report)
+}
