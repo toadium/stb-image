@@ -101,7 +101,7 @@ pub fn run_length_encode(
   data : Bytes,
 ) -> Bytes {
   let len = data.length()
-  let encoded : Array[Byte> = []
+  let encoded : Array[Byte] = []
 
   if len == 0 {
     return Bytes::from_array(encoded)
@@ -128,7 +128,7 @@ pub fn run_length_decode(
   data : Bytes,
 ) -> Bytes {
   let len = data.length()
-  let decoded : Array[Byte> = []
+  let decoded : Array[Byte] = []
 
   let mut i = 0
   while i < len - 1 {
@@ -152,7 +152,7 @@ pub fn calculate_image_entropy(
   let h = img.height
   let total = w * h
 
-  let histogram : Array[Int> = []
+  let histogram : Array[Int] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -181,7 +181,7 @@ pub fn quantize_image(
   let w = img.width
   let h = img.height
   let total = w * h
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
   let step = 256 / levels
 
   for i in 0..<total {
@@ -202,7 +202,7 @@ pub fn predictive_encode(
   let w = img.width
   let h = img.height
   let total = w * h
-  let diff : Array[Byte> = []
+  let diff : Array[Byte] = []
 
   for y in 0..<h {
     for x in 0..<w {
@@ -438,6 +438,36 @@ pub fn compress_image(
 }
 
 ///|
+/// 获取压缩算法名称
+pub fn compression_algorithm_to_string(
+  algorithm : CompressionAlgorithm,
+) -> String {
+  if algorithm == CompressionAlgorithm::RunLengthEncoding {
+    "游程编码(RLE)"
+  } else if algorithm == CompressionAlgorithm::HuffmanCoding {
+    "霍夫曼编码"
+  } else if algorithm == CompressionAlgorithm::ArithmeticCoding {
+    "算术编码"
+  } else if algorithm == CompressionAlgorithm::LZW {
+    "LZW"
+  } else if algorithm == CompressionAlgorithm::Deflate {
+    "Deflate"
+  } else if algorithm == CompressionAlgorithm::JPEGBaseline {
+    "JPEG 基线"
+  } else if algorithm == CompressionAlgorithm::JPEG2000 {
+    "JPEG 2000"
+  } else if algorithm == CompressionAlgorithm::WebP {
+    "WebP"
+  } else if algorithm == CompressionAlgorithm::AVIF {
+    "AVIF"
+  } else if algorithm == CompressionAlgorithm::PNG {
+    "PNG"
+  } else {
+    "未知"
+  }
+}
+
+///|
 /// 生成压缩报告
 pub fn compression_report_to_string(
   result : CompressionResult,
@@ -446,19 +476,7 @@ pub fn compression_report_to_string(
   let mut report = "## 图像压缩报告\n\n"
   report = report + "### 压缩信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (match result.algorithm {
-    CompressionAlgorithm::RunLengthEncoding => "游程编码(RLE)",
-    CompressionAlgorithm::HuffmanCoding => "霍夫曼编码",
-    CompressionAlgorithm::ArithmeticCoding => "算术编码",
-    CompressionAlgorithm::LZW => "LZW",
-    CompressionAlgorithm::Deflate => "Deflate",
-    CompressionAlgorithm::JPEGBaseline => "JPEG 基线",
-    CompressionAlgorithm::JPEG2000 => "JPEG 2000",
-    CompressionAlgorithm::WebP => "WebP",
-    CompressionAlgorithm::AVIF => "AVIF",
-    CompressionAlgorithm::PNG => "PNG",
-    CompressionAlgorithm::Unknown => "未知",
-  }) + " |\n"
+  report = report + "| 算法 | " + compression_algorithm_to_string(result.algorithm) + " |\n"
   report = report + "| 原始大小 | " + result.original_size.to_string() + " 字节 |\n"
   report = report + "| 压缩大小 | " + result.compressed_size.to_string() + " 字节 |\n"
   report = report + "| 压缩比 | " + result.compression_ratio.to_string() + ":1 |\n"

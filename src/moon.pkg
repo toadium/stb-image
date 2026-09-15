@@ -35,6 +35,7 @@ import {
   "walkzzz/image/src/process/fusion_enhanced",
   "walkzzz/image/src/process/forensics",
   "walkzzz/image/src/process/compression",
+  "walkzzz/image/src/process/denoise",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

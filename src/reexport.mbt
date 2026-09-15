@@ -8127,3 +8127,138 @@ pub fn compression_report_to_string_cp(
 ) -> String {
   @compression.compression_report_to_string(result, metrics)
 }
+
+// ==================== 高级图像降噪与增强（v29.0.0） ====================
+
+///|
+pub type DenoiseAlgorithm = @denoise.DenoiseAlgorithm
+
+///|
+pub type DenoiseResult = @denoise.DenoiseResult
+
+///|
+pub type DenoiseConfig = @denoise.DenoiseConfig
+
+///|
+pub type EnhancementAlgorithm = @denoise.EnhancementAlgorithm
+
+///|
+pub type EnhancementResult = @denoise.EnhancementResult
+
+///|
+pub type NoiseType = @denoise.NoiseType
+
+///|
+pub fn create_default_denoise_config_dn() -> @denoise.DenoiseConfig {
+  @denoise.create_default_denoise_config()
+}
+
+///|
+pub fn mean_filter_denoise_dn(
+  img : @types.Image,
+  kernel_size : Int,
+) -> @types.Image {
+  @denoise.mean_filter_denoise(img, kernel_size)
+}
+
+///|
+pub fn median_filter_denoise_dn(
+  img : @types.Image,
+  kernel_size : Int,
+) -> @types.Image {
+  @denoise.median_filter_denoise(img, kernel_size)
+}
+
+///|
+pub fn gaussian_filter_denoise_dn(
+  img : @types.Image,
+  kernel_size : Int,
+  sigma : Double,
+) -> @types.Image {
+  @denoise.gaussian_filter_denoise(img, kernel_size, sigma)
+}
+
+///|
+pub fn bilateral_filter_denoise_dn(
+  img : @types.Image,
+  kernel_size : Int,
+  sigma_color : Double,
+  sigma_space : Double,
+) -> @types.Image {
+  @denoise.bilateral_filter_denoise(img, kernel_size, sigma_color, sigma_space)
+}
+
+///|
+pub fn calculate_noise_level_dn(
+  img : @types.Image,
+) -> Double {
+  @denoise.calculate_noise_level(img)
+}
+
+///|
+pub fn histogram_equalization_enhance_dn(
+  img : @types.Image,
+) -> @types.Image {
+  @denoise.histogram_equalization_enhance(img)
+}
+
+///|
+pub fn gamma_correction_enhance_dn(
+  img : @types.Image,
+  gamma : Double,
+) -> @types.Image {
+  @denoise.gamma_correction_enhance(img, gamma)
+}
+
+///|
+pub fn unsharp_mask_enhance_dn(
+  img : @types.Image,
+  amount : Double,
+  radius : Int,
+) -> @types.Image {
+  @denoise.unsharp_mask_enhance(img, amount, radius)
+}
+
+///|
+pub fn calculate_brightness_dn(
+  img : @types.Image,
+) -> Double {
+  @denoise.calculate_brightness(img)
+}
+
+///|
+pub fn calculate_contrast_dn(
+  img : @types.Image,
+) -> Double {
+  @denoise.calculate_contrast(img)
+}
+
+///|
+pub fn calculate_sharpness_dn(
+  img : @types.Image,
+) -> Double {
+  @denoise.calculate_sharpness(img)
+}
+
+///|
+pub fn denoise_image_dn(
+  img : @types.Image,
+  config : @denoise.DenoiseConfig,
+) -> @denoise.DenoiseResult {
+  @denoise.denoise_image(img, config)
+}
+
+///|
+pub fn enhance_image_advanced_dn(
+  img : @types.Image,
+  algorithm : @denoise.EnhancementAlgorithm,
+) -> @denoise.EnhancementResult {
+  @denoise.enhance_image_advanced(img, algorithm)
+}
+
+///|
+pub fn denoise_report_to_string_dn(
+  result : @denoise.DenoiseResult,
+) -> String {
+  @denoise.denoise_report_to_string(result)
+}
