@@ -5502,3 +5502,87 @@ pub fn analyze_table_results(
 ) -> Array[(String, Int)] {
   @ocr.analyze_table_results(tables)
 }
+
+// ==================== OCR 准确率测试框架（v12.21.0 P0 基础加固） ====================
+
+///|
+pub type CharRecognitionResult = @ocr.CharRecognitionResult
+
+///|
+pub type AccuracyStats = @ocr.AccuracyStats
+
+///|
+pub type ConfusionEntry = @ocr.ConfusionEntry
+
+///|
+pub type ConfusionMatrix = @ocr.ConfusionMatrix
+
+///|
+pub type OcrErrorType = @ocr.OcrErrorType
+
+///|
+pub type ErrorAnalysisEntry = @ocr.ErrorAnalysisEntry
+
+///|
+pub type ErrorAnalysisReport = @ocr.ErrorAnalysisReport
+
+///|
+pub type PerformanceBenchmark = @ocr.PerformanceBenchmark
+
+///|
+pub fn calculate_char_accuracy(
+  expected : String,
+  actual : String,
+) -> Double {
+  @ocr.calculate_char_accuracy(expected, actual)
+}
+
+///|
+pub fn calculate_word_accuracy(
+  expected : String,
+  actual : String,
+) -> Double {
+  @ocr.calculate_word_accuracy(expected, actual)
+}
+
+///|
+pub fn calculate_edit_distance(
+  s1 : String,
+  s2 : String,
+) -> Int {
+  @ocr.calculate_edit_distance(s1, s2)
+}
+
+///|
+pub fn calculate_accuracy_stats(
+  expected_lines : Array[String],
+  actual_lines : Array[String],
+) -> @ocr.AccuracyStats {
+  @ocr.calculate_accuracy_stats(expected_lines, actual_lines)
+}
+
+///|
+pub fn generate_accuracy_report(
+  stats : @ocr.AccuracyStats,
+  dataset_name : String,
+) -> String {
+  @ocr.generate_accuracy_report(stats, dataset_name)
+}
+
+///|
+pub fn generate_performance_report(
+  benchmark : @ocr.PerformanceBenchmark,
+  dataset_name : String,
+) -> String {
+  @ocr.generate_performance_report(benchmark, dataset_name)
+}
+
+///|
+pub fn check_accuracy_threshold(
+  stats : @ocr.AccuracyStats,
+  min_char_accuracy? : Double = 0.95,
+  min_word_accuracy? : Double = 0.90,
+  min_f1_score? : Double = 0.92,
+) -> (Bool, Array[String]) {
+  @ocr.check_accuracy_threshold(stats, min_char_accuracy~, min_word_accuracy~, min_f1_score~)
+}
