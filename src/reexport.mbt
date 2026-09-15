@@ -6124,3 +6124,137 @@ pub fn cosine_similarity(
 ) -> Double {
   @ocr.cosine_similarity(feat1, feat2)
 }
+
+// ==================== OCR 模型训练框架（v13.1.0） ====================
+
+///|
+pub type OptimizerType = @ocr.OptimizerType
+
+///|
+pub type OptimizerConfig = @ocr.OptimizerConfig
+
+///|
+pub type LRSchedulerType = @ocr.LRSchedulerType
+
+///|
+pub type LRSchedulerConfig = @ocr.LRSchedulerConfig
+
+///|
+pub type AugmentationType = @ocr.AugmentationType
+
+///|
+pub type AugmentationConfig = @ocr.AugmentationConfig
+
+///|
+pub type TrainingConfig = @ocr.TrainingConfig
+
+///|
+pub type TrainingMetrics = @ocr.TrainingMetrics
+
+///|
+pub type TrainingState = @ocr.TrainingState
+
+///|
+pub type DataLoader = @ocr.DataLoader
+
+///|
+pub fn create_default_training_config() -> @ocr.TrainingConfig {
+  @ocr.create_default_training_config()
+}
+
+///|
+pub fn create_data_loader(
+  samples : Array[@ocr.DLTrainingSample],
+  batch_size : Int,
+  shuffle : Bool,
+) -> @ocr.DataLoader {
+  @ocr.create_data_loader(samples, batch_size, shuffle)
+}
+
+///|
+pub fn next_batch(
+  loader : @ocr.DataLoader,
+) -> (Array[@ocr.DLTrainingSample], @ocr.DataLoader) {
+  @ocr.next_batch(loader)
+}
+
+///|
+pub fn calculate_learning_rate(
+  config : @ocr.LRSchedulerConfig,
+  epoch : Int,
+  current_lr : Double,
+  val_loss : Double,
+) -> Double {
+  @ocr.calculate_learning_rate(config, epoch, current_lr, val_loss)
+}
+
+///|
+pub fn apply_augmentation(
+  sample : @ocr.DLTrainingSample,
+  config : @ocr.AugmentationConfig,
+) -> @ocr.DLTrainingSample {
+  @ocr.apply_augmentation(sample, config)
+}
+
+///|
+pub fn calculate_accuracy(
+  predictions : Array[Int],
+  labels : Array[Int],
+) -> Double {
+  @ocr.calculate_accuracy(predictions, labels)
+}
+
+///|
+pub fn check_early_stopping(
+  state : @ocr.TrainingState,
+  config : @ocr.TrainingConfig,
+  current_val_accuracy : Double,
+) -> (Bool, @ocr.TrainingState) {
+  @ocr.check_early_stopping(state, config, current_val_accuracy)
+}
+
+///|
+pub fn create_training_state() -> @ocr.TrainingState {
+  @ocr.create_training_state()
+}
+
+///|
+pub fn record_training_metrics(
+  state : @ocr.TrainingState,
+  metrics : @ocr.TrainingMetrics,
+) -> @ocr.TrainingState {
+  @ocr.record_training_metrics(state, metrics)
+}
+
+///|
+pub fn generate_training_progress_report(
+  state : @ocr.TrainingState,
+  config : @ocr.TrainingConfig,
+) -> String {
+  @ocr.generate_training_progress_report(state, config)
+}
+
+///|
+pub fn split_train_validation(
+  samples : Array[@ocr.DLTrainingSample],
+  validation_split : Double,
+  shuffle : Bool,
+) -> (Array[@ocr.DLTrainingSample], Array[@ocr.DLTrainingSample]) {
+  @ocr.split_train_validation(samples, validation_split, shuffle)
+}
+
+///|
+pub fn compute_confusion_matrix(
+  predictions : Array[Int],
+  labels : Array[Int],
+  num_classes : Int,
+) -> Array[Array[Int]] {
+  @ocr.compute_confusion_matrix(predictions, labels, num_classes)
+}
+
+///|
+pub fn compute_per_class_accuracy(
+  confusion_matrix : Array[Array[Int]],
+) -> Array[Double] {
+  @ocr.compute_per_class_accuracy(confusion_matrix)
+}
