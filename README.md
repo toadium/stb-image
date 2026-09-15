@@ -10,9 +10,9 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-参赛项目-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1700-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-900%2B%20functions%20%2B%20187%20types-blueviolet)]()
+[![Tests](https://img.shields.io/badge/tests-1725-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-91.2%25-brightgreen)]()
+[![Functions](https://img.shields.io/badge/API-1100%2B%20functions%20%2B%20187%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-0.6.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
@@ -42,7 +42,7 @@
 | 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
 | 🟢 | **900+ 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编解码、OCR 全链路（数字/英文/中文/表格/手写体/多语言混合）等高级算法 |
-| 🟢 | **OCR 全链路** | 预处理→文本检测→字符分割→特征提取→分类器→数字/英文/中文OCR→表格识别→后处理→文档理解→手写体→多语言混合，19 个模块文件 |
+| 🟢 | **OCR 全链路** | 预处理→文本检测→字符分割→特征提取→分类器→数字/英文/中文OCR→表格识别→后处理→文档理解→手写体→多语言混合，36 个模块文件 |
 | 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，v5.0 计划增量解码） |
 | 🟢 | **安全加固** | MAX_IMAGE_DIMENSION(65535) 维度守卫 + check_dims 全解码器入口校验 + safe_mul 溢出保护 |
 | 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
