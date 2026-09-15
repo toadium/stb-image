@@ -6258,3 +6258,105 @@ pub fn compute_per_class_accuracy(
 ) -> Array[Double] {
   @ocr.compute_per_class_accuracy(confusion_matrix)
 }
+
+// ==================== 手写体识别支持（v13.2.0） ====================
+
+///|
+pub type HandwritingStyle = @ocr.HandwritingStyle
+
+///|
+pub type StrokeType = @ocr.StrokeType
+
+///|
+pub type StrokeFeature = @ocr.StrokeFeature
+
+///|
+pub type StrokeSegmentationResult = @ocr.StrokeSegmentationResult
+
+///|
+pub type HandwritingCharFeature = @ocr.HandwritingCharFeature
+
+///|
+pub type HandwritingTemplate = @ocr.HandwritingTemplate
+
+///|
+pub type HandwritingRecognitionConfig = @ocr.HandwritingRecognitionConfig
+
+///|
+pub type HandwritingRecognitionResult = @ocr.HandwritingRecognitionResult
+
+///|
+pub fn create_default_handwriting_config() -> @ocr.HandwritingRecognitionConfig {
+  @ocr.create_default_handwriting_config()
+}
+
+///|
+pub fn detect_handwriting_slant(
+  img : @types.Image,
+) -> Double {
+  @ocr.detect_handwriting_slant(img)
+}
+
+///|
+pub fn normalize_handwriting_size(
+  img : @types.Image,
+  target_size : Int,
+) -> @types.Image {
+  @ocr.normalize_handwriting_size(img, target_size)
+}
+
+///|
+pub fn extract_hw_stroke_features(
+  img : @types.Image,
+) -> Array[@ocr.StrokeFeature] {
+  @ocr.extract_hw_stroke_features(img)
+}
+
+///|
+pub fn segment_connected_strokes(
+  img : @types.Image,
+  config : @ocr.HandwritingRecognitionConfig,
+) -> @ocr.StrokeSegmentationResult {
+  @ocr.segment_connected_strokes(img, config)
+}
+
+///|
+pub fn extract_handwriting_features(
+  img : @types.Image,
+  char : String,
+) -> @ocr.HandwritingCharFeature {
+  @ocr.extract_handwriting_features(img, char)
+}
+
+///|
+pub fn handwriting_feature_similarity(
+  feat1 : @ocr.HandwritingCharFeature,
+  feat2 : @ocr.HandwritingCharFeature,
+) -> Double {
+  @ocr.handwriting_feature_similarity(feat1, feat2)
+}
+
+///|
+pub fn create_handwriting_template(
+  char : String,
+  style : @ocr.HandwritingStyle,
+  samples : Array[@types.Image],
+) -> @ocr.HandwritingTemplate {
+  @ocr.create_handwriting_template(char, style, samples)
+}
+
+///|
+pub fn recognize_handwriting_char(
+  img : @types.Image,
+  templates : Array[@ocr.HandwritingTemplate],
+  config : @ocr.HandwritingRecognitionConfig,
+) -> @ocr.HandwritingRecognitionResult {
+  @ocr.recognize_handwriting_char(img, templates, config)
+}
+
+///|
+pub fn handwriting_report_to_string(
+  result : @ocr.HandwritingRecognitionResult,
+) -> String {
+  @ocr.handwriting_report_to_string(result)
+}
