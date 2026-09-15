@@ -5212,3 +5212,93 @@ pub fn ocr_result_to_json(
 ) -> String {
   @ocr.ocr_result_to_json(result)
 }
+
+// ==================== 文档结构理解与 Markdown 还原（v12.18.0） ====================
+
+///|
+pub type MarkdownElementType = @ocr.MarkdownElementType
+
+///|
+pub type MarkdownElement = @ocr.MarkdownElement
+
+///|
+pub type MarkdownTable = @ocr.MarkdownTable
+
+///|
+pub type MarkdownImage = @ocr.MarkdownImage
+
+///|
+pub type MarkdownSymbol = @ocr.MarkdownSymbol
+
+///|
+pub type MarkdownDocument = @ocr.MarkdownDocument
+
+///|
+pub fn recognize_symbols_markdown(
+  text : String,
+) -> Array[@ocr.MarkdownSymbol] {
+  @ocr.recognize_symbols_markdown(text)
+}
+
+///|
+pub fn detect_image_regions_markdown(
+  binary_img : @types.Image,
+  min_area? : Int = 500,
+) -> Array[@ocr.MarkdownImage] {
+  @ocr.detect_image_regions_markdown(binary_img, min_area~)
+}
+
+///|
+pub fn classify_markdown_element(
+  block : @ocr.TextBlock,
+  avg_font_size? : Double = 16.0,
+) -> @ocr.MarkdownElementType {
+  @ocr.classify_markdown_element(block, avg_font_size~)
+}
+
+///|
+pub fn markdown_table_to_string(
+  table : @ocr.MarkdownTable,
+) -> String {
+  @ocr.markdown_table_to_string(table)
+}
+
+///|
+pub fn determine_reading_order_markdown(
+  elements : Array[@ocr.MarkdownElement],
+) -> Array[Int] {
+  @ocr.determine_reading_order_markdown(elements)
+}
+
+///|
+pub fn markdown_document_to_string(
+  doc : @ocr.MarkdownDocument,
+) -> String {
+  @ocr.markdown_document_to_string(doc)
+}
+
+///|
+pub fn build_markdown_document(
+  ocr_result : @ocr.OCRPageResult,
+  title? : String,
+) -> @ocr.MarkdownDocument {
+  match title {
+    Some(t) => @ocr.build_markdown_document(ocr_result, title=t)
+    None => @ocr.build_markdown_document(ocr_result)
+  }
+}
+
+///|
+pub fn generate_markdown_image_placeholder(
+  image : @ocr.MarkdownImage,
+  index : Int,
+) -> String {
+  @ocr.generate_markdown_image_placeholder(image, index)
+}
+
+///|
+pub fn analyze_markdown_element_distribution(
+  doc : @ocr.MarkdownDocument,
+) -> Array[(String, Int)] {
+  @ocr.analyze_markdown_element_distribution(doc)
+}
