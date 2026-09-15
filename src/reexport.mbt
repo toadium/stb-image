@@ -7596,3 +7596,118 @@ pub fn style_transfer_report_to_string_st(
 ) -> String {
   @style_transfer.style_transfer_report_to_string(result, content_stats, style_stats, texture)
 }
+
+// ==================== 图像修复增强（v25.0.0） ====================
+
+///|
+pub type InpaintingAlgorithm = @inpainting.InpaintingAlgorithm
+
+///|
+pub type InpaintingResult = @inpainting.InpaintingResult
+
+///|
+pub type InpaintingConfig = @inpainting.InpaintingConfig
+
+///|
+pub type DehazeAlgorithm = @inpainting.DehazeAlgorithm
+
+///|
+pub type DehazeResult = @inpainting.DehazeResult
+
+///|
+pub type DerainAlgorithm = @inpainting.DerainAlgorithm
+
+///|
+pub type DerainResult = @inpainting.DerainResult
+
+///|
+pub fn create_default_inpainting_config_ip() -> @inpainting.InpaintingConfig {
+  @inpainting.create_default_inpainting_config()
+}
+
+///|
+pub fn create_rect_mask_ip(
+  width : Int,
+  height : Int,
+  x : Int,
+  y : Int,
+  rect_width : Int,
+  rect_height : Int,
+) -> @types.Image {
+  @inpainting.create_rect_mask(width, height, x, y, rect_width, rect_height)
+}
+
+///|
+pub fn inpaint_simple_ip(
+  img : @types.Image,
+  mask : @types.Image,
+  radius : Int,
+) -> @types.Image {
+  @inpainting.inpaint_simple(img, mask, radius)
+}
+
+///|
+pub fn inpaint_diffusion_ip(
+  img : @types.Image,
+  mask : @types.Image,
+  radius : Int,
+) -> @types.Image {
+  @inpainting.inpaint_diffusion(img, mask, radius)
+}
+
+///|
+pub fn inpaint_ip(
+  img : @types.Image,
+  mask : @types.Image,
+  config : @inpainting.InpaintingConfig,
+) -> @inpainting.InpaintingResult {
+  @inpainting.inpaint(img, mask, config)
+}
+
+///|
+pub fn dehaze_dark_channel_ip(
+  img : @types.Image,
+  omega : Double,
+  t0 : Double,
+) -> @inpainting.DehazeResult {
+  @inpainting.dehaze_dark_channel(img, omega, t0)
+}
+
+///|
+pub fn dehaze_clahe_ip(
+  img : @types.Image,
+  clip_limit : Double,
+  tile_size : Int,
+) -> @types.Image {
+  @inpainting.dehaze_clahe(img, clip_limit, tile_size)
+}
+
+///|
+pub fn dehaze_ip(
+  img : @types.Image,
+  algorithm : @inpainting.DehazeAlgorithm,
+) -> @inpainting.DehazeResult {
+  @inpainting.dehaze(img, algorithm)
+}
+
+///|
+pub fn derain_morphological_ip(
+  img : @types.Image,
+) -> @inpainting.DerainResult {
+  @inpainting.derain_morphological(img)
+}
+
+///|
+pub fn derain_ip(
+  img : @types.Image,
+  algorithm : @inpainting.DerainAlgorithm,
+) -> @inpainting.DerainResult {
+  @inpainting.derain(img, algorithm)
+}
+
+///|
+pub fn inpainting_report_to_string_ip(
+  result : @inpainting.InpaintingResult,
+) -> String {
+  @inpainting.inpainting_report_to_string(result)
+}

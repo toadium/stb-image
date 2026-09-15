@@ -31,6 +31,7 @@ import {
   "walkzzz/image/src/process/photo_enhance",
   "walkzzz/image/src/process/segmentation",
   "walkzzz/image/src/process/style_transfer",
+  "walkzzz/image/src/process/inpainting",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
