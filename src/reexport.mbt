@@ -7504,3 +7504,95 @@ pub fn super_resolution_report_to_string_sr(
 ) -> String {
   @superres.super_resolution_report_to_string(result, metrics)
 }
+
+// ==================== 图像风格迁移增强（v24.0.0） ====================
+
+///|
+pub type StyleTransferAlgorithm = @style_transfer.StyleTransferAlgorithm
+
+///|
+pub type StyleTransferResult = @style_transfer.StyleTransferResult
+
+///|
+pub type StyleTransferConfig = @style_transfer.StyleTransferConfig
+
+///|
+pub type ColorStatistics = @style_transfer.ColorStatistics
+
+///|
+pub type StyleTransferTextureFeatures = @style_transfer.StyleTransferTextureFeatures
+
+///|
+pub type ArtStyle = @style_transfer.ArtStyle
+
+///|
+pub fn create_default_style_transfer_config_st() -> @style_transfer.StyleTransferConfig {
+  @style_transfer.create_default_style_transfer_config()
+}
+
+///|
+pub fn calculate_color_statistics_st(
+  img : @types.Image,
+) -> @style_transfer.ColorStatistics {
+  @style_transfer.calculate_color_statistics(img)
+}
+
+///|
+pub fn color_transfer_st(
+  content : @types.Image,
+  style : @types.Image,
+  strength : Double,
+) -> @types.Image {
+  @style_transfer.color_transfer(content, style, strength)
+}
+
+///|
+pub fn calculate_texture_features_st(
+  img : @types.Image,
+) -> @style_transfer.StyleTransferTextureFeatures {
+  @style_transfer.calculate_texture_features(img)
+}
+
+///|
+pub fn cartoonize_st(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image {
+  @style_transfer.cartoonize(img, strength)
+}
+
+///|
+pub fn oil_painting_st(
+  img : @types.Image,
+  radius : Int,
+  intensity_levels : Int,
+) -> @types.Image {
+  @style_transfer.oil_painting(img, radius, intensity_levels)
+}
+
+///|
+pub fn sketch_effect_st(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image {
+  @style_transfer.sketch_effect(img, strength)
+}
+
+///|
+pub fn style_transfer_st(
+  content : @types.Image,
+  style : @types.Image,
+  config : @style_transfer.StyleTransferConfig,
+) -> @style_transfer.StyleTransferResult {
+  @style_transfer.style_transfer(content, style, config)
+}
+
+///|
+pub fn style_transfer_report_to_string_st(
+  result : @style_transfer.StyleTransferResult,
+  content_stats : @style_transfer.ColorStatistics,
+  style_stats : @style_transfer.ColorStatistics,
+  texture : @style_transfer.StyleTransferTextureFeatures,
+) -> String {
+  @style_transfer.style_transfer_report_to_string(result, content_stats, style_stats, texture)
+}
