@@ -5586,3 +5586,74 @@ pub fn check_accuracy_threshold(
 ) -> (Bool, Array[String]) {
   @ocr.check_accuracy_threshold(stats, min_char_accuracy~, min_word_accuracy~, min_f1_score~)
 }
+
+// ==================== OCR 后处理纠错（v12.22.0 P1 准确率提升） ====================
+
+///|
+pub type CorrectionResult = @ocr.CorrectionResult
+
+///|
+pub type CorrectionEntry = @ocr.CorrectionEntry
+
+///|
+pub type SimilarCharMapping = @ocr.SimilarCharMapping
+
+///|
+pub type CommonErrorPattern = @ocr.CommonErrorPattern
+
+///|
+pub type DictionaryEntry = @ocr.DictionaryEntry
+
+///|
+pub type LanguageModelState = @ocr.LanguageModelState
+
+///|
+pub fn create_default_language_model() -> @ocr.LanguageModelState {
+  @ocr.create_default_language_model()
+}
+
+///|
+pub fn correct_similar_chars(
+  text : String,
+  context_type : String,
+) -> @ocr.CorrectionResult {
+  @ocr.correct_similar_chars(text, context_type)
+}
+
+///|
+pub fn correct_common_patterns(
+  text : String,
+) -> @ocr.CorrectionResult {
+  @ocr.correct_common_patterns(text)
+}
+
+///|
+pub fn full_postprocess_correction(
+  text : String,
+  context_type? : String = "mixed",
+) -> @ocr.CorrectionResult {
+  @ocr.full_postprocess_correction(text, context_type~)
+}
+
+///|
+pub fn batch_correct_texts(
+  texts : Array[String],
+  context_type? : String = "mixed",
+) -> Array[@ocr.CorrectionResult] {
+  @ocr.batch_correct_texts(texts, context_type~)
+}
+
+///|
+pub fn generate_correction_report(
+  results : Array[@ocr.CorrectionResult],
+) -> String {
+  @ocr.generate_correction_report(results)
+}
+
+///|
+pub fn calculate_accuracy_improvement(
+  before_results : Array[@ocr.CorrectionResult],
+  expected_texts : Array[String],
+) -> (Double, Double, Double) {
+  @ocr.calculate_accuracy_improvement(before_results, expected_texts)
+}
