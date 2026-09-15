@@ -8005,3 +8005,125 @@ pub fn enhanced_verification_report_to_string_fs(
 ) -> String {
   @forensics.enhanced_verification_report_to_string(result)
 }
+
+// ==================== 图像压缩与编码优化（v28.0.0） ====================
+
+///|
+pub type CompressionAlgorithm = @compression.CompressionAlgorithm
+
+///|
+pub type CompressionResult = @compression.CompressionResult
+
+///|
+pub type CompressionConfig = @compression.CompressionConfig
+
+///|
+pub type CompressionQualityMetrics = @compression.CompressionQualityMetrics
+
+///|
+pub type QuantizationTableType = @compression.QuantizationTableType
+
+///|
+pub type DCTBlock = @compression.DCTBlock
+
+///|
+pub type HuffmanTable = @compression.HuffmanTable
+
+///|
+pub fn create_default_compression_config_cp() -> @compression.CompressionConfig {
+  @compression.create_default_compression_config()
+}
+
+///|
+pub fn run_length_encode_cp(
+  data : Bytes,
+) -> Bytes {
+  @compression.run_length_encode(data)
+}
+
+///|
+pub fn run_length_decode_cp(
+  data : Bytes,
+) -> Bytes {
+  @compression.run_length_decode(data)
+}
+
+///|
+pub fn calculate_image_entropy_cp(
+  img : @types.Image,
+) -> Double {
+  @compression.calculate_image_entropy(img)
+}
+
+///|
+pub fn quantize_image_cp(
+  img : @types.Image,
+  levels : Int,
+) -> @types.Image {
+  @compression.quantize_image(img, levels)
+}
+
+///|
+pub fn predictive_encode_cp(
+  img : @types.Image,
+) -> Bytes {
+  @compression.predictive_encode(img)
+}
+
+///|
+pub fn calculate_compression_ratio_cp(
+  original_size : Int,
+  compressed_size : Int,
+) -> Double {
+  @compression.calculate_compression_ratio(original_size, compressed_size)
+}
+
+///|
+pub fn calculate_bits_per_pixel_cp(
+  compressed_size : Int,
+  width : Int,
+  height : Int,
+) -> Double {
+  @compression.calculate_bits_per_pixel(compressed_size, width, height)
+}
+
+///|
+pub fn calculate_compression_quality_cp(
+  original : @types.Image,
+  compressed : @types.Image,
+  original_size : Int,
+  compressed_size : Int,
+) -> @compression.CompressionQualityMetrics {
+  @compression.calculate_compression_quality(original, compressed, original_size, compressed_size)
+}
+
+///|
+pub fn compress_jpeg_simple_cp(
+  img : @types.Image,
+  quality : Double,
+) -> @compression.CompressionResult {
+  @compression.compress_jpeg_simple(img, quality)
+}
+
+///|
+pub fn compress_png_simple_cp(
+  img : @types.Image,
+) -> @compression.CompressionResult {
+  @compression.compress_png_simple(img)
+}
+
+///|
+pub fn compress_image_cp(
+  img : @types.Image,
+  config : @compression.CompressionConfig,
+) -> @compression.CompressionResult {
+  @compression.compress_image(img, config)
+}
+
+///|
+pub fn compression_report_to_string_cp(
+  result : @compression.CompressionResult,
+  metrics : @compression.CompressionQualityMetrics,
+) -> String {
+  @compression.compression_report_to_string(result, metrics)
+}
