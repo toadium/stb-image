@@ -5302,3 +5302,126 @@ pub fn analyze_markdown_element_distribution(
 ) -> Array[(String, Int)] {
   @ocr.analyze_markdown_element_distribution(doc)
 }
+
+// ==================== 增强版 PDF 布局分析（v12.19.0） ====================
+
+///|
+pub type LayoutType = @ocr.LayoutType
+
+///|
+pub type PageRegionType = @ocr.PageRegionType
+
+///|
+pub type PageRegion = @ocr.PageRegion
+
+///|
+pub type TextLineAttributes = @ocr.TextLineAttributes
+
+///|
+pub type ListItemType = @ocr.ListItemType
+
+///|
+pub type ListItemInfo = @ocr.ListItemInfo
+
+///|
+pub type EnhancedDocumentElement = @ocr.EnhancedDocumentElement
+
+///|
+pub type EnhancedDocument = @ocr.EnhancedDocument
+
+///|
+pub fn detect_layout_type(
+  text_lines : Array[@ocr.TextLineAttributes],
+  page_width : Int,
+  page_height : Int,
+) -> @ocr.LayoutType {
+  @ocr.detect_layout_type(text_lines, page_width, page_height)
+}
+
+///|
+pub fn detect_header_footer(
+  text_lines : Array[@ocr.TextLineAttributes],
+  page_height : Int,
+) -> (Int, Int) {
+  @ocr.detect_header_footer(text_lines, page_height)
+}
+
+///|
+pub fn detect_column_boundaries(
+  text_lines : Array[@ocr.TextLineAttributes],
+  page_width : Int,
+  layout_type : @ocr.LayoutType,
+) -> Array[Int] {
+  @ocr.detect_column_boundaries(text_lines, page_width, layout_type)
+}
+
+///|
+pub fn is_heading_line(
+  line : @ocr.TextLineAttributes,
+  avg_font_size : Double,
+) -> (Bool, Int) {
+  @ocr.is_heading_line(line, avg_font_size)
+}
+
+///|
+pub fn detect_list_item(
+  line : @ocr.TextLineAttributes,
+) -> @ocr.ListItemInfo {
+  @ocr.detect_list_item(line)
+}
+
+///|
+pub fn is_code_block_line(
+  line : @ocr.TextLineAttributes,
+  avg_indent : Int,
+) -> Bool {
+  @ocr.is_code_block_line(line, avg_indent)
+}
+
+///|
+pub fn is_quote_line(
+  line : @ocr.TextLineAttributes,
+  avg_x : Int,
+) -> Bool {
+  @ocr.is_quote_line(line, avg_x)
+}
+
+///|
+pub fn segment_paragraphs(
+  lines : Array[@ocr.TextLineAttributes],
+) -> Array[Array[@ocr.TextLineAttributes]] {
+  @ocr.segment_paragraphs(lines)
+}
+
+///|
+pub fn smart_reading_order(
+  elements : Array[@ocr.EnhancedDocumentElement],
+  layout_type : @ocr.LayoutType,
+  column_boundaries : Array[Int],
+) -> Array[Int] {
+  @ocr.smart_reading_order(elements, layout_type, column_boundaries)
+}
+
+///|
+pub fn build_enhanced_elements(
+  lines : Array[@ocr.TextLineAttributes],
+  page_width : Int,
+  page_height : Int,
+) -> @ocr.EnhancedDocument {
+  @ocr.build_enhanced_elements(lines, page_width, page_height)
+}
+
+///|
+pub fn enhanced_document_to_markdown(
+  doc : @ocr.EnhancedDocument,
+  include_header_footer? : Bool = false,
+) -> String {
+  @ocr.enhanced_document_to_markdown(doc, include_header_footer~)
+}
+
+///|
+pub fn enhanced_element_distribution(
+  doc : @ocr.EnhancedDocument,
+) -> Array[(String, Int)] {
+  @ocr.enhanced_element_distribution(doc)
+}
