@@ -6575,3 +6575,89 @@ pub fn computational_photography_report(
 ) -> String {
   @photo_enhance.computational_photography_report(hdr, panorama)
 }
+
+// ==================== 目标检测增强（v16.0.0） ====================
+
+///|
+pub type YoloBoundingBox = @detection.YoloBoundingBox
+
+///|
+pub type YoloDetectionResult = @detection.YoloDetectionResult
+
+///|
+pub type YoloConfig = @detection.YoloConfig
+
+///|
+pub type ObjectClass = @detection.ObjectClass
+
+///|
+pub type YoloTrackedObject = @detection.YoloTrackedObject
+
+///|
+pub type YoloTrackingResult = @detection.YoloTrackingResult
+
+///|
+pub type YoloDetectionMetrics = @detection.YoloDetectionMetrics
+
+///|
+pub fn create_default_yolo_config() -> @detection.YoloConfig {
+  @detection.create_default_yolo_config()
+}
+
+///|
+pub fn calculate_iou(
+  box1 : @detection.YoloBoundingBox,
+  box2 : @detection.YoloBoundingBox,
+) -> Double {
+  @detection.calculate_iou(box1, box2)
+}
+
+///|
+pub fn non_max_suppression(
+  boxes : Array[@detection.YoloBoundingBox],
+  iou_threshold : Double,
+  max_detections : Int,
+) -> Array[@detection.YoloBoundingBox] {
+  @detection.non_max_suppression(boxes, iou_threshold, max_detections)
+}
+
+///|
+pub fn detect_objects_simple(
+  img : @types.Image,
+  config : @detection.YoloConfig,
+) -> @detection.YoloDetectionResult {
+  @detection.detect_objects_simple(img, config)
+}
+
+///|
+pub fn initialize_object_tracking(
+  detection : @detection.YoloDetectionResult,
+) -> Array[@detection.YoloTrackedObject] {
+  @detection.initialize_object_tracking(detection)
+}
+
+///|
+pub fn update_object_tracking(
+  tracked_objects : Array[@detection.YoloTrackedObject],
+  detection : @detection.YoloDetectionResult,
+  max_age : Int,
+) -> Array[@detection.YoloTrackedObject] {
+  @detection.update_object_tracking(tracked_objects, detection, max_age)
+}
+
+///|
+pub fn calculate_detection_metrics(
+  predictions : Array[@detection.YoloBoundingBox],
+  ground_truth : Array[@detection.YoloBoundingBox],
+  iou_threshold : Double,
+) -> @detection.YoloDetectionMetrics {
+  @detection.calculate_detection_metrics(predictions, ground_truth, iou_threshold)
+}
+
+///|
+pub fn detection_report_to_string(
+  result : @detection.YoloDetectionResult,
+  metrics : @detection.YoloDetectionMetrics,
+) -> String {
+  @detection.detection_report_to_string(result, metrics)
+}
