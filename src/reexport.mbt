@@ -6360,3 +6360,122 @@ pub fn handwriting_report_to_string(
 ) -> String {
   @ocr.handwriting_report_to_string(result)
 }
+
+// ==================== 视频目标跟踪与动作识别（v14.0.0） ====================
+
+///|
+pub type OpticalFlowVector = @video.OpticalFlowVector
+
+///|
+pub type OpticalFlowField = @video.OpticalFlowField
+
+///|
+pub type TrackedObject = @video.TrackedObject
+
+///|
+pub type TrackingResult = @video.TrackingResult
+
+///|
+pub type ActionType = @video.ActionType
+
+///|
+pub type ActionRecognitionResult = @video.ActionRecognitionResult
+
+///|
+pub type VideoStabilizationConfig = @video.VideoStabilizationConfig
+
+///|
+pub type KeyframeType = @video.KeyframeType
+
+///|
+pub type Keyframe = @video.Keyframe
+
+///|
+pub type VideoSummary = @video.VideoSummary
+
+///|
+pub fn create_default_stabilization_config() -> @video.VideoStabilizationConfig {
+  @video.create_default_stabilization_config()
+}
+
+///|
+pub fn compute_frame_difference(
+  frame1 : @types.Image,
+  frame2 : @types.Image,
+  threshold? : Double = 30.0,
+) -> Double {
+  @video.compute_frame_difference(frame1, frame2, threshold~)
+}
+
+///|
+pub fn compute_optical_flow(
+  frame1 : @types.Image,
+  frame2 : @types.Image,
+  block_size? : Int = 8,
+  search_range? : Int = 4,
+) -> @video.OpticalFlowField {
+  @video.compute_optical_flow(frame1, frame2, block_size~, search_range~)
+}
+
+///|
+pub fn initialize_tracking(
+  first_frame : @types.Image,
+  roi_x : Int,
+  roi_y : Int,
+  roi_width : Int,
+  roi_height : Int,
+  label : String,
+) -> @video.TrackedObject {
+  @video.initialize_tracking(first_frame, roi_x, roi_y, roi_width, roi_height, label)
+}
+
+///|
+pub fn update_tracking(
+  obj : @video.TrackedObject,
+  frame : @types.Image,
+) -> @video.TrackedObject {
+  @video.update_tracking(obj, frame)
+}
+
+///|
+pub fn recognize_action(
+  frames : Array[@types.Image],
+  start_frame : Int,
+  end_frame : Int,
+) -> @video.ActionRecognitionResult {
+  @video.recognize_action(frames, start_frame, end_frame)
+}
+
+///|
+pub fn detect_scene_change(
+  frame1 : @types.Image,
+  frame2 : @types.Image,
+  threshold? : Double = 0.3,
+) -> (Bool, Double) {
+  @video.detect_scene_change(frame1, frame2, threshold~)
+}
+
+///|
+pub fn extract_keyframes(
+  frames : Array[@types.Image],
+  fps : Double,
+  method? : String = "auto",
+) -> Array[@video.Keyframe] {
+  @video.extract_keyframes(frames, fps, method~)
+}
+
+///|
+pub fn generate_video_summary(
+  frames : Array[@types.Image],
+  fps : Double,
+) -> @video.VideoSummary {
+  @video.generate_video_summary(frames, fps)
+}
+
+///|
+pub fn stabilize_video(
+  frames : Array[@types.Image],
+  config : @video.VideoStabilizationConfig,
+) -> Array[@types.Image] {
+  @video.stabilize_video(frames, config)
+}
