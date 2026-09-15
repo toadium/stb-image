@@ -389,7 +389,7 @@ pub fn estimate_affine_transform(
   } else {
     TransformMatrix::{
       matrix: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
-      transform_type: TransformType::Identity,
+      transform_type: TransformType::Unknown,
       width: 3,
       height: 3,
     }

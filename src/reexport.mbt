@@ -8380,3 +8380,104 @@ pub fn registration_report_to_string_advanced_ra(
 ) -> String {
   @registration_advanced.registration_report_to_string_advanced(result)
 }
+
+// ==================== SLAM 同时定位与地图构建（v31.0.0） ====================
+
+///|
+pub type SLAMAlgorithmSL = @slam.SLAMAlgorithm
+
+///|
+pub type CameraPoseSL = @slam.CameraPose
+
+///|
+pub type MapPointSL = @slam.MapPoint
+
+///|
+pub type KeyFrameSL = @slam.KeyFrame
+
+///|
+pub type SLAMStateSL = @slam.SLAMState
+
+///|
+pub type SLAMConfigSL = @slam.SLAMConfig
+
+///|
+pub type FeatureTrackingResultSL = @slam.FeatureTrackingResult
+
+///|
+pub type LoopClosureResultSL = @slam.LoopClosureResult
+
+///|
+pub fn create_default_slam_config_sl() -> @slam.SLAMConfig {
+  @slam.create_default_slam_config()
+}
+
+///|
+pub fn detect_features_slam_sl(
+  img : @types.Image,
+  max_features : Int,
+  threshold : Double,
+) -> Array[Array[Double]] {
+  @slam.detect_features_slam(img, max_features, threshold)
+}
+
+///|
+pub fn track_features_slam_sl(
+  prev_img : @types.Image,
+  curr_img : @types.Image,
+  prev_features : Array[Array[Double]],
+  search_radius : Int,
+) -> @slam.FeatureTrackingResult {
+  @slam.track_features_slam(prev_img, curr_img, prev_features, search_radius)
+}
+
+///|
+pub fn estimate_camera_pose_sl(
+  tracking_result : @slam.FeatureTrackingResult,
+  config : @slam.SLAMConfig,
+  prev_pose : @slam.CameraPose,
+) -> @slam.CameraPose {
+  @slam.estimate_camera_pose(tracking_result, config, prev_pose)
+}
+
+///|
+pub fn triangulate_points_sl(
+  features : Array[Array[Double]],
+  pose1 : @slam.CameraPose,
+  pose2 : @slam.CameraPose,
+  config : @slam.SLAMConfig,
+) -> Array[@slam.MapPoint] {
+  @slam.triangulate_points(features, pose1, pose2, config)
+}
+
+///|
+pub fn detect_loop_closure_sl(
+  current_features : Array[Array[Double]],
+  keyframes : Array[@slam.KeyFrame],
+  threshold : Double,
+) -> @slam.LoopClosureResult {
+  @slam.detect_loop_closure(current_features, keyframes, threshold)
+}
+
+///|
+pub fn initialize_slam_sl(
+  config : @slam.SLAMConfig,
+) -> @slam.SLAMState {
+  @slam.initialize_slam(config)
+}
+
+///|
+pub fn process_frame_slam_sl(
+  state : @slam.SLAMState,
+  img : @types.Image,
+  config : @slam.SLAMConfig,
+) -> @slam.SLAMState {
+  @slam.process_frame_slam(state, img, config)
+}
+
+///|
+pub fn slam_report_to_string_sl(
+  state : @slam.SLAMState,
+) -> String {
+  @slam.slam_report_to_string(state)
+}
