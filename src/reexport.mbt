@@ -6983,3 +6983,124 @@ pub fn medical_image_report_to_string_medical(
 ) -> String {
   @medical.medical_image_report_to_string(image, lesions, quality)
 }
+
+// ==================== 遥感图像增强（v20.0.0） ====================
+
+///|
+pub type RemoteSensingImageType = @remote_sensing.RemoteSensingImageType
+
+///|
+pub type RemoteSensingImage = @remote_sensing.RemoteSensingImage
+
+///|
+pub type LandCoverClass = @remote_sensing.LandCoverClass
+
+///|
+pub type ChangeDetectionResult = @remote_sensing.ChangeDetectionResult
+
+///|
+pub type VegetationIndices = @remote_sensing.VegetationIndices
+
+///|
+pub type SpectralSignature = @remote_sensing.SpectralSignature
+
+///|
+pub type TextureFeatures = @remote_sensing.TextureFeatures
+
+///|
+pub type RemoteSensingQuality = @remote_sensing.RemoteSensingQuality
+
+///|
+pub fn create_default_remote_sensing_image(
+  width : Int,
+  height : Int,
+  bands : Int,
+) -> @remote_sensing.RemoteSensingImage {
+  @remote_sensing.create_default_remote_sensing_image(width, height, bands)
+}
+
+///|
+pub fn calculate_ndvi_rs(
+  image : @remote_sensing.RemoteSensingImage,
+  red_band : Int,
+  nir_band : Int,
+) -> Array[Double] {
+  @remote_sensing.calculate_ndvi(image, red_band, nir_band)
+}
+
+///|
+pub fn calculate_ndwi_rs(
+  image : @remote_sensing.RemoteSensingImage,
+  green_band : Int,
+  nir_band : Int,
+) -> Array[Double] {
+  @remote_sensing.calculate_ndwi(image, green_band, nir_band)
+}
+
+///|
+pub fn calculate_ndbi_rs(
+  image : @remote_sensing.RemoteSensingImage,
+  swir_band : Int,
+  nir_band : Int,
+) -> Array[Double] {
+  @remote_sensing.calculate_ndbi(image, swir_band, nir_band)
+}
+
+///|
+pub fn calculate_all_vegetation_indices_rs(
+  image : @remote_sensing.RemoteSensingImage,
+) -> @remote_sensing.VegetationIndices {
+  @remote_sensing.calculate_all_vegetation_indices(image)
+}
+
+///|
+pub fn classify_land_cover_simple_rs(
+  image : @remote_sensing.RemoteSensingImage,
+) -> @remote_sensing.ClassificationResult {
+  @remote_sensing.classify_land_cover_simple(image)
+}
+
+///|
+pub fn detect_changes_simple_rs(
+  image1 : @remote_sensing.RemoteSensingImage,
+  image2 : @remote_sensing.RemoteSensingImage,
+  threshold : Double,
+) -> @remote_sensing.ChangeDetectionResult {
+  @remote_sensing.detect_changes_simple(image1, image2, threshold)
+}
+
+///|
+pub fn calculate_texture_features_rs(
+  image : @types.Image,
+  x : Int,
+  y : Int,
+  window_size : Int,
+) -> @remote_sensing.TextureFeatures {
+  @remote_sensing.calculate_texture_features(image, x, y, window_size)
+}
+
+///|
+pub fn calculate_spectral_signature_rs(
+  image : @remote_sensing.RemoteSensingImage,
+  x : Int,
+  y : Int,
+) -> @remote_sensing.SpectralSignature {
+  @remote_sensing.calculate_spectral_signature(image, x, y)
+}
+
+///|
+pub fn calculate_remote_sensing_quality_rs(
+  image : @remote_sensing.RemoteSensingImage,
+) -> @remote_sensing.RemoteSensingQuality {
+  @remote_sensing.calculate_remote_sensing_quality(image)
+}
+
+///|
+pub fn remote_sensing_report_to_string_rs(
+  image : @remote_sensing.RemoteSensingImage,
+  classification : @remote_sensing.ClassificationResult,
+  changes : @remote_sensing.ChangeDetectionResult,
+  quality : @remote_sensing.RemoteSensingQuality,
+) -> String {
+  @remote_sensing.remote_sensing_report_to_string(image, classification, changes, quality)
+}
