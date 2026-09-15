@@ -7389,3 +7389,118 @@ pub fn retrieval_report_to_string_cbir(
 ) -> String {
   @retrieval.retrieval_report_to_string(results, query_feature)
 }
+
+// ==================== 图像超分辨率增强（v23.0.0） ====================
+
+///|
+pub type SuperResolutionAlgorithm = @superres.SuperResolutionAlgorithm
+
+///|
+pub type SuperResolutionResult = @superres.SuperResolutionResult
+
+///|
+pub type InterpolationConfig = @superres.InterpolationConfig
+
+///|
+pub type ImageQualityMetrics = @superres.ImageQualityMetrics
+
+///|
+pub type EnhancementConfig = @superres.EnhancementConfig
+
+///|
+pub fn create_default_interpolation_config_sr() -> @superres.InterpolationConfig {
+  @superres.create_default_interpolation_config()
+}
+
+///|
+pub fn create_default_enhancement_config_sr() -> @superres.EnhancementConfig {
+  @superres.create_default_enhancement_config()
+}
+
+///|
+pub fn nearest_neighbor_interpolate_sr(
+  img : @types.Image,
+  scale_factor : Double,
+) -> @types.Image {
+  @superres.nearest_neighbor_interpolate(img, scale_factor)
+}
+
+///|
+pub fn bilinear_interpolate_sr(
+  img : @types.Image,
+  scale_factor : Double,
+) -> @types.Image {
+  @superres.bilinear_interpolate(img, scale_factor)
+}
+
+///|
+pub fn bicubic_interpolate_sr(
+  img : @types.Image,
+  scale_factor : Double,
+) -> @types.Image {
+  @superres.bicubic_interpolate(img, scale_factor)
+}
+
+///|
+pub fn sharpen_image_sr(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image {
+  @superres.sharpen_image(img, strength)
+}
+
+///|
+pub fn denoise_image_sr(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image {
+  @superres.denoise_image(img, strength)
+}
+
+///|
+pub fn super_resolve_sr(
+  img : @types.Image,
+  config : @superres.InterpolationConfig,
+) -> @superres.SuperResolutionResult {
+  @superres.super_resolve(img, config)
+}
+
+///|
+pub fn calculate_psnr_sr_api(
+  original : @types.Image,
+  processed : @types.Image,
+) -> Double {
+  @superres.calculate_psnr_sr(original, processed)
+}
+
+///|
+pub fn calculate_ssim_sr_api(
+  original : @types.Image,
+  processed : @types.Image,
+) -> Double {
+  @superres.calculate_ssim_sr(original, processed)
+}
+
+///|
+pub fn calculate_image_quality_metrics_sr(
+  original : @types.Image,
+  processed : @types.Image,
+) -> @superres.ImageQualityMetrics {
+  @superres.calculate_image_quality_metrics(original, processed)
+}
+
+///|
+pub fn enhance_image_sr(
+  img : @types.Image,
+  config : @superres.EnhancementConfig,
+) -> @types.Image {
+  @superres.enhance_image(img, config)
+}
+
+///|
+pub fn super_resolution_report_to_string_sr(
+  result : @superres.SuperResolutionResult,
+  metrics : @superres.ImageQualityMetrics,
+) -> String {
+  @superres.super_resolution_report_to_string(result, metrics)
+}
