@@ -7934,3 +7934,74 @@ pub fn source_verification_report_to_string_fs(
 ) -> String {
   @forensics.source_verification_report_to_string(result)
 }
+
+// ==================== 图像来源鉴定增强（v27.1.0） ====================
+
+///|
+pub type EnhancedVerificationResult = @forensics.EnhancedVerificationResult
+
+///|
+pub type EnhancedVerificationFeatures = @forensics.EnhancedVerificationFeatures
+
+///|
+pub type UIDetectionResult = @forensics.UIDetectionResult
+
+///|
+pub type TextDetectionResult = @forensics.TextDetectionResult
+
+///|
+pub type GeometryAnalysisResult = @forensics.GeometryAnalysisResult
+
+///|
+pub type ColorQuantizationResult = @forensics.ColorQuantizationResult
+
+///|
+pub type EnhancedVerificationConfig = @forensics.EnhancedVerificationConfig
+
+///|
+pub fn create_default_enhanced_verification_config_fs() -> @forensics.EnhancedVerificationConfig {
+  @forensics.create_default_enhanced_verification_config()
+}
+
+///|
+pub fn detect_ui_elements_fs(
+  img : @types.Image,
+) -> @forensics.UIDetectionResult {
+  @forensics.detect_ui_elements(img)
+}
+
+///|
+pub fn detect_text_regions_fs(
+  img : @types.Image,
+) -> @forensics.TextDetectionResult {
+  @forensics.detect_text_regions(img)
+}
+
+///|
+pub fn analyze_geometry_fs(
+  img : @types.Image,
+) -> @forensics.GeometryAnalysisResult {
+  @forensics.analyze_geometry(img)
+}
+
+///|
+pub fn analyze_color_quantization_fs(
+  img : @types.Image,
+) -> @forensics.ColorQuantizationResult {
+  @forensics.analyze_color_quantization(img)
+}
+
+///|
+pub fn verify_image_source_enhanced_fs(
+  img : @types.Image,
+  config : @forensics.EnhancedVerificationConfig,
+) -> @forensics.EnhancedVerificationResult {
+  @forensics.verify_image_source_enhanced(img, config)
+}
+
+///|
+pub fn enhanced_verification_report_to_string_fs(
+  result : @forensics.EnhancedVerificationResult,
+) -> String {
+  @forensics.enhanced_verification_report_to_string(result)
+}
