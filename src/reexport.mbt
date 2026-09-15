@@ -7104,3 +7104,138 @@ pub fn remote_sensing_report_to_string_rs(
 ) -> String {
   @remote_sensing.remote_sensing_report_to_string(image, classification, changes, quality)
 }
+
+// ==================== 图像加密与水印增强（v21.0.0） ====================
+
+///|
+pub type EncryptionAlgorithm = @encryption.EncryptionAlgorithm
+
+///|
+pub type EncryptionResult = @encryption.EncryptionResult
+
+///|
+pub type WatermarkType = @encryption.WatermarkType
+
+///|
+pub type WatermarkInfo = @encryption.WatermarkInfo
+
+///|
+pub type WatermarkExtractionResult = @encryption.WatermarkExtractionResult
+
+///|
+pub type ChaoticParams = @encryption.ChaoticParams
+
+///|
+pub type ArnoldParams = @encryption.ArnoldParams
+
+///|
+pub type ImageEncryptionQuality = @encryption.ImageEncryptionQuality
+
+///|
+pub fn create_default_chaotic_params_enc() -> @encryption.ChaoticParams {
+  @encryption.create_default_chaotic_params()
+}
+
+///|
+pub fn create_default_arnold_params_enc() -> @encryption.ArnoldParams {
+  @encryption.create_default_arnold_params()
+}
+
+///|
+pub fn xor_encrypt_enc(
+  img : @types.Image,
+  key : Array[Byte],
+) -> @encryption.EncryptionResult {
+  @encryption.xor_encrypt(img, key)
+}
+
+///|
+pub fn xor_decrypt_enc(
+  encrypted : @encryption.EncryptionResult,
+  key : Array[Byte],
+) -> @types.Image {
+  @encryption.xor_decrypt(encrypted, key)
+}
+
+///|
+pub fn chaotic_encrypt_enc(
+  img : @types.Image,
+  params : @encryption.ChaoticParams,
+) -> @encryption.EncryptionResult {
+  @encryption.chaotic_encrypt(img, params)
+}
+
+///|
+pub fn arnold_scramble_enc(
+  img : @types.Image,
+  params : @encryption.ArnoldParams,
+) -> @encryption.EncryptionResult {
+  @encryption.arnold_scramble(img, params)
+}
+
+///|
+pub fn embed_watermark_lsb_enc(
+  img : @types.Image,
+  watermark : Array[Byte],
+  strength : Int,
+) -> (@types.Image, @encryption.WatermarkInfo) {
+  @encryption.embed_watermark_lsb(img, watermark, strength)
+}
+
+///|
+pub fn extract_watermark_lsb_enc(
+  img : @types.Image,
+  watermark_length : Int,
+  strength : Int,
+) -> @encryption.WatermarkExtractionResult {
+  @encryption.extract_watermark_lsb(img, watermark_length, strength)
+}
+
+///|
+pub fn embed_visible_watermark_enc(
+  img : @types.Image,
+  watermark_text : String,
+  x : Int,
+  y : Int,
+  opacity : Double,
+) -> @types.Image {
+  @encryption.embed_visible_watermark(img, watermark_text, x, y, opacity)
+}
+
+///|
+pub fn calculate_image_entropy_enc(img : @types.Image) -> Double {
+  @encryption.calculate_image_entropy(img)
+}
+
+///|
+pub fn calculate_correlation_enc(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @encryption.calculate_correlation(img1, img2)
+}
+
+///|
+pub fn calculate_psnr_enc(
+  original : @types.Image,
+  encrypted : @types.Image,
+) -> Double {
+  @encryption.calculate_psnr(original, encrypted)
+}
+
+///|
+pub fn evaluate_image_encryption_quality_enc(
+  original : @types.Image,
+  encrypted : @types.Image,
+) -> @encryption.ImageEncryptionQuality {
+  @encryption.evaluate_image_encryption_quality(original, encrypted)
+}
+
+///|
+pub fn encryption_report_to_string_enc(
+  encryption : @encryption.EncryptionResult,
+  watermark : @encryption.WatermarkInfo,
+  quality : @encryption.ImageEncryptionQuality,
+) -> String {
+  @encryption.encryption_report_to_string(encryption, watermark, quality)
+}
