@@ -5817,3 +5817,107 @@ pub fn robustness_report_to_string(
 ) -> String {
   @ocr.robustness_report_to_string(report)
 }
+
+// ==================== OCR 批处理引擎（v12.25.0 P4 工程化） ====================
+
+///|
+pub type BatchOcrConfig = @ocr.BatchOcrConfig
+
+///|
+pub type BatchTaskStatus = @ocr.BatchTaskStatus
+
+///|
+pub type BatchTask = @ocr.BatchTask
+
+///|
+pub type BatchProgress = @ocr.BatchProgress
+
+///|
+pub type BatchResultSummary = @ocr.BatchResultSummary
+
+///|
+pub type MemoryUsageStats = @ocr.MemoryUsageStats
+
+///|
+pub fn create_default_batch_config() -> @ocr.BatchOcrConfig {
+  @ocr.create_default_batch_config()
+}
+
+///|
+pub fn create_batch_tasks(
+  input_files : Array[String],
+  output_directory : String,
+  output_format : String,
+) -> Array[@ocr.BatchTask] {
+  @ocr.create_batch_tasks(input_files, output_directory, output_format)
+}
+
+///|
+pub fn update_task_progress(
+  task : @ocr.BatchTask,
+  progress : Double,
+  current_page : Int,
+  total_pages : Int,
+) -> @ocr.BatchTask {
+  @ocr.update_task_progress(task, progress, current_page, total_pages)
+}
+
+///|
+pub fn mark_task_completed(
+  task : @ocr.BatchTask,
+  char_count : Int,
+  accuracy : Double,
+  end_time : Double,
+) -> @ocr.BatchTask {
+  @ocr.mark_task_completed(task, char_count, accuracy, end_time)
+}
+
+///|
+pub fn mark_task_failed(
+  task : @ocr.BatchTask,
+  error_message : String,
+  end_time : Double,
+) -> @ocr.BatchTask {
+  @ocr.mark_task_failed(task, error_message, end_time)
+}
+
+///|
+pub fn calculate_batch_progress(
+  tasks : Array[@ocr.BatchTask],
+  elapsed_time_ms : Double,
+) -> @ocr.BatchProgress {
+  @ocr.calculate_batch_progress(tasks, elapsed_time_ms)
+}
+
+///|
+pub fn generate_batch_summary(
+  tasks : Array[@ocr.BatchTask],
+  total_time_ms : Double,
+) -> @ocr.BatchResultSummary {
+  @ocr.generate_batch_summary(tasks, total_time_ms)
+}
+
+///|
+pub fn batch_summary_to_string(
+  summary : @ocr.BatchResultSummary,
+) -> String {
+  @ocr.batch_summary_to_string(summary)
+}
+
+///|
+pub fn progress_bar_to_string(
+  progress : Double,
+  width? : Int = 30,
+) -> String {
+  @ocr.progress_bar_to_string(progress, width~)
+}
+
+///|
+pub fn estimate_memory_usage(
+  image_count : Int,
+  image_width : Int,
+  image_height : Int,
+  channels : Int,
+) -> @ocr.MemoryUsageStats {
+  @ocr.estimate_memory_usage(image_count, image_width, image_height, channels)
+}
