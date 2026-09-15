@@ -8262,3 +8262,121 @@ pub fn denoise_report_to_string_dn(
 ) -> String {
   @denoise.denoise_report_to_string(result)
 }
+
+// ==================== 高级图像配准算法（v30.0.0） ====================
+
+///|
+pub type RegistrationAlgorithmRA = @registration_advanced.RegistrationAlgorithm
+
+///|
+pub type TransformTypeRA = @registration_advanced.TransformType
+
+///|
+pub type RegistrationResultAdvanced = @registration_advanced.RegistrationResultAdvanced
+
+///|
+pub type RegistrationConfigAdvanced = @registration_advanced.RegistrationConfigAdvanced
+
+///|
+pub type FeaturePointRA = @registration_advanced.FeaturePoint
+
+///|
+pub type FeatureMatchRA = @registration_advanced.FeatureMatch
+
+///|
+pub type TransformMatrixRA = @registration_advanced.TransformMatrix
+
+///|
+pub fn create_default_registration_config_advanced_ra() -> @registration_advanced.RegistrationConfigAdvanced {
+  @registration_advanced.create_default_registration_config_advanced()
+}
+
+///|
+pub fn phase_correlation_registration_ra(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> @registration_advanced.RegistrationResultAdvanced {
+  @registration_advanced.phase_correlation_registration(img1, img2)
+}
+
+///|
+pub fn apply_translation_ra(
+  img : @types.Image,
+  dx : Int,
+  dy : Int,
+) -> @types.Image {
+  @registration_advanced.apply_translation(img, dx, dy)
+}
+
+///|
+pub fn normalized_cross_correlation_ra(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @registration_advanced.normalized_cross_correlation(img1, img2)
+}
+
+///|
+pub fn calculate_mutual_information_ra(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double {
+  @registration_advanced.calculate_mutual_information(img1, img2)
+}
+
+///|
+pub fn detect_harris_corners_ra(
+  img : @types.Image,
+  threshold : Double,
+) -> Array[@registration_advanced.FeaturePoint] {
+  @registration_advanced.detect_harris_corners(img, threshold)
+}
+
+///|
+pub fn match_feature_points_ra(
+  points1 : Array[@registration_advanced.FeaturePoint],
+  points2 : Array[@registration_advanced.FeaturePoint],
+  max_distance : Double,
+) -> Array[@registration_advanced.FeatureMatch] {
+  @registration_advanced.match_feature_points(points1, points2, max_distance)
+}
+
+///|
+pub fn estimate_affine_transform_ra(
+  matches : Array[@registration_advanced.FeatureMatch],
+) -> @registration_advanced.TransformMatrix {
+  @registration_advanced.estimate_affine_transform(matches)
+}
+
+///|
+pub fn apply_affine_transform_ra(
+  img : @types.Image,
+  matrix : @registration_advanced.TransformMatrix,
+) -> @types.Image {
+  @registration_advanced.apply_affine_transform(img, matrix)
+}
+
+///|
+pub fn feature_based_registration_ra(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  config : @registration_advanced.RegistrationConfigAdvanced,
+) -> @registration_advanced.RegistrationResultAdvanced {
+  @registration_advanced.feature_based_registration(img1, img2, config)
+}
+
+///|
+pub fn register_images_advanced_ra(
+  img1 : @types.Image,
+  img2 : @types.Image,
+  config : @registration_advanced.RegistrationConfigAdvanced,
+) -> @registration_advanced.RegistrationResultAdvanced {
+  @registration_advanced.register_images_advanced(img1, img2, config)
+}
+
+///|
+pub fn registration_report_to_string_advanced_ra(
+  result : @registration_advanced.RegistrationResultAdvanced,
+) -> String {
+  @registration_advanced.registration_report_to_string_advanced(result)
+}
