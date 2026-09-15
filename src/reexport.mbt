@@ -7711,3 +7711,122 @@ pub fn inpainting_report_to_string_ip(
 ) -> String {
   @inpainting.inpainting_report_to_string(result)
 }
+
+// ==================== 图像融合与配准增强（v26.0.0） ====================
+
+///|
+pub type FusionAlgorithm = @fusion_enhanced.FusionAlgorithm
+
+///|
+pub type FusionResult = @fusion_enhanced.FusionResult
+
+///|
+pub type FusionEnhancedConfig = @fusion_enhanced.FusionConfig
+
+///|
+pub type RegistrationAlgorithm = @fusion_enhanced.RegistrationAlgorithm
+
+///|
+pub type RegistrationEnhancedResult = @fusion_enhanced.RegistrationResult
+
+///|
+pub type RegistrationConfig = @fusion_enhanced.RegistrationConfig
+
+///|
+pub type TransformMatrix = @fusion_enhanced.TransformMatrix
+
+///|
+pub fn create_default_fusion_config_fe() -> @fusion_enhanced.FusionConfig {
+  @fusion_enhanced.create_default_fusion_config()
+}
+
+///|
+pub fn create_default_registration_config_fe() -> @fusion_enhanced.RegistrationConfig {
+  @fusion_enhanced.create_default_registration_config()
+}
+
+///|
+pub fn fuse_weighted_average_fe(
+  images : Array[@types.Image],
+  weights : Array[Double],
+) -> @types.Image {
+  @fusion_enhanced.fuse_weighted_average(images, weights)
+}
+
+///|
+pub fn fuse_maximum_fe(
+  images : Array[@types.Image],
+) -> @types.Image {
+  @fusion_enhanced.fuse_maximum(images)
+}
+
+///|
+pub fn fuse_minimum_fe(
+  images : Array[@types.Image],
+) -> @types.Image {
+  @fusion_enhanced.fuse_minimum(images)
+}
+
+///|
+pub fn fuse_simple_mean_fe(
+  images : Array[@types.Image],
+) -> @types.Image {
+  @fusion_enhanced.fuse_simple_mean(images)
+}
+
+///|
+pub fn fuse_laplacian_pyramid_fe(
+  images : Array[@types.Image],
+  levels : Int,
+) -> @types.Image {
+  @fusion_enhanced.fuse_laplacian_pyramid(images, levels)
+}
+
+///|
+pub fn fuse_images_fe(
+  images : Array[@types.Image],
+  config : @fusion_enhanced.FusionConfig,
+) -> @fusion_enhanced.FusionResult {
+  @fusion_enhanced.fuse_images(images, config)
+}
+
+///|
+pub fn register_phase_correlation_fe(
+  reference : @types.Image,
+  target : @types.Image,
+) -> @fusion_enhanced.RegistrationResult {
+  @fusion_enhanced.register_phase_correlation(reference, target)
+}
+
+///|
+pub fn register_images_fe(
+  reference : @types.Image,
+  target : @types.Image,
+  config : @fusion_enhanced.RegistrationConfig,
+) -> @fusion_enhanced.RegistrationResult {
+  @fusion_enhanced.register_images(reference, target, config)
+}
+
+///|
+pub fn apply_translation_fe(
+  img : @types.Image,
+  dx : Int,
+  dy : Int,
+) -> @types.Image {
+  @fusion_enhanced.apply_translation(img, dx, dy)
+}
+
+///|
+pub fn calculate_fusion_quality_fe(
+  fused : @types.Image,
+) -> Double {
+  @fusion_enhanced.calculate_fusion_quality(fused)
+}
+
+///|
+pub fn fusion_report_to_string_fe(
+  result : @fusion_enhanced.FusionResult,
+  quality : Double,
+) -> String {
+  @fusion_enhanced.fusion_report_to_string(result, quality)
+}
