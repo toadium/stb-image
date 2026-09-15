@@ -5921,3 +5921,206 @@ pub fn estimate_memory_usage(
 ) -> @ocr.MemoryUsageStats {
   @ocr.estimate_memory_usage(image_count, image_width, image_height, channels)
 }
+
+// ==================== OCR 深度学习集成（v13.0.0） ====================
+
+///|
+pub type DLLayerType = @ocr.DLLayerType
+
+///|
+pub type DLConv2DConfig = @ocr.DLConv2DConfig
+
+///|
+pub type DLDenseConfig = @ocr.DLDenseConfig
+
+///|
+pub type DLNeuralLayer = @ocr.DLNeuralLayer
+
+///|
+pub type DLCnnModelConfig = @ocr.DLCnnModelConfig
+
+///|
+pub type DLTrainingSample = @ocr.DLTrainingSample
+
+///|
+pub type DLTrainingHistory = @ocr.DLTrainingHistory
+
+///|
+pub type DLInferenceResult = @ocr.DLInferenceResult
+
+///|
+pub type DLFeatureExtractor = @ocr.DLFeatureExtractor
+
+///|
+pub fn create_default_char_cnn_config(
+  num_classes : Int,
+) -> @ocr.DLCnnModelConfig {
+  @ocr.create_default_char_cnn_config(num_classes)
+}
+
+///|
+pub fn create_neural_layer(
+  layer_type : @ocr.DLLayerType,
+  name : String,
+  input_shape : Array[Int],
+) -> @ocr.DLNeuralLayer {
+  @ocr.create_neural_layer(layer_type, name, input_shape)
+}
+
+///|
+pub fn normalize_image(
+  image_data : Array[Double],
+  mean : Double,
+  std : Double,
+) -> Array[Double] {
+  @ocr.normalize_image(image_data, mean, std)
+}
+
+///|
+pub fn resize_image_for_cnn(
+  img : @types.Image,
+  target_width : Int,
+  target_height : Int,
+) -> Array[Double] {
+  @ocr.resize_image_for_cnn(img, target_width, target_height)
+}
+
+///|
+pub fn relu(x : Double) -> Double {
+  @ocr.relu(x)
+}
+
+///|
+pub fn sigmoid(x : Double) -> Double {
+  @ocr.sigmoid(x)
+}
+
+///|
+pub fn softmax(logits : Array[Double]) -> Array[Double] {
+  @ocr.softmax(logits)
+}
+
+///|
+pub fn conv2d(
+  input : Array[Double],
+  in_h : Int,
+  in_w : Int,
+  in_c : Int,
+  kernel : Array[Double],
+  out_c : Int,
+  k_size : Int,
+  stride : Int,
+  padding : Int,
+) -> Array[Double] {
+  @ocr.conv2d(input, in_h, in_w, in_c, kernel, out_c, k_size, stride, padding)
+}
+
+///|
+pub fn max_pool2d(
+  input : Array[Double],
+  in_h : Int,
+  in_w : Int,
+  channels : Int,
+  pool_size : Int,
+) -> Array[Double] {
+  @ocr.max_pool2d(input, in_h, in_w, channels, pool_size)
+}
+
+///|
+pub fn dense_forward(
+  input : Array[Double],
+  weights : Array[Double],
+  biases : Array[Double],
+  in_features : Int,
+  out_features : Int,
+  activation : String,
+) -> Array[Double] {
+  @ocr.dense_forward(input, weights, biases, in_features, out_features, activation)
+}
+
+///|
+pub fn cnn_infer(
+  image_data : Array[Double],
+  config : @ocr.DLCnnModelConfig,
+  labels : Array[String],
+) -> @ocr.DLInferenceResult {
+  @ocr.cnn_infer(image_data, config, labels)
+}
+
+///|
+pub fn create_training_sample(
+  img : @types.Image,
+  label : Int,
+  label_text : String,
+) -> @ocr.DLTrainingSample {
+  @ocr.create_training_sample(img, label, label_text)
+}
+
+///|
+pub fn cross_entropy_loss(
+  predicted : Array[Double],
+  target : Int,
+) -> Double {
+  @ocr.cross_entropy_loss(predicted, target)
+}
+
+///|
+pub fn create_training_history(
+  epoch : Int,
+  train_loss : Double,
+  train_accuracy : Double,
+  val_loss : Double,
+  val_accuracy : Double,
+  learning_rate : Double,
+  time_ms : Double,
+) -> @ocr.DLTrainingHistory {
+  @ocr.create_training_history(epoch, train_loss, train_accuracy, val_loss, val_accuracy, learning_rate, time_ms)
+}
+
+///|
+pub fn generate_training_report(
+  history : Array[@ocr.DLTrainingHistory],
+  config : @ocr.DLCnnModelConfig,
+) -> String {
+  @ocr.generate_training_report(history, config)
+}
+
+///|
+pub fn save_model(
+  config : @ocr.DLCnnModelConfig,
+  weights : Array[Double],
+  path : String,
+) -> Bool {
+  @ocr.save_model(config, weights, path)
+}
+
+///|
+pub fn load_model(
+  path : String,
+) -> Option[@ocr.DLCnnModelConfig] {
+  @ocr.load_model(path)
+}
+
+///|
+pub fn create_feature_extractor(
+  model_name : String,
+  feature_dim : Int,
+) -> @ocr.DLFeatureExtractor {
+  @ocr.create_feature_extractor(model_name, feature_dim)
+}
+
+///|
+pub fn extract_features(
+  extractor : @ocr.DLFeatureExtractor,
+  img : @types.Image,
+) -> Array[Double] {
+  @ocr.extract_features(extractor, img)
+}
+
+///|
+pub fn cosine_similarity(
+  feat1 : Array[Double],
+  feat2 : Array[Double],
+) -> Double {
+  @ocr.cosine_similarity(feat1, feat2)
+}
