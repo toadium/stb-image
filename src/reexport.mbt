@@ -6772,3 +6772,108 @@ pub fn segmentation_report_to_string(
 ) -> String {
   @segmentation.segmentation_report_to_string(result, metrics)
 }
+
+// ==================== 3D 视觉增强（v18.0.0） ====================
+
+///|
+pub type Point3d = @stereo3d.Point3d
+
+///|
+pub type PointCloud3D = @stereo3d.PointCloud3D
+
+///|
+pub type BoundingBox3d = @stereo3d.BoundingBox3d
+
+///|
+pub type DepthMap3d = @stereo3d.DepthMap3d
+
+///|
+pub type CameraIntrinsics3d = @stereo3d.CameraIntrinsics3d
+
+///|
+pub type CameraExtrinsics3d = @stereo3d.CameraExtrinsics3d
+
+///|
+pub type StereoConfig3d = @stereo3d.StereoConfig3d
+
+///|
+pub type RegistrationResult3d = @stereo3d.RegistrationResult3d
+
+///|
+pub type Mesh3d = @stereo3d.Mesh3d
+
+///|
+pub fn create_default_stereo_config_3d() -> @stereo3d.StereoConfig3d {
+  @stereo3d.create_default_stereo_config()
+}
+
+///|
+pub fn create_default_camera_intrinsics_3d(width : Int, height : Int) -> @stereo3d.CameraIntrinsics3d {
+  @stereo3d.create_default_camera_intrinsics(width, height)
+}
+
+///|
+pub fn depth_to_point_cloud_3d(
+  depth : @stereo3d.DepthMap3d,
+  intrinsics : @stereo3d.CameraIntrinsics3d,
+) -> @stereo3d.PointCloud3D {
+  @stereo3d.depth_to_point_cloud(depth, intrinsics)
+}
+
+///|
+pub fn stereo_match_3d(
+  left : @types.Image,
+  right : @types.Image,
+  config : @stereo3d.StereoConfig3d,
+) -> @stereo3d.DepthMap3d {
+  @stereo3d.stereo_match(left, right, config)
+}
+
+///|
+pub fn voxel_downsample_3d(
+  cloud : @stereo3d.PointCloud3D,
+  voxel_size : Double,
+) -> @stereo3d.PointCloud3D {
+  @stereo3d.voxel_downsample(cloud, voxel_size)
+}
+
+///|
+pub fn statistical_outlier_removal_3d(
+  cloud : @stereo3d.PointCloud3D,
+  mean_k : Int,
+  std_ratio : Double,
+) -> @stereo3d.PointCloud3D {
+  @stereo3d.statistical_outlier_removal(cloud, mean_k, std_ratio)
+}
+
+///|
+pub fn icp_registration_3d(
+  source : @stereo3d.PointCloud3D,
+  target : @stereo3d.PointCloud3D,
+  max_iterations : Int,
+  tolerance : Double,
+) -> @stereo3d.RegistrationResult3d {
+  @stereo3d.icp_registration(source, target, max_iterations, tolerance)
+}
+
+///|
+pub fn estimate_normals_3d(
+  cloud : @stereo3d.PointCloud3D,
+  search_radius : Double,
+) -> Array[(Double, Double, Double)] {
+  @stereo3d.estimate_normals(cloud, search_radius)
+}
+
+///|
+pub fn depth_map_to_image_3d(depth : @stereo3d.DepthMap3d) -> @types.Image {
+  @stereo3d.depth_map_to_image(depth)
+}
+
+///|
+pub fn vision_3d_report_to_string(
+  cloud : @stereo3d.PointCloud3D,
+  depth : @stereo3d.DepthMap3d,
+  registration : @stereo3d.RegistrationResult3d,
+) -> String {
+  @stereo3d.vision_3d_report_to_string(cloud, depth, registration)
+}
