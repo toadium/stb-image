@@ -443,3 +443,10 @@
 - 11种距离度量类型（欧氏/曼哈顿/余弦/切比雪夫/闵可夫斯基/汉明/马氏/相关/Bray-Curtis/Canberra）
 - 7种层次聚类链接类型（单链接/全链接/平均链接/Ward/质心/中位数）
 - K-Means聚类、DBSCAN聚类、层次聚类、轮廓系数计算、图像聚类、聚类评估
+
+## v77.0.0 - 图像降维高级
+- 10种图像降维任务类型（PCA/LDA/t-SNE/UMAP/ISOMAP/LLE/自动编码器/流形学习/特征选择）
+- 17种降维算法类型（PCA/核PCA/增量PCA/稀疏PCA/截断SVD/LDA/t-SNE/UMAP/ISOMAP/LLE/Hessian LLE/Modified LLE/LTSA/MDS/谱嵌入/自动编码器）
+- 7种核函数类型（线性/多项式/RBF/Sigmoid/余弦/预计算）
+- 6种距离度量类型（欧氏/曼哈顿/余弦/切比雪夫/闵可夫斯基/相关）
+- PCA降维、t-SNE降维、UMAP降维、特征选择、协方差计算、幂迭代法特征分解
