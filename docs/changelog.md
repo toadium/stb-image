@@ -436,3 +436,10 @@
 - 11种特征提取方法（颜色直方图/HOG/LBP/SIFT/SURF/ORB/Gabor/Haar小波/深度特征/迁移学习）
 - 9种集成方法类型（Bagging/Boosting/Stacking/Voting/随机森林/Gradient Boosting/AdaBoost/XGBoost）
 - 图像分类、多标签分类、细粒度分类、集成分类、训练分类器、softmax、特征提取
+
+## v76.0.0 - 图像聚类高级
+- 9种图像聚类任务类型（K-Means/层次/DBSCAN/谱聚类/GMM/模糊C均值/密度/子空间）
+- 13种聚类算法类型（K-Means/K-Medoids/层次/DBSCAN/HDBSCAN/谱/GMM/模糊C均值/Mean Shift/亲和传播/BIRCH/OPTICS）
+- 11种距离度量类型（欧氏/曼哈顿/余弦/切比雪夫/闵可夫斯基/汉明/马氏/相关/Bray-Curtis/Canberra）
+- 7种层次聚类链接类型（单链接/全链接/平均链接/Ward/质心/中位数）
+- K-Means聚类、DBSCAN聚类、层次聚类、轮廓系数计算、图像聚类、聚类评估
