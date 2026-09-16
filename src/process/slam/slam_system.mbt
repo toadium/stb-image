@@ -182,7 +182,9 @@ pub fn track_features_slam(
     }
 
     if best_score < 50.0 {
-      let parallax = ((best_x - px) * (best_x - px) + (best_y - py) * (best_y - py)).sqrt()
+      let dx = (best_x - px).to_double()
+      let dy = (best_y - py).to_double()
+      let parallax = (dx * dx + dy * dy).sqrt()
       total_parallax += parallax
       tracked.push([best_x.to_double(), best_y.to_double(), parallax])
     } else {
@@ -212,21 +214,13 @@ pub fn estimate_camera_pose(
   config : SLAMConfig,
   prev_pose : CameraPose,
 ) -> CameraPose {
-  let mut dx = 0.0
-  let mut dy = 0.0
-  let mut dz = 0.0
-
-  for feat in tracking_result.tracked_features {
-    dx += feat[0] - feat[0]  // 简化：使用特征点位置变化
-  }
-
   // 简化的位姿估计：基于平均视差
   let avg_parallax = tracking_result.parallax
   let forward_motion = avg_parallax * 0.01
-  dz = forward_motion
+  let dz = forward_motion
 
   CameraPose::{
-    position: [prev_pose.position[0] + dx * 0.001, prev_pose.position[1] + dy * 0.001, prev_pose.position[2] + dz],
+    position: [prev_pose.position[0], prev_pose.position[1], prev_pose.position[2] + dz],
     rotation: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
     timestamp: prev_pose.timestamp + 0.033,
     confidence: tracking_result.num_tracked.to_double() / (tracking_result.num_tracked + tracking_result.num_lost).to_double(),
@@ -371,15 +365,15 @@ pub fn process_frame_slam(
       // 三角化新的地图点
       let new_points = triangulate_points(features, last_kf.pose, new_pose, config)
 
-      let mut new_map_points = state.map_points
+      let new_map_points = state.map_points
       for p in new_points {
         new_map_points.push(p)
       }
 
-      let mut new_keyframes = state.keyframes
+      let new_keyframes = state.keyframes
       new_keyframes.push(new_kf)
 
-      let mut new_trajectory = state.trajectory
+      let new_trajectory = state.trajectory
       new_trajectory.push(new_pose)
 
       SLAMState::{
@@ -394,7 +388,7 @@ pub fn process_frame_slam(
         processing_time_ms: 0.0,
       }
     } else {
-      let mut new_trajectory = state.trajectory
+      let new_trajectory = state.trajectory
       new_trajectory.push(new_pose)
 
       SLAMState::{

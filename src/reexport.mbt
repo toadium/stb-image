@@ -8481,3 +8481,111 @@ pub fn slam_report_to_string_sl(
 ) -> String {
   @slam.slam_report_to_string(state)
 }
+
+// ==================== 人体姿态估计与动作识别（v32.0.0） ====================
+
+///|
+pub type PoseEstimationAlgorithmPE = @pose_estimation.PoseEstimationAlgorithm
+
+///|
+pub type ActionRecognitionAlgorithmPE = @pose_estimation.ActionRecognitionAlgorithm
+
+///|
+pub type KeypointPE = @pose_estimation.Keypoint
+
+///|
+pub type HumanPosePE = @pose_estimation.HumanPose
+
+///|
+pub type SkeletonConnectionPE = @pose_estimation.SkeletonConnection
+
+///|
+pub type ActionRecognitionResultPE = @pose_estimation.ActionRecognitionResult
+
+///|
+pub type GestureTypePE = @pose_estimation.GestureType
+
+///|
+pub type GestureRecognitionResultPE = @pose_estimation.GestureRecognitionResult
+
+///|
+pub type PoseEstimationConfigPE = @pose_estimation.PoseEstimationConfig
+
+///|
+pub type ActionRecognitionConfigPE = @pose_estimation.ActionRecognitionConfig
+
+///|
+pub fn create_default_pose_config_pe() -> @pose_estimation.PoseEstimationConfig {
+  @pose_estimation.create_default_pose_config()
+}
+
+///|
+pub fn create_default_action_config_pe() -> @pose_estimation.ActionRecognitionConfig {
+  @pose_estimation.create_default_action_config()
+}
+
+///|
+pub fn get_coco_keypoint_names_pe() -> Array[String] {
+  @pose_estimation.get_coco_keypoint_names()
+}
+
+///|
+pub fn get_coco_skeleton_connections_pe() -> Array[Array[Int]] {
+  @pose_estimation.get_coco_skeleton_connections()
+}
+
+///|
+pub fn detect_keypoints_pe(
+  img : @types.Image,
+  config : @pose_estimation.PoseEstimationConfig,
+) -> Array[@pose_estimation.HumanPose] {
+  @pose_estimation.detect_keypoints(img, config)
+}
+
+///|
+pub fn extract_skeleton_pe(
+  pose : @pose_estimation.HumanPose,
+) -> Array[@pose_estimation.SkeletonConnection] {
+  @pose_estimation.extract_skeleton(pose)
+}
+
+///|
+pub fn calculate_joint_angle_pe(
+  pose : @pose_estimation.HumanPose,
+  joint1 : Int,
+  joint_center : Int,
+  joint2 : Int,
+) -> Double {
+  @pose_estimation.calculate_joint_angle(pose, joint1, joint_center, joint2)
+}
+
+///|
+pub fn recognize_action_pe(
+  poses : Array[@pose_estimation.HumanPose],
+  config : @pose_estimation.ActionRecognitionConfig,
+) -> @pose_estimation.ActionRecognitionResult {
+  @pose_estimation.recognize_action(poses, config)
+}
+
+///|
+pub fn recognize_gesture_pe(
+  pose : @pose_estimation.HumanPose,
+) -> @pose_estimation.GestureRecognitionResult {
+  @pose_estimation.recognize_gesture(pose)
+}
+
+///|
+pub fn visualize_pose_pe(
+  img : @types.Image,
+  pose : @pose_estimation.HumanPose,
+) -> @types.Image {
+  @pose_estimation.visualize_pose(img, pose)
+}
+
+///|
+pub fn pose_estimation_report_to_string_pe(
+  poses : Array[@pose_estimation.HumanPose],
+  action_result : @pose_estimation.ActionRecognitionResult,
+) -> String {
+  @pose_estimation.pose_estimation_report_to_string(poses, action_result)
+}

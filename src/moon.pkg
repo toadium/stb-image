@@ -38,6 +38,7 @@ import {
   "walkzzz/image/src/process/denoise",
   "walkzzz/image/src/process/registration_advanced",
   "walkzzz/image/src/process/slam",
+  "walkzzz/image/src/process/pose_estimation",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }
