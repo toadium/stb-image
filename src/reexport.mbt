@@ -9554,3 +9554,4 @@ pub fn advanced_imaging_report_to_string_ai(
 ) -> String {
   @advanced_imaging.advanced_imaging_report_to_string(modality, image, config)
 }
+
