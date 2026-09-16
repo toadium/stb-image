@@ -8721,3 +8721,130 @@ pub fn face_recognition_report_to_string_fr(
 ) -> String {
   @face_recognition.face_recognition_report_to_string(analysis)
 }
+
+// ==================== 图像生成与编辑（v34.0.0） ====================
+
+///|
+pub type ImageGenerationAlgorithmIG = @image_generation.ImageGenerationAlgorithm
+
+///|
+pub type ImageEditingAlgorithmIG = @image_generation.ImageEditingAlgorithm
+
+///|
+pub type GenerationResultIG = @image_generation.GenerationResult
+
+///|
+pub type EditingResultIG = @image_generation.EditingResult
+
+///|
+pub type GenerationConfigIG = @image_generation.GenerationConfig
+
+///|
+pub type EditingConfigIG = @image_generation.EditingConfig
+
+///|
+pub type LatentVectorIG = @image_generation.LatentVector
+
+///|
+pub type CompositionConfigIG = @image_generation.CompositionConfig
+
+///|
+pub fn create_default_generation_config_ig() -> @image_generation.GenerationConfig {
+  @image_generation.create_default_generation_config()
+}
+
+///|
+pub fn create_default_editing_config_ig() -> @image_generation.EditingConfig {
+  @image_generation.create_default_editing_config()
+}
+
+///|
+pub fn generate_random_latent_ig(
+  dimension : Int,
+  seed : Int,
+) -> @image_generation.LatentVector {
+  @image_generation.generate_random_latent(dimension, seed)
+}
+
+///|
+pub fn generate_from_latent_ig(
+  latent : @image_generation.LatentVector,
+  config : @image_generation.GenerationConfig,
+) -> @image_generation.GenerationResult {
+  @image_generation.generate_from_latent(latent, config)
+}
+
+///|
+pub fn generate_random_image_ig(
+  config : @image_generation.GenerationConfig,
+) -> @image_generation.GenerationResult {
+  @image_generation.generate_random_image(config)
+}
+
+///|
+pub fn inpaint_image_ig(
+  img : @types.Image,
+  mask : @types.Image,
+  config : @image_generation.EditingConfig,
+) -> @image_generation.EditingResult {
+  @image_generation.inpaint_image(img, mask, config)
+}
+
+///|
+pub fn outpaint_image_ig(
+  img : @types.Image,
+  new_width : Int,
+  new_height : Int,
+  config : @image_generation.EditingConfig,
+) -> @image_generation.EditingResult {
+  @image_generation.outpaint_image(img, new_width, new_height, config)
+}
+
+///|
+pub fn colorize_image_ig(
+  img : @types.Image,
+  config : @image_generation.EditingConfig,
+) -> @image_generation.EditingResult {
+  @image_generation.colorize_image(img, config)
+}
+
+///|
+pub fn compose_images_ig(
+  background : @types.Image,
+  foreground : @types.Image,
+  mask : @types.Image,
+  config : @image_generation.CompositionConfig,
+) -> @types.Image {
+  @image_generation.compose_images(background, foreground, mask, config)
+}
+
+///|
+pub fn remove_background_ig(
+  img : @types.Image,
+  config : @image_generation.EditingConfig,
+) -> @image_generation.EditingResult {
+  @image_generation.remove_background(img, config)
+}
+
+///|
+pub fn edit_image_ig(
+  img : @types.Image,
+  mask : @types.Image,
+  config : @image_generation.EditingConfig,
+) -> @image_generation.EditingResult {
+  @image_generation.edit_image(img, mask, config)
+}
+
+///|
+pub fn generation_report_to_string_ig(
+  result : @image_generation.GenerationResult,
+) -> String {
+  @image_generation.generation_report_to_string(result)
+}
+
+///|
+pub fn editing_report_to_string_ig(
+  result : @image_generation.EditingResult,
+) -> String {
+  @image_generation.editing_report_to_string(result)
+}

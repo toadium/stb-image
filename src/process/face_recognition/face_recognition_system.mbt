@@ -414,8 +414,8 @@ pub fn recognize_expression(
   mouth_brightness = if count > 0 { mouth_brightness / count.to_double() } else { 0.0 }
 
   // 简化的表情分类
-  let expression : ExpressionType
-  let confidence : Double
+  let mut expression = ExpressionType::Neutral
+  let mut confidence = 0.55
   let probabilities : Array[Double] = []
 
   if mouth_brightness > 150.0 {
