@@ -8941,3 +8941,117 @@ pub fn scene_understanding_report_to_string_su(
 ) -> String {
   @scene_understanding.scene_understanding_report_to_string(classification, caption, vqa, scene_graph)
 }
+
+// ==================== 神经渲染与 3D 重建（v36.0.0） ====================
+
+///|
+pub type NeuralRenderingAlgorithmNR = @neural_rendering.NeuralRenderingAlgorithm
+
+///|
+pub type ReconstructionAlgorithmNR = @neural_rendering.ReconstructionAlgorithm
+
+///|
+pub type RayNR = @neural_rendering.Ray
+
+///|
+pub type Point3DNR = @neural_rendering.Point3D
+
+///|
+pub type VoxelNR = @neural_rendering.Voxel
+
+///|
+pub type Gaussian3DNR = @neural_rendering.Gaussian3D
+
+///|
+pub type NeRFConfigNR = @neural_rendering.NeRFConfig
+
+///|
+pub type GaussianSplattingConfigNR = @neural_rendering.GaussianSplattingConfig
+
+///|
+pub type CameraParamsNR = @neural_rendering.CameraParams
+
+///|
+pub type RenderingResultNR = @neural_rendering.RenderingResult
+
+///|
+pub type ReconstructionResultNR = @neural_rendering.ReconstructionResult
+
+///|
+pub fn create_default_nerf_config_nr() -> @neural_rendering.NeRFConfig {
+  @neural_rendering.create_default_nerf_config()
+}
+
+///|
+pub fn create_default_gaussian_config_nr() -> @neural_rendering.GaussianSplattingConfig {
+  @neural_rendering.create_default_gaussian_config()
+}
+
+///|
+pub fn create_default_camera_nr() -> @neural_rendering.CameraParams {
+  @neural_rendering.create_default_camera()
+}
+
+///|
+pub fn generate_rays_nr(
+  camera : @neural_rendering.CameraParams,
+) -> Array[@neural_rendering.Ray] {
+  @neural_rendering.generate_rays(camera)
+}
+
+///|
+pub fn render_nerf_nr(
+  camera : @neural_rendering.CameraParams,
+  config : @neural_rendering.NeRFConfig,
+) -> @neural_rendering.RenderingResult {
+  @neural_rendering.render_nerf(camera, config)
+}
+
+///|
+pub fn render_gaussian_splatting_nr(
+  camera : @neural_rendering.CameraParams,
+  gaussians : Array[@neural_rendering.Gaussian3D],
+  config : @neural_rendering.GaussianSplattingConfig,
+) -> @neural_rendering.RenderingResult {
+  @neural_rendering.render_gaussian_splatting(camera, gaussians, config)
+}
+
+///|
+pub fn generate_sample_gaussians_nr(
+  num_gaussians : Int,
+) -> Array[@neural_rendering.Gaussian3D] {
+  @neural_rendering.generate_sample_gaussians(num_gaussians)
+}
+
+///|
+pub fn multiview_stereo_reconstruction_nr(
+  images : Array[@types.Image],
+  cameras : Array[@neural_rendering.CameraParams],
+) -> @neural_rendering.ReconstructionResult {
+  @neural_rendering.multiview_stereo_reconstruction(images, cameras)
+}
+
+///|
+pub fn visualize_point_cloud_nr(
+  point_cloud : Array[@neural_rendering.Point3D],
+  width : Int,
+  height : Int,
+) -> @types.Image {
+  @neural_rendering.visualize_point_cloud(point_cloud, width, height)
+}
+
+///|
+pub fn neural_rendering_report_to_string_nr(
+  result : @neural_rendering.RenderingResult,
+  algorithm : @neural_rendering.NeuralRenderingAlgorithm,
+) -> String {
+  @neural_rendering.neural_rendering_report_to_string(result, algorithm)
+}
+
+///|
+pub fn reconstruction_report_to_string_nr(
+  result : @neural_rendering.ReconstructionResult,
+  algorithm : @neural_rendering.ReconstructionAlgorithm,
+) -> String {
+  @neural_rendering.reconstruction_report_to_string(result, algorithm)
+}

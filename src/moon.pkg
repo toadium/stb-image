@@ -42,6 +42,7 @@ import {
   "walkzzz/image/src/process/face_recognition",
   "walkzzz/image/src/process/image_generation",
   "walkzzz/image/src/process/scene_understanding",
+  "walkzzz/image/src/process/neural_rendering",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

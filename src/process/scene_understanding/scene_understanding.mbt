@@ -186,9 +186,9 @@ pub fn classify_scene(
   let edge_density = edge_count.to_double() / total.to_double()
 
   // 简化的场景分类
-  let scene_type : String
-  let scene_category : String
-  let confidence : Double
+  let mut scene_type = "indoor"
+  let mut scene_category = "environment"
+  let mut confidence = 0.45
 
   if mean < 60.0 {
     scene_type = "night"
@@ -255,7 +255,7 @@ pub fn generate_caption(
   let mean = sum / total.to_double()
 
   // 简化的描述生成
-  let caption : String
+  let mut caption = ""
   let brightness_desc = if mean < 60.0 {
     "dark"
   } else if mean < 120.0 {
@@ -304,10 +304,10 @@ pub fn answer_visual_question(
   let mean = sum / total.to_double()
 
   // 简化的问答
-  let answer : String
-  let question_type : String
-  let answer_type : String
-  let confidence : Double
+  let mut answer = ""
+  let mut question_type = ""
+  let mut answer_type = ""
+  let mut confidence = 0.0
 
   if question.contains("scene") || question.contains("environment") || question.contains("place") {
     answer = classification.scene_type
