@@ -178,7 +178,7 @@ pub fn generate_rays(
 ) -> Array[Ray] {
   let w = camera.image_width
   let h = camera.image_height
-  let rays : Array[Ray> = []
+  let rays : Array[Ray] = []
 
   for y in 0..<h {
     for x in 0..<w {
@@ -208,13 +208,13 @@ pub fn volume_render(
   config : NeRFConfig,
 ) -> (Array[Double], Double) {
   // 简化的体渲染：累积颜色和密度
-  let mut color = [0.0, 0.0, 0.0]
+  let color = [0.0, 0.0, 0.0]
   let mut alpha = 0.0
   let mut transmittance = 1.0
 
   for sample in samples {
     if sample.is_occupied && sample.density > 0.0 {
-      let alpha_i = 1.0 - (0.0 - sample.density * 0.1).exp()  // 简化的指数
+      let alpha_i = 1.0 - (1.0 - sample.density * 0.1)  // 简化的指数
       let weight = transmittance * alpha_i
 
       color[0] += weight * sample.color[0]
@@ -237,8 +237,8 @@ pub fn render_nerf(
   let w = camera.image_width
   let h = camera.image_height
   let total = w * h
-  let out : Array[Byte> = []
-  let depth_out : Array[Byte> = []
+  let out : Array[Byte] = []
+  let depth_out : Array[Byte] = []
 
   // 简化版：基于射线方向生成程序化图像
   for y in 0..<h {
@@ -248,10 +248,10 @@ pub fn render_nerf(
 
       // 简化的场景：中心球体 + 渐变背景
       let dist = (ndc_x * ndc_x + ndc_y * ndc_y).sqrt()
-      let r : Double
-      let g : Double
-      let b : Double
-      let depth : Double
+      let mut r = 0.0
+      let mut g = 0.0
+      let mut b = 0.0
+      let mut depth = 0.0
 
       if dist < 0.3 {
         // 球体
@@ -301,8 +301,8 @@ pub fn render_gaussian_splatting(
   let w = camera.image_width
   let h = camera.image_height
   let total = w * h
-  let out : Array[Byte> = []
-  let depth_out : Array[Byte> = []
+  let out : Array[Byte] = []
+  let depth_out : Array[Byte] = []
 
   // 简化版：基于高斯分布生成图像
   for y in 0..<h {
@@ -321,7 +321,7 @@ pub fn render_gaussian_splatting(
         let dy = ndc_y - gaussian.position[1]
         let dist_sq = dx * dx / (gaussian.scale[0] * gaussian.scale[0] + 0.001) +
                       dy * dy / (gaussian.scale[1] * gaussian.scale[1] + 0.001)
-        let weight = gaussian.opacity * (0.0 - dist_sq * 0.5).exp()  // 简化的高斯
+        let weight = gaussian.opacity * (1.0 - dist_sq * 0.5)  // 简化的高斯
 
         r += weight * gaussian.color[0]
         g += weight * gaussian.color[1]
@@ -367,7 +367,7 @@ pub fn render_gaussian_splatting(
 pub fn generate_sample_gaussians(
   num_gaussians : Int,
 ) -> Array[Gaussian3D] {
-  let gaussians : Array[Gaussian3D> = []
+  let gaussians : Array[Gaussian3D] = []
   let mut state = 42
 
   for i in 0..<num_gaussians {
@@ -404,7 +404,7 @@ pub fn multiview_stereo_reconstruction(
   images : Array[@types.Image],
   cameras : Array[CameraParams],
 ) -> ReconstructionResult {
-  let point_cloud : Array[Point3D> = []
+  let point_cloud : Array[Point3D] = []
 
   // 简化版：从图像中提取特征点并三角化
   if images.length() >= 2 && cameras.length() >= 2 {
@@ -414,24 +414,26 @@ pub fn multiview_stereo_reconstruction(
     let h = img1.height
 
     // 简化的特征点检测（高对比度区域）
-    for y in 0..<h step 10 {
-      for x in 0..<w step 10 {
-        let idx = y * w + x
-        if x > 0 && x < w - 1 && y > 0 && y < h - 1 {
-          let gx = img1.data[idx + 1].to_double() - img1.data[idx - 1].to_double()
-          let gy = img1.data[idx + w].to_double() - img1.data[idx - w].to_double()
-          if (gx * gx + gy * gy).sqrt() > 30.0 {
-            // 简化的三角化
-            let depth = 5.0 + (x % 100).to_double() / 20.0
-            let ndc_x = (x.to_double() - cameras[0].principal_point[0]) / cameras[0].focal_length
-            let ndc_y = (y.to_double() - cameras[0].principal_point[1]) / cameras[0].focal_length
+    for y in 0..<h {
+      for x in 0..<w {
+        if y % 10 == 0 && x % 10 == 0 {
+          let idx = y * w + x
+          if x > 0 && x < w - 1 && y > 0 && y < h - 1 {
+            let gx = img1.data[idx + 1].to_double() - img1.data[idx - 1].to_double()
+            let gy = img1.data[idx + w].to_double() - img1.data[idx - w].to_double()
+            if (gx * gx + gy * gy).sqrt() > 30.0 {
+              // 简化的三角化
+              let depth = 5.0 + (x % 100).to_double() / 20.0
+              let ndc_x = (x.to_double() - cameras[0].principal_point[0]) / cameras[0].focal_length
+              let ndc_y = (y.to_double() - cameras[0].principal_point[1]) / cameras[0].focal_length
 
-            point_cloud.push(Point3D::{
-              position: [ndc_x * depth, ndc_y * depth, depth],
-              color: [img1.data[idx].to_double(), img1.data[idx].to_double(), img1.data[idx].to_double()],
-              normal: [0.0, 0.0, 1.0],
-              confidence: 0.7,
-            })
+              point_cloud.push(Point3D::{
+                position: [ndc_x * depth, ndc_y * depth, depth],
+                color: [img1.data[idx].to_double(), img1.data[idx].to_double(), img1.data[idx].to_double()],
+                normal: [0.0, 0.0, 1.0],
+                confidence: 0.7,
+              })
+            }
           }
         }
       }
@@ -457,7 +459,7 @@ pub fn visualize_point_cloud(
   height : Int,
 ) -> @types.Image {
   let total = width * height
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   // 初始化黑色背景
   for _ in 0..<total {

@@ -9055,3 +9055,133 @@ pub fn reconstruction_report_to_string_nr(
 ) -> String {
   @neural_rendering.reconstruction_report_to_string(result, algorithm)
 }
+
+// ==================== 计算成像与光场成像（v37.0.0） ====================
+
+///|
+pub type ComputationalImagingAlgorithmCI = @computational_imaging.ComputationalImagingAlgorithm
+
+///|
+pub type LightFieldRepresentationCI = @computational_imaging.LightFieldRepresentation
+
+///|
+pub type HologramTypeCI = @computational_imaging.HologramType
+
+///|
+pub type LightFieldCameraParamsCI = @computational_imaging.LightFieldCameraParams
+
+///|
+pub type LightFieldDataCI = @computational_imaging.LightFieldData
+
+///|
+pub type HologramCI = @computational_imaging.Hologram
+
+///|
+pub type CTProjectionDataCI = @computational_imaging.CTProjectionData
+
+///|
+pub type PhaseRetrievalConfigCI = @computational_imaging.PhaseRetrievalConfig
+
+///|
+pub type CodedAperturePatternCI = @computational_imaging.CodedAperturePattern
+
+///|
+pub type RefocusResultCI = @computational_imaging.RefocusResult
+
+///|
+pub type ViewSynthesisResultCI = @computational_imaging.ViewSynthesisResult
+
+///|
+pub type ImagingReconstructionResultCI = @computational_imaging.ImagingReconstructionResult
+
+///|
+pub fn create_default_lightfield_camera_ci() -> @computational_imaging.LightFieldCameraParams {
+  @computational_imaging.create_default_lightfield_camera()
+}
+
+///|
+pub fn create_default_phase_config_ci() -> @computational_imaging.PhaseRetrievalConfig {
+  @computational_imaging.create_default_phase_config()
+}
+
+///|
+pub fn create_default_coded_aperture_ci(
+  size : Int,
+) -> @computational_imaging.CodedAperturePattern {
+  @computational_imaging.create_default_coded_aperture(size)
+}
+
+///|
+pub fn generate_sample_lightfield_ci(
+  base_image : @types.Image,
+  params : @computational_imaging.LightFieldCameraParams,
+) -> @computational_imaging.LightFieldData {
+  @computational_imaging.generate_sample_lightfield(base_image, params)
+}
+
+///|
+pub fn lightfield_refocus_ci(
+  lightfield : @computational_imaging.LightFieldData,
+  focus_depth : Double,
+  aperture_size : Double,
+) -> @computational_imaging.RefocusResult {
+  @computational_imaging.lightfield_refocus(lightfield, focus_depth, aperture_size)
+}
+
+///|
+pub fn synthesize_view_ci(
+  lightfield : @computational_imaging.LightFieldData,
+  target_x : Double,
+  target_y : Double,
+) -> @computational_imaging.ViewSynthesisResult {
+  @computational_imaging.synthesize_view(lightfield, target_x, target_y)
+}
+
+///|
+pub fn generate_hologram_ci(
+  image : @types.Image,
+  wavelength : Double,
+  distance : Double,
+  pixel_size : Double,
+) -> @computational_imaging.Hologram {
+  @computational_imaging.generate_hologram(image, wavelength, distance, pixel_size)
+}
+
+///|
+pub fn reconstruct_hologram_ci(
+  hologram : @computational_imaging.Hologram,
+) -> @computational_imaging.ImagingReconstructionResult {
+  @computational_imaging.reconstruct_hologram(hologram)
+}
+
+///|
+pub fn ct_reconstruct_fbp_ci(
+  projections : @computational_imaging.CTProjectionData,
+  output_size : Int,
+) -> @computational_imaging.ImagingReconstructionResult {
+  @computational_imaging.ct_reconstruct_fbp(projections, output_size)
+}
+
+///|
+pub fn phase_retrieval_ci(
+  magnitude : @types.Image,
+  config : @computational_imaging.PhaseRetrievalConfig,
+) -> @computational_imaging.ImagingReconstructionResult {
+  @computational_imaging.phase_retrieval(magnitude, config)
+}
+
+///|
+pub fn coded_aperture_reconstruct_ci(
+  measurement : @types.Image,
+  pattern : @computational_imaging.CodedAperturePattern,
+) -> @computational_imaging.ImagingReconstructionResult {
+  @computational_imaging.coded_aperture_reconstruct(measurement, pattern)
+}
+
+///|
+pub fn computational_imaging_report_to_string_ci(
+  result : @computational_imaging.ImagingReconstructionResult,
+  algorithm_name : String,
+) -> String {
+  @computational_imaging.computational_imaging_report_to_string(result, algorithm_name)
+}
