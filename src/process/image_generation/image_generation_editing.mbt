@@ -138,12 +138,12 @@ pub fn generate_random_latent(
   dimension : Int,
   seed : Int,
 ) -> LatentVector {
-  let vector : Array[Double> = []
+  let vector : Array[Double] = []
   let mut state = seed
 
   for _ in 0..<dimension {
-    // 简化的伪随机数生成器
-    state = (state * 1103515245 + 12345) % 2147483648
+    // 简化的伪随机数生成器（避免溢出）
+    state = (state * 11035 + 12345) % 1000000
     let random = (state % 1000).to_double() / 1000.0
     // 转换为近似正态分布（Box-Muller 简化版）
     let normal = (random - 0.5) * 2.0
@@ -173,7 +173,7 @@ pub fn generate_from_latent(
   let w = config.width
   let h = config.height
   let total = w * h
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   // 简化版：使用潜空间向量生成程序化图像
   // 实际实现应该使用 GAN 或扩散模型
@@ -188,10 +188,15 @@ pub fn generate_from_latent(
       let ny = y.to_double() / h.to_double()
 
       // 简化的程序化生成：正弦波 + 潜向量调制
+      let phase1 = nx * 6.28 + latent.vector[(latent_idx + 1) % latent.dimension] * 3.14
+      let phase2 = ny * 6.28 + latent.vector[(latent_idx + 2) % latent.dimension] * 3.14
+      // 简化的正弦近似
+      let sin1 = phase1 - phase1 * phase1 * phase1 / 6.0
+      let sin2 = phase2 - phase2 * phase2 * phase2 / 6.0
       let value = 128.0 +
         latent.vector[latent_idx] * 50.0 +
-        (nx * 6.28 + latent.vector[(latent_idx + 1) % latent.dimension] * 3.14).sin() * 30.0 +
-        (ny * 6.28 + latent.vector[(latent_idx + 2) % latent.dimension] * 3.14).sin() * 30.0
+        sin1 * 30.0 +
+        sin2 * 30.0
 
       let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
       out.push(clamped.to_int().to_byte())
@@ -230,7 +235,7 @@ pub fn inpaint_image(
   let w = img.width
   let h = img.height
   let total = w * h
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   for i in 0..<total {
     let mask_value = mask.data[i].to_int()
@@ -285,7 +290,7 @@ pub fn outpaint_image(
   let w = img.width
   let h = img.height
   let total = new_width * new_height
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   let offset_x = (new_width - w) / 2
   let offset_y = (new_height - h) / 2
@@ -328,16 +333,16 @@ pub fn colorize_image(
   let w = img.width
   let h = img.height
   let total = w * h
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   // 简化版：基于灰度值的伪彩色映射
   for i in 0..<total {
     let gray = img.data[i].to_double()
 
     // 伪彩色映射（蓝-绿-红渐变）
-    let r : Double
-    let g : Double
-    let b : Double
+    let mut r = 0.0
+    let mut g = 0.0
+    let mut b = 0.0
 
     if gray < 85.0 {
       r = 0.0
@@ -391,7 +396,7 @@ pub fn compose_images(
   let w = background.width
   let h = background.height
   let total = w * h
-  let out : Array[Byte> = []
+  let out : Array[Byte] = []
 
   for i in 0..<total {
     let mask_value = mask.data[i].to_double() / 255.0
@@ -417,8 +422,8 @@ pub fn remove_background(
   let w = img.width
   let h = img.height
   let total = w * h
-  let out : Array[Byte> = []
-  let mask : Array[Byte> = []
+  let out : Array[Byte] = []
+  let mask : Array[Byte] = []
 
   // 简化版：基于边缘检测的背景移除
   // 实际实现应该使用语义分割模型

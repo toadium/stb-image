@@ -8848,3 +8848,96 @@ pub fn editing_report_to_string_ig(
 ) -> String {
   @image_generation.editing_report_to_string(result)
 }
+
+// ==================== 场景理解与图像描述（v35.0.0） ====================
+
+///|
+pub type SceneClassificationAlgorithmSU = @scene_understanding.SceneClassificationAlgorithm
+
+///|
+pub type ImageCaptioningAlgorithmSU = @scene_understanding.ImageCaptioningAlgorithm
+
+///|
+pub type VisualQuestionAnsweringAlgorithmSU = @scene_understanding.VisualQuestionAnsweringAlgorithm
+
+///|
+pub type SceneClassificationResultSU = @scene_understanding.SceneClassificationResult
+
+///|
+pub type ImageCaptioningResultSU = @scene_understanding.ImageCaptioningResult
+
+///|
+pub type VisualQuestionAnsweringResultSU = @scene_understanding.VisualQuestionAnsweringResult
+
+///|
+pub type SceneGraphNodeSU = @scene_understanding.SceneGraphNode
+
+///|
+pub type SceneGraphRelationSU = @scene_understanding.SceneGraphRelation
+
+///|
+pub type SceneGraphSU = @scene_understanding.SceneGraph
+
+///|
+pub type SceneUnderstandingConfigSU = @scene_understanding.SceneUnderstandingConfig
+
+///|
+pub fn create_default_scene_config_su() -> @scene_understanding.SceneUnderstandingConfig {
+  @scene_understanding.create_default_scene_config()
+}
+
+///|
+pub fn get_common_scene_types_su() -> Array[String] {
+  @scene_understanding.get_common_scene_types()
+}
+
+///|
+pub fn classify_scene_su(
+  img : @types.Image,
+  config : @scene_understanding.SceneUnderstandingConfig,
+) -> @scene_understanding.SceneClassificationResult {
+  @scene_understanding.classify_scene(img, config)
+}
+
+///|
+pub fn generate_caption_su(
+  img : @types.Image,
+  config : @scene_understanding.SceneUnderstandingConfig,
+) -> @scene_understanding.ImageCaptioningResult {
+  @scene_understanding.generate_caption(img, config)
+}
+
+///|
+pub fn answer_visual_question_su(
+  img : @types.Image,
+  question : String,
+  config : @scene_understanding.SceneUnderstandingConfig,
+) -> @scene_understanding.VisualQuestionAnsweringResult {
+  @scene_understanding.answer_visual_question(img, question, config)
+}
+
+///|
+pub fn generate_scene_graph_su(
+  img : @types.Image,
+  config : @scene_understanding.SceneUnderstandingConfig,
+) -> @scene_understanding.SceneGraph {
+  @scene_understanding.generate_scene_graph(img, config)
+}
+
+///|
+pub fn understand_scene_su(
+  img : @types.Image,
+  config : @scene_understanding.SceneUnderstandingConfig,
+) -> (@scene_understanding.SceneClassificationResult, @scene_understanding.ImageCaptioningResult, @scene_understanding.SceneGraph) {
+  @scene_understanding.understand_scene(img, config)
+}
+
+///|
+pub fn scene_understanding_report_to_string_su(
+  classification : @scene_understanding.SceneClassificationResult,
+  caption : @scene_understanding.ImageCaptioningResult,
+  vqa : @scene_understanding.VisualQuestionAnsweringResult,
+  scene_graph : @scene_understanding.SceneGraph,
+) -> String {
+  @scene_understanding.scene_understanding_report_to_string(classification, caption, vqa, scene_graph)
+}
