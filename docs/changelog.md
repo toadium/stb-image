@@ -363,3 +363,19 @@
 - 5种去模糊方法（Wiener/Richardson-Lucy/盲去卷积/深度学习）
 - 5种去雾方法（暗通道先验/颜色衰减/DehazeNet/AODNet）
 - HDR成像、全景拼接、景深合成、多帧降噪、超分辨率、去模糊、去雾、色彩管理
+
+## v66.0.0 - 图像生成高级
+- 8种图像生成任务类型（文本到图像/图像到图像/图像修复/图像外扩/风格迁移/超分辨率/图像上色）
+- 7种生成模型类型（扩散模型/GAN/VAE/流模型/自回归/能量模型）
+- 7种扩散模型类型（DDPM/DDIM/ScoreBased/LatentDiffusion/StableDiffusion/ControlNet）
+- 9种GAN类型（VanillaGAN/DCGAN/WGAN/WGANGP/StyleGAN/StyleGAN2/CycleGAN/Pix2Pix）
+- 7种VAE类型（VanillaVAE/BetaVAE/CVAE/VQVAE/VQVAE2/GumbelVAE）
+- 文本到图像、图像到图像、图像修复、风格迁移、随机噪声生成、扩散采样
+
+## v67.0.0 - 图像编辑高级
+- 9种图像编辑任务类型（智能抠图/背景替换/物体移除/人脸编辑/美颜/妆容/年龄变换/表情编辑）
+- 6种抠图方法（GrabCut/DeepLab/U2Net/MODNet/BackgroundMatting）
+- 6种物体移除方法（图像修复/内容感知填充/PatchMatch/Telea/NavierStokes）
+- 8种美颜类型（磨皮/美白/瘦脸/大眼/隆鼻/丰唇/牙齿美白）
+- 10种妆容类型（粉底/遮瑕/腮红/眼影/眼线/睫毛膏/口红/修容/高光）
+- 智能抠图、背景替换、物体移除、美颜、妆容、年龄变换、表情编辑
