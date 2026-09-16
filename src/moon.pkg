@@ -44,6 +44,9 @@ import {
   "walkzzz/image/src/process/scene_understanding",
   "walkzzz/image/src/process/neural_rendering",
   "walkzzz/image/src/process/computational_imaging",
+  "walkzzz/image/src/process/vlm_multimodal",
+  "walkzzz/image/src/process/intelligent_vision",
+  "walkzzz/image/src/process/advanced_imaging",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
 }

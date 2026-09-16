@@ -9185,3 +9185,372 @@ pub fn computational_imaging_report_to_string_ci(
 ) -> String {
   @computational_imaging.computational_imaging_report_to_string(result, algorithm_name)
 }
+
+// ==================== 视觉语言模型与多模态融合（v38.0.0） ====================
+
+///|
+pub type VisionLanguageModelTypeVLM = @vlm_multimodal.VisionLanguageModelType
+
+///|
+pub type MultimodalFusionStrategyVLM = @vlm_multimodal.MultimodalFusionStrategy
+
+///|
+pub type DiffusionModelTypeVLM = @vlm_multimodal.DiffusionModelType
+
+///|
+pub type GenerativeAITaskTypeVLM = @vlm_multimodal.GenerativeAITaskType
+
+///|
+pub type VLMConfigVLM = @vlm_multimodal.VLMConfig
+
+///|
+pub type FusionConfigVLM = @vlm_multimodal.FusionConfig
+
+///|
+pub type DiffusionConfigVLM = @vlm_multimodal.DiffusionConfig
+
+///|
+pub type GenerativeAIConfigVLM = @vlm_multimodal.GenerativeAIConfig
+
+///|
+pub type VisionTextEmbeddingVLM = @vlm_multimodal.VisionTextEmbedding
+
+///|
+pub type FusionResultVLM = @vlm_multimodal.FusionResult
+
+///|
+pub type DiffusionResultVLM = @vlm_multimodal.DiffusionResult
+
+///|
+pub type GenerativeAIResultVLM = @vlm_multimodal.GenerativeAIResult
+
+///|
+pub fn create_default_vlm_config_vlm() -> @vlm_multimodal.VLMConfig {
+  @vlm_multimodal.create_default_vlm_config()
+}
+
+///|
+pub fn create_default_fusion_config_vlm() -> @vlm_multimodal.FusionConfig {
+  @vlm_multimodal.create_default_fusion_config()
+}
+
+///|
+pub fn create_default_diffusion_config_vlm() -> @vlm_multimodal.DiffusionConfig {
+  @vlm_multimodal.create_default_diffusion_config()
+}
+
+///|
+pub fn create_default_genai_config_vlm() -> @vlm_multimodal.GenerativeAIConfig {
+  @vlm_multimodal.create_default_genai_config()
+}
+
+///|
+pub fn compute_image_text_similarity_vlm(
+  image : @types.Image,
+  text : String,
+  config : @vlm_multimodal.VLMConfig,
+) -> @vlm_multimodal.VisionTextEmbedding {
+  @vlm_multimodal.compute_image_text_similarity(image, text, config)
+}
+
+///|
+pub fn fuse_modalities_vlm(
+  image_features : Array[Double],
+  text_features : Array[Double],
+  config : @vlm_multimodal.FusionConfig,
+) -> @vlm_multimodal.FusionResult {
+  @vlm_multimodal.fuse_modalities(image_features, text_features, config)
+}
+
+///|
+pub fn diffusion_generate_vlm(
+  prompt : String,
+  negative_prompt : String,
+  config : @vlm_multimodal.DiffusionConfig,
+  seed : Int,
+) -> @vlm_multimodal.DiffusionResult {
+  @vlm_multimodal.diffusion_generate(prompt, negative_prompt, config, seed)
+}
+
+///|
+pub fn text_to_image_vlm(
+  prompt : String,
+  config : @vlm_multimodal.GenerativeAIConfig,
+  seed : Int,
+) -> @vlm_multimodal.GenerativeAIResult {
+  @vlm_multimodal.text_to_image(prompt, config, seed)
+}
+
+///|
+pub fn image_to_text_vlm(
+  image : @types.Image,
+  config : @vlm_multimodal.GenerativeAIConfig,
+) -> @vlm_multimodal.GenerativeAIResult {
+  @vlm_multimodal.image_to_text(image, config)
+}
+
+///|
+pub fn vlm_report_to_string_vlm(
+  embedding : @vlm_multimodal.VisionTextEmbedding,
+  model_type : @vlm_multimodal.VisionLanguageModelType,
+) -> String {
+  @vlm_multimodal.vlm_report_to_string(embedding, model_type)
+}
+
+///|
+pub fn fusion_report_to_string_vlm(
+  result : @vlm_multimodal.FusionResult,
+) -> String {
+  @vlm_multimodal.fusion_report_to_string(result)
+}
+
+// ==================== 智能应用视觉（v39.0.0） ====================
+
+///|
+pub type AutonomousDrivingTaskIV = @intelligent_vision.AutonomousDrivingTask
+
+///|
+pub type RobotVisionTaskIV = @intelligent_vision.RobotVisionTask
+
+///|
+pub type IndustrialInspectionTaskIV = @intelligent_vision.IndustrialInspectionTask
+
+///|
+pub type SecurityMonitoringTaskIV = @intelligent_vision.SecurityMonitoringTask
+
+///|
+pub type AgriculturalVisionTaskIV = @intelligent_vision.AgriculturalVisionTask
+
+///|
+pub type AstronomicalImageTaskIV = @intelligent_vision.AstronomicalImageTask
+
+///|
+pub type DetectionResultIV = @intelligent_vision.DetectionResultIV
+
+///|
+pub type LaneDetectionResultIV = @intelligent_vision.LaneDetectionResult
+
+///|
+pub type TrafficSignResultIV = @intelligent_vision.TrafficSignResult
+
+///|
+pub type DefectDetectionResultIV = @intelligent_vision.DefectDetectionResult
+
+///|
+pub type IntrusionDetectionResultIV = @intelligent_vision.IntrusionDetectionResult
+
+///|
+pub type CropDetectionResultIV = @intelligent_vision.CropDetectionResult
+
+///|
+pub type StarDetectionResultIV = @intelligent_vision.StarDetectionResult
+
+///|
+pub type IntelligentVisionConfigIV = @intelligent_vision.IntelligentVisionConfig
+
+///|
+pub fn create_default_intelligent_vision_config_iv() -> @intelligent_vision.IntelligentVisionConfig {
+  @intelligent_vision.create_default_intelligent_vision_config()
+}
+
+///|
+pub fn detect_objects_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> Array[@intelligent_vision.DetectionResultIV] {
+  @intelligent_vision.detect_objects_iv(image, config)
+}
+
+///|
+pub fn detect_lanes_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> @intelligent_vision.LaneDetectionResult {
+  @intelligent_vision.detect_lanes(image, config)
+}
+
+///|
+pub fn recognize_traffic_signs_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> Array[@intelligent_vision.TrafficSignResult] {
+  @intelligent_vision.recognize_traffic_signs(image, config)
+}
+
+///|
+pub fn detect_defects_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> Array[@intelligent_vision.DefectDetectionResult] {
+  @intelligent_vision.detect_defects(image, config)
+}
+
+///|
+pub fn detect_intrusion_iv(
+  image : @types.Image,
+  roi : Array[Double],
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> @intelligent_vision.IntrusionDetectionResult {
+  @intelligent_vision.detect_intrusion(image, roi, config)
+}
+
+///|
+pub fn detect_crops_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> Array[@intelligent_vision.CropDetectionResult] {
+  @intelligent_vision.detect_crops(image, config)
+}
+
+///|
+pub fn detect_stars_iv(
+  image : @types.Image,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> @intelligent_vision.StarDetectionResult {
+  @intelligent_vision.detect_stars(image, config)
+}
+
+///|
+pub fn intelligent_vision_report_to_string_iv(
+  task_name : String,
+  num_results : Int,
+  avg_confidence : Double,
+  config : @intelligent_vision.IntelligentVisionConfig,
+) -> String {
+  @intelligent_vision.intelligent_vision_report_to_string(task_name, num_results, avg_confidence, config)
+}
+
+// ==================== 高级成像技术（v40.0.0） ====================
+
+///|
+pub type ImagingModalityAI = @advanced_imaging.ImagingModality
+
+///|
+pub type QuantumImagingAlgorithmAI = @advanced_imaging.QuantumImagingAlgorithm
+
+///|
+pub type InfraredImagingTypeAI = @advanced_imaging.InfraredImagingType
+
+///|
+pub type HyperspectralDataAI = @advanced_imaging.HyperspectralData
+
+///|
+pub type PolarizationDataAI = @advanced_imaging.PolarizationData
+
+///|
+pub type ThermalDataAI = @advanced_imaging.ThermalData
+
+///|
+pub type XRayDataAI = @advanced_imaging.XRayData
+
+///|
+pub type UltrasoundDataAI = @advanced_imaging.UltrasoundData
+
+///|
+pub type MRIDataAI = @advanced_imaging.MRIData
+
+///|
+pub type PETDataAI = @advanced_imaging.PETData
+
+///|
+pub type AdvancedImagingConfigAI = @advanced_imaging.AdvancedImagingConfig
+
+///|
+pub fn create_default_advanced_imaging_config_ai(
+  modality : @advanced_imaging.ImagingModality,
+) -> @advanced_imaging.AdvancedImagingConfig {
+  @advanced_imaging.create_default_advanced_imaging_config(modality)
+}
+
+///|
+pub fn quantum_ghost_imaging_ai(
+  num_patterns : Int,
+  width : Int,
+  height : Int,
+  algorithm : @advanced_imaging.QuantumImagingAlgorithm,
+) -> @types.Image {
+  @advanced_imaging.quantum_ghost_imaging(num_patterns, width, height, algorithm)
+}
+
+///|
+pub fn infrared_pseudocolor_ai(
+  infrared_image : @types.Image,
+  ir_type : @advanced_imaging.InfraredImagingType,
+) -> @types.Image {
+  @advanced_imaging.infrared_pseudocolor(infrared_image, ir_type)
+}
+
+///|
+pub fn generate_hyperspectral_cube_ai(
+  base_image : @types.Image,
+  num_bands : Int,
+  start_wavelength : Double,
+  end_wavelength : Double,
+) -> @advanced_imaging.HyperspectralData {
+  @advanced_imaging.generate_hyperspectral_cube(base_image, num_bands, start_wavelength, end_wavelength)
+}
+
+///|
+pub fn analyze_polarization_ai(
+  images_0deg : @types.Image,
+  images_45deg : @types.Image,
+  images_90deg : @types.Image,
+  images_135deg : @types.Image,
+) -> @advanced_imaging.PolarizationData {
+  @advanced_imaging.analyze_polarization(images_0deg, images_45deg, images_90deg, images_135deg)
+}
+
+///|
+pub fn thermal_to_temperature_ai(
+  thermal_image : @types.Image,
+  emissivity : Double,
+  min_temp : Double,
+  max_temp : Double,
+) -> @advanced_imaging.ThermalData {
+  @advanced_imaging.thermal_to_temperature(thermal_image, emissivity, min_temp, max_temp)
+}
+
+///|
+pub fn xray_enhance_ai(
+  xray_image : @types.Image,
+  energy_kev : Double,
+) -> @advanced_imaging.XRayData {
+  @advanced_imaging.xray_enhance(xray_image, energy_kev)
+}
+
+///|
+pub fn ultrasound_synthesize_ai(
+  width : Int,
+  height : Int,
+  frequency_mhz : Double,
+  depth_cm : Double,
+) -> @advanced_imaging.UltrasoundData {
+  @advanced_imaging.ultrasound_synthesize(width, height, frequency_mhz, depth_cm)
+}
+
+///|
+pub fn mri_synthesize_ai(
+  width : Int,
+  height : Int,
+  field_strength_t : Double,
+) -> @advanced_imaging.MRIData {
+  @advanced_imaging.mri_synthesize(width, height, field_strength_t)
+}
+
+///|
+pub fn pet_synthesize_ai(
+  width : Int,
+  height : Int,
+  radiotracer : String,
+) -> @advanced_imaging.PETData {
+  @advanced_imaging.pet_synthesize(width, height, radiotracer)
+}
+
+///|
+pub fn advanced_imaging_report_to_string_ai(
+  modality : @advanced_imaging.ImagingModality,
+  image : @types.Image,
+  config : @advanced_imaging.AdvancedImagingConfig,
+) -> String {
+  @advanced_imaging.advanced_imaging_report_to_string(modality, image, config)
+}

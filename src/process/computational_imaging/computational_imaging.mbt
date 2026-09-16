@@ -385,7 +385,7 @@ pub fn generate_hologram(
       let phase_norm = ((phase % 6.28318) / 6.28318 * 255.0)
 
       // 干涉图样
-      let interference = gray * 127.0 + 128.0 * (0.5 + 0.5 * phase_norm.cos_approx())
+      let interference = gray * 127.0 + 128.0 * (0.5 + 0.5 * cos_approx(phase_norm))
 
       intensity_out.push(interference.to_int().to_byte())
       phase_out.push(phase_norm.to_int().to_byte())
@@ -456,8 +456,8 @@ pub fn ct_reconstruct_fbp(
       if angle_idx < projections.projections.length() {
         let proj = projections.projections[angle_idx]
         let angle = angle_idx.to_double() * projections.angular_range / projections.num_angles.to_double()
-        let cos_a = angle.cos_approx()
-        let sin_a = angle.sin_approx()
+        let cos_a = cos_approx(angle)
+        let sin_a = sin_approx(angle)
 
         for y in 0..<output_size {
           for x in 0..<output_size {
@@ -500,7 +500,7 @@ pub fn phase_retrieval(
   let total = w * h
 
   // 简化的相位恢复：迭代优化
-  let mut phase : Array[Double] = []
+  let phase : Array[Double] = []
   for _ in 0..<total {
     phase.push(0.0)
   }
@@ -520,7 +520,7 @@ pub fn phase_retrieval(
   // 生成重建图像
   let out : Array[Byte] = []
   for i in 0..<total {
-    let value = magnitude.data[i].to_double() * (0.5 + 0.5 * phase[i].cos_approx())
+    let value = magnitude.data[i].to_double() * (0.5 + 0.5 * cos_approx(phase[i]))
     let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
     out.push(clamped.to_int().to_byte())
   }
@@ -607,14 +607,12 @@ pub fn computational_imaging_report_to_string(
 }
 
 // 辅助函数：Double 的近似三角函数
-fn Double.cos_approx(self : Double) -> Double {
-  let x = self % 6.28318
+fn cos_approx(x : Double) -> Double {
   let x2 = x * x
   1.0 - x2 / 2.0 + x2 * x2 / 24.0
 }
 
-fn Double.sin_approx(self : Double) -> Double {
-  let x = self % 6.28318
+fn sin_approx(x : Double) -> Double {
   let x2 = x * x
   x - x * x2 / 6.0 + x * x2 * x2 / 120.0
 }
