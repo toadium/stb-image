@@ -267,7 +267,9 @@ pub fn extract_skeleton(
       let dy = k2.y - k1.y
       let length = (dx * dx + dy * dy).sqrt()
       let angle = if length > 0.0 {
-        (dy / length).asin() * 180.0 / 3.14159
+        let sin_val = dy / length
+        // 简化的反正弦近似
+        sin_val * 57.3
       } else {
         0.0
       }
@@ -346,8 +348,8 @@ pub fn recognize_action(
   let right_knee_angle = calculate_joint_angle(pose, 12, 14, 16)  // 右髋-右膝-右踝
 
   // 简化的动作分类
-  let action_name : String
-  let confidence : Double
+  let mut action_name = "walking"
+  let mut confidence = 0.5
 
   if left_elbow_angle < 60.0 && right_elbow_angle < 60.0 {
     action_name = "arms_crossed"
@@ -390,9 +392,9 @@ pub fn recognize_gesture(
   let right_shoulder = if 6 < pose.keypoints.length() { pose.keypoints[6] } else { Keypoint::{ x: 0.0, y: 0.0, confidence: 0.0, is_visible: false, part_name: "" } }
 
   // 简化的手势分类
-  let gesture_type : GestureType
-  let confidence : Double
-  let is_left_hand : Bool
+  let mut gesture_type = GestureType::Unknown
+  let mut confidence = 0.3
+  let mut is_left_hand = false
 
   let left_arm_up = left_wrist.y < left_shoulder.y
   let right_arm_up = right_wrist.y < right_shoulder.y

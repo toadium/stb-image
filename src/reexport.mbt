@@ -8589,3 +8589,135 @@ pub fn pose_estimation_report_to_string_pe(
 ) -> String {
   @pose_estimation.pose_estimation_report_to_string(poses, action_result)
 }
+
+// ==================== 人脸识别与表情识别（v33.0.0） ====================
+
+///|
+pub type FaceDetectionAlgorithmFR = @face_recognition.FaceDetectionAlgorithm
+
+///|
+pub type FaceRecognitionAlgorithmFR = @face_recognition.FaceRecognitionAlgorithm
+
+///|
+pub type ExpressionTypeFR = @face_recognition.ExpressionType
+
+///|
+pub type FaceDetectionResultFR = @face_recognition.FaceDetectionResult
+
+///|
+pub type FaceFeatureFR = @face_recognition.FaceFeature
+
+///|
+pub type FaceRecognitionResultFR = @face_recognition.FaceRecognitionResult
+
+///|
+pub type ExpressionRecognitionResultFR = @face_recognition.ExpressionRecognitionResult
+
+///|
+pub type AgeGenderEstimationResultFR = @face_recognition.AgeGenderEstimationResult
+
+///|
+pub type FaceAttributeAnalysisFR = @face_recognition.FaceAttributeAnalysis
+
+///|
+pub type FaceDatabaseFR = @face_recognition.FaceDatabase
+
+///|
+pub type FaceRecognitionConfigFR = @face_recognition.FaceRecognitionConfig
+
+///|
+pub fn create_default_face_config_fr() -> @face_recognition.FaceRecognitionConfig {
+  @face_recognition.create_default_face_config()
+}
+
+///|
+pub fn create_face_database_fr(
+  algorithm : @face_recognition.FaceRecognitionAlgorithm,
+  threshold : Double,
+) -> @face_recognition.FaceDatabase {
+  @face_recognition.create_face_database(algorithm, threshold)
+}
+
+///|
+pub fn detect_faces_fr(
+  img : @types.Image,
+  config : @face_recognition.FaceRecognitionConfig,
+) -> Array[@face_recognition.FaceDetectionResult] {
+  @face_recognition.detect_faces(img, config)
+}
+
+///|
+pub fn extract_face_feature_fr(
+  img : @types.Image,
+  face : @face_recognition.FaceDetectionResult,
+  config : @face_recognition.FaceRecognitionConfig,
+) -> @face_recognition.FaceFeature {
+  @face_recognition.extract_face_feature(img, face, config)
+}
+
+///|
+pub fn calculate_cosine_similarity_fr(
+  feat1 : @face_recognition.FaceFeature,
+  feat2 : @face_recognition.FaceFeature,
+) -> Double {
+  @face_recognition.calculate_cosine_similarity(feat1, feat2)
+}
+
+///|
+pub fn add_face_to_database_fr(
+  database : @face_recognition.FaceDatabase,
+  feature : @face_recognition.FaceFeature,
+  identity : String,
+) -> @face_recognition.FaceDatabase {
+  @face_recognition.add_face_to_database(database, feature, identity)
+}
+
+///|
+pub fn recognize_face_in_database_fr(
+  database : @face_recognition.FaceDatabase,
+  feature : @face_recognition.FaceFeature,
+  bounding_box : Array[Double],
+) -> @face_recognition.FaceRecognitionResult {
+  @face_recognition.recognize_face_in_database(database, feature, bounding_box)
+}
+
+///|
+pub fn recognize_expression_fr(
+  img : @types.Image,
+  face : @face_recognition.FaceDetectionResult,
+) -> @face_recognition.ExpressionRecognitionResult {
+  @face_recognition.recognize_expression(img, face)
+}
+
+///|
+pub fn estimate_age_gender_fr(
+  img : @types.Image,
+  face : @face_recognition.FaceDetectionResult,
+) -> @face_recognition.AgeGenderEstimationResult {
+  @face_recognition.estimate_age_gender(img, face)
+}
+
+///|
+pub fn evaluate_face_quality_fr(
+  img : @types.Image,
+  face : @face_recognition.FaceDetectionResult,
+) -> Double {
+  @face_recognition.evaluate_face_quality(img, face)
+}
+
+///|
+pub fn analyze_face_attributes_fr(
+  img : @types.Image,
+  face : @face_recognition.FaceDetectionResult,
+  database : @face_recognition.FaceDatabase,
+  config : @face_recognition.FaceRecognitionConfig,
+) -> @face_recognition.FaceAttributeAnalysis {
+  @face_recognition.analyze_face_attributes(img, face, database, config)
+}
+
+///|
+pub fn face_recognition_report_to_string_fr(
+  analysis : @face_recognition.FaceAttributeAnalysis,
+) -> String {
+  @face_recognition.face_recognition_report_to_string(analysis)
+}
