@@ -429,3 +429,10 @@
 - 11种相似度度量类型（欧氏/余弦/曼哈顿/切比雪夫/闵可夫斯基/汉明/卡方/相关/Bhattacharyya/推土机）
 - 10种索引结构类型（KD树/球树/VP树/LSH/IVF/HNSW/Annoy/扁平/倒排）
 - 颜色直方图特征、相似度计算、图像检索、索引构建、查询扩展、相关反馈
+
+## v75.0.0 - 图像分类高级
+- 9种图像分类任务类型（二分类/多分类/多标签/细粒度/层次/零样本/少样本/开集）
+- 14种分类器类型（KNN/SVM/随机森林/决策树/逻辑回归/朴素贝叶斯/神经网络/CNN/ResNet/VGG/Inception/EfficientNet/Vision Transformer）
+- 11种特征提取方法（颜色直方图/HOG/LBP/SIFT/SURF/ORB/Gabor/Haar小波/深度特征/迁移学习）
+- 9种集成方法类型（Bagging/Boosting/Stacking/Voting/随机森林/Gradient Boosting/AdaBoost/XGBoost）
+- 图像分类、多标签分类、细粒度分类、集成分类、训练分类器、softmax、特征提取
