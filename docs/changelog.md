@@ -459,3 +459,11 @@
 - 9种特征融合方法类型（拼接/加法/乘法/加权和/注意力/门控融合/双线性池化/紧凑双线性池化）
 - 11种度量学习方法类型（对比损失/三元组损失/四元组损失/N-Pair损失/Lifted Structured/ProxyNCA/Proxy Anchor/Circle Loss/ArcFace/CosFace）
 - 特征提取、特征选择、特征变换、特征融合、特征学习、统计特征计算
+
+## v79.0.0 - 表示学习高级
+- 10种表示学习任务类型（自编码器/变分自编码器/生成对抗网络/对比学习/自监督学习/预训练/微调/表示学习/特征学习）
+- 10种自编码器类型（欠完备/稀疏/去噪/收缩/卷积/循环/变分/条件/对抗）
+- 11种GAN类型（Vanilla GAN/DCGAN/WGAN/WGAN-GP/CycleGAN/Pix2Pix/StyleGAN/ProGAN/BigGAN/条件GAN）
+- 11种对比学习方法类型（SimCLR/MoCo/BYOL/SwAV/DINO/CLIP/ALIGN/SimSiam/Barlow Twins/VICReg）
+- 11种自监督学习任务类型（旋转预测/着色/拼图/相对位置/上下文预测/掩码图像建模/掩码自编码器/对比预测编码/深度聚类/SeLa）
+- 自编码器训练、VAE训练、GAN训练、对比学习训练、表示学习、编码/解码、重参数化技巧
