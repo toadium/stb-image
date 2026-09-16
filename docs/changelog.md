@@ -450,3 +450,12 @@
 - 7种核函数类型（线性/多项式/RBF/Sigmoid/余弦/预计算）
 - 6种距离度量类型（欧氏/曼哈顿/余弦/切比雪夫/闵可夫斯基/相关）
 - PCA降维、t-SNE降维、UMAP降维、特征选择、协方差计算、幂迭代法特征分解
+
+## v78.0.0 - 特征学习高级
+- 10种特征学习任务类型（特征提取/特征选择/特征变换/特征融合/度量学习/对比学习/自监督学习/表示学习/迁移学习）
+- 12种特征提取方法类型（手工特征/深度学习/CNN/ResNet/VGG/Inception/EfficientNet/Vision Transformer/自动编码器/PCA/LDA）
+- 11种特征选择方法类型（Filter/Wrapper/Embedded/方差阈值/SelectKBest/SelectPercentile/RFE/L1正则化/树基/互信息）
+- 13种特征变换方法类型（标准化/归一化/缩放/对数变换/幂变换/分位数变换/分箱/独热编码/PCA/LDA/NMF/ICA）
+- 9种特征融合方法类型（拼接/加法/乘法/加权和/注意力/门控融合/双线性池化/紧凑双线性池化）
+- 11种度量学习方法类型（对比损失/三元组损失/四元组损失/N-Pair损失/Lifted Structured/ProxyNCA/Proxy Anchor/Circle Loss/ArcFace/CosFace）
+- 特征提取、特征选择、特征变换、特征融合、特征学习、统计特征计算
