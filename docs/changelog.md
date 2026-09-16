@@ -407,3 +407,11 @@
 - 4种压缩模式（无损/有损/近无损）
 - 7种变换类型（DCT/DWT/DFT/Hadamard/KLT/PCA）
 - DCT变换、量化、游程编码、图像压缩、解压缩、质量评估、率失真优化
+
+## v72.0.0 - 图像加密高级
+- 9种图像加密任务类型（对称加密/非对称加密/混沌加密/DNA加密/光学加密/隐写术/数字水印/同态加密）
+- 9种加密算法类型（AES/DES/RSA/ECC/ChaCha20/Blowfish/Twofish/Serpent）
+- 7种混沌系统类型（Logistic/Henon/Lorenz/Rossler/Chen/超混沌）
+- 6种DNA编码类型（二进制/互补/加法/减法/异或）
+- 7种隐写术类型（LSB/MSB/DCT域/DWT域/FFT域/扩频）
+- XOR加密、混沌加密、隐写术嵌入、数字水印嵌入、熵计算、加密/解密
