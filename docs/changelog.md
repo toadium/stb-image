@@ -467,3 +467,12 @@
 - 11种对比学习方法类型（SimCLR/MoCo/BYOL/SwAV/DINO/CLIP/ALIGN/SimSiam/Barlow Twins/VICReg）
 - 11种自监督学习任务类型（旋转预测/着色/拼图/相对位置/上下文预测/掩码图像建模/掩码自编码器/对比预测编码/深度聚类/SeLa）
 - 自编码器训练、VAE训练、GAN训练、对比学习训练、表示学习、编码/解码、重参数化技巧
+
+## v80.0.0 - 迁移学习高级
+- 11种迁移学习任务类型（预训练/微调/特征提取/域适应/多任务学习/终身学习/零样本学习/少样本学习/元学习/知识蒸馏）
+- 11种预训练模型类型（ResNet/VGG/Inception/EfficientNet/Vision Transformer/Swin Transformer/ConvNeXt/MobileNet/DenseNet/AlexNet）
+- 11种微调策略类型（全量微调/部分微调/逐层微调/判别式学习率/逐步解冻/冻结骨干/Adapter/LoRA/提示微调/前缀微调）
+- 11种域适应方法类型（DANN/CDAN/MMD/CORAL/ADDA/CycleGAN/MCD/M3SDA/SHOT/FixMatch）
+- 9种多任务学习方法类型（硬参数共享/软参数共享/CrossStitch/张量分解/MMoE/PLE/共享底层/多门混合专家）
+- 11种少样本学习方法类型（原型网络/匹配网络/关系网络/MAML/Reptile/Meta-SGD/TADAM/FEAT/Baseline/Baseline++）
+- 预训练模型加载、模型微调、域适应、多任务学习、少样本学习、知识蒸馏、迁移学习
