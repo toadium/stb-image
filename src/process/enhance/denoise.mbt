@@ -27,11 +27,37 @@ pub fn nlm_default_config() -> NlmConfig {
 pub fn denoise_nlm(
   img : @types.Image,
   config? : NlmConfig,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_nlm: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("denoise_nlm: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "denoise_nlm: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let cfg = match config {
     Some(c) => c
     None => nlm_default_config()
   }
+
+  // 参数验证
+  if cfg.search_window <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_nlm: search_window必须大于0")
+  }
+  if cfg.patch_size <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_nlm: patch_size必须大于0")
+  }
+  if cfg.h <= 0.0 {
+    raise @types.LoadError::DecodeFailed("denoise_nlm: h必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -99,7 +125,30 @@ pub fn denoise_bilateral(
   diameter? : Int = 9,
   sigma_color? : Double = 75.0,
   sigma_space? : Double = 75.0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_bilateral: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("denoise_bilateral: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if diameter <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_bilateral: diameter必须大于0")
+  }
+  if sigma_color <= 0.0 {
+    raise @types.LoadError::DecodeFailed("denoise_bilateral: sigma_color必须大于0")
+  }
+  if sigma_space <= 0.0 {
+    raise @types.LoadError::DecodeFailed("denoise_bilateral: sigma_space必须大于0")
+  }
+
   let d = diameter
   let sc = sigma_color
   let ss = sigma_space
@@ -150,7 +199,24 @@ pub fn denoise_bilateral(
 pub fn denoise_median(
   img : @types.Image,
   kernel_size? : Int = 3,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise_median: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("denoise_median: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "denoise_median: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if kernel_size <= 0 || kernel_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("denoise_median: kernel_size必须是正奇数")
+  }
+
 let ks = kernel_size
   let w = img.width
   let h = img.height
@@ -200,7 +266,15 @@ let ks = kernel_size
 pub fn denoise(
   img : @types.Image,
   method : String,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("denoise: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("denoise: 通道数必须在1-4之间")
+  }
+
   match method {
     "nlm" => denoise_nlm(img)
     "bilateral" => denoise_bilateral(img)

@@ -510,3 +510,12 @@
 - 错误处理：ProductionErrorCode/ProductionError/create_production_error
 - 重试机制：RetryConfig/create_default_retry_config/calculate_retry_delay
 - 报告生成：validation_result_to_string/production_error_to_string
+
+## v85.0.0 - 生产级增强：enhance模块
+- 增强 enhance/denoise.mbt：为所有public函数添加生产级输入验证和错误处理
+  - denoise_nlm: 图像尺寸/通道数/数据大小验证，search_window/patch_size/h参数验证
+  - denoise_bilateral: 图像验证，diameter/sigma_color/sigma_space参数验证
+  - denoise_median: 图像验证，kernel_size必须为正奇数验证
+  - denoise: 图像验证，通用接口错误处理
+- 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
+- 所有函数返回类型添加 raise @types.LoadError

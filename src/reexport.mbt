@@ -4222,7 +4222,7 @@ pub fn nlm_default_config() -> @enhance.NlmConfig {
 pub fn denoise_nlm(
   img : @types.Image,
   config? : @enhance.NlmConfig,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   match config {
     Some(c) => @enhance.denoise_nlm(img, config=c)
     None => @enhance.denoise_nlm(img)
@@ -4235,7 +4235,7 @@ pub fn denoise_bilateral(
   diameter? : Int = 9,
   sigma_color? : Double = 75.0,
   sigma_space? : Double = 75.0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.denoise_bilateral(img, diameter~, sigma_color~, sigma_space~)
 }
 
@@ -4243,7 +4243,7 @@ pub fn denoise_bilateral(
 pub fn denoise_median(
   img : @types.Image,
   kernel_size? : Int = 3,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.denoise_median(img, kernel_size~)
 }
 
@@ -4251,7 +4251,7 @@ pub fn denoise_median(
 pub fn denoise(
   img : @types.Image,
   method : String,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.denoise(img, method)
 }
 
