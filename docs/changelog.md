@@ -819,3 +819,9 @@
   - 参数验证：min_height/min_width>0、max_gap非负、padding非负、target_size>0
   - extract_text_line_image/extract_char_image支持多通道（1-4）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v119.0.0 - 生产级增强：ocr模块 char_segmentation（6个函数）
+- 增强 ocr/char_segmentation.mbt：drop_fall_segmentation/detect_touching_chars/segment_by_connected_components/merge_small_segments/filter_noise_segments/complete_char_segmentation函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道二值图、数据大小匹配
+  - 参数验证：字符宽度范围、面积范围、面积比例范围、min_width/min_height>0
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

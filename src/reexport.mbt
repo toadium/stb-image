@@ -2663,7 +2663,7 @@ pub fn merge_small_segments(
   segments : Array[(Int, Int, Int, Int)],
   min_width : Int,
   min_height : Int,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   @ocr.merge_small_segments(segments, min_width, min_height)
 }
 
@@ -2674,7 +2674,7 @@ pub fn filter_noise_segments(
   img_height : Int,
   min_area_ratio? : Double = 0.001,
   max_area_ratio? : Double = 0.5,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   @ocr.filter_noise_segments(segments, img_width, img_height, min_area_ratio~, max_area_ratio~)
 }
 
