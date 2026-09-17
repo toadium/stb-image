@@ -749,3 +749,12 @@
   - 图像尺寸/通道验证
   - Gabor参数验证：ksize正奇数、sigma>0、num_orientations>0
   - 模板匹配验证：模板尺寸/通道/数据大小、模板尺寸不大于图像尺寸
+
+## v110.0.0 - 生产级增强：feature模块 光流+GLCM 16/f版本（8个函数）
+- 增强 feature/optical_glcm_16f.mbt：lucas_kanade_16/lucas_kanade_f/horn_schunck_16/horn_schunck_f/compute_glcm_16/compute_glcm_f/glcm_features_multi_direction_16/glcm_features_multi_direction_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证
+  - 光流验证：两帧尺寸一致、点列表非空、window_size正奇数、max_iter>0
+  - Horn-Schunck验证：alpha>0、iterations>0
+  - GLCM验证：levels>0
