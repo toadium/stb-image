@@ -727,3 +727,11 @@
   - lucas_kanade: 图像验证 + points非空验证 + window_size/max_iter参数验证
   - horn_schunck: 图像验证 + alpha/iterations参数验证
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v107.0.0 - 生产级增强：feature模块 直方图16/f版本（8个函数）
+- 增强 feature/histogram_16f.mbt：histogram_16/histogram_f/histogram_equalize_16/histogram_equalize_f/histogram_normalize_16/histogram_normalize_f/histogram_matching_16/histogram_matching_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证
+  - histogram_matching系列：参考图像验证
+- 同步更新 reexport.mbt 中的8个函数类型定义（添加raise @types.LoadError）

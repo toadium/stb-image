@@ -1228,18 +1228,18 @@ pub fn haar_denoise_f(
 
 ///|
 pub let histogram : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.histogram
-pub let histogram_16 : (@types.Image16) -> Array[Int] = @feature.histogram_16
-pub let histogram_f : (@types.ImageF) -> Array[Int] = @feature.histogram_f
+pub let histogram_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.histogram_16
+pub let histogram_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.histogram_f
 
 ///|
 pub let histogram_equalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_equalize
-pub let histogram_equalize_16 : (@types.Image16) -> @types.Image16 = @feature.histogram_equalize_16
-pub let histogram_equalize_f : (@types.ImageF) -> @types.ImageF = @feature.histogram_equalize_f
+pub let histogram_equalize_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_equalize_16
+pub let histogram_equalize_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_equalize_f
 
 ///|
 pub let histogram_normalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_normalize
-pub let histogram_normalize_16 : (@types.Image16) -> @types.Image16 = @feature.histogram_normalize_16
-pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF = @feature.histogram_normalize_f
+pub let histogram_normalize_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_normalize_16
+pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_normalize_f
 
 ///|
 pub let ahash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.ahash
@@ -1351,8 +1351,8 @@ pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> F
 
 ///|
 pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_matching
-pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image16 = @feature.histogram_matching_16
-pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF = @feature.histogram_matching_f
+pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_matching_16
+pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_matching_f
 
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
