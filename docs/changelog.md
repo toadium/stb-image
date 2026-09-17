@@ -560,3 +560,9 @@
 - 同步更新 reexport.mbt 中的函数类型定义，支持raise错误传播
 - 同步更新 bench.mbt 中的函数调用，添加catch处理raise
 - 修复 filter_examples_test.mbt 中的测试代码，处理raise错误
+
+## v90.0.0 - 生产级增强：filter模块 bilateral_filter（2个函数）
+- 增强 filter/bilateral_filter.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - bilateral_filter: 补充图像尺寸验证、数据大小验证、sigma_space/sigma_color参数验证（>0）
+  - bilateral_filter_fast: 补充完整图像验证、参数验证（radius>=1、sigma>0、downsample>=1）
+- 两个函数原本已有部分验证，本次补充完整，达到生产级标准

@@ -10,13 +10,29 @@ pub fn bilateral_filter(
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.Image raise @types.LoadError {
-  if radius < 1 {
-    raise @types.LoadError::DecodeFailed("radius 必须 >= 1")
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter: 图像尺寸必须大于0")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
-      "bilateral_filter 仅支持 channels=1/3/4",
+      "bilateral_filter: 仅支持 channels=1/3/4",
     )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter: radius 必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter: sigma_color必须大于0")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -217,6 +233,34 @@ pub fn bilateral_filter_fast(
   sigma_color : Float,
   downsample : Int,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_fast: 仅支持 channels=1/3/4",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_fast: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast: radius 必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast: sigma_color必须大于0")
+  }
+  if downsample < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast: downsample必须 >= 1")
+  }
+
   if downsample <= 1 {
     return bilateral_filter(img, radius, sigma_space, sigma_color)
   }
