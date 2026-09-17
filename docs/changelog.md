@@ -622,3 +622,15 @@
   - edge_detect_prewitt: 图像验证，返回类型从Image改为Image raise @types.LoadError
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
 - 同步更新 bench.mbt 中的2个函数调用（添加catch处理）
+
+## v97.0.0 - 生产级增强：edge模块 canny/contour/hough（7个函数）
+- 增强 edge/canny.mbt：canny_edge函数补充图像尺寸验证和数据大小验证
+- 增强 edge/contour.mbt：find_contours和draw_contours函数补充完整的生产级验证
+  - find_contours: 图像验证（尺寸/通道/数据大小）
+  - draw_contours: 图像验证 + color数组非空验证
+- 增强 edge/hough.mbt：hough_lines和hough_lines_nms函数添加完整的生产级验证
+  - hough_lines: 图像验证 + threshold/theta_resolution/rho_resolution参数验证
+  - hough_lines_nms: rho_threshold/theta_threshold参数验证，返回类型改为raise
+- 增强 edge/hough_circles.mbt：hough_circles函数添加完整的生产级验证
+  - 图像验证 + dp/min_dist/param1/param2/min_radius/max_radius参数验证
+- 同步更新 reexport.mbt 中的hough_lines_nms函数类型定义（添加raise @types.LoadError）

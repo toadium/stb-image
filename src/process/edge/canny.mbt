@@ -10,8 +10,18 @@ pub fn canny_edge(
   low_threshold? : Int = 50,
   high_threshold? : Int = 100,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("canny_edge: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("canny_edge 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("canny_edge: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if low_threshold < 0 || low_threshold > 255 {
     raise @types.LoadError::DecodeFailed(

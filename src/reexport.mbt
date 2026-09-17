@@ -994,7 +994,7 @@ pub fn hough_lines_nms(
   arg0 : Array[@edge.HoughLine],
   rho_threshold? : Float = 5.0F,
   theta_threshold? : Float = 0.1F,
-) -> Array[@edge.HoughLine] {
+) -> Array[@edge.HoughLine] raise @types.LoadError {
   @edge.hough_lines_nms(arg0, rho_threshold~, theta_threshold~)
 }
 

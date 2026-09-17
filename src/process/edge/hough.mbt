@@ -18,8 +18,27 @@ pub fn hough_lines(
   theta_resolution? : Float = 1.0F,
   rho_resolution? : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("hough_lines 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("hough_lines: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if threshold <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines: threshold必须大于0")
+  }
+  if theta_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines: theta_resolution必须大于0")
+  }
+  if rho_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines: rho_resolution必须大于0")
   }
   let w = img.width
   let h = img.height
@@ -99,7 +118,15 @@ pub fn hough_lines_nms(
   lines : Array[HoughLine],
   rho_threshold? : Float = 5.0F,
   theta_threshold? : Float = 0.1F,
-) -> Array[HoughLine] {
+) -> Array[HoughLine] raise @types.LoadError {
+  // 参数验证
+  if rho_threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_nms: rho_threshold必须大于0")
+  }
+  if theta_threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_nms: theta_threshold必须大于0")
+  }
+
   let result : Array[HoughLine] = []
   let suppressed : Array[Bool] = Array::make(lines.length(), false)
   for i in 0..<lines.length() {

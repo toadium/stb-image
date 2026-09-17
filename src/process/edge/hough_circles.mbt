@@ -23,10 +23,36 @@ pub fn hough_circles(
   min_radius? : Int = 0,
   max_radius? : Int = 0,
 ) -> Array[Circle] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_circles: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("hough_circles: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "hough_circles 仅支持 channels=1/3/4",
+      "hough_circles: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
+  }
+  if dp < 1 {
+    raise @types.LoadError::DecodeFailed("hough_circles: dp必须 >= 1")
+  }
+  if min_dist < 1 {
+    raise @types.LoadError::DecodeFailed("hough_circles: min_dist必须 >= 1")
+  }
+  if param1 <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_circles: param1必须大于0")
+  }
+  if param2 <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_circles: param2必须大于0")
+  }
+  if min_radius < 0 {
+    raise @types.LoadError::DecodeFailed("hough_circles: min_radius必须 >= 0")
+  }
+  if max_radius < 0 {
+    raise @types.LoadError::DecodeFailed("hough_circles: max_radius必须 >= 0")
   }
   let w = img.width
   let h = img.height
