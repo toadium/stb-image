@@ -607,3 +607,10 @@
   - bilateral_filter_fast_16: 16位图像验证，完整参数验证（含downsample）
   - bilateral_filter_fast_f: 浮点图像验证，完整参数验证（含downsample）
 - 这些函数原本已是包装函数（16位/浮点→8位→处理→转换回），本次补充前置输入验证，达到生产级标准
+
+## v95.0.0 - 生产级增强：filter模块 inpaint（2个函数，filter模块全部完成）
+- 增强 filter/inpaint.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - inpaint: 图像验证（尺寸/通道/数据大小），掩码验证（尺寸/通道/数据大小），iterations参数验证
+  - inpaint_fast: 图像验证，掩码验证，radius参数验证
+- 两个函数原本已有部分验证（掩码尺寸/通道），本次补充完整验证，达到生产级标准
+- **filter模块生产级增强全部完成**：7个源文件，33个public函数全部增强

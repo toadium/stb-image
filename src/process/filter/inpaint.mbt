@@ -13,11 +13,33 @@ pub fn inpaint(
   mask : @types.Image,
   iterations? : Int = 100,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.width != mask.width || img.height != mask.height {
-    raise @types.LoadError::DecodeFailed("掩码尺寸必须与图像一致")
+    raise @types.LoadError::DecodeFailed("inpaint: 掩码尺寸必须与图像一致")
   }
   if mask.channels != 1 {
-    raise @types.LoadError::DecodeFailed("掩码必须为单通道图像")
+    raise @types.LoadError::DecodeFailed("inpaint: 掩码必须为单通道图像")
+  }
+  let mask_expected_size = mask.width * mask.height
+  if mask.data.length() != mask_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint: 掩码数据大小不匹配，期望 " + mask_expected_size.to_string() + "，实际 " + mask.data.length().to_string(),
+    )
+  }
+  if iterations <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint: iterations必须大于0")
   }
   let w = img.width
   let h = img.height
@@ -109,11 +131,33 @@ pub fn inpaint_fast(
   mask : @types.Image,
   radius? : Int = 5,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_fast: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.width != mask.width || img.height != mask.height {
-    raise @types.LoadError::DecodeFailed("掩码尺寸必须与图像一致")
+    raise @types.LoadError::DecodeFailed("inpaint_fast: 掩码尺寸必须与图像一致")
   }
   if mask.channels != 1 {
-    raise @types.LoadError::DecodeFailed("掩码必须为单通道图像")
+    raise @types.LoadError::DecodeFailed("inpaint_fast: 掩码必须为单通道图像")
+  }
+  let mask_expected_size = mask.width * mask.height
+  if mask.data.length() != mask_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_fast: 掩码数据大小不匹配，期望 " + mask_expected_size.to_string() + "，实际 " + mask.data.length().to_string(),
+    )
+  }
+  if radius <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast: radius必须大于0")
   }
   let w = img.width
   let h = img.height
