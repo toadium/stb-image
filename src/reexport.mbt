@@ -916,7 +916,7 @@ pub fn sift_match(
   arg1 : Array[@feature.SiftDescriptor],
   max_distance? : Float = 300.0F,
   ratio_test? : Float = 0.75F,
-) -> Array[@feature.SiftMatch] {
+) -> Array[@feature.SiftMatch] raise @types.LoadError {
   @feature.sift_match(arg0, arg1, max_distance~, ratio_test~)
 }
 
@@ -926,7 +926,7 @@ pub fn ransac_homography(
   arg0 : Array[((Float, Float), (Float, Float))],
   iterations? : Int = 1000,
   threshold? : Float = 3.0F,
-) -> Array[Float]? {
+) -> Array[Float]? raise @types.LoadError {
   @feature.ransac_homography(arg0, iterations~, threshold~)
 }
 

@@ -716,3 +716,14 @@
   - integral_mean: 积分图像有效性验证 + x/y/w/h范围验证（w=0或h=0时返回0.0F）
   - integral_variance: 积分图像和平方积分图像尺寸相同验证 + x/y/w/h范围验证
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v106.0.0 - 生产级增强：feature模块 匹配与光流（5个函数）
+- 增强 feature/match.mbt：sift_match/ransac_homography函数补充完整的生产级验证
+  - sift_match: max_distance/ratio_test参数验证（空数组返回空结果）
+  - ransac_homography: iterations/threshold参数验证（少于4个点返回None）
+- 增强 feature/template_match.mbt：template_match函数补充完整的生产级验证
+  - 图像验证 + 模板验证 + 通道数相同验证 + 模板不大于图像验证
+- 增强 feature/optical_flow.mbt：lucas_kanade/horn_schunck函数补充完整的生产级验证
+  - lucas_kanade: 图像验证 + points非空验证 + window_size/max_iter参数验证
+  - horn_schunck: 图像验证 + alpha/iterations参数验证
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

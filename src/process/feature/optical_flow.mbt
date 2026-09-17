@@ -25,8 +25,42 @@ pub fn lucas_kanade(
   window_size? : Int = 15,
   max_iter? : Int = 20,
 ) -> Array[FlowResult] raise @types.LoadError {
+  // 输入验证
+  if prev.width <= 0 || prev.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: prev图像尺寸必须大于0")
+  }
+  if next.width <= 0 || next.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: next图像尺寸必须大于0")
+  }
+  if prev.channels < 1 || prev.channels > 4 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: prev通道数必须在1-4之间")
+  }
+  if next.channels < 1 || next.channels > 4 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: next通道数必须在1-4之间")
+  }
+  let prev_expected_size = prev.width * prev.height * prev.channels
+  if prev.data.length() != prev_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade: prev数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+    )
+  }
+  let next_expected_size = next.width * next.height * next.channels
+  if next.data.length() != next_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade: next数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+    )
+  }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed("lucas_kanade: 两帧图像尺寸必须一致")
+  }
+  if points.length() == 0 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: points数组不能为空")
+  }
+  if window_size < 3 || window_size > 31 || window_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: window_size必须为3..31之间的奇数")
+  }
+  if max_iter <= 0 {
+    raise @types.LoadError::DecodeFailed("lucas_kanade: max_iter必须大于0")
   }
   let w = prev.width
   let h = prev.height
@@ -117,8 +151,39 @@ pub fn horn_schunck(
   alpha? : Float = 1.0F,
   iterations? : Int = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
+  // 输入验证
+  if prev.width <= 0 || prev.height <= 0 {
+    raise @types.LoadError::DecodeFailed("horn_schunck: prev图像尺寸必须大于0")
+  }
+  if next.width <= 0 || next.height <= 0 {
+    raise @types.LoadError::DecodeFailed("horn_schunck: next图像尺寸必须大于0")
+  }
+  if prev.channels < 1 || prev.channels > 4 {
+    raise @types.LoadError::DecodeFailed("horn_schunck: prev通道数必须在1-4之间")
+  }
+  if next.channels < 1 || next.channels > 4 {
+    raise @types.LoadError::DecodeFailed("horn_schunck: next通道数必须在1-4之间")
+  }
+  let prev_expected_size = prev.width * prev.height * prev.channels
+  if prev.data.length() != prev_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck: prev数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+    )
+  }
+  let next_expected_size = next.width * next.height * next.channels
+  if next.data.length() != next_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck: next数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+    )
+  }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed("horn_schunck: 两帧图像尺寸必须一致")
+  }
+  if alpha <= 0.0F {
+    raise @types.LoadError::DecodeFailed("horn_schunck: alpha必须大于0")
+  }
+  if iterations <= 0 {
+    raise @types.LoadError::DecodeFailed("horn_schunck: iterations必须大于0")
   }
   let w = prev.width
   let h = prev.height

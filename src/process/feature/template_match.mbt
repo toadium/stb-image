@@ -31,11 +31,33 @@ pub fn template_match(
   template : @types.Image,
   match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match: 图像通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if template.width <= 0 || template.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match: 模板尺寸必须大于0")
+  }
+  let tpl_expected_size = template.width * template.height * template.channels
+  if template.data.length() != tpl_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match: 模板数据大小不匹配，期望 " + tpl_expected_size.to_string() + "，实际 " + template.data.length().to_string(),
+    )
+  }
   if img.channels != template.channels {
-    raise @types.LoadError::DecodeFailed("模板与图像通道数必须一致")
+    raise @types.LoadError::DecodeFailed("template_match: 模板与图像通道数必须一致")
   }
   if template.width > img.width || template.height > img.height {
-    raise @types.LoadError::DecodeFailed("模板不能大于图像")
+    raise @types.LoadError::DecodeFailed("template_match: 模板不能大于图像")
   }
   let w = img.width
   let tw = template.width
