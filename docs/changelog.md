@@ -758,3 +758,13 @@
   - 光流验证：两帧尺寸一致、点列表非空、window_size正奇数、max_iter>0
   - Horn-Schunck验证：alpha>0、iterations>0
   - GLCM验证：levels>0
+
+## v111.0.0 - 生产级增强：feature模块 特征检测高级 16/f版本（8个函数）
+- 增强 feature/feature_advanced_16f.mbt：harris_corners_16/harris_corners_f/sift_detect_16/sift_detect_f/orb_detect_16/orb_detect_f/good_features_to_track_16/good_features_to_track_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证
+  - Harris验证：k>0、threshold>0、min_distance>0
+  - SIFT验证：max_features>0、contrast_threshold>0
+  - ORB验证：max_features>0、threshold>0
+  - Shi-Tomasi验证：max_corners>0、quality_level>0、min_distance>0

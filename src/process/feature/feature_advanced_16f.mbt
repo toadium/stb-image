@@ -55,6 +55,29 @@ pub fn harris_corners_16(
   threshold? : Float = 1000.0F,
   min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("harris_corners_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "harris_corners_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if k <= 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners_16: k必须大于0")
+  }
+  if threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners_16: threshold必须大于0")
+  }
+  if min_distance <= 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners_16: min_distance必须大于0")
+  }
+
   let img8 = img16_to_img8_feat(img)
   harris_corners(img8, k~, threshold~, min_distance~)
 }
@@ -69,6 +92,29 @@ pub fn harris_corners_f(
   threshold? : Float = 1000.0F,
   min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("harris_corners_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "harris_corners_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if k <= 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners_f: k必须大于0")
+  }
+  if threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners_f: threshold必须大于0")
+  }
+  if min_distance <= 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners_f: min_distance必须大于0")
+  }
+
   let img8 = imgf_to_img8_feat(img)
   harris_corners(img8, k~, threshold~, min_distance~)
 }
@@ -82,6 +128,26 @@ pub fn sift_detect_16(
   max_features? : Int = 500,
   contrast_threshold? : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sift_detect_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sift_detect_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_features <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect_16: max_features必须大于0")
+  }
+  if contrast_threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("sift_detect_16: contrast_threshold必须大于0")
+  }
+
   let img8 = img16_to_img8_feat(img)
   sift_detect(img8, max_features~, contrast_threshold~)
 }
@@ -95,6 +161,26 @@ pub fn sift_detect_f(
   max_features? : Int = 500,
   contrast_threshold? : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sift_detect_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sift_detect_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_features <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect_f: max_features必须大于0")
+  }
+  if contrast_threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("sift_detect_f: contrast_threshold必须大于0")
+  }
+
   let img8 = imgf_to_img8_feat(img)
   sift_detect(img8, max_features~, contrast_threshold~)
 }
@@ -108,6 +194,26 @@ pub fn orb_detect_16(
   max_features? : Int = 500,
   threshold? : Int = 20,
 ) -> Array[OrbDescriptor] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("orb_detect_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "orb_detect_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_features <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_16: max_features必须大于0")
+  }
+  if threshold <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_16: threshold必须大于0")
+  }
+
   let img8 = img16_to_img8_feat(img)
   orb_detect(img8, max_features~, threshold~)
 }
@@ -121,6 +227,26 @@ pub fn orb_detect_f(
   max_features? : Int = 500,
   threshold? : Int = 20,
 ) -> Array[OrbDescriptor] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("orb_detect_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "orb_detect_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_features <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_f: max_features必须大于0")
+  }
+  if threshold <= 0 {
+    raise @types.LoadError::DecodeFailed("orb_detect_f: threshold必须大于0")
+  }
+
   let img8 = imgf_to_img8_feat(img)
   orb_detect(img8, max_features~, threshold~)
 }
@@ -135,6 +261,29 @@ pub fn good_features_to_track_16(
   quality_level : Float,
   min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_corners <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_16: max_corners必须大于0")
+  }
+  if quality_level <= 0.0F {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_16: quality_level必须大于0")
+  }
+  if min_distance <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_16: min_distance必须大于0")
+  }
+
   let img8 = img16_to_img8_feat(img)
   good_features_to_track(img8, max_corners, quality_level, min_distance~)
 }
@@ -149,6 +298,29 @@ pub fn good_features_to_track_f(
   quality_level : Float,
   min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_corners <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_f: max_corners必须大于0")
+  }
+  if quality_level <= 0.0F {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_f: quality_level必须大于0")
+  }
+  if min_distance <= 0 {
+    raise @types.LoadError::DecodeFailed("good_features_to_track_f: min_distance必须大于0")
+  }
+
   let img8 = imgf_to_img8_feat(img)
   good_features_to_track(img8, max_corners, quality_level, min_distance~)
 }
