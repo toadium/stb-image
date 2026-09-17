@@ -634,3 +634,14 @@
 - 增强 edge/hough_circles.mbt：hough_circles函数添加完整的生产级验证
   - 图像验证 + dp/min_dist/param1/param2/min_radius/max_radius参数验证
 - 同步更新 reexport.mbt 中的hough_lines_nms函数类型定义（添加raise @types.LoadError）
+
+## v98.0.0 - 生产级增强：edge模块 edge_detect_16f（6个函数）
+- 增强 edge/edge_detect_16f.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - edge_detect_sobel_16: 16位图像验证（尺寸>0、通道数1-4、数据大小=w*h*ch*2）
+  - edge_detect_sobel_f: 浮点图像验证（数据大小=w*h*ch*4）
+  - edge_detect_laplacian_16: 16位图像验证
+  - edge_detect_laplacian_f: 浮点图像验证
+  - edge_detect_prewitt_16: 16位图像验证
+  - edge_detect_prewitt_f: 浮点图像验证
+- 所有函数返回类型从Image16/ImageF改为Image16/ImageF raise @types.LoadError
+- 同步更新 reexport.mbt 中的6个函数类型定义（添加raise @types.LoadError）
