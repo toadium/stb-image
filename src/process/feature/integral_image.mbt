@@ -14,9 +14,17 @@ pub struct IntegralImage {
 pub fn integral_image(
   img : @types.Image,
 ) -> IntegralImage raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("integral_image: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "integral_image 仅支持 channels=1/3/4",
+      "integral_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -47,7 +55,21 @@ pub fn integral_sum(
   y : Int,
   w : Int,
   h : Int,
-) -> Int64 {
+) -> Int64 raise @types.LoadError {
+  // 参数验证
+  if integral.width <= 0 || integral.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum: 积分图像尺寸必须大于0")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum: x和y必须 >= 0")
+  }
+  if w <= 0 || h <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum: w和h必须大于0")
+  }
+  if x + w > integral.width || y + h > integral.height {
+    raise @types.LoadError::DecodeFailed("integral_sum: 矩形区域超出图像边界")
+  }
+
   let iw = integral.width + 1
   let x2 = x + w
   let y2 = y + h
@@ -66,10 +88,24 @@ pub fn integral_mean(
   y : Int,
   w : Int,
   h : Int,
-) -> Float {
-  if w <= 0 || h <= 0 {
+) -> Float raise @types.LoadError {
+  // 参数验证
+  if integral.width <= 0 || integral.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_mean: 积分图像尺寸必须大于0")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("integral_mean: x和y必须 >= 0")
+  }
+  if w < 0 || h < 0 {
+    raise @types.LoadError::DecodeFailed("integral_mean: w和h必须 >= 0")
+  }
+  if w == 0 || h == 0 {
     return 0.0F
   }
+  if x + w > integral.width || y + h > integral.height {
+    raise @types.LoadError::DecodeFailed("integral_mean: 矩形区域超出图像边界")
+  }
+
   let sum = integral_sum(integral, x, y, w, h)
   Float::from_int(sum.to_int()) / Float::from_int(w * h)
 }
@@ -87,9 +123,17 @@ pub struct IntegralImageSq {
 pub fn integral_image_sq(
   img : @types.Image,
 ) -> IntegralImageSq raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "integral_image_sq 仅支持 channels=1/3/4",
+      "integral_image_sq: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -123,10 +167,27 @@ pub fn integral_variance(
   y : Int,
   w : Int,
   h : Int,
-) -> Float {
-  if w <= 0 || h <= 0 {
-    return 0.0F
+) -> Float raise @types.LoadError {
+  // 参数验证
+  if integral.width <= 0 || integral.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_variance: 积分图像尺寸必须大于0")
   }
+  if integral_sq.width <= 0 || integral_sq.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_variance: 平方积分图像尺寸必须大于0")
+  }
+  if integral.width != integral_sq.width || integral.height != integral_sq.height {
+    raise @types.LoadError::DecodeFailed("integral_variance: 积分图像和平方积分图像尺寸必须相同")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("integral_variance: x和y必须 >= 0")
+  }
+  if w <= 0 || h <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_variance: w和h必须大于0")
+  }
+  if x + w > integral.width || y + h > integral.height {
+    raise @types.LoadError::DecodeFailed("integral_variance: 矩形区域超出图像边界")
+  }
+
   let n = Float::from_int(w * h)
   let sum = Float::from_int(integral_sum(integral, x, y, w, h).to_int())
   let sum_sq = Float::from_int(
@@ -144,7 +205,21 @@ pub fn integral_sum_sq(
   y : Int,
   w : Int,
   h : Int,
-) -> Int64 {
+) -> Int64 raise @types.LoadError {
+  // 参数验证
+  if integral_sq.width <= 0 || integral_sq.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum_sq: 平方积分图像尺寸必须大于0")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum_sq: x和y必须 >= 0")
+  }
+  if w <= 0 || h <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_sum_sq: w和h必须大于0")
+  }
+  if x + w > integral_sq.width || y + h > integral_sq.height {
+    raise @types.LoadError::DecodeFailed("integral_sum_sq: 矩形区域超出图像边界")
+  }
+
   let iw = integral_sq.width + 1
   let x2 = x + w
   let y2 = y + h

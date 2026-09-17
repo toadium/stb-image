@@ -708,3 +708,11 @@
   - 图像验证 + 两幅图像尺寸/通道相同验证 + 数据大小验证
 - 同步更新 hash_quality_integral_16f.mbt 中的16/f版本函数（添加raise @types.LoadError）
 - 同步更新 reexport.mbt 中的14个函数类型定义（添加raise @types.LoadError）
+
+## v105.0.0 - 生产级增强：feature模块 积分图像（6个函数）
+- 增强 feature/integral_image.mbt：integral_image/integral_sum/integral_mean/integral_image_sq/integral_variance/integral_sum_sq函数补充完整的生产级验证
+  - integral_image/integral_image_sq: 图像验证（尺寸/通道/数据大小）
+  - integral_sum/integral_sum_sq: 积分图像有效性验证 + x/y/w/h范围验证
+  - integral_mean: 积分图像有效性验证 + x/y/w/h范围验证（w=0或h=0时返回0.0F）
+  - integral_variance: 积分图像和平方积分图像尺寸相同验证 + x/y/w/h范围验证
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）

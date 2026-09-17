@@ -1380,13 +1380,13 @@ pub let integral_image_sq_16 : (@types.Image16) -> @feature.IntegralImageSq rais
 pub let integral_image_sq_f : (@types.ImageF) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_f
 
 ///|
-pub let integral_mean : (@feature.IntegralImage, Int, Int, Int, Int) -> Float = @feature.integral_mean
+pub let integral_mean : (@feature.IntegralImage, Int, Int, Int, Int) -> Float raise @types.LoadError = @feature.integral_mean
 
 ///|
-pub let integral_sum : (@feature.IntegralImage, Int, Int, Int, Int) -> Int64 = @feature.integral_sum
+pub let integral_sum : (@feature.IntegralImage, Int, Int, Int, Int) -> Int64 raise @types.LoadError = @feature.integral_sum
 
 ///|
-pub let integral_sum_sq : (@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64 = @feature.integral_sum_sq
+pub let integral_sum_sq : (@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64 raise @types.LoadError = @feature.integral_sum_sq
 
 ///|
 pub let integral_variance : (
@@ -1396,7 +1396,7 @@ pub let integral_variance : (
   Int,
   Int,
   Int,
-) -> Float = @feature.integral_variance
+) -> Float raise @types.LoadError = @feature.integral_variance
 
 ///|
 pub let invert : (@types.Image) -> @types.Image = @color.invert
