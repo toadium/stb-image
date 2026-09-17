@@ -540,3 +540,12 @@
   - hdr_process: 完整流水线验证，所有配置参数验证
 - 返回类型从 Option 改为 raise @types.LoadError，提供详细错误信息
 - 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
+
+## v88.0.0 - 生产级增强：enhance模块 inpaint（enhance模块全部完成）
+- 增强 enhance/inpaint.mbt：为所有public函数添加生产级输入验证和错误处理
+  - inpaint_advanced: 图像验证，掩码尺寸/通道验证，radius参数验证
+  - create_rect_mask: 尺寸验证，坐标非负验证，矩形尺寸验证，边界检查
+  - remove_small_objects: 图像验证，max_size参数验证
+  - remove_watermark: 图像验证，区域坐标/尺寸验证，边界检查
+- 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
+- enhance模块生产级增强全部完成：denoise/dehaze/hdr/inpaint 4个文件，20个函数

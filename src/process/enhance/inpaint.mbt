@@ -26,7 +26,30 @@ pub fn inpaint_advanced(
   img : @types.Image,
   mask : @types.Image,
   radius? : Int = 5,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_advanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_advanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_advanced: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if mask.width != img.width || mask.height != img.height {
+    raise @types.LoadError::DecodeFailed("inpaint_advanced: 掩码图像尺寸必须与原图一致")
+  }
+  if mask.channels < 1 {
+    raise @types.LoadError::DecodeFailed("inpaint_advanced: 掩码通道数必须大于0")
+  }
+  if radius <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_advanced: radius必须大于0")
+  }
+
 let r = radius
   let w = img.width
   let h = img.height
@@ -128,7 +151,21 @@ pub fn create_rect_mask(
   y : Int,
   rect_w : Int,
   rect_h : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if width <= 0 || height <= 0 {
+    raise @types.LoadError::DecodeFailed("create_rect_mask: 图像尺寸必须大于0")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("create_rect_mask: 矩形坐标不能为负")
+  }
+  if rect_w <= 0 || rect_h <= 0 {
+    raise @types.LoadError::DecodeFailed("create_rect_mask: 矩形尺寸必须大于0")
+  }
+  if x + rect_w > width || y + rect_h > height {
+    raise @types.LoadError::DecodeFailed("create_rect_mask: 矩形超出图像边界")
+  }
+
   let mask_data : Array[Byte] = Array::make(width * height, b'\x00')
   for py in 0..<height {
     for px in 0..<width {
@@ -145,7 +182,24 @@ pub fn create_rect_mask(
 pub fn remove_small_objects(
   img : @types.Image,
   max_size? : Int = 100,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("remove_small_objects: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("remove_small_objects: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "remove_small_objects: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_size <= 0 {
+    raise @types.LoadError::DecodeFailed("remove_small_objects: max_size必须大于0")
+  }
+
 let ms = max_size
   let w = img.width
   let h = img.height
@@ -224,7 +278,24 @@ pub fn remove_watermark(
   y : Int,
   width : Int,
   height : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("remove_watermark: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("remove_watermark: 通道数必须在1-4之间")
+  }
+  if x < 0 || y < 0 {
+    raise @types.LoadError::DecodeFailed("remove_watermark: 区域坐标不能为负")
+  }
+  if width <= 0 || height <= 0 {
+    raise @types.LoadError::DecodeFailed("remove_watermark: 区域尺寸必须大于0")
+  }
+  if x + width > img.width || y + height > img.height {
+    raise @types.LoadError::DecodeFailed("remove_watermark: 区域超出图像边界")
+  }
+
   let mask = create_rect_mask(img.width, img.height, x, y, width, height)
   inpaint_advanced(img, mask, radius=5)
 }

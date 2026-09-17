@@ -4173,7 +4173,7 @@ pub fn inpaint_advanced(
   img : @types.Image,
   mask : @types.Image,
   radius? : Int = 5,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.inpaint_advanced(img, mask, radius~)
 }
 
@@ -4185,7 +4185,7 @@ pub fn create_rect_mask(
   y : Int,
   rect_w : Int,
   rect_h : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.create_rect_mask(width, height, x, y, rect_w, rect_h)
 }
 
@@ -4193,7 +4193,7 @@ pub fn create_rect_mask(
 pub fn remove_small_objects(
   img : @types.Image,
   max_size? : Int = 100,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.remove_small_objects(img, max_size~)
 }
 
@@ -4204,7 +4204,7 @@ pub fn remove_watermark(
   y : Int,
   width : Int,
   height : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.remove_watermark(img, x, y, width, height)
 }
 
