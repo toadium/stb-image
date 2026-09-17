@@ -1227,17 +1227,17 @@ pub fn haar_denoise_f(
 }
 
 ///|
-pub let histogram : (@types.Image) -> Array[Int] = @feature.histogram
+pub let histogram : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.histogram
 pub let histogram_16 : (@types.Image16) -> Array[Int] = @feature.histogram_16
 pub let histogram_f : (@types.ImageF) -> Array[Int] = @feature.histogram_f
 
 ///|
-pub let histogram_equalize : (@types.Image) -> @types.Image = @feature.histogram_equalize
+pub let histogram_equalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_equalize
 pub let histogram_equalize_16 : (@types.Image16) -> @types.Image16 = @feature.histogram_equalize_16
 pub let histogram_equalize_f : (@types.ImageF) -> @types.ImageF = @feature.histogram_equalize_f
 
 ///|
-pub let histogram_normalize : (@types.Image) -> @types.Image = @feature.histogram_normalize
+pub let histogram_normalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_normalize
 pub let histogram_normalize_16 : (@types.Image16) -> @types.Image16 = @feature.histogram_normalize_16
 pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF = @feature.histogram_normalize_f
 
@@ -1347,10 +1347,10 @@ pub fn good_features_to_track_f(
 pub type HistCompareMethod = @feature.HistCompareMethod
 
 ///|
-pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> Float = @feature.compare_hist
+pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> Float raise @types.LoadError = @feature.compare_hist
 
 ///|
-pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image = @feature.histogram_matching
+pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_matching
 pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image16 = @feature.histogram_matching_16
 pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF = @feature.histogram_matching_f
 

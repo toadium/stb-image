@@ -123,7 +123,7 @@ pub fn bench_run() -> Unit {
   b.bench(name="clahe 128x128", () => {
     ignore(@color.clahe(img128, 8, 2.0F) catch { _ => empty })
   })
-  b.bench(name="histogram 128x128", () => ignore(@feature.histogram(img128)))
+  b.bench(name="histogram 128x128", () => ignore(@feature.histogram(img128) catch { _ => [] }))
   b.bench(name="premultiply_alpha 128x128", () => {
     ignore(@color.premultiply_alpha(img_rgba128) catch { _ => empty })
   })
