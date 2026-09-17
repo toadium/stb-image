@@ -21,7 +21,21 @@ pub fn bbox_new(
   height : Int,
   score? : Double = 0.0,
   class_id? : Int = 0,
-) -> BoundingBox {
+) -> BoundingBox raise @types.LoadError {
+  // 输入验证
+  if width <= 0 {
+    raise @types.LoadError::DecodeFailed("bbox_new: width必须大于0")
+  }
+  if height <= 0 {
+    raise @types.LoadError::DecodeFailed("bbox_new: height必须大于0")
+  }
+  if score < 0.0 || score > 1.0 {
+    raise @types.LoadError::DecodeFailed("bbox_new: score必须在0-1之间")
+  }
+  if class_id < 0 {
+    raise @types.LoadError::DecodeFailed("bbox_new: class_id必须大于等于0")
+  }
+
   BoundingBox::{
     x, y, width, height,
     score,
@@ -34,7 +48,15 @@ pub fn bbox_new(
 pub fn bbox_iou(
   a : BoundingBox,
   b : BoundingBox,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.width <= 0 || a.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bbox_iou: 检测框a的尺寸必须大于0")
+  }
+  if b.width <= 0 || b.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bbox_iou: 检测框b的尺寸必须大于0")
+  }
+
   let x1 = a.x.max(b.x)
   let y1 = a.y.max(b.y)
   let x2 = (a.x + a.width).min(b.x + b.width)
@@ -53,7 +75,15 @@ pub fn bbox_iou(
 pub fn nms(
   boxes : Array[BoundingBox],
   iou_threshold? : Double = 0.5,
-) -> Array[BoundingBox] {
+) -> Array[BoundingBox] raise @types.LoadError {
+  // 输入验证
+  if boxes.length() == 0 {
+    raise @types.LoadError::DecodeFailed("nms: 检测框列表不能为空")
+  }
+  if iou_threshold < 0.0 || iou_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("nms: iou_threshold必须在0-1之间")
+  }
+
   let threshold = iou_threshold
   // 按置信度降序排序（选择排序）
   let sorted = boxes
@@ -96,7 +126,21 @@ pub fn nms(
 pub fn draw_detections(
   img : @types.Image,
   boxes : Array[BoundingBox],
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("draw_detections: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("draw_detections: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "draw_detections: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let channels = img.channels

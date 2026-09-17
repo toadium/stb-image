@@ -4310,7 +4310,7 @@ pub fn bbox_new(
   height : Int,
   score? : Double = 0.0,
   class_id? : Int = 0,
-) -> @detection.BoundingBox {
+) -> @detection.BoundingBox raise @types.LoadError {
   @detection.bbox_new(x, y, width, height, score~, class_id~)
 }
 
@@ -4318,7 +4318,7 @@ pub fn bbox_new(
 pub fn bbox_iou(
   a : @detection.BoundingBox,
   b : @detection.BoundingBox,
-) -> Double {
+) -> Double raise @types.LoadError {
   @detection.bbox_iou(a, b)
 }
 
@@ -4326,7 +4326,7 @@ pub fn bbox_iou(
 pub fn nms(
   boxes : Array[@detection.BoundingBox],
   iou_threshold? : Double = 0.5,
-) -> Array[@detection.BoundingBox] {
+) -> Array[@detection.BoundingBox] raise @types.LoadError {
   @detection.nms(boxes, iou_threshold~)
 }
 
@@ -4334,7 +4334,7 @@ pub fn nms(
 pub fn draw_detections(
   img : @types.Image,
   boxes : Array[@detection.BoundingBox],
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @detection.draw_detections(img, boxes)
 }
 

@@ -775,3 +775,11 @@
   - 浮点图像验证：数据大小=w*h*ch*4
   - 图像尺寸/通道验证
   - 图像质量评估验证：两图像尺寸一致
+
+## v113.0.0 - 生产级增强：detection模块 object_detection（4个函数）
+- 增强 detection/object_detection.mbt：bbox_new/bbox_iou/nms/draw_detections函数补充完整的生产级验证
+  - bbox_new验证：width>0、height>0、score在0-1之间、class_id>=0
+  - bbox_iou验证：检测框尺寸>0
+  - nms验证：检测框列表非空、iou_threshold在0-1之间
+  - draw_detections验证：图像尺寸/通道/数据大小
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
