@@ -476,3 +476,10 @@
 - 9种多任务学习方法类型（硬参数共享/软参数共享/CrossStitch/张量分解/MMoE/PLE/共享底层/多门混合专家）
 - 11种少样本学习方法类型（原型网络/匹配网络/关系网络/MAML/Reptile/Meta-SGD/TADAM/FEAT/Baseline/Baseline++）
 - 预训练模型加载、模型微调、域适应、多任务学习、少样本学习、知识蒸馏、迁移学习
+
+## v81.0.0 - 元学习高级
+- 9种元学习任务类型（少样本分类/少样本回归/元优化/元架构/元学习率/元数据增强/元正则化/元特征选择）
+- 16种元学习算法类型（MAML/Reptile/Meta-SGD/FOMAML/iMAML/Meta-Curvature/LEO/SNAIL/ProtoNet/MatchingNet/RelationNet/TADAM/FEAT/MetaOptNet/R2D2）
+- 7种元学习优化器类型（SGD/Adam/RMSprop/Adagrad/元学习优化器/学习优化器）
+- 6种任务分布类型（均匀/课程/难例挖掘/多样性/加权）
+- MAML训练、Reptile训练、原型网络训练、匹配网络训练、关系网络训练、元学习
