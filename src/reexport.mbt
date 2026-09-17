@@ -756,7 +756,7 @@ pub fn orb_match(
   arg0 : Array[@feature.OrbDescriptor],
   arg1 : Array[@feature.OrbDescriptor],
   max_distance? : Int = 64,
-) -> Array[@feature.DescriptorMatch] {
+) -> Array[@feature.DescriptorMatch] raise @types.LoadError {
   @feature.orb_match(arg0, arg1, max_distance~)
 }
 

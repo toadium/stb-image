@@ -30,8 +30,27 @@ pub fn sift_detect(
   max_features? : Int = 500,
   contrast_threshold? : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect: 图像尺寸必须大于0")
+  }
   if img.width < 16 || img.height < 16 {
-    raise @types.LoadError::DecodeFailed("SIFT 需要至少 16x16 图像")
+    raise @types.LoadError::DecodeFailed("sift_detect: SIFT 需要至少 16x16 图像")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sift_detect: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sift_detect: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if max_features <= 0 {
+    raise @types.LoadError::DecodeFailed("sift_detect: max_features必须大于0")
+  }
+  if contrast_threshold <= 0.0F {
+    raise @types.LoadError::DecodeFailed("sift_detect: contrast_threshold必须大于0")
   }
   let (gray, w, h) = to_gray_sift(img)
   let n_layers = 3

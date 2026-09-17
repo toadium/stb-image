@@ -18,10 +18,27 @@ pub fn harris_corners(
   threshold? : Float = 1000.0F,
   min_distance? : Int = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("harris_corners: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "harris_corners 仅支持 channels=1/3/4",
+      "harris_corners: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
+  }
+  if k <= 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners: k必须大于0")
+  }
+  if threshold < 0.0F {
+    raise @types.LoadError::DecodeFailed("harris_corners: threshold必须 >= 0")
+  }
+  if min_distance < 0 {
+    raise @types.LoadError::DecodeFailed("harris_corners: min_distance必须 >= 0")
   }
   let w = img.width
   let h = img.height
@@ -192,10 +209,24 @@ pub fn draw_corners(
   color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
   radius? : Int = 2,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("draw_corners: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("draw_corners: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "draw_corners 仅支持 channels=1/3/4",
+      "draw_corners: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
+  }
+  if color.length() == 0 {
+    raise @types.LoadError::DecodeFailed("draw_corners: color数组不能为空")
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("draw_corners: radius必须 >= 0")
   }
   let ch = img.channels
   let w = img.width

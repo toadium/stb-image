@@ -665,3 +665,16 @@
 - 所有函数返回类型添加raise @types.LoadError
 - 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
 - **edge模块生产级增强全部完成**：11个源文件，32个public函数全部增强
+
+## v101.0.0 - 生产级增强：feature模块 特征检测（6个函数）
+- 增强 feature/harris.mbt：harris_corners和draw_corners函数补充完整的生产级验证
+  - harris_corners: 图像验证 + k/threshold/min_distance参数验证
+  - draw_corners: 图像验证 + color数组非空验证 + radius参数验证
+- 增强 feature/shi_tomasi.mbt：good_features_to_track函数补充完整的生产级验证
+  - 图像验证 + max_corners/quality_level/min_distance参数验证
+- 增强 feature/sift.mbt：sift_detect函数补充完整的生产级验证
+  - 图像验证（尺寸>=16x16）+ max_features/contrast_threshold参数验证
+- 增强 feature/orb.mbt：orb_detect和orb_match函数补充完整的生产级验证
+  - orb_detect: 图像验证（尺寸>=7x7）+ max_features/threshold参数验证
+  - orb_match: query/train数组非空验证 + max_distance参数验证
+- 同步更新 reexport.mbt 中的orb_match函数类型定义（添加raise @types.LoadError）
