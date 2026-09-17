@@ -27,7 +27,12 @@ pub(all) struct Moments {
 
 ///|
 /// 凸包（Graham 扫描法）。输入点集，返回凸包顶点（逆时针）。
-pub fn convex_hull(points : Array[ContourPoint]) -> Array[ContourPoint] {
+pub fn convex_hull(points : Array[ContourPoint]) -> Array[ContourPoint] raise @types.LoadError {
+  // 空数组返回空数组
+  if points.length() == 0 {
+    return []
+  }
+
   let n = points.length()
   if n <= 2 {
     let out : Array[ContourPoint] = []
@@ -81,7 +86,16 @@ pub fn approx_poly_dp(
   points : Array[ContourPoint],
   epsilon : Float,
   closed? : Bool = true,
-) -> Array[ContourPoint] {
+) -> Array[ContourPoint] raise @types.LoadError {
+  // 参数验证
+  if epsilon < 0.0F {
+    raise @types.LoadError::DecodeFailed("approx_poly_dp: epsilon必须 >= 0")
+  }
+  // 空数组返回空数组
+  if points.length() == 0 {
+    return []
+  }
+
   let n = points.length()
   if n <= 2 {
     let out : Array[ContourPoint] = []
@@ -155,7 +169,17 @@ fn approx_dp_recursive(
 
 ///|
 /// 计算轮廓的空间矩和中心矩。
-pub fn image_moments(points : Array[ContourPoint]) -> Moments {
+pub fn image_moments(points : Array[ContourPoint]) -> Moments raise @types.LoadError {
+  // 空数组返回零矩
+  if points.length() == 0 {
+    return Moments::{
+      m00: 0.0, m10: 0.0, m01: 0.0, m20: 0.0, m11: 0.0, m02: 0.0,
+      m30: 0.0, m21: 0.0, m12: 0.0, m03: 0.0,
+      mu20: 0.0, mu11: 0.0, mu02: 0.0, mu30: 0.0, mu21: 0.0, mu12: 0.0, mu03: 0.0,
+      nu20: 0.0, nu11: 0.0, nu02: 0.0,
+    }
+  }
+
   let mut m00 = 0.0
   let mut m10 = 0.0
   let mut m01 = 0.0
@@ -220,7 +244,12 @@ pub fn image_moments(points : Array[ContourPoint]) -> Moments {
 
 ///|
 /// 计算 Hu 矩不变量（7 个）。对平移、旋转、缩放不变。
-pub fn hu_moments(m : Moments) -> Array[Double] {
+pub fn hu_moments(m : Moments) -> Array[Double] raise @types.LoadError {
+  // 参数验证
+  if m.m00 == 0.0 {
+    raise @types.LoadError::DecodeFailed("hu_moments: m00不能为0（空轮廓）")
+  }
+
   let hu : Array[Double] = Array::make(7, 0.0)
   let n20 = m.nu20
   let n11 = m.nu11
@@ -255,11 +284,13 @@ pub fn hu_moments(m : Moments) -> Array[Double] {
 /// 最小外接圆。Welzl 算法简化版。
 pub fn min_enclosing_circle(
   points : Array[ContourPoint],
-) -> (ContourPoint, Float) {
-  let n = points.length()
-  if n == 0 {
+) -> (ContourPoint, Float) raise @types.LoadError {
+  // 空数组返回默认值
+  if points.length() == 0 {
     return (ContourPoint::{ x: 0, y: 0 }, 0.0F)
   }
+
+  let n = points.length()
   if n == 1 {
     return (points[0], 0.0F)
   }

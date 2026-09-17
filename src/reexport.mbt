@@ -1972,28 +1972,28 @@ pub let get_affine_transform : (Array[(Float, Float)], Array[(Float, Float)]) ->
 pub let get_rotation_matrix_2d : ((Float, Float), Float, Float) -> @transform.AffineMatrix = @transform.get_rotation_matrix_2d
 
 ///|
-pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] = @edge.convex_hull
+pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] raise @types.LoadError = @edge.convex_hull
 
 ///|
 pub fn approx_poly_dp(
   points : Array[@edge.ContourPoint],
   epsilon : Float,
   closed? : Bool = true,
-) -> Array[@edge.ContourPoint] {
+) -> Array[@edge.ContourPoint] raise @types.LoadError {
   @edge.approx_poly_dp(points, epsilon, closed~)
 }
 
 ///|
-pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments = @edge.image_moments
+pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments raise @types.LoadError = @edge.image_moments
 
 ///|
-pub let hu_moments : (@edge.Moments) -> Array[Double] = @edge.hu_moments
+pub let hu_moments : (@edge.Moments) -> Array[Double] raise @types.LoadError = @edge.hu_moments
 
 ///|
 pub let min_enclosing_circle : (Array[@edge.ContourPoint]) -> (
   @edge.ContourPoint,
   Float,
-) = @edge.min_enclosing_circle
+) raise @types.LoadError = @edge.min_enclosing_circle
 
 ///|
 pub fn hough_circles(
