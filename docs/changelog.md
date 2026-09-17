@@ -499,3 +499,14 @@
 - 11种知识蒸馏类型（响应式/特征式/关系式/注意力迁移/FitNet/RKD/PKT/CRD/DML/在线蒸馏）
 - 7种低秩分解类型（SVD/CP分解/Tucker分解/张量链/规范多变量/分层Tucker）
 - 模型量化、模型剪枝、知识蒸馏、低秩分解、模型压缩
+
+## v84.0.0 - 生产级工具框架
+- 新增 production_utils 模块，提供统一的生产级工具函数
+- 图像验证：validate_image/validate_image_or_raise/validate_channels
+- 参数验证：validate_range/validate_int_range/validate_range_or_raise
+- 安全工具：clamp_pixel_value/clamp_pixel_value_double/is_valid_index/is_valid_2d_index
+- 性能监控：PerformanceTimer/create_performance_timer
+- 内存管理：MemoryUsageStats/create_memory_stats
+- 错误处理：ProductionErrorCode/ProductionError/create_production_error
+- 重试机制：RetryConfig/create_default_retry_config/calculate_retry_delay
+- 报告生成：validation_result_to_string/production_error_to_string
