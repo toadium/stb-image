@@ -2,7 +2,21 @@
 
 ///|
 /// 均值哈希（aHash）。将图像缩放至 8×8 灰度，与均值比较生成 64 位哈希。
-pub fn ahash(img : @types.Image) -> Array[Int] {
+pub fn ahash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ahash: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ahash: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ahash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   // 缩放到 8x8 灰度
   let small = resize_to_gray_8x8(img)
   let mut sum = 0
@@ -19,7 +33,21 @@ pub fn ahash(img : @types.Image) -> Array[Int] {
 
 ///|
 /// 差值哈希（dHash）。将图像缩放至 9×8 灰度，比较水平相邻像素差。
-pub fn dhash(img : @types.Image) -> Array[Int] {
+pub fn dhash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("dhash: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("dhash: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "dhash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let small = resize_to_gray_9x8(img)
   let hash : Array[Int] = Array::make(64, 0)
   for row in 0..<8 {
@@ -37,7 +65,21 @@ pub fn dhash(img : @types.Image) -> Array[Int] {
 ///|
 /// 感知哈希（pHash 简化版）。将图像缩放至 8×8 灰度，用 DCT 近似：取每行均值与全局均值比较。
 /// 完整 pHash 需 2D DCT，此处用简化版本（行列均值差分），足以满足去重需求。
-pub fn phash(img : @types.Image) -> Array[Int] {
+pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("phash: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("phash: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "phash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let small = resize_to_gray_8x8(img)
   // 简化 DCT：计算行均值和列均值
   let row_means : Array[Int] = Array::make(8, 0)
@@ -79,8 +121,19 @@ pub fn phash(img : @types.Image) -> Array[Int] {
 
 ///|
 /// 汉明距离。计算两个哈希的差异位数。
-pub fn hamming_distance(h1 : Array[Int], h2 : Array[Int]) -> Int {
-  let n = if h1.length() < h2.length() { h1.length() } else { h2.length() }
+pub fn hamming_distance(h1 : Array[Int], h2 : Array[Int]) -> Int raise @types.LoadError {
+  // 参数验证
+  if h1.length() == 0 {
+    raise @types.LoadError::DecodeFailed("hamming_distance: h1数组不能为空")
+  }
+  if h2.length() == 0 {
+    raise @types.LoadError::DecodeFailed("hamming_distance: h2数组不能为空")
+  }
+  if h1.length() != h2.length() {
+    raise @types.LoadError::DecodeFailed("hamming_distance: h1和h2长度必须相同")
+  }
+
+  let n = h1.length()
   let mut dist = 0
   for i in 0..<n {
     if h1[i] != h2[i] {

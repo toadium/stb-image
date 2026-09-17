@@ -48,21 +48,21 @@ fn imgf_to_img8_iq(img : @types.ImageF) -> @types.Image {
 
 ///|
 /// 16-bit 平均哈希。
-pub fn ahash_16(img : @types.Image16) -> Array[Int] {
+pub fn ahash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
   let img8 = img16_to_img8_iq(img)
   ahash(img8)
 }
 
 ///|
 /// 16-bit 差异哈希。
-pub fn dhash_16(img : @types.Image16) -> Array[Int] {
+pub fn dhash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
   let img8 = img16_to_img8_iq(img)
   dhash(img8)
 }
 
 ///|
 /// 16-bit 感知哈希。
-pub fn phash_16(img : @types.Image16) -> Array[Int] {
+pub fn phash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
   let img8 = img16_to_img8_iq(img)
   phash(img8)
 }
@@ -71,21 +71,21 @@ pub fn phash_16(img : @types.Image16) -> Array[Int] {
 
 ///|
 /// float 平均哈希。
-pub fn ahash_f(img : @types.ImageF) -> Array[Int] {
+pub fn ahash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
   let img8 = imgf_to_img8_iq(img)
   ahash(img8)
 }
 
 ///|
 /// float 差异哈希。
-pub fn dhash_f(img : @types.ImageF) -> Array[Int] {
+pub fn dhash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
   let img8 = imgf_to_img8_iq(img)
   dhash(img8)
 }
 
 ///|
 /// float 感知哈希。
-pub fn phash_f(img : @types.ImageF) -> Array[Int] {
+pub fn phash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
   let img8 = imgf_to_img8_iq(img)
   phash(img8)
 }
@@ -94,7 +94,7 @@ pub fn phash_f(img : @types.ImageF) -> Array[Int] {
 
 ///|
 /// 16-bit 均方误差。
-pub fn mse_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
+pub fn mse_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   mse(img1_8, img2_8)
@@ -102,7 +102,7 @@ pub fn mse_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
 
 ///|
 /// 16-bit 峰值信噪比。
-pub fn psnr_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
+pub fn psnr_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   psnr(img1_8, img2_8)
@@ -110,7 +110,7 @@ pub fn psnr_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
 
 ///|
 /// 16-bit 结构相似性。
-pub fn ssim_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
+pub fn ssim_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   ssim(img1_8, img2_8)
@@ -120,7 +120,7 @@ pub fn ssim_16(img1 : @types.Image16, img2 : @types.Image16) -> Double {
 
 ///|
 /// float 均方误差。
-pub fn mse_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double {
+pub fn mse_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   mse(img1_8, img2_8)
@@ -128,7 +128,7 @@ pub fn mse_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double {
 
 ///|
 /// float 峰值信噪比。
-pub fn psnr_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double {
+pub fn psnr_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   psnr(img1_8, img2_8)
@@ -136,7 +136,7 @@ pub fn psnr_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double {
 
 ///|
 /// float 结构相似性。
-pub fn ssim_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double {
+pub fn ssim_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   ssim(img1_8, img2_8)

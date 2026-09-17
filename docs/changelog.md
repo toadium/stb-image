@@ -699,3 +699,12 @@
   - histogram_matching: 图像验证 + 参考图像验证
 - 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
 - 同步更新 bench.mbt 中的histogram函数调用（添加catch处理）
+
+## v104.0.0 - 生产级增强：feature模块 图像哈希与质量评估（7个函数）
+- 增强 feature/image_hash.mbt：ahash/dhash/phash/hamming_distance函数补充完整的生产级验证
+  - ahash/dhash/phash: 图像验证（尺寸/通道/数据大小）
+  - hamming_distance: h1/h2非空验证 + 长度相同验证
+- 增强 feature/image_quality.mbt：mse/psnr/ssim函数补充完整的生产级验证
+  - 图像验证 + 两幅图像尺寸/通道相同验证 + 数据大小验证
+- 同步更新 hash_quality_integral_16f.mbt 中的16/f版本函数（添加raise @types.LoadError）
+- 同步更新 reexport.mbt 中的14个函数类型定义（添加raise @types.LoadError）
