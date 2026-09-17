@@ -4045,7 +4045,7 @@ pub fn dehaze_default_config() -> @enhance.DehazeConfig {
 pub fn dark_channel(
   img : @types.Image,
   patch_size? : Int = 15,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.dark_channel(img, patch_size~)
 }
 
@@ -4054,7 +4054,7 @@ pub fn estimate_atmospheric_light(
   img : @types.Image,
   dark : @types.Image,
   top_percent? : Int = 1000,
-) -> Array[Int] {
+) -> Array[Int] raise @types.LoadError {
   @enhance.estimate_atmospheric_light(img, dark, top_percent~)
 }
 
@@ -4064,7 +4064,7 @@ pub fn estimate_transmission(
   atmospheric : Array[Int],
   omega? : Double = 0.95,
   patch_size? : Int = 15,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.estimate_transmission(img, atmospheric, omega~, patch_size~)
 }
 
@@ -4074,7 +4074,7 @@ pub fn guided_filter_image(
   guide : @types.Image,
   radius? : Int = 20,
   eps? : Double = 0.0001,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.guided_filter_image(input, guide, radius~, eps~)
 }
 
@@ -4084,7 +4084,7 @@ pub fn dehaze_recover(
   transmission : @types.Image,
   atmospheric : Array[Int],
   t_min? : Double = 0.1,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.dehaze_recover(img, transmission, atmospheric, t_min~)
 }
 
@@ -4092,7 +4092,7 @@ pub fn dehaze_recover(
 pub fn dehaze_advanced(
   img : @types.Image,
   config? : @enhance.DehazeConfig,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   match config {
     Some(c) => @enhance.dehaze_advanced(img, config=c)
     None => @enhance.dehaze_advanced(img)

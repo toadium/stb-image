@@ -519,3 +519,13 @@
   - denoise: 图像验证，通用接口错误处理
 - 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
 - 所有函数返回类型添加 raise @types.LoadError
+
+## v86.0.0 - 生产级增强：enhance模块 dehaze
+- 增强 enhance/dehaze.mbt：为所有public函数添加生产级输入验证和错误处理
+  - dark_channel: 图像尺寸/通道数/数据大小验证，patch_size必须为正奇数
+  - estimate_atmospheric_light: 图像验证，暗通道尺寸/通道验证，top_percent验证
+  - estimate_transmission: 图像验证，atmospheric数组非空，omega/patch_size范围验证
+  - guided_filter_image: 输入/引导图像尺寸验证，radius/eps参数验证
+  - dehaze_recover: 图像验证，透射率尺寸/通道验证，atmospheric/t_min验证
+  - dehaze_advanced: 完整流水线验证，所有配置参数验证
+- 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
