@@ -623,17 +623,17 @@ pub fn draw_polygon_f(
 pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_over
 
 ///|
-pub let edge_detect_laplacian : (@types.Image) -> @types.Image = @edge.edge_detect_laplacian
+pub let edge_detect_laplacian : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_laplacian
 pub let edge_detect_laplacian_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_laplacian_16
 pub let edge_detect_laplacian_f : (@types.ImageF) -> @types.ImageF = @edge.edge_detect_laplacian_f
 
 ///|
-pub let edge_detect_prewitt : (@types.Image) -> @types.Image = @edge.edge_detect_prewitt
+pub let edge_detect_prewitt : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_prewitt
 pub let edge_detect_prewitt_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_prewitt_16
 pub let edge_detect_prewitt_f : (@types.ImageF) -> @types.ImageF = @edge.edge_detect_prewitt_f
 
 ///|
-pub let edge_detect_sobel : (@types.Image) -> @types.Image = @edge.edge_detect_sobel
+pub let edge_detect_sobel : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_sobel
 
 ///|
 pub let edge_detect_sobel_16 : (@types.Image16) -> @types.Image16 = @edge.edge_detect_sobel_16

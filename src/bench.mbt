@@ -83,7 +83,7 @@ pub fn bench_run() -> Unit {
 
   // === 边缘检测 ===
   b.bench(name="edge_detect_sobel 128x128", () => {
-    ignore(@edge.edge_detect_sobel(img128))
+    ignore(@edge.edge_detect_sobel(img128) catch { _ => empty })
   })
   b.bench(name="canny_edge 128x128", () => {
     ignore(@edge.canny_edge(img128) catch { _ => empty })
@@ -185,7 +185,7 @@ pub fn bench_run() -> Unit {
     ignore(@edge.find_contours(img128) catch { _ => [] })
   })
   b.bench(name="edge_detect_laplacian 128x128", () => {
-    ignore(@edge.edge_detect_laplacian(img128))
+    ignore(@edge.edge_detect_laplacian(img128) catch { _ => empty })
   })
   b.bench(name="median_blur 128x128", () => {
     ignore(@filter.median_blur(img128, 5) catch { _ => empty })

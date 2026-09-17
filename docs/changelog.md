@@ -614,3 +614,11 @@
   - inpaint_fast: 图像验证，掩码验证，radius参数验证
 - 两个函数原本已有部分验证（掩码尺寸/通道），本次补充完整验证，达到生产级标准
 - **filter模块生产级增强全部完成**：7个源文件，33个public函数全部增强
+
+## v96.0.0 - 生产级增强：edge模块 edge_detect（3个函数）
+- 增强 edge/edge_detect.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - edge_detect_sobel: 图像验证（尺寸>0、通道数1-4、数据大小匹配），返回类型从Image改为Image raise @types.LoadError
+  - edge_detect_laplacian: 图像验证，返回类型从Image改为Image raise @types.LoadError
+  - edge_detect_prewitt: 图像验证，返回类型从Image改为Image raise @types.LoadError
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+- 同步更新 bench.mbt 中的2个函数调用（添加catch处理）
