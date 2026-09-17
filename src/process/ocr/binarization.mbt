@@ -57,9 +57,23 @@ pub fn niblack_threshold(
   window_size? : Int = 15,
   k? : Double = -0.2,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("niblack_threshold: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("niblack_threshold: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "niblack_threshold: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if window_size <= 0 || window_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("niblack_threshold: window_size必须为正奇数")
+  }
+
   let w = img.width
   let h = img.height
   let radius = window_size / 2
@@ -92,9 +106,26 @@ pub fn sauvola_threshold(
   k? : Double = 0.5,
   r? : Double = 128.0,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sauvola_threshold: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("sauvola_threshold: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sauvola_threshold: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if window_size <= 0 || window_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("sauvola_threshold: window_size必须为正奇数")
+  }
+  if r <= 0.0 {
+    raise @types.LoadError::DecodeFailed("sauvola_threshold: r必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let radius = window_size / 2
@@ -123,9 +154,23 @@ pub fn adaptive_threshold_ocr(
   block_size? : Int = 15,
   c? : Int = 10,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adaptive_threshold_ocr: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("adaptive_threshold_ocr: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adaptive_threshold_ocr: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if block_size <= 0 || block_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("adaptive_threshold_ocr: block_size必须为正奇数")
+  }
+
   let w = img.width
   let h = img.height
   let radius = block_size / 2
@@ -150,9 +195,20 @@ pub fn adaptive_threshold_ocr(
 ///|
 /// Otsu 全局阈值二值化（自动计算最佳阈值）
 pub fn otsu_threshold(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("otsu_threshold: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("otsu_threshold: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "otsu_threshold: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let n = w * h

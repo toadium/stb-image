@@ -794,3 +794,8 @@
   - update_object_tracking验证：跟踪目标列表非空、max_age>0
   - calculate_detection_metrics验证：预测框/真实框列表非空、iou_threshold在0-1之间
 - 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）
+
+## v115.0.0 - 生产级增强：ocr模块 binarization（4个函数）
+- 增强 ocr/binarization.mbt：niblack_threshold/sauvola_threshold/adaptive_threshold_ocr/otsu_threshold函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
+  - 参数验证：window_size/block_size正奇数、r>0
