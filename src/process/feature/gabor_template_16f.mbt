@@ -94,6 +94,26 @@ pub fn gabor_filter_16(
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 || ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_16: ksize必须为正奇数")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gabor_filter_16: sigma必须大于0")
+  }
+
   let img8 = img16_to_img8_gabor(img)
   let result8 = gabor_filter(img8, ksize, sigma, theta, lambda~, gamma~, phi~)
   img8_to_img16_gabor(result8)
@@ -112,6 +132,26 @@ pub fn gabor_filter_f(
   gamma? : Float = 0.5F,
   phi? : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 || ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_f: ksize必须为正奇数")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gabor_filter_f: sigma必须大于0")
+  }
+
   let img8 = imgf_to_img8_gabor(img)
   let result8 = gabor_filter(img8, ksize, sigma, theta, lambda~, gamma~, phi~)
   img8_to_imgf_gabor(result8)
@@ -129,6 +169,29 @@ pub fn gabor_filter_bank_16(
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 || ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_16: ksize必须为正奇数")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_16: sigma必须大于0")
+  }
+  if num_orientations <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_16: num_orientations必须大于0")
+  }
+
   let img8 = img16_to_img8_gabor(img)
   let result8 = gabor_filter_bank(img8, ksize, sigma, num_orientations~, lambda~, gamma~)
   img8_to_img16_gabor(result8)
@@ -146,6 +209,29 @@ pub fn gabor_filter_bank_f(
   lambda? : Float = 10.0F,
   gamma? : Float = 0.5F,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 || ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_f: ksize必须为正奇数")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_f: sigma必须大于0")
+  }
+  if num_orientations <= 0 {
+    raise @types.LoadError::DecodeFailed("gabor_filter_bank_f: num_orientations必须大于0")
+  }
+
   let img8 = imgf_to_img8_gabor(img)
   let result8 = gabor_filter_bank(img8, ksize, sigma, num_orientations~, lambda~, gamma~)
   img8_to_imgf_gabor(result8)
@@ -160,6 +246,35 @@ pub fn template_match_16(
   template : @types.Image16,
   match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if template.width <= 0 || template.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_16: 模板尺寸必须大于0")
+  }
+  if template.channels < 1 || template.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_16: 模板通道数必须在1-4之间")
+  }
+  let tpl_expected_size = template.width * template.height * template.channels * 2
+  if template.data.length() != tpl_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_16: 模板数据大小不匹配，期望 " + tpl_expected_size.to_string() + "，实际 " + template.data.length().to_string(),
+    )
+  }
+  if template.width > img.width || template.height > img.height {
+    raise @types.LoadError::DecodeFailed("template_match_16: 模板尺寸不能大于图像尺寸")
+  }
+
   let img8 = img16_to_img8_gabor(img)
   let tpl8 = img16_to_img8_gabor(template)
   template_match(img8, tpl8, match_method~)
@@ -174,6 +289,35 @@ pub fn template_match_f(
   template : @types.ImageF,
   match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if template.width <= 0 || template.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_f: 模板尺寸必须大于0")
+  }
+  if template.channels < 1 || template.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_f: 模板通道数必须在1-4之间")
+  }
+  let tpl_expected_size = template.width * template.height * template.channels * 4
+  if template.data.length() != tpl_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_f: 模板数据大小不匹配，期望 " + tpl_expected_size.to_string() + "，实际 " + template.data.length().to_string(),
+    )
+  }
+  if template.width > img.width || template.height > img.height {
+    raise @types.LoadError::DecodeFailed("template_match_f: 模板尺寸不能大于图像尺寸")
+  }
+
   let img8 = imgf_to_img8_gabor(img)
   let tpl8 = imgf_to_img8_gabor(template)
   template_match(img8, tpl8, match_method~)
@@ -188,6 +332,35 @@ pub fn template_match_best_16(
   template : @types.Image16,
   match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> TemplateMatchResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_best_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_best_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_best_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if template.width <= 0 || template.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_best_16: 模板尺寸必须大于0")
+  }
+  if template.channels < 1 || template.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_best_16: 模板通道数必须在1-4之间")
+  }
+  let tpl_expected_size = template.width * template.height * template.channels * 2
+  if template.data.length() != tpl_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_best_16: 模板数据大小不匹配，期望 " + tpl_expected_size.to_string() + "，实际 " + template.data.length().to_string(),
+    )
+  }
+  if template.width > img.width || template.height > img.height {
+    raise @types.LoadError::DecodeFailed("template_match_best_16: 模板尺寸不能大于图像尺寸")
+  }
+
   let img8 = img16_to_img8_gabor(img)
   let tpl8 = img16_to_img8_gabor(template)
   template_match_best(img8, tpl8, match_method~)
@@ -202,6 +375,35 @@ pub fn template_match_best_f(
   template : @types.ImageF,
   match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> TemplateMatchResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_best_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_best_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_best_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if template.width <= 0 || template.height <= 0 {
+    raise @types.LoadError::DecodeFailed("template_match_best_f: 模板尺寸必须大于0")
+  }
+  if template.channels < 1 || template.channels > 4 {
+    raise @types.LoadError::DecodeFailed("template_match_best_f: 模板通道数必须在1-4之间")
+  }
+  let tpl_expected_size = template.width * template.height * template.channels * 4
+  if template.data.length() != tpl_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "template_match_best_f: 模板数据大小不匹配，期望 " + tpl_expected_size.to_string() + "，实际 " + template.data.length().to_string(),
+    )
+  }
+  if template.width > img.width || template.height > img.height {
+    raise @types.LoadError::DecodeFailed("template_match_best_f: 模板尺寸不能大于图像尺寸")
+  }
+
   let img8 = imgf_to_img8_gabor(img)
   let tpl8 = imgf_to_img8_gabor(template)
   template_match_best(img8, tpl8, match_method~)

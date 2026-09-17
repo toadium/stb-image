@@ -741,3 +741,11 @@
   - 16位图像验证：数据大小=w*h*ch*2
   - 浮点图像验证：数据大小=w*h*ch*4
   - 图像尺寸/通道验证
+
+## v109.0.0 - 生产级增强：feature模块 Gabor+模板匹配 16/f版本（8个函数）
+- 增强 feature/gabor_template_16f.mbt：gabor_filter_16/gabor_filter_f/gabor_filter_bank_16/gabor_filter_bank_f/template_match_16/template_match_f/template_match_best_16/template_match_best_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证
+  - Gabor参数验证：ksize正奇数、sigma>0、num_orientations>0
+  - 模板匹配验证：模板尺寸/通道/数据大小、模板尺寸不大于图像尺寸
