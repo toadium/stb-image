@@ -806,3 +806,9 @@
   - rotate_document支持多通道（1-4）
 - 增强 ocr/handwriting_ocr.mbt：correct_slant函数补充完整的生产级验证（因rotate_document添加raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v117.0.0 - 生产级增强：ocr模块 connected_components（5个函数）
+- 增强 ocr/connected_components.mbt：connected_components_analysis/filter_components_by_area/filter_components_by_aspect_ratio/filter_components_by_position/merge_adjacent_components函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道二值图、数据大小匹配
+  - 参数验证：connectivity为4或8、面积范围、宽高比范围、矩形尺寸、max_gap非负
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

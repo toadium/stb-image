@@ -30,9 +30,23 @@ pub fn connected_components_analysis(
   img : @types.Image,
   connectivity? : Int = 8,
 ) -> OcrConnectedComponentsResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("connected_components_analysis: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("connected_components_analysis: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "connected_components_analysis: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if connectivity != 4 && connectivity != 8 {
+    raise @types.LoadError::DecodeFailed("connected_components_analysis: connectivity必须为4或8")
+  }
+
   let w = img.width
   let h = img.height
   let n = w * h
@@ -179,7 +193,18 @@ pub fn filter_components_by_area(
   result : OcrConnectedComponentsResult,
   min_area : Int,
   max_area : Int,
-) -> Array[OcrConnectedComponent] {
+) -> Array[OcrConnectedComponent] raise @types.LoadError {
+  // 输入验证
+  if result.components.length() == 0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_area: 连通域列表不能为空")
+  }
+  if min_area < 0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_area: min_area不能为负数")
+  }
+  if max_area < min_area {
+    raise @types.LoadError::DecodeFailed("filter_components_by_area: max_area不能小于min_area")
+  }
+
   let filtered : Array[OcrConnectedComponent] = []
   for comp in result.components {
     if comp.pixel_count >= min_area && comp.pixel_count <= max_area {
@@ -195,7 +220,18 @@ pub fn filter_components_by_aspect_ratio(
   result : OcrConnectedComponentsResult,
   min_ratio : Double,
   max_ratio : Double,
-) -> Array[OcrConnectedComponent] {
+) -> Array[OcrConnectedComponent] raise @types.LoadError {
+  // 输入验证
+  if result.components.length() == 0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: 连通域列表不能为空")
+  }
+  if min_ratio < 0.0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: min_ratio不能为负数")
+  }
+  if max_ratio < min_ratio {
+    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: max_ratio不能小于min_ratio")
+  }
+
   let filtered : Array[OcrConnectedComponent] = []
   for comp in result.components {
     if comp.height > 0 {
@@ -216,7 +252,15 @@ pub fn filter_components_by_position(
   y : Int,
   width : Int,
   height : Int,
-) -> Array[OcrConnectedComponent] {
+) -> Array[OcrConnectedComponent] raise @types.LoadError {
+  // 输入验证
+  if result.components.length() == 0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_position: 连通域列表不能为空")
+  }
+  if width <= 0 || height <= 0 {
+    raise @types.LoadError::DecodeFailed("filter_components_by_position: 矩形尺寸必须大于0")
+  }
+
   let filtered : Array[OcrConnectedComponent] = []
   for comp in result.components {
     let cx = comp.x + comp.width / 2
@@ -233,10 +277,15 @@ pub fn filter_components_by_position(
 pub fn merge_adjacent_components(
   components : Array[OcrConnectedComponent],
   max_gap : Int,
-) -> Array[OcrConnectedComponent] {
+) -> Array[OcrConnectedComponent] raise @types.LoadError {
+  // 输入验证
   if components.length() == 0 {
-    return components
+    raise @types.LoadError::DecodeFailed("merge_adjacent_components: 连通域列表不能为空")
   }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("merge_adjacent_components: max_gap不能为负数")
+  }
+
   let merged : Array[OcrConnectedComponent] = []
   let mut current = components[0]
   for i in 1..<components.length() {

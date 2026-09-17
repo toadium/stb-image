@@ -2551,7 +2551,7 @@ pub fn filter_components_by_area(
   result : @ocr.OcrConnectedComponentsResult,
   min_area : Int,
   max_area : Int,
-) -> Array[@ocr.OcrConnectedComponent] {
+) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError {
   @ocr.filter_components_by_area(result, min_area, max_area)
 }
 
@@ -2560,7 +2560,7 @@ pub fn filter_components_by_aspect_ratio(
   result : @ocr.OcrConnectedComponentsResult,
   min_ratio : Double,
   max_ratio : Double,
-) -> Array[@ocr.OcrConnectedComponent] {
+) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError {
   @ocr.filter_components_by_aspect_ratio(result, min_ratio, max_ratio)
 }
 
@@ -2568,7 +2568,7 @@ pub fn filter_components_by_aspect_ratio(
 pub fn merge_adjacent_components(
   components : Array[@ocr.OcrConnectedComponent],
   max_gap : Int,
-) -> Array[@ocr.OcrConnectedComponent] {
+) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError {
   @ocr.merge_adjacent_components(components, max_gap)
 }
 
