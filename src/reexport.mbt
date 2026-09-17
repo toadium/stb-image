@@ -310,10 +310,10 @@ pub let bilateral_filter_fast_f : (@types.ImageF, Int, Float, Float, Int) -> @ty
 pub let box_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.box_blur
 
 ///|
-pub let box_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.box_blur_16
+pub let box_blur_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @filter.box_blur_16
 
 ///|
-pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF = @filter.box_blur_f
+pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @filter.box_blur_f
 
 ///|
 pub let build_gaussian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
@@ -1147,19 +1147,19 @@ pub fn gabor_kernel(
 pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image raise @types.LoadError = @filter.gaussian_blur
 
 ///|
-pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 = @filter.gaussian_blur_16
+pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 raise @types.LoadError = @filter.gaussian_blur_16
 
 ///|
-pub let gaussian_blur_f : (@types.ImageF, Int, Float) -> @types.ImageF = @filter.gaussian_blur_f
+pub let gaussian_blur_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @filter.gaussian_blur_f
 
 ///|
 pub let median_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.median_blur
 
 ///|
-pub let median_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.median_blur_16
+pub let median_blur_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @filter.median_blur_16
 
 ///|
-pub let median_blur_f : (@types.ImageF, Int) -> @types.ImageF = @filter.median_blur_f
+pub let median_blur_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @filter.median_blur_f
 
 ///|
 pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_transform_1d
@@ -1692,8 +1692,8 @@ pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image = @segme
 
 ///|
 pub let sharpen : (@types.Image, Float) -> @types.Image raise @types.LoadError = @filter.sharpen
-pub let sharpen_16 : (@types.Image16, Float) -> @types.Image16 = @filter.sharpen_16
-pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF = @filter.sharpen_f
+pub let sharpen_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @filter.sharpen_16
+pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @filter.sharpen_f
 
 ///|
 pub fn ssr(

@@ -573,3 +573,15 @@
   - nlm_denoise_fast: 补充图像尺寸验证、数据大小验证（原本已有完整参数验证）
 - 修复 nlm_denoise_test.mbt 中的测试代码，处理0x0图像的raise错误
 - 两个函数原本已有部分参数验证，本次补充图像验证，达到生产级标准
+
+## v92.0.0 - 生产级增强：filter模块 filter_16f（8个函数）
+- 增强 filter/filter_16f.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - box_blur_16: 16位图像验证（数据大小=w*h*ch*2），radius参数验证
+  - box_blur_f: 浮点图像验证（数据大小=w*h*ch*4），radius参数验证
+  - gaussian_blur_16: 16位图像验证，radius/sigma参数验证
+  - gaussian_blur_f: 浮点图像验证，radius/sigma参数验证
+  - median_blur_16: 16位图像验证，ksize参数验证（>0、奇数）
+  - median_blur_f: 浮点图像验证，ksize参数验证（>0、奇数）
+  - sharpen_16: 16位图像验证，amount参数验证（非负）
+  - sharpen_f: 浮点图像验证，amount参数验证（非负）
+- 同步更新 reexport.mbt 中的8个函数类型定义，支持raise错误传播

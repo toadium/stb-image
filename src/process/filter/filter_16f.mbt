@@ -45,7 +45,23 @@ fn clamp_coord_f(v : Int, max : Int) -> Int {
 ///|
 /// 16-bit 盒模糊。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur_16(img : @types.Image16, radius : Int) -> @types.Image16 {
+pub fn box_blur_16(img : @types.Image16, radius : Int) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("box_blur_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("box_blur_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("box_blur_16: radius不能为负")
+  }
   if radius <= 0 {
     return img
   }
@@ -113,7 +129,23 @@ pub fn box_blur_16(img : @types.Image16, radius : Int) -> @types.Image16 {
 ///|
 /// float 盒模糊。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur_f(img : @types.ImageF, radius : Int) -> @types.ImageF {
+pub fn box_blur_f(img : @types.ImageF, radius : Int) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("box_blur_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("box_blur_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("box_blur_f: radius不能为负")
+  }
   if radius <= 0 {
     return img
   }
@@ -187,7 +219,26 @@ pub fn gaussian_blur_16(
   img : @types.Image16,
   radius : Int,
   sigma : Float,
-) -> @types.Image16 {
+) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_16: radius不能为负")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_16: sigma必须大于0")
+  }
   if radius <= 0 {
     return img
   }
@@ -311,7 +362,26 @@ pub fn gaussian_blur_f(
   img : @types.ImageF,
   radius : Int,
   sigma : Float,
-) -> @types.ImageF {
+) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_f: radius不能为负")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gaussian_blur_f: sigma必须大于0")
+  }
   if radius <= 0 {
     return img
   }
@@ -427,7 +497,26 @@ pub fn gaussian_blur_f(
 ///|
 /// 16-bit 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
 /// 仅滤波颜色通道，alpha 不变。
-pub fn median_blur_16(img : @types.Image16, ksize : Int) -> @types.Image16 {
+pub fn median_blur_16(img : @types.Image16, ksize : Int) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_blur_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_16: ksize必须大于0")
+  }
+  if ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_16: ksize必须为奇数")
+  }
   if ksize <= 1 {
     return img
   }
@@ -506,7 +595,26 @@ pub fn median_blur_16(img : @types.Image16, ksize : Int) -> @types.Image16 {
 ///|
 /// float 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
 /// 仅滤波颜色通道，alpha 不变。
-pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF {
+pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_blur_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_f: ksize必须大于0")
+  }
+  if ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("median_blur_f: ksize必须为奇数")
+  }
   if ksize <= 1 {
     return img
   }
@@ -565,7 +673,24 @@ pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF {
 
 ///|
 /// 16-bit 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
-pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 {
+pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sharpen_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sharpen_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sharpen_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if amount < 0.0F {
+    raise @types.LoadError::DecodeFailed("sharpen_16: amount不能为负")
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -629,7 +754,24 @@ pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 {
 
 ///|
 /// float 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
-pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF {
+pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sharpen_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sharpen_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sharpen_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if amount < 0.0F {
+    raise @types.LoadError::DecodeFailed("sharpen_f: amount不能为负")
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
