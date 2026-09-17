@@ -91,6 +91,26 @@ pub fn inpaint_16(
   mask : @types.Image16,
   iterations? : Int = 100,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_16: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if mask.width != img.width || mask.height != img.height {
+    raise @types.LoadError::DecodeFailed("inpaint_16: 掩码图像尺寸必须与原图一致")
+  }
+  if iterations <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_16: iterations必须大于0")
+  }
+
   let img8 = img16_to_img8_adv(img)
   let mask8 = img16_to_img8_adv(mask)
   let out8 = inpaint(img8, mask8, iterations~)
@@ -104,6 +124,26 @@ pub fn inpaint_fast_16(
   mask : @types.Image16,
   radius? : Int = 5,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_fast_16: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if mask.width != img.width || mask.height != img.height {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_16: 掩码图像尺寸必须与原图一致")
+  }
+  if radius <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_16: radius必须大于0")
+  }
+
   let img8 = img16_to_img8_adv(img)
   let mask8 = img16_to_img8_adv(mask)
   let out8 = inpaint_fast(img8, mask8, radius~)
@@ -119,6 +159,26 @@ pub fn inpaint_f(
   mask : @types.ImageF,
   iterations? : Int = 100,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_f: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if mask.width != img.width || mask.height != img.height {
+    raise @types.LoadError::DecodeFailed("inpaint_f: 掩码图像尺寸必须与原图一致")
+  }
+  if iterations <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_f: iterations必须大于0")
+  }
+
   let img8 = imgf_to_img8_adv(img)
   let mask8 = imgf_to_img8_adv(mask)
   let out8 = inpaint(img8, mask8, iterations~)
@@ -132,6 +192,26 @@ pub fn inpaint_fast_f(
   mask : @types.ImageF,
   radius? : Int = 5,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "inpaint_fast_f: 图像数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if mask.width != img.width || mask.height != img.height {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_f: 掩码图像尺寸必须与原图一致")
+  }
+  if radius <= 0 {
+    raise @types.LoadError::DecodeFailed("inpaint_fast_f: radius必须大于0")
+  }
+
   let img8 = imgf_to_img8_adv(img)
   let mask8 = imgf_to_img8_adv(mask)
   let out8 = inpaint_fast(img8, mask8, radius~)
@@ -148,6 +228,29 @@ pub fn nlm_denoise_16(
   search_size? : Int = 7,
   h? : Int = 10,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if patch_size < 1 || patch_size > 10 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_16: patch_size必须在1-10之间")
+  }
+  if search_size < 1 || search_size > 20 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_16: search_size必须在1-20之间")
+  }
+  if h < 1 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_16: h必须 >= 1")
+  }
+
   let img8 = img16_to_img8_adv(img)
   let out8 = nlm_denoise(img8, patch_size~, search_size~, h~)
   img8_to_img16_adv(out8)
@@ -162,6 +265,32 @@ pub fn nlm_denoise_fast_16(
   h? : Int = 10,
   step? : Int = 2,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise_fast_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if patch_size < 1 || patch_size > 10 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: patch_size必须在1-10之间")
+  }
+  if search_size < 1 || search_size > 20 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: search_size必须在1-20之间")
+  }
+  if h < 1 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: h必须 >= 1")
+  }
+  if step < 1 || step > 5 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_16: step必须在1-5之间")
+  }
+
   let img8 = img16_to_img8_adv(img)
   let out8 = nlm_denoise_fast(img8, patch_size~, search_size~, h~, step~)
   img8_to_img16_adv(out8)
@@ -177,6 +306,29 @@ pub fn nlm_denoise_f(
   search_size? : Int = 7,
   h? : Int = 10,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if patch_size < 1 || patch_size > 10 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_f: patch_size必须在1-10之间")
+  }
+  if search_size < 1 || search_size > 20 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_f: search_size必须在1-20之间")
+  }
+  if h < 1 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_f: h必须 >= 1")
+  }
+
   let img8 = imgf_to_img8_adv(img)
   let out8 = nlm_denoise(img8, patch_size~, search_size~, h~)
   img8_to_imgf_adv(out8)
@@ -191,6 +343,32 @@ pub fn nlm_denoise_fast_f(
   h? : Int = 10,
   step? : Int = 2,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise_fast_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if patch_size < 1 || patch_size > 10 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: patch_size必须在1-10之间")
+  }
+  if search_size < 1 || search_size > 20 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: search_size必须在1-20之间")
+  }
+  if h < 1 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: h必须 >= 1")
+  }
+  if step < 1 || step > 5 {
+    raise @types.LoadError::DecodeFailed("nlm_denoise_fast_f: step必须在1-5之间")
+  }
+
   let img8 = imgf_to_img8_adv(img)
   let out8 = nlm_denoise_fast(img8, patch_size~, search_size~, h~, step~)
   img8_to_imgf_adv(out8)

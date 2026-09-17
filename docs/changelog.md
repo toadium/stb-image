@@ -585,3 +585,15 @@
   - sharpen_16: 16位图像验证，amount参数验证（非负）
   - sharpen_f: 浮点图像验证，amount参数验证（非负）
 - 同步更新 reexport.mbt 中的8个函数类型定义，支持raise错误传播
+
+## v93.0.0 - 生产级增强：filter模块 advanced_16f（8个函数）
+- 增强 filter/advanced_16f.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - inpaint_16: 16位图像验证，掩码尺寸验证，iterations参数验证
+  - inpaint_fast_16: 16位图像验证，掩码尺寸验证，radius参数验证
+  - inpaint_f: 浮点图像验证，掩码尺寸验证，iterations参数验证
+  - inpaint_fast_f: 浮点图像验证，掩码尺寸验证，radius参数验证
+  - nlm_denoise_16: 16位图像验证，patch_size/search_size/h参数验证
+  - nlm_denoise_fast_16: 16位图像验证，完整参数验证（含step）
+  - nlm_denoise_f: 浮点图像验证，patch_size/search_size/h参数验证
+  - nlm_denoise_fast_f: 浮点图像验证，完整参数验证（含step）
+- 这些函数原本已是包装函数（16位/浮点→8位→处理→转换回），本次补充前置输入验证，达到生产级标准
