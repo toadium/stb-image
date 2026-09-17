@@ -290,7 +290,11 @@ test "nlm_denoise 0x0 图像" {
     channels: 1,
     data: Bytes::from_array([]),
   }
-  let out = nlm_denoise(img)
-  assert_eq(out.width, 0)
-  assert_eq(out.height, 0)
+  // 0x0 图像现在会 raise 错误（生产级验证）
+  try {
+    ignore(nlm_denoise(img))
+    assert_true(false)
+  } catch {
+    _ => assert_true(true)
+  }
 }

@@ -566,3 +566,10 @@
   - bilateral_filter: 补充图像尺寸验证、数据大小验证、sigma_space/sigma_color参数验证（>0）
   - bilateral_filter_fast: 补充完整图像验证、参数验证（radius>=1、sigma>0、downsample>=1）
 - 两个函数原本已有部分验证，本次补充完整，达到生产级标准
+
+## v91.0.0 - 生产级增强：filter模块 nlm_denoise（2个函数）
+- 增强 filter/nlm_denoise.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - nlm_denoise: 补充图像尺寸验证、数据大小验证（原本已有channels/patch_size/search_size/h参数验证）
+  - nlm_denoise_fast: 补充图像尺寸验证、数据大小验证（原本已有完整参数验证）
+- 修复 nlm_denoise_test.mbt 中的测试代码，处理0x0图像的raise错误
+- 两个函数原本已有部分参数验证，本次补充图像验证，达到生产级标准
