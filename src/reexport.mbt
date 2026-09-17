@@ -2610,7 +2610,7 @@ pub fn extract_text_line_image(
   img : @types.Image,
   line : @ocr.TextLineInfo,
   padding? : Int = 2,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.extract_text_line_image(img, line, padding~)
 }
 
@@ -2620,7 +2620,7 @@ pub fn extract_char_image(
   char : @ocr.CharSegment,
   target_size? : Int = 32,
   padding? : Int = 2,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.extract_char_image(img, char, target_size~, padding~)
 }
 

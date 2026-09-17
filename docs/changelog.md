@@ -812,3 +812,10 @@
   - 图像验证：尺寸>0、单通道二值图、数据大小匹配
   - 参数验证：connectivity为4或8、面积范围、宽高比范围、矩形尺寸、max_gap非负
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v118.0.0 - 生产级增强：ocr模块 projection_analysis（6个函数）
+- 增强 ocr/projection_analysis.mbt：horizontal_projection/vertical_projection/detect_text_lines_projection/segment_chars_projection/extract_text_line_image/extract_char_image函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道二值图、数据大小匹配
+  - 参数验证：min_height/min_width>0、max_gap非负、padding非负、target_size>0
+  - extract_text_line_image/extract_char_image支持多通道（1-4）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

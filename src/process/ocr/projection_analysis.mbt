@@ -16,9 +16,20 @@ pub(all) struct ProjectionResult {
 pub fn horizontal_projection(
   img : @types.Image,
 ) -> ProjectionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("horizontal_projection: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("horizontal_projection: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "horizontal_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -38,9 +49,20 @@ pub fn horizontal_projection(
 pub fn vertical_projection(
   img : @types.Image,
 ) -> ProjectionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("vertical_projection: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("vertical_projection: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "vertical_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -112,9 +134,26 @@ pub fn detect_text_lines_projection(
   min_height? : Int = 5,
   max_gap? : Int = 3,
 ) -> Array[TextLineInfo] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("detect_text_lines_projection: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_lines_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if min_height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: min_height必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: max_gap不能为负数")
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -237,9 +276,29 @@ pub fn segment_chars_projection(
   min_width? : Int = 2,
   max_gap? : Int = 2,
 ) -> Array[CharSegment] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("segment_chars_projection: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("segment_chars_projection: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if line.width <= 0 || line.height <= 0 {
+    raise @types.LoadError::DecodeFailed("segment_chars_projection: 文本行尺寸必须大于0")
+  }
+  if min_width <= 0 {
+    raise @types.LoadError::DecodeFailed("segment_chars_projection: min_width必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("segment_chars_projection: max_gap不能为负数")
+  }
+
   let w = img.width
   let data = img.data
   let y_start = line.y_start
@@ -338,7 +397,27 @@ pub fn extract_text_line_image(
   img : @types.Image,
   line : TextLineInfo,
   padding? : Int = 2,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_text_line_image: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("extract_text_line_image: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_line_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if line.width <= 0 || line.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_text_line_image: 文本行尺寸必须大于0")
+  }
+  if padding < 0 {
+    raise @types.LoadError::DecodeFailed("extract_text_line_image: padding不能为负数")
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -367,7 +446,30 @@ pub fn extract_char_image(
   char : CharSegment,
   target_size? : Int = 32,
   padding? : Int = 2,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_char_image: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("extract_char_image: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if char.width <= 0 || char.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_char_image: 字符尺寸必须大于0")
+  }
+  if target_size <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_char_image: target_size必须大于0")
+  }
+  if padding < 0 {
+    raise @types.LoadError::DecodeFailed("extract_char_image: padding不能为负数")
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
