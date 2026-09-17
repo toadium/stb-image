@@ -37,7 +37,23 @@ fn clamp_int(v : Int, lo : Int, hi : Int) -> Int {
 ///|
 /// 盒模糊（均值滤波）。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur(img : @types.Image, radius : Int) -> @types.Image {
+pub fn box_blur(img : @types.Image, radius : Int) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("box_blur: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("box_blur: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "box_blur: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("box_blur: radius不能为负")
+  }
   if radius <= 0 {
     return img
   }
@@ -106,7 +122,26 @@ pub fn gaussian_blur(
   img : @types.Image,
   radius : Int,
   sigma : Float,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 0 {
+    raise @types.LoadError::DecodeFailed("gaussian_blur: radius不能为负")
+  }
+  if sigma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("gaussian_blur: sigma必须大于0")
+  }
   if radius <= 0 {
     return img
   }
@@ -234,7 +269,24 @@ pub fn gaussian_blur(
 ///|
 /// 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
 /// 使用拉普拉斯锐化卷积核。仅处理颜色通道，alpha 不变。
-pub fn sharpen(img : @types.Image, amount : Float) -> @types.Image {
+pub fn sharpen(img : @types.Image, amount : Float) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("sharpen: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("sharpen: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "sharpen: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if amount < 0.0F {
+    raise @types.LoadError::DecodeFailed("sharpen: amount不能为负")
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -307,7 +359,26 @@ pub fn sharpen(img : @types.Image, amount : Float) -> @types.Image {
 ///|
 /// 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
 /// 对每个像素，取 ksize×ksize 邻域的中值。仅滤波颜色通道，alpha 不变。
-pub fn median_blur(img : @types.Image, ksize : Int) -> @types.Image {
+pub fn median_blur(img : @types.Image, ksize : Int) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_blur: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_blur: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if ksize <= 0 {
+    raise @types.LoadError::DecodeFailed("median_blur: ksize必须大于0")
+  }
+  if ksize % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("median_blur: ksize必须为奇数")
+  }
   if ksize <= 1 {
     return img
   }
@@ -390,8 +461,24 @@ pub fn convolve(
   bias : Float,
   scale : Float,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("convolve: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("convolve: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "convolve: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if kernel.length() != 9 {
-    raise @types.LoadError::DecodeFailed("kernel 必须为 9 个值（3x3）")
+    raise @types.LoadError::DecodeFailed("convolve: kernel 必须为 9 个值（3x3）")
+  }
+  if scale == 0.0F {
+    raise @types.LoadError::DecodeFailed("convolve: scale不能为0")
   }
   let ch = img.channels
   let w = img.width

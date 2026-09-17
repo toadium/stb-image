@@ -549,3 +549,14 @@
   - remove_watermark: 图像验证，区域坐标/尺寸验证，边界检查
 - 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
 - enhance模块生产级增强全部完成：denoise/dehaze/hdr/inpaint 4个文件，20个函数
+
+## v89.0.0 - 生产级增强：filter模块 filter.mbt（5个核心函数）
+- 增强 filter/filter.mbt：为所有public函数添加生产级输入验证和错误处理
+  - box_blur: 图像验证，radius参数验证（非负）
+  - gaussian_blur: 图像验证，radius参数验证，sigma参数验证（>0）
+  - sharpen: 图像验证，amount参数验证（非负）
+  - median_blur: 图像验证，ksize参数验证（>0、奇数）
+  - convolve: 图像验证，kernel尺寸验证，scale参数验证（非0）
+- 同步更新 reexport.mbt 中的函数类型定义，支持raise错误传播
+- 同步更新 bench.mbt 中的函数调用，添加catch处理raise
+- 修复 filter_examples_test.mbt 中的测试代码，处理raise错误

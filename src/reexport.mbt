@@ -307,7 +307,7 @@ pub let bilateral_filter_fast_16 : (@types.Image16, Int, Float, Float, Int) -> @
 pub let bilateral_filter_fast_f : (@types.ImageF, Int, Float, Float, Int) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_fast_f
 
 ///|
-pub let box_blur : (@types.Image, Int) -> @types.Image = @filter.box_blur
+pub let box_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.box_blur
 
 ///|
 pub let box_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.box_blur_16
@@ -1144,7 +1144,7 @@ pub fn gabor_kernel(
 }
 
 ///|
-pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image = @filter.gaussian_blur
+pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image raise @types.LoadError = @filter.gaussian_blur
 
 ///|
 pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 = @filter.gaussian_blur_16
@@ -1153,7 +1153,7 @@ pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 = @fil
 pub let gaussian_blur_f : (@types.ImageF, Int, Float) -> @types.ImageF = @filter.gaussian_blur_f
 
 ///|
-pub let median_blur : (@types.Image, Int) -> @types.Image = @filter.median_blur
+pub let median_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.median_blur
 
 ///|
 pub let median_blur_16 : (@types.Image16, Int) -> @types.Image16 = @filter.median_blur_16
@@ -1691,7 +1691,7 @@ pub let rotate_270_f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270_
 pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image = @segment.segment_to_color
 
 ///|
-pub let sharpen : (@types.Image, Float) -> @types.Image = @filter.sharpen
+pub let sharpen : (@types.Image, Float) -> @types.Image raise @types.LoadError = @filter.sharpen
 pub let sharpen_16 : (@types.Image16, Float) -> @types.Image16 = @filter.sharpen_16
 pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF = @filter.sharpen_f
 

@@ -69,10 +69,10 @@ pub fn bench_run() -> Unit {
 
   // === 滤波 ===
   b.bench(name="gaussian_blur 128x128", () => {
-    ignore(@filter.gaussian_blur(img128, 5, 1.0F))
+    ignore(@filter.gaussian_blur(img128, 5, 1.0F) catch { _ => empty })
   })
-  b.bench(name="box_blur 128x128", () => ignore(@filter.box_blur(img128, 5)))
-  b.bench(name="sharpen 128x128", () => ignore(@filter.sharpen(img128, 1.0F)))
+  b.bench(name="box_blur 128x128", () => ignore(@filter.box_blur(img128, 5) catch { _ => empty }))
+  b.bench(name="sharpen 128x128", () => ignore(@filter.sharpen(img128, 1.0F) catch { _ => empty }))
   b.bench(name="bilateral_filter 128x128", () => {
     ignore(
       @filter.bilateral_filter(img128, 3, 2.0F, 30.0F) catch {
@@ -188,7 +188,7 @@ pub fn bench_run() -> Unit {
     ignore(@edge.edge_detect_laplacian(img128))
   })
   b.bench(name="median_blur 128x128", () => {
-    ignore(@filter.median_blur(img128, 5))
+    ignore(@filter.median_blur(img128, 5) catch { _ => empty })
   })
   b.bench(name="flood_fill 128x128", () => {
     ignore(
