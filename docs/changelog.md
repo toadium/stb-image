@@ -783,3 +783,14 @@
   - nms验证：检测框列表非空、iou_threshold在0-1之间
   - draw_detections验证：图像尺寸/通道/数据大小
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v114.0.0 - 生产级增强：detection模块 yolo_detection（7个函数）
+- 增强 detection/yolo_detection.mbt：calculate_iou/non_max_suppression/refine_bounding_box/detect_objects_simple/initialize_object_tracking/update_object_tracking/calculate_detection_metrics函数补充完整的生产级验证
+  - calculate_iou验证：检测框尺寸>0
+  - non_max_suppression验证：检测框列表非空、iou_threshold在0-1之间、max_detections>0
+  - refine_bounding_box验证：检测框尺寸>0
+  - detect_objects_simple验证：图像尺寸/通道/数据大小、配置参数验证
+  - initialize_object_tracking验证：检测框列表非空
+  - update_object_tracking验证：跟踪目标列表非空、max_age>0
+  - calculate_detection_metrics验证：预测框/真实框列表非空、iou_threshold在0-1之间
+- 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）

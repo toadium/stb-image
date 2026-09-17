@@ -6608,7 +6608,7 @@ pub fn create_default_yolo_config() -> @detection.YoloConfig {
 pub fn calculate_iou(
   box1 : @detection.YoloBoundingBox,
   box2 : @detection.YoloBoundingBox,
-) -> Double {
+) -> Double raise @types.LoadError {
   @detection.calculate_iou(box1, box2)
 }
 
@@ -6617,7 +6617,7 @@ pub fn non_max_suppression(
   boxes : Array[@detection.YoloBoundingBox],
   iou_threshold : Double,
   max_detections : Int,
-) -> Array[@detection.YoloBoundingBox] {
+) -> Array[@detection.YoloBoundingBox] raise @types.LoadError {
   @detection.non_max_suppression(boxes, iou_threshold, max_detections)
 }
 
@@ -6625,14 +6625,14 @@ pub fn non_max_suppression(
 pub fn detect_objects_simple(
   img : @types.Image,
   config : @detection.YoloConfig,
-) -> @detection.YoloDetectionResult {
+) -> @detection.YoloDetectionResult raise @types.LoadError {
   @detection.detect_objects_simple(img, config)
 }
 
 ///|
 pub fn initialize_object_tracking(
   detection : @detection.YoloDetectionResult,
-) -> Array[@detection.YoloTrackedObject] {
+) -> Array[@detection.YoloTrackedObject] raise @types.LoadError {
   @detection.initialize_object_tracking(detection)
 }
 
@@ -6641,7 +6641,7 @@ pub fn update_object_tracking(
   tracked_objects : Array[@detection.YoloTrackedObject],
   detection : @detection.YoloDetectionResult,
   max_age : Int,
-) -> Array[@detection.YoloTrackedObject] {
+) -> Array[@detection.YoloTrackedObject] raise @types.LoadError {
   @detection.update_object_tracking(tracked_objects, detection, max_age)
 }
 
@@ -6650,7 +6650,7 @@ pub fn calculate_detection_metrics(
   predictions : Array[@detection.YoloBoundingBox],
   ground_truth : Array[@detection.YoloBoundingBox],
   iou_threshold : Double,
-) -> @detection.YoloDetectionMetrics {
+) -> @detection.YoloDetectionMetrics raise @types.LoadError {
   @detection.calculate_detection_metrics(predictions, ground_truth, iou_threshold)
 }
 

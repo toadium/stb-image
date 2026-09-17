@@ -132,7 +132,15 @@ pub fn create_default_yolo_config() -> YoloConfig {
 pub fn calculate_iou(
   box1 : YoloBoundingBox,
   box2 : YoloBoundingBox,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if box1.width <= 0.0 || box1.height <= 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_iou: 检测框1的尺寸必须大于0")
+  }
+  if box2.width <= 0.0 || box2.height <= 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_iou: 检测框2的尺寸必须大于0")
+  }
+
   let x1_min = box1.x - box1.width / 2.0
   let x1_max = box1.x + box1.width / 2.0
   let y1_min = box1.y - box1.height / 2.0
@@ -165,7 +173,18 @@ pub fn non_max_suppression(
   boxes : Array[YoloBoundingBox],
   iou_threshold : Double,
   max_detections : Int,
-) -> Array[YoloBoundingBox] {
+) -> Array[YoloBoundingBox] raise @types.LoadError {
+  // 输入验证
+  if boxes.length() == 0 {
+    raise @types.LoadError::DecodeFailed("non_max_suppression: 检测框列表不能为空")
+  }
+  if iou_threshold < 0.0 || iou_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("non_max_suppression: iou_threshold必须在0-1之间")
+  }
+  if max_detections <= 0 {
+    raise @types.LoadError::DecodeFailed("non_max_suppression: max_detections必须大于0")
+  }
+
   if boxes.length() == 0 {
     return []
   }
@@ -220,7 +239,12 @@ pub fn refine_bounding_box(
   dy : Double,
   dw : Double,
   dh : Double,
-) -> YoloBoundingBox {
+) -> YoloBoundingBox raise @types.LoadError {
+  // 输入验证
+  if box.width <= 0.0 || box.height <= 0.0 {
+    raise @types.LoadError::DecodeFailed("refine_bounding_box: 检测框尺寸必须大于0")
+  }
+
   let new_x = box.x + dx * box.width
   let new_y = box.y + dy * box.height
   let new_width = box.width * (dw* 1.0)
@@ -242,7 +266,36 @@ pub fn refine_bounding_box(
 pub fn detect_objects_simple(
   img : @types.Image,
   config : YoloConfig,
-) -> YoloDetectionResult {
+) -> YoloDetectionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if config.input_size <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: input_size必须大于0")
+  }
+  if config.num_classes <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: num_classes必须大于0")
+  }
+  if config.confidence_threshold < 0.0 || config.confidence_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: confidence_threshold必须在0-1之间")
+  }
+  if config.iou_threshold < 0.0 || config.iou_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: iou_threshold必须在0-1之间")
+  }
+  if config.max_detections <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_objects_simple: max_detections必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let boxes : Array[YoloBoundingBox] = []
@@ -306,7 +359,12 @@ pub fn detect_objects_simple(
 /// 目标跟踪初始化
 pub fn initialize_object_tracking(
   detection : YoloDetectionResult,
-) -> Array[YoloTrackedObject] {
+) -> Array[YoloTrackedObject] raise @types.LoadError {
+  // 输入验证
+  if detection.boxes.length() == 0 {
+    raise @types.LoadError::DecodeFailed("initialize_object_tracking: 检测框列表不能为空")
+  }
+
   let objects : Array[YoloTrackedObject] = []
   let colors = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255),
@@ -341,7 +399,15 @@ pub fn update_object_tracking(
   tracked_objects : Array[YoloTrackedObject],
   detection : YoloDetectionResult,
   max_age : Int,
-) -> Array[YoloTrackedObject] {
+) -> Array[YoloTrackedObject] raise @types.LoadError {
+  // 输入验证
+  if tracked_objects.length() == 0 {
+    raise @types.LoadError::DecodeFailed("update_object_tracking: 跟踪目标列表不能为空")
+  }
+  if max_age <= 0 {
+    raise @types.LoadError::DecodeFailed("update_object_tracking: max_age必须大于0")
+  }
+
   let updated : Array[YoloTrackedObject] = []
   let matched_detections : Array[Bool] = []
   for _ in 0..<detection.boxes.length() {
@@ -449,7 +515,18 @@ pub fn calculate_detection_metrics(
   predictions : Array[YoloBoundingBox],
   ground_truth : Array[YoloBoundingBox],
   iou_threshold : Double,
-) -> YoloDetectionMetrics {
+) -> YoloDetectionMetrics raise @types.LoadError {
+  // 输入验证
+  if predictions.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: 预测框列表不能为空")
+  }
+  if ground_truth.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: 真实框列表不能为空")
+  }
+  if iou_threshold < 0.0 || iou_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: iou_threshold必须在0-1之间")
+  }
+
   let mut tp = 0
   let mut fp = 0
   let matched_gt : Array[Bool] = []
