@@ -678,3 +678,14 @@
   - orb_detect: 图像验证（尺寸>=7x7）+ max_features/threshold参数验证
   - orb_match: query/train数组非空验证 + max_distance参数验证
 - 同步更新 reexport.mbt 中的orb_match函数类型定义（添加raise @types.LoadError）
+
+## v102.0.0 - 生产级增强：feature模块 纹理特征（7个函数）
+- 增强 feature/gabor.mbt：gabor_filter/gabor_filter_bank/gabor_kernel函数补充完整的生产级验证
+  - gabor_filter: 图像验证 + gamma参数验证
+  - gabor_filter_bank: 图像验证 + ksize/sigma/lambda/gamma参数验证
+  - gabor_kernel: lambda/gamma参数验证
+- 增强 feature/glcm.mbt：compute_glcm和glcm_features_multi_direction函数补充完整的生产级验证
+  - compute_glcm: 图像验证 + dx/dy参数验证（不能同时为0）
+  - glcm_features_multi_direction: 图像验证 + levels参数验证
+- 增强 feature/lbp.mbt：lbp和lbp_uniform函数补充完整的生产级验证
+  - 图像验证（尺寸/通道/数据大小）

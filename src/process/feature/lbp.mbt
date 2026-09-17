@@ -5,8 +5,18 @@
 /// 大于等于中心记 1，否则记 0，按顺时针顺序组成 8 位二进制数。
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn lbp(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -108,8 +118,18 @@ pub fn lbp(img : @types.Image) -> @types.Image raise @types.LoadError {
 /// 均匀模式指 0→1 和 1→0 跳变次数 <= 2 的模式，共有 58 种均匀模式。
 /// 非均匀模式统一映射为 59。输出范围 0~59。
 pub fn lbp_uniform(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_uniform: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp_uniform 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_uniform: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_uniform: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
