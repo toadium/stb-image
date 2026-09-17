@@ -9,8 +9,27 @@ pub fn hough_lines_16(
   theta_resolution? : Float = 1.0F,
   rho_resolution? : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("hough_lines_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("hough_lines_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if threshold <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines_16: threshold必须大于0")
+  }
+  if theta_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_16: theta_resolution必须大于0")
+  }
+  if rho_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_16: rho_resolution必须大于0")
   }
   let w = img.width
   let h = img.height
@@ -81,8 +100,27 @@ pub fn hough_lines_f(
   theta_resolution? : Float = 1.0F,
   rho_resolution? : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("hough_lines_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("hough_lines_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if threshold <= 0 {
+    raise @types.LoadError::DecodeFailed("hough_lines_f: threshold必须大于0")
+  }
+  if theta_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_f: theta_resolution必须大于0")
+  }
+  if rho_resolution <= 0.0F {
+    raise @types.LoadError::DecodeFailed("hough_lines_f: rho_resolution必须大于0")
   }
   let w = img.width
   let h = img.height

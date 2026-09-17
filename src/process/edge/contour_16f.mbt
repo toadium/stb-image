@@ -5,8 +5,18 @@
 pub fn find_contours_16(
   img : @types.Image16,
 ) -> Array[Contour] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("find_contours_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("find_contours_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("find_contours_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "find_contours_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let w = img.width
   let h = img.height
@@ -38,8 +48,18 @@ pub fn find_contours_16(
 pub fn find_contours_f(
   img : @types.ImageF,
 ) -> Array[Contour] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("find_contours_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("find_contours_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("find_contours_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "find_contours_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let w = img.width
   let h = img.height
@@ -131,8 +151,21 @@ pub fn draw_contours_16(
   contours : Array[Contour],
   color : Array[Int],
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("draw_contours_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("draw_contours_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("draw_contours_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "draw_contours_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if color.length() == 0 {
+    raise @types.LoadError::DecodeFailed("draw_contours_16: color数组不能为空")
   }
   let ch = img.channels
   let w = img.width
@@ -171,8 +204,21 @@ pub fn draw_contours_f(
   contours : Array[Contour],
   color : Array[Float],
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("draw_contours_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("draw_contours_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("draw_contours_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "draw_contours_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if color.length() == 0 {
+    raise @types.LoadError::DecodeFailed("draw_contours_f: color数组不能为空")
   }
   let ch = img.channels
   let w = img.width

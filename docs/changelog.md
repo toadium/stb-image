@@ -645,3 +645,12 @@
   - edge_detect_prewitt_f: 浮点图像验证
 - 所有函数返回类型从Image16/ImageF改为Image16/ImageF raise @types.LoadError
 - 同步更新 reexport.mbt 中的6个函数类型定义（添加raise @types.LoadError）
+
+## v99.0.0 - 生产级增强：edge模块 16f版本（10个函数）
+- 增强 edge/canny_16f.mbt：canny_edge_16和canny_edge_f函数补充图像尺寸验证和数据大小验证
+- 增强 edge/contour_16f.mbt：find_contours_16/find_contours_f/draw_contours_16/draw_contours_f函数补充完整的生产级验证
+  - 图像验证（尺寸/通道/数据大小）+ color数组非空验证
+- 增强 edge/hough_16f.mbt：hough_lines_16和hough_lines_f函数添加完整的生产级验证
+  - 图像验证 + threshold/theta_resolution/rho_resolution参数验证
+- 增强 edge/hough_circles_16f.mbt：hough_circles_16和hough_circles_f函数添加完整的生产级验证
+  - 图像验证 + dp/min_dist/param1/param2/min_radius/max_radius参数验证

@@ -83,8 +83,18 @@ pub fn canny_edge_16(
   low_threshold? : Int = 12800,
   high_threshold? : Int = 25600,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("canny_edge_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("canny_edge_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("canny_edge_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if low_threshold < 0 || low_threshold > 65535 {
     raise @types.LoadError::DecodeFailed("low_threshold 必须在 0..65535 之间")
@@ -221,8 +231,18 @@ pub fn canny_edge_f(
   low_threshold? : Float = 0.2F,
   high_threshold? : Float = 0.4F,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("canny_edge_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("canny_edge_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("canny_edge_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if low_threshold < 0.0F || low_threshold > 1.0F {
     raise @types.LoadError::DecodeFailed("low_threshold 必须在 0.0..1.0 之间")
