@@ -597,3 +597,13 @@
   - nlm_denoise_f: 浮点图像验证，patch_size/search_size/h参数验证
   - nlm_denoise_fast_f: 浮点图像验证，完整参数验证（含step）
 - 这些函数原本已是包装函数（16位/浮点→8位→处理→转换回），本次补充前置输入验证，达到生产级标准
+
+## v94.0.0 - 生产级增强：filter模块 convolve_bilateral_16f（6个函数）
+- 增强 filter/convolve_bilateral_16f.mbt：为所有public函数添加完整的生产级输入验证和错误处理
+  - convolve_16: 16位图像验证，kernel尺寸验证（9个值），scale参数验证（非0）
+  - convolve_f: 浮点图像验证，kernel尺寸验证，scale参数验证
+  - bilateral_filter_16: 16位图像验证（channels=1/3/4），radius/sigma参数验证
+  - bilateral_filter_f: 浮点图像验证（channels=1/3/4），radius/sigma参数验证
+  - bilateral_filter_fast_16: 16位图像验证，完整参数验证（含downsample）
+  - bilateral_filter_fast_f: 浮点图像验证，完整参数验证（含downsample）
+- 这些函数原本已是包装函数（16位/浮点→8位→处理→转换回），本次补充前置输入验证，达到生产级标准

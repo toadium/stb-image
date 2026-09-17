@@ -91,6 +91,26 @@ pub fn convolve_16(
   bias : Float,
   scale : Float,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("convolve_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("convolve_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "convolve_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if kernel.length() != 9 {
+    raise @types.LoadError::DecodeFailed("convolve_16: kernel必须为9个值（3x3）")
+  }
+  if scale == 0.0F {
+    raise @types.LoadError::DecodeFailed("convolve_16: scale不能为0")
+  }
+
   let img8 = img16_to_img8_cb(img)
   let result8 = convolve(img8, kernel, bias, scale)
   img8_to_img16_cb(result8)
@@ -106,6 +126,26 @@ pub fn convolve_f(
   bias : Float,
   scale : Float,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("convolve_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("convolve_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "convolve_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if kernel.length() != 9 {
+    raise @types.LoadError::DecodeFailed("convolve_f: kernel必须为9个值（3x3）")
+  }
+  if scale == 0.0F {
+    raise @types.LoadError::DecodeFailed("convolve_f: scale不能为0")
+  }
+
   let img8 = imgf_to_img8_cb(img)
   let result8 = convolve(img8, kernel, bias, scale)
   img8_to_imgf_cb(result8)
@@ -121,6 +161,29 @@ pub fn bilateral_filter_16(
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_16: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_16: radius必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_16: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_16: sigma_color必须大于0")
+  }
+
   let img8 = img16_to_img8_cb(img)
   let result8 = bilateral_filter(img8, radius, sigma_space, sigma_color)
   img8_to_img16_cb(result8)
@@ -136,6 +199,29 @@ pub fn bilateral_filter_f(
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_f: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_f: radius必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_f: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_f: sigma_color必须大于0")
+  }
+
   let img8 = imgf_to_img8_cb(img)
   let result8 = bilateral_filter(img8, radius, sigma_space, sigma_color)
   img8_to_imgf_cb(result8)
@@ -152,6 +238,32 @@ pub fn bilateral_filter_fast_16(
   sigma_color : Float,
   downsample : Int,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_fast_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: radius必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: sigma_color必须大于0")
+  }
+  if downsample < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_16: downsample必须 >= 1")
+  }
+
   let img8 = img16_to_img8_cb(img)
   let result8 = bilateral_filter_fast(img8, radius, sigma_space, sigma_color, downsample)
   img8_to_img16_cb(result8)
@@ -168,6 +280,32 @@ pub fn bilateral_filter_fast_f(
   sigma_color : Float,
   downsample : Int,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 && img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_fast_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: radius必须 >= 1")
+  }
+  if sigma_space <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: sigma_space必须大于0")
+  }
+  if sigma_color <= 0.0F {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: sigma_color必须大于0")
+  }
+  if downsample < 1 {
+    raise @types.LoadError::DecodeFailed("bilateral_filter_fast_f: downsample必须 >= 1")
+  }
+
   let img8 = imgf_to_img8_cb(img)
   let result8 = bilateral_filter_fast(img8, radius, sigma_space, sigma_color, downsample)
   img8_to_imgf_cb(result8)
