@@ -529,3 +529,14 @@
   - dehaze_recover: 图像验证，透射率尺寸/通道验证，atmospheric/t_min验证
   - dehaze_advanced: 完整流水线验证，所有配置参数验证
 - 同步更新 reexport.mbt 中的包装函数，支持raise错误传播
+
+## v87.0.0 - 生产级增强：enhance模块 hdr
+- 增强 enhance/hdr.mbt：为所有public函数添加生产级输入验证和错误处理
+  - hdr_fusion_average: 图像数组非空验证，每张图像尺寸/通道/数据大小验证
+  - hdr_fusion_weighted: 图像数组验证，每张图像尺寸/通道/数据大小验证
+  - tone_mapping_reinhard: 图像验证，key参数>0验证
+  - tone_mapping_gamma: 图像验证，gamma参数>0验证
+  - tone_mapping_sigmoid: 图像验证，strength参数>0验证
+  - hdr_process: 完整流水线验证，所有配置参数验证
+- 返回类型从 Option 改为 raise @types.LoadError，提供详细错误信息
+- 同步更新 reexport.mbt 中的包装函数，支持raise错误传播

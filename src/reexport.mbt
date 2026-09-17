@@ -4112,14 +4112,14 @@ pub fn hdr_default_config() -> @enhance.HdrConfig {
 ///|
 pub fn hdr_fusion_average(
   images : Array[@types.Image],
-) -> @types.Image? {
+) -> @types.Image raise @types.LoadError {
   @enhance.hdr_fusion_average(images)
 }
 
 ///|
 pub fn hdr_fusion_weighted(
   images : Array[@types.Image],
-) -> @types.Image? {
+) -> @types.Image raise @types.LoadError {
   @enhance.hdr_fusion_weighted(images)
 }
 
@@ -4127,7 +4127,7 @@ pub fn hdr_fusion_weighted(
 pub fn tone_mapping_reinhard(
   img : @types.Image,
   key? : Double = 0.18,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_reinhard(img, key~)
 }
 
@@ -4135,7 +4135,7 @@ pub fn tone_mapping_reinhard(
 pub fn tone_mapping_gamma(
   img : @types.Image,
   gamma? : Double = 0.4545,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_gamma(img, gamma~)
 }
 
@@ -4143,7 +4143,7 @@ pub fn tone_mapping_gamma(
 pub fn tone_mapping_sigmoid(
   img : @types.Image,
   strength? : Double = 5.0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_sigmoid(img, strength~)
 }
 
@@ -4151,7 +4151,7 @@ pub fn tone_mapping_sigmoid(
 pub fn hdr_process(
   images : Array[@types.Image],
   config? : @enhance.HdrConfig,
-) -> @types.Image? {
+) -> @types.Image raise @types.LoadError {
   match config {
     Some(c) => @enhance.hdr_process(images, config=c)
     None => @enhance.hdr_process(images)
