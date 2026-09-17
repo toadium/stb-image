@@ -49,6 +49,20 @@ fn imgf_to_img8_iq(img : @types.ImageF) -> @types.Image {
 ///|
 /// 16-bit 平均哈希。
 pub fn ahash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ahash_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ahash_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ahash_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = img16_to_img8_iq(img)
   ahash(img8)
 }
@@ -56,6 +70,20 @@ pub fn ahash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 ///|
 /// 16-bit 差异哈希。
 pub fn dhash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("dhash_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("dhash_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "dhash_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = img16_to_img8_iq(img)
   dhash(img8)
 }
@@ -63,6 +91,20 @@ pub fn dhash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 ///|
 /// 16-bit 感知哈希。
 pub fn phash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("phash_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("phash_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "phash_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = img16_to_img8_iq(img)
   phash(img8)
 }
@@ -72,6 +114,20 @@ pub fn phash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 ///|
 /// float 平均哈希。
 pub fn ahash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ahash_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ahash_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ahash_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = imgf_to_img8_iq(img)
   ahash(img8)
 }
@@ -79,6 +135,20 @@ pub fn ahash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 ///|
 /// float 差异哈希。
 pub fn dhash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("dhash_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("dhash_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "dhash_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = imgf_to_img8_iq(img)
   dhash(img8)
 }
@@ -86,6 +156,20 @@ pub fn dhash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 ///|
 /// float 感知哈希。
 pub fn phash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("phash_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("phash_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "phash_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = imgf_to_img8_iq(img)
   phash(img8)
 }
@@ -95,6 +179,35 @@ pub fn phash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 ///|
 /// 16-bit 均方误差。
 pub fn mse_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("mse_16: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("mse_16: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 2
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "mse_16: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("mse_16: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("mse_16: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 2
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "mse_16: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("mse_16: 两图像尺寸必须一致")
+  }
+
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   mse(img1_8, img2_8)
@@ -103,6 +216,35 @@ pub fn mse_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @typ
 ///|
 /// 16-bit 峰值信噪比。
 pub fn psnr_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("psnr_16: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("psnr_16: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 2
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "psnr_16: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("psnr_16: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("psnr_16: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 2
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "psnr_16: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("psnr_16: 两图像尺寸必须一致")
+  }
+
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   psnr(img1_8, img2_8)
@@ -111,6 +253,35 @@ pub fn psnr_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @ty
 ///|
 /// 16-bit 结构相似性。
 pub fn ssim_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ssim_16: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ssim_16: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 2
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssim_16: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ssim_16: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ssim_16: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 2
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssim_16: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("ssim_16: 两图像尺寸必须一致")
+  }
+
   let img1_8 = img16_to_img8_iq(img1)
   let img2_8 = img16_to_img8_iq(img2)
   ssim(img1_8, img2_8)
@@ -121,6 +292,35 @@ pub fn ssim_16(img1 : @types.Image16, img2 : @types.Image16) -> Double raise @ty
 ///|
 /// float 均方误差。
 pub fn mse_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("mse_f: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("mse_f: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 4
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "mse_f: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("mse_f: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("mse_f: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 4
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "mse_f: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("mse_f: 两图像尺寸必须一致")
+  }
+
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   mse(img1_8, img2_8)
@@ -129,6 +329,35 @@ pub fn mse_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.
 ///|
 /// float 峰值信噪比。
 pub fn psnr_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("psnr_f: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("psnr_f: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 4
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "psnr_f: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("psnr_f: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("psnr_f: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 4
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "psnr_f: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("psnr_f: 两图像尺寸必须一致")
+  }
+
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   psnr(img1_8, img2_8)
@@ -137,6 +366,35 @@ pub fn psnr_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types
 ///|
 /// float 结构相似性。
 pub fn ssim_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ssim_f: 图像1尺寸必须大于0")
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ssim_f: 图像1通道数必须在1-4之间")
+  }
+  let img1_expected_size = img1.width * img1.height * img1.channels * 4
+  if img1.data.length() != img1_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssim_f: 图像1数据大小不匹配，期望 " + img1_expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed("ssim_f: 图像2尺寸必须大于0")
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed("ssim_f: 图像2通道数必须在1-4之间")
+  }
+  let img2_expected_size = img2.width * img2.height * img2.channels * 4
+  if img2.data.length() != img2_expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssim_f: 图像2数据大小不匹配，期望 " + img2_expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+    )
+  }
+  if img1.width != img2.width || img1.height != img2.height {
+    raise @types.LoadError::DecodeFailed("ssim_f: 两图像尺寸必须一致")
+  }
+
   let img1_8 = imgf_to_img8_iq(img1)
   let img2_8 = imgf_to_img8_iq(img2)
   ssim(img1_8, img2_8)
@@ -147,6 +405,20 @@ pub fn ssim_f(img1 : @types.ImageF, img2 : @types.ImageF) -> Double raise @types
 ///|
 /// 16-bit 积分图像。
 pub fn integral_image_16(img : @types.Image16) -> IntegralImage raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("integral_image_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "integral_image_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = img16_to_img8_iq(img)
   integral_image(img8)
 }
@@ -154,6 +426,20 @@ pub fn integral_image_16(img : @types.Image16) -> IntegralImage raise @types.Loa
 ///|
 /// 16-bit 平方积分图像。
 pub fn integral_image_sq_16(img : @types.Image16) -> IntegralImageSq raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "integral_image_sq_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = img16_to_img8_iq(img)
   integral_image_sq(img8)
 }
@@ -163,6 +449,20 @@ pub fn integral_image_sq_16(img : @types.Image16) -> IntegralImageSq raise @type
 ///|
 /// float 积分图像。
 pub fn integral_image_f(img : @types.ImageF) -> IntegralImage raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("integral_image_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "integral_image_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = imgf_to_img8_iq(img)
   integral_image(img8)
 }
@@ -170,6 +470,20 @@ pub fn integral_image_f(img : @types.ImageF) -> IntegralImage raise @types.LoadE
 ///|
 /// float 平方积分图像。
 pub fn integral_image_sq_f(img : @types.ImageF) -> IntegralImageSq raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("integral_image_sq_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "integral_image_sq_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let img8 = imgf_to_img8_iq(img)
   integral_image_sq(img8)
 }

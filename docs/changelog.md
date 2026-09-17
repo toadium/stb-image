@@ -768,3 +768,10 @@
   - SIFT验证：max_features>0、contrast_threshold>0
   - ORB验证：max_features>0、threshold>0
   - Shi-Tomasi验证：max_corners>0、quality_level>0、min_distance>0
+
+## v112.0.0 - 生产级增强：feature模块 哈希+质量+积分 16/f版本（16个函数）
+- 增强 feature/hash_quality_integral_16f.mbt：ahash_16/dhash_16/phash_16/ahash_f/dhash_f/phash_f/mse_16/psnr_16/ssim_16/mse_f/psnr_f/ssim_f/integral_image_16/integral_image_sq_16/integral_image_f/integral_image_sq_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证
+  - 图像质量评估验证：两图像尺寸一致
