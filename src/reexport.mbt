@@ -2456,7 +2456,7 @@ pub fn detect_skew_angle(img : @types.Image) -> Double raise @types.LoadError {
 pub fn rotate_document(
   img : @types.Image,
   angle : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.rotate_document(img, angle)
 }
 
@@ -3308,7 +3308,7 @@ pub fn generate_handwriting_templates(
 pub fn correct_slant(
   img : @types.Image,
   max_slant? : Double = 15.0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.correct_slant(img, max_slant~)
 }
 

@@ -799,3 +799,10 @@
 - 增强 ocr/binarization.mbt：niblack_threshold/sauvola_threshold/adaptive_threshold_ocr/otsu_threshold函数补充完整的生产级验证
   - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
   - 参数验证：window_size/block_size正奇数、r>0
+
+## v116.0.0 - 生产级增强：ocr模块 deskew（3个函数）+ handwriting correct_slant
+- 增强 ocr/deskew.mbt：detect_skew_angle/deskew/rotate_document函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
+  - rotate_document支持多通道（1-4）
+- 增强 ocr/handwriting_ocr.mbt：correct_slant函数补充完整的生产级验证（因rotate_document添加raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

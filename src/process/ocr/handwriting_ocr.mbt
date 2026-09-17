@@ -90,7 +90,21 @@ fn generate_handwriting_char_template(
 pub fn correct_slant(
   img : @types.Image,
   max_slant? : Double = 15.0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("correct_slant: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("correct_slant: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "correct_slant: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   // 简化版：检测主要倾斜角度并校正
   let angle = estimate_slant_angle(img)
   if angle.abs() > 1.0 {

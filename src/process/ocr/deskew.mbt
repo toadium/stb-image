@@ -17,9 +17,20 @@ fn clamp_byte_deskew(v : Int) -> Byte {
 /// 检测图像倾斜角度（基于水平投影的方差最大化）
 /// 返回角度（度），正值表示顺时针倾斜
 pub fn detect_skew_angle(img : @types.Image) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_skew_angle: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("detect_skew_angle: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -87,6 +98,20 @@ fn projection_variance_at_angle(
 ///|
 /// 倾斜校正（自动检测倾斜角度并旋转）
 pub fn deskew(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("deskew: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("deskew: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "deskew: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let angle = detect_skew_angle(img)
   rotate_document(img, -angle)
 }
@@ -97,7 +122,21 @@ pub fn deskew(img : @types.Image) -> @types.Image raise @types.LoadError {
 pub fn rotate_document(
   img : @types.Image,
   angle : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("rotate_document: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("rotate_document: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "rotate_document: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let ch = img.channels
