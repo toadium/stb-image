@@ -735,3 +735,9 @@
   - 图像尺寸/通道验证
   - histogram_matching系列：参考图像验证
 - 同步更新 reexport.mbt 中的8个函数类型定义（添加raise @types.LoadError）
+
+## v108.0.0 - 生产级增强：feature模块 LBP 16/f版本（4个函数）
+- 增强 feature/lbp_16f.mbt：lbp_16/lbp_f/lbp_uniform_16/lbp_uniform_f函数补充完整的生产级验证
+  - 16位图像验证：数据大小=w*h*ch*2
+  - 浮点图像验证：数据大小=w*h*ch*4
+  - 图像尺寸/通道验证

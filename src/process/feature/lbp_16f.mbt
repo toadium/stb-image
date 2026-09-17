@@ -81,8 +81,18 @@ fn uniform_lbp_map(lbp_val : Int) -> Int {
 ///|
 /// 16-bit 基本局部二值模式（LBP）。输出 0-255 的编码值，存储为 16-bit。
 pub fn lbp_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -142,8 +152,18 @@ pub fn lbp_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
 ///|
 /// float 基本局部二值模式（LBP）。输出归一化到 0.0-1.0（LBP值/255）。
 pub fn lbp_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -206,8 +226,18 @@ pub fn lbp_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
 ///|
 /// 16-bit 均匀局部二值模式（Uniform LBP）。输出 0-9 的标签值，存储为 16-bit。
 pub fn lbp_uniform_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_uniform_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp_uniform_16 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_uniform_16: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_uniform_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
@@ -267,8 +297,18 @@ pub fn lbp_uniform_16(img : @types.Image16) -> @types.Image16 raise @types.LoadE
 ///|
 /// float 均匀局部二值模式（Uniform LBP）。输出归一化到 0.0-1.0（标签/9）。
 pub fn lbp_uniform_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_uniform_f: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("lbp_uniform_f 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed("lbp_uniform_f: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_uniform_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }
