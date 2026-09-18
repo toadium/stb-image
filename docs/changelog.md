@@ -1168,3 +1168,9 @@
   - floyd_steinberg：尺寸>0、通道数1-4、数据大小匹配、levels>=2（改为raise类型）
 - 同步更新 reexport.mbt 中的1个函数类型定义（添加raise @types.LoadError）
 - 修改测试用例：levels=1时现在抛出错误而非返回原图
+
+## v167.0.0 - 生产级增强：color模块 color_16f（2个核心函数）
+- 增强 color/color_16f.mbt：2个核心函数补充完整的生产级验证
+  - adjust_gamma_16：尺寸>0、通道数1-4、数据大小匹配、gamma>0（改为raise类型）
+  - to_grayscale_16：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

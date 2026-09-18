@@ -283,7 +283,7 @@ pub let adjust_hue : (@types.Image, Float) -> @types.Image raise @types.LoadErro
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_gamma
-pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_gamma_16
+pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @color.adjust_gamma_16
 pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_gamma_f
 
 ///|
@@ -1803,7 +1803,7 @@ pub let threshold_otsu_f : (@types.ImageF) -> @types.ImageF raise @types.LoadErr
 
 ///|
 pub let to_grayscale : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_grayscale
-pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 = @color.to_grayscale_16
+pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_grayscale_16
 pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF = @color.to_grayscale_f
 
 ///|

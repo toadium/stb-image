@@ -188,7 +188,23 @@ pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF {
 ///|
 /// 16-bit Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 以 65535 为满量程。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 {
+pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if gamma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_16: gamma必须>0")
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -322,7 +338,20 @@ pub fn invert_f(img : @types.ImageF) -> @types.ImageF {
 ///|
 /// 16-bit 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
 /// 输出 channels=1 的 16-bit 灰度图。
-pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 {
+pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_grayscale_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_grayscale_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let bpp = ch * 2
