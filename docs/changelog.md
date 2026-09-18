@@ -825,3 +825,8 @@
   - 图像验证：尺寸>0、单通道二值图、数据大小匹配
   - 参数验证：字符宽度范围、面积范围、面积比例范围、min_width/min_height>0
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v120.0.0 - 生产级增强：ocr模块 feature_extraction（6个函数）
+- 增强 ocr/feature_extraction.mbt：hog_features/lbp_features/projection_features/grid_features/statistical_features/combined_features函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度/二值图、数据大小匹配
+  - 参数验证：cell_size/num_bins/radius/num_points/grid_rows/grid_cols>0

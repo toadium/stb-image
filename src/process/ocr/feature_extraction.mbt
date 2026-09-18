@@ -59,9 +59,26 @@ pub fn hog_features(
   cell_size? : Int = 8,
   num_bins? : Int = 9,
 ) -> HogFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hog_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("hog_features: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "hog_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if cell_size <= 0 {
+    raise @types.LoadError::DecodeFailed("hog_features: cell_size必须大于0")
+  }
+  if num_bins <= 0 {
+    raise @types.LoadError::DecodeFailed("hog_features: num_bins必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -130,9 +147,29 @@ pub fn lbp_features(
   num_points? : Int = 8,
   num_bins? : Int = 256,
 ) -> LbpFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("lbp_features: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "lbp_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_features: radius必须大于0")
+  }
+  if num_points <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_features: num_points必须大于0")
+  }
+  if num_bins <= 0 {
+    raise @types.LoadError::DecodeFailed("lbp_features: num_bins必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -185,9 +222,20 @@ pub fn lbp_features(
 pub fn projection_features(
   img : @types.Image,
 ) -> ProjectionFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("projection_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("projection_features: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "projection_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -235,9 +283,26 @@ pub fn grid_features(
   grid_rows? : Int = 4,
   grid_cols? : Int = 4,
 ) -> GridFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("grid_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("grid_features: 仅支持单通道二值图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "grid_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if grid_rows <= 0 {
+    raise @types.LoadError::DecodeFailed("grid_features: grid_rows必须大于0")
+  }
+  if grid_cols <= 0 {
+    raise @types.LoadError::DecodeFailed("grid_features: grid_cols必须大于0")
+  }
+
   let w = img.width
   let h = img.height
   let data = img.data
@@ -276,9 +341,20 @@ pub fn grid_features(
 pub fn statistical_features(
   img : @types.Image,
 ) -> StatisticalFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("statistical_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("statistical_features: 仅支持单通道灰度图")
   }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "statistical_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let w = img.width
   let h = img.height
   let n = w * h
@@ -360,6 +436,20 @@ pub fn statistical_features(
 pub fn combined_features(
   img : @types.Image,
 ) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("combined_features: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("combined_features: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "combined_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let hog = hog_features(img)
   let lbp = lbp_features(img)
   let proj = projection_features(img)
