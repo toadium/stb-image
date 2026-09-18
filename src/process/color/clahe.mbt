@@ -10,11 +10,24 @@ pub fn clahe(
   tile_size : Int,
   clip_limit : Float,
 ) -> @types.Image raise @types.LoadError {
-  if tile_size < 2 {
-    raise @types.LoadError::DecodeFailed("tile_size 必须 >= 2")
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("clahe: 图像尺寸必须大于0")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("clahe 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "clahe: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if tile_size < 2 {
+    raise @types.LoadError::DecodeFailed("tile_size 必须 >= 2")
+  }
+  if clip_limit <= 0.0 {
+    raise @types.LoadError::DecodeFailed("clip_limit 必须大于0")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { 1 }

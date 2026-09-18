@@ -1655,7 +1655,7 @@ pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_t
 pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) = @color.cmyk_to_rgb_f
 
 ///|
-pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image = @color.apply_colormap
+pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image raise @types.LoadError = @color.apply_colormap
 
 ///|
 pub let rotate : (@types.Image, Float) -> @types.Image = @transform.rotate

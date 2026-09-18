@@ -1053,3 +1053,10 @@
   - median_cut：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
 - 同步更新 bench.mbt 中的to_grayscale函数调用（添加catch处理）
+
+## v150.0.0 - 生产级增强：color模块 clahe + colormap（2个核心函数）
+- 增强 color/clahe.mbt：1个核心函数补充完整的生产级验证
+  - clahe：尺寸>0、通道数1/3/4、数据大小匹配、tile_size>=2、clip_limit>0
+- 增强 color/colormap.mbt：1个核心函数补充完整的生产级验证
+  - apply_colormap：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的apply_colormap函数类型定义（添加raise @types.LoadError）
