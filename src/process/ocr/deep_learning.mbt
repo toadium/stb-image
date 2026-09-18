@@ -196,7 +196,14 @@ pub fn normalize_image(
   image_data : Array[Double],
   mean : Double,
   std : Double,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if image_data.length() == 0 {
+    raise @types.LoadError::DecodeFailed("normalize_image: 图像数据不能为空")
+  }
+  if std <= 0.0 {
+    raise @types.LoadError::DecodeFailed("normalize_image: std必须大于0")
+  }
   let normalized : Array[Double] = []
   for pixel in image_data {
     normalized.push((pixel - mean) / std)
@@ -210,7 +217,23 @@ pub fn resize_image_for_cnn(
   img : @types.Image,
   target_width : Int,
   target_height : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "resize_image_for_cnn: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if target_width <= 0 || target_height <= 0 {
+    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 目标尺寸必须大于0")
+  }
   let result : Array[Double] = []
   let src_w = img.width
   let src_h = img.height
@@ -318,7 +341,38 @@ pub fn conv2d(
   k_size : Int,
   stride : Int,
   padding : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if input.length() == 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 输入数据不能为空")
+  }
+  if kernel.length() == 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 卷积核不能为空")
+  }
+  if in_h <= 0 || in_w <= 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 输入尺寸必须大于0")
+  }
+  if in_c <= 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 输入通道数必须大于0")
+  }
+  if out_c <= 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 输出通道数必须大于0")
+  }
+  if k_size <= 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 卷积核尺寸必须大于0")
+  }
+  if stride <= 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 步长必须大于0")
+  }
+  if padding < 0 {
+    raise @types.LoadError::DecodeFailed("conv2d: 填充不能为负数")
+  }
+  let expected_input_size = in_h * in_w * in_c
+  if input.length() != expected_input_size {
+    raise @types.LoadError::DecodeFailed(
+      "conv2d: 输入数据大小不匹配，期望 " + expected_input_size.to_string() + "，实际 " + input.length().to_string(),
+    )
+  }
   let out_h = (in_h + 2 * padding - k_size) / stride + 1
   let out_w = (in_w + 2 * padding - k_size) / stride + 1
   let output : Array[Double] = []
@@ -357,7 +411,26 @@ pub fn max_pool2d(
   in_w : Int,
   channels : Int,
   pool_size : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if input.length() == 0 {
+    raise @types.LoadError::DecodeFailed("max_pool2d: 输入数据不能为空")
+  }
+  if in_h <= 0 || in_w <= 0 {
+    raise @types.LoadError::DecodeFailed("max_pool2d: 输入尺寸必须大于0")
+  }
+  if channels <= 0 {
+    raise @types.LoadError::DecodeFailed("max_pool2d: 通道数必须大于0")
+  }
+  if pool_size <= 0 {
+    raise @types.LoadError::DecodeFailed("max_pool2d: 池化尺寸必须大于0")
+  }
+  let expected_input_size = in_h * in_w * channels
+  if input.length() != expected_input_size {
+    raise @types.LoadError::DecodeFailed(
+      "max_pool2d: 输入数据大小不匹配，期望 " + expected_input_size.to_string() + "，实际 " + input.length().to_string(),
+    )
+  }
   let out_h = in_h / pool_size
   let out_w = in_w / pool_size
   let output : Array[Double] = []
@@ -486,7 +559,14 @@ pub fn create_training_sample(
   img : @types.Image,
   label : Int,
   label_text : String,
-) -> DLTrainingSample {
+) -> DLTrainingSample raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("create_training_sample: 图像尺寸必须大于0")
+  }
+  if label < 0 {
+    raise @types.LoadError::DecodeFailed("create_training_sample: 标签不能为负数")
+  }
   let normalized = resize_image_for_cnn(img, 32, 32)
   DLTrainingSample::{
     image_data: normalized,

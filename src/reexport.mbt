@@ -5972,7 +5972,7 @@ pub fn normalize_image(
   image_data : Array[Double],
   mean : Double,
   std : Double,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.normalize_image(image_data, mean, std)
 }
 
@@ -5981,7 +5981,7 @@ pub fn resize_image_for_cnn(
   img : @types.Image,
   target_width : Int,
   target_height : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.resize_image_for_cnn(img, target_width, target_height)
 }
 
@@ -6011,7 +6011,7 @@ pub fn conv2d(
   k_size : Int,
   stride : Int,
   padding : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.conv2d(input, in_h, in_w, in_c, kernel, out_c, k_size, stride, padding)
 }
 
@@ -6022,7 +6022,7 @@ pub fn max_pool2d(
   in_w : Int,
   channels : Int,
   pool_size : Int,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.max_pool2d(input, in_h, in_w, channels, pool_size)
 }
 
@@ -6052,7 +6052,7 @@ pub fn create_training_sample(
   img : @types.Image,
   label : Int,
   label_text : String,
-) -> @ocr.DLTrainingSample {
+) -> @ocr.DLTrainingSample raise @types.LoadError {
   @ocr.create_training_sample(img, label, label_text)
 }
 

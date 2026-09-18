@@ -879,3 +879,12 @@
   - extract_cell_image：尺寸>0、通道数1-4、数据大小匹配、单元格尺寸>0、padding>=0（改为raise类型）
   - extract_all_cells：尺寸>0、通道数1-4、数据大小匹配、padding>=0（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v126.0.0 - 生产级增强：ocr模块 deep_learning（5个核心函数）
+- 增强 ocr/deep_learning.mbt：5个核心函数补充完整的生产级验证
+  - normalize_image：图像数据非空、std>0（改为raise类型）
+  - resize_image_for_cnn：尺寸>0、通道数1-4、数据大小匹配、目标尺寸>0（改为raise类型）
+  - conv2d：输入/卷积核非空、尺寸>0、通道数>0、步长>0、填充>=0、数据大小匹配（改为raise类型）
+  - max_pool2d：输入非空、尺寸>0、通道数>0、池化尺寸>0、数据大小匹配（改为raise类型）
+  - create_training_sample：图像尺寸>0、标签>=0（改为raise类型）
+- 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
