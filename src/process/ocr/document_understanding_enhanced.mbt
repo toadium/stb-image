@@ -83,6 +83,19 @@ pub fn analyze_layout_enhanced(
   img : @types.Image,
   config? : DocumentUnderstandingEnhancedConfig,
 ) -> Array[DocumentBlock] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("analyze_layout_enhanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("analyze_layout_enhanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_layout_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let cfg = match config {
     Some(c) => c
     None => document_understanding_enhanced_default_config()
@@ -460,6 +473,19 @@ pub fn understand_document_enhanced(
   img : @types.Image,
   config? : DocumentUnderstandingEnhancedConfig,
 ) -> (Array[DocumentBlock], Array[DocumentTreeNode], String) raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("understand_document_enhanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("understand_document_enhanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "understand_document_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let cfg = match config {
     Some(c) => c
     None => document_understanding_enhanced_default_config()
