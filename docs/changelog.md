@@ -954,3 +954,10 @@
   - calculate_accuracy_stats：期望文本行列表非空、实际文本行列表非空（改为raise类型）
   - check_accuracy_threshold：字符准确率阈值0-1、词准确率阈值0-1、F1分数阈值0-1（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v136.0.0 - 生产级增强：ocr模块 postprocess_correction（3个核心函数）
+- 增强 ocr/postprocess_correction.mbt：3个核心函数补充完整的生产级验证
+  - correct_similar_chars：上下文类型必须是 number/english/chinese/mixed 之一（改为raise类型）
+  - full_postprocess_correction：上下文类型必须是 number/english/chinese/mixed 之一（改为raise类型）
+  - batch_correct_texts：文本列表非空、上下文类型必须是 number/english/chinese/mixed 之一（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

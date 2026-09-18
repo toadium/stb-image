@@ -136,7 +136,11 @@ pub fn create_default_language_model() -> LanguageModelState {
 pub fn correct_similar_chars(
   text : String,
   context_type : String,  // "number" / "english" / "chinese" / "mixed"
-) -> CorrectionResult {
+) -> CorrectionResult raise @types.LoadError {
+  // 输入验证
+  if context_type != "number" && context_type != "english" && context_type != "chinese" && context_type != "mixed" {
+    raise @types.LoadError::DecodeFailed("correct_similar_chars: 上下文类型必须是 number/english/chinese/mixed 之一")
+  }
   let similar_chars = match context_type {
     "number" => get_english_similar_chars()
     "english" => get_english_similar_chars()
@@ -273,7 +277,11 @@ pub fn correct_common_patterns(
 pub fn full_postprocess_correction(
   text : String,
   context_type? : String = "mixed",
-) -> CorrectionResult {
+) -> CorrectionResult raise @types.LoadError {
+  // 输入验证
+  if context_type != "number" && context_type != "english" && context_type != "chinese" && context_type != "mixed" {
+    raise @types.LoadError::DecodeFailed("full_postprocess_correction: 上下文类型必须是 number/english/chinese/mixed 之一")
+  }
   let ctx = context_type
   
   // 第一步：相似字符纠正
@@ -316,7 +324,14 @@ pub fn full_postprocess_correction(
 pub fn batch_correct_texts(
   texts : Array[String],
   context_type? : String = "mixed",
-) -> Array[CorrectionResult] {
+) -> Array[CorrectionResult] raise @types.LoadError {
+  // 输入验证
+  if texts.length() == 0 {
+    raise @types.LoadError::DecodeFailed("batch_correct_texts: 文本列表不能为空")
+  }
+  if context_type != "number" && context_type != "english" && context_type != "chinese" && context_type != "mixed" {
+    raise @types.LoadError::DecodeFailed("batch_correct_texts: 上下文类型必须是 number/english/chinese/mixed 之一")
+  }
   let results : Array[CorrectionResult] = []
   for text in texts {
     let result = full_postprocess_correction(text, context_type~)

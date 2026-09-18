@@ -5616,7 +5616,7 @@ pub fn create_default_language_model() -> @ocr.LanguageModelState {
 pub fn correct_similar_chars(
   text : String,
   context_type : String,
-) -> @ocr.CorrectionResult {
+) -> @ocr.CorrectionResult raise @types.LoadError {
   @ocr.correct_similar_chars(text, context_type)
 }
 
@@ -5631,7 +5631,7 @@ pub fn correct_common_patterns(
 pub fn full_postprocess_correction(
   text : String,
   context_type? : String = "mixed",
-) -> @ocr.CorrectionResult {
+) -> @ocr.CorrectionResult raise @types.LoadError {
   @ocr.full_postprocess_correction(text, context_type~)
 }
 
@@ -5639,7 +5639,7 @@ pub fn full_postprocess_correction(
 pub fn batch_correct_texts(
   texts : Array[String],
   context_type? : String = "mixed",
-) -> Array[@ocr.CorrectionResult] {
+) -> Array[@ocr.CorrectionResult] raise @types.LoadError {
   @ocr.batch_correct_texts(texts, context_type~)
 }
 
