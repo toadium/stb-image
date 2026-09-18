@@ -1124,3 +1124,8 @@
   - gamma_tonemap_16：尺寸>0、通道数1-4、数据大小匹配（浮点4字节输入）、gamma>0（改为raise类型）
   - reinhard_tonemap_16：尺寸>0、通道数1-4、数据大小匹配（浮点4字节输入）、key>0（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v161.0.0 - 生产级增强：color模块 quantize_16f（2个核心函数）
+- 增强 color/quantize_16f.mbt：2个核心函数补充完整的生产级验证
+  - kmeans_quantize_16：负尺寸报错、通道数3/4、数据大小匹配（16位2字节）、k范围1-256
+  - kmeans_quantize_f：负尺寸报错、通道数3/4、数据大小匹配（浮点4字节）、k范围1-256

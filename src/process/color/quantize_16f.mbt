@@ -48,11 +48,21 @@ pub fn kmeans_quantize_16(
   k : Int,
   max_iters : Int,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("kmeans_quantize_16: 图像尺寸不能为负")
+  }
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("kmeans_quantize_16 需要 RGB/RGBA 图像")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let n = img.width * img.height
@@ -149,11 +159,21 @@ pub fn kmeans_quantize_f(
   k : Int,
   max_iters : Int,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("kmeans_quantize_f: 图像尺寸不能为负")
+  }
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("kmeans_quantize_f 需要 RGB/RGBA 图像")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let ch = img.channels
   let n = img.width * img.height
