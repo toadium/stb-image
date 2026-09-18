@@ -194,7 +194,14 @@ pub fn calculate_edit_distance(
 pub fn calculate_accuracy_stats(
   expected_lines : Array[String],
   actual_lines : Array[String],
-) -> AccuracyStats {
+) -> AccuracyStats raise @types.LoadError {
+  // 输入验证
+  if expected_lines.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calculate_accuracy_stats: 期望文本行列表不能为空")
+  }
+  if actual_lines.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calculate_accuracy_stats: 实际文本行列表不能为空")
+  }
   let mut total_chars = 0
   let mut correct_chars = 0
   let mut total_words = 0
@@ -340,7 +347,17 @@ pub fn check_accuracy_threshold(
   min_char_accuracy? : Double = 0.95,
   min_word_accuracy? : Double = 0.90,
   min_f1_score? : Double = 0.92,
-) -> (Bool, Array[String]) {
+) -> (Bool, Array[String]) raise @types.LoadError {
+  // 输入验证
+  if min_char_accuracy < 0.0 || min_char_accuracy > 1.0 {
+    raise @types.LoadError::DecodeFailed("check_accuracy_threshold: 字符准确率阈值必须在0-1之间")
+  }
+  if min_word_accuracy < 0.0 || min_word_accuracy > 1.0 {
+    raise @types.LoadError::DecodeFailed("check_accuracy_threshold: 词准确率阈值必须在0-1之间")
+  }
+  if min_f1_score < 0.0 || min_f1_score > 1.0 {
+    raise @types.LoadError::DecodeFailed("check_accuracy_threshold: F1分数阈值必须在0-1之间")
+  }
   let min_char = min_char_accuracy
   let min_word = min_word_accuracy
   let min_f1 = min_f1_score

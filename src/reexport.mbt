@@ -5557,7 +5557,7 @@ pub fn calculate_edit_distance(
 pub fn calculate_accuracy_stats(
   expected_lines : Array[String],
   actual_lines : Array[String],
-) -> @ocr.AccuracyStats {
+) -> @ocr.AccuracyStats raise @types.LoadError {
   @ocr.calculate_accuracy_stats(expected_lines, actual_lines)
 }
 
@@ -5583,7 +5583,7 @@ pub fn check_accuracy_threshold(
   min_char_accuracy? : Double = 0.95,
   min_word_accuracy? : Double = 0.90,
   min_f1_score? : Double = 0.92,
-) -> (Bool, Array[String]) {
+) -> (Bool, Array[String]) raise @types.LoadError {
   @ocr.check_accuracy_threshold(stats, min_char_accuracy~, min_word_accuracy~, min_f1_score~)
 }
 

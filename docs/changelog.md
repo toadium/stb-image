@@ -948,3 +948,9 @@
   - detect_skew_angle_robust：尺寸>0、单通道、数据大小匹配（改为raise类型）
   - detect_distortions：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v135.0.0 - 生产级增强：ocr模块 accuracy_testing（2个核心函数）
+- 增强 ocr/accuracy_testing.mbt：2个核心函数补充完整的生产级验证
+  - calculate_accuracy_stats：期望文本行列表非空、实际文本行列表非空（改为raise类型）
+  - check_accuracy_threshold：字符准确率阈值0-1、词准确率阈值0-1、F1分数阈值0-1（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
