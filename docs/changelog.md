@@ -1155,3 +1155,10 @@
   - rgb_to_lab：r,g,b∈[0,255]范围验证（改为raise类型）
   - lab_to_rgb：L∈[0,100]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的6个函数类型定义（添加raise @types.LoadError）
+
+## v165.0.0 - 生产级增强：color模块 color_convert（2个核心函数）
+- 增强 color/color_convert.mbt：2个核心函数补充完整的生产级验证
+  - rgb_to_cmyk：r,g,b∈[0,255]范围验证（改为raise类型）
+  - cmyk_to_rgb：c,m,y,k∈[0,255]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+- color_convert.mbt 全部完成（13个函数）

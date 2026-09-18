@@ -1645,12 +1645,12 @@ pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to
 pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.lab_to_rgb_f
 
 ///|
-pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk
+pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk
 pub let rgb_to_cmyk_16 : (Int, Int, Int) -> (Int, Int, Int, Int) = @color.rgb_to_cmyk_16
 pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) = @color.rgb_to_cmyk_f
 
 ///|
-pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb
+pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb
 pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) = @color.cmyk_to_rgb_16
 pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) = @color.cmyk_to_rgb_f
 

@@ -331,7 +331,11 @@ pub fn lab_to_rgb(l : Float, a : Float, b : Float) -> (Int, Int, Int) raise @typ
 
 ///|
 /// RGB → CMYK。返回 (C, M, Y, K)，范围 0-255。
-pub fn rgb_to_cmyk(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) {
+pub fn rgb_to_cmyk(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_cmyk: r,g,b必须在[0,255]范围内")
+  }
   let c = 255 - r
   let m = 255 - g
   let y = 255 - b
@@ -346,7 +350,11 @@ pub fn rgb_to_cmyk(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) {
 
 ///|
 /// CMYK → RGB。输入范围 0-255。
-pub fn cmyk_to_rgb(c : Int, m : Int, y : Int, k : Int) -> (Int, Int, Int) {
+pub fn cmyk_to_rgb(c : Int, m : Int, y : Int, k : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if c < 0 || c > 255 || m < 0 || m > 255 || y < 0 || y > 255 || k < 0 || k > 255 {
+    raise @types.LoadError::DecodeFailed("cmyk_to_rgb: c,m,y,k必须在[0,255]范围内")
+  }
   let r = 255 - (c * (255 - k) / 255 + k)
   let g = 255 - (m * (255 - k) / 255 + k)
   let b = 255 - (y * (255 - k) / 255 + k)
