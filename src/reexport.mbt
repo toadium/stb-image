@@ -5244,7 +5244,7 @@ pub fn recognize_symbols_markdown(
 pub fn detect_image_regions_markdown(
   binary_img : @types.Image,
   min_area? : Int = 500,
-) -> Array[@ocr.MarkdownImage] {
+) -> Array[@ocr.MarkdownImage] raise @types.LoadError {
   @ocr.detect_image_regions_markdown(binary_img, min_area~)
 }
 
@@ -5281,7 +5281,7 @@ pub fn markdown_document_to_string(
 pub fn build_markdown_document(
   ocr_result : @ocr.OCRPageResult,
   title? : String,
-) -> @ocr.MarkdownDocument {
+) -> @ocr.MarkdownDocument raise @types.LoadError {
   match title {
     Some(t) => @ocr.build_markdown_document(ocr_result, title=t)
     None => @ocr.build_markdown_document(ocr_result)

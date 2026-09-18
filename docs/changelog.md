@@ -983,3 +983,9 @@
   - find_similar_chinese_chars：目标字符非空、返回数量>0（改为raise类型）
   - lookup_char：字符非空（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v140.0.0 - 生产级增强：ocr模块 document_reconstruction（2个核心函数）
+- 增强 ocr/document_reconstruction.mbt：2个核心函数补充完整的生产级验证
+  - detect_image_regions_markdown：尺寸>0、单通道、数据大小匹配、最小区域面积>0（改为raise类型）
+  - build_markdown_document：OCR结果的文本块列表非空（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）

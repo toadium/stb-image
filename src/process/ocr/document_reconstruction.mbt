@@ -155,7 +155,23 @@ pub fn recognize_symbols_markdown(
 pub fn detect_image_regions_markdown(
   binary_img : @types.Image,
   min_area? : Int = 500,
-) -> Array[MarkdownImage] {
+) -> Array[MarkdownImage] raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_image_regions_markdown: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
+  if min_area <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 最小区域面积必须大于0")
+  }
   let min = min_area
   let w = binary_img.width
   let h = binary_img.height
@@ -367,7 +383,11 @@ pub fn markdown_document_to_string(
 pub fn build_markdown_document(
   ocr_result : OCRPageResult,
   title? : String,
-) -> MarkdownDocument {
+) -> MarkdownDocument raise @types.LoadError {
+  // 输入验证
+  if ocr_result.blocks.length() == 0 {
+    raise @types.LoadError::DecodeFailed("build_markdown_document: OCR结果的文本块列表不能为空")
+  }
   let doc_title = match title {
     Some(v) => v
     None => ""
