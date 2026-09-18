@@ -140,7 +140,20 @@ fn generate_punctuation_features(
 /// 检测字符语言类型（基于宽高比和尺寸）
 pub fn detect_char_language(
   char_img : @types.Image,
-) -> LanguageType {
+) -> LanguageType raise @types.LoadError {
+  // 输入验证
+  if char_img.width <= 0 || char_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_char_language: 图像尺寸必须大于0")
+  }
+  if char_img.channels < 1 || char_img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_char_language: 通道数必须在1-4之间")
+  }
+  let expected_size = char_img.width * char_img.height * char_img.channels
+  if char_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_char_language: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+    )
+  }
   let w = char_img.width
   let h = char_img.height
   let ratio = if h > 0 { w.to_double() / h.to_double() } else { 1.0 }
@@ -168,6 +181,19 @@ pub fn detect_char_language(
 pub fn detect_document_language(
   img : @types.Image,
 ) -> LanguageType raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_document_language: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_document_language: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_language: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   // 预处理
   let preprocessed = ocr_preprocess(img)
   // 检测文本行
@@ -214,6 +240,19 @@ pub fn recognize_multilingual(
   img : @types.Image,
   config? : MultilingualOcrConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_multilingual: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_multilingual: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_multilingual: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let cfg = match config {
     Some(c) => c
     None => multilingual_ocr_default_config()

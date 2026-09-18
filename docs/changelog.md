@@ -905,3 +905,10 @@
   - understand_document：尺寸>0、通道数1-4、数据大小匹配
   - detect_document_columns：尺寸>0、通道数1-4、数据大小匹配
 - 同步更新 reexport.mbt 中的compute_reading_order函数类型定义（添加raise @types.LoadError）
+
+## v129.0.0 - 生产级增强：ocr模块 multilingual_ocr（3个核心函数）
+- 增强 ocr/multilingual_ocr.mbt：3个核心函数补充完整的生产级验证
+  - detect_char_language：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - detect_document_language：尺寸>0、通道数1-4、数据大小匹配
+  - recognize_multilingual：尺寸>0、通道数1-4、数据大小匹配
+- 同步更新 reexport.mbt 中的detect_char_language函数类型定义（添加raise @types.LoadError）

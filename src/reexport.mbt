@@ -3347,7 +3347,7 @@ pub fn generate_punctuation_templates() -> Array[@ocr.PunctuationTemplate] {
 ///|
 pub fn detect_char_language(
   char_img : @types.Image,
-) -> @ocr.LanguageType {
+) -> @ocr.LanguageType raise @types.LoadError {
   @ocr.detect_char_language(char_img)
 }
 
