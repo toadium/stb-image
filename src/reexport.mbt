@@ -3129,7 +3129,7 @@ pub fn generate_3500_chinese_templates(
 ///|
 pub fn decompose_chinese_char(
   char : String,
-) -> @ocr.ChineseCharStructure {
+) -> @ocr.ChineseCharStructure raise @types.LoadError {
   @ocr.decompose_chinese_char(char)
 }
 

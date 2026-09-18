@@ -912,3 +912,9 @@
   - detect_document_language：尺寸>0、通道数1-4、数据大小匹配
   - recognize_multilingual：尺寸>0、通道数1-4、数据大小匹配
 - 同步更新 reexport.mbt 中的detect_char_language函数类型定义（添加raise @types.LoadError）
+
+## v130.0.0 - 生产级增强：ocr模块 advanced_chinese_ocr（2个核心函数）
+- 增强 ocr/advanced_chinese_ocr.mbt：2个核心函数补充完整的生产级验证
+  - decompose_chinese_char：字符非空（改为raise类型）
+  - recognize_chinese_advanced：尺寸>0、通道数1-4、数据大小匹配
+- 同步更新 reexport.mbt 中的decompose_chinese_char函数类型定义（添加raise @types.LoadError）

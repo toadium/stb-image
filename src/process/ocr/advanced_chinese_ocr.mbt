@@ -140,7 +140,11 @@ fn generate_advanced_chinese_template(char : String) -> Array[Double] {
 /// 汉字部件分解（简化版）
 pub fn decompose_chinese_char(
   char : String,
-) -> ChineseCharStructure {
+) -> ChineseCharStructure raise @types.LoadError {
+  // 输入验证
+  if char.length() == 0 {
+    raise @types.LoadError::DecodeFailed("decompose_chinese_char: 字符不能为空")
+  }
   let seed = if char.length() > 0 { char[0].to_int() } else { 0 }
   // 基于码点判断结构类型（简化版）
   let structure_type = match seed % 5 {
@@ -174,6 +178,19 @@ pub fn recognize_chinese_advanced(
   img : @types.Image,
   config? : AdvancedChineseOcrConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_chinese_advanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_chinese_advanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese_advanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let cfg = match config {
     Some(c) => c
     None => advanced_chinese_ocr_default_config()
