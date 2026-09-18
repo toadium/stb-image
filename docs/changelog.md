@@ -1077,3 +1077,8 @@
   - reinhard_tonemap：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、key>0（改为raise类型）
   - gamma_tonemap：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、gamma>0（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v154.0.0 - 生产级增强：color模块 dehaze（2个核心函数）
+- 增强 color/dehaze.mbt：2个核心函数补充完整的生产级验证
+  - dehaze：负尺寸报错、通道数3/4、数据大小匹配、patch_size范围、omega范围、t0范围
+  - guided_filter：负尺寸报错、通道数1/3/4、数据大小匹配、radius>=1、eps>0
