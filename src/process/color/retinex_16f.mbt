@@ -46,8 +46,21 @@ pub fn ssr_16(
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width == 0 || img.height == 0 {
+    return img
+  }
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("ssr_16: 图像尺寸不能为负")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("ssr_16 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if sigma <= 0.0F {
     raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
@@ -101,8 +114,21 @@ pub fn ssr_f(
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width == 0 || img.height == 0 {
+    return img
+  }
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("ssr_f: 图像尺寸不能为负")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("ssr_f 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "ssr_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if sigma <= 0.0F {
     raise @types.LoadError::DecodeFailed("sigma 必须 > 0")
