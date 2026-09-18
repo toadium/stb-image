@@ -313,7 +313,11 @@ pub fn unpremultiply_alpha_f(
 
 ///|
 /// 16-bit RGB → YCbCr（ITU-R BT.601）。输入范围 0-65535，输出范围 0-65535。
-pub fn rgb_to_ycbcr_16(r : Int, g : Int, b : Int) -> (Int, Int, Int) {
+pub fn rgb_to_ycbcr_16(r : Int, g : Int, b : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
+    raise @types.LoadError::DecodeFailed("rgb_to_ycbcr_16: r,g,b必须在[0,65535]范围内")
+  }
   let y = (299 * r + 587 * g + 114 * b) / 1000
   let cb = (-169 * r - 331 * g + 500 * b) / 1000 + 32768
   let cr = (500 * r - 419 * g - 81 * b) / 1000 + 32768
@@ -331,7 +335,11 @@ pub fn rgb_to_ycbcr_f(r : Float, g : Float, b : Float) -> (Float, Float, Float) 
 
 ///|
 /// 16-bit YCbCr → RGB（ITU-R BT.601）。输入范围 0-65535。
-pub fn ycbcr_to_rgb_16(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
+pub fn ycbcr_to_rgb_16(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if y < 0 || y > 65535 || cb < 0 || cb > 65535 || cr < 0 || cr > 65535 {
+    raise @types.LoadError::DecodeFailed("ycbcr_to_rgb_16: y,cb,cr必须在[0,65535]范围内")
+  }
   let cb0 = cb - 32768
   let cr0 = cr - 32768
   let r = y + 1402 * cr0 / 1000
@@ -353,7 +361,11 @@ pub fn ycbcr_to_rgb_f(y : Float, cb : Float, cr : Float) -> (Float, Float, Float
 
 ///|
 /// 16-bit RGB → CMYK。输入范围 0-65535，输出范围 0-65535。
-pub fn rgb_to_cmyk_16(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) {
+pub fn rgb_to_cmyk_16(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
+    raise @types.LoadError::DecodeFailed("rgb_to_cmyk_16: r,g,b必须在[0,65535]范围内")
+  }
   let c = 65535 - r
   let m = 65535 - g
   let y = 65535 - b
@@ -383,7 +395,11 @@ pub fn rgb_to_cmyk_f(r : Float, g : Float, b : Float) -> (Float, Float, Float, F
 
 ///|
 /// 16-bit CMYK → RGB。输入范围 0-65535。
-pub fn cmyk_to_rgb_16(c : Int, m : Int, y : Int, k : Int) -> (Int, Int, Int) {
+pub fn cmyk_to_rgb_16(c : Int, m : Int, y : Int, k : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if c < 0 || c > 65535 || m < 0 || m > 65535 || y < 0 || y > 65535 || k < 0 || k > 65535 {
+    raise @types.LoadError::DecodeFailed("cmyk_to_rgb_16: c,m,y,k必须在[0,65535]范围内")
+  }
   let r = 65535 - (c * (65535 - k) / 65535 + k)
   let g = 65535 - (m * (65535 - k) / 65535 + k)
   let b = 65535 - (y * (65535 - k) / 65535 + k)

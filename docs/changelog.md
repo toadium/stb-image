@@ -1174,3 +1174,11 @@
   - adjust_gamma_16：尺寸>0、通道数1-4、数据大小匹配、gamma>0（改为raise类型）
   - to_grayscale_16：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v168.0.0 - 生产级增强：color模块 color_convert_16f（4个核心函数）
+- 增强 color/color_convert_16f.mbt：4个核心函数补充完整的生产级验证
+  - rgb_to_ycbcr_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - ycbcr_to_rgb_16：y,cb,cr∈[0,65535]范围验证（改为raise类型）
+  - rgb_to_cmyk_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - cmyk_to_rgb_16：c,m,y,k∈[0,65535]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
