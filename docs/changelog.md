@@ -1096,3 +1096,11 @@
   - to_rgba_16：负尺寸报错、通道数1-4、数据大小匹配（16位2字节）（改为raise类型）
   - premultiply_alpha_16：尺寸>0、通道数4、数据大小匹配（16位2字节）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v157.0.0 - 生产级增强：color模块 color_space_16f（4个核心函数）
+- 增强 color/color_space_16f.mbt：4个核心函数补充完整的生产级验证
+  - rgb_to_hsl_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - hsl_to_rgb_16：s,l∈[0,1]范围验证（改为raise类型）
+  - rgb_to_hsv_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - hsv_to_rgb_16：s,v∈[0,1]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
