@@ -1104,3 +1104,10 @@
   - rgb_to_hsv_16：r,g,b∈[0,65535]范围验证（改为raise类型）
   - hsv_to_rgb_16：s,v∈[0,1]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v158.0.0 - 生产级增强：color模块 dehaze_16f（4个核心函数）
+- 增强 color/dehaze_16f.mbt：4个核心函数补充完整的生产级验证
+  - dehaze_16：尺寸>0、通道数3/4、数据大小匹配（16位2字节）
+  - dehaze_f：尺寸>0、通道数3/4、数据大小匹配（浮点4字节）
+  - guided_filter_16：尺寸>0、通道数1-4、数据大小匹配（16位2字节）、radius>=1、eps>0
+  - guided_filter_f：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、radius>=1、eps>0

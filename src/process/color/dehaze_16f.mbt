@@ -92,6 +92,19 @@ pub fn dehaze_16(
   omega? : Float = 0.95F,
   t0? : Float = 0.1F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("dehaze_16: 图像尺寸必须大于0")
+  }
+  if img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("dehaze_16: 仅支持RGB/RGBA图像（channels=3/4）")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let img8 = img16_to_img8_dh(img)
   let out8 = dehaze(img8, patch_size~, omega~, t0~)
   img8_to_img16_dh(out8)
@@ -107,6 +120,19 @@ pub fn dehaze_f(
   omega? : Float = 0.95F,
   t0? : Float = 0.1F,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("dehaze_f: 图像尺寸必须大于0")
+  }
+  if img.channels != 3 && img.channels != 4 {
+    raise @types.LoadError::DecodeFailed("dehaze_f: 仅支持RGB/RGBA图像（channels=3/4）")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let img8 = imgf_to_img8_dh(img)
   let out8 = dehaze(img8, patch_size~, omega~, t0~)
   img8_to_imgf_dh(out8)
@@ -122,6 +148,25 @@ pub fn guided_filter_16(
   radius? : Int = 20,
   eps? : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("guided_filter_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("guided_filter_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("guided_filter_16: radius必须>=1")
+  }
+  if eps <= 0.0F {
+    raise @types.LoadError::DecodeFailed("guided_filter_16: eps必须大于0")
+  }
   let img8 = img16_to_img8_dh(img)
   guided_filter(img8, input, radius~, eps~)
 }
@@ -136,6 +181,25 @@ pub fn guided_filter_f(
   radius? : Int = 20,
   eps? : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("guided_filter_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("guided_filter_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if radius < 1 {
+    raise @types.LoadError::DecodeFailed("guided_filter_f: radius必须>=1")
+  }
+  if eps <= 0.0F {
+    raise @types.LoadError::DecodeFailed("guided_filter_f: eps必须大于0")
+  }
   let img8 = imgf_to_img8_dh(img)
   guided_filter(img8, input, radius~, eps~)
 }
