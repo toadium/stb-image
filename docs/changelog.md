@@ -888,3 +888,12 @@
   - max_pool2d：输入非空、尺寸>0、通道数>0、池化尺寸>0、数据大小匹配（改为raise类型）
   - create_training_sample：图像尺寸>0、标签>=0（改为raise类型）
 - 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
+
+## v127.0.0 - 生产级增强：ocr模块 scan_document_ocr（5个核心函数）
+- 增强 ocr/scan_document_ocr.mbt：5个核心函数补充完整的生产级验证
+  - evaluate_scan_quality：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - scan_document_preprocess：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - analyze_layout_scan：尺寸>0、单通道二值图、数据大小匹配（改为raise类型）
+  - scan_ocr_recognize：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - batch_scan_ocr：图像列表非空、每张图像尺寸>0（改为raise类型）
+- 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）

@@ -68,7 +68,20 @@ pub(all) struct OCRPageResult {
 /// 评估扫描图像质量
 pub fn evaluate_scan_quality(
   img : @types.Image,
-) -> ScanQuality {
+) -> ScanQuality raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("evaluate_scan_quality: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("evaluate_scan_quality: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_scan_quality: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -179,7 +192,20 @@ pub fn evaluate_scan_quality(
 pub fn scan_document_preprocess(
   img : @types.Image,
   config : ScanOCRConfig,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("scan_document_preprocess: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("scan_document_preprocess: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "scan_document_preprocess: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let mut result = img
   // 1. 去噪（中值滤波简化版）
   if config.denoise {
@@ -473,7 +499,20 @@ fn binarize_sauvola_scan(
 /// 版面分析（基于投影的文本块检测）
 pub fn analyze_layout_scan(
   binary_img : @types.Image,
-) -> Array[TextBlock] {
+) -> Array[TextBlock] raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("analyze_layout_scan: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("analyze_layout_scan: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_layout_scan: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
   let w = binary_img.width
   let h = binary_img.height
   // 水平投影（检测文本行）
@@ -538,7 +577,20 @@ pub fn analyze_layout_scan(
 pub fn scan_ocr_recognize(
   img : @types.Image,
   config : ScanOCRConfig,
-) -> OCRPageResult {
+) -> OCRPageResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("scan_ocr_recognize: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("scan_ocr_recognize: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "scan_ocr_recognize: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let start_time = 0.0  // 简化，实际需要计时
   // 1. 预处理
   let preprocessed = scan_document_preprocess(img, config)
@@ -602,7 +654,16 @@ pub fn scan_ocr_recognize(
 pub fn batch_scan_ocr(
   images : Array[@types.Image],
   config : ScanOCRConfig,
-) -> Array[OCRPageResult] {
+) -> Array[OCRPageResult] raise @types.LoadError {
+  // 输入验证
+  if images.length() == 0 {
+    raise @types.LoadError::DecodeFailed("batch_scan_ocr: 图像列表不能为空")
+  }
+  for i in 0..<images.length() {
+    if images[i].width <= 0 || images[i].height <= 0 {
+      raise @types.LoadError::DecodeFailed("batch_scan_ocr: 第 " + i.to_string() + " 张图像尺寸必须大于0")
+    }
+  }
   let results : Array[OCRPageResult] = []
   for i in 0..<images.length() {
     let result = scan_ocr_recognize(images[i], config)

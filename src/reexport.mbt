@@ -5157,7 +5157,7 @@ pub fn scan_ocr_default_config() -> @ocr.ScanOCRConfig {
 ///|
 pub fn evaluate_scan_quality(
   img : @types.Image,
-) -> @ocr.ScanQuality {
+) -> @ocr.ScanQuality raise @types.LoadError {
   @ocr.evaluate_scan_quality(img)
 }
 
@@ -5165,14 +5165,14 @@ pub fn evaluate_scan_quality(
 pub fn scan_document_preprocess(
   img : @types.Image,
   config : @ocr.ScanOCRConfig,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.scan_document_preprocess(img, config)
 }
 
 ///|
 pub fn analyze_layout_scan(
   binary_img : @types.Image,
-) -> Array[@ocr.TextBlock] {
+) -> Array[@ocr.TextBlock] raise @types.LoadError {
   @ocr.analyze_layout_scan(binary_img)
 }
 
@@ -5180,7 +5180,7 @@ pub fn analyze_layout_scan(
 pub fn scan_ocr_recognize(
   img : @types.Image,
   config : @ocr.ScanOCRConfig,
-) -> @ocr.OCRPageResult {
+) -> @ocr.OCRPageResult raise @types.LoadError {
   @ocr.scan_ocr_recognize(img, config)
 }
 
@@ -5188,7 +5188,7 @@ pub fn scan_ocr_recognize(
 pub fn batch_scan_ocr(
   images : Array[@types.Image],
   config : @ocr.ScanOCRConfig,
-) -> Array[@ocr.OCRPageResult] {
+) -> Array[@ocr.OCRPageResult] raise @types.LoadError {
   @ocr.batch_scan_ocr(images, config)
 }
 
