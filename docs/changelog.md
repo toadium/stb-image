@@ -1116,3 +1116,11 @@
 - 增强 color/retinex_16f.mbt：2个核心函数补充完整的生产级验证
   - ssr_16：空图像直接返回、负尺寸报错、通道数1/3/4、数据大小匹配（16位2字节）、sigma>0
   - ssr_f：空图像直接返回、负尺寸报错、通道数1/3/4、数据大小匹配（浮点4字节）、sigma>0
+
+## v160.0.0 - 生产级增强：color模块 tonemap_16f（4个核心函数）
+- 增强 color/tonemap_16f.mbt：4个核心函数补充完整的生产级验证
+  - gamma_tonemap_f：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、gamma>0（改为raise类型）
+  - reinhard_tonemap_f：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、key>0（改为raise类型）
+  - gamma_tonemap_16：尺寸>0、通道数1-4、数据大小匹配（浮点4字节输入）、gamma>0（改为raise类型）
+  - reinhard_tonemap_16：尺寸>0、通道数1-4、数据大小匹配（浮点4字节输入）、key>0（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
