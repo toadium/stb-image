@@ -3615,7 +3615,7 @@ pub fn generate_enhanced_handwriting_templates(
 ///|
 pub fn extract_handwriting_stroke_features(
   char_img : @types.Image,
-) -> @ocr.HandwritingStrokeFeatures {
+) -> @ocr.HandwritingStrokeFeatures raise @types.LoadError {
   @ocr.extract_handwriting_stroke_features(char_img)
 }
 
