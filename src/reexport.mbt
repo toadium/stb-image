@@ -5334,7 +5334,7 @@ pub fn detect_layout_type(
   text_lines : Array[@ocr.TextLineAttributes],
   page_width : Int,
   page_height : Int,
-) -> @ocr.LayoutType {
+) -> @ocr.LayoutType raise @types.LoadError {
   @ocr.detect_layout_type(text_lines, page_width, page_height)
 }
 
@@ -5342,7 +5342,7 @@ pub fn detect_layout_type(
 pub fn detect_header_footer(
   text_lines : Array[@ocr.TextLineAttributes],
   page_height : Int,
-) -> (Int, Int) {
+) -> (Int, Int) raise @types.LoadError {
   @ocr.detect_header_footer(text_lines, page_height)
 }
 
@@ -5398,7 +5398,7 @@ pub fn smart_reading_order(
   elements : Array[@ocr.EnhancedDocumentElement],
   layout_type : @ocr.LayoutType,
   column_boundaries : Array[Int],
-) -> Array[Int] {
+) -> Array[Int] raise @types.LoadError {
   @ocr.smart_reading_order(elements, layout_type, column_boundaries)
 }
 
@@ -5407,7 +5407,7 @@ pub fn build_enhanced_elements(
   lines : Array[@ocr.TextLineAttributes],
   page_width : Int,
   page_height : Int,
-) -> @ocr.EnhancedDocument {
+) -> @ocr.EnhancedDocument raise @types.LoadError {
   @ocr.build_enhanced_elements(lines, page_width, page_height)
 }
 

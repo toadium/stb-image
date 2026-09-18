@@ -989,3 +989,11 @@
   - detect_image_regions_markdown：尺寸>0、单通道、数据大小匹配、最小区域面积>0（改为raise类型）
   - build_markdown_document：OCR结果的文本块列表非空（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v141.0.0 - 生产级增强：ocr模块 enhanced_layout_analysis（4个核心函数）
+- 增强 ocr/enhanced_layout_analysis.mbt：4个核心函数补充完整的生产级验证
+  - detect_layout_type：文本行列表非空、页面宽度>0、页面高度>0（改为raise类型）
+  - detect_header_footer：文本行列表非空、页面高度>0（改为raise类型）
+  - smart_reading_order：文档元素列表非空（改为raise类型）
+  - build_enhanced_elements：文本行列表非空、页面宽度>0、页面高度>0（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）

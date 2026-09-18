@@ -111,9 +111,16 @@ pub fn detect_layout_type(
   text_lines : Array[TextLineAttributes],
   page_width : Int,
   page_height : Int,
-) -> LayoutType {
+) -> LayoutType raise @types.LoadError {
+  // 输入验证
   if text_lines.length() == 0 {
-    return LayoutType::UnknownLayout
+    raise @types.LoadError::DecodeFailed("detect_layout_type: 文本行列表不能为空")
+  }
+  if page_width <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_layout_type: 页面宽度必须大于0")
+  }
+  if page_height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_layout_type: 页面高度必须大于0")
   }
   // 统计每行的水平覆盖范围
   let mut full_width_count = 0
@@ -150,9 +157,13 @@ pub fn detect_layout_type(
 pub fn detect_header_footer(
   text_lines : Array[TextLineAttributes],
   page_height : Int,
-) -> (Int, Int) {
+) -> (Int, Int) raise @types.LoadError {
+  // 输入验证
   if text_lines.length() == 0 {
-    return (0, page_height)
+    raise @types.LoadError::DecodeFailed("detect_header_footer: 文本行列表不能为空")
+  }
+  if page_height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_header_footer: 页面高度必须大于0")
   }
   // 找出最顶部和最底部的文本行
   let mut min_y = page_height
@@ -342,7 +353,11 @@ pub fn smart_reading_order(
   elements : Array[EnhancedDocumentElement],
   layout_type : LayoutType,
   column_boundaries : Array[Int],
-) -> Array[Int] {
+) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if elements.length() == 0 {
+    raise @types.LoadError::DecodeFailed("smart_reading_order: 文档元素列表不能为空")
+  }
   let indices : Array[Int] = []
   for i in 0..<elements.length() {
     indices.push(i)
@@ -379,7 +394,17 @@ pub fn build_enhanced_elements(
   lines : Array[TextLineAttributes],
   page_width : Int,
   page_height : Int,
-) -> EnhancedDocument {
+) -> EnhancedDocument raise @types.LoadError {
+  // 输入验证
+  if lines.length() == 0 {
+    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 文本行列表不能为空")
+  }
+  if page_width <= 0 {
+    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 页面宽度必须大于0")
+  }
+  if page_height <= 0 {
+    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 页面高度必须大于0")
+  }
   // 1. 检测布局类型
   let layout = detect_layout_type(lines, page_width, page_height)
   // 2. 检测页眉页脚
