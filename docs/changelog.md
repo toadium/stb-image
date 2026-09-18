@@ -1011,3 +1011,9 @@
   - extract_combined_enhanced_features：尺寸>0、单通道、数据大小匹配（改为raise类型）
   - recognize_ocr_enhanced：尺寸>0、通道数1-4、数据大小匹配、模板列表非空
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v144.0.0 - 生产级增强：ocr模块 chinese_ocr_enhanced（2个核心函数）
+- 增强 ocr/chinese_ocr_enhanced.mbt：2个核心函数补充完整的生产级验证
+  - extract_stroke_features：尺寸>0、单通道、数据大小匹配（改为raise类型）
+  - recognize_enhanced_chinese：尺寸>0、通道数1-4、数据大小匹配
+- 同步更新 reexport.mbt 中的extract_stroke_features函数类型定义（添加raise @types.LoadError）

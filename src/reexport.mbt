@@ -3406,7 +3406,7 @@ pub fn structure_based_filter(
 ///|
 pub fn extract_stroke_features(
   char_img : @types.Image,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.extract_stroke_features(char_img)
 }
 
