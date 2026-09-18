@@ -26,7 +26,20 @@ fn write_f32_le(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 pub fn adjust_brightness_16(
   img : @types.Image16,
   delta : Int,
-) -> @types.Image16 {
+) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -93,7 +106,23 @@ pub fn adjust_brightness_f(img : @types.ImageF, delta : Float) -> @types.ImageF 
 pub fn adjust_contrast_16(
   img : @types.Image16,
   factor : Float,
-) -> @types.Image16 {
+) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if factor < 0.0F {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_16: factor必须大于等于0")
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -222,7 +251,20 @@ pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF {
 
 ///|
 /// 16-bit 反色（负片）。new = 65535 - old。仅影响颜色通道，alpha 不变。
-pub fn invert_16(img : @types.Image16) -> @types.Image16 {
+pub fn invert_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("invert_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("invert_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "invert_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
