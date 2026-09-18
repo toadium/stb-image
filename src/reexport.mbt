@@ -1509,7 +1509,7 @@ pub fn nlm_denoise_fast_f(
 }
 
 ///|
-pub let median_cut : (@types.Image, Int) -> @types.Image = @color.median_cut
+pub let median_cut : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.median_cut
 pub let median_cut_16 : (@types.Image16, Int) -> @types.Image16 = @color.median_cut_16
 pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF = @color.median_cut_f
 
@@ -1802,17 +1802,17 @@ pub let threshold_otsu_16 : (@types.Image16) -> @types.Image16 raise @types.Load
 pub let threshold_otsu_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.threshold_otsu_f
 
 ///|
-pub let to_grayscale : (@types.Image) -> @types.Image = @color.to_grayscale
+pub let to_grayscale : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_grayscale
 pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 = @color.to_grayscale_16
 pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF = @color.to_grayscale_f
 
 ///|
-pub let to_rgb : (@types.Image) -> @types.Image = @color.to_rgb
+pub let to_rgb : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgb
 pub let to_rgb_16 : (@types.Image16) -> @types.Image16 = @color.to_rgb_16
 pub let to_rgb_f : (@types.ImageF) -> @types.ImageF = @color.to_rgb_f
 
 ///|
-pub let to_rgba : (@types.Image) -> @types.Image = @color.to_rgba
+pub let to_rgba : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgba
 pub let to_rgba_16 : (@types.Image16) -> @types.Image16 = @color.to_rgba_16
 pub let to_rgba_f : (@types.ImageF) -> @types.ImageF = @color.to_rgba_f
 

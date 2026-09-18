@@ -8,7 +8,20 @@
 /// 转为灰度图（channels=1）
 /// 使用 ITU-R BT.601 亮度公式: Y = 0.299R + 0.587G + 0.114B
 /// 优化：直接从 Bytes 读取，避免额外数组分配
-pub fn to_grayscale(img : @types.Image) -> @types.Image {
+pub fn to_grayscale(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_grayscale: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_grayscale: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 1 {
     return img
   }
@@ -34,7 +47,20 @@ pub fn to_grayscale(img : @types.Image) -> @types.Image {
 
 ///|
 /// 去除 alpha 通道（RGBA → RGB，channels=3）
-pub fn to_rgb(img : @types.Image) -> @types.Image {
+pub fn to_rgb(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_rgb: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgb: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgb: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 3 {
     return img
   }
@@ -58,7 +84,20 @@ pub fn to_rgb(img : @types.Image) -> @types.Image {
 
 ///|
 /// 添加 alpha 通道（RGB → RGBA，channels=4，alpha=255）
-pub fn to_rgba(img : @types.Image) -> @types.Image {
+pub fn to_rgba(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_rgba: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgba: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgba: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 4 {
     return img
   }

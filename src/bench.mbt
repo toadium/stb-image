@@ -113,7 +113,7 @@ pub fn bench_run() -> Unit {
   })
 
   // === 色彩 ===
-  b.bench(name="to_grayscale 128x128", () => ignore(@color.to_grayscale(img128)))
+  b.bench(name="to_grayscale 128x128", () => ignore(@color.to_grayscale(img128) catch { _ => empty }))
   b.bench(name="adjust_brightness 128x128", () => {
     ignore(@color.adjust_brightness(img128, 50) catch { _ => empty })
   })

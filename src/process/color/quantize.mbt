@@ -72,7 +72,20 @@ pub fn floyd_steinberg(img : @types.Image, levels : Int) -> @types.Image {
 /// Median Cut 色彩量化。将图像量化为最多 num_colors 种颜色。
 /// 返回量化后的 RGB 图像（channels=3）。
 /// 算法：递归地沿最大方差通道在中位数处分割颜色空间。
-pub fn median_cut(img : @types.Image, num_colors : Int) -> @types.Image {
+pub fn median_cut(img : @types.Image, num_colors : Int) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_cut: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_cut: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_cut: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if num_colors < 2 {
     return to_rgb(img)
   }

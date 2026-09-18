@@ -1043,3 +1043,13 @@
   - invert：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
 - 同步更新 bench.mbt 中的2个函数调用（添加catch处理）
+
+## v149.0.0 - 生产级增强：color模块 color_convert + quantize（4个核心函数）
+- 增强 color/color_convert.mbt：3个核心函数补充完整的生产级验证
+  - to_grayscale：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - to_rgb：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - to_rgba：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 增强 color/quantize.mbt：1个核心函数补充完整的生产级验证
+  - median_cut：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+- 同步更新 bench.mbt 中的to_grayscale函数调用（添加catch处理）
