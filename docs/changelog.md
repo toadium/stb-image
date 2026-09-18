@@ -968,3 +968,10 @@
   - detect_vertical_table_lines：尺寸>0、单通道、数据大小匹配、最小线长>0、最大间隙>=0（改为raise类型）
   - detect_table_enhanced：尺寸>0、单通道、数据大小匹配、最小表格尺寸>0（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v138.0.0 - 生产级增强：ocr模块 training_framework（3个核心函数）
+- 增强 ocr/training_framework.mbt：3个核心函数补充完整的生产级验证
+  - create_data_loader：样本列表非空、批大小>0（改为raise类型）
+  - next_batch：样本列表非空、批大小>0（改为raise类型）
+  - calculate_learning_rate：轮次>=0、当前学习率>0、验证损失>=0、初始学习率>0、最小学习率>=0（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

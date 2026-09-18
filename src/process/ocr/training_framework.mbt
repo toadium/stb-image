@@ -191,7 +191,14 @@ pub fn create_data_loader(
   samples : Array[DLTrainingSample],
   batch_size : Int,
   shuffle : Bool,
-) -> DataLoader {
+) -> DataLoader raise @types.LoadError {
+  // 输入验证
+  if samples.length() == 0 {
+    raise @types.LoadError::DecodeFailed("create_data_loader: 样本列表不能为空")
+  }
+  if batch_size <= 0 {
+    raise @types.LoadError::DecodeFailed("create_data_loader: 批大小必须大于0")
+  }
   DataLoader::{
     samples,
     batch_size,
@@ -205,7 +212,14 @@ pub fn create_data_loader(
 /// 获取下一批数据
 pub fn next_batch(
   loader : DataLoader,
-) -> (Array[DLTrainingSample], DataLoader) {
+) -> (Array[DLTrainingSample], DataLoader) raise @types.LoadError {
+  // 输入验证
+  if loader.samples.length() == 0 {
+    raise @types.LoadError::DecodeFailed("next_batch: 数据加载器的样本列表不能为空")
+  }
+  if loader.batch_size <= 0 {
+    raise @types.LoadError::DecodeFailed("next_batch: 批大小必须大于0")
+  }
   let end_index = if loader.current_index + loader.batch_size < loader.samples.length() {
     loader.current_index + loader.batch_size
   } else {
@@ -271,7 +285,23 @@ pub fn calculate_learning_rate(
   epoch : Int,
   current_lr : Double,
   val_loss : Double,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if epoch < 0 {
+    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 轮次不能为负")
+  }
+  if current_lr <= 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 当前学习率必须大于0")
+  }
+  if val_loss < 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 验证损失不能为负")
+  }
+  if config.initial_lr <= 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 初始学习率必须大于0")
+  }
+  if config.min_lr < 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 最小学习率不能为负")
+  }
   match config.scheduler_type {
     LRSchedulerType::Constant => config.initial_lr
     LRSchedulerType::StepDecay => {

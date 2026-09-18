@@ -6167,14 +6167,14 @@ pub fn create_data_loader(
   samples : Array[@ocr.DLTrainingSample],
   batch_size : Int,
   shuffle : Bool,
-) -> @ocr.DataLoader {
+) -> @ocr.DataLoader raise @types.LoadError {
   @ocr.create_data_loader(samples, batch_size, shuffle)
 }
 
 ///|
 pub fn next_batch(
   loader : @ocr.DataLoader,
-) -> (Array[@ocr.DLTrainingSample], @ocr.DataLoader) {
+) -> (Array[@ocr.DLTrainingSample], @ocr.DataLoader) raise @types.LoadError {
   @ocr.next_batch(loader)
 }
 
@@ -6184,7 +6184,7 @@ pub fn calculate_learning_rate(
   epoch : Int,
   current_lr : Double,
   val_loss : Double,
-) -> Double {
+) -> Double raise @types.LoadError {
   @ocr.calculate_learning_rate(config, epoch, current_lr, val_loss)
 }
 
