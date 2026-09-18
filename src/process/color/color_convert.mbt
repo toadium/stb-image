@@ -205,7 +205,11 @@ pub fn unpremultiply_alpha(
 
 ///|
 /// RGB → YCbCr（ITU-R BT.601）。返回 (Y, Cb, Cr)，范围 0-255。
-pub fn rgb_to_ycbcr(r : Int, g : Int, b : Int) -> (Int, Int, Int) {
+pub fn rgb_to_ycbcr(r : Int, g : Int, b : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_ycbcr: r,g,b必须在[0,255]范围内")
+  }
   let y = (299 * r + 587 * g + 114 * b) / 1000
   let cb = (-169 * r - 331 * g + 500 * b) / 1000 + 128
   let cr = (500 * r - 419 * g - 81 * b) / 1000 + 128
@@ -214,7 +218,11 @@ pub fn rgb_to_ycbcr(r : Int, g : Int, b : Int) -> (Int, Int, Int) {
 
 ///|
 /// YCbCr → RGB（ITU-R BT.601）。输入范围 0-255。
-pub fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
+pub fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if y < 0 || y > 255 || cb < 0 || cb > 255 || cr < 0 || cr > 255 {
+    raise @types.LoadError::DecodeFailed("ycbcr_to_rgb: y,cb,cr必须在[0,255]范围内")
+  }
   let cb0 = cb - 128
   let cr0 = cr - 128
   let r = y + 1402 * cr0 / 1000
@@ -225,7 +233,11 @@ pub fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
 
 ///|
 /// RGB → XYZ（sRGB, D65 白点）。返回 (X, Y, Z)，范围 0.0-1.0。
-pub fn rgb_to_xyz(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_xyz(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_xyz: r,g,b必须在[0,255]范围内")
+  }
   fn linearize(c : Int) -> Float {
     let cf = Float::from_int(c) / 255.0F
     if cf <= 0.04045F {
@@ -245,7 +257,11 @@ pub fn rgb_to_xyz(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 
 ///|
 /// XYZ → RGB（sRGB, D65 白点）。输入范围 0.0-1.0。
-pub fn xyz_to_rgb(x : Float, y : Float, z : Float) -> (Int, Int, Int) {
+pub fn xyz_to_rgb(x : Float, y : Float, z : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if x < 0.0F || x > 1.0F || y < 0.0F || y > 1.0F || z < 0.0F || z > 1.0F {
+    raise @types.LoadError::DecodeFailed("xyz_to_rgb: x,y,z必须在[0,1]范围内")
+  }
   let rl = 3.2406F * x - 1.5372F * y - 0.4986F * z
   let gl = -0.9689F * x + 1.8758F * y + 0.0415F * z
   let bl = 0.0557F * x - 0.2040F * y + 1.0570F * z
@@ -262,7 +278,11 @@ pub fn xyz_to_rgb(x : Float, y : Float, z : Float) -> (Int, Int, Int) {
 
 ///|
 /// RGB → Lab（CIELAB, D65 白点）。返回 (L, a, b)，L 范围 0-100，a/b 范围 -128-127。
-pub fn rgb_to_lab(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_lab(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_lab: r,g,b必须在[0,255]范围内")
+  }
   let (x, y, z) = rgb_to_xyz(r, g, b)
   let xn = 0.9505F
   let yn = 1.0F
@@ -285,7 +305,11 @@ pub fn rgb_to_lab(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 
 ///|
 /// Lab → RGB（CIELAB, D65 白点）。输入 L 范围 0-100，a/b 范围 -128-127。
-pub fn lab_to_rgb(l : Float, a : Float, b : Float) -> (Int, Int, Int) {
+pub fn lab_to_rgb(l : Float, a : Float, b : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if l < 0.0F || l > 100.0F {
+    raise @types.LoadError::DecodeFailed("lab_to_rgb: L必须在[0,100]范围内")
+  }
   let yn = 1.0F
   let xn = 0.9505F
   let zn = 1.089F

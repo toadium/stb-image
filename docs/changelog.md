@@ -1145,3 +1145,13 @@
   - adjust_hue：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 修复 segment/segment.mbt：segment_to_color 函数改为raise类型（因调用hsv_to_rgb）
 - 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）
+
+## v164.0.0 - 生产级增强：color模块 color_convert（6个核心函数）
+- 增强 color/color_convert.mbt：6个核心函数补充完整的生产级验证
+  - rgb_to_ycbcr：r,g,b∈[0,255]范围验证（改为raise类型）
+  - ycbcr_to_rgb：y,cb,cr∈[0,255]范围验证（改为raise类型）
+  - rgb_to_xyz：r,g,b∈[0,255]范围验证（改为raise类型）
+  - xyz_to_rgb：x,y,z∈[0,1]范围验证（改为raise类型）
+  - rgb_to_lab：r,g,b∈[0,255]范围验证（改为raise类型）
+  - lab_to_rgb：L∈[0,100]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的6个函数类型定义（添加raise @types.LoadError）
