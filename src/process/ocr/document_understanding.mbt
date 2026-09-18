@@ -51,6 +51,19 @@ pub(all) struct DocumentStructure {
 pub fn analyze_document_layout(
   img : @types.Image,
 ) -> DocumentStructure raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("analyze_document_layout: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("analyze_document_layout: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_document_layout: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   // 1. 预处理
   let preprocessed = ocr_preprocess(img)
   // 2. 文本行检测
@@ -165,7 +178,11 @@ fn classify_element_type(
 /// 计算阅读顺序（从上到下，从左到右）
 pub fn compute_reading_order(
   elements : Array[DocumentElement],
-) -> Array[Int] {
+) -> Array[Int] raise @types.LoadError {
+  // 输入验证
+  if elements.length() == 0 {
+    raise @types.LoadError::DecodeFailed("compute_reading_order: 元素列表不能为空")
+  }
   // 按 y 坐标排序，然后按 x 坐标排序
   let indices : Array[Int] = []
   for i in 0..<elements.length() {
@@ -289,6 +306,19 @@ pub fn document_structure_stats(
 pub fn detect_document_columns(
   img : @types.Image,
 ) -> Int raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_document_columns: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_document_columns: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_columns: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let (num_cols, _) = detect_columns(img)
   num_cols
 }
@@ -298,6 +328,19 @@ pub fn detect_document_columns(
 pub fn understand_document(
   img : @types.Image,
 ) -> DocumentStructure raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("understand_document: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("understand_document: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "understand_document: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   // 1. 版面分析
   let structure = analyze_document_layout(img)
   // 2. 计算阅读顺序

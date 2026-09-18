@@ -897,3 +897,11 @@
   - scan_ocr_recognize：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
   - batch_scan_ocr：图像列表非空、每张图像尺寸>0（改为raise类型）
 - 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
+
+## v128.0.0 - 生产级增强：ocr模块 document_understanding（4个核心函数）
+- 增强 ocr/document_understanding.mbt：4个核心函数补充完整的生产级验证
+  - analyze_document_layout：尺寸>0、通道数1-4、数据大小匹配
+  - compute_reading_order：元素列表非空（改为raise类型）
+  - understand_document：尺寸>0、通道数1-4、数据大小匹配
+  - detect_document_columns：尺寸>0、通道数1-4、数据大小匹配
+- 同步更新 reexport.mbt 中的compute_reading_order函数类型定义（添加raise @types.LoadError）

@@ -3234,7 +3234,7 @@ pub fn analyze_document_layout(
 ///|
 pub fn compute_reading_order(
   elements : Array[@ocr.DocumentElement],
-) -> Array[Int] {
+) -> Array[Int] raise @types.LoadError {
   @ocr.compute_reading_order(elements)
 }
 
