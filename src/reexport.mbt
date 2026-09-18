@@ -3435,7 +3435,7 @@ pub fn ocr_accuracy_enhanced_default_config() -> @ocr.OcrAccuracyEnhancedConfig 
 pub fn extract_zernike_moments(
   char_img : @types.Image,
   max_order? : Int = 4,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.extract_zernike_moments(char_img, max_order~)
 }
 
@@ -3487,7 +3487,7 @@ pub fn multi_scale_recognize(
 pub fn extract_combined_enhanced_features(
   char_img : @types.Image,
   config : @ocr.OcrAccuracyEnhancedConfig,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
   @ocr.extract_combined_enhanced_features(char_img, config)
 }
 

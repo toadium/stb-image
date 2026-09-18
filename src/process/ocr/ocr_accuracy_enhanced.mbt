@@ -34,7 +34,23 @@ pub fn ocr_accuracy_enhanced_default_config() -> OcrAccuracyEnhancedConfig {
 pub fn extract_zernike_moments(
   char_img : @types.Image,
   max_order? : Int = 4,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if char_img.width <= 0 || char_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 图像尺寸必须大于0")
+  }
+  if char_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 仅支持单通道灰度图")
+  }
+  let expected_size = char_img.width * char_img.height
+  if char_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_zernike_moments: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+    )
+  }
+  if max_order <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 最大阶数必须大于0")
+  }
   let w = char_img.width
   let h = char_img.height
   let data = char_img.data
@@ -448,7 +464,20 @@ fn extract_grid_features(
 pub fn extract_combined_enhanced_features(
   char_img : @types.Image,
   config : OcrAccuracyEnhancedConfig,
-) -> Array[Double] {
+) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if char_img.width <= 0 || char_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_combined_enhanced_features: 图像尺寸必须大于0")
+  }
+  if char_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("extract_combined_enhanced_features: 仅支持单通道灰度图")
+  }
+  let expected_size = char_img.width * char_img.height
+  if char_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_enhanced_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+    )
+  }
   let features : Array[Double] = []
   // 网格特征（基础）
   let grid = extract_grid_features(char_img, 16)
@@ -486,6 +515,22 @@ pub fn recognize_ocr_enhanced(
   templates : Array[(String, Array[Double])],
   config? : OcrAccuracyEnhancedConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_ocr_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if templates.length() == 0 {
+    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 模板列表不能为空")
+  }
   let cfg = match config {
     Some(c) => c
     None => ocr_accuracy_enhanced_default_config()

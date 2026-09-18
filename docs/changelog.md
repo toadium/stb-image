@@ -1004,3 +1004,10 @@
   - smart_segment_chars：尺寸>0、单通道、数据大小匹配（改为raise类型）
   - recognize_multilingual_enhanced：尺寸>0、通道数1-4、数据大小匹配
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v143.0.0 - 生产级增强：ocr模块 ocr_accuracy_enhanced（3个核心函数）
+- 增强 ocr/ocr_accuracy_enhanced.mbt：3个核心函数补充完整的生产级验证
+  - extract_zernike_moments：尺寸>0、单通道、数据大小匹配、最大阶数>0（改为raise类型）
+  - extract_combined_enhanced_features：尺寸>0、单通道、数据大小匹配（改为raise类型）
+  - recognize_ocr_enhanced：尺寸>0、通道数1-4、数据大小匹配、模板列表非空
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
