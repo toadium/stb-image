@@ -71,10 +71,14 @@ test "rgb_to_xyz_f white" {
 }
 
 test "xyz_to_rgb_16 white" {
-  let (r, g, b) = @color.xyz_to_rgb_16(0.9505F, 1.0F, 1.089F)
-  assert_true(r >= 65000)
-  assert_true(g >= 65000)
-  assert_true(b >= 65000)
+  try {
+    let (r, g, b) = @color.xyz_to_rgb_16(0.9505F, 1.0F, 1.089F)
+    assert_true(r >= 65000)
+    assert_true(g >= 65000)
+    assert_true(b >= 65000)
+  } catch {
+    _ => assert_true(false) // 不应该抛出错误
+  }
 }
 
 test "xyz_to_rgb_f white" {
@@ -99,10 +103,14 @@ test "rgb_to_lab_f white" {
 }
 
 test "lab_to_rgb_16 white" {
-  let (r, g, b) = @color.lab_to_rgb_16(100.0F, 0.0F, 0.0F)
-  assert_true(r >= 65000)
-  assert_true(g >= 65000)
-  assert_true(b >= 65000)
+  try {
+    let (r, g, b) = @color.lab_to_rgb_16(100.0F, 0.0F, 0.0F)
+    assert_true(r >= 65000)
+    assert_true(g >= 65000)
+    assert_true(b >= 65000)
+  } catch {
+    _ => assert_true(false) // 不应该抛出错误
+  }
 }
 
 test "lab_to_rgb_f white" {

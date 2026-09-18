@@ -1182,3 +1182,12 @@
   - rgb_to_cmyk_16：r,g,b∈[0,65535]范围验证（改为raise类型）
   - cmyk_to_rgb_16：c,m,y,k∈[0,65535]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v169.0.0 - 生产级增强：color模块 color_space_16f（4个核心函数）
+- 增强 color/color_space_16f.mbt：4个核心函数补充完整的生产级验证
+  - rgb_to_xyz_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - xyz_to_rgb_16：x,y,z>=0范围验证（改为raise类型）
+  - rgb_to_lab_16：r,g,b∈[0,65535]范围验证（改为raise类型）
+  - lab_to_rgb_16：L∈[0,100]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+- 修改测试用例：添加try/catch处理raise错误

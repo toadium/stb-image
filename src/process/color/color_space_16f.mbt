@@ -249,7 +249,11 @@ pub fn hsv_to_rgb_f(h : Float, s : Float, v : Float) -> (Float, Float, Float) {
 
 ///|
 /// 16-bit RGB → XYZ。输入 r,g,b ∈ [0,65535]，输出 x,y,z ∈ [0,1]
-pub fn rgb_to_xyz_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_xyz_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
+    raise @types.LoadError::DecodeFailed("rgb_to_xyz_16: r,g,b必须在[0,65535]范围内")
+  }
   fn linearize(c : Int) -> Float {
     let cf = Float::from_int(c) / 65535.0F
     if cf <= 0.04045F {
@@ -269,7 +273,11 @@ pub fn rgb_to_xyz_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 
 ///|
 /// 16-bit XYZ → RGB。输入 x,y,z ∈ [0,1]，输出 r,g,b ∈ [0,65535]
-pub fn xyz_to_rgb_16(x : Float, y : Float, z : Float) -> (Int, Int, Int) {
+pub fn xyz_to_rgb_16(x : Float, y : Float, z : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证（XYZ空间允许z值超过1.0）
+  if x < 0.0F || y < 0.0F || z < 0.0F {
+    raise @types.LoadError::DecodeFailed("xyz_to_rgb_16: x,y,z必须>=0")
+  }
   let rl = 3.2406F * x - 1.5372F * y - 0.4986F * z
   let gl = -0.9689F * x + 1.8758F * y + 0.0415F * z
   let bl = 0.0557F * x - 0.2040F * y + 1.0570F * z
@@ -327,7 +335,11 @@ pub fn xyz_to_rgb_f(x : Float, y : Float, z : Float) -> (Float, Float, Float) {
 
 ///|
 /// 16-bit RGB → LAB。输入 r,g,b ∈ [0,65535]，输出 L ∈ [0,100], a,b ∈ [-128,127]
-pub fn rgb_to_lab_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_lab_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
+    raise @types.LoadError::DecodeFailed("rgb_to_lab_16: r,g,b必须在[0,65535]范围内")
+  }
   let (x, y, z) = rgb_to_xyz_16(r, g, b)
   let xn = 0.9505F
   let yn = 1.0F
@@ -350,7 +362,11 @@ pub fn rgb_to_lab_16(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 
 ///|
 /// 16-bit LAB → RGB。输入 L ∈ [0,100], a,b ∈ [-128,127]，输出 r,g,b ∈ [0,65535]
-pub fn lab_to_rgb_16(l : Float, a : Float, b : Float) -> (Int, Int, Int) {
+pub fn lab_to_rgb_16(l : Float, a : Float, b : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if l < 0.0F || l > 100.0F {
+    raise @types.LoadError::DecodeFailed("lab_to_rgb_16: L必须在[0,100]范围内")
+  }
   let xn = 0.9505F
   let yn = 1.0F
   let zn = 1.089F

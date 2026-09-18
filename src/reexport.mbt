@@ -1626,22 +1626,22 @@ pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color
 
 ///|
 pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz
-pub let rgb_to_xyz_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_xyz_16
+pub let rgb_to_xyz_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_16
 pub let rgb_to_xyz_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_xyz_f
 
 ///|
 pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb
-pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.xyz_to_rgb_16
+pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb_16
 pub let xyz_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.xyz_to_rgb_f
 
 ///|
 pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab
-pub let rgb_to_lab_16 : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_lab_16
+pub let rgb_to_lab_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_16
 pub let rgb_to_lab_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_lab_f
 
 ///|
 pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb
-pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) = @color.lab_to_rgb_16
+pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb_16
 pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.lab_to_rgb_f
 
 ///|
