@@ -830,3 +830,11 @@
 - 增强 ocr/feature_extraction.mbt：hog_features/lbp_features/projection_features/grid_features/statistical_features/combined_features函数补充完整的生产级验证
   - 图像验证：尺寸>0、单通道灰度/二值图、数据大小匹配
   - 参数验证：cell_size/num_bins/radius/num_points/grid_rows/grid_cols>0
+
+## v121.0.0 - 生产级增强：ocr模块 classifier（14个函数）+ ensemble_predict
+- 增强 ocr/classifier.mbt：euclidean_distance/manhattan_distance/cosine_distance/chebyshev_distance/compute_distance/knn_create/knn_add_sample/knn_add_samples/knn_predict/template_matcher_add/template_matcher_predict/normalize_features/standardize_features函数补充完整的生产级验证
+  - 向量验证：非空检查
+  - 参数验证：k>0、标签非空、特征向量非空
+  - 分类器验证：训练样本/模板非空
+- 增强 ocr/ocr_accuracy.mbt：ensemble_predict函数补充完整的生产级验证（因knn_predict添加raise类型）
+- 同步更新 reexport.mbt 中的15个函数类型定义（添加raise @types.LoadError）

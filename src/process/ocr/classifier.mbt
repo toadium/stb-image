@@ -42,7 +42,15 @@ pub(all) enum DistanceMetric {
 
 ///|
 /// 计算欧氏距离
-pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.length() == 0 {
+    raise @types.LoadError::DecodeFailed("euclidean_distance: 向量a不能为空")
+  }
+  if b.length() == 0 {
+    raise @types.LoadError::DecodeFailed("euclidean_distance: 向量b不能为空")
+  }
+
   let n = if a.length() < b.length() { a.length() } else { b.length() }
   let mut sum_sq = 0.0
   for i in 0..<n {
@@ -54,7 +62,15 @@ pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 计算曼哈顿距离
-pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.length() == 0 {
+    raise @types.LoadError::DecodeFailed("manhattan_distance: 向量a不能为空")
+  }
+  if b.length() == 0 {
+    raise @types.LoadError::DecodeFailed("manhattan_distance: 向量b不能为空")
+  }
+
   let n = if a.length() < b.length() { a.length() } else { b.length() }
   let mut sum = 0.0
   for i in 0..<n {
@@ -65,7 +81,15 @@ pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 计算余弦相似度（返回距离 = 1 - 相似度）
-pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.length() == 0 {
+    raise @types.LoadError::DecodeFailed("cosine_distance: 向量a不能为空")
+  }
+  if b.length() == 0 {
+    raise @types.LoadError::DecodeFailed("cosine_distance: 向量b不能为空")
+  }
+
   let n = if a.length() < b.length() { a.length() } else { b.length() }
   let mut dot = 0.0
   let mut norm_a = 0.0
@@ -85,7 +109,15 @@ pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 计算切比雪夫距离
-pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.length() == 0 {
+    raise @types.LoadError::DecodeFailed("chebyshev_distance: 向量a不能为空")
+  }
+  if b.length() == 0 {
+    raise @types.LoadError::DecodeFailed("chebyshev_distance: 向量b不能为空")
+  }
+
   let n = if a.length() < b.length() { a.length() } else { b.length() }
   let mut max_diff = 0.0
   for i in 0..<n {
@@ -103,7 +135,15 @@ pub fn compute_distance(
   a : Array[Double],
   b : Array[Double],
   metric : DistanceMetric,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if a.length() == 0 {
+    raise @types.LoadError::DecodeFailed("compute_distance: 向量a不能为空")
+  }
+  if b.length() == 0 {
+    raise @types.LoadError::DecodeFailed("compute_distance: 向量b不能为空")
+  }
+
   match metric {
     DistanceMetric::Euclidean => euclidean_distance(a, b)
     DistanceMetric::Manhattan => manhattan_distance(a, b)
@@ -117,7 +157,12 @@ pub fn compute_distance(
 pub fn knn_create(
   k? : Int = 3,
   distance_metric? : String = "euclidean",
-) -> KnnClassifier {
+) -> KnnClassifier raise @types.LoadError {
+  // 输入验证
+  if k <= 0 {
+    raise @types.LoadError::DecodeFailed("knn_create: k必须大于0")
+  }
+
   KnnClassifier::{
     samples: [],
     k,
@@ -131,7 +176,15 @@ pub fn knn_add_sample(
   classifier : KnnClassifier,
   features : Array[Double],
   label : String,
-) -> KnnClassifier {
+) -> KnnClassifier raise @types.LoadError {
+  // 输入验证
+  if features.length() == 0 {
+    raise @types.LoadError::DecodeFailed("knn_add_sample: 特征向量不能为空")
+  }
+  if label.length() == 0 {
+    raise @types.LoadError::DecodeFailed("knn_add_sample: 标签不能为空")
+  }
+
   let new_samples = classifier.samples
   new_samples.push(TrainingSample::{ features, label })
   KnnClassifier::{
@@ -146,7 +199,12 @@ pub fn knn_add_sample(
 pub fn knn_add_samples(
   classifier : KnnClassifier,
   samples : Array[(Array[Double], String)],
-) -> KnnClassifier {
+) -> KnnClassifier raise @types.LoadError {
+  // 输入验证
+  if samples.length() == 0 {
+    raise @types.LoadError::DecodeFailed("knn_add_samples: 样本列表不能为空")
+  }
+
   let new_samples = classifier.samples
   for (features, label) in samples {
     new_samples.push(TrainingSample::{ features, label })
@@ -163,7 +221,15 @@ pub fn knn_add_samples(
 pub fn knn_predict(
   classifier : KnnClassifier,
   features : Array[Double],
-) -> ClassificationResult {
+) -> ClassificationResult raise @types.LoadError {
+  // 输入验证
+  if features.length() == 0 {
+    raise @types.LoadError::DecodeFailed("knn_predict: 特征向量不能为空")
+  }
+  if classifier.samples.length() == 0 {
+    raise @types.LoadError::DecodeFailed("knn_predict: 分类器没有训练样本")
+  }
+
   let metric = match classifier.distance_metric {
     "manhattan" => DistanceMetric::Manhattan
     "cosine" => DistanceMetric::Cosine
@@ -228,6 +294,7 @@ pub fn knn_predict(
 pub fn template_matcher_create(
   distance_metric? : String = "euclidean",
 ) -> TemplateMatcher {
+  // 输入验证：distance_metric 不做强制验证，使用默认值兜底
   TemplateMatcher::{
     templates: [],
     distance_metric,
@@ -240,7 +307,15 @@ pub fn template_matcher_add(
   matcher : TemplateMatcher,
   label : String,
   template : Array[Double],
-) -> TemplateMatcher {
+) -> TemplateMatcher raise @types.LoadError {
+  // 输入验证
+  if template.length() == 0 {
+    raise @types.LoadError::DecodeFailed("template_matcher_add: 模板特征向量不能为空")
+  }
+  if label.length() == 0 {
+    raise @types.LoadError::DecodeFailed("template_matcher_add: 标签不能为空")
+  }
+
   let new_templates = matcher.templates
   new_templates.push((label, template))
   TemplateMatcher::{
@@ -254,7 +329,15 @@ pub fn template_matcher_add(
 pub fn template_matcher_predict(
   matcher : TemplateMatcher,
   features : Array[Double],
-) -> ClassificationResult {
+) -> ClassificationResult raise @types.LoadError {
+  // 输入验证
+  if features.length() == 0 {
+    raise @types.LoadError::DecodeFailed("template_matcher_predict: 特征向量不能为空")
+  }
+  if matcher.templates.length() == 0 {
+    raise @types.LoadError::DecodeFailed("template_matcher_predict: 模板匹配器没有模板")
+  }
+
   let metric = match matcher.distance_metric {
     "manhattan" => DistanceMetric::Manhattan
     "cosine" => DistanceMetric::Cosine
@@ -304,9 +387,10 @@ pub fn template_matcher_predict(
 
 ///|
 /// 特征归一化（Min-Max 归一化到 [0, 1]）
-pub fn normalize_features(features : Array[Double]) -> Array[Double] {
+pub fn normalize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+  // 输入验证
   if features.length() == 0 {
-    return features
+    raise @types.LoadError::DecodeFailed("normalize_features: 特征向量不能为空")
   }
   let mut min_val = features[0]
   let mut max_val = features[0]
@@ -330,9 +414,10 @@ pub fn normalize_features(features : Array[Double]) -> Array[Double] {
 
 ///|
 /// 特征标准化（Z-score 标准化，均值0，标准差1）
-pub fn standardize_features(features : Array[Double]) -> Array[Double] {
+pub fn standardize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+  // 输入验证
   if features.length() == 0 {
-    return features
+    raise @types.LoadError::DecodeFailed("standardize_features: 特征向量不能为空")
   }
   // 计算均值
   let mut sum = 0.0

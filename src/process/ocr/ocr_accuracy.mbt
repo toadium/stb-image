@@ -187,7 +187,12 @@ pub fn ensemble_predict(
   knn_classifier : KnnClassifier,
   templates : Array[(String, Array[Double])],
   config? : EnsembleConfig,
-) -> ClassificationResult {
+) -> ClassificationResult raise @types.LoadError {
+  // 输入验证
+  if features.length() == 0 {
+    raise @types.LoadError::DecodeFailed("ensemble_predict: 特征向量不能为空")
+  }
+
   let cfg = match config {
     Some(c) => c
     None => ensemble_default_config()
@@ -196,7 +201,9 @@ pub fn ensemble_predict(
   let predictions : Array[(String, Double)] = []
   // KNN 预测
   if cfg.use_knn {
-    let knn_result = knn_predict(knn_classifier, features)
+    let knn_result = try knn_predict(knn_classifier, features) catch { _ =>
+      ClassificationResult::{ label: "?", confidence: 0.0, top_k: [] }
+    }
     predictions.push((knn_result.label, knn_result.confidence))
   }
   // 模板匹配预测

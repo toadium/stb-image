@@ -2771,22 +2771,22 @@ pub type TemplateMatcher = @ocr.TemplateMatcher
 pub type DistanceMetric = @ocr.DistanceMetric
 
 ///|
-pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
   @ocr.euclidean_distance(a, b)
 }
 
 ///|
-pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
   @ocr.manhattan_distance(a, b)
 }
 
 ///|
-pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
   @ocr.cosine_distance(a, b)
 }
 
 ///|
-pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double {
+pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
   @ocr.chebyshev_distance(a, b)
 }
 
@@ -2795,7 +2795,7 @@ pub fn compute_distance(
   a : Array[Double],
   b : Array[Double],
   metric : @ocr.DistanceMetric,
-) -> Double {
+) -> Double raise @types.LoadError {
   @ocr.compute_distance(a, b, metric)
 }
 
@@ -2803,7 +2803,7 @@ pub fn compute_distance(
 pub fn knn_create(
   k? : Int = 3,
   distance_metric? : String = "euclidean",
-) -> @ocr.KnnClassifier {
+) -> @ocr.KnnClassifier raise @types.LoadError {
   @ocr.knn_create(k~, distance_metric~)
 }
 
@@ -2812,7 +2812,7 @@ pub fn knn_add_sample(
   classifier : @ocr.KnnClassifier,
   features : Array[Double],
   label : String,
-) -> @ocr.KnnClassifier {
+) -> @ocr.KnnClassifier raise @types.LoadError {
   @ocr.knn_add_sample(classifier, features, label)
 }
 
@@ -2820,7 +2820,7 @@ pub fn knn_add_sample(
 pub fn knn_add_samples(
   classifier : @ocr.KnnClassifier,
   samples : Array[(Array[Double], String)],
-) -> @ocr.KnnClassifier {
+) -> @ocr.KnnClassifier raise @types.LoadError {
   @ocr.knn_add_samples(classifier, samples)
 }
 
@@ -2828,7 +2828,7 @@ pub fn knn_add_samples(
 pub fn knn_predict(
   classifier : @ocr.KnnClassifier,
   features : Array[Double],
-) -> @ocr.ClassificationResult {
+) -> @ocr.ClassificationResult raise @types.LoadError {
   @ocr.knn_predict(classifier, features)
 }
 
@@ -2844,7 +2844,7 @@ pub fn template_matcher_add(
   matcher : @ocr.TemplateMatcher,
   label : String,
   template : Array[Double],
-) -> @ocr.TemplateMatcher {
+) -> @ocr.TemplateMatcher raise @types.LoadError {
   @ocr.template_matcher_add(matcher, label, template)
 }
 
@@ -2852,17 +2852,17 @@ pub fn template_matcher_add(
 pub fn template_matcher_predict(
   matcher : @ocr.TemplateMatcher,
   features : Array[Double],
-) -> @ocr.ClassificationResult {
+) -> @ocr.ClassificationResult raise @types.LoadError {
   @ocr.template_matcher_predict(matcher, features)
 }
 
 ///|
-pub fn normalize_features(features : Array[Double]) -> Array[Double] {
+pub fn normalize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
   @ocr.normalize_features(features)
 }
 
 ///|
-pub fn standardize_features(features : Array[Double]) -> Array[Double] {
+pub fn standardize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
   @ocr.standardize_features(features)
 }
 
@@ -3199,7 +3199,7 @@ pub fn ensemble_predict(
   knn_classifier : @ocr.KnnClassifier,
   templates : Array[(String, Array[Double])],
   config? : @ocr.EnsembleConfig,
-) -> @ocr.ClassificationResult {
+) -> @ocr.ClassificationResult raise @types.LoadError {
   match config {
     Some(c) => @ocr.ensemble_predict(features, knn_classifier, templates, config=c)
     None => @ocr.ensemble_predict(features, knn_classifier, templates)
