@@ -11,7 +11,20 @@ fn clamp_float(v : Float) -> Float {
 
 ///|
 /// 16-bit 去除 alpha 通道（RGBA → RGB，channels=3）
-pub fn to_rgb_16(img : @types.Image16) -> @types.Image16 {
+pub fn to_rgb_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("to_rgb_16: 图像尺寸不能为负")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgb_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgb_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 3 {
     return img
   }
@@ -72,7 +85,20 @@ pub fn to_rgb_f(img : @types.ImageF) -> @types.ImageF {
 
 ///|
 /// 16-bit 添加 alpha 通道（RGB → RGBA，channels=4，alpha=65535）
-pub fn to_rgba_16(img : @types.Image16) -> @types.Image16 {
+pub fn to_rgba_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width < 0 || img.height < 0 {
+    raise @types.LoadError::DecodeFailed("to_rgba_16: 图像尺寸不能为负")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgba_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgba_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 4 {
     return img
   }
@@ -140,9 +166,19 @@ pub fn to_rgba_f(img : @types.ImageF) -> @types.ImageF {
 pub fn premultiply_alpha_16(
   img : @types.Image16,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("premultiply_alpha_16: 图像尺寸必须大于0")
+  }
   if img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "premultiply_alpha_16 需要 channels=4 (RGBA)",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "premultiply_alpha_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let n = img.width * img.height

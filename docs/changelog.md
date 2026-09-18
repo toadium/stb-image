@@ -1089,3 +1089,10 @@
   - adjust_contrast_16：尺寸>0、通道数1-4、数据大小匹配（16位2字节）、factor>=0（改为raise类型）
   - invert_16：尺寸>0、通道数1-4、数据大小匹配（16位2字节）（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v156.0.0 - 生产级增强：color模块 color_convert_16f（3个核心函数）
+- 增强 color/color_convert_16f.mbt：3个核心函数补充完整的生产级验证
+  - to_rgb_16：负尺寸报错、通道数1-4、数据大小匹配（16位2字节）（改为raise类型）
+  - to_rgba_16：负尺寸报错、通道数1-4、数据大小匹配（16位2字节）（改为raise类型）
+  - premultiply_alpha_16：尺寸>0、通道数4、数据大小匹配（16位2字节）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
