@@ -235,9 +235,33 @@ pub fn recognize_handwriting(
   img : @types.Image,
   config? : HandwritingOcrConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let cfg = match config {
     Some(c) => c
     None => handwriting_ocr_default_config()
+  }
+  // 配置验证
+  if cfg.min_char_width <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting: min_char_width必须大于0")
+  }
+  if cfg.max_char_width < cfg.min_char_width {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting: max_char_width不能小于min_char_width")
+  }
+  if cfg.target_size <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting: target_size必须大于0")
   }
   // 1. 预处理
   let mut preprocessed = ocr_preprocess(img)

@@ -50,8 +50,24 @@ pub fn detect_horizontal_lines(
   min_length? : Int = 20,
   max_gap? : Int = 2,
 ) -> Array[TableLine] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_lines: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("detect_horizontal_lines: 仅支持单通道二值图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if min_length <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_lines: min_length必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_lines: max_gap不能为负数")
   }
   let w = img.width
   let h = img.height
@@ -102,8 +118,24 @@ pub fn detect_vertical_lines(
   min_length? : Int = 20,
   max_gap? : Int = 2,
 ) -> Array[TableLine] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_lines: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("detect_vertical_lines: 仅支持单通道二值图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if min_length <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_lines: min_length必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_lines: max_gap不能为负数")
   }
   let w = img.width
   let h = img.height
@@ -219,7 +251,14 @@ fn merge_vertical_lines(
 pub fn analyze_table_structure(
   horizontal_lines : Array[TableLine],
   vertical_lines : Array[TableLine],
-) -> TableStructure {
+) -> TableStructure raise @types.LoadError {
+  // 输入验证
+  if horizontal_lines.length() == 0 {
+    raise @types.LoadError::DecodeFailed("analyze_table_structure: 水平线列表不能为空")
+  }
+  if vertical_lines.length() == 0 {
+    raise @types.LoadError::DecodeFailed("analyze_table_structure: 垂直线列表不能为空")
+  }
   if horizontal_lines.length() < 2 || vertical_lines.length() < 2 {
     return TableStructure::{
       rows: 0,
@@ -304,6 +343,22 @@ pub fn recognize_table(
   img : @types.Image,
   min_line_length? : Int = 20,
 ) -> TableStructure raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_table: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_table: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_table: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if min_line_length <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_table: min_line_length必须大于0")
+  }
   // 1. 预处理（二值化）
   let binary = if img.channels == 1 {
     img
@@ -324,7 +379,26 @@ pub fn extract_cell_image(
   img : @types.Image,
   cell : TableCell,
   padding? : Int = 1,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_cell_image: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("extract_cell_image: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_cell_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if cell.width <= 0 || cell.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_cell_image: 单元格尺寸必须大于0")
+  }
+  if padding < 0 {
+    raise @types.LoadError::DecodeFailed("extract_cell_image: padding不能为负数")
+  }
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -354,7 +428,23 @@ pub fn extract_all_cells(
   img : @types.Image,
   structure : TableStructure,
   padding? : Int = 1,
-) -> Array[@types.Image] {
+) -> Array[@types.Image] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_all_cells: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("extract_all_cells: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_all_cells: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if padding < 0 {
+    raise @types.LoadError::DecodeFailed("extract_all_cells: padding不能为负数")
+  }
   let images : Array[@types.Image] = []
   for cell in structure.cells {
     let cell_img = extract_cell_image(img, cell, padding=padding)

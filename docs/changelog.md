@@ -865,3 +865,17 @@
   - detect_columns：尺寸>0、单通道、数据大小匹配
   - extract_text_lines：尺寸>0、单通道、数据大小匹配
   - ocr_preprocess：尺寸>0、通道数1-4、数据大小匹配
+
+## v125.0.0 - 生产级增强：ocr模块 handwriting_ocr + table_recognition（7个函数）
+- 增强 ocr/handwriting_ocr.mbt：recognize_handwriting函数补充完整的生产级验证
+  - 图像验证：尺寸>0、通道数1-4、数据大小匹配
+  - 配置验证：min_char_width>0、max_char_width>=min_char_width、target_size>0
+  - correct_slant函数已有完整验证
+- 增强 ocr/table_recognition.mbt：6个函数补充完整的生产级验证
+  - detect_horizontal_lines：尺寸>0、单通道、数据大小匹配、min_length>0、max_gap>=0
+  - detect_vertical_lines：尺寸>0、单通道、数据大小匹配、min_length>0、max_gap>=0
+  - analyze_table_structure：水平线/垂直线列表非空（改为raise类型）
+  - recognize_table：尺寸>0、通道数1-4、数据大小匹配、min_line_length>0
+  - extract_cell_image：尺寸>0、通道数1-4、数据大小匹配、单元格尺寸>0、padding>=0（改为raise类型）
+  - extract_all_cells：尺寸>0、通道数1-4、数据大小匹配、padding>=0（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

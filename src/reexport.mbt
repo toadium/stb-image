@@ -3073,7 +3073,7 @@ pub fn detect_vertical_lines(
 pub fn analyze_table_structure(
   horizontal_lines : Array[@ocr.TableLine],
   vertical_lines : Array[@ocr.TableLine],
-) -> @ocr.TableStructure {
+) -> @ocr.TableStructure raise @types.LoadError {
   @ocr.analyze_table_structure(horizontal_lines, vertical_lines)
 }
 
@@ -3090,7 +3090,7 @@ pub fn extract_cell_image(
   img : @types.Image,
   cell : @ocr.TableCell,
   padding? : Int = 1,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.extract_cell_image(img, cell, padding~)
 }
 
@@ -3099,7 +3099,7 @@ pub fn extract_all_cells(
   img : @types.Image,
   structure : @ocr.TableStructure,
   padding? : Int = 1,
-) -> Array[@types.Image] {
+) -> Array[@types.Image] raise @types.LoadError {
   @ocr.extract_all_cells(img, structure, padding~)
 }
 
