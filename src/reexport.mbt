@@ -2943,7 +2943,7 @@ pub fn postprocess_default_config() -> @ocr.PostProcessConfig {
 }
 
 ///|
-pub fn dictionary_create(words : Array[String]) -> @ocr.Dictionary {
+pub fn dictionary_create(words : Array[String]) -> @ocr.Dictionary raise @types.LoadError {
   @ocr.dictionary_create(words)
 }
 
@@ -2953,7 +2953,7 @@ pub fn dictionary_create_common_english() -> @ocr.Dictionary {
 }
 
 ///|
-pub fn edit_distance(s1 : String, s2 : String) -> Int {
+pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
   @ocr.edit_distance(s1, s2)
 }
 
@@ -2962,7 +2962,7 @@ pub fn dictionary_match(
   word : String,
   dictionary : @ocr.Dictionary,
   max_distance? : Int = 2,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int)] raise @types.LoadError {
   @ocr.dictionary_match(word, dictionary, max_distance~)
 }
 
@@ -2970,7 +2970,7 @@ pub fn dictionary_match(
 pub fn ngram_create(
   texts : Array[String],
   n? : Int = 2,
-) -> @ocr.NgramModel {
+) -> @ocr.NgramModel raise @types.LoadError {
   @ocr.ngram_create(texts, n~)
 }
 
@@ -2978,7 +2978,7 @@ pub fn ngram_create(
 pub fn ngram_score(
   text : String,
   model : @ocr.NgramModel,
-) -> Double {
+) -> Double raise @types.LoadError {
   @ocr.ngram_score(text, model)
 }
 
@@ -2988,7 +2988,7 @@ pub fn ocr_postprocess(
   config? : @ocr.PostProcessConfig,
   dictionary? : @ocr.Dictionary,
   ngram_model? : @ocr.NgramModel,
-) -> @ocr.OcrResult {
+) -> @ocr.OcrResult raise @types.LoadError {
   match config {
     Some(c) => match dictionary {
       Some(d) => match ngram_model {
@@ -3005,7 +3005,7 @@ pub fn ocr_postprocess(
 pub fn calibrate_confidence(
   result : @ocr.OcrResult,
   factor? : Double = 1.0,
-) -> @ocr.OcrResult {
+) -> @ocr.OcrResult raise @types.LoadError {
   @ocr.calibrate_confidence(result, factor~)
 }
 

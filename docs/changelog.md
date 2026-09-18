@@ -838,3 +838,11 @@
   - 分类器验证：训练样本/模板非空
 - 增强 ocr/ocr_accuracy.mbt：ensemble_predict函数补充完整的生产级验证（因knn_predict添加raise类型）
 - 同步更新 reexport.mbt 中的15个函数类型定义（添加raise @types.LoadError）
+
+## v122.0.0 - 生产级增强：ocr模块 postprocess（7个函数）
+- 增强 ocr/postprocess.mbt：dictionary_create/edit_distance/dictionary_match/ngram_create/ngram_score/ocr_postprocess/calibrate_confidence函数补充完整的生产级验证
+  - 输入验证：非空检查、参数范围检查
+  - 词典验证：单词列表/词典非空
+  - N-gram验证：文本列表/模型非空、n>=1
+  - OCR结果验证：字符列表/文本非空
+- 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）

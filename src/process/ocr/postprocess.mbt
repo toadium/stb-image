@@ -32,7 +32,12 @@ pub(all) struct Dictionary {
 
 ///|
 /// 创建词典
-pub fn dictionary_create(words : Array[String]) -> Dictionary {
+pub fn dictionary_create(words : Array[String]) -> Dictionary raise @types.LoadError {
+  // 输入验证
+  if words.length() == 0 {
+    raise @types.LoadError::DecodeFailed("dictionary_create: 单词列表不能为空")
+  }
+
   Dictionary::{
     words,
     word_set: words,
@@ -80,7 +85,12 @@ pub fn dictionary_create_common_english() -> Dictionary {
 
 ///|
 /// 计算编辑距离（Levenshtein距离）
-pub fn edit_distance(s1 : String, s2 : String) -> Int {
+pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
+  // 输入验证
+  if s1.length() == 0 && s2.length() == 0 {
+    raise @types.LoadError::DecodeFailed("edit_distance: 两个字符串不能同时为空")
+  }
+
   let len1 = s1.length()
   let len2 = s2.length()
   if len1 == 0 {
@@ -118,7 +128,18 @@ pub fn dictionary_match(
   word : String,
   dictionary : Dictionary,
   max_distance? : Int = 2,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int)] raise @types.LoadError {
+  // 输入验证
+  if word.length() == 0 {
+    raise @types.LoadError::DecodeFailed("dictionary_match: 单词不能为空")
+  }
+  if dictionary.words.length() == 0 {
+    raise @types.LoadError::DecodeFailed("dictionary_match: 词典不能为空")
+  }
+  if max_distance < 0 {
+    raise @types.LoadError::DecodeFailed("dictionary_match: max_distance不能为负数")
+  }
+
   let results : Array[(String, Int)] = []
   for dict_word in dictionary.words {
     let dist = edit_distance(word, dict_word)
@@ -152,7 +173,15 @@ pub(all) struct NgramModel {
 pub fn ngram_create(
   texts : Array[String],
   n? : Int = 2,
-) -> NgramModel {
+) -> NgramModel raise @types.LoadError {
+  // 输入验证
+  if texts.length() == 0 {
+    raise @types.LoadError::DecodeFailed("ngram_create: 文本列表不能为空")
+  }
+  if n < 1 {
+    raise @types.LoadError::DecodeFailed("ngram_create: n必须大于等于1")
+  }
+
   let bigram_counts : Array[(String, Int)] = []
   let unigram_counts : Array[(String, Int)] = []
   for text in texts {
@@ -198,7 +227,15 @@ pub fn ngram_create(
 pub fn ngram_score(
   text : String,
   model : NgramModel,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if text.length() == 0 {
+    raise @types.LoadError::DecodeFailed("ngram_score: 文本不能为空")
+  }
+  if model.bigram_counts.length() == 0 && model.unigram_counts.length() == 0 {
+    raise @types.LoadError::DecodeFailed("ngram_score: N-gram模型不能为空")
+  }
+
   if text.length() < 2 {
     return 0.0
   }
@@ -239,7 +276,12 @@ pub fn ocr_postprocess(
   config? : PostProcessConfig,
   dictionary? : Dictionary,
   ngram_model? : NgramModel,
-) -> OcrResult {
+) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if result.characters.length() == 0 && result.text.length() == 0 {
+    raise @types.LoadError::DecodeFailed("ocr_postprocess: OCR结果不能为空")
+  }
+
   let cfg = match config {
     Some(c) => c
     None => postprocess_default_config()
@@ -359,7 +401,15 @@ fn split_into_words(text : String) -> Array[String] {
 pub fn calibrate_confidence(
   result : OcrResult,
   factor? : Double = 1.0,
-) -> OcrResult {
+) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if result.characters.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calibrate_confidence: OCR结果字符列表不能为空")
+  }
+  if factor <= 0.0 {
+    raise @types.LoadError::DecodeFailed("calibrate_confidence: factor必须大于0")
+  }
+
   let calibrated_chars : Array[OcrCharResult] = []
   let mut total = 0.0
   for char_result in result.characters {
