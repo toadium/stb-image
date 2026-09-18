@@ -380,9 +380,33 @@ pub fn recognize_english(
   img : @types.Image,
   config? : EnglishOcrConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_english: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("recognize_english: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_english: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+
   let cfg = match config {
     Some(c) => c
     None => english_ocr_default_config()
+  }
+  // 配置验证
+  if cfg.min_char_width <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_english: min_char_width必须大于0")
+  }
+  if cfg.max_char_width < cfg.min_char_width {
+    raise @types.LoadError::DecodeFailed("recognize_english: max_char_width不能小于min_char_width")
+  }
+  if cfg.target_size <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_english: target_size必须大于0")
   }
   // 1. 预处理
   let preprocessed = ocr_preprocess(img)

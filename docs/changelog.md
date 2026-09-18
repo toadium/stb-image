@@ -851,3 +851,17 @@
 - 增强 ocr/digit_ocr.mbt：recognize_digits函数补充完整的生产级验证
   - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
   - 配置验证：min_char_width>0、max_char_width>=min_char_width、target_size>0、k>0
+
+## v124.0.0 - 生产级增强：ocr模块 english_ocr + chinese_ocr + layout_analysis（7个函数）
+- 增强 ocr/english_ocr.mbt：recognize_english函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
+  - 配置验证：min_char_width>0、max_char_width>=min_char_width、target_size>0
+- 增强 ocr/chinese_ocr.mbt：recognize_chinese函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
+  - 配置验证：min_char_width>0、max_char_width>=min_char_width、target_size>0
+- 增强 ocr/layout_analysis.mbt：5个函数补充完整的生产级验证
+  - detect_text_regions：尺寸>0、单通道、数据大小匹配
+  - segment_page：尺寸>0、单通道、数据大小匹配
+  - detect_columns：尺寸>0、单通道、数据大小匹配
+  - extract_text_lines：尺寸>0、单通道、数据大小匹配
+  - ocr_preprocess：尺寸>0、通道数1-4、数据大小匹配
