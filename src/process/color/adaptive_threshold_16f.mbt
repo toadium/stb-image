@@ -13,12 +13,22 @@ pub fn adaptive_threshold_mean_16(
   block_size : Int,
   c : Int,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adaptive_threshold_mean_16: 图像尺寸必须大于0")
+  }
   if block_size < 3 || block_size % 2 == 0 {
     raise @types.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "adaptive_threshold_mean_16 仅支持 channels=1/3/4",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adaptive_threshold_mean_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let ch = img.channels
@@ -367,9 +377,19 @@ pub fn adaptive_threshold_gaussian_f(
 pub fn threshold_otsu_16(
   img : @types.Image16,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("threshold_otsu_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "threshold_otsu_16 仅支持 channels=1/3/4",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "threshold_otsu_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let ch = img.channels

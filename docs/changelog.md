@@ -1129,3 +1129,8 @@
 - 增强 color/quantize_16f.mbt：2个核心函数补充完整的生产级验证
   - kmeans_quantize_16：负尺寸报错、通道数3/4、数据大小匹配（16位2字节）、k范围1-256
   - kmeans_quantize_f：负尺寸报错、通道数3/4、数据大小匹配（浮点4字节）、k范围1-256
+
+## v162.0.0 - 生产级增强：color模块 adaptive_threshold_16f（2个核心函数）
+- 增强 color/adaptive_threshold_16f.mbt：2个核心函数补充完整的生产级验证
+  - adaptive_threshold_mean_16：尺寸>0、通道数1/3/4、数据大小匹配（16位2字节）、block_size>=3奇数
+  - threshold_otsu_16：尺寸>0、通道数1/3/4、数据大小匹配（16位2字节）
