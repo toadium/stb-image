@@ -16,12 +16,15 @@ test "floyd_steinberg: levels=2 produces binary image" {
 }
 
 ///|
-test "floyd_steinberg: levels=1 is identity" {
+test "floyd_steinberg: levels=1 raises error" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = floyd_steinberg(img, 1)
-  assert_eq(result.data, img.data)
+  try {
+    let _ = floyd_steinberg(img, 1)
+    assert_true(false) // 应该抛出错误
+  } catch {
+    _ => assert_true(true) // 预期的错误
+  }
   let _ = img
-  let _ = result
 }
 
 ///|

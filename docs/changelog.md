@@ -1162,3 +1162,9 @@
   - cmyk_to_rgb：c,m,y,k∈[0,255]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
 - color_convert.mbt 全部完成（13个函数）
+
+## v166.0.0 - 生产级增强：color模块 quantize（1个核心函数）
+- 增强 color/quantize.mbt：1个核心函数补充完整的生产级验证
+  - floyd_steinberg：尺寸>0、通道数1-4、数据大小匹配、levels>=2（改为raise类型）
+- 同步更新 reexport.mbt 中的1个函数类型定义（添加raise @types.LoadError）
+- 修改测试用例：levels=1时现在抛出错误而非返回原图

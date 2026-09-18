@@ -1004,7 +1004,7 @@ pub let find_contours_16 : (@types.Image16) -> Array[@edge.Contour] raise @types
 pub let find_contours_f : (@types.ImageF) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_f
 
 ///|
-pub let floyd_steinberg : (@types.Image, Int) -> @types.Image = @color.floyd_steinberg
+pub let floyd_steinberg : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.floyd_steinberg
 pub let floyd_steinberg_16 : (@types.Image16, Int) -> @types.Image16 = @color.floyd_steinberg_16
 pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF = @color.floyd_steinberg_f
 
