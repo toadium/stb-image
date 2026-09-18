@@ -1273,7 +1273,7 @@ pub let idct_2d_f : (Array[Array[Double]]) -> @types.ImageF = @frequency.idct_2d
 pub fn reinhard_tonemap(
   imgf : @types.ImageF,
   key? : Float = 0.18F,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @color.reinhard_tonemap(imgf, key~)
 }
 
@@ -1294,7 +1294,7 @@ pub fn reinhard_tonemap_f(
 }
 
 ///|
-pub let gamma_tonemap : (@types.ImageF, Float) -> @types.Image = @color.gamma_tonemap
+pub let gamma_tonemap : (@types.ImageF, Float) -> @types.Image raise @types.LoadError = @color.gamma_tonemap
 pub let gamma_tonemap_16 : (@types.ImageF, Float) -> @types.Image16 = @color.gamma_tonemap_16
 pub let gamma_tonemap_f : (@types.ImageF, Float) -> @types.ImageF = @color.gamma_tonemap_f
 

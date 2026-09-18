@@ -1071,3 +1071,9 @@
 - 增强 color/retinex.mbt：2个核心函数补充完整的生产级验证
   - ssr：空图像直接返回、负尺寸报错、通道数1/3/4、数据大小匹配、sigma>0
   - msr：空图像直接返回、负尺寸报错、通道数1/3/4、数据大小匹配、sigmas非空且>0
+
+## v153.0.0 - 生产级增强：color模块 tonemap（2个核心函数）
+- 增强 color/tonemap.mbt：2个核心函数补充完整的生产级验证
+  - reinhard_tonemap：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、key>0（改为raise类型）
+  - gamma_tonemap：尺寸>0、通道数1-4、数据大小匹配（浮点4字节）、gamma>0（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
