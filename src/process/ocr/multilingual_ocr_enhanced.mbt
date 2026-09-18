@@ -49,7 +49,20 @@ pub(all) struct LanguageDetectionResult {
 /// 增强语言检测（基于多特征的分类器）
 pub fn detect_language_enhanced(
   char_img : @types.Image,
-) -> LanguageDetectionResult {
+) -> LanguageDetectionResult raise @types.LoadError {
+  // 输入验证
+  if char_img.width <= 0 || char_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_language_enhanced: 图像尺寸必须大于0")
+  }
+  if char_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_language_enhanced: 仅支持单通道灰度图")
+  }
+  let expected_size = char_img.width * char_img.height
+  if char_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_language_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+    )
+  }
   let w = char_img.width
   let h = char_img.height
   let data = char_img.data
@@ -169,7 +182,20 @@ pub fn detect_language_enhanced(
 pub fn smart_segment_chars(
   img : @types.Image,
   config : MultilingualOcrEnhancedConfig,
-) -> Array[(Int, Int, Int, Int, String)] {
+) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("smart_segment_chars: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("smart_segment_chars: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "smart_segment_chars: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let w = img.width
   let h = img.height
   let data = img.data
@@ -368,6 +394,19 @@ pub fn recognize_multilingual_enhanced(
   img : @types.Image,
   config? : MultilingualOcrEnhancedConfig,
 ) -> OcrResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_multilingual_enhanced: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_multilingual_enhanced: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_multilingual_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let cfg = match config {
     Some(c) => c
     None => multilingual_ocr_enhanced_default_config()

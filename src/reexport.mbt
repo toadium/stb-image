@@ -3673,7 +3673,7 @@ pub fn multilingual_ocr_enhanced_default_config() -> @ocr.MultilingualOcrEnhance
 ///|
 pub fn detect_language_enhanced(
   char_img : @types.Image,
-) -> @ocr.LanguageDetectionResult {
+) -> @ocr.LanguageDetectionResult raise @types.LoadError {
   @ocr.detect_language_enhanced(char_img)
 }
 
@@ -3681,7 +3681,7 @@ pub fn detect_language_enhanced(
 pub fn smart_segment_chars(
   img : @types.Image,
   config : @ocr.MultilingualOcrEnhancedConfig,
-) -> Array[(Int, Int, Int, Int, String)] {
+) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError {
   @ocr.smart_segment_chars(img, config)
 }
 

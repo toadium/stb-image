@@ -997,3 +997,10 @@
   - smart_reading_order：文档元素列表非空（改为raise类型）
   - build_enhanced_elements：文本行列表非空、页面宽度>0、页面高度>0（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v142.0.0 - 生产级增强：ocr模块 multilingual_ocr_enhanced（3个核心函数）
+- 增强 ocr/multilingual_ocr_enhanced.mbt：3个核心函数补充完整的生产级验证
+  - detect_language_enhanced：尺寸>0、单通道、数据大小匹配（改为raise类型）
+  - smart_segment_chars：尺寸>0、单通道、数据大小匹配（改为raise类型）
+  - recognize_multilingual_enhanced：尺寸>0、通道数1-4、数据大小匹配
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
