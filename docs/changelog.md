@@ -846,3 +846,8 @@
   - N-gram验证：文本列表/模型非空、n>=1
   - OCR结果验证：字符列表/文本非空
 - 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）
+
+## v123.0.0 - 生产级增强：ocr模块 digit_ocr（1个函数）
+- 增强 ocr/digit_ocr.mbt：recognize_digits函数补充完整的生产级验证
+  - 图像验证：尺寸>0、单通道灰度图、数据大小匹配
+  - 配置验证：min_char_width>0、max_char_width>=min_char_width、target_size>0、k>0
