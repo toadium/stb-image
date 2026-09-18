@@ -90,7 +90,11 @@ pub(all) struct RobustnessReport {
 /// 根据扫描质量自动选择预处理配置
 pub fn select_adaptive_config(
   quality : ScanQuality,
-) -> AdaptivePreprocessConfig {
+) -> AdaptivePreprocessConfig raise @types.LoadError {
+  // 输入验证
+  if quality.overall_score < 0.0 || quality.overall_score > 100.0 {
+    raise @types.LoadError::DecodeFailed("select_adaptive_config: 质量评分必须在0-100之间")
+  }
   let score = quality.overall_score
   if score >= 90.0 {
     AdaptivePreprocessConfig::{
@@ -159,7 +163,20 @@ pub fn select_adaptive_config(
 /// 检测倾斜角度（基于霍夫变换的简化版）
 pub fn detect_skew_angle_robust(
   binary_img : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_skew_angle_robust: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_skew_angle_robust: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle_robust: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
   let w = binary_img.width
   let h = binary_img.height
   // 简化版：基于文本行的倾斜检测
@@ -230,7 +247,20 @@ pub fn detect_skew_angle_robust(
 /// 检测畸变类型和严重程度
 pub fn detect_distortions(
   img : @types.Image,
-) -> Array[DistortionDetectionResult] {
+) -> Array[DistortionDetectionResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_distortions: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_distortions: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_distortions: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let results : Array[DistortionDetectionResult] = []
   let w = img.width
   let h = img.height

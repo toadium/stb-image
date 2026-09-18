@@ -941,3 +941,10 @@
   - shadow_removal：尺寸>0、单通道、数据大小匹配、核大小为正奇数
   - background_normalization：尺寸>0、单通道、数据大小匹配、核大小为正奇数
 - 同步更新 reexport.mbt 中的document_enhance函数类型定义（添加raise @types.LoadError）
+
+## v134.0.0 - 生产级增强：ocr模块 robustness_enhancement（3个核心函数）
+- 增强 ocr/robustness_enhancement.mbt：3个核心函数补充完整的生产级验证
+  - select_adaptive_config：质量评分在0-100之间（改为raise类型）
+  - detect_skew_angle_robust：尺寸>0、单通道、数据大小匹配（改为raise类型）
+  - detect_distortions：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

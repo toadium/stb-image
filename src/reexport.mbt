@@ -5775,21 +5775,21 @@ pub type RobustnessReport = @ocr.RobustnessReport
 ///|
 pub fn select_adaptive_config(
   quality : @ocr.ScanQuality,
-) -> @ocr.AdaptivePreprocessConfig {
+) -> @ocr.AdaptivePreprocessConfig raise @types.LoadError {
   @ocr.select_adaptive_config(quality)
 }
 
 ///|
 pub fn detect_skew_angle_robust(
   binary_img : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
   @ocr.detect_skew_angle_robust(binary_img)
 }
 
 ///|
 pub fn detect_distortions(
   img : @types.Image,
-) -> Array[@ocr.DistortionDetectionResult] {
+) -> Array[@ocr.DistortionDetectionResult] raise @types.LoadError {
   @ocr.detect_distortions(img)
 }
 
