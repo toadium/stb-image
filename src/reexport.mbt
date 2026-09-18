@@ -5687,7 +5687,7 @@ pub fn create_default_chinese_dictionary() -> @ocr.DictChineseDict {
 pub fn lookup_by_radical(
   dict : @ocr.DictChineseDict,
   radical : String,
-) -> Array[@ocr.DictCharEntry] {
+) -> Array[@ocr.DictCharEntry] raise @types.LoadError {
   @ocr.lookup_by_radical(dict, radical)
 }
 
@@ -5695,7 +5695,7 @@ pub fn lookup_by_radical(
 pub fn lookup_by_pinyin(
   dict : @ocr.DictChineseDict,
   pinyin : String,
-) -> Array[@ocr.DictCharEntry] {
+) -> Array[@ocr.DictCharEntry] raise @types.LoadError {
   @ocr.lookup_by_pinyin(dict, pinyin)
 }
 
@@ -5720,7 +5720,7 @@ pub fn find_similar_chinese_chars(
   dict : @ocr.DictChineseDict,
   target_char : String,
   top_n? : Int = 5,
-) -> Array[@ocr.DictCharMatch] {
+) -> Array[@ocr.DictCharMatch] raise @types.LoadError {
   @ocr.find_similar_chinese_chars(dict, target_char, top_n~)
 }
 
@@ -5728,7 +5728,7 @@ pub fn find_similar_chinese_chars(
 pub fn lookup_char(
   dict : @ocr.DictChineseDict,
   char : String,
-) -> Option[@ocr.DictCharEntry] {
+) -> Option[@ocr.DictCharEntry] raise @types.LoadError {
   @ocr.lookup_char(dict, char)
 }
 

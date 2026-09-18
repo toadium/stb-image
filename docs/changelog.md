@@ -975,3 +975,11 @@
   - next_batch：样本列表非空、批大小>0（改为raise类型）
   - calculate_learning_rate：轮次>=0、当前学习率>0、验证损失>=0、初始学习率>0、最小学习率>=0（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v139.0.0 - 生产级增强：ocr模块 chinese_dictionary（4个核心函数）
+- 增强 ocr/chinese_dictionary.mbt：4个核心函数补充完整的生产级验证
+  - lookup_by_radical：部首非空（改为raise类型）
+  - lookup_by_pinyin：拼音非空（改为raise类型）
+  - find_similar_chinese_chars：目标字符非空、返回数量>0（改为raise类型）
+  - lookup_char：字符非空（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）

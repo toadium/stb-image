@@ -367,7 +367,11 @@ pub fn create_default_chinese_dictionary() -> DictChineseDict {
 pub fn lookup_by_radical(
   dict : DictChineseDict,
   radical : String,
-) -> Array[DictCharEntry] {
+) -> Array[DictCharEntry] raise @types.LoadError {
+  // 输入验证
+  if radical.length() == 0 {
+    raise @types.LoadError::DecodeFailed("lookup_by_radical: 部首不能为空")
+  }
   let results : Array[DictCharEntry] = []
   for char in dict.chars {
     if char.radical == radical {
@@ -382,7 +386,11 @@ pub fn lookup_by_radical(
 pub fn lookup_by_pinyin(
   dict : DictChineseDict,
   pinyin : String,
-) -> Array[DictCharEntry] {
+) -> Array[DictCharEntry] raise @types.LoadError {
+  // 输入验证
+  if pinyin.length() == 0 {
+    raise @types.LoadError::DecodeFailed("lookup_by_pinyin: 拼音不能为空")
+  }
   let results : Array[DictCharEntry] = []
   for char in dict.chars {
     for py in char.pinyin {
@@ -464,7 +472,14 @@ pub fn find_similar_chinese_chars(
   dict : DictChineseDict,
   target_char : String,
   top_n? : Int = 5,
-) -> Array[DictCharMatch] {
+) -> Array[DictCharMatch] raise @types.LoadError {
+  // 输入验证
+  if target_char.length() == 0 {
+    raise @types.LoadError::DecodeFailed("find_similar_chinese_chars: 目标字符不能为空")
+  }
+  if top_n <= 0 {
+    raise @types.LoadError::DecodeFailed("find_similar_chinese_chars: 返回数量必须大于0")
+  }
   let n = top_n
   let target_entry = lookup_char(dict, target_char)
   let matches : Array[DictCharMatch] = []
@@ -522,7 +537,11 @@ pub fn find_similar_chinese_chars(
 pub fn lookup_char(
   dict : DictChineseDict,
   char : String,
-) -> Option[DictCharEntry] {
+) -> Option[DictCharEntry] raise @types.LoadError {
+  // 输入验证
+  if char.length() == 0 {
+    raise @types.LoadError::DecodeFailed("lookup_char: 字符不能为空")
+  }
   for entry in dict.chars {
     if entry.char == char {
       return Some(entry)
