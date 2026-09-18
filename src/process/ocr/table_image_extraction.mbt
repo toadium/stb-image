@@ -65,7 +65,26 @@ pub fn detect_horizontal_table_lines(
   binary_img : @types.Image,
   min_length? : Int = 50,
   max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] {
+) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_table_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
+  if min_length <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 最小线长必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 最大间隙不能为负")
+  }
   let min_len = min_length
   let max_g = max_gap
   let w = binary_img.width
@@ -125,7 +144,26 @@ pub fn detect_vertical_table_lines(
   binary_img : @types.Image,
   min_length? : Int = 50,
   max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] {
+) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_table_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
+  if min_length <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 最小线长必须大于0")
+  }
+  if max_gap < 0 {
+    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 最大间隙不能为负")
+  }
   let min_len = min_length
   let max_g = max_gap
   let w = binary_img.width
@@ -200,7 +238,23 @@ pub fn find_line_intersections(
 pub fn detect_table_enhanced(
   binary_img : @types.Image,
   min_table_size? : Int = 100,
-) -> Array[EnhancedTableResult] {
+) -> Array[EnhancedTableResult] raise @types.LoadError {
+  // 输入验证
+  if binary_img.width <= 0 || binary_img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 图像尺寸必须大于0")
+  }
+  if binary_img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 仅支持单通道二值图")
+  }
+  let expected_size = binary_img.width * binary_img.height
+  if binary_img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_table_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+    )
+  }
+  if min_table_size <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 最小表格尺寸必须大于0")
+  }
   let min_size = min_table_size
   let h_lines = detect_horizontal_table_lines(binary_img, min_length=50, max_gap=3)
   let v_lines = detect_vertical_table_lines(binary_img, min_length=50, max_gap=3)

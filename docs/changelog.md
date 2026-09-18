@@ -961,3 +961,10 @@
   - full_postprocess_correction：上下文类型必须是 number/english/chinese/mixed 之一（改为raise类型）
   - batch_correct_texts：文本列表非空、上下文类型必须是 number/english/chinese/mixed 之一（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v137.0.0 - 生产级增强：ocr模块 table_image_extraction（3个核心函数）
+- 增强 ocr/table_image_extraction.mbt：3个核心函数补充完整的生产级验证
+  - detect_horizontal_table_lines：尺寸>0、单通道、数据大小匹配、最小线长>0、最大间隙>=0（改为raise类型）
+  - detect_vertical_table_lines：尺寸>0、单通道、数据大小匹配、最小线长>0、最大间隙>=0（改为raise类型）
+  - detect_table_enhanced：尺寸>0、单通道、数据大小匹配、最小表格尺寸>0（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

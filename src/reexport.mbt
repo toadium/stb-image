@@ -5445,7 +5445,7 @@ pub fn detect_horizontal_table_lines(
   binary_img : @types.Image,
   min_length? : Int = 50,
   max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] {
+) -> Array[(Int, Int, Int)] raise @types.LoadError {
   @ocr.detect_horizontal_table_lines(binary_img, min_length~, max_gap~)
 }
 
@@ -5454,7 +5454,7 @@ pub fn detect_vertical_table_lines(
   binary_img : @types.Image,
   min_length? : Int = 50,
   max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] {
+) -> Array[(Int, Int, Int)] raise @types.LoadError {
   @ocr.detect_vertical_table_lines(binary_img, min_length~, max_gap~)
 }
 
@@ -5470,7 +5470,7 @@ pub fn find_line_intersections(
 pub fn detect_table_enhanced(
   binary_img : @types.Image,
   min_table_size? : Int = 100,
-) -> Array[@ocr.EnhancedTableResult] {
+) -> Array[@ocr.EnhancedTableResult] raise @types.LoadError {
   @ocr.detect_table_enhanced(binary_img, min_table_size~)
 }
 
