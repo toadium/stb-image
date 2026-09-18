@@ -6293,7 +6293,7 @@ pub fn create_default_handwriting_config() -> @ocr.HandwritingRecognitionConfig 
 ///|
 pub fn detect_handwriting_slant(
   img : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
   @ocr.detect_handwriting_slant(img)
 }
 
@@ -6301,7 +6301,7 @@ pub fn detect_handwriting_slant(
 pub fn normalize_handwriting_size(
   img : @types.Image,
   target_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @ocr.normalize_handwriting_size(img, target_size)
 }
 
@@ -6324,7 +6324,7 @@ pub fn segment_connected_strokes(
 pub fn extract_handwriting_features(
   img : @types.Image,
   char : String,
-) -> @ocr.HandwritingCharFeature {
+) -> @ocr.HandwritingCharFeature raise @types.LoadError {
   @ocr.extract_handwriting_features(img, char)
 }
 
@@ -6341,7 +6341,7 @@ pub fn create_handwriting_template(
   char : String,
   style : @ocr.HandwritingStyle,
   samples : Array[@types.Image],
-) -> @ocr.HandwritingTemplate {
+) -> @ocr.HandwritingTemplate raise @types.LoadError {
   @ocr.create_handwriting_template(char, style, samples)
 }
 
@@ -6350,7 +6350,7 @@ pub fn recognize_handwriting_char(
   img : @types.Image,
   templates : Array[@ocr.HandwritingTemplate],
   config : @ocr.HandwritingRecognitionConfig,
-) -> @ocr.HandwritingRecognitionResult {
+) -> @ocr.HandwritingRecognitionResult raise @types.LoadError {
   @ocr.recognize_handwriting_char(img, templates, config)
 }
 

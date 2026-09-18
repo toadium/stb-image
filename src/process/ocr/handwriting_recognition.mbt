@@ -124,7 +124,20 @@ pub fn create_default_handwriting_config() -> HandwritingRecognitionConfig {
 /// 检测手写体倾斜角度
 pub fn detect_handwriting_slant(
   img : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("detect_handwriting_slant: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("detect_handwriting_slant: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_handwriting_slant: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let w = img.width
   let h = img.height
   // 基于文本行的倾斜检测
@@ -166,7 +179,23 @@ pub fn detect_handwriting_slant(
 pub fn normalize_handwriting_size(
   img : @types.Image,
   target_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "normalize_handwriting_size: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if target_size <= 0 {
+    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 目标尺寸必须大于0")
+  }
   // 简化版：返回原图像，实际应进行缩放
   img
 }
@@ -240,7 +269,20 @@ pub fn segment_connected_strokes(
 pub fn extract_handwriting_features(
   img : @types.Image,
   char : String,
-) -> HandwritingCharFeature {
+) -> HandwritingCharFeature raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_handwriting_features: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("extract_handwriting_features: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_handwriting_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let w = img.width
   let h = img.height
   
@@ -358,7 +400,11 @@ pub fn create_handwriting_template(
   char : String,
   style : HandwritingStyle,
   samples : Array[@types.Image],
-) -> HandwritingTemplate {
+) -> HandwritingTemplate raise @types.LoadError {
+  // 输入验证
+  if char.length() == 0 {
+    raise @types.LoadError::DecodeFailed("create_handwriting_template: 字符不能为空")
+  }
   if samples.length() == 0 {
     return HandwritingTemplate::{
       char,
@@ -433,7 +479,26 @@ pub fn recognize_handwriting_char(
   img : @types.Image,
   templates : Array[HandwritingTemplate],
   config : HandwritingRecognitionConfig,
-) -> HandwritingRecognitionResult {
+) -> HandwritingRecognitionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_char: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if templates.length() == 0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 模板列表不能为空")
+  }
+  if config.similarity_threshold < 0.0 || config.similarity_threshold > 1.0 {
+    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 相似度阈值必须在0-1之间")
+  }
   let start_time = 0.0
   
   // 1. 预处理

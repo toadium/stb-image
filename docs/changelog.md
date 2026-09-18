@@ -925,3 +925,12 @@
   - calculate_batch_progress：任务列表非空、已用时间>=0（改为raise类型）
   - generate_batch_summary：任务列表非空、总时间>=0（改为raise类型）
 - 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）
+
+## v132.0.0 - 生产级增强：ocr模块 handwriting_recognition（5个核心函数）
+- 增强 ocr/handwriting_recognition.mbt：5个核心函数补充完整的生产级验证
+  - detect_handwriting_slant：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - normalize_handwriting_size：尺寸>0、通道数1-4、数据大小匹配、目标尺寸>0（改为raise类型）
+  - extract_handwriting_features：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - create_handwriting_template：字符非空（改为raise类型）
+  - recognize_handwriting_char：尺寸>0、通道数1-4、数据大小匹配、模板列表非空、相似度阈值0-1（改为raise类型）
+- 同步更新 reexport.mbt 中的5个函数类型定义（添加raise @types.LoadError）
