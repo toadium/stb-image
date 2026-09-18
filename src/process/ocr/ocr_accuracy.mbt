@@ -115,8 +115,18 @@ fn pseudo_random(seed : Int) -> Double {
 pub fn hu_moments_features(
   img : @types.Image,
 ) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("hu_moments_features: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("hu_moments_features: 仅支持单通道图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "hu_moments_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   let w = img.width
   let h = img.height
@@ -307,6 +317,19 @@ fn manhattan_distance_ensemble(a : Array[Double], b : Array[Double]) -> Double {
 pub fn extract_combined_ocr_features(
   img : @types.Image,
 ) -> Array[Double] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("extract_combined_ocr_features: 图像尺寸必须大于0")
+  }
+  if img.channels != 1 {
+    raise @types.LoadError::DecodeFailed("extract_combined_ocr_features: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_ocr_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   // 网格特征
   let grid = grid_features(img, grid_rows=8, grid_cols=8)
   // HOG 特征

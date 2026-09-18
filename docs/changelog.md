@@ -1028,3 +1028,9 @@
   - extract_handwriting_stroke_features：尺寸>0、单通道、数据大小匹配（改为raise类型）
   - recognize_handwriting_enhanced：尺寸>0、通道数1-4、数据大小匹配
 - 同步更新 reexport.mbt 中的extract_handwriting_stroke_features函数类型定义（添加raise @types.LoadError）
+
+## v147.0.0 - 生产级增强：ocr模块 ocr_accuracy（2个核心函数）【ocr模块全部完成】
+- 增强 ocr/ocr_accuracy.mbt：2个核心函数补充完整的生产级验证
+  - hu_moments_features：尺寸>0、单通道、数据大小匹配
+  - extract_combined_ocr_features：尺寸>0、单通道、数据大小匹配
+- **ocr模块生产级增强全部完成！**（36个文件，136+个函数）
