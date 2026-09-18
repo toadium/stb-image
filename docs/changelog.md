@@ -1134,3 +1134,14 @@
 - 增强 color/adaptive_threshold_16f.mbt：2个核心函数补充完整的生产级验证
   - adaptive_threshold_mean_16：尺寸>0、通道数1/3/4、数据大小匹配（16位2字节）、block_size>=3奇数
   - threshold_otsu_16：尺寸>0、通道数1/3/4、数据大小匹配（16位2字节）
+
+## v163.0.0 - 生产级增强：color模块 color_adjust（6个核心函数）
+- 增强 color/color_adjust.mbt：6个核心函数补充完整的生产级验证
+  - rgb_to_hsv：r,g,b∈[0,255]范围验证（改为raise类型）
+  - hsv_to_rgb：s,v∈[0,1]范围验证（改为raise类型）
+  - rgb_to_hsl：r,g,b∈[0,255]范围验证（改为raise类型）
+  - hsl_to_rgb：s,l∈[0,1]范围验证（改为raise类型）
+  - adjust_saturation：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - adjust_hue：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 修复 segment/segment.mbt：segment_to_color 函数改为raise类型（因调用hsv_to_rgb）
+- 同步更新 reexport.mbt 中的7个函数类型定义（添加raise @types.LoadError）

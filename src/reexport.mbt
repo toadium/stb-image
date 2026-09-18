@@ -276,10 +276,10 @@ pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 raise @ty
 pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrast_f
 
 ///|
-pub let adjust_saturation : (@types.Image, Float) -> @types.Image = @color.adjust_saturation
+pub let adjust_saturation : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_saturation
 
 ///|
-pub let adjust_hue : (@types.Image, Float) -> @types.Image = @color.adjust_hue
+pub let adjust_hue : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_hue
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_gamma
@@ -1355,12 +1355,12 @@ pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image
 pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_matching_f
 
 ///|
-pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsl_to_rgb
+pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb
 pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb_16
 pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsl_to_rgb_f
 
 ///|
-pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) = @color.hsv_to_rgb
+pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb
 pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb_16
 pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsv_to_rgb_f
 
@@ -1605,12 +1605,12 @@ pub fn region_growing_segment(
 }
 
 ///|
-pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsl
+pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl
 pub let rgb_to_hsl_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_16
 pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsl_f
 
 ///|
-pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) = @color.rgb_to_hsv
+pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv
 pub let rgb_to_hsv_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_16
 pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsv_f
 
@@ -1688,7 +1688,7 @@ pub let rotate_270_16 : (@types.Image16) -> @types.Image16 = @transform.rotate_2
 pub let rotate_270_f : (@types.ImageF) -> @types.ImageF = @transform.rotate_270_f
 
 ///|
-pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image = @segment.segment_to_color
+pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image raise @types.LoadError = @segment.segment_to_color
 
 ///|
 pub let sharpen : (@types.Image, Float) -> @types.Image raise @types.LoadError = @filter.sharpen

@@ -203,7 +203,11 @@ pub fn invert(img : @types.Image) -> @types.Image raise @types.LoadError {
 ///|
 /// RGB → HSV 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], v ∈ [0,1]
-pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_hsv: r,g,b必须在[0,255]范围内")
+  }
   let rf = Float::from_int(r) / 255.0F
   let gf = Float::from_int(g) / 255.0F
   let bf = Float::from_int(b) / 255.0F
@@ -228,7 +232,11 @@ pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 ///|
 /// HSV → RGB 色彩空间转换。
 /// 输入 h ∈ [0,360), s ∈ [0,1], v ∈ [0,1]，输出 r,g,b ∈ [0,255]
-pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int) {
+pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if s < 0.0F || s > 1.0F || v < 0.0F || v > 1.0F {
+    raise @types.LoadError::DecodeFailed("hsv_to_rgb: s,v必须在[0,1]范围内")
+  }
   let c = v * s
   // 归一化 h 到 [0,6)
   let mut hp = h / 60.0F
@@ -271,7 +279,11 @@ pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int) {
 ///|
 /// RGB → HSL 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], l ∈ [0,1]
-pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
+pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    raise @types.LoadError::DecodeFailed("rgb_to_hsl: r,g,b必须在[0,255]范围内")
+  }
   let rf = Float::from_int(r) / 255.0F
   let gf = Float::from_int(g) / 255.0F
   let bf = Float::from_int(b) / 255.0F
@@ -300,7 +312,11 @@ pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float) {
 ///|
 /// HSL → RGB 色彩空间转换。
 /// 输入 h ∈ [0,360), s ∈ [0,1], l ∈ [0,1]，输出 r,g,b ∈ [0,255]
-pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) {
+pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) raise @types.LoadError {
+  // 输入验证
+  if s < 0.0F || s > 1.0F || l < 0.0F || l > 1.0F {
+    raise @types.LoadError::DecodeFailed("hsl_to_rgb: s,l必须在[0,1]范围内")
+  }
   let c = (1.0F - (2.0F * l - 1.0F).abs()) * s
   // 归一化 h 到 [0,6)
   let mut hp = h / 60.0F
@@ -341,7 +357,20 @@ pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) {
 
 ///|
 /// 饱和度调整。factor: 0.0 = 灰度, 1.0 = 原始, >1.0 = 增强饱和度
-pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image {
+pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_saturation: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_saturation: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_saturation: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   if ch < 3 {
@@ -369,7 +398,20 @@ pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image {
 
 ///|
 /// 色相调整。delta: 色相偏移量（度，0-360）
-pub fn adjust_hue(img : @types.Image, delta : Float) -> @types.Image {
+pub fn adjust_hue(img : @types.Image, delta : Float) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_hue: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_hue: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_hue: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   if ch < 3 {
