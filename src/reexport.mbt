@@ -5848,7 +5848,7 @@ pub fn create_batch_tasks(
   input_files : Array[String],
   output_directory : String,
   output_format : String,
-) -> Array[@ocr.BatchTask] {
+) -> Array[@ocr.BatchTask] raise @types.LoadError {
   @ocr.create_batch_tasks(input_files, output_directory, output_format)
 }
 
@@ -5885,7 +5885,7 @@ pub fn mark_task_failed(
 pub fn calculate_batch_progress(
   tasks : Array[@ocr.BatchTask],
   elapsed_time_ms : Double,
-) -> @ocr.BatchProgress {
+) -> @ocr.BatchProgress raise @types.LoadError {
   @ocr.calculate_batch_progress(tasks, elapsed_time_ms)
 }
 
@@ -5893,7 +5893,7 @@ pub fn calculate_batch_progress(
 pub fn generate_batch_summary(
   tasks : Array[@ocr.BatchTask],
   total_time_ms : Double,
-) -> @ocr.BatchResultSummary {
+) -> @ocr.BatchResultSummary raise @types.LoadError {
   @ocr.generate_batch_summary(tasks, total_time_ms)
 }
 

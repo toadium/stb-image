@@ -918,3 +918,10 @@
   - decompose_chinese_char：字符非空（改为raise类型）
   - recognize_chinese_advanced：尺寸>0、通道数1-4、数据大小匹配
 - 同步更新 reexport.mbt 中的decompose_chinese_char函数类型定义（添加raise @types.LoadError）
+
+## v131.0.0 - 生产级增强：ocr模块 batch_processing（3个核心函数）
+- 增强 ocr/batch_processing.mbt：3个核心函数补充完整的生产级验证
+  - create_batch_tasks：输入文件列表非空、输出目录非空、输出格式非空（改为raise类型）
+  - calculate_batch_progress：任务列表非空、已用时间>=0（改为raise类型）
+  - generate_batch_summary：任务列表非空、总时间>=0（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

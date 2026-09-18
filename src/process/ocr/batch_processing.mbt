@@ -108,7 +108,17 @@ pub fn create_batch_tasks(
   input_files : Array[String],
   output_directory : String,
   output_format : String,
-) -> Array[BatchTask] {
+) -> Array[BatchTask] raise @types.LoadError {
+  // 输入验证
+  if input_files.length() == 0 {
+    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输入文件列表不能为空")
+  }
+  if output_directory.length() == 0 {
+    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输出目录不能为空")
+  }
+  if output_format.length() == 0 {
+    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输出格式不能为空")
+  }
   let tasks : Array[BatchTask] = []
   for i in 0..<input_files.length() {
     let input_path = input_files[i]
@@ -213,7 +223,14 @@ pub fn mark_task_failed(
 pub fn calculate_batch_progress(
   tasks : Array[BatchTask],
   elapsed_time_ms : Double,
-) -> BatchProgress {
+) -> BatchProgress raise @types.LoadError {
+  // 输入验证
+  if tasks.length() == 0 {
+    raise @types.LoadError::DecodeFailed("calculate_batch_progress: 任务列表不能为空")
+  }
+  if elapsed_time_ms < 0.0 {
+    raise @types.LoadError::DecodeFailed("calculate_batch_progress: 已用时间不能为负数")
+  }
   let mut completed = 0
   let mut failed = 0
   let mut skipped = 0
@@ -282,7 +299,14 @@ pub fn calculate_batch_progress(
 pub fn generate_batch_summary(
   tasks : Array[BatchTask],
   total_time_ms : Double,
-) -> BatchResultSummary {
+) -> BatchResultSummary raise @types.LoadError {
+  // 输入验证
+  if tasks.length() == 0 {
+    raise @types.LoadError::DecodeFailed("generate_batch_summary: 任务列表不能为空")
+  }
+  if total_time_ms < 0.0 {
+    raise @types.LoadError::DecodeFailed("generate_batch_summary: 总时间不能为负数")
+  }
   let mut successful = 0
   let mut failed = 0
   let mut skipped = 0
