@@ -1060,3 +1060,9 @@
 - 增强 color/colormap.mbt：1个核心函数补充完整的生产级验证
   - apply_colormap：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的apply_colormap函数类型定义（添加raise @types.LoadError）
+
+## v151.0.0 - 生产级增强：color模块 adaptive_threshold（3个核心函数）
+- 增强 color/adaptive_threshold.mbt：3个核心函数补充完整的生产级验证
+  - adaptive_threshold_mean：尺寸>0、通道数1/3/4、数据大小匹配、block_size>=3奇数
+  - adaptive_threshold_gaussian：尺寸>0、通道数1/3/4、数据大小匹配、block_size>=3奇数
+  - threshold_otsu：尺寸>0、通道数1/3/4、数据大小匹配
