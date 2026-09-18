@@ -258,7 +258,7 @@ pub fn write_tga_to_bytes(img : @types.Image) -> Bytes {
 // From process/
 
 ///|
-pub let adjust_brightness : (@types.Image, Int) -> @types.Image = @color.adjust_brightness
+pub let adjust_brightness : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.adjust_brightness
 
 ///|
 pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 = @color.adjust_brightness_16
@@ -267,7 +267,7 @@ pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 = @color.
 pub let adjust_brightness_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightness_f
 
 ///|
-pub let adjust_contrast : (@types.Image, Float) -> @types.Image = @color.adjust_contrast
+pub let adjust_contrast : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_contrast
 
 ///|
 pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_contrast_16
@@ -282,7 +282,7 @@ pub let adjust_saturation : (@types.Image, Float) -> @types.Image = @color.adjus
 pub let adjust_hue : (@types.Image, Float) -> @types.Image = @color.adjust_hue
 
 ///|
-pub let adjust_gamma : (@types.Image, Float) -> @types.Image = @color.adjust_gamma
+pub let adjust_gamma : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_gamma
 pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 = @color.adjust_gamma_16
 pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_gamma_f
 
@@ -1399,7 +1399,7 @@ pub let integral_variance : (
 ) -> Float raise @types.LoadError = @feature.integral_variance
 
 ///|
-pub let invert : (@types.Image) -> @types.Image = @color.invert
+pub let invert : (@types.Image) -> @types.Image raise @types.LoadError = @color.invert
 pub let invert_16 : (@types.Image16) -> @types.Image16 = @color.invert_16
 pub let invert_f : (@types.ImageF) -> @types.ImageF = @color.invert_f
 

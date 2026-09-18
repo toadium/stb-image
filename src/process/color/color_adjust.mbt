@@ -15,7 +15,20 @@ fn clamp_byte(v : Int) -> Byte {
 ///|
 /// 亮度调整。delta ∈ [-255, 255]，正值变亮，负值变暗。
 /// 仅影响颜色通道（前 min(channels,3) 个），alpha 通道不变。
-pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image {
+pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -44,7 +57,23 @@ pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image {
 /// 对比度调整。factor=1.0 为原图，>1 增加对比度，<1 降低。
 /// 以 128 为中心缩放。仅影响颜色通道，alpha 不变。
 /// 优化：直接处理所有像素，避免内层循环
-pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image {
+pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if factor < 0.0 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast: factor必须大于等于0")
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -90,7 +119,23 @@ pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image {
 ///|
 /// Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 使用查找表加速。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma(img : @types.Image, gamma : Float) -> @types.Image {
+pub fn adjust_gamma(img : @types.Image, gamma : Float) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if gamma <= 0.0 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma: gamma必须大于0")
+  }
   // 预计算 256 项查找表
   let lut : Array[Byte] = Array::make(256, b'\x00')
   for i in 0..<256 {
@@ -121,7 +166,20 @@ pub fn adjust_gamma(img : @types.Image, gamma : Float) -> @types.Image {
 
 ///|
 /// 反色（负片）。new = 255 - old。仅影响颜色通道，alpha 不变。
-pub fn invert(img : @types.Image) -> @types.Image {
+pub fn invert(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("invert: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("invert: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "invert: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }

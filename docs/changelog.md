@@ -1034,3 +1034,12 @@
   - hu_moments_features：尺寸>0、单通道、数据大小匹配
   - extract_combined_ocr_features：尺寸>0、单通道、数据大小匹配
 - **ocr模块生产级增强全部完成！**（36个文件，136+个函数）
+
+## v148.0.0 - 生产级增强：color模块 color_adjust（4个核心函数）
+- 增强 color/color_adjust.mbt：4个核心函数补充完整的生产级验证
+  - adjust_brightness：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - adjust_contrast：尺寸>0、通道数1-4、数据大小匹配、factor>=0（改为raise类型）
+  - adjust_gamma：尺寸>0、通道数1-4、数据大小匹配、gamma>0（改为raise类型）
+  - invert：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+- 同步更新 bench.mbt 中的2个函数调用（添加catch处理）
