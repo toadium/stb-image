@@ -16,7 +16,20 @@ fn clamp_byte_doc(v : Int) -> Byte {
 ///|
 /// 文档图像增强（去噪+对比度+锐化）
 /// 适用于扫描文档和照片文档的预处理
-pub fn document_enhance(img : @types.Image) -> @types.Image {
+pub fn document_enhance(img : @types.Image) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("document_enhance: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("document_enhance: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "document_enhance: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let mut result = img
   // 1. 转灰度（如果是彩色图像）
   if result.channels != 1 {
@@ -168,8 +181,21 @@ pub fn shadow_removal(
   img : @types.Image,
   kernel_size? : Int = 51,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("shadow_removal: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("shadow_removal: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "shadow_removal: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if kernel_size <= 0 || kernel_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("shadow_removal: 核大小必须为正奇数")
   }
   let w = img.width
   let h = img.height
@@ -212,8 +238,21 @@ pub fn background_normalization(
   img : @types.Image,
   kernel_size? : Int = 31,
 ) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("background_normalization: 图像尺寸必须大于0")
+  }
   if img.channels != 1 {
     raise @types.LoadError::DecodeFailed("background_normalization: 仅支持单通道灰度图")
+  }
+  let expected_size = img.width * img.height
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "background_normalization: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if kernel_size <= 0 || kernel_size % 2 == 0 {
+    raise @types.LoadError::DecodeFailed("background_normalization: 核大小必须为正奇数")
   }
   let w = img.width
   let h = img.height

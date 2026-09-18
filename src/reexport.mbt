@@ -2422,7 +2422,7 @@ pub fn ocr_preprocess(
 }
 
 ///|
-pub fn document_enhance(img : @types.Image) -> @types.Image {
+pub fn document_enhance(img : @types.Image) -> @types.Image raise @types.LoadError {
   @ocr.document_enhance(img)
 }
 
