@@ -180,8 +180,18 @@ pub fn msr_16(
   gain? : Float = 1.0F,
   offset? : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("msr_16: 图像尺寸必须大于0")
+  }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("msr_16 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "msr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if sigmas.length() == 0 {
     raise @types.LoadError::DecodeFailed("sigmas 不能为空")
@@ -322,8 +332,18 @@ pub fn msrcr_16(
   alpha? : Float = 125.0F,
   beta? : Float = 46.0F,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("msrcr_16: 图像尺寸必须大于0")
+  }
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("msrcr_16 需要 RGB/RGBA 图像")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "msrcr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
   }
   if sigmas.length() == 0 {
     raise @types.LoadError::DecodeFailed("sigmas 不能为空")

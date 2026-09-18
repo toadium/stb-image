@@ -1191,3 +1191,8 @@
   - lab_to_rgb_16：L∈[0,100]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
 - 修改测试用例：添加try/catch处理raise错误
+
+## v170.0.0 - 生产级增强：color模块 retinex_16f（2个核心函数）
+- 增强 color/retinex_16f.mbt：2个核心函数补充完整的生产级验证
+  - msr_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
+  - msrcr_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
