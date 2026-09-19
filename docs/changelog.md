@@ -1262,3 +1262,8 @@
 ## v181.0.0 - 生产级增强：color模块 color_convert_16f（1个核心函数）
 - 增强 color/color_convert_16f.mbt：premultiply_alpha_f补充完整的生产级验证
   - premultiply_alpha_f：补充尺寸>0、数据大小匹配验证（已有raise类型）
+
+## v182.0.0 - 生产级增强：color模块 color_convert（2个核心函数）
+- 增强 color/color_convert.mbt：2个核心函数补充完整的生产级验证
+  - premultiply_alpha：补充尺寸>0、数据大小匹配验证（已有raise类型）
+  - unpremultiply_alpha：补充尺寸>0、数据大小匹配验证（已有raise类型）
