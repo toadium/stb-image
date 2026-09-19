@@ -1231,3 +1231,11 @@
   - rgb_to_hsl_f：r,g,b∈[0,1]范围验证（改为raise类型）
   - hsl_to_rgb_f：s,l∈[0,1]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v177.0.0 - 生产级增强：color模块 color_convert_16f（4个核心函数）
+- 增强 color/color_convert_16f.mbt：4个核心float函数补充完整的生产级验证
+  - rgb_to_ycbcr_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - ycbcr_to_rgb_f：y,cb,cr∈[0,1]范围验证（改为raise类型）
+  - rgb_to_cmyk_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - cmyk_to_rgb_f：c,m,y,k∈[0,1]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）

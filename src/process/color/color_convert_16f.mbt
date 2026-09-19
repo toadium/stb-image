@@ -346,7 +346,11 @@ pub fn rgb_to_ycbcr_16(r : Int, g : Int, b : Int) -> (Int, Int, Int) raise @type
 
 ///|
 /// float RGB → YCbCr（ITU-R BT.601）。输入范围 0.0-1.0，输出范围 0.0-1.0。
-pub fn rgb_to_ycbcr_f(r : Float, g : Float, b : Float) -> (Float, Float, Float) {
+pub fn rgb_to_ycbcr_f(r : Float, g : Float, b : Float) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0.0F || r > 1.0F || g < 0.0F || g > 1.0F || b < 0.0F || b > 1.0F {
+    raise @types.LoadError::DecodeFailed("rgb_to_ycbcr_f: r,g,b必须在[0,1]范围内")
+  }
   let y = 0.299F * r + 0.587F * g + 0.114F * b
   let cb = -0.169F * r - 0.331F * g + 0.5F * b + 0.5F
   let cr = 0.5F * r - 0.419F * g - 0.081F * b + 0.5F
@@ -370,7 +374,11 @@ pub fn ycbcr_to_rgb_16(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) raise @ty
 
 ///|
 /// float YCbCr → RGB（ITU-R BT.601）。输入范围 0.0-1.0。
-pub fn ycbcr_to_rgb_f(y : Float, cb : Float, cr : Float) -> (Float, Float, Float) {
+pub fn ycbcr_to_rgb_f(y : Float, cb : Float, cr : Float) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if y < 0.0F || y > 1.0F || cb < 0.0F || cb > 1.0F || cr < 0.0F || cr > 1.0F {
+    raise @types.LoadError::DecodeFailed("ycbcr_to_rgb_f: y,cb,cr必须在[0,1]范围内")
+  }
   let cb0 = cb - 0.5F
   let cr0 = cr - 0.5F
   let r = y + 1.402F * cr0
@@ -400,7 +408,11 @@ pub fn rgb_to_cmyk_16(r : Int, g : Int, b : Int) -> (Int, Int, Int, Int) raise @
 
 ///|
 /// float RGB → CMYK。输入范围 0.0-1.0，输出范围 0.0-1.0。
-pub fn rgb_to_cmyk_f(r : Float, g : Float, b : Float) -> (Float, Float, Float, Float) {
+pub fn rgb_to_cmyk_f(r : Float, g : Float, b : Float) -> (Float, Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if r < 0.0F || r > 1.0F || g < 0.0F || g > 1.0F || b < 0.0F || b > 1.0F {
+    raise @types.LoadError::DecodeFailed("rgb_to_cmyk_f: r,g,b必须在[0,1]范围内")
+  }
   let c = 1.0F - r
   let m = 1.0F - g
   let y = 1.0F - b
@@ -428,7 +440,11 @@ pub fn cmyk_to_rgb_16(c : Int, m : Int, y : Int, k : Int) -> (Int, Int, Int) rai
 
 ///|
 /// float CMYK → RGB。输入范围 0.0-1.0。
-pub fn cmyk_to_rgb_f(c : Float, m : Float, y : Float, k : Float) -> (Float, Float, Float) {
+pub fn cmyk_to_rgb_f(c : Float, m : Float, y : Float, k : Float) -> (Float, Float, Float) raise @types.LoadError {
+  // 输入验证
+  if c < 0.0F || c > 1.0F || m < 0.0F || m > 1.0F || y < 0.0F || y > 1.0F || k < 0.0F || k > 1.0F {
+    raise @types.LoadError::DecodeFailed("cmyk_to_rgb_f: c,m,y,k必须在[0,1]范围内")
+  }
   let r = 1.0F - (c * (1.0F - k) + k)
   let g = 1.0F - (m * (1.0F - k) + k)
   let b = 1.0F - (y * (1.0F - k) + k)

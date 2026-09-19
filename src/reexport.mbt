@@ -1617,12 +1617,12 @@ pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) = @color.r
 ///|
 pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr
 pub let rgb_to_ycbcr_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr_16
-pub let rgb_to_ycbcr_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_ycbcr_f
+pub let rgb_to_ycbcr_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_ycbcr_f
 
 ///|
 pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb
 pub let ycbcr_to_rgb_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb_16
-pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.ycbcr_to_rgb_f
+pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.ycbcr_to_rgb_f
 
 ///|
 pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz
@@ -1647,12 +1647,12 @@ pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @typ
 ///|
 pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk
 pub let rgb_to_cmyk_16 : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk_16
-pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) = @color.rgb_to_cmyk_f
+pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) raise @types.LoadError = @color.rgb_to_cmyk_f
 
 ///|
 pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb
 pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb_16
-pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) = @color.cmyk_to_rgb_f
+pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.cmyk_to_rgb_f
 
 ///|
 pub let apply_colormap : (@types.Image, @color.Colormap) -> @types.Image raise @types.LoadError = @color.apply_colormap
