@@ -264,7 +264,7 @@ pub let adjust_brightness : (@types.Image, Int) -> @types.Image raise @types.Loa
 pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.adjust_brightness_16
 
 ///|
-pub let adjust_brightness_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_brightness_f
+pub let adjust_brightness_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_brightness_f
 
 ///|
 pub let adjust_contrast : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_contrast
@@ -273,7 +273,7 @@ pub let adjust_contrast : (@types.Image, Float) -> @types.Image raise @types.Loa
 pub let adjust_contrast_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @color.adjust_contrast_16
 
 ///|
-pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_contrast_f
+pub let adjust_contrast_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_contrast_f
 
 ///|
 pub let adjust_saturation : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_saturation
@@ -1804,7 +1804,7 @@ pub let threshold_otsu_f : (@types.ImageF) -> @types.ImageF raise @types.LoadErr
 ///|
 pub let to_grayscale : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_grayscale
 pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_grayscale_16
-pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF = @color.to_grayscale_f
+pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_grayscale_f
 
 ///|
 pub let to_rgb : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgb

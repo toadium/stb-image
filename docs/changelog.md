@@ -1245,3 +1245,10 @@
   - rgb_to_hsv_f：r,g,b∈[0,1]范围验证（改为raise类型）
   - hsv_to_rgb_f：s,v∈[0,1]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v179.0.0 - 生产级增强：color模块 color_16f（3个核心函数）
+- 增强 color/color_16f.mbt：3个核心float函数补充完整的生产级验证
+  - adjust_brightness_f：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+  - adjust_contrast_f：尺寸>0、通道数1-4、数据大小匹配、factor>=0（改为raise类型）
+  - to_grayscale_f：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的3个函数类型定义（添加raise @types.LoadError）

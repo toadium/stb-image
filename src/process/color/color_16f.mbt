@@ -74,7 +74,20 @@ pub fn adjust_brightness_16(
 
 ///|
 /// float 亮度调整。delta 为浮点偏移量
-pub fn adjust_brightness_f(img : @types.ImageF, delta : Float) -> @types.ImageF {
+pub fn adjust_brightness_f(img : @types.ImageF, delta : Float) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_brightness_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -158,7 +171,23 @@ pub fn adjust_contrast_16(
 
 ///|
 /// float 对比度调整。factor=1.0 为原图，以 0.5 为中心
-pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF {
+pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if factor < 0.0F {
+    raise @types.LoadError::DecodeFailed("adjust_contrast_f: factor必须大于等于0")
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -409,7 +438,20 @@ pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 raise @types.Load
 ///|
 /// float 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
 /// 输出 channels=1 的 float 灰度图。
-pub fn to_grayscale_f(img : @types.ImageF) -> @types.ImageF {
+pub fn to_grayscale_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_grayscale_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_grayscale_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let bpp = ch * 4
