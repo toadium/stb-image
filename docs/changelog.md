@@ -1217,3 +1217,11 @@
 - 增强 color/color_convert_16f.mbt：2个核心函数补充完整的生产级验证
   - unpremultiply_alpha_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
   - unpremultiply_alpha_f：补充尺寸>0、数据大小匹配验证（已有raise类型）
+
+## v175.0.0 - 生产级增强：color模块 color_space_16f（4个核心函数）
+- 增强 color/color_space_16f.mbt：4个核心float函数补充完整的生产级验证
+  - rgb_to_xyz_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - xyz_to_rgb_f：x,y,z>=0范围验证（改为raise类型）
+  - rgb_to_lab_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - lab_to_rgb_f：L∈[0,100]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
