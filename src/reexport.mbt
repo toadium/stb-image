@@ -1362,7 +1362,7 @@ pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @typ
 ///|
 pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb
 pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb_16
-pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsv_to_rgb_f
+pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsv_to_rgb_f
 
 ///|
 pub let ifft_2d : (@frequency.FFTResult) -> @types.Image = @frequency.ifft_2d
@@ -1612,7 +1612,7 @@ pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) raise @typ
 ///|
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv
 pub let rgb_to_hsv_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_16
-pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsv_f
+pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_f
 
 ///|
 pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr

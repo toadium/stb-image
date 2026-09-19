@@ -1239,3 +1239,9 @@
   - rgb_to_cmyk_f：r,g,b∈[0,1]范围验证（改为raise类型）
   - cmyk_to_rgb_f：c,m,y,k∈[0,1]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v178.0.0 - 生产级增强：color模块 color_space_16f（2个核心函数）
+- 增强 color/color_space_16f.mbt：2个核心float HSV函数补充完整的生产级验证
+  - rgb_to_hsv_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - hsv_to_rgb_f：s,v∈[0,1]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
