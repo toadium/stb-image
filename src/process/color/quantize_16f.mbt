@@ -261,9 +261,22 @@ pub fn kmeans_quantize_f(
 
 ///|
 /// Floyd-Steinberg 误差扩散抖动量化 16-bit 版本。
-pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 {
+pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("floyd_steinberg_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("floyd_steinberg_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if levels < 2 {
-    return img
+    raise @types.LoadError::DecodeFailed("floyd_steinberg_16: levels必须>=2")
   }
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -451,9 +464,22 @@ fn bucket_average_mc16(
 
 ///|
 /// Median Cut 色彩量化 16-bit 版本。
-pub fn median_cut_16(img : @types.Image16, num_colors : Int) -> @types.Image16 {
+pub fn median_cut_16(img : @types.Image16, num_colors : Int) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_cut_16: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_cut_16: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if num_colors < 2 {
-    return img
+    raise @types.LoadError::DecodeFailed("median_cut_16: num_colors必须>=2")
   }
   let w = img.width
   let h = img.height

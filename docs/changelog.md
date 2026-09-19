@@ -1196,3 +1196,9 @@
 - 增强 color/retinex_16f.mbt：2个核心函数补充完整的生产级验证
   - msr_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
   - msrcr_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
+
+## v171.0.0 - 生产级增强：color模块 quantize_16f（2个核心函数）
+- 增强 color/quantize_16f.mbt：2个核心函数补充完整的生产级验证
+  - floyd_steinberg_16：尺寸>0、通道数1-4、数据大小匹配、levels>=2（改为raise类型）
+  - median_cut_16：尺寸>0、通道数1-4、数据大小匹配、num_colors>=2（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
