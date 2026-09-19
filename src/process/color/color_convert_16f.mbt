@@ -238,9 +238,19 @@ pub fn premultiply_alpha_f(
 pub fn unpremultiply_alpha_16(
   img : @types.Image16,
 ) -> @types.Image16 raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("unpremultiply_alpha_16: 图像尺寸必须大于0")
+  }
   if img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "unpremultiply_alpha_16 需要 channels=4 (RGBA)",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels * 2
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "unpremultiply_alpha_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -276,9 +286,19 @@ pub fn unpremultiply_alpha_16(
 pub fn unpremultiply_alpha_f(
   img : @types.ImageF,
 ) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("unpremultiply_alpha_f: 图像尺寸必须大于0")
+  }
   if img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "unpremultiply_alpha_f 需要 channels=4 (RGBA)",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "unpremultiply_alpha_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
