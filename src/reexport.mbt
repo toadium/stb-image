@@ -1357,7 +1357,7 @@ pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF r
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb
 pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb_16
-pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) = @color.hsl_to_rgb_f
+pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsl_to_rgb_f
 
 ///|
 pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb
@@ -1607,7 +1607,7 @@ pub fn region_growing_segment(
 ///|
 pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl
 pub let rgb_to_hsl_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_16
-pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) = @color.rgb_to_hsl_f
+pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_f
 
 ///|
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv

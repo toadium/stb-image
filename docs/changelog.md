@@ -1225,3 +1225,9 @@
   - rgb_to_lab_f：r,g,b∈[0,1]范围验证（改为raise类型）
   - lab_to_rgb_f：L∈[0,100]范围验证（改为raise类型）
 - 同步更新 reexport.mbt 中的4个函数类型定义（添加raise @types.LoadError）
+
+## v176.0.0 - 生产级增强：color模块 color_space_16f（2个核心函数）
+- 增强 color/color_space_16f.mbt：2个核心float HSL函数补充完整的生产级验证
+  - rgb_to_hsl_f：r,g,b∈[0,1]范围验证（改为raise类型）
+  - hsl_to_rgb_f：s,l∈[0,1]范围验证（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
