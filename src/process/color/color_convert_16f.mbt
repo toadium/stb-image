@@ -54,7 +54,20 @@ pub fn to_rgb_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError 
 
 ///|
 /// float 去除 alpha 通道（RGBA → RGB，channels=3）
-pub fn to_rgb_f(img : @types.ImageF) -> @types.ImageF {
+pub fn to_rgb_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_rgb_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgb_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgb_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 3 {
     return img
   }
@@ -131,7 +144,20 @@ pub fn to_rgba_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError
 
 ///|
 /// float 添加 alpha 通道（RGB → RGBA，channels=4，alpha=1.0）
-pub fn to_rgba_f(img : @types.ImageF) -> @types.ImageF {
+pub fn to_rgba_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("to_rgba_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("to_rgba_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "to_rgba_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if img.channels == 4 {
     return img
   }

@@ -1809,12 +1809,12 @@ pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError
 ///|
 pub let to_rgb : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgb
 pub let to_rgb_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_rgb_16
-pub let to_rgb_f : (@types.ImageF) -> @types.ImageF = @color.to_rgb_f
+pub let to_rgb_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_rgb_f
 
 ///|
 pub let to_rgba : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgba
 pub let to_rgba_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_rgba_16
-pub let to_rgba_f : (@types.ImageF) -> @types.ImageF = @color.to_rgba_f
+pub let to_rgba_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_rgba_f
 
 ///|
 pub let unpremultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.unpremultiply_alpha
