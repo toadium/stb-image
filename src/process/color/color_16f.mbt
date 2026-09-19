@@ -237,7 +237,23 @@ pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 ra
 ///|
 /// float Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 以 1.0 为满量程。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF {
+pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
+  if gamma <= 0.0F {
+    raise @types.LoadError::DecodeFailed("adjust_gamma_f: gamma必须>0")
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -308,7 +324,20 @@ pub fn invert_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError 
 
 ///|
 /// float 反色（负片）。new = 1.0 - old。仅影响颜色通道，alpha 不变。
-pub fn invert_f(img : @types.ImageF) -> @types.ImageF {
+pub fn invert_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("invert_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("invert_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "invert_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }

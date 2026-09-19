@@ -284,7 +284,7 @@ pub let adjust_hue : (@types.Image, Float) -> @types.Image raise @types.LoadErro
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_gamma
 pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @color.adjust_gamma_16
-pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF = @color.adjust_gamma_f
+pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_gamma_f
 
 ///|
 pub let adaptive_threshold_mean : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
@@ -1401,7 +1401,7 @@ pub let integral_variance : (
 ///|
 pub let invert : (@types.Image) -> @types.Image raise @types.LoadError = @color.invert
 pub let invert_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.invert_16
-pub let invert_f : (@types.ImageF) -> @types.ImageF = @color.invert_f
+pub let invert_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.invert_f
 
 ///|
 pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize

@@ -1206,3 +1206,9 @@
 ## v172.0.0 - 生产级增强：color模块 adaptive_threshold_16f（1个核心函数）
 - 增强 color/adaptive_threshold_16f.mbt：1个核心函数补充完整的生产级验证
   - adaptive_threshold_gaussian_16：补充尺寸>0、数据大小匹配验证（已有raise类型）
+
+## v173.0.0 - 生产级增强：color模块 color_16f（2个核心函数）
+- 增强 color/color_16f.mbt：2个核心函数补充完整的生产级验证
+  - adjust_gamma_f：尺寸>0、通道数1-4、数据大小匹配、gamma>0（改为raise类型）
+  - invert_f：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
+- 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
