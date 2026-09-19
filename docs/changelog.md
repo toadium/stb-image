@@ -1258,3 +1258,7 @@
   - to_rgb_f：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
   - to_rgba_f：尺寸>0、通道数1-4、数据大小匹配（改为raise类型）
 - 同步更新 reexport.mbt 中的2个函数类型定义（添加raise @types.LoadError）
+
+## v181.0.0 - 生产级增强：color模块 color_convert_16f（1个核心函数）
+- 增强 color/color_convert_16f.mbt：premultiply_alpha_f补充完整的生产级验证
+  - premultiply_alpha_f：补充尺寸>0、数据大小匹配验证（已有raise类型）
