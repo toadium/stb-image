@@ -338,7 +338,20 @@ pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 
 
 ///|
 /// Floyd-Steinberg 误差扩散抖动量化 float 版本。
-pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF {
+pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("floyd_steinberg_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("floyd_steinberg_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if levels < 2 {
     return img
   }
@@ -631,7 +644,20 @@ fn bucket_average_mcf(
 
 ///|
 /// Median Cut 色彩量化 float 版本。
-pub fn median_cut_f(img : @types.ImageF, num_colors : Int) -> @types.ImageF {
+pub fn median_cut_f(img : @types.ImageF, num_colors : Int) -> @types.ImageF raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed("median_cut_f: 图像尺寸必须大于0")
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed("median_cut_f: 通道数必须在1-4之间")
+  }
+  let expected_size = img.width * img.height * img.channels * 4
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+    )
+  }
   if num_colors < 2 {
     return img
   }

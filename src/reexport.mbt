@@ -1006,7 +1006,7 @@ pub let find_contours_f : (@types.ImageF) -> Array[@edge.Contour] raise @types.L
 ///|
 pub let floyd_steinberg : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.floyd_steinberg
 pub let floyd_steinberg_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.floyd_steinberg_16
-pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF = @color.floyd_steinberg_f
+pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.floyd_steinberg_f
 
 ///|
 pub let glcm_features : (Array[Array[Int]]) -> @feature.GlcmFeatures = @feature.glcm_features
@@ -1511,7 +1511,7 @@ pub fn nlm_denoise_fast_f(
 ///|
 pub let median_cut : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.median_cut
 pub let median_cut_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.median_cut_16
-pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF = @color.median_cut_f
+pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.median_cut_f
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
