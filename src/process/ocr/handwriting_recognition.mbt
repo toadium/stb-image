@@ -4,24 +4,24 @@
 ///|
 /// 手写体类型
 pub(all) enum HandwritingStyle {
-  Print       // 印刷体
-  Cursive     // 草书/连笔
+  Print // 印刷体
+  Cursive // 草书/连笔
   SemiCursive // 半连笔
-  Block       // 方块字
+  Block // 方块字
   Unknown
 } derive(Eq)
 
 ///|
 /// 笔画类型
 pub(all) enum StrokeType {
-  Horizontal    // 横
-  Vertical      // 竖
-  LeftFalling   // 撇
-  RightFalling  // 捺
-  Dot           // 点
-  Hook          // 钩
-  Turning       // 折
-  Rising        // 提
+  Horizontal // 横
+  Vertical // 竖
+  LeftFalling // 撇
+  RightFalling // 捺
+  Dot // 点
+  Hook // 钩
+  Turning // 折
+  Rising // 提
   Unknown
 } derive(Eq)
 
@@ -127,15 +127,22 @@ pub fn detect_handwriting_slant(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_handwriting_slant: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_handwriting_slant: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_handwriting_slant: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_handwriting_slant: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_handwriting_slant: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_handwriting_slant: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -143,7 +150,7 @@ pub fn detect_handwriting_slant(
   // 基于文本行的倾斜检测
   let mut total_angle = 0.0
   let mut line_count = 0
-  
+
   for y in 0..<(h - 1) {
     let mut start_x = -1
     let mut end_x = -1
@@ -160,13 +167,15 @@ pub fn detect_handwriting_slant(
       // 简化：用行中心的变化计算倾斜
       if y > 0 {
         let prev_center = center_x
-        let angle = (prev_center - center_x).to_double() / h.to_double() * 57.2958
+        let angle = (prev_center - center_x).to_double() /
+          h.to_double() *
+          57.2958
         total_angle += angle
         line_count += 1
       }
     }
   }
-  
+
   if line_count > 0 {
     total_angle / line_count.to_double()
   } else {
@@ -182,19 +191,28 @@ pub fn normalize_handwriting_size(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "normalize_handwriting_size: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "normalize_handwriting_size: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "normalize_handwriting_size: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "normalize_handwriting_size: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if target_size <= 0 {
-    raise @types.LoadError::DecodeFailed("normalize_handwriting_size: 目标尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "normalize_handwriting_size: 目标尺寸必须大于0",
+    )
   }
   // 简化版：返回原图像，实际应进行缩放
   img
@@ -202,19 +220,17 @@ pub fn normalize_handwriting_size(
 
 ///|
 /// 提取笔画特征
-pub fn extract_hw_stroke_features(
-  img : @types.Image,
-) -> Array[StrokeFeature] {
+pub fn extract_hw_stroke_features(img : @types.Image) -> Array[StrokeFeature] {
   let w = img.width
   let h = img.height
   let strokes : Array[StrokeFeature] = []
-  
+
   // 简化版：基于连通域的笔画提取
   let visited : Array[Bool] = []
   for _ in 0..<(w * h) {
     visited.push(false)
   }
-  
+
   for y in 0..<h {
     for x in 0..<w {
       let idx = y * w + x
@@ -236,7 +252,7 @@ pub fn extract_hw_stroke_features(
       }
     }
   }
-  
+
   strokes
 }
 
@@ -248,14 +264,16 @@ pub fn segment_connected_strokes(
 ) -> StrokeSegmentationResult {
   let strokes = extract_hw_stroke_features(img)
   let segmentation_points : Array[(Int, Int)] = []
-  
+
   // 简化版：基于笔画长度的分割
   for i in 0..<strokes.length() {
     if strokes[i].length < config.min_stroke_length {
-      segmentation_points.push((strokes[i].start_x.to_int(), strokes[i].start_y.to_int()))
+      segmentation_points.push(
+        (strokes[i].start_x.to_int(), strokes[i].start_y.to_int()),
+      )
     }
   }
-  
+
   StrokeSegmentationResult::{
     num_strokes: strokes.length(),
     strokes,
@@ -272,20 +290,27 @@ pub fn extract_handwriting_features(
 ) -> HandwritingCharFeature raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_handwriting_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_handwriting_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("extract_handwriting_features: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "extract_handwriting_features: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_handwriting_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "extract_handwriting_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
   let h = img.height
-  
+
   // 计算水平投影
   let horizontal : Array[Double] = []
   for y in 0..<h {
@@ -297,7 +322,7 @@ pub fn extract_handwriting_features(
     }
     horizontal.push(count / w.to_double())
   }
-  
+
   // 计算垂直投影
   let vertical : Array[Double] = []
   for x in 0..<w {
@@ -309,7 +334,7 @@ pub fn extract_handwriting_features(
     }
     vertical.push(count / h.to_double())
   }
-  
+
   // 计算重心
   let mut total_mass = 0.0
   let mut sum_x = 0.0
@@ -323,20 +348,28 @@ pub fn extract_handwriting_features(
       }
     }
   }
-  
-  let center_x = if total_mass > 0 { sum_x / total_mass } else { w.to_double() / 2.0 }
-  let center_y = if total_mass > 0 { sum_y / total_mass } else { h.to_double() / 2.0 }
-  
+
+  let center_x = if total_mass > 0 {
+    sum_x / total_mass
+  } else {
+    w.to_double() / 2.0
+  }
+  let center_y = if total_mass > 0 {
+    sum_y / total_mass
+  } else {
+    h.to_double() / 2.0
+  }
+
   // 计算密度
   let density = total_mass / (w * h).to_double()
-  
+
   // 提取笔画
   let strokes = extract_hw_stroke_features(img)
   let stroke_types : Array[StrokeType] = []
   for s in strokes {
     stroke_types.push(s.stroke_type)
   }
-  
+
   HandwritingCharFeature::{
     char,
     num_strokes: strokes.length(),
@@ -360,37 +393,77 @@ pub fn handwriting_feature_similarity(
   feat2 : HandwritingCharFeature,
 ) -> Double {
   let mut score = 0.0
-  
+
   // 笔画数相似度（20%）
   let stroke_diff = (feat1.num_strokes - feat2.num_strokes).abs().to_double()
-  let stroke_sim = if stroke_diff < 1 { 1.0 } else if stroke_diff < 3 { 0.7 } else { 0.4 }
+  let stroke_sim = if stroke_diff < 1 {
+    1.0
+  } else if stroke_diff < 3 {
+    0.7
+  } else {
+    0.4
+  }
   score += stroke_sim * 0.2
-  
+
   // 宽高比相似度（15%）
   let aspect_diff = (feat1.aspect_ratio - feat2.aspect_ratio).abs()
-  let aspect_sim = if aspect_diff < 0.1 { 1.0 } else if aspect_diff < 0.3 { 0.7 } else { 0.4 }
+  let aspect_sim = if aspect_diff < 0.1 {
+    1.0
+  } else if aspect_diff < 0.3 {
+    0.7
+  } else {
+    0.4
+  }
   score += aspect_sim * 0.15
-  
+
   // 密度相似度（15%）
   let density_diff = (feat1.density - feat2.density).abs()
-  let density_sim = if density_diff < 0.05 { 1.0 } else if density_diff < 0.15 { 0.7 } else { 0.4 }
+  let density_sim = if density_diff < 0.05 {
+    1.0
+  } else if density_diff < 0.15 {
+    0.7
+  } else {
+    0.4
+  }
   score += density_sim * 0.15
-  
+
   // 重心相似度（20%）
-  let center_dist = ((feat1.center_of_mass_x - feat2.center_of_mass_x).pow(2.0) + (feat1.center_of_mass_y - feat2.center_of_mass_y).pow(2.0)).sqrt()
-  let center_sim = if center_dist < 0.05 { 1.0 } else if center_dist < 0.15 { 0.7 } else { 0.4 }
+  let center_dist = (@math.pow(
+    feat1.center_of_mass_x - feat2.center_of_mass_x,
+    2.0,
+  ) +
+  @math.pow(feat1.center_of_mass_y - feat2.center_of_mass_y, 2.0)).sqrt()
+  let center_sim = if center_dist < 0.05 {
+    1.0
+  } else if center_dist < 0.15 {
+    0.7
+  } else {
+    0.4
+  }
   score += center_sim * 0.2
-  
+
   // 倾斜角度相似度（10%）
   let slant_diff = (feat1.slant_angle - feat2.slant_angle).abs()
-  let slant_sim = if slant_diff < 5.0 { 1.0 } else if slant_diff < 15.0 { 0.7 } else { 0.4 }
+  let slant_sim = if slant_diff < 5.0 {
+    1.0
+  } else if slant_diff < 15.0 {
+    0.7
+  } else {
+    0.4
+  }
   score += slant_sim * 0.1
-  
+
   // 轮廓复杂度相似度（10%）
   let contour_diff = (feat1.contour_complexity - feat2.contour_complexity).abs()
-  let contour_sim = if contour_diff < 0.5 { 1.0 } else if contour_diff < 1.5 { 0.7 } else { 0.4 }
+  let contour_sim = if contour_diff < 0.5 {
+    1.0
+  } else if contour_diff < 1.5 {
+    0.7
+  } else {
+    0.4
+  }
   score += contour_sim * 0.1
-  
+
   score
 }
 
@@ -403,7 +476,9 @@ pub fn create_handwriting_template(
 ) -> HandwritingTemplate raise @types.LoadError {
   // 输入验证
   if char.length() == 0 {
-    raise @types.LoadError::DecodeFailed("create_handwriting_template: 字符不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "create_handwriting_template: 字符不能为空",
+    )
   }
   if samples.length() == 0 {
     return HandwritingTemplate::{
@@ -427,7 +502,7 @@ pub fn create_handwriting_template(
       avg_accuracy: 0.0,
     }
   }
-  
+
   // 计算平均特征
   let mut avg_strokes = 0.0
   let mut avg_aspect = 0.0
@@ -436,7 +511,7 @@ pub fn create_handwriting_template(
   let mut avg_center_y = 0.0
   let mut avg_slant = 0.0
   let mut avg_contour = 0.0
-  
+
   for sample in samples {
     let feat = extract_handwriting_features(sample, char)
     avg_strokes += feat.num_strokes.to_double()
@@ -447,7 +522,7 @@ pub fn create_handwriting_template(
     avg_slant += feat.slant_angle
     avg_contour += feat.contour_complexity
   }
-  
+
   let n = samples.length().to_double()
   let avg_features = HandwritingCharFeature::{
     char,
@@ -463,7 +538,7 @@ pub fn create_handwriting_template(
     slant_angle: avg_slant / n,
     size_normalized: true,
   }
-  
+
   HandwritingTemplate::{
     char,
     style,
@@ -482,25 +557,36 @@ pub fn recognize_handwriting_char(
 ) -> HandwritingRecognitionResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_char: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_char: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_handwriting_char: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_handwriting_char: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if templates.length() == 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 模板列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_char: 模板列表不能为空",
+    )
   }
   if config.similarity_threshold < 0.0 || config.similarity_threshold > 1.0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_char: 相似度阈值必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_char: 相似度阈值必须在0-1之间",
+    )
   }
-  let start_time = 0.0
-  
+  let _ = 0.0
+
   // 1. 预处理
   let preprocessed = if config.enable_size_normalization {
     normalize_handwriting_size(img, 64)
@@ -508,11 +594,11 @@ pub fn recognize_handwriting_char(
     img
   }
   let preprocess_time = 0.0
-  
+
   // 2. 特征提取
   let features = extract_handwriting_features(preprocessed, "?")
   let feature_time = 0.0
-  
+
   // 3. 模板匹配
   let candidates : Array[(String, Double)] = []
   for template in templates {
@@ -521,7 +607,7 @@ pub fn recognize_handwriting_char(
       candidates.push((template.char, sim))
     }
   }
-  
+
   // 排序
   for i in 0..<candidates.length() {
     for j in 0..<(candidates.length() - i - 1) {
@@ -532,17 +618,22 @@ pub fn recognize_handwriting_char(
       }
     }
   }
-  
+
   let match_time = 0.0
-  
+
   let predicted = if candidates.length() > 0 { candidates[0].0 } else { "?" }
   let confidence = if candidates.length() > 0 { candidates[0].1 } else { 0.0 }
-  
+
   let top_candidates : Array[(String, Double)] = []
-  for i in 0..<(if config.max_candidates < candidates.length() { config.max_candidates } else { candidates.length() }) {
+  for
+    i in 0..<(if config.max_candidates < candidates.length() {
+      config.max_candidates
+    } else {
+      candidates.length()
+    }) {
     top_candidates.push(candidates[i])
   }
-  
+
   HandwritingRecognitionResult::{
     predicted_char: predicted,
     confidence,
@@ -567,25 +658,44 @@ pub fn handwriting_report_to_string(
   report = report + "| 指标 | 值 |\n"
   report = report + "|------|------|\n"
   report = report + "| 预测字符 | **" + result.predicted_char + "** |\n"
-  report = report + "| 置信度 | " + (result.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 检测字体 | " + (match result.detected_style {
-    HandwritingStyle::Print => "印刷体"
-    HandwritingStyle::Cursive => "草书/连笔"
-    HandwritingStyle::SemiCursive => "半连笔"
-    HandwritingStyle::Block => "方块字"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 检测笔画数 | " + result.num_strokes_detected.to_string() + " |\n"
-  report = report + "| 倾斜角度 | " + result.slant_angle.to_string() + "° |\n\n"
-  
+  report = report +
+    "| 置信度 | " +
+    (result.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 检测字体 | " +
+    (match result.detected_style {
+      HandwritingStyle::Print => "印刷体"
+      HandwritingStyle::Cursive => "草书/连笔"
+      HandwritingStyle::SemiCursive => "半连笔"
+      HandwritingStyle::Block => "方块字"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 检测笔画数 | " +
+    result.num_strokes_detected.to_string() +
+    " |\n"
+  report = report +
+    "| 倾斜角度 | " +
+    result.slant_angle.to_string() +
+    "° |\n\n"
+
   if result.top_candidates.length() > 0 {
     report = report + "### Top-K 候选\n\n"
     report = report + "| 排名 | 字符 | 置信度 |\n"
     report = report + "|------|------|--------|\n"
     for i in 0..<result.top_candidates.length() {
-      report = report + "| " + (i + 1).to_string() + " | " + result.top_candidates[i].0 + " | " + (result.top_candidates[i].1 * 100.0).to_string() + "% |\n"
+      report = report +
+        "| " +
+        (i + 1).to_string() +
+        " | " +
+        result.top_candidates[i].0 +
+        " | " +
+        (result.top_candidates[i].1 * 100.0).to_string() +
+        "% |\n"
     }
   }
-  
+
   report
 }

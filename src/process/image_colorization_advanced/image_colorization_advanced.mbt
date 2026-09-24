@@ -244,14 +244,21 @@ pub fn automatic_colorization(
 
   // 简化的上色：根据灰度值分配颜色
   for i in 0..<grayscale_image.length() {
-    let gray = if i < grayscale_image.length() { grayscale_image[i] } else { 128.0 }
+    let gray = if i < grayscale_image.length() {
+      grayscale_image[i]
+    } else {
+      128.0
+    }
     let palette_idx = (gray / 16.0).to_int() % palette.length()
     let color = palette[palette_idx]
 
     // 混合灰度和颜色
-    let r = gray * (1.0 - config.colorization_strength) + color[0] * config.colorization_strength
-    let g = gray * (1.0 - config.colorization_strength) + color[1] * config.colorization_strength
-    let b = gray * (1.0 - config.colorization_strength) + color[2] * config.colorization_strength
+    let r = gray * (1.0 - config.colorization_strength) +
+      color[0] * config.colorization_strength
+    let g = gray * (1.0 - config.colorization_strength) +
+      color[1] * config.colorization_strength
+    let b = gray * (1.0 - config.colorization_strength) +
+      color[2] * config.colorization_strength
 
     colorized.push(r)
     colorized.push(g)
@@ -292,8 +299,16 @@ pub fn reference_based_colorization(
   let mut state = 42
 
   for i in 0..<grayscale_image.length() {
-    let gray = if i < grayscale_image.length() { grayscale_image[i] } else { 128.0 }
-    let ref_color = if i < reference_image.length() { reference_image[i] } else { 128.0 }
+    let gray = if i < grayscale_image.length() {
+      grayscale_image[i]
+    } else {
+      128.0
+    }
+    let ref_color = if i < reference_image.length() {
+      reference_image[i]
+    } else {
+      128.0
+    }
 
     // 简化的颜色迁移
     let color = gray * 0.5 + ref_color * 0.5
@@ -398,8 +413,16 @@ pub fn transfer_colors(
   let transferred : Array[Double] = []
 
   for i in 0..<source_image.length() {
-    let source_val = if i < source_image.length() { source_image[i] } else { 128.0 }
-    let ref_val = if i < reference_image.length() { reference_image[i] } else { 128.0 }
+    let source_val = if i < source_image.length() {
+      source_image[i]
+    } else {
+      128.0
+    }
+    let ref_val = if i < reference_image.length() {
+      reference_image[i]
+    } else {
+      128.0
+    }
 
     // 简化的颜色迁移
     let value = source_val * 0.7 + ref_val * 0.3
@@ -478,37 +501,67 @@ pub fn image_colorization_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ColorizationTaskType::AutomaticColorization => "自动上色"
-    ColorizationTaskType::ReferenceBasedColorization => "参考上色"
-    ColorizationTaskType::ColorRestoration => "颜色修复"
-    ColorizationTaskType::OldPhotoColorization => "老照片上色"
-    ColorizationTaskType::GrayscaleToColor => "灰度到彩色"
-    ColorizationTaskType::ColorTransfer => "颜色迁移"
-    ColorizationTaskType::ColorEnhancement => "颜色增强"
-    ColorizationTaskType::ColorCorrection => "颜色校正"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 模型类型 | " + (match config.model_type {
-    ColorizationModelType::Zhang2016 => "Zhang 2016"
-    ColorizationModelType::DeOldify => "DeOldify"
-    ColorizationModelType::CIC => "CIC"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 颜色空间 | " + (match config.color_space {
-    ColorSpaceType::RGB => "RGB"
-    ColorSpaceType::LAB => "LAB"
-    ColorSpaceType::HSV => "HSV"
-    ColorSpaceType::YUV => "YUV"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 上色强度 | " + config.colorization_strength.to_string() + " |\n"
-  report = report + "| 饱和度增强 | " + config.saturation_boost.to_string() + " |\n"
-  report = report + "| 对比度增强 | " + config.contrast_boost.to_string() + " |\n"
-  report = report + "| 亮度调整 | " + config.brightness_adjustment.to_string() + " |\n"
-  report = report + "| 使用参考 | " + (if config.use_reference { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 划痕去除 | " + (if config.scratch_removal { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 降噪强度 | " + config.noise_reduction.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ColorizationTaskType::AutomaticColorization => "自动上色"
+      ColorizationTaskType::ReferenceBasedColorization => "参考上色"
+      ColorizationTaskType::ColorRestoration => "颜色修复"
+      ColorizationTaskType::OldPhotoColorization => "老照片上色"
+      ColorizationTaskType::GrayscaleToColor => "灰度到彩色"
+      ColorizationTaskType::ColorTransfer => "颜色迁移"
+      ColorizationTaskType::ColorEnhancement => "颜色增强"
+      ColorizationTaskType::ColorCorrection => "颜色校正"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 模型类型 | " +
+    (match config.model_type {
+      ColorizationModelType::Zhang2016 => "Zhang 2016"
+      ColorizationModelType::DeOldify => "DeOldify"
+      ColorizationModelType::CIC => "CIC"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 颜色空间 | " +
+    (match config.color_space {
+      ColorSpaceType::RGB => "RGB"
+      ColorSpaceType::LAB => "LAB"
+      ColorSpaceType::HSV => "HSV"
+      ColorSpaceType::YUV => "YUV"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 上色强度 | " +
+    config.colorization_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 饱和度增强 | " +
+    config.saturation_boost.to_string() +
+    " |\n"
+  report = report +
+    "| 对比度增强 | " +
+    config.contrast_boost.to_string() +
+    " |\n"
+  report = report +
+    "| 亮度调整 | " +
+    config.brightness_adjustment.to_string() +
+    " |\n"
+  report = report +
+    "| 使用参考 | " +
+    (if config.use_reference { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 划痕去除 | " +
+    (if config.scratch_removal { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 降噪强度 | " +
+    config.noise_reduction.to_string() +
+    " |\n"
   report = report + "| 年代调色板 | " + config.era_color_palette + " |\n"
 
   report = report + "\n### 结果\n\n"

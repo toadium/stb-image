@@ -11,25 +11,38 @@ pub fn hough_lines_16(
 ) -> Array[HoughLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("hough_lines_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("hough_lines_16: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "hough_lines_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "hough_lines_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if threshold <= 0 {
-    raise @types.LoadError::DecodeFailed("hough_lines_16: threshold必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: threshold必须大于0",
+    )
   }
   if theta_resolution <= 0.0F {
-    raise @types.LoadError::DecodeFailed("hough_lines_16: theta_resolution必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: theta_resolution必须大于0",
+    )
   }
   if rho_resolution <= 0.0F {
-    raise @types.LoadError::DecodeFailed("hough_lines_16: rho_resolution必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_16: rho_resolution必须大于0",
+    )
   }
   let w = img.width
   let h = img.height
@@ -51,7 +64,8 @@ pub fn hough_lines_16(
   let rho_max_idx = n_rho - 1
   let data_int : Array[Int] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
-    data_int[i] = img.data[i * ch * 2].to_int() | (img.data[i * ch * 2 + 1].to_int() << 8)
+    data_int[i] = img.data[i * ch * 2].to_int() |
+      (img.data[i * ch * 2 + 1].to_int() << 8)
   }
   for y in 0..<h {
     let fy = Float::from_int(y)
@@ -84,7 +98,7 @@ pub fn hough_lines_16(
       if votes >= threshold {
         let rho = (Float::from_int(r) - max_rho_f) * rho_resolution
         let theta = Float::from_int(t) * angle_scale
-        lines.push(HoughLine::{ rho: rho, theta: theta, votes: votes })
+        lines.push(HoughLine::{ rho, theta, votes })
       }
     }
   }
@@ -102,25 +116,38 @@ pub fn hough_lines_f(
 ) -> Array[HoughLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("hough_lines_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("hough_lines_f: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "hough_lines_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "hough_lines_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if threshold <= 0 {
-    raise @types.LoadError::DecodeFailed("hough_lines_f: threshold必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: threshold必须大于0",
+    )
   }
   if theta_resolution <= 0.0F {
-    raise @types.LoadError::DecodeFailed("hough_lines_f: theta_resolution必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: theta_resolution必须大于0",
+    )
   }
   if rho_resolution <= 0.0F {
-    raise @types.LoadError::DecodeFailed("hough_lines_f: rho_resolution必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hough_lines_f: rho_resolution必须大于0",
+    )
   }
   let w = img.width
   let h = img.height
@@ -142,8 +169,10 @@ pub fn hough_lines_f(
   let rho_max_idx = n_rho - 1
   let data_f : Array[Float] = Array::make(w * h, 0.0F)
   for i in 0..<(w * h) {
-    let bits = img.data[i * ch * 4].to_int() | (img.data[i * ch * 4 + 1].to_int() << 8) |
-      (img.data[i * ch * 4 + 2].to_int() << 16) | (img.data[i * ch * 4 + 3].to_int() << 24)
+    let bits = img.data[i * ch * 4].to_int() |
+      (img.data[i * ch * 4 + 1].to_int() << 8) |
+      (img.data[i * ch * 4 + 2].to_int() << 16) |
+      (img.data[i * ch * 4 + 3].to_int() << 24)
     data_f[i] = Float::reinterpret_from_int(bits)
   }
   for y in 0..<h {
@@ -177,7 +206,7 @@ pub fn hough_lines_f(
       if votes >= threshold {
         let rho = (Float::from_int(r) - max_rho_f) * rho_resolution
         let theta = Float::from_int(t) * angle_scale
-        lines.push(HoughLine::{ rho: rho, theta: theta, votes: votes })
+        lines.push(HoughLine::{ rho, theta, votes })
       }
     }
   }

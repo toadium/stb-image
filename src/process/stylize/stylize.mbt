@@ -4,12 +4,12 @@
 ///|
 /// 风格化配置
 pub(all) struct StylizeConfig {
-  oil_paint_radius : Int  // 油画效果半径
-  oil_paint_intensity : Int  // 油画色阶数
-  sketch_blend : Double  // 素描混合比例
-  watercolor_blur : Int  // 水彩模糊半径
-  cartoon_levels : Int  // 卡通色阶数
-  cartoon_edge_threshold : Double  // 卡通边缘阈值
+  oil_paint_radius : Int // 油画效果半径
+  oil_paint_intensity : Int // 油画色阶数
+  sketch_blend : Double // 素描混合比例
+  watercolor_blur : Int // 水彩模糊半径
+  cartoon_levels : Int // 卡通色阶数
+  cartoon_edge_threshold : Double // 卡通边缘阈值
 }
 
 ///|
@@ -47,8 +47,8 @@ pub fn oil_paint(
       let bin_r : Array[Int] = Array::make(levels * levels * levels, 0)
       let bin_g : Array[Int] = Array::make(levels * levels * levels, 0)
       let bin_b : Array[Int] = Array::make(levels * levels * levels, 0)
-      for dy in (-r)..<(r + 1) {
-        for dx in (-r)..<(r + 1) {
+      for dy in -r..<(r + 1) {
+        for dx in -r..<(r + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -97,17 +97,19 @@ pub fn oil_paint(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 素描效果
 /// 基于灰度反色 + 颜色减淡混合的铅笔素描效果
-pub fn sketch(
-  img : @types.Image,
-  blend? : Double = 0.7,
-) -> @types.Image {
-let b = blend
+pub fn sketch(img : @types.Image, blend? : Double = 0.7) -> @types.Image {
+  let b = blend
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -135,7 +137,11 @@ let b = blend
     let base = gray[i].to_double()
     let blur = blurred[i].to_double()
     // 颜色减淡：result = base * 255 / (255 - blur)
-    let mut result = if blur < 255.0 { base * 255.0 / (255.0 - blur) } else { 255.0 }
+    let mut result = if blur < 255.0 {
+      base * 255.0 / (255.0 - blur)
+    } else {
+      255.0
+    }
     result = result.min(255.0).max(0.0)
     // 与原图混合
     let final_val = (result * b + base * (1.0 - b)).to_int().min(255).max(0)
@@ -151,7 +157,12 @@ let b = blend
       out_data[out_idx + 3] = data[out_idx + 3]
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -167,8 +178,8 @@ fn simple_blur(
     for x in 0..<w {
       let mut sum = 0
       let mut count = 0
-      for dy in (-radius)..<(radius + 1) {
-        for dx in (-radius)..<(radius + 1) {
+      for dy in -radius..<(radius + 1) {
+        for dx in -radius..<(radius + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -177,7 +188,13 @@ fn simple_blur(
           }
         }
       }
-      output.push(if count > 0 { (sum / count).to_byte() } else { input[y * w + x] })
+      output.push(
+        if count > 0 {
+          (sum / count).to_byte()
+        } else {
+          input[y * w + x]
+        },
+      )
     }
   }
   output
@@ -186,11 +203,8 @@ fn simple_blur(
 ///|
 /// 水彩效果
 /// 基于模糊 + 颜色量化 + 边缘增强的水彩效果
-pub fn watercolor(
-  img : @types.Image,
-  blur_radius? : Int = 5,
-) -> @types.Image {
-let radius = blur_radius
+pub fn watercolor(img : @types.Image, blur_radius? : Int = 5) -> @types.Image {
+  let radius = blur_radius
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -213,11 +227,16 @@ let radius = blur_radius
     for c in 0..<channels {
       let idx = i * channels + c
       let val = out_data[idx].to_int()
-      let quantized = (val * levels / 256) * (256 / levels)
+      let quantized = val * levels / 256 * (256 / levels)
       out_data[idx] = quantized.min(255).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -240,7 +259,7 @@ pub fn cartoon(
     for c in 0..<channels {
       let idx = i * channels + c
       let val = data[idx].to_int()
-      let q = (val * lv / 256) * (256 / lv)
+      let q = val * lv / 256 * (256 / lv)
       quantized[idx] = q.min(255).to_byte()
     }
   }
@@ -248,7 +267,7 @@ pub fn cartoon(
   let edges : Array[Double] = Array::make(w * h, 0.0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
-      let idx = (y * w + x) * channels
+      let _ = (y * w + x) * channels
       // 灰度
       let gray = (px, py) => {
         let i = (py * w + px) * channels
@@ -257,10 +276,18 @@ pub fn cartoon(
         let b = if channels >= 3 { data[i + 2].to_double() } else { r }
         0.299 * r + 0.587 * g + 0.114 * b
       }
-      let gx = -gray(x - 1, y - 1) - 2.0 * gray(x - 1, y) - gray(x - 1, y + 1) +
-               gray(x + 1, y - 1) + 2.0 * gray(x + 1, y) + gray(x + 1, y + 1)
-      let gy = -gray(x - 1, y - 1) - 2.0 * gray(x, y - 1) - gray(x + 1, y - 1) +
-               gray(x - 1, y + 1) + 2.0 * gray(x, y + 1) + gray(x + 1, y + 1)
+      let gx = -gray(x - 1, y - 1) -
+        2.0 * gray(x - 1, y) -
+        gray(x - 1, y + 1) +
+        gray(x + 1, y - 1) +
+        2.0 * gray(x + 1, y) +
+        gray(x + 1, y + 1)
+      let gy = -gray(x - 1, y - 1) -
+        2.0 * gray(x, y - 1) -
+        gray(x + 1, y - 1) +
+        gray(x - 1, y + 1) +
+        2.0 * gray(x, y + 1) +
+        gray(x + 1, y + 1)
       edges[y * w + x] = (gx * gx + gy * gy).sqrt()
     }
   }
@@ -283,7 +310,12 @@ pub fn cartoon(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -298,10 +330,20 @@ pub fn stylize(
     None => stylize_default_config()
   }
   match style {
-    "oil" => oil_paint(img, radius=cfg.oil_paint_radius, intensity=cfg.oil_paint_intensity)
+    "oil" =>
+      oil_paint(
+        img,
+        radius=cfg.oil_paint_radius,
+        intensity=cfg.oil_paint_intensity,
+      )
     "sketch" => sketch(img, blend=cfg.sketch_blend)
     "watercolor" => watercolor(img, blur_radius=cfg.watercolor_blur)
-    "cartoon" => cartoon(img, levels=cfg.cartoon_levels, edge_threshold=cfg.cartoon_edge_threshold)
+    "cartoon" =>
+      cartoon(
+        img,
+        levels=cfg.cartoon_levels,
+        edge_threshold=cfg.cartoon_edge_threshold,
+      )
     _ => oil_paint(img)
   }
 }

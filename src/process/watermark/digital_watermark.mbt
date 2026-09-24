@@ -4,19 +4,15 @@
 ///|
 /// 水印配置
 pub(all) struct WatermarkConfig {
-  method : String  // "lsb" / "dct"
-  strength : Double  // 水印强度
-  key : Int  // 随机种子密钥
+  method_type : String // "lsb" / "dct"
+  strength : Double // 水印强度
+  key : Int // 随机种子密钥
 }
 
 ///|
 /// 创建默认水印配置
 pub fn watermark_default_config() -> WatermarkConfig {
-  WatermarkConfig::{
-    method: "lsb",
-    strength: 1.0,
-    key: 42,
-  }
+  WatermarkConfig::{ method_type: "lsb", strength: 1.0, key: 42 }
 }
 
 ///|
@@ -66,7 +62,7 @@ pub fn embed_watermark_lsb(
   watermark : @types.Image,
   key? : Int = 42,
 ) -> @types.Image {
-let k = key
+  let _ = key
   if cover.width != watermark.width || cover.height != watermark.height {
     return cover
   }
@@ -83,7 +79,11 @@ let k = key
     for x in 0..<w {
       let idx = (y * w + x) * channels
       let watermark_idx = y * w + x
-      let watermark_val = if watermark.channels >= 1 { watermark.data[watermark_idx * watermark.channels].to_int() } else { 0 }
+      let watermark_val = if watermark.channels >= 1 {
+        watermark.data[watermark_idx * watermark.channels].to_int()
+      } else {
+        0
+      }
       let bit = if watermark_val > 128 { 1 } else { 0 }
       // 修改最低有效位
       let original = out_data[idx].to_int()
@@ -91,15 +91,18 @@ let k = key
       out_data[idx] = modified.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// LSB 水印提取
 /// 从载体图像的最低有效位提取水印
-pub fn extract_watermark_lsb(
-  stego : @types.Image,
-) -> @types.Image {
+pub fn extract_watermark_lsb(stego : @types.Image) -> @types.Image {
   let w = stego.width
   let h = stego.height
   let channels = stego.channels
@@ -111,7 +114,12 @@ pub fn extract_watermark_lsb(
       out_data[y * w + x] = if bit == 1 { b'\xFF' } else { b'\x00' }
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -121,7 +129,7 @@ pub fn embed_text_watermark(
   text : String,
   key? : Int = 42,
 ) -> @types.Image {
-let k = key
+  let k = key
   let w = cover.width
   let h = cover.height
   let channels = cover.channels
@@ -131,12 +139,12 @@ let k = key
     out_data[i] = cover.data[i]
   }
   // 将文本转换为二进制位
-  let text_bytes = text.to_bytes()
+  let text_bytes = @encoding/utf8.encode(text)
   let total_bits = text_bytes.length() * 8
   let positions = generate_random_positions(total_bits, w * h, k)
   for i in 0..<total_bits {
     let byte_idx = i / 8
-    let bit_idx = 7 - (i % 8)
+    let bit_idx = 7 - i % 8
     let byte_val = text_bytes[byte_idx].to_int()
     let bit = (byte_val >> bit_idx) & 1
     let pos = positions[i]
@@ -145,7 +153,12 @@ let k = key
     let modified = if bit == 1 { original | 1 } else { original & 254 }
     out_data[idx] = modified.to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -155,7 +168,7 @@ pub fn extract_text_watermark(
   length : Int,
   key? : Int = 42,
 ) -> String {
-let k = key
+  let k = key
   let w = stego.width
   let h = stego.height
   let channels = stego.channels
@@ -164,7 +177,7 @@ let k = key
   let result_bytes : Array[Byte] = Array::make(length, b'\x00')
   for i in 0..<total_bits {
     let byte_idx = i / 8
-    let bit_idx = 7 - (i % 8)
+    let bit_idx = 7 - i % 8
     let pos = positions[i]
     let idx = pos * channels
     let bit = stego.data[idx].to_int() & 1
@@ -187,7 +200,8 @@ pub fn watermark_psnr(
   original : @types.Image,
   watermarked : @types.Image,
 ) -> Double {
-  if original.width != watermarked.width || original.height != watermarked.height {
+  if original.width != watermarked.width ||
+    original.height != watermarked.height {
     return -1.0
   }
   let w = original.width
@@ -199,7 +213,8 @@ pub fn watermark_psnr(
     for x in 0..<w {
       let idx = (y * w + x) * channels
       for c in 0..<channels {
-        let diff = original.data[idx + c].to_double() - watermarked.data[idx + c].to_double()
+        let diff = original.data[idx + c].to_double() -
+          watermarked.data[idx + c].to_double()
         mse += diff * diff
         count += 1
       }
@@ -221,7 +236,7 @@ pub fn watermark_robustness_test(
   original_watermark : @types.Image,
   noise_level? : Double = 10.0,
 ) -> Double {
-let noise = noise_level
+  let noise = noise_level
   let w = watermarked.width
   let h = watermarked.height
   let channels = watermarked.channels
@@ -231,19 +246,28 @@ let noise = noise_level
   for i in 0..<(w * h * channels) {
     let (next, value) = lcg_next(seed)
     seed = next
-    let noise_val = ((value.to_double() / 1073741824.0) - 0.5) * 2.0 * noise
+    let noise_val = (value.to_double() / 1073741824.0 - 0.5) * 2.0 * noise
     let original = watermarked.data[i].to_double()
     let noisy = (original + noise_val).min(255.0).max(0.0)
     noisy_data[i] = noisy.to_int().to_byte()
   }
-  let noisy_img = @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(noisy_data) }
+  let noisy_img = @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(noisy_data),
+  }
   // 提取水印
   let extracted = extract_watermark_lsb(noisy_img)
   // 计算相似度
   let mut match_count = 0
   let total = w * h
   for i in 0..<total {
-    let orig = if original_watermark.channels >= 1 { original_watermark.data[i * original_watermark.channels].to_int() } else { 0 }
+    let orig = if original_watermark.channels >= 1 {
+      original_watermark.data[i * original_watermark.channels].to_int()
+    } else {
+      0
+    }
     let extr = extracted.data[i].to_int()
     if (orig > 128 && extr > 128) || (orig <= 128 && extr <= 128) {
       match_count += 1

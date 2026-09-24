@@ -46,9 +46,9 @@ test "decode_apng_pure: no IHDR raises" {
 test "decode_apng_pure: chunk data beyond file raises" {
   // PNG signature followed by chunk with length beyond file
   let out : Array[Byte] = [
-    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n',
-    b'\x00', b'\x00', b'\xFF', b'\xFF', // chunk length=65535
-    b'I', b'H', b'D', b'R',
+    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n', b'\x00', b'\x00', b'\xFF',
+    b'\xFF', // chunk length=65535
+     b'I', b'H', b'D', b'R',
   ]
   try {
     let _ = decode_apng_pure(Bytes::from_array(out))
@@ -91,8 +91,7 @@ test "decode_apng_pure: no IDAT chunk raises" {
   // IHDR chunk (minimal 1x1 RGB)
   let ihdr : Array[Byte] = [
     0x00, 0x00, 0x00, 0x0D, // length=13
-     b'I', b'H', b'D', b'R',
-     0x00, 0x00, 0x00, 0x01, // width=1
+     b'I', b'H', b'D', b'R', 0x00, 0x00, 0x00, 0x01, // width=1
      0x00, 0x00, 0x00, 0x01, // height=1
      0x08, // bit depth=8
      0x02, // color type=2 (RGB)
@@ -101,15 +100,20 @@ test "decode_apng_pure: no IDAT chunk raises" {
   // acTL chunk
   let actl : Array[Byte] = [
     0x00, 0x00, 0x00, 0x08, // length=8
-     b'a', b'c', b'T', b'L',
-     0x00, 0x00, 0x00, 0x01, // num_frames=1
+     b'a', b'c', b'T', b'L', 0x00, 0x00, 0x00, 0x01, // num_frames=1
      0x00, 0x00, 0x00, 0x01, // num_plays=1
      0x00, 0x00, 0x00, 0x00, // crc
   ]
   let data : Array[Byte] = []
-  for b in sig { data.push(b) }
-  for b in ihdr { data.push(b) }
-  for b in actl { data.push(b) }
+  for b in sig {
+    data.push(b)
+  }
+  for b in ihdr {
+    data.push(b)
+  }
+  for b in actl {
+    data.push(b)
+  }
   try {
     let _ = decode_apng_pure(Bytes::from_array(data))
     assert_true(false)

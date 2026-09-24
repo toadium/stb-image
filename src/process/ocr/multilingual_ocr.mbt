@@ -43,7 +43,7 @@ pub fn multilingual_ocr_default_config() -> MultilingualOcrConfig {
 pub(all) struct PunctuationTemplate {
   char : String
   features : Array[Double]
-  width_ratio : Double  // 相对宽度（窄/宽）
+  width_ratio : Double // 相对宽度（窄/宽）
 }
 
 ///|
@@ -52,61 +52,58 @@ pub fn generate_punctuation_templates() -> Array[PunctuationTemplate] {
   let templates : Array[PunctuationTemplate] = []
   // 常见标点符号
   let punctuations : Array[(String, Double)] = [
-    (",", 0.3),    // 逗号（窄）
-    (".", 0.3),    // 句号（窄）
-    ("!", 0.3),    // 感叹号（窄）
-    ("?", 0.5),    // 问号（中）
-    (";", 0.3),    // 分号（窄）
-    (":", 0.3),    // 冒号（窄）
-    ("\"", 0.4),   // 引号（中）
-    ("'", 0.2),    // 单引号（窄）
-    ("(", 0.4),    // 左括号（中）
-    (")", 0.4),    // 右括号（中）
-    ("[", 0.4),    // 左方括号
-    ("]", 0.4),    // 右方括号
-    ("{", 0.5),    // 左花括号
-    ("}", 0.5),    // 右花括号
-    ("-", 0.6),    // 连字符（宽）
-    ("_", 0.6),    // 下划线（宽）
-    ("/", 0.4),    // 斜杠
-    ("\\", 0.4),   // 反斜杠
-    ("|", 0.2),    // 竖线（窄）
-    ("@", 0.7),    // at符号（宽）
-    ("#", 0.6),    // 井号
-    ("$", 0.5),    // 美元符号
-    ("%", 0.6),    // 百分号
-    ("^", 0.5),    // 脱字符
-    ("&", 0.6),    // 和号
-    ("*", 0.5),    // 星号
-    ("+", 0.5),    // 加号
-    ("=", 0.6),    // 等号
-    ("<", 0.5),    // 小于号
-    (">", 0.5),    // 大于号
-    ("~", 0.6),    // 波浪号
-    ("`", 0.3),    // 反引号
-    ("，", 0.5),   // 中文逗号
-    ("。", 0.5),   // 中文句号
-    ("！", 0.5),   // 中文感叹号
-    ("？", 0.6),   // 中文问号
-    ("；", 0.5),   // 中文分号
-    ("：", 0.5),   // 中文冒号
-    ("“", 0.6),    // 中文左引号
-    ("”", 0.6),    // 中文右引号
-    ("（", 0.6),   // 中文左括号
-    ("）", 0.6),   // 中文右括号
-    ("、", 0.4),   // 顿号
-    ("《", 0.6),   // 书名号左
-    ("》", 0.6),   // 书名号右
-    ("—", 0.8),    // 破折号
-    ("…", 0.7),    // 省略号
+    (",", 0.3), // 逗号（窄）
+    (".", 0.3), // 句号（窄）
+    ("!", 0.3), // 感叹号（窄）
+    ("?", 0.5), // 问号（中）
+    (";", 0.3), // 分号（窄）
+    (":", 0.3), // 冒号（窄）
+    ("\"", 0.4), // 引号（中）
+    ("'", 0.2), // 单引号（窄）
+    ("(", 0.4), // 左括号（中）
+    (")", 0.4), // 右括号（中）
+    ("[", 0.4), // 左方括号
+    ("]", 0.4), // 右方括号
+    ("{", 0.5), // 左花括号
+    ("}", 0.5), // 右花括号
+    ("-", 0.6), // 连字符（宽）
+    ("_", 0.6), // 下划线（宽）
+    ("/", 0.4), // 斜杠
+    ("\\", 0.4), // 反斜杠
+    ("|", 0.2), // 竖线（窄）
+    ("@", 0.7), // at符号（宽）
+    ("#", 0.6), // 井号
+    ("$", 0.5), // 美元符号
+    ("%", 0.6), // 百分号
+    ("^", 0.5), // 脱字符
+    ("&", 0.6), // 和号
+    ("*", 0.5), // 星号
+    ("+", 0.5), // 加号
+    ("=", 0.6), // 等号
+    ("<", 0.5), // 小于号
+    (">", 0.5), // 大于号
+    ("~", 0.6), // 波浪号
+    ("`", 0.3), // 反引号
+    ("，", 0.5), // 中文逗号
+    ("。", 0.5), // 中文句号
+    ("！", 0.5), // 中文感叹号
+    ("？", 0.6), // 中文问号
+    ("；", 0.5), // 中文分号
+    ("：", 0.5), // 中文冒号
+    ("“", 0.6), // 中文左引号
+    ("”", 0.6), // 中文右引号
+    ("（", 0.6), // 中文左括号
+    ("）", 0.6), // 中文右括号
+    ("、", 0.4), // 顿号
+    ("《", 0.6), // 书名号左
+    ("》", 0.6), // 书名号右
+    ("—", 0.8), // 破折号
+    ("…", 0.7), // 省略号
   ]
-  for (char, width_ratio) in punctuations {
+  for _tup0 in punctuations {
+    let (char, width_ratio) = _tup0
     let features = generate_punctuation_features(char, width_ratio)
-    templates.push(PunctuationTemplate::{
-      char,
-      features,
-      width_ratio,
-    })
+    templates.push(PunctuationTemplate::{ char, features, width_ratio })
   }
   templates
 }
@@ -126,7 +123,8 @@ fn generate_punctuation_features(
   for y in 0..<size {
     for x in 0..<size {
       let h = (seed * 31 + x * 17 + y * 13) % 100
-      let dist = ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y)).to_double()
+      let dist = ((x - center_x) * (x - center_x) +
+      (y - center_y) * (y - center_y)).to_double()
       let center_factor = 1.0 - dist / 64.0
       if h < 40 + (center_factor * 30.0).to_int() {
         features[y * size + x] = 1.0
@@ -143,15 +141,22 @@ pub fn detect_char_language(
 ) -> LanguageType raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_char_language: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_char_language: 图像尺寸必须大于0",
+    )
   }
   if char_img.channels < 1 || char_img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_char_language: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_char_language: 通道数必须在1-4之间",
+    )
   }
   let expected_size = char_img.width * char_img.height * char_img.channels
   if char_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_char_language: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+      "detect_char_language: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      char_img.data.length().to_string(),
     )
   }
   let w = char_img.width
@@ -183,15 +188,22 @@ pub fn detect_document_language(
 ) -> LanguageType raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_document_language: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_language: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_document_language: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_language: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_document_language: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_document_language: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   // 预处理
@@ -242,15 +254,22 @@ pub fn recognize_multilingual(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_multilingual: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_multilingual: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_multilingual: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_multilingual: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_multilingual: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_multilingual: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let cfg = match config {
@@ -260,7 +279,7 @@ pub fn recognize_multilingual(
   // 1. 预处理
   let preprocessed = ocr_preprocess(img)
   // 2. 检测文档主要语言
-  let doc_language = if cfg.auto_language_detection {
+  let _ = if cfg.auto_language_detection {
     detect_document_language(preprocessed)
   } else {
     LanguageType::Mixed
@@ -292,33 +311,60 @@ pub fn recognize_multilingual(
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup1 in char_regions {
+    let (x, y, w, h) = _tup1
     // 提取字符图像
-    let char_img = extract_multilingual_char_region(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_multilingual_char_region(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 检测字符语言类型
     let char_language = detect_char_language(char_img)
     // 根据语言类型选择模板
     let result = match char_language {
-      LanguageType::Chinese => if chinese_templates.length() > 0 {
-        match_multilingual_template(extract_multilingual_features(char_img, 16), chinese_templates, cfg.distance_metric)
-      } else {
-        ("?", 0.0)
-      }
-      LanguageType::English => if english_templates.length() > 0 {
-        match_multilingual_template(extract_multilingual_features(char_img, 16), english_templates, cfg.distance_metric)
-      } else {
-        ("?", 0.0)
-      }
-      LanguageType::Digit => if digit_templates.length() > 0 {
-        match_multilingual_template(extract_multilingual_features(char_img, 16), digit_templates, cfg.distance_metric)
-      } else {
-        ("?", 0.0)
-      }
-      LanguageType::Punctuation => if punctuation_templates.length() > 0 {
-        match_punctuation_template(extract_multilingual_features(char_img, 16), punctuation_templates)
-      } else {
-        ("?", 0.0)
-      }
+      LanguageType::Chinese =>
+        if chinese_templates.length() > 0 {
+          match_multilingual_template(
+            extract_multilingual_features(char_img, 16),
+            chinese_templates,
+            cfg.distance_metric,
+          )
+        } else {
+          ("?", 0.0)
+        }
+      LanguageType::English =>
+        if english_templates.length() > 0 {
+          match_multilingual_template(
+            extract_multilingual_features(char_img, 16),
+            english_templates,
+            cfg.distance_metric,
+          )
+        } else {
+          ("?", 0.0)
+        }
+      LanguageType::Digit =>
+        if digit_templates.length() > 0 {
+          match_multilingual_template(
+            extract_multilingual_features(char_img, 16),
+            digit_templates,
+            cfg.distance_metric,
+          )
+        } else {
+          ("?", 0.0)
+        }
+      LanguageType::Punctuation =>
+        if punctuation_templates.length() > 0 {
+          match_punctuation_template(
+            extract_multilingual_features(char_img, 16),
+            punctuation_templates,
+          )
+        } else {
+          ("?", 0.0)
+        }
       _ => {
         // 未知语言，尝试所有模板
         let all_templates : Array[(String, Array[Double])] = []
@@ -332,7 +378,11 @@ pub fn recognize_multilingual(
           all_templates.push(t)
         }
         if all_templates.length() > 0 {
-          match_multilingual_template(extract_multilingual_features(char_img, 16), all_templates, cfg.distance_metric)
+          match_multilingual_template(
+            extract_multilingual_features(char_img, 16),
+            all_templates,
+            cfg.distance_metric,
+          )
         } else {
           ("?", 0.0)
         }
@@ -354,11 +404,7 @@ pub fn recognize_multilingual(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -404,10 +450,18 @@ fn segment_multilingual_chars(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -439,20 +493,30 @@ fn extract_multilingual_char_region(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -483,7 +547,11 @@ fn extract_multilingual_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -499,7 +567,8 @@ fn match_multilingual_template(
 ) -> (String, Double) {
   let mut best_label = "?"
   let mut best_dist = 1000000.0
-  for (label, template) in templates {
+  for _tup2 in templates {
+    let (label, template) = _tup2
     let dist = match distance_metric {
       "manhattan" => manhattan_ml(features, template)
       "cosine" => cosine_ml(features, template)

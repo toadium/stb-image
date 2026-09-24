@@ -18,15 +18,22 @@ pub fn gabor_filter(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gabor_filter: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("gabor_filter: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gabor_filter: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "gabor_filter: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {
@@ -181,28 +188,43 @@ pub fn gabor_filter_bank(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gabor_filter_bank: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "gabor_filter_bank: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: ksize必须为3..31之间的奇数")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: ksize必须为3..31之间的奇数",
+    )
   }
   if sigma <= 0.0F {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: sigma必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: sigma必须大于0",
+    )
   }
   if lambda <= 0.0F {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: lambda必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: lambda必须大于0",
+    )
   }
   if gamma <= 0.0F {
-    raise @types.LoadError::DecodeFailed("gabor_filter_bank: gamma必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_filter_bank: gamma必须大于0",
+    )
   }
   if num_orientations < 1 || num_orientations > 16 {
     raise @types.LoadError::DecodeFailed(
@@ -253,7 +275,9 @@ pub fn gabor_kernel(
 ) -> Array[Array[Float]] raise @types.LoadError {
   // 参数验证
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("gabor_kernel: ksize必须为3..31之间的奇数")
+    raise @types.LoadError::DecodeFailed(
+      "gabor_kernel: ksize必须为3..31之间的奇数",
+    )
   }
   if sigma <= 0.0F {
     raise @types.LoadError::DecodeFailed("gabor_kernel: sigma必须大于0")

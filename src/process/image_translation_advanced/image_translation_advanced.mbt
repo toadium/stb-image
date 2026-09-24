@@ -260,7 +260,8 @@ pub fn translate_image(
   for value in image {
     state = (state * 11035 + 12345) % 1000000
     let noise = (state % 1000).to_double() / 1000.0 - 0.5
-    let translated_value = value * (1.0 + noise * config.translation_strength * 0.1)
+    let translated_value = value *
+      (1.0 + noise * config.translation_strength * 0.1)
     if translated_value < 0.0 {
       translated.push(0.0)
     } else if translated_value > 255.0 {
@@ -299,11 +300,16 @@ pub fn advanced_style_transfer(
   let stylized : Array[Double] = []
 
   for i in 0..<content_image.length() {
-    let content_val = if i < content_image.length() { content_image[i] } else { 0.0 }
+    let content_val = if i < content_image.length() {
+      content_image[i]
+    } else {
+      0.0
+    }
     let style_val = if i < style_image.length() { style_image[i] } else { 0.0 }
     let total_weight = config.content_weight + config.style_weight
     let mixed = if total_weight > 0.0 {
-      (content_val * config.content_weight + style_val * config.style_weight) / total_weight
+      (content_val * config.content_weight + style_val * config.style_weight) /
+      total_weight
     } else {
       content_val
     }
@@ -361,7 +367,13 @@ pub fn transfer_season(
 
   for i in 0..<image.length() {
     let channel = i % 3
-    let shift = if channel == 0 { r_shift } else if channel == 1 { g_shift } else { b_shift }
+    let shift = if channel == 0 {
+      r_shift
+    } else if channel == 1 {
+      g_shift
+    } else {
+      b_shift
+    }
     let value = image[i] * (1.0 + shift * config.translation_strength)
     if value < 0.0 {
       translated.push(0.0)
@@ -405,21 +417,15 @@ pub fn transfer_weather(
 
     let mut new_value = value
     match config.target_weather {
-      WeatherType::Rainy => {
-        new_value = value * 0.9 + noise * 20.0
-      }
+      WeatherType::Rainy => new_value = value * 0.9 + noise * 20.0
       WeatherType::Snowy => {
         new_value = value * 1.1 + noise * 30.0
         if new_value > 255.0 {
           new_value = 255.0
         }
       }
-      WeatherType::Foggy => {
-        new_value = value * 0.7 + 128.0 * 0.3
-      }
-      WeatherType::Cloudy => {
-        new_value = value * 0.85
-      }
+      WeatherType::Foggy => new_value = value * 0.7 + 128.0 * 0.3
+      WeatherType::Cloudy => new_value = value * 0.85
       _ => ()
     }
 
@@ -485,10 +491,22 @@ pub fn transfer_day_night(
     num_channels: 3,
     is_night: config.target_is_night,
     translation_strength: config.translation_strength,
-    brightness_reduction: if config.target_is_night { 0.7 } else { 0.0 },
-    color_temperature_shift: if config.target_is_night { -2000.0 } else { 1000.0 },
+    brightness_reduction: if config.target_is_night {
+      0.7
+    } else {
+      0.0
+    },
+    color_temperature_shift: if config.target_is_night {
+      -2000.0
+    } else {
+      1000.0
+    },
     light_source_added: config.target_is_night,
-    num_light_sources: if config.target_is_night { 5 } else { 0 },
+    num_light_sources: if config.target_is_night {
+      5
+    } else {
+      0
+    },
     content_preservation: 0.75,
     translation_time_ms: 400.0,
     realism_score: 0.7,
@@ -506,62 +524,93 @@ pub fn image_translation_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageTranslationTaskType::StyleTransfer => "风格迁移"
-    ImageTranslationTaskType::DomainAdaptation => "域适应"
-    ImageTranslationTaskType::ImageToImageTranslation => "图像到图像翻译"
-    ImageTranslationTaskType::SeasonTransfer => "季节转换"
-    ImageTranslationTaskType::WeatherTransfer => "天气转换"
-    ImageTranslationTaskType::DayNightTransfer => "昼夜转换"
-    ImageTranslationTaskType::SketchToPhoto => "素描到照片"
-    ImageTranslationTaskType::MapToSatellite => "地图到卫星图"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 模型类型 | " + (match config.model_type {
-    TranslationModelType::CycleGAN => "CycleGAN"
-    TranslationModelType::Pix2Pix => "Pix2Pix"
-    TranslationModelType::UNIT => "UNIT"
-    TranslationModelType::MUNIT => "MUNIT"
-    TranslationModelType::StarGAN => "StarGAN"
-    TranslationModelType::AdaIN => "AdaIN"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageTranslationTaskType::StyleTransfer => "风格迁移"
+      ImageTranslationTaskType::DomainAdaptation => "域适应"
+      ImageTranslationTaskType::ImageToImageTranslation =>
+        "图像到图像翻译"
+      ImageTranslationTaskType::SeasonTransfer => "季节转换"
+      ImageTranslationTaskType::WeatherTransfer => "天气转换"
+      ImageTranslationTaskType::DayNightTransfer => "昼夜转换"
+      ImageTranslationTaskType::SketchToPhoto => "素描到照片"
+      ImageTranslationTaskType::MapToSatellite => "地图到卫星图"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 模型类型 | " +
+    (match config.model_type {
+      TranslationModelType::CycleGAN => "CycleGAN"
+      TranslationModelType::Pix2Pix => "Pix2Pix"
+      TranslationModelType::UNIT => "UNIT"
+      TranslationModelType::MUNIT => "MUNIT"
+      TranslationModelType::StarGAN => "StarGAN"
+      TranslationModelType::AdaIN => "AdaIN"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 源域 | " + config.source_domain + " |\n"
   report = report + "| 目标域 | " + config.target_domain + " |\n"
-  report = report + "| 翻译强度 | " + config.translation_strength.to_string() + " |\n"
-  report = report + "| 内容权重 | " + config.content_weight.to_string() + " |\n"
-  report = report + "| 风格权重 | " + config.style_weight.to_string() + " |\n"
-  report = report + "| 迭代次数 | " + config.num_iterations.to_string() + " |\n"
-  report = report + "| 源季节 | " + (match config.source_season {
-    SeasonType::Spring => "春"
-    SeasonType::Summer => "夏"
-    SeasonType::Autumn => "秋"
-    SeasonType::Winter => "冬"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 目标季节 | " + (match config.target_season {
-    SeasonType::Spring => "春"
-    SeasonType::Summer => "夏"
-    SeasonType::Autumn => "秋"
-    SeasonType::Winter => "冬"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 源天气 | " + (match config.source_weather {
-    WeatherType::Sunny => "晴"
-    WeatherType::Cloudy => "多云"
-    WeatherType::Rainy => "雨"
-    WeatherType::Snowy => "雪"
-    WeatherType::Foggy => "雾"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 目标天气 | " + (match config.target_weather {
-    WeatherType::Sunny => "晴"
-    WeatherType::Cloudy => "多云"
-    WeatherType::Rainy => "雨"
-    WeatherType::Snowy => "雪"
-    WeatherType::Foggy => "雾"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 翻译强度 | " +
+    config.translation_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 内容权重 | " +
+    config.content_weight.to_string() +
+    " |\n"
+  report = report +
+    "| 风格权重 | " +
+    config.style_weight.to_string() +
+    " |\n"
+  report = report +
+    "| 迭代次数 | " +
+    config.num_iterations.to_string() +
+    " |\n"
+  report = report +
+    "| 源季节 | " +
+    (match config.source_season {
+      SeasonType::Spring => "春"
+      SeasonType::Summer => "夏"
+      SeasonType::Autumn => "秋"
+      SeasonType::Winter => "冬"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 目标季节 | " +
+    (match config.target_season {
+      SeasonType::Spring => "春"
+      SeasonType::Summer => "夏"
+      SeasonType::Autumn => "秋"
+      SeasonType::Winter => "冬"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 源天气 | " +
+    (match config.source_weather {
+      WeatherType::Sunny => "晴"
+      WeatherType::Cloudy => "多云"
+      WeatherType::Rainy => "雨"
+      WeatherType::Snowy => "雪"
+      WeatherType::Foggy => "雾"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 目标天气 | " +
+    (match config.target_weather {
+      WeatherType::Sunny => "晴"
+      WeatherType::Cloudy => "多云"
+      WeatherType::Rainy => "雨"
+      WeatherType::Snowy => "雪"
+      WeatherType::Foggy => "雾"
+      _ => "未知"
+    }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

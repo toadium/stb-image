@@ -112,7 +112,12 @@ pub fn create_rect_mask(
     }
   }
 
-  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(mask_data) }
+  @types.Image::{
+    width,
+    height,
+    channels: 1,
+    data: Bytes::from_array(mask_data),
+  }
 }
 
 ///|
@@ -142,7 +147,9 @@ pub fn inpaint_simple(
           let mut count = 0
           for dy in -radius..<(radius + 1) {
             for dx in -radius..<(radius + 1) {
-              if dx == 0 && dy == 0 { continue }
+              if dx == 0 && dy == 0 {
+                continue
+              }
               let nx = x + dx
               let ny = y + dy
               if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -156,7 +163,13 @@ pub fn inpaint_simple(
           }
           if count > 0 {
             let avg = sum / count.to_double()
-            let clamped = if avg < 0.0 { 0.0 } else if avg > 255.0 { 255.0 } else { avg }
+            let clamped = if avg < 0.0 {
+              0.0
+            } else if avg > 255.0 {
+              255.0
+            } else {
+              avg
+            }
             out[idx] = clamped.to_int().to_byte()
           }
         }
@@ -164,7 +177,12 @@ pub fn inpaint_simple(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -184,7 +202,7 @@ pub fn inpaint_diffusion(
   }
 
   // 从边界向内部扩散
-  for iteration in 0..<10 {
+  for _ in 0..<10 {
     for y in 0..<h {
       for x in 0..<w {
         let idx = y * w + x
@@ -193,7 +211,9 @@ pub fn inpaint_diffusion(
           let mut has_known = false
           for dy in -1..<2 {
             for dx in -1..<2 {
-              if dx == 0 && dy == 0 { continue }
+              if dx == 0 && dy == 0 {
+                continue
+              }
               let nx = x + dx
               let ny = y + dy
               if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -211,7 +231,9 @@ pub fn inpaint_diffusion(
             let mut weight_sum = 0.0
             for dy in -radius..<(radius + 1) {
               for dx in -radius..<(radius + 1) {
-                if dx == 0 && dy == 0 { continue }
+                if dx == 0 && dy == 0 {
+                  continue
+                }
                 let nx = x + dx
                 let ny = y + dy
                 if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -227,7 +249,13 @@ pub fn inpaint_diffusion(
             }
             if weight_sum > 0.0 {
               let avg = sum / weight_sum
-              let clamped = if avg < 0.0 { 0.0 } else if avg > 255.0 { 255.0 } else { avg }
+              let clamped = if avg < 0.0 {
+                0.0
+              } else if avg > 255.0 {
+                255.0
+              } else {
+                avg
+              }
               out[idx] = clamped.to_int().to_byte()
             }
           }
@@ -236,7 +264,12 @@ pub fn inpaint_diffusion(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -343,12 +376,23 @@ pub fn dehaze_dark_channel(
     let t = transmission[i]
     let pixel = img.data[i].to_double()
     let dehazed = (pixel - atmospheric_light) / t + atmospheric_light
-    let clamped = if dehazed < 0.0 { 0.0 } else if dehazed > 255.0 { 255.0 } else { dehazed }
+    let clamped = if dehazed < 0.0 {
+      0.0
+    } else if dehazed > 255.0 {
+      255.0
+    } else {
+      dehazed
+    }
     out.push(clamped.to_int().to_byte())
   }
 
   DehazeResult::{
-    image: @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels: img.channels,
+      data: Bytes::from_array(out),
+    },
     algorithm: DehazeAlgorithm::DarkChannelPrior,
     atmospheric_light,
     transmission_map: transmission,
@@ -397,19 +441,27 @@ pub fn dehaze_clahe(
     } else {
       pixel
     }
-    let clamped = if equalized < 0 { 0 } else if equalized > 255 { 255 } else { equalized }
+    let clamped = if equalized < 0 {
+      0
+    } else if equalized > 255 {
+      255
+    } else {
+      equalized
+    }
     out.push(clamped.to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 去雾
-pub fn dehaze(
-  img : @types.Image,
-  algorithm : DehazeAlgorithm,
-) -> DehazeResult {
+pub fn dehaze(img : @types.Image, algorithm : DehazeAlgorithm) -> DehazeResult {
   if algorithm == DehazeAlgorithm::DarkChannelPrior {
     dehaze_dark_channel(img, 0.95, 0.1)
   } else {
@@ -426,12 +478,10 @@ pub fn dehaze(
 
 ///|
 /// 形态学去雨（简化版）
-pub fn derain_morphological(
-  img : @types.Image,
-) -> DerainResult {
+pub fn derain_morphological(img : @types.Image) -> DerainResult {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
 
   // 简化：中值滤波去除雨线
   let out : Array[Byte] = []
@@ -464,7 +514,12 @@ pub fn derain_morphological(
   }
 
   DerainResult::{
-    image: @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels: img.channels,
+      data: Bytes::from_array(out),
+    },
     algorithm: DerainAlgorithm::Morphological,
     rain_streaks_removed: 0,
     processing_time_ms: 0.0,
@@ -473,18 +528,13 @@ pub fn derain_morphological(
 
 ///|
 /// 去雨
-pub fn derain(
-  img : @types.Image,
-  algorithm : DerainAlgorithm,
-) -> DerainResult {
+pub fn derain(img : @types.Image, algorithm : DerainAlgorithm) -> DerainResult {
   derain_morphological(img)
 }
 
 ///|
 /// 生成修复报告
-pub fn inpainting_report_to_string(
-  result : InpaintingResult,
-) -> String {
+pub fn inpainting_report_to_string(result : InpaintingResult) -> String {
   let mut report = "## 图像修复报告\n\n"
   report = report + "### 处理信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
@@ -502,10 +552,19 @@ pub fn inpainting_report_to_string(
     "未知"
   }
   report = report + "| 算法 | " + algo_str + " |\n"
-  report = report + "| 修复像素数 | " + result.inpainted_pixels.to_string() + " |\n"
-  report = report + "| 掩膜像素总数 | " + result.total_mask_pixels.to_string() + " |\n"
+  report = report +
+    "| 修复像素数 | " +
+    result.inpainted_pixels.to_string() +
+    " |\n"
+  report = report +
+    "| 掩膜像素总数 | " +
+    result.total_mask_pixels.to_string() +
+    " |\n"
   report = report + "| 迭代次数 | " + result.iterations.to_string() + " |\n"
-  report = report + "| 处理耗时 | " + result.processing_time_ms.to_string() + "ms |\n"
+  report = report +
+    "| 处理耗时 | " +
+    result.processing_time_ms.to_string() +
+    "ms |\n"
 
   report
 }

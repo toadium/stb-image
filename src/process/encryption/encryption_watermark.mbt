@@ -90,8 +90,8 @@ pub(all) struct ImageEncryptionQuality {
   correlation_horizontal : Double
   correlation_vertical : Double
   correlation_diagonal : Double
-  uaci : Double  // 统一平均变化强度
-  npcr : Double  // 像素变化率
+  uaci : Double // 统一平均变化强度
+  npcr : Double // 像素变化率
   key_sensitivity : Double
   psnr : Double
 }
@@ -113,19 +113,12 @@ pub fn create_default_chaotic_params() -> ChaoticParams {
 ///|
 /// 创建默认 Arnold 参数
 pub fn create_default_arnold_params() -> ArnoldParams {
-  ArnoldParams::{
-    iterations: 10,
-    a: 1,
-    b: 1,
-  }
+  ArnoldParams::{ iterations: 10, a: 1, b: 1 }
 }
 
 ///|
 /// XOR 加密
-pub fn xor_encrypt(
-  img : @types.Image,
-  key : Array[Byte],
-) -> EncryptionResult {
+pub fn xor_encrypt(img : @types.Image, key : Array[Byte]) -> EncryptionResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -169,7 +162,12 @@ pub fn xor_decrypt(
     decrypted.push(pixel ^ key_byte)
   }
 
-  @types.Image::{ width: w, height: h, channels: encrypted.channels, data: Bytes::from_array(decrypted) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: encrypted.channels,
+    data: Bytes::from_array(decrypted),
+  }
 }
 
 ///|
@@ -302,7 +300,7 @@ pub fn embed_watermark_lsb(
     let pixel = img.data[i].to_int()
     if i < wm_len * 8 {
       let byte_idx = i / 8
-      let bit_idx = 7 - (i % 8)
+      let bit_idx = 7 - i % 8
       let wm_byte = watermark[byte_idx].to_int()
       let wm_bit = (wm_byte >> bit_idx) & 1
       let mask = 255 - (1 << strength)
@@ -324,7 +322,15 @@ pub fn embed_watermark_lsb(
     key: "lsb_key",
   }
 
-  (@types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(watermarked) }, info)
+  (
+    @types.Image::{
+      width: w,
+      height: h,
+      channels: img.channels,
+      data: Bytes::from_array(watermarked),
+    },
+    info,
+  )
 }
 
 ///|
@@ -391,7 +397,12 @@ pub fn embed_visible_watermark(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(watermarked) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(watermarked),
+  }
 }
 
 ///|
@@ -479,7 +490,7 @@ pub fn calculate_psnr(
   mse /= total.to_double()
 
   if mse > 0.0 {
-    10.0 * (255.0 * 255.0 / mse)* 0.1
+    10.0 * (255.0 * 255.0 / mse) * 0.1
   } else {
     100.0
   }
@@ -550,10 +561,24 @@ pub fn encryption_report_to_string(
     "未知"
   }
   report = report + "| 加密算法 | " + algo_str + " |\n"
-  report = report + "| 图像尺寸 | " + encryption.width.to_string() + "x" + encryption.height.to_string() + " |\n"
-  report = report + "| 原始大小 | " + encryption.file_size_original.to_string() + " bytes |\n"
-  report = report + "| 加密大小 | " + encryption.file_size_encrypted.to_string() + " bytes |\n"
-  report = report + "| 加密耗时 | " + encryption.encryption_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 图像尺寸 | " +
+    encryption.width.to_string() +
+    "x" +
+    encryption.height.to_string() +
+    " |\n"
+  report = report +
+    "| 原始大小 | " +
+    encryption.file_size_original.to_string() +
+    " bytes |\n"
+  report = report +
+    "| 加密大小 | " +
+    encryption.file_size_encrypted.to_string() +
+    " bytes |\n"
+  report = report +
+    "| 加密耗时 | " +
+    encryption.encryption_time_ms.to_string() +
+    "ms |\n\n"
 
   report = report + "### 水印信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
@@ -573,20 +598,41 @@ pub fn encryption_report_to_string(
     "未知"
   }
   report = report + "| 水印类型 | " + wm_str + " |\n"
-  report = report + "| 嵌入强度 | " + watermark.strength.to_string() + " |\n"
-  report = report + "| 已嵌入 | " + (if watermark.embedded { "是" } else { "否" }) + " |\n"
-  report = report + "| 嵌入位置 | " + watermark.embedding_position + " |\n\n"
+  report = report +
+    "| 嵌入强度 | " +
+    watermark.strength.to_string() +
+    " |\n"
+  report = report +
+    "| 已嵌入 | " +
+    (if watermark.embedded { "是" } else { "否" }) +
+    " |\n"
+  report = report +
+    "| 嵌入位置 | " +
+    watermark.embedding_position +
+    " |\n\n"
 
   report = report + "### 加密质量评估\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 信息熵 | " + quality.entropy.to_string() + " |\n"
-  report = report + "| 水平相关性 | " + quality.correlation_horizontal.to_string() + " |\n"
-  report = report + "| 垂直相关性 | " + quality.correlation_vertical.to_string() + " |\n"
-  report = report + "| 对角相关性 | " + quality.correlation_diagonal.to_string() + " |\n"
+  report = report +
+    "| 水平相关性 | " +
+    quality.correlation_horizontal.to_string() +
+    " |\n"
+  report = report +
+    "| 垂直相关性 | " +
+    quality.correlation_vertical.to_string() +
+    " |\n"
+  report = report +
+    "| 对角相关性 | " +
+    quality.correlation_diagonal.to_string() +
+    " |\n"
   report = report + "| NPCR | " + quality.npcr.to_string() + "% |\n"
   report = report + "| UACI | " + quality.uaci.to_string() + "% |\n"
   report = report + "| PSNR | " + quality.psnr.to_string() + " dB |\n"
-  report = report + "| 密钥敏感度 | " + (quality.key_sensitivity * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 密钥敏感度 | " +
+    (quality.key_sensitivity * 100.0).to_string() +
+    "% |\n"
 
   report
 }

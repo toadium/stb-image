@@ -4,11 +4,11 @@
 ///|
 /// HDR 配置
 pub(all) struct HdrConfig {
-  fusion_method : String  // "average" / "weighted" / "mertens"
-  tone_mapping : String  // "reinhard" / "gamma" / "sigmoid"
-  gamma : Double  // Gamma 校正值
-  reinhard_key : Double  // Reinhard 色调映射关键值
-  sigmoid_strength : Double  // Sigmoid 强度
+  fusion_method : String // "average" / "weighted" / "mertens"
+  tone_mapping : String // "reinhard" / "gamma" / "sigmoid"
+  gamma : Double // Gamma 校正值
+  reinhard_key : Double // Reinhard 色调映射关键值
+  sigmoid_strength : Double // Sigmoid 强度
 }
 
 ///|
@@ -31,7 +31,9 @@ pub fn hdr_fusion_average(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if images.length() == 0 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_average: 图像数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_average: 图像数组不能为空",
+    )
   }
   let w = images[0].width
   let h = images[0].height
@@ -39,10 +41,14 @@ pub fn hdr_fusion_average(
 
   // 验证第一张图像
   if w <= 0 || h <= 0 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_average: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_average: 图像尺寸必须大于0",
+    )
   }
   if channels < 1 || channels > 4 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_average: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_average: 通道数必须在1-4之间",
+    )
   }
 
   // 验证所有图像尺寸一致且数据大小正确
@@ -51,12 +57,16 @@ pub fn hdr_fusion_average(
     let img = images[img_idx]
     if img.width != w || img.height != h || img.channels != channels {
       raise @types.LoadError::DecodeFailed(
-        "hdr_fusion_average: 第 " + img_idx.to_string() + " 张图像尺寸/通道不一致",
+        "hdr_fusion_average: 第 " +
+        img_idx.to_string() +
+        " 张图像尺寸/通道不一致",
       )
     }
     if img.data.length() != expected_size {
       raise @types.LoadError::DecodeFailed(
-        "hdr_fusion_average: 第 " + img_idx.to_string() + " 张图像数据大小不匹配",
+        "hdr_fusion_average: 第 " +
+        img_idx.to_string() +
+        " 张图像数据大小不匹配",
       )
     }
   }
@@ -72,7 +82,12 @@ pub fn hdr_fusion_average(
       out_data[i * channels + c] = avg.min(255.0).max(0.0).to_int().to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -83,7 +98,9 @@ pub fn hdr_fusion_weighted(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if images.length() == 0 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_weighted: 图像数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_weighted: 图像数组不能为空",
+    )
   }
   let w = images[0].width
   let h = images[0].height
@@ -91,10 +108,14 @@ pub fn hdr_fusion_weighted(
 
   // 验证第一张图像
   if w <= 0 || h <= 0 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_weighted: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_weighted: 图像尺寸必须大于0",
+    )
   }
   if channels < 1 || channels > 4 {
-    raise @types.LoadError::DecodeFailed("hdr_fusion_weighted: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_fusion_weighted: 通道数必须在1-4之间",
+    )
   }
 
   // 验证所有图像尺寸一致且数据大小正确
@@ -103,12 +124,16 @@ pub fn hdr_fusion_weighted(
     let img = images[img_idx]
     if img.width != w || img.height != h || img.channels != channels {
       raise @types.LoadError::DecodeFailed(
-        "hdr_fusion_weighted: 第 " + img_idx.to_string() + " 张图像尺寸/通道不一致",
+        "hdr_fusion_weighted: 第 " +
+        img_idx.to_string() +
+        " 张图像尺寸/通道不一致",
       )
     }
     if img.data.length() != expected_size {
       raise @types.LoadError::DecodeFailed(
-        "hdr_fusion_weighted: 第 " + img_idx.to_string() + " 张图像数据大小不匹配",
+        "hdr_fusion_weighted: 第 " +
+        img_idx.to_string() +
+        " 张图像数据大小不匹配",
       )
     }
   }
@@ -148,7 +173,12 @@ pub fn hdr_fusion_weighted(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -160,22 +190,31 @@ pub fn tone_mapping_reinhard(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_reinhard: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_reinhard: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_reinhard: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_reinhard: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "tone_mapping_reinhard: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "tone_mapping_reinhard: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if key <= 0.0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_reinhard: key必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_reinhard: key必须大于0",
+    )
   }
 
-let k = key
+  let k = key
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -202,10 +241,19 @@ let k = key
       let scaled = val * k / (log_avg + delta)
       // Reinhard 映射
       let mapped = scaled / (1.0 + scaled)
-      out_data[idx + c] = (mapped * 255.0).min(255.0).max(0.0).to_int().to_byte()
+      out_data[idx + c] = (mapped * 255.0)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -217,22 +265,31 @@ pub fn tone_mapping_gamma(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_gamma: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_gamma: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_gamma: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_gamma: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "tone_mapping_gamma: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "tone_mapping_gamma: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if gamma <= 0.0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_gamma: gamma必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_gamma: gamma必须大于0",
+    )
   }
 
-let g = gamma
+  let g = gamma
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -243,10 +300,19 @@ let g = gamma
     for c in 0..<channels {
       let val = data[idx + c].to_double() / 255.0
       let mapped = @math.pow(val, g)
-      out_data[idx + c] = (mapped * 255.0).min(255.0).max(0.0).to_int().to_byte()
+      out_data[idx + c] = (mapped * 255.0)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -258,22 +324,31 @@ pub fn tone_mapping_sigmoid(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_sigmoid: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_sigmoid: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_sigmoid: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_sigmoid: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "tone_mapping_sigmoid: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "tone_mapping_sigmoid: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if strength <= 0.0 {
-    raise @types.LoadError::DecodeFailed("tone_mapping_sigmoid: strength必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "tone_mapping_sigmoid: strength必须大于0",
+    )
   }
 
-let s = strength
+  let s = strength
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -284,10 +359,19 @@ let s = strength
     for c in 0..<channels {
       let val = data[idx + c].to_double() / 255.0
       let mapped = 1.0 / (1.0 + @math.exp(-s * (val - 0.5)))
-      out_data[idx + c] = (mapped * 255.0).min(255.0).max(0.0).to_int().to_byte()
+      out_data[idx + c] = (mapped * 255.0)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -298,7 +382,9 @@ pub fn hdr_process(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if images.length() == 0 {
-    raise @types.LoadError::DecodeFailed("hdr_process: 图像数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_process: 图像数组不能为空",
+    )
   }
 
   let cfg = match config {
@@ -311,10 +397,14 @@ pub fn hdr_process(
     raise @types.LoadError::DecodeFailed("hdr_process: gamma必须大于0")
   }
   if cfg.reinhard_key <= 0.0 {
-    raise @types.LoadError::DecodeFailed("hdr_process: reinhard_key必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_process: reinhard_key必须大于0",
+    )
   }
   if cfg.sigmoid_strength <= 0.0 {
-    raise @types.LoadError::DecodeFailed("hdr_process: sigmoid_strength必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hdr_process: sigmoid_strength必须大于0",
+    )
   }
   // 1. 多曝光融合
   let fused = match cfg.fusion_method {

@@ -4,8 +4,8 @@
 ///|
 /// 边界框
 pub(all) struct YoloBoundingBox {
-  x : Double  // 中心 X
-  y : Double  // 中心 Y
+  x : Double // 中心 X
+  y : Double // 中心 Y
   width : Double
   height : Double
   confidence : Double
@@ -26,7 +26,7 @@ pub(all) struct YoloDetectionResult {
 ///|
 /// YOLO 配置
 pub(all) struct YoloConfig {
-  model_version : String  // "yolov3" / "yolov4" / "yolov5" / "yolov8"
+  model_version : String // "yolov3" / "yolov4" / "yolov5" / "yolov8"
   input_size : Int
   num_classes : Int
   confidence_threshold : Double
@@ -98,7 +98,7 @@ pub(all) struct YoloDetectionMetrics {
   precision : Double
   recall : Double
   f1_score : Double
-  mAP : Double  // mean Average Precision
+  mAP : Double // mean Average Precision
   mAP50 : Double
   mAP50_95 : Double
   true_positives : Int
@@ -110,9 +110,15 @@ pub(all) struct YoloDetectionMetrics {
 /// 创建默认 YOLO 配置
 pub fn create_default_yolo_config() -> YoloConfig {
   let anchors : Array[(Double, Double)] = [
-    (10.0, 13.0), (16.0, 30.0), (33.0, 23.0),
-    (30.0, 61.0), (62.0, 45.0), (59.0, 119.0),
-    (116.0, 90.0), (156.0, 198.0), (373.0, 326.0),
+    (10.0, 13.0),
+    (16.0, 30.0),
+    (33.0, 23.0),
+    (30.0, 61.0),
+    (62.0, 45.0),
+    (59.0, 119.0),
+    (116.0, 90.0),
+    (156.0, 198.0),
+    (373.0, 326.0),
   ]
   let strides : Array[Int] = [8, 16, 32]
   YoloConfig::{
@@ -135,10 +141,14 @@ pub fn calculate_iou(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if box1.width <= 0.0 || box1.height <= 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_iou: 检测框1的尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_iou: 检测框1的尺寸必须大于0",
+    )
   }
   if box2.width <= 0.0 || box2.height <= 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_iou: 检测框2的尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_iou: 检测框2的尺寸必须大于0",
+    )
   }
 
   let x1_min = box1.x - box1.width / 2.0
@@ -156,15 +166,27 @@ pub fn calculate_iou(
   let inter_y_min = if y1_min > y2_min { y1_min } else { y2_min }
   let inter_y_max = if y1_max < y2_max { y1_max } else { y2_max }
 
-  let inter_width = if inter_x_max > inter_x_min { inter_x_max - inter_x_min } else { 0.0 }
-  let inter_height = if inter_y_max > inter_y_min { inter_y_max - inter_y_min } else { 0.0 }
+  let inter_width = if inter_x_max > inter_x_min {
+    inter_x_max - inter_x_min
+  } else {
+    0.0
+  }
+  let inter_height = if inter_y_max > inter_y_min {
+    inter_y_max - inter_y_min
+  } else {
+    0.0
+  }
   let inter_area = inter_width * inter_height
 
   let area1 = box1.width * box1.height
   let area2 = box2.width * box2.height
   let union_area = area1 + area2 - inter_area
 
-  if union_area > 0.0 { inter_area / union_area } else { 0.0 }
+  if union_area > 0.0 {
+    inter_area / union_area
+  } else {
+    0.0
+  }
 }
 
 ///|
@@ -176,13 +198,19 @@ pub fn non_max_suppression(
 ) -> Array[YoloBoundingBox] raise @types.LoadError {
   // 输入验证
   if boxes.length() == 0 {
-    raise @types.LoadError::DecodeFailed("non_max_suppression: 检测框列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "non_max_suppression: 检测框列表不能为空",
+    )
   }
   if iou_threshold < 0.0 || iou_threshold > 1.0 {
-    raise @types.LoadError::DecodeFailed("non_max_suppression: iou_threshold必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "non_max_suppression: iou_threshold必须在0-1之间",
+    )
   }
   if max_detections <= 0 {
-    raise @types.LoadError::DecodeFailed("non_max_suppression: max_detections必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "non_max_suppression: max_detections必须大于0",
+    )
   }
 
   if boxes.length() == 0 {
@@ -242,13 +270,15 @@ pub fn refine_bounding_box(
 ) -> YoloBoundingBox raise @types.LoadError {
   // 输入验证
   if box.width <= 0.0 || box.height <= 0.0 {
-    raise @types.LoadError::DecodeFailed("refine_bounding_box: 检测框尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "refine_bounding_box: 检测框尺寸必须大于0",
+    )
   }
 
   let new_x = box.x + dx * box.width
   let new_y = box.y + dy * box.height
-  let new_width = box.width * (dw* 1.0)
-  let new_height = box.height * (dh* 1.0)
+  let new_width = box.width * (dw * 1.0)
+  let new_height = box.height * (dh * 1.0)
 
   YoloBoundingBox::{
     x: new_x,
@@ -269,31 +299,48 @@ pub fn detect_objects_simple(
 ) -> YoloDetectionResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_objects_simple: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_objects_simple: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if config.input_size <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: input_size必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: input_size必须大于0",
+    )
   }
   if config.num_classes <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: num_classes必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: num_classes必须大于0",
+    )
   }
   if config.confidence_threshold < 0.0 || config.confidence_threshold > 1.0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: confidence_threshold必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: confidence_threshold必须在0-1之间",
+    )
   }
   if config.iou_threshold < 0.0 || config.iou_threshold > 1.0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: iou_threshold必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: iou_threshold必须在0-1之间",
+    )
   }
   if config.max_detections <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_objects_simple: max_detections必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_objects_simple: max_detections必须大于0",
+    )
   }
 
   let w = img.width
@@ -324,7 +371,11 @@ pub fn detect_objects_simple(
         if count > 0 {
           let mean = sum / count.to_double()
           let variance = sum_sq / count.to_double() - mean * mean
-          let confidence = if variance > 100.0 { (variance / 1000.0) } else { 0.0 }
+          let confidence = if variance > 100.0 {
+            variance / 1000.0
+          } else {
+            0.0
+          }
           if confidence > config.confidence_threshold {
             boxes.push(YoloBoundingBox::{
               x: (x + window_size / 2).to_double(),
@@ -344,7 +395,11 @@ pub fn detect_objects_simple(
   }
 
   // NMS
-  let final_boxes = non_max_suppression(boxes, config.iou_threshold, config.max_detections)
+  let final_boxes = non_max_suppression(
+    boxes,
+    config.iou_threshold,
+    config.max_detections,
+  )
 
   YoloDetectionResult::{
     boxes: final_boxes,
@@ -362,13 +417,19 @@ pub fn initialize_object_tracking(
 ) -> Array[YoloTrackedObject] raise @types.LoadError {
   // 输入验证
   if detection.boxes.length() == 0 {
-    raise @types.LoadError::DecodeFailed("initialize_object_tracking: 检测框列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "initialize_object_tracking: 检测框列表不能为空",
+    )
   }
 
   let objects : Array[YoloTrackedObject] = []
   let colors = [
-    (255, 0, 0), (0, 255, 0), (0, 0, 255),
-    (255, 255, 0), (255, 0, 255), (0, 255, 255),
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 0),
+    (255, 0, 255),
+    (0, 255, 255),
   ]
 
   for i in 0..<detection.boxes.length() {
@@ -402,10 +463,14 @@ pub fn update_object_tracking(
 ) -> Array[YoloTrackedObject] raise @types.LoadError {
   // 输入验证
   if tracked_objects.length() == 0 {
-    raise @types.LoadError::DecodeFailed("update_object_tracking: 跟踪目标列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "update_object_tracking: 跟踪目标列表不能为空",
+    )
   }
   if max_age <= 0 {
-    raise @types.LoadError::DecodeFailed("update_object_tracking: max_age必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "update_object_tracking: max_age必须大于0",
+    )
   }
 
   let updated : Array[YoloTrackedObject] = []
@@ -459,23 +524,21 @@ pub fn update_object_tracking(
         trajectory: new_trajectory,
         color: obj.color,
       })
-    } else {
       // 匹配失败，目标不可见
-      if obj.invisible_count < max_age {
-        updated.push(YoloTrackedObject::{
-          id: obj.id,
-          class_id: obj.class_id,
-          class_name: obj.class_name,
-          bbox: obj.bbox,
-          age: obj.age + 1,
-          visible_count: obj.visible_count,
-          invisible_count: obj.invisible_count + 1,
-          velocity_x: obj.velocity_x,
-          velocity_y: obj.velocity_y,
-          trajectory: obj.trajectory,
-          color: obj.color,
-        })
-      }
+    } else if obj.invisible_count < max_age {
+      updated.push(YoloTrackedObject::{
+        id: obj.id,
+        class_id: obj.class_id,
+        class_name: obj.class_name,
+        bbox: obj.bbox,
+        age: obj.age + 1,
+        visible_count: obj.visible_count,
+        invisible_count: obj.invisible_count + 1,
+        velocity_x: obj.velocity_x,
+        velocity_y: obj.velocity_y,
+        trajectory: obj.trajectory,
+        color: obj.color,
+      })
     }
   }
 
@@ -486,8 +549,12 @@ pub fn update_object_tracking(
       let box = detection.boxes[i]
       let trajectory : Array[(Double, Double)] = [(box.x, box.y)]
       let colors = [
-        (255, 0, 0), (0, 255, 0), (0, 0, 255),
-        (255, 255, 0), (255, 0, 255), (0, 255, 255),
+        (255, 0, 0),
+        (0, 255, 0),
+        (0, 0, 255),
+        (255, 255, 0),
+        (255, 0, 255),
+        (0, 255, 255),
       ]
       updated.push(YoloTrackedObject::{
         id: next_id,
@@ -518,13 +585,19 @@ pub fn calculate_detection_metrics(
 ) -> YoloDetectionMetrics raise @types.LoadError {
   // 输入验证
   if predictions.length() == 0 {
-    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: 预测框列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_detection_metrics: 预测框列表不能为空",
+    )
   }
   if ground_truth.length() == 0 {
-    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: 真实框列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_detection_metrics: 真实框列表不能为空",
+    )
   }
   if iou_threshold < 0.0 || iou_threshold > 1.0 {
-    raise @types.LoadError::DecodeFailed("calculate_detection_metrics: iou_threshold必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_detection_metrics: iou_threshold必须在0-1之间",
+    )
   }
 
   let mut tp = 0
@@ -571,9 +644,21 @@ pub fn calculate_detection_metrics(
 
   let false_neg = ground_truth.length() - tp
 
-  let precision = if (tp + fp) > 0 { tp.to_double() / (tp + fp).to_double() } else { 0.0 }
-  let recall = if (tp + false_neg) > 0 { tp.to_double() / (tp + false_neg).to_double() } else { 0.0 }
-  let f1 = if (precision + recall) > 0 { 2.0 * precision * recall / (precision + recall) } else { 0.0 }
+  let precision = if tp + fp > 0 {
+    tp.to_double() / (tp + fp).to_double()
+  } else {
+    0.0
+  }
+  let recall = if tp + false_neg > 0 {
+    tp.to_double() / (tp + false_neg).to_double()
+  } else {
+    0.0
+  }
+  let f1 = if precision + recall > 0 {
+    2.0 * precision * recall / (precision + recall)
+  } else {
+    0.0
+  }
 
   YoloDetectionMetrics::{
     precision,
@@ -597,27 +682,69 @@ pub fn detection_report_to_string(
   let mut report = "## 目标检测报告\n\n"
   report = report + "### 检测结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 检测目标数 | " + result.num_detections.to_string() + " |\n"
-  report = report + "| 输入尺寸 | " + result.input_width.to_string() + "x" + result.input_height.to_string() + " |\n"
-  report = report + "| 推理耗时 | " + result.inference_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 检测目标数 | " +
+    result.num_detections.to_string() +
+    " |\n"
+  report = report +
+    "| 输入尺寸 | " +
+    result.input_width.to_string() +
+    "x" +
+    result.input_height.to_string() +
+    " |\n"
+  report = report +
+    "| 推理耗时 | " +
+    result.inference_time_ms.to_string() +
+    "ms |\n\n"
 
   if result.boxes.length() > 0 {
     report = report + "### 检测目标列表\n\n"
-    report = report + "| ID | 类别 | 置信度 | 位置(X,Y) | 尺寸(WxH) |\n"
+    report = report +
+      "| ID | 类别 | 置信度 | 位置(X,Y) | 尺寸(WxH) |\n"
     report = report + "|----|------|--------|-----------|------------|\n"
     for i in 0..<result.boxes.length() {
       let box = result.boxes[i]
-      report = report + "| " + i.to_string() + " | " + box.class_name + " | " + (box.confidence * 100.0).to_string() + "% | " + box.x.to_string() + "," + box.y.to_string() + " | " + box.width.to_string() + "x" + box.height.to_string() + " |\n"
+      report = report +
+        "| " +
+        i.to_string() +
+        " | " +
+        box.class_name +
+        " | " +
+        (box.confidence * 100.0).to_string() +
+        "% | " +
+        box.x.to_string() +
+        "," +
+        box.y.to_string() +
+        " | " +
+        box.width.to_string() +
+        "x" +
+        box.height.to_string() +
+        " |\n"
     }
   }
 
   report = report + "\n### 评估指标\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| Precision | " + (metrics.precision * 100.0).to_string() + "% |\n"
-  report = report + "| Recall | " + (metrics.recall * 100.0).to_string() + "% |\n"
-  report = report + "| F1 Score | " + (metrics.f1_score * 100.0).to_string() + "% |\n"
-  report = report + "| mAP@0.5 | " + (metrics.mAP50 * 100.0).to_string() + "% |\n"
-  report = report + "| mAP@0.5:0.95 | " + (metrics.mAP50_95 * 100.0).to_string() + "% |\n"
+  report = report +
+    "| Precision | " +
+    (metrics.precision * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| Recall | " +
+    (metrics.recall * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| F1 Score | " +
+    (metrics.f1_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| mAP@0.5 | " +
+    (metrics.mAP50 * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| mAP@0.5:0.95 | " +
+    (metrics.mAP50_95 * 100.0).to_string() +
+    "% |\n"
   report = report + "| TP | " + metrics.true_positives.to_string() + " |\n"
   report = report + "| FP | " + metrics.false_positives.to_string() + " |\n"
   report = report + "| FN | " + metrics.false_negatives.to_string() + " |\n"

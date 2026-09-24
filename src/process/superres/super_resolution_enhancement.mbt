@@ -110,13 +110,30 @@ pub fn nearest_neighbor_interpolate(
     for x in 0..<new_w {
       let src_x = (x.to_double() / scale_factor).to_int()
       let src_y = (y.to_double() / scale_factor).to_int()
-      let clamped_x = if src_x < 0 { 0 } else if src_x >= w { w - 1 } else { src_x }
-      let clamped_y = if src_y < 0 { 0 } else if src_y >= h { h - 1 } else { src_y }
+      let clamped_x = if src_x < 0 {
+        0
+      } else if src_x >= w {
+        w - 1
+      } else {
+        src_x
+      }
+      let clamped_y = if src_y < 0 {
+        0
+      } else if src_y >= h {
+        h - 1
+      } else {
+        src_y
+      }
       out.push(img.data[clamped_y * w + clamped_x])
     }
   }
 
-  @types.Image::{ width: new_w, height: new_h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -155,12 +172,23 @@ pub fn bilinear_interpolate(
       let top = p00 * (1.0 - fx) + p01 * fx
       let bottom = p10 * (1.0 - fx) + p11 * fx
       let value = top * (1.0 - fy) + bottom * fy
-      let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      let clamped = if value < 0.0 {
+        0.0
+      } else if value > 255.0 {
+        255.0
+      } else {
+        value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: new_w, height: new_h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -198,20 +226,28 @@ pub fn bicubic_interpolate(
       let top = p00 * (1.0 - fx) + p01 * fx
       let bottom = p10 * (1.0 - fx) + p11 * fx
       let value = top * (1.0 - fy) + bottom * fy
-      let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      let clamped = if value < 0.0 {
+        0.0
+      } else if value > 255.0 {
+        255.0
+      } else {
+        value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: new_w, height: new_h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 图像锐化（USM 非锐化掩膜）
-pub fn sharpen_image(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn sharpen_image(img : @types.Image, strength : Double) -> @types.Image {
   let w = img.width
   let h = img.height
   let out : Array[Byte] = []
@@ -224,7 +260,9 @@ pub fn sharpen_image(
       let mut count = 0
       for dy in -1..<2 {
         for dx in -1..<2 {
-          if dx == 0 && dy == 0 { continue }
+          if dx == 0 && dy == 0 {
+            continue
+          }
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -235,20 +273,28 @@ pub fn sharpen_image(
       }
       let avg = if count > 0 { sum / count.to_double() } else { center }
       let sharpened = center + strength * (center - avg)
-      let clamped = if sharpened < 0.0 { 0.0 } else if sharpened > 255.0 { 255.0 } else { sharpened }
+      let clamped = if sharpened < 0.0 {
+        0.0
+      } else if sharpened > 255.0 {
+        255.0
+      } else {
+        sharpened
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 图像去噪（均值滤波）
-pub fn denoise_image(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn denoise_image(img : @types.Image, strength : Double) -> @types.Image {
   let w = img.width
   let h = img.height
   let out : Array[Byte] = []
@@ -271,7 +317,11 @@ pub fn denoise_image(
             }
           }
         }
-        let avg = if count > 0 { sum / count.to_double() } else { img.data[y * w + x].to_double() }
+        let avg = if count > 0 {
+          sum / count.to_double()
+        } else {
+          img.data[y * w + x].to_double()
+        }
         let original = img.data[y * w + x].to_double()
         let blended = original * (1.0 - strength) + avg * strength
         out.push(blended.to_int().to_byte())
@@ -279,7 +329,12 @@ pub fn denoise_image(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -288,7 +343,8 @@ pub fn super_resolve(
   img : @types.Image,
   config : InterpolationConfig,
 ) -> SuperResolutionResult {
-  let mut result = if config.algorithm == SuperResolutionAlgorithm::NearestNeighbor {
+  let mut result = if config.algorithm ==
+    SuperResolutionAlgorithm::NearestNeighbor {
     nearest_neighbor_interpolate(img, config.scale_factor)
   } else if config.algorithm == SuperResolutionAlgorithm::Bilinear {
     bilinear_interpolate(img, config.scale_factor)
@@ -342,7 +398,7 @@ pub fn calculate_psnr_sr(
   mse /= total.to_double()
 
   if mse > 0.0 {
-    10.0 * (65025.0 / mse)* 0.1
+    10.0 * (65025.0 / mse) * 0.1
   } else {
     100.0
   }
@@ -384,7 +440,11 @@ pub fn calculate_ssim_sr(
   let numerator = (2.0 * mean1 * mean2 + c1) * (2.0 * cov12 + c2)
   let denominator = (mean1 * mean1 + mean2 * mean2 + c1) * (var1 + var2 + c2)
 
-  if denominator > 0.0 { numerator / denominator } else { 1.0 }
+  if denominator > 0.0 {
+    numerator / denominator
+  } else {
+    1.0
+  }
 }
 
 ///|
@@ -428,7 +488,9 @@ pub fn calculate_image_quality_metrics(
       v += (p - mean1) * (p - mean1)
     }
     v / total.to_double()
-  } else { 0.0 }
+  } else {
+    0.0
+  }
   let var2 = if total > 0 {
     let mut v = 0.0
     for i in 0..<total {
@@ -436,16 +498,24 @@ pub fn calculate_image_quality_metrics(
       v += (p - mean2) * (p - mean2)
     }
     v / total.to_double()
-  } else { 0.0 }
-  let correlation = if var1 > 0.0 && var2 > 0.0 { cov / (var1 * var2).sqrt() } else { 0.0 }
+  } else {
+    0.0
+  }
+  let correlation = if var1 > 0.0 && var2 > 0.0 {
+    cov / (var1 * var2).sqrt()
+  } else {
+    0.0
+  }
 
   // 清晰度（基于梯度）
   let mut sharpness = 0.0
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
-      let gx = processed.data[idx + 1].to_double() - processed.data[idx - 1].to_double()
-      let gy = processed.data[idx + w].to_double() - processed.data[idx - w].to_double()
+      let gx = processed.data[idx + 1].to_double() -
+        processed.data[idx - 1].to_double()
+      let gy = processed.data[idx + w].to_double() -
+        processed.data[idx - w].to_double()
       sharpness += (gx * gx + gy * gy).sqrt()
     }
   }
@@ -496,14 +566,25 @@ pub fn enhance_image(
 
     // Gamma
     if config.gamma != 1.0 && config.gamma > 0.0 {
-      pixel = 255.0 * (pixel / 255.0)* (1.0 / config.gamma)
+      pixel = 255.0 * (pixel / 255.0) * (1.0 / config.gamma)
     }
 
-    let clamped = if pixel < 0.0 { 0.0 } else if pixel > 255.0 { 255.0 } else { pixel }
+    let clamped = if pixel < 0.0 {
+      0.0
+    } else if pixel > 255.0 {
+      255.0
+    } else {
+      pixel
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  let mut result = @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  let mut result = @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 
   // 去噪
   if config.denoise > 0.0 {
@@ -527,10 +608,24 @@ pub fn super_resolution_report_to_string(
   let mut report = "## 图像超分辨率报告\n\n"
   report = report + "### 处理信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 原始尺寸 | " + result.original_width.to_string() + "x" + result.original_height.to_string() + " |\n"
-  report = report + "| 输出尺寸 | " + result.output_width.to_string() + "x" + result.output_height.to_string() + " |\n"
-  report = report + "| 缩放因子 | " + result.scale_factor.to_string() + "x |\n"
-  let algo_str = if result.algorithm == SuperResolutionAlgorithm::NearestNeighbor {
+  report = report +
+    "| 原始尺寸 | " +
+    result.original_width.to_string() +
+    "x" +
+    result.original_height.to_string() +
+    " |\n"
+  report = report +
+    "| 输出尺寸 | " +
+    result.output_width.to_string() +
+    "x" +
+    result.output_height.to_string() +
+    " |\n"
+  report = report +
+    "| 缩放因子 | " +
+    result.scale_factor.to_string() +
+    "x |\n"
+  let algo_str = if result.algorithm ==
+    SuperResolutionAlgorithm::NearestNeighbor {
     "最近邻"
   } else if result.algorithm == SuperResolutionAlgorithm::Bilinear {
     "双线性"
@@ -548,7 +643,10 @@ pub fn super_resolution_report_to_string(
     "未知"
   }
   report = report + "| 算法 | " + algo_str + " |\n"
-  report = report + "| 处理耗时 | " + result.processing_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 处理耗时 | " +
+    result.processing_time_ms.to_string() +
+    "ms |\n\n"
 
   report = report + "### 质量评估\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
@@ -558,8 +656,14 @@ pub fn super_resolution_report_to_string(
   report = report + "| MAE | " + metrics.mae.to_string() + " |\n"
   report = report + "| 相关性 | " + metrics.correlation.to_string() + " |\n"
   report = report + "| 清晰度 | " + metrics.sharpness.to_string() + " |\n"
-  report = report + "| 噪声水平 | " + metrics.noise_level.to_string() + " |\n"
-  report = report + "| 综合质量 | " + metrics.overall_quality.to_string() + "/5.0 |\n"
+  report = report +
+    "| 噪声水平 | " +
+    metrics.noise_level.to_string() +
+    " |\n"
+  report = report +
+    "| 综合质量 | " +
+    metrics.overall_quality.to_string() +
+    "/5.0 |\n"
 
   report
 }

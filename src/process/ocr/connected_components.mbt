@@ -32,19 +32,28 @@ pub fn connected_components_analysis(
 ) -> OcrConnectedComponentsResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("connected_components_analysis: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "connected_components_analysis: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("connected_components_analysis: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "connected_components_analysis: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "connected_components_analysis: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "connected_components_analysis: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if connectivity != 4 && connectivity != 8 {
-    raise @types.LoadError::DecodeFailed("connected_components_analysis: connectivity必须为4或8")
+    raise @types.LoadError::DecodeFailed(
+      "connected_components_analysis: connectivity必须为4或8",
+    )
   }
 
   let w = img.width
@@ -158,10 +167,18 @@ pub fn connected_components_analysis(
           pixel_count += 1
           sum_x += x
           sum_y += y
-          if x < min_x { min_x = x }
-          if x > max_x { max_x = x }
-          if y < min_y { min_y = y }
-          if y > max_y { max_y = y }
+          if x < min_x {
+            min_x = x
+          }
+          if x > max_x {
+            max_x = x
+          }
+          if y < min_y {
+            min_y = y
+          }
+          if y > max_y {
+            max_y = y
+          }
         }
       }
     }
@@ -175,7 +192,10 @@ pub fn connected_components_analysis(
         area: (max_x - min_x + 1) * (max_y - min_y + 1),
         pixel_count,
         bounding_box: (min_x, min_y, max_x - min_x + 1, max_y - min_y + 1),
-        centroid: (sum_x.to_double() / pixel_count.to_double(), sum_y.to_double() / pixel_count.to_double()),
+        centroid: (
+          sum_x.to_double() / pixel_count.to_double(),
+          sum_y.to_double() / pixel_count.to_double(),
+        ),
       }
       components.push(comp)
     }
@@ -196,13 +216,19 @@ pub fn filter_components_by_area(
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if result.components.length() == 0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_area: 连通域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_area: 连通域列表不能为空",
+    )
   }
   if min_area < 0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_area: min_area不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_area: min_area不能为负数",
+    )
   }
   if max_area < min_area {
-    raise @types.LoadError::DecodeFailed("filter_components_by_area: max_area不能小于min_area")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_area: max_area不能小于min_area",
+    )
   }
 
   let filtered : Array[OcrConnectedComponent] = []
@@ -223,13 +249,19 @@ pub fn filter_components_by_aspect_ratio(
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if result.components.length() == 0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: 连通域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_aspect_ratio: 连通域列表不能为空",
+    )
   }
   if min_ratio < 0.0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: min_ratio不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_aspect_ratio: min_ratio不能为负数",
+    )
   }
   if max_ratio < min_ratio {
-    raise @types.LoadError::DecodeFailed("filter_components_by_aspect_ratio: max_ratio不能小于min_ratio")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_aspect_ratio: max_ratio不能小于min_ratio",
+    )
   }
 
   let filtered : Array[OcrConnectedComponent] = []
@@ -255,10 +287,14 @@ pub fn filter_components_by_position(
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if result.components.length() == 0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_position: 连通域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_position: 连通域列表不能为空",
+    )
   }
   if width <= 0 || height <= 0 {
-    raise @types.LoadError::DecodeFailed("filter_components_by_position: 矩形尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "filter_components_by_position: 矩形尺寸必须大于0",
+    )
   }
 
   let filtered : Array[OcrConnectedComponent] = []
@@ -280,10 +316,14 @@ pub fn merge_adjacent_components(
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if components.length() == 0 {
-    raise @types.LoadError::DecodeFailed("merge_adjacent_components: 连通域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "merge_adjacent_components: 连通域列表不能为空",
+    )
   }
   if max_gap < 0 {
-    raise @types.LoadError::DecodeFailed("merge_adjacent_components: max_gap不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "merge_adjacent_components: max_gap不能为负数",
+    )
   }
 
   let merged : Array[OcrConnectedComponent] = []
@@ -292,7 +332,8 @@ pub fn merge_adjacent_components(
     let next = components[i]
     // 检查是否相邻（水平方向）
     let gap = next.x - (current.x + current.width)
-    let vertical_overlap = min(current.y + current.height, next.y + next.height) - max(current.y, next.y)
+    let vertical_overlap = min(current.y + current.height, next.y + next.height) -
+      max(current.y, next.y)
     if gap <= max_gap && vertical_overlap > 0 {
       // 合并
       let new_x = min(current.x, next.x)
@@ -308,7 +349,10 @@ pub fn merge_adjacent_components(
         area: (new_max_x - new_x) * (new_max_y - new_y),
         pixel_count: current.pixel_count + next.pixel_count,
         bounding_box: (new_x, new_y, new_max_x - new_x, new_max_y - new_y),
-        centroid: ((current.centroid.0 + next.centroid.0) / 2.0, (current.centroid.1 + next.centroid.1) / 2.0),
+        centroid: (
+          (current.centroid.0 + next.centroid.0) / 2.0,
+          (current.centroid.1 + next.centroid.1) / 2.0,
+        ),
       }
     } else {
       merged.push(current)
@@ -322,11 +366,19 @@ pub fn merge_adjacent_components(
 ///|
 /// 辅助函数：最小值
 fn min(a : Int, b : Int) -> Int {
-  if a < b { a } else { b }
+  if a < b {
+    a
+  } else {
+    b
+  }
 }
 
 ///|
 /// 辅助函数：最大值
 fn max(a : Int, b : Int) -> Int {
-  if a > b { a } else { b }
+  if a > b {
+    a
+  } else {
+    b
+  }
 }

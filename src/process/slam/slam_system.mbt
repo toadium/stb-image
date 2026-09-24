@@ -220,10 +220,15 @@ pub fn estimate_camera_pose(
   let dz = forward_motion
 
   CameraPose::{
-    position: [prev_pose.position[0], prev_pose.position[1], prev_pose.position[2] + dz],
+    position: [
+      prev_pose.position[0],
+      prev_pose.position[1],
+      prev_pose.position[2] + dz,
+    ],
     rotation: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
     timestamp: prev_pose.timestamp + 0.033,
-    confidence: tracking_result.num_tracked.to_double() / (tracking_result.num_tracked + tracking_result.num_lost).to_double(),
+    confidence: tracking_result.num_tracked.to_double() /
+    (tracking_result.num_tracked + tracking_result.num_lost).to_double(),
   }
 }
 
@@ -293,7 +298,10 @@ pub fn detect_loop_closure(
       is_loop_detected: true,
       loop_frame_index: best_index,
       similarity_score: best_score,
-      transformation: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+      transformation: [
+        1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+        1.0,
+      ],
       num_inliers: 50,
     }
   } else {
@@ -301,7 +309,10 @@ pub fn detect_loop_closure(
       is_loop_detected: false,
       loop_frame_index: -1,
       similarity_score: 0.0,
-      transformation: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+      transformation: [
+        1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+        1.0,
+      ],
       num_inliers: 0,
     }
   }
@@ -309,9 +320,7 @@ pub fn detect_loop_closure(
 
 ///|
 /// 初始化 SLAM 系统
-pub fn initialize_slam(
-  config : SLAMConfig,
-) -> SLAMState {
+pub fn initialize_slam(config : SLAMConfig) -> SLAMState {
   let initial_pose = CameraPose::{
     position: [0.0, 0.0, 0.0],
     rotation: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
@@ -340,15 +349,28 @@ pub fn process_frame_slam(
   config : SLAMConfig,
 ) -> SLAMState {
   // 检测特征点
-  let features = detect_features_slam(img, config.max_features, config.feature_threshold)
+  let features = detect_features_slam(
+    img,
+    config.max_features,
+    config.feature_threshold,
+  )
 
   // 如果有关键帧，进行特征跟踪
   if state.keyframes.length() > 0 {
     let last_kf = state.keyframes[state.keyframes.length() - 1]
-    let tracking_result = track_features_slam(last_kf.image, img, last_kf.features, 16)
+    let tracking_result = track_features_slam(
+      last_kf.image,
+      img,
+      last_kf.features,
+      16,
+    )
 
     // 估计位姿
-    let new_pose = estimate_camera_pose(tracking_result, config, state.current_pose)
+    let new_pose = estimate_camera_pose(
+      tracking_result,
+      config,
+      state.current_pose,
+    )
 
     // 如果是关键帧，添加到地图
     if tracking_result.is_keyframe {
@@ -363,7 +385,12 @@ pub fn process_frame_slam(
       }
 
       // 三角化新的地图点
-      let new_points = triangulate_points(features, last_kf.pose, new_pose, config)
+      let new_points = triangulate_points(
+        features,
+        last_kf.pose,
+        new_pose,
+        config,
+      )
 
       let new_map_points = state.map_points
       for p in new_points {
@@ -397,7 +424,11 @@ pub fn process_frame_slam(
         map_points: state.map_points,
         keyframes: state.keyframes,
         num_frames_processed: state.num_frames_processed + 1,
-        num_lost_frames: if tracking_result.num_tracked < 20 { state.num_lost_frames + 1 } else { state.num_lost_frames },
+        num_lost_frames: if tracking_result.num_tracked < 20 {
+          state.num_lost_frames + 1
+        } else {
+          state.num_lost_frames
+        },
         is_tracking: tracking_result.num_tracked > 20,
         is_mapping: true,
         processing_time_ms: 0.0,
@@ -431,27 +462,61 @@ pub fn process_frame_slam(
 
 ///|
 /// 生成 SLAM 报告
-pub fn slam_report_to_string(
-  state : SLAMState,
-) -> String {
+pub fn slam_report_to_string(state : SLAMState) -> String {
   let mut report = "## SLAM 系统报告\n\n"
   report = report + "### 系统状态\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 处理帧数 | " + state.num_frames_processed.to_string() + " |\n"
-  report = report + "| 丢失帧数 | " + state.num_lost_frames.to_string() + " |\n"
-  report = report + "| 关键帧数 | " + state.keyframes.length().to_string() + " |\n"
-  report = report + "| 地图点数 | " + state.map_points.length().to_string() + " |\n"
-  report = report + "| 轨迹长度 | " + state.trajectory.length().to_string() + " |\n"
-  report = report + "| 跟踪状态 | " + (if state.is_tracking { "跟踪中" } else { "丢失" }) + " |\n"
-  report = report + "| 建图状态 | " + (if state.is_mapping { "建图中" } else { "暂停" }) + " |\n\n"
+  report = report +
+    "| 处理帧数 | " +
+    state.num_frames_processed.to_string() +
+    " |\n"
+  report = report +
+    "| 丢失帧数 | " +
+    state.num_lost_frames.to_string() +
+    " |\n"
+  report = report +
+    "| 关键帧数 | " +
+    state.keyframes.length().to_string() +
+    " |\n"
+  report = report +
+    "| 地图点数 | " +
+    state.map_points.length().to_string() +
+    " |\n"
+  report = report +
+    "| 轨迹长度 | " +
+    state.trajectory.length().to_string() +
+    " |\n"
+  report = report +
+    "| 跟踪状态 | " +
+    (if state.is_tracking { "跟踪中" } else { "丢失" }) +
+    " |\n"
+  report = report +
+    "| 建图状态 | " +
+    (if state.is_mapping { "建图中" } else { "暂停" }) +
+    " |\n\n"
 
   report = report + "### 当前位姿\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 位置 X | " + state.current_pose.position[0].to_string() + " |\n"
-  report = report + "| 位置 Y | " + state.current_pose.position[1].to_string() + " |\n"
-  report = report + "| 位置 Z | " + state.current_pose.position[2].to_string() + " |\n"
-  report = report + "| 置信度 | " + (state.current_pose.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 时间戳 | " + state.current_pose.timestamp.to_string() + "s |\n"
+  report = report +
+    "| 位置 X | " +
+    state.current_pose.position[0].to_string() +
+    " |\n"
+  report = report +
+    "| 位置 Y | " +
+    state.current_pose.position[1].to_string() +
+    " |\n"
+  report = report +
+    "| 位置 Z | " +
+    state.current_pose.position[2].to_string() +
+    " |\n"
+  report = report +
+    "| 置信度 | " +
+    (state.current_pose.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 时间戳 | " +
+    state.current_pose.timestamp.to_string() +
+    "s |\n"
 
   report
 }

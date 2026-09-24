@@ -7,7 +7,12 @@ fn make_img16_adv(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_adv(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 // ========== Inpaint ==========
@@ -119,7 +129,13 @@ test "nlm_denoise_f: basic denoise" {
 ///|
 test "nlm_denoise_fast_16: basic denoise" {
   let img = make_img16_adv(8, 8, 1, 30000)
-  let result = nlm_denoise_fast_16(img, patch_size=3, search_size=5, h=10, step=2)
+  let result = nlm_denoise_fast_16(
+    img,
+    patch_size=3,
+    search_size=5,
+    h=10,
+    step=2,
+  )
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -130,7 +146,13 @@ test "nlm_denoise_fast_16: basic denoise" {
 ///|
 test "nlm_denoise_fast_f: basic denoise" {
   let img = make_imgf_adv(8, 8, 1, 0.5F)
-  let result = nlm_denoise_fast_f(img, patch_size=3, search_size=5, h=10, step=2)
+  let result = nlm_denoise_fast_f(
+    img,
+    patch_size=3,
+    search_size=5,
+    h=10,
+    step=2,
+  )
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)

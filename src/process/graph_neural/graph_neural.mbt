@@ -112,7 +112,7 @@ pub(all) struct NodeEmbeddingResult {
   embeddings : Array[Array[Double]]
   num_nodes : Int
   embedding_dim : Int
-  method : String
+  method_type : String
   training_loss : Double
   training_accuracy : Double
 }
@@ -135,7 +135,7 @@ pub(all) struct CommunityDetectionResult {
   num_communities : Int
   modularity : Double
   community_sizes : Array[Int]
-  method : String
+  method_type : String
 }
 
 ///|
@@ -184,7 +184,7 @@ pub fn create_random_graph(
   let adjacency : Array[Array[Double]] = []
 
   // 初始化邻接矩阵
-  for i in 0..<num_nodes {
+  for _ in 0..<num_nodes {
     let row : Array[Double] = []
     for _ in 0..<num_nodes {
       row.push(0.0)
@@ -246,7 +246,14 @@ pub fn create_random_graph(
       }
     }
     let old_node = nodes[i]
-    let new_node = GraphNode::{ node_id: old_node.node_id, features: old_node.features, label: old_node.label, num_features: old_node.num_features, degree: degree, is_visited: old_node.is_visited }
+    let new_node = GraphNode::{
+      node_id: old_node.node_id,
+      features: old_node.features,
+      label: old_node.label,
+      num_features: old_node.num_features,
+      degree,
+      is_visited: old_node.is_visited,
+    }
     nodes[i] = new_node
   }
 
@@ -320,7 +327,7 @@ pub fn graph_convolution(
     embeddings,
     num_nodes: graph.num_nodes,
     embedding_dim: config.hidden_dim,
-    method: "GCN",
+    method_type: "GCN",
     training_loss: 0.1,
     training_accuracy: 0.85,
   }
@@ -399,7 +406,7 @@ pub fn graph_attention(
     embeddings,
     num_nodes: graph.num_nodes,
     embedding_dim: config.hidden_dim,
-    method: "GAT",
+    method_type: "GAT",
     training_loss: 0.08,
     training_accuracy: 0.88,
   }
@@ -486,7 +493,7 @@ pub fn detect_communities(
   let community_sizes : Array[Int] = []
 
   // 简化的社区分配：基于节点度
-  for c in 0..<num_communities {
+  for _ in 0..<num_communities {
     let community : Array[Int] = []
     communities.push(community)
     community_sizes.push(0)
@@ -517,8 +524,9 @@ pub fn detect_communities(
 
     if graph.num_edges > 0 {
       modularity += internal_edges / (2.0 * graph.num_edges.to_double()) -
-                    (total_degree / (2.0 * graph.num_edges.to_double())) *
-                    (total_degree / (2.0 * graph.num_edges.to_double()))
+        total_degree /
+        (2.0 * graph.num_edges.to_double()) *
+        (total_degree / (2.0 * graph.num_edges.to_double()))
     }
   }
 
@@ -527,7 +535,7 @@ pub fn detect_communities(
     num_communities,
     modularity,
     community_sizes,
-    method: "Louvain",
+    method_type: "Louvain",
   }
 }
 
@@ -544,32 +552,56 @@ pub fn graph_neural_report_to_string(
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 节点数 | " + graph.num_nodes.to_string() + " |\n"
   report = report + "| 边数 | " + graph.num_edges.to_string() + " |\n"
-  report = report + "| 有向图 | " + (if graph.is_directed { "是" } else { "否" }) + " |\n"
-  report = report + "| 加权图 | " + (if graph.is_weighted { "是" } else { "否" }) + " |\n"
+  report = report +
+    "| 有向图 | " +
+    (if graph.is_directed { "是" } else { "否" }) +
+    " |\n"
+  report = report +
+    "| 加权图 | " +
+    (if graph.is_weighted { "是" } else { "否" }) +
+    " |\n"
 
   report = report + "\n### GNN配置\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 层类型 | " + (match config.layer_type {
-    GNNLayerType::GCN => "GCN"
-    GNNLayerType::GAT => "GAT"
-    GNNLayerType::GraphSAGE => "GraphSAGE"
-    GNNLayerType::GIN => "GIN"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 层类型 | " +
+    (match config.layer_type {
+      GNNLayerType::GCN => "GCN"
+      GNNLayerType::GAT => "GAT"
+      GNNLayerType::GraphSAGE => "GraphSAGE"
+      GNNLayerType::GIN => "GIN"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 层数 | " + config.num_layers.to_string() + " |\n"
   report = report + "| 隐藏维度 | " + config.hidden_dim.to_string() + " |\n"
   report = report + "| 输出维度 | " + config.output_dim.to_string() + " |\n"
   report = report + "| Dropout率 | " + config.dropout_rate.to_string() + " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
-  report = report + "| 注意力头数 | " + config.num_heads.to_string() + " |\n"
+  report = report +
+    "| 注意力头数 | " +
+    config.num_heads.to_string() +
+    " |\n"
 
   report = report + "\n### 嵌入结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 方法 | " + embedding_result.method + " |\n"
-  report = report + "| 节点数 | " + embedding_result.num_nodes.to_string() + " |\n"
-  report = report + "| 嵌入维度 | " + embedding_result.embedding_dim.to_string() + " |\n"
-  report = report + "| 训练损失 | " + embedding_result.training_loss.to_string() + " |\n"
-  report = report + "| 训练精度 | " + (embedding_result.training_accuracy * 100.0).to_string() + "% |\n"
+  report = report + "| 方法 | " + embedding_result.method_type + " |\n"
+  report = report +
+    "| 节点数 | " +
+    embedding_result.num_nodes.to_string() +
+    " |\n"
+  report = report +
+    "| 嵌入维度 | " +
+    embedding_result.embedding_dim.to_string() +
+    " |\n"
+  report = report +
+    "| 训练损失 | " +
+    embedding_result.training_loss.to_string() +
+    " |\n"
+  report = report +
+    "| 训练精度 | " +
+    (embedding_result.training_accuracy * 100.0).to_string() +
+    "% |\n"
 
   report
 }

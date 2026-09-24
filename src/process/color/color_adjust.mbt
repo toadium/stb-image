@@ -15,18 +15,28 @@ fn clamp_byte(v : Int) -> Byte {
 ///|
 /// 亮度调整。delta ∈ [-255, 255]，正值变亮，负值变暗。
 /// 仅影响颜色通道（前 min(channels,3) 个），alpha 通道不变。
-pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image raise @types.LoadError {
+pub fn adjust_brightness(
+  img : @types.Image,
+  delta : Int,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_brightness: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_brightness: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -57,26 +67,38 @@ pub fn adjust_brightness(img : @types.Image, delta : Int) -> @types.Image raise 
 /// 对比度调整。factor=1.0 为原图，>1 增加对比度，<1 降低。
 /// 以 128 为中心缩放。仅影响颜色通道，alpha 不变。
 /// 优化：直接处理所有像素，避免内层循环
-pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image raise @types.LoadError {
+pub fn adjust_contrast(
+  img : @types.Image,
+  factor : Float,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_contrast: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_contrast: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if factor < 0.0 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast: factor必须大于等于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast: factor必须大于等于0",
+    )
   }
   let n = img.width * img.height
   let ch = img.channels
-  let color_ch = if ch >= 3 { 3 } else { ch }
+  let _ = if ch >= 3 { 3 } else { ch }
   let lut : Array[Byte] = Array::make(256, b'\x00')
   for i in 0..<256 {
     let adjusted = (Float::from_int(i - 128) * factor + 128.0F).to_int()
@@ -119,18 +141,28 @@ pub fn adjust_contrast(img : @types.Image, factor : Float) -> @types.Image raise
 ///|
 /// Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 使用查找表加速。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma(img : @types.Image, gamma : Float) -> @types.Image raise @types.LoadError {
+pub fn adjust_gamma(
+  img : @types.Image,
+  gamma : Float,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_gamma: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_gamma: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if gamma <= 0.0 {
@@ -177,7 +209,10 @@ pub fn invert(img : @types.Image) -> @types.Image raise @types.LoadError {
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "invert: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "invert: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -203,10 +238,16 @@ pub fn invert(img : @types.Image) -> @types.Image raise @types.LoadError {
 ///|
 /// RGB → HSV 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], v ∈ [0,1]
-pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+pub fn rgb_to_hsv(
+  r : Int,
+  g : Int,
+  b : Int,
+) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
-    raise @types.LoadError::DecodeFailed("rgb_to_hsv: r,g,b必须在[0,255]范围内")
+    raise @types.LoadError::DecodeFailed(
+      "rgb_to_hsv: r,g,b必须在[0,255]范围内",
+    )
   }
   let rf = Float::from_int(r) / 255.0F
   let gf = Float::from_int(g) / 255.0F
@@ -232,10 +273,16 @@ pub fn rgb_to_hsv(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @typ
 ///|
 /// HSV → RGB 色彩空间转换。
 /// 输入 h ∈ [0,360), s ∈ [0,1], v ∈ [0,1]，输出 r,g,b ∈ [0,255]
-pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int) raise @types.LoadError {
+pub fn hsv_to_rgb(
+  h : Float,
+  s : Float,
+  v : Float,
+) -> (Int, Int, Int) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || v < 0.0F || v > 1.0F {
-    raise @types.LoadError::DecodeFailed("hsv_to_rgb: s,v必须在[0,1]范围内")
+    raise @types.LoadError::DecodeFailed(
+      "hsv_to_rgb: s,v必须在[0,1]范围内",
+    )
   }
   let c = v * s
   // 归一化 h 到 [0,6)
@@ -279,10 +326,16 @@ pub fn hsv_to_rgb(h : Float, s : Float, v : Float) -> (Int, Int, Int) raise @typ
 ///|
 /// RGB → HSL 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], l ∈ [0,1]
-pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @types.LoadError {
+pub fn rgb_to_hsl(
+  r : Int,
+  g : Int,
+  b : Int,
+) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
-    raise @types.LoadError::DecodeFailed("rgb_to_hsl: r,g,b必须在[0,255]范围内")
+    raise @types.LoadError::DecodeFailed(
+      "rgb_to_hsl: r,g,b必须在[0,255]范围内",
+    )
   }
   let rf = Float::from_int(r) / 255.0F
   let gf = Float::from_int(g) / 255.0F
@@ -312,10 +365,16 @@ pub fn rgb_to_hsl(r : Int, g : Int, b : Int) -> (Float, Float, Float) raise @typ
 ///|
 /// HSL → RGB 色彩空间转换。
 /// 输入 h ∈ [0,360), s ∈ [0,1], l ∈ [0,1]，输出 r,g,b ∈ [0,255]
-pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) raise @types.LoadError {
+pub fn hsl_to_rgb(
+  h : Float,
+  s : Float,
+  l : Float,
+) -> (Int, Int, Int) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || l < 0.0F || l > 1.0F {
-    raise @types.LoadError::DecodeFailed("hsl_to_rgb: s,l必须在[0,1]范围内")
+    raise @types.LoadError::DecodeFailed(
+      "hsl_to_rgb: s,l必须在[0,1]范围内",
+    )
   }
   let c = (1.0F - (2.0F * l - 1.0F).abs()) * s
   // 归一化 h 到 [0,6)
@@ -357,18 +416,28 @@ pub fn hsl_to_rgb(h : Float, s : Float, l : Float) -> (Int, Int, Int) raise @typ
 
 ///|
 /// 饱和度调整。factor: 0.0 = 灰度, 1.0 = 原始, >1.0 = 增强饱和度
-pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image raise @types.LoadError {
+pub fn adjust_saturation(
+  img : @types.Image,
+  factor : Float,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_saturation: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_saturation: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_saturation: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_saturation: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_saturation: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_saturation: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -379,37 +448,58 @@ pub fn adjust_saturation(img : @types.Image, factor : Float) -> @types.Image rai
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   let f = factor.clamp(min=0.0F, max=10.0F)
   for i in 0..<n {
-    let r = img.data[i * ch].to_int().to_float() / 255.0F
-    let g = img.data[i * ch + 1].to_int().to_float() / 255.0F
-    let b = img.data[i * ch + 2].to_int().to_float() / 255.0F
+    let r = Float::from_int(img.data[i * ch].to_int()) / 255.0F
+    let g = Float::from_int(img.data[i * ch + 1].to_int()) / 255.0F
+    let b = Float::from_int(img.data[i * ch + 2].to_int()) / 255.0F
     let gray = 0.299F * r + 0.587F * g + 0.114F * b
     let nr = (gray + (r - gray) * f).clamp(min=0.0F, max=1.0F)
     let ng = (gray + (g - gray) * f).clamp(min=0.0F, max=1.0F)
     let nb = (gray + (b - gray) * f).clamp(min=0.0F, max=1.0F)
     out[i * ch] = (nr * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
-    out[i * ch + 1] = (ng * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
-    out[i * ch + 2] = (nb * 255.0F + 0.5F).to_int().clamp(min=0, max=255).to_byte()
+    out[i * ch + 1] = (ng * 255.0F + 0.5F)
+      .to_int()
+      .clamp(min=0, max=255)
+      .to_byte()
+    out[i * ch + 2] = (nb * 255.0F + 0.5F)
+      .to_int()
+      .clamp(min=0, max=255)
+      .to_byte()
     if ch == 4 {
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @types.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 色相调整。delta: 色相偏移量（度，0-360）
-pub fn adjust_hue(img : @types.Image, delta : Float) -> @types.Image raise @types.LoadError {
+pub fn adjust_hue(
+  img : @types.Image,
+  delta : Float,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_hue: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_hue: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_hue: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_hue: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_hue: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_hue: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -438,5 +528,10 @@ pub fn adjust_hue(img : @types.Image, delta : Float) -> @types.Image raise @type
       out[i * ch + 3] = img.data[i * ch + 3]
     }
   }
-  @types.Image::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

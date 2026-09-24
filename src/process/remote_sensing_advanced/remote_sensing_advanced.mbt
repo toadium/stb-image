@@ -218,11 +218,7 @@ pub fn calculate_ndvi(
     let nir = if i < nir_band.length() { nir_band[i] } else { 0.0 }
     let red = if i < red_band.length() { red_band[i] } else { 0.0 }
     let denom = nir + red
-    let value = if denom > 0.0 {
-      (nir - red) / denom
-    } else {
-      0.0
-    }
+    let value = if denom > 0.0 { (nir - red) / denom } else { 0.0 }
     ndvi.push(value)
   }
 
@@ -242,11 +238,7 @@ pub fn calculate_ndwi(
     let green = if i < green_band.length() { green_band[i] } else { 0.0 }
     let nir = if i < nir_band.length() { nir_band[i] } else { 0.0 }
     let denom = green + nir
-    let value = if denom > 0.0 {
-      (green - nir) / denom
-    } else {
-      0.0
-    }
+    let value = if denom > 0.0 { (green - nir) / denom } else { 0.0 }
     ndwi.push(value)
   }
 
@@ -264,8 +256,8 @@ pub fn classify_land_cover(
   let classification_map : Array[Array[Int]] = []
   let confidence_map : Array[Array[Double]] = []
   let class_names = [
-    "water", "forest", "grassland", "cropland", "urban",
-    "barren", "wetland", "snow", "cloud", "shadow"
+    "water", "forest", "grassland", "cropland", "urban", "barren", "wetland", "snow",
+    "cloud", "shadow",
   ]
   let class_distribution : Array[Double] = []
   for _ in class_names {
@@ -273,10 +265,10 @@ pub fn classify_land_cover(
   }
 
   let mut state = 42
-  for y in 0..<height {
+  for _ in 0..<height {
     let row : Array[Int] = []
     let conf_row : Array[Double] = []
-    for x in 0..<width {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
       let class_idx = state % class_names.length()
       row.push(class_idx)
@@ -326,9 +318,11 @@ pub fn detect_remote_sensing_objects(
   let objects : Array[DetectedRemoteSensingObject] = []
 
   let object_types = [
-    RemoteSensingObjectType::Building, RemoteSensingObjectType::Road,
-    RemoteSensingObjectType::Vehicle, RemoteSensingObjectType::Ship,
-    RemoteSensingObjectType::Aircraft
+    RemoteSensingObjectType::Building,
+    RemoteSensingObjectType::Road,
+    RemoteSensingObjectType::Vehicle,
+    RemoteSensingObjectType::Ship,
+    RemoteSensingObjectType::Aircraft,
   ]
 
   let mut state = 42
@@ -365,7 +359,10 @@ pub fn detect_remote_sensing_objects(
       area,
       perimeter,
       orientation: 0.0,
-      geolocation: [x * config.spatial_resolution, y * config.spatial_resolution],
+      geolocation: [
+        x * config.spatial_resolution,
+        y * config.spatial_resolution,
+      ],
     }
     objects.push(obj)
   }
@@ -388,17 +385,19 @@ pub fn detect_changes(
   let mut total_change_area = 0.0
 
   let mut state = 42
-  for y in 0..<height {
+  for _ in 0..<height {
     let row : Array[Bool] = []
     let mask_row : Array[Int] = []
-    for x in 0..<width {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
-      let is_change = (state % 100).to_double() / 100.0 < config.change_threshold
+      let is_change = (state % 100).to_double() / 100.0 <
+        config.change_threshold
       row.push(is_change)
       if is_change {
         mask_row.push(1)
         num_changes += 1
-        total_change_area += config.spatial_resolution * config.spatial_resolution
+        total_change_area += config.spatial_resolution *
+          config.spatial_resolution
       } else {
         mask_row.push(0)
       }
@@ -432,36 +431,60 @@ pub fn remote_sensing_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    RemoteSensingTaskType::LandCoverClassification => "地物分类"
-    RemoteSensingTaskType::ObjectDetection => "目标检测"
-    RemoteSensingTaskType::ChangeDetection => "变化检测"
-    RemoteSensingTaskType::ImageFusion => "图像融合"
-    RemoteSensingTaskType::SuperResolution => "超分辨率"
-    RemoteSensingTaskType::TimeSeriesAnalysis => "时间序列分析"
-    RemoteSensingTaskType::SceneClassification => "场景分类"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 图像类型 | " + (match config.image_type {
-    RemoteSensingImageType::Optical => "光学"
-    RemoteSensingImageType::SAR => "SAR"
-    RemoteSensingImageType::Multispectral => "多光谱"
-    RemoteSensingImageType::Hyperspectral => "高光谱"
-    RemoteSensingImageType::Thermal => "热红外"
-    RemoteSensingImageType::LiDAR => "激光雷达"
-    RemoteSensingImageType::DEM => "数字高程模型"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      RemoteSensingTaskType::LandCoverClassification => "地物分类"
+      RemoteSensingTaskType::ObjectDetection => "目标检测"
+      RemoteSensingTaskType::ChangeDetection => "变化检测"
+      RemoteSensingTaskType::ImageFusion => "图像融合"
+      RemoteSensingTaskType::SuperResolution => "超分辨率"
+      RemoteSensingTaskType::TimeSeriesAnalysis => "时间序列分析"
+      RemoteSensingTaskType::SceneClassification => "场景分类"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 图像类型 | " +
+    (match config.image_type {
+      RemoteSensingImageType::Optical => "光学"
+      RemoteSensingImageType::SAR => "SAR"
+      RemoteSensingImageType::Multispectral => "多光谱"
+      RemoteSensingImageType::Hyperspectral => "高光谱"
+      RemoteSensingImageType::Thermal => "热红外"
+      RemoteSensingImageType::LiDAR => "激光雷达"
+      RemoteSensingImageType::DEM => "数字高程模型"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 波段数 | " + config.num_bands.to_string() + " |\n"
-  report = report + "| 空间分辨率 | " + config.spatial_resolution.to_string() + " m |\n"
-  report = report + "| 时间分辨率 | " + config.temporal_resolution_days.to_string() + " 天 |\n"
+  report = report +
+    "| 空间分辨率 | " +
+    config.spatial_resolution.to_string() +
+    " m |\n"
+  report = report +
+    "| 时间分辨率 | " +
+    config.temporal_resolution_days.to_string() +
+    " 天 |\n"
   report = report + "| 投影 | " + config.projection + " |\n"
   report = report + "| 基准面 | " + config.datum + " |\n"
   report = report + "| 分类方法 | " + config.classification_method + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
-  report = report + "| 变化阈值 | " + config.change_threshold.to_string() + " |\n"
-  report = report + "| NDVI | " + (if config.use_ndvi { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| NDWI | " + (if config.use_ndwi { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 变化阈值 | " +
+    config.change_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| NDVI | " +
+    (if config.use_ndvi { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| NDWI | " +
+    (if config.use_ndwi { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

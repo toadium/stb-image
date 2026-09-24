@@ -111,9 +111,7 @@ pub fn create_default_enhanced_verification_config() -> EnhancedVerificationConf
 
 ///|
 /// UI 元素检测
-pub fn detect_ui_elements(
-  img : @types.Image,
-) -> UIDetectionResult {
+pub fn detect_ui_elements(img : @types.Image) -> UIDetectionResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -184,12 +182,14 @@ pub fn detect_ui_elements(
       let idx = y * w + x
       let mut has_edge = false
       if x > 0 && x < w - 1 {
-        if (img.data[idx].to_double() - img.data[idx - 1].to_double()).abs() > 20.0 {
+        if (img.data[idx].to_double() - img.data[idx - 1].to_double()).abs() >
+          20.0 {
           has_edge = true
         }
       }
       if y > 0 && y < h - 1 {
-        if (img.data[idx].to_double() - img.data[idx - w].to_double()).abs() > 20.0 {
+        if (img.data[idx].to_double() - img.data[idx - w].to_double()).abs() >
+          20.0 {
           has_edge = true
         }
       }
@@ -228,9 +228,7 @@ pub fn detect_ui_elements(
 
 ///|
 /// 文字区域检测
-pub fn detect_text_regions(
-  img : @types.Image,
-) -> TextDetectionResult {
+pub fn detect_text_regions(img : @types.Image) -> TextDetectionResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -250,15 +248,18 @@ pub fn detect_text_regions(
           let py = by * block_size + y
           if px > 0 && px < w - 1 && py > 0 && py < h - 1 {
             let idx = py * w + px
-            let gx = (img.data[idx + 1].to_double() - img.data[idx - 1].to_double()).abs()
-            let gy = (img.data[idx + w].to_double() - img.data[idx - w].to_double()).abs()
+            let gx = (img.data[idx + 1].to_double() -
+            img.data[idx - 1].to_double()).abs()
+            let gy = (img.data[idx + w].to_double() -
+            img.data[idx - w].to_double()).abs()
             if gx > 15.0 || gy > 15.0 {
               edge_count += 1
             }
           }
         }
       }
-      let edge_density = edge_count.to_double() / (block_size * block_size).to_double()
+      let edge_density = edge_count.to_double() /
+        (block_size * block_size).to_double()
       // 文字区域通常边缘密度在 0.15-0.5 之间
       if edge_density > 0.15 && edge_density < 0.6 {
         dense_edge_regions += 1
@@ -266,7 +267,8 @@ pub fn detect_text_regions(
     }
   }
 
-  let text_area_ratio = dense_edge_regions.to_double() / (blocks_x * blocks_y).to_double()
+  let text_area_ratio = dense_edge_regions.to_double() /
+    (blocks_x * blocks_y).to_double()
 
   // 小边缘密度（全局）
   let mut small_edges = 0
@@ -306,9 +308,7 @@ pub fn detect_text_regions(
 
 ///|
 /// 几何形状分析
-pub fn analyze_geometry(
-  img : @types.Image,
-) -> GeometryAnalysisResult {
+pub fn analyze_geometry(img : @types.Image) -> GeometryAnalysisResult {
   let w = img.width
   let h = img.height
 
@@ -339,9 +339,21 @@ pub fn analyze_geometry(
     }
   }
 
-  let horizontal_ratio = if total_edges > 0 { horizontal_edges.to_double() / total_edges.to_double() } else { 0.0 }
-  let vertical_ratio = if total_edges > 0 { vertical_edges.to_double() / total_edges.to_double() } else { 0.0 }
-  let diagonal_ratio = if total_edges > 0 { diagonal_edges.to_double() / total_edges.to_double() } else { 0.0 }
+  let horizontal_ratio = if total_edges > 0 {
+    horizontal_edges.to_double() / total_edges.to_double()
+  } else {
+    0.0
+  }
+  let vertical_ratio = if total_edges > 0 {
+    vertical_edges.to_double() / total_edges.to_double()
+  } else {
+    0.0
+  }
+  let diagonal_ratio = if total_edges > 0 {
+    diagonal_edges.to_double() / total_edges.to_double()
+  } else {
+    0.0
+  }
 
   // 几何规则性：水平+垂直边缘比例越高，越规则（UI 界面特征）
   let geometry_regularity = horizontal_ratio + vertical_ratio
@@ -417,12 +429,20 @@ pub fn analyze_color_quantization(
     }
   }
 
-  let top_color_ratio = if total > 0 { sorted_colors[0].to_double() / total.to_double() } else { 0.0 }
+  let top_color_ratio = if total > 0 {
+    sorted_colors[0].to_double() / total.to_double()
+  } else {
+    0.0
+  }
   let mut top_10_sum = 0
   for i in 0..<10 {
     top_10_sum += sorted_colors[i]
   }
-  let top_10_ratio = if total > 0 { top_10_sum.to_double() / total.to_double() } else { 0.0 }
+  let top_10_ratio = if total > 0 {
+    top_10_sum.to_double() / total.to_double()
+  } else {
+    0.0
+  }
 
   // 颜色量化级别：唯一颜色越少，量化越严重（UI 界面特征）
   let quantization_level = 1.0 - unique_colors.to_double() / 64.0
@@ -453,15 +473,13 @@ pub fn analyze_color_quantization(
 
 ///|
 /// 纯色区域分析
-pub fn analyze_solid_areas(
-  img : @types.Image,
-) -> Double {
+pub fn analyze_solid_areas(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let block_size = 8
   let mut solid_blocks = 0
-  let total_blocks = (w / block_size) * (h / block_size)
+  let total_blocks = w / block_size * (h / block_size)
 
   for by in 0..<(h / block_size) {
     for bx in 0..<(w / block_size) {
@@ -472,8 +490,12 @@ pub fn analyze_solid_areas(
           let px = bx * block_size + x
           let py = by * block_size + y
           let val = img.data[py * w + px].to_int()
-          if val < min_val { min_val = val }
-          if val > max_val { max_val = val }
+          if val < min_val {
+            min_val = val
+          }
+          if val > max_val {
+            max_val = val
+          }
         }
       }
       if max_val - min_val < 10 {
@@ -482,7 +504,11 @@ pub fn analyze_solid_areas(
     }
   }
 
-  let solid_ratio = if total_blocks > 0 { solid_blocks.to_double() / total_blocks.to_double() } else { 0.0 }
+  let solid_ratio = if total_blocks > 0 {
+    solid_blocks.to_double() / total_blocks.to_double()
+  } else {
+    0.0
+  }
 
   // 纯色区域指示值：纯色区域越多，越可能是屏幕截图（物理生成）
   if solid_ratio > 0.5 {
@@ -498,9 +524,7 @@ pub fn analyze_solid_areas(
 
 ///|
 /// 边缘方向分析
-pub fn analyze_edge_directions(
-  img : @types.Image,
-) -> Double {
+pub fn analyze_edge_directions(img : @types.Image) -> Double {
   let geometry = analyze_geometry(img)
   // 水平+垂直边缘比例越高，越可能是 UI 界面（物理生成）
   let hv_ratio = geometry.horizontal_edge_ratio + geometry.vertical_edge_ratio
@@ -517,9 +541,7 @@ pub fn analyze_edge_directions(
 
 ///|
 /// 像素值分布分析
-pub fn analyze_pixel_distribution(
-  img : @types.Image,
-) -> Double {
+pub fn analyze_pixel_distribution(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -537,7 +559,7 @@ pub fn analyze_pixel_distribution(
   for i in 0..<256 {
     if histogram[i] > 0 {
       let p = histogram[i].to_double() / total.to_double()
-      entropy -= p * p * 0.1  // 简化的 log2
+      entropy -= p * p * 0.1 // 简化的 log2
     }
   }
 
@@ -567,21 +589,20 @@ pub fn intelligent_decision(
   config : EnhancedVerificationConfig,
 ) -> (ImageSourceType, Double, Double, Double, String) {
   // 增强特征的物理生成指示值（值越高越可能是物理生成）
-  let enhanced_physical_score = (
-    ui_result.ui_indicator * 0.25 +
+  let enhanced_physical_score = ui_result.ui_indicator * 0.25 +
     text_result.text_indicator * 0.20 +
     geometry_result.geometry_indicator * 0.15 +
     color_result.color_quantization_indicator * 0.15 +
     solid_indicator * 0.10 +
     edge_dir_indicator * 0.08 +
     pixel_dist_indicator * 0.07
-  )
 
   // 基础特征的 AI 生成指示值
   let basic_ai_score = basic_result.ai_probability
 
   // 加权融合
-  let final_ai_score = basic_ai_score * config.basic_weight + (1.0 - enhanced_physical_score) * config.enhanced_weight
+  let final_ai_score = basic_ai_score * config.basic_weight +
+    (1.0 - enhanced_physical_score) * config.enhanced_weight
   let final_physical_score = 1.0 - final_ai_score
 
   // 智能决策规则
@@ -590,15 +611,19 @@ pub fn intelligent_decision(
   let mut confidence = 0.0
 
   // 强 UI 特征判定
-  if ui_result.has_window_border && ui_result.has_toolbar && text_result.text_area_ratio > 0.05 {
+  if ui_result.has_window_border &&
+    ui_result.has_toolbar &&
+    text_result.text_area_ratio > 0.05 {
     source_type = ImageSourceType::PhysicalCaptured
     confidence = 0.9
     decision_reason = "检测到窗口边框、工具栏和文字区域，强烈判定为屏幕截图（物理生成）"
-  } else if ui_result.ui_element_count >= 6 && geometry_result.geometry_regularity > 0.7 {
+  } else if ui_result.ui_element_count >= 6 &&
+    geometry_result.geometry_regularity > 0.7 {
     source_type = ImageSourceType::PhysicalCaptured
     confidence = 0.8
     decision_reason = "检测到大量 UI 元素和规则几何形状，判定为屏幕截图（物理生成）"
-  } else if text_result.text_area_ratio > 0.1 && color_result.top_10_color_ratio > 0.7 {
+  } else if text_result.text_area_ratio > 0.1 &&
+    color_result.top_10_color_ratio > 0.7 {
     source_type = ImageSourceType::PhysicalCaptured
     confidence = 0.75
     decision_reason = "检测到大量文字区域和集中的颜色分布，判定为屏幕截图（物理生成）"
@@ -606,7 +631,8 @@ pub fn intelligent_decision(
     source_type = ImageSourceType::PhysicalCaptured
     confidence = 0.7
     decision_reason = "增强特征综合评分偏向物理生成，判定为物理生成"
-  } else if final_ai_score >= config.decision_threshold && enhanced_physical_score < 0.4 {
+  } else if final_ai_score >= config.decision_threshold &&
+    enhanced_physical_score < 0.4 {
     source_type = ImageSourceType::AIGenerated
     confidence = if final_ai_score > 0.7 { 0.75 } else { 0.55 }
     decision_reason = "基础特征和增强特征均偏向 AI 生成，判定为 AI 生成"
@@ -620,7 +646,9 @@ pub fn intelligent_decision(
     decision_reason = "综合特征偏向物理生成，判定为物理生成"
   }
 
-  (source_type, final_ai_score, final_physical_score, confidence, decision_reason)
+  (
+    source_type, final_ai_score, final_physical_score, confidence, decision_reason,
+  )
 }
 
 ///|
@@ -710,15 +738,13 @@ pub fn verify_image_source_enhanced(
   let pixel_dist_indicator = analyze_pixel_distribution(img)
 
   // 增强特征综合评分
-  let enhanced_overall = (
-    ui_result.ui_indicator * 0.25 +
+  let enhanced_overall = ui_result.ui_indicator * 0.25 +
     text_result.text_indicator * 0.20 +
     geometry_result.geometry_indicator * 0.15 +
     color_result.color_quantization_indicator * 0.15 +
     solid_indicator * 0.10 +
     edge_dir_indicator * 0.08 +
     pixel_dist_indicator * 0.07
-  )
 
   let enhanced_features = EnhancedVerificationFeatures::{
     ui_indicator: ui_result.ui_indicator,
@@ -733,15 +759,8 @@ pub fn verify_image_source_enhanced(
 
   // 智能决策
   let (source_type, ai_prob, physical_prob, confidence, reason) = intelligent_decision(
-    basic_result,
-    ui_result,
-    text_result,
-    geometry_result,
-    color_result,
-    solid_indicator,
-    edge_dir_indicator,
-    pixel_dist_indicator,
-    config,
+    basic_result, ui_result, text_result, geometry_result, color_result, solid_indicator,
+    edge_dir_indicator, pixel_dist_indicator, config,
   )
 
   EnhancedVerificationResult::{
@@ -779,69 +798,193 @@ pub fn enhanced_verification_report_to_string(
     "混合"
   }
   report = report + "| 来源类型 | " + source_str + " |\n"
-  report = report + "| AI 生成概率 | " + (result.ai_probability * 100.0).to_string() + "% |\n"
-  report = report + "| 物理生成概率 | " + (result.physical_probability * 100.0).to_string() + "% |\n"
-  report = report + "| 置信度 | " + (result.confidence * 100.0).to_string() + "% |\n"
+  report = report +
+    "| AI 生成概率 | " +
+    (result.ai_probability * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 物理生成概率 | " +
+    (result.physical_probability * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 置信度 | " +
+    (result.confidence * 100.0).to_string() +
+    "% |\n"
   report = report + "| 决策依据 | " + result.decision_reason + " |\n\n"
 
   report = report + "### 基础特征分析\n\n"
   report = report + "| 特征 | AI 指示值 |\n|------|-----------|\n"
-  report = report + "| 噪声模式 | " + (result.basic_features.noise_pattern_score * 100.0).to_string() + "% |\n"
-  report = report + "| 频域特征 | " + (result.basic_features.frequency_domain_score * 100.0).to_string() + "% |\n"
-  report = report + "| 颜色分布 | " + (result.basic_features.color_distribution_score * 100.0).to_string() + "% |\n"
-  report = report + "| 纹理特征 | " + (result.basic_features.texture_score * 100.0).to_string() + "% |\n"
-  report = report + "| 边缘特征 | " + (result.basic_features.edge_score * 100.0).to_string() + "% |\n"
-  report = report + "| 压缩伪影 | " + (result.basic_features.compression_artifact_score * 100.0).to_string() + "% |\n"
-  report = report + "| 细节特征 | " + (result.basic_features.detail_score * 100.0).to_string() + "% |\n"
-  report = report + "| 基础综合 | " + (result.basic_features.overall_score * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 噪声模式 | " +
+    (result.basic_features.noise_pattern_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 频域特征 | " +
+    (result.basic_features.frequency_domain_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 颜色分布 | " +
+    (result.basic_features.color_distribution_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 纹理特征 | " +
+    (result.basic_features.texture_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 边缘特征 | " +
+    (result.basic_features.edge_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 压缩伪影 | " +
+    (result.basic_features.compression_artifact_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 细节特征 | " +
+    (result.basic_features.detail_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 基础综合 | " +
+    (result.basic_features.overall_score * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 增强特征分析\n\n"
-  report = report + "| 特征 | 物理生成指示值 | 说明 |\n|------|---------------|------|\n"
-  report = report + "| UI 元素检测 | " + (result.enhanced_features.ui_indicator * 100.0).to_string() + "% | 窗口边框/工具栏/按钮检测 |\n"
-  report = report + "| 文字区域检测 | " + (result.enhanced_features.text_indicator * 100.0).to_string() + "% | 密集小边缘区域检测 |\n"
-  report = report + "| 几何形状分析 | " + (result.enhanced_features.geometry_indicator * 100.0).to_string() + "% | 水平/垂直边缘比例 |\n"
-  report = report + "| 颜色量化分析 | " + (result.enhanced_features.color_quantization_indicator * 100.0).to_string() + "% | 颜色集中度/调色板大小 |\n"
-  report = report + "| 纯色区域分析 | " + (result.enhanced_features.solid_area_indicator * 100.0).to_string() + "% | 大面积纯色区域比例 |\n"
-  report = report + "| 边缘方向分析 | " + (result.enhanced_features.edge_direction_indicator * 100.0).to_string() + "% | 水平+垂直边缘占比 |\n"
-  report = report + "| 像素分布分析 | " + (result.enhanced_features.pixel_distribution_indicator * 100.0).to_string() + "% | 像素值分布熵 |\n"
-  report = report + "| 增强综合 | " + (result.enhanced_features.overall_enhanced_score * 100.0).to_string() + "% | 加权综合评分 |\n\n"
+  report = report +
+    "| 特征 | 物理生成指示值 | 说明 |\n|------|---------------|------|\n"
+  report = report +
+    "| UI 元素检测 | " +
+    (result.enhanced_features.ui_indicator * 100.0).to_string() +
+    "% | 窗口边框/工具栏/按钮检测 |\n"
+  report = report +
+    "| 文字区域检测 | " +
+    (result.enhanced_features.text_indicator * 100.0).to_string() +
+    "% | 密集小边缘区域检测 |\n"
+  report = report +
+    "| 几何形状分析 | " +
+    (result.enhanced_features.geometry_indicator * 100.0).to_string() +
+    "% | 水平/垂直边缘比例 |\n"
+  report = report +
+    "| 颜色量化分析 | " +
+    (result.enhanced_features.color_quantization_indicator * 100.0).to_string() +
+    "% | 颜色集中度/调色板大小 |\n"
+  report = report +
+    "| 纯色区域分析 | " +
+    (result.enhanced_features.solid_area_indicator * 100.0).to_string() +
+    "% | 大面积纯色区域比例 |\n"
+  report = report +
+    "| 边缘方向分析 | " +
+    (result.enhanced_features.edge_direction_indicator * 100.0).to_string() +
+    "% | 水平+垂直边缘占比 |\n"
+  report = report +
+    "| 像素分布分析 | " +
+    (result.enhanced_features.pixel_distribution_indicator * 100.0).to_string() +
+    "% | 像素值分布熵 |\n"
+  report = report +
+    "| 增强综合 | " +
+    (result.enhanced_features.overall_enhanced_score * 100.0).to_string() +
+    "% | 加权综合评分 |\n\n"
 
   report = report + "### UI 检测详情\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 窗口边框 | " + (if result.ui_detection.has_window_border { "检测到" } else { "未检测到" }) + " |\n"
-  report = report + "| 工具栏 | " + (if result.ui_detection.has_toolbar { "检测到" } else { "未检测到" }) + " |\n"
-  report = report + "| 按钮状元素 | " + (if result.ui_detection.has_button_like_elements { "检测到" } else { "未检测到" }) + " |\n"
-  report = report + "| UI 元素总数 | " + result.ui_detection.ui_element_count.to_string() + " |\n"
-  report = report + "| 水平线条数 | " + result.ui_detection.horizontal_line_count.to_string() + " |\n"
-  report = report + "| 垂直线条数 | " + result.ui_detection.vertical_line_count.to_string() + " |\n"
-  report = report + "| UI 区域比例 | " + (result.ui_detection.ui_area_ratio * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 窗口边框 | " +
+    (if result.ui_detection.has_window_border {
+      "检测到"
+    } else {
+      "未检测到"
+    }) +
+    " |\n"
+  report = report +
+    "| 工具栏 | " +
+    (if result.ui_detection.has_toolbar { "检测到" } else { "未检测到" }) +
+    " |\n"
+  report = report +
+    "| 按钮状元素 | " +
+    (if result.ui_detection.has_button_like_elements {
+      "检测到"
+    } else {
+      "未检测到"
+    }) +
+    " |\n"
+  report = report +
+    "| UI 元素总数 | " +
+    result.ui_detection.ui_element_count.to_string() +
+    " |\n"
+  report = report +
+    "| 水平线条数 | " +
+    result.ui_detection.horizontal_line_count.to_string() +
+    " |\n"
+  report = report +
+    "| 垂直线条数 | " +
+    result.ui_detection.vertical_line_count.to_string() +
+    " |\n"
+  report = report +
+    "| UI 区域比例 | " +
+    (result.ui_detection.ui_area_ratio * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 文字检测详情\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 文字区域数 | " + result.text_detection.text_area_count.to_string() + " |\n"
-  report = report + "| 文字区域比例 | " + (result.text_detection.text_area_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 小边缘密度 | " + (result.text_detection.small_edge_density * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 文字区域数 | " +
+    result.text_detection.text_area_count.to_string() +
+    " |\n"
+  report = report +
+    "| 文字区域比例 | " +
+    (result.text_detection.text_area_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 小边缘密度 | " +
+    (result.text_detection.small_edge_density * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 几何分析详情\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 水平边缘比例 | " + (result.geometry_analysis.horizontal_edge_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 垂直边缘比例 | " + (result.geometry_analysis.vertical_edge_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 对角边缘比例 | " + (result.geometry_analysis.diagonal_edge_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 几何规则性 | " + (result.geometry_analysis.geometry_regularity * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 水平边缘比例 | " +
+    (result.geometry_analysis.horizontal_edge_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 垂直边缘比例 | " +
+    (result.geometry_analysis.vertical_edge_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 对角边缘比例 | " +
+    (result.geometry_analysis.diagonal_edge_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 几何规则性 | " +
+    (result.geometry_analysis.geometry_regularity * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 颜色量化详情\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 唯一颜色数(64级) | " + result.color_quantization.unique_color_count.to_string() + " |\n"
-  report = report + "| 顶部颜色比例 | " + (result.color_quantization.top_color_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 前10颜色比例 | " + (result.color_quantization.top_10_color_ratio * 100.0).to_string() + "% |\n"
-  report = report + "| 调色板大小 | " + result.color_quantization.color_palette_size.to_string() + " |\n\n"
+  report = report +
+    "| 唯一颜色数(64级) | " +
+    result.color_quantization.unique_color_count.to_string() +
+    " |\n"
+  report = report +
+    "| 顶部颜色比例 | " +
+    (result.color_quantization.top_color_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 前10颜色比例 | " +
+    (result.color_quantization.top_10_color_ratio * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 调色板大小 | " +
+    result.color_quantization.color_palette_size.to_string() +
+    " |\n\n"
 
   report = report + "### 说明\n\n"
-  report = report + "- 本鉴定基于基础统计特征 + 增强特征（UI/文字/几何/颜色）综合分析\n"
-  report = report + "- 增强特征专门针对屏幕截图/数字渲染图进行优化\n"
-  report = report + "- 物理生成指示值越高，表示越可能是真实拍摄或屏幕截图\n"
+  report = report +
+    "- 本鉴定基于基础统计特征 + 增强特征（UI/文字/几何/颜色）综合分析\n"
+  report = report +
+    "- 增强特征专门针对屏幕截图/数字渲染图进行优化\n"
+  report = report +
+    "- 物理生成指示值越高，表示越可能是真实拍摄或屏幕截图\n"
   report = report + "- 置信度表示鉴定结果的可靠程度\n"
-  report = report + "- 对于经过编辑、压缩或重采样的图像，鉴定准确率可能下降\n"
+  report = report +
+    "- 对于经过编辑、压缩或重采样的图像，鉴定准确率可能下降\n"
 
   report
 }

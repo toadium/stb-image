@@ -83,18 +83,28 @@ fn get_colormap_lut(map : Colormap) -> Array[(Byte, Byte, Byte)] {
 
 ///|
 /// 伪彩色映射。将灰度图或彩色图（先转灰度）映射为 RGB 伪彩色图像。
-pub fn apply_colormap(img : @types.Image, map : Colormap) -> @types.Image raise @types.LoadError {
+pub fn apply_colormap(
+  img : @types.Image,
+  map : Colormap,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("apply_colormap: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "apply_colormap: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("apply_colormap: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "apply_colormap: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "apply_colormap: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "apply_colormap: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let lut = get_colormap_lut(map)

@@ -168,10 +168,7 @@ pub fn create_tracked_object(
 
 ///|
 /// 计算IoU
-pub fn calculate_iou(
-  box1 : Array[Int],
-  box2 : Array[Int],
-) -> Double {
+pub fn calculate_iou(box1 : Array[Int], box2 : Array[Int]) -> Double {
   let x1 = if box1[0] > box2[0] { box1[0] } else { box2[0] }
   let y1 = if box1[1] > box2[1] { box1[1] } else { box2[1] }
   let x2 = if box1[2] < box2[2] { box1[2] } else { box2[2] }
@@ -235,8 +232,8 @@ pub fn recognize_action(
   config : CVAdvancedConfig,
 ) -> ActionRecognitionResult {
   let actions = [
-    "running", "walking", "jumping", "sitting", "standing",
-    "lying", "eating", "drinking", "reading", "writing"
+    "running", "walking", "jumping", "sitting", "standing", "lying", "eating", "drinking",
+    "reading", "writing",
   ]
   let all_scores : Array[Double] = []
   let mut best_action = "unknown"
@@ -286,8 +283,8 @@ pub fn parse_scene(
   config : CVAdvancedConfig,
 ) -> SceneParsingResult {
   let scene_types = [
-    "indoor", "outdoor", "urban", "rural", "forest",
-    "beach", "mountain", "desert", "snow", "water"
+    "indoor", "outdoor", "urban", "rural", "forest", "beach", "mountain", "desert",
+    "snow", "water",
   ]
   let objects = ["person", "car", "building", "tree", "sky", "road", "grass"]
   let class_distribution : Array[Double] = []
@@ -351,15 +348,10 @@ pub fn visual_question_answering(
 
 ///|
 /// 图像描述（简化版）
-pub fn generate_caption(
-  image_id : String,
-) -> ImageCaptioningResult {
+pub fn generate_caption(image_id : String) -> ImageCaptioningResult {
   let captions = [
-    "A person walking in the park",
-    "A beautiful sunset over the ocean",
-    "A cat sitting on a windowsill",
-    "A busy city street with cars",
-    "A mountain landscape with snow"
+    "A person walking in the park", "A beautiful sunset over the ocean", "A cat sitting on a windowsill",
+    "A busy city street with cars", "A mountain landscape with snow",
   ]
   let all_scores : Array[Double] = []
 
@@ -392,31 +384,43 @@ pub fn cv_advanced_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    CVAdvancedTaskType::ObjectTracking => "目标跟踪"
-    CVAdvancedTaskType::ActionRecognition => "动作识别"
-    CVAdvancedTaskType::SceneParsing => "场景解析"
-    CVAdvancedTaskType::VisualQuestionAnswering => "视觉问答"
-    CVAdvancedTaskType::ImageCaptioning => "图像描述"
-    CVAdvancedTaskType::VisualReasoning => "视觉推理"
-    CVAdvancedTaskType::VideoUnderstanding => "视频理解"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 跟踪算法 | " + (match config.tracking_algorithm {
-    TrackingAlgorithm::KCF => "KCF"
-    TrackingAlgorithm::MOSSE => "MOSSE"
-    TrackingAlgorithm::CSRT => "CSRT"
-    TrackingAlgorithm::SiamRPN => "SiamRPN"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 动作识别算法 | " + (match config.action_algorithm {
-    ActionRecognitionAlgorithm::C3D => "C3D"
-    ActionRecognitionAlgorithm::I3D => "I3D"
-    ActionRecognitionAlgorithm::SlowFast => "SlowFast"
-    ActionRecognitionAlgorithm::TimeSformer => "TimeSformer"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 置信度阈值 | " + config.confidence_threshold.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      CVAdvancedTaskType::ObjectTracking => "目标跟踪"
+      CVAdvancedTaskType::ActionRecognition => "动作识别"
+      CVAdvancedTaskType::SceneParsing => "场景解析"
+      CVAdvancedTaskType::VisualQuestionAnswering => "视觉问答"
+      CVAdvancedTaskType::ImageCaptioning => "图像描述"
+      CVAdvancedTaskType::VisualReasoning => "视觉推理"
+      CVAdvancedTaskType::VideoUnderstanding => "视频理解"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 跟踪算法 | " +
+    (match config.tracking_algorithm {
+      TrackingAlgorithm::KCF => "KCF"
+      TrackingAlgorithm::MOSSE => "MOSSE"
+      TrackingAlgorithm::CSRT => "CSRT"
+      TrackingAlgorithm::SiamRPN => "SiamRPN"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 动作识别算法 | " +
+    (match config.action_algorithm {
+      ActionRecognitionAlgorithm::C3D => "C3D"
+      ActionRecognitionAlgorithm::I3D => "I3D"
+      ActionRecognitionAlgorithm::SlowFast => "SlowFast"
+      ActionRecognitionAlgorithm::TimeSformer => "TimeSformer"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 置信度阈值 | " +
+    config.confidence_threshold.to_string() +
+    " |\n"
   report = report + "| IoU阈值 | " + config.iou_threshold.to_string() + " |\n"
 
   report = report + "\n### 结果\n\n"

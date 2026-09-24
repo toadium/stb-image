@@ -183,8 +183,7 @@ test "decode_png_pure: palette index out of bounds raises" {
 test "decode_png_pure: chunk header too short raises" {
   // PNG signature followed by truncated chunk header
   let out : Array[Byte] = [
-    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n',
-    b'\x00', b'\x00', // truncated chunk length
+    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n', b'\x00', b'\x00', // truncated chunk length
   ]
   let bad = Bytes::from_array(out)
   try {
@@ -229,10 +228,9 @@ test "decode_png_pure: invalid filter type raises" {
 test "decode_png_pure: palette missing for indexed color raises" {
   // Construct a PNG with color type 3 (indexed) but no PLTE chunk
   let out : Array[Byte] = [
-    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n',
-    b'\x00', b'\x00', b'\x00', b'\x0D', // IHDR length=13
-     b'I', b'H', b'D', b'R',
-     b'\x00', b'\x00', b'\x00', b'\x01', // width=1
+    b'\x89', b'P', b'N', b'G', b'\r', b'\n', b'\x1A', b'\n', b'\x00', b'\x00', b'\x00',
+    b'\x0D', // IHDR length=13
+     b'I', b'H', b'D', b'R', b'\x00', b'\x00', b'\x00', b'\x01', // width=1
      b'\x00', b'\x00', b'\x00', b'\x01', // height=1
      b'\x08', // bit depth=8
      b'\x03', // color type=3 (indexed)

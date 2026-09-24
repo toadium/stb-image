@@ -1,19 +1,19 @@
 // 联邦学习与隐私计算（v43.0.0）
 
-fn __sqrt_approx(self : Double) -> Double {
-  if self <= 0.0 {
+///|
+fn __sqrt_approx(x : Double) -> Double {
+  if x <= 0.0 {
     0.0
   } else {
-    let mut x = self
-    let mut y = (x + 1.0) / 2.0
+    let mut x0 = x
+    let mut y = (x0 + 1.0) / 2.0
     for _ in 0..<20 {
-      x = y
-      y = (x + self / x) / 2.0
+      x0 = y
+      y = (x0 + x / x0) / 2.0
     }
     y
   }
 }
-
 
 // 联邦学习、差分隐私、同态加密、安全多方计算、隐私保护
 
@@ -290,11 +290,14 @@ pub fn simulate_federated_training(
 
   for round in 0..<config.num_rounds {
     // 选择参与客户端
-    let num_participating = (clients.length().to_double() * config.client_fraction).to_int()
+    let num_participating = (clients.length().to_double() *
+    config.client_fraction).to_int()
     total_clients_participated += num_participating
 
     // 模拟精度提升
-    let improvement = 0.01 * (1.0 - accuracy) * (1.0 - round.to_double() / config.num_rounds.to_double())
+    let improvement = 0.01 *
+      (1.0 - accuracy) *
+      (1.0 - round.to_double() / config.num_rounds.to_double())
     accuracy += improvement
     loss *= 0.95
 
@@ -462,44 +465,85 @@ pub fn federated_learning_report_to_string(
 
   report = report + "### 联邦学习训练\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (match config.algorithm {
-    FederatedLearningAlgorithm::FedAvg => "FedAvg"
-    FederatedLearningAlgorithm::FedProx => "FedProx"
-    FederatedLearningAlgorithm::FedAdam => "FedAdam"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 完成轮次 | " + training_result.num_rounds_completed.to_string() + " |\n"
-  report = report + "| 最终精度 | " + (training_result.final_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 最终损失 | " + training_result.final_loss.to_string() + " |\n"
-  report = report + "| 收敛轮次 | " + training_result.convergence_round.to_string() + " |\n"
-  report = report + "| 参与客户端数 | " + training_result.num_clients_participated.to_string() + " |\n"
-  report = report + "| 通信成本 | " + training_result.communication_cost_mb.to_string() + " MB |\n"
-  report = report + "| 训练时间 | " + training_result.training_time_s.to_string() + " s |\n"
-  report = report + "| 隐私预算使用 | " + training_result.privacy_budget_used.to_string() + " |\n"
+  report = report +
+    "| 算法 | " +
+    (match config.algorithm {
+      FederatedLearningAlgorithm::FedAvg => "FedAvg"
+      FederatedLearningAlgorithm::FedProx => "FedProx"
+      FederatedLearningAlgorithm::FedAdam => "FedAdam"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 完成轮次 | " +
+    training_result.num_rounds_completed.to_string() +
+    " |\n"
+  report = report +
+    "| 最终精度 | " +
+    (training_result.final_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 最终损失 | " +
+    training_result.final_loss.to_string() +
+    " |\n"
+  report = report +
+    "| 收敛轮次 | " +
+    training_result.convergence_round.to_string() +
+    " |\n"
+  report = report +
+    "| 参与客户端数 | " +
+    training_result.num_clients_participated.to_string() +
+    " |\n"
+  report = report +
+    "| 通信成本 | " +
+    training_result.communication_cost_mb.to_string() +
+    " MB |\n"
+  report = report +
+    "| 训练时间 | " +
+    training_result.training_time_s.to_string() +
+    " s |\n"
+  report = report +
+    "| 隐私预算使用 | " +
+    training_result.privacy_budget_used.to_string() +
+    " |\n"
 
   report = report + "\n### 隐私保护\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 技术 | " + (match privacy_result.technology {
-    PrivacyTechnology::DifferentialPrivacy => "差分隐私"
-    PrivacyTechnology::HomomorphicEncryption => "同态加密"
-    PrivacyTechnology::SecureMultiPartyComputation => "安全多方计算"
-    PrivacyTechnology::FederatedLearning => "联邦学习"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 技术 | " +
+    (match privacy_result.technology {
+      PrivacyTechnology::DifferentialPrivacy => "差分隐私"
+      PrivacyTechnology::HomomorphicEncryption => "同态加密"
+      PrivacyTechnology::SecureMultiPartyComputation => "安全多方计算"
+      PrivacyTechnology::FederatedLearning => "联邦学习"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| Epsilon | " + privacy_result.epsilon.to_string() + " |\n"
   report = report + "| Delta | " + privacy_result.delta.to_string() + " |\n"
-  report = report + "| 精度损失 | " + (privacy_result.accuracy_loss * 100.0).to_string() + "% |\n"
-  report = report + "| 时间开销 | " + privacy_result.overhead_time_ms.to_string() + " ms |\n"
-  report = report + "| 内存开销 | " + privacy_result.overhead_memory_mb.to_string() + " MB |\n"
+  report = report +
+    "| 精度损失 | " +
+    (privacy_result.accuracy_loss * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 时间开销 | " +
+    privacy_result.overhead_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 内存开销 | " +
+    privacy_result.overhead_memory_mb.to_string() +
+    " MB |\n"
   report = report + "| 安全级别 | " + privacy_result.security_level + " |\n"
 
   report
 }
 
 // 辅助函数
+
+///|
 fn log_approx(x : Double) -> Double {
   // 简化的自然对数近似
-  let val = x
+  let _ = x
   let mut result = 0.0
   let y = (x - 1.0) / (x + 1.0)
   let y2 = y * y

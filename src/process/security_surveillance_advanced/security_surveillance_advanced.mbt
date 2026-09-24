@@ -206,9 +206,9 @@ pub fn detect_people(
     state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 400)
     state = (state * 11035 + 12345) % 1000000
-    let w = (state % 100) + 80
+    let w = state % 100 + 80
     state = (state * 11035 + 12345) % 1000000
-    let h = (state % 200) + 150
+    let h = state % 200 + 150
     state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
@@ -261,8 +261,10 @@ pub fn detect_intrusion(
     let cy = (bbox[1] + bbox[3]) / 2
 
     // 检查是否在入侵区域内
-    let in_zone = cx >= intrusion_zone[0] && cx <= intrusion_zone[2] &&
-                  cy >= intrusion_zone[1] && cy <= intrusion_zone[3]
+    let in_zone = cx >= intrusion_zone[0] &&
+      cx <= intrusion_zone[2] &&
+      cy >= intrusion_zone[1] &&
+      cy <= intrusion_zone[3]
 
     if in_zone && person.confidence > config.detection_threshold {
       let alert_level = if person.confidence > config.alert_threshold {
@@ -300,8 +302,8 @@ pub fn analyze_behavior(
   config : SecuritySurveillanceConfig,
 ) -> BehaviorAnalysisResult {
   // 简化的行为分析：基于速度
-  let speed = (person.velocity[0] * person.velocity[0] +
-               person.velocity[1] * person.velocity[1])
+  let speed = person.velocity[0] * person.velocity[0] +
+    person.velocity[1] * person.velocity[1]
 
   let behavior_type = if speed > 5.0 {
     BehaviorType::Running
@@ -314,7 +316,7 @@ pub fn analyze_behavior(
   }
 
   let is_suspicious = behavior_type == BehaviorType::Suspicious ||
-                      behavior_type == BehaviorType::Aggressive
+    behavior_type == BehaviorType::Aggressive
   let risk_score = if is_suspicious { 0.8 } else { 0.2 }
 
   BehaviorAnalysisResult::{
@@ -420,25 +422,56 @@ pub fn security_surveillance_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    SecuritySurveillanceTaskType::IntrusionDetection => "入侵检测"
-    SecuritySurveillanceTaskType::FaceRecognition => "人脸识别"
-    SecuritySurveillanceTaskType::BehaviorAnalysis => "行为分析"
-    SecuritySurveillanceTaskType::CrowdAnalysis => "人群分析"
-    SecuritySurveillanceTaskType::LicensePlateRecognition => "车牌识别"
-    SecuritySurveillanceTaskType::AnomalyEventDetection => "异常事件检测"
-    SecuritySurveillanceTaskType::ObjectTracking => "目标跟踪"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
-  report = report + "| 识别阈值 | " + config.recognition_threshold.to_string() + " |\n"
-  report = report + "| 警报阈值 | " + config.alert_threshold.to_string() + " |\n"
-  report = report + "| 徘徊时间 | " + config.loitering_time.to_string() + " s |\n"
-  report = report + "| 人脸识别 | " + (if config.use_face_recognition { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 行为分析 | " + (if config.use_behavior_analysis { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 人群分析 | " + (if config.use_crowd_analysis { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 自动警报 | " + (if config.auto_alert { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 摄像头数 | " + config.num_cameras.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      SecuritySurveillanceTaskType::IntrusionDetection => "入侵检测"
+      SecuritySurveillanceTaskType::FaceRecognition => "人脸识别"
+      SecuritySurveillanceTaskType::BehaviorAnalysis => "行为分析"
+      SecuritySurveillanceTaskType::CrowdAnalysis => "人群分析"
+      SecuritySurveillanceTaskType::LicensePlateRecognition => "车牌识别"
+      SecuritySurveillanceTaskType::AnomalyEventDetection =>
+        "异常事件检测"
+      SecuritySurveillanceTaskType::ObjectTracking => "目标跟踪"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 识别阈值 | " +
+    config.recognition_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 警报阈值 | " +
+    config.alert_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 徘徊时间 | " +
+    config.loitering_time.to_string() +
+    " s |\n"
+  report = report +
+    "| 人脸识别 | " +
+    (if config.use_face_recognition { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 行为分析 | " +
+    (if config.use_behavior_analysis { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 人群分析 | " +
+    (if config.use_crowd_analysis { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 自动警报 | " +
+    (if config.auto_alert { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 摄像头数 | " +
+    config.num_cameras.to_string() +
+    " |\n"
   report = report + "| 帧率 | " + config.fps.to_string() + " fps |\n"
 
   report = report + "\n### 结果\n\n"

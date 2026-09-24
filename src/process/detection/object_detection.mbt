@@ -4,12 +4,12 @@
 ///|
 /// 检测框
 pub(all) struct BoundingBox {
-  x : Int  // 左上角 x
-  y : Int  // 左上角 y
-  width : Int  // 宽度
-  height : Int  // 高度
-  score : Double  // 置信度
-  class_id : Int  // 类别 ID
+  x : Int // 左上角 x
+  y : Int // 左上角 y
+  width : Int // 宽度
+  height : Int // 高度
+  score : Double // 置信度
+  class_id : Int // 类别 ID
 }
 
 ///|
@@ -33,14 +33,12 @@ pub fn bbox_new(
     raise @types.LoadError::DecodeFailed("bbox_new: score必须在0-1之间")
   }
   if class_id < 0 {
-    raise @types.LoadError::DecodeFailed("bbox_new: class_id必须大于等于0")
+    raise @types.LoadError::DecodeFailed(
+      "bbox_new: class_id必须大于等于0",
+    )
   }
 
-  BoundingBox::{
-    x, y, width, height,
-    score,
-    class_id,
-  }
+  BoundingBox::{ x, y, width, height, score, class_id }
 }
 
 ///|
@@ -51,10 +49,14 @@ pub fn bbox_iou(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if a.width <= 0 || a.height <= 0 {
-    raise @types.LoadError::DecodeFailed("bbox_iou: 检测框a的尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "bbox_iou: 检测框a的尺寸必须大于0",
+    )
   }
   if b.width <= 0 || b.height <= 0 {
-    raise @types.LoadError::DecodeFailed("bbox_iou: 检测框b的尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "bbox_iou: 检测框b的尺寸必须大于0",
+    )
   }
 
   let x1 = a.x.max(b.x)
@@ -67,7 +69,11 @@ pub fn bbox_iou(
   let area_a = a.width.to_double() * a.height.to_double()
   let area_b = b.width.to_double() * b.height.to_double()
   let union = area_a + area_b - intersection
-  if union > 0.0 { intersection / union } else { 0.0 }
+  if union > 0.0 {
+    intersection / union
+  } else {
+    0.0
+  }
 }
 
 ///|
@@ -129,15 +135,22 @@ pub fn draw_detections(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("draw_detections: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "draw_detections: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("draw_detections: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "draw_detections: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "draw_detections: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "draw_detections: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -151,7 +164,11 @@ pub fn draw_detections(
   }
   // 绘制检测框（红色，2像素宽）
   for bbox in boxes {
-    let color = if channels >= 3 { [b'\xFF', b'\x00', b'\x00'] } else { [b'\xFF'] }
+    let color = if channels >= 3 {
+      [b'\xFF', b'\x00', b'\x00']
+    } else {
+      [b'\xFF']
+    }
     // 上下边
     for x in bbox.x..<(bbox.x + bbox.width) {
       for dy in 0..<2 {
@@ -191,5 +208,10 @@ pub fn draw_detections(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }

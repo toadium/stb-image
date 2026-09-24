@@ -20,15 +20,22 @@ pub fn harris_corners(
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("harris_corners: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "harris_corners: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("harris_corners: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "harris_corners: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "harris_corners: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "harris_corners: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if k <= 0.0F {
@@ -38,7 +45,9 @@ pub fn harris_corners(
     raise @types.LoadError::DecodeFailed("harris_corners: threshold必须 >= 0")
   }
   if min_distance < 0 {
-    raise @types.LoadError::DecodeFailed("harris_corners: min_distance必须 >= 0")
+    raise @types.LoadError::DecodeFailed(
+      "harris_corners: min_distance必须 >= 0",
+    )
   }
   let w = img.width
   let h = img.height
@@ -211,19 +220,28 @@ pub fn draw_corners(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("draw_corners: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "draw_corners: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("draw_corners: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "draw_corners: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "draw_corners: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "draw_corners: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if color.length() == 0 {
-    raise @types.LoadError::DecodeFailed("draw_corners: color数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "draw_corners: color数组不能为空",
+    )
   }
   if radius < 0 {
     raise @types.LoadError::DecodeFailed("draw_corners: radius必须 >= 0")

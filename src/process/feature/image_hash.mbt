@@ -13,7 +13,10 @@ pub fn ahash(img : @types.Image) -> Array[Int] raise @types.LoadError {
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ahash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "ahash: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -44,7 +47,10 @@ pub fn dhash(img : @types.Image) -> Array[Int] raise @types.LoadError {
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "dhash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "dhash: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -76,7 +82,10 @@ pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "phash: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "phash: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -121,16 +130,25 @@ pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// 汉明距离。计算两个哈希的差异位数。
-pub fn hamming_distance(h1 : Array[Int], h2 : Array[Int]) -> Int raise @types.LoadError {
+pub fn hamming_distance(
+  h1 : Array[Int],
+  h2 : Array[Int],
+) -> Int raise @types.LoadError {
   // 参数验证
   if h1.length() == 0 {
-    raise @types.LoadError::DecodeFailed("hamming_distance: h1数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "hamming_distance: h1数组不能为空",
+    )
   }
   if h2.length() == 0 {
-    raise @types.LoadError::DecodeFailed("hamming_distance: h2数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "hamming_distance: h2数组不能为空",
+    )
   }
   if h1.length() != h2.length() {
-    raise @types.LoadError::DecodeFailed("hamming_distance: h1和h2长度必须相同")
+    raise @types.LoadError::DecodeFailed(
+      "hamming_distance: h1和h2长度必须相同",
+    )
   }
 
   let n = h1.length()

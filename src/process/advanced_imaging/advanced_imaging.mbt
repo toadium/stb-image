@@ -161,13 +161,13 @@ pub fn quantum_ghost_imaging(
 
   // 简化的鬼成像：随机模式与桶信号的关联
   let mut state = 42
-  for pattern_idx in 0..<num_patterns {
+  for _ in 0..<num_patterns {
     // 生成随机照明模式
     let pattern : Array[Bool] = []
     let mut bucket_signal = 0.0
-    for i in 0..<total {
+    for _ in 0..<total {
       state = (state * 11035 + 12345) % 1000000
-      let is_on = (state % 2) == 0
+      let is_on = state % 2 == 0
       pattern.push(is_on)
       if is_on {
         bucket_signal += 1.0
@@ -247,7 +247,12 @@ pub fn infrared_pseudocolor(
     out.push(b.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -260,7 +265,8 @@ pub fn generate_hyperspectral_cube(
 ) -> HyperspectralData {
   let image_cube : Array[@types.Image] = []
   let wavelengths : Array[Double] = []
-  let spectral_resolution = (end_wavelength - start_wavelength) / num_bands.to_double()
+  let spectral_resolution = (end_wavelength - start_wavelength) /
+    num_bands.to_double()
 
   for band in 0..<num_bands {
     let wavelength = start_wavelength + band.to_double() * spectral_resolution
@@ -288,7 +294,12 @@ pub fn generate_hyperspectral_cube(
       out.push(clamped.to_int().to_byte())
     }
 
-    image_cube.push(@types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) })
+    image_cube.push(@types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    })
   }
 
   HyperspectralData::{
@@ -329,7 +340,7 @@ pub fn analyze_polarization(
 
     // 偏振度
     let dop = if s0 > 0.0 {
-      ((s1 * s1 + s2 * s2).sqrt() / s0) * 255.0
+      (s1 * s1 + s2 * s2).sqrt() / s0 * 255.0
     } else {
       0.0
     }
@@ -357,9 +368,24 @@ pub fn analyze_polarization(
   stokes.push(images_135deg)
 
   PolarizationData::{
-    intensity: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(intensity_out) },
-    degree_of_polarization: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(dop_out) },
-    angle_of_polarization: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(aop_out) },
+    intensity: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(intensity_out),
+    },
+    degree_of_polarization: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(dop_out),
+    },
+    angle_of_polarization: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(aop_out),
+    },
     stokes_parameters: stokes,
     num_stokes: 4,
   }
@@ -387,17 +413,32 @@ pub fn thermal_to_temperature(
     let temp = min_temp + gray * (max_temp - min_temp)
     let corrected = temp / emissivity
 
-    if corrected < min_t { min_t = corrected }
-    if corrected > max_t { max_t = corrected }
+    if corrected < min_t {
+      min_t = corrected
+    }
+    if corrected > max_t {
+      max_t = corrected
+    }
     sum_t += corrected
 
     let normalized = (corrected - min_temp) / (max_temp - min_temp) * 255.0
-    let clamped = if normalized < 0.0 { 0.0 } else if normalized > 255.0 { 255.0 } else { normalized }
+    let clamped = if normalized < 0.0 {
+      0.0
+    } else if normalized > 255.0 {
+      255.0
+    } else {
+      normalized
+    }
     temp_out.push(clamped.to_int().to_byte())
   }
 
   ThermalData::{
-    temperature_map: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(temp_out) },
+    temperature_map: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(temp_out),
+    },
     min_temperature: min_t,
     max_temperature: max_t,
     average_temperature: sum_t / total.to_double(),
@@ -408,10 +449,7 @@ pub fn thermal_to_temperature(
 
 ///|
 /// X射线图像增强（简化版）
-pub fn xray_enhance(
-  xray_image : @types.Image,
-  energy_kev : Double,
-) -> XRayData {
+pub fn xray_enhance(xray_image : @types.Image, energy_kev : Double) -> XRayData {
   let w = xray_image.width
   let h = xray_image.height
   let total = w * h
@@ -434,12 +472,23 @@ pub fn xray_enhance(
     // 标准化+对比度拉伸
     let normalized = (v - mean) / std_dev
     let enhanced = normalized * 40.0 + 128.0
-    let clamped = if enhanced < 0.0 { 0.0 } else if enhanced > 255.0 { 255.0 } else { enhanced }
+    let clamped = if enhanced < 0.0 {
+      0.0
+    } else if enhanced > 255.0 {
+      255.0
+    } else {
+      enhanced
+    }
     out.push(clamped.to_int().to_byte())
   }
 
   XRayData::{
-    projection: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) },
+    projection: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     energy_kev,
     dose: 0.1,
     contrast: std_dev / mean,
@@ -455,7 +504,7 @@ pub fn ultrasound_synthesize(
   frequency_mhz : Double,
   depth_cm : Double,
 ) -> UltrasoundData {
-  let total = width * height
+  let _ = width * height
   let b_out : Array[Byte] = []
   let doppler_out : Array[Byte] = []
 
@@ -475,7 +524,13 @@ pub fn ultrasound_synthesize(
       let speckle = noise * 0.3
       let structure = if distance < 0.3 { 150.0 } else { 50.0 }
       let b_value = (structure + speckle * 100.0) * attenuation
-      let b_clamped = if b_value < 0.0 { 0.0 } else if b_value > 255.0 { 255.0 } else { b_value }
+      let b_clamped = if b_value < 0.0 {
+        0.0
+      } else if b_value > 255.0 {
+        255.0
+      } else {
+        b_value
+      }
       b_out.push(b_clamped.to_int().to_byte())
 
       // 简化的多普勒：血流信号
@@ -489,8 +544,18 @@ pub fn ultrasound_synthesize(
   }
 
   UltrasoundData::{
-    b_mode: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(b_out) },
-    doppler: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(doppler_out) },
+    b_mode: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(b_out),
+    },
+    doppler: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(doppler_out),
+    },
     frequency_mhz,
     depth_cm,
     gain: 50.0,
@@ -505,7 +570,7 @@ pub fn mri_synthesize(
   height : Int,
   field_strength_t : Double,
 ) -> MRIData {
-  let total = width * height
+  let _ = width * height
   let t1_out : Array[Byte] = []
   let t2_out : Array[Byte] = []
   let flair_out : Array[Byte] = []
@@ -554,9 +619,24 @@ pub fn mri_synthesize(
   }
 
   MRIData::{
-    t1_weighted: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(t1_out) },
-    t2_weighted: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(t2_out) },
-    flair: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(flair_out) },
+    t1_weighted: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(t1_out),
+    },
+    t2_weighted: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(t2_out),
+    },
+    flair: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(flair_out),
+    },
     tr_ms: 500.0,
     te_ms: 14.0,
     slice_thickness_mm: 5.0,
@@ -571,7 +651,7 @@ pub fn pet_synthesize(
   height : Int,
   radiotracer : String,
 ) -> PETData {
-  let total = width * height
+  let _ = width * height
   let out : Array[Byte] = []
 
   let center_x = width.to_double() / 2.0
@@ -603,7 +683,12 @@ pub fn pet_synthesize(
   }
 
   PETData::{
-    activity_map: @types.Image::{ width, height, channels: 1, data: Bytes::from_array(out) },
+    activity_map: @types.Image::{
+      width,
+      height,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     radiotracer,
     injected_dose_mbq: 370.0,
     uptake_time_min: 60.0,
@@ -638,17 +723,33 @@ pub fn advanced_imaging_report_to_string(
   report = report + "### 成像信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 成像模态 | " + modality_name + " |\n"
-  report = report + "| 图像尺寸 | " + image.width.to_string() + "x" + image.height.to_string() + " |\n"
+  report = report +
+    "| 图像尺寸 | " +
+    image.width.to_string() +
+    "x" +
+    image.height.to_string() +
+    " |\n"
   report = report + "| 通道数 | " + image.channels.to_string() + " |\n"
   report = report + "| 切片数 | " + config.num_slices.to_string() + " |\n"
-  report = report + "| 校准因子 | " + config.calibration_factor.to_string() + " |\n"
-  report = report + "| 噪声抑制 | " + (if config.use_noise_reduction { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 图像增强 | " + (if config.use_enhancement { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 校准因子 | " +
+    config.calibration_factor.to_string() +
+    " |\n"
+  report = report +
+    "| 噪声抑制 | " +
+    (if config.use_noise_reduction { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 图像增强 | " +
+    (if config.use_enhancement { "开启" } else { "关闭" }) +
+    " |\n"
 
   report
 }
 
 // 辅助函数
+
+///|
 fn atan_approx(x : Double) -> Double {
   // 简化的反正切近似
   x - x * x * x / 3.0 + x * x * x * x * x / 5.0

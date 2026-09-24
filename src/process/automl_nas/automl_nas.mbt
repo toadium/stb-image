@@ -201,7 +201,7 @@ pub fn generate_random_architecture(
   ]
 
   let mut state = 42
-  for i in 0..<num_layers {
+  for _ in 0..<num_layers {
     state = (state * 11035 + 12345) % 1000000
     let layer_idx = state % layer_types.length()
     let layer = layer_types[layer_idx]
@@ -246,11 +246,11 @@ pub fn generate_random_hyperparameters() -> HyperparameterConfig {
   state = (state * 11035 + 12345) % 1000000
   let lr = 0.0001 + (state % 1000).to_double() / 1000.0 * 0.01
   state = (state * 11035 + 12345) % 1000000
-  let batch = 16 + (state % 8) * 16
+  let batch = 16 + state % 8 * 16
   state = (state * 11035 + 12345) % 1000000
   let dropout = (state % 100).to_double() / 100.0 * 0.5
   state = (state * 11035 + 12345) % 1000000
-  let hidden = 64 + (state % 8) * 64
+  let hidden = 64 + state % 8 * 64
 
   HyperparameterConfig::{
     learning_rate: lr,
@@ -283,13 +283,15 @@ pub fn evaluate_model(
     0.01
   }
 
-  let lr_bonus = if hyperparameters.learning_rate > 0.0001 && hyperparameters.learning_rate < 0.01 {
+  let lr_bonus = if hyperparameters.learning_rate > 0.0001 &&
+    hyperparameters.learning_rate < 0.01 {
     0.05
   } else {
     0.0
   }
 
-  let dropout_bonus = if hyperparameters.dropout_rate > 0.1 && hyperparameters.dropout_rate < 0.4 {
+  let dropout_bonus = if hyperparameters.dropout_rate > 0.1 &&
+    hyperparameters.dropout_rate < 0.4 {
     0.03
   } else {
     0.0
@@ -315,9 +317,7 @@ pub fn evaluate_model(
 
 ///|
 /// 执行神经架构搜索（简化版）
-pub fn perform_nas(
-  config : NASConfig,
-) -> SearchResult {
+pub fn perform_nas(config : NASConfig) -> SearchResult {
   let all_accuracies : Array[Double] = []
   let convergence_curve : Array[Double] = []
   let mut best_accuracy = 0.0
@@ -326,7 +326,7 @@ pub fn perform_nas(
 
   for trial in 0..<config.num_trials {
     // 生成随机架构
-    let num_layers = 5 + (trial % 15)
+    let num_layers = 5 + trial % 15
     let arch = generate_random_architecture(num_layers, config.max_channels)
     let hp = generate_random_hyperparameters()
 
@@ -366,7 +366,7 @@ pub fn perform_hpo(
   let mut best_accuracy = 0.0
   let mut best_hp = generate_random_hyperparameters()
 
-  for trial in 0..<config.num_trials {
+  for _ in 0..<config.num_trials {
     let hp = generate_random_hyperparameters()
     let metrics = evaluate_model(base_architecture, hp)
     all_accuracies.push(metrics.accuracy)
@@ -385,7 +385,9 @@ pub fn perform_hpo(
     best_accuracy,
     best_loss: 1.0 - best_accuracy,
     num_trials_completed: config.num_trials,
-    search_time_s: config.num_trials.to_double() * config.num_epochs_per_trial.to_double() * 5.0,
+    search_time_s: config.num_trials.to_double() *
+    config.num_epochs_per_trial.to_double() *
+    5.0,
     all_accuracies,
     convergence_curve,
   }
@@ -402,49 +404,115 @@ pub fn automl_report_to_string(
 
   report = report + "### 搜索配置\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| NAS算法 | " + (match config.algorithm {
-    NASAlgorithm::ReinforcementLearning => "强化学习"
-    NASAlgorithm::Evolutionary => "进化算法"
-    NASAlgorithm::GradientBased => "基于梯度"
-    NASAlgorithm::BayesianOptimization => "贝叶斯优化"
-    NASAlgorithm::RandomSearch => "随机搜索"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 搜索空间 | " + (match config.search_space_type {
-    SearchSpaceType::Macro => "宏观"
-    SearchSpaceType::Micro => "微观"
-    SearchSpaceType::CellBased => "基于单元"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| NAS算法 | " +
+    (match config.algorithm {
+      NASAlgorithm::ReinforcementLearning => "强化学习"
+      NASAlgorithm::Evolutionary => "进化算法"
+      NASAlgorithm::GradientBased => "基于梯度"
+      NASAlgorithm::BayesianOptimization => "贝叶斯优化"
+      NASAlgorithm::RandomSearch => "随机搜索"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 搜索空间 | " +
+    (match config.search_space_type {
+      SearchSpaceType::Macro => "宏观"
+      SearchSpaceType::Micro => "微观"
+      SearchSpaceType::CellBased => "基于单元"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 试验次数 | " + config.num_trials.to_string() + " |\n"
   report = report + "| 最大层数 | " + config.max_layers.to_string() + " |\n"
-  report = report + "| 种群大小 | " + config.population_size.to_string() + " |\n"
-  report = report + "| 权重共享 | " + (if config.use_weight_sharing { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 种群大小 | " +
+    config.population_size.to_string() +
+    " |\n"
+  report = report +
+    "| 权重共享 | " +
+    (if config.use_weight_sharing { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 搜索结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 最佳精度 | " + (result.best_accuracy * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 最佳精度 | " +
+    (result.best_accuracy * 100.0).to_string() +
+    "% |\n"
   report = report + "| 最佳损失 | " + result.best_loss.to_string() + " |\n"
-  report = report + "| 完成试验 | " + result.num_trials_completed.to_string() + " |\n"
-  report = report + "| 搜索时间 | " + result.search_time_s.to_string() + " s |\n"
-  report = report + "| 最佳层数 | " + result.best_architecture.num_layers.to_string() + " |\n"
-  report = report + "| 参数量 | " + result.best_architecture.num_parameters.to_string() + " |\n"
-  report = report + "| FLOPs | " + result.best_architecture.flops.to_string() + " |\n"
-  report = report + "| 推理时间 | " + result.best_architecture.inference_time_ms.to_string() + " ms |\n"
-  report = report + "| 内存占用 | " + result.best_architecture.memory_mb.to_string() + " MB |\n"
+  report = report +
+    "| 完成试验 | " +
+    result.num_trials_completed.to_string() +
+    " |\n"
+  report = report +
+    "| 搜索时间 | " +
+    result.search_time_s.to_string() +
+    " s |\n"
+  report = report +
+    "| 最佳层数 | " +
+    result.best_architecture.num_layers.to_string() +
+    " |\n"
+  report = report +
+    "| 参数量 | " +
+    result.best_architecture.num_parameters.to_string() +
+    " |\n"
+  report = report +
+    "| FLOPs | " +
+    result.best_architecture.flops.to_string() +
+    " |\n"
+  report = report +
+    "| 推理时间 | " +
+    result.best_architecture.inference_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 内存占用 | " +
+    result.best_architecture.memory_mb.to_string() +
+    " MB |\n"
 
   report = report + "\n### 最佳超参数\n\n"
   report = report + "| 超参数 | 值 |\n|------|------|\n"
-  report = report + "| 学习率 | " + result.best_hyperparameters.learning_rate.to_string() + " |\n"
-  report = report + "| 批次大小 | " + result.best_hyperparameters.batch_size.to_string() + " |\n"
-  report = report + "| 训练轮数 | " + result.best_hyperparameters.num_epochs.to_string() + " |\n"
-  report = report + "| 优化器 | " + result.best_hyperparameters.optimizer + " |\n"
-  report = report + "| 权重衰减 | " + result.best_hyperparameters.weight_decay.to_string() + " |\n"
-  report = report + "| Dropout率 | " + result.best_hyperparameters.dropout_rate.to_string() + " |\n"
-  report = report + "| 隐藏维度 | " + result.best_hyperparameters.hidden_dim.to_string() + " |\n"
-  report = report + "| 层数 | " + result.best_hyperparameters.num_layers.to_string() + " |\n"
-  report = report + "| 注意力头数 | " + result.best_hyperparameters.num_heads.to_string() + " |\n"
-  report = report + "| 激活函数 | " + result.best_hyperparameters.activation + " |\n"
+  report = report +
+    "| 学习率 | " +
+    result.best_hyperparameters.learning_rate.to_string() +
+    " |\n"
+  report = report +
+    "| 批次大小 | " +
+    result.best_hyperparameters.batch_size.to_string() +
+    " |\n"
+  report = report +
+    "| 训练轮数 | " +
+    result.best_hyperparameters.num_epochs.to_string() +
+    " |\n"
+  report = report +
+    "| 优化器 | " +
+    result.best_hyperparameters.optimizer +
+    " |\n"
+  report = report +
+    "| 权重衰减 | " +
+    result.best_hyperparameters.weight_decay.to_string() +
+    " |\n"
+  report = report +
+    "| Dropout率 | " +
+    result.best_hyperparameters.dropout_rate.to_string() +
+    " |\n"
+  report = report +
+    "| 隐藏维度 | " +
+    result.best_hyperparameters.hidden_dim.to_string() +
+    " |\n"
+  report = report +
+    "| 层数 | " +
+    result.best_hyperparameters.num_layers.to_string() +
+    " |\n"
+  report = report +
+    "| 注意力头数 | " +
+    result.best_hyperparameters.num_heads.to_string() +
+    " |\n"
+  report = report +
+    "| 激活函数 | " +
+    result.best_hyperparameters.activation +
+    " |\n"
 
   report
 }

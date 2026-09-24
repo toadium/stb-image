@@ -278,14 +278,18 @@ pub fn create_default_representation_learning_config() -> RepresentationLearning
 
 ///|
 /// 简化的自编码器编码
-fn encode_simple(data : Array[Double], input_dim : Int, latent_dim : Int) -> Array[Double] {
+fn encode_simple(
+  data : Array[Double],
+  input_dim : Int,
+  latent_dim : Int,
+) -> Array[Double] {
   let encoded : Array[Double] = []
   for i in 0..<latent_dim {
     let mut sum = 0.0
     for j in 0..<input_dim {
       if j < data.length() {
         // 简化的权重：使用正弦函数生成伪随机权重
-        let weight = ((i * input_dim + j).to_double() * 0.1)
+        let weight = (i * input_dim + j).to_double() * 0.1
         sum += data[j] * weight
       }
     }
@@ -298,13 +302,17 @@ fn encode_simple(data : Array[Double], input_dim : Int, latent_dim : Int) -> Arr
 
 ///|
 /// 简化的自编码器解码
-fn decode_simple(encoded : Array[Double], latent_dim : Int, output_dim : Int) -> Array[Double] {
+fn decode_simple(
+  encoded : Array[Double],
+  latent_dim : Int,
+  output_dim : Int,
+) -> Array[Double] {
   let decoded : Array[Double] = []
   for i in 0..<output_dim {
     let mut sum = 0.0
     for j in 0..<latent_dim {
       if j < encoded.length() {
-        let weight = ((j * output_dim + i).to_double() * 0.1)
+        let weight = (j * output_dim + i).to_double() * 0.1
         sum += encoded[j] * weight
       }
     }
@@ -321,7 +329,7 @@ fn sin_approx_rl(x : Double) -> Double {
   let mut result = x
   let mut term = x
   for i in 1..<10 {
-    term = term * x * x / ((2.0 * i.to_double()) * (2.0 * i.to_double() + 1.0))
+    term = term * x * x / (2.0 * i.to_double() * (2.0 * i.to_double() + 1.0))
     if i % 2 == 1 {
       result -= term
     } else {
@@ -374,14 +382,14 @@ pub fn train_autoencoder(
   for i in 0..<latent_dim {
     let row : Array[Double] = []
     for j in 0..<original_dim {
-      row.push(((i * original_dim + j).to_double() * 0.1))
+      row.push((i * original_dim + j).to_double() * 0.1)
     }
     encoder_weights.push(row)
   }
   for i in 0..<original_dim {
     let row : Array[Double] = []
     for j in 0..<latent_dim {
-      row.push(((j * original_dim + i).to_double() * 0.1))
+      row.push((j * original_dim + i).to_double() * 0.1)
     }
     decoder_weights.push(row)
   }
@@ -453,7 +461,8 @@ pub fn train_vae(
     let mut kl = 0.0
     for i in 0..<latent_dim {
       if i < mean.length() && i < log_var.length() {
-        kl += -0.5 * (1.0 + log_var[i] - mean[i] * mean[i] - exp_approx_rl(log_var[i]))
+        kl += -0.5 *
+          (1.0 + log_var[i] - mean[i] * mean[i] - exp_approx_rl(log_var[i]))
       }
     }
     total_kl += kl
@@ -618,76 +627,104 @@ pub fn representation_learning_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    RepresentationLearningTaskType::Autoencoder => "自编码器"
-    RepresentationLearningTaskType::VariationalAutoencoder => "变分自编码器"
-    RepresentationLearningTaskType::GenerativeAdversarialNetwork => "生成对抗网络"
-    RepresentationLearningTaskType::ContrastiveLearning => "对比学习"
-    RepresentationLearningTaskType::SelfSupervisedLearning => "自监督学习"
-    RepresentationLearningTaskType::Pretraining => "预训练"
-    RepresentationLearningTaskType::FineTuning => "微调"
-    RepresentationLearningTaskType::RepresentationLearning => "表示学习"
-    RepresentationLearningTaskType::FeatureLearning => "特征学习"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 自编码器类型 | " + (match config.autoencoder_type {
-    AutoencoderType::Undercomplete => "欠完备"
-    AutoencoderType::Sparse => "稀疏"
-    AutoencoderType::Denoising => "去噪"
-    AutoencoderType::Contractive => "收缩"
-    AutoencoderType::Convolutional => "卷积"
-    AutoencoderType::Recurrent => "循环"
-    AutoencoderType::Variational => "变分"
-    AutoencoderType::Conditional => "条件"
-    AutoencoderType::Adversarial => "对抗"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| GAN类型 | " + (match config.gan_type {
-    GANType::VanillaGAN => "Vanilla GAN"
-    GANType::DCGAN => "DCGAN"
-    GANType::WGAN => "WGAN"
-    GANType::WGANGP => "WGAN-GP"
-    GANType::CycleGAN => "CycleGAN"
-    GANType::Pix2Pix => "Pix2Pix"
-    GANType::StyleGAN => "StyleGAN"
-    GANType::ProGAN => "ProGAN"
-    GANType::BigGAN => "BigGAN"
-    GANType::ConditionalGAN => "条件GAN"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 对比学习方法 | " + (match config.contrastive_method {
-    ContrastiveLearningMethodType::SimCLR => "SimCLR"
-    ContrastiveLearningMethodType::MoCo => "MoCo"
-    ContrastiveLearningMethodType::BYOL => "BYOL"
-    ContrastiveLearningMethodType::SwAV => "SwAV"
-    ContrastiveLearningMethodType::DINO => "DINO"
-    ContrastiveLearningMethodType::CLIP => "CLIP"
-    ContrastiveLearningMethodType::ALIGN => "ALIGN"
-    ContrastiveLearningMethodType::SimSiam => "SimSiam"
-    ContrastiveLearningMethodType::BarlowTwins => "Barlow Twins"
-    ContrastiveLearningMethodType::VICReg => "VICReg"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 自监督任务 | " + (match config.self_supervised_task {
-    SelfSupervisedTaskType::RotationPrediction => "旋转预测"
-    SelfSupervisedTaskType::Colorization => "着色"
-    SelfSupervisedTaskType::JigsawPuzzle => "拼图"
-    SelfSupervisedTaskType::RelativePosition => "相对位置"
-    SelfSupervisedTaskType::ContextPrediction => "上下文预测"
-    SelfSupervisedTaskType::MaskedImageModeling => "掩码图像建模"
-    SelfSupervisedTaskType::MaskedAutoencoder => "掩码自编码器"
-    SelfSupervisedTaskType::ContrastivePredictiveCoding => "对比预测编码"
-    SelfSupervisedTaskType::DeepCluster => "深度聚类"
-    SelfSupervisedTaskType::SeLa => "SeLa"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 潜在维度 | " + config.latent_dimension.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      RepresentationLearningTaskType::Autoencoder => "自编码器"
+      RepresentationLearningTaskType::VariationalAutoencoder =>
+        "变分自编码器"
+      RepresentationLearningTaskType::GenerativeAdversarialNetwork =>
+        "生成对抗网络"
+      RepresentationLearningTaskType::ContrastiveLearning => "对比学习"
+      RepresentationLearningTaskType::SelfSupervisedLearning =>
+        "自监督学习"
+      RepresentationLearningTaskType::Pretraining => "预训练"
+      RepresentationLearningTaskType::FineTuning => "微调"
+      RepresentationLearningTaskType::RepresentationLearning => "表示学习"
+      RepresentationLearningTaskType::FeatureLearning => "特征学习"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 自编码器类型 | " +
+    (match config.autoencoder_type {
+      AutoencoderType::Undercomplete => "欠完备"
+      AutoencoderType::Sparse => "稀疏"
+      AutoencoderType::Denoising => "去噪"
+      AutoencoderType::Contractive => "收缩"
+      AutoencoderType::Convolutional => "卷积"
+      AutoencoderType::Recurrent => "循环"
+      AutoencoderType::Variational => "变分"
+      AutoencoderType::Conditional => "条件"
+      AutoencoderType::Adversarial => "对抗"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| GAN类型 | " +
+    (match config.gan_type {
+      GANType::VanillaGAN => "Vanilla GAN"
+      GANType::DCGAN => "DCGAN"
+      GANType::WGAN => "WGAN"
+      GANType::WGANGP => "WGAN-GP"
+      GANType::CycleGAN => "CycleGAN"
+      GANType::Pix2Pix => "Pix2Pix"
+      GANType::StyleGAN => "StyleGAN"
+      GANType::ProGAN => "ProGAN"
+      GANType::BigGAN => "BigGAN"
+      GANType::ConditionalGAN => "条件GAN"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 对比学习方法 | " +
+    (match config.contrastive_method {
+      ContrastiveLearningMethodType::SimCLR => "SimCLR"
+      ContrastiveLearningMethodType::MoCo => "MoCo"
+      ContrastiveLearningMethodType::BYOL => "BYOL"
+      ContrastiveLearningMethodType::SwAV => "SwAV"
+      ContrastiveLearningMethodType::DINO => "DINO"
+      ContrastiveLearningMethodType::CLIP => "CLIP"
+      ContrastiveLearningMethodType::ALIGN => "ALIGN"
+      ContrastiveLearningMethodType::SimSiam => "SimSiam"
+      ContrastiveLearningMethodType::BarlowTwins => "Barlow Twins"
+      ContrastiveLearningMethodType::VICReg => "VICReg"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 自监督任务 | " +
+    (match config.self_supervised_task {
+      SelfSupervisedTaskType::RotationPrediction => "旋转预测"
+      SelfSupervisedTaskType::Colorization => "着色"
+      SelfSupervisedTaskType::JigsawPuzzle => "拼图"
+      SelfSupervisedTaskType::RelativePosition => "相对位置"
+      SelfSupervisedTaskType::ContextPrediction => "上下文预测"
+      SelfSupervisedTaskType::MaskedImageModeling => "掩码图像建模"
+      SelfSupervisedTaskType::MaskedAutoencoder => "掩码自编码器"
+      SelfSupervisedTaskType::ContrastivePredictiveCoding =>
+        "对比预测编码"
+      SelfSupervisedTaskType::DeepCluster => "深度聚类"
+      SelfSupervisedTaskType::SeLa => "SeLa"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 潜在维度 | " +
+    config.latent_dimension.to_string() +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 训练轮数 | " + config.num_epochs.to_string() + " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"
   report = report + "| 温度 | " + config.temperature.to_string() + " |\n"
-  report = report + "| 使用预训练 | " + (if config.use_pretrained { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 冻结层 | " + (if config.freeze_layers { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 使用预训练 | " +
+    (if config.use_pretrained { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 冻结层 | " +
+    (if config.freeze_layers { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

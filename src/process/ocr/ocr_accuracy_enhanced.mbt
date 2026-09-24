@@ -11,7 +11,7 @@ pub(all) struct OcrAccuracyEnhancedConfig {
   use_confidence_calibration : Bool
   use_multi_scale : Bool
   knn_k : Int
-  scales : Array[Int]  // 多尺度识别的尺寸列表
+  scales : Array[Int] // 多尺度识别的尺寸列表
 }
 
 ///|
@@ -37,19 +37,28 @@ pub fn extract_zernike_moments(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_zernike_moments: 图像尺寸必须大于0",
+    )
   }
   if char_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_zernike_moments: 仅支持单通道灰度图",
+    )
   }
   let expected_size = char_img.width * char_img.height
   if char_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_zernike_moments: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+      "extract_zernike_moments: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      char_img.data.length().to_string(),
     )
   }
   if max_order <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_zernike_moments: 最大阶数必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_zernike_moments: 最大阶数必须大于0",
+    )
   }
   let w = char_img.width
   let h = char_img.height
@@ -71,7 +80,7 @@ pub fn extract_zernike_moments(
   let cx = if total > 0.0 { sum_x / total } else { w.to_double() / 2.0 }
   let cy = if total > 0.0 { sum_y / total } else { h.to_double() / 2.0 }
   // 计算半径（归一化）
-  let max_r = (w.to_double().max(h.to_double())) / 2.0
+  let max_r = w.to_double().max(h.to_double()) / 2.0
   // 计算 Zernike 矩（简化版：前几阶的径向矩）
   for n in 0..<(max_order + 1) {
     for m in 0..<(n + 1) {
@@ -93,9 +102,14 @@ pub fn extract_zernike_moments(
                 for k in 0..<(k_max + 1) {
                   let sign = if k % 2 == 0 { 1.0 } else { -1.0 }
                   let numerator = factorial(n - k)
-                  let denominator = factorial(k) * factorial((n + m) / 2 - k) * factorial((n - m) / 2 - k)
+                  let denominator = factorial(k) *
+                    factorial((n + m) / 2 - k) *
+                    factorial((n - m) / 2 - k)
                   if denominator > 0.0 {
-                    radial += sign * numerator / denominator * r.pow((n - 2 * k).to_double())
+                    radial += sign *
+                      numerator /
+                      denominator *
+                      @math.pow(r, (n - 2 * k).to_double())
                   }
                 }
                 z_real += radial * @math.cos(m.to_double() * theta)
@@ -139,7 +153,7 @@ pub fn extract_gabor_ocr_features(
     let theta = o.to_double() * 3.141592653589793 / num_orientations.to_double()
     for f in 0..<num_frequencies {
       let frequency = (f + 1).to_double() * 0.1
-      let sigma = 1.0 / (frequency * 2.0)
+      let _ = 1.0 / (frequency * 2.0)
       // 计算 Gabor 滤波响应（简化版：统计方向能量）
       let mut energy = 0.0
       let mut count = 0
@@ -153,8 +167,14 @@ pub fn extract_gabor_ocr_features(
             let y1 = (y.to_double() + dy).to_int()
             let x2 = (x.to_double() - dx).to_int()
             let y2 = (y.to_double() - dy).to_int()
-            if x1 >= 0 && x1 < w && y1 >= 0 && y1 < h &&
-               x2 >= 0 && x2 < w && y2 >= 0 && y2 < h {
+            if x1 >= 0 &&
+              x1 < w &&
+              y1 >= 0 &&
+              y1 < h &&
+              x2 >= 0 &&
+              x2 < w &&
+              y2 >= 0 &&
+              y2 < h {
               let g1 = data[y1 * w + x1].to_int().to_double()
               let g2 = data[y2 * w + x2].to_int().to_double()
               let grad = (g1 - g2).abs()
@@ -173,25 +193,24 @@ pub fn extract_gabor_ocr_features(
 
 ///|
 /// 提取方向特征（8个方向的笔画密度）
-pub fn extract_directional_features(
-  char_img : @types.Image,
-) -> Array[Double] {
+pub fn extract_directional_features(char_img : @types.Image) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height
   let data = char_img.data
   let features : Array[Double] = []
   // 8个方向：0°(水平)、45°、90°(垂直)、135°、180°、225°、270°、315°
   let directions : Array[(Double, Double)] = [
-    (1.0, 0.0),    // 0° 水平
+    (1.0, 0.0), // 0° 水平
     (0.707, 0.707), // 45°
-    (0.0, 1.0),    // 90° 垂直
+    (0.0, 1.0), // 90° 垂直
     (-0.707, 0.707), // 135°
-    (-1.0, 0.0),   // 180°
+    (-1.0, 0.0), // 180°
     (-0.707, -0.707), // 225°
-    (0.0, -1.0),   // 270°
+    (0.0, -1.0), // 270°
     (0.707, -0.707), // 315°
   ]
-  for (dx, dy) in directions {
+  for _tup0 in directions {
+    let (dx, dy) = _tup0
     let mut energy = 0.0
     let mut count = 0
     for y in 2..<(h - 2) {
@@ -201,8 +220,14 @@ pub fn extract_directional_features(
           let y1 = (y.to_double() + dy * 2.0).to_int()
           let x2 = (x.to_double() - dx * 2.0).to_int()
           let y2 = (y.to_double() - dy * 2.0).to_int()
-          if x1 >= 0 && x1 < w && y1 >= 0 && y1 < h &&
-             x2 >= 0 && x2 < w && y2 >= 0 && y2 < h {
+          if x1 >= 0 &&
+            x1 < w &&
+            y1 >= 0 &&
+            y1 < h &&
+            x2 >= 0 &&
+            x2 < w &&
+            y2 >= 0 &&
+            y2 < h {
             let g1 = data[y1 * w + x1].to_int().to_double()
             let g2 = data[y2 * w + x2].to_int().to_double()
             energy += (g1 - g2).abs()
@@ -227,12 +252,13 @@ pub fn weighted_knn_classify(
 ) -> (String, Double, Array[(String, Double)]) {
   // 计算所有训练样本的距离
   let distances : Array[(String, Double)] = []
-  for (label, sample) in training_data {
+  for _tup1 in training_data {
+    let (label, sample) = _tup1
     let dist = calculate_distance(features, sample, distance_metric)
     distances.push((label, dist))
   }
   // 按距离排序（冒泡排序）
-  for i in 0..<distances.length() {
+  for _ in 0..<distances.length() {
     for j in 0..<(distances.length() - 1) {
       if distances[j].1 > distances[j + 1].1 {
         let temp = distances[j]
@@ -263,14 +289,19 @@ pub fn weighted_knn_classify(
   let mut best_label = "?"
   let mut best_votes = 0.0
   let mut total_votes = 0.0
-  for (label, v) in votes {
+  for _tup2 in votes {
+    let (label, v) = _tup2
     total_votes += v
     if v > best_votes {
       best_votes = v
       best_label = label
     }
   }
-  let confidence = if total_votes > 0.0 { best_votes / total_votes } else { 0.0 }
+  let confidence = if total_votes > 0.0 {
+    best_votes / total_votes
+  } else {
+    0.0
+  }
   (best_label, confidence, votes)
 }
 
@@ -300,7 +331,11 @@ fn calculate_distance(
         norm_b += b[i] * b[i]
       }
       let denom = norm_a.sqrt() * norm_b.sqrt()
-      if denom > 0.0 { 1.0 - dot / denom } else { 1.0 }
+      if denom > 0.0 {
+        1.0 - dot / denom
+      } else {
+        1.0
+      }
     }
     _ => {
       let mut sum_sq = 0.0
@@ -328,8 +363,12 @@ pub fn calibrate_confidence_enhanced(
   let mut max_dist = 0.0
   for d in distance_distribution {
     mean += d
-    if d < min_dist { min_dist = d }
-    if d > max_dist { max_dist = d }
+    if d < min_dist {
+      min_dist = d
+    }
+    if d > max_dist {
+      max_dist = d
+    }
   }
   mean = mean / distance_distribution.length().to_double()
   // 基于距离分布的校准
@@ -338,7 +377,13 @@ pub fn calibrate_confidence_enhanced(
   // 如果平均距离较小，说明匹配质量高，提升置信度
   let calibration_factor = 1.0 + (1.0 - normalized_mean) * 0.3
   let calibrated = raw_confidence * calibration_factor
-  if calibrated > 1.0 { 1.0 } else if calibrated < 0.0 { 0.0 } else { calibrated }
+  if calibrated > 1.0 {
+    1.0
+  } else if calibrated < 0.0 {
+    0.0
+  } else {
+    calibrated
+  }
 }
 
 ///|
@@ -349,9 +394,9 @@ pub fn multi_scale_recognize(
   scales : Array[Int],
   distance_metric? : String = "euclidean",
 ) -> (String, Double) {
-  let w = char_img.width
-  let h = char_img.height
-  let data = char_img.data
+  let _ = char_img.width
+  let _ = char_img.height
+  let _ = char_img.data
   // 对每个尺度进行识别
   let all_results : Array[(String, Double)] = []
   for scale in scales {
@@ -362,7 +407,8 @@ pub fn multi_scale_recognize(
     // 模板匹配
     let mut best_label = "?"
     let mut best_dist = 1000000.0
-    for (label, template) in templates {
+    for _tup3 in templates {
+      let (label, template) = _tup3
       let dist = calculate_distance(features, template, distance_metric)
       if dist < best_dist {
         best_dist = dist
@@ -374,7 +420,8 @@ pub fn multi_scale_recognize(
   }
   // 加权融合（所有尺度等权）
   let votes : Array[(String, Double)] = []
-  for (label, conf) in all_results {
+  for _tup4 in all_results {
+    let (label, conf) = _tup4
     let mut found = false
     for i in 0..<votes.length() {
       if votes[i].0 == label {
@@ -390,7 +437,8 @@ pub fn multi_scale_recognize(
   let mut best_label = "?"
   let mut best_votes = 0.0
   let mut total = 0.0
-  for (label, v) in votes {
+  for _tup5 in votes {
+    let (label, v) = _tup5
     total += v
     if v > best_votes {
       best_votes = v
@@ -421,7 +469,12 @@ fn resize_char_image(
       }
     }
   }
-  @types.Image::{ width: new_w, height: new_h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -452,7 +505,11 @@ fn extract_grid_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -467,15 +524,22 @@ pub fn extract_combined_enhanced_features(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_combined_enhanced_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_enhanced_features: 图像尺寸必须大于0",
+    )
   }
   if char_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_combined_enhanced_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_enhanced_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = char_img.width * char_img.height
   if char_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_combined_enhanced_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+      "extract_combined_enhanced_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      char_img.data.length().to_string(),
     )
   }
   let features : Array[Double] = []
@@ -493,7 +557,11 @@ pub fn extract_combined_enhanced_features(
   }
   // Gabor 特征（多方向多频率）
   if config.use_gabor_features {
-    let gabor = extract_gabor_ocr_features(char_img, num_orientations=4, num_frequencies=2)
+    let gabor = extract_gabor_ocr_features(
+      char_img,
+      num_orientations=4,
+      num_frequencies=2,
+    )
     for f in gabor {
       features.push(f)
     }
@@ -517,19 +585,28 @@ pub fn recognize_ocr_enhanced(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_ocr_enhanced: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_ocr_enhanced: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_ocr_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_ocr_enhanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if templates.length() == 0 {
-    raise @types.LoadError::DecodeFailed("recognize_ocr_enhanced: 模板列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_ocr_enhanced: 模板列表不能为空",
+    )
   }
   let cfg = match config {
     Some(c) => c
@@ -543,22 +620,36 @@ pub fn recognize_ocr_enhanced(
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup6 in char_regions {
+    let (x, y, w, h) = _tup6
     // 提取字符图像
-    let char_img = extract_char_region_for_enhanced(preprocessed, x, y, w, h, 48)
+    let char_img = extract_char_region_for_enhanced(
+      preprocessed, x, y, w, h, 48,
+    )
     // 多尺度识别（如果启用）
     let result = if cfg.use_multi_scale {
-      multi_scale_recognize(char_img, templates, cfg.scales, distance_metric="euclidean")
+      multi_scale_recognize(
+        char_img,
+        templates,
+        cfg.scales,
+        distance_metric="euclidean",
+      )
     } else {
       // 单尺度识别
       let features = extract_combined_enhanced_features(char_img, cfg)
       // 加权 KNN（如果启用）
       if cfg.use_weighted_knn {
-        let (label, conf, _) = weighted_knn_classify(features, templates, k=cfg.knn_k, distance_metric="euclidean")
+        let (label, conf, _) = weighted_knn_classify(
+          features,
+          templates,
+          k=cfg.knn_k,
+          distance_metric="euclidean",
+        )
         // 置信度校准（如果启用）
         let final_conf = if cfg.use_confidence_calibration {
           let dists : Array[Double] = []
-          for (_, sample) in templates {
+          for _tup7 in templates {
+            let (_, sample) = _tup7
             dists.push(calculate_distance(features, sample, "euclidean"))
           }
           calibrate_confidence_enhanced(conf, dists)
@@ -570,7 +661,8 @@ pub fn recognize_ocr_enhanced(
         // 简单模板匹配
         let mut best_label = "?"
         let mut best_dist = 1000000.0
-        for (label, template) in templates {
+        for _tup8 in templates {
+          let (label, template) = _tup8
           let dist = calculate_distance(features, template, "euclidean")
           if dist < best_dist {
             best_dist = dist
@@ -597,11 +689,7 @@ pub fn recognize_ocr_enhanced(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -644,10 +732,18 @@ fn segment_chars_for_enhanced(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -678,18 +774,28 @@ fn extract_char_region_for_enhanced(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

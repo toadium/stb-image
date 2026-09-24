@@ -200,7 +200,10 @@ pub fn create_default_automl_config() -> AutoMLConfig {
 
 ///|
 /// 简化的超参数采样
-fn sample_hyperparameters(num_params : Int, state : Int) -> (Array[Double], Int) {
+fn sample_hyperparameters(
+  num_params : Int,
+  state : Int,
+) -> (Array[Double], Int) {
   let params : Array[Double] = []
   let mut current_state = state
   for _ in 0..<num_params {
@@ -365,10 +368,7 @@ pub fn automated_model_selection(
 
 ///|
 /// AutoML（统一接口）
-pub fn automl(
-  num_hyperparams : Int,
-  config : AutoMLConfig,
-) -> AutoMLResult {
+pub fn automl(num_hyperparams : Int, config : AutoMLConfig) -> AutoMLResult {
   let hpo_result = optimize_hyperparameters(num_hyperparams, config)
 
   AutoMLResult::{
@@ -383,7 +383,9 @@ pub fn automl(
     total_time_ms: hpo_result.total_time_ms,
     search_space_size: config.search_space_size,
     convergence_curve: hpo_result.convergence_curve,
-    best_pipeline: ["preprocessing", "feature_engineering", "model", "postprocessing"],
+    best_pipeline: [
+      "preprocessing", "feature_engineering", "model", "postprocessing",
+    ],
     automl_task_type: config.task_type,
   }
 }
@@ -399,48 +401,70 @@ pub fn automl_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    AutoMLTaskType::HyperparameterOptimization => "超参数优化"
-    AutoMLTaskType::NeuralArchitectureSearch => "神经架构搜索"
-    AutoMLTaskType::FeatureEngineering => "特征工程"
-    AutoMLTaskType::ModelSelection => "模型选择"
-    AutoMLTaskType::PipelineOptimization => "流水线优化"
-    AutoMLTaskType::DataAugmentationSearch => "数据增强搜索"
-    AutoMLTaskType::NeuralArchitectureAndHPO => "架构与超参数联合搜索"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| HPO算法 | " + (match config.hpo_algorithm {
-    HPOAlgorithmType::GridSearch => "网格搜索"
-    HPOAlgorithmType::RandomSearch => "随机搜索"
-    HPOAlgorithmType::BayesianOptimization => "贝叶斯优化"
-    HPOAlgorithmType::TPE => "TPE"
-    HPOAlgorithmType::SMAC => "SMAC"
-    HPOAlgorithmType::Hyperband => "Hyperband"
-    HPOAlgorithmType::BOHB => "BOHB"
-    HPOAlgorithmType::ASHA => "ASHA"
-    HPOAlgorithmType::PBT => "PBT"
-    HPOAlgorithmType::CMAES => "CMA-ES"
-    HPOAlgorithmType::GeneticAlgorithm => "遗传算法"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| NAS算法 | " + (match config.nas_algorithm {
-    NASAlgorithmType::ReinforcementLearning => "强化学习"
-    NASAlgorithmType::Evolutionary => "进化算法"
-    NASAlgorithmType::Differentiable => "可微搜索"
-    NASAlgorithmType::OneShot => "一次性搜索"
-    NASAlgorithmType::ProxylessNAS => "ProxylessNAS"
-    NASAlgorithmType::DARTS => "DARTS"
-    NASAlgorithmType::ENAS => "ENAS"
-    NASAlgorithmType::NASNet => "NASNet"
-    NASAlgorithmType::AmoebaNet => "AmoebaNet"
-    NASAlgorithmType::PNAS => "PNAS"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 最大试验次数 | " + config.max_trials.to_string() + " |\n"
-  report = report + "| 最大时间(ms) | " + config.max_time_ms.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      AutoMLTaskType::HyperparameterOptimization => "超参数优化"
+      AutoMLTaskType::NeuralArchitectureSearch => "神经架构搜索"
+      AutoMLTaskType::FeatureEngineering => "特征工程"
+      AutoMLTaskType::ModelSelection => "模型选择"
+      AutoMLTaskType::PipelineOptimization => "流水线优化"
+      AutoMLTaskType::DataAugmentationSearch => "数据增强搜索"
+      AutoMLTaskType::NeuralArchitectureAndHPO =>
+        "架构与超参数联合搜索"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| HPO算法 | " +
+    (match config.hpo_algorithm {
+      HPOAlgorithmType::GridSearch => "网格搜索"
+      HPOAlgorithmType::RandomSearch => "随机搜索"
+      HPOAlgorithmType::BayesianOptimization => "贝叶斯优化"
+      HPOAlgorithmType::TPE => "TPE"
+      HPOAlgorithmType::SMAC => "SMAC"
+      HPOAlgorithmType::Hyperband => "Hyperband"
+      HPOAlgorithmType::BOHB => "BOHB"
+      HPOAlgorithmType::ASHA => "ASHA"
+      HPOAlgorithmType::PBT => "PBT"
+      HPOAlgorithmType::CMAES => "CMA-ES"
+      HPOAlgorithmType::GeneticAlgorithm => "遗传算法"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| NAS算法 | " +
+    (match config.nas_algorithm {
+      NASAlgorithmType::ReinforcementLearning => "强化学习"
+      NASAlgorithmType::Evolutionary => "进化算法"
+      NASAlgorithmType::Differentiable => "可微搜索"
+      NASAlgorithmType::OneShot => "一次性搜索"
+      NASAlgorithmType::ProxylessNAS => "ProxylessNAS"
+      NASAlgorithmType::DARTS => "DARTS"
+      NASAlgorithmType::ENAS => "ENAS"
+      NASAlgorithmType::NASNet => "NASNet"
+      NASAlgorithmType::AmoebaNet => "AmoebaNet"
+      NASAlgorithmType::PNAS => "PNAS"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 最大试验次数 | " +
+    config.max_trials.to_string() +
+    " |\n"
+  report = report +
+    "| 最大时间(ms) | " +
+    config.max_time_ms.to_string() +
+    " |\n"
   report = report + "| CV折数 | " + config.num_cv_folds.to_string() + " |\n"
-  report = report + "| 搜索空间大小 | " + config.search_space_size.to_string() + " |\n"
-  report = report + "| 早停 | " + (if config.use_early_stopping { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 搜索空间大小 | " +
+    config.search_space_size.to_string() +
+    " |\n"
+  report = report +
+    "| 早停 | " +
+    (if config.use_early_stopping { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

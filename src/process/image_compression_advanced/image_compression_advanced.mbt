@@ -202,8 +202,14 @@ fn dct_2d(block : Array[Double], block_size : Int) -> Array[Double] {
         for y in 0..<block_size {
           let idx = x * block_size + y
           if idx < block.length() {
-            let cos_x = ((2.0 * x.to_double() + 1.0) * u.to_double() * pi) / (2.0 * block_size.to_double())
-            let cos_y = ((2.0 * y.to_double() + 1.0) * v.to_double() * pi) / (2.0 * block_size.to_double())
+            let cos_x = (2.0 * x.to_double() + 1.0) *
+              u.to_double() *
+              pi /
+              (2.0 * block_size.to_double())
+            let cos_y = (2.0 * y.to_double() + 1.0) *
+              v.to_double() *
+              pi /
+              (2.0 * block_size.to_double())
             sum += block[idx] * cos_x * cos_y
           }
         }
@@ -440,49 +446,81 @@ pub fn image_compression_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageCompressionTaskType::LosslessCompression => "无损压缩"
-    ImageCompressionTaskType::LossyCompression => "有损压缩"
-    ImageCompressionTaskType::JPEGCompression => "JPEG压缩"
-    ImageCompressionTaskType::PNGCompression => "PNG压缩"
-    ImageCompressionTaskType::WebPCompression => "WebP压缩"
-    ImageCompressionTaskType::HEICCompression => "HEIC压缩"
-    ImageCompressionTaskType::AVIFCompression => "AVIF压缩"
-    ImageCompressionTaskType::FractalCompression => "分形压缩"
-    ImageCompressionTaskType::WaveletCompression => "小波压缩"
-    ImageCompressionTaskType::NeuralCompression => "神经网络压缩"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 压缩标准 | " + (match config.compression_standard {
-    CompressionStandardType::JPEG => "JPEG"
-    CompressionStandardType::JPEG2000 => "JPEG2000"
-    CompressionStandardType::PNG => "PNG"
-    CompressionStandardType::WebP => "WebP"
-    CompressionStandardType::HEIC => "HEIC"
-    CompressionStandardType::AVIF => "AVIF"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 压缩模式 | " + (match config.compression_mode {
-    CompressionMode::Lossless => "无损"
-    CompressionMode::Lossy => "有损"
-    CompressionMode::NearLossless => "近无损"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageCompressionTaskType::LosslessCompression => "无损压缩"
+      ImageCompressionTaskType::LossyCompression => "有损压缩"
+      ImageCompressionTaskType::JPEGCompression => "JPEG压缩"
+      ImageCompressionTaskType::PNGCompression => "PNG压缩"
+      ImageCompressionTaskType::WebPCompression => "WebP压缩"
+      ImageCompressionTaskType::HEICCompression => "HEIC压缩"
+      ImageCompressionTaskType::AVIFCompression => "AVIF压缩"
+      ImageCompressionTaskType::FractalCompression => "分形压缩"
+      ImageCompressionTaskType::WaveletCompression => "小波压缩"
+      ImageCompressionTaskType::NeuralCompression => "神经网络压缩"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 压缩标准 | " +
+    (match config.compression_standard {
+      CompressionStandardType::JPEG => "JPEG"
+      CompressionStandardType::JPEG2000 => "JPEG2000"
+      CompressionStandardType::PNG => "PNG"
+      CompressionStandardType::WebP => "WebP"
+      CompressionStandardType::HEIC => "HEIC"
+      CompressionStandardType::AVIF => "AVIF"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 压缩模式 | " +
+    (match config.compression_mode {
+      CompressionMode::Lossless => "无损"
+      CompressionMode::Lossy => "有损"
+      CompressionMode::NearLossless => "近无损"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 质量 | " + config.quality.to_string() + " |\n"
-  report = report + "| 变换类型 | " + (match config.transform_type {
-    TransformType::DCT => "DCT"
-    TransformType::DWT => "DWT"
-    TransformType::DFT => "DFT"
-    TransformType::Hadamard => "Hadamard"
-    TransformType::KLT => "KLT"
-    TransformType::PCA => "PCA"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 变换类型 | " +
+    (match config.transform_type {
+      TransformType::DCT => "DCT"
+      TransformType::DWT => "DWT"
+      TransformType::DFT => "DFT"
+      TransformType::Hadamard => "Hadamard"
+      TransformType::KLT => "KLT"
+      TransformType::PCA => "PCA"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 块大小 | " + config.block_size.to_string() + " |\n"
-  report = report + "| 色度子采样 | " + (if config.use_chroma_subsampling { config.chroma_subsampling } else { "4:4:4" }) + " |\n"
-  report = report + "| 熵编码 | " + (if config.use_entropy_coding { config.entropy_coding_method } else { "关闭" }) + " |\n"
-  report = report + "| 预测 | " + (if config.use_prediction { config.prediction_method } else { "关闭" }) + " |\n"
-  report = report + "| 环路滤波 | " + (if config.use_loop_filter { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 色度子采样 | " +
+    (if config.use_chroma_subsampling {
+      config.chroma_subsampling
+    } else {
+      "4:4:4"
+    }) +
+    " |\n"
+  report = report +
+    "| 熵编码 | " +
+    (if config.use_entropy_coding {
+      config.entropy_coding_method
+    } else {
+      "关闭"
+    }) +
+    " |\n"
+  report = report +
+    "| 预测 | " +
+    (if config.use_prediction { config.prediction_method } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 环路滤波 | " +
+    (if config.use_loop_filter { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

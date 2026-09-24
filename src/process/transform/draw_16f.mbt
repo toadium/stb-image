@@ -3,11 +3,13 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn write_u16_le_draw(buf : Array[Byte], offset : Int, val : Int) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
+///|
 fn write_f32_le_draw(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
@@ -16,12 +18,29 @@ fn write_f32_le_draw(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   buf[offset + 3] = ((bits >> 24) & 0xFF).to_byte()
 }
 
+///|
 fn clamp_int_draw(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
-fn set_pixel_16(buf : Array[Byte], x : Int, y : Int, w : Int, ch : Int, color : Array[Int]) -> Unit {
-  if x < 0 || x >= w || y < 0 { return }
+///|
+fn set_pixel_16(
+  buf : Array[Byte],
+  x : Int,
+  y : Int,
+  w : Int,
+  ch : Int,
+  color : Array[Int],
+) -> Unit {
+  if x < 0 || x >= w || y < 0 {
+    return
+  }
   let idx = (y * w + x) * ch * 2
   for c in 0..<ch {
     if c < color.length() {
@@ -30,8 +49,18 @@ fn set_pixel_16(buf : Array[Byte], x : Int, y : Int, w : Int, ch : Int, color : 
   }
 }
 
-fn set_pixel_f(buf : Array[Byte], x : Int, y : Int, w : Int, ch : Int, color : Array[Float]) -> Unit {
-  if x < 0 || x >= w || y < 0 { return }
+///|
+fn set_pixel_f(
+  buf : Array[Byte],
+  x : Int,
+  y : Int,
+  w : Int,
+  ch : Int,
+  color : Array[Float],
+) -> Unit {
+  if x < 0 || x >= w || y < 0 {
+    return
+  }
   let idx = (y * w + x) * ch * 4
   for c in 0..<ch {
     if c < color.length() {
@@ -72,7 +101,9 @@ pub fn draw_line_16(
         set_pixel_16(buf, x + tx, y + ty, w, ch, color)
       }
     }
-    if x == x2 && y == y2 { done = true }
+    if x == x2 && y == y2 {
+      done = true
+    }
     if !done {
       let e2 = 2 * err
       if e2 > -dy {
@@ -85,7 +116,12 @@ pub fn draw_line_16(
       }
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -125,7 +161,12 @@ pub fn draw_rectangle_16(
       }
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -177,7 +218,12 @@ pub fn draw_circle_16(
       }
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -190,7 +236,9 @@ pub fn draw_polygon_16(
 ) -> @types.Image16 {
   let mut result = img
   let n = points.length()
-  if n < 2 { return result }
+  if n < 2 {
+    return result
+  }
   for i in 0..<n {
     let (x1, y1) = points[i]
     let (x2, y2) = points[(i + 1) % n]
@@ -231,7 +279,9 @@ pub fn draw_line_f(
         set_pixel_f(buf, x + tx, y + ty, w, ch, color)
       }
     }
-    if x == x2 && y == y2 { done = true }
+    if x == x2 && y == y2 {
+      done = true
+    }
     if !done {
       let e2 = 2 * err
       if e2 > -dy {
@@ -244,7 +294,12 @@ pub fn draw_line_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -284,7 +339,12 @@ pub fn draw_rectangle_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -336,7 +396,12 @@ pub fn draw_circle_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(buf) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(buf),
+  }
 }
 
 ///|
@@ -349,7 +414,9 @@ pub fn draw_polygon_f(
 ) -> @types.ImageF {
   let mut result = img
   let n = points.length()
-  if n < 2 { return result }
+  if n < 2 {
+    return result
+  }
   for i in 0..<n {
     let (x1, y1) = points[i]
     let (x2, y2) = points[(i + 1) % n]

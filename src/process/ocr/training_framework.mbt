@@ -67,14 +67,14 @@ pub(all) enum AugmentationType {
 pub(all) struct AugmentationConfig {
   enabled : Bool
   augmentation_types : Array[AugmentationType]
-  rotation_range : Double  // 度
-  shift_range : Double     // 比例
-  scale_range : Double     // 比例
+  rotation_range : Double // 度
+  shift_range : Double // 比例
+  scale_range : Double // 比例
   noise_level : Double
   blur_sigma : Double
   brightness_range : Double
   contrast_range : Double
-  probability : Double     // 每个增强的应用概率
+  probability : Double // 每个增强的应用概率
 }
 
 ///|
@@ -194,18 +194,16 @@ pub fn create_data_loader(
 ) -> DataLoader raise @types.LoadError {
   // 输入验证
   if samples.length() == 0 {
-    raise @types.LoadError::DecodeFailed("create_data_loader: 样本列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "create_data_loader: 样本列表不能为空",
+    )
   }
   if batch_size <= 0 {
-    raise @types.LoadError::DecodeFailed("create_data_loader: 批大小必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "create_data_loader: 批大小必须大于0",
+    )
   }
-  DataLoader::{
-    samples,
-    batch_size,
-    shuffle,
-    current_index: 0,
-    epoch: 0,
-  }
+  DataLoader::{ samples, batch_size, shuffle, current_index: 0, epoch: 0 }
 }
 
 ///|
@@ -215,12 +213,15 @@ pub fn next_batch(
 ) -> (Array[DLTrainingSample], DataLoader) raise @types.LoadError {
   // 输入验证
   if loader.samples.length() == 0 {
-    raise @types.LoadError::DecodeFailed("next_batch: 数据加载器的样本列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "next_batch: 数据加载器的样本列表不能为空",
+    )
   }
   if loader.batch_size <= 0 {
     raise @types.LoadError::DecodeFailed("next_batch: 批大小必须大于0")
   }
-  let end_index = if loader.current_index + loader.batch_size < loader.samples.length() {
+  let end_index = if loader.current_index + loader.batch_size <
+    loader.samples.length() {
     loader.current_index + loader.batch_size
   } else {
     loader.samples.length()
@@ -239,15 +240,17 @@ pub fn next_batch(
   } else {
     loader.epoch
   }
-  (batch, DataLoader::{
-    samples: loader.samples,
-    batch_size: loader.batch_size,
-    shuffle: loader.shuffle,
-    current_index: new_index,
-    epoch: new_epoch,
-  })
+  (
+    batch,
+    DataLoader::{
+      samples: loader.samples,
+      batch_size: loader.batch_size,
+      shuffle: loader.shuffle,
+      current_index: new_index,
+      epoch: new_epoch,
+    },
+  )
 }
-
 
 ///|
 /// 幂运算
@@ -259,20 +262,25 @@ fn power_double(base : Double, exp : Int) -> Double {
   result
 }
 
-
 ///|
 /// 近似 cos 函数（泰勒级数）
 fn approx_cos(x : Double) -> Double {
   // 归一化到 [-pi, pi]
   let pi = 3.141592653589793
   let mut t = x % (2.0 * pi)
-  if t > pi { t = t - 2.0 * pi }
-  if t < -pi { t = t + 2.0 * pi }
+  if t > pi {
+    t = t - 2.0 * pi
+  }
+  if t < -pi {
+    t = t + 2.0 * pi
+  }
   // 泰勒级数
   let mut result = 1.0
   let mut term = 1.0
   for i in 1..<10 {
-    term = term * (-t * t) / ((2.0 * i.to_double() - 1.0) * (2.0 * i.to_double()))
+    term = term *
+      (-t * t) /
+      ((2.0 * i.to_double() - 1.0) * (2.0 * i.to_double()))
     result = result + term
   }
   result
@@ -288,47 +296,70 @@ pub fn calculate_learning_rate(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if epoch < 0 {
-    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 轮次不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_learning_rate: 轮次不能为负",
+    )
   }
   if current_lr <= 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 当前学习率必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_learning_rate: 当前学习率必须大于0",
+    )
   }
   if val_loss < 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 验证损失不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_learning_rate: 验证损失不能为负",
+    )
   }
   if config.initial_lr <= 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 初始学习率必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_learning_rate: 初始学习率必须大于0",
+    )
   }
   if config.min_lr < 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_learning_rate: 最小学习率不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_learning_rate: 最小学习率不能为负",
+    )
   }
   match config.scheduler_type {
     LRSchedulerType::Constant => config.initial_lr
     LRSchedulerType::StepDecay => {
       let decay_factor = (epoch / config.decay_steps).to_double()
-      let lr = config.initial_lr * power_double(config.decay_rate, decay_factor.to_int())
-      if lr > config.min_lr { lr } else { config.min_lr }
+      let lr = config.initial_lr *
+        power_double(config.decay_rate, decay_factor.to_int())
+      if lr > config.min_lr {
+        lr
+      } else {
+        config.min_lr
+      }
     }
     LRSchedulerType::ExponentialDecay => {
       let lr = config.initial_lr * power_double(config.decay_rate, epoch)
-      if lr > config.min_lr { lr } else { config.min_lr }
+      if lr > config.min_lr {
+        lr
+      } else {
+        config.min_lr
+      }
     }
     LRSchedulerType::CosineAnnealing => {
       let pi = 3.141592653589793
       let cos_val = approx_cos(pi * epoch.to_double() / 50.0)
-      let lr = config.min_lr + 0.5 * (config.initial_lr - config.min_lr) * (1.0 + cos_val)
+      let lr = config.min_lr +
+        0.5 * (config.initial_lr - config.min_lr) * (1.0 + cos_val)
       lr
     }
-    LRSchedulerType::WarmupCosine => {
+    LRSchedulerType::WarmupCosine =>
       if epoch < config.warmup_steps {
-        config.initial_lr * (epoch.to_double() + 1.0) / config.warmup_steps.to_double()
+        config.initial_lr *
+        (epoch.to_double() + 1.0) /
+        config.warmup_steps.to_double()
       } else {
         let pi = 3.141592653589793
-        let progress = (epoch - config.warmup_steps).to_double() / (50.0 - config.warmup_steps.to_double())
+        let progress = (epoch - config.warmup_steps).to_double() /
+          (50.0 - config.warmup_steps.to_double())
         let cos_val = approx_cos(pi * progress)
-        config.min_lr + 0.5 * (config.initial_lr - config.min_lr) * (1.0 + cos_val)
+        config.min_lr +
+        0.5 * (config.initial_lr - config.min_lr) * (1.0 + cos_val)
       }
-    }
     LRSchedulerType::ReduceOnPlateau => current_lr
   }
 }
@@ -371,8 +402,14 @@ pub fn augment_random_noise(
 ) -> DLTrainingSample {
   let augmented_data : Array[Double] = []
   for pixel in sample.image_data {
-    let noise = (pixel * noise_level * (if pixel > 0.5 { 1.0 } else { -1.0 }))
-    let new_pixel = if pixel + noise > 1.0 { 1.0 } else if pixel + noise < 0.0 { 0.0 } else { pixel + noise }
+    let noise = pixel * noise_level * (if pixel > 0.5 { 1.0 } else { -1.0 })
+    let new_pixel = if pixel + noise > 1.0 {
+      1.0
+    } else if pixel + noise < 0.0 {
+      0.0
+    } else {
+      pixel + noise
+    }
     augmented_data.push(new_pixel)
   }
   DLTrainingSample::{
@@ -397,10 +434,9 @@ pub fn apply_augmentation(
   for aug_type in config.augmentation_types {
     // 简化：固定应用噪声增强
     match aug_type {
-      AugmentationType::RandomNoise => {
+      AugmentationType::RandomNoise =>
         augmented = augment_random_noise(augmented, config.noise_level)
-      }
-      _ => {()}
+      _ => ()
     }
   }
   augmented
@@ -416,7 +452,11 @@ pub fn calculate_accuracy(
     return 0.0
   }
   let mut correct = 0
-  let len = if predictions.length() < labels.length() { predictions.length() } else { labels.length() }
+  let len = if predictions.length() < labels.length() {
+    predictions.length()
+  } else {
+    labels.length()
+  }
   for i in 0..<len {
     if predictions[i] == labels[i] {
       correct += 1
@@ -456,7 +496,11 @@ pub fn check_early_stopping(
       total_training_time_ms: state.total_training_time_ms,
       history: state.history,
       is_completed: should_stop,
-      stop_reason: if should_stop { "early_stopping" } else { "" },
+      stop_reason: if should_stop {
+        "early_stopping"
+      } else {
+        ""
+      },
     }
     (should_stop, new_state)
   }
@@ -487,9 +531,22 @@ pub fn record_training_metrics(
   new_history.push(metrics)
   TrainingState::{
     current_epoch: metrics.epoch,
-    best_val_accuracy: if metrics.val_accuracy > state.best_val_accuracy { metrics.val_accuracy } else { state.best_val_accuracy },
-    best_epoch: if metrics.val_accuracy > state.best_val_accuracy { metrics.epoch } else { state.best_epoch },
-    epochs_without_improvement: if metrics.val_accuracy > state.best_val_accuracy { 0 } else { state.epochs_without_improvement + 1 },
+    best_val_accuracy: if metrics.val_accuracy > state.best_val_accuracy {
+      metrics.val_accuracy
+    } else {
+      state.best_val_accuracy
+    },
+    best_epoch: if metrics.val_accuracy > state.best_val_accuracy {
+      metrics.epoch
+    } else {
+      state.best_epoch
+    },
+    epochs_without_improvement: if metrics.val_accuracy >
+      state.best_val_accuracy {
+      0
+    } else {
+      state.epochs_without_improvement + 1
+    },
     total_training_time_ms: state.total_training_time_ms + metrics.time_ms,
     history: new_history,
     is_completed: state.is_completed,
@@ -507,18 +564,47 @@ pub fn generate_training_progress_report(
   report = report + "### 当前状态\n\n"
   report = report + "| 指标 | 值 |\n"
   report = report + "|------|------|\n"
-  report = report + "| 当前轮次 | " + state.current_epoch.to_string() + " / " + config.epochs.to_string() + " |\n"
-  report = report + "| 最佳验证准确率 | " + (state.best_val_accuracy * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 当前轮次 | " +
+    state.current_epoch.to_string() +
+    " / " +
+    config.epochs.to_string() +
+    " |\n"
+  report = report +
+    "| 最佳验证准确率 | " +
+    (state.best_val_accuracy * 100.0).to_string() +
+    "% |\n"
   report = report + "| 最佳轮次 | " + state.best_epoch.to_string() + " |\n"
-  report = report + "| 无改进轮次 | " + state.epochs_without_improvement.to_string() + " / " + config.early_stopping_patience.to_string() + " |\n"
-  report = report + "| 总训练时间 | " + (state.total_training_time_ms / 1000.0).to_string() + " 秒 |\n"
-  report = report + "| 训练状态 | " + (if state.is_completed { "已完成 (" + state.stop_reason + ")" } else { "进行中" }) + " |\n\n"
-  
+  report = report +
+    "| 无改进轮次 | " +
+    state.epochs_without_improvement.to_string() +
+    " / " +
+    config.early_stopping_patience.to_string() +
+    " |\n"
+  report = report +
+    "| 总训练时间 | " +
+    (state.total_training_time_ms / 1000.0).to_string() +
+    " 秒 |\n"
+  report = report +
+    "| 训练状态 | " +
+    (if state.is_completed {
+      "已完成 (" + state.stop_reason + ")"
+    } else {
+      "进行中"
+    }) +
+    " |\n\n"
+
   if state.history.length() > 0 {
     report = report + "### 最近 5 轮训练记录\n\n"
-    report = report + "| Epoch | Train Loss | Train Acc | Val Loss | Val Acc | LR |\n"
-    report = report + "|-------|------------|-----------|----------|---------|----|\n"
-    let start = if state.history.length() > 5 { state.history.length() - 5 } else { 0 }
+    report = report +
+      "| Epoch | Train Loss | Train Acc | Val Loss | Val Acc | LR |\n"
+    report = report +
+      "|-------|------------|-----------|----------|---------|----|\n"
+    let start = if state.history.length() > 5 {
+      state.history.length() - 5
+    } else {
+      0
+    }
     for i in start..<state.history.length() {
       let h = state.history[i]
       report = report + "| " + h.epoch.to_string() + " | "
@@ -529,7 +615,7 @@ pub fn generate_training_progress_report(
       report = report + h.learning_rate.to_string() + " |\n"
     }
   }
-  
+
   report
 }
 
@@ -543,17 +629,17 @@ pub fn split_train_validation(
   let total = samples.length()
   let val_count = (total.to_double() * validation_split).to_int()
   let train_count = total - val_count
-  
+
   let train_samples : Array[DLTrainingSample] = []
   let val_samples : Array[DLTrainingSample] = []
-  
+
   for i in 0..<train_count {
     train_samples.push(samples[i])
   }
   for i in train_count..<total {
     val_samples.push(samples[i])
   }
-  
+
   (train_samples, val_samples)
 }
 
@@ -572,7 +658,11 @@ pub fn compute_confusion_matrix(
     }
     matrix.push(row)
   }
-  let len = if predictions.length() < labels.length() { predictions.length() } else { labels.length() }
+  let len = if predictions.length() < labels.length() {
+    predictions.length()
+  } else {
+    labels.length()
+  }
   for i in 0..<len {
     let true_label = labels[i]
     let pred_label = predictions[i]
@@ -595,7 +685,11 @@ pub fn compute_per_class_accuracy(
     for j in 0..<confusion_matrix[i].length() {
       total += confusion_matrix[i][j]
     }
-    let accuracy = if total > 0 { confusion_matrix[i][i].to_double() / total.to_double() } else { 0.0 }
+    let accuracy = if total > 0 {
+      confusion_matrix[i][i].to_double() / total.to_double()
+    } else {
+      0.0
+    }
     accuracies.push(accuracy)
   }
   accuracies

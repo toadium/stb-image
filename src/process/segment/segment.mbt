@@ -325,7 +325,9 @@ pub fn flood_fill(
 
 ///|
 /// 将分割标签图可视化为彩色图像。每个标签分配一个不同颜色。
-pub fn segment_to_color(seg : SegmentLabelImage) -> @types.Image raise @types.LoadError {
+pub fn segment_to_color(
+  seg : SegmentLabelImage,
+) -> @types.Image raise @types.LoadError {
   let w = seg.width
   let h = seg.height
   let n = w * h

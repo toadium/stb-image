@@ -3,15 +3,18 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_h(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn write_u16_le_h(buf : Array[Byte], offset : Int, val : Int) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
+///|
 fn read_float_le_h(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -21,6 +24,7 @@ fn read_float_le_h(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn write_f32_le_h(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
@@ -29,12 +33,26 @@ fn write_f32_le_h(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   buf[offset + 3] = ((bits >> 24) & 0xFF).to_byte()
 }
 
+///|
 fn clamp_int_h(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
+///|
 fn clamp_float_h(v : Float, lo : Float, hi : Float) -> Float {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
 // ========== histogram ==========
@@ -44,15 +62,22 @@ fn clamp_float_h(v : Float, lo : Float, hi : Float) -> Float {
 pub fn histogram_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -78,15 +103,22 @@ pub fn histogram_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 pub fn histogram_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -102,7 +134,13 @@ pub fn histogram_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
       let b = read_float_le_h(img.data, i * ch * 4 + 8)
       r * 0.299F + g * 0.587F + b * 0.114F
     }
-    let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+    let bin = if v < 0.0F {
+      0
+    } else if v >= 1.0F {
+      255
+    } else {
+      (v * 255.0F + 0.5F).to_int()
+    }
     hist[bin] += 1
   }
   hist
@@ -112,7 +150,9 @@ pub fn histogram_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// 16-bit 直方图均衡化。基于灰度直方图计算映射 LUT，应用到所有颜色通道。
-pub fn histogram_equalize_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn histogram_equalize_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   let hist = histogram_16(img)
   let n = img.width * img.height
   let ch = img.channels
@@ -159,12 +199,19 @@ pub fn histogram_equalize_16(img : @types.Image16) -> @types.Image16 raise @type
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// float 直方图均衡化。基于灰度直方图计算映射 LUT，应用到所有颜色通道。
-pub fn histogram_equalize_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn histogram_equalize_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   let hist = histogram_f(img)
   let n = img.width * img.height
   let ch = img.channels
@@ -201,7 +248,13 @@ pub fn histogram_equalize_f(img : @types.ImageF) -> @types.ImageF raise @types.L
   for i in 0..<n {
     for c in 0..<color_ch {
       let v = src[i * ch + c]
-      let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+      let bin = if v < 0.0F {
+        0
+      } else if v >= 1.0F {
+        255
+      } else {
+        (v * 255.0F + 0.5F).to_int()
+      }
       write_f32_le_h(out, i * bpp + c * 4, lut[bin])
     }
     if ch == 4 {
@@ -211,25 +264,39 @@ pub fn histogram_equalize_f(img : @types.ImageF) -> @types.ImageF raise @types.L
       }
     }
   }
-  @types.ImageF::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== histogram_normalize ==========
 
 ///|
 /// 16-bit 直方图归一化（线性拉伸）。将像素值范围线性映射到 [0, 65535]。
-pub fn histogram_normalize_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn histogram_normalize_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_normalize_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_normalize_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -247,8 +314,12 @@ pub fn histogram_normalize_16(img : @types.Image16) -> @types.Image16 raise @typ
   for i in 0..<n {
     for c in 0..<color_ch {
       let v = src[i * ch + c]
-      if v < min_val { min_val = v }
-      if v > max_val { max_val = v }
+      if v < min_val {
+        min_val = v
+      }
+      if v > max_val {
+        max_val = v
+      }
     }
   }
   let range = max_val - min_val
@@ -268,23 +339,37 @@ pub fn histogram_normalize_16(img : @types.Image16) -> @types.Image16 raise @typ
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// float 直方图归一化（线性拉伸）。将像素值范围线性映射到 [0.0, 1.0]。
-pub fn histogram_normalize_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn histogram_normalize_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_normalize_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_normalize_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -302,8 +387,12 @@ pub fn histogram_normalize_f(img : @types.ImageF) -> @types.ImageF raise @types.
   for i in 0..<n {
     for c in 0..<color_ch {
       let v = src[i * ch + c]
-      if v < min_val { min_val = v }
-      if v > max_val { max_val = v }
+      if v < min_val {
+        min_val = v
+      }
+      if v > max_val {
+        max_val = v
+      }
     }
   }
   let range = max_val - min_val
@@ -324,7 +413,12 @@ pub fn histogram_normalize_f(img : @types.ImageF) -> @types.ImageF raise @types.
       }
     }
   }
-  @types.ImageF::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== histogram_matching ==========
@@ -337,27 +431,44 @@ pub fn histogram_matching_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_matching_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if reference.width <= 0 || reference.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_16: 参考图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_16: 参考图像尺寸必须大于0",
+    )
   }
   if reference.channels < 1 || reference.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_16: 参考图像通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_16: 参考图像通道数必须在1-4之间",
+    )
   }
-  let ref_expected_size = reference.width * reference.height * reference.channels * 2
+  let ref_expected_size = reference.width *
+    reference.height *
+    reference.channels *
+    2
   if reference.data.length() != ref_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching_16: 参考图像数据大小不匹配，期望 " + ref_expected_size.to_string() + "，实际 " + reference.data.length().to_string(),
+      "histogram_matching_16: 参考图像数据大小不匹配，期望 " +
+      ref_expected_size.to_string() +
+      "，实际 " +
+      reference.data.length().to_string(),
     )
   }
 
@@ -416,7 +527,12 @@ pub fn histogram_matching_16(
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -427,27 +543,44 @@ pub fn histogram_matching_f(
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_matching_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if reference.width <= 0 || reference.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_f: 参考图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_f: 参考图像尺寸必须大于0",
+    )
   }
   if reference.channels < 1 || reference.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching_f: 参考图像通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching_f: 参考图像通道数必须在1-4之间",
+    )
   }
-  let ref_expected_size = reference.width * reference.height * reference.channels * 4
+  let ref_expected_size = reference.width *
+    reference.height *
+    reference.channels *
+    4
   if reference.data.length() != ref_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching_f: 参考图像数据大小不匹配，期望 " + ref_expected_size.to_string() + "，实际 " + reference.data.length().to_string(),
+      "histogram_matching_f: 参考图像数据大小不匹配，期望 " +
+      ref_expected_size.to_string() +
+      "，实际 " +
+      reference.data.length().to_string(),
     )
   }
 
@@ -464,13 +597,25 @@ pub fn histogram_matching_f(
     let hist_ref : Array[Int] = Array::make(256, 0)
     for i in 0..<n {
       let v = read_float_le_h(img.data, i * bpp + c * 4)
-      let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+      let bin = if v < 0.0F {
+        0
+      } else if v >= 1.0F {
+        255
+      } else {
+        (v * 255.0F + 0.5F).to_int()
+      }
       hist_in[bin] += 1
     }
     if c < ref_color_ch {
       for i in 0..<n_ref {
         let v = read_float_le_h(reference.data, i * ref_ch * 4 + c * 4)
-        let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+        let bin = if v < 0.0F {
+          0
+        } else if v >= 1.0F {
+          255
+        } else {
+          (v * 255.0F + 0.5F).to_int()
+        }
         hist_ref[bin] += 1
       }
     }
@@ -500,7 +645,13 @@ pub fn histogram_matching_f(
     }
     for i in 0..<n {
       let v = read_float_le_h(img.data, i * bpp + c * 4)
-      let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+      let bin = if v < 0.0F {
+        0
+      } else if v >= 1.0F {
+        255
+      } else {
+        (v * 255.0F + 0.5F).to_int()
+      }
       let mapped = Float::from_int(lut[bin]) / 255.0F
       write_f32_le_h(out, i * bpp + c * 4, clamp_float_h(mapped, 0.0F, 1.0F))
     }
@@ -513,5 +664,10 @@ pub fn histogram_matching_f(
       }
     }
   }
-  @types.ImageF::{ width: img.width, height: img.height, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: img.width,
+    height: img.height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

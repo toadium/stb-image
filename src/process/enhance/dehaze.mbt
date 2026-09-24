@@ -4,12 +4,12 @@
 ///|
 /// 去雾配置
 pub(all) struct DehazeConfig {
-  patch_size : Int  // 暗通道 patch 大小
-  omega : Double  // 透射率保留系数（0-1，越大去雾越强）
-  t_min : Double  // 最小透射率
-  guided_radius : Int  // 引导滤波半径
-  guided_eps : Double  // 引导滤波正则化参数
-  max_atmospheric : Int  // 大气光候选像素比例（前 0.1%）
+  patch_size : Int // 暗通道 patch 大小
+  omega : Double // 透射率保留系数（0-1，越大去雾越强）
+  t_min : Double // 最小透射率
+  guided_radius : Int // 引导滤波半径
+  guided_eps : Double // 引导滤波正则化参数
+  max_atmospheric : Int // 大气光候选像素比例（前 0.1%）
 }
 
 ///|
@@ -34,22 +34,31 @@ pub fn dark_channel(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("dark_channel: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "dark_channel: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("dark_channel: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "dark_channel: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "dark_channel: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "dark_channel: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if patch_size <= 0 || patch_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("dark_channel: patch_size必须是正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "dark_channel: patch_size必须是正奇数",
+    )
   }
 
-let ps = patch_size
+  let ps = patch_size
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -70,8 +79,8 @@ let ps = patch_size
   for y in 0..<h {
     for x in 0..<w {
       let mut min_val = 255
-      for dy in (-half)..<(half + 1) {
-        for dx in (-half)..<(half + 1) {
+      for dy in -half..<(half + 1) {
+        for dx in -half..<(half + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -85,7 +94,12 @@ let ps = patch_size
       out_data[y * w + x] = min_val.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -98,22 +112,32 @@ pub fn estimate_atmospheric_light(
 ) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("estimate_atmospheric_light: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_atmospheric_light: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("estimate_atmospheric_light: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_atmospheric_light: 通道数必须在1-4之间",
+    )
   }
   if dark.width != img.width || dark.height != img.height {
-    raise @types.LoadError::DecodeFailed("estimate_atmospheric_light: 暗通道图像尺寸必须与原图一致")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_atmospheric_light: 暗通道图像尺寸必须与原图一致",
+    )
   }
   if dark.channels != 1 {
-    raise @types.LoadError::DecodeFailed("estimate_atmospheric_light: 暗通道图像必须是单通道")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_atmospheric_light: 暗通道图像必须是单通道",
+    )
   }
   if top_percent <= 0 {
-    raise @types.LoadError::DecodeFailed("estimate_atmospheric_light: top_percent必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_atmospheric_light: top_percent必须大于0",
+    )
   }
 
-let top = top_percent
+  let top = top_percent
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -168,19 +192,29 @@ pub fn estimate_transmission(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("estimate_transmission: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_transmission: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("estimate_transmission: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_transmission: 通道数必须在1-4之间",
+    )
   }
   if atmospheric.length() == 0 {
-    raise @types.LoadError::DecodeFailed("estimate_transmission: atmospheric数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_transmission: atmospheric数组不能为空",
+    )
   }
   if omega < 0.0 || omega > 1.0 {
-    raise @types.LoadError::DecodeFailed("estimate_transmission: omega必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_transmission: omega必须在0-1之间",
+    )
   }
   if patch_size <= 0 || patch_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("estimate_transmission: patch_size必须是正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "estimate_transmission: patch_size必须是正奇数",
+    )
   }
 
   let om = omega
@@ -195,12 +229,25 @@ pub fn estimate_transmission(
     for c in 0..<channels {
       let idx = i * channels + c
       let val = data[idx].to_double()
-      let a = if c < atmospheric.length() { atmospheric[c].to_double() } else { 255.0 }
-      let norm = if a > 0.0 { (val / a * 255.0).min(255.0).max(0.0) } else { 0.0 }
+      let a = if c < atmospheric.length() {
+        atmospheric[c].to_double()
+      } else {
+        255.0
+      }
+      let norm = if a > 0.0 {
+        (val / a * 255.0).min(255.0).max(0.0)
+      } else {
+        0.0
+      }
       normalized.push(norm.to_int().to_byte())
     }
   }
-  let norm_img = @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(normalized) }
+  let norm_img = @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(normalized),
+  }
   // 2. 计算归一化图像的暗通道
   let dark = dark_channel(norm_img, patch_size=ps)
   // 3. 计算透射率
@@ -211,7 +258,12 @@ pub fn estimate_transmission(
     let t_clamped = t.max(0.0).min(1.0)
     out_data[i] = (t_clamped * 255.0).to_int().to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -225,19 +277,29 @@ pub fn guided_filter_image(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if input.width <= 0 || input.height <= 0 {
-    raise @types.LoadError::DecodeFailed("guided_filter_image: 输入图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_image: 输入图像尺寸必须大于0",
+    )
   }
   if guide.width <= 0 || guide.height <= 0 {
-    raise @types.LoadError::DecodeFailed("guided_filter_image: 引导图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_image: 引导图像尺寸必须大于0",
+    )
   }
   if input.width != guide.width || input.height != guide.height {
-    raise @types.LoadError::DecodeFailed("guided_filter_image: 输入图像和引导图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_image: 输入图像和引导图像尺寸必须一致",
+    )
   }
   if radius <= 0 {
-    raise @types.LoadError::DecodeFailed("guided_filter_image: radius必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_image: radius必须大于0",
+    )
   }
   if eps < 0.0 {
-    raise @types.LoadError::DecodeFailed("guided_filter_image: eps必须大于等于0")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter_image: eps必须大于等于0",
+    )
   }
 
   let r = radius
@@ -256,15 +318,17 @@ pub fn guided_filter_image(
       let mut sum = 0.0
       let mut weight_sum = 0.0
       let center_guide = guide_data[y * w + x].to_double()
-      for dy in (-half)..<(half + 1) {
-        for dx in (-half)..<(half + 1) {
+      for dy in -half..<(half + 1) {
+        for dx in -half..<(half + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
-            let spatial_dist = ((dx * dx + dy * dy).to_double()).sqrt()
+            let spatial_dist = (dx * dx + dy * dy).to_double().sqrt()
             let guide_diff = (guide_data[ny * w + nx].to_double() - center_guide).abs()
             // 双边权重：空间距离 + 引导图差异
-            let spatial_weight = (1.0 - spatial_dist / half.to_double()).max(0.0)
+            let spatial_weight = (1.0 - spatial_dist / half.to_double()).max(
+              0.0,
+            )
             let range_weight = (1.0 - guide_diff / 255.0).max(0.0)
             let weight = spatial_weight * range_weight + e
             sum += input_data[ny * w + nx].to_double() * weight
@@ -272,11 +336,20 @@ pub fn guided_filter_image(
           }
         }
       }
-      let result = if weight_sum > 0.0 { sum / weight_sum } else { input_data[y * w + x].to_double() }
+      let result = if weight_sum > 0.0 {
+        sum / weight_sum
+      } else {
+        input_data[y * w + x].to_double()
+      }
       out_data[y * w + x] = result.min(255.0).max(0.0).to_int().to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -290,25 +363,37 @@ pub fn dehaze_recover(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: 通道数必须在1-4之间",
+    )
   }
   if transmission.width != img.width || transmission.height != img.height {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: 透射率图像尺寸必须与原图一致")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: 透射率图像尺寸必须与原图一致",
+    )
   }
   if transmission.channels != 1 {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: 透射率图像必须是单通道")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: 透射率图像必须是单通道",
+    )
   }
   if atmospheric.length() == 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: atmospheric数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: atmospheric数组不能为空",
+    )
   }
   if t_min < 0.0 || t_min > 1.0 {
-    raise @types.LoadError::DecodeFailed("dehaze_recover: t_min必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_recover: t_min必须在0-1之间",
+    )
   }
 
-let t0 = t_min
+  let t0 = t_min
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -321,12 +406,21 @@ let t0 = t_min
     for c in 0..<channels {
       let idx = i * channels + c
       let val = img_data[idx].to_double()
-      let a = if c < atmospheric.length() { atmospheric[c].to_double() } else { 255.0 }
+      let a = if c < atmospheric.length() {
+        atmospheric[c].to_double()
+      } else {
+        255.0
+      }
       let recovered = (val - a) / t_clamped + a
       out_data[idx] = recovered.min(255.0).max(0.0).to_int().to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -337,15 +431,22 @@ pub fn dehaze_advanced(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "dehaze_advanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "dehaze_advanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -356,28 +457,52 @@ pub fn dehaze_advanced(
 
   // 参数验证
   if cfg.patch_size <= 0 || cfg.patch_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: patch_size必须是正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: patch_size必须是正奇数",
+    )
   }
   if cfg.omega < 0.0 || cfg.omega > 1.0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: omega必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: omega必须在0-1之间",
+    )
   }
   if cfg.t_min < 0.0 || cfg.t_min > 1.0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: t_min必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: t_min必须在0-1之间",
+    )
   }
   if cfg.guided_radius <= 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: guided_radius必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: guided_radius必须大于0",
+    )
   }
   if cfg.max_atmospheric <= 0 {
-    raise @types.LoadError::DecodeFailed("dehaze_advanced: max_atmospheric必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "dehaze_advanced: max_atmospheric必须大于0",
+    )
   }
   // 1. 计算暗通道
   let dark = dark_channel(img, patch_size=cfg.patch_size)
   // 2. 估计大气光
-  let atmospheric = estimate_atmospheric_light(img, dark, top_percent=cfg.max_atmospheric)
+  let atmospheric = estimate_atmospheric_light(
+    img,
+    dark,
+    top_percent=cfg.max_atmospheric,
+  )
   // 3. 估计透射率
-  let transmission_raw = estimate_transmission(img, atmospheric, omega=cfg.omega, patch_size=cfg.patch_size)
+  let transmission_raw = estimate_transmission(
+    img,
+    atmospheric,
+    omega=cfg.omega,
+    patch_size=cfg.patch_size,
+  )
   // 4. 引导滤波优化透射率
-  let transmission = guided_filter_image(transmission_raw, img, radius=cfg.guided_radius, eps=cfg.guided_eps)
+  let transmission = guided_filter_image(
+    transmission_raw,
+    img,
+    radius=cfg.guided_radius,
+    eps=cfg.guided_eps,
+  )
   // 5. 去雾复原
   dehaze_recover(img, transmission, atmospheric, t_min=cfg.t_min)
 }

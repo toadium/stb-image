@@ -13,6 +13,8 @@ pub fn add_noise_gaussian(@types.Image, Float, UInt) -> @types.Image
 
 pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
 
+pub fn alpha_blend(@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError
+
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
 pub fn blend_color_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
@@ -41,25 +43,39 @@ pub fn blend_screen(@types.Image, @types.Image) -> @types.Image raise @types.Loa
 
 pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn brightness_value(@types.Image) -> Float
+
 pub fn compute_stats(@types.Image) -> ImageStats
 
 pub fn compute_stats_16(@types.Image16) -> ImageStats
 
 pub fn compute_stats_f(@types.ImageF) -> ImageStatsF
 
+pub fn contrast_value(@types.Image) -> Float
+
+pub fn entropy_value(@types.Image) -> Float
+
 pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
 
+pub fn flip_horizontal(@types.Image) -> @types.Image
+
+pub fn flip_vertical(@types.Image) -> @types.Image
+
 pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
 pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn mask_blend(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn mean_value(@types.Image) -> Float
 
 pub fn mean_value_16(@types.Image16) -> Float
 
 pub fn mean_value_f(@types.ImageF) -> Float
+
+pub fn median_value(@types.Image) -> Int
 
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
@@ -78,6 +94,8 @@ pub fn threshold(@types.Image, Int) -> @types.Image
 pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn transpose(@types.Image) -> @types.Image
+
+pub fn variance_value(@types.Image) -> Float
 
 pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
@@ -101,3 +119,4 @@ pub(all) struct ImageStatsF {
 // Type aliases
 
 // Traits
+

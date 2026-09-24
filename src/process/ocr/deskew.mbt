@@ -19,15 +19,22 @@ fn clamp_byte_deskew(v : Int) -> Byte {
 pub fn detect_skew_angle(img : @types.Image) -> Double raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_skew_angle: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_skew_angle: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_skew_angle: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_skew_angle: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -62,7 +69,9 @@ fn projection_variance_at_angle(
   let cos_a = @math.cos(angle_rad)
   let sin_a = @math.sin(angle_rad)
   // 计算旋转后的图像尺寸
-  let new_h = (height.to_double() * cos_a.abs() + width.to_double() * sin_a.abs()).to_int() + 1
+  let new_h = (height.to_double() * cos_a.abs() +
+    width.to_double() * sin_a.abs()).to_int() +
+    1
   // 计算水平投影
   let projection : Array[Int] = Array::make(new_h, 0)
   for y in 0..<height {
@@ -70,8 +79,8 @@ fn projection_variance_at_angle(
       if data[y * width + x].to_int() < 128 {
         // 黑色像素（文字）
         let new_y = ((x.to_double() - width.to_double() / 2.0) * sin_a +
-                     (y.to_double() - height.to_double() / 2.0) * cos_a +
-                     new_h.to_double() / 2.0).to_int()
+        (y.to_double() - height.to_double() / 2.0) * cos_a +
+        new_h.to_double() / 2.0).to_int()
         if new_y >= 0 && new_y < new_h {
           projection[new_y] += 1
         }
@@ -108,7 +117,10 @@ pub fn deskew(img : @types.Image) -> @types.Image raise @types.LoadError {
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "deskew: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "deskew: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -125,15 +137,22 @@ pub fn rotate_document(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("rotate_document: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "rotate_document: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("rotate_document: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "rotate_document: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "rotate_document: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "rotate_document: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -144,8 +163,10 @@ pub fn rotate_document(
   let cos_a = @math.cos(angle_rad)
   let sin_a = @math.sin(angle_rad)
   // 计算新图像尺寸
-  let new_w = (w.to_double() * cos_a.abs() + h.to_double() * sin_a.abs()).to_int() + 1
-  let new_h = (w.to_double() * sin_a.abs() + h.to_double() * cos_a.abs()).to_int() + 1
+  let new_w = (w.to_double() * cos_a.abs() + h.to_double() * sin_a.abs()).to_int() +
+    1
+  let new_h = (w.to_double() * sin_a.abs() + h.to_double() * cos_a.abs()).to_int() +
+    1
   // 创建白色背景的新图像
   let out : Array[Byte] = Array::make(new_w * new_h * ch, b'\xFF')
   let data = img.data
@@ -180,5 +201,10 @@ pub fn rotate_document(
       }
     }
   }
-  @types.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

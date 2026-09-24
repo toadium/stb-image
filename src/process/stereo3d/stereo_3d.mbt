@@ -4,19 +4,15 @@
 ///|
 /// 点云数据
 pub(all) struct PointCloud {
-  points : Array[(Double, Double, Double)]  // (x, y, z)
-  colors : Array[(Int, Int, Int)]  // (r, g, b)
+  points : Array[(Double, Double, Double)] // (x, y, z)
+  colors : Array[(Int, Int, Int)] // (r, g, b)
   num_points : Int
 }
 
 ///|
 /// 创建空点云
 pub fn point_cloud_new() -> PointCloud {
-  PointCloud::{
-    points: [],
-    colors: [],
-    num_points: 0,
-  }
+  PointCloud::{ points: [], colors: [], num_points: 0 }
 }
 
 ///|
@@ -25,7 +21,7 @@ pub fn depth_to_colormap(
   depth : @types.Image,
   colormap? : String = "jet",
 ) -> @types.Image {
-let cmap = colormap
+  let cmap = colormap
   let w = depth.width
   let h = depth.height
   let channels = depth.channels
@@ -37,8 +33,12 @@ let cmap = colormap
     for x in 0..<w {
       let idx = (y * w + x) * channels
       let v = depth.data[idx].to_double()
-      if v < min_depth { min_depth = v }
-      if v > max_depth { max_depth = v }
+      if v < min_depth {
+        min_depth = v
+      }
+      if v > max_depth {
+        max_depth = v
+      }
     }
   }
   let range = if max_depth > min_depth { max_depth - min_depth } else { 1.0 }
@@ -70,7 +70,12 @@ let cmap = colormap
       out_data[out_idx + 2] = b.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -110,11 +115,7 @@ pub fn depth_to_pointcloud(
       }
     }
   }
-  PointCloud::{
-    points,
-    colors,
-    num_points: points.length(),
-  }
+  PointCloud::{ points, colors, num_points: points.length() }
 }
 
 ///|
@@ -123,7 +124,7 @@ pub fn pointcloud_voxel_downsample(
   cloud : PointCloud,
   voxel_size? : Double = 1.0,
 ) -> PointCloud {
-let vs = voxel_size
+  let vs = voxel_size
   // 简单的体素下采样：每个体素保留第一个点
   let seen : Array[String] = []
   let points : Array[(Double, Double, Double)] = []
@@ -150,11 +151,7 @@ let vs = voxel_size
       }
     }
   }
-  PointCloud::{
-    points,
-    colors,
-    num_points: points.length(),
-  }
+  PointCloud::{ points, colors, num_points: points.length() }
 }
 
 ///|
@@ -185,12 +182,13 @@ pub fn compute_disparity(
         }
         // 计算 SAD（绝对差之和）
         let mut cost = 0.0
-        for dy in (-half)..<(half + 1) {
-          for dx in (-half)..<(half + 1) {
+        for dy in -half..<(half + 1) {
+          for dx in -half..<(half + 1) {
             let l_idx = ((y + dy) * w + (x + dx)) * channels
             let r_idx = ((y + dy) * w + (x + dx - d)) * channels
             for c in 0..<channels {
-              let diff = (left.data[l_idx + c].to_double() - right.data[r_idx + c].to_double()).abs()
+              let diff = (left.data[l_idx + c].to_double() -
+              right.data[r_idx + c].to_double()).abs()
               cost += diff
             }
           }
@@ -209,7 +207,12 @@ pub fn compute_disparity(
     let value = (disparity[i].to_double() / max_disp.to_double() * 255.0).to_int()
     out_data[i] = value.min(255).max(0).to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -236,5 +239,10 @@ pub fn disparity_to_depth(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }

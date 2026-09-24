@@ -277,7 +277,7 @@ pub fn denoise_image(
         if nx >= 0 && nx < width && ny >= 0 && ny < height {
           let nidx = ny * width + nx
           if nidx < noisy_image.length() {
-            let dist = ((dx * dx + dy * dy)).to_double()
+            let dist = (dx * dx + dy * dy).to_double()
             let weight = 1.0 / (1.0 + dist * config.noise_level * 0.01)
             sum += noisy_image[nidx] * weight
             weight_sum += weight
@@ -343,7 +343,11 @@ pub fn deblur_image(
           }
         }
 
-        let neighbor_avg = if neighbor_count > 0 { neighbor_sum / neighbor_count.to_double() } else { center }
+        let neighbor_avg = if neighbor_count > 0 {
+          neighbor_sum / neighbor_count.to_double()
+        } else {
+          center
+        }
         let sharpened = center * 2.0 - neighbor_avg
         if sharpened < 0.0 {
           deblurred.push(0.0)
@@ -362,7 +366,8 @@ pub fn deblur_image(
   for i in 0..<config.kernel_size {
     let row : Array[Double] = []
     for j in 0..<config.kernel_size {
-      let dist = ((i - config.kernel_size / 2) * (i - config.kernel_size / 2) + (j - config.kernel_size / 2) * (j - config.kernel_size / 2)).to_double()
+      let dist = ((i - config.kernel_size / 2) * (i - config.kernel_size / 2) +
+      (j - config.kernel_size / 2) * (j - config.kernel_size / 2)).to_double()
       let value = 1.0 / (1.0 + dist)
       row.push(value)
     }
@@ -422,7 +427,10 @@ pub fn super_resolution(
       let v10 = if idx10 < image.length() { image[idx10] } else { 0.0 }
       let v11 = if idx11 < image.length() { image[idx11] } else { 0.0 }
 
-      let value = v00 * (1.0 - fx) * (1.0 - fy) + v01 * fx * (1.0 - fy) + v10 * (1.0 - fx) * fy + v11 * fx * fy
+      let value = v00 * (1.0 - fx) * (1.0 - fy) +
+        v01 * fx * (1.0 - fy) +
+        v10 * (1.0 - fx) * fy +
+        v11 * fx * fy
       sr.push(value)
     }
   }
@@ -466,11 +474,7 @@ pub fn dehaze_image(
     transmission.push(t)
 
     // 去雾公式
-    let dehazed_value = if t > 0.1 {
-      (value - a) / t + a
-    } else {
-      value
-    }
+    let dehazed_value = if t > 0.1 { (value - a) / t + a } else { value }
     if dehazed_value < 0.0 {
       dehazed.push(0.0)
     } else if dehazed_value > 255.0 {
@@ -513,7 +517,8 @@ pub fn restore_old_photo(
     let denoised = value + noise * config.noise_reduction * 10.0
 
     // 对比度增强
-    let enhanced = (denoised - 128.0) * (1.0 + config.contrast_enhancement) + 128.0
+    let enhanced = (denoised - 128.0) * (1.0 + config.contrast_enhancement) +
+      128.0
 
     if enhanced < 0.0 {
       restored.push(0.0)
@@ -552,54 +557,90 @@ pub fn image_restoration_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageRestorationTaskType::Denoising => "图像去噪"
-    ImageRestorationTaskType::Deblurring => "图像去模糊"
-    ImageRestorationTaskType::SuperResolution => "超分辨率"
-    ImageRestorationTaskType::Dehazing => "去雾"
-    ImageRestorationTaskType::Deraining => "去雨"
-    ImageRestorationTaskType::Desnowing => "去雪"
-    ImageRestorationTaskType::Deocclusion => "去遮挡"
-    ImageRestorationTaskType::ScratchRemoval => "划痕修复"
-    ImageRestorationTaskType::OldPhotoRestoration => "老照片修复"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 去噪方法 | " + (match config.denoising_method {
-    DenoisingMethod::BM3D => "BM3D"
-    DenoisingMethod::NLM => "非局部均值"
-    DenoisingMethod::Wiener => "维纳滤波"
-    DenoisingMethod::TotalVariation => "全变分"
-    DenoisingMethod::DeepLearning => "深度学习"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 去模糊方法 | " + (match config.deblurring_method {
-    DeblurringMethod::Wiener => "维纳滤波"
-    DeblurringMethod::RichardsonLucy => "Richardson-Lucy"
-    DeblurringMethod::BlindDeconvolution => "盲去卷积"
-    DeblurringMethod::DeepLearning => "深度学习"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 噪声类型 | " + (match config.noise_type {
-    NoiseType::Gaussian => "高斯噪声"
-    NoiseType::SaltAndPepper => "椒盐噪声"
-    NoiseType::Poisson => "泊松噪声"
-    NoiseType::Speckle => "斑点噪声"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 噪声水平 | " + config.noise_level.to_string() + " |\n"
-  report = report + "| 模糊类型 | " + (match config.blur_type {
-    BlurType::Gaussian => "高斯模糊"
-    BlurType::Motion => "运动模糊"
-    BlurType::Defocus => "散焦模糊"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageRestorationTaskType::Denoising => "图像去噪"
+      ImageRestorationTaskType::Deblurring => "图像去模糊"
+      ImageRestorationTaskType::SuperResolution => "超分辨率"
+      ImageRestorationTaskType::Dehazing => "去雾"
+      ImageRestorationTaskType::Deraining => "去雨"
+      ImageRestorationTaskType::Desnowing => "去雪"
+      ImageRestorationTaskType::Deocclusion => "去遮挡"
+      ImageRestorationTaskType::ScratchRemoval => "划痕修复"
+      ImageRestorationTaskType::OldPhotoRestoration => "老照片修复"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 去噪方法 | " +
+    (match config.denoising_method {
+      DenoisingMethod::BM3D => "BM3D"
+      DenoisingMethod::NLM => "非局部均值"
+      DenoisingMethod::Wiener => "维纳滤波"
+      DenoisingMethod::TotalVariation => "全变分"
+      DenoisingMethod::DeepLearning => "深度学习"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 去模糊方法 | " +
+    (match config.deblurring_method {
+      DeblurringMethod::Wiener => "维纳滤波"
+      DeblurringMethod::RichardsonLucy => "Richardson-Lucy"
+      DeblurringMethod::BlindDeconvolution => "盲去卷积"
+      DeblurringMethod::DeepLearning => "深度学习"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 噪声类型 | " +
+    (match config.noise_type {
+      NoiseType::Gaussian => "高斯噪声"
+      NoiseType::SaltAndPepper => "椒盐噪声"
+      NoiseType::Poisson => "泊松噪声"
+      NoiseType::Speckle => "斑点噪声"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 噪声水平 | " +
+    config.noise_level.to_string() +
+    " |\n"
+  report = report +
+    "| 模糊类型 | " +
+    (match config.blur_type {
+      BlurType::Gaussian => "高斯模糊"
+      BlurType::Motion => "运动模糊"
+      BlurType::Defocus => "散焦模糊"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 核大小 | " + config.kernel_size.to_string() + " |\n"
-  report = report + "| 超分倍率 | " + config.scale_factor.to_string() + "x |\n"
-  report = report + "| 划痕去除 | " + (if config.scratch_removal { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 降噪强度 | " + config.noise_reduction.to_string() + " |\n"
-  report = report + "| 对比度增强 | " + config.contrast_enhancement.to_string() + " |\n"
-  report = report + "| 上色 | " + (if config.colorization { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 人脸增强 | " + (if config.face_enhancement { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 超分倍率 | " +
+    config.scale_factor.to_string() +
+    "x |\n"
+  report = report +
+    "| 划痕去除 | " +
+    (if config.scratch_removal { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 降噪强度 | " +
+    config.noise_reduction.to_string() +
+    " |\n"
+  report = report +
+    "| 对比度增强 | " +
+    config.contrast_enhancement.to_string() +
+    " |\n"
+  report = report +
+    "| 上色 | " +
+    (if config.colorization { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 人脸增强 | " +
+    (if config.face_enhancement { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

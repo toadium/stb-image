@@ -21,7 +21,7 @@ fn Vp8BitReader::new(data : Bytes, start : Int) -> Vp8BitReader {
 ///|
 fn Vp8BitReader::read_bits(self : Vp8BitReader, n : Int) -> Int {
   let mut result = 0
-  for i in 0..<n {
+  for _ in 0..<n {
     if self.bit_count == 0 {
       if self.pos >= self.data.length() {
         self.bit_buf = 0
@@ -75,9 +75,14 @@ fn Vp8BoolDecoder::new(data : Bytes, start : Int) -> Vp8BoolDecoder {
     value: 0,
   }
   // 初始化：读取前两个字节
-  bd.value = if bd.pos < bd.data.length() { bd.data[bd.pos].to_int() } else { 0 }
+  bd.value = if bd.pos < bd.data.length() {
+    bd.data[bd.pos].to_int()
+  } else {
+    0
+  }
   bd.pos += 1
-  bd.value = (bd.value << 8) | (if bd.pos < bd.data.length() { bd.data[bd.pos].to_int() } else { 0 })
+  bd.value = (bd.value << 8) |
+    (if bd.pos < bd.data.length() { bd.data[bd.pos].to_int() } else { 0 })
   bd.pos += 1
   bd.bit_count = 16
   bd
@@ -116,7 +121,7 @@ fn Vp8BoolDecoder::read_bool(self : Vp8BoolDecoder, prob : Int) -> Int {
 fn Vp8BoolDecoder::read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
   // 读取指定位数的字面值（概率 128）
   let mut v = 0
-  for i in 0..<num_bits {
+  for _ in 0..<num_bits {
     v = (v << 1) | self.read_bool(128)
   }
   v
@@ -130,29 +135,37 @@ fn Vp8BoolDecoder::read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
 /// VP8 自适应系数概率模型
 priv struct Vp8AdaptiveProbs {
   // 每个系数位置（0-15，zig-zag 顺序）的概率
-  prob_zero : Array[Int]      // 零系数概率
-  prob_one : Array[Int]       // 单系数（值为±1）概率
-  prob_eob : Array[Int]       // EOB（块结束）概率
-  prob_extra : Array[Int]     // 额外位概率
-  mut prob_sign : Int              // 符号位概率（所有位置共用）
+  prob_zero : Array[Int] // 零系数概率
+  prob_one : Array[Int] // 单系数（值为±1）概率
+  prob_eob : Array[Int] // EOB（块结束）概率
+  prob_extra : Array[Int] // 额外位概率
+  mut prob_sign : Int // 符号位概率（所有位置共用）
 
   // 统计计数器（用于概率更新）
   count_zero : Array[Int]
   count_one : Array[Int]
   count_eob : Array[Int]
   count_extra : Array[Int]
-  mut count_sign_pos : Int         // 正符号计数
-  mut count_sign_neg : Int         // 负符号计数
-  mut total_blocks : Int           // 已解析块数
+  mut count_sign_pos : Int // 正符号计数
+  mut count_sign_neg : Int // 负符号计数
+  mut total_blocks : Int // 已解析块数
 }
 
 ///|
 fn Vp8AdaptiveProbs::new() -> Vp8AdaptiveProbs {
   // VP8 默认概率（基于统计）
-  let default_zero = [200, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40]
-  let default_one = [180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40, 30]
-  let default_eob = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250]
-  let default_extra = [140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140]
+  let default_zero = [
+    200, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40,
+  ]
+  let default_one = [
+    180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40, 30,
+  ]
+  let default_eob = [
+    100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250,
+  ]
+  let default_extra = [
+    140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140,
+  ]
 
   Vp8AdaptiveProbs::{
     prob_zero: default_zero,
@@ -204,7 +217,10 @@ fn Vp8AdaptiveProbs::record_extra(self : Vp8AdaptiveProbs, pos : Int) -> Unit {
 
 ///|
 /// 记录符号统计
-fn Vp8AdaptiveProbs::record_sign(self : Vp8AdaptiveProbs, is_positive : Bool) -> Unit {
+fn Vp8AdaptiveProbs::record_sign(
+  self : Vp8AdaptiveProbs,
+  is_positive : Bool,
+) -> Unit {
   if is_positive {
     self.count_sign_pos += 1
   } else {
@@ -227,25 +243,25 @@ fn Vp8AdaptiveProbs::update(self : Vp8AdaptiveProbs) -> Unit {
     let total = self.count_zero[i] + self.count_one[i] + 1
     // 更新零系数概率
     if total > 0 {
-      let observed_zero = (self.count_zero[i] * 256) / total
+      let observed_zero = self.count_zero[i] * 256 / total
       self.prob_zero[i] = (self.prob_zero[i] * 7 + observed_zero) / 8
     }
     // 更新单系数概率
     let non_zero = self.count_one[i] + 1
     if non_zero > 0 {
-      let observed_one = (self.count_one[i] * 256) / non_zero
+      let observed_one = self.count_one[i] * 256 / non_zero
       self.prob_one[i] = (self.prob_one[i] * 7 + observed_one) / 8
     }
     // 更新 EOB 概率
     let eob_total = self.count_eob[i] + 1
     if eob_total > 0 {
-      let observed_eob = (self.count_eob[i] * 256) / eob_total
+      let observed_eob = self.count_eob[i] * 256 / eob_total
       self.prob_eob[i] = (self.prob_eob[i] * 7 + observed_eob) / 8
     }
     // 更新额外位概率
     let extra_total = self.count_extra[i] + 1
     if extra_total > 0 {
-      let observed_extra = (self.count_extra[i] * 256) / extra_total
+      let observed_extra = self.count_extra[i] * 256 / extra_total
       self.prob_extra[i] = (self.prob_extra[i] * 7 + observed_extra) / 8
     }
   }
@@ -253,7 +269,7 @@ fn Vp8AdaptiveProbs::update(self : Vp8AdaptiveProbs) -> Unit {
   // 更新符号概率
   let sign_total = self.count_sign_pos + self.count_sign_neg + 1
   if sign_total > 0 {
-    let observed_sign = (self.count_sign_pos * 256) / sign_total
+    let observed_sign = self.count_sign_pos * 256 / sign_total
     self.prob_sign = (self.prob_sign * 7 + observed_sign) / 8
   }
 
@@ -314,12 +330,7 @@ fn Vp8AdaptiveProbs::get_extra_prob(self : Vp8AdaptiveProbs, pos : Int) -> Int {
 ///|
 /// VP8 zig-zag 扫描顺序（4x4 块）
 fn vp8_zigzag_4x4() -> Array[Int] {
-  [
-    0, 1, 4, 8,
-    5, 2, 3, 6,
-    9, 12, 13, 10,
-    7, 11, 14, 15,
-  ]
+  [0, 1, 4, 8, 5, 2, 3, 6, 9, 12, 13, 10, 7, 11, 14, 15]
 }
 
 ///|
@@ -428,7 +439,9 @@ fn parse_vp8_frame_header(br : Vp8BitReader) -> Vp8FrameHeader {
   let first_part_size_0 = br.read_bits(8)
   let first_part_size_1 = br.read_bits(8)
   let first_part_size_2 = br.read_bits(8)
-  let first_part_size = first_part_size_0 | (first_part_size_1 << 8) | (first_part_size_2 << 16)
+  let first_part_size = first_part_size_0 |
+    (first_part_size_1 << 8) |
+    (first_part_size_2 << 16)
 
   let mut width = 0
   let mut height = 0
@@ -511,13 +524,13 @@ fn parse_quantization(br : Vp8BitReader) -> Vp8QuantParams {
 ///|
 /// VP8 Segment 参数
 priv struct Vp8SegmentParams {
-  mut enabled : Bool                    // 是否启用 segmentation
-  mut update_map : Bool                 // 是否更新宏块 segment 映射
-  mut update_features : Bool            // 是否更新 segment 特征数据
-  mut feature_mode : Int                // 特征模式：0=delta，1=absolute
-  quantizer_deltas : Array[Int]        // 每个 segment 的量化器增量（4个）
-  filter_deltas : Array[Int]           // 每个 segment 的滤波级别增量（4个）
-  mb_segment_tree_probs : Array[Int]   // 宏块 segment 树概率（3个）
+  mut enabled : Bool // 是否启用 segmentation
+  mut update_map : Bool // 是否更新宏块 segment 映射
+  mut update_features : Bool // 是否更新 segment 特征数据
+  mut feature_mode : Int // 特征模式：0=delta，1=absolute
+  quantizer_deltas : Array[Int] // 每个 segment 的量化器增量（4个）
+  filter_deltas : Array[Int] // 每个 segment 的滤波级别增量（4个）
+  mb_segment_tree_probs : Array[Int] // 宏块 segment 树概率（3个）
 }
 
 ///|
@@ -593,10 +606,7 @@ fn parse_segmentation(br : Vp8BitReader) -> Vp8SegmentParams {
 
 ///|
 /// 解析宏块的 segment ID（使用树概率）
-fn vp8_parse_mb_segment_id(
-  bd : Vp8BoolDecoder,
-  probs : Array[Int],
-) -> Int {
+fn vp8_parse_mb_segment_id(bd : Vp8BoolDecoder, probs : Array[Int]) -> Int {
   // VP8 segment ID 使用二叉树解析
   // 树结构：
   //       0
@@ -611,13 +621,11 @@ fn vp8_parse_mb_segment_id(
     } else {
       1
     }
-  } else {
     // 右子树：2 或 3
-    if bd.read_bool(probs[2]) == 0 {
-      2
-    } else {
-      3
-    }
+  } else if bd.read_bool(probs[2]) == 0 {
+    2
+  } else {
+    3
   }
 }
 
@@ -642,12 +650,7 @@ fn vp8_get_quant_for_segment(
     }
   } else {
     // absolute 模式
-    Vp8QuantParams::{
-      y_ac: delta,
-      y_dc: delta,
-      uv_ac: delta,
-      uv_dc: delta,
-    }
+    Vp8QuantParams::{ y_ac: delta, y_dc: delta, uv_ac: delta, uv_dc: delta }
   }
 }
 
@@ -667,8 +670,12 @@ fn vp8_get_filter_level_for_segment(
   } else {
     delta
   }
-  if level < 0 { level = 0 }
-  if level > 63 { level = 63 }
+  if level < 0 {
+    level = 0
+  }
+  if level > 63 {
+    level = 63
+  }
   level
 }
 
@@ -767,7 +774,7 @@ fn vp8_wht_4x4(block : Array[Int]) -> Array[Int] {
 
 ///|
 /// I16x16 帧内预测模式
-enum Vp8I16x16Mode {
+priv enum Vp8I16x16Mode {
   I16x16DcPred
   I16x16TrueMotionPred
   I16x16HPred
@@ -776,7 +783,7 @@ enum Vp8I16x16Mode {
 
 ///|
 /// I4x4 帧内预测模式
-enum Vp8I4x4Mode {
+priv enum Vp8I4x4Mode {
   I4x4DcPred
   I4x4TrueMotionPred
   I4x4HPred
@@ -813,7 +820,7 @@ fn vp8_intra_predict_16x16(
         result[i] = dc
       }
     }
-    I16x16TrueMotionPred => {
+    I16x16TrueMotionPred =>
       for y in 0..<16 {
         for x in 0..<16 {
           let mut sum = 0
@@ -827,21 +834,18 @@ fn vp8_intra_predict_16x16(
           result[y * 16 + x] = (sum + (x + y + 2) / 2) / (x + y + 2)
         }
       }
-    }
-    I16x16HPred => {
+    I16x16HPred =>
       for y in 0..<16 {
         for x in 0..<16 {
           result[y * 16 + x] = left[y]
         }
       }
-    }
-    I16x16VPred => {
+    I16x16VPred =>
       for y in 0..<16 {
         for x in 0..<16 {
           result[y * 16 + x] = above[x]
         }
       }
-    }
   }
   result
 }
@@ -878,42 +882,43 @@ fn vp8_intra_predict_4x4(
 
     // 1: TrueMotion 预测 - 基于水平和垂直梯度
     // P[y][x] = clip(above[x] + left[y] - above_left, 0, 255)
-    I4x4TrueMotionPred => {
+    I4x4TrueMotionPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           let mut pred = above[x] + left[y] - above_left
-          if pred < 0 { pred = 0 }
-          if pred > 255 { pred = 255 }
+          if pred < 0 {
+            pred = 0
+          }
+          if pred > 255 {
+            pred = 255
+          }
           result[y * 4 + x] = pred
         }
       }
-    }
 
     // 2: 水平预测 - 使用左方像素
     // P[y][x] = left[y]
-    I4x4HPred => {
+    I4x4HPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           result[y * 4 + x] = left[y]
         }
       }
-    }
 
     // 3: 垂直预测 - 使用上方像素
     // P[y][x] = above[x]
-    I4x4VPred => {
+    I4x4VPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           result[y * 4 + x] = above[x]
         }
       }
-    }
 
     // 4: LeftDown 预测（左下/对角线，斜率 1）
     // 从左上到右下的对角线预测
     // P[y][x] = (above[x+y] + above[x+y+1] + 1) >> 1  (x+y <= 6)
     // P[y][x] = above[7]  (x+y == 7)
-    I4x4LeftDownPred => {
+    I4x4LeftDownPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           let idx = x + y
@@ -924,13 +929,12 @@ fn vp8_intra_predict_4x4(
           }
         }
       }
-    }
 
     // 5: RightDown 预测（右下/对角线，斜率 -1）
     // 从右上到左下的对角线预测
     // 如果 x >= y: P[y][x] = (above[x-y] + above[x-y+1] + 1) >> 1
     // 如果 x < y:  P[y][x] = (left[y-x-1] + left[y-x] + 1) >> 1
-    I4x4RightDownPred => {
+    I4x4RightDownPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           if x >= y {
@@ -942,35 +946,32 @@ fn vp8_intra_predict_4x4(
           }
         }
       }
-    }
 
     // 6: RightUp 预测（右上/垂直-右组合）
     // 垂直预测为主，向右下方倾斜
     // P[y][x] = (above[x] + above[x+1] + left[y] + 1) >> 2
-    I4x4RightUpPred => {
+    I4x4RightUpPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           result[y * 4 + x] = (above[x] + above[x + 1] + left[y] + 1) >> 2
         }
       }
-    }
 
     // 7: LeftUp 预测（左上/水平-上组合）
     // 水平预测为主，向右上方倾斜
     // P[y][x] = (left[y] + left[y+1] + above[x] + 1) >> 2
-    I4x4LeftUpPred => {
+    I4x4LeftUpPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           result[y * 4 + x] = (left[y] + left[y + 1] + above[x] + 1) >> 2
         }
       }
-    }
 
     // 8: VertRight 预测（垂直-右）
     // 垂直预测 + 对角线修正
     // P[y][x] = (above[x] + above[x+1] + 1) >> 1  (y == 0)
     // P[y][x] = (above[x] + left[y-1] + 1) >> 1    (y > 0)
-    I4x4VertRightPred => {
+    I4x4VertRightPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           if y == 0 {
@@ -980,13 +981,12 @@ fn vp8_intra_predict_4x4(
           }
         }
       }
-    }
 
     // 9: HorizDown 预测（水平-下）
     // 水平预测 + 对角线修正
     // P[y][x] = (left[y] + left[y+1] + 1) >> 1  (x == 0)
     // P[y][x] = (left[y] + above[x-1] + 1) >> 1  (x > 0)
-    I4x4HorizDownPred => {
+    I4x4HorizDownPred =>
       for y in 0..<4 {
         for x in 0..<4 {
           if x == 0 {
@@ -996,7 +996,6 @@ fn vp8_intra_predict_4x4(
           }
         }
       }
-    }
   }
   result
 }
@@ -1150,10 +1149,7 @@ fn vp8_parse_uv_mode(
 ///|
 /// 解析子宏块类型（I16x16 vs I4x4）
 /// 返回 true 表示使用 I16x16，false 表示使用 I4x4
-fn vp8_parse_submb_type(
-  bd : Vp8BoolDecoder,
-  probs : Vp8MbModeProbs,
-) -> Bool {
+fn vp8_parse_submb_type(bd : Vp8BoolDecoder, probs : Vp8MbModeProbs) -> Bool {
   let use_i16x16 = bd.read_bool(probs.submb_type_prob) == 1
   if use_i16x16 {
     probs.submb_type_count += 1
@@ -1171,38 +1167,50 @@ fn Vp8MbModeProbs::update(self : Vp8MbModeProbs) -> Unit {
   }
 
   // 更新 I16x16 概率
-  let i16_total = self.i16x16_count[0] + self.i16x16_count[1] +
-    self.i16x16_count[2] + self.i16x16_count[3] + 1
+  let i16_total = self.i16x16_count[0] +
+    self.i16x16_count[1] +
+    self.i16x16_count[2] +
+    self.i16x16_count[3] +
+    1
   for i in 0..<4 {
-    let observed = (self.i16x16_count[i] * 256) / i16_total
+    let observed = self.i16x16_count[i] * 256 / i16_total
     self.i16x16_prob[i] = (self.i16x16_prob[i] * 7 + observed) / 8
     self.i16x16_count[i] = self.i16x16_count[i] / 2
   }
 
   // 更新 I4x4 概率
-  let i4_total = self.i4x4_count[0] + self.i4x4_count[1] +
-    self.i4x4_count[2] + self.i4x4_count[3] +
-    self.i4x4_count[4] + self.i4x4_count[5] +
-    self.i4x4_count[6] + self.i4x4_count[7] +
-    self.i4x4_count[8] + self.i4x4_count[9] + 1
+  let i4_total = self.i4x4_count[0] +
+    self.i4x4_count[1] +
+    self.i4x4_count[2] +
+    self.i4x4_count[3] +
+    self.i4x4_count[4] +
+    self.i4x4_count[5] +
+    self.i4x4_count[6] +
+    self.i4x4_count[7] +
+    self.i4x4_count[8] +
+    self.i4x4_count[9] +
+    1
   for i in 0..<10 {
-    let observed = (self.i4x4_count[i] * 256) / i4_total
+    let observed = self.i4x4_count[i] * 256 / i4_total
     self.i4x4_prob[i] = (self.i4x4_prob[i] * 7 + observed) / 8
     self.i4x4_count[i] = self.i4x4_count[i] / 2
   }
 
   // 更新 UV 概率
-  let uv_total = self.uv_count[0] + self.uv_count[1] +
-    self.uv_count[2] + self.uv_count[3] + 1
+  let uv_total = self.uv_count[0] +
+    self.uv_count[1] +
+    self.uv_count[2] +
+    self.uv_count[3] +
+    1
   for i in 0..<4 {
-    let observed = (self.uv_count[i] * 256) / uv_total
+    let observed = self.uv_count[i] * 256 / uv_total
     self.uv_prob[i] = (self.uv_prob[i] * 7 + observed) / 8
     self.uv_count[i] = self.uv_count[i] / 2
   }
 
   // 更新子宏块类型概率
   let submb_total = self.total_mbs + 1
-  let observed_submb = (self.submb_type_count * 256) / submb_total
+  let observed_submb = self.submb_type_count * 256 / submb_total
   self.submb_type_prob = (self.submb_type_prob * 7 + observed_submb) / 8
   self.submb_type_count = self.submb_type_count / 2
 }
@@ -1214,10 +1222,10 @@ fn Vp8MbModeProbs::update(self : Vp8MbModeProbs) -> Unit {
 ///|
 /// VP8 环路滤波参数
 priv struct Vp8LoopFilterParams {
-  filter_level : Int       // 基础滤波级别 (0-63)
-  inner_filter_level : Int  // 内部滤波级别
-  sharpness_level : Int     // 锐化级别 (0-7)
-  segment_deltas : Array[Int]  // 每个 segment 的滤波增量
+  filter_level : Int // 基础滤波级别 (0-63)
+  inner_filter_level : Int // 内部滤波级别
+  sharpness_level : Int // 锐化级别 (0-7)
+  segment_deltas : Array[Int] // 每个 segment 的滤波增量
   mode_ref_deltas : Array[Int] // 模式/参考帧的滤波增量
 }
 
@@ -1251,8 +1259,12 @@ fn vp8_calc_filter_level(
     level += params.mode_ref_deltas[1]
   }
   // 限制范围
-  if level < 0 { level = 0 }
-  if level > 63 { level = 63 }
+  if level < 0 {
+    level = 0
+  }
+  if level > 63 {
+    level = 63
+  }
   level
 }
 
@@ -1387,7 +1399,9 @@ fn vp8_loop_filter_mb(
     for y in 0..<16 {
       let py = mb_py + y
       if py < height {
-        vp8_filter_vertical_4(y_plane, mb_px, py, width, filter_level, inner_level)
+        vp8_filter_vertical_4(
+          y_plane, mb_px, py, width, filter_level, inner_level,
+        )
       }
     }
   }
@@ -1397,7 +1411,9 @@ fn vp8_loop_filter_mb(
     for x in 0..<16 {
       let px = mb_px + x
       if px < width {
-        vp8_filter_horizontal_4(y_plane, px, mb_py, width, filter_level, inner_level)
+        vp8_filter_horizontal_4(
+          y_plane, px, mb_py, width, filter_level, inner_level,
+        )
       }
     }
   }
@@ -1409,7 +1425,14 @@ fn vp8_loop_filter_mb(
       for y in 0..<16 {
         let py = mb_py + y
         if py < height {
-          vp8_filter_vertical_4(y_plane, px, py, width, inner_level, inner_level / 2)
+          vp8_filter_vertical_4(
+            y_plane,
+            px,
+            py,
+            width,
+            inner_level,
+            inner_level / 2,
+          )
         }
       }
     }
@@ -1422,7 +1445,14 @@ fn vp8_loop_filter_mb(
       for x in 0..<16 {
         let px = mb_px + x
         if px < width {
-          vp8_filter_horizontal_4(y_plane, px, py, width, inner_level, inner_level / 2)
+          vp8_filter_horizontal_4(
+            y_plane,
+            px,
+            py,
+            width,
+            inner_level,
+            inner_level / 2,
+          )
         }
       }
     }
@@ -1439,7 +1469,14 @@ fn vp8_loop_filter_mb(
     for y in 0..<8 {
       let py = uv_mb_py + y
       if py < uv_height {
-        vp8_filter_vertical_4(u_plane, uv_mb_px, py, uv_width, filter_level / 2, inner_level / 2)
+        vp8_filter_vertical_4(
+          u_plane,
+          uv_mb_px,
+          py,
+          uv_width,
+          filter_level / 2,
+          inner_level / 2,
+        )
       }
     }
   }
@@ -1449,7 +1486,14 @@ fn vp8_loop_filter_mb(
     for x in 0..<8 {
       let px = uv_mb_px + x
       if px < uv_width {
-        vp8_filter_horizontal_4(u_plane, px, uv_mb_py, uv_width, filter_level / 2, inner_level / 2)
+        vp8_filter_horizontal_4(
+          u_plane,
+          px,
+          uv_mb_py,
+          uv_width,
+          filter_level / 2,
+          inner_level / 2,
+        )
       }
     }
   }
@@ -1459,7 +1503,14 @@ fn vp8_loop_filter_mb(
     for y in 0..<8 {
       let py = uv_mb_py + y
       if py < uv_height {
-        vp8_filter_vertical_4(v_plane, uv_mb_px, py, uv_width, filter_level / 2, inner_level / 2)
+        vp8_filter_vertical_4(
+          v_plane,
+          uv_mb_px,
+          py,
+          uv_width,
+          filter_level / 2,
+          inner_level / 2,
+        )
       }
     }
   }
@@ -1469,7 +1520,14 @@ fn vp8_loop_filter_mb(
     for x in 0..<8 {
       let px = uv_mb_px + x
       if px < uv_width {
-        vp8_filter_horizontal_4(v_plane, px, uv_mb_py, uv_width, filter_level / 2, inner_level / 2)
+        vp8_filter_horizontal_4(
+          v_plane,
+          px,
+          uv_mb_py,
+          uv_width,
+          filter_level / 2,
+          inner_level / 2,
+        )
       }
     }
   }
@@ -1481,8 +1539,8 @@ fn vp8_loop_filter_mb(
 ///|
 /// 运动向量（整数像素精度）
 priv struct Vp8MotionVector {
-  mut mv_x : Int  // 水平运动向量（像素单位）
-  mut mv_y : Int  // 垂直运动向量（像素单位）
+  mut mv_x : Int // 水平运动向量（像素单位）
+  mut mv_y : Int // 垂直运动向量（像素单位）
 }
 
 ///|
@@ -1492,25 +1550,25 @@ fn Vp8MotionVector::new() -> Vp8MotionVector {
 
 ///|
 /// 宏块类型（帧内/帧间）
-enum Vp8MbType {
-  MbIntra    // 帧内预测
-  MbInter    // 帧间预测（运动补偿）
-  MbSkip     // 跳过宏块（使用零运动向量，无残差）
+priv enum Vp8MbType {
+  MbIntra // 帧内预测
+  MbInter // 帧间预测（运动补偿）
+  MbSkip // 跳过宏块（使用零运动向量，无残差）
 }
 
 ///|
 /// 参考帧管理
 /// VP8 使用 3 个参考帧：last（前向）、golden（黄金帧）、altref（备用参考帧）
 pub struct Vp8ReferenceFrames {
-  last_y : Array[Int]     // 前向参考帧 Y 平面
-  last_u : Array[Int]     // 前向参考帧 U 平面
-  last_v : Array[Int]     // 前向参考帧 V 平面
-  golden_y : Array[Int]   // 黄金帧 Y 平面
-  golden_u : Array[Int]   // 黄金帧 U 平面
-  golden_v : Array[Int]   // 黄金帧 V 平面
-  altref_y : Array[Int]   // 备用参考帧 Y 平面
-  altref_u : Array[Int]   // 备用参考帧 U 平面
-  altref_v : Array[Int]   // 备用参考帧 V 平面
+  last_y : Array[Int] // 前向参考帧 Y 平面
+  last_u : Array[Int] // 前向参考帧 U 平面
+  last_v : Array[Int] // 前向参考帧 V 平面
+  golden_y : Array[Int] // 黄金帧 Y 平面
+  golden_u : Array[Int] // 黄金帧 U 平面
+  golden_v : Array[Int] // 黄金帧 V 平面
+  altref_y : Array[Int] // 备用参考帧 Y 平面
+  altref_u : Array[Int] // 备用参考帧 U 平面
+  altref_v : Array[Int] // 备用参考帧 V 平面
   width : Int
   height : Int
 }
@@ -1518,7 +1576,7 @@ pub struct Vp8ReferenceFrames {
 ///|
 fn Vp8ReferenceFrames::new(width : Int, height : Int) -> Vp8ReferenceFrames {
   let y_size = width * height
-  let uv_size = (width / 2) * (height / 2)
+  let uv_size = width / 2 * (height / 2)
   Vp8ReferenceFrames::{
     last_y: Array::make(y_size, 128),
     last_u: Array::make(uv_size, 128),
@@ -1529,8 +1587,8 @@ fn Vp8ReferenceFrames::new(width : Int, height : Int) -> Vp8ReferenceFrames {
     altref_y: Array::make(y_size, 128),
     altref_u: Array::make(uv_size, 128),
     altref_v: Array::make(uv_size, 128),
-    width: width,
-    height: height,
+    width,
+    height,
   }
 }
 
@@ -1543,7 +1601,7 @@ fn Vp8ReferenceFrames::update(
   v_plane : Array[Int],
 ) -> Unit {
   let y_size = self.width * self.height
-  let uv_size = (self.width / 2) * (self.height / 2)
+  let uv_size = self.width / 2 * (self.height / 2)
   for i in 0..<y_size {
     self.last_y[i] = y_plane[i]
   }
@@ -1566,9 +1624,9 @@ fn vp8_motion_compensate_16x16(
   width : Int,
   height : Int,
 ) -> (Array[Int], Array[Int], Array[Int]) {
-  let pred_y = Array::make(256, 128)  // 16x16 = 256
-  let pred_u = Array::make(64, 128)   // 8x8 = 64
-  let pred_v = Array::make(64, 128)   // 8x8 = 64
+  let pred_y = Array::make(256, 128) // 16x16 = 256
+  let pred_u = Array::make(64, 128) // 8x8 = 64
+  let pred_v = Array::make(64, 128) // 8x8 = 64
 
   // 计算参考位置（加上运动向量）
   let ref_x = mb_x * 16 + mv.mv_x
@@ -1595,8 +1653,20 @@ fn vp8_motion_compensate_16x16(
     for x in 0..<8 {
       let sx = uv_ref_x + x
       let sy = uv_ref_y + y
-      let cx = if sx < 0 { 0 } else if sx >= uv_width { uv_width - 1 } else { sx }
-      let cy = if sy < 0 { 0 } else if sy >= uv_height { uv_height - 1 } else { sy }
+      let cx = if sx < 0 {
+        0
+      } else if sx >= uv_width {
+        uv_width - 1
+      } else {
+        sx
+      }
+      let cy = if sy < 0 {
+        0
+      } else if sy >= uv_height {
+        uv_height - 1
+      } else {
+        sy
+      }
       pred_u[y * 8 + x] = ref_u[cy * uv_width + cx]
       pred_v[y * 8 + x] = ref_v[cy * uv_width + cx]
     }
@@ -1609,11 +1679,22 @@ fn vp8_motion_compensate_16x16(
 /// VP8 6 抽头插值滤波器（用于半像素插值）
 /// 系数：[1, -5, 20, 20, -5, 1]，右移 6 位
 fn vp8_interpolate_6tap(
-  p0 : Int, p1 : Int, p2 : Int, p3 : Int, p4 : Int, p5 : Int,
+  p0 : Int,
+  p1 : Int,
+  p2 : Int,
+  p3 : Int,
+  p4 : Int,
+  p5 : Int,
 ) -> Int {
   let sum = p0 - 5 * p1 + 20 * p2 + 20 * p3 - 5 * p4 + p5
   let result = (sum + 32) >> 6
-  if result < 0 { 0 } else if result > 255 { 255 } else { result }
+  if result < 0 {
+    0
+  } else if result > 255 {
+    255
+  } else {
+    result
+  }
 }
 
 ///|
@@ -1663,7 +1744,14 @@ fn vp8_interpolate_subpixel(
     h_samples[i] = vp8_get_ref_pixel(ref_plane, px - 2 + i, py, width, height)
   }
   let half_x = if frac_x >= 2 {
-    vp8_interpolate_6tap(h_samples[0], h_samples[1], h_samples[2], h_samples[3], h_samples[4], h_samples[5])
+    vp8_interpolate_6tap(
+      h_samples[0],
+      h_samples[1],
+      h_samples[2],
+      h_samples[3],
+      h_samples[4],
+      h_samples[5],
+    )
   } else {
     h_samples[2]
   }
@@ -1674,7 +1762,14 @@ fn vp8_interpolate_subpixel(
     v_samples[i] = vp8_get_ref_pixel(ref_plane, px, py - 2 + i, width, height)
   }
   let half_y = if frac_y >= 2 {
-    vp8_interpolate_6tap(v_samples[0], v_samples[1], v_samples[2], v_samples[3], v_samples[4], v_samples[5])
+    vp8_interpolate_6tap(
+      v_samples[0],
+      v_samples[1],
+      v_samples[2],
+      v_samples[3],
+      v_samples[4],
+      v_samples[5],
+    )
   } else {
     v_samples[2]
   }
@@ -1697,9 +1792,22 @@ fn vp8_interpolate_subpixel(
   // 计算对角半像素（先水平后垂直，或先垂直后水平，取平均）
   let diag_samples_h : Array[Int] = Array::make(6, 0)
   for i in 0..<6 {
-    diag_samples_h[i] = vp8_get_ref_pixel(ref_plane, px - 2 + i, py + 1, width, height)
+    diag_samples_h[i] = vp8_get_ref_pixel(
+      ref_plane,
+      px - 2 + i,
+      py + 1,
+      width,
+      height,
+    )
   }
-  let h11 = vp8_interpolate_6tap(diag_samples_h[0], diag_samples_h[1], diag_samples_h[2], diag_samples_h[3], diag_samples_h[4], diag_samples_h[5])
+  let h11 = vp8_interpolate_6tap(
+    diag_samples_h[0],
+    diag_samples_h[1],
+    diag_samples_h[2],
+    diag_samples_h[3],
+    diag_samples_h[4],
+    diag_samples_h[5],
+  )
 
   let tx = frac_x
   let ty = frac_y
@@ -1732,8 +1840,13 @@ fn vp8_motion_compensate_16x4_subpixel(
   for y in 0..<16 {
     for x in 0..<16 {
       pred_y[y * 16 + x] = vp8_interpolate_subpixel(
-        ref_y, mb_x * 16 + x, mb_y * 16 + y,
-        mv_x_q4, mv_y_q4, width, height,
+        ref_y,
+        mb_x * 16 + x,
+        mb_y * 16 + y,
+        mv_x_q4,
+        mv_y_q4,
+        width,
+        height,
       )
     }
   }
@@ -1746,12 +1859,22 @@ fn vp8_motion_compensate_16x4_subpixel(
   for y in 0..<8 {
     for x in 0..<8 {
       pred_u[y * 8 + x] = vp8_interpolate_subpixel(
-        ref_u, mb_x * 8 + x, mb_y * 8 + y,
-        uv_mv_x_q4, uv_mv_y_q4, uv_width, uv_height,
+        ref_u,
+        mb_x * 8 + x,
+        mb_y * 8 + y,
+        uv_mv_x_q4,
+        uv_mv_y_q4,
+        uv_width,
+        uv_height,
       )
       pred_v[y * 8 + x] = vp8_interpolate_subpixel(
-        ref_v, mb_x * 8 + x, mb_y * 8 + y,
-        uv_mv_x_q4, uv_mv_y_q4, uv_width, uv_height,
+        ref_v,
+        mb_x * 8 + x,
+        mb_y * 8 + y,
+        uv_mv_x_q4,
+        uv_mv_y_q4,
+        uv_width,
+        uv_height,
       )
     }
   }
@@ -1797,21 +1920,18 @@ fn vp8_read_se_golomb(bd : Vp8BoolDecoder) -> Int {
 ///|
 /// 解析运动向量残差（1/4 像素单位）
 /// VP8 使用简化的 Golomb 编码解析运动向量差
-fn vp8_parse_mv_residual(
-  bd : Vp8BoolDecoder,
-  prob : Int,
-) -> Int {
+fn vp8_parse_mv_residual(bd : Vp8BoolDecoder, prob : Int) -> Int {
   ignore(prob)
   // 简化实现：使用 Exp-Golomb 编码
   // 完整 VP8 使用更复杂的运动向量残差编码
   let residual = vp8_read_se_golomb(bd)
-  residual * 4  // 转换为 1/4 像素单位
+  residual * 4 // 转换为 1/4 像素单位
 }
 
 ///|
 /// 参考帧选择
 /// VP8 支持 3 个参考帧：last（0）、golden（1）、altref（2）
-enum Vp8RefFrame {
+priv enum Vp8RefFrame {
   RefLast
   RefGolden
   RefAltref
@@ -1819,10 +1939,7 @@ enum Vp8RefFrame {
 
 ///|
 /// 解析参考帧选择
-fn vp8_parse_ref_frame(
-  bd : Vp8BoolDecoder,
-  ref_prob : Int,
-) -> Vp8RefFrame {
+fn vp8_parse_ref_frame(bd : Vp8BoolDecoder, ref_prob : Int) -> Vp8RefFrame {
   // 简化实现：使用概率选择参考帧
   let is_last = bd.read_bool(ref_prob) == 1
   if is_last {
@@ -1920,7 +2037,10 @@ fn vp8_predict_motion_vector(
 
 ///|
 /// 解码 VP8 lossy 帧
-pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types.LoadError {
+pub fn decode_vp8_frame(
+  data : Bytes,
+  offset : Int,
+) -> @types.Image raise @types.LoadError {
   let br = Vp8BitReader::new(data, offset)
   let header = parse_vp8_frame_header(br)
 
@@ -1948,8 +2068,8 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   let base_u = 128 - quant.uv_ac / 4
   let base_v = 128 - quant.uv_dc / 4
   let y_plane : Array[Int] = Array::make(w * h, base_y)
-  let u_plane : Array[Int] = Array::make((w / 2) * (h / 2), base_u)
-  let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), base_v)
+  let u_plane : Array[Int] = Array::make(w / 2 * (h / 2), base_u)
+  let v_plane : Array[Int] = Array::make(w / 2 * (h / 2), base_v)
 
   // 帧内预测 + 残差系数解析 + IDCT 反变换
   // 创建布尔解码器用于残差系数解析和预测模式解析
@@ -1973,7 +2093,7 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
       segment_id_map[mb_y * mb_w + mb_x] = segment_id
 
       // 根据 segment ID 计算实际量化参数
-      let mb_quant = vp8_get_quant_for_segment(quant, segment, segment_id)
+      let _ = vp8_get_quant_for_segment(quant, segment, segment_id)
 
       // 生成参考像素
       let above : Array[Int] = Array::make(16, 128)
@@ -2011,8 +2131,12 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
                 let pred_y = sub_y * 4 + y
                 let pred_x = sub_x * 4 + x
                 let mut val = pred[pred_y * 16 + pred_x] + residual[y * 4 + x]
-                if val < 0 { val = 0 }
-                if val > 255 { val = 255 }
+                if val < 0 {
+                  val = 0
+                }
+                if val > 255 {
+                  val = 255
+                }
                 y_plane[py * w + px] = val
               }
             }
@@ -2029,8 +2153,12 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
       let segment_id = segment_id_map[mb_y * mb_w + mb_x]
-      let mb_filter_level = vp8_get_filter_level_for_segment(base_filter_level, segment, segment_id)
-      vp8_loop_filter_mb(y_plane, u_plane, v_plane, mb_x, mb_y, w, h, mb_filter_level)
+      let mb_filter_level = vp8_get_filter_level_for_segment(
+        base_filter_level, segment, segment_id,
+      )
+      vp8_loop_filter_mb(
+        y_plane, u_plane, v_plane, mb_x, mb_y, w, h, mb_filter_level,
+      )
     }
   }
 
@@ -2039,8 +2167,8 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
   for y in 0..<h {
     for x in 0..<w {
       let y_val = y_plane[y * w + x]
-      let u_val = u_plane[(y / 2) * (w / 2) + (x / 2)]
-      let v_val = v_plane[(y / 2) * (w / 2) + (x / 2)]
+      let u_val = u_plane[y / 2 * (w / 2) + x / 2]
+      let v_val = v_plane[y / 2 * (w / 2) + x / 2]
 
       // YUV 转 RGB（简化）
       let c = y_val - 16
@@ -2051,12 +2179,24 @@ pub fn decode_vp8_frame(data : Bytes, offset : Int) -> @types.Image raise @types
       let mut g = (298 * c - 100 * d - 208 * e + 128) >> 8
       let mut b = (298 * c + 516 * d + 128) >> 8
 
-      if r < 0 { r = 0 }
-      if r > 255 { r = 255 }
-      if g < 0 { g = 0 }
-      if g > 255 { g = 255 }
-      if b < 0 { b = 0 }
-      if b > 255 { b = 255 }
+      if r < 0 {
+        r = 0
+      }
+      if r > 255 {
+        r = 255
+      }
+      if g < 0 {
+        g = 0
+      }
+      if g > 255 {
+        g = 255
+      }
+      if b < 0 {
+        b = 0
+      }
+      if b > 255 {
+        b = 255
+      }
 
       let idx = (y * w + x) * 3
       out[idx] = r.to_byte()
@@ -2092,7 +2232,7 @@ pub fn decode_vp8_inter_frame(
     let w = img.width
     let h = img.height
     let y_size = w * h
-    let uv_size = (w / 2) * (h / 2)
+    let uv_size = w / 2 * (h / 2)
     let new_refs = Vp8ReferenceFrames::new(w, h)
     // 从 RGB 转换回 YUV（简化：使用亮度作为 Y，UV 固定为 128）
     for i in 0..<y_size {
@@ -2127,8 +2267,8 @@ pub fn decode_vp8_inter_frame(
   let quant = parse_quantization(br)
 
   let y_plane : Array[Int] = Array::make(w * h, 128)
-  let u_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
-  let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
+  let u_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
+  let v_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
 
   // 创建布尔解码器
   let bd = Vp8BoolDecoder::new(data, offset + 10)
@@ -2138,7 +2278,10 @@ pub fn decode_vp8_inter_frame(
   // 运动向量预测缓存（用于相邻宏块的运动向量预测）
   let mb_w = (w + 15) / 16
   let mb_h = (h + 15) / 16
-  let mv_cache : Array[Vp8MotionVector] = Array::make(mb_w * mb_h, Vp8MotionVector::new())
+  let mv_cache : Array[Vp8MotionVector] = Array::make(
+    mb_w * mb_h,
+    Vp8MotionVector::new(),
+  )
 
   // 对每个宏块进行解码
   for mb_y in 0..<mb_h {
@@ -2174,8 +2317,12 @@ pub fn decode_vp8_inter_frame(
                   let pred_y = sub_y * 4 + y
                   let pred_x = sub_x * 4 + x
                   let mut val = pred[pred_y * 16 + pred_x] + residual[y * 4 + x]
-                  if val < 0 { val = 0 }
-                  if val > 255 { val = 255 }
+                  if val < 0 {
+                    val = 0
+                  }
+                  if val > 255 {
+                    val = 255
+                  }
                   y_plane[py * w + px] = val
                 }
               }
@@ -2189,10 +2336,24 @@ pub fn decode_vp8_inter_frame(
         let (ref_y, ref_u, ref_v) = vp8_get_ref_planes(refs, ref_frame)
 
         // 运动向量预测（使用相邻宏块的中值）
-        let left_mv = if mb_x > 0 { mv_cache[mb_y * mb_w + mb_x - 1] } else { Vp8MotionVector::new() }
-        let above_mv = if mb_y > 0 { mv_cache[(mb_y - 1) * mb_w + mb_x] } else { Vp8MotionVector::new() }
-        let above_left_mv = if mb_x > 0 && mb_y > 0 { mv_cache[(mb_y - 1) * mb_w + mb_x - 1] } else { Vp8MotionVector::new() }
-        let pred_mv = vp8_predict_motion_vector(left_mv, above_mv, above_left_mv)
+        let left_mv = if mb_x > 0 {
+          mv_cache[mb_y * mb_w + mb_x - 1]
+        } else {
+          Vp8MotionVector::new()
+        }
+        let above_mv = if mb_y > 0 {
+          mv_cache[(mb_y - 1) * mb_w + mb_x]
+        } else {
+          Vp8MotionVector::new()
+        }
+        let above_left_mv = if mb_x > 0 && mb_y > 0 {
+          mv_cache[(mb_y - 1) * mb_w + mb_x - 1]
+        } else {
+          Vp8MotionVector::new()
+        }
+        let pred_mv = vp8_predict_motion_vector(
+          left_mv, above_mv, above_left_mv,
+        )
 
         // 解析完整运动向量（预测 + 残差），1/4 像素精度
         let (mv_x_q4, mv_y_q4) = vp8_parse_full_motion_vector(bd, pred_mv, 150)
@@ -2205,10 +2366,7 @@ pub fn decode_vp8_inter_frame(
 
         // 亚像素运动补偿（1/4 像素精度）
         let (pred_y, pred_u, pred_v) = vp8_motion_compensate_16x4_subpixel(
-          ref_y, ref_u, ref_v,
-          mb_x, mb_y,
-          mv_x_q4, mv_y_q4,
-          w, h,
+          ref_y, ref_u, ref_v, mb_x, mb_y, mv_x_q4, mv_y_q4, w, h,
         )
 
         // 解析残差系数（帧间宏块可能有残差）
@@ -2226,8 +2384,12 @@ pub fn decode_vp8_inter_frame(
                   if px < w && py < h {
                     let pred_idx = (sub_y * 4 + y) * 16 + (sub_x * 4 + x)
                     let mut val = pred_y[pred_idx] + residual[y * 4 + x]
-                    if val < 0 { val = 0 }
-                    if val > 255 { val = 255 }
+                    if val < 0 {
+                      val = 0
+                    }
+                    if val > 255 {
+                      val = 255
+                    }
                     y_plane[py * w + px] = val
                   }
                 }
@@ -2269,7 +2431,9 @@ pub fn decode_vp8_inter_frame(
   let filter_level = quant.y_ac / 4
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
-      vp8_loop_filter_mb(y_plane, u_plane, v_plane, mb_x, mb_y, w, h, filter_level)
+      vp8_loop_filter_mb(
+        y_plane, u_plane, v_plane, mb_x, mb_y, w, h, filter_level,
+      )
     }
   }
 
@@ -2281,8 +2445,8 @@ pub fn decode_vp8_inter_frame(
   for y in 0..<h {
     for x in 0..<w {
       let y_val = y_plane[y * w + x]
-      let u_val = u_plane[(y / 2) * (w / 2) + (x / 2)]
-      let v_val = v_plane[(y / 2) * (w / 2) + (x / 2)]
+      let u_val = u_plane[y / 2 * (w / 2) + x / 2]
+      let v_val = v_plane[y / 2 * (w / 2) + x / 2]
 
       let c = y_val - 16
       let d = u_val - 128
@@ -2292,12 +2456,24 @@ pub fn decode_vp8_inter_frame(
       let mut g = (298 * c - 100 * d - 208 * e + 128) >> 8
       let mut b = (298 * c + 516 * d + 128) >> 8
 
-      if r < 0 { r = 0 }
-      if r > 255 { r = 255 }
-      if g < 0 { g = 0 }
-      if g > 255 { g = 255 }
-      if b < 0 { b = 0 }
-      if b > 255 { b = 255 }
+      if r < 0 {
+        r = 0
+      }
+      if r > 255 {
+        r = 255
+      }
+      if g < 0 {
+        g = 0
+      }
+      if g > 255 {
+        g = 255
+      }
+      if b < 0 {
+        b = 0
+      }
+      if b > 255 {
+        b = 255
+      }
 
       let idx = (y * w + x) * 3
       out[idx] = r.to_byte()

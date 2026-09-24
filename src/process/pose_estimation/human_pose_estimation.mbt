@@ -155,10 +155,9 @@ pub fn create_default_action_config() -> ActionRecognitionConfig {
 /// COCO 17 关键点名称
 pub fn get_coco_keypoint_names() -> Array[String] {
   [
-    "nose", "left_eye", "right_eye", "left_ear", "right_ear",
-    "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
-    "left_wrist", "right_wrist", "left_hip", "right_hip",
-    "left_knee", "right_knee", "left_ankle", "right_ankle"
+    "nose", "left_eye", "right_eye", "left_ear", "right_ear", "left_shoulder", "right_shoulder",
+    "left_elbow", "right_elbow", "left_wrist", "right_wrist", "left_hip", "right_hip",
+    "left_knee", "right_knee", "left_ankle", "right_ankle",
   ]
 }
 
@@ -166,10 +165,22 @@ pub fn get_coco_keypoint_names() -> Array[String] {
 /// COCO 骨架连接对
 pub fn get_coco_skeleton_connections() -> Array[Array[Int]] {
   [
-    [0, 1], [0, 2], [1, 3], [2, 4],  // 头部
-    [5, 6], [5, 7], [7, 9], [6, 8], [8, 10],  // 手臂
-    [5, 11], [6, 12], [11, 12],  // 躯干
-    [11, 13], [13, 15], [12, 14], [14, 16]  // 腿部
+    [0, 1],
+    [0, 2],
+    [1, 3],
+    [2, 4], // 头部
+    [5, 6],
+    [5, 7],
+    [7, 9],
+    [6, 8],
+    [8, 10], // 手臂
+    [5, 11],
+    [6, 12],
+    [11, 12], // 躯干
+    [11, 13],
+    [13, 15],
+    [12, 14],
+    [14, 16], // 腿部
   ]
 }
 
@@ -210,36 +221,143 @@ pub fn detect_keypoints(
   let keypoints : Array[Keypoint] = []
 
   // 头部关键点
-  keypoints.push(Keypoint::{ x: center_x, y: center_y - h.to_double() * 0.3, confidence: 0.8, is_visible: true, part_name: keypoint_names[0] })
-  keypoints.push(Keypoint::{ x: center_x - 10.0, y: center_y - h.to_double() * 0.32, confidence: 0.7, is_visible: true, part_name: keypoint_names[1] })
-  keypoints.push(Keypoint::{ x: center_x + 10.0, y: center_y - h.to_double() * 0.32, confidence: 0.7, is_visible: true, part_name: keypoint_names[2] })
-  keypoints.push(Keypoint::{ x: center_x - 15.0, y: center_y - h.to_double() * 0.3, confidence: 0.6, is_visible: true, part_name: keypoint_names[3] })
-  keypoints.push(Keypoint::{ x: center_x + 15.0, y: center_y - h.to_double() * 0.3, confidence: 0.6, is_visible: true, part_name: keypoint_names[4] })
+  keypoints.push(Keypoint::{
+    x: center_x,
+    y: center_y - h.to_double() * 0.3,
+    confidence: 0.8,
+    is_visible: true,
+    part_name: keypoint_names[0],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x - 10.0,
+    y: center_y - h.to_double() * 0.32,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[1],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 10.0,
+    y: center_y - h.to_double() * 0.32,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[2],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x - 15.0,
+    y: center_y - h.to_double() * 0.3,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[3],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 15.0,
+    y: center_y - h.to_double() * 0.3,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[4],
+  })
 
   // 躯干关键点
-  keypoints.push(Keypoint::{ x: center_x - 30.0, y: center_y - h.to_double() * 0.15, confidence: 0.8, is_visible: true, part_name: keypoint_names[5] })
-  keypoints.push(Keypoint::{ x: center_x + 30.0, y: center_y - h.to_double() * 0.15, confidence: 0.8, is_visible: true, part_name: keypoint_names[6] })
+  keypoints.push(Keypoint::{
+    x: center_x - 30.0,
+    y: center_y - h.to_double() * 0.15,
+    confidence: 0.8,
+    is_visible: true,
+    part_name: keypoint_names[5],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 30.0,
+    y: center_y - h.to_double() * 0.15,
+    confidence: 0.8,
+    is_visible: true,
+    part_name: keypoint_names[6],
+  })
 
   // 手臂关键点
-  keypoints.push(Keypoint::{ x: center_x - 50.0, y: center_y, confidence: 0.7, is_visible: true, part_name: keypoint_names[7] })
-  keypoints.push(Keypoint::{ x: center_x + 50.0, y: center_y, confidence: 0.7, is_visible: true, part_name: keypoint_names[8] })
-  keypoints.push(Keypoint::{ x: center_x - 60.0, y: center_y + h.to_double() * 0.1, confidence: 0.6, is_visible: true, part_name: keypoint_names[9] })
-  keypoints.push(Keypoint::{ x: center_x + 60.0, y: center_y + h.to_double() * 0.1, confidence: 0.6, is_visible: true, part_name: keypoint_names[10] })
+  keypoints.push(Keypoint::{
+    x: center_x - 50.0,
+    y: center_y,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[7],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 50.0,
+    y: center_y,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[8],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x - 60.0,
+    y: center_y + h.to_double() * 0.1,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[9],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 60.0,
+    y: center_y + h.to_double() * 0.1,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[10],
+  })
 
   // 髋部关键点
-  keypoints.push(Keypoint::{ x: center_x - 20.0, y: center_y + h.to_double() * 0.15, confidence: 0.8, is_visible: true, part_name: keypoint_names[11] })
-  keypoints.push(Keypoint::{ x: center_x + 20.0, y: center_y + h.to_double() * 0.15, confidence: 0.8, is_visible: true, part_name: keypoint_names[12] })
+  keypoints.push(Keypoint::{
+    x: center_x - 20.0,
+    y: center_y + h.to_double() * 0.15,
+    confidence: 0.8,
+    is_visible: true,
+    part_name: keypoint_names[11],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 20.0,
+    y: center_y + h.to_double() * 0.15,
+    confidence: 0.8,
+    is_visible: true,
+    part_name: keypoint_names[12],
+  })
 
   // 腿部关键点
-  keypoints.push(Keypoint::{ x: center_x - 25.0, y: center_y + h.to_double() * 0.3, confidence: 0.7, is_visible: true, part_name: keypoint_names[13] })
-  keypoints.push(Keypoint::{ x: center_x + 25.0, y: center_y + h.to_double() * 0.3, confidence: 0.7, is_visible: true, part_name: keypoint_names[14] })
-  keypoints.push(Keypoint::{ x: center_x - 30.0, y: center_y + h.to_double() * 0.45, confidence: 0.6, is_visible: true, part_name: keypoint_names[15] })
-  keypoints.push(Keypoint::{ x: center_x + 30.0, y: center_y + h.to_double() * 0.45, confidence: 0.6, is_visible: true, part_name: keypoint_names[16] })
+  keypoints.push(Keypoint::{
+    x: center_x - 25.0,
+    y: center_y + h.to_double() * 0.3,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[13],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 25.0,
+    y: center_y + h.to_double() * 0.3,
+    confidence: 0.7,
+    is_visible: true,
+    part_name: keypoint_names[14],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x - 30.0,
+    y: center_y + h.to_double() * 0.45,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[15],
+  })
+  keypoints.push(Keypoint::{
+    x: center_x + 30.0,
+    y: center_y + h.to_double() * 0.45,
+    confidence: 0.6,
+    is_visible: true,
+    part_name: keypoint_names[16],
+  })
 
   let pose = HumanPose::{
     keypoints,
     num_keypoints: 17,
-    bounding_box: [center_x - 80.0, center_y - h.to_double() * 0.4, 160.0, h.to_double() * 0.9],
+    bounding_box: [
+      center_x - 80.0,
+      center_y - h.to_double() * 0.4,
+      160.0,
+      h.to_double() * 0.9,
+    ],
     confidence: 0.75,
     pose_id: 0,
     is_tracked: true,
@@ -251,9 +369,7 @@ pub fn detect_keypoints(
 
 ///|
 /// 提取骨架连接
-pub fn extract_skeleton(
-  pose : HumanPose,
-) -> Array[SkeletonConnection] {
+pub fn extract_skeleton(pose : HumanPose) -> Array[SkeletonConnection] {
   let connections = get_coco_skeleton_connections()
   let skeleton : Array[SkeletonConnection] = []
 
@@ -294,7 +410,9 @@ pub fn calculate_joint_angle(
   joint_center : Int,
   joint2 : Int,
 ) -> Double {
-  if joint1 < pose.keypoints.length() && joint_center < pose.keypoints.length() && joint2 < pose.keypoints.length() {
+  if joint1 < pose.keypoints.length() &&
+    joint_center < pose.keypoints.length() &&
+    joint2 < pose.keypoints.length() {
     let k1 = pose.keypoints[joint1]
     let kc = pose.keypoints[joint_center]
     let k2 = pose.keypoints[joint2]
@@ -310,7 +428,13 @@ pub fn calculate_joint_angle(
 
     if len1 > 0.0 && len2 > 0.0 {
       let cos_angle = dot / (len1 * len2)
-      let clamped_cos = if cos_angle < -1.0 { -1.0 } else if cos_angle > 1.0 { 1.0 } else { cos_angle }
+      let clamped_cos = if cos_angle < -1.0 {
+        -1.0
+      } else if cos_angle > 1.0 {
+        1.0
+      } else {
+        cos_angle
+      }
       // 简化的反余弦
       (1.0 - clamped_cos) * 90.0
     } else {
@@ -342,10 +466,10 @@ pub fn recognize_action(
   let pose = poses[0]
 
   // 计算关键关节角度
-  let left_elbow_angle = calculate_joint_angle(pose, 5, 7, 9)  // 左肩-左肘-左腕
-  let right_elbow_angle = calculate_joint_angle(pose, 6, 8, 10)  // 右肩-右肘-右腕
-  let left_knee_angle = calculate_joint_angle(pose, 11, 13, 15)  // 左髋-左膝-左踝
-  let right_knee_angle = calculate_joint_angle(pose, 12, 14, 16)  // 右髋-右膝-右踝
+  let left_elbow_angle = calculate_joint_angle(pose, 5, 7, 9) // 左肩-左肘-左腕
+  let right_elbow_angle = calculate_joint_angle(pose, 6, 8, 10) // 右肩-右肘-右腕
+  let left_knee_angle = calculate_joint_angle(pose, 11, 13, 15) // 左髋-左膝-左踝
+  let right_knee_angle = calculate_joint_angle(pose, 12, 14, 16) // 右髋-右膝-右踝
 
   // 简化的动作分类
   let mut action_name = "walking"
@@ -381,15 +505,53 @@ pub fn recognize_action(
 
 ///|
 /// 识别手势（简化版：基于手部关键点）
-pub fn recognize_gesture(
-  pose : HumanPose,
-) -> GestureRecognitionResult {
+pub fn recognize_gesture(pose : HumanPose) -> GestureRecognitionResult {
   // 简化版：基于手腕位置和手臂角度判断手势
-  let left_wrist = if 9 < pose.keypoints.length() { pose.keypoints[9] } else { Keypoint::{ x: 0.0, y: 0.0, confidence: 0.0, is_visible: false, part_name: "" } }
-  let right_wrist = if 10 < pose.keypoints.length() { pose.keypoints[10] } else { Keypoint::{ x: 0.0, y: 0.0, confidence: 0.0, is_visible: false, part_name: "" } }
+  let left_wrist = if 9 < pose.keypoints.length() {
+    pose.keypoints[9]
+  } else {
+    Keypoint::{
+      x: 0.0,
+      y: 0.0,
+      confidence: 0.0,
+      is_visible: false,
+      part_name: "",
+    }
+  }
+  let right_wrist = if 10 < pose.keypoints.length() {
+    pose.keypoints[10]
+  } else {
+    Keypoint::{
+      x: 0.0,
+      y: 0.0,
+      confidence: 0.0,
+      is_visible: false,
+      part_name: "",
+    }
+  }
 
-  let left_shoulder = if 5 < pose.keypoints.length() { pose.keypoints[5] } else { Keypoint::{ x: 0.0, y: 0.0, confidence: 0.0, is_visible: false, part_name: "" } }
-  let right_shoulder = if 6 < pose.keypoints.length() { pose.keypoints[6] } else { Keypoint::{ x: 0.0, y: 0.0, confidence: 0.0, is_visible: false, part_name: "" } }
+  let left_shoulder = if 5 < pose.keypoints.length() {
+    pose.keypoints[5]
+  } else {
+    Keypoint::{
+      x: 0.0,
+      y: 0.0,
+      confidence: 0.0,
+      is_visible: false,
+      part_name: "",
+    }
+  }
+  let right_shoulder = if 6 < pose.keypoints.length() {
+    pose.keypoints[6]
+  } else {
+    Keypoint::{
+      x: 0.0,
+      y: 0.0,
+      confidence: 0.0,
+      is_visible: false,
+      part_name: "",
+    }
+  }
 
   // 简化的手势分类
   let mut gesture_type = GestureType::Unknown
@@ -428,10 +590,7 @@ pub fn recognize_gesture(
 
 ///|
 /// 可视化姿态（在图像上绘制骨架）
-pub fn visualize_pose(
-  img : @types.Image,
-  pose : HumanPose,
-) -> @types.Image {
+pub fn visualize_pose(img : @types.Image, pose : HumanPose) -> @types.Image {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -452,7 +611,7 @@ pub fn visualize_pose(
           let nx = cx + dx
           let ny = cy + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
-            out[ny * w + nx] = b'\xFF'  // 红色
+            out[ny * w + nx] = b'\xFF' // 红色
           }
         }
       }
@@ -477,13 +636,18 @@ pub fn visualize_pose(
         let x = (x1.to_double() + (x2 - x1).to_double() * t).to_int()
         let y = (y1.to_double() + (y2 - y1).to_double() * t).to_int()
         if x >= 0 && x < w && y >= 0 && y < h {
-          out[y * w + x] = b'\x00'  // 绿色（简化版）
+          out[y * w + x] = b'\x00' // 绿色（简化版）
         }
       }
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -499,24 +663,54 @@ pub fn pose_estimation_report_to_string(
 
   if poses.length() > 0 {
     let pose = poses[0]
-    report = report + "| 关键点数量 | " + pose.num_keypoints.to_string() + " |\n"
-    report = report + "| 姿态置信度 | " + (pose.confidence * 100.0).to_string() + "% |\n"
-    report = report + "| 跟踪状态 | " + (if pose.is_tracked { "跟踪中" } else { "未跟踪" }) + " |\n\n"
+    report = report +
+      "| 关键点数量 | " +
+      pose.num_keypoints.to_string() +
+      " |\n"
+    report = report +
+      "| 姿态置信度 | " +
+      (pose.confidence * 100.0).to_string() +
+      "% |\n"
+    report = report +
+      "| 跟踪状态 | " +
+      (if pose.is_tracked { "跟踪中" } else { "未跟踪" }) +
+      " |\n\n"
 
     // 关键点详情
     report = report + "### 关键点详情\n\n"
-    report = report + "| 部位 | X | Y | 置信度 | 可见 |\n|------|------|------|------|------|\n"
+    report = report +
+      "| 部位 | X | Y | 置信度 | 可见 |\n|------|------|------|------|------|\n"
     for kp in pose.keypoints {
-      report = report + "| " + kp.part_name + " | " + kp.x.to_string() + " | " + kp.y.to_string() + " | " + (kp.confidence * 100.0).to_string() + "% | " + (if kp.is_visible { "是" } else { "否" }) + " |\n"
+      report = report +
+        "| " +
+        kp.part_name +
+        " | " +
+        kp.x.to_string() +
+        " | " +
+        kp.y.to_string() +
+        " | " +
+        (kp.confidence * 100.0).to_string() +
+        "% | " +
+        (if kp.is_visible { "是" } else { "否" }) +
+        " |\n"
     }
 
     // 动作识别结果
     report = report + "\n### 动作识别结果\n\n"
     report = report + "| 指标 | 值 |\n|------|------|\n"
     report = report + "| 动作名称 | " + action_result.action_name + " |\n"
-    report = report + "| 置信度 | " + (action_result.confidence * 100.0).to_string() + "% |\n"
-    report = report + "| 持续帧数 | " + action_result.duration_frames.to_string() + " |\n"
-    report = report + "| 完成状态 | " + (if action_result.is_completed { "已完成" } else { "进行中" }) + " |\n"
+    report = report +
+      "| 置信度 | " +
+      (action_result.confidence * 100.0).to_string() +
+      "% |\n"
+    report = report +
+      "| 持续帧数 | " +
+      action_result.duration_frames.to_string() +
+      " |\n"
+    report = report +
+      "| 完成状态 | " +
+      (if action_result.is_completed { "已完成" } else { "进行中" }) +
+      " |\n"
   }
 
   report

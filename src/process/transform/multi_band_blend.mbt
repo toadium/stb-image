@@ -332,17 +332,23 @@ pub fn multi_band_blend_f(
   let n = w * h
   let mask_f : Array[Float] = Array::make(n, 0.0F)
   for i in 0..<n {
-    let bits = mask.data[i * 4].to_int() | (mask.data[i * 4 + 1].to_int() << 8) |
-      (mask.data[i * 4 + 2].to_int() << 16) | (mask.data[i * 4 + 3].to_int() << 24)
+    let bits = mask.data[i * 4].to_int() |
+      (mask.data[i * 4 + 1].to_int() << 8) |
+      (mask.data[i * 4 + 2].to_int() << 16) |
+      (mask.data[i * 4 + 3].to_int() << 24)
     mask_f[i] = Float::reinterpret_from_int(bits)
   }
   let a_f : Array[Float] = Array::make(n * ch, 0.0F)
   let b_f : Array[Float] = Array::make(n * ch, 0.0F)
   for i in 0..<(n * ch) {
-    let bits_a = img_a.data[i * 4].to_int() | (img_a.data[i * 4 + 1].to_int() << 8) |
-      (img_a.data[i * 4 + 2].to_int() << 16) | (img_a.data[i * 4 + 3].to_int() << 24)
-    let bits_b = img_b.data[i * 4].to_int() | (img_b.data[i * 4 + 1].to_int() << 8) |
-      (img_b.data[i * 4 + 2].to_int() << 16) | (img_b.data[i * 4 + 3].to_int() << 24)
+    let bits_a = img_a.data[i * 4].to_int() |
+      (img_a.data[i * 4 + 1].to_int() << 8) |
+      (img_a.data[i * 4 + 2].to_int() << 16) |
+      (img_a.data[i * 4 + 3].to_int() << 24)
+    let bits_b = img_b.data[i * 4].to_int() |
+      (img_b.data[i * 4 + 1].to_int() << 8) |
+      (img_b.data[i * 4 + 2].to_int() << 16) |
+      (img_b.data[i * 4 + 3].to_int() << 24)
     a_f[i] = Float::reinterpret_from_int(bits_a)
     b_f[i] = Float::reinterpret_from_int(bits_b)
   }

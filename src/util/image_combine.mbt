@@ -21,10 +21,15 @@ pub fn alpha_blend(
   for i in 0..<n {
     let v1 = img1.data[i].to_int()
     let v2 = img2.data[i].to_int()
-    let blended = (v1.to_float() * (1.0F - a) + v2.to_float() * a).to_int()
+    let blended = (Float::from_int(v1) * (1.0F - a) + Float::from_int(v2) * a).to_int()
     result.push(blended.clamp(min=0, max=255).to_byte())
   }
-  @types.Image::{ width: img1.width, height: img1.height, channels: img1.channels, data: Bytes::from_array(result) }
+  @types.Image::{
+    width: img1.width,
+    height: img1.height,
+    channels: img1.channels,
+    data: Bytes::from_array(result),
+  }
 }
 
 ///|
@@ -54,17 +59,23 @@ pub fn mask_blend(
   let result : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {
-      let m = mask.data[y * w + x].to_int().to_float() / 255.0F
+      let m = Float::from_int(mask.data[y * w + x].to_int()) / 255.0F
       for c in 0..<ch {
         let idx = (y * w + x) * ch + c
         let v1 = img1.data[idx].to_int()
         let v2 = img2.data[idx].to_int()
-        let blended = (v1.to_float() * (1.0F - m) + v2.to_float() * m).to_int()
+        let blended = (Float::from_int(v1) * (1.0F - m) +
+        Float::from_int(v2) * m).to_int()
         result.push(blended.clamp(min=0, max=255).to_byte())
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(result) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(result),
+  }
 }
 
 ///|
@@ -82,7 +93,12 @@ pub fn flip_horizontal(img : @types.Image) -> @types.Image {
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(result) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(result),
+  }
 }
 
 ///|
@@ -100,5 +116,10 @@ pub fn flip_vertical(img : @types.Image) -> @types.Image {
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(result) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(result),
+  }
 }

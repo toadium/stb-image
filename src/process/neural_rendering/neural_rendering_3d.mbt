@@ -173,9 +173,7 @@ pub fn create_default_camera() -> CameraParams {
 
 ///|
 /// 生成射线
-pub fn generate_rays(
-  camera : CameraParams,
-) -> Array[Ray] {
+pub fn generate_rays(camera : CameraParams) -> Array[Ray] {
   let w = camera.image_width
   let h = camera.image_height
   let rays : Array[Ray] = []
@@ -183,8 +181,10 @@ pub fn generate_rays(
   for y in 0..<h {
     for x in 0..<w {
       // 计算射线方向（简化的针孔相机模型）
-      let ndc_x = (x.to_double() - camera.principal_point[0]) / camera.focal_length
-      let ndc_y = (y.to_double() - camera.principal_point[1]) / camera.focal_length
+      let ndc_x = (x.to_double() - camera.principal_point[0]) /
+        camera.focal_length
+      let ndc_y = (y.to_double() - camera.principal_point[1]) /
+        camera.focal_length
 
       let direction = [ndc_x, ndc_y, 1.0]
 
@@ -214,7 +214,7 @@ pub fn volume_render(
 
   for sample in samples {
     if sample.is_occupied && sample.density > 0.0 {
-      let alpha_i = 1.0 - (1.0 - sample.density * 0.1)  // 简化的指数
+      let alpha_i = 1.0 - (1.0 - sample.density * 0.1) // 简化的指数
       let weight = transmittance * alpha_i
 
       color[0] += weight * sample.color[0]
@@ -243,8 +243,10 @@ pub fn render_nerf(
   // 简化版：基于射线方向生成程序化图像
   for y in 0..<h {
     for x in 0..<w {
-      let ndc_x = (x.to_double() - camera.principal_point[0]) / camera.focal_length
-      let ndc_y = (y.to_double() - camera.principal_point[1]) / camera.focal_length
+      let ndc_x = (x.to_double() - camera.principal_point[0]) /
+        camera.focal_length
+      let ndc_y = (y.to_double() - camera.principal_point[1]) /
+        camera.focal_length
 
       // 简化的场景：中心球体 + 渐变背景
       let dist = (ndc_x * ndc_x + ndc_y * ndc_y).sqrt()
@@ -275,10 +277,30 @@ pub fn render_nerf(
     }
   }
 
-  let image = @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
-  let depth_map = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(depth_out) }
-  let normal_map = @types.Image::{ width: w, height: h, channels: 3, data: Bytes::make(total * 3, b'\x80') }
-  let alpha_map = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::make(total, b'\xFF') }
+  let image = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
+  let depth_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(depth_out),
+  }
+  let normal_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::make(total * 3, b'\x80'),
+  }
+  let alpha_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::make(total, b'\xFF'),
+  }
 
   RenderingResult::{
     image,
@@ -307,8 +329,10 @@ pub fn render_gaussian_splatting(
   // 简化版：基于高斯分布生成图像
   for y in 0..<h {
     for x in 0..<w {
-      let ndc_x = (x.to_double() - camera.principal_point[0]) / camera.focal_length
-      let ndc_y = (y.to_double() - camera.principal_point[1]) / camera.focal_length
+      let ndc_x = (x.to_double() - camera.principal_point[0]) /
+        camera.focal_length
+      let ndc_y = (y.to_double() - camera.principal_point[1]) /
+        camera.focal_length
 
       // 简化的高斯混合
       let mut r = 0.0
@@ -320,8 +344,8 @@ pub fn render_gaussian_splatting(
         let dx = ndc_x - gaussian.position[0]
         let dy = ndc_y - gaussian.position[1]
         let dist_sq = dx * dx / (gaussian.scale[0] * gaussian.scale[0] + 0.001) +
-                      dy * dy / (gaussian.scale[1] * gaussian.scale[1] + 0.001)
-        let weight = gaussian.opacity * (1.0 - dist_sq * 0.5)  // 简化的高斯
+          dy * dy / (gaussian.scale[1] * gaussian.scale[1] + 0.001)
+        let weight = gaussian.opacity * (1.0 - dist_sq * 0.5) // 简化的高斯
 
         r += weight * gaussian.color[0]
         g += weight * gaussian.color[1]
@@ -346,10 +370,30 @@ pub fn render_gaussian_splatting(
     }
   }
 
-  let image = @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
-  let depth_map = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(depth_out) }
-  let normal_map = @types.Image::{ width: w, height: h, channels: 3, data: Bytes::make(total * 3, b'\x80') }
-  let alpha_map = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::make(total, b'\xFF') }
+  let image = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
+  let depth_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(depth_out),
+  }
+  let normal_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::make(total * 3, b'\x80'),
+  }
+  let alpha_map = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::make(total, b'\xFF'),
+  }
 
   RenderingResult::{
     image,
@@ -364,13 +408,11 @@ pub fn render_gaussian_splatting(
 
 ///|
 /// 生成示例 3D 高斯
-pub fn generate_sample_gaussians(
-  num_gaussians : Int,
-) -> Array[Gaussian3D] {
+pub fn generate_sample_gaussians(num_gaussians : Int) -> Array[Gaussian3D] {
   let gaussians : Array[Gaussian3D] = []
   let mut state = 42
 
-  for i in 0..<num_gaussians {
+  for _ in 0..<num_gaussians {
     state = (state * 11035 + 12345) % 1000000
     let x = ((state % 1000).to_double() / 1000.0 - 0.5) * 2.0
     state = (state * 11035 + 12345) % 1000000
@@ -409,7 +451,7 @@ pub fn multiview_stereo_reconstruction(
   // 简化版：从图像中提取特征点并三角化
   if images.length() >= 2 && cameras.length() >= 2 {
     let img1 = images[0]
-    let img2 = images[1]
+    let _ = images[1]
     let w = img1.width
     let h = img1.height
 
@@ -419,17 +461,25 @@ pub fn multiview_stereo_reconstruction(
         if y % 10 == 0 && x % 10 == 0 {
           let idx = y * w + x
           if x > 0 && x < w - 1 && y > 0 && y < h - 1 {
-            let gx = img1.data[idx + 1].to_double() - img1.data[idx - 1].to_double()
-            let gy = img1.data[idx + w].to_double() - img1.data[idx - w].to_double()
+            let gx = img1.data[idx + 1].to_double() -
+              img1.data[idx - 1].to_double()
+            let gy = img1.data[idx + w].to_double() -
+              img1.data[idx - w].to_double()
             if (gx * gx + gy * gy).sqrt() > 30.0 {
               // 简化的三角化
               let depth = 5.0 + (x % 100).to_double() / 20.0
-              let ndc_x = (x.to_double() - cameras[0].principal_point[0]) / cameras[0].focal_length
-              let ndc_y = (y.to_double() - cameras[0].principal_point[1]) / cameras[0].focal_length
+              let ndc_x = (x.to_double() - cameras[0].principal_point[0]) /
+                cameras[0].focal_length
+              let ndc_y = (y.to_double() - cameras[0].principal_point[1]) /
+                cameras[0].focal_length
 
               point_cloud.push(Point3D::{
                 position: [ndc_x * depth, ndc_y * depth, depth],
-                color: [img1.data[idx].to_double(), img1.data[idx].to_double(), img1.data[idx].to_double()],
+                color: [
+                  img1.data[idx].to_double(),
+                  img1.data[idx].to_double(),
+                  img1.data[idx].to_double(),
+                ],
                 normal: [0.0, 0.0, 1.0],
                 confidence: 0.7,
               })
@@ -472,8 +522,10 @@ pub fn visualize_point_cloud(
   for point in point_cloud {
     if point.position[2] > 0.1 {
       let focal = 500.0
-      let px = (point.position[0] * focal / point.position[2] + width.to_double() / 2.0).to_int()
-      let py = (point.position[1] * focal / point.position[2] + height.to_double() / 2.0).to_int()
+      let px = (point.position[0] * focal / point.position[2] +
+      width.to_double() / 2.0).to_int()
+      let py = (point.position[1] * focal / point.position[2] +
+      height.to_double() / 2.0).to_int()
 
       if px >= 0 && px < width && py >= 0 && py < height {
         let idx = (py * width + px) * 3
@@ -496,11 +548,32 @@ pub fn neural_rendering_report_to_string(
   let mut report = "## 神经渲染报告\n\n"
   report = report + "### 渲染信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (if algorithm == NeuralRenderingAlgorithm::NeRF { "NeRF" } else if algorithm == NeuralRenderingAlgorithm::GaussianSplatting { "3D 高斯泼溅" } else if algorithm == NeuralRenderingAlgorithm::InstantNGP { "Instant-NGP" } else if algorithm == NeuralRenderingAlgorithm::TensoRF { "TensoRF" } else { "未知" }) + " |\n"
-  report = report + "| 渲染时间 | " + result.rendering_time_ms.to_string() + " ms |\n"
+  report = report +
+    "| 算法 | " +
+    (if algorithm == NeuralRenderingAlgorithm::NeRF {
+      "NeRF"
+    } else if algorithm == NeuralRenderingAlgorithm::GaussianSplatting {
+      "3D 高斯泼溅"
+    } else if algorithm == NeuralRenderingAlgorithm::InstantNGP {
+      "Instant-NGP"
+    } else if algorithm == NeuralRenderingAlgorithm::TensoRF {
+      "TensoRF"
+    } else {
+      "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 渲染时间 | " +
+    result.rendering_time_ms.to_string() +
+    " ms |\n"
   report = report + "| PSNR | " + result.psnr.to_string() + " dB |\n"
   report = report + "| SSIM | " + result.ssim.to_string() + " |\n"
-  report = report + "| 图像尺寸 | " + result.image.width.to_string() + "x" + result.image.height.to_string() + " |\n"
+  report = report +
+    "| 图像尺寸 | " +
+    result.image.width.to_string() +
+    "x" +
+    result.image.height.to_string() +
+    " |\n"
 
   report
 }
@@ -514,12 +587,35 @@ pub fn reconstruction_report_to_string(
   let mut report = "## 3D 重建报告\n\n"
   report = report + "### 重建信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (if algorithm == ReconstructionAlgorithm::MultiViewStereo { "多视图立体" } else if algorithm == ReconstructionAlgorithm::StructureFromMotion { "运动恢复结构" } else if algorithm == ReconstructionAlgorithm::PhotometricStereo { "光度立体" } else { "未知" }) + " |\n"
+  report = report +
+    "| 算法 | " +
+    (if algorithm == ReconstructionAlgorithm::MultiViewStereo {
+      "多视图立体"
+    } else if algorithm == ReconstructionAlgorithm::StructureFromMotion {
+      "运动恢复结构"
+    } else if algorithm == ReconstructionAlgorithm::PhotometricStereo {
+      "光度立体"
+    } else {
+      "未知"
+    }) +
+    " |\n"
   report = report + "| 点云数量 | " + result.num_points.to_string() + " |\n"
-  report = report + "| 相机数量 | " + result.num_cameras.to_string() + " |\n"
-  report = report + "| 重建时间 | " + result.reconstruction_time_ms.to_string() + " ms |\n"
-  report = report + "| 覆盖率 | " + (result.coverage * 100.0).to_string() + "% |\n"
-  report = report + "| 精度 | " + (result.accuracy * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 相机数量 | " +
+    result.num_cameras.to_string() +
+    " |\n"
+  report = report +
+    "| 重建时间 | " +
+    result.reconstruction_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 覆盖率 | " +
+    (result.coverage * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 精度 | " +
+    (result.accuracy * 100.0).to_string() +
+    "% |\n"
 
   report
 }

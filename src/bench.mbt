@@ -71,8 +71,12 @@ pub fn bench_run() -> Unit {
   b.bench(name="gaussian_blur 128x128", () => {
     ignore(@filter.gaussian_blur(img128, 5, 1.0F) catch { _ => empty })
   })
-  b.bench(name="box_blur 128x128", () => ignore(@filter.box_blur(img128, 5) catch { _ => empty }))
-  b.bench(name="sharpen 128x128", () => ignore(@filter.sharpen(img128, 1.0F) catch { _ => empty }))
+  b.bench(name="box_blur 128x128", () => {
+    ignore(@filter.box_blur(img128, 5) catch { _ => empty })
+  })
+  b.bench(name="sharpen 128x128", () => {
+    ignore(@filter.sharpen(img128, 1.0F) catch { _ => empty })
+  })
   b.bench(name="bilateral_filter 128x128", () => {
     ignore(
       @filter.bilateral_filter(img128, 3, 2.0F, 30.0F) catch {
@@ -113,7 +117,9 @@ pub fn bench_run() -> Unit {
   })
 
   // === 色彩 ===
-  b.bench(name="to_grayscale 128x128", () => ignore(@color.to_grayscale(img128) catch { _ => empty }))
+  b.bench(name="to_grayscale 128x128", () => {
+    ignore(@color.to_grayscale(img128) catch { _ => empty })
+  })
   b.bench(name="adjust_brightness 128x128", () => {
     ignore(@color.adjust_brightness(img128, 50) catch { _ => empty })
   })
@@ -123,7 +129,9 @@ pub fn bench_run() -> Unit {
   b.bench(name="clahe 128x128", () => {
     ignore(@color.clahe(img128, 8, 2.0F) catch { _ => empty })
   })
-  b.bench(name="histogram 128x128", () => ignore(@feature.histogram(img128) catch { _ => [] }))
+  b.bench(name="histogram 128x128", () => {
+    ignore(@feature.histogram(img128) catch { _ => [] })
+  })
   b.bench(name="premultiply_alpha 128x128", () => {
     ignore(@color.premultiply_alpha(img_rgba128) catch { _ => empty })
   })

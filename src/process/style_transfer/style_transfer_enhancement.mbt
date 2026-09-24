@@ -104,9 +104,7 @@ pub fn create_default_style_transfer_config() -> StyleTransferConfig {
 
 ///|
 /// 计算颜色统计信息
-pub fn calculate_color_statistics(
-  img : @types.Image,
-) -> ColorStatistics {
+pub fn calculate_color_statistics(img : @types.Image) -> ColorStatistics {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -126,12 +124,24 @@ pub fn calculate_color_statistics(
     sum_r += pixel
     sum_g += pixel
     sum_b += pixel
-    if pixel < min_r { min_r = pixel }
-    if pixel < min_g { min_g = pixel }
-    if pixel < min_b { min_b = pixel }
-    if pixel > max_r { max_r = pixel }
-    if pixel > max_g { max_g = pixel }
-    if pixel > max_b { max_b = pixel }
+    if pixel < min_r {
+      min_r = pixel
+    }
+    if pixel < min_g {
+      min_g = pixel
+    }
+    if pixel < min_b {
+      min_b = pixel
+    }
+    if pixel > max_r {
+      max_r = pixel
+    }
+    if pixel > max_g {
+      max_g = pixel
+    }
+    if pixel > max_b {
+      max_b = pixel
+    }
   }
 
   let mean_r = sum_r / total.to_double()
@@ -194,11 +204,22 @@ pub fn color_transfer(
     let transferred = normalized * style_stats.std_r + style_stats.mean_r
     // 混合
     let blended = pixel * (1.0 - strength) + transferred * strength
-    let clamped = if blended < 0.0 { 0.0 } else if blended > 255.0 { 255.0 } else { blended }
+    let clamped = if blended < 0.0 {
+      0.0
+    } else if blended > 255.0 {
+      255.0
+    } else {
+      blended
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: content.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: content.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -208,7 +229,7 @@ pub fn calculate_texture_features(
 ) -> StyleTransferTextureFeatures {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
 
   // 计算灰度共生矩阵（简化：水平方向）
   let glcm_size = 16
@@ -219,8 +240,8 @@ pub fn calculate_texture_features(
 
   for y in 0..<h {
     for x in 0..<(w - 1) {
-      let i = (img.data[y * w + x].to_int() * glcm_size / 256) % glcm_size
-      let j = (img.data[y * w + x + 1].to_int() * glcm_size / 256) % glcm_size
+      let i = img.data[y * w + x].to_int() * glcm_size / 256 % glcm_size
+      let j = img.data[y * w + x + 1].to_int() * glcm_size / 256 % glcm_size
       glcm[i * glcm_size + j] += 1.0
     }
   }
@@ -278,13 +299,10 @@ pub fn calculate_texture_features(
 
 ///|
 /// 卡通化效果
-pub fn cartoonize(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn cartoonize(img : @types.Image, strength : Double) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   // 简化：边缘检测 + 色彩量化
@@ -297,24 +315,47 @@ pub fn cartoonize(
       let mut gx = 0.0
       let mut gy = 0.0
       if x > 0 && x < w - 1 && y > 0 && y < h - 1 {
-        gx = img.data[(y + 1) * w + (x - 1)].to_double() + 2.0 * img.data[y * w + (x - 1)].to_double() + img.data[(y - 1) * w + (x - 1)].to_double() - img.data[(y + 1) * w + (x + 1)].to_double() - 2.0 * img.data[y * w + (x + 1)].to_double() - img.data[(y - 1) * w + (x + 1)].to_double()
-        gy = img.data[(y - 1) * w + (x + 1)].to_double() + 2.0 * img.data[(y - 1) * w + x].to_double() + img.data[(y - 1) * w + (x - 1)].to_double() - img.data[(y + 1) * w + (x + 1)].to_double() - 2.0 * img.data[(y + 1) * w + x].to_double() - img.data[(y + 1) * w + (x - 1)].to_double()
+        gx = img.data[(y + 1) * w + (x - 1)].to_double() +
+          2.0 * img.data[y * w + (x - 1)].to_double() +
+          img.data[(y - 1) * w + (x - 1)].to_double() -
+          img.data[(y + 1) * w + (x + 1)].to_double() -
+          2.0 * img.data[y * w + (x + 1)].to_double() -
+          img.data[(y - 1) * w + (x + 1)].to_double()
+        gy = img.data[(y - 1) * w + (x + 1)].to_double() +
+          2.0 * img.data[(y - 1) * w + x].to_double() +
+          img.data[(y - 1) * w + (x - 1)].to_double() -
+          img.data[(y + 1) * w + (x + 1)].to_double() -
+          2.0 * img.data[(y + 1) * w + x].to_double() -
+          img.data[(y + 1) * w + (x - 1)].to_double()
       }
       let edge = (gx * gx + gy * gy).sqrt()
 
       // 色彩量化（减少色阶）
       let levels = 8.0
-      let quantized = (center / 255.0 * levels).to_int().to_double() / levels * 255.0
+      let quantized = (center / 255.0 * levels).to_int().to_double() /
+        levels *
+        255.0
 
       // 混合：边缘变暗，量化色彩
       let edge_factor = if edge > 30.0 { strength } else { 0.0 }
       let result = quantized * (1.0 - edge_factor) + 0.0 * edge_factor
-      let clamped = if result < 0.0 { 0.0 } else if result > 255.0 { 255.0 } else { result }
+      let clamped = if result < 0.0 {
+        0.0
+      } else if result > 255.0 {
+        255.0
+      } else {
+        result
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -326,7 +367,7 @@ pub fn oil_painting(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   for y in 0..<h {
@@ -346,7 +387,13 @@ pub fn oil_painting(
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
             let pixel = img.data[ny * w + nx].to_double()
             let level = (pixel / 255.0 * intensity_levels.to_double()).to_int()
-            let clamped_level = if level < 0 { 0 } else if level >= intensity_levels { intensity_levels - 1 } else { level }
+            let clamped_level = if level < 0 {
+              0
+            } else if level >= intensity_levels {
+              intensity_levels - 1
+            } else {
+              level
+            }
             histogram[clamped_level] += 1
             sum_histogram[clamped_level] += pixel
           }
@@ -364,48 +411,81 @@ pub fn oil_painting(
       }
 
       // 输出该级别的平均值
-      let result = if max_count > 0 { sum_histogram[max_level] / max_count.to_double() } else { img.data[y * w + x].to_double() }
-      let clamped = if result < 0.0 { 0.0 } else if result > 255.0 { 255.0 } else { result }
+      let result = if max_count > 0 {
+        sum_histogram[max_level] / max_count.to_double()
+      } else {
+        img.data[y * w + x].to_double()
+      }
+      let clamped = if result < 0.0 {
+        0.0
+      } else if result > 255.0 {
+        255.0
+      } else {
+        result
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 素描效果
-pub fn sketch_effect(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn sketch_effect(img : @types.Image, strength : Double) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   for y in 0..<h {
     for x in 0..<w {
       let idx = y * w + x
-      let center = img.data[idx].to_double()
+      let _ = img.data[idx].to_double()
 
       // 边缘检测
       let mut gx = 0.0
       let mut gy = 0.0
       if x > 0 && x < w - 1 && y > 0 && y < h - 1 {
-        gx = img.data[(y + 1) * w + (x - 1)].to_double() + 2.0 * img.data[y * w + (x - 1)].to_double() + img.data[(y - 1) * w + (x - 1)].to_double() - img.data[(y + 1) * w + (x + 1)].to_double() - 2.0 * img.data[y * w + (x + 1)].to_double() - img.data[(y - 1) * w + (x + 1)].to_double()
-        gy = img.data[(y - 1) * w + (x + 1)].to_double() + 2.0 * img.data[(y - 1) * w + x].to_double() + img.data[(y - 1) * w + (x - 1)].to_double() - img.data[(y + 1) * w + (x + 1)].to_double() - 2.0 * img.data[(y + 1) * w + x].to_double() - img.data[(y + 1) * w + (x - 1)].to_double()
+        gx = img.data[(y + 1) * w + (x - 1)].to_double() +
+          2.0 * img.data[y * w + (x - 1)].to_double() +
+          img.data[(y - 1) * w + (x - 1)].to_double() -
+          img.data[(y + 1) * w + (x + 1)].to_double() -
+          2.0 * img.data[y * w + (x + 1)].to_double() -
+          img.data[(y - 1) * w + (x + 1)].to_double()
+        gy = img.data[(y - 1) * w + (x + 1)].to_double() +
+          2.0 * img.data[(y - 1) * w + x].to_double() +
+          img.data[(y - 1) * w + (x - 1)].to_double() -
+          img.data[(y + 1) * w + (x + 1)].to_double() -
+          2.0 * img.data[(y + 1) * w + x].to_double() -
+          img.data[(y + 1) * w + (x - 1)].to_double()
       }
       let edge = (gx * gx + gy * gy).sqrt()
 
       // 反色：边缘为黑色，背景为白色
       let sketch_value = 255.0 - edge * strength
-      let clamped = if sketch_value < 0.0 { 0.0 } else if sketch_value > 255.0 { 255.0 } else { sketch_value }
+      let clamped = if sketch_value < 0.0 {
+        0.0
+      } else if sketch_value > 255.0 {
+        255.0
+      } else {
+        sketch_value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -474,17 +554,47 @@ pub fn style_transfer_report_to_string(
     "未知"
   }
   report = report + "| 算法 | " + algo_str + " |\n"
-  report = report + "| 风格强度 | " + result.style_strength.to_string() + " |\n"
-  report = report + "| 内容强度 | " + result.content_strength.to_string() + " |\n"
+  report = report +
+    "| 风格强度 | " +
+    result.style_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 内容强度 | " +
+    result.content_strength.to_string() +
+    " |\n"
   report = report + "| 迭代次数 | " + result.iterations.to_string() + " |\n"
-  report = report + "| 处理耗时 | " + result.processing_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 处理耗时 | " +
+    result.processing_time_ms.to_string() +
+    "ms |\n\n"
 
   report = report + "### 颜色统计\n\n"
-  report = report + "| 指标 | 内容图 | 风格图 |\n|------|--------|--------|\n"
-  report = report + "| 均值 | " + content_stats.mean_r.to_string() + " | " + style_stats.mean_r.to_string() + " |\n"
-  report = report + "| 标准差 | " + content_stats.std_r.to_string() + " | " + style_stats.std_r.to_string() + " |\n"
-  report = report + "| 最小值 | " + content_stats.min_r.to_string() + " | " + style_stats.min_r.to_string() + " |\n"
-  report = report + "| 最大值 | " + content_stats.max_r.to_string() + " | " + style_stats.max_r.to_string() + " |\n\n"
+  report = report +
+    "| 指标 | 内容图 | 风格图 |\n|------|--------|--------|\n"
+  report = report +
+    "| 均值 | " +
+    content_stats.mean_r.to_string() +
+    " | " +
+    style_stats.mean_r.to_string() +
+    " |\n"
+  report = report +
+    "| 标准差 | " +
+    content_stats.std_r.to_string() +
+    " | " +
+    style_stats.std_r.to_string() +
+    " |\n"
+  report = report +
+    "| 最小值 | " +
+    content_stats.min_r.to_string() +
+    " | " +
+    style_stats.min_r.to_string() +
+    " |\n"
+  report = report +
+    "| 最大值 | " +
+    content_stats.max_r.to_string() +
+    " | " +
+    style_stats.max_r.to_string() +
+    " |\n\n"
 
   report = report + "### 纹理特征\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"

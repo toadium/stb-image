@@ -4,34 +4,28 @@
 ///|
 /// 分割结果
 pub(all) struct SegmentationResult {
-  labels : Array[Int]  // 每个像素的标签
-  num_regions : Int  // 区域数量
-  region_sizes : Array[Int]  // 每个区域的大小
+  labels : Array[Int] // 每个像素的标签
+  num_regions : Int // 区域数量
+  region_sizes : Array[Int] // 每个区域的大小
 }
 
 ///|
 /// 分水岭算法配置
 pub(all) struct WatershedConfig {
-  threshold : Double  // 梯度阈值
-  min_region_size : Int  // 最小区域大小
-  connectivity : Int  // 连通性（4或8）
+  threshold : Double // 梯度阈值
+  min_region_size : Int // 最小区域大小
+  connectivity : Int // 连通性（4或8）
 }
 
 ///|
 /// 创建默认分水岭配置
 pub fn watershed_default_config() -> WatershedConfig {
-  WatershedConfig::{
-    threshold: 10.0,
-    min_region_size: 50,
-    connectivity: 8,
-  }
+  WatershedConfig::{ threshold: 10.0, min_region_size: 50, connectivity: 8 }
 }
 
 ///|
 /// 计算图像梯度（Sobel）
-fn compute_gradient(
-  img : @types.Image,
-) -> Array[Double] {
+fn compute_gradient(img : @types.Image) -> Array[Double] {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -39,7 +33,7 @@ fn compute_gradient(
   let gradient : Array[Double] = Array::make(w * h, 0.0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
-      let idx = (y * w + x) * channels
+      let _ = (y * w + x) * channels
       // 灰度
       let gray = (px, py) => {
         let i = (py * w + px) * channels
@@ -48,10 +42,18 @@ fn compute_gradient(
         let b = if channels >= 3 { data[i + 2].to_double() } else { r }
         0.299 * r + 0.587 * g + 0.114 * b
       }
-      let gx = -gray(x - 1, y - 1) - 2.0 * gray(x - 1, y) - gray(x - 1, y + 1) +
-               gray(x + 1, y - 1) + 2.0 * gray(x + 1, y) + gray(x + 1, y + 1)
-      let gy = -gray(x - 1, y - 1) - 2.0 * gray(x, y - 1) - gray(x + 1, y - 1) +
-               gray(x - 1, y + 1) + 2.0 * gray(x, y + 1) + gray(x + 1, y + 1)
+      let gx = -gray(x - 1, y - 1) -
+        2.0 * gray(x - 1, y) -
+        gray(x - 1, y + 1) +
+        gray(x + 1, y - 1) +
+        2.0 * gray(x + 1, y) +
+        gray(x + 1, y + 1)
+      let gy = -gray(x - 1, y - 1) -
+        2.0 * gray(x, y - 1) -
+        gray(x + 1, y - 1) +
+        gray(x - 1, y + 1) +
+        2.0 * gray(x, y + 1) +
+        gray(x + 1, y + 1)
       gradient[y * w + x] = (gx * gx + gy * gy).sqrt()
     }
   }
@@ -83,8 +85,18 @@ pub fn watershed_segment(
       if g < cfg.threshold {
         // 检查是否是局部最小值
         let mut is_min = true
-        let neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
-        for (dx, dy) in neighbors {
+        let neighbors = [
+          (-1, 0),
+          (1, 0),
+          (0, -1),
+          (0, 1),
+          (-1, -1),
+          (1, 1),
+          (-1, 1),
+          (1, -1),
+        ]
+        for _tup0 in neighbors {
+          let (dx, dy) = _tup0
           if gradient[(y + dy) * w + (x + dx)] < g {
             is_min = false
           }
@@ -106,11 +118,21 @@ pub fn watershed_segment(
         if labels[y * w + x] == 0 && gradient[y * w + x] < cfg.threshold * 2.0 {
           // 检查邻域是否有已标记像素
           let neighbors = if cfg.connectivity == 8 {
-            [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
+            [
+              (-1, 0),
+              (1, 0),
+              (0, -1),
+              (0, 1),
+              (-1, -1),
+              (1, 1),
+              (-1, 1),
+              (1, -1),
+            ]
           } else {
             [(-1, 0), (1, 0), (0, -1), (0, 1)]
           }
-          for (dx, dy) in neighbors {
+          for _tup1 in neighbors {
+            let (dx, dy) = _tup1
             let nx = x + dx
             let ny = y + dy
             if nx >= 0 && nx < w && ny >= 0 && ny < h && labels[ny * w + nx] > 0 {
@@ -138,12 +160,17 @@ pub fn watershed_segment(
         for x in 0..<w {
           if labels[y * w + x] == label {
             let neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-            for (dx, dy) in neighbors {
+            for _tup2 in neighbors {
+              let (dx, dy) = _tup2
               let nx = x + dx
               let ny = y + dy
-              if nx >= 0 && nx < w && ny >= 0 && ny < h &&
-                 labels[ny * w + nx] > 0 && labels[ny * w + nx] != label &&
-                 region_sizes[labels[ny * w + nx]] >= cfg.min_region_size {
+              if nx >= 0 &&
+                nx < w &&
+                ny >= 0 &&
+                ny < h &&
+                labels[ny * w + nx] > 0 &&
+                labels[ny * w + nx] != label &&
+                region_sizes[labels[ny * w + nx]] >= cfg.min_region_size {
                 // 合并
                 let old_label = label
                 let new_label = labels[ny * w + nx]
@@ -193,7 +220,7 @@ pub fn region_growing(
   seeds : Array[(Int, Int)],
   threshold? : Double = 30.0,
 ) -> SegmentationResult {
-let thresh = threshold
+  let thresh = threshold
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -201,7 +228,8 @@ let thresh = threshold
   let labels : Array[Int] = Array::make(w * h, 0)
   let region_sizes : Array[Int] = []
   let mut label = 1
-  for (sx, sy) in seeds {
+  for _tup3 in seeds {
+    let (sx, sy) = _tup3
     if sx < 0 || sx >= w || sy < 0 || sy >= h {
       continue
     }
@@ -211,8 +239,16 @@ let thresh = threshold
     // 种子点颜色
     let seed_idx = (sy * w + sx) * channels
     let seed_r = data[seed_idx].to_double()
-    let seed_g = if channels >= 2 { data[seed_idx + 1].to_double() } else { seed_r }
-    let seed_b = if channels >= 3 { data[seed_idx + 2].to_double() } else { seed_r }
+    let seed_g = if channels >= 2 {
+      data[seed_idx + 1].to_double()
+    } else {
+      seed_r
+    }
+    let seed_b = if channels >= 3 {
+      data[seed_idx + 2].to_double()
+    } else {
+      seed_r
+    }
     // 区域生长（洪水填充）
     let stack : Array[(Int, Int)] = []
     stack.push((sx, sy))
@@ -223,15 +259,22 @@ let thresh = threshold
         Some((x, y)) => {
           size += 1
           let neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-          for (dx, dy) in neighbors {
+          for _tup4 in neighbors {
+            let (dx, dy) = _tup4
             let nx = x + dx
             let ny = y + dy
-            if nx >= 0 && nx < w && ny >= 0 && ny < h && labels[ny * w + nx] == 0 {
+            if nx >= 0 &&
+              nx < w &&
+              ny >= 0 &&
+              ny < h &&
+              labels[ny * w + nx] == 0 {
               let idx = (ny * w + nx) * channels
               let r = data[idx].to_double()
               let g = if channels >= 2 { data[idx + 1].to_double() } else { r }
               let b = if channels >= 3 { data[idx + 2].to_double() } else { r }
-              let dist = ((r - seed_r) * (r - seed_r) + (g - seed_g) * (g - seed_g) + (b - seed_b) * (b - seed_b)).sqrt()
+              let dist = ((r - seed_r) * (r - seed_r) +
+              (g - seed_g) * (g - seed_g) +
+              (b - seed_b) * (b - seed_b)).sqrt()
               if dist < thresh {
                 labels[ny * w + nx] = label
                 stack.push((nx, ny))
@@ -245,18 +288,12 @@ let thresh = threshold
     region_sizes.push(size)
     label += 1
   }
-  SegmentationResult::{
-    labels,
-    num_regions: label - 1,
-    region_sizes,
-  }
+  SegmentationResult::{ labels, num_regions: label - 1, region_sizes }
 }
 
 ///|
 /// 阈值分割（Otsu 自动阈值）
-pub fn threshold_otsu(
-  img : @types.Image,
-) -> @types.Image {
+pub fn threshold_otsu(img : @types.Image) -> @types.Image {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -268,7 +305,9 @@ pub fn threshold_otsu(
     let r = data[idx].to_int()
     let g = if channels >= 2 { data[idx + 1].to_int() } else { r }
     let b = if channels >= 3 { data[idx + 2].to_int() } else { r }
-    let gray = (0.299 * r.to_double() + 0.587 * g.to_double() + 0.114 * b.to_double()).to_int()
+    let gray = (0.299 * r.to_double() +
+    0.587 * g.to_double() +
+    0.114 * b.to_double()).to_int()
     histogram[gray] += 1
   }
   // Otsu 阈值计算
@@ -306,13 +345,20 @@ pub fn threshold_otsu(
     let r = data[idx].to_int()
     let g = if channels >= 2 { data[idx + 1].to_int() } else { r }
     let b = if channels >= 3 { data[idx + 2].to_int() } else { r }
-    let gray = (0.299 * r.to_double() + 0.587 * g.to_double() + 0.114 * b.to_double()).to_int()
+    let gray = (0.299 * r.to_double() +
+    0.587 * g.to_double() +
+    0.114 * b.to_double()).to_int()
     let value = if gray > threshold { 255 } else { 0 }
     for c in 0..<channels {
       out_data[idx + c] = value.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -323,10 +369,22 @@ pub fn segmentation_to_color(
   height : Int,
 ) -> @types.Image {
   let colors = [
-    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
-    (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0),
-    (0, 0, 128), (128, 128, 0), (128, 0, 128), (0, 128, 128),
-    (192, 192, 192), (128, 128, 128), (255, 128, 0), (255, 0, 128),
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 0),
+    (255, 0, 255),
+    (0, 255, 255),
+    (128, 0, 0),
+    (0, 128, 0),
+    (0, 0, 128),
+    (128, 128, 0),
+    (128, 0, 128),
+    (0, 128, 128),
+    (192, 192, 192),
+    (128, 128, 128),
+    (255, 128, 0),
+    (255, 0, 128),
   ]
   let out_data : Array[Byte] = Array::make(width * height * 3, b'\x00')
   for y in 0..<height {
@@ -345,5 +403,10 @@ pub fn segmentation_to_color(
       }
     }
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width,
+    height,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }

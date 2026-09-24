@@ -7,7 +7,12 @@ fn make_img16_mbb(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,9 +25,15 @@ fn make_imgf_mbb(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
+///|
 test "multi_band_blend_16 basic" {
   let img_a = make_img16_mbb(8, 8, 3, 100)
   let img_b = make_img16_mbb(8, 8, 3, 200)
@@ -33,6 +44,7 @@ test "multi_band_blend_16 basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "multi_band_blend_f basic" {
   let img_a = make_imgf_mbb(8, 8, 3, 0.2F)
   let img_b = make_imgf_mbb(8, 8, 3, 0.8F)
@@ -43,6 +55,7 @@ test "multi_band_blend_f basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "multi_band_blend_16 rgba" {
   let img_a = make_img16_mbb(8, 8, 4, 100)
   let img_b = make_img16_mbb(8, 8, 4, 200)
@@ -51,6 +64,7 @@ test "multi_band_blend_16 rgba" {
   assert_eq(out.channels, 4)
 }
 
+///|
 test "multi_band_blend_f default_bands" {
   let img_a = make_imgf_mbb(8, 8, 3, 0.2F)
   let img_b = make_imgf_mbb(8, 8, 3, 0.8F)

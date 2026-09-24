@@ -18,15 +18,22 @@ pub fn horizontal_projection(
 ) -> ProjectionResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("horizontal_projection: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horizontal_projection: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("horizontal_projection: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "horizontal_projection: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "horizontal_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "horizontal_projection: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -51,15 +58,22 @@ pub fn vertical_projection(
 ) -> ProjectionResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("vertical_projection: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "vertical_projection: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("vertical_projection: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "vertical_projection: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "vertical_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "vertical_projection: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -89,29 +103,31 @@ fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
     sum_sq += projection[i] * projection[i]
   }
   let mean = if n > 0 { sum.to_double() / n.to_double() } else { 0.0 }
-  let variance = if n > 0 { sum_sq.to_double() / n.to_double() - mean * mean } else { 0.0 }
+  let variance = if n > 0 {
+    sum_sq.to_double() / n.to_double() - mean * mean
+  } else {
+    0.0
+  }
   let stddev = if variance > 0.0 { variance.sqrt() } else { 0.0 }
   // 找峰值（局部最大值）
   let peaks : Array[Int] = []
   for i in 1..<(n - 1) {
-    if projection[i] > projection[i - 1] && projection[i] >= projection[i + 1] && projection[i].to_double() > mean {
+    if projection[i] > projection[i - 1] &&
+      projection[i] >= projection[i + 1] &&
+      projection[i].to_double() > mean {
       peaks.push(i)
     }
   }
   // 找谷值（局部最小值）
   let valleys : Array[Int] = []
   for i in 1..<(n - 1) {
-    if projection[i] < projection[i - 1] && projection[i] <= projection[i + 1] && projection[i].to_double() < mean {
+    if projection[i] < projection[i - 1] &&
+      projection[i] <= projection[i + 1] &&
+      projection[i].to_double() < mean {
       valleys.push(i)
     }
   }
-  ProjectionResult::{
-    projection,
-    peaks,
-    valleys,
-    mean,
-    stddev,
-  }
+  ProjectionResult::{ projection, peaks, valleys, mean, stddev }
 }
 
 ///|
@@ -136,22 +152,33 @@ pub fn detect_text_lines_projection(
 ) -> Array[TextLineInfo] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_lines_projection: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_lines_projection: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_text_lines_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_text_lines_projection: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if min_height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: min_height必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_lines_projection: min_height必须大于0",
+    )
   }
   if max_gap < 0 {
-    raise @types.LoadError::DecodeFailed("detect_text_lines_projection: max_gap不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_lines_projection: max_gap不能为负数",
+    )
   }
 
   let w = img.width
@@ -199,8 +226,12 @@ pub fn detect_text_lines_projection(
             for x in 0..<w {
               if data[yy * w + x].to_int() > 128 {
                 pixel_count += 1
-                if x < min_x { min_x = x }
-                if x > max_x { max_x = x }
+                if x < min_x {
+                  min_x = x
+                }
+                if x > max_x {
+                  max_x = x
+                }
               }
             }
           }
@@ -234,8 +265,12 @@ pub fn detect_text_lines_projection(
         for x in 0..<w {
           if data[yy * w + x].to_int() > 128 {
             pixel_count += 1
-            if x < min_x { min_x = x }
-            if x > max_x { max_x = x }
+            if x < min_x {
+              min_x = x
+            }
+            if x > max_x {
+              max_x = x
+            }
           }
         }
       }
@@ -278,25 +313,38 @@ pub fn segment_chars_projection(
 ) -> Array[CharSegment] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("segment_chars_projection: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("segment_chars_projection: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "segment_chars_projection: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "segment_chars_projection: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if line.width <= 0 || line.height <= 0 {
-    raise @types.LoadError::DecodeFailed("segment_chars_projection: 文本行尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: 文本行尺寸必须大于0",
+    )
   }
   if min_width <= 0 {
-    raise @types.LoadError::DecodeFailed("segment_chars_projection: min_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: min_width必须大于0",
+    )
   }
   if max_gap < 0 {
-    raise @types.LoadError::DecodeFailed("segment_chars_projection: max_gap不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "segment_chars_projection: max_gap不能为负数",
+    )
   }
 
   let w = img.width
@@ -340,8 +388,12 @@ pub fn segment_chars_projection(
             for yy in y_start..<(y_end + 1) {
               if data[yy * w + xx].to_int() > 128 {
                 pixel_count += 1
-                if yy < min_y { min_y = yy }
-                if yy > max_y { max_y = yy }
+                if yy < min_y {
+                  min_y = yy
+                }
+                if yy > max_y {
+                  max_y = yy
+                }
               }
             }
           }
@@ -372,8 +424,12 @@ pub fn segment_chars_projection(
         for yy in y_start..<(y_end + 1) {
           if data[yy * w + xx].to_int() > 128 {
             pixel_count += 1
-            if yy < min_y { min_y = yy }
-            if yy > max_y { max_y = yy }
+            if yy < min_y {
+              min_y = yy
+            }
+            if yy > max_y {
+              max_y = yy
+            }
           }
         }
       }
@@ -400,22 +456,33 @@ pub fn extract_text_line_image(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_text_line_image: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_line_image: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("extract_text_line_image: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_line_image: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_text_line_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "extract_text_line_image: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if line.width <= 0 || line.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_text_line_image: 文本行尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_line_image: 文本行尺寸必须大于0",
+    )
   }
   if padding < 0 {
-    raise @types.LoadError::DecodeFailed("extract_text_line_image: padding不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_line_image: padding不能为负数",
+    )
   }
 
   let w = img.width
@@ -432,11 +499,18 @@ pub fn extract_text_line_image(
   for y in 0..<new_h {
     for x in 0..<new_w {
       for c in 0..<ch {
-        out[(y * new_w + x) * ch + c] = data[((y_start + y) * w + (x_start + x)) * ch + c]
+        out[(y * new_w + x) * ch + c] = data[((y_start + y) * w + (x_start + x)) *
+          ch +
+          c]
       }
     }
   }
-  @types.Image::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -449,25 +523,38 @@ pub fn extract_char_image(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_char_image: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("extract_char_image: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_char_image: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "extract_char_image: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if char.width <= 0 || char.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_char_image: 字符尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: 字符尺寸必须大于0",
+    )
   }
   if target_size <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_char_image: target_size必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: target_size必须大于0",
+    )
   }
   if padding < 0 {
-    raise @types.LoadError::DecodeFailed("extract_char_image: padding不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "extract_char_image: padding不能为负数",
+    )
   }
 
   let w = img.width
@@ -492,24 +579,41 @@ pub fn extract_char_image(
   // 最近邻缩放
   for y in 0..<new_h {
     for x in 0..<new_w {
-      let src_x = x_start + (x * src_w / new_w)
-      let src_y = y_start + (y * src_h / new_h)
+      let src_x = x_start + x * src_w / new_w
+      let src_y = y_start + y * src_h / new_h
       for c in 0..<ch {
-        out[((offset_y + y) * target_size + (offset_x + x)) * ch + c] = data[(src_y * w + src_x) * ch + c]
+        out[((offset_y + y) * target_size + (offset_x + x)) * ch + c] = data[(
+            src_y * w + src_x
+          ) *
+          ch +
+          c]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 辅助函数：最小值
 fn min_proj(a : Int, b : Int) -> Int {
-  if a < b { a } else { b }
+  if a < b {
+    a
+  } else {
+    b
+  }
 }
 
 ///|
 /// 辅助函数：最大值
 fn max_proj(a : Int, b : Int) -> Int {
-  if a > b { a } else { b }
+  if a > b {
+    a
+  } else {
+    b
+  }
 }

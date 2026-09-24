@@ -15,7 +15,9 @@ pub fn adaptive_threshold_mean_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adaptive_threshold_mean_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adaptive_threshold_mean_16: 图像尺寸必须大于0",
+    )
   }
   if block_size < 3 || block_size % 2 == 0 {
     raise @types.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
@@ -28,7 +30,10 @@ pub fn adaptive_threshold_mean_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adaptive_threshold_mean_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adaptive_threshold_mean_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let ch = img.channels
@@ -65,7 +70,9 @@ pub fn adaptive_threshold_mean_16(
     for y in 0..<h {
       let y_inner = y >= half && y < h - half
       for x in 0..<w {
-        if y_inner && x >= half && x < w - half { continue }
+        if y_inner && x >= half && x < w - half {
+          continue
+        }
         let mut sum = 0
         let mut count = 0
         for dy in -half..<=half {
@@ -94,7 +101,12 @@ pub fn adaptive_threshold_mean_16(
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -147,7 +159,9 @@ pub fn adaptive_threshold_mean_f(
     for y in 0..<h {
       let y_inner = y >= half && y < h - half
       for x in 0..<w {
-        if y_inner && x >= half && x < w - half { continue }
+        if y_inner && x >= half && x < w - half {
+          continue
+        }
         let mut sum = 0.0F
         let mut count = 0.0F
         for dy in -half..<=half {
@@ -177,7 +191,12 @@ pub fn adaptive_threshold_mean_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -189,7 +208,9 @@ pub fn adaptive_threshold_gaussian_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adaptive_threshold_gaussian_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adaptive_threshold_gaussian_16: 图像尺寸必须大于0",
+    )
   }
   if block_size < 3 || block_size % 2 == 0 {
     raise @types.LoadError::DecodeFailed("block_size 必须为 >=3 的奇数")
@@ -197,7 +218,10 @@ pub fn adaptive_threshold_gaussian_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adaptive_threshold_gaussian_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adaptive_threshold_gaussian_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
@@ -252,7 +276,9 @@ pub fn adaptive_threshold_gaussian_16(
     for y in 0..<h {
       let y_inner = y >= half && y < h - half
       for x in 0..<w {
-        if y_inner && x >= half && x < w - half { continue }
+        if y_inner && x >= half && x < w - half {
+          continue
+        }
         let mut sum = 0.0F
         let mut weight_sum = 0.0F
         for dy in -half..<=half {
@@ -282,7 +308,12 @@ pub fn adaptive_threshold_gaussian_16(
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -347,7 +378,9 @@ pub fn adaptive_threshold_gaussian_f(
     for y in 0..<h {
       let y_inner = y >= half && y < h - half
       for x in 0..<w {
-        if y_inner && x >= half && x < w - half { continue }
+        if y_inner && x >= half && x < w - half {
+          continue
+        }
         let mut sum = 0.0F
         let mut weight_sum = 0.0F
         for dy in -half..<=half {
@@ -378,7 +411,12 @@ pub fn adaptive_threshold_gaussian_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -389,7 +427,9 @@ pub fn threshold_otsu_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("threshold_otsu_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "threshold_otsu_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -399,7 +439,10 @@ pub fn threshold_otsu_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "threshold_otsu_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "threshold_otsu_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let ch = img.channels
@@ -427,7 +470,9 @@ pub fn threshold_otsu_16(
     for t in 0..<65536 {
       w0 += hist[t]
       sum0 += t * hist[t]
-      if w0 == 0 || w0 == total { continue }
+      if w0 == 0 || w0 == total {
+        continue
+      }
       let w1 = total - w0
       let sum1 = sum - sum0
       let mean0 = Float::from_int(sum0) / Float::from_int(w0)
@@ -455,7 +500,12 @@ pub fn threshold_otsu_16(
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -482,7 +532,13 @@ pub fn threshold_otsu_f(
     for i in 0..<n {
       let v = read_float_le(img.data, i * bpp + c_idx * 4)
       src[i] = v
-      let bin = if v < 0.0F { 0 } else if v >= 1.0F { 255 } else { (v * 255.0F + 0.5F).to_int() }
+      let bin = if v < 0.0F {
+        0
+      } else if v >= 1.0F {
+        255
+      } else {
+        (v * 255.0F + 0.5F).to_int()
+      }
       hist[bin] += 1
     }
     let mut total = 0
@@ -498,7 +554,9 @@ pub fn threshold_otsu_f(
     for t in 0..<256 {
       w0 += hist[t]
       sum0 += t * hist[t]
-      if w0 == 0 || w0 == total { continue }
+      if w0 == 0 || w0 == total {
+        continue
+      }
       let w1 = total - w0
       let sum1 = sum - sum0
       let mean0 = Float::from_int(sum0) / Float::from_int(w0)
@@ -527,5 +585,10 @@ pub fn threshold_otsu_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

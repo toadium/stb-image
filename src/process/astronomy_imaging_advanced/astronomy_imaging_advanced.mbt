@@ -1,6 +1,7 @@
 // 天文图像处理高级（v60.0.0）
 
 // 辅助函数
+///|
 fn log_approx(x : Double) -> Double {
   if x <= 0.0 {
     -100.0
@@ -15,6 +16,7 @@ fn log_approx(x : Double) -> Double {
   }
 }
 
+///|
 fn sqrt_approx(x : Double) -> Double {
   if x <= 0.0 {
     0.0
@@ -28,7 +30,6 @@ fn sqrt_approx(x : Double) -> Double {
     y
   }
 }
-
 
 // 天体检测、星系分类、测光、光谱分析、图像叠加、宇宙学参数估计
 
@@ -279,8 +280,10 @@ pub fn detect_celestial_objects(
     let flux = brightness * config.gain / config.exposure_time
 
     let object_types = [
-      CelestialObjectType::Star, CelestialObjectType::Galaxy,
-      CelestialObjectType::Nebula, CelestialObjectType::Star
+      CelestialObjectType::Star,
+      CelestialObjectType::Galaxy,
+      CelestialObjectType::Nebula,
+      CelestialObjectType::Star,
     ]
     let object_type = object_types[i % object_types.length()]
     let is_point = object_type == CelestialObjectType::Star
@@ -298,8 +301,16 @@ pub fn detect_celestial_objects(
       flux_error: flux / snr,
       snr,
       is_point_source: is_point,
-      semi_major_axis: if is_point { 2.0 } else { 10.0 },
-      semi_minor_axis: if is_point { 2.0 } else { 8.0 },
+      semi_major_axis: if is_point {
+        2.0
+      } else {
+        10.0
+      },
+      semi_minor_axis: if is_point {
+        2.0
+      } else {
+        8.0
+      },
       position_angle: 45.0,
       confidence,
     }
@@ -318,8 +329,10 @@ pub fn classify_galaxies(
   let results : Array[GalaxyClassificationResult] = []
 
   let morphologies = [
-    GalaxyMorphologyType::Elliptical, GalaxyMorphologyType::Spiral,
-    GalaxyMorphologyType::BarredSpiral, GalaxyMorphologyType::Irregular
+    GalaxyMorphologyType::Elliptical,
+    GalaxyMorphologyType::Spiral,
+    GalaxyMorphologyType::BarredSpiral,
+    GalaxyMorphologyType::Irregular,
   ]
 
   let mut state = 42
@@ -448,30 +461,64 @@ pub fn astronomy_imaging_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    AstronomyImagingTaskType::ObjectDetection => "天体检测"
-    AstronomyImagingTaskType::GalaxyClassification => "星系分类"
-    AstronomyImagingTaskType::Photometry => "测光"
-    AstronomyImagingTaskType::Spectroscopy => "光谱分析"
-    AstronomyImagingTaskType::ImageStacking => "图像叠加"
-    AstronomyImagingTaskType::CosmologicalParameterEstimation => "宇宙学参数估计"
-    AstronomyImagingTaskType::TransitDetection => "凌星检测"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " sigma |\n"
-  report = report + "| 测光孔径 | " + config.photometry_aperture.to_string() + " px |\n"
-  report = report + "| 像素尺度 | " + config.pixel_scale.to_string() + " arcsec/px |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      AstronomyImagingTaskType::ObjectDetection => "天体检测"
+      AstronomyImagingTaskType::GalaxyClassification => "星系分类"
+      AstronomyImagingTaskType::Photometry => "测光"
+      AstronomyImagingTaskType::Spectroscopy => "光谱分析"
+      AstronomyImagingTaskType::ImageStacking => "图像叠加"
+      AstronomyImagingTaskType::CosmologicalParameterEstimation =>
+        "宇宙学参数估计"
+      AstronomyImagingTaskType::TransitDetection => "凌星检测"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " sigma |\n"
+  report = report +
+    "| 测光孔径 | " +
+    config.photometry_aperture.to_string() +
+    " px |\n"
+  report = report +
+    "| 像素尺度 | " +
+    config.pixel_scale.to_string() +
+    " arcsec/px |\n"
   report = report + "| 增益 | " + config.gain.to_string() + " e-/ADU |\n"
-  report = report + "| 读出噪声 | " + config.read_noise.to_string() + " e- |\n"
-  report = report + "| 曝光时间 | " + config.exposure_time.to_string() + " s |\n"
+  report = report +
+    "| 读出噪声 | " +
+    config.read_noise.to_string() +
+    " e- |\n"
+  report = report +
+    "| 曝光时间 | " +
+    config.exposure_time.to_string() +
+    " s |\n"
   report = report + "| 滤镜 | " + config.filter_name + " |\n"
-  report = report + "| 望远镜口径 | " + config.telescope_diameter.to_string() + " m |\n"
+  report = report +
+    "| 望远镜口径 | " +
+    config.telescope_diameter.to_string() +
+    " m |\n"
   report = report + "| 焦距 | " + config.focal_length.to_string() + " m |\n"
-  report = report + "| WCS | " + (if config.use_wcs { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 暗场校正 | " + (if config.use_dark_subtraction { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 平场校正 | " + (if config.use_flat_correction { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| WCS | " +
+    (if config.use_wcs { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 暗场校正 | " +
+    (if config.use_dark_subtraction { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 平场校正 | " +
+    (if config.use_flat_correction { "开启" } else { "关闭" }) +
+    " |\n"
   report = report + "| 叠加方法 | " + config.stacking_method + " |\n"
-  report = report + "| 叠加图像数 | " + config.num_stack_images.to_string() + " |\n"
+  report = report +
+    "| 叠加图像数 | " +
+    config.num_stack_images.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

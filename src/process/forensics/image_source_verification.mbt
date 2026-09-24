@@ -140,9 +140,7 @@ pub fn create_default_source_verification_config() -> SourceVerificationConfig {
 
 ///|
 /// 噪声模式分析
-pub fn analyze_noise_pattern(
-  img : @types.Image,
-) -> NoiseAnalysisResult {
+pub fn analyze_noise_pattern(img : @types.Image) -> NoiseAnalysisResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -153,7 +151,13 @@ pub fn analyze_noise_pattern(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       let center = img.data[idx].to_double()
-      let avg = (img.data[idx - 1].to_double() + img.data[idx + 1].to_double() + img.data[idx - w].to_double() + img.data[idx + w].to_double()) / 4.0
+      let avg = (
+          img.data[idx - 1].to_double() +
+          img.data[idx + 1].to_double() +
+          img.data[idx - w].to_double() +
+          img.data[idx + w].to_double()
+        ) /
+        4.0
       noise_level += (center - avg) * (center - avg)
     }
   }
@@ -195,9 +199,7 @@ pub fn analyze_noise_pattern(
 
 ///|
 /// 频域分析（简化版，使用梯度能量代替 FFT）
-pub fn analyze_frequency_domain(
-  img : @types.Image,
-) -> FrequencyAnalysisResult {
+pub fn analyze_frequency_domain(img : @types.Image) -> FrequencyAnalysisResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -252,9 +254,7 @@ pub fn analyze_frequency_domain(
 
 ///|
 /// 颜色分布分析
-pub fn analyze_color_distribution(
-  img : @types.Image,
-) -> ColorAnalysisResult {
+pub fn analyze_color_distribution(img : @types.Image) -> ColorAnalysisResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -271,7 +271,9 @@ pub fn analyze_color_distribution(
 
   let mut smoothness = 0.0
   for i in 1..<63 {
-    let diff = (histogram[i + 1] - 2 * histogram[i] + histogram[i - 1]).to_double().abs()
+    let diff = (histogram[i + 1] - 2 * histogram[i] + histogram[i - 1])
+      .to_double()
+      .abs()
     smoothness += diff
   }
   smoothness /= 64.0
@@ -281,7 +283,8 @@ pub fn analyze_color_distribution(
   let mut count = 0
   for y in 0..<h {
     for x in 0..<(w - 1) {
-      let diff = (img.data[y * w + x].to_double() - img.data[y * w + x + 1].to_double()).abs()
+      let diff = (img.data[y * w + x].to_double() -
+      img.data[y * w + x + 1].to_double()).abs()
       transition_naturalness += diff
       count += 1
     }
@@ -291,7 +294,8 @@ pub fn analyze_color_distribution(
   }
 
   // AI 生成图像通常颜色过渡过于平滑
-  let ai_color_indicator = if smoothness < 100.0 && transition_naturalness < 10.0 {
+  let ai_color_indicator = if smoothness < 100.0 &&
+    transition_naturalness < 10.0 {
     0.7
   } else if smoothness < 200.0 {
     0.5
@@ -310,9 +314,7 @@ pub fn analyze_color_distribution(
 
 ///|
 /// 纹理分析
-pub fn analyze_texture(
-  img : @types.Image,
-) -> TextureAnalysisResult {
+pub fn analyze_texture(img : @types.Image) -> TextureAnalysisResult {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -326,7 +328,9 @@ pub fn analyze_texture(
       let mut sum = 0.0
       for dy in -1..<2 {
         for dx in -1..<2 {
-          if dx == 0 && dy == 0 { continue }
+          if dx == 0 && dy == 0 {
+            continue
+          }
           sum += img.data[(y + dy) * w + (x + dx)].to_double()
         }
       }
@@ -349,7 +353,8 @@ pub fn analyze_texture(
   texture_regularity /= total.to_double()
 
   // AI 生成图像通常纹理复杂度较低且规律性较高
-  let ai_texture_indicator = if texture_complexity < 15.0 && texture_regularity < 10.0 {
+  let ai_texture_indicator = if texture_complexity < 15.0 &&
+    texture_regularity < 10.0 {
     0.7
   } else if texture_complexity < 25.0 {
     0.5
@@ -368,12 +373,10 @@ pub fn analyze_texture(
 
 ///|
 /// 边缘分析
-pub fn analyze_edges(
-  img : @types.Image,
-) -> EdgeAnalysisResult {
+pub fn analyze_edges(img : @types.Image) -> EdgeAnalysisResult {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
 
   // 边缘锐度（梯度幅值）
   let mut edge_sharpness = 0.0
@@ -407,10 +410,14 @@ pub fn analyze_edges(
         let mut neighbor_edges = 0
         for dy in -1..<2 {
           for dx in -1..<2 {
-            if dx == 0 && dy == 0 { continue }
+            if dx == 0 && dy == 0 {
+              continue
+            }
             let nidx = (y + dy) * w + (x + dx)
-            let ngx = img.data[nidx + 1].to_double() - img.data[nidx - 1].to_double()
-            let ngy = img.data[nidx + w].to_double() - img.data[nidx - w].to_double()
+            let ngx = img.data[nidx + 1].to_double() -
+              img.data[nidx - 1].to_double()
+            let ngy = img.data[nidx + w].to_double() -
+              img.data[nidx - w].to_double()
             let nmag = (ngx * ngx + ngy * ngy).sqrt()
             if nmag > 30.0 {
               neighbor_edges += 1
@@ -458,12 +465,14 @@ pub fn analyze_compression_artifacts(
   for y in 0..<h {
     for x in 0..<w {
       if x % 8 == 0 && x > 0 && x < w - 1 {
-        let diff = (img.data[y * w + x].to_double() - img.data[y * w + x - 1].to_double()).abs()
+        let diff = (img.data[y * w + x].to_double() -
+        img.data[y * w + x - 1].to_double()).abs()
         blocking_artifact += diff
         block_count += 1
       }
       if y % 8 == 0 && y > 0 && y < h - 1 {
-        let diff = (img.data[y * w + x].to_double() - img.data[(y - 1) * w + x].to_double()).abs()
+        let diff = (img.data[y * w + x].to_double() -
+        img.data[(y - 1) * w + x].to_double()).abs()
         blocking_artifact += diff
         block_count += 1
       }
@@ -479,10 +488,10 @@ pub fn analyze_compression_artifacts(
     for x in 2..<(w - 2) {
       let idx = y * w + x
       let center = img.data[idx].to_double()
-      let p1 = img.data[idx - 2].to_double()
+      let _ = img.data[idx - 2].to_double()
       let p2 = img.data[idx - 1].to_double()
       let p3 = img.data[idx + 1].to_double()
-      let p4 = img.data[idx + 2].to_double()
+      let _ = img.data[idx + 2].to_double()
       // 检测振荡模式
       if (p2 > center && p3 > center) || (p2 < center && p3 < center) {
         ringing_artifact += 1.0
@@ -492,7 +501,8 @@ pub fn analyze_compression_artifacts(
   ringing_artifact /= total.to_double()
 
   // AI 生成图像通常压缩伪影较少
-  let ai_compression_indicator = if blocking_artifact < 5.0 && ringing_artifact < 0.1 {
+  let ai_compression_indicator = if blocking_artifact < 5.0 &&
+    ringing_artifact < 0.1 {
     0.6
   } else if blocking_artifact < 10.0 {
     0.4
@@ -511,12 +521,10 @@ pub fn analyze_compression_artifacts(
 
 ///|
 /// 细节分析
-pub fn analyze_details(
-  img : @types.Image,
-) -> DetailAnalysisResult {
+pub fn analyze_details(img : @types.Image) -> DetailAnalysisResult {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
 
   // 细节一致性（高频细节的局部一致性）
   let mut detail_consistency = 0.0
@@ -524,7 +532,7 @@ pub fn analyze_details(
   for y in 2..<(h - 2) {
     for x in 2..<(w - 2) {
       let idx = y * w + x
-      let center = img.data[idx].to_double()
+      let _ = img.data[idx].to_double()
       // 检查 5x5 邻域内的细节变化
       let mut variance = 0.0
       let mut sum = 0.0
@@ -593,36 +601,61 @@ pub fn verify_image_source(
 ) -> SourceVerificationResult {
   let noise_score = if config.use_noise_analysis {
     analyze_noise_pattern(img).ai_noise_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let freq_score = if config.use_frequency_analysis {
     analyze_frequency_domain(img).ai_frequency_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let color_score = if config.use_color_analysis {
     analyze_color_distribution(img).ai_color_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let texture_score = if config.use_texture_analysis {
     analyze_texture(img).ai_texture_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let edge_score = if config.use_edge_analysis {
     analyze_edges(img).ai_edge_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let compression_score = if config.use_compression_analysis {
     analyze_compression_artifacts(img).ai_compression_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
   let detail_score = if config.use_detail_analysis {
     analyze_details(img).ai_detail_indicator
-  } else { 0.5 }
+  } else {
+    0.5
+  }
 
   // 加权平均
   let mut weighted_sum = 0.0
   let mut weight_sum = 0.0
-  let scores = [noise_score, freq_score, color_score, texture_score, edge_score, compression_score, detail_score]
+  let scores = [
+    noise_score, freq_score, color_score, texture_score, edge_score, compression_score,
+    detail_score,
+  ]
   for i in 0..<scores.length() {
-    let weight = if i < config.weights.length() { config.weights[i] } else { 1.0 }
+    let weight = if i < config.weights.length() {
+      config.weights[i]
+    } else {
+      1.0
+    }
     weighted_sum += scores[i] * weight
     weight_sum += weight
   }
-  let overall_score = if weight_sum > 0.0 { weighted_sum / weight_sum } else { 0.5 }
+  let overall_score = if weight_sum > 0.0 {
+    weighted_sum / weight_sum
+  } else {
+    0.5
+  }
 
   let features = SourceVerificationFeatures::{
     noise_pattern_score: noise_score,
@@ -680,27 +713,66 @@ pub fn source_verification_report_to_string(
     "混合"
   }
   report = report + "| 来源类型 | " + source_str + " |\n"
-  report = report + "| AI 生成概率 | " + (result.ai_probability * 100.0).to_string() + "% |\n"
-  report = report + "| 物理生成概率 | " + (result.physical_probability * 100.0).to_string() + "% |\n"
-  report = report + "| 置信度 | " + (result.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 决策阈值 | " + result.decision_threshold.to_string() + " |\n\n"
+  report = report +
+    "| AI 生成概率 | " +
+    (result.ai_probability * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 物理生成概率 | " +
+    (result.physical_probability * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 置信度 | " +
+    (result.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 决策阈值 | " +
+    result.decision_threshold.to_string() +
+    " |\n\n"
 
   report = report + "### 特征分析\n\n"
-  report = report + "| 特征 | AI 指示值 | 说明 |\n|------|-----------|------|\n"
-  report = report + "| 噪声模式 | " + (result.features.noise_pattern_score * 100.0).to_string() + "% | AI 生成图像噪声通常较低且相关性高 |\n"
-  report = report + "| 频域特征 | " + (result.features.frequency_domain_score * 100.0).to_string() + "% | AI 生成图像高频能量通常较低 |\n"
-  report = report + "| 颜色分布 | " + (result.features.color_distribution_score * 100.0).to_string() + "% | AI 生成图像颜色过渡通常过于平滑 |\n"
-  report = report + "| 纹理特征 | " + (result.features.texture_score * 100.0).to_string() + "% | AI 生成图像纹理复杂度通常较低 |\n"
-  report = report + "| 边缘特征 | " + (result.features.edge_score * 100.0).to_string() + "% | AI 生成图像边缘锐度通常较低 |\n"
-  report = report + "| 压缩伪影 | " + (result.features.compression_artifact_score * 100.0).to_string() + "% | AI 生成图像压缩伪影通常较少 |\n"
-  report = report + "| 细节特征 | " + (result.features.detail_score * 100.0).to_string() + "% | AI 生成图像细节一致性通常较差 |\n"
-  report = report + "| 综合评分 | " + (result.features.overall_score * 100.0).to_string() + "% | 加权平均综合评分 |\n\n"
+  report = report +
+    "| 特征 | AI 指示值 | 说明 |\n|------|-----------|------|\n"
+  report = report +
+    "| 噪声模式 | " +
+    (result.features.noise_pattern_score * 100.0).to_string() +
+    "% | AI 生成图像噪声通常较低且相关性高 |\n"
+  report = report +
+    "| 频域特征 | " +
+    (result.features.frequency_domain_score * 100.0).to_string() +
+    "% | AI 生成图像高频能量通常较低 |\n"
+  report = report +
+    "| 颜色分布 | " +
+    (result.features.color_distribution_score * 100.0).to_string() +
+    "% | AI 生成图像颜色过渡通常过于平滑 |\n"
+  report = report +
+    "| 纹理特征 | " +
+    (result.features.texture_score * 100.0).to_string() +
+    "% | AI 生成图像纹理复杂度通常较低 |\n"
+  report = report +
+    "| 边缘特征 | " +
+    (result.features.edge_score * 100.0).to_string() +
+    "% | AI 生成图像边缘锐度通常较低 |\n"
+  report = report +
+    "| 压缩伪影 | " +
+    (result.features.compression_artifact_score * 100.0).to_string() +
+    "% | AI 生成图像压缩伪影通常较少 |\n"
+  report = report +
+    "| 细节特征 | " +
+    (result.features.detail_score * 100.0).to_string() +
+    "% | AI 生成图像细节一致性通常较差 |\n"
+  report = report +
+    "| 综合评分 | " +
+    (result.features.overall_score * 100.0).to_string() +
+    "% | 加权平均综合评分 |\n\n"
 
   report = report + "### 说明\n\n"
-  report = report + "- 本鉴定基于图像的统计特征分析，结果仅供参考\n"
+  report = report +
+    "- 本鉴定基于图像的统计特征分析，结果仅供参考\n"
   report = report + "- AI 指示值越高，表示越可能是 AI 生成\n"
   report = report + "- 置信度表示鉴定结果的可靠程度\n"
-  report = report + "- 对于经过编辑、压缩或重采样的图像，鉴定准确率可能下降\n"
+  report = report +
+    "- 对于经过编辑、压缩或重采样的图像，鉴定准确率可能下降\n"
 
   report
 }

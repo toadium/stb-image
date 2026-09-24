@@ -412,7 +412,7 @@ pub fn low_rank_decomposition(
     let s : Array[Array[Double]] = []
     let v : Array[Array[Double]] = []
 
-    for i in 0..<config.rank {
+    for _ in 0..<config.rank {
       let row : Array[Double] = []
       for _ in 0..<layer.length() {
         row.push(0.01)
@@ -432,7 +432,7 @@ pub fn low_rank_decomposition(
       s.push(row)
     }
 
-    for i in 0..<config.rank {
+    for _ in 0..<config.rank {
       let row : Array[Double] = []
       for _ in 0..<layer.length() {
         row.push(0.01)
@@ -452,7 +452,11 @@ pub fn low_rank_decomposition(
     }
     total
   }
-  let layer_size = if original_weights.length() > 0 { original_weights[0].length() } else { 1 }
+  let layer_size = if original_weights.length() > 0 {
+    original_weights[0].length()
+  } else {
+    1
+  }
   let decomposed_params = config.rank * layer_size * 3
 
   LowRankResult::{
@@ -463,7 +467,8 @@ pub fn low_rank_decomposition(
     decomposition_type: config.low_rank_type,
     original_params,
     decomposed_params,
-    compression_ratio: original_params.to_double() / decomposed_params.to_double(),
+    compression_ratio: original_params.to_double() /
+    decomposed_params.to_double(),
     reconstruction_error: 0.01,
     original_accuracy: 0.9,
     decomposed_accuracy: 0.87,
@@ -518,48 +523,66 @@ pub fn compression_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ModelCompressionTaskType::Quantization => "量化"
-    ModelCompressionTaskType::Pruning => "剪枝"
-    ModelCompressionTaskType::KnowledgeDistillation => "知识蒸馏"
-    ModelCompressionTaskType::LowRankFactorization => "低秩分解"
-    ModelCompressionTaskType::WeightSharing => "权重共享"
-    ModelCompressionTaskType::NetworkSlimming => "网络瘦身"
-    ModelCompressionTaskType::StructuredPruning => "结构化剪枝"
-    ModelCompressionTaskType::UnstructuredPruning => "非结构化剪枝"
-    ModelCompressionTaskType::MixedPrecision => "混合精度"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 量化类型 | " + (match config.quantization_type {
-    QuantizationType::INT8 => "INT8"
-    QuantizationType::INT4 => "INT4"
-    QuantizationType::INT2 => "INT2"
-    QuantizationType::INT1 => "INT1"
-    QuantizationType::FP16 => "FP16"
-    QuantizationType::BF16 => "BF16"
-    QuantizationType::FP8 => "FP8"
-    QuantizationType::MixedPrecision => "混合精度"
-    QuantizationType::PerChannel => "逐通道"
-    QuantizationType::PerTensor => "逐张量"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 剪枝类型 | " + (match config.pruning_type {
-    PruningType::Unstructured => "非结构化"
-    PruningType::Structured => "结构化"
-    PruningType::ChannelPruning => "通道剪枝"
-    PruningType::FilterPruning => "滤波器剪枝"
-    PruningType::LayerPruning => "层剪枝"
-    PruningType::BlockPruning => "块剪枝"
-    PruningType::HeadPruning => "注意力头剪枝"
-    PruningType::NeuronPruning => "神经元剪枝"
-    PruningType::WeightPruning => "权重剪枝"
-    PruningType::GradualPruning => "渐进剪枝"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ModelCompressionTaskType::Quantization => "量化"
+      ModelCompressionTaskType::Pruning => "剪枝"
+      ModelCompressionTaskType::KnowledgeDistillation => "知识蒸馏"
+      ModelCompressionTaskType::LowRankFactorization => "低秩分解"
+      ModelCompressionTaskType::WeightSharing => "权重共享"
+      ModelCompressionTaskType::NetworkSlimming => "网络瘦身"
+      ModelCompressionTaskType::StructuredPruning => "结构化剪枝"
+      ModelCompressionTaskType::UnstructuredPruning => "非结构化剪枝"
+      ModelCompressionTaskType::MixedPrecision => "混合精度"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 量化类型 | " +
+    (match config.quantization_type {
+      QuantizationType::INT8 => "INT8"
+      QuantizationType::INT4 => "INT4"
+      QuantizationType::INT2 => "INT2"
+      QuantizationType::INT1 => "INT1"
+      QuantizationType::FP16 => "FP16"
+      QuantizationType::BF16 => "BF16"
+      QuantizationType::FP8 => "FP8"
+      QuantizationType::MixedPrecision => "混合精度"
+      QuantizationType::PerChannel => "逐通道"
+      QuantizationType::PerTensor => "逐张量"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 剪枝类型 | " +
+    (match config.pruning_type {
+      PruningType::Unstructured => "非结构化"
+      PruningType::Structured => "结构化"
+      PruningType::ChannelPruning => "通道剪枝"
+      PruningType::FilterPruning => "滤波器剪枝"
+      PruningType::LayerPruning => "层剪枝"
+      PruningType::BlockPruning => "块剪枝"
+      PruningType::HeadPruning => "注意力头剪枝"
+      PruningType::NeuronPruning => "神经元剪枝"
+      PruningType::WeightPruning => "权重剪枝"
+      PruningType::GradualPruning => "渐进剪枝"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 位宽 | " + config.bit_width.to_string() + " |\n"
-  report = report + "| 剪枝比例 | " + config.pruning_ratio.to_string() + " |\n"
-  report = report + "| 目标压缩比 | " + config.target_compression_ratio.to_string() + " |\n"
-  report = report + "| 目标精度下降 | " + config.target_accuracy_drop.to_string() + " |\n"
+  report = report +
+    "| 剪枝比例 | " +
+    config.pruning_ratio.to_string() +
+    " |\n"
+  report = report +
+    "| 目标压缩比 | " +
+    config.target_compression_ratio.to_string() +
+    " |\n"
+  report = report +
+    "| 目标精度下降 | " +
+    config.target_accuracy_drop.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

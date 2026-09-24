@@ -4,23 +4,22 @@
 ///|
 /// 加密配置
 pub(all) struct EncryptionConfig {
-  method : String  // "logistic" / "xor"
-  key : Double  // 混沌系统初始值
-  mu : Double  // Logistic 映射参数（通常 3.5699456 < mu <= 4）
-  iterations : Int  // 混沌迭代次数
+  method_type : String // "logistic" / "xor"
+  key : Double // 混沌系统初始值
+  mu : Double // Logistic 映射参数（通常 3.5699456 < mu <= 4）
+  iterations : Int // 混沌迭代次数
 }
 
 ///|
 /// 创建默认加密配置
 pub fn encryption_default_config() -> EncryptionConfig {
   EncryptionConfig::{
-    method: "logistic",
+    method_type: "logistic",
     key: 0.123456789,
     mu: 3.99,
     iterations: 1000,
   }
 }
-
 
 ///|
 /// 简单的伪随机数生成器（线性同余）
@@ -34,10 +33,7 @@ fn lcg_next(seed : Int) -> (Int, Int) {
 
 ///|
 /// Logistic 混沌映射：x(n+1) = mu * x(n) * (1 - x(n))
-fn logistic_map(
-  x : Double,
-  mu : Double,
-) -> Double {
+fn logistic_map(x : Double, mu : Double) -> Double {
   mu * x * (1.0 - x)
 }
 
@@ -49,15 +45,15 @@ fn generate_chaotic_sequence(
   mu : Double,
   warmup? : Int = 100,
 ) -> Array[Double] {
-let warm = warmup
+  let warm = warmup
   let sequence : Array[Double] = []
   let mut x = key
   // 预热（丢弃前 warm 个值）
-  for i in 0..<warm {
+  for _ in 0..<warm {
     x = logistic_map(x, mu)
   }
   // 生成序列
-  for i in 0..<length {
+  for _ in 0..<length {
     x = logistic_map(x, mu)
     sequence.push(x)
   }
@@ -88,7 +84,12 @@ pub fn encrypt_image_logistic(
     let encrypted = original ^ chaotic_byte
     out_data[i] = encrypted.to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -104,15 +105,12 @@ pub fn decrypt_image_logistic(
 
 ///|
 /// 简单的 XOR 加密（使用密钥字节序列）
-pub fn encrypt_image_xor(
-  img : @types.Image,
-  key : String,
-) -> @types.Image {
+pub fn encrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
   let w = img.width
   let h = img.height
   let channels = img.channels
   let total_pixels = w * h * channels
-  let key_bytes = key.to_bytes()
+  let key_bytes = @encoding/utf8.encode(key)
   let key_len = key_bytes.length()
   let out_data : Array[Byte] = Array::make(total_pixels, b'\x00')
   for i in 0..<total_pixels {
@@ -121,25 +119,25 @@ pub fn encrypt_image_xor(
     let encrypted = original ^ key_byte
     out_data[i] = encrypted.to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 简单的 XOR 解密
-pub fn decrypt_image_xor(
-  img : @types.Image,
-  key : String,
-) -> @types.Image {
+pub fn decrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
   encrypt_image_xor(img, key)
 }
 
 ///|
 /// 计算图像直方图
-fn compute_histogram(
-  img : @types.Image,
-) -> Array[Int] {
+fn compute_histogram(img : @types.Image) -> Array[Int] {
   let histogram : Array[Int] = []
-  for i in 0..<256 {
+  for _ in 0..<256 {
     histogram.push(0)
   }
   let w = img.width
@@ -159,9 +157,7 @@ fn compute_histogram(
 
 ///|
 /// 计算直方图熵（衡量加密质量，熵越高越好）
-pub fn histogram_entropy(
-  img : @types.Image,
-) -> Double {
+pub fn histogram_entropy(img : @types.Image) -> Double {
   let histogram = compute_histogram(img)
   let w = img.width
   let h = img.height
@@ -183,7 +179,7 @@ pub fn adjacent_correlation(
   img : @types.Image,
   direction? : String = "horizontal",
 ) -> Double {
-let dir = direction
+  let dir = direction
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -196,7 +192,7 @@ let dir = direction
   let mut sum_y2 = 0.0
   let mut count = 0
   let mut seed = 12345
-  for i in 0..<sample_count {
+  for _ in 0..<sample_count {
     // 随机选择像素位置
     let (next, value) = lcg_next(seed)
     seed = next
@@ -208,27 +204,24 @@ let dir = direction
     let pixel1 = img.data[idx].to_double()
     // 相邻像素
     let pixel2 = match dir {
-      "horizontal" => {
+      "horizontal" =>
         if x + 1 < w {
           img.data[(y * w + x + 1) * channels].to_double()
         } else {
           img.data[idx].to_double()
         }
-      }
-      "vertical" => {
+      "vertical" =>
         if y + 1 < h {
           img.data[((y + 1) * w + x) * channels].to_double()
         } else {
           img.data[idx].to_double()
         }
-      }
-      "diagonal" => {
+      "diagonal" =>
         if x + 1 < w && y + 1 < h {
           img.data[((y + 1) * w + x + 1) * channels].to_double()
         } else {
           img.data[idx].to_double()
         }
-      }
       _ => img.data[idx].to_double()
     }
     sum_x += pixel1
@@ -257,20 +250,17 @@ let dir = direction
 ///|
 /// 加密质量评估
 pub(all) struct EncryptionQuality {
-  entropy : Double  // 直方图熵（理想值 8）
-  correlation_h : Double  // 水平相关性（理想值 0）
-  correlation_v : Double  // 垂直相关性（理想值 0）
-  correlation_d : Double  // 对角相关性（理想值 0）
-  npcr : Double  // 像素变化率（Number of Pixel Change Rate）
-  uaci : Double  // 统一平均变化强度（Unified Average Changing Intensity）
+  entropy : Double // 直方图熵（理想值 8）
+  correlation_h : Double // 水平相关性（理想值 0）
+  correlation_v : Double // 垂直相关性（理想值 0）
+  correlation_d : Double // 对角相关性（理想值 0）
+  npcr : Double // 像素变化率（Number of Pixel Change Rate）
+  uaci : Double // 统一平均变化强度（Unified Average Changing Intensity）
 }
 
 ///|
 /// 计算 NPCR（像素变化率）
-fn compute_npcr(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+fn compute_npcr(img1 : @types.Image, img2 : @types.Image) -> Double {
   if img1.width != img2.width || img1.height != img2.height {
     return 0.0
   }
@@ -289,10 +279,7 @@ fn compute_npcr(
 
 ///|
 /// 计算 UACI（统一平均变化强度）
-fn compute_uaci(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+fn compute_uaci(img1 : @types.Image, img2 : @types.Image) -> Double {
   if img1.width != img2.width || img1.height != img2.height {
     return 0.0
   }
@@ -337,8 +324,8 @@ pub fn key_sensitivity_test(
   key : Double,
   delta? : Double = 0.0000001,
 ) -> Double {
-let d = delta
-  let encrypted1 = encrypt_image_logistic(img, key=key, mu=3.99)
+  let d = delta
+  let encrypted1 = encrypt_image_logistic(img, key~, mu=3.99)
   let encrypted2 = encrypt_image_logistic(img, key=key + d, mu=3.99)
   compute_npcr(encrypted1, encrypted2)
 }
@@ -351,7 +338,7 @@ pub fn batch_encrypt(
 ) -> Array[@types.Image] {
   let result : Array[@types.Image] = []
   for img in images {
-    result.push(encrypt_image_logistic(img, key=key, mu=3.99))
+    result.push(encrypt_image_logistic(img, key~, mu=3.99))
   }
   result
 }

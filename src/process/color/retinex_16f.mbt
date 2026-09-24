@@ -59,7 +59,10 @@ pub fn ssr_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ssr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "ssr_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if sigma <= 0.0F {
@@ -127,7 +130,10 @@ pub fn ssr_f(
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ssr_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "ssr_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if sigma <= 0.0F {
@@ -190,7 +196,10 @@ pub fn msr_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "msr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "msr_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if sigmas.length() == 0 {
@@ -342,7 +351,10 @@ pub fn msrcr_16(
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "msrcr_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "msrcr_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if sigmas.length() == 0 {
@@ -397,7 +409,13 @@ pub fn msrcr_16(
       let crf = logf_r(alpha * channels[c][i] / (sum + 1.0F)) * beta
       let val = msr_results[c][i] * gain + offset + crf
       let mapped = (val * 30.0F + 32768.0F).to_int()
-      let clamped = if mapped < 0 { 0 } else if mapped > 65535 { 65535 } else { mapped }
+      let clamped = if mapped < 0 {
+        0
+      } else if mapped > 65535 {
+        65535
+      } else {
+        mapped
+      }
       write_u16_r(out, (i * ch + c) * 2, clamped)
     }
     if ch == 4 {

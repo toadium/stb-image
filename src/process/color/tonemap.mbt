@@ -26,15 +26,22 @@ pub fn reinhard_tonemap(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "reinhard_tonemap: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "reinhard_tonemap: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if key <= 0.0F {
@@ -83,18 +90,28 @@ pub fn reinhard_tonemap(
 /// Gamma 色调映射。
 /// 先归一化到 [0,1]，再应用 gamma 校正：L_out = L^(1/gamma)。
 /// gamma > 1 提亮暗部，gamma < 1 压暗。
-pub fn gamma_tonemap(imgf : @types.ImageF, gamma : Float) -> @types.Image raise @types.LoadError {
+pub fn gamma_tonemap(
+  imgf : @types.ImageF,
+  gamma : Float,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gamma_tonemap: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "gamma_tonemap: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {

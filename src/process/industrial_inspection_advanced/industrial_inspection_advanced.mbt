@@ -139,7 +139,12 @@ pub(all) struct IndustrialInspectionConfig {
 pub fn create_default_industrial_config() -> IndustrialInspectionConfig {
   IndustrialInspectionConfig::{
     task_type: IndustrialInspectionTaskType::DefectDetection,
-    defect_types: [DefectType::Scratch, DefectType::Dent, DefectType::Crack, DefectType::Stain],
+    defect_types: [
+      DefectType::Scratch,
+      DefectType::Dent,
+      DefectType::Crack,
+      DefectType::Stain,
+    ],
     detection_threshold: 0.5,
     segmentation_threshold: 0.5,
     severity_threshold: 0.7,
@@ -178,17 +183,20 @@ pub fn detect_defects(
     state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 100)
     state = (state * 11035 + 12345) % 1000000
-    let w = (state % 50) + 20
+    let w = state % 50 + 20
     state = (state * 11035 + 12345) % 1000000
-    let h = (state % 50) + 20
+    let h = state % 50 + 20
     state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.5 + 0.5
     state = (state * 11035 + 12345) % 1000000
     let severity = (state % 1000).to_double() / 1000.0
 
     let defect_types = [
-      DefectType::Scratch, DefectType::Dent, DefectType::Crack,
-      DefectType::Stain, DefectType::Rust
+      DefectType::Scratch,
+      DefectType::Dent,
+      DefectType::Crack,
+      DefectType::Stain,
+      DefectType::Rust,
     ]
     let defect_type = defect_types[i % defect_types.length()]
 
@@ -210,7 +218,10 @@ pub fn detect_defects(
       severity,
       area,
       perimeter,
-      position: [x.to_double() + w.to_double() / 2.0, y.to_double() + h.to_double() / 2.0],
+      position: [
+        x.to_double() + w.to_double() / 2.0,
+        y.to_double() + h.to_double() / 2.0,
+      ],
       is_critical: severity > config.severity_threshold,
     }
     defects.push(defect)
@@ -231,13 +242,17 @@ pub fn measure_dimensions(
   let measurements : Array[DimensionalMeasurementResult] = []
 
   // 简化的尺寸测量
-  let measurement_names = ["width", "height", "diameter", "thickness", "hole_diameter"]
+  let measurement_names = [
+    "width", "height", "diameter", "thickness", "hole_diameter",
+  ]
   let nominal_values = [100.0, 50.0, 25.0, 5.0, 10.0]
 
   let mut state = 42
   for i in 0..<measurement_names.length() {
     state = (state * 11035 + 12345) % 1000000
-    let deviation = ((state % 1000).to_double() / 1000.0 - 0.5) * config.tolerance_default * 2.0
+    let deviation = ((state % 1000).to_double() / 1000.0 - 0.5) *
+      config.tolerance_default *
+      2.0
     let measured = nominal_values[i] + deviation
     let upper = nominal_values[i] + config.tolerance_default
     let lower = nominal_values[i] - config.tolerance_default
@@ -375,28 +390,64 @@ pub fn industrial_inspection_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    IndustrialInspectionTaskType::DefectDetection => "缺陷检测"
-    IndustrialInspectionTaskType::DimensionalMeasurement => "尺寸测量"
-    IndustrialInspectionTaskType::SurfaceQualityInspection => "表面质量检测"
-    IndustrialInspectionTaskType::ProductClassification => "产品分类"
-    IndustrialInspectionTaskType::IndustrialOCR => "工业OCR"
-    IndustrialInspectionTaskType::AnomalyDetection => "异常检测"
-    IndustrialInspectionTaskType::AssemblyVerification => "装配验证"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
-  report = report + "| 严重度阈值 | " + config.severity_threshold.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      IndustrialInspectionTaskType::DefectDetection => "缺陷检测"
+      IndustrialInspectionTaskType::DimensionalMeasurement => "尺寸测量"
+      IndustrialInspectionTaskType::SurfaceQualityInspection =>
+        "表面质量检测"
+      IndustrialInspectionTaskType::ProductClassification => "产品分类"
+      IndustrialInspectionTaskType::IndustrialOCR => "工业OCR"
+      IndustrialInspectionTaskType::AnomalyDetection => "异常检测"
+      IndustrialInspectionTaskType::AssemblyVerification => "装配验证"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 严重度阈值 | " +
+    config.severity_threshold.to_string() +
+    " |\n"
   report = report + "| 测量单位 | " + config.measurement_unit + " |\n"
-  report = report + "| 默认公差 | " + config.tolerance_default.to_string() + " |\n"
-  report = report + "| 表面质量阈值 | " + config.surface_quality_threshold.to_string() + " |\n"
-  report = report + "| 异常阈值 | " + config.anomaly_threshold.to_string() + " |\n"
-  report = report + "| AI检测 | " + (if config.use_ai_detection { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 传统视觉 | " + (if config.use_traditional_vision { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 混合方法 | " + (if config.use_hybrid { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 相机分辨率 | " + config.camera_resolution[0].to_string() + "x" + config.camera_resolution[1].to_string() + " |\n"
+  report = report +
+    "| 默认公差 | " +
+    config.tolerance_default.to_string() +
+    " |\n"
+  report = report +
+    "| 表面质量阈值 | " +
+    config.surface_quality_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 异常阈值 | " +
+    config.anomaly_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| AI检测 | " +
+    (if config.use_ai_detection { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 传统视觉 | " +
+    (if config.use_traditional_vision { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 混合方法 | " +
+    (if config.use_hybrid { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 相机分辨率 | " +
+    config.camera_resolution[0].to_string() +
+    "x" +
+    config.camera_resolution[1].to_string() +
+    " |\n"
   report = report + "| 照明类型 | " + config.lighting_type + " |\n"
-  report = report + "| 检测速度 | " + config.inspection_speed.to_string() + " 件/分钟 |\n"
+  report = report +
+    "| 检测速度 | " +
+    config.inspection_speed.to_string() +
+    " 件/分钟 |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

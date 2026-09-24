@@ -219,10 +219,9 @@ test "write_exif_to_bytes: non-ASCII string replaces with ?" {
   // Read back and verify non-ASCII was replaced
   let read_back = read_exif_from_bytes(result)
   match read_back {
-    Some(r) => {
+    Some(r) =>
       // Non-ASCII bytes should be replaced with '?'
       assert_true(r.make.contains("?"))
-    }
     None => assert_true(false)
   }
 }

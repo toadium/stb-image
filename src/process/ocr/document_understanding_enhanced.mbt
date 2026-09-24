@@ -85,15 +85,22 @@ pub fn analyze_layout_enhanced(
 ) -> Array[DocumentBlock] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("analyze_layout_enhanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "analyze_layout_enhanced: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("analyze_layout_enhanced: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "analyze_layout_enhanced: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "analyze_layout_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "analyze_layout_enhanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let cfg = match config {
@@ -105,7 +112,7 @@ pub fn analyze_layout_enhanced(
   // 2. 检测文本行
   let lines = detect_text_lines_projection(preprocessed)
   // 3. 检测文本区域（连通域合并）
-  let regions = detect_text_regions(preprocessed)
+  let _ = detect_text_regions(preprocessed)
   // 4. 多栏检测
   let num_columns = if cfg.enable_column_detection {
     let (cols, _) = detect_columns(preprocessed)
@@ -126,7 +133,8 @@ pub fn analyze_layout_enhanced(
     // 计算行间距
     let line_spacing = if order > 0 && order < blocks.length() {
       let prev = blocks[order - 1]
-      (line.y_start - (prev.y + prev.height)).to_double() / font_size.to_double()
+      (line.y_start - (prev.y + prev.height)).to_double() /
+      font_size.to_double()
     } else {
       1.0
     }
@@ -175,7 +183,9 @@ fn classify_block_type_enhanced(
   order : Int,
 ) -> DocumentBlockType {
   // 标题检测（第一行且字体大）
-  if cfg.enable_title_detection && order == 0 && font_size >= cfg.title_font_size_threshold {
+  if cfg.enable_title_detection &&
+    order == 0 &&
+    font_size >= cfg.title_font_size_threshold {
     return DocumentBlockType::Title
   }
   // 标题检测（字体大且加粗）
@@ -198,19 +208,24 @@ fn classify_block_type_enhanced(
 
 ///|
 /// 估计是否加粗（基于笔画密度）
-fn estimate_bold(
-  img : @types.Image,
-  line : TextLineInfo,
-) -> Bool {
+fn estimate_bold(img : @types.Image, line : TextLineInfo) -> Bool {
   let w = img.width
   let h = img.height
   let data = img.data
   let mut ink_pixels = 0
   let mut total = 0
   let y_start = if line.y_start > 0 { line.y_start } else { 0 }
-  let y_end = if line.y_start + line.height < h { line.y_start + line.height } else { h }
+  let y_end = if line.y_start + line.height < h {
+    line.y_start + line.height
+  } else {
+    h
+  }
   let x_start = if line.x_start > 0 { line.x_start } else { 0 }
-  let x_end = if line.x_start + line.width < w { line.x_start + line.width } else { w }
+  let x_end = if line.x_start + line.width < w {
+    line.x_start + line.width
+  } else {
+    w
+  }
   for y in y_start..<y_end {
     for x in x_start..<x_end {
       total += 1
@@ -219,7 +234,11 @@ fn estimate_bold(
       }
     }
   }
-  let density = if total > 0 { ink_pixels.to_double() / total.to_double() } else { 0.0 }
+  let density = if total > 0 {
+    ink_pixels.to_double() / total.to_double()
+  } else {
+    0.0
+  }
   // 加粗字符通常密度更高
   density > 0.35
 }
@@ -240,7 +259,7 @@ pub fn optimize_reading_order(
       }
     }
     // 列内按 y 排序，再按 x 排序（冒泡排序）
-    for i in 0..<col_indices.length() {
+    for _ in 0..<col_indices.length() {
       for j in 0..<(col_indices.length() - 1) {
         let b1 = blocks[col_indices[j]]
         let b2 = blocks[col_indices[j + 1]]
@@ -267,7 +286,7 @@ pub fn optimize_reading_order(
     for i in 0..<blocks.length() {
       indices.push(i)
     }
-    for i in 0..<indices.length() {
+    for _ in 0..<indices.length() {
       for j in 0..<(indices.length() - 1) {
         let b1 = blocks[indices[j]]
         let b2 = blocks[indices[j + 1]]
@@ -301,7 +320,7 @@ pub fn detect_paragraphs(
     let block = blocks[i]
     // 只处理段落类型的块
     if block.block_type != DocumentBlockType::Paragraph &&
-       block.block_type != DocumentBlockType::ListItem {
+      block.block_type != DocumentBlockType::ListItem {
       if current_paragraph.length() > 0 {
         paragraphs.push(current_paragraph)
         current_paragraph.clear()
@@ -317,7 +336,7 @@ pub fn detect_paragraphs(
       let indent_changed = block.indent_level != prev.indent_level
       // 前一个块不是段落
       let prev_not_paragraph = prev.block_type != DocumentBlockType::Paragraph &&
-                               prev.block_type != DocumentBlockType::ListItem
+        prev.block_type != DocumentBlockType::ListItem
       spacing_too_large || indent_changed || prev_not_paragraph
     } else {
       true
@@ -378,12 +397,7 @@ pub fn build_document_structure_tree(
       DocumentBlockType::Heading3 => 3
       _ => 4
     }
-    let node = DocumentTreeNode::{
-      node_id,
-      block,
-      children: [],
-      depth,
-    }
+    let node = DocumentTreeNode::{ node_id, block, children: [], depth }
     node_id += 1
     // 弹出栈中深度 >= 当前深度的节点
     while stack.length() > 0 && stack[stack.length() - 1].depth >= depth {
@@ -475,15 +489,22 @@ pub fn understand_document_enhanced(
 ) -> (Array[DocumentBlock], Array[DocumentTreeNode], String) raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("understand_document_enhanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "understand_document_enhanced: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("understand_document_enhanced: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "understand_document_enhanced: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "understand_document_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "understand_document_enhanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let cfg = match config {
@@ -513,6 +534,10 @@ pub fn understand_document_enhanced(
     []
   }
   // 5. 提取纯文本
-  let text = extract_document_text(blocks, include_headers=true, include_footers=false)
+  let text = extract_document_text(
+    blocks,
+    include_headers=true,
+    include_footers=false,
+  )
   (blocks, tree, text)
 }

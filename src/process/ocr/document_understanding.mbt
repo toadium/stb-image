@@ -30,7 +30,7 @@ pub(all) struct DocumentElement {
   text : String
   confidence : Double
   font_size : Int
-  font_weight : String  // "normal" / "bold"
+  font_weight : String // "normal" / "bold"
   reading_order : Int
 }
 
@@ -53,15 +53,22 @@ pub fn analyze_document_layout(
 ) -> DocumentStructure raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("analyze_document_layout: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "analyze_document_layout: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("analyze_document_layout: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "analyze_document_layout: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "analyze_document_layout: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "analyze_document_layout: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   // 1. 预处理
@@ -69,7 +76,7 @@ pub fn analyze_document_layout(
   // 2. 文本行检测
   let lines = detect_text_lines_projection(preprocessed)
   // 3. 文本区域检测
-  let regions = detect_text_regions(preprocessed)
+  let _ = detect_text_regions(preprocessed)
   // 4. 分类元素类型
   let elements : Array[DocumentElement] = []
   let mut order = 0
@@ -100,7 +107,8 @@ pub fn analyze_document_layout(
   // 6. 提取标题
   let mut title = ""
   for elem in elements {
-    if elem.element_type == DocumentElementType::Title || elem.element_type == DocumentElementType::Heading1 {
+    if elem.element_type == DocumentElementType::Title ||
+      elem.element_type == DocumentElementType::Heading1 {
       title = elem.text
       break
     }
@@ -123,10 +131,18 @@ pub fn analyze_document_layout(
   let mut max_x = 0
   let mut max_y = 0
   for elem in elements {
-    if elem.x < min_x { min_x = elem.x }
-    if elem.y < min_y { min_y = elem.y }
-    if elem.x + elem.width > max_x { max_x = elem.x + elem.width }
-    if elem.y + elem.height > max_y { max_y = elem.y + elem.height }
+    if elem.x < min_x {
+      min_x = elem.x
+    }
+    if elem.y < min_y {
+      min_y = elem.y
+    }
+    if elem.x + elem.width > max_x {
+      max_x = elem.x + elem.width
+    }
+    if elem.y + elem.height > max_y {
+      max_y = elem.y + elem.height
+    }
   }
   DocumentStructure::{
     elements,
@@ -181,7 +197,9 @@ pub fn compute_reading_order(
 ) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if elements.length() == 0 {
-    raise @types.LoadError::DecodeFailed("compute_reading_order: 元素列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "compute_reading_order: 元素列表不能为空",
+    )
   }
   // 按 y 坐标排序，然后按 x 坐标排序
   let indices : Array[Int] = []
@@ -189,7 +207,7 @@ pub fn compute_reading_order(
     indices.push(i)
   }
   // 简单排序（冒泡排序）
-  for i in 0..<indices.length() {
+  for _ in 0..<indices.length() {
     for j in 0..<(indices.length() - 1) {
       let e1 = elements[indices[j]]
       let e2 = elements[indices[j + 1]]
@@ -213,9 +231,7 @@ pub fn compute_reading_order(
 
 ///|
 /// 提取标题
-pub fn extract_title(
-  structure : DocumentStructure,
-) -> String {
+pub fn extract_title(structure : DocumentStructure) -> String {
   for elem in structure.elements {
     if elem.element_type == DocumentElementType::Title {
       return elem.text
@@ -308,15 +324,22 @@ pub fn detect_document_columns(
 ) -> Int raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_document_columns: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_columns: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_document_columns: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_document_columns: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_document_columns: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_document_columns: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let (num_cols, _) = detect_columns(img)
@@ -330,15 +353,22 @@ pub fn understand_document(
 ) -> DocumentStructure raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("understand_document: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "understand_document: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("understand_document: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "understand_document: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "understand_document: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "understand_document: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   // 1. 版面分析

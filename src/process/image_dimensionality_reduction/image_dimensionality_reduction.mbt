@@ -225,7 +225,10 @@ pub fn create_default_dr_config() -> DimensionalityReductionConfig {
 
 ///|
 /// 简化的均值计算
-fn calculate_mean(data : Array[Array[Double]], dimension : Int) -> Array[Double] {
+fn calculate_mean(
+  data : Array[Array[Double]],
+  dimension : Int,
+) -> Array[Double] {
   let mean : Array[Double] = []
   for _ in 0..<dimension {
     mean.push(0.0)
@@ -251,7 +254,10 @@ fn calculate_mean(data : Array[Array[Double]], dimension : Int) -> Array[Double]
 
 ///|
 /// 简化的中心化
-fn center_data(data : Array[Array[Double]], mean : Array[Double]) -> Array[Array[Double]] {
+fn center_data(
+  data : Array[Array[Double]],
+  mean : Array[Double],
+) -> Array[Array[Double]] {
   let centered : Array[Array[Double]] = []
   for sample in data {
     let c : Array[Double] = []
@@ -269,7 +275,10 @@ fn center_data(data : Array[Array[Double]], mean : Array[Double]) -> Array[Array
 
 ///|
 /// 简化的协方差矩阵
-fn calculate_covariance(centered : Array[Array[Double]], dimension : Int) -> Array[Array[Double]] {
+fn calculate_covariance(
+  centered : Array[Array[Double]],
+  dimension : Int,
+) -> Array[Array[Double]] {
   let cov : Array[Array[Double]] = []
   for i in 0..<dimension {
     let row : Array[Double] = []
@@ -315,10 +324,10 @@ pub fn pca_reduce(
     }
   }
 
-  for k in 0..<num_components {
+  for _ in 0..<num_components {
     // 幂迭代法
     let mut v : Array[Double] = []
-    for i in 0..<original_dim {
+    for _ in 0..<original_dim {
       v.push(1.0 / original_dim.to_double())
     }
 
@@ -388,7 +397,9 @@ pub fn pca_reduce(
     for k in 0..<num_components {
       let mut sum = 0.0
       for d in 0..<original_dim {
-        if d < sample.length() && k < components.length() && d < components[k].length() {
+        if d < sample.length() &&
+          k < components.length() &&
+          d < components[k].length() {
           sum += sample[d] * components[k][d]
         }
       }
@@ -447,9 +458,9 @@ pub fn tsne_reduce(
   // 随机初始化低维表示
   let reduced : Array[Array[Double]] = []
   let mut state = config.random_state
-  for i in 0..<num_samples {
+  for _ in 0..<num_samples {
     let r : Array[Double] = []
-    for d in 0..<num_components {
+    for _ in 0..<num_components {
       state = (state * 11035 + 12345) % 1000000
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       r.push(rand_val * 0.01)
@@ -458,7 +469,7 @@ pub fn tsne_reduce(
   }
 
   // 简化的梯度下降（实际t-SNE需要计算高维亲和度和低维Q分布）
-  for iter in 0..<config.num_iterations {
+  for _ in 0..<config.num_iterations {
     // 简化：随机扰动
     for i in 0..<num_samples {
       for d in 0..<num_components {
@@ -496,9 +507,9 @@ pub fn umap_reduce(
   // 随机初始化
   let reduced : Array[Array[Double]] = []
   let mut state = config.random_state
-  for i in 0..<num_samples {
+  for _ in 0..<num_samples {
     let r : Array[Double] = []
-    for d in 0..<num_components {
+    for _ in 0..<num_components {
       state = (state * 11035 + 12345) % 1000000
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       r.push(rand_val * 0.1)
@@ -577,7 +588,11 @@ pub fn select_features(
         var_sum += diff * diff
       }
     }
-    let variance = if num_samples > 0 { var_sum / num_samples.to_double() } else { 0.0 }
+    let variance = if num_samples > 0 {
+      var_sum / num_samples.to_double()
+    } else {
+      0.0
+    }
     scores.push(variance)
   }
 
@@ -589,7 +604,7 @@ pub fn select_features(
   }
 
   // 简单排序
-  for i in 0..<num_features {
+  for _ in 0..<num_features {
     for j in 0..<(num_features - 1) {
       if scores[ranking[j]] < scores[ranking[j + 1]] {
         let temp = ranking[j]
@@ -628,49 +643,67 @@ pub fn dimensionality_reduction_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    DimensionalityReductionTaskType::PCA => "PCA"
-    DimensionalityReductionTaskType::LDA => "LDA"
-    DimensionalityReductionTaskType::TSNE => "t-SNE"
-    DimensionalityReductionTaskType::UMAP => "UMAP"
-    DimensionalityReductionTaskType::ISOMAP => "ISOMAP"
-    DimensionalityReductionTaskType::LLE => "LLE"
-    DimensionalityReductionTaskType::Autoencoder => "自动编码器"
-    DimensionalityReductionTaskType::ManifoldLearning => "流形学习"
-    DimensionalityReductionTaskType::FeatureSelection => "特征选择"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 降维算法 | " + (match config.algorithm_type {
-    DimensionalityReductionAlgorithmType::PCA => "PCA"
-    DimensionalityReductionAlgorithmType::KernelPCA => "核PCA"
-    DimensionalityReductionAlgorithmType::IncrementalPCA => "增量PCA"
-    DimensionalityReductionAlgorithmType::SparsePCA => "稀疏PCA"
-    DimensionalityReductionAlgorithmType::TruncatedSVD => "截断SVD"
-    DimensionalityReductionAlgorithmType::LDA => "LDA"
-    DimensionalityReductionAlgorithmType::TSNE => "t-SNE"
-    DimensionalityReductionAlgorithmType::UMAP => "UMAP"
-    DimensionalityReductionAlgorithmType::ISOMAP => "ISOMAP"
-    DimensionalityReductionAlgorithmType::LLE => "LLE"
-    DimensionalityReductionAlgorithmType::MDS => "MDS"
-    DimensionalityReductionAlgorithmType::SpectralEmbedding => "谱嵌入"
-    DimensionalityReductionAlgorithmType::Autoencoder => "自动编码器"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 目标维度 | " + config.num_components.to_string() + " |\n"
-  report = report + "| 核函数 | " + (match config.kernel_type {
-    KernelType::Linear => "线性"
-    KernelType::Polynomial => "多项式"
-    KernelType::RBF => "RBF"
-    KernelType::Sigmoid => "Sigmoid"
-    KernelType::Cosine => "余弦"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      DimensionalityReductionTaskType::PCA => "PCA"
+      DimensionalityReductionTaskType::LDA => "LDA"
+      DimensionalityReductionTaskType::TSNE => "t-SNE"
+      DimensionalityReductionTaskType::UMAP => "UMAP"
+      DimensionalityReductionTaskType::ISOMAP => "ISOMAP"
+      DimensionalityReductionTaskType::LLE => "LLE"
+      DimensionalityReductionTaskType::Autoencoder => "自动编码器"
+      DimensionalityReductionTaskType::ManifoldLearning => "流形学习"
+      DimensionalityReductionTaskType::FeatureSelection => "特征选择"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 降维算法 | " +
+    (match config.algorithm_type {
+      DimensionalityReductionAlgorithmType::PCA => "PCA"
+      DimensionalityReductionAlgorithmType::KernelPCA => "核PCA"
+      DimensionalityReductionAlgorithmType::IncrementalPCA => "增量PCA"
+      DimensionalityReductionAlgorithmType::SparsePCA => "稀疏PCA"
+      DimensionalityReductionAlgorithmType::TruncatedSVD => "截断SVD"
+      DimensionalityReductionAlgorithmType::LDA => "LDA"
+      DimensionalityReductionAlgorithmType::TSNE => "t-SNE"
+      DimensionalityReductionAlgorithmType::UMAP => "UMAP"
+      DimensionalityReductionAlgorithmType::ISOMAP => "ISOMAP"
+      DimensionalityReductionAlgorithmType::LLE => "LLE"
+      DimensionalityReductionAlgorithmType::MDS => "MDS"
+      DimensionalityReductionAlgorithmType::SpectralEmbedding => "谱嵌入"
+      DimensionalityReductionAlgorithmType::Autoencoder => "自动编码器"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 目标维度 | " +
+    config.num_components.to_string() +
+    " |\n"
+  report = report +
+    "| 核函数 | " +
+    (match config.kernel_type {
+      KernelType::Linear => "线性"
+      KernelType::Polynomial => "多项式"
+      KernelType::RBF => "RBF"
+      KernelType::Sigmoid => "Sigmoid"
+      KernelType::Cosine => "余弦"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 困惑度 | " + config.perplexity.to_string() + " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
-  report = report + "| 迭代次数 | " + config.num_iterations.to_string() + " |\n"
+  report = report +
+    "| 迭代次数 | " +
+    config.num_iterations.to_string() +
+    " |\n"
   report = report + "| 邻居数 | " + config.n_neighbors.to_string() + " |\n"
   report = report + "| 最小距离 | " + config.min_dist.to_string() + " |\n"
-  report = report + "| 白化 | " + (if config.use_whitening { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 白化 | " +
+    (if config.use_whitening { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

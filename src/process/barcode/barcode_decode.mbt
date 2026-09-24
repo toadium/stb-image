@@ -30,10 +30,10 @@ pub(all) struct BarcodeConfig {
   enable_upca : Bool
   enable_code128 : Bool
   enable_qrcode : Bool
-  min_bar_width : Int  // 最小条宽（像素）
-  max_bar_width : Int  // 最大条宽（像素）
-  scan_lines : Int  // 扫描线数量
-  quiet_zone_required : Bool  // 是否要求静区
+  min_bar_width : Int // 最小条宽（像素）
+  max_bar_width : Int // 最大条宽（像素）
+  scan_lines : Int // 扫描线数量
+  quiet_zone_required : Bool // 是否要求静区
 }
 
 ///|
@@ -57,61 +57,61 @@ pub fn barcode_default_config() -> BarcodeConfig {
 /// EAN-13 编码表（左侧奇偶编码）
 /// L码（奇数）和 G码（偶数）的编码模式
 let ean13_l_codes : Array[Array[Int]] = [
-  [0,0,0,1,1,0,1],  // 0
-  [0,0,1,1,0,0,1],  // 1
-  [0,0,1,0,0,1,1],  // 2
-  [0,1,1,1,1,0,1],  // 3
-  [0,1,0,0,0,1,1],  // 4
-  [0,1,1,0,0,0,1],  // 5
-  [0,1,0,1,1,1,1],  // 6
-  [0,1,1,1,0,1,1],  // 7
-  [0,1,1,0,1,1,1],  // 8
-  [0,0,0,1,0,1,1],  // 9
+  [0, 0, 0, 1, 1, 0, 1], // 0
+  [0, 0, 1, 1, 0, 0, 1], // 1
+  [0, 0, 1, 0, 0, 1, 1], // 2
+  [0, 1, 1, 1, 1, 0, 1], // 3
+  [0, 1, 0, 0, 0, 1, 1], // 4
+  [0, 1, 1, 0, 0, 0, 1], // 5
+  [0, 1, 0, 1, 1, 1, 1], // 6
+  [0, 1, 1, 1, 0, 1, 1], // 7
+  [0, 1, 1, 0, 1, 1, 1], // 8
+  [0, 0, 0, 1, 0, 1, 1], // 9
 ]
 
 ///|
 /// EAN-13 G码（偶数编码）
 let ean13_g_codes : Array[Array[Int]] = [
-  [0,1,0,0,1,1,1],  // 0
-  [0,1,1,0,0,1,1],  // 1
-  [0,0,1,1,0,1,1],  // 2
-  [0,1,0,0,0,0,1],  // 3
-  [0,0,1,1,1,0,1],  // 4
-  [0,1,1,1,0,0,1],  // 5
-  [0,0,0,0,1,0,1],  // 6
-  [0,0,1,0,0,0,1],  // 7
-  [0,0,0,1,0,0,1],  // 8
-  [0,0,1,0,1,1,1],  // 9
+  [0, 1, 0, 0, 1, 1, 1], // 0
+  [0, 1, 1, 0, 0, 1, 1], // 1
+  [0, 0, 1, 1, 0, 1, 1], // 2
+  [0, 1, 0, 0, 0, 0, 1], // 3
+  [0, 0, 1, 1, 1, 0, 1], // 4
+  [0, 1, 1, 1, 0, 0, 1], // 5
+  [0, 0, 0, 0, 1, 0, 1], // 6
+  [0, 0, 1, 0, 0, 0, 1], // 7
+  [0, 0, 0, 1, 0, 0, 1], // 8
+  [0, 0, 1, 0, 1, 1, 1], // 9
 ]
 
 ///|
 /// EAN-13 右侧编码（R码）
 let ean13_r_codes : Array[Array[Int]] = [
-  [1,1,1,0,0,1,0],  // 0
-  [1,1,0,0,1,1,0],  // 1
-  [1,1,0,1,1,0,0],  // 2
-  [1,0,0,0,0,1,0],  // 3
-  [1,0,1,1,1,0,0],  // 4
-  [1,0,0,1,1,1,0],  // 5
-  [1,0,1,0,0,0,0],  // 6
-  [1,0,0,0,1,0,0],  // 7
-  [1,0,0,1,0,0,0],  // 8
-  [1,1,1,0,1,0,0],  // 9
+  [1, 1, 1, 0, 0, 1, 0], // 0
+  [1, 1, 0, 0, 1, 1, 0], // 1
+  [1, 1, 0, 1, 1, 0, 0], // 2
+  [1, 0, 0, 0, 0, 1, 0], // 3
+  [1, 0, 1, 1, 1, 0, 0], // 4
+  [1, 0, 0, 1, 1, 1, 0], // 5
+  [1, 0, 1, 0, 0, 0, 0], // 6
+  [1, 0, 0, 0, 1, 0, 0], // 7
+  [1, 0, 0, 1, 0, 0, 0], // 8
+  [1, 1, 1, 0, 1, 0, 0], // 9
 ]
 
 ///|
 /// EAN-13 前缀对应的奇偶编码模式
 let ean13_parity_patterns : Array[Array[Int]] = [
-  [0,0,0,0,0,0],  // 0
-  [0,0,1,0,1,1],  // 1
-  [0,0,1,1,0,1],  // 2
-  [0,0,1,1,1,0],  // 3
-  [0,1,0,0,1,1],  // 4
-  [0,1,1,0,0,1],  // 5
-  [0,1,1,1,0,0],  // 6
-  [0,1,0,1,0,1],  // 7
-  [0,1,0,1,1,0],  // 8
-  [0,1,1,0,1,0],  // 9
+  [0, 0, 0, 0, 0, 0], // 0
+  [0, 0, 1, 0, 1, 1], // 1
+  [0, 0, 1, 1, 0, 1], // 2
+  [0, 0, 1, 1, 1, 0], // 3
+  [0, 1, 0, 0, 1, 1], // 4
+  [0, 1, 1, 0, 0, 1], // 5
+  [0, 1, 1, 1, 0, 0], // 6
+  [0, 1, 0, 1, 0, 1], // 7
+  [0, 1, 0, 1, 1, 0], // 8
+  [0, 1, 1, 0, 1, 0], // 9
 ]
 
 ///|
@@ -149,12 +149,11 @@ pub fn decode_ean13(
     // 尝试解码
     let result = decode_ean13_from_binary(binary, y, w, h)
     match result {
-      Some(r) => {
+      Some(r) =>
         if r.confidence > best_confidence {
           best_confidence = r.confidence
           best_result = Some(r)
         }
-      }
       None => ignore(())
     }
   }
@@ -163,9 +162,7 @@ pub fn decode_ean13(
 
 ///|
 /// 扫描线二值化
-fn binarize_scanline(
-  pixels : Array[Int],
-) -> Array[Int] {
+fn binarize_scanline(pixels : Array[Int]) -> Array[Int] {
   // 计算阈值（简单均值）
   let mut sum = 0
   for p in pixels {
@@ -188,7 +185,7 @@ fn decode_ean13_from_binary(
   img_height : Int,
 ) -> BarcodeResult? {
   let w = binary.length()
-  if w < 95 {  // EAN-13 至少需要 95 个模块
+  if w < 95 { // EAN-13 至少需要 95 个模块
     return None
   }
   // 寻找起始符（101）
@@ -219,8 +216,8 @@ fn decode_ean13_from_binary(
   // 解析左侧6位数字
   let left_digits : Array[Int] = []
   let left_parity : Array[Int] = []
-  let mut pos = start_idx + 3 * module_width  // 跳过起始符
-  for i in 0..<6 {
+  let mut pos = start_idx + 3 * module_width // 跳过起始符
+  for _ in 0..<6 {
     let (digit, parity) = decode_ean13_digit(binary, pos, module_width, true)
     if digit < 0 {
       return None
@@ -230,10 +227,10 @@ fn decode_ean13_from_binary(
     pos += 7 * module_width
   }
   // 检查中间分隔符（01010）
-  pos += 5 * module_width  // 跳过中间分隔符
+  pos += 5 * module_width // 跳过中间分隔符
   // 解析右侧6位数字
   let right_digits : Array[Int] = []
-  for i in 0..<6 {
+  for _ in 0..<6 {
     let (digit, _) = decode_ean13_digit(binary, pos, module_width, false)
     if digit < 0 {
       return None
@@ -270,10 +267,7 @@ fn decode_ean13_from_binary(
 
 ///|
 /// 估计模块宽度
-fn estimate_module_width(
-  binary : Array[Int],
-  start_idx : Int,
-) -> Int {
+fn estimate_module_width(binary : Array[Int], start_idx : Int) -> Int {
   // 起始符是 101，测量第一个条的宽度
   let mut width = 0
   let mut i = start_idx
@@ -310,13 +304,13 @@ fn decode_ean13_digit(
     // 尝试 L 码（奇数）
     for d in 0..<10 {
       if modules == ean13_l_codes[d] {
-        return (d, 0)  // 0 = L码（奇数）
+        return (d, 0) // 0 = L码（奇数）
       }
     }
     // 尝试 G 码（偶数）
     for d in 0..<10 {
       if modules == ean13_g_codes[d] {
-        return (d, 1)  // 1 = G码（偶数）
+        return (d, 1) // 1 = G码（偶数）
       }
     }
   } else {
@@ -332,9 +326,7 @@ fn decode_ean13_digit(
 
 ///|
 /// 根据奇偶编码模式匹配第一位数字
-fn match_parity_pattern(
-  parity : Array[Int],
-) -> Int {
+fn match_parity_pattern(parity : Array[Int]) -> Int {
   for d in 0..<10 {
     let mut is_match = true
     for i in 0..<6 {
@@ -351,9 +343,7 @@ fn match_parity_pattern(
 
 ///|
 /// 验证 EAN-13 校验位
-fn validate_ean13_checksum(
-  barcode : String,
-) -> Bool {
+fn validate_ean13_checksum(barcode : String) -> Bool {
   if barcode.length() != 13 {
     return false
   }
@@ -361,12 +351,12 @@ fn validate_ean13_checksum(
   for i in 0..<12 {
     let digit = barcode[i].to_int() - '0'.to_int()
     if i % 2 == 0 {
-      sum += digit  // 奇数位（从0开始）权重1
+      sum += digit // 奇数位（从0开始）权重1
     } else {
-      sum += digit * 3  // 偶数位权重3
+      sum += digit * 3 // 偶数位权重3
     }
   }
-  let checksum = (10 - (sum % 10)) % 10
+  let checksum = (10 - sum % 10) % 10
   let actual = barcode[12].to_int() - '0'.to_int()
   checksum == actual
 }
@@ -384,9 +374,7 @@ pub(all) struct QrFinderPattern {
 
 ///|
 /// 检测 QR Code 定位图案
-pub fn detect_qr_finder_patterns(
-  img : @types.Image,
-) -> Array[QrFinderPattern] {
+pub fn detect_qr_finder_patterns(img : @types.Image) -> Array[QrFinderPattern] {
   let w = img.width
   let h = img.height
   let data = img.data
@@ -397,10 +385,14 @@ pub fn detect_qr_finder_patterns(
     while x < w {
       // 寻找起始黑条
       if data[y * w + x].to_int() < 128 {
-        let (found, pattern_x, pattern_size) = scan_qr_pattern_horizontal(data, w, x, y)
+        let (found, pattern_x, pattern_size) = scan_qr_pattern_horizontal(
+          data, w, x, y,
+        )
         if found && pattern_size > 10 {
           // 验证垂直方向
-          let vertical_valid = verify_qr_pattern_vertical(data, w, h, pattern_x, y, pattern_size)
+          let vertical_valid = verify_qr_pattern_vertical(
+            data, w, h, pattern_x, y, pattern_size,
+          )
           if vertical_valid {
             patterns.push(QrFinderPattern::{
               x: pattern_x.to_double(),
@@ -465,18 +457,23 @@ fn scan_qr_pattern_horizontal(
   if total < 20 {
     return (false, 0, 0)
   }
-  let module = total / 7
+  let module_val = total / 7
   let m1d = m1.to_double()
   let m2d = m2.to_double()
   let m3d = m3.to_double()
   let m4d = m4.to_double()
   let m5d = m5.to_double()
-  let mod_d = module.to_double()
-  let ratio_ok = m1d >= mod_d * 0.5 && m1d <= mod_d * 1.5 &&
-                  m2d >= mod_d * 0.5 && m2d <= mod_d * 1.5 &&
-                  m3d >= mod_d * 2.5 && m3d <= mod_d * 3.5 &&
-                  m4d >= mod_d * 0.5 && m4d <= mod_d * 1.5 &&
-                  m5d >= mod_d * 0.5 && m5d <= mod_d * 1.5
+  let mod_d = module_val.to_double()
+  let ratio_ok = m1d >= mod_d * 0.5 &&
+    m1d <= mod_d * 1.5 &&
+    m2d >= mod_d * 0.5 &&
+    m2d <= mod_d * 1.5 &&
+    m3d >= mod_d * 2.5 &&
+    m3d <= mod_d * 3.5 &&
+    m4d >= mod_d * 0.5 &&
+    m4d <= mod_d * 1.5 &&
+    m5d >= mod_d * 0.5 &&
+    m5d <= mod_d * 1.5
   if ratio_ok {
     return (true, start_x, total)
   }
@@ -532,18 +529,23 @@ fn verify_qr_pattern_vertical(
   if total < 20 {
     return false
   }
-  let module = total / 7
+  let module_val = total / 7
   let m1d = m1.to_double()
   let m2d = m2.to_double()
   let m3d = m3.to_double()
   let m4d = m4.to_double()
   let m5d = m5.to_double()
-  let mod_d = module.to_double()
-  m1d >= mod_d * 0.5 && m1d <= mod_d * 1.5 &&
-  m2d >= mod_d * 0.5 && m2d <= mod_d * 1.5 &&
-  m3d >= mod_d * 2.5 && m3d <= mod_d * 3.5 &&
-  m4d >= mod_d * 0.5 && m4d <= mod_d * 1.5 &&
-  m5d >= mod_d * 0.5 && m5d <= mod_d * 1.5
+  let mod_d = module_val.to_double()
+  m1d >= mod_d * 0.5 &&
+  m1d <= mod_d * 1.5 &&
+  m2d >= mod_d * 0.5 &&
+  m2d <= mod_d * 1.5 &&
+  m3d >= mod_d * 2.5 &&
+  m3d <= mod_d * 3.5 &&
+  m4d >= mod_d * 0.5 &&
+  m4d <= mod_d * 1.5 &&
+  m5d >= mod_d * 0.5 &&
+  m5d <= mod_d * 1.5
 }
 
 ///|
@@ -571,7 +573,7 @@ pub fn decode_qrcode(
   // 估算 QR Code 尺寸
   let avg_size = (p1.size + p2.size + p3.size) / 3.0
   let module_size = avg_size / 7.0
-  let qr_size = (21.0 * module_size).to_int()  // Version 1 是 21x21 模块
+  let _ = (21.0 * module_size).to_int() // Version 1 是 21x21 模块
   // 计算边界框
   let min_x = p1.x.min(p2.x).min(p3.x).to_int()
   let min_y = p1.y.min(p2.y).min(p3.y).to_int()
@@ -581,7 +583,9 @@ pub fn decode_qrcode(
   let height = max_y - min_y
   // 基础版：只检测定位，不做完整解码
   // 返回检测结果，data 字段包含基本信息
-  let info = "QR Code detected: 3 finder patterns, ~" + module_size.to_int().to_string() + "px/module, ~v1 size"
+  let info = "QR Code detected: 3 finder patterns, ~" +
+    module_size.to_int().to_string() +
+    "px/module_val, ~v1 size"
   Some(BarcodeResult::{
     barcode_type: BarcodeType::QrCode,
     data: info,

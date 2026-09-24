@@ -6,8 +6,8 @@
 pub(all) struct MultispectralImage {
   width : Int
   height : Int
-  bands : Array[@types.Image]  // 每个波段一个灰度图像
-  band_names : Array[String]  // 波段名称
+  bands : Array[@types.Image] // 每个波段一个灰度图像
+  band_names : Array[String] // 波段名称
 }
 
 ///|
@@ -27,21 +27,13 @@ pub fn multispectral_new(
     }
     default_names
   }
-  MultispectralImage::{
-    width,
-    height,
-    bands,
-    band_names: names,
-  }
+  MultispectralImage::{ width, height, bands, band_names: names }
 }
 
 ///|
 /// 计算 NDVI（归一化植被指数）
 /// NDVI = (NIR - Red) / (NIR + Red)
-pub fn compute_ndvi(
-  nir : @types.Image,
-  red : @types.Image,
-) -> @types.Image {
+pub fn compute_ndvi(nir : @types.Image, red : @types.Image) -> @types.Image {
   if nir.width != red.width || nir.height != red.height {
     return nir
   }
@@ -54,26 +46,24 @@ pub fn compute_ndvi(
       let nir_val = nir.data[idx].to_double()
       let red_val = red.data[idx].to_double()
       let sum = nir_val + red_val
-      let ndvi = if sum > 0.0 {
-        (nir_val - red_val) / sum
-      } else {
-        0.0
-      }
+      let ndvi = if sum > 0.0 { (nir_val - red_val) / sum } else { 0.0 }
       // 映射到 0-255（NDVI 范围 -1 到 1）
       let mapped = ((ndvi + 1.0) / 2.0 * 255.0).to_int()
       out_data[idx] = mapped.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 计算 NDWI（归一化水指数）
 /// NDWI = (Green - NIR) / (Green + NIR)
-pub fn compute_ndwi(
-  green : @types.Image,
-  nir : @types.Image,
-) -> @types.Image {
+pub fn compute_ndwi(green : @types.Image, nir : @types.Image) -> @types.Image {
   if green.width != nir.width || green.height != nir.height {
     return green
   }
@@ -86,25 +76,23 @@ pub fn compute_ndwi(
       let green_val = green.data[idx].to_double()
       let nir_val = nir.data[idx].to_double()
       let sum = green_val + nir_val
-      let ndwi = if sum > 0.0 {
-        (green_val - nir_val) / sum
-      } else {
-        0.0
-      }
+      let ndwi = if sum > 0.0 { (green_val - nir_val) / sum } else { 0.0 }
       let mapped = ((ndwi + 1.0) / 2.0 * 255.0).to_int()
       out_data[idx] = mapped.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 计算 NDBI（归一化建筑指数）
 /// NDBI = (SWIR - NIR) / (SWIR + NIR)
-pub fn compute_ndbi(
-  swir : @types.Image,
-  nir : @types.Image,
-) -> @types.Image {
+pub fn compute_ndbi(swir : @types.Image, nir : @types.Image) -> @types.Image {
   if swir.width != nir.width || swir.height != nir.height {
     return swir
   }
@@ -117,16 +105,17 @@ pub fn compute_ndbi(
       let swir_val = swir.data[idx].to_double()
       let nir_val = nir.data[idx].to_double()
       let sum = swir_val + nir_val
-      let ndbi = if sum > 0.0 {
-        (swir_val - nir_val) / sum
-      } else {
-        0.0
-      }
+      let ndbi = if sum > 0.0 { (swir_val - nir_val) / sum } else { 0.0 }
       let mapped = ((ndbi + 1.0) / 2.0 * 255.0).to_int()
       out_data[idx] = mapped.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -137,8 +126,10 @@ pub fn compute_evi(
   red : @types.Image,
   blue : @types.Image,
 ) -> @types.Image {
-  if nir.width != red.width || nir.height != red.height ||
-     nir.width != blue.width || nir.height != blue.height {
+  if nir.width != red.width ||
+    nir.height != red.height ||
+    nir.width != blue.width ||
+    nir.height != blue.height {
     return nir
   }
   let w = nir.width
@@ -160,7 +151,12 @@ pub fn compute_evi(
       out_data[idx] = mapped.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -170,8 +166,10 @@ pub fn false_color_composite(
   red : @types.Image,
   green : @types.Image,
 ) -> @types.Image {
-  if nir.width != red.width || nir.height != red.height ||
-     nir.width != green.width || nir.height != green.height {
+  if nir.width != red.width ||
+    nir.height != red.height ||
+    nir.width != green.width ||
+    nir.height != green.height {
     return nir
   }
   let w = nir.width
@@ -187,7 +185,12 @@ pub fn false_color_composite(
       out_data[out_idx + 2] = green.data[idx]
     }
   }
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -197,8 +200,10 @@ pub fn true_color_composite(
   green : @types.Image,
   blue : @types.Image,
 ) -> @types.Image {
-  if red.width != green.width || red.height != green.height ||
-     red.width != blue.width || red.height != blue.height {
+  if red.width != green.width ||
+    red.height != green.height ||
+    red.width != blue.width ||
+    red.height != blue.height {
     return red
   }
   let w = red.width
@@ -213,7 +218,12 @@ pub fn true_color_composite(
       out_data[out_idx + 2] = blue.data[idx]
     }
   }
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -243,7 +253,12 @@ pub fn vegetation_coverage(
       out_data[idx] = (coverage * 255.0).to_int().min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -254,8 +269,10 @@ pub fn land_cover_classification(
   ndwi : @types.Image,
   ndbi : @types.Image,
 ) -> @types.Image {
-  if ndvi.width != ndwi.width || ndvi.height != ndwi.height ||
-     ndvi.width != ndbi.width || ndvi.height != ndbi.height {
+  if ndvi.width != ndwi.width ||
+    ndvi.height != ndwi.height ||
+    ndvi.width != ndbi.width ||
+    ndvi.height != ndbi.height {
     return ndvi
   }
   let w = ndvi.width
@@ -270,36 +287,39 @@ pub fn land_cover_classification(
       let ndbi_val = ndbi.data[idx].to_double() / 255.0 * 2.0 - 1.0
       // 简单分类规则
       let class_id = if ndwi_val > 0.2 {
-        0  // 水体
+        0 // 水体
       } else if ndvi_val > 0.3 {
-        1  // 植被
+        1 // 植被
       } else if ndbi_val > 0.1 {
-        2  // 建筑
+        2 // 建筑
       } else if ndvi_val > 0.1 {
-        3  // 裸土
+        3 // 裸土
       } else {
-        4  // 其他
+        4 // 其他
       }
       out_data[idx] = class_id.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 分类图彩色可视化
-pub fn classification_colormap(
-  classification : @types.Image,
-) -> @types.Image {
+pub fn classification_colormap(classification : @types.Image) -> @types.Image {
   let w = classification.width
   let h = classification.height
   let out_data : Array[Byte] = Array::make(w * h * 3, b'\x00')
   // 分类颜色：0=水体(蓝), 1=植被(绿), 2=建筑(红), 3=裸土(黄), 4=其他(灰)
   let colors = [
-    (0, 0, 255),    // 水体 - 蓝
-    (0, 255, 0),    // 植被 - 绿
-    (255, 0, 0),    // 建筑 - 红
-    (255, 255, 0),  // 裸土 - 黄
+    (0, 0, 255), // 水体 - 蓝
+    (0, 255, 0), // 植被 - 绿
+    (255, 0, 0), // 建筑 - 红
+    (255, 255, 0), // 裸土 - 黄
     (128, 128, 128), // 其他 - 灰
   ]
   for y in 0..<h {
@@ -314,5 +334,10 @@ pub fn classification_colormap(
       out_data[out_idx + 2] = b.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }

@@ -42,7 +42,7 @@ pub(all) struct DLDenseConfig {
 pub(all) struct DLNeuralLayer {
   layer_type : DLLayerType
   name : String
-  config : String  // JSON 格式的配置
+  config : String // JSON 格式的配置
   weights : Array[Double]
   biases : Array[Double]
   input_shape : Array[Int]
@@ -107,9 +107,7 @@ pub(all) struct DLFeatureExtractor {
 
 ///|
 /// 创建默认 CNN 模型配置（用于字符识别）
-pub fn create_default_char_cnn_config(
-  num_classes : Int,
-) -> DLCnnModelConfig {
+pub fn create_default_char_cnn_config(num_classes : Int) -> DLCnnModelConfig {
   let conv_layers : Array[DLConv2DConfig] = [
     DLConv2DConfig::{
       in_channels: 1,
@@ -173,8 +171,10 @@ pub fn create_neural_layer(
 ) -> DLNeuralLayer {
   let output_shape = match layer_type {
     DLLayerType::Conv2D => [input_shape[0], input_shape[1], input_shape[2]]
-    DLLayerType::MaxPool2D => [input_shape[0], input_shape[1] / 2, input_shape[2] / 2]
-    DLLayerType::AvgPool2D => [input_shape[0], input_shape[1] / 2, input_shape[2] / 2]
+    DLLayerType::MaxPool2D =>
+      [input_shape[0], input_shape[1] / 2, input_shape[2] / 2]
+    DLLayerType::AvgPool2D =>
+      [input_shape[0], input_shape[1] / 2, input_shape[2] / 2]
     DLLayerType::Flatten => [input_shape[0] * input_shape[1] * input_shape[2]]
     DLLayerType::Dense => [input_shape[0]]
     _ => input_shape
@@ -199,7 +199,9 @@ pub fn normalize_image(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if image_data.length() == 0 {
-    raise @types.LoadError::DecodeFailed("normalize_image: 图像数据不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "normalize_image: 图像数据不能为空",
+    )
   }
   if std <= 0.0 {
     raise @types.LoadError::DecodeFailed("normalize_image: std必须大于0")
@@ -220,26 +222,35 @@ pub fn resize_image_for_cnn(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "resize_image_for_cnn: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "resize_image_for_cnn: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "resize_image_for_cnn: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "resize_image_for_cnn: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if target_width <= 0 || target_height <= 0 {
-    raise @types.LoadError::DecodeFailed("resize_image_for_cnn: 目标尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "resize_image_for_cnn: 目标尺寸必须大于0",
+    )
   }
   let result : Array[Double] = []
   let src_w = img.width
   let src_h = img.height
   let x_scale = src_w.to_double() / target_width.to_double()
   let y_scale = src_h.to_double() / target_height.to_double()
-  
+
   for y in 0..<target_height {
     for x in 0..<target_width {
       let src_x = (x.to_double() * x_scale).to_int()
@@ -259,9 +270,12 @@ pub fn resize_image_for_cnn(
 ///|
 /// ReLU 激活函数
 pub fn relu(x : Double) -> Double {
-  if x > 0.0 { x } else { 0.0 }
+  if x > 0.0 {
+    x
+  } else {
+    0.0
+  }
 }
-
 
 ///|
 /// 近似 exp 函数（泰勒级数）
@@ -313,7 +327,9 @@ pub fn sigmoid(x : Double) -> Double {
 pub fn softmax(logits : Array[Double]) -> Array[Double] {
   let mut max_logit = logits[0]
   for l in logits {
-    if l > max_logit { max_logit = l }
+    if l > max_logit {
+      max_logit = l
+    }
   }
   let mut exp_sum = 0.0
   let exps : Array[Double] = []
@@ -370,13 +386,16 @@ pub fn conv2d(
   let expected_input_size = in_h * in_w * in_c
   if input.length() != expected_input_size {
     raise @types.LoadError::DecodeFailed(
-      "conv2d: 输入数据大小不匹配，期望 " + expected_input_size.to_string() + "，实际 " + input.length().to_string(),
+      "conv2d: 输入数据大小不匹配，期望 " +
+      expected_input_size.to_string() +
+      "，实际 " +
+      input.length().to_string(),
     )
   }
   let out_h = (in_h + 2 * padding - k_size) / stride + 1
   let out_w = (in_w + 2 * padding - k_size) / stride + 1
   let output : Array[Double] = []
-  
+
   for oc in 0..<out_c {
     for oh in 0..<out_h {
       for ow in 0..<out_w {
@@ -388,7 +407,10 @@ pub fn conv2d(
               let iw = ow * stride - padding + kw
               if ih >= 0 && ih < in_h && iw >= 0 && iw < in_w {
                 let input_idx = ic * in_h * in_w + ih * in_w + iw
-                let kernel_idx = oc * in_c * k_size * k_size + ic * k_size * k_size + kh * k_size + kw
+                let kernel_idx = oc * in_c * k_size * k_size +
+                  ic * k_size * k_size +
+                  kh * k_size +
+                  kw
                 if input_idx < input.length() && kernel_idx < kernel.length() {
                   sum += input[input_idx] * kernel[kernel_idx]
                 }
@@ -417,24 +439,31 @@ pub fn max_pool2d(
     raise @types.LoadError::DecodeFailed("max_pool2d: 输入数据不能为空")
   }
   if in_h <= 0 || in_w <= 0 {
-    raise @types.LoadError::DecodeFailed("max_pool2d: 输入尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "max_pool2d: 输入尺寸必须大于0",
+    )
   }
   if channels <= 0 {
     raise @types.LoadError::DecodeFailed("max_pool2d: 通道数必须大于0")
   }
   if pool_size <= 0 {
-    raise @types.LoadError::DecodeFailed("max_pool2d: 池化尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "max_pool2d: 池化尺寸必须大于0",
+    )
   }
   let expected_input_size = in_h * in_w * channels
   if input.length() != expected_input_size {
     raise @types.LoadError::DecodeFailed(
-      "max_pool2d: 输入数据大小不匹配，期望 " + expected_input_size.to_string() + "，实际 " + input.length().to_string(),
+      "max_pool2d: 输入数据大小不匹配，期望 " +
+      expected_input_size.to_string() +
+      "，实际 " +
+      input.length().to_string(),
     )
   }
   let out_h = in_h / pool_size
   let out_w = in_w / pool_size
   let output : Array[Double] = []
-  
+
   for c in 0..<channels {
     for oh in 0..<out_h {
       for ow in 0..<out_w {
@@ -494,13 +523,13 @@ pub fn cnn_infer(
   labels : Array[String],
 ) -> DLInferenceResult {
   let start_time = 0.0
-  
+
   // 简化版推理：使用模板匹配代替真实 CNN
   // 实际部署时应加载预训练权重
   let mut best_class = 0
   let mut best_score = -1.0
   let scores : Array[(Int, Double)] = []
-  
+
   for c in 0..<config.num_classes {
     // 简化：计算图像与模板的相似度
     let mut score = 0.0
@@ -509,22 +538,23 @@ pub fn cnn_infer(
     }
     score = score / image_data.length().to_double()
     // 添加类别相关的伪分数
-    score = score + (c.to_double() * 0.001)
+    score = score + c.to_double() * 0.001
     scores.push((c, score))
     if score > best_score {
       best_score = score
       best_class = c
     }
   }
-  
+
   // 计算置信度（softmax 归一化）
   let logits : Array[Double] = []
-  for (_, s) in scores {
+  for _tup0 in scores {
+    let (_, s) = _tup0
     logits.push(s)
   }
   let probs = softmax(logits)
   let confidence = probs[best_class]
-  
+
   // Top-K 预测
   let top_k : Array[(Int, Double)] = []
   let sorted_scores = scores
@@ -538,15 +568,24 @@ pub fn cnn_infer(
       }
     }
   }
-  for i in 0..<(if 5 < sorted_scores.length() { 5 } else { sorted_scores.length() }) {
+  for
+    i in 0..<(if 5 < sorted_scores.length() {
+      5
+    } else {
+      sorted_scores.length()
+    }) {
     top_k.push(sorted_scores[i])
   }
-  
+
   let end_time = 0.0
-  
+
   DLInferenceResult::{
     predicted_class: best_class,
-    predicted_label: if best_class < labels.length() { labels[best_class] } else { "unknown" },
+    predicted_label: if best_class < labels.length() {
+      labels[best_class]
+    } else {
+      "unknown"
+    },
     confidence,
     top_k_predictions: top_k,
     inference_time_ms: end_time - start_time,
@@ -562,10 +601,14 @@ pub fn create_training_sample(
 ) -> DLTrainingSample raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("create_training_sample: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "create_training_sample: 图像尺寸必须大于0",
+    )
   }
   if label < 0 {
-    raise @types.LoadError::DecodeFailed("create_training_sample: 标签不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "create_training_sample: 标签不能为负数",
+    )
   }
   let normalized = resize_image_for_cnn(img, 32, 32)
   DLTrainingSample::{
@@ -579,13 +622,10 @@ pub fn create_training_sample(
 
 ///|
 /// 计算交叉熵损失
-pub fn cross_entropy_loss(
-  predicted : Array[Double],
-  target : Int,
-) -> Double {
+pub fn cross_entropy_loss(predicted : Array[Double], target : Int) -> Double {
   let eps = 0.0000001
   let p = if target < predicted.length() { predicted[target] } else { eps }
-  -(approx_log(p + eps))
+  -approx_log(p + eps)
 }
 
 ///|
@@ -621,17 +661,30 @@ pub fn generate_training_report(
   report = report + "| 参数 | 值 |\n"
   report = report + "|------|------|\n"
   report = report + "| 模型名称 | " + config.model_name + " |\n"
-  report = report + "| 输入尺寸 | " + config.input_width.to_string() + "x" + config.input_height.to_string() + " |\n"
+  report = report +
+    "| 输入尺寸 | " +
+    config.input_width.to_string() +
+    "x" +
+    config.input_height.to_string() +
+    " |\n"
   report = report + "| 类别数 | " + config.num_classes.to_string() + " |\n"
-  report = report + "| 卷积层数 | " + config.conv_layers.length().to_string() + " |\n"
-  report = report + "| 全连接层数 | " + config.dense_layers.length().to_string() + " |\n"
+  report = report +
+    "| 卷积层数 | " +
+    config.conv_layers.length().to_string() +
+    " |\n"
+  report = report +
+    "| 全连接层数 | " +
+    config.dense_layers.length().to_string() +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 批大小 | " + config.batch_size.to_string() + " |\n"
   report = report + "| 训练轮数 | " + config.epochs.to_string() + " |\n\n"
-  
+
   report = report + "### 训练历史\n\n"
-  report = report + "| Epoch | Train Loss | Train Acc | Val Loss | Val Acc | Time |\n"
-  report = report + "|-------|------------|-----------|----------|---------|------|\n"
+  report = report +
+    "| Epoch | Train Loss | Train Acc | Val Loss | Val Acc | Time |\n"
+  report = report +
+    "|-------|------------|-----------|----------|---------|------|\n"
   for h in history {
     report = report + "| " + h.epoch.to_string() + " | "
     report = report + h.train_loss.to_string() + " | "
@@ -640,16 +693,22 @@ pub fn generate_training_report(
     report = report + (h.val_accuracy * 100.0).to_string() + "% | "
     report = report + h.time_ms.to_string() + "ms |\n"
   }
-  
+
   if history.length() > 0 {
     let last = history[history.length() - 1]
     report = report + "\n### 最终结果\n\n"
-    report = report + "- 训练准确率: " + (last.train_accuracy * 100.0).to_string() + "%\n"
-    report = report + "- 验证准确率: " + (last.val_accuracy * 100.0).to_string() + "%\n"
+    report = report +
+      "- 训练准确率: " +
+      (last.train_accuracy * 100.0).to_string() +
+      "%\n"
+    report = report +
+      "- 验证准确率: " +
+      (last.val_accuracy * 100.0).to_string() +
+      "%\n"
     report = report + "- 训练损失: " + last.train_loss.to_string() + "\n"
     report = report + "- 验证损失: " + last.val_loss.to_string() + "\n"
   }
-  
+
   report
 }
 
@@ -666,9 +725,7 @@ pub fn save_model(
 
 ///|
 /// 模型加载
-pub fn load_model(
-  path : String,
-) -> Option[DLCnnModelConfig] {
+pub fn load_model(path : String) -> DLCnnModelConfig? {
   // 简化版：实际应反序列化权重
   None
 }
@@ -697,14 +754,14 @@ pub fn extract_features(
   let features : Array[Double] = []
   let w = img.width
   let h = img.height
-  
+
   // 1. 均值
   let mut sum = 0.0
   for pixel in img.data {
     sum += pixel.to_double()
   }
   features.push(sum / img.data.length().to_double() / 255.0)
-  
+
   // 2. 标准差
   let mean = sum / img.data.length().to_double()
   let mut var_sum = 0.0
@@ -713,7 +770,7 @@ pub fn extract_features(
     var_sum += diff * diff
   }
   features.push((var_sum / img.data.length().to_double()).sqrt() / 255.0)
-  
+
   // 3. 水平投影
   for y in 0..<(if 8 < h { 8 } else { h }) {
     let mut row_sum = 0.0
@@ -722,7 +779,7 @@ pub fn extract_features(
     }
     features.push(row_sum / w.to_double() / 255.0)
   }
-  
+
   // 4. 垂直投影
   for x in 0..<(if 8 < w { 8 } else { w }) {
     let mut col_sum = 0.0
@@ -731,12 +788,12 @@ pub fn extract_features(
     }
     features.push(col_sum / h.to_double() / 255.0)
   }
-  
+
   // 填充到 feature_dim
   while features.length() < extractor.feature_dim {
     features.push(0.0)
   }
-  
+
   features
 }
 
@@ -749,7 +806,11 @@ pub fn cosine_similarity(
   let mut dot = 0.0
   let mut norm1 = 0.0
   let mut norm2 = 0.0
-  let len = if feat1.length() < feat2.length() { feat1.length() } else { feat2.length() }
+  let len = if feat1.length() < feat2.length() {
+    feat1.length()
+  } else {
+    feat2.length()
+  }
   for i in 0..<len {
     dot += feat1[i] * feat2[i]
     norm1 += feat1[i] * feat1[i]

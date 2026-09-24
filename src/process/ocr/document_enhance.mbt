@@ -16,18 +16,27 @@ fn clamp_byte_doc(v : Int) -> Byte {
 ///|
 /// 文档图像增强（去噪+对比度+锐化）
 /// 适用于扫描文档和照片文档的预处理
-pub fn document_enhance(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn document_enhance(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("document_enhance: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "document_enhance: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("document_enhance: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "document_enhance: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "document_enhance: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "document_enhance: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let mut result = img
@@ -62,7 +71,12 @@ fn to_grayscale_doc(img : @types.Image) -> @types.Image {
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }
-  @types.Image::{ width: img.width, height: img.height, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -99,10 +113,15 @@ fn contrast_stretch_doc(img : @types.Image) -> @types.Image {
   let out : Array[Byte] = Array::make(n, b'\x00')
   for i in 0..<n {
     let v = data[i].to_int()
-    let stretched = ((v - min_val) * 255) / range
+    let stretched = (v - min_val) * 255 / range
     out[i] = clamp_byte_doc(stretched)
   }
-  @types.Image::{ width: img.width, height: img.height, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -116,8 +135,8 @@ fn median_denoise_doc(img : @types.Image, size : Int) -> @types.Image {
   for y in 0..<h {
     for x in 0..<w {
       let values : Array[Int] = []
-      for dy in (-radius)..<(radius + 1) {
-        for dx in (-radius)..<(radius + 1) {
+      for dy in -radius..<(radius + 1) {
+        for dx in -radius..<(radius + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -139,7 +158,12 @@ fn median_denoise_doc(img : @types.Image, size : Int) -> @types.Image {
       out[y * w + x] = median.to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -155,8 +179,8 @@ fn sharpen_doc(img : @types.Image, amount : Double) -> @types.Image {
       // 计算邻域均值
       let mut sum = 0.0
       let mut count = 0
-      for dy in (-1)..<2 {
-        for dx in (-1)..<2 {
+      for dy in -1..<2 {
+        for dx in -1..<2 {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -171,7 +195,12 @@ fn sharpen_doc(img : @types.Image, amount : Double) -> @types.Image {
       out[y * w + x] = clamp_byte_doc(sharpened.to_int())
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -183,19 +212,28 @@ pub fn shadow_removal(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("shadow_removal: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "shadow_removal: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("shadow_removal: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "shadow_removal: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "shadow_removal: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "shadow_removal: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if kernel_size <= 0 || kernel_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("shadow_removal: 核大小必须为正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "shadow_removal: 核大小必须为正奇数",
+    )
   }
   let w = img.width
   let h = img.height
@@ -207,8 +245,8 @@ pub fn shadow_removal(
     for x in 0..<w {
       let mut sum = 0
       let mut count = 0
-      for dy in (-radius)..<(radius + 1) {
-        for dx in (-radius)..<(radius + 1) {
+      for dy in -radius..<(radius + 1) {
+        for dx in -radius..<(radius + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -225,10 +263,15 @@ pub fn shadow_removal(
   for i in 0..<(w * h) {
     let orig = data[i].to_int()
     let bg = background[i]
-    let result = if bg > 0 { (orig * 255) / bg } else { 255 }
+    let result = if bg > 0 { orig * 255 / bg } else { 255 }
     out[i] = clamp_byte_doc(result)
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -240,19 +283,28 @@ pub fn background_normalization(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("background_normalization: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "background_normalization: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("background_normalization: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "background_normalization: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "background_normalization: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "background_normalization: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if kernel_size <= 0 || kernel_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("background_normalization: 核大小必须为正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "background_normalization: 核大小必须为正奇数",
+    )
   }
   let w = img.width
   let h = img.height
@@ -263,8 +315,8 @@ pub fn background_normalization(
   for y in 0..<h {
     for x in 0..<w {
       let values : Array[Int] = []
-      for dy in (-radius)..<(radius + 1) {
-        for dx in (-radius)..<(radius + 1) {
+      for dy in -radius..<(radius + 1) {
+        for dx in -radius..<(radius + 1) {
           let nx = x + dx
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -287,8 +339,13 @@ pub fn background_normalization(
   for i in 0..<(w * h) {
     let orig = data[i].to_int()
     let bg = background[i]
-    let result = if bg > 0 { (orig * 255) / bg } else { 255 }
+    let result = if bg > 0 { orig * 255 / bg } else { 255 }
     out[i] = clamp_byte_doc(result)
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

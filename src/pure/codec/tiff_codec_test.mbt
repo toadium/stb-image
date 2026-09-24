@@ -1035,16 +1035,15 @@ test "encode_tiff_pure: 无效 channels raises" {
   }
 }
 
-
 ///|
 
 ///|
 test "decode_tiff_pure: big-endian (MM) 1x1 gray roundtrip" {
   let out : Array[Byte] = [
     b'\x4D', b'\x49', // 'MM'
-    b'\x00', b'\x2A', // magic = 42
-    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
-    b'\x00', b'\x09', // IFD count = 9 (big-endian)
+     b'\x00', b'\x2A', // magic = 42
+     b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+     b'\x00', b'\x09', // IFD count = 9 (big-endian)
   ]
   // Entry 0: tag=256 (0x0100), type=4, count=1, value=1
   out.push(b'\x01')
@@ -1184,9 +1183,9 @@ test "decode_tiff_pure: type_id=1 (BYTE) in IFD entry" {
   // which tests the type_id=1 branch in tiff_read_values
   let out : Array[Byte] = [
     b'\x49', b'\x49', // 'II' little-endian
-    b'\x00', b'\x2A', // magic = 42
-    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
-    b'\x00', b'\x01', // IFD count = 1
+     b'\x00', b'\x2A', // magic = 42
+     b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+     b'\x00', b'\x01', // IFD count = 1
   ]
   // Entry 0: tag=254 (0x00FE), type=1 (BYTE), count=1, value=200
   out.push(b'\x00')
@@ -1211,9 +1210,9 @@ test "decode_tiff_pure: type_id=5 (RATIONAL) in IFD entry" {
   // which tests the type_id=5 branch in tiff_type_size
   let out : Array[Byte] = [
     b'\x49', b'\x49', // 'II' little-endian
-    b'\x00', b'\x2A', // magic = 42
-    b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
-    b'\x00', b'\x01', // IFD count = 1
+     b'\x00', b'\x2A', // magic = 42
+     b'\x00', b'\x00', b'\x00', b'\x08', // IFD offset = 8
+     b'\x00', b'\x01', // IFD count = 1
   ]
   // Entry 0: tag=700 (ExifGPSInfo IFD pointer), type=5 (RATIONAL), count=1
   out.push(b'\x02')

@@ -32,7 +32,14 @@ fn write_f32_q(data : Array[Byte], offset : Int, v : Float) -> Unit {
 }
 
 ///|
-fn dist_sq_f(r1 : Float, g1 : Float, b1 : Float, r2 : Float, g2 : Float, b2 : Float) -> Float {
+fn dist_sq_f(
+  r1 : Float,
+  g1 : Float,
+  b1 : Float,
+  r2 : Float,
+  g2 : Float,
+  b2 : Float,
+) -> Float {
   let dr = r1 - r2
   let dg = g1 - g2
   let db = b1 - b2
@@ -50,18 +57,25 @@ pub fn kmeans_quantize_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
-    raise @types.LoadError::DecodeFailed("kmeans_quantize_16: 图像尺寸不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_16: 图像尺寸不能为负",
+    )
   }
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("kmeans_quantize_16 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_16 需要 RGB/RGBA 图像",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "kmeans_quantize_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "kmeans_quantize_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let ch = img.channels
@@ -161,18 +175,25 @@ pub fn kmeans_quantize_f(
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
-    raise @types.LoadError::DecodeFailed("kmeans_quantize_f: 图像尺寸不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_f: 图像尺寸不能为负",
+    )
   }
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
   }
   if img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("kmeans_quantize_f 需要 RGB/RGBA 图像")
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_quantize_f 需要 RGB/RGBA 图像",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "kmeans_quantize_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "kmeans_quantize_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let ch = img.channels
@@ -203,9 +224,23 @@ pub fn kmeans_quantize_f(
       let g = data_f[i * ch + 1]
       let b = data_f[i * ch + 2]
       let mut best = 0
-      let mut best_dist = dist_sq_f(r, g, b, centroids_r[0], centroids_g[0], centroids_b[0])
+      let mut best_dist = dist_sq_f(
+        r,
+        g,
+        b,
+        centroids_r[0],
+        centroids_g[0],
+        centroids_b[0],
+      )
       for j in 1..<k {
-        let d = dist_sq_f(r, g, b, centroids_r[j], centroids_g[j], centroids_b[j])
+        let d = dist_sq_f(
+          r,
+          g,
+          b,
+          centroids_r[j],
+          centroids_g[j],
+          centroids_b[j],
+        )
         if d < best_dist {
           best_dist = d
           best = j
@@ -261,18 +296,28 @@ pub fn kmeans_quantize_f(
 
 ///|
 /// Floyd-Steinberg 误差扩散抖动量化 16-bit 版本。
-pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 raise @types.LoadError {
+pub fn floyd_steinberg_16(
+  img : @types.Image16,
+  levels : Int,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("floyd_steinberg_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("floyd_steinberg_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "floyd_steinberg_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "floyd_steinberg_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels < 2 {
@@ -295,9 +340,21 @@ pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 
     for x in 0..<w {
       for c in 0..<color_ch {
         let idx = (y * w + x) * color_ch + c
-        let old_val = if buf[idx] < 0 { 0 } else if buf[idx] > 65535 { 65535 } else { buf[idx] }
-        let new_val = ((old_val + half_step) / step * step)
-        let new_val_clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        let old_val = if buf[idx] < 0 {
+          0
+        } else if buf[idx] > 65535 {
+          65535
+        } else {
+          buf[idx]
+        }
+        let new_val = (old_val + half_step) / step * step
+        let new_val_clamped = if new_val < 0 {
+          0
+        } else if new_val > 65535 {
+          65535
+        } else {
+          new_val
+        }
         buf[idx] = new_val_clamped
         let err = old_val - new_val_clamped
         if x + 1 < w {
@@ -318,7 +375,13 @@ pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 
   let out : Array[Byte] = Array::make(n * ch * 2, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      let v = if buf[i * color_ch + c] < 0 { 0 } else if buf[i * color_ch + c] > 65535 { 65535 } else { buf[i * color_ch + c] }
+      let v = if buf[i * color_ch + c] < 0 {
+        0
+      } else if buf[i * color_ch + c] > 65535 {
+        65535
+      } else {
+        buf[i * color_ch + c]
+      }
       write_u16_q(out, (i * ch + c) * 2, v)
     }
     if ch == 4 {
@@ -338,18 +401,28 @@ pub fn floyd_steinberg_16(img : @types.Image16, levels : Int) -> @types.Image16 
 
 ///|
 /// Floyd-Steinberg 误差扩散抖动量化 float 版本。
-pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF raise @types.LoadError {
+pub fn floyd_steinberg_f(
+  img : @types.ImageF,
+  levels : Int,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("floyd_steinberg_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("floyd_steinberg_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "floyd_steinberg_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "floyd_steinberg_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "floyd_steinberg_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels < 2 {
@@ -372,9 +445,22 @@ pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF rai
     for x in 0..<w {
       for c in 0..<color_ch {
         let idx = (y * w + x) * color_ch + c
-        let old_val = if buf[idx] < 0.0F { 0.0F } else if buf[idx] > 1.0F { 1.0F } else { buf[idx] }
-        let new_val = Float::from_int(((old_val + half_step) / step).to_int()) * step
-        let new_val_clamped = if new_val < 0.0F { 0.0F } else if new_val > 1.0F { 1.0F } else { new_val }
+        let old_val = if buf[idx] < 0.0F {
+          0.0F
+        } else if buf[idx] > 1.0F {
+          1.0F
+        } else {
+          buf[idx]
+        }
+        let new_val = Float::from_int(((old_val + half_step) / step).to_int()) *
+          step
+        let new_val_clamped = if new_val < 0.0F {
+          0.0F
+        } else if new_val > 1.0F {
+          1.0F
+        } else {
+          new_val
+        }
         buf[idx] = new_val_clamped
         let err = old_val - new_val_clamped
         if x + 1 < w {
@@ -395,7 +481,13 @@ pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF rai
   let out : Array[Byte] = Array::make(n * ch * 4, b'\x00')
   for i in 0..<n {
     for c in 0..<color_ch {
-      let v = if buf[i * color_ch + c] < 0.0F { 0.0F } else if buf[i * color_ch + c] > 1.0F { 1.0F } else { buf[i * color_ch + c] }
+      let v = if buf[i * color_ch + c] < 0.0F {
+        0.0F
+      } else if buf[i * color_ch + c] > 1.0F {
+        1.0F
+      } else {
+        buf[i * color_ch + c]
+      }
       write_f32_q(out, (i * ch + c) * 4, v)
     }
     if ch == 4 {
@@ -413,6 +505,7 @@ pub fn floyd_steinberg_f(img : @types.ImageF, levels : Int) -> @types.ImageF rai
 
 // ========== Median Cut 辅助函数 16-bit ==========
 
+///|
 fn channel_value_mc16(pixel : (Int, Int, Int), ch : Int) -> Int {
   match ch {
     0 => pixel.0
@@ -421,6 +514,7 @@ fn channel_value_mc16(pixel : (Int, Int, Int), ch : Int) -> Int {
   }
 }
 
+///|
 fn bucket_max_range_mc16(
   pixels : Array[(Int, Int, Int)],
   bucket : Array[Int],
@@ -433,12 +527,24 @@ fn bucket_max_range_mc16(
   let mut max_b = 0
   for i in 0..<bucket.length() {
     let (r, g, b) = pixels[bucket[i]]
-    if r < min_r { min_r = r }
-    if r > max_r { max_r = r }
-    if g < min_g { min_g = g }
-    if g > max_g { max_g = g }
-    if b < min_b { min_b = b }
-    if b > max_b { max_b = b }
+    if r < min_r {
+      min_r = r
+    }
+    if r > max_r {
+      max_r = r
+    }
+    if g < min_g {
+      min_g = g
+    }
+    if g > max_g {
+      max_g = g
+    }
+    if b < min_b {
+      min_b = b
+    }
+    if b > max_b {
+      max_b = b
+    }
   }
   let range_r = max_r - min_r
   let range_g = max_g - min_g
@@ -452,6 +558,7 @@ fn bucket_max_range_mc16(
   }
 }
 
+///|
 fn bucket_average_mc16(
   pixels : Array[(Int, Int, Int)],
   bucket : Array[Int],
@@ -477,18 +584,28 @@ fn bucket_average_mc16(
 
 ///|
 /// Median Cut 色彩量化 16-bit 版本。
-pub fn median_cut_16(img : @types.Image16, num_colors : Int) -> @types.Image16 raise @types.LoadError {
+pub fn median_cut_16(
+  img : @types.Image16,
+  num_colors : Int,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("median_cut_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("median_cut_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "median_cut_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "median_cut_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if num_colors < 2 {
@@ -548,7 +665,10 @@ pub fn median_cut_16(img : @types.Image16, num_colors : Int) -> @types.Image16 r
     buckets.push(right)
     num_buckets += 1
   }
-  let palette : Array[(Int, Int, Int)] = Array::make(buckets.length(), (0, 0, 0))
+  let palette : Array[(Int, Int, Int)] = Array::make(
+    buckets.length(),
+    (0, 0, 0),
+  )
   for bi in 0..<buckets.length() {
     palette[bi] = bucket_average_mc16(pixels, buckets[bi])
   }
@@ -580,6 +700,7 @@ pub fn median_cut_16(img : @types.Image16, num_colors : Int) -> @types.Image16 r
 
 // ========== Median Cut 辅助函数 float ==========
 
+///|
 fn channel_value_mcf(pixel : (Float, Float, Float), ch : Int) -> Float {
   match ch {
     0 => pixel.0
@@ -588,6 +709,7 @@ fn channel_value_mcf(pixel : (Float, Float, Float), ch : Int) -> Float {
   }
 }
 
+///|
 fn bucket_max_range_mcf(
   pixels : Array[(Float, Float, Float)],
   bucket : Array[Int],
@@ -600,12 +722,24 @@ fn bucket_max_range_mcf(
   let mut max_b = 0.0F
   for i in 0..<bucket.length() {
     let (r, g, b) = pixels[bucket[i]]
-    if r < min_r { min_r = r }
-    if r > max_r { max_r = r }
-    if g < min_g { min_g = g }
-    if g > max_g { max_g = g }
-    if b < min_b { min_b = b }
-    if b > max_b { max_b = b }
+    if r < min_r {
+      min_r = r
+    }
+    if r > max_r {
+      max_r = r
+    }
+    if g < min_g {
+      min_g = g
+    }
+    if g > max_g {
+      max_g = g
+    }
+    if b < min_b {
+      min_b = b
+    }
+    if b > max_b {
+      max_b = b
+    }
   }
   let range_r = max_r - min_r
   let range_g = max_g - min_g
@@ -619,6 +753,7 @@ fn bucket_max_range_mcf(
   }
 }
 
+///|
 fn bucket_average_mcf(
   pixels : Array[(Float, Float, Float)],
   bucket : Array[Int],
@@ -644,18 +779,28 @@ fn bucket_average_mcf(
 
 ///|
 /// Median Cut 色彩量化 float 版本。
-pub fn median_cut_f(img : @types.ImageF, num_colors : Int) -> @types.ImageF raise @types.LoadError {
+pub fn median_cut_f(
+  img : @types.ImageF,
+  num_colors : Int,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("median_cut_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("median_cut_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "median_cut_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "median_cut_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "median_cut_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if num_colors < 2 {
@@ -715,7 +860,10 @@ pub fn median_cut_f(img : @types.ImageF, num_colors : Int) -> @types.ImageF rais
     buckets.push(right)
     num_buckets += 1
   }
-  let palette : Array[(Float, Float, Float)] = Array::make(buckets.length(), (0.0F, 0.0F, 0.0F))
+  let palette : Array[(Float, Float, Float)] = Array::make(
+    buckets.length(),
+    (0.0F, 0.0F, 0.0F),
+  )
   for bi in 0..<buckets.length() {
     palette[bi] = bucket_average_mcf(pixels, buckets[bi])
   }

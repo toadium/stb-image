@@ -37,15 +37,22 @@ pub fn detect_text_regions(
 ) -> Array[TextRegion] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_text_regions: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_regions: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_text_regions: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_text_regions: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_text_regions: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_text_regions: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -82,8 +89,12 @@ pub fn detect_text_regions(
       for yy in start_y..<y {
         for x in 0..<w {
           if binary[yy * w + x] {
-            if x < min_x { min_x = x }
-            if x > max_x { max_x = x }
+            if x < min_x {
+              min_x = x
+            }
+            if x > max_x {
+              max_x = x
+            }
           }
         }
       }
@@ -109,15 +120,22 @@ pub fn segment_page(
 ) -> Array[TextRegion] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("segment_page: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "segment_page: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("segment_page: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "segment_page: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "segment_page: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "segment_page: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -147,17 +165,29 @@ pub fn segment_page(
           let (cx, cy) = queue[queue_idx]
           queue_idx += 1
           count += 1
-          if cx < min_x { min_x = cx }
-          if cx > max_x { max_x = cx }
-          if cy < min_y { min_y = cy }
-          if cy > max_y { max_y = cy }
+          if cx < min_x {
+            min_x = cx
+          }
+          if cx > max_x {
+            max_x = cx
+          }
+          if cy < min_y {
+            min_y = cy
+          }
+          if cy > max_y {
+            max_y = cy
+          }
           // 8 邻域
-          for dy in (-1)..<2 {
-            for dx in (-1)..<2 {
+          for dy in -1..<2 {
+            for dx in -1..<2 {
               let nx = cx + dx
               let ny = cy + dy
-              if nx >= 0 && nx < w && ny >= 0 && ny < h &&
-                 binary[ny * w + nx] && !visited[ny * w + nx] {
+              if nx >= 0 &&
+                nx < w &&
+                ny >= 0 &&
+                ny < h &&
+                binary[ny * w + nx] &&
+                !visited[ny * w + nx] {
                 visited[ny * w + nx] = true
                 queue.push((nx, ny))
               }
@@ -195,15 +225,22 @@ pub fn detect_columns(
 ) -> (Int, Array[(Int, Int)]) raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_columns: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_columns: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_columns: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_columns: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_columns: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_columns: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -256,22 +293,35 @@ pub fn extract_text_lines(
 ) -> Array[@types.Image] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_text_lines: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_lines: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_text_lines: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_text_lines: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_text_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "extract_text_lines: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let regions = detect_text_regions(img)
   let lines : Array[@types.Image] = []
   for region in regions {
     if region.region_type == TextRegionType::Text {
-      let line = crop_region(img, region.x, region.y, region.width, region.height)
+      let line = crop_region(
+        img,
+        region.x,
+        region.y,
+        region.width,
+        region.height,
+      )
       match line {
         Some(l) => lines.push(l)
         None => ignore(())
@@ -301,11 +351,17 @@ fn crop_region(
   for yy in 0..<height {
     for xx in 0..<width {
       for c in 0..<ch {
-        out[(yy * width + xx) * ch + c] = data[((y + yy) * w + (x + xx)) * ch + c]
+        out[(yy * width + xx) * ch + c] = data[((y + yy) * w + (x + xx)) * ch +
+          c]
       }
     }
   }
-  Some(@types.Image::{ width, height, channels: ch, data: Bytes::from_array(out) })
+  Some(@types.Image::{
+    width,
+    height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  })
 }
 
 ///|
@@ -317,15 +373,22 @@ pub fn ocr_preprocess(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("ocr_preprocess: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "ocr_preprocess: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("ocr_preprocess: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "ocr_preprocess: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ocr_preprocess: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "ocr_preprocess: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let mut result = img
@@ -366,5 +429,10 @@ fn to_grayscale_ocr(img : @types.Image) -> @types.Image {
     let gray = (r * 299 + g * 587 + b * 114) / 1000
     out[i] = gray.to_byte()
   }
-  @types.Image::{ width: img.width, height: img.height, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: img.width,
+    height: img.height,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

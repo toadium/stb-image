@@ -194,7 +194,10 @@ pub fn create_default_retrieval_config() -> ImageRetrievalConfig {
 
 ///|
 /// 简化的颜色直方图特征提取
-fn extract_color_histogram(image : Array[Double], num_bins : Int) -> Array[Double] {
+fn extract_color_histogram(
+  image : Array[Double],
+  num_bins : Int,
+) -> Array[Double] {
   let histogram : Array[Double] = []
   for _ in 0..<num_bins {
     histogram.push(0.0)
@@ -228,7 +231,11 @@ fn extract_color_histogram(image : Array[Double], num_bins : Int) -> Array[Doubl
 /// 简化的欧氏距离计算
 fn euclidean_distance(v1 : Array[Double], v2 : Array[Double]) -> Double {
   let mut sum = 0.0
-  let min_len = if v1.length() < v2.length() { v1.length() } else { v2.length() }
+  let min_len = if v1.length() < v2.length() {
+    v1.length()
+  } else {
+    v2.length()
+  }
   for i in 0..<min_len {
     let diff = v1[i] - v2[i]
     sum += diff * diff
@@ -249,7 +256,11 @@ fn cosine_similarity(v1 : Array[Double], v2 : Array[Double]) -> Double {
   let mut dot = 0.0
   let mut norm1 = 0.0
   let mut norm2 = 0.0
-  let min_len = if v1.length() < v2.length() { v1.length() } else { v2.length() }
+  let min_len = if v1.length() < v2.length() {
+    v1.length()
+  } else {
+    v2.length()
+  }
   for i in 0..<min_len {
     dot += v1[i] * v2[i]
     norm1 += v1[i] * v1[i]
@@ -297,11 +308,17 @@ pub fn calculate_similarity(
   metric : SimilarityMetricType,
 ) -> Double {
   match metric {
-    SimilarityMetricType::EuclideanDistance => euclidean_distance(features1, features2)
-    SimilarityMetricType::CosineSimilarity => cosine_similarity(features1, features2)
+    SimilarityMetricType::EuclideanDistance =>
+      euclidean_distance(features1, features2)
+    SimilarityMetricType::CosineSimilarity =>
+      cosine_similarity(features1, features2)
     SimilarityMetricType::ManhattanDistance => {
       let mut sum = 0.0
-      let min_len = if features1.length() < features2.length() { features1.length() } else { features2.length() }
+      let min_len = if features1.length() < features2.length() {
+        features1.length()
+      } else {
+        features2.length()
+      }
       for i in 0..<min_len {
         sum += (features1[i] - features2[i]).abs()
       }
@@ -320,20 +337,30 @@ pub fn retrieve_images(
   database_images : Array[Array[Double]],
   config : ImageRetrievalConfig,
 ) -> RetrievalResult {
-  let query_features = extract_color_histogram(query_image, config.feature_dimension)
+  let query_features = extract_color_histogram(
+    query_image,
+    config.feature_dimension,
+  )
 
   let scores : Array[Double] = []
   let indices : Array[Int] = []
 
   for i in 0..<database_images.length() {
-    let db_features = extract_color_histogram(database_images[i], config.feature_dimension)
-    let score = calculate_similarity(query_features, db_features, config.similarity_metric)
+    let db_features = extract_color_histogram(
+      database_images[i],
+      config.feature_dimension,
+    )
+    let score = calculate_similarity(
+      query_features,
+      db_features,
+      config.similarity_metric,
+    )
     scores.push(score)
     indices.push(i)
   }
 
   // 简单排序（冒泡排序）
-  for i in 0..<scores.length() {
+  for _ in 0..<scores.length() {
     for j in 0..<(scores.length() - 1) {
       if scores[j] > scores[j + 1] {
         let temp_score = scores[j]
@@ -473,7 +500,9 @@ pub fn relevance_feedback(
       0.0
     }
 
-    updated.push(alpha * original_query[i] + beta * relevant_avg - gamma * irrelevant_avg)
+    updated.push(
+      alpha * original_query[i] + beta * relevant_avg - gamma * irrelevant_avg,
+    )
   }
 
   RelevanceFeedbackResult::{
@@ -500,61 +529,92 @@ pub fn image_retrieval_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageRetrievalTaskType::ContentBasedRetrieval => "基于内容的图像检索"
-    ImageRetrievalTaskType::FeatureExtraction => "特征提取"
-    ImageRetrievalTaskType::SimilaritySearch => "相似度搜索"
-    ImageRetrievalTaskType::IndexConstruction => "索引构建"
-    ImageRetrievalTaskType::QueryExpansion => "查询扩展"
-    ImageRetrievalTaskType::RelevanceFeedback => "相关反馈"
-    ImageRetrievalTaskType::ImageClustering => "图像聚类"
-    ImageRetrievalTaskType::ImageClassification => "图像分类"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征类型 | " + (match config.feature_type {
-    FeatureDescriptorType::SIFT => "SIFT"
-    FeatureDescriptorType::SURF => "SURF"
-    FeatureDescriptorType::ORB => "ORB"
-    FeatureDescriptorType::HOG => "HOG"
-    FeatureDescriptorType::LBP => "LBP"
-    FeatureDescriptorType::Gabor => "Gabor"
-    FeatureDescriptorType::ColorHistogram => "颜色直方图"
-    FeatureDescriptorType::TextureDescriptor => "纹理描述符"
-    FeatureDescriptorType::ShapeDescriptor => "形状描述符"
-    FeatureDescriptorType::DeepFeature => "深度特征"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 相似度度量 | " + (match config.similarity_metric {
-    SimilarityMetricType::EuclideanDistance => "欧氏距离"
-    SimilarityMetricType::CosineSimilarity => "余弦相似度"
-    SimilarityMetricType::ManhattanDistance => "曼哈顿距离"
-    SimilarityMetricType::ChebyshevDistance => "切比雪夫距离"
-    SimilarityMetricType::MinkowskiDistance => "闵可夫斯基距离"
-    SimilarityMetricType::HammingDistance => "汉明距离"
-    SimilarityMetricType::ChiSquareDistance => "卡方距离"
-    SimilarityMetricType::CorrelationCoefficient => "相关系数"
-    SimilarityMetricType::BhattacharyyaDistance => "Bhattacharyya距离"
-    SimilarityMetricType::EarthMoverDistance => "推土机距离"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 索引结构 | " + (match config.index_type {
-    IndexStructureType::KDTree => "KD树"
-    IndexStructureType::BallTree => "球树"
-    IndexStructureType::VPree => "VP树"
-    IndexStructureType::LSH => "LSH"
-    IndexStructureType::IVF => "IVF"
-    IndexStructureType::HNSW => "HNSW"
-    IndexStructureType::Annoy => "Annoy"
-    IndexStructureType::FlatIndex => "扁平索引"
-    IndexStructureType::InvertedIndex => "倒排索引"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 返回结果数 | " + config.num_results.to_string() + " |\n"
-  report = report + "| 特征维度 | " + config.feature_dimension.to_string() + " |\n"
-  report = report + "| 使用PCA | " + (if config.use_pca { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 使用归一化 | " + (if config.use_normalization { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 查询扩展 | " + (if config.use_query_expansion { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 相关反馈 | " + (if config.use_relevance_feedback { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageRetrievalTaskType::ContentBasedRetrieval =>
+        "基于内容的图像检索"
+      ImageRetrievalTaskType::FeatureExtraction => "特征提取"
+      ImageRetrievalTaskType::SimilaritySearch => "相似度搜索"
+      ImageRetrievalTaskType::IndexConstruction => "索引构建"
+      ImageRetrievalTaskType::QueryExpansion => "查询扩展"
+      ImageRetrievalTaskType::RelevanceFeedback => "相关反馈"
+      ImageRetrievalTaskType::ImageClustering => "图像聚类"
+      ImageRetrievalTaskType::ImageClassification => "图像分类"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征类型 | " +
+    (match config.feature_type {
+      FeatureDescriptorType::SIFT => "SIFT"
+      FeatureDescriptorType::SURF => "SURF"
+      FeatureDescriptorType::ORB => "ORB"
+      FeatureDescriptorType::HOG => "HOG"
+      FeatureDescriptorType::LBP => "LBP"
+      FeatureDescriptorType::Gabor => "Gabor"
+      FeatureDescriptorType::ColorHistogram => "颜色直方图"
+      FeatureDescriptorType::TextureDescriptor => "纹理描述符"
+      FeatureDescriptorType::ShapeDescriptor => "形状描述符"
+      FeatureDescriptorType::DeepFeature => "深度特征"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 相似度度量 | " +
+    (match config.similarity_metric {
+      SimilarityMetricType::EuclideanDistance => "欧氏距离"
+      SimilarityMetricType::CosineSimilarity => "余弦相似度"
+      SimilarityMetricType::ManhattanDistance => "曼哈顿距离"
+      SimilarityMetricType::ChebyshevDistance => "切比雪夫距离"
+      SimilarityMetricType::MinkowskiDistance => "闵可夫斯基距离"
+      SimilarityMetricType::HammingDistance => "汉明距离"
+      SimilarityMetricType::ChiSquareDistance => "卡方距离"
+      SimilarityMetricType::CorrelationCoefficient => "相关系数"
+      SimilarityMetricType::BhattacharyyaDistance => "Bhattacharyya距离"
+      SimilarityMetricType::EarthMoverDistance => "推土机距离"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 索引结构 | " +
+    (match config.index_type {
+      IndexStructureType::KDTree => "KD树"
+      IndexStructureType::BallTree => "球树"
+      IndexStructureType::VPree => "VP树"
+      IndexStructureType::LSH => "LSH"
+      IndexStructureType::IVF => "IVF"
+      IndexStructureType::HNSW => "HNSW"
+      IndexStructureType::Annoy => "Annoy"
+      IndexStructureType::FlatIndex => "扁平索引"
+      IndexStructureType::InvertedIndex => "倒排索引"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 返回结果数 | " +
+    config.num_results.to_string() +
+    " |\n"
+  report = report +
+    "| 特征维度 | " +
+    config.feature_dimension.to_string() +
+    " |\n"
+  report = report +
+    "| 使用PCA | " +
+    (if config.use_pca { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 使用归一化 | " +
+    (if config.use_normalization { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 查询扩展 | " +
+    (if config.use_query_expansion { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 相关反馈 | " +
+    (if config.use_relevance_feedback { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

@@ -4,15 +4,15 @@
 ///|
 /// 批处理配置
 pub(all) struct BatchOcrConfig {
-  max_concurrent : Int           // 最大并发数
-  batch_size : Int               // 每批处理数量
+  max_concurrent : Int // 最大并发数
+  batch_size : Int // 每批处理数量
   enable_progress_callback : Bool // 是否启用进度回调
-  enable_error_recovery : Bool   // 是否启用错误恢复
-  output_format : String         // 输出格式："text" / "hocr" / "json" / "markdown"
-  dpi : Int                      // 处理 DPI
-  preprocess_config : String     // 预处理配置："auto" / "standard" / "enhanced" / "heavy"
-  save_intermediate : Bool       // 是否保存中间结果
-  output_directory : String      // 输出目录
+  enable_error_recovery : Bool // 是否启用错误恢复
+  output_format : String // 输出格式："text" / "hocr" / "json" / "markdown"
+  dpi : Int // 处理 DPI
+  preprocess_config : String // 预处理配置："auto" / "standard" / "enhanced" / "heavy"
+  save_intermediate : Bool // 是否保存中间结果
+  output_directory : String // 输出目录
 }
 
 ///|
@@ -111,13 +111,19 @@ pub fn create_batch_tasks(
 ) -> Array[BatchTask] raise @types.LoadError {
   // 输入验证
   if input_files.length() == 0 {
-    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输入文件列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "create_batch_tasks: 输入文件列表不能为空",
+    )
   }
   if output_directory.length() == 0 {
-    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输出目录不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "create_batch_tasks: 输出目录不能为空",
+    )
   }
   if output_format.length() == 0 {
-    raise @types.LoadError::DecodeFailed("create_batch_tasks: 输出格式不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "create_batch_tasks: 输出格式不能为空",
+    )
   }
   let tasks : Array[BatchTask] = []
   for i in 0..<input_files.length() {
@@ -157,7 +163,13 @@ pub fn update_task_progress(
   current_page : Int,
   total_pages : Int,
 ) -> BatchTask {
-  let new_progress = if progress > 1.0 { 1.0 } else if progress < 0.0 { 0.0 } else { progress }
+  let new_progress = if progress > 1.0 {
+    1.0
+  } else if progress < 0.0 {
+    0.0
+  } else {
+    progress
+  }
   BatchTask::{
     task_id: task.task_id,
     input_path: task.input_path,
@@ -226,10 +238,14 @@ pub fn calculate_batch_progress(
 ) -> BatchProgress raise @types.LoadError {
   // 输入验证
   if tasks.length() == 0 {
-    raise @types.LoadError::DecodeFailed("calculate_batch_progress: 任务列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_batch_progress: 任务列表不能为空",
+    )
   }
   if elapsed_time_ms < 0.0 {
-    raise @types.LoadError::DecodeFailed("calculate_batch_progress: 已用时间不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "calculate_batch_progress: 已用时间不能为负数",
+    )
   }
   let mut completed = 0
   let mut failed = 0
@@ -239,7 +255,7 @@ pub fn calculate_batch_progress(
   let mut current_progress = 0.0
   let mut total_pages = 0
   let mut total_chars = 0
-  
+
   for i in 0..<tasks.length() {
     let task = tasks[i]
     match task.status {
@@ -253,23 +269,33 @@ pub fn calculate_batch_progress(
         failed += 1
         total_progress += task.progress
       }
-      BatchTaskStatus::Skipped => {
-        skipped += 1
-      }
+      BatchTaskStatus::Skipped => skipped += 1
       BatchTaskStatus::Processing => {
         current_index = i
         current_progress = task.progress
         total_progress += task.progress
       }
-      BatchTaskStatus::Pending => {()}
+      BatchTaskStatus::Pending => ()
     }
   }
-  
-  let overall = if tasks.length() > 0 { total_progress / tasks.length().to_double() } else { 0.0 }
+
+  let overall = if tasks.length() > 0 {
+    total_progress / tasks.length().to_double()
+  } else {
+    0.0
+  }
   let elapsed_seconds = elapsed_time_ms / 1000.0
-  let pages_per_second = if elapsed_seconds > 0 { total_pages.to_double() / elapsed_seconds } else { 0.0 }
-  let chars_per_second = if elapsed_seconds > 0 { total_chars.to_double() / elapsed_seconds } else { 0.0 }
-  
+  let pages_per_second = if elapsed_seconds > 0 {
+    total_pages.to_double() / elapsed_seconds
+  } else {
+    0.0
+  }
+  let chars_per_second = if elapsed_seconds > 0 {
+    total_chars.to_double() / elapsed_seconds
+  } else {
+    0.0
+  }
+
   // 估算剩余时间
   let estimated_remaining = if completed > 0 {
     let avg_time_per_task = elapsed_time_ms / completed.to_double()
@@ -278,7 +304,7 @@ pub fn calculate_batch_progress(
   } else {
     0.0
   }
-  
+
   BatchProgress::{
     total_tasks: tasks.length(),
     completed_tasks: completed,
@@ -302,10 +328,14 @@ pub fn generate_batch_summary(
 ) -> BatchResultSummary raise @types.LoadError {
   // 输入验证
   if tasks.length() == 0 {
-    raise @types.LoadError::DecodeFailed("generate_batch_summary: 任务列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "generate_batch_summary: 任务列表不能为空",
+    )
   }
   if total_time_ms < 0.0 {
-    raise @types.LoadError::DecodeFailed("generate_batch_summary: 总时间不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "generate_batch_summary: 总时间不能为负数",
+    )
   }
   let mut successful = 0
   let mut failed = 0
@@ -315,7 +345,7 @@ pub fn generate_batch_summary(
   let mut total_accuracy = 0.0
   let failed_ids : Array[String] = []
   let output_files : Array[String] = []
-  
+
   for task in tasks {
     match task.status {
       BatchTaskStatus::Completed => {
@@ -329,19 +359,33 @@ pub fn generate_batch_summary(
         failed += 1
         failed_ids.push(task.task_id)
       }
-      BatchTaskStatus::Skipped => {
-        skipped += 1
-      }
-      _ => {()}
+      BatchTaskStatus::Skipped => skipped += 1
+      _ => ()
     }
   }
-  
-  let success_rate = if tasks.length() > 0 { successful.to_double() / tasks.length().to_double() } else { 0.0 }
-  let avg_accuracy = if successful > 0 { total_accuracy / successful.to_double() } else { 0.0 }
+
+  let success_rate = if tasks.length() > 0 {
+    successful.to_double() / tasks.length().to_double()
+  } else {
+    0.0
+  }
+  let avg_accuracy = if successful > 0 {
+    total_accuracy / successful.to_double()
+  } else {
+    0.0
+  }
   let total_seconds = total_time_ms / 1000.0
-  let avg_pages_per_second = if total_seconds > 0 { total_pages.to_double() / total_seconds } else { 0.0 }
-  let avg_chars_per_second = if total_seconds > 0 { total_chars.to_double() / total_seconds } else { 0.0 }
-  
+  let avg_pages_per_second = if total_seconds > 0 {
+    total_pages.to_double() / total_seconds
+  } else {
+    0.0
+  }
+  let avg_chars_per_second = if total_seconds > 0 {
+    total_chars.to_double() / total_seconds
+  } else {
+    0.0
+  }
+
   BatchResultSummary::{
     total_tasks: tasks.length(),
     successful_tasks: successful,
@@ -361,47 +405,80 @@ pub fn generate_batch_summary(
 
 ///|
 /// 生成批处理报告
-pub fn batch_summary_to_string(
-  summary : BatchResultSummary,
-) -> String {
+pub fn batch_summary_to_string(summary : BatchResultSummary) -> String {
   let mut report = "## OCR 批处理结果报告\n\n"
   report = report + "### 整体统计\n\n"
   report = report + "| 指标 | 数值 |\n"
   report = report + "|------|------|\n"
-  report = report + "| 总任务数 | " + summary.total_tasks.to_string() + " |\n"
-  report = report + "| 成功任务 | " + summary.successful_tasks.to_string() + " |\n"
-  report = report + "| 失败任务 | " + summary.failed_tasks.to_string() + " |\n"
-  report = report + "| 跳过任务 | " + summary.skipped_tasks.to_string() + " |\n"
-  report = report + "| **成功率** | **" + (summary.success_rate * 100.0).to_string() + "%** |\n"
+  report = report +
+    "| 总任务数 | " +
+    summary.total_tasks.to_string() +
+    " |\n"
+  report = report +
+    "| 成功任务 | " +
+    summary.successful_tasks.to_string() +
+    " |\n"
+  report = report +
+    "| 失败任务 | " +
+    summary.failed_tasks.to_string() +
+    " |\n"
+  report = report +
+    "| 跳过任务 | " +
+    summary.skipped_tasks.to_string() +
+    " |\n"
+  report = report +
+    "| **成功率** | **" +
+    (summary.success_rate * 100.0).to_string() +
+    "%** |\n"
   report = report + "| 总页数 | " + summary.total_pages.to_string() + " |\n"
-  report = report + "| 总字符数 | " + summary.total_chars.to_string() + " |\n"
-  report = report + "| 总耗时 | " + (summary.total_time_ms / 1000.0).to_string() + " 秒 |\n"
-  report = report + "| 平均准确率 | " + (summary.average_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 处理速度 | " + summary.average_pages_per_second.to_string() + " 页/秒 |\n"
-  report = report + "| 识别速度 | " + summary.average_chars_per_second.to_string() + " 字符/秒 |\n\n"
-  
+  report = report +
+    "| 总字符数 | " +
+    summary.total_chars.to_string() +
+    " |\n"
+  report = report +
+    "| 总耗时 | " +
+    (summary.total_time_ms / 1000.0).to_string() +
+    " 秒 |\n"
+  report = report +
+    "| 平均准确率 | " +
+    (summary.average_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 处理速度 | " +
+    summary.average_pages_per_second.to_string() +
+    " 页/秒 |\n"
+  report = report +
+    "| 识别速度 | " +
+    summary.average_chars_per_second.to_string() +
+    " 字符/秒 |\n\n"
+
   if summary.failed_tasks > 0 {
     report = report + "### 失败任务列表\n\n"
     for i in 0..<summary.failed_task_ids.length() {
-      report = report + (i + 1).to_string() + ". " + summary.failed_task_ids[i] + "\n"
+      report = report +
+        (i + 1).to_string() +
+        ". " +
+        summary.failed_task_ids[i] +
+        "\n"
     }
     report = report + "\n"
   }
-  
+
   report = report + "### 输出文件\n\n"
   for i in 0..<summary.output_files.length() {
-    report = report + (i + 1).to_string() + ". " + summary.output_files[i] + "\n"
+    report = report +
+      (i + 1).to_string() +
+      ". " +
+      summary.output_files[i] +
+      "\n"
   }
-  
+
   report
 }
 
 ///|
 /// 生成进度条字符串
-pub fn progress_bar_to_string(
-  progress : Double,
-  width? : Int = 30,
-) -> String {
+pub fn progress_bar_to_string(progress : Double, width? : Int = 30) -> String {
   let bar_width = width
   let filled = (progress * bar_width.to_double()).to_int()
   let mut bar = "["
@@ -426,8 +503,9 @@ pub fn estimate_memory_usage(
   image_height : Int,
   channels : Int,
 ) -> MemoryUsageStats {
-  let per_image_mb = (image_width * image_height * channels).to_double() / (1024.0 * 1024.0)
-  let current_usage = per_image_mb * 3.0  // 原图+预处理+二值化
+  let per_image_mb = (image_width * image_height * channels).to_double() /
+    (1024.0 * 1024.0)
+  let current_usage = per_image_mb * 3.0 // 原图+预处理+二值化
   let peak_usage = per_image_mb * image_count.to_double() * 1.5
   MemoryUsageStats::{
     current_usage_mb: current_usage,

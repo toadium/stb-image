@@ -33,3 +33,4 @@ pub(all) struct PngTextChunk {
 // Type aliases
 
 // Traits
+

@@ -8,7 +8,7 @@ pub(all) struct EnhancedChineseOcrConfig {
   max_char_width : Int
   target_size : Int
   distance_metric : String
-  char_set_size : Int  // 500 / 1000
+  char_set_size : Int // 500 / 1000
   use_structure_filter : Bool
   use_stroke_features : Bool
   use_radical_hint : Bool
@@ -35,9 +35,9 @@ pub(all) struct ChineseCharInfo {
   char : String
   radical : String
   strokes : Int
-  structure_type : String  // "single" / "left-right" / "top-bottom" / "left-middle-right" / "top-middle-bottom" / "surround" / "complex"
-  complexity : Int  // 1-5 复杂度等级
-  common_grade : Int  // 常用等级 1-5
+  structure_type : String // "single" / "left-right" / "top-bottom" / "left-middle-right" / "top-middle-bottom" / "surround" / "complex"
+  complexity : Int // 1-5 复杂度等级
+  common_grade : Int // 常用等级 1-5
 }
 
 ///|
@@ -239,7 +239,8 @@ pub fn generate_chinese_char_info_db() -> Array[ChineseCharInfo] {
     ("象", "豕", 11, "single", 4, 2),
     ("员", "贝", 7, "top-bottom", 3, 2),
   ]
-  for (char, radical, strokes, structure_type, complexity, common_grade) in char_infos {
+  for _tup0 in char_infos {
+    let (char, radical, strokes, structure_type, complexity, common_grade) = _tup0
     db.push(ChineseCharInfo::{
       char,
       radical,
@@ -273,25 +274,24 @@ pub fn generate_enhanced_chinese_templates(
 fn get_common_chinese_chars(count : Int) -> Array[String] {
   // 常用字列表（前 200 个明确列出，其余用 Unicode 范围生成）
   let common_200 : Array[String] = [
-    "的", "一", "是", "在", "不", "了", "有", "和", "人", "这",
-    "中", "大", "为", "上", "个", "国", "我", "以", "要", "他",
-    "时", "来", "用", "们", "生", "到", "作", "地", "于", "出",
-    "就", "分", "对", "成", "会", "可", "主", "发", "年", "动",
-    "同", "工", "也", "能", "下", "过", "子", "说", "产", "种",
-    "面", "而", "方", "后", "多", "定", "行", "学", "法", "所",
-    "民", "得", "经", "十", "三", "之", "进", "着", "等", "部",
-    "度", "家", "电", "力", "里", "如", "水", "化", "高", "自",
-    "二", "理", "起", "小", "物", "现", "实", "加", "量", "都",
-    "两", "体", "重", "机", "当", "使", "点", "从", "业", "本",
-    "去", "把", "性", "好", "应", "开", "它", "合", "还", "因",
-    "由", "其", "些", "然", "前", "外", "天", "政", "四", "日",
-    "那", "社", "义", "事", "平", "形", "相", "全", "间", "与",
-    "关", "各", "重", "新", "线", "内", "数", "正", "心", "反",
-    "你", "明", "看", "原", "又", "么", "利", "比", "或", "但",
-    "质", "气", "第", "向", "道", "命", "此", "变", "条", "只",
-    "没", "结", "解", "问", "意", "建", "月", "公", "无", "系",
-    "军", "很", "情", "最", "立", "代", "想", "已", "通", "并",
-    "提", "直", "题", "党", "程", "展", "五", "果", "料", "象",
+    "的", "一", "是", "在", "不", "了", "有", "和", "人", "这", "中",
+    "大", "为", "上", "个", "国", "我", "以", "要", "他", "时", "来",
+    "用", "们", "生", "到", "作", "地", "于", "出", "就", "分", "对",
+    "成", "会", "可", "主", "发", "年", "动", "同", "工", "也", "能",
+    "下", "过", "子", "说", "产", "种", "面", "而", "方", "后", "多",
+    "定", "行", "学", "法", "所", "民", "得", "经", "十", "三", "之",
+    "进", "着", "等", "部", "度", "家", "电", "力", "里", "如", "水",
+    "化", "高", "自", "二", "理", "起", "小", "物", "现", "实", "加",
+    "量", "都", "两", "体", "重", "机", "当", "使", "点", "从", "业",
+    "本", "去", "把", "性", "好", "应", "开", "它", "合", "还", "因",
+    "由", "其", "些", "然", "前", "外", "天", "政", "四", "日", "那",
+    "社", "义", "事", "平", "形", "相", "全", "间", "与", "关", "各",
+    "重", "新", "线", "内", "数", "正", "心", "反", "你", "明", "看",
+    "原", "又", "么", "利", "比", "或", "但", "质", "气", "第", "向",
+    "道", "命", "此", "变", "条", "只", "没", "结", "解", "问", "意",
+    "建", "月", "公", "无", "系", "军", "很", "情", "最", "立", "代",
+    "想", "已", "通", "并", "提", "直", "题", "党", "程", "展", "五",
+    "果", "料", "象",
   ]
   let result : Array[String] = []
   let n = if count < common_200.length() { count } else { common_200.length() }
@@ -303,7 +303,7 @@ fn get_common_chinese_chars(count : Int) -> Array[String] {
     let mut code = 0x4E00 + common_200.length()
     while result.length() < count {
       // 跳过一些不常用的字，选择常用区域
-      let char_str = code.to_char().to_string()
+      let char_str = code.to_char().map(c => c.to_string()).unwrap_or("")
       result.push(char_str)
       code += 1
     }
@@ -313,10 +313,7 @@ fn get_common_chinese_chars(count : Int) -> Array[String] {
 
 ///|
 /// 生成优化的字符模板（改进的多层哈希 + 结构感知）
-fn generate_optimized_char_template(
-  char : String,
-  size : Int,
-) -> Array[Double] {
+fn generate_optimized_char_template(char : String, size : Int) -> Array[Double] {
   let features : Array[Double] = Array::make(size * size, 0.0)
   let seed = if char.length() > 0 { char[0].to_int() } else { 0 }
   // 改进的多层哈希：使用 4 种不同的哈希函数
@@ -335,8 +332,10 @@ fn generate_optimized_char_template(
       // 中心权重（汉字通常居中）
       let center_x = size / 2
       let center_y = size / 2
-      let center_dist = ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y)).to_double()
-      let center_factor = 1.0 - center_dist / (size.to_double() * size.to_double() / 2.0)
+      let center_dist = ((x - center_x) * (x - center_x) +
+      (y - center_y) * (y - center_y)).to_double()
+      let center_factor = 1.0 -
+        center_dist / (size.to_double() * size.to_double() / 2.0)
       // 边缘权重（汉字有边框特征）
       let edge_factor = if x < 2 || x >= size - 2 || y < 2 || y >= size - 2 {
         0.7
@@ -373,7 +372,11 @@ pub fn structure_based_filter(
       ink_pixels += 1
     }
   }
-  let density = if total > 0 { ink_pixels.to_double() / total.to_double() } else { 0.0 }
+  let density = if total > 0 {
+    ink_pixels.to_double() / total.to_double()
+  } else {
+    0.0
+  }
   // 估计复杂度（基于密度和纵横比）
   let estimated_complexity = if density > 0.4 {
     5
@@ -424,7 +427,11 @@ pub fn structure_based_filter(
   }
   // 限制候选数量
   let result : Array[ChineseCharInfo] = []
-  let n = if max_candidates < candidates.length() { max_candidates } else { candidates.length() }
+  let n = if max_candidates < candidates.length() {
+    max_candidates
+  } else {
+    candidates.length()
+  }
   for i in 0..<n {
     result.push(candidates[i])
   }
@@ -438,15 +445,22 @@ pub fn extract_stroke_features(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_stroke_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_stroke_features: 图像尺寸必须大于0",
+    )
   }
   if char_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_stroke_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_stroke_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = char_img.width * char_img.height
   if char_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_stroke_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+      "extract_stroke_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      char_img.data.length().to_string(),
     )
   }
   let w = char_img.width
@@ -536,15 +550,22 @@ pub fn recognize_enhanced_chinese(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_enhanced_chinese: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_enhanced_chinese: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_enhanced_chinese: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_enhanced_chinese: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_enhanced_chinese: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_enhanced_chinese: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let cfg = match config {
@@ -556,16 +577,26 @@ pub fn recognize_enhanced_chinese(
   // 2. 字符分割
   let char_regions = segment_enhanced_chars(preprocessed, cfg)
   // 3. 生成模板
-  let templates = generate_enhanced_chinese_templates(char_set_size=cfg.char_set_size)
+  let templates = generate_enhanced_chinese_templates(
+    char_set_size=cfg.char_set_size,
+  )
   // 4. 生成结构信息数据库
   let char_db = generate_chinese_char_info_db()
   // 5. 对每个字符进行识别
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup1 in char_regions {
+    let (x, y, w, h) = _tup1
     // 提取字符图像
-    let char_img = extract_enhanced_char_region(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_enhanced_char_region(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 结构预筛选（如果启用）
     let candidates = if cfg.use_structure_filter {
       structure_based_filter(char_img, char_db, max_candidates=50)
@@ -579,7 +610,9 @@ pub fn recognize_enhanced_chinese(
       []
     }
     // 模板匹配（在候选范围内）
-    let result = match_enhanced_template(char_img, templates, candidates, stroke_features, cfg)
+    let result = match_enhanced_template(
+      char_img, templates, candidates, stroke_features, cfg,
+    )
     text += result.0
     total_confidence += result.1
     char_results.push(OcrCharResult::{
@@ -596,11 +629,7 @@ pub fn recognize_enhanced_chinese(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -646,10 +675,18 @@ fn segment_enhanced_chars(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -658,9 +695,11 @@ fn segment_enhanced_chars(
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
-    if rw >= cfg.min_char_width && rw <= cfg.max_char_width &&
-       rh >= cfg.min_char_width && rh <= cfg.max_char_width &&
-       area[label] > 15 {
+    if rw >= cfg.min_char_width &&
+      rw <= cfg.max_char_width &&
+      rh >= cfg.min_char_width &&
+      rh <= cfg.max_char_width &&
+      area[label] > 15 {
       regions.push((min_x[label], min_y[label], rw, rh))
     }
   }
@@ -683,20 +722,30 @@ fn extract_enhanced_char_region(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -732,7 +781,11 @@ fn match_enhanced_template(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -744,7 +797,8 @@ fn match_enhanced_template(
   // 在候选范围内匹配
   let mut best_label = "?"
   let mut best_dist = 1000000.0
-  for (label, template) in templates {
+  for _tup2 in templates {
+    let (label, template) = _tup2
     // 检查是否在候选范围内（如果候选列表非空）
     let mut in_candidates = candidate_chars.length() == 0
     for c in candidate_chars {
@@ -756,14 +810,17 @@ fn match_enhanced_template(
       continue
     }
     // 计算距离
-    let n = if features.length() < template.length() { features.length() } else { template.length() }
+    let n = if features.length() < template.length() {
+      features.length()
+    } else {
+      template.length()
+    }
     let mut dist = 0.0
     match cfg.distance_metric {
-      "manhattan" => {
+      "manhattan" =>
         for i in 0..<n {
           dist += (features[i] - template[i]).abs()
         }
-      }
       "cosine" => {
         let mut dot = 0.0
         let mut norm_a = 0.0

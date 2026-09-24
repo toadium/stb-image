@@ -7,7 +7,12 @@ fn make_img16_feat(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_feat(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -73,7 +83,9 @@ test "lbp_f: uniform image" {
 ///|
 test "lbp_16: rejects invalid channels" {
   let img = @types.Image16::{
-    width: 2, height: 2, channels: 2,
+    width: 2,
+    height: 2,
+    channels: 2,
     data: Array::make(8, b'\x00') |> Bytes::from_array,
   }
   try {

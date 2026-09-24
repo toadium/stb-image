@@ -9,7 +9,7 @@ fn create_test_document_image() -> @types.Image {
   let channels = 3
   let data : Array[Byte] = []
   // 白色背景
-  for i in 0..<(width * height * channels) {
+  for _ in 0..<(width * height * channels) {
     data.push(b'\xFF')
   }
   // 绘制一些黑色文本行（模拟文本）
@@ -49,12 +49,7 @@ fn create_test_document_image() -> @types.Image {
       data[idx + 2] = b'\x00'
     }
   }
-  @types.Image::{
-    width,
-    height,
-    channels,
-    data: Bytes::from_array(data),
-  }
+  @types.Image::{ width, height, channels, data: Bytes::from_array(data) }
 }
 
 ///|
@@ -102,7 +97,14 @@ test "layout_analysis" {
   println("  检测到文本块数: " + blocks.length().to_string())
   for i in 0..<blocks.length() {
     let block = blocks[i]
-    println("    块 " + i.to_string() + ": y=" + block.y.to_string() + ", height=" + block.height.to_string())
+    println(
+      "    块 " +
+      i.to_string() +
+      ": y=" +
+      block.y.to_string() +
+      ", height=" +
+      block.height.to_string(),
+    )
   }
 }
 

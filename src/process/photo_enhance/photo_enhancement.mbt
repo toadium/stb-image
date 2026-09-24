@@ -4,27 +4,20 @@
 ///|
 /// 低光增强配置
 pub(all) struct LowLightConfig {
-  method : String  // "gamma" / "log" / "retinex"
-  gamma : Double  // Gamma 校正参数
-  strength : Double  // 增强强度
+  method_type : String // "gamma" / "log" / "retinex"
+  gamma : Double // Gamma 校正参数
+  strength : Double // 增强强度
 }
 
 ///|
 /// 创建默认低光增强配置
 pub fn low_light_default_config() -> LowLightConfig {
-  LowLightConfig::{
-    method: "gamma",
-    gamma: 0.5,
-    strength: 1.0,
-  }
+  LowLightConfig::{ method_type: "gamma", gamma: 0.5, strength: 1.0 }
 }
 
 ///|
 /// Gamma 校正低光增强
-fn gamma_enhance(
-  img : @types.Image,
-  gamma : Double,
-) -> @types.Image {
+fn gamma_enhance(img : @types.Image, gamma : Double) -> @types.Image {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -33,22 +26,24 @@ fn gamma_enhance(
   let lut : Array[Byte] = []
   for i in 0..<256 {
     let normalized = i.to_double() / 255.0
-    let enhanced = normalized.pow(gamma)
+    let enhanced = @math.pow(normalized, gamma)
     let val = (enhanced * 255.0).to_int().min(255).max(0)
     lut.push(val.to_byte())
   }
   for i in 0..<(w * h * channels) {
     out_data[i] = lut[img.data[i].to_int()]
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 对数变换低光增强
-fn log_enhance(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+fn log_enhance(img : @types.Image, strength : Double) -> @types.Image {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -59,16 +54,18 @@ fn log_enhance(
     let enhanced = c * @math.ln(1.0 + val) * strength
     out_data[i] = enhanced.min(255.0).max(0.0).to_int().to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 简化版 Retinex 低光增强（单尺度 Retinex）
-fn retinex_enhance(
-  img : @types.Image,
-  sigma? : Double = 50.0,
-) -> @types.Image {
-let s = sigma
+fn retinex_enhance(img : @types.Image, sigma? : Double = 50.0) -> @types.Image {
+  let _ = sigma
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -84,8 +81,8 @@ let s = sigma
         // 计算局部均值（光照估计）
         let mut sum = 0.0
         let mut count = 0
-        for ky in -half..=half {
-          for kx in -half..=half {
+        for ky in -half..<=half {
+          for kx in -half..<=half {
             let ny = y + ky
             let nx = x + kx
             if ny >= 0 && ny < h && nx >= 0 && nx < w {
@@ -107,7 +104,12 @@ let s = sigma
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -116,11 +118,11 @@ pub fn low_light_enhance(
   img : @types.Image,
   config? : LowLightConfig,
 ) -> @types.Image {
-let cfg = match config {
+  let cfg = match config {
     Some(v) => v
     None => low_light_default_config()
   }
-  match cfg.method {
+  match cfg.method_type {
     "gamma" => gamma_enhance(img, cfg.gamma)
     "log" => log_enhance(img, cfg.strength)
     "retinex" => retinex_enhance(img, sigma=50.0)
@@ -136,7 +138,7 @@ pub fn deblur_motion(
   angle? : Double = 0.0,
 ) -> @types.Image {
   let ks = kernel_size
-  let ang = angle
+  let _ = angle
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -152,8 +154,8 @@ pub fn deblur_motion(
         // 计算局部均值（模糊版本）
         let mut sum = 0.0
         let mut count = 0
-        for ky in -blur_radius..=blur_radius {
-          for kx in -blur_radius..=blur_radius {
+        for ky in -blur_radius..<=blur_radius {
+          for kx in -blur_radius..<=blur_radius {
             let ny = y + ky
             let nx = x + kx
             if ny >= 0 && ny < h && nx >= 0 && nx < w {
@@ -176,7 +178,12 @@ pub fn deblur_motion(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -220,7 +227,12 @@ pub fn color_enhance(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -231,7 +243,7 @@ pub fn clahe_enhance(
   tile_size? : Int = 8,
 ) -> @types.Image {
   let clip = clip_limit
-  let ts = tile_size
+  let _ = tile_size
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -240,7 +252,7 @@ pub fn clahe_enhance(
   for c in 0..<channels {
     // 计算直方图
     let histogram : Array[Int] = []
-    for i in 0..<256 {
+    for _ in 0..<256 {
       histogram.push(0)
     }
     for y in 0..<h {
@@ -276,7 +288,12 @@ pub fn clahe_enhance(
     let cdf_min = cdf[0]
     let denominator = (w * h - cdf_min).max(1)
     for i in 0..<256 {
-      let val = ((cdf[i] - cdf_min).to_double() / denominator.to_double() * 255.0).to_int().min(255).max(0)
+      let val = ((cdf[i] - cdf_min).to_double() /
+        denominator.to_double() *
+        255.0)
+        .to_int()
+        .min(255)
+        .max(0)
       lut.push(val.to_byte())
     }
     // 应用查找表
@@ -287,14 +304,17 @@ pub fn clahe_enhance(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 白平衡校正（灰度世界算法）
-pub fn white_balance(
-  img : @types.Image,
-) -> @types.Image {
+pub fn white_balance(img : @types.Image) -> @types.Image {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -327,26 +347,43 @@ pub fn white_balance(
   for y in 0..<h {
     for x in 0..<w {
       let idx = (y * w + x) * channels
-      out_data[idx] = (img.data[idx].to_double() * gain_r).min(255.0).max(0.0).to_int().to_byte()
-      out_data[idx + 1] = (img.data[idx + 1].to_double() * gain_g).min(255.0).max(0.0).to_int().to_byte()
-      out_data[idx + 2] = (img.data[idx + 2].to_double() * gain_b).min(255.0).max(0.0).to_int().to_byte()
+      out_data[idx] = (img.data[idx].to_double() * gain_r)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
+      out_data[idx + 1] = (img.data[idx + 1].to_double() * gain_g)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
+      out_data[idx + 2] = (img.data[idx + 2].to_double() * gain_b)
+        .min(255.0)
+        .max(0.0)
+        .to_int()
+        .to_byte()
       for c in 3..<channels {
         out_data[idx + c] = img.data[idx + c]
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 批量计算摄影增强
 pub fn batch_photo_enhance(
   images : Array[@types.Image],
-  method : String,
+  method_type : String,
 ) -> Array[@types.Image] {
   let result : Array[@types.Image] = []
   for img in images {
-    let enhanced = match method {
+    let enhanced = match method_type {
       "low_light" => low_light_enhance(img)
       "deblur" => deblur_motion(img, kernel_size=15, angle=0.0)
       "color" => color_enhance(img, saturation=1.3, contrast=1.1)

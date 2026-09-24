@@ -45,18 +45,28 @@ fn clamp_coord_f(v : Int, max : Int) -> Int {
 ///|
 /// 16-bit 盒模糊。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur_16(img : @types.Image16, radius : Int) -> @types.Image16 raise @types.LoadError {
+pub fn box_blur_16(
+  img : @types.Image16,
+  radius : Int,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("box_blur_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("box_blur_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "box_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "box_blur_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius < 0 {
@@ -129,18 +139,28 @@ pub fn box_blur_16(img : @types.Image16, radius : Int) -> @types.Image16 raise @
 ///|
 /// float 盒模糊。radius 为模糊半径，窗口大小 = 2*radius+1。
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
-pub fn box_blur_f(img : @types.ImageF, radius : Int) -> @types.ImageF raise @types.LoadError {
+pub fn box_blur_f(
+  img : @types.ImageF,
+  radius : Int,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("box_blur_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("box_blur_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "box_blur_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "box_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "box_blur_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius < 0 {
@@ -222,15 +242,22 @@ pub fn gaussian_blur_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gaussian_blur_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("gaussian_blur_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gaussian_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "gaussian_blur_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius < 0 {
@@ -365,15 +392,22 @@ pub fn gaussian_blur_f(
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gaussian_blur_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("gaussian_blur_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_blur_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gaussian_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "gaussian_blur_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius < 0 {
@@ -497,18 +531,28 @@ pub fn gaussian_blur_f(
 ///|
 /// 16-bit 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
 /// 仅滤波颜色通道，alpha 不变。
-pub fn median_blur_16(img : @types.Image16, ksize : Int) -> @types.Image16 raise @types.LoadError {
+pub fn median_blur_16(
+  img : @types.Image16,
+  ksize : Int,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("median_blur_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("median_blur_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "median_blur_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "median_blur_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if ksize <= 0 {
@@ -595,18 +639,28 @@ pub fn median_blur_16(img : @types.Image16, ksize : Int) -> @types.Image16 raise
 ///|
 /// float 中值滤波。ksize 为窗口大小（奇数）。有效去除椒盐噪声。
 /// 仅滤波颜色通道，alpha 不变。
-pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF raise @types.LoadError {
+pub fn median_blur_f(
+  img : @types.ImageF,
+  ksize : Int,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("median_blur_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("median_blur_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "median_blur_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "median_blur_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "median_blur_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if ksize <= 0 {
@@ -673,18 +727,28 @@ pub fn median_blur_f(img : @types.ImageF, ksize : Int) -> @types.ImageF raise @t
 
 ///|
 /// 16-bit 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
-pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 raise @types.LoadError {
+pub fn sharpen_16(
+  img : @types.Image16,
+  amount : Float,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("sharpen_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "sharpen_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("sharpen_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "sharpen_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "sharpen_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "sharpen_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if amount < 0.0F {
@@ -714,16 +778,25 @@ pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 raise 
         let right = px[(idx + 1) * ch + c]
         let top = px[(idx - w) * ch + c]
         let bottom = px[(idx + w) * ch + c]
-        let val = Float::from_int(cx) * center - amount * Float::from_int(left + right + top + bottom)
+        let val = Float::from_int(cx) * center -
+          amount * Float::from_int(left + right + top + bottom)
         let new_val = (val + 0.5F).to_int()
-        let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        let clamped = if new_val < 0 {
+          0
+        } else if new_val > 65535 {
+          65535
+        } else {
+          new_val
+        }
         write_u16_le_f(out, idx * bpp + c * 2, clamped)
       }
     }
   }
   for y in 0..<h {
     for x in 0..<w {
-      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 { continue }
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
       let idx = y * w + x
       let x_l = clamp_coord_f(x - 1, w)
       let x_r = clamp_coord_f(x + 1, w)
@@ -735,9 +808,16 @@ pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 raise 
         let right = px[(y * w + x_r) * ch + c]
         let top = px[(y_t * w + x) * ch + c]
         let bottom = px[(y_b * w + x) * ch + c]
-        let val = Float::from_int(cx) * center - amount * Float::from_int(left + right + top + bottom)
+        let val = Float::from_int(cx) * center -
+          amount * Float::from_int(left + right + top + bottom)
         let new_val = (val + 0.5F).to_int()
-        let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+        let clamped = if new_val < 0 {
+          0
+        } else if new_val > 65535 {
+          65535
+        } else {
+          new_val
+        }
         write_u16_le_f(out, idx * bpp + c * 2, clamped)
       }
     }
@@ -749,23 +829,36 @@ pub fn sharpen_16(img : @types.Image16, amount : Float) -> @types.Image16 raise 
       out[alpha_off + 1] = img.data[alpha_off + 1]
     }
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// float 锐化。amount 控制锐化强度（0.0=原图，1.0=强锐化）。
-pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF raise @types.LoadError {
+pub fn sharpen_f(
+  img : @types.ImageF,
+  amount : Float,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("sharpen_f: 图像尺寸必须大于0")
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("sharpen_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "sharpen_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "sharpen_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "sharpen_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if amount < 0.0F {
@@ -802,7 +895,9 @@ pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF raise @ty
   }
   for y in 0..<h {
     for x in 0..<w {
-      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 { continue }
+      if x >= 1 && x < w - 1 && y >= 1 && y < h - 1 {
+        continue
+      }
       let idx = y * w + x
       let x_l = clamp_coord_f(x - 1, w)
       let x_r = clamp_coord_f(x + 1, w)
@@ -827,5 +922,10 @@ pub fn sharpen_f(img : @types.ImageF, amount : Float) -> @types.ImageF raise @ty
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

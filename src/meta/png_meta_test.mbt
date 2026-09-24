@@ -296,14 +296,13 @@ test "read_png_text_chunks: chunk data extends beyond buffer" {
   // Construct a PNG with a tEXt chunk whose declared length exceeds available data
   // tEXt chunk_len=20 but only 15 bytes available after header
   let png : Array[Byte] = [
-    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A',
-    0x00, 0x00, 0x00, 0x0D, b'I', b'H', b'D', b'R',
-    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, b'\x08', b'\x02', b'\x00', b'\x00', b'\x00',
-    0x90, b'W', b'\x3D', b'\x1F',
-    0x00, 0x00, 0x00, 0x14, b't', b'E', b'X', b't',  // chunk_len=20
-    0x00, 0x05, // keyword length = 5
-    b'T', b'e', b's', b't', b' ', // "Test "
-    b'A', b'B', b'C', b'D', b'E',  // only 5 more bytes, need 10 more to fill 20
+    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A', 0x00,
+    0x00, 0x00, 0x0D, b'I', b'H', b'D', b'R', 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
+    0x00, 0x01, b'\x08', b'\x02', b'\x00', b'\x00', b'\x00', 0x90, b'W', b'\x3D',
+    b'\x1F', 0x00, 0x00, 0x00, 0x14, b't', b'E', b'X', b't', // chunk_len=20
+     0x00, 0x05, // keyword length = 5
+     b'T', b'e', b's', b't', b' ', // "Test "
+     b'A', b'B', b'C', b'D', b'E', // only 5 more bytes, need 10 more to fill 20
     // Total: 52 bytes, but tEXt needs 60 bytes (40 + 20)
   ]
   let result = read_png_text_chunks(Bytes::from_array(png))
@@ -315,19 +314,17 @@ test "read_png_text_chunks: chunk data extends beyond buffer" {
 test "read_png_text_chunks: UTF-8 invalid sequence returns empty" {
   // Construct PNG with tEXt chunk containing invalid UTF-8
   let png : Array[Byte] = [
-    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A',
-    0x00, 0x00, 0x00, 0x0D, b'I', b'H', b'D', b'R',
-    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, b'\x08', b'\x02', b'\x00', b'\x00', b'\x00',
-    0x90, b'W', b'\x3D', b'\x1F',
-    0x00, 0x00, 0x00, 0x0C, b't', b'E', b'X', b't',
-    b'T', b'e', b's', b't', // keyword "test"
-    0x00, // separator
-    0x80, b'\xFF', 0x80, 0x00, 0x00, 0x00, // invalid UTF-8 + padding
-    0x00, 0x00, 0x00, 0x0D, b'I', b'E', b'D', b'A',
-    0x78, b'\x9C', b'\x63', b'\xFC', b'\xCF', b'\x80', b'\x00', b'\x4C',
-    b'\x48', b'\x6C', b'\x3C', b'\x1C', b'\x00', b'\x33', b'\xD1', b'\x01',
-    b'\x07', b'\x30', b'\xE7', b'\xE1', b'\x4C', b'\x00', b'\x00', b'\x00',
-    b'\x00', b'I', b'E', b'N', b'D', b'\xAE', b'\x42', b'\x60', b'\x82'
+    b'\x89', b'\x50', b'\x4E', b'\x47', b'\x0D', b'\x0A', b'\x1A', b'\x0A', 0x00,
+    0x00, 0x00, 0x0D, b'I', b'H', b'D', b'R', 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
+    0x00, 0x01, b'\x08', b'\x02', b'\x00', b'\x00', b'\x00', 0x90, b'W', b'\x3D',
+    b'\x1F', 0x00, 0x00, 0x00, 0x0C, b't', b'E', b'X', b't', b'T', b'e', b's', b't', // keyword "test"
+     0x00, // separator
+     0x80, b'\xFF', 0x80, 0x00, 0x00, 0x00, // invalid UTF-8 + padding
+     0x00, 0x00, 0x00, 0x0D, b'I', b'E', b'D', b'A', 0x78, b'\x9C', b'\x63', b'\xFC',
+    b'\xCF', b'\x80', b'\x00', b'\x4C', b'\x48', b'\x6C', b'\x3C', b'\x1C', b'\x00',
+    b'\x33', b'\xD1', b'\x01', b'\x07', b'\x30', b'\xE7', b'\xE1', b'\x4C', b'\x00',
+    b'\x00', b'\x00', b'\x00', b'I', b'E', b'N', b'D', b'\xAE', b'\x42', b'\x60',
+    b'\x82',
   ]
   let result = read_png_text_chunks(Bytes::from_array(png))
   // Should return 1 chunk with empty text (UTF-8 decode fails)

@@ -13,25 +13,38 @@ pub fn good_features_to_track(
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("good_features_to_track: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("good_features_to_track: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "good_features_to_track: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "good_features_to_track: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if max_corners <= 0 {
-    raise @types.LoadError::DecodeFailed("good_features_to_track: max_corners必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track: max_corners必须大于0",
+    )
   }
   if quality_level <= 0.0F || quality_level > 1.0F {
-    raise @types.LoadError::DecodeFailed("good_features_to_track: quality_level必须在(0, 1]范围内")
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track: quality_level必须在(0, 1]范围内",
+    )
   }
   if min_distance < 0 {
-    raise @types.LoadError::DecodeFailed("good_features_to_track: min_distance必须 >= 0")
+    raise @types.LoadError::DecodeFailed(
+      "good_features_to_track: min_distance必须 >= 0",
+    )
   }
   let w = img.width
   let h = img.height

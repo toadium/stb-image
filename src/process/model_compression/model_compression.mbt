@@ -56,7 +56,7 @@ pub(all) struct ModelCompressionResult {
   compressed_flops : Int
   flops_reduction : Double
   accuracy_drop : Double
-  method : ModelCompressionMethod
+  method_type : ModelCompressionMethod
 }
 
 ///|
@@ -294,7 +294,7 @@ pub fn quantize_model(
     compressed_flops,
     flops_reduction: 0.0,
     accuracy_drop,
-    method: ModelCompressionMethod::Quantization,
+    method_type: ModelCompressionMethod::Quantization,
   }
 }
 
@@ -308,8 +308,10 @@ pub fn prune_model(
 ) -> ModelCompressionResult {
   let pruning_ratio = config.pruning_ratio
   let compressed_size = original_size_mb * (1.0 - pruning_ratio)
-  let compressed_parameters = (original_parameters.to_double() * (1.0 - pruning_ratio)).to_int()
-  let compressed_flops = (original_flops.to_double() * (1.0 - pruning_ratio * 0.8)).to_int()
+  let compressed_parameters = (original_parameters.to_double() *
+  (1.0 - pruning_ratio)).to_int()
+  let compressed_flops = (original_flops.to_double() *
+  (1.0 - pruning_ratio * 0.8)).to_int()
   let accuracy_drop = pruning_ratio * 0.1
 
   ModelCompressionResult::{
@@ -323,7 +325,7 @@ pub fn prune_model(
     compressed_flops,
     flops_reduction: pruning_ratio * 0.8,
     accuracy_drop,
-    method: ModelCompressionMethod::Pruning,
+    method_type: ModelCompressionMethod::Pruning,
   }
 }
 
@@ -337,7 +339,8 @@ pub fn knowledge_distillation(
   config : KnowledgeDistillationConfig,
 ) -> ModelCompressionResult {
   let compression_ratio = teacher_size_mb / student_size_mb
-  let parameter_reduction = 1.0 - student_parameters.to_double() / teacher_parameters.to_double()
+  let parameter_reduction = 1.0 -
+    student_parameters.to_double() / teacher_parameters.to_double()
   let accuracy_drop = 0.01 / config.temperature
 
   ModelCompressionResult::{
@@ -351,7 +354,7 @@ pub fn knowledge_distillation(
     compressed_flops: 0,
     flops_reduction: parameter_reduction * 0.7,
     accuracy_drop,
-    method: ModelCompressionMethod::KnowledgeDistillation,
+    method_type: ModelCompressionMethod::KnowledgeDistillation,
   }
 }
 
@@ -365,7 +368,8 @@ pub fn low_rank_factorization(
 ) -> ModelCompressionResult {
   let rank_ratio = config.rank_ratio
   let compressed_size = original_size_mb * (0.3 + rank_ratio * 0.4)
-  let compressed_parameters = (original_parameters.to_double() * (0.3 + rank_ratio * 0.4)).to_int()
+  let compressed_parameters = (original_parameters.to_double() *
+  (0.3 + rank_ratio * 0.4)).to_int()
   let compressed_flops = (original_flops.to_double() * (0.4 + rank_ratio * 0.3)).to_int()
   let accuracy_drop = (1.0 - rank_ratio) * 0.03
 
@@ -375,12 +379,14 @@ pub fn low_rank_factorization(
     compression_ratio: original_size_mb / compressed_size,
     original_parameters,
     compressed_parameters,
-    parameter_reduction: 1.0 - compressed_parameters.to_double() / original_parameters.to_double(),
+    parameter_reduction: 1.0 -
+    compressed_parameters.to_double() / original_parameters.to_double(),
     original_flops,
     compressed_flops,
-    flops_reduction: 1.0 - compressed_flops.to_double() / original_flops.to_double(),
+    flops_reduction: 1.0 -
+    compressed_flops.to_double() / original_flops.to_double(),
     accuracy_drop,
-    method: ModelCompressionMethod::LowRankFactorization,
+    method_type: ModelCompressionMethod::LowRankFactorization,
   }
 }
 
@@ -473,11 +479,36 @@ pub fn model_compression_report_to_string(
 ) -> String {
   let mut report = "## 模型压缩与优化报告\n\n"
   report = report + "### 压缩信息\n\n"
-  report = report + "| 指标 | 原始 | 压缩后 | 变化 |\n|------|------|------|------|\n"
-  report = report + "| 模型大小 | " + result.original_size_mb.to_string() + " MB | " + result.compressed_size_mb.to_string() + " MB | " + (result.compression_ratio).to_string() + "x |\n"
-  report = report + "| 参数数量 | " + result.original_parameters.to_string() + " | " + result.compressed_parameters.to_string() + " | " + (result.parameter_reduction * 100.0).to_string() + "% |\n"
-  report = report + "| FLOPs | " + result.original_flops.to_string() + " | " + result.compressed_flops.to_string() + " | " + (result.flops_reduction * 100.0).to_string() + "% |\n"
-  report = report + "| 精度下降 | - | - | " + (result.accuracy_drop * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 指标 | 原始 | 压缩后 | 变化 |\n|------|------|------|------|\n"
+  report = report +
+    "| 模型大小 | " +
+    result.original_size_mb.to_string() +
+    " MB | " +
+    result.compressed_size_mb.to_string() +
+    " MB | " +
+    result.compression_ratio.to_string() +
+    "x |\n"
+  report = report +
+    "| 参数数量 | " +
+    result.original_parameters.to_string() +
+    " | " +
+    result.compressed_parameters.to_string() +
+    " | " +
+    (result.parameter_reduction * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| FLOPs | " +
+    result.original_flops.to_string() +
+    " | " +
+    result.compressed_flops.to_string() +
+    " | " +
+    (result.flops_reduction * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 精度下降 | - | - | " +
+    (result.accuracy_drop * 100.0).to_string() +
+    "% |\n"
   report = report + "| 压缩方法 | " + method_name + " | | |\n"
 
   report

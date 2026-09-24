@@ -83,7 +83,7 @@ pub(all) enum SimilarityMetric {
 /// 颜色直方图配置
 pub(all) struct ColorHistogramConfig {
   num_bins : Int
-  color_space : String  // "RGB" / "HSV" / "Gray"
+  color_space : String // "RGB" / "HSV" / "Gray"
   normalize : Bool
   cumulative : Bool
 }
@@ -140,12 +140,7 @@ pub fn create_default_lbp_config() -> LBPConfig {
 ///|
 /// 创建默认 HOG 配置
 pub fn create_default_hog_config() -> HOGConfig {
-  HOGConfig::{
-    cell_size: 8,
-    block_size: 2,
-    num_bins: 9,
-    normalize: true,
-  }
+  HOGConfig::{ cell_size: 8, block_size: 2, num_bins: 9, normalize: true }
 }
 
 ///|
@@ -164,7 +159,11 @@ pub fn extract_color_histogram(
 
   for i in 0..<total {
     let pixel = img.data[i].to_int()
-    let bin = if config.num_bins > 0 { pixel * config.num_bins / 256 } else { 0 }
+    let bin = if config.num_bins > 0 {
+      pixel * config.num_bins / 256
+    } else {
+      0
+    }
     if bin >= 0 && bin < config.num_bins {
       histogram[bin] += 1.0
     }
@@ -197,7 +196,7 @@ pub fn extract_lbp_feature(
 ) -> CBIRImageFeature {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let num_bins = 256
   let histogram : Array[Double] = []
   for _ in 0..<num_bins {
@@ -276,12 +275,17 @@ pub fn extract_hog_feature(
           let px = cx * cell_size + x
           let py = cy * cell_size + y
           if px > 0 && px < w - 1 && py > 0 && py < h - 1 {
-            let gx = img.data[py * w + (px + 1)].to_double() - img.data[py * w + (px - 1)].to_double()
-            let gy = img.data[(py + 1) * w + px].to_double() - img.data[(py - 1) * w + px].to_double()
+            let gx = img.data[py * w + (px + 1)].to_double() -
+              img.data[py * w + (px - 1)].to_double()
+            let gy = img.data[(py + 1) * w + px].to_double() -
+              img.data[(py - 1) * w + px].to_double()
             let magnitude = (gx * gx + gy * gy).sqrt()
-            let mut angle = if gx != 0.0 { (gy / gx)* 0.1 } else { 1.5708 }
-            if angle < 0.0 { angle += 3.14159 }
-            let bin = (angle / 3.14159 * num_bins.to_double()).to_int() % num_bins
+            let mut angle = if gx != 0.0 { gy / gx * 0.1 } else { 1.5708 }
+            if angle < 0.0 {
+              angle += 3.14159
+            }
+            let bin = (angle / 3.14159 * num_bins.to_double()).to_int() %
+              num_bins
             cell_hist[bin] += magnitude
           }
         }
@@ -311,7 +315,11 @@ pub fn cosine_similarity_cbir(
   feat1 : Array[Double],
   feat2 : Array[Double],
 ) -> Double {
-  let len = if feat1.length() < feat2.length() { feat1.length() } else { feat2.length() }
+  let len = if feat1.length() < feat2.length() {
+    feat1.length()
+  } else {
+    feat2.length()
+  }
   let mut dot = 0.0
   let mut norm1 = 0.0
   let mut norm2 = 0.0
@@ -335,7 +343,11 @@ pub fn euclidean_distance_cbir(
   feat1 : Array[Double],
   feat2 : Array[Double],
 ) -> Double {
-  let len = if feat1.length() < feat2.length() { feat1.length() } else { feat2.length() }
+  let len = if feat1.length() < feat2.length() {
+    feat1.length()
+  } else {
+    feat2.length()
+  }
   let mut sum = 0.0
 
   for i in 0..<len {
@@ -352,7 +364,11 @@ pub fn manhattan_distance_cbir(
   feat1 : Array[Double],
   feat2 : Array[Double],
 ) -> Double {
-  let len = if feat1.length() < feat2.length() { feat1.length() } else { feat2.length() }
+  let len = if feat1.length() < feat2.length() {
+    feat1.length()
+  } else {
+    feat2.length()
+  }
   let mut sum = 0.0
 
   for i in 0..<len {
@@ -368,7 +384,11 @@ pub fn histogram_intersection_cbir(
   feat1 : Array[Double],
   feat2 : Array[Double],
 ) -> Double {
-  let len = if feat1.length() < feat2.length() { feat1.length() } else { feat2.length() }
+  let len = if feat1.length() < feat2.length() {
+    feat1.length()
+  } else {
+    feat2.length()
+  }
   let mut intersection = 0.0
   let mut sum1 = 0.0
 
@@ -377,7 +397,11 @@ pub fn histogram_intersection_cbir(
     sum1 += feat1[i]
   }
 
-  if sum1 > 0.0 { intersection / sum1 } else { 0.0 }
+  if sum1 > 0.0 {
+    intersection / sum1
+  } else {
+    0.0
+  }
 }
 
 ///|
@@ -441,7 +465,11 @@ pub fn retrieve_images(
 ) -> CBIRRetrievalResultList {
   let similarities : Array[Double] = []
   for i in 0..<index.num_images {
-    let sim = calculate_similarity(query_feature.feature_vector, index.features[i].feature_vector, metric)
+    let sim = calculate_similarity(
+      query_feature.feature_vector,
+      index.features[i].feature_vector,
+      metric,
+    )
     similarities.push(sim)
   }
 
@@ -461,7 +489,11 @@ pub fn retrieve_images(
   }
 
   let results : Array[CBIRRetrievalResult] = []
-  let result_count = if num_results < index.num_images { num_results } else { index.num_images }
+  let result_count = if num_results < index.num_images {
+    num_results
+  } else {
+    index.num_images
+  }
   for i in 0..<result_count {
     let idx = indices[i]
     let feat = index.features[idx]
@@ -487,9 +519,7 @@ pub fn retrieve_images(
 
 ///|
 /// 提取组合特征（颜色+纹理+形状）
-pub fn extract_combined_features(
-  img : @types.Image,
-) -> CBIRImageFeature {
+pub fn extract_combined_features(img : @types.Image) -> CBIRImageFeature {
   let color_config = create_default_color_histogram_config()
   let color_feat = extract_color_histogram(img, color_config)
   let lbp_config = create_default_lbp_config()
@@ -526,7 +556,8 @@ pub fn retrieval_report_to_string(
   report = report + "### 查询信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 查询图像ID | " + query_feature.image_id + " |\n"
-  let feat_type_str = if query_feature.feature_type == FeatureType::ColorHistogram {
+  let feat_type_str = if query_feature.feature_type ==
+    FeatureType::ColorHistogram {
     "颜色直方图"
   } else if query_feature.feature_type == FeatureType::Texture {
     "纹理"
@@ -546,16 +577,38 @@ pub fn retrieval_report_to_string(
     "其他"
   }
   report = report + "| 特征类型 | " + feat_type_str + " |\n"
-  report = report + "| 特征维度 | " + query_feature.feature_length.to_string() + " |\n"
-  report = report + "| 索引图像数 | " + results.total_images_in_index.to_string() + " |\n"
-  report = report + "| 检索耗时 | " + results.retrieval_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 特征维度 | " +
+    query_feature.feature_length.to_string() +
+    " |\n"
+  report = report +
+    "| 索引图像数 | " +
+    results.total_images_in_index.to_string() +
+    " |\n"
+  report = report +
+    "| 检索耗时 | " +
+    results.retrieval_time_ms.to_string() +
+    "ms |\n\n"
 
   if results.num_results > 0 {
     report = report + "### 检索结果\n\n"
     report = report + "| 排名 | 图像ID | 相似度 | 距离 | 尺寸 |\n"
     report = report + "|------|--------|--------|------|------|\n"
     for result in results.results {
-      report = report + "| " + result.rank.to_string() + " | " + result.image_id + " | " + (result.similarity * 100.0).to_string() + "% | " + result.distance.to_string() + " | " + result.width.to_string() + "x" + result.height.to_string() + " |\n"
+      report = report +
+        "| " +
+        result.rank.to_string() +
+        " | " +
+        result.image_id +
+        " | " +
+        (result.similarity * 100.0).to_string() +
+        "% | " +
+        result.distance.to_string() +
+        " | " +
+        result.width.to_string() +
+        "x" +
+        result.height.to_string() +
+        " |\n"
     }
   } else {
     report = report + "### 检索结果\n\n未找到匹配图像。\n"

@@ -17,7 +17,7 @@ pub(all) struct EnsembleConfig {
   use_template : Bool
   use_svm_like : Bool
   knn_k : Int
-  voting_method : String  // "majority" / "weighted" / "confidence"
+  voting_method : String // "majority" / "weighted" / "confidence"
 }
 
 ///|
@@ -35,12 +35,7 @@ pub fn ensemble_default_config() -> EnsembleConfig {
 ///|
 /// 创建空训练数据集
 pub fn dataset_create() -> TrainingDataset {
-  TrainingDataset::{
-    samples: [],
-    labels: [],
-    num_samples: 0,
-    num_classes: 0,
-  }
+  TrainingDataset::{ samples: [], labels: [], num_samples: 0, num_classes: 0 }
 }
 
 ///|
@@ -72,7 +67,9 @@ pub fn dataset_add_sample(
 
 ///|
 /// 数据集统计信息
-pub fn dataset_stats(dataset : TrainingDataset) -> (Int, Int, Array[(String, Int)]) {
+pub fn dataset_stats(
+  dataset : TrainingDataset,
+) -> (Int, Int, Array[(String, Int)]) {
   let class_counts : Array[(String, Int)] = []
   for label in dataset.labels {
     let mut count = 0
@@ -97,7 +94,13 @@ pub fn augment_features(
     // 添加高斯噪声（简化为均匀噪声）
     let noise = (pseudo_random(i) - 0.5) * 2.0 * noise_level
     let new_val = features[i] + noise
-    let clamped = if new_val < 0.0 { 0.0 } else if new_val > 1.0 { 1.0 } else { new_val }
+    let clamped = if new_val < 0.0 {
+      0.0
+    } else if new_val > 1.0 {
+      1.0
+    } else {
+      new_val
+    }
     augmented.push(clamped)
   }
   augmented
@@ -117,15 +120,22 @@ pub fn hu_moments_features(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("hu_moments_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hu_moments_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("hu_moments_features: 仅支持单通道图")
+    raise @types.LoadError::DecodeFailed(
+      "hu_moments_features: 仅支持单通道图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "hu_moments_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "hu_moments_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -175,18 +185,47 @@ pub fn hu_moments_features(
   let eta20 = mu20 / (m00 * m00)
   let eta02 = mu02 / (m00 * m00)
   let eta11 = mu11 / (m00 * m00)
-  let eta30 = mu30 / (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
-  let eta03 = mu03 / (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
-  let eta21 = mu21 / (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
-  let eta12 = mu12 / (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
+  let eta30 = mu30 /
+    (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
+  let eta03 = mu03 /
+    (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
+  let eta21 = mu21 /
+    (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
+  let eta12 = mu12 /
+    (m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00 * m00).sqrt()
   // Hu 不变矩
   let h1 = eta20 + eta02
   let h2 = (eta20 - eta02) * (eta20 - eta02) + 4.0 * eta11 * eta11
-  let h3 = (eta30 - 3.0 * eta12) * (eta30 - 3.0 * eta12) + (3.0 * eta21 - eta03) * (3.0 * eta21 - eta03)
+  let h3 = (eta30 - 3.0 * eta12) * (eta30 - 3.0 * eta12) +
+    (3.0 * eta21 - eta03) * (3.0 * eta21 - eta03)
   let h4 = (eta30 + eta12) * (eta30 + eta12) + (eta21 + eta03) * (eta21 + eta03)
-  let h5 = (eta30 - 3.0 * eta12) * (eta30 + eta12) * ((eta30 + eta12) * (eta30 + eta12) - 3.0 * (eta21 + eta03) * (eta21 + eta03)) + (3.0 * eta21 - eta03) * (eta21 + eta03) * (3.0 * (eta30 + eta12) * (eta30 + eta12) - (eta21 + eta03) * (eta21 + eta03))
-  let h6 = (eta20 - eta02) * ((eta30 + eta12) * (eta30 + eta12) - (eta21 + eta03) * (eta21 + eta03)) + 4.0 * eta11 * (eta30 + eta12) * (eta21 + eta03)
-  let h7 = (3.0 * eta21 - eta03) * (eta30 + eta12) * ((eta30 + eta12) * (eta30 + eta12) - 3.0 * (eta21 + eta03) * (eta21 + eta03)) - (eta30 - 3.0 * eta12) * (eta21 + eta03) * (3.0 * (eta30 + eta12) * (eta30 + eta12) - (eta21 + eta03) * (eta21 + eta03))
+  let h5 = (eta30 - 3.0 * eta12) *
+    (eta30 + eta12) *
+    (
+      (eta30 + eta12) * (eta30 + eta12) -
+      3.0 * (eta21 + eta03) * (eta21 + eta03)
+    ) +
+    (3.0 * eta21 - eta03) *
+    (eta21 + eta03) *
+    (
+      3.0 * (eta30 + eta12) * (eta30 + eta12) -
+      (eta21 + eta03) * (eta21 + eta03)
+    )
+  let h6 = (eta20 - eta02) *
+    ((eta30 + eta12) * (eta30 + eta12) - (eta21 + eta03) * (eta21 + eta03)) +
+    4.0 * eta11 * (eta30 + eta12) * (eta21 + eta03)
+  let h7 = (3.0 * eta21 - eta03) *
+    (eta30 + eta12) *
+    (
+      (eta30 + eta12) * (eta30 + eta12) -
+      3.0 * (eta21 + eta03) * (eta21 + eta03)
+    ) -
+    (eta30 - 3.0 * eta12) *
+    (eta21 + eta03) *
+    (
+      3.0 * (eta30 + eta12) * (eta30 + eta12) -
+      (eta21 + eta03) * (eta21 + eta03)
+    )
   [h1, h2, h3, h4, h5, h6, h7]
 }
 
@@ -200,7 +239,9 @@ pub fn ensemble_predict(
 ) -> ClassificationResult raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("ensemble_predict: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "ensemble_predict: 特征向量不能为空",
+    )
   }
 
   let cfg = match config {
@@ -211,8 +252,8 @@ pub fn ensemble_predict(
   let predictions : Array[(String, Double)] = []
   // KNN 预测
   if cfg.use_knn {
-    let knn_result = try knn_predict(knn_classifier, features) catch { _ =>
-      ClassificationResult::{ label: "?", confidence: 0.0, top_k: [] }
+    let knn_result = knn_predict(knn_classifier, features) catch {
+      _ => ClassificationResult::{ label: "?", confidence: 0.0, top_k: [] }
     }
     predictions.push((knn_result.label, knn_result.confidence))
   }
@@ -220,7 +261,8 @@ pub fn ensemble_predict(
   if cfg.use_template {
     let mut best_label = "?"
     let mut best_dist = 1000000.0
-    for (label, template) in templates {
+    for _tup0 in templates {
+      let (label, template) = _tup0
       let dist = euclidean_distance_ensemble(features, template)
       if dist < best_dist {
         best_dist = dist
@@ -236,20 +278,26 @@ pub fn ensemble_predict(
     if templates.length() > 0 {
       let mut best_label = "?"
       let mut best_dist = 1000000.0
-      for (label, template) in templates {
+      for _tup1 in templates {
+        let (label, template) = _tup1
         let dist = manhattan_distance_ensemble(features, template)
         if dist < best_dist {
           best_dist = dist
           best_label = label
         }
       }
-      let confidence = if best_dist > 0.0 { 1.0 / (1.0 + best_dist) } else { 1.0 }
+      let confidence = if best_dist > 0.0 {
+        1.0 / (1.0 + best_dist)
+      } else {
+        1.0
+      }
       predictions.push((best_label, confidence))
     }
   }
   // 投票
   let label_votes : Array[(String, Double)] = []
-  for (label, conf) in predictions {
+  for _tup2 in predictions {
+    let (label, conf) = _tup2
     let mut found = false
     for i in 0..<label_votes.length() {
       if label_votes[i].0 == label {
@@ -274,19 +322,20 @@ pub fn ensemble_predict(
   // 找得票最多的标签
   let mut best_label = "?"
   let mut best_votes = 0.0
-  for (label, votes) in label_votes {
+  for _tup3 in label_votes {
+    let (label, votes) = _tup3
     if votes > best_votes {
       best_votes = votes
       best_label = label
     }
   }
-  let total_votes = if predictions.length() > 0 { predictions.length().to_double() } else { 1.0 }
-  let confidence = best_votes / total_votes
-  ClassificationResult::{
-    label: best_label,
-    confidence,
-    top_k: predictions,
+  let total_votes = if predictions.length() > 0 {
+    predictions.length().to_double()
+  } else {
+    1.0
   }
+  let confidence = best_votes / total_votes
+  ClassificationResult::{ label: best_label, confidence, top_k: predictions }
 }
 
 ///|
@@ -319,15 +368,22 @@ pub fn extract_combined_ocr_features(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_combined_ocr_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_ocr_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_combined_ocr_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_combined_ocr_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_combined_ocr_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "extract_combined_ocr_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   // 网格特征

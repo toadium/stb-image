@@ -287,7 +287,10 @@ pub fn create_default_transfer_learning_config() -> TransferLearningConfig {
 
 ///|
 /// 简化的权重初始化（使用预训练权重）
-fn init_pretrained_weights(num_layers : Int, layer_size : Int) -> Array[Array[Double]] {
+fn init_pretrained_weights(
+  num_layers : Int,
+  layer_size : Int,
+) -> Array[Array[Double]] {
   let weights : Array[Array[Double]] = []
   let mut state = 42
   for _ in 0..<num_layers {
@@ -500,7 +503,11 @@ pub fn few_shot_learning(
   let prototypes : Array[Array[Double]] = []
   for c in 0..<num_classes {
     let proto : Array[Double] = []
-    let dim = if support_data.length() > 0 { support_data[0].length() } else { 1 }
+    let dim = if support_data.length() > 0 {
+      support_data[0].length()
+    } else {
+      1
+    }
     for d in 0..<dim {
       let mut sum = 0.0
       for s in 0..<config.num_shot {
@@ -584,8 +591,16 @@ pub fn transfer_learning(
   let num_layers = 10
   let layer_size = 64
 
-  let pretrained = load_pretrained_model(config.pretrained_model, num_layers, layer_size)
-  let fine_tuned = fine_tune_model(pretrained.pretrained_weights, config.num_frozen_layers, config)
+  let pretrained = load_pretrained_model(
+    config.pretrained_model,
+    num_layers,
+    layer_size,
+  )
+  let fine_tuned = fine_tune_model(
+    pretrained.pretrained_weights,
+    config.num_frozen_layers,
+    config,
+  )
 
   let source_acc = 0.9
   let target_acc = fine_tuned.test_accuracy
@@ -620,90 +635,115 @@ pub fn transfer_learning_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    TransferLearningTaskType::Pretraining => "预训练"
-    TransferLearningTaskType::FineTuning => "微调"
-    TransferLearningTaskType::FeatureExtraction => "特征提取"
-    TransferLearningTaskType::DomainAdaptation => "域适应"
-    TransferLearningTaskType::MultiTaskLearning => "多任务学习"
-    TransferLearningTaskType::LifelongLearning => "终身学习"
-    TransferLearningTaskType::ZeroShotLearning => "零样本学习"
-    TransferLearningTaskType::FewShotLearning => "少样本学习"
-    TransferLearningTaskType::MetaLearning => "元学习"
-    TransferLearningTaskType::KnowledgeDistillation => "知识蒸馏"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 预训练模型 | " + (match config.pretrained_model {
-    PretrainedModelType::ResNet => "ResNet"
-    PretrainedModelType::VGG => "VGG"
-    PretrainedModelType::Inception => "Inception"
-    PretrainedModelType::EfficientNet => "EfficientNet"
-    PretrainedModelType::VisionTransformer => "Vision Transformer"
-    PretrainedModelType::SwinTransformer => "Swin Transformer"
-    PretrainedModelType::ConvNeXt => "ConvNeXt"
-    PretrainedModelType::MobileNet => "MobileNet"
-    PretrainedModelType::DenseNet => "DenseNet"
-    PretrainedModelType::AlexNet => "AlexNet"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 微调策略 | " + (match config.fine_tuning_strategy {
-    FineTuningStrategyType::FullFineTuning => "全量微调"
-    FineTuningStrategyType::PartialFineTuning => "部分微调"
-    FineTuningStrategyType::LayerWiseFineTuning => "逐层微调"
-    FineTuningStrategyType::DiscriminativeLearningRate => "判别式学习率"
-    FineTuningStrategyType::GradualUnfreezing => "逐步解冻"
-    FineTuningStrategyType::FreezeBackbone => "冻结骨干"
-    FineTuningStrategyType::AdapterTuning => "Adapter微调"
-    FineTuningStrategyType::LoRA => "LoRA"
-    FineTuningStrategyType::PromptTuning => "提示微调"
-    FineTuningStrategyType::PrefixTuning => "前缀微调"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 域适应方法 | " + (match config.domain_adaptation_method {
-    DomainAdaptationMethodType::DANN => "DANN"
-    DomainAdaptationMethodType::CDAN => "CDAN"
-    DomainAdaptationMethodType::MMD => "MMD"
-    DomainAdaptationMethodType::CORAL => "CORAL"
-    DomainAdaptationMethodType::ADDA => "ADDA"
-    DomainAdaptationMethodType::CycleGAN => "CycleGAN"
-    DomainAdaptationMethodType::MCD => "MCD"
-    DomainAdaptationMethodType::M3SDA => "M3SDA"
-    DomainAdaptationMethodType::SHOT => "SHOT"
-    DomainAdaptationMethodType::FixMatch => "FixMatch"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 多任务方法 | " + (match config.multi_task_method {
-    MultiTaskLearningMethodType::HardParameterSharing => "硬参数共享"
-    MultiTaskLearningMethodType::SoftParameterSharing => "软参数共享"
-    MultiTaskLearningMethodType::CrossStitch => "CrossStitch"
-    MultiTaskLearningMethodType::TensorFactorization => "张量分解"
-    MultiTaskLearningMethodType::MMoE => "MMoE"
-    MultiTaskLearningMethodType::PLE => "PLE"
-    MultiTaskLearningMethodType::SharedBottom => "共享底层"
-    MultiTaskLearningMethodType::MultiGateMixtureOfExperts => "多门混合专家"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 少样本方法 | " + (match config.few_shot_method {
-    FewShotLearningMethodType::PrototypicalNetwork => "原型网络"
-    FewShotLearningMethodType::MatchingNetwork => "匹配网络"
-    FewShotLearningMethodType::RelationNetwork => "关系网络"
-    FewShotLearningMethodType::MAML => "MAML"
-    FewShotLearningMethodType::Reptile => "Reptile"
-    FewShotLearningMethodType::MetaSGD => "Meta-SGD"
-    FewShotLearningMethodType::TADAM => "TADAM"
-    FewShotLearningMethodType::FEAT => "FEAT"
-    FewShotLearningMethodType::Baseline => "Baseline"
-    FewShotLearningMethodType::BaselinePlus => "Baseline++"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 冻结层数 | " + config.num_frozen_layers.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      TransferLearningTaskType::Pretraining => "预训练"
+      TransferLearningTaskType::FineTuning => "微调"
+      TransferLearningTaskType::FeatureExtraction => "特征提取"
+      TransferLearningTaskType::DomainAdaptation => "域适应"
+      TransferLearningTaskType::MultiTaskLearning => "多任务学习"
+      TransferLearningTaskType::LifelongLearning => "终身学习"
+      TransferLearningTaskType::ZeroShotLearning => "零样本学习"
+      TransferLearningTaskType::FewShotLearning => "少样本学习"
+      TransferLearningTaskType::MetaLearning => "元学习"
+      TransferLearningTaskType::KnowledgeDistillation => "知识蒸馏"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 预训练模型 | " +
+    (match config.pretrained_model {
+      PretrainedModelType::ResNet => "ResNet"
+      PretrainedModelType::VGG => "VGG"
+      PretrainedModelType::Inception => "Inception"
+      PretrainedModelType::EfficientNet => "EfficientNet"
+      PretrainedModelType::VisionTransformer => "Vision Transformer"
+      PretrainedModelType::SwinTransformer => "Swin Transformer"
+      PretrainedModelType::ConvNeXt => "ConvNeXt"
+      PretrainedModelType::MobileNet => "MobileNet"
+      PretrainedModelType::DenseNet => "DenseNet"
+      PretrainedModelType::AlexNet => "AlexNet"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 微调策略 | " +
+    (match config.fine_tuning_strategy {
+      FineTuningStrategyType::FullFineTuning => "全量微调"
+      FineTuningStrategyType::PartialFineTuning => "部分微调"
+      FineTuningStrategyType::LayerWiseFineTuning => "逐层微调"
+      FineTuningStrategyType::DiscriminativeLearningRate => "判别式学习率"
+      FineTuningStrategyType::GradualUnfreezing => "逐步解冻"
+      FineTuningStrategyType::FreezeBackbone => "冻结骨干"
+      FineTuningStrategyType::AdapterTuning => "Adapter微调"
+      FineTuningStrategyType::LoRA => "LoRA"
+      FineTuningStrategyType::PromptTuning => "提示微调"
+      FineTuningStrategyType::PrefixTuning => "前缀微调"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 域适应方法 | " +
+    (match config.domain_adaptation_method {
+      DomainAdaptationMethodType::DANN => "DANN"
+      DomainAdaptationMethodType::CDAN => "CDAN"
+      DomainAdaptationMethodType::MMD => "MMD"
+      DomainAdaptationMethodType::CORAL => "CORAL"
+      DomainAdaptationMethodType::ADDA => "ADDA"
+      DomainAdaptationMethodType::CycleGAN => "CycleGAN"
+      DomainAdaptationMethodType::MCD => "MCD"
+      DomainAdaptationMethodType::M3SDA => "M3SDA"
+      DomainAdaptationMethodType::SHOT => "SHOT"
+      DomainAdaptationMethodType::FixMatch => "FixMatch"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 多任务方法 | " +
+    (match config.multi_task_method {
+      MultiTaskLearningMethodType::HardParameterSharing => "硬参数共享"
+      MultiTaskLearningMethodType::SoftParameterSharing => "软参数共享"
+      MultiTaskLearningMethodType::CrossStitch => "CrossStitch"
+      MultiTaskLearningMethodType::TensorFactorization => "张量分解"
+      MultiTaskLearningMethodType::MMoE => "MMoE"
+      MultiTaskLearningMethodType::PLE => "PLE"
+      MultiTaskLearningMethodType::SharedBottom => "共享底层"
+      MultiTaskLearningMethodType::MultiGateMixtureOfExperts =>
+        "多门混合专家"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 少样本方法 | " +
+    (match config.few_shot_method {
+      FewShotLearningMethodType::PrototypicalNetwork => "原型网络"
+      FewShotLearningMethodType::MatchingNetwork => "匹配网络"
+      FewShotLearningMethodType::RelationNetwork => "关系网络"
+      FewShotLearningMethodType::MAML => "MAML"
+      FewShotLearningMethodType::Reptile => "Reptile"
+      FewShotLearningMethodType::MetaSGD => "Meta-SGD"
+      FewShotLearningMethodType::TADAM => "TADAM"
+      FewShotLearningMethodType::FEAT => "FEAT"
+      FewShotLearningMethodType::Baseline => "Baseline"
+      FewShotLearningMethodType::BaselinePlus => "Baseline++"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 冻结层数 | " +
+    config.num_frozen_layers.to_string() +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 训练轮数 | " + config.num_epochs.to_string() + " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"
   report = report + "| 温度 | " + config.temperature.to_string() + " |\n"
   report = report + "| N-way | " + config.num_way.to_string() + " |\n"
   report = report + "| K-shot | " + config.num_shot.to_string() + " |\n"
-  report = report + "| 使用预训练 | " + (if config.use_pretrained { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 使用预训练 | " +
+    (if config.use_pretrained { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

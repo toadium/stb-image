@@ -221,7 +221,11 @@ pub fn create_default_clustering_config() -> ImageClusteringConfig {
 /// 简化的欧氏距离
 fn euclidean_distance_cl(v1 : Array[Double], v2 : Array[Double]) -> Double {
   let mut sum = 0.0
-  let min_len = if v1.length() < v2.length() { v1.length() } else { v2.length() }
+  let min_len = if v1.length() < v2.length() {
+    v1.length()
+  } else {
+    v2.length()
+  }
   for i in 0..<min_len {
     let diff = v1[i] - v2[i]
     sum += diff * diff
@@ -288,8 +292,12 @@ pub fn kmeans_clustering(
     // 更新质心
     for c in 0..<num_clusters {
       let new_centroid : Array[Double] = []
-      let dim = if centroids[c].length() > 0 { centroids[c].length() } else { 1 }
-      for d in 0..<dim {
+      let dim = if centroids[c].length() > 0 {
+        centroids[c].length()
+      } else {
+        1
+      }
+      for _ in 0..<dim {
         new_centroid.push(0.0)
       }
       let mut count = 0
@@ -626,7 +634,11 @@ pub fn cluster_images(
     for v in img {
       sum += v
     }
-    let avg = if img.length() > 0 { sum / img.length().to_double() } else { 0.0 }
+    let avg = if img.length() > 0 {
+      sum / img.length().to_double()
+    } else {
+      0.0
+    }
     feature.push(avg)
     features.push(feature)
   }
@@ -672,60 +684,81 @@ pub fn image_clustering_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageClusteringTaskType::KMeansClustering => "K-Means聚类"
-    ImageClusteringTaskType::HierarchicalClustering => "层次聚类"
-    ImageClusteringTaskType::DBSCANClustering => "DBSCAN聚类"
-    ImageClusteringTaskType::SpectralClustering => "谱聚类"
-    ImageClusteringTaskType::GaussianMixtureModel => "高斯混合模型"
-    ImageClusteringTaskType::FuzzyCMeans => "模糊C均值"
-    ImageClusteringTaskType::DensityClustering => "密度聚类"
-    ImageClusteringTaskType::SubspaceClustering => "子空间聚类"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 聚类算法 | " + (match config.algorithm_type {
-    ClusteringAlgorithmType::KMeans => "K-Means"
-    ClusteringAlgorithmType::KMedoids => "K-Medoids"
-    ClusteringAlgorithmType::Hierarchical => "层次聚类"
-    ClusteringAlgorithmType::DBSCAN => "DBSCAN"
-    ClusteringAlgorithmType::HDBSCAN => "HDBSCAN"
-    ClusteringAlgorithmType::Spectral => "谱聚类"
-    ClusteringAlgorithmType::GMM => "GMM"
-    ClusteringAlgorithmType::FuzzyCMeans => "模糊C均值"
-    ClusteringAlgorithmType::MeanShift => "Mean Shift"
-    ClusteringAlgorithmType::AffinityPropagation => "亲和传播"
-    ClusteringAlgorithmType::BIRCH => "BIRCH"
-    ClusteringAlgorithmType::OPTICS => "OPTICS"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageClusteringTaskType::KMeansClustering => "K-Means聚类"
+      ImageClusteringTaskType::HierarchicalClustering => "层次聚类"
+      ImageClusteringTaskType::DBSCANClustering => "DBSCAN聚类"
+      ImageClusteringTaskType::SpectralClustering => "谱聚类"
+      ImageClusteringTaskType::GaussianMixtureModel => "高斯混合模型"
+      ImageClusteringTaskType::FuzzyCMeans => "模糊C均值"
+      ImageClusteringTaskType::DensityClustering => "密度聚类"
+      ImageClusteringTaskType::SubspaceClustering => "子空间聚类"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 聚类算法 | " +
+    (match config.algorithm_type {
+      ClusteringAlgorithmType::KMeans => "K-Means"
+      ClusteringAlgorithmType::KMedoids => "K-Medoids"
+      ClusteringAlgorithmType::Hierarchical => "层次聚类"
+      ClusteringAlgorithmType::DBSCAN => "DBSCAN"
+      ClusteringAlgorithmType::HDBSCAN => "HDBSCAN"
+      ClusteringAlgorithmType::Spectral => "谱聚类"
+      ClusteringAlgorithmType::GMM => "GMM"
+      ClusteringAlgorithmType::FuzzyCMeans => "模糊C均值"
+      ClusteringAlgorithmType::MeanShift => "Mean Shift"
+      ClusteringAlgorithmType::AffinityPropagation => "亲和传播"
+      ClusteringAlgorithmType::BIRCH => "BIRCH"
+      ClusteringAlgorithmType::OPTICS => "OPTICS"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 簇数量 | " + config.num_clusters.to_string() + " |\n"
-  report = report + "| 距离度量 | " + (match config.distance_metric {
-    DistanceMetricType::Euclidean => "欧氏距离"
-    DistanceMetricType::Manhattan => "曼哈顿距离"
-    DistanceMetricType::Cosine => "余弦相似度"
-    DistanceMetricType::Chebyshev => "切比雪夫距离"
-    DistanceMetricType::Minkowski => "闵可夫斯基距离"
-    DistanceMetricType::Hamming => "汉明距离"
-    DistanceMetricType::Mahalanobis => "马氏距离"
-    DistanceMetricType::Correlation => "相关距离"
-    DistanceMetricType::BrayCurtis => "Bray-Curtis距离"
-    DistanceMetricType::Canberra => "Canberra距离"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 最大迭代次数 | " + config.max_iterations.to_string() + " |\n"
+  report = report +
+    "| 距离度量 | " +
+    (match config.distance_metric {
+      DistanceMetricType::Euclidean => "欧氏距离"
+      DistanceMetricType::Manhattan => "曼哈顿距离"
+      DistanceMetricType::Cosine => "余弦相似度"
+      DistanceMetricType::Chebyshev => "切比雪夫距离"
+      DistanceMetricType::Minkowski => "闵可夫斯基距离"
+      DistanceMetricType::Hamming => "汉明距离"
+      DistanceMetricType::Mahalanobis => "马氏距离"
+      DistanceMetricType::Correlation => "相关距离"
+      DistanceMetricType::BrayCurtis => "Bray-Curtis距离"
+      DistanceMetricType::Canberra => "Canberra距离"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 最大迭代次数 | " +
+    config.max_iterations.to_string() +
+    " |\n"
   report = report + "| 收敛阈值 | " + config.tolerance.to_string() + " |\n"
   report = report + "| DBSCAN eps | " + config.eps.to_string() + " |\n"
-  report = report + "| DBSCAN min_samples | " + config.min_samples.to_string() + " |\n"
-  report = report + "| 链接类型 | " + (match config.linkage_type {
-    LinkageType::Single => "单链接"
-    LinkageType::Complete => "全链接"
-    LinkageType::Average => "平均链接"
-    LinkageType::Ward => "Ward链接"
-    LinkageType::Centroid => "质心链接"
-    LinkageType::Median => "中位数链接"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 模糊参数 | " + config.fuzziness_parameter.to_string() + " |\n"
+  report = report +
+    "| DBSCAN min_samples | " +
+    config.min_samples.to_string() +
+    " |\n"
+  report = report +
+    "| 链接类型 | " +
+    (match config.linkage_type {
+      LinkageType::Single => "单链接"
+      LinkageType::Complete => "全链接"
+      LinkageType::Average => "平均链接"
+      LinkageType::Ward => "Ward链接"
+      LinkageType::Centroid => "质心链接"
+      LinkageType::Median => "中位数链接"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 模糊参数 | " +
+    config.fuzziness_parameter.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

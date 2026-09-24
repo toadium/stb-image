@@ -67,80 +67,79 @@ fn generate_single_digit_template(digit : Int) -> Array[Double] {
   match digit {
     0 => {
       // 0: 上、上左、上右、下左、下右、下（缺中）
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 4, 0, 1, 3)  // 下左
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 4, 0, 1, 3) // 下左
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
-    1 => {
+    1 =>
       // 1: 上右、下右
-      set_segment(features, size, 0, 6, 1, 7)  // 右
-    }
+      set_segment(features, size, 0, 6, 1, 7) // 右
     2 => {
       // 2: 上、上右、中、下左、下
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 0, 1, 3)  // 下左
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 0, 1, 3) // 下左
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     3 => {
       // 3: 上、上右、中、下右、下
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     4 => {
       // 4: 上左、上右、中、下右
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 6, 1, 3) // 下右
     }
     5 => {
       // 5: 上、上左、中、下右、下
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     6 => {
       // 6: 上、上左、中、下左、下右、下
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 0, 1, 3)  // 下左
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 0, 1, 3) // 下左
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     7 => {
       // 7: 上、上右、下右
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 6, 1, 6)  // 右
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 6, 1, 6) // 右
     }
     8 => {
       // 8: 全部段
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 0, 1, 3)  // 下左
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 0, 1, 3) // 下左
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     9 => {
       // 9: 上、上左、上右、中、下右、下
-      set_segment(features, size, 0, 1, 6, 1)  // 上
-      set_segment(features, size, 1, 0, 1, 3)  // 上左
-      set_segment(features, size, 1, 6, 1, 3)  // 上右
-      set_segment(features, size, 3, 1, 6, 1)  // 中
-      set_segment(features, size, 4, 6, 1, 3)  // 下右
-      set_segment(features, size, 6, 1, 6, 1)  // 下
+      set_segment(features, size, 0, 1, 6, 1) // 上
+      set_segment(features, size, 1, 0, 1, 3) // 上左
+      set_segment(features, size, 1, 6, 1, 3) // 上右
+      set_segment(features, size, 3, 1, 6, 1) // 中
+      set_segment(features, size, 4, 6, 1, 3) // 下右
+      set_segment(features, size, 6, 1, 6, 1) // 下
     }
     _ => ignore(())
   }
@@ -177,15 +176,22 @@ pub fn recognize_digits(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_digits: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_digits: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("recognize_digits: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_digits: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_digits: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_digits: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -195,13 +201,19 @@ pub fn recognize_digits(
   }
   // 配置验证
   if cfg.min_char_width <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_digits: min_char_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_digits: min_char_width必须大于0",
+    )
   }
   if cfg.max_char_width < cfg.min_char_width {
-    raise @types.LoadError::DecodeFailed("recognize_digits: max_char_width不能小于min_char_width")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_digits: max_char_width不能小于min_char_width",
+    )
   }
   if cfg.target_size <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_digits: target_size必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_digits: target_size必须大于0",
+    )
   }
   if cfg.k <= 0 {
     raise @types.LoadError::DecodeFailed("recognize_digits: k必须大于0")
@@ -220,9 +232,17 @@ pub fn recognize_digits(
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup0 in char_regions {
+    let (x, y, w, h) = _tup0
     // 提取字符图像
-    let char_img = extract_char_region(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_char_region(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 提取特征（网格特征）
     let features = extract_char_features(char_img, 8)
     // 模板匹配
@@ -243,11 +263,7 @@ pub fn recognize_digits(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -267,7 +283,12 @@ fn extract_char_region(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   // 缩放到目标尺寸（保持宽高比，居中）
   let scale = if crop_w > crop_h {
@@ -284,14 +305,20 @@ fn extract_char_region(
   // 最近邻缩放
   for py in 0..<new_h {
     for px in 0..<new_w {
-      let src_x = x + (px * crop_w / new_w)
-      let src_y = y + (py * crop_h / new_h)
+      let src_x = x + px * crop_w / new_w
+      let src_y = y + py * crop_h / new_h
       if src_x < w && src_y < h {
-        out[(offset_y + py) * target_size + (offset_x + px)] = data[src_y * w + src_x]
+        out[(offset_y + py) * target_size + (offset_x + px)] = data[src_y * w +
+          src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -322,7 +349,11 @@ fn extract_char_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -338,7 +369,8 @@ fn match_template(
 ) -> (String, Double) {
   let mut best_label = "?"
   let mut best_dist = 1000000.0
-  for (label, template) in templates {
+  for _tup1 in templates {
+    let (label, template) = _tup1
     let dist = match distance_metric {
       "manhattan" => manhattan_distance_local(features, template)
       "cosine" => cosine_distance_local(features, template)
@@ -399,5 +431,9 @@ fn cosine_distance_local(a : Array[Double], b : Array[Double]) -> Double {
 ///|
 /// 辅助函数：最大值
 fn max_ocr(a : Int, b : Int) -> Int {
-  if a > b { a } else { b }
+  if a > b {
+    a
+  } else {
+    b
+  }
 }

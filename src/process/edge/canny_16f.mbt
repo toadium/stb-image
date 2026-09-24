@@ -3,15 +3,18 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_c(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn write_u16_le_c(buf : Array[Byte], offset : Int, val : Int) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
+///|
 fn read_float_le_c(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -21,6 +24,7 @@ fn read_float_le_c(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn write_f32_le_c(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
@@ -29,11 +33,20 @@ fn write_f32_le_c(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   buf[offset + 3] = ((bits >> 24) & 0xFF).to_byte()
 }
 
+///|
 fn clamp_int_c(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
 // 5x5 高斯模糊 (sigma=1.0)
+
+///|
 fn canny_gaussian_blur_16(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
   let n = w * h
   let out : Array[Int] = Array::make(n, 0)
@@ -59,7 +72,9 @@ fn canny_gaussian_blur_16(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
   for y in 0..<h {
     let y_inner = y >= 2 && y < h - 2
     for x in 0..<w {
-      if y_inner && x >= 2 && x < w - 2 { continue }
+      if y_inner && x >= 2 && x < w - 2 {
+        continue
+      }
       let mut sum = 0
       for ky in 0..<5 {
         for kx in 0..<5 {
@@ -85,22 +100,33 @@ pub fn canny_edge_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("canny_edge_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("canny_edge_16: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_16: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "canny_edge_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "canny_edge_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if low_threshold < 0 || low_threshold > 65535 {
-    raise @types.LoadError::DecodeFailed("low_threshold 必须在 0..65535 之间")
+    raise @types.LoadError::DecodeFailed(
+      "low_threshold 必须在 0..65535 之间",
+    )
   }
   if high_threshold < 0 || high_threshold > 65535 {
-    raise @types.LoadError::DecodeFailed("high_threshold 必须在 0..65535 之间")
+    raise @types.LoadError::DecodeFailed(
+      "high_threshold 必须在 0..65535 之间",
+    )
   }
   if low_threshold > high_threshold {
     raise @types.LoadError::DecodeFailed("low_threshold 应 <= high_threshold")
@@ -168,7 +194,9 @@ pub fn canny_edge_16(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       let mag = gradient[idx]
-      if mag == 0 { continue }
+      if mag == 0 {
+        continue
+      }
       let dir = direction[idx]
       let (n1, n2) = match dir {
         0 => (gradient[idx - 1], gradient[idx + 1])
@@ -205,7 +233,9 @@ pub fn canny_edge_16(
     let y = idx / w
     for dy in -1..<=1 {
       for dx in -1..<=1 {
-        if dx == 0 && dy == 0 { continue }
+        if dx == 0 && dy == 0 {
+          continue
+        }
         let nx = x + dx
         let ny = y + dy
         if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -219,7 +249,12 @@ pub fn canny_edge_16(
       }
     }
   }
-  @types.Image16::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== float Canny ==========
@@ -233,22 +268,33 @@ pub fn canny_edge_f(
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("canny_edge_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("canny_edge_f: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "canny_edge_f: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "canny_edge_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "canny_edge_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if low_threshold < 0.0F || low_threshold > 1.0F {
-    raise @types.LoadError::DecodeFailed("low_threshold 必须在 0.0..1.0 之间")
+    raise @types.LoadError::DecodeFailed(
+      "low_threshold 必须在 0.0..1.0 之间",
+    )
   }
   if high_threshold < 0.0F || high_threshold > 1.0F {
-    raise @types.LoadError::DecodeFailed("high_threshold 必须在 0.0..1.0 之间")
+    raise @types.LoadError::DecodeFailed(
+      "high_threshold 必须在 0.0..1.0 之间",
+    )
   }
   if low_threshold > high_threshold {
     raise @types.LoadError::DecodeFailed("low_threshold 应 <= high_threshold")
@@ -276,11 +322,8 @@ pub fn canny_edge_f(
   // 1. 高斯模糊 (5x5, sigma=1.0)
   let blurred : Array[Float] = Array::make(n, 0.0F)
   let kernel : Array[Float] = [
-    2.0F, 4.0F, 5.0F, 4.0F, 2.0F,
-    4.0F, 9.0F, 12.0F, 9.0F, 4.0F,
-    5.0F, 12.0F, 15.0F, 12.0F, 5.0F,
-    4.0F, 9.0F, 12.0F, 9.0F, 4.0F,
-    2.0F, 4.0F, 5.0F, 4.0F, 2.0F,
+    2.0F, 4.0F, 5.0F, 4.0F, 2.0F, 4.0F, 9.0F, 12.0F, 9.0F, 4.0F, 5.0F, 12.0F, 15.0F,
+    12.0F, 5.0F, 4.0F, 9.0F, 12.0F, 9.0F, 4.0F, 2.0F, 4.0F, 5.0F, 4.0F, 2.0F,
   ]
   let kernel_sum = 159.0F
   for y in 2..<(h - 2) {
@@ -300,7 +343,9 @@ pub fn canny_edge_f(
   for y in 0..<h {
     let y_inner = y >= 2 && y < h - 2
     for x in 0..<w {
-      if y_inner && x >= 2 && x < w - 2 { continue }
+      if y_inner && x >= 2 && x < w - 2 {
+        continue
+      }
       let mut sum = 0.0F
       for ky in 0..<5 {
         for kx in 0..<5 {
@@ -351,7 +396,9 @@ pub fn canny_edge_f(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       let mag = gradient[idx]
-      if mag == 0.0F { continue }
+      if mag == 0.0F {
+        continue
+      }
       let dir = direction[idx]
       let (n1, n2) = match dir {
         0 => (gradient[idx - 1], gradient[idx + 1])
@@ -388,7 +435,9 @@ pub fn canny_edge_f(
     let y = idx / w
     for dy in -1..<=1 {
       for dx in -1..<=1 {
-        if dx == 0 && dy == 0 { continue }
+        if dx == 0 && dy == 0 {
+          continue
+        }
         let nx = x + dx
         let ny = y + dy
         if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -402,5 +451,10 @@ pub fn canny_edge_f(
       }
     }
   }
-  @types.ImageF::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }

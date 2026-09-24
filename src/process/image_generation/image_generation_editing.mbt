@@ -134,10 +134,7 @@ pub fn create_default_editing_config() -> EditingConfig {
 
 ///|
 /// 生成随机潜空间向量
-pub fn generate_random_latent(
-  dimension : Int,
-  seed : Int,
-) -> LatentVector {
+pub fn generate_random_latent(dimension : Int, seed : Int) -> LatentVector {
   let vector : Array[Double] = []
   let mut state = seed
 
@@ -156,12 +153,7 @@ pub fn generate_random_latent(
   }
   let norm = if norm_sq > 0.0 { norm_sq.sqrt() } else { 1.0 }
 
-  LatentVector::{
-    vector,
-    dimension,
-    norm,
-    is_normalized: false,
-  }
+  LatentVector::{ vector, dimension, norm, is_normalized: false }
 }
 
 ///|
@@ -172,7 +164,7 @@ pub fn generate_from_latent(
 ) -> GenerationResult {
   let w = config.width
   let h = config.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   // 简化版：使用潜空间向量生成程序化图像
@@ -188,8 +180,10 @@ pub fn generate_from_latent(
       let ny = y.to_double() / h.to_double()
 
       // 简化的程序化生成：正弦波 + 潜向量调制
-      let phase1 = nx * 6.28 + latent.vector[(latent_idx + 1) % latent.dimension] * 3.14
-      let phase2 = ny * 6.28 + latent.vector[(latent_idx + 2) % latent.dimension] * 3.14
+      let phase1 = nx * 6.28 +
+        latent.vector[(latent_idx + 1) % latent.dimension] * 3.14
+      let phase2 = ny * 6.28 +
+        latent.vector[(latent_idx + 2) % latent.dimension] * 3.14
       // 简化的正弦近似
       let sin1 = phase1 - phase1 * phase1 * phase1 / 6.0
       let sin2 = phase2 - phase2 * phase2 * phase2 / 6.0
@@ -198,12 +192,23 @@ pub fn generate_from_latent(
         sin1 * 30.0 +
         sin2 * 30.0
 
-      let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      let clamped = if value < 0.0 {
+        0.0
+      } else if value > 255.0 {
+        255.0
+      } else {
+        value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  let image = @types.Image::{ width: w, height: h, channels: config.channels, data: Bytes::from_array(out) }
+  let image = @types.Image::{
+    width: w,
+    height: h,
+    channels: config.channels,
+    data: Bytes::from_array(out),
+  }
 
   GenerationResult::{
     image,
@@ -218,9 +223,7 @@ pub fn generate_from_latent(
 
 ///|
 /// 生成随机图像
-pub fn generate_random_image(
-  config : GenerationConfig,
-) -> GenerationResult {
+pub fn generate_random_image(config : GenerationConfig) -> GenerationResult {
   let latent = generate_random_latent(512, config.seed)
   generate_from_latent(latent, config)
 }
@@ -266,7 +269,12 @@ pub fn inpaint_image(
     }
   }
 
-  let result_image = @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  let result_image = @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 
   EditingResult::{
     image: result_image,
@@ -289,7 +297,7 @@ pub fn outpaint_image(
 ) -> EditingResult {
   let w = img.width
   let h = img.height
-  let total = new_width * new_height
+  let _ = new_width * new_height
   let out : Array[Byte] = []
 
   let offset_x = (new_width - w) / 2
@@ -303,15 +311,37 @@ pub fn outpaint_image(
         out.push(img.data[src_y * w + src_x])
       } else {
         // 外扩区域：使用边缘像素扩展
-        let edge_x = if src_x < 0 { 0 } else if src_x >= w { w - 1 } else { src_x }
-        let edge_y = if src_y < 0 { 0 } else if src_y >= h { h - 1 } else { src_y }
+        let edge_x = if src_x < 0 {
+          0
+        } else if src_x >= w {
+          w - 1
+        } else {
+          src_x
+        }
+        let edge_y = if src_y < 0 {
+          0
+        } else if src_y >= h {
+          h - 1
+        } else {
+          src_y
+        }
         out.push(img.data[edge_y * w + edge_x])
       }
     }
   }
 
-  let result_image = @types.Image::{ width: new_width, height: new_height, channels: img.channels, data: Bytes::from_array(out) }
-  let mask = @types.Image::{ width: new_width, height: new_height, channels: 1, data: Bytes::make(new_width * new_height, b'\xFF') }
+  let result_image = @types.Image::{
+    width: new_width,
+    height: new_height,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
+  let mask = @types.Image::{
+    width: new_width,
+    height: new_height,
+    channels: 1,
+    data: Bytes::make(new_width * new_height, b'\xFF'),
+  }
 
   EditingResult::{
     image: result_image,
@@ -371,8 +401,18 @@ pub fn colorize_image(
     out.push(final_b.to_int().to_byte())
   }
 
-  let result_image = @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out) }
-  let mask = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::make(total, b'\xFF') }
+  let result_image = @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out),
+  }
+  let mask = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::make(total, b'\xFF'),
+  }
 
   EditingResult::{
     image: result_image,
@@ -406,11 +446,22 @@ pub fn compose_images(
     // Alpha 混合
     let alpha = mask_value * config.opacity
     let value = bg * (1.0 - alpha) + fg * alpha
-    let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+    let clamped = if value < 0.0 {
+      0.0
+    } else if value > 255.0 {
+      255.0
+    } else {
+      value
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: background.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: background.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -421,7 +472,7 @@ pub fn remove_background(
 ) -> EditingResult {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let mask : Array[Byte] = []
 
@@ -452,8 +503,18 @@ pub fn remove_background(
     }
   }
 
-  let result_image = @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
-  let mask_image = @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(mask) }
+  let result_image = @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
+  let mask_image = @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(mask),
+  }
 
   EditingResult::{
     image: result_image,
@@ -486,34 +547,83 @@ pub fn edit_image(
 
 ///|
 /// 生成图像报告
-pub fn generation_report_to_string(
-  result : GenerationResult,
-) -> String {
+pub fn generation_report_to_string(result : GenerationResult) -> String {
   let mut report = "## 图像生成报告\n\n"
   report = report + "### 生成信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (if result.algorithm == ImageGenerationAlgorithm::GAN { "GAN" } else if result.algorithm == ImageGenerationAlgorithm::StyleGAN { "StyleGAN" } else if result.algorithm == ImageGenerationAlgorithm::CycleGAN { "CycleGAN" } else if result.algorithm == ImageGenerationAlgorithm::DiffusionModel { "扩散模型" } else if result.algorithm == ImageGenerationAlgorithm::VAE { "VAE" } else { "未知" }) + " |\n"
+  report = report +
+    "| 算法 | " +
+    (if result.algorithm == ImageGenerationAlgorithm::GAN {
+      "GAN"
+    } else if result.algorithm == ImageGenerationAlgorithm::StyleGAN {
+      "StyleGAN"
+    } else if result.algorithm == ImageGenerationAlgorithm::CycleGAN {
+      "CycleGAN"
+    } else if result.algorithm == ImageGenerationAlgorithm::DiffusionModel {
+      "扩散模型"
+    } else if result.algorithm == ImageGenerationAlgorithm::VAE {
+      "VAE"
+    } else {
+      "未知"
+    }) +
+    " |\n"
   report = report + "| 随机种子 | " + result.seed.to_string() + " |\n"
-  report = report + "| 潜空间维度 | " + result.latent_vector.length().to_string() + " |\n"
-  report = report + "| 生成时间 | " + result.generation_time_ms.to_string() + " ms |\n"
-  report = report + "| 质量评分 | " + (result.quality_score * 100.0).to_string() + "% |\n"
-  report = report + "| 多样性评分 | " + (result.diversity_score * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 潜空间维度 | " +
+    result.latent_vector.length().to_string() +
+    " |\n"
+  report = report +
+    "| 生成时间 | " +
+    result.generation_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 质量评分 | " +
+    (result.quality_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 多样性评分 | " +
+    (result.diversity_score * 100.0).to_string() +
+    "% |\n"
 
   report
 }
 
 ///|
 /// 生成编辑报告
-pub fn editing_report_to_string(
-  result : EditingResult,
-) -> String {
+pub fn editing_report_to_string(result : EditingResult) -> String {
   let mut report = "## 图像编辑报告\n\n"
   report = report + "### 编辑信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (if result.algorithm == ImageEditingAlgorithm::Inpainting { "图像修复" } else if result.algorithm == ImageEditingAlgorithm::Outpainting { "图像外扩" } else if result.algorithm == ImageEditingAlgorithm::Colorization { "图像上色" } else if result.algorithm == ImageEditingAlgorithm::StyleTransfer { "风格迁移" } else if result.algorithm == ImageEditingAlgorithm::BackgroundRemoval { "背景移除" } else if result.algorithm == ImageEditingAlgorithm::ObjectRemoval { "物体移除" } else { "未知" }) + " |\n"
-  report = report + "| 编辑时间 | " + result.editing_time_ms.to_string() + " ms |\n"
-  report = report + "| 质量评分 | " + (result.quality_score * 100.0).to_string() + "% |\n"
-  report = report + "| 一致性评分 | " + (result.consistency_score * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 算法 | " +
+    (if result.algorithm == ImageEditingAlgorithm::Inpainting {
+      "图像修复"
+    } else if result.algorithm == ImageEditingAlgorithm::Outpainting {
+      "图像外扩"
+    } else if result.algorithm == ImageEditingAlgorithm::Colorization {
+      "图像上色"
+    } else if result.algorithm == ImageEditingAlgorithm::StyleTransfer {
+      "风格迁移"
+    } else if result.algorithm == ImageEditingAlgorithm::BackgroundRemoval {
+      "背景移除"
+    } else if result.algorithm == ImageEditingAlgorithm::ObjectRemoval {
+      "物体移除"
+    } else {
+      "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 编辑时间 | " +
+    result.editing_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 质量评分 | " +
+    (result.quality_score * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 一致性评分 | " +
+    (result.consistency_score * 100.0).to_string() +
+    "% |\n"
 
   report
 }

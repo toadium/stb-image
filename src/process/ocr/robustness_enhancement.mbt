@@ -4,37 +4,37 @@
 ///|
 /// 扫描质量等级
 pub(all) enum ScanQualityLevel {
-  Excellent   // 优秀：可直接识别
-  Good        // 良好：轻微预处理即可
-  Fair        // 一般：需要增强处理
-  Poor        // 较差：需要重度预处理
-  VeryPoor    // 很差：可能无法识别
+  Excellent // 优秀：可直接识别
+  Good // 良好：轻微预处理即可
+  Fair // 一般：需要增强处理
+  Poor // 较差：需要重度预处理
+  VeryPoor // 很差：可能无法识别
 } derive(Eq)
 
 ///|
 /// 自适应预处理配置
 pub(all) struct AdaptivePreprocessConfig {
   quality_level : ScanQualityLevel
-  denoise_strength : Int      // 去噪强度 0-5
-  contrast_enhance : Double   // 对比度增强倍数 1.0-3.0
+  denoise_strength : Int // 去噪强度 0-5
+  contrast_enhance : Double // 对比度增强倍数 1.0-3.0
   binarization_method : String // "otsu" / "adaptive" / "sauvola"
-  deskew_enabled : Bool       // 是否启用倾斜校正
-  sharpen_enabled : Bool      // 是否启用锐化
-  morph_open_enabled : Bool   // 是否启用形态学开运算
-  morph_close_enabled : Bool  // 是否启用形态学闭运算
-  recommended_dpi : Int       // 推荐 DPI
+  deskew_enabled : Bool // 是否启用倾斜校正
+  sharpen_enabled : Bool // 是否启用锐化
+  morph_open_enabled : Bool // 是否启用形态学开运算
+  morph_close_enabled : Bool // 是否启用形态学闭运算
+  recommended_dpi : Int // 推荐 DPI
 }
 
 ///|
 /// 畸变类型
 pub(all) enum DistortionType {
-  Skew            // 倾斜
-  Perspective     // 透视畸变
-  Barrel          // 桶形畸变
-  Pincushion      // 枕形畸变
-  UnevenLighting  // 光照不均
-  Blur            // 模糊
-  Noise           // 噪声
+  Skew // 倾斜
+  Perspective // 透视畸变
+  Barrel // 桶形畸变
+  Pincushion // 枕形畸变
+  UnevenLighting // 光照不均
+  Blur // 模糊
+  Noise // 噪声
   Unknown
 } derive(Eq)
 
@@ -42,8 +42,8 @@ pub(all) enum DistortionType {
 /// 畸变检测结果
 pub(all) struct DistortionDetectionResult {
   distortion_type : DistortionType
-  severity : Double  // 0.0-1.0
-  angle : Double     // 倾斜角度（度）
+  severity : Double // 0.0-1.0
+  angle : Double // 倾斜角度（度）
   confidence : Double
   correction_params : Array[(String, Double)]
 }
@@ -93,7 +93,9 @@ pub fn select_adaptive_config(
 ) -> AdaptivePreprocessConfig raise @types.LoadError {
   // 输入验证
   if quality.overall_score < 0.0 || quality.overall_score > 100.0 {
-    raise @types.LoadError::DecodeFailed("select_adaptive_config: 质量评分必须在0-100之间")
+    raise @types.LoadError::DecodeFailed(
+      "select_adaptive_config: 质量评分必须在0-100之间",
+    )
   }
   let score = quality.overall_score
   if score >= 90.0 {
@@ -166,15 +168,22 @@ pub fn detect_skew_angle_robust(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_skew_angle_robust: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle_robust: 图像尺寸必须大于0",
+    )
   }
   if binary_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_skew_angle_robust: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_skew_angle_robust: 仅支持单通道二值图",
+    )
   }
   let expected_size = binary_img.width * binary_img.height
   if binary_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_skew_angle_robust: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+      "detect_skew_angle_robust: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      binary_img.data.length().to_string(),
     )
   }
   let w = binary_img.width
@@ -204,8 +213,8 @@ pub fn detect_skew_angle_robust(
     return 0.0
   }
   // 线性回归计算倾斜角度
-  let mean_x = total_x.to_double() / count.to_double()
-  let mean_y = total_y.to_double() / count.to_double()
+  let _ = total_x.to_double() / count.to_double()
+  let _ = total_y.to_double() / count.to_double()
   let mut numerator = 0.0
   let mut denominator = 0.0
   // 简化：用首尾两行的重心差计算角度
@@ -235,9 +244,16 @@ pub fn detect_skew_angle_robust(
     }
   }
   if last_y - first_y > 0 {
-    let angle_rad = (last_x - first_x).to_double() / (last_y - first_y).to_double()
-    let angle_deg = angle_rad * 57.2958  // rad to deg
-    if angle_deg > 45.0 { 90.0 - angle_deg } else if angle_deg < -45.0 { -90.0 - angle_deg } else { angle_deg }
+    let angle_rad = (last_x - first_x).to_double() /
+      (last_y - first_y).to_double()
+    let angle_deg = angle_rad * 57.2958 // rad to deg
+    if angle_deg > 45.0 {
+      90.0 - angle_deg
+    } else if angle_deg < -45.0 {
+      -90.0 - angle_deg
+    } else {
+      angle_deg
+    }
   } else {
     0.0
   }
@@ -250,21 +266,28 @@ pub fn detect_distortions(
 ) -> Array[DistortionDetectionResult] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_distortions: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_distortions: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("detect_distortions: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "detect_distortions: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_distortions: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_distortions: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let results : Array[DistortionDetectionResult] = []
   let w = img.width
   let h = img.height
-  
+
   // 1. 检测噪声
   let mut noise_count = 0
   let mut total_pixels = 0
@@ -289,17 +312,38 @@ pub fn detect_distortions(
       total_pixels += 1
     }
   }
-  let noise_ratio = if total_pixels > 0 { noise_count.to_double() / total_pixels.to_double() } else { 0.0 }
+  let noise_ratio = if total_pixels > 0 {
+    noise_count.to_double() / total_pixels.to_double()
+  } else {
+    0.0
+  }
   if noise_ratio > 0.01 {
     results.push(DistortionDetectionResult::{
       distortion_type: DistortionType::Noise,
-      severity: if noise_ratio > 0.1 { 0.8 } else if noise_ratio > 0.05 { 0.5 } else { 0.2 },
+      severity: if noise_ratio > 0.1 {
+        0.8
+      } else if noise_ratio > 0.05 {
+        0.5
+      } else {
+        0.2
+      },
       angle: 0.0,
       confidence: 0.8,
-      correction_params: [("denoise_strength", if noise_ratio > 0.1 { 5.0 } else if noise_ratio > 0.05 { 3.0 } else { 2.0 })],
+      correction_params: [
+        (
+          "denoise_strength",
+          if noise_ratio > 0.1 {
+            5.0
+          } else if noise_ratio > 0.05 {
+            3.0
+          } else {
+            2.0
+          },
+        ),
+      ],
     })
   }
-  
+
   // 2. 检测模糊（拉普拉斯方差）
   let mut laplacian_sum = 0.0
   let mut laplacian_count = 0
@@ -307,29 +351,59 @@ pub fn detect_distortions(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       let center = img.data[idx].to_double()
-      let lap = 4.0 * center - img.data[idx - 1].to_double() - img.data[idx + 1].to_double() - img.data[idx - w].to_double() - img.data[idx + w].to_double()
+      let lap = 4.0 * center -
+        img.data[idx - 1].to_double() -
+        img.data[idx + 1].to_double() -
+        img.data[idx - w].to_double() -
+        img.data[idx + w].to_double()
       laplacian_sum += lap * lap
       laplacian_count += 1
     }
   }
-  let laplacian_var = if laplacian_count > 0 { laplacian_sum / laplacian_count.to_double() } else { 0.0 }
+  let laplacian_var = if laplacian_count > 0 {
+    laplacian_sum / laplacian_count.to_double()
+  } else {
+    0.0
+  }
   if laplacian_var < 100.0 {
     results.push(DistortionDetectionResult::{
       distortion_type: DistortionType::Blur,
-      severity: if laplacian_var < 20.0 { 0.9 } else if laplacian_var < 50.0 { 0.6 } else { 0.3 },
+      severity: if laplacian_var < 20.0 {
+        0.9
+      } else if laplacian_var < 50.0 {
+        0.6
+      } else {
+        0.3
+      },
       angle: 0.0,
       confidence: 0.75,
-      correction_params: [("sharpen_strength", if laplacian_var < 20.0 { 3.0 } else if laplacian_var < 50.0 { 2.0 } else { 1.0 })],
+      correction_params: [
+        (
+          "sharpen_strength",
+          if laplacian_var < 20.0 {
+            3.0
+          } else if laplacian_var < 50.0 {
+            2.0
+          } else {
+            1.0
+          },
+        ),
+      ],
     })
   }
-  
+
   // 3. 检测光照不均（四角亮度差）
   if w > 20 && h > 20 {
     let regions = [
-      (10, 10), (w - 10, 10), (10, h - 10), (w - 10, h - 10), (w / 2, h / 2)
+      (10, 10),
+      (w - 10, 10),
+      (10, h - 10),
+      (w - 10, h - 10),
+      (w / 2, h / 2),
     ]
     let brightnesses : Array[Double] = []
-    for (rx, ry) in regions {
+    for _tup0 in regions {
+      let (rx, ry) = _tup0
       let mut sum = 0.0
       let mut count = 0
       for dy in 0..<10 {
@@ -348,22 +422,35 @@ pub fn detect_distortions(
       let mut max_b = brightnesses[0]
       let mut min_b = brightnesses[0]
       for b in brightnesses {
-        if b > max_b { max_b = b }
-        if b < min_b { min_b = b }
+        if b > max_b {
+          max_b = b
+        }
+        if b < min_b {
+          min_b = b
+        }
       }
       let brightness_diff = max_b - min_b
       if brightness_diff > 50.0 {
         results.push(DistortionDetectionResult::{
           distortion_type: DistortionType::UnevenLighting,
-          severity: if brightness_diff > 100.0 { 0.8 } else if brightness_diff > 75.0 { 0.5 } else { 0.3 },
+          severity: if brightness_diff > 100.0 {
+            0.8
+          } else if brightness_diff > 75.0 {
+            0.5
+          } else {
+            0.3
+          },
           angle: 0.0,
           confidence: 0.7,
-          correction_params: [("adaptive_threshold", 1.0), ("contrast_enhance", 1.5)],
+          correction_params: [
+            ("adaptive_threshold", 1.0),
+            ("contrast_enhance", 1.5),
+          ],
         })
       }
     }
   }
-  
+
   results
 }
 
@@ -385,13 +472,13 @@ pub fn analyze_complex_layout(
       confidence: 0.0,
     }
   }
-  
+
   // 统计水平覆盖范围
   let mut full_width_count = 0
   let mut left_count = 0
   let mut right_count = 0
   let mid_x = page_width / 2
-  
+
   for block in text_blocks {
     let center = block.x + block.width / 2
     if block.width.to_double() > page_width.to_double() * 0.7 {
@@ -402,12 +489,12 @@ pub fn analyze_complex_layout(
       right_count += 1
     }
   }
-  
+
   let total = text_blocks.length().to_double()
   let full_ratio = full_width_count.to_double() / total
   let left_ratio = left_count.to_double() / total
   let right_ratio = right_count.to_double() / total
-  
+
   let layout_type = if full_ratio > 0.8 {
     ComplexLayoutType::SingleColumn
   } else if left_ratio > 0.3 && right_ratio > 0.3 && full_ratio < 0.2 {
@@ -417,16 +504,16 @@ pub fn analyze_complex_layout(
   } else {
     ComplexLayoutType::SingleColumn
   }
-  
+
   let num_columns = match layout_type {
     ComplexLayoutType::DoubleColumn => 2
     ComplexLayoutType::TripleColumn => 3
     ComplexLayoutType::MultiColumnWithFloats => 3
     _ => 1
   }
-  
+
   let has_floats = full_ratio > 0.1 && full_ratio < 0.5
-  
+
   let reading_order_strategy = match layout_type {
     ComplexLayoutType::SingleColumn => "top_to_bottom"
     ComplexLayoutType::DoubleColumn => "left_column_first"
@@ -434,7 +521,7 @@ pub fn analyze_complex_layout(
     ComplexLayoutType::MixedLayout => "adaptive"
     _ => "default"
   }
-  
+
   let boundaries : Array[Int] = []
   boundaries.push(0)
   if num_columns >= 2 {
@@ -442,7 +529,7 @@ pub fn analyze_complex_layout(
     boundaries.push(page_width / 2 + 20)
   }
   boundaries.push(page_width)
-  
+
   ComplexLayoutAnalysis::{
     layout_type,
     num_columns,
@@ -463,14 +550,18 @@ pub fn generate_robustness_report(
 ) -> RobustnessReport {
   // 质量分数
   let quality_score = quality.overall_score / 100.0
-  
+
   // 畸变分数（畸变越少分数越高）
   let mut distortion_penalty = 0.0
   for d in distortions {
     distortion_penalty += d.severity * 0.2
   }
-  let distortion_score = if 1.0 - distortion_penalty > 0 { 1.0 - distortion_penalty } else { 0.0 }
-  
+  let distortion_score = if 1.0 - distortion_penalty > 0 {
+    1.0 - distortion_penalty
+  } else {
+    0.0
+  }
+
   // 版面复杂度分数（越简单分数越高）
   let layout_score = match layout.layout_type {
     ComplexLayoutType::SingleColumn => 1.0
@@ -480,7 +571,7 @@ pub fn generate_robustness_report(
     ComplexLayoutType::MultiColumnWithFloats => 0.4
     _ => 0.7
   }
-  
+
   // 噪声抵抗分数
   let mut noise_severity = 0.0
   for d in distortions {
@@ -489,10 +580,13 @@ pub fn generate_robustness_report(
     }
   }
   let noise_score = 1.0 - noise_severity
-  
+
   // 综合分数
-  let overall = (quality_score * 0.3 + distortion_score * 0.3 + layout_score * 0.2 + noise_score * 0.2)
-  
+  let overall = quality_score * 0.3 +
+    distortion_score * 0.3 +
+    layout_score * 0.2 +
+    noise_score * 0.2
+
   // 建议
   let recommendations : Array[String] = []
   if quality_score < 0.6 {
@@ -502,18 +596,22 @@ pub fn generate_robustness_report(
     recommendations.push("建议启用强去噪处理（中值滤波+NLM）")
   }
   if layout.num_columns > 1 {
-    recommendations.push("检测到多栏布局，建议使用分栏阅读顺序")
+    recommendations.push(
+      "检测到多栏布局，建议使用分栏阅读顺序",
+    )
   }
   if distortion_penalty > 0.3 {
-    recommendations.push("检测到严重畸变，建议启用完整预处理流水线")
+    recommendations.push(
+      "检测到严重畸变，建议启用完整预处理流水线",
+    )
   }
   if recommendations.length() == 0 {
     recommendations.push("文档质量良好，可使用标准预处理流程")
   }
-  
+
   // 预估准确率
   let estimated_accuracy = overall * 0.95 + 0.05
-  
+
   let processing_recommendation = if overall > 0.8 {
     "标准处理流程"
   } else if overall > 0.6 {
@@ -521,7 +619,7 @@ pub fn generate_robustness_report(
   } else {
     "重度预处理+人工复核"
   }
-  
+
   RobustnessReport::{
     overall_score: overall,
     quality_score,
@@ -536,23 +634,46 @@ pub fn generate_robustness_report(
 
 ///|
 /// 生成鲁棒性报告文本
-pub fn robustness_report_to_string(
-  report : RobustnessReport,
-) -> String {
+pub fn robustness_report_to_string(report : RobustnessReport) -> String {
   let mut output = "## OCR 鲁棒性评估报告\n\n"
   output = output + "### 综合评分\n\n"
   output = output + "| 指标 | 分数 |\n"
   output = output + "|------|------|\n"
-  output = output + "| **综合评分** | **" + (report.overall_score * 100.0).to_string() + "/100** |\n"
-  output = output + "| 扫描质量 | " + (report.quality_score * 100.0).to_string() + "/100 |\n"
-  output = output + "| 畸变控制 | " + (report.distortion_score * 100.0).to_string() + "/100 |\n"
-  output = output + "| 版面复杂度 | " + (report.layout_complexity_score * 100.0).to_string() + "/100 |\n"
-  output = output + "| 噪声抵抗 | " + (report.noise_resistance_score * 100.0).to_string() + "/100 |\n\n"
-  output = output + "### 预估识别准确率: " + (report.estimated_accuracy * 100.0).to_string() + "%\n\n"
-  output = output + "### 推荐处理方式: " + report.processing_recommendation + "\n\n"
+  output = output +
+    "| **综合评分** | **" +
+    (report.overall_score * 100.0).to_string() +
+    "/100** |\n"
+  output = output +
+    "| 扫描质量 | " +
+    (report.quality_score * 100.0).to_string() +
+    "/100 |\n"
+  output = output +
+    "| 畸变控制 | " +
+    (report.distortion_score * 100.0).to_string() +
+    "/100 |\n"
+  output = output +
+    "| 版面复杂度 | " +
+    (report.layout_complexity_score * 100.0).to_string() +
+    "/100 |\n"
+  output = output +
+    "| 噪声抵抗 | " +
+    (report.noise_resistance_score * 100.0).to_string() +
+    "/100 |\n\n"
+  output = output +
+    "### 预估识别准确率: " +
+    (report.estimated_accuracy * 100.0).to_string() +
+    "%\n\n"
+  output = output +
+    "### 推荐处理方式: " +
+    report.processing_recommendation +
+    "\n\n"
   output = output + "### 改进建议\n\n"
   for i in 0..<report.recommendations.length() {
-    output = output + (i + 1).to_string() + ". " + report.recommendations[i] + "\n"
+    output = output +
+      (i + 1).to_string() +
+      ". " +
+      report.recommendations[i] +
+      "\n"
   }
   output
 }

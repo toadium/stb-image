@@ -3,15 +3,18 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_geo(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn write_u16_le_geo(buf : Array[Byte], offset : Int, val : Int) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
+///|
 fn read_float_le_geo(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -21,6 +24,7 @@ fn read_float_le_geo(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn write_f32_le_geo(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
@@ -29,10 +33,18 @@ fn write_f32_le_geo(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   buf[offset + 3] = ((bits >> 24) & 0xFF).to_byte()
 }
 
+///|
 fn clamp_int_geo(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
+///|
 fn sample_bilinear_16(
   data : Array[Int],
   w : Int,
@@ -61,6 +73,7 @@ fn sample_bilinear_16(
   (top * (1.0F - fy) + bot * fy + 0.5F).to_int()
 }
 
+///|
 fn sample_bilinear_f(
   data : Array[Float],
   w : Int,
@@ -115,11 +128,20 @@ pub fn warp_affine_16(
       let sy = d * Float::from_int(dx) + e * fdy + f
       for ci in 0..<ch {
         let val = sample_bilinear_16(data_int, w, h, ch, ci, sx, sy)
-        write_u16_le_geo(out, (dy * new_w + dx) * ch * 2 + ci * 2, clamp_int_geo(val, 0, 65535))
+        write_u16_le_geo(
+          out,
+          (dy * new_w + dx) * ch * 2 + ci * 2,
+          clamp_int_geo(val, 0, 65535),
+        )
       }
     }
   }
-  @types.Image16::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== warp_affine float ==========
@@ -152,7 +174,12 @@ pub fn warp_affine_f(
       }
     }
   }
-  @types.ImageF::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== warp_perspective 16-bit ==========
@@ -182,11 +209,20 @@ pub fn warp_perspective_16(
       let sy = (matrix.m10 * fdx + matrix.m11 * fdy + matrix.m12) / denom
       for ci in 0..<ch {
         let val = sample_bilinear_16(data_int, w, h, ch, ci, sx, sy)
-        write_u16_le_geo(out, (dy * new_w + dx) * ch * 2 + ci * 2, clamp_int_geo(val, 0, 65535))
+        write_u16_le_geo(
+          out,
+          (dy * new_w + dx) * ch * 2 + ci * 2,
+          clamp_int_geo(val, 0, 65535),
+        )
       }
     }
   }
-  @types.Image16::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== warp_perspective float ==========
@@ -220,7 +256,12 @@ pub fn warp_perspective_f(
       }
     }
   }
-  @types.ImageF::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== resize 16-bit ==========
@@ -248,22 +289,27 @@ pub fn resize_16(
       let sy = (Float::from_int(dy) + 0.5F) * scale_y - 0.5F
       for ci in 0..<ch {
         let val = sample_bilinear_16(data_int, w, h, ch, ci, sx, sy)
-        write_u16_le_geo(out, (dy * new_w + dx) * ch * 2 + ci * 2, clamp_int_geo(val, 0, 65535))
+        write_u16_le_geo(
+          out,
+          (dy * new_w + dx) * ch * 2 + ci * 2,
+          clamp_int_geo(val, 0, 65535),
+        )
       }
     }
   }
-  @types.Image16::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== resize float ==========
 
 ///|
 /// float 图像缩放。
-pub fn resize_f(
-  img : @types.ImageF,
-  new_w : Int,
-  new_h : Int,
-) -> @types.ImageF {
+pub fn resize_f(img : @types.ImageF, new_w : Int, new_h : Int) -> @types.ImageF {
   let ch = img.channels
   let w = img.width
   let h = img.height
@@ -284,5 +330,10 @@ pub fn resize_f(
       }
     }
   }
-  @types.ImageF::{ width: new_w, height: new_h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

@@ -221,7 +221,11 @@ pub fn create_default_watermark_config() -> ImageWatermarkConfig {
 
 ///|
 /// 简化的LSB水印嵌入
-fn lsb_embed(image : Array[Double], watermark : Array[Byte], strength : Double) -> Array[Double] {
+fn lsb_embed(
+  image : Array[Double],
+  watermark : Array[Byte],
+  strength : Double,
+) -> Array[Double] {
   let result : Array[Double] = []
   let mut wm_idx = 0
   let mut bit_idx = 0
@@ -231,11 +235,7 @@ fn lsb_embed(image : Array[Double], watermark : Array[Byte], strength : Double) 
       let byte_val = watermark[wm_idx].to_int()
       let bit = (byte_val >> (7 - bit_idx)) & 1
       let pixel_val = value.to_int()
-      let new_pixel = if bit == 1 {
-        pixel_val | 1
-      } else {
-        pixel_val & 0xFE
-      }
+      let new_pixel = if bit == 1 { pixel_val | 1 } else { pixel_val & 0xFE }
       result.push(new_pixel.to_double())
       bit_idx += 1
       if bit_idx >= 8 {
@@ -362,21 +362,14 @@ pub fn attack_watermark(
     let mut new_value = value
 
     match attack_type {
-      WatermarkAttackType::NoiseAddition => {
+      WatermarkAttackType::NoiseAddition =>
         new_value = value + noise * attack_strength * 50.0
-      }
-      WatermarkAttackType::BrightnessChange => {
+      WatermarkAttackType::BrightnessChange =>
         new_value = value + attack_strength * 50.0
-      }
-      WatermarkAttackType::ContrastChange => {
+      WatermarkAttackType::ContrastChange =>
         new_value = (value - 128.0) * (1.0 + attack_strength) + 128.0
-      }
-      WatermarkAttackType::Filtering => {
-        new_value = value * 0.9 + 128.0 * 0.1
-      }
-      _ => {
-        new_value = value
-      }
+      WatermarkAttackType::Filtering => new_value = value * 0.9 + 128.0 * 0.1
+      _ => new_value = value
     }
 
     if new_value < 0.0 {
@@ -425,8 +418,10 @@ pub fn embed_visible_watermark(
         let mut value = image[idx]
 
         // 简化的可见水印：在指定位置添加半透明文字
-        let in_text_area = x >= vc.position_x && x < vc.position_x + text_length * vc.font_size / 2 &&
-                           y >= vc.position_y && y < vc.position_y + vc.font_size
+        let in_text_area = x >= vc.position_x &&
+          x < vc.position_x + text_length * vc.font_size / 2 &&
+          y >= vc.position_y &&
+          y < vc.position_y + vc.font_size
 
         if in_text_area {
           let alpha = vc.opacity
@@ -455,40 +450,67 @@ pub fn image_watermark_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageWatermarkTaskType::VisibleWatermark => "可见水印"
-    ImageWatermarkTaskType::InvisibleWatermark => "不可见水印"
-    ImageWatermarkTaskType::RobustWatermark => "鲁棒水印"
-    ImageWatermarkTaskType::FragileWatermark => "脆弱水印"
-    ImageWatermarkTaskType::SemiFragileWatermark => "半脆弱水印"
-    ImageWatermarkTaskType::DigitalFingerprint => "数字指纹"
-    ImageWatermarkTaskType::WatermarkAttack => "水印攻击"
-    ImageWatermarkTaskType::WatermarkDetection => "水印检测"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 水印类型 | " + (match config.watermark_type {
-    WatermarkType::TextWatermark => "文字水印"
-    WatermarkType::ImageWatermark => "图像水印"
-    WatermarkType::LogoWatermark => "Logo水印"
-    WatermarkType::BinaryWatermark => "二值水印"
-    WatermarkType::QRCodeWatermark => "二维码水印"
-    WatermarkType::EncryptedWatermark => "加密水印"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 嵌入域 | " + (match config.embedding_domain {
-    WatermarkDomain::SpatialDomain => "空间域"
-    WatermarkDomain::DCTDomain => "DCT域"
-    WatermarkDomain::DWTDomain => "DWT域"
-    WatermarkDomain::FFTDomain => "FFT域"
-    WatermarkDomain::WaveletDomain => "小波域"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 水印强度 | " + config.watermark_strength.to_string() + " |\n"
-  report = report + "| 使用加密 | " + (if config.use_encryption { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 使用纠错 | " + (if config.use_error_correction { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 使用置乱 | " + (if config.use_scrambling { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 可见水印文字 | " + config.visible_config.watermark_text + " |\n"
-  report = report + "| 不透明度 | " + config.visible_config.opacity.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageWatermarkTaskType::VisibleWatermark => "可见水印"
+      ImageWatermarkTaskType::InvisibleWatermark => "不可见水印"
+      ImageWatermarkTaskType::RobustWatermark => "鲁棒水印"
+      ImageWatermarkTaskType::FragileWatermark => "脆弱水印"
+      ImageWatermarkTaskType::SemiFragileWatermark => "半脆弱水印"
+      ImageWatermarkTaskType::DigitalFingerprint => "数字指纹"
+      ImageWatermarkTaskType::WatermarkAttack => "水印攻击"
+      ImageWatermarkTaskType::WatermarkDetection => "水印检测"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 水印类型 | " +
+    (match config.watermark_type {
+      WatermarkType::TextWatermark => "文字水印"
+      WatermarkType::ImageWatermark => "图像水印"
+      WatermarkType::LogoWatermark => "Logo水印"
+      WatermarkType::BinaryWatermark => "二值水印"
+      WatermarkType::QRCodeWatermark => "二维码水印"
+      WatermarkType::EncryptedWatermark => "加密水印"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 嵌入域 | " +
+    (match config.embedding_domain {
+      WatermarkDomain::SpatialDomain => "空间域"
+      WatermarkDomain::DCTDomain => "DCT域"
+      WatermarkDomain::DWTDomain => "DWT域"
+      WatermarkDomain::FFTDomain => "FFT域"
+      WatermarkDomain::WaveletDomain => "小波域"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 水印强度 | " +
+    config.watermark_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 使用加密 | " +
+    (if config.use_encryption { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 使用纠错 | " +
+    (if config.use_error_correction { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 使用置乱 | " +
+    (if config.use_scrambling { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 可见水印文字 | " +
+    config.visible_config.watermark_text +
+    " |\n"
+  report = report +
+    "| 不透明度 | " +
+    config.visible_config.opacity.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

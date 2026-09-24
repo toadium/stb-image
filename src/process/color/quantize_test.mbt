@@ -265,10 +265,10 @@ test "median_cut: channel_value branch 1 (G channel split)" {
     height: 1,
     channels: 3,
     data: Bytes::from_array([
-      b'\x00', b'\x00', b'\x00',  // pixel 0
-      b'\x00', b'\xFF', b'\x00',  // pixel 1: wide G range
-      b'\x00', b'\x80', b'\x00',  // pixel 2
-      b'\x00', b'\x40', b'\x00',  // pixel 3
+      b'\x00', b'\x00', b'\x00', // pixel 0
+       b'\x00', b'\xFF', b'\x00', // pixel 1: wide G range
+       b'\x00', b'\x80', b'\x00', // pixel 2
+       b'\x00', b'\x40', b'\x00', // pixel 3
     ]),
   }
   let result = median_cut(img, 2)
@@ -285,10 +285,10 @@ test "median_cut: bucket_average empty bucket returns (0,0,0)" {
     height: 2,
     channels: 3,
     data: Bytes::from_array([
-      b'\xFF', b'\xFF', b'\xFF',  // white
-      b'\xFF', b'\xFF', b'\xFF',  // white
-      b'\x00', b'\x00', b'\x00',  // black
-      b'\x00', b'\x00', b'\x00',  // black
+      b'\xFF', b'\xFF', b'\xFF', // white
+       b'\xFF', b'\xFF', b'\xFF', // white
+       b'\x00', b'\x00', b'\x00', // black
+       b'\x00', b'\x00', b'\x00', // black
     ]),
   }
   let result = median_cut(img, 4)
@@ -304,10 +304,10 @@ test "median_cut: bucket_max_range G channel selected" {
     height: 1,
     channels: 3,
     data: Bytes::from_array([
-      b'\x00', b'\x00', b'\x00',  // pixel 0
-      b'\x00', b'\xFF', b'\x80',  // pixel 1: G=0..255, R=0, B=0..128
-      b'\x00', b'\x80', b'\x40',  // pixel 2
-      b'\x00', b'\x40', b'\x20',  // pixel 3
+      b'\x00', b'\x00', b'\x00', // pixel 0
+       b'\x00', b'\xFF', b'\x80', // pixel 1: G=0..255, R=0, B=0..128
+       b'\x00', b'\x80', b'\x40', // pixel 2
+       b'\x00', b'\x40', b'\x20', // pixel 3
     ]),
   }
   let result = median_cut(img, 2)

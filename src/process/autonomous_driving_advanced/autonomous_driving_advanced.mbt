@@ -259,8 +259,11 @@ pub fn fuse_sensors(
 
   // 简化的融合：基于传感器数据生成虚拟目标
   let object_types = [
-    ADObjectType::Car, ADObjectType::Pedestrian, ADObjectType::TrafficLight,
-    ADObjectType::Lane, ADObjectType::Road
+    ADObjectType::Car,
+    ADObjectType::Pedestrian,
+    ADObjectType::TrafficLight,
+    ADObjectType::Lane,
+    ADObjectType::Road,
   ]
 
   let mut state = 42
@@ -317,10 +320,10 @@ pub fn plan_path(
   let mut risk_level = 0.1
 
   for obj in detected_objects {
-    let dist = ((obj.position_3d[0] - target_position[0]) *
-                (obj.position_3d[0] - target_position[0]) +
-                (obj.position_3d[1] - target_position[1]) *
-                (obj.position_3d[1] - target_position[1]))
+    let dist = (obj.position_3d[0] - target_position[0]) *
+      (obj.position_3d[0] - target_position[0]) +
+      (obj.position_3d[1] - target_position[1]) *
+      (obj.position_3d[1] - target_position[1])
     if dist < config.safety_margin {
       is_safe = false
       risk_level = 0.8
@@ -378,9 +381,10 @@ pub fn decision_control(
 
   // 简化的障碍物检测
   for obj in detected_objects {
-    if obj.object_type == ADObjectType::Pedestrian || obj.object_type == ADObjectType::Car {
-      let dist = ((obj.position_3d[0]) * (obj.position_3d[0]) +
-                  (obj.position_3d[1]) * (obj.position_3d[1]))
+    if obj.object_type == ADObjectType::Pedestrian ||
+      obj.object_type == ADObjectType::Car {
+      let dist = obj.position_3d[0] * obj.position_3d[0] +
+        obj.position_3d[1] * obj.position_3d[1]
       if dist < 5.0 {
         brake = 1.0
         throttle = 0.0
@@ -414,24 +418,51 @@ pub fn autonomous_driving_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    AutonomousDrivingTaskType::EnvironmentPerception => "环境感知"
-    AutonomousDrivingTaskType::PathPlanning => "路径规划"
-    AutonomousDrivingTaskType::DecisionControl => "决策控制"
-    AutonomousDrivingTaskType::SensorFusion => "传感器融合"
-    AutonomousDrivingTaskType::BEVPerception => "BEV感知"
-    AutonomousDrivingTaskType::EndToEnd => "端到端"
-    AutonomousDrivingTaskType::Localization => "定位"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 传感器数量 | " + config.num_sensors.to_string() + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
-  report = report + "| 规划视野 | " + config.planning_horizon.to_string() + " s |\n"
-  report = report + "| 控制频率 | " + config.control_frequency.to_string() + " Hz |\n"
-  report = report + "| 最大速度 | " + config.max_speed.to_string() + " m/s |\n"
-  report = report + "| 安全距离 | " + config.safety_margin.to_string() + " m |\n"
-  report = report + "| BEV感知 | " + (if config.use_bev { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 传感器融合 | " + (if config.use_sensor_fusion { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      AutonomousDrivingTaskType::EnvironmentPerception => "环境感知"
+      AutonomousDrivingTaskType::PathPlanning => "路径规划"
+      AutonomousDrivingTaskType::DecisionControl => "决策控制"
+      AutonomousDrivingTaskType::SensorFusion => "传感器融合"
+      AutonomousDrivingTaskType::BEVPerception => "BEV感知"
+      AutonomousDrivingTaskType::EndToEnd => "端到端"
+      AutonomousDrivingTaskType::Localization => "定位"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 传感器数量 | " +
+    config.num_sensors.to_string() +
+    " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 规划视野 | " +
+    config.planning_horizon.to_string() +
+    " s |\n"
+  report = report +
+    "| 控制频率 | " +
+    config.control_frequency.to_string() +
+    " Hz |\n"
+  report = report +
+    "| 最大速度 | " +
+    config.max_speed.to_string() +
+    " m/s |\n"
+  report = report +
+    "| 安全距离 | " +
+    config.safety_margin.to_string() +
+    " m |\n"
+  report = report +
+    "| BEV感知 | " +
+    (if config.use_bev { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 传感器融合 | " +
+    (if config.use_sensor_fusion { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

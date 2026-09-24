@@ -7,7 +7,12 @@ fn make_img16_cb(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_cb(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 // ========== 卷积 ==========
@@ -28,7 +38,17 @@ fn make_imgf_cb(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "convolve_16: basic" {
   let img = make_img16_cb(16, 16, 1, 30000)
-  let kernel : Array[Float] = [0.0F, -1.0F, 0.0F, -1.0F, 5.0F, -1.0F, 0.0F, -1.0F, 0.0F]
+  let kernel : Array[Float] = [
+    0.0F,
+    -1.0F,
+    0.0F,
+    -1.0F,
+    5.0F,
+    -1.0F,
+    0.0F,
+    -1.0F,
+    0.0F,
+  ]
   let result = convolve_16(img, kernel, 0.0F, 1.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
@@ -41,7 +61,17 @@ test "convolve_16: basic" {
 ///|
 test "convolve_f: basic" {
   let img = make_imgf_cb(16, 16, 1, 0.5F)
-  let kernel : Array[Float] = [0.0F, -1.0F, 0.0F, -1.0F, 5.0F, -1.0F, 0.0F, -1.0F, 0.0F]
+  let kernel : Array[Float] = [
+    0.0F,
+    -1.0F,
+    0.0F,
+    -1.0F,
+    5.0F,
+    -1.0F,
+    0.0F,
+    -1.0F,
+    0.0F,
+  ]
   let result = convolve_f(img, kernel, 0.0F, 1.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
@@ -54,7 +84,17 @@ test "convolve_f: basic" {
 ///|
 test "convolve_16: RGB input" {
   let img = make_img16_cb(16, 16, 3, 30000)
-  let kernel : Array[Float] = [1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F, 1.0F / 9.0F]
+  let kernel : Array[Float] = [
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+    1.0F / 9.0F,
+  ]
   let result = convolve_16(img, kernel, 0.0F, 1.0F)
   assert_eq(result.channels, 3)
   let _ = img

@@ -37,18 +37,28 @@ fn log_f_tm(x : Float) -> Float {
 /// Gamma 色调映射（float 输出）。
 /// 先归一化到 [0,1]，再应用 gamma 校正：L_out = L^(1/gamma)。
 /// gamma > 1 提亮暗部，gamma < 1 压暗。
-pub fn gamma_tonemap_f(imgf : @types.ImageF, gamma : Float) -> @types.ImageF raise @types.LoadError {
+pub fn gamma_tonemap_f(
+  imgf : @types.ImageF,
+  gamma : Float,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap_f: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gamma_tonemap_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "gamma_tonemap_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {
@@ -114,15 +124,22 @@ pub fn reinhard_tonemap_f(
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap_f: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "reinhard_tonemap_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "reinhard_tonemap_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if key <= 0.0F {
@@ -171,18 +188,28 @@ pub fn reinhard_tonemap_f(
 ///|
 /// Gamma 色调映射（16-bit 输出）。
 /// 输入 ImageF，输出 Image16（0-65535）。
-pub fn gamma_tonemap_16(imgf : @types.ImageF, gamma : Float) -> @types.Image16 raise @types.LoadError {
+pub fn gamma_tonemap_16(
+  imgf : @types.ImageF,
+  gamma : Float,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap_16: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("gamma_tonemap_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "gamma_tonemap_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "gamma_tonemap_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "gamma_tonemap_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {
@@ -249,19 +276,28 @@ pub fn reinhard_tonemap_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap_16: 图像尺寸必须大于0",
+    )
   }
   if imgf.channels < 1 || imgf.channels > 4 {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = imgf.width * imgf.height * imgf.channels * 4
   if imgf.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "reinhard_tonemap_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + imgf.data.length().to_string(),
+      "reinhard_tonemap_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      imgf.data.length().to_string(),
     )
   }
   if key <= 0.0F {
-    raise @types.LoadError::DecodeFailed("reinhard_tonemap_16: key必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap_16: key必须大于0",
+    )
   }
   let w = imgf.width
   let h = imgf.height

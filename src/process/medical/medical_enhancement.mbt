@@ -57,27 +57,27 @@ pub(all) struct Lesion {
   diameter : Double
   volume : Double
   intensity : Double
-  margin : String  // "well_defined" / "ill_defined" / "spiculated"
-  shape : String  // "round" / "oval" / "irregular"
-  density : String  // "solid" / "cystic" / "mixed" / "calcified"
+  margin : String // "well_defined" / "ill_defined" / "spiculated"
+  shape : String // "round" / "oval" / "irregular"
+  density : String // "solid" / "cystic" / "mixed" / "calcified"
   confidence : Double
-  birads_category : Int  // BI-RADS 1-6
+  birads_category : Int // BI-RADS 1-6
 }
 
 ///|
 /// 医学图像配准结果
 pub(all) struct MedicalRegistrationResult {
-  transformation : Array[Double]  // 4x4 变换矩阵
+  transformation : Array[Double] // 4x4 变换矩阵
   similarity : Double
   iterations : Int
   converged : Bool
-  registration_type : String  // "rigid" / "affine" / "deformable"
+  registration_type : String // "rigid" / "affine" / "deformable"
 }
 
 ///|
 /// 医学图像分割配置
 pub(all) struct MedicalSegmentationConfig {
-  method : String  // "threshold" / "region_growing" / "level_set" / "watershed"
+  method_type : String // "threshold" / "region_growing" / "level_set" / "watershed"
   lower_threshold : Double
   upper_threshold : Double
   seed_points : Array[(Int, Int, Int)]
@@ -90,25 +90,25 @@ pub(all) struct MedicalSegmentationConfig {
 pub(all) struct WindowLevelConfig {
   center : Double
   width : Double
-  preset : String  // "brain" / "lung" / "abdomen" / "bone" / "soft_tissue" / "custom"
+  preset : String // "brain" / "lung" / "abdomen" / "bone" / "soft_tissue" / "custom"
 }
 
 ///|
 /// 医学图像质量指标
 pub(all) struct MedicalImageQuality {
-  snr : Double  // 信噪比
-  cnr : Double  // 对比噪声比
+  snr : Double // 信噪比
+  cnr : Double // 对比噪声比
   sharpness : Double
   noise_level : Double
   artifact_score : Double
-  overall_quality : Double  // 1-5 分
+  overall_quality : Double // 1-5 分
 }
 
 ///|
 /// 创建默认医学分割配置
 pub fn create_default_medical_segmentation_config() -> MedicalSegmentationConfig {
   MedicalSegmentationConfig::{
-    method: "threshold",
+    method_type: "threshold",
     lower_threshold: 0.0,
     upper_threshold: 255.0,
     seed_points: [],
@@ -121,15 +121,15 @@ pub fn create_default_medical_segmentation_config() -> MedicalSegmentationConfig
 /// 创建默认窗宽窗位配置
 pub fn create_default_window_level(preset : String) -> WindowLevelConfig {
   if preset == "brain" {
-    WindowLevelConfig::{ center: 40.0, width: 80.0, preset: preset }
+    WindowLevelConfig::{ center: 40.0, width: 80.0, preset }
   } else if preset == "lung" {
-    WindowLevelConfig::{ center: -600.0, width: 1500.0, preset: preset }
+    WindowLevelConfig::{ center: -600.0, width: 1500.0, preset }
   } else if preset == "abdomen" {
-    WindowLevelConfig::{ center: 40.0, width: 400.0, preset: preset }
+    WindowLevelConfig::{ center: 40.0, width: 400.0, preset }
   } else if preset == "bone" {
-    WindowLevelConfig::{ center: 300.0, width: 1500.0, preset: preset }
+    WindowLevelConfig::{ center: 300.0, width: 1500.0, preset }
   } else if preset == "soft_tissue" {
-    WindowLevelConfig::{ center: 50.0, width: 350.0, preset: preset }
+    WindowLevelConfig::{ center: 50.0, width: 350.0, preset }
   } else {
     WindowLevelConfig::{ center: 128.0, width: 256.0, preset: "custom" }
   }
@@ -149,13 +149,28 @@ pub fn apply_window_level_medical(
 
   for i in 0..<(w * h) {
     let pixel = image.data[i]
-    let normalized = if upper > lower { (pixel - lower) / (upper - lower) } else { 0.5 }
-    let clamped = if normalized < 0.0 { 0.0 } else if normalized > 1.0 { 1.0 } else { normalized }
+    let normalized = if upper > lower {
+      (pixel - lower) / (upper - lower)
+    } else {
+      0.5
+    }
+    let clamped = if normalized < 0.0 {
+      0.0
+    } else if normalized > 1.0 {
+      1.0
+    } else {
+      normalized
+    }
     let value = (clamped * 255.0).to_int()
     out.push(if value > 127 { b'\xFF' } else { b'\x00' })
   }
 
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -214,12 +229,16 @@ pub fn region_growing_segmentation(
 
     // 6 邻域
     let neighbors = [
-      (cx + 1, cy, cz), (cx - 1, cy, cz),
-      (cx, cy + 1, cz), (cx, cy - 1, cz),
-      (cx, cy, cz + 1), (cx, cy, cz - 1),
+      (cx + 1, cy, cz),
+      (cx - 1, cy, cz),
+      (cx, cy + 1, cz),
+      (cx, cy - 1, cz),
+      (cx, cy, cz + 1),
+      (cx, cy, cz - 1),
     ]
 
-    for (nx, ny, nz) in neighbors {
+    for _tup0 in neighbors {
+      let (nx, ny, nz) = _tup0
       if nx < 0 || nx >= w || ny < 0 || ny >= h || nz < 0 || nz >= s {
         continue
       }
@@ -260,7 +279,11 @@ pub fn calculate_roi_stats(
   }
 
   let mean = if count > 0 { sum / count.to_double() } else { 0.0 }
-  let variance = if count > 0 { sum_sq / count.to_double() - mean * mean } else { 0.0 }
+  let variance = if count > 0 {
+    sum_sq / count.to_double() - mean * mean
+  } else {
+    0.0
+  }
   let std = if variance > 0.0 { variance.sqrt() } else { 0.0 }
 
   (mean, std, count)
@@ -291,7 +314,9 @@ pub fn detect_lesions_simple(
       let mut is_local_max = true
       for dy in -3..<4 {
         for dx in -3..<4 {
-          if dx == 0 && dy == 0 { continue }
+          if dx == 0 && dy == 0 {
+            continue
+          }
           let neighbor = image.data[(y + dy) * w + (x + dx)]
           if neighbor > pixel {
             is_local_max = false
@@ -353,10 +378,7 @@ pub fn medical_image_registration(
   max_iterations : Int,
 ) -> MedicalRegistrationResult {
   let transformation : Array[Double] = [
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
+    1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
   ]
 
   let mut similarity = 0.0
@@ -371,7 +393,11 @@ pub fn medical_image_registration(
     let mut sum_product = 0.0
     let mut sum_fixed_sq = 0.0
     let mut sum_moving_sq = 0.0
-    let count = if fixed.data.length() < moving.data.length() { fixed.data.length() } else { moving.data.length() }
+    let count = if fixed.data.length() < moving.data.length() {
+      fixed.data.length()
+    } else {
+      moving.data.length()
+    }
 
     for i in 0..<count {
       let f = fixed.data[i]
@@ -388,7 +414,11 @@ pub fn medical_image_registration(
     let cov = sum_product / count.to_double() - mean_f * mean_m
     let var_f = sum_fixed_sq / count.to_double() - mean_f * mean_f
     let var_m = sum_moving_sq / count.to_double() - mean_m * mean_m
-    let ncc = if var_f > 0.0 && var_m > 0.0 { cov / (var_f * var_m).sqrt() } else { 0.0 }
+    let ncc = if var_f > 0.0 && var_m > 0.0 {
+      cov / (var_f * var_m).sqrt()
+    } else {
+      0.0
+    }
 
     if (ncc - similarity).abs() < 0.001 {
       converged = true
@@ -444,7 +474,13 @@ pub fn calculate_medical_image_quality(
   let noise_level = std
   let cnr = snr * 0.8
   let artifact_score = 1.0
-  let overall_quality = if snr > 10.0 && sharpness > 5.0 { 5.0 } else if snr > 5.0 { 3.0 } else { 2.0 }
+  let overall_quality = if snr > 10.0 && sharpness > 5.0 {
+    5.0
+  } else if snr > 5.0 {
+    3.0
+  } else {
+    2.0
+  }
 
   MedicalImageQuality::{
     snr,
@@ -486,23 +522,68 @@ pub fn medical_image_report_to_string(
     "未知"
   }
   report = report + "| 类型 | " + type_str + " |\n"
-  report = report + "| 尺寸 | " + image.width.to_string() + "x" + image.height.to_string() + "x" + image.slices.to_string() + " |\n"
-  report = report + "| 窗宽窗位 | " + image.window_center.to_string() + "/" + image.window_width.to_string() + " |\n\n"
+  report = report +
+    "| 尺寸 | " +
+    image.width.to_string() +
+    "x" +
+    image.height.to_string() +
+    "x" +
+    image.slices.to_string() +
+    " |\n"
+  report = report +
+    "| 窗宽窗位 | " +
+    image.window_center.to_string() +
+    "/" +
+    image.window_width.to_string() +
+    " |\n\n"
 
   report = report + "### 图像质量\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| SNR | " + quality.snr.to_string() + " dB |\n"
   report = report + "| CNR | " + quality.cnr.to_string() + " |\n"
   report = report + "| 清晰度 | " + quality.sharpness.to_string() + " |\n"
-  report = report + "| 噪声水平 | " + quality.noise_level.to_string() + " |\n"
-  report = report + "| 综合质量 | " + quality.overall_quality.to_string() + "/5.0 |\n\n"
+  report = report +
+    "| 噪声水平 | " +
+    quality.noise_level.to_string() +
+    " |\n"
+  report = report +
+    "| 综合质量 | " +
+    quality.overall_quality.to_string() +
+    "/5.0 |\n\n"
 
   if lesions.length() > 0 {
     report = report + "### 检测到的病灶\n\n"
-    report = report + "| ID | 类型 | 位置(X,Y,Z) | 直径 | 体积 | 强度 | 形状 | 密度 | 置信度 | BI-RADS |\n"
-    report = report + "|----|------|-------------|------|------|------|------|------|--------|---------|\n"
+    report = report +
+      "| ID | 类型 | 位置(X,Y,Z) | 直径 | 体积 | 强度 | 形状 | 密度 | 置信度 | BI-RADS |\n"
+    report = report +
+      "|----|------|-------------|------|------|------|------|------|--------|---------|\n"
     for lesion in lesions {
-      report = report + "| " + lesion.id.to_string() + " | " + lesion.lesion_type + " | " + lesion.x.to_string() + "," + lesion.y.to_string() + "," + lesion.z.to_string() + " | " + lesion.diameter.to_string() + " | " + lesion.volume.to_string() + " | " + lesion.intensity.to_string() + " | " + lesion.shape + " | " + lesion.density + " | " + (lesion.confidence * 100.0).to_string() + "% | " + lesion.birads_category.to_string() + " |\n"
+      report = report +
+        "| " +
+        lesion.id.to_string() +
+        " | " +
+        lesion.lesion_type +
+        " | " +
+        lesion.x.to_string() +
+        "," +
+        lesion.y.to_string() +
+        "," +
+        lesion.z.to_string() +
+        " | " +
+        lesion.diameter.to_string() +
+        " | " +
+        lesion.volume.to_string() +
+        " | " +
+        lesion.intensity.to_string() +
+        " | " +
+        lesion.shape +
+        " | " +
+        lesion.density +
+        " | " +
+        (lesion.confidence * 100.0).to_string() +
+        "% | " +
+        lesion.birads_category.to_string() +
+        " |\n"
     }
   } else {
     report = report + "### 病灶检测\n\n未检测到明显病灶。\n"

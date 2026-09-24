@@ -3,15 +3,18 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_freq(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn write_u16_le_freq(buf : Array[Byte], offset : Int, val : Int) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
+///|
 fn read_float_le_freq(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -21,6 +24,7 @@ fn read_float_le_freq(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn write_f32_le_freq(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
@@ -29,15 +33,24 @@ fn write_f32_le_freq(buf : Array[Byte], offset : Int, val : Float) -> Unit {
   buf[offset + 3] = ((bits >> 24) & 0xFF).to_byte()
 }
 
+///|
 fn clamp_int_freq(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
 // ========== FFT 16-bit ==========
 
 ///|
 /// 16-bit 2D FFT。输入归一化到 0-1 后变换。
-pub fn fft_2d_16(img : @types.Image16) -> Array[FFTResult] raise @types.LoadError {
+pub fn fft_2d_16(
+  img : @types.Image16,
+) -> Array[FFTResult] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("fft_2d_16 仅支持 channels=1/3/4")
   }
@@ -55,7 +68,9 @@ pub fn fft_2d_16(img : @types.Image16) -> Array[FFTResult] raise @types.LoadErro
     }
   }
   let img8 = @types.Image::{
-    width: w, height: h, channels: color_ch,
+    width: w,
+    height: h,
+    channels: color_ch,
     data: Bytes::from_array(data8),
   }
   fft_2d(img8)
@@ -73,7 +88,12 @@ pub fn ifft_2d_16(fft : FFTResult) -> @types.Image16 {
     let v8 = img8.data[i].to_int()
     write_u16_le_freq(out, i * 2, v8 * 257)
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -88,7 +108,12 @@ pub fn fft_magnitude_16(fft : FFTResult, log_scale : Bool) -> @types.Image16 {
     let v8 = img8.data[i].to_int()
     write_u16_le_freq(out, i * 2, v8 * 257)
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== FFT float ==========
@@ -114,7 +139,9 @@ pub fn fft_2d_f(img : @types.ImageF) -> Array[FFTResult] raise @types.LoadError 
     }
   }
   let img8 = @types.Image::{
-    width: w, height: h, channels: color_ch,
+    width: w,
+    height: h,
+    channels: color_ch,
     data: Bytes::from_array(data8),
   }
   fft_2d(img8)
@@ -132,7 +159,12 @@ pub fn ifft_2d_f(fft : FFTResult) -> @types.ImageF {
     let v8 = img8.data[i].to_int()
     write_f32_le_freq(out, i * 4, Float::from_int(v8) / 255.0F)
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -147,7 +179,12 @@ pub fn fft_magnitude_f(fft : FFTResult, log_scale : Bool) -> @types.ImageF {
     let v8 = img8.data[i].to_int()
     write_f32_le_freq(out, i * 4, Float::from_int(v8) / 255.0F)
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== DCT 16-bit ==========
@@ -164,7 +201,12 @@ pub fn dct_2d_16(img : @types.Image16) -> Array[Array[Double]] {
     let v16 = read_u16_le_freq(img.data, i * 2)
     data8[i] = (v16 / 257).to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   dct_2d(img8)
 }
 
@@ -180,7 +222,12 @@ pub fn idct_2d_16(coeffs : Array[Array[Double]]) -> @types.Image16 {
     let v8 = img8.data[i].to_int()
     write_u16_le_freq(out, i * 2, v8 * 257)
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== DCT float ==========
@@ -197,7 +244,12 @@ pub fn dct_2d_f(img : @types.ImageF) -> Array[Array[Double]] {
     let v8 = clamp_int_freq((vf * 255.0F).to_int(), 0, 255)
     data8[i] = v8.to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   dct_2d(img8)
 }
 
@@ -213,7 +265,12 @@ pub fn idct_2d_f(coeffs : Array[Array[Double]]) -> @types.ImageF {
     let v8 = img8.data[i].to_int()
     write_f32_le_freq(out, i * 4, Float::from_int(v8) / 255.0F)
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== Haar 16-bit ==========
@@ -232,13 +289,20 @@ pub fn haar_transform_2d_16(
     let v16 = read_u16_le_freq(img.data, i * 2)
     data8[i] = (v16 / 257).to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   haar_transform_2d(img8, levels~)
 }
 
 ///|
 /// 16-bit 逆 Haar 小波变换。输出 Image16。
-pub fn haar_inverse_transform_2d_16(result : HaarWaveletResult) -> @types.Image16 {
+pub fn haar_inverse_transform_2d_16(
+  result : HaarWaveletResult,
+) -> @types.Image16 {
   let img8 = haar_inverse_transform_2d(result)
   let w = img8.width
   let h = img8.height
@@ -248,7 +312,12 @@ pub fn haar_inverse_transform_2d_16(result : HaarWaveletResult) -> @types.Image1
     let v8 = img8.data[i].to_int()
     write_u16_le_freq(out, i * 2, v8 * 257)
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -267,14 +336,24 @@ pub fn haar_denoise_16(
     let v16 = read_u16_le_freq(img.data, i * 2)
     data8[i] = (v16 / 257).to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   let out8 = haar_denoise(img8, threshold~, soft~, levels~)
   let out : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     let v8 = out8.data[i].to_int()
     write_u16_le_freq(out, i * 2, v8 * 257)
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 // ========== Haar float ==========
@@ -294,7 +373,12 @@ pub fn haar_transform_2d_f(
     let v8 = clamp_int_freq((vf * 255.0F).to_int(), 0, 255)
     data8[i] = v8.to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   haar_transform_2d(img8, levels~)
 }
 
@@ -310,7 +394,12 @@ pub fn haar_inverse_transform_2d_f(result : HaarWaveletResult) -> @types.ImageF 
     let v8 = img8.data[i].to_int()
     write_f32_le_freq(out, i * 4, Float::from_int(v8) / 255.0F)
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -330,12 +419,22 @@ pub fn haar_denoise_f(
     let v8 = clamp_int_freq((vf * 255.0F).to_int(), 0, 255)
     data8[i] = v8.to_byte()
   }
-  let img8 = @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  let img8 = @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
   let out8 = haar_denoise(img8, threshold~, soft~, levels~)
   let out : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let v8 = out8.data[i].to_int()
     write_f32_le_freq(out, i * 4, Float::from_int(v8) / 255.0F)
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(out) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(out),
+  }
 }

@@ -101,7 +101,7 @@ pub(all) struct TextSummarizationResult {
   compression_ratio : Double
   original_length : Int
   summary_length : Int
-  method : String
+  method_type : String
   rouge_score : Double
 }
 
@@ -114,7 +114,7 @@ pub(all) struct MachineTranslationResult {
   target_language : String
   confidence : Double
   bleu_score : Double
-  method : String
+  method_type : String
 }
 
 ///|
@@ -126,7 +126,7 @@ pub(all) struct QuestionAnsweringResult {
   confidence : Double
   answer_start : Int
   answer_end : Int
-  method : String
+  method_type : String
 }
 
 ///|
@@ -178,15 +178,13 @@ pub fn create_default_nlp_config() -> NLPConfig {
 
 ///|
 /// 文本分词（简化版）
-pub fn tokenize(
-  text : String,
-) -> Array[String] {
+pub fn tokenize(text : String) -> Array[String] {
   let tokens : Array[String] = []
 
   // 简化的分词：按空格分割
   let parts = text.split(" ")
   for part in parts {
-    let part_str = part.to_string()
+    let part_str = part.to_owned()
     if part_str.length() > 0 {
       tokens.push(part_str)
     }
@@ -209,7 +207,7 @@ pub fn classify_text(
   let keywords = [
     ["happy", "good", "great", "excellent", "love"],
     ["sad", "bad", "terrible", "awful", "hate"],
-    ["neutral", "okay", "fine", "average", "normal"]
+    ["neutral", "okay", "fine", "average", "normal"],
   ]
 
   for class_idx in 0..<classes.length() {
@@ -264,9 +262,7 @@ pub fn classify_text(
 
 ///|
 /// 命名实体识别（简化版）
-pub fn recognize_entities(
-  text : String,
-) -> NERResult {
+pub fn recognize_entities(text : String) -> NERResult {
   let entities : Array[String] = []
   let entity_types : Array[NEREntityType] = []
   let entity_spans : Array[Array[Int]] = []
@@ -289,9 +285,13 @@ pub fn recognize_entities(
       if token.length() > 1 {
         is_entity = true
         // 简化的实体类型判断
-        if token.contains("Inc") || token.contains("Corp") || token.contains("Company") {
+        if token.contains("Inc") ||
+          token.contains("Corp") ||
+          token.contains("Company") {
           entity_type = NEREntityType::Organization
-        } else if token.contains("Street") || token.contains("Avenue") || token.contains("City") {
+        } else if token.contains("Street") ||
+          token.contains("Avenue") ||
+          token.contains("City") {
           entity_type = NEREntityType::Location
         } else {
           entity_type = NEREntityType::Person
@@ -324,13 +324,17 @@ pub fn recognize_entities(
 
 ///|
 /// 情感分析（简化版）
-pub fn analyze_sentiment(
-  text : String,
-) -> SentimentAnalysisResult {
+pub fn analyze_sentiment(text : String) -> SentimentAnalysisResult {
   let tokens = tokenize(text)
 
-  let positive_words = ["good", "great", "excellent", "love", "happy", "amazing", "wonderful", "fantastic", "best", "perfect"]
-  let negative_words = ["bad", "terrible", "awful", "hate", "sad", "horrible", "worst", "poor", "disappointing", "ugly"]
+  let positive_words = [
+    "good", "great", "excellent", "love", "happy", "amazing", "wonderful", "fantastic",
+    "best", "perfect",
+  ]
+  let negative_words = [
+    "bad", "terrible", "awful", "hate", "sad", "horrible", "worst", "poor", "disappointing",
+    "ugly",
+  ]
 
   let mut positive_count = 0
   let mut negative_count = 0
@@ -350,8 +354,16 @@ pub fn analyze_sentiment(
   }
 
   let total = positive_count + negative_count
-  let positive_score = if total > 0 { positive_count.to_double() / total.to_double() } else { 0.5 }
-  let negative_score = if total > 0 { negative_count.to_double() / total.to_double() } else { 0.5 }
+  let positive_score = if total > 0 {
+    positive_count.to_double() / total.to_double()
+  } else {
+    0.5
+  }
+  let negative_score = if total > 0 {
+    negative_count.to_double() / total.to_double()
+  } else {
+    0.5
+  }
   let neutral_score = 1.0 - positive_score - negative_score
 
   let sentiment_score = positive_score - negative_score
@@ -395,7 +407,7 @@ pub fn summarize_text(
   let sentences : Array[String] = []
   let parts = text.split(".")
   for part in parts {
-    let current_sentence = part.to_string() + "."
+    let current_sentence = part.to_owned() + "."
     if current_sentence.length() > 10 {
       sentences.push(current_sentence)
     }
@@ -434,28 +446,25 @@ pub fn summarize_text(
     compression_ratio,
     original_length,
     summary_length,
-    method: "extractive",
+    method_type: "extractive",
     rouge_score: 0.5,
   }
 }
 
 ///|
 /// 生成文本嵌入（简化版）
-pub fn embed_text(
-  text : String,
-  embedding_dim : Int,
-) -> TextEmbedding {
+pub fn embed_text(text : String, embedding_dim : Int) -> TextEmbedding {
   let tokens = tokenize(text)
   let embedding : Array[Double] = []
   let token_ids : Array[Int] = []
 
   let mut state = 42
-  for i in 0..<embedding_dim {
+  for _ in 0..<embedding_dim {
     state = (state * 11035 + 12345) % 1000000
     embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
   }
 
-  for token in tokens {
+  for _ in tokens {
     state = (state * 11035 + 12345) % 1000000
     token_ids.push(state % 30000)
   }
@@ -481,27 +490,33 @@ pub fn nlp_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    NLPTaskType::TextClassification => "文本分类"
-    NLPTaskType::NamedEntityRecognition => "命名实体识别"
-    NLPTaskType::SentimentAnalysis => "情感分析"
-    NLPTaskType::TextSummarization => "文本摘要"
-    NLPTaskType::MachineTranslation => "机器翻译"
-    NLPTaskType::QuestionAnswering => "问答系统"
-    NLPTaskType::TextGeneration => "文本生成"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 分类模型 | " + (match config.classification_model {
-    TextClassificationModel::NaiveBayes => "朴素贝叶斯"
-    TextClassificationModel::SVM => "SVM"
-    TextClassificationModel::CNN => "CNN"
-    TextClassificationModel::RNN => "RNN"
-    TextClassificationModel::LSTM => "LSTM"
-    TextClassificationModel::Transformer => "Transformer"
-    TextClassificationModel::BERT => "BERT"
-    TextClassificationModel::RoBERTa => "RoBERTa"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      NLPTaskType::TextClassification => "文本分类"
+      NLPTaskType::NamedEntityRecognition => "命名实体识别"
+      NLPTaskType::SentimentAnalysis => "情感分析"
+      NLPTaskType::TextSummarization => "文本摘要"
+      NLPTaskType::MachineTranslation => "机器翻译"
+      NLPTaskType::QuestionAnswering => "问答系统"
+      NLPTaskType::TextGeneration => "文本生成"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 分类模型 | " +
+    (match config.classification_model {
+      TextClassificationModel::NaiveBayes => "朴素贝叶斯"
+      TextClassificationModel::SVM => "SVM"
+      TextClassificationModel::CNN => "CNN"
+      TextClassificationModel::RNN => "RNN"
+      TextClassificationModel::LSTM => "LSTM"
+      TextClassificationModel::Transformer => "Transformer"
+      TextClassificationModel::BERT => "BERT"
+      TextClassificationModel::RoBERTa => "RoBERTa"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 最大长度 | " + config.max_length.to_string() + " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"

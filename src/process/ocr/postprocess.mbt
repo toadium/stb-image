@@ -27,42 +27,42 @@ pub fn postprocess_default_config() -> PostProcessConfig {
 /// 词典结构体
 pub(all) struct Dictionary {
   words : Array[String]
-  word_set : Array[String]  // 用于快速查找（简化版）
+  word_set : Array[String] // 用于快速查找（简化版）
 }
 
 ///|
 /// 创建词典
-pub fn dictionary_create(words : Array[String]) -> Dictionary raise @types.LoadError {
+pub fn dictionary_create(
+  words : Array[String],
+) -> Dictionary raise @types.LoadError {
   // 输入验证
   if words.length() == 0 {
-    raise @types.LoadError::DecodeFailed("dictionary_create: 单词列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "dictionary_create: 单词列表不能为空",
+    )
   }
 
-  Dictionary::{
-    words,
-    word_set: words,
-  }
+  Dictionary::{ words, word_set: words }
 }
 
 ///|
 /// 创建常用英文单词词典
 pub fn dictionary_create_common_english() -> Dictionary {
   let words : Array[String] = [
-    "the", "be", "to", "of", "and", "a", "in", "that", "have", "I",
-    "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
-    "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
-    "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
-    "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
-    "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
-    "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
-    "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
-    "back", "after", "use", "two", "how", "our", "work", "first", "well", "way",
-    "even", "new", "want", "because", "any", "these", "give", "day", "most", "us",
-    "hello", "world", "image", "text", "ocr", "digit", "number", "letter", "word", "line",
-    "page", "document", "scan", "read", "write", "print", "font", "size", "color", "black",
-    "white", "gray", "bright", "dark", "contrast", "sharp", "blur", "noise", "filter",
-    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-    "ten", "hundred", "thousand", "million", "billion",
+    "the", "be", "to", "of", "and", "a", "in", "that", "have", "I", "it", "for",
+    "not", "on", "with", "he", "as", "you", "do", "at", "this", "but", "his", "by",
+    "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all",
+    "would", "there", "their", "what", "so", "up", "out", "if", "about", "who", "get",
+    "which", "go", "me", "when", "make", "can", "like", "time", "no", "just", "him",
+    "know", "take", "people", "into", "year", "your", "good", "some", "could", "them",
+    "see", "other", "than", "then", "now", "look", "only", "come", "its", "over",
+    "think", "also", "back", "after", "use", "two", "how", "our", "work", "first",
+    "well", "way", "even", "new", "want", "because", "any", "these", "give", "day",
+    "most", "us", "hello", "world", "image", "text", "ocr", "digit", "number", "letter",
+    "word", "line", "page", "document", "scan", "read", "write", "print", "font",
+    "size", "color", "black", "white", "gray", "bright", "dark", "contrast", "sharp",
+    "blur", "noise", "filter", "zero", "one", "two", "three", "four", "five", "six",
+    "seven", "eight", "nine", "ten", "hundred", "thousand", "million", "billion",
     "yes", "no", "true", "false", "ok", "okay", "error", "warning", "info", "debug",
     "start", "stop", "begin", "end", "open", "close", "save", "load", "delete", "copy",
     "paste", "cut", "undo", "redo", "find", "replace", "search", "result", "output",
@@ -70,17 +70,14 @@ pub fn dictionary_create_common_english() -> Dictionary {
     "code", "program", "software", "hardware", "system", "network", "server", "client",
     "user", "admin", "password", "login", "logout", "register", "account", "profile",
     "setting", "option", "config", "parameter", "argument", "variable", "function",
-    "class", "object", "method", "property", "attribute", "field", "element", "node",
-    "tree", "list", "array", "map", "set", "queue", "stack", "heap", "graph",
-    "string", "integer", "float", "double", "boolean", "char", "byte", "bit",
-    "pixel", "image", "width", "height", "channel", "format", "encode", "decode",
-    "compress", "decompress", "encrypt", "decrypt", "hash", "checksum", "signature",
-    "test", "test1", "test2", "abc", "abcd", "xyz", "foo", "bar", "baz",
+    "class", "object", "method_type", "property", "attribute", "field", "element",
+    "node", "tree", "list", "array", "map", "set", "queue", "stack", "heap", "graph",
+    "string", "integer", "float", "double", "boolean", "char", "byte", "bit", "pixel",
+    "image", "width", "height", "channel", "format", "encode", "decode", "compress",
+    "decompress", "encrypt", "decrypt", "hash", "checksum", "signature", "test",
+    "test1", "test2", "abc", "abcd", "xyz", "foo", "bar", "baz",
   ]
-  Dictionary::{
-    words,
-    word_set: words,
-  }
+  Dictionary::{ words, word_set: words }
 }
 
 ///|
@@ -88,7 +85,9 @@ pub fn dictionary_create_common_english() -> Dictionary {
 pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
   // 输入验证
   if s1.length() == 0 && s2.length() == 0 {
-    raise @types.LoadError::DecodeFailed("edit_distance: 两个字符串不能同时为空")
+    raise @types.LoadError::DecodeFailed(
+      "edit_distance: 两个字符串不能同时为空",
+    )
   }
 
   let len1 = s1.length()
@@ -137,7 +136,9 @@ pub fn dictionary_match(
     raise @types.LoadError::DecodeFailed("dictionary_match: 词典不能为空")
   }
   if max_distance < 0 {
-    raise @types.LoadError::DecodeFailed("dictionary_match: max_distance不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "dictionary_match: max_distance不能为负数",
+    )
   }
 
   let results : Array[(String, Int)] = []
@@ -148,7 +149,7 @@ pub fn dictionary_match(
     }
   }
   // 按距离排序
-  for i in 0..<results.length() {
+  for _ in 0..<results.length() {
     for j in 0..<(results.length() - 1) {
       if results[j].1 > results[j + 1].1 {
         let temp = results[j]
@@ -164,7 +165,7 @@ pub fn dictionary_match(
 /// N-gram 语言模型
 pub(all) struct NgramModel {
   n : Int
-  bigram_counts : Array[(String, Int)]  // 简化版：存储bigram和计数
+  bigram_counts : Array[(String, Int)] // 简化版：存储bigram和计数
   unigram_counts : Array[(String, Int)]
 }
 
@@ -176,7 +177,9 @@ pub fn ngram_create(
 ) -> NgramModel raise @types.LoadError {
   // 输入验证
   if texts.length() == 0 {
-    raise @types.LoadError::DecodeFailed("ngram_create: 文本列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "ngram_create: 文本列表不能为空",
+    )
   }
   if n < 1 {
     raise @types.LoadError::DecodeFailed("ngram_create: n必须大于等于1")
@@ -215,11 +218,7 @@ pub fn ngram_create(
       }
     }
   }
-  NgramModel::{
-    n,
-    bigram_counts,
-    unigram_counts,
-  }
+  NgramModel::{ n, bigram_counts, unigram_counts }
 }
 
 ///|
@@ -233,7 +232,9 @@ pub fn ngram_score(
     raise @types.LoadError::DecodeFailed("ngram_score: 文本不能为空")
   }
   if model.bigram_counts.length() == 0 && model.unigram_counts.length() == 0 {
-    raise @types.LoadError::DecodeFailed("ngram_score: N-gram模型不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "ngram_score: N-gram模型不能为空",
+    )
   }
 
   if text.length() < 2 {
@@ -279,7 +280,9 @@ pub fn ocr_postprocess(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if result.characters.length() == 0 && result.text.length() == 0 {
-    raise @types.LoadError::DecodeFailed("ocr_postprocess: OCR结果不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "ocr_postprocess: OCR结果不能为空",
+    )
   }
 
   let cfg = match config {
@@ -404,10 +407,14 @@ pub fn calibrate_confidence(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if result.characters.length() == 0 {
-    raise @types.LoadError::DecodeFailed("calibrate_confidence: OCR结果字符列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "calibrate_confidence: OCR结果字符列表不能为空",
+    )
   }
   if factor <= 0.0 {
-    raise @types.LoadError::DecodeFailed("calibrate_confidence: factor必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "calibrate_confidence: factor必须大于0",
+    )
   }
 
   let calibrated_chars : Array[OcrCharResult] = []

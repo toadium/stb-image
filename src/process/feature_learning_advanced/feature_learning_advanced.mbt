@@ -257,7 +257,11 @@ pub fn create_default_feature_learning_config() -> FeatureLearningConfig {
 
 ///|
 /// 简化的特征提取（使用统计特征）
-fn extract_statistical_features(image : Array[Double], width : Int, height : Int) -> Array[Double] {
+fn extract_statistical_features(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+) -> Array[Double] {
   let features : Array[Double] = []
 
   // 均值
@@ -265,7 +269,11 @@ fn extract_statistical_features(image : Array[Double], width : Int, height : Int
   for v in image {
     sum += v
   }
-  let mean = if image.length() > 0 { sum / image.length().to_double() } else { 0.0 }
+  let mean = if image.length() > 0 {
+    sum / image.length().to_double()
+  } else {
+    0.0
+  }
   features.push(mean)
 
   // 方差
@@ -274,7 +282,11 @@ fn extract_statistical_features(image : Array[Double], width : Int, height : Int
     let diff = v - mean
     var_sum += diff * diff
   }
-  let variance = if image.length() > 0 { var_sum / image.length().to_double() } else { 0.0 }
+  let variance = if image.length() > 0 {
+    var_sum / image.length().to_double()
+  } else {
+    0.0
+  }
   features.push(variance)
 
   // 标准差
@@ -308,7 +320,7 @@ fn extract_statistical_features(image : Array[Double], width : Int, height : Int
   // 中位数（简化：使用排序后的中间值）
   let sorted = image
   // 简单排序
-  for i in 0..<sorted.length() {
+  for _ in 0..<sorted.length() {
     for j in 0..<(sorted.length() - 1) {
       if sorted[j] > sorted[j + 1] {
         let temp = sorted[j]
@@ -331,7 +343,7 @@ fn extract_statistical_features(image : Array[Double], width : Int, height : Int
     skew_sum += diff * diff * diff
   }
   let skewness = if std > 0.0 && image.length() > 0 {
-    (skew_sum / image.length().to_double()) / (std * std * std)
+    skew_sum / image.length().to_double() / (std * std * std)
   } else {
     0.0
   }
@@ -344,7 +356,7 @@ fn extract_statistical_features(image : Array[Double], width : Int, height : Int
     kurt_sum += diff * diff * diff * diff
   }
   let kurtosis = if std > 0.0 && image.length() > 0 {
-    (kurt_sum / image.length().to_double()) / (std * std * std * std) - 3.0
+    kurt_sum / image.length().to_double() / (std * std * std * std) - 3.0
   } else {
     0.0
   }
@@ -448,7 +460,13 @@ pub fn extract_features_fl(
         }
       }
     }
-    stat.push(if features.length() > 0 { sum / features.length().to_double() } else { 0.0 })
+    stat.push(
+      if features.length() > 0 {
+        sum / features.length().to_double()
+      } else {
+        0.0
+      },
+    )
     stat.push(min_val)
     stat.push(max_val)
     stats.push(stat)
@@ -494,7 +512,11 @@ pub fn select_features_fl(
         var_sum += diff * diff
       }
     }
-    let variance = if num_samples > 0 { var_sum / num_samples.to_double() } else { 0.0 }
+    let variance = if num_samples > 0 {
+      var_sum / num_samples.to_double()
+    } else {
+      0.0
+    }
     scores.push(variance)
   }
 
@@ -503,7 +525,7 @@ pub fn select_features_fl(
   for f in 0..<num_features {
     ranking.push(f)
   }
-  for i in 0..<num_features {
+  for _ in 0..<num_features {
     for j in 0..<(num_features - 1) {
       if scores[ranking[j]] < scores[ranking[j + 1]] {
         let temp = ranking[j]
@@ -587,7 +609,11 @@ pub fn transform_features_fl(
         var_sum += diff * diff
       }
     }
-    let variance = if num_samples > 0 { var_sum / num_samples.to_double() } else { 0.0 }
+    let variance = if num_samples > 0 {
+      var_sum / num_samples.to_double()
+    } else {
+      0.0
+    }
     let s = if variance > 0.0 {
       let mut result = variance
       for _ in 0..<20 {
@@ -635,7 +661,11 @@ pub fn fuse_features_fl(
   features_list : Array[Array[Array[Double]]],
   config : FeatureLearningConfig,
 ) -> FeatureFusionResult {
-  let num_samples = if features_list.length() > 0 { features_list[0].length() } else { 0 }
+  let num_samples = if features_list.length() > 0 {
+    features_list[0].length()
+  } else {
+    0
+  }
   let input_dims : Array[Int] = []
   for feats in features_list {
     if feats.length() > 0 {
@@ -710,7 +740,11 @@ pub fn learn_features(
   }
 
   let selected : Array[Int] = []
-  let k = if config.num_features < original_dim { config.num_features } else { original_dim }
+  let k = if config.num_features < original_dim {
+    config.num_features
+  } else {
+    original_dim
+  }
   for i in 0..<k {
     selected.push(i)
   }
@@ -744,91 +778,115 @@ pub fn feature_learning_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    FeatureLearningTaskType::FeatureExtraction => "特征提取"
-    FeatureLearningTaskType::FeatureSelection => "特征选择"
-    FeatureLearningTaskType::FeatureTransformation => "特征变换"
-    FeatureLearningTaskType::FeatureFusion => "特征融合"
-    FeatureLearningTaskType::MetricLearning => "度量学习"
-    FeatureLearningTaskType::ContrastiveLearning => "对比学习"
-    FeatureLearningTaskType::SelfSupervisedLearning => "自监督学习"
-    FeatureLearningTaskType::RepresentationLearning => "表示学习"
-    FeatureLearningTaskType::TransferLearning => "迁移学习"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 提取方法 | " + (match config.extraction_method {
-    FeatureExtractionMethodType::Handcrafted => "手工特征"
-    FeatureExtractionMethodType::DeepLearning => "深度学习"
-    FeatureExtractionMethodType::CNN => "CNN"
-    FeatureExtractionMethodType::ResNet => "ResNet"
-    FeatureExtractionMethodType::VGG => "VGG"
-    FeatureExtractionMethodType::Inception => "Inception"
-    FeatureExtractionMethodType::EfficientNet => "EfficientNet"
-    FeatureExtractionMethodType::VisionTransformer => "Vision Transformer"
-    FeatureExtractionMethodType::Autoencoder => "自动编码器"
-    FeatureExtractionMethodType::PCA => "PCA"
-    FeatureExtractionMethodType::LDA => "LDA"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 选择方法 | " + (match config.selection_method {
-    FeatureSelectionMethodType::Filter => "Filter"
-    FeatureSelectionMethodType::Wrapper => "Wrapper"
-    FeatureSelectionMethodType::Embedded => "Embedded"
-    FeatureSelectionMethodType::VarianceThreshold => "方差阈值"
-    FeatureSelectionMethodType::SelectKBest => "SelectKBest"
-    FeatureSelectionMethodType::SelectPercentile => "SelectPercentile"
-    FeatureSelectionMethodType::RFE => "RFE"
-    FeatureSelectionMethodType::L1Regularization => "L1正则化"
-    FeatureSelectionMethodType::TreeBased => "树基"
-    FeatureSelectionMethodType::MutualInformation => "互信息"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 变换方法 | " + (match config.transformation_method {
-    FeatureTransformationMethodType::Standardization => "标准化"
-    FeatureTransformationMethodType::Normalization => "归一化"
-    FeatureTransformationMethodType::Scaling => "缩放"
-    FeatureTransformationMethodType::LogTransform => "对数变换"
-    FeatureTransformationMethodType::PowerTransform => "幂变换"
-    FeatureTransformationMethodType::QuantileTransform => "分位数变换"
-    FeatureTransformationMethodType::Binning => "分箱"
-    FeatureTransformationMethodType::OneHotEncoding => "独热编码"
-    FeatureTransformationMethodType::PCA => "PCA"
-    FeatureTransformationMethodType::LDA => "LDA"
-    FeatureTransformationMethodType::NMF => "NMF"
-    FeatureTransformationMethodType::ICA => "ICA"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 融合方法 | " + (match config.fusion_method {
-    FeatureFusionMethodType::Concatenation => "拼接"
-    FeatureFusionMethodType::Addition => "加法"
-    FeatureFusionMethodType::Multiplication => "乘法"
-    FeatureFusionMethodType::WeightedSum => "加权和"
-    FeatureFusionMethodType::Attention => "注意力"
-    FeatureFusionMethodType::GatedFusion => "门控融合"
-    FeatureFusionMethodType::BilinearPooling => "双线性池化"
-    FeatureFusionMethodType::CompactBilinearPooling => "紧凑双线性池化"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 度量方法 | " + (match config.metric_method {
-    MetricLearningMethodType::ContrastiveLoss => "对比损失"
-    MetricLearningMethodType::TripletLoss => "三元组损失"
-    MetricLearningMethodType::QuadrupletLoss => "四元组损失"
-    MetricLearningMethodType::NPairLoss => "N-Pair损失"
-    MetricLearningMethodType::LiftedStructured => "Lifted Structured"
-    MetricLearningMethodType::ProxyNCA => "ProxyNCA"
-    MetricLearningMethodType::ProxyAnchor => "Proxy Anchor"
-    MetricLearningMethodType::CircleLoss => "Circle Loss"
-    MetricLearningMethodType::ArcFace => "ArcFace"
-    MetricLearningMethodType::CosFace => "CosFace"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征数量 | " + config.num_features.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      FeatureLearningTaskType::FeatureExtraction => "特征提取"
+      FeatureLearningTaskType::FeatureSelection => "特征选择"
+      FeatureLearningTaskType::FeatureTransformation => "特征变换"
+      FeatureLearningTaskType::FeatureFusion => "特征融合"
+      FeatureLearningTaskType::MetricLearning => "度量学习"
+      FeatureLearningTaskType::ContrastiveLearning => "对比学习"
+      FeatureLearningTaskType::SelfSupervisedLearning => "自监督学习"
+      FeatureLearningTaskType::RepresentationLearning => "表示学习"
+      FeatureLearningTaskType::TransferLearning => "迁移学习"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 提取方法 | " +
+    (match config.extraction_method {
+      FeatureExtractionMethodType::Handcrafted => "手工特征"
+      FeatureExtractionMethodType::DeepLearning => "深度学习"
+      FeatureExtractionMethodType::CNN => "CNN"
+      FeatureExtractionMethodType::ResNet => "ResNet"
+      FeatureExtractionMethodType::VGG => "VGG"
+      FeatureExtractionMethodType::Inception => "Inception"
+      FeatureExtractionMethodType::EfficientNet => "EfficientNet"
+      FeatureExtractionMethodType::VisionTransformer => "Vision Transformer"
+      FeatureExtractionMethodType::Autoencoder => "自动编码器"
+      FeatureExtractionMethodType::PCA => "PCA"
+      FeatureExtractionMethodType::LDA => "LDA"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 选择方法 | " +
+    (match config.selection_method {
+      FeatureSelectionMethodType::Filter => "Filter"
+      FeatureSelectionMethodType::Wrapper => "Wrapper"
+      FeatureSelectionMethodType::Embedded => "Embedded"
+      FeatureSelectionMethodType::VarianceThreshold => "方差阈值"
+      FeatureSelectionMethodType::SelectKBest => "SelectKBest"
+      FeatureSelectionMethodType::SelectPercentile => "SelectPercentile"
+      FeatureSelectionMethodType::RFE => "RFE"
+      FeatureSelectionMethodType::L1Regularization => "L1正则化"
+      FeatureSelectionMethodType::TreeBased => "树基"
+      FeatureSelectionMethodType::MutualInformation => "互信息"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 变换方法 | " +
+    (match config.transformation_method {
+      FeatureTransformationMethodType::Standardization => "标准化"
+      FeatureTransformationMethodType::Normalization => "归一化"
+      FeatureTransformationMethodType::Scaling => "缩放"
+      FeatureTransformationMethodType::LogTransform => "对数变换"
+      FeatureTransformationMethodType::PowerTransform => "幂变换"
+      FeatureTransformationMethodType::QuantileTransform => "分位数变换"
+      FeatureTransformationMethodType::Binning => "分箱"
+      FeatureTransformationMethodType::OneHotEncoding => "独热编码"
+      FeatureTransformationMethodType::PCA => "PCA"
+      FeatureTransformationMethodType::LDA => "LDA"
+      FeatureTransformationMethodType::NMF => "NMF"
+      FeatureTransformationMethodType::ICA => "ICA"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 融合方法 | " +
+    (match config.fusion_method {
+      FeatureFusionMethodType::Concatenation => "拼接"
+      FeatureFusionMethodType::Addition => "加法"
+      FeatureFusionMethodType::Multiplication => "乘法"
+      FeatureFusionMethodType::WeightedSum => "加权和"
+      FeatureFusionMethodType::Attention => "注意力"
+      FeatureFusionMethodType::GatedFusion => "门控融合"
+      FeatureFusionMethodType::BilinearPooling => "双线性池化"
+      FeatureFusionMethodType::CompactBilinearPooling => "紧凑双线性池化"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 度量方法 | " +
+    (match config.metric_method {
+      MetricLearningMethodType::ContrastiveLoss => "对比损失"
+      MetricLearningMethodType::TripletLoss => "三元组损失"
+      MetricLearningMethodType::QuadrupletLoss => "四元组损失"
+      MetricLearningMethodType::NPairLoss => "N-Pair损失"
+      MetricLearningMethodType::LiftedStructured => "Lifted Structured"
+      MetricLearningMethodType::ProxyNCA => "ProxyNCA"
+      MetricLearningMethodType::ProxyAnchor => "Proxy Anchor"
+      MetricLearningMethodType::CircleLoss => "Circle Loss"
+      MetricLearningMethodType::ArcFace => "ArcFace"
+      MetricLearningMethodType::CosFace => "CosFace"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征数量 | " +
+    config.num_features.to_string() +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 训练轮数 | " + config.num_epochs.to_string() + " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"
   report = report + "| 边距 | " + config.margin.to_string() + " |\n"
   report = report + "| 温度 | " + config.temperature.to_string() + " |\n"
-  report = report + "| 使用预训练 | " + (if config.use_pretrained { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 使用预训练 | " +
+    (if config.use_pretrained { "开启" } else { "关闭" }) +
+    " |\n"
   report = report + "| 预训练模型 | " + config.pretrained_model + " |\n"
 
   report = report + "\n### 结果\n\n"

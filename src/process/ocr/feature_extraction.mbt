@@ -61,15 +61,22 @@ pub fn hog_features(
 ) -> HogFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("hog_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "hog_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("hog_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "hog_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "hog_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "hog_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if cell_size <= 0 {
@@ -93,9 +100,14 @@ pub fn hog_features(
       let gy = data[(y + 1) * w + x].to_int() - data[(y - 1) * w + x].to_int()
       grad_x[y * w + x] = gx.to_double()
       grad_y[y * w + x] = gy.to_double()
-      magnitude[y * w + x] = (gx.to_double() * gx.to_double() + gy.to_double() * gy.to_double()).sqrt()
-      let mut angle = @math.atan2(gy.to_double(), gx.to_double()) * 180.0 / 3.141592653589793
-      if angle < 0.0 { angle += 180.0 }
+      magnitude[y * w + x] = (gx.to_double() * gx.to_double() +
+      gy.to_double() * gy.to_double()).sqrt()
+      let mut angle = @math.atan2(gy.to_double(), gx.to_double()) *
+        180.0 /
+        3.141592653589793
+      if angle < 0.0 {
+        angle += 180.0
+      }
       orientation[y * w + x] = angle
     }
   }
@@ -149,22 +161,31 @@ pub fn lbp_features(
 ) -> LbpFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("lbp_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lbp_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("lbp_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "lbp_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "lbp_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "lbp_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius <= 0 {
     raise @types.LoadError::DecodeFailed("lbp_features: radius必须大于0")
   }
   if num_points <= 0 {
-    raise @types.LoadError::DecodeFailed("lbp_features: num_points必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lbp_features: num_points必须大于0",
+    )
   }
   if num_bins <= 0 {
     raise @types.LoadError::DecodeFailed("lbp_features: num_bins必须大于0")
@@ -180,7 +201,10 @@ pub fn lbp_features(
       let center = data[y * w + x].to_int()
       let mut code = 0
       for i in 0..<num_points {
-        let angle = 2.0 * 3.141592653589793 * i.to_double() / num_points.to_double()
+        let angle = 2.0 *
+          3.141592653589793 *
+          i.to_double() /
+          num_points.to_double()
         let nx = (x.to_double() + radius.to_double() * @math.cos(angle)).to_int()
         let ny = (y.to_double() + radius.to_double() * @math.sin(angle)).to_int()
         if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -209,12 +233,7 @@ pub fn lbp_features(
       hist[i] /= total.to_double()
     }
   }
-  LbpFeatures::{
-    features: hist,
-    num_bins,
-    radius,
-    num_points,
-  }
+  LbpFeatures::{ features: hist, num_bins, radius, num_points }
 }
 
 ///|
@@ -224,15 +243,22 @@ pub fn projection_features(
 ) -> ProjectionFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("projection_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "projection_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("projection_features: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "projection_features: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "projection_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "projection_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -285,22 +311,33 @@ pub fn grid_features(
 ) -> GridFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("grid_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "grid_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("grid_features: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "grid_features: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "grid_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "grid_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if grid_rows <= 0 {
-    raise @types.LoadError::DecodeFailed("grid_features: grid_rows必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "grid_features: grid_rows必须大于0",
+    )
   }
   if grid_cols <= 0 {
-    raise @types.LoadError::DecodeFailed("grid_features: grid_cols必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "grid_features: grid_cols必须大于0",
+    )
   }
 
   let w = img.width
@@ -325,15 +362,15 @@ pub fn grid_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
-  GridFeatures::{
-    features,
-    grid_rows,
-    grid_cols,
-  }
+  GridFeatures::{ features, grid_rows, grid_cols }
 }
 
 ///|
@@ -343,15 +380,22 @@ pub fn statistical_features(
 ) -> StatisticalFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("statistical_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "statistical_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("statistical_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "statistical_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "statistical_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "statistical_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -438,15 +482,22 @@ pub fn combined_features(
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("combined_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "combined_features: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("combined_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "combined_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "combined_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "combined_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -461,7 +512,11 @@ pub fn combined_features(
     combined.push(f)
   }
   // LBP 特征（降采样，只取前64维）
-  let lbp_dim = if lbp.features.length() > 64 { 64 } else { lbp.features.length() }
+  let lbp_dim = if lbp.features.length() > 64 {
+    64
+  } else {
+    lbp.features.length()
+  }
   for i in 0..<lbp_dim {
     combined.push(lbp.features[i])
   }
@@ -511,5 +566,9 @@ fn std_array(arr : Array[Double], mean : Double) -> Double {
     sum_sq += diff * diff
   }
   let variance = sum_sq / arr.length().to_double()
-  if variance > 0.0 { variance.sqrt() } else { 0.0 }
+  if variance > 0.0 {
+    variance.sqrt()
+  } else {
+    0.0
+  }
 }

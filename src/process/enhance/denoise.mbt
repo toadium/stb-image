@@ -4,21 +4,16 @@
 ///|
 /// 非局部均值去噪配置
 pub(all) struct NlmConfig {
-  search_window : Int  // 搜索窗口大小
-  patch_size : Int  // 补丁大小
-  h : Double  // 滤波强度参数
-  sigma : Double  // 噪声标准差
+  search_window : Int // 搜索窗口大小
+  patch_size : Int // 补丁大小
+  h : Double // 滤波强度参数
+  sigma : Double // 噪声标准差
 }
 
 ///|
 /// 创建默认 NLM 配置
 pub fn nlm_default_config() -> NlmConfig {
-  NlmConfig::{
-    search_window: 21,
-    patch_size: 7,
-    h: 10.0,
-    sigma: 10.0,
-  }
+  NlmConfig::{ search_window: 21, patch_size: 7, h: 10.0, sigma: 10.0 }
 }
 
 ///|
@@ -30,15 +25,22 @@ pub fn denoise_nlm(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("denoise_nlm: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_nlm: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("denoise_nlm: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_nlm: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "denoise_nlm: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "denoise_nlm: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -49,7 +51,9 @@ pub fn denoise_nlm(
 
   // 参数验证
   if cfg.search_window <= 0 {
-    raise @types.LoadError::DecodeFailed("denoise_nlm: search_window必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_nlm: search_window必须大于0",
+    )
   }
   if cfg.patch_size <= 0 {
     raise @types.LoadError::DecodeFailed("denoise_nlm: patch_size必须大于0")
@@ -72,22 +76,28 @@ pub fn denoise_nlm(
         let mut weighted_sum = 0.0
         let mut weight_sum = 0.0
         // 在搜索窗口内寻找相似块
-        for dy in (-half_search)..<(half_search + 1) {
-          for dx in (-half_search)..<(half_search + 1) {
+        for dy in -half_search..<(half_search + 1) {
+          for dx in -half_search..<(half_search + 1) {
             let nx = x + dx
             let ny = y + dy
             if nx >= 0 && nx < w && ny >= 0 && ny < h {
               // 计算两个块的相似度（欧氏距离）
               let mut dist = 0.0
               let mut count = 0
-              for py in (-half_patch)..<(half_patch + 1) {
-                for px in (-half_patch)..<(half_patch + 1) {
+              for py in -half_patch..<(half_patch + 1) {
+                for px in -half_patch..<(half_patch + 1) {
                   let p1x = x + px
                   let p1y = y + py
                   let p2x = nx + px
                   let p2y = ny + py
-                  if p1x >= 0 && p1x < w && p1y >= 0 && p1y < h &&
-                     p2x >= 0 && p2x < w && p2y >= 0 && p2y < h {
+                  if p1x >= 0 &&
+                    p1x < w &&
+                    p1y >= 0 &&
+                    p1y < h &&
+                    p2x >= 0 &&
+                    p2x < w &&
+                    p2y >= 0 &&
+                    p2y < h {
                     let v1 = data[(p1y * w + p1x) * channels + c].to_double()
                     let v2 = data[(p2y * w + p2x) * channels + c].to_double()
                     let diff = v1 - v2
@@ -100,21 +110,31 @@ pub fn denoise_nlm(
                 dist = dist / count.to_double()
                 // 高斯权重
                 let weight = @math.exp(-dist / h2)
-                weighted_sum += data[(ny * w + nx) * channels + c].to_double() * weight
+                weighted_sum += data[(ny * w + nx) * channels + c].to_double() *
+                  weight
                 weight_sum += weight
               }
             }
           }
         }
         if weight_sum > 0.0 {
-          out_data[(y * w + x) * channels + c] = (weighted_sum / weight_sum).min(255.0).max(0.0).to_int().to_byte()
+          out_data[(y * w + x) * channels + c] = (weighted_sum / weight_sum)
+            .min(255.0)
+            .max(0.0)
+            .to_int()
+            .to_byte()
         } else {
           out_data[(y * w + x) * channels + c] = data[(y * w + x) * channels + c]
         }
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -128,25 +148,38 @@ pub fn denoise_bilateral(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("denoise_bilateral: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("denoise_bilateral: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "denoise_bilateral: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "denoise_bilateral: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if diameter <= 0 {
-    raise @types.LoadError::DecodeFailed("denoise_bilateral: diameter必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: diameter必须大于0",
+    )
   }
   if sigma_color <= 0.0 {
-    raise @types.LoadError::DecodeFailed("denoise_bilateral: sigma_color必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: sigma_color必须大于0",
+    )
   }
   if sigma_space <= 0.0 {
-    raise @types.LoadError::DecodeFailed("denoise_bilateral: sigma_space必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_bilateral: sigma_space必须大于0",
+    )
   }
 
   let d = diameter
@@ -164,18 +197,22 @@ pub fn denoise_bilateral(
         let center_val = data[(y * w + x) * channels + c].to_double()
         let mut weighted_sum = 0.0
         let mut weight_sum = 0.0
-        for dy in (-half)..<(half + 1) {
-          for dx in (-half)..<(half + 1) {
+        for dy in -half..<(half + 1) {
+          for dx in -half..<(half + 1) {
             let nx = x + dx
             let ny = y + dy
             if nx >= 0 && nx < w && ny >= 0 && ny < h {
               let neighbor_val = data[(ny * w + nx) * channels + c].to_double()
               // 空间距离权重
-              let spatial_dist = ((dx * dx + dy * dy).to_double()).sqrt()
-              let spatial_weight = @math.exp(-(spatial_dist * spatial_dist) / (2.0 * ss * ss))
+              let spatial_dist = (dx * dx + dy * dy).to_double().sqrt()
+              let spatial_weight = @math.exp(
+                -(spatial_dist * spatial_dist) / (2.0 * ss * ss),
+              )
               // 像素值差异权重
               let color_diff = (center_val - neighbor_val).abs()
-              let color_weight = @math.exp(-(color_diff * color_diff) / (2.0 * sc * sc))
+              let color_weight = @math.exp(
+                -(color_diff * color_diff) / (2.0 * sc * sc),
+              )
               // 组合权重
               let weight = spatial_weight * color_weight
               weighted_sum += neighbor_val * weight
@@ -184,14 +221,23 @@ pub fn denoise_bilateral(
           }
         }
         if weight_sum > 0.0 {
-          out_data[(y * w + x) * channels + c] = (weighted_sum / weight_sum).min(255.0).max(0.0).to_int().to_byte()
+          out_data[(y * w + x) * channels + c] = (weighted_sum / weight_sum)
+            .min(255.0)
+            .max(0.0)
+            .to_int()
+            .to_byte()
         } else {
           out_data[(y * w + x) * channels + c] = data[(y * w + x) * channels + c]
         }
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -202,22 +248,31 @@ pub fn denoise_median(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("denoise_median: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_median: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("denoise_median: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_median: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "denoise_median: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "denoise_median: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if kernel_size <= 0 || kernel_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("denoise_median: kernel_size必须是正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "denoise_median: kernel_size必须是正奇数",
+    )
   }
 
-let ks = kernel_size
+  let ks = kernel_size
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -229,8 +284,8 @@ let ks = kernel_size
       for c in 0..<channels {
         // 收集邻域像素
         let neighborhood : Array[Int] = []
-        for dy in (-half)..<(half + 1) {
-          for dx in (-half)..<(half + 1) {
+        for dy in -half..<(half + 1) {
+          for dx in -half..<(half + 1) {
             let nx = x + dx
             let ny = y + dy
             if nx >= 0 && nx < w && ny >= 0 && ny < h {
@@ -253,19 +308,28 @@ let ks = kernel_size
             neighborhood[min_idx] = tmp
           }
         }
-        let median = if n > 0 { neighborhood[n / 2] } else { data[(y * w + x) * channels + c].to_int() }
+        let median = if n > 0 {
+          neighborhood[n / 2]
+        } else {
+          data[(y * w + x) * channels + c].to_int()
+        }
         out_data[(y * w + x) * channels + c] = median.to_byte()
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
 /// 通用去噪接口
 pub fn denoise(
   img : @types.Image,
-  method : String,
+  method_type : String,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -275,7 +339,7 @@ pub fn denoise(
     raise @types.LoadError::DecodeFailed("denoise: 通道数必须在1-4之间")
   }
 
-  match method {
+  match method_type {
     "nlm" => denoise_nlm(img)
     "bilateral" => denoise_bilateral(img)
     "median" => denoise_median(img)

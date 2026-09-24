@@ -15,7 +15,7 @@ pub(all) struct SegmentationLabel {
 pub(all) struct SemanticSegmentationResult {
   width : Int
   height : Int
-  labels : Array[Int]  // 每个像素的标签 ID
+  labels : Array[Int] // 每个像素的标签 ID
   label_info : Array[SegmentationLabel]
   num_classes : Int
   inference_time_ms : Double
@@ -26,8 +26,8 @@ pub(all) struct SemanticSegmentationResult {
 pub(all) struct InstanceSegmentationResult {
   width : Int
   height : Int
-  masks : Array[Array[Bool]]  // 每个实例的掩码
-  boxes : Array[(Int, Int, Int, Int)]  // 每个实例的边界框 (x, y, w, h)
+  masks : Array[Array[Bool]] // 每个实例的掩码
+  boxes : Array[(Int, Int, Int, Int)] // 每个实例的边界框 (x, y, w, h)
   class_ids : Array[Int]
   class_names : Array[String]
   confidences : Array[Double]
@@ -50,7 +50,7 @@ pub(all) struct Superpixel {
 pub(all) struct SuperpixelResult {
   width : Int
   height : Int
-  labels : Array[Int]  // 每个像素的超像素 ID
+  labels : Array[Int] // 每个像素的超像素 ID
   superpixels : Array[Superpixel]
   num_superpixels : Int
 }
@@ -61,7 +61,7 @@ pub(all) struct WatershedConfig {
   min_region_size : Int
   max_regions : Int
   use_markers : Bool
-  connectivity : Int  // 4 或 8
+  connectivity : Int // 4 或 8
 }
 
 ///|
@@ -121,11 +121,7 @@ pub fn create_default_kmeans_config() -> KMeansConfig {
 ///|
 /// 创建默认 GrabCut 配置
 pub fn create_default_grabcut_config() -> GrabCutConfig {
-  GrabCutConfig::{
-    num_iterations: 5,
-    gamma: 50.0,
-    use_gmm: true,
-  }
+  GrabCutConfig::{ num_iterations: 5, gamma: 50.0, use_gmm: true }
 }
 
 ///|
@@ -154,8 +150,18 @@ pub fn threshold_segmentation(
   }
 
   let label_info : Array[SegmentationLabel] = [
-    SegmentationLabel::{ id: 0, name: "background", color: (0, 0, 0), pixel_count: bg_count },
-    SegmentationLabel::{ id: 1, name: "foreground", color: (255, 255, 255), pixel_count: fg_count },
+    SegmentationLabel::{
+      id: 0,
+      name: "background",
+      color: (0, 0, 0),
+      pixel_count: bg_count,
+    },
+    SegmentationLabel::{
+      id: 1,
+      name: "foreground",
+      color: (255, 255, 255),
+      pixel_count: fg_count,
+    },
   ]
 
   SemanticSegmentationResult::{
@@ -232,7 +238,7 @@ pub fn kmeans_segmentation(
   // 初始化聚类中心
   let centers : Array[Double] = []
   for i in 0..<k {
-    centers.push((i.to_double() * 255.0 / k.to_double()) + 128.0 / k.to_double())
+    centers.push(i.to_double() * 255.0 / k.to_double() + 128.0 / k.to_double())
   }
 
   let labels : Array[Int] = []
@@ -288,9 +294,16 @@ pub fn kmeans_segmentation(
 
   let label_info : Array[SegmentationLabel] = []
   let colors = [
-    (255, 0, 0), (0, 255, 0), (0, 0, 255),
-    (255, 255, 0), (255, 0, 255), (0, 255, 255),
-    (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 128),
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 255, 0),
+    (255, 0, 255),
+    (0, 255, 255),
+    (128, 0, 0),
+    (0, 128, 0),
+    (0, 0, 128),
+    (128, 128, 128),
   ]
   for c in 0..<k {
     label_info.push(SegmentationLabel::{
@@ -321,7 +334,7 @@ pub fn superpixel_segmentation(
   let h = img.height
   let total = w * h
   let step = (total.to_double() / num_superpixels.to_double()).sqrt().to_int()
-  let actual_sp = ((w / step) * (h / step))
+  let _ = w / step * (h / step)
 
   let labels : Array[Int] = []
   for _ in 0..<total {
@@ -352,13 +365,21 @@ pub fn superpixel_segmentation(
       let cx = centers_x[sp].to_int()
       let cy = centers_y[sp].to_int()
       for y in (cy - step)..<(cy + step) {
-        if y < 0 || y >= h { continue }
+        if y < 0 || y >= h {
+          continue
+        }
         for x in (cx - step)..<(cx + step) {
-          if x < 0 || x >= w { continue }
+          if x < 0 || x >= w {
+            continue
+          }
           let idx = y * w + x
           let pixel = img.data[idx].to_double()
           let color_dist = (pixel - centers_color[sp]).abs()
-          let spatial_dist = ((x.to_double() - centers_x[sp]).abs() + (y.to_double() - centers_y[sp]).abs()) / step.to_double()
+          let spatial_dist = (
+              (x.to_double() - centers_x[sp]).abs() +
+              (y.to_double() - centers_y[sp]).abs()
+            ) /
+            step.to_double()
           let dist = color_dist + spatial_dist * 10.0
           if labels[idx] == -1 || dist < 50.0 {
             labels[idx] = sp
@@ -431,7 +452,9 @@ pub fn watershed_segmentation(
       let mut is_min = true
       for dy in -1..<2 {
         for dx in -1..<2 {
-          if dx == 0 && dy == 0 { continue }
+          if dx == 0 && dy == 0 {
+            continue
+          }
           let neighbor = img.data[(y + dy) * w + (x + dx)].to_double()
           if neighbor < pixel {
             is_min = false
@@ -450,10 +473,14 @@ pub fn watershed_segmentation(
           queue_idx += 1
           for dy in -1..<2 {
             for dx in -1..<2 {
-              if dx == 0 && dy == 0 { continue }
+              if dx == 0 && dy == 0 {
+                continue
+              }
               let nx = cx + dx
               let ny = cy + dy
-              if nx < 0 || nx >= w || ny < 0 || ny >= h { continue }
+              if nx < 0 || nx >= w || ny < 0 || ny >= h {
+                continue
+              }
               let nidx = ny * w + nx
               if labels[nidx] == -1 {
                 let npixel = img.data[nidx].to_double()
@@ -480,7 +507,7 @@ pub fn watershed_segmentation(
   // 未标记的像素归为背景
   for i in 0..<total {
     if labels[i] == -1 {
-      labels[i] = region_id  // 背景
+      labels[i] = region_id // 背景
     }
   }
 
@@ -495,11 +522,15 @@ pub fn watershed_segmentation(
 
   let label_info : Array[SegmentationLabel] = []
   for r in 0..<(region_id + 1) {
-    let name = if r == region_id { "background" } else { "region_" + r.to_string() }
+    let name = if r == region_id {
+      "background"
+    } else {
+      "region_" + r.to_string()
+    }
     label_info.push(SegmentationLabel::{
       id: r,
       name,
-      color: ((r * 37) % 256, (r * 73) % 256, (r * 113) % 256),
+      color: (r * 37 % 256, r * 73 % 256, r * 113 % 256),
       pixel_count: pixel_counts[r],
     })
   }
@@ -532,10 +563,13 @@ pub fn grabcut_segmentation(
   // 初始化：矩形内为可能前景，外为背景
   for y in 0..<h {
     for x in 0..<w {
-      if x >= rect_x && x < rect_x + rect_w && y >= rect_y && y < rect_y + rect_h {
-        labels.push(1)  // 可能前景
+      if x >= rect_x &&
+        x < rect_x + rect_w &&
+        y >= rect_y &&
+        y < rect_y + rect_h {
+        labels.push(1) // 可能前景
       } else {
-        labels.push(0)  // 背景
+        labels.push(0) // 背景
       }
     }
   }
@@ -557,8 +591,16 @@ pub fn grabcut_segmentation(
         bg_count += 1
       }
     }
-    let fg_mean = if fg_count > 0 { fg_sum / fg_count.to_double() } else { 128.0 }
-    let bg_mean = if bg_count > 0 { bg_sum / bg_count.to_double() } else { 128.0 }
+    let fg_mean = if fg_count > 0 {
+      fg_sum / fg_count.to_double()
+    } else {
+      128.0
+    }
+    let bg_mean = if bg_count > 0 {
+      bg_sum / bg_count.to_double()
+    } else {
+      128.0
+    }
 
     // 重新分类
     for i in 0..<total {
@@ -577,12 +619,26 @@ pub fn grabcut_segmentation(
   let mut fg_count = 0
   let mut bg_count = 0
   for i in 0..<total {
-    if labels[i] == 1 { fg_count += 1 } else { bg_count += 1 }
+    if labels[i] == 1 {
+      fg_count += 1
+    } else {
+      bg_count += 1
+    }
   }
 
   let label_info : Array[SegmentationLabel] = [
-    SegmentationLabel::{ id: 0, name: "background", color: (0, 0, 0), pixel_count: bg_count },
-    SegmentationLabel::{ id: 1, name: "foreground", color: (255, 255, 255), pixel_count: fg_count },
+    SegmentationLabel::{
+      id: 0,
+      name: "background",
+      color: (0, 0, 0),
+      pixel_count: bg_count,
+    },
+    SegmentationLabel::{
+      id: 1,
+      name: "foreground",
+      color: (255, 255, 255),
+      pixel_count: fg_count,
+    },
   ]
 
   SemanticSegmentationResult::{
@@ -621,9 +677,21 @@ pub fn calculate_segmentation_metrics(
     }
   }
 
-  let pixel_accuracy = if total > 0 { correct.to_double() / total.to_double() } else { 0.0 }
-  let iou = if (tp + fp + false_neg) > 0 { tp.to_double() / (tp + fp + false_neg).to_double() } else { 0.0 }
-  let dice = if (2 * tp + fp + false_neg) > 0 { (2 * tp).to_double() / (2 * tp + fp + false_neg).to_double() } else { 0.0 }
+  let pixel_accuracy = if total > 0 {
+    correct.to_double() / total.to_double()
+  } else {
+    0.0
+  }
+  let iou = if tp + fp + false_neg > 0 {
+    tp.to_double() / (tp + fp + false_neg).to_double()
+  } else {
+    0.0
+  }
+  let dice = if 2 * tp + fp + false_neg > 0 {
+    (2 * tp).to_double() / (2 * tp + fp + false_neg).to_double()
+  } else {
+    0.0
+  }
 
   SegmentationMetrics::{
     pixel_accuracy,
@@ -655,7 +723,12 @@ pub fn segmentation_to_image(
     }
     out.push(if color > 127 { b'\xFF' } else { b'\x00' })
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -667,25 +740,64 @@ pub fn segmentation_report_to_string(
   let mut report = "## 图像分割报告\n\n"
   report = report + "### 分割结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 图像尺寸 | " + result.width.to_string() + "x" + result.height.to_string() + " |\n"
+  report = report +
+    "| 图像尺寸 | " +
+    result.width.to_string() +
+    "x" +
+    result.height.to_string() +
+    " |\n"
   report = report + "| 类别数 | " + result.num_classes.to_string() + " |\n"
-  report = report + "| 推理耗时 | " + result.inference_time_ms.to_string() + "ms |\n\n"
+  report = report +
+    "| 推理耗时 | " +
+    result.inference_time_ms.to_string() +
+    "ms |\n\n"
 
   report = report + "### 类别统计\n\n"
   report = report + "| ID | 名称 | 颜色(RGB) | 像素数 | 占比 |\n"
   report = report + "|----|------|-----------|--------|------|\n"
   let total = result.width * result.height
   for info in result.label_info {
-    let ratio = if total > 0 { info.pixel_count.to_double() / total.to_double() * 100.0 } else { 0.0 }
-    report = report + "| " + info.id.to_string() + " | " + info.name + " | " + info.color.0.to_string() + "," + info.color.1.to_string() + "," + info.color.2.to_string() + " | " + info.pixel_count.to_string() + " | " + ratio.to_string() + "% |\n"
+    let ratio = if total > 0 {
+      info.pixel_count.to_double() / total.to_double() * 100.0
+    } else {
+      0.0
+    }
+    report = report +
+      "| " +
+      info.id.to_string() +
+      " | " +
+      info.name +
+      " | " +
+      info.color.0.to_string() +
+      "," +
+      info.color.1.to_string() +
+      "," +
+      info.color.2.to_string() +
+      " | " +
+      info.pixel_count.to_string() +
+      " | " +
+      ratio.to_string() +
+      "% |\n"
   }
 
   report = report + "\n### 评估指标\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| Pixel Accuracy | " + (metrics.pixel_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| Mean IoU | " + (metrics.mean_iou * 100.0).to_string() + "% |\n"
-  report = report + "| Mean Accuracy | " + (metrics.mean_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| Dice Coefficient | " + (metrics.dice_coefficient * 100.0).to_string() + "% |\n"
+  report = report +
+    "| Pixel Accuracy | " +
+    (metrics.pixel_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| Mean IoU | " +
+    (metrics.mean_iou * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| Mean Accuracy | " +
+    (metrics.mean_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| Dice Coefficient | " +
+    (metrics.dice_coefficient * 100.0).to_string() +
+    "% |\n"
   report = report + "| TP | " + metrics.true_positives.to_string() + " |\n"
   report = report + "| FP | " + metrics.false_positives.to_string() + " |\n"
   report = report + "| FN | " + metrics.false_negatives.to_string() + " |\n"

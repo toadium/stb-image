@@ -1,8 +1,6 @@
 import {
-  "walkzzz/image/src/types",
   "moonbitlang/core/math",
 }
 
 import {
-  "walkzzz/image/src/lib",
 } for "test"

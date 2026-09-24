@@ -554,11 +554,11 @@ test "info_from_bytes_pure: JPEG truncated SOF returns None" {
   // pos=2, so pos+9=11 >= len=11 → hits truncation guard
   let out : Array[Byte] = [
     b'\xFF', b'\xD8', // SOI
-    b'\xFF', b'\xC0', // SOF0
-    b'\x00', b'\x08', // length=8
-    b'\x08', // precision
-    b'\x00', b'\x01', // height=1
-    b'\x00', b'\x01', // width=1
+     b'\xFF', b'\xC0', // SOF0
+     b'\x00', b'\x08', // length=8
+     b'\x08', // precision
+     b'\x00', b'\x01', // height=1
+     b'\x00', b'\x01', // width=1
     // num_components byte missing → pos+9=11 >= len=11
   ]
   let data = Bytes::from_array(out)

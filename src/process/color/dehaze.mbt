@@ -22,7 +22,10 @@ pub fn dehaze(
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "dehaze: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "dehaze: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if patch_size < 1 || patch_size > 30 {
@@ -187,7 +190,9 @@ pub fn guided_filter(
 ) -> Array[Float] raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
-    raise @types.LoadError::DecodeFailed("guided_filter: 图像尺寸不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "guided_filter: 图像尺寸不能为负",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -197,7 +202,10 @@ pub fn guided_filter(
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "guided_filter: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "guided_filter: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if radius < 1 {

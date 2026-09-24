@@ -279,12 +279,31 @@ pub fn video_super_resolution(
         let idx10 = y1 * frame.width + x0
         let idx11 = y1 * frame.width + x1
 
-        let v00 = if idx00 < frame.frame_data.length() { frame.frame_data[idx00] } else { 0.0 }
-        let v01 = if idx01 < frame.frame_data.length() { frame.frame_data[idx01] } else { 0.0 }
-        let v10 = if idx10 < frame.frame_data.length() { frame.frame_data[idx10] } else { 0.0 }
-        let v11 = if idx11 < frame.frame_data.length() { frame.frame_data[idx11] } else { 0.0 }
+        let v00 = if idx00 < frame.frame_data.length() {
+          frame.frame_data[idx00]
+        } else {
+          0.0
+        }
+        let v01 = if idx01 < frame.frame_data.length() {
+          frame.frame_data[idx01]
+        } else {
+          0.0
+        }
+        let v10 = if idx10 < frame.frame_data.length() {
+          frame.frame_data[idx10]
+        } else {
+          0.0
+        }
+        let v11 = if idx11 < frame.frame_data.length() {
+          frame.frame_data[idx11]
+        } else {
+          0.0
+        }
 
-        let value = v00 * (1.0 - fx) * (1.0 - fy) + v01 * fx * (1.0 - fy) + v10 * (1.0 - fx) * fy + v11 * fx * fy
+        let value = v00 * (1.0 - fx) * (1.0 - fy) +
+          v01 * fx * (1.0 - fy) +
+          v10 * (1.0 - fx) * fy +
+          v11 * fx * fy
         sr_data.push(value)
       }
     }
@@ -305,10 +324,26 @@ pub fn video_super_resolution(
 
   VideoSuperResolutionResult::{
     sr_frames,
-    original_width: if frames.length() > 0 { frames[0].width } else { 0 },
-    original_height: if frames.length() > 0 { frames[0].height } else { 0 },
-    sr_width: if frames.length() > 0 { (frames[0].width.to_double() * scale).to_int() } else { 0 },
-    sr_height: if frames.length() > 0 { (frames[0].height.to_double() * scale).to_int() } else { 0 },
+    original_width: if frames.length() > 0 {
+      frames[0].width
+    } else {
+      0
+    },
+    original_height: if frames.length() > 0 {
+      frames[0].height
+    } else {
+      0
+    },
+    sr_width: if frames.length() > 0 {
+      (frames[0].width.to_double() * scale).to_int()
+    } else {
+      0
+    },
+    sr_height: if frames.length() > 0 {
+      (frames[0].height.to_double() * scale).to_int()
+    } else {
+      0
+    },
     scale_factor: scale,
     sr_method: config.sr_method,
     psnr: 32.0,
@@ -328,9 +363,13 @@ pub fn summarize_video(
   let importance_scores : Array[Double] = []
 
   let mut state = 42
-  let num_keyframes = if config.max_keyframes < frames.length() { config.max_keyframes } else { frames.length() }
+  let num_keyframes = if config.max_keyframes < frames.length() {
+    config.max_keyframes
+  } else {
+    frames.length()
+  }
 
-  for i in 0..<num_keyframes {
+  for _ in 0..<num_keyframes {
     state = (state * 11035 + 12345) % 1000000
     let idx = state % frames.length()
     keyframes.push(frames[idx])
@@ -340,8 +379,14 @@ pub fn summarize_video(
     importance_scores.push(score)
   }
 
-  let original_duration = if frames.length() > 0 { frames[frames.length() - 1].timestamp_ms } else { 0.0 }
-  let summary_duration = original_duration * num_keyframes.to_double() / frames.length().to_double()
+  let original_duration = if frames.length() > 0 {
+    frames[frames.length() - 1].timestamp_ms
+  } else {
+    0.0
+  }
+  let summary_duration = original_duration *
+    num_keyframes.to_double() /
+    frames.length().to_double()
 
   VideoSummarizationResult::{
     keyframes,
@@ -366,32 +411,61 @@ pub fn video_processing_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    VideoProcessingTaskType::VideoEncoding => "视频编码"
-    VideoProcessingTaskType::VideoDecoding => "视频解码"
-    VideoProcessingTaskType::VideoEnhancement => "视频增强"
-    VideoProcessingTaskType::VideoSuperResolution => "视频超分辨率"
-    VideoProcessingTaskType::VideoDenoising => "视频去噪"
-    VideoProcessingTaskType::VideoStabilization => "视频稳定"
-    VideoProcessingTaskType::VideoSummarization => "视频摘要"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 编码格式 | " + (match config.codec {
-    VideoCodecType::H264 => "H.264"
-    VideoCodecType::H265 => "H.265/HEVC"
-    VideoCodecType::VP8 => "VP8"
-    VideoCodecType::VP9 => "VP9"
-    VideoCodecType::AV1 => "AV1"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 目标帧率 | " + config.target_fps.to_string() + " fps |\n"
-  report = report + "| 目标码率 | " + config.target_bitrate_kbps.to_string() + " kbps |\n"
-  report = report + "| 目标分辨率 | " + config.target_width.to_string() + "x" + config.target_height.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      VideoProcessingTaskType::VideoEncoding => "视频编码"
+      VideoProcessingTaskType::VideoDecoding => "视频解码"
+      VideoProcessingTaskType::VideoEnhancement => "视频增强"
+      VideoProcessingTaskType::VideoSuperResolution => "视频超分辨率"
+      VideoProcessingTaskType::VideoDenoising => "视频去噪"
+      VideoProcessingTaskType::VideoStabilization => "视频稳定"
+      VideoProcessingTaskType::VideoSummarization => "视频摘要"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 编码格式 | " +
+    (match config.codec {
+      VideoCodecType::H264 => "H.264"
+      VideoCodecType::H265 => "H.265/HEVC"
+      VideoCodecType::VP8 => "VP8"
+      VideoCodecType::VP9 => "VP9"
+      VideoCodecType::AV1 => "AV1"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 目标帧率 | " +
+    config.target_fps.to_string() +
+    " fps |\n"
+  report = report +
+    "| 目标码率 | " +
+    config.target_bitrate_kbps.to_string() +
+    " kbps |\n"
+  report = report +
+    "| 目标分辨率 | " +
+    config.target_width.to_string() +
+    "x" +
+    config.target_height.to_string() +
+    " |\n"
   report = report + "| 质量 | " + config.quality.to_string() + " |\n"
-  report = report + "| 去噪强度 | " + config.denoise_strength.to_string() + " |\n"
-  report = report + "| 锐化强度 | " + config.sharpen_strength.to_string() + " |\n"
-  report = report + "| 超分倍率 | " + config.sr_scale_factor.to_string() + "x |\n"
-  report = report + "| 最大关键帧 | " + config.max_keyframes.to_string() + " |\n"
+  report = report +
+    "| 去噪强度 | " +
+    config.denoise_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 锐化强度 | " +
+    config.sharpen_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 超分倍率 | " +
+    config.sr_scale_factor.to_string() +
+    "x |\n"
+  report = report +
+    "| 最大关键帧 | " +
+    config.max_keyframes.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

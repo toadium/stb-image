@@ -190,8 +190,8 @@ pub fn stereo_match(
   let confidence_map : Array[Double] = []
 
   let mut state = 42
-  for y in 0..<height {
-    for x in 0..<width {
+  for _ in 0..<height {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
       let disparity = (state % config.disparity_range).to_double()
       disparity_map.push(disparity)
@@ -236,10 +236,13 @@ pub fn estimate_depth(
   let confidence_map : Array[Double] = []
 
   let mut state = 42
-  for y in 0..<height {
-    for x in 0..<width {
+  for _ in 0..<height {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
-      let depth = config.min_depth + (state % 1000).to_double() / 1000.0 * (config.max_depth - config.min_depth)
+      let depth = config.min_depth +
+        (state % 1000).to_double() /
+        1000.0 *
+        (config.max_depth - config.min_depth)
       depth_data.push(depth)
       state = (state * 11035 + 12345) % 1000000
       let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
@@ -255,7 +258,11 @@ pub fn estimate_depth(
     max_depth: config.max_depth,
     invalid_pixels: 50,
     confidence_map,
-    camera_params: [config.focal_length, config.principal_point_x, config.principal_point_y],
+    camera_params: [
+      config.focal_length,
+      config.principal_point_x,
+      config.principal_point_y,
+    ],
   }
 }
 
@@ -274,7 +281,7 @@ pub fn reconstruct_3d(
   let mut state = 42
   let num_points = 1000
 
-  for i in 0..<num_points {
+  for _ in 0..<num_points {
     state = (state * 11035 + 12345) % 1000000
     let x = (state % 1000).to_double() / 100.0 - 5.0
     state = (state * 11035 + 12345) % 1000000
@@ -289,9 +296,16 @@ pub fn reconstruct_3d(
     let b = (state % 256).to_double() / 255.0
 
     let point = Point3D::{
-      x, y, z, r, g, b,
+      x,
+      y,
+      z,
+      r,
+      g,
+      b,
       intensity: (r + g + b) / 3.0,
-      normal_x: 0.0, normal_y: 0.0, normal_z: 1.0,
+      normal_x: 0.0,
+      normal_y: 0.0,
+      normal_z: 1.0,
       curvature: 0.1,
     }
     points.push(point)
@@ -405,26 +419,50 @@ pub fn vision_3d_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    Vision3DTaskType::Reconstruction3D => "三维重建"
-    Vision3DTaskType::PointCloudProcessing => "点云处理"
-    Vision3DTaskType::StereoMatching => "立体匹配"
-    Vision3DTaskType::DepthEstimation => "深度估计"
-    Vision3DTaskType::PoseEstimation => "位姿估计"
-    Vision3DTaskType::SLAM => "SLAM"
-    Vision3DTaskType::ObjectTracking3D => "3D目标跟踪"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 立体基线 | " + config.stereo_baseline.to_string() + " m |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      Vision3DTaskType::Reconstruction3D => "三维重建"
+      Vision3DTaskType::PointCloudProcessing => "点云处理"
+      Vision3DTaskType::StereoMatching => "立体匹配"
+      Vision3DTaskType::DepthEstimation => "深度估计"
+      Vision3DTaskType::PoseEstimation => "位姿估计"
+      Vision3DTaskType::SLAM => "SLAM"
+      Vision3DTaskType::ObjectTracking3D => "3D目标跟踪"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 立体基线 | " +
+    config.stereo_baseline.to_string() +
+    " m |\n"
   report = report + "| 焦距 | " + config.focal_length.to_string() + " px |\n"
-  report = report + "| 最小深度 | " + config.min_depth.to_string() + " m |\n"
-  report = report + "| 最大深度 | " + config.max_depth.to_string() + " m |\n"
-  report = report + "| 视差范围 | " + config.disparity_range.to_string() + " |\n"
+  report = report +
+    "| 最小深度 | " +
+    config.min_depth.to_string() +
+    " m |\n"
+  report = report +
+    "| 最大深度 | " +
+    config.max_depth.to_string() +
+    " m |\n"
+  report = report +
+    "| 视差范围 | " +
+    config.disparity_range.to_string() +
+    " |\n"
   report = report + "| 匹配方法 | " + config.matching_method + " |\n"
   report = report + "| 重建方法 | " + config.reconstruction_method + " |\n"
-  report = report + "| 体素大小 | " + config.voxel_size.to_string() + " m |\n"
-  report = report + "| 使用颜色 | " + (if config.use_color { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 使用法线 | " + (if config.use_normals { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 体素大小 | " +
+    config.voxel_size.to_string() +
+    " m |\n"
+  report = report +
+    "| 使用颜色 | " +
+    (if config.use_color { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 使用法线 | " +
+    (if config.use_normals { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

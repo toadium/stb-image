@@ -1,5 +1,6 @@
 // hough_lines 16-bit/float 测试
 
+///|
 test "hough_lines_16 basic" {
   let w = 16
   let h = 16
@@ -11,11 +12,17 @@ test "hough_lines_16 basic" {
     data[idx] = b'\xFF'
     data[idx + 1] = b'\xFF'
   }
-  let img = @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let lines = @edge.hough_lines_16(img, 5)
   assert_true(lines.length() >= 0)
 }
 
+///|
 test "hough_lines_f basic" {
   let w = 16
   let h = 16
@@ -30,27 +37,44 @@ test "hough_lines_f basic" {
     data[idx + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[idx + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  let img = @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let lines = @edge.hough_lines_f(img, 5)
   assert_true(lines.length() >= 0)
 }
 
+///|
 test "hough_lines_16 rgb" {
   let w = 16
   let h = 16
   let ch = 3
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
-  let img = @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let lines = @edge.hough_lines_16(img, 100)
   assert_eq(lines.length(), 0)
 }
 
+///|
 test "hough_lines_f rgb" {
   let w = 16
   let h = 16
   let ch = 3
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
-  let img = @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let lines = @edge.hough_lines_f(img, 100)
   assert_eq(lines.length(), 0)
 }

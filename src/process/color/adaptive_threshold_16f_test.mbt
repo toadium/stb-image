@@ -198,10 +198,13 @@ test "adaptive_threshold_mean_16: rejects invalid channels" {
 }
 
 // 辅助函数
+
+///|
 fn read_u16_le_at(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn read_float_le_at(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()

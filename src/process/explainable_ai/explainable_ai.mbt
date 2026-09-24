@@ -37,7 +37,7 @@ pub(all) struct FeatureImportanceResult {
   feature_names : Array[String]
   importance_scores : Array[Double]
   num_features : Int
-  method : ExplainabilityMethod
+  method_type : ExplainabilityMethod
   top_features : Array[String]
   top_scores : Array[Double]
 }
@@ -46,7 +46,7 @@ pub(all) struct FeatureImportanceResult {
 /// 显著性图结果
 pub(all) struct SaliencyMapResult {
   saliency_map : @types.Image
-  method : ExplainabilityMethod
+  method_type : ExplainabilityMethod
   target_class : String
   confidence : Double
   num_iterations : Int
@@ -108,14 +108,14 @@ pub(all) struct EmbeddingVisualization {
   labels : Array[Int]
   num_points : Int
   dimensions : Int
-  method : String
+  method_type : String
   perplexity : Double
 }
 
 ///|
 /// 可解释AI配置
 pub(all) struct ExplainableAIConfig {
-  method : ExplainabilityMethod
+  method_type : ExplainabilityMethod
   num_samples : Int
   num_features : Int
   perturbation_scale : Double
@@ -129,7 +129,7 @@ pub(all) struct ExplainableAIConfig {
 /// 创建默认可解释AI配置
 pub fn create_default_explainable_ai_config() -> ExplainableAIConfig {
   ExplainableAIConfig::{
-    method: ExplainabilityMethod::GradCAM,
+    method_type: ExplainabilityMethod::GradCAM,
     num_samples: 1000,
     num_features: 10,
     perturbation_scale: 0.1,
@@ -148,7 +148,7 @@ pub fn compute_feature_importance(
 ) -> FeatureImportanceResult {
   let w = image.width
   let h = image.height
-  let total = w * h
+  let _ = w * h
 
   // 简化的特征重要性：基于区域对比度
   let grid_size = 32
@@ -214,7 +214,7 @@ pub fn compute_feature_importance(
     feature_names,
     importance_scores,
     num_features: num_regions,
-    method: config.method,
+    method_type: config.method_type,
     top_features,
     top_scores,
   }
@@ -228,7 +228,7 @@ pub fn generate_saliency_map(
 ) -> SaliencyMapResult {
   let w = image.width
   let h = image.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   // 简化的显著性图：基于梯度近似
@@ -260,8 +260,13 @@ pub fn generate_saliency_map(
   }
 
   SaliencyMapResult::{
-    saliency_map: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) },
-    method: config.method,
+    saliency_map: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
+    method_type: config.method_type,
     target_class: "class_" + config.target_class.to_string(),
     confidence: 0.7,
     num_iterations: config.num_samples,
@@ -277,7 +282,7 @@ pub fn generate_confusion_matrix(
   class_names : Array[String],
 ) -> ConfusionMatrix {
   let matrix : Array[Array[Int]] = []
-  for i in 0..<num_classes {
+  for _ in 0..<num_classes {
     let row : Array[Int] = []
     for _ in 0..<num_classes {
       row.push(0)
@@ -303,7 +308,11 @@ pub fn generate_confusion_matrix(
     }
   }
 
-  let accuracy = if total > 0 { correct.to_double() / total.to_double() } else { 0.0 }
+  let accuracy = if total > 0 {
+    correct.to_double() / total.to_double()
+  } else {
+    0.0
+  }
 
   // 计算每个类别的精确率、召回率、F1
   let precision : Array[Double] = []
@@ -324,9 +333,17 @@ pub fn generate_confusion_matrix(
       }
     }
 
-    let p = if (tp + fp) > 0 { tp.to_double() / (tp + fp).to_double() } else { 0.0 }
-    let r = if (tp + false_neg) > 0 { tp.to_double() / (tp + false_neg).to_double() } else { 0.0 }
-    let f1 = if (p + r) > 0.0 { 2.0 * p * r / (p + r) } else { 0.0 }
+    let p = if tp + fp > 0 {
+      tp.to_double() / (tp + fp).to_double()
+    } else {
+      0.0
+    }
+    let r = if tp + false_neg > 0 {
+      tp.to_double() / (tp + false_neg).to_double()
+    } else {
+      0.0
+    }
+    let f1 = if p + r > 0.0 { 2.0 * p * r / (p + r) } else { 0.0 }
 
     precision.push(p)
     recall.push(r)
@@ -393,8 +410,16 @@ pub fn generate_roc_curve(
       }
     }
 
-    let fpr_val = if negatives > 0 { fp.to_double() / negatives.to_double() } else { 0.0 }
-    let tpr_val = if positives > 0 { tp.to_double() / positives.to_double() } else { 0.0 }
+    let fpr_val = if negatives > 0 {
+      fp.to_double() / negatives.to_double()
+    } else {
+      0.0
+    }
+    let tpr_val = if positives > 0 {
+      tp.to_double() / positives.to_double()
+    } else {
+      0.0
+    }
     fpr.push(fpr_val)
     tpr.push(tpr_val)
   }
@@ -405,13 +430,7 @@ pub fn generate_roc_curve(
     auc += (fpr[i] - fpr[i - 1]) * (tpr[i] + tpr[i - 1]) / 2.0
   }
 
-  ROCCurveData::{
-    fpr,
-    tpr,
-    thresholds,
-    auc,
-    num_points: num_thresholds,
-  }
+  ROCCurveData::{ fpr, tpr, thresholds, auc, num_points: num_thresholds }
 }
 
 ///|
@@ -446,7 +465,12 @@ pub fn visualize_feature_maps(
       }
     }
 
-    feature_maps.push(@types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) })
+    feature_maps.push(@types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    })
   }
 
   FeatureMapVisualization::{
@@ -469,45 +493,94 @@ pub fn explainable_ai_report_to_string(
 
   report = report + "### 特征重要性\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 方法 | " + (match importance.method {
-    ExplainabilityMethod::LIME => "LIME"
-    ExplainabilityMethod::SHAP => "SHAP"
-    ExplainabilityMethod::GradCAM => "Grad-CAM"
-    ExplainabilityMethod::IntegratedGradients => "Integrated Gradients"
-    ExplainabilityMethod::SaliencyMap => "Saliency Map"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征数量 | " + importance.num_features.to_string() + " |\n"
-  report = report + "| Top特征数 | " + importance.top_features.length().to_string() + " |\n\n"
+  report = report +
+    "| 方法 | " +
+    (match importance.method_type {
+      ExplainabilityMethod::LIME => "LIME"
+      ExplainabilityMethod::SHAP => "SHAP"
+      ExplainabilityMethod::GradCAM => "Grad-CAM"
+      ExplainabilityMethod::IntegratedGradients => "Integrated Gradients"
+      ExplainabilityMethod::SaliencyMap => "Saliency Map"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征数量 | " +
+    importance.num_features.to_string() +
+    " |\n"
+  report = report +
+    "| Top特征数 | " +
+    importance.top_features.length().to_string() +
+    " |\n\n"
 
   report = report + "### Top 特征\n\n"
   report = report + "| 排名 | 特征 | 重要性 |\n|------|------|------|\n"
   for i in 0..<importance.top_features.length() {
-    report = report + "| " + (i + 1).to_string() + " | " + importance.top_features[i] + " | " + (importance.top_scores[i] * 100.0).to_string() + "% |\n"
+    report = report +
+      "| " +
+      (i + 1).to_string() +
+      " | " +
+      importance.top_features[i] +
+      " | " +
+      (importance.top_scores[i] * 100.0).to_string() +
+      "% |\n"
   }
 
   report = report + "\n### 显著性图\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 方法 | " + (match saliency.method {
-    ExplainabilityMethod::GradCAM => "Grad-CAM"
-    ExplainabilityMethod::SaliencyMap => "Saliency Map"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 方法 | " +
+    (match saliency.method_type {
+      ExplainabilityMethod::GradCAM => "Grad-CAM"
+      ExplainabilityMethod::SaliencyMap => "Saliency Map"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 目标类别 | " + saliency.target_class + " |\n"
-  report = report + "| 置信度 | " + (saliency.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 迭代次数 | " + saliency.num_iterations.to_string() + " |\n"
+  report = report +
+    "| 置信度 | " +
+    (saliency.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 迭代次数 | " +
+    saliency.num_iterations.to_string() +
+    " |\n"
 
   report = report + "\n### 模型性能\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 准确率 | " + (metrics.accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 精确率 | " + (metrics.precision * 100.0).to_string() + "% |\n"
-  report = report + "| 召回率 | " + (metrics.recall * 100.0).to_string() + "% |\n"
-  report = report + "| F1分数 | " + (metrics.f1_score * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 准确率 | " +
+    (metrics.accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 精确率 | " +
+    (metrics.precision * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 召回率 | " +
+    (metrics.recall * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| F1分数 | " +
+    (metrics.f1_score * 100.0).to_string() +
+    "% |\n"
   report = report + "| AUC-ROC | " + metrics.auc_roc.to_string() + " |\n"
-  report = report + "| 推理时间 | " + metrics.inference_time_ms.to_string() + " ms |\n"
-  report = report + "| 内存占用 | " + metrics.memory_mb.to_string() + " MB |\n"
-  report = report + "| 模型大小 | " + metrics.model_size_mb.to_string() + " MB |\n"
-  report = report + "| 参数数量 | " + metrics.num_parameters.to_string() + " |\n"
+  report = report +
+    "| 推理时间 | " +
+    metrics.inference_time_ms.to_string() +
+    " ms |\n"
+  report = report +
+    "| 内存占用 | " +
+    metrics.memory_mb.to_string() +
+    " MB |\n"
+  report = report +
+    "| 模型大小 | " +
+    metrics.model_size_mb.to_string() +
+    " MB |\n"
+  report = report +
+    "| 参数数量 | " +
+    metrics.num_parameters.to_string() +
+    " |\n"
 
   report
 }

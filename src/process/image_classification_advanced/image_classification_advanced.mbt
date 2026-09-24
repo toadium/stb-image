@@ -196,7 +196,10 @@ pub fn create_default_classification_config() -> ImageClassificationConfig {
 
 ///|
 /// 简化的颜色直方图特征
-fn extract_simple_features(image : Array[Double], num_bins : Int) -> Array[Double] {
+fn extract_simple_features(
+  image : Array[Double],
+  num_bins : Int,
+) -> Array[Double] {
   let features : Array[Double] = []
   for _ in 0..<num_bins {
     features.push(0.0)
@@ -306,7 +309,7 @@ pub fn classify_image(
   }
 
   // 简单排序
-  for i in 0..<probabilities.length() {
+  for _ in 0..<probabilities.length() {
     for j in 0..<(probabilities.length() - 1) {
       if probabilities[indices[j]] < probabilities[indices[j + 1]] {
         let temp = indices[j]
@@ -329,7 +332,11 @@ pub fn classify_image(
 
   ClassificationResult::{
     predicted_class: max_idx,
-    predicted_label: if max_idx < labels.length() { labels[max_idx] } else { "unknown" },
+    predicted_label: if max_idx < labels.length() {
+      labels[max_idx]
+    } else {
+      "unknown"
+    },
     class_probabilities: probabilities,
     num_classes: config.num_classes,
     confidence: max_prob,
@@ -400,7 +407,7 @@ pub fn classify_ensemble(
   let individual_preds : Array[Int] = []
   let individual_confs : Array[Double] = []
 
-  for i in 0..<config.num_classifiers {
+  for _ in 0..<config.num_classifiers {
     let result = classify_image(image, width, height, config)
     individual_preds.push(result.predicted_class)
     individual_confs.push(result.confidence)
@@ -454,9 +461,9 @@ pub fn train_classifier(
 ) -> TrainingResult {
   let num_samples = training_images.length()
   let confusion : Array[Array[Int]] = []
-  for i in 0..<config.num_classes {
+  for _ in 0..<config.num_classes {
     let row : Array[Int] = []
-    for j in 0..<config.num_classes {
+    for _ in 0..<config.num_classes {
       row.push(0)
     }
     confusion.push(row)
@@ -468,7 +475,8 @@ pub fn train_classifier(
       let true_label = training_labels[i]
       // 简化的预测
       let pred = true_label
-      if true_label < confusion.length() && pred < confusion[true_label].length() {
+      if true_label < confusion.length() &&
+        pred < confusion[true_label].length() {
         confusion[true_label][pred] += 1
       }
       if pred == true_label {
@@ -512,51 +520,70 @@ pub fn image_classification_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageClassificationTaskType::BinaryClassification => "二分类"
-    ImageClassificationTaskType::MultiClassClassification => "多分类"
-    ImageClassificationTaskType::MultiLabelClassification => "多标签分类"
-    ImageClassificationTaskType::FineGrainedClassification => "细粒度分类"
-    ImageClassificationTaskType::HierarchicalClassification => "层次分类"
-    ImageClassificationTaskType::ZeroShotClassification => "零样本分类"
-    ImageClassificationTaskType::FewShotClassification => "少样本分类"
-    ImageClassificationTaskType::OpenSetClassification => "开集分类"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 分类器类型 | " + (match config.classifier_type {
-    ClassifierType::KNN => "KNN"
-    ClassifierType::SVM => "SVM"
-    ClassifierType::RandomForest => "随机森林"
-    ClassifierType::DecisionTree => "决策树"
-    ClassifierType::LogisticRegression => "逻辑回归"
-    ClassifierType::NaiveBayes => "朴素贝叶斯"
-    ClassifierType::NeuralNetwork => "神经网络"
-    ClassifierType::CNN => "CNN"
-    ClassifierType::ResNet => "ResNet"
-    ClassifierType::VGG => "VGG"
-    ClassifierType::Inception => "Inception"
-    ClassifierType::EfficientNet => "EfficientNet"
-    ClassifierType::VisionTransformer => "Vision Transformer"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征提取 | " + (match config.feature_extraction_method {
-    FeatureExtractionMethod::ColorHistogram => "颜色直方图"
-    FeatureExtractionMethod::HOG => "HOG"
-    FeatureExtractionMethod::LBP => "LBP"
-    FeatureExtractionMethod::SIFT => "SIFT"
-    FeatureExtractionMethod::SURF => "SURF"
-    FeatureExtractionMethod::ORB => "ORB"
-    FeatureExtractionMethod::Gabor => "Gabor"
-    FeatureExtractionMethod::HaarWavelet => "Haar小波"
-    FeatureExtractionMethod::DeepFeature => "深度特征"
-    FeatureExtractionMethod::TransferLearning => "迁移学习"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageClassificationTaskType::BinaryClassification => "二分类"
+      ImageClassificationTaskType::MultiClassClassification => "多分类"
+      ImageClassificationTaskType::MultiLabelClassification => "多标签分类"
+      ImageClassificationTaskType::FineGrainedClassification =>
+        "细粒度分类"
+      ImageClassificationTaskType::HierarchicalClassification => "层次分类"
+      ImageClassificationTaskType::ZeroShotClassification => "零样本分类"
+      ImageClassificationTaskType::FewShotClassification => "少样本分类"
+      ImageClassificationTaskType::OpenSetClassification => "开集分类"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 分类器类型 | " +
+    (match config.classifier_type {
+      ClassifierType::KNN => "KNN"
+      ClassifierType::SVM => "SVM"
+      ClassifierType::RandomForest => "随机森林"
+      ClassifierType::DecisionTree => "决策树"
+      ClassifierType::LogisticRegression => "逻辑回归"
+      ClassifierType::NaiveBayes => "朴素贝叶斯"
+      ClassifierType::NeuralNetwork => "神经网络"
+      ClassifierType::CNN => "CNN"
+      ClassifierType::ResNet => "ResNet"
+      ClassifierType::VGG => "VGG"
+      ClassifierType::Inception => "Inception"
+      ClassifierType::EfficientNet => "EfficientNet"
+      ClassifierType::VisionTransformer => "Vision Transformer"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征提取 | " +
+    (match config.feature_extraction_method {
+      FeatureExtractionMethod::ColorHistogram => "颜色直方图"
+      FeatureExtractionMethod::HOG => "HOG"
+      FeatureExtractionMethod::LBP => "LBP"
+      FeatureExtractionMethod::SIFT => "SIFT"
+      FeatureExtractionMethod::SURF => "SURF"
+      FeatureExtractionMethod::ORB => "ORB"
+      FeatureExtractionMethod::Gabor => "Gabor"
+      FeatureExtractionMethod::HaarWavelet => "Haar小波"
+      FeatureExtractionMethod::DeepFeature => "深度特征"
+      FeatureExtractionMethod::TransferLearning => "迁移学习"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 类别数 | " + config.num_classes.to_string() + " |\n"
-  report = report + "| 迁移学习 | " + (if config.use_transfer_learning { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 迁移学习 | " +
+    (if config.use_transfer_learning { "开启" } else { "关闭" }) +
+    " |\n"
   report = report + "| 预训练模型 | " + config.pretrained_model + " |\n"
-  report = report + "| 数据增强 | " + (if config.use_data_augmentation { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 集成学习 | " + (if config.use_ensemble { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 数据增强 | " +
+    (if config.use_data_augmentation { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 集成学习 | " +
+    (if config.use_ensemble { "开启" } else { "关闭" }) +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 训练轮数 | " + config.num_epochs.to_string() + " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"

@@ -10,12 +10,17 @@ pub fn histogram(img : @types.Image) -> Array[Int] raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("histogram: 图像尺寸必须大于0")
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -41,18 +46,27 @@ pub fn histogram(img : @types.Image) -> Array[Int] raise @types.LoadError {
 ///|
 /// 直方图均衡化。基于灰度直方图计算映射 LUT，应用到所有颜色通道。
 /// alpha 通道不变。
-pub fn histogram_equalize(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn histogram_equalize(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_equalize: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_equalize: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_equalize: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_equalize: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_equalize: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_equalize: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -111,18 +125,27 @@ pub fn histogram_equalize(img : @types.Image) -> @types.Image raise @types.LoadE
 ///|
 /// 直方图归一化（线性拉伸）。将像素值范围线性映射到 [0, 255]。
 /// alpha 通道不变。
-pub fn histogram_normalize(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn histogram_normalize(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_normalize: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_normalize: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_normalize: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_normalize: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -189,13 +212,19 @@ pub fn compare_hist(
 ) -> Float raise @types.LoadError {
   // 参数验证
   if hist1.length() == 0 {
-    raise @types.LoadError::DecodeFailed("compare_hist: hist1数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "compare_hist: hist1数组不能为空",
+    )
   }
   if hist2.length() == 0 {
-    raise @types.LoadError::DecodeFailed("compare_hist: hist2数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "compare_hist: hist2数组不能为空",
+    )
   }
   if hist1.length() != hist2.length() {
-    raise @types.LoadError::DecodeFailed("compare_hist: hist1和hist2长度必须相同")
+    raise @types.LoadError::DecodeFailed(
+      "compare_hist: hist1和hist2长度必须相同",
+    )
   }
 
   let n = hist1.length()
@@ -266,27 +295,43 @@ pub fn histogram_matching(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "histogram_matching: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if reference.width <= 0 || reference.height <= 0 {
-    raise @types.LoadError::DecodeFailed("histogram_matching: 参考图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching: 参考图像尺寸必须大于0",
+    )
   }
   if reference.channels < 1 || reference.channels > 4 {
-    raise @types.LoadError::DecodeFailed("histogram_matching: 参考图像通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "histogram_matching: 参考图像通道数必须在1-4之间",
+    )
   }
-  let ref_expected_size = reference.width * reference.height * reference.channels
+  let ref_expected_size = reference.width *
+    reference.height *
+    reference.channels
   if reference.data.length() != ref_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "histogram_matching: 参考图像数据大小不匹配，期望 " + ref_expected_size.to_string() + "，实际 " + reference.data.length().to_string(),
+      "histogram_matching: 参考图像数据大小不匹配，期望 " +
+      ref_expected_size.to_string() +
+      "，实际 " +
+      reference.data.length().to_string(),
     )
   }
 

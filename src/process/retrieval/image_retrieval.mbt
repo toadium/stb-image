@@ -5,7 +5,7 @@
 /// 图像特征描述子
 pub(all) struct ImageFeature {
   image_id : String
-  features : Array[Double]  // 特征向量
+  features : Array[Double] // 特征向量
   width : Int
   height : Int
 }
@@ -22,16 +22,13 @@ pub(all) struct SearchResult {
 /// 图像数据库
 pub(all) struct ImageDatabase {
   features : Array[ImageFeature]
-  index : Array[String]  // image_id 列表
+  index : Array[String] // image_id 列表
 }
 
 ///|
 /// 创建空的图像数据库
 pub fn image_database_new() -> ImageDatabase {
-  ImageDatabase::{
-    features: [],
-    index: [],
-  }
+  ImageDatabase::{ features: [], index: [] }
 }
 
 ///|
@@ -40,14 +37,14 @@ fn compute_color_histogram(
   img : @types.Image,
   bins? : Int = 16,
 ) -> Array[Double] {
-let num_bins = bins
+  let num_bins = bins
   let w = img.width
   let h = img.height
   let channels = img.channels
   // 每个通道的直方图
   let hist_size = num_bins * channels
   let histogram : Array[Double] = []
-  for i in 0..<hist_size {
+  for _ in 0..<hist_size {
     histogram.push(0.0)
   }
   let total_pixels = (w * h).to_double()
@@ -56,7 +53,10 @@ let num_bins = bins
       let idx = (y * w + x) * channels
       for c in 0..<channels {
         let val = img.data[idx + c].to_double()
-        let bin_idx = (val / 256.0 * num_bins.to_double()).to_int().min(num_bins - 1).max(0)
+        let bin_idx = (val / 256.0 * num_bins.to_double())
+          .to_int()
+          .min(num_bins - 1)
+          .max(0)
         histogram[c * num_bins + bin_idx] += 1.0
       }
     }
@@ -70,9 +70,7 @@ let num_bins = bins
 
 ///|
 /// 计算图像的平均颜色特征
-fn compute_average_color(
-  img : @types.Image,
-) -> Array[Double] {
+fn compute_average_color(img : @types.Image) -> Array[Double] {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -116,10 +114,7 @@ pub fn extract_image_features(
 
 ///|
 /// 计算余弦相似度
-fn cosine_similarity(
-  a : Array[Double],
-  b : Array[Double],
-) -> Double {
+fn cosine_similarity(a : Array[Double], b : Array[Double]) -> Double {
   let len = a.length().min(b.length())
   let mut dot = 0.0
   let mut norm_a = 0.0
@@ -138,10 +133,7 @@ fn cosine_similarity(
 
 ///|
 /// 计算欧氏距离
-fn euclidean_distance(
-  a : Array[Double],
-  b : Array[Double],
-) -> Double {
+fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double {
   let len = a.length().min(b.length())
   let mut sum = 0.0
   for i in 0..<len {
@@ -153,10 +145,7 @@ fn euclidean_distance(
 
 ///|
 /// 计算直方图交集相似度
-fn histogram_intersection(
-  a : Array[Double],
-  b : Array[Double],
-) -> Double {
+fn histogram_intersection(a : Array[Double], b : Array[Double]) -> Double {
   let len = a.length().min(b.length())
   let mut intersection = 0.0
   let mut sum_a = 0.0
@@ -186,10 +175,7 @@ pub fn database_add_image(
     new_index.push(id)
   }
   new_index.push(feature.image_id)
-  ImageDatabase::{
-    features: new_features,
-    index: new_index,
-  }
+  ImageDatabase::{ features: new_features, index: new_index }
 }
 
 ///|
@@ -206,10 +192,7 @@ pub fn database_remove_image(
       new_index.push(db.index[i])
     }
   }
-  ImageDatabase::{
-    features: new_features,
-    index: new_index,
-  }
+  ImageDatabase::{ features: new_features, index: new_index }
 }
 
 ///|
@@ -218,10 +201,10 @@ pub fn search_similar_images(
   db : ImageDatabase,
   query : ImageFeature,
   top_k? : Int = 5,
-  method? : String = "cosine",
+  method_type? : String = "cosine",
 ) -> Array[SearchResult] {
   let k = top_k
-  let search_method = method
+  let search_method = method_type
   // 计算所有相似度
   let scores : Array[(String, Double)] = []
   for f in db.features {
@@ -264,11 +247,11 @@ pub fn search_similar_images(
 pub fn image_similarity(
   img1 : @types.Image,
   img2 : @types.Image,
-  method? : String = "cosine",
+  method_type? : String = "cosine",
 ) -> Double {
   let f1 = extract_image_features(img1, "query")
   let f2 = extract_image_features(img2, "target")
-let search_method = method
+  let search_method = method_type
   match search_method {
     "cosine" => cosine_similarity(f1.features, f2.features)
     "euclidean" => {
@@ -286,7 +269,8 @@ pub fn batch_extract_features(
   images : Array[(@types.Image, String)],
 ) -> Array[ImageFeature] {
   let results : Array[ImageFeature] = []
-  for (img, id) in images {
+  for _tup0 in images {
+    let (img, id) = _tup0
     results.push(extract_image_features(img, id))
   }
   results
@@ -294,8 +278,6 @@ pub fn batch_extract_features(
 
 ///|
 /// 获取数据库大小
-pub fn database_size(
-  db : ImageDatabase,
-) -> Int {
+pub fn database_size(db : ImageDatabase) -> Int {
   db.features.length()
 }

@@ -166,7 +166,17 @@ pub fn phase_correlation_registration(
     registered_image: registered,
     algorithm: RegistrationAlgorithm::PhaseCorrelation,
     transform_type: TransformType::Translation,
-    transform_matrix: [1.0, 0.0, best_dx.to_double(), 0.0, 1.0, best_dy.to_double(), 0.0, 0.0, 1.0],
+    transform_matrix: [
+      1.0,
+      0.0,
+      best_dx.to_double(),
+      0.0,
+      1.0,
+      best_dy.to_double(),
+      0.0,
+      0.0,
+      1.0,
+    ],
     translation_x: best_dx.to_double(),
     translation_y: best_dy.to_double(),
     rotation_angle: 0.0,
@@ -190,7 +200,7 @@ pub fn apply_translation(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   for y in 0..<h {
@@ -205,7 +215,12 @@ pub fn apply_translation(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -265,8 +280,8 @@ pub fn calculate_mutual_information(
   }
 
   for i in 0..<total {
-    let b1 = (img1.data[i].to_int() * bins / 256)
-    let b2 = (img2.data[i].to_int() * bins / 256)
+    let b1 = img1.data[i].to_int() * bins / 256
+    let b2 = img2.data[i].to_int() * bins / 256
     joint_hist[b1 * bins + b2] += 1
   }
 
@@ -284,7 +299,7 @@ pub fn calculate_mutual_information(
           py += joint_hist[k * bins + j].to_double() / total.to_double()
         }
         if px > 0.0 && py > 0.0 {
-          mi += pxy * (pxy / (px * py)) * 0.1  // 简化的 log
+          mi += pxy * (pxy / (px * py)) * 0.1 // 简化的 log
         }
       }
     }
@@ -311,7 +326,9 @@ pub fn detect_harris_corners(
       let gy = img.data[idx + w].to_double() - img.data[idx - w].to_double()
 
       // Harris 响应（简化版）
-      let response = gx * gx * gy * gy - (gx * gy) * (gx * gy) * 0.04 - (gx * gx + gy * gy) * (gx * gx + gy * gy) * 0.04
+      let response = gx * gx * gy * gy -
+        gx * gy * (gx * gy) * 0.04 -
+        (gx * gx + gy * gy) * (gx * gx + gy * gy) * 0.04
 
       if response > threshold {
         points.push(FeaturePoint::{
@@ -404,7 +421,7 @@ pub fn apply_affine_transform(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   let a = matrix.matrix[0]
@@ -417,8 +434,10 @@ pub fn apply_affine_transform(
   for y in 0..<h {
     for x in 0..<w {
       // 逆变换
-      let src_x = (d * (x.to_double() - tx) - b * (y.to_double() - ty)) / (a * d - b * c + 0.001)
-      let src_y = (-c * (x.to_double() - tx) + a * (y.to_double() - ty)) / (a * d - b * c + 0.001)
+      let src_x = (d * (x.to_double() - tx) - b * (y.to_double() - ty)) /
+        (a * d - b * c + 0.001)
+      let src_y = (-c * (x.to_double() - tx) + a * (y.to_double() - ty)) /
+        (a * d - b * c + 0.001)
 
       let sx = src_x.to_int()
       let sy = src_y.to_int()
@@ -431,7 +450,12 @@ pub fn apply_affine_transform(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -512,17 +536,66 @@ pub fn registration_report_to_string_advanced(
   let mut report = "## 高级图像配准报告\n\n"
   report = report + "### 配准信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (if result.algorithm == RegistrationAlgorithm::PhaseCorrelation { "相位相关" } else if result.algorithm == RegistrationAlgorithm::FeatureBased { "基于特征" } else if result.algorithm == RegistrationAlgorithm::IntensityBased { "基于强度" } else if result.algorithm == RegistrationAlgorithm::MutualInformation { "互信息" } else if result.algorithm == RegistrationAlgorithm::NormalizedCrossCorrelation { "归一化互相关" } else { "未知" }) + " |\n"
-  report = report + "| 变换类型 | " + (if result.transform_type == TransformType::Translation { "平移" } else if result.transform_type == TransformType::Rigid { "刚性" } else if result.transform_type == TransformType::Similarity { "相似" } else if result.transform_type == TransformType::Affine { "仿射" } else if result.transform_type == TransformType::Perspective { "透视" } else { "未知" }) + " |\n"
-  report = report + "| 平移 X | " + result.translation_x.to_string() + " 像素 |\n"
-  report = report + "| 平移 Y | " + result.translation_y.to_string() + " 像素 |\n"
-  report = report + "| 旋转角度 | " + result.rotation_angle.to_string() + " 度 |\n"
+  report = report +
+    "| 算法 | " +
+    (if result.algorithm == RegistrationAlgorithm::PhaseCorrelation {
+      "相位相关"
+    } else if result.algorithm == RegistrationAlgorithm::FeatureBased {
+      "基于特征"
+    } else if result.algorithm == RegistrationAlgorithm::IntensityBased {
+      "基于强度"
+    } else if result.algorithm == RegistrationAlgorithm::MutualInformation {
+      "互信息"
+    } else if result.algorithm ==
+      RegistrationAlgorithm::NormalizedCrossCorrelation {
+      "归一化互相关"
+    } else {
+      "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 变换类型 | " +
+    (if result.transform_type == TransformType::Translation {
+      "平移"
+    } else if result.transform_type == TransformType::Rigid {
+      "刚性"
+    } else if result.transform_type == TransformType::Similarity {
+      "相似"
+    } else if result.transform_type == TransformType::Affine {
+      "仿射"
+    } else if result.transform_type == TransformType::Perspective {
+      "透视"
+    } else {
+      "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 平移 X | " +
+    result.translation_x.to_string() +
+    " 像素 |\n"
+  report = report +
+    "| 平移 Y | " +
+    result.translation_y.to_string() +
+    " 像素 |\n"
+  report = report +
+    "| 旋转角度 | " +
+    result.rotation_angle.to_string() +
+    " 度 |\n"
   report = report + "| 缩放 X | " + result.scale_x.to_string() + " |\n"
   report = report + "| 缩放 Y | " + result.scale_y.to_string() + " |\n"
-  report = report + "| 相关系数 | " + result.correlation.to_string() + " |\n"
-  report = report + "| 互信息 | " + result.mutual_information.to_string() + " |\n"
+  report = report +
+    "| 相关系数 | " +
+    result.correlation.to_string() +
+    " |\n"
+  report = report +
+    "| 互信息 | " +
+    result.mutual_information.to_string() +
+    " |\n"
   report = report + "| RMSE | " + result.rmse.to_string() + " |\n"
-  report = report + "| 特征点数 | " + result.num_feature_points.to_string() + " |\n"
+  report = report +
+    "| 特征点数 | " +
+    result.num_feature_points.to_string() +
+    " |\n"
   report = report + "| 内点数 | " + result.num_inliers.to_string() + " |\n"
 
   report

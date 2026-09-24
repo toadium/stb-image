@@ -154,9 +154,7 @@ pub fn create_default_continual_config() -> ContinualLearningConfig {
 
 ///|
 /// 创建默认EWC配置
-pub fn create_default_ewc_config(
-  num_params : Int,
-) -> EWCConfig {
+pub fn create_default_ewc_config(num_params : Int) -> EWCConfig {
   let fisher : Array[Double] = []
   let optimal : Array[Double] = []
   for _ in 0..<num_params {
@@ -259,7 +257,8 @@ pub fn update_fisher_information(
     }
 
     let updated = if ewc_config.online {
-      ewc_config.gamma * ewc_config.fisher_information[i] + (1.0 - ewc_config.gamma) * grad_sq
+      ewc_config.gamma * ewc_config.fisher_information[i] +
+      (1.0 - ewc_config.gamma) * grad_sq
     } else {
       ewc_config.fisher_information[i] + grad_sq
     }
@@ -357,7 +356,8 @@ pub fn simulate_continual_learning(
     let task = tasks[task_idx]
 
     // 模拟任务学习
-    let task_accuracy = initial_accuracy + (1.0 - initial_accuracy) * (1.0 - task.difficulty * 0.5)
+    let task_accuracy = initial_accuracy +
+      (1.0 - initial_accuracy) * (1.0 - task.difficulty * 0.5)
     task_accuracies.push(task_accuracy)
     learning_accuracy.push(task_accuracy)
 
@@ -403,7 +403,9 @@ pub fn simulate_continual_learning(
     task_accuracies,
     num_tasks_completed: num_tasks,
     memory_usage_mb: config.memory_size.to_double() * 0.001,
-    training_time_s: num_tasks.to_double() * config.num_epochs.to_double() * 10.0,
+    training_time_s: num_tasks.to_double() *
+    config.num_epochs.to_double() *
+    10.0,
   }
 }
 
@@ -417,45 +419,86 @@ pub fn continual_learning_report_to_string(
 
   report = report + "### 配置信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 策略 | " + (match config.strategy {
-    ContinualLearningStrategy::RegularizationBased => "基于正则化"
-    ContinualLearningStrategy::ReplayBased => "基于回放"
-    ContinualLearningStrategy::ArchitectureBased => "基于架构"
-    ContinualLearningStrategy::MetaLearningBased => "基于元学习"
-    _ => "混合"
-  }) + " |\n"
-  report = report + "| 正则化方法 | " + (match config.regularization_method {
-    RegularizationMethod::EWC => "EWC"
-    RegularizationMethod::SI => "SI"
-    RegularizationMethod::MAS => "MAS"
-    RegularizationMethod::LwF => "LwF"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 场景 | " + (match config.scenario {
-    IncrementalLearningScenario::TaskIncremental => "任务增量"
-    IncrementalLearningScenario::DomainIncremental => "域增量"
-    IncrementalLearningScenario::ClassIncremental => "类增量"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 策略 | " +
+    (match config.strategy {
+      ContinualLearningStrategy::RegularizationBased => "基于正则化"
+      ContinualLearningStrategy::ReplayBased => "基于回放"
+      ContinualLearningStrategy::ArchitectureBased => "基于架构"
+      ContinualLearningStrategy::MetaLearningBased => "基于元学习"
+      _ => "混合"
+    }) +
+    " |\n"
+  report = report +
+    "| 正则化方法 | " +
+    (match config.regularization_method {
+      RegularizationMethod::EWC => "EWC"
+      RegularizationMethod::SI => "SI"
+      RegularizationMethod::MAS => "MAS"
+      RegularizationMethod::LwF => "LwF"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 场景 | " +
+    (match config.scenario {
+      IncrementalLearningScenario::TaskIncremental => "任务增量"
+      IncrementalLearningScenario::DomainIncremental => "域增量"
+      IncrementalLearningScenario::ClassIncremental => "类增量"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 任务数 | " + config.num_tasks.to_string() + " |\n"
   report = report + "| EWC Lambda | " + config.ewc_lambda.to_string() + " |\n"
-  report = report + "| 记忆大小 | " + config.memory_size.to_string() + " |\n"
+  report = report +
+    "| 记忆大小 | " +
+    config.memory_size.to_string() +
+    " |\n"
 
   report = report + "\n### 性能指标\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 平均精度 | " + (metrics.average_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 最终精度 | " + (metrics.final_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 反向迁移 | " + (metrics.backward_transfer * 100.0).to_string() + "% |\n"
-  report = report + "| 正向迁移 | " + (metrics.forward_transfer * 100.0).to_string() + "% |\n"
-  report = report + "| 遗忘度量 | " + (metrics.forgetting_measure * 100.0).to_string() + "% |\n"
-  report = report + "| 完成任务数 | " + metrics.num_tasks_completed.to_string() + " |\n"
-  report = report + "| 内存使用 | " + metrics.memory_usage_mb.to_string() + " MB |\n"
-  report = report + "| 训练时间 | " + metrics.training_time_s.to_string() + " s |\n"
+  report = report +
+    "| 平均精度 | " +
+    (metrics.average_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 最终精度 | " +
+    (metrics.final_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 反向迁移 | " +
+    (metrics.backward_transfer * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 正向迁移 | " +
+    (metrics.forward_transfer * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 遗忘度量 | " +
+    (metrics.forgetting_measure * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 完成任务数 | " +
+    metrics.num_tasks_completed.to_string() +
+    " |\n"
+  report = report +
+    "| 内存使用 | " +
+    metrics.memory_usage_mb.to_string() +
+    " MB |\n"
+  report = report +
+    "| 训练时间 | " +
+    metrics.training_time_s.to_string() +
+    " s |\n"
 
   report = report + "\n### 各任务精度\n\n"
   report = report + "| 任务 | 精度 |\n|------|------|\n"
   for i in 0..<metrics.task_accuracies.length() {
-    report = report + "| 任务 " + (i + 1).to_string() + " | " + (metrics.task_accuracies[i] * 100.0).to_string() + "% |\n"
+    report = report +
+      "| 任务 " +
+      (i + 1).to_string() +
+      " | " +
+      (metrics.task_accuracies[i] * 100.0).to_string() +
+      "% |\n"
   }
 
   report

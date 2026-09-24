@@ -8,7 +8,7 @@ pub(all) struct ChineseOcrConfig {
   max_char_width : Int
   target_size : Int
   distance_metric : String
-  char_set : String  // "common" / "full"
+  char_set : String // "common" / "full"
 }
 
 ///|
@@ -31,16 +31,16 @@ pub fn generate_chinese_templates(
   let templates : Array[(String, Array[Double])] = []
   // 常用汉字列表（100个最常用汉字）
   let common_chars : Array[String] = [
-    "的", "一", "是", "在", "不", "了", "有", "和", "人", "这",
-    "中", "大", "为", "上", "个", "国", "我", "以", "要", "他",
-    "时", "来", "用", "们", "生", "到", "作", "地", "于", "出",
-    "就", "分", "对", "成", "会", "可", "主", "发", "年", "动",
-    "同", "工", "也", "能", "下", "过", "子", "说", "产", "种",
-    "面", "而", "方", "后", "多", "定", "行", "学", "法", "所",
-    "民", "得", "经", "十", "三", "之", "进", "着", "等", "部",
-    "度", "家", "电", "力", "里", "如", "水", "化", "高", "自",
-    "二", "理", "起", "小", "物", "现", "实", "加", "量", "都",
-    "两", "体", "重", "机", "当", "使", "点", "从", "业", "本",
+    "的", "一", "是", "在", "不", "了", "有", "和", "人", "这", "中",
+    "大", "为", "上", "个", "国", "我", "以", "要", "他", "时", "来",
+    "用", "们", "生", "到", "作", "地", "于", "出", "就", "分", "对",
+    "成", "会", "可", "主", "发", "年", "动", "同", "工", "也", "能",
+    "下", "过", "子", "说", "产", "种", "面", "而", "方", "后", "多",
+    "定", "行", "学", "法", "所", "民", "得", "经", "十", "三", "之",
+    "进", "着", "等", "部", "度", "家", "电", "力", "里", "如", "水",
+    "化", "高", "自", "二", "理", "起", "小", "物", "现", "实", "加",
+    "量", "都", "两", "体", "重", "机", "当", "使", "点", "从", "业",
+    "本",
   ]
   let chars = if char_set == "full" {
     // 完整字符集（这里简化，仍然用常用汉字）
@@ -67,7 +67,7 @@ fn generate_chinese_char_template(char : String) -> Array[Double] {
   for y in 0..<size {
     for x in 0..<size {
       // 使用简单的哈希函数生成模式
-      let hash = ((seed * 31 + x * 17 + y * 13) % 100)
+      let hash = (seed * 31 + x * 17 + y * 13) % 100
       // 中心区域更可能有像素
       let center_dist = ((x - 8) * (x - 8) + (y - 8) * (y - 8)).to_double()
       let center_factor = 1.0 - center_dist / 128.0
@@ -88,15 +88,22 @@ pub fn recognize_chinese(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_chinese: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("recognize_chinese: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_chinese: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_chinese: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -106,13 +113,19 @@ pub fn recognize_chinese(
   }
   // 配置验证
   if cfg.min_char_width <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_chinese: min_char_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese: min_char_width必须大于0",
+    )
   }
   if cfg.max_char_width < cfg.min_char_width {
-    raise @types.LoadError::DecodeFailed("recognize_chinese: max_char_width不能小于min_char_width")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese: max_char_width不能小于min_char_width",
+    )
   }
   if cfg.target_size <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_chinese: target_size必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_chinese: target_size必须大于0",
+    )
   }
   // 1. 预处理
   let preprocessed = ocr_preprocess(img)
@@ -124,13 +137,25 @@ pub fn recognize_chinese(
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup0 in char_regions {
+    let (x, y, w, h) = _tup0
     // 提取字符图像
-    let char_img = extract_chinese_char_region(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_chinese_char_region(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 提取特征
     let features = extract_chinese_char_features(char_img, 16)
     // 模板匹配
-    let result = match_chinese_template(features, templates, cfg.distance_metric)
+    let result = match_chinese_template(
+      features,
+      templates,
+      cfg.distance_metric,
+    )
     text += result.0
     total_confidence += result.1
     char_results.push(OcrCharResult::{
@@ -147,11 +172,7 @@ pub fn recognize_chinese(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -197,10 +218,18 @@ fn segment_chinese_chars(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -211,10 +240,13 @@ fn segment_chinese_chars(
     let rh = max_y[label] - min_y[label] + 1
     // 中文字符过滤：接近正方形，尺寸在合理范围内
     let ratio = if rh > 0 { rw.to_double() / rh.to_double() } else { 0.0 }
-    if rw >= cfg.min_char_width && rw <= cfg.max_char_width &&
-       rh >= cfg.min_char_width && rh <= cfg.max_char_width &&
-       ratio > 0.5 && ratio < 2.0 &&
-       area[label] > 20 {
+    if rw >= cfg.min_char_width &&
+      rw <= cfg.max_char_width &&
+      rh >= cfg.min_char_width &&
+      rh <= cfg.max_char_width &&
+      ratio > 0.5 &&
+      ratio < 2.0 &&
+      area[label] > 20 {
       regions.push((min_x[label], min_y[label], rw, rh))
     }
   }
@@ -237,21 +269,31 @@ fn extract_chinese_char_region(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   // 缩放到目标尺寸（中文字符保持正方形）
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -282,7 +324,11 @@ fn extract_chinese_char_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -298,7 +344,8 @@ fn match_chinese_template(
 ) -> (String, Double) {
   let mut best_label = "?"
   let mut best_dist = 1000000.0
-  for (label, template) in templates {
+  for _tup1 in templates {
+    let (label, template) = _tup1
     let dist = match distance_metric {
       "manhattan" => manhattan_distance_chi(features, template)
       "cosine" => cosine_distance_chi(features, template)

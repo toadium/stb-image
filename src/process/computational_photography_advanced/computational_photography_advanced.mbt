@@ -248,20 +248,24 @@ pub fn create_hdr_image(
     for j in 0..<exposures.length() {
       if i < exposures[j].length() {
         let value = exposures[j][i]
-        let ev = if j < exposure_values.length() { exposure_values[j] } else { 0.0 }
-        // 简化的响应函数和权重
-        let weight = if value > 0.01 && value < 0.99 {
-          1.0
+        let ev = if j < exposure_values.length() {
+          exposure_values[j]
         } else {
-          0.1
+          0.0
         }
+        // 简化的响应函数和权重
+        let weight = if value > 0.01 && value < 0.99 { 1.0 } else { 0.1 }
         let irradiance = value * power_approx(2.0, ev.to_int().to_double())
         hdr_value += irradiance * weight
         weight_sum += weight
       }
     }
 
-    let final_value = if weight_sum > 0.0 { hdr_value / weight_sum } else { 0.0 }
+    let final_value = if weight_sum > 0.0 {
+      hdr_value / weight_sum
+    } else {
+      0.0
+    }
     hdr_data.push(final_value)
   }
 
@@ -433,7 +437,6 @@ pub fn multi_frame_denoise(
 }
 
 ///|
-
 fn power_approx(base : Double, exponent : Double) -> Double {
   let mut result = 1.0
   let int_exponent = exponent.to_int()
@@ -444,6 +447,8 @@ fn power_approx(base : Double, exponent : Double) -> Double {
 }
 
 // 近似对数（计算摄影模块）
+
+///|
 fn log_approx_cp(x : Double) -> Double {
   if x <= 0.0 {
     -100.0
@@ -561,11 +566,7 @@ pub fn dehaze_image(
 
         // 去雾公式：J = (I - A) / t + A
         let a = atmospheric[idx % 3]
-        let dehazed_value = if t > 0.1 {
-          (value - a) / t + a
-        } else {
-          value
-        }
+        let dehazed_value = if t > 0.1 { (value - a) / t + a } else { value }
         if dehazed_value < 0.0 {
           dehazed.push(0.0)
         } else if dehazed_value > 255.0 {
@@ -605,43 +606,64 @@ pub fn computational_photography_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ComputationalPhotographyTaskType::HDRImaging => "HDR成像"
-    ComputationalPhotographyTaskType::PanoramaStitching => "全景拼接"
-    ComputationalPhotographyTaskType::FocusStacking => "景深合成"
-    ComputationalPhotographyTaskType::MultiFrameDenoising => "多帧降噪"
-    ComputationalPhotographyTaskType::SuperResolution => "超分辨率"
-    ComputationalPhotographyTaskType::Deblurring => "去模糊"
-    ComputationalPhotographyTaskType::Dehazing => "去雾"
-    ComputationalPhotographyTaskType::ColorManagement => "色彩管理"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| HDR色调映射 | " + (match config.hdr_tone_mapping {
-    HDRToneMappingMethod::Reinhard => "Reinhard"
-    HDRToneMappingMethod::Durand => "Durand"
-    HDRToneMappingMethod::Mantiuk => "Mantiuk"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 全景拼接 | " + (match config.panorama_stitching {
-    PanoramaStitchingMethod::SIFT => "SIFT"
-    PanoramaStitchingMethod::SURF => "SURF"
-    PanoramaStitchingMethod::ORB => "ORB"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 去模糊方法 | " + (match config.deblurring_method {
-    DeblurringMethod::Wiener => "Wiener"
-    DeblurringMethod::RichardsonLucy => "Richardson-Lucy"
-    DeblurringMethod::BlindDeconvolution => "盲去卷积"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 去雾方法 | " + (match config.dehazing_method {
-    DehazingMethod::DarkChannelPrior => "暗通道先验"
-    DehazingMethod::ColorAttenuation => "颜色衰减"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ComputationalPhotographyTaskType::HDRImaging => "HDR成像"
+      ComputationalPhotographyTaskType::PanoramaStitching => "全景拼接"
+      ComputationalPhotographyTaskType::FocusStacking => "景深合成"
+      ComputationalPhotographyTaskType::MultiFrameDenoising => "多帧降噪"
+      ComputationalPhotographyTaskType::SuperResolution => "超分辨率"
+      ComputationalPhotographyTaskType::Deblurring => "去模糊"
+      ComputationalPhotographyTaskType::Dehazing => "去雾"
+      ComputationalPhotographyTaskType::ColorManagement => "色彩管理"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| HDR色调映射 | " +
+    (match config.hdr_tone_mapping {
+      HDRToneMappingMethod::Reinhard => "Reinhard"
+      HDRToneMappingMethod::Durand => "Durand"
+      HDRToneMappingMethod::Mantiuk => "Mantiuk"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 全景拼接 | " +
+    (match config.panorama_stitching {
+      PanoramaStitchingMethod::SIFT => "SIFT"
+      PanoramaStitchingMethod::SURF => "SURF"
+      PanoramaStitchingMethod::ORB => "ORB"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 去模糊方法 | " +
+    (match config.deblurring_method {
+      DeblurringMethod::Wiener => "Wiener"
+      DeblurringMethod::RichardsonLucy => "Richardson-Lucy"
+      DeblurringMethod::BlindDeconvolution => "盲去卷积"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 去雾方法 | " +
+    (match config.dehazing_method {
+      DehazingMethod::DarkChannelPrior => "暗通道先验"
+      DehazingMethod::ColorAttenuation => "颜色衰减"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| Gamma | " + config.gamma.to_string() + " |\n"
-  report = report + "| 白平衡温度 | " + config.white_balance_temperature.to_string() + " K |\n"
-  report = report + "| 超分倍率 | " + config.sr_scale_factor.to_string() + "x |\n"
+  report = report +
+    "| 白平衡温度 | " +
+    config.white_balance_temperature.to_string() +
+    " K |\n"
+  report = report +
+    "| 超分倍率 | " +
+    config.sr_scale_factor.to_string() +
+    "x |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

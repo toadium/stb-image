@@ -276,10 +276,17 @@ pub fn smart_cutout(
   for y in 0..<height {
     for x in 0..<width {
       state = (state * 11035 + 12345) % 1000000
-      let dist_center = ((x - width / 2) * (x - width / 2) + (y - height / 2) * (y - height / 2)).to_double()
+      let dist_center = ((x - width / 2) * (x - width / 2) +
+      (y - height / 2) * (y - height / 2)).to_double()
       let max_dist = (width * width / 4 + height * height / 4).to_double()
       let alpha_val = 1.0 - dist_center / max_dist
-      let final_alpha = if alpha_val < 0.0 { 0.0 } else if alpha_val > 1.0 { 1.0 } else { alpha_val }
+      let final_alpha = if alpha_val < 0.0 {
+        0.0
+      } else if alpha_val > 1.0 {
+        1.0
+      } else {
+        alpha_val
+      }
 
       alpha.push(final_alpha)
       let idx = y * width + x
@@ -458,36 +465,60 @@ pub fn image_editing_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageEditingTaskType::SmartCutout => "智能抠图"
-    ImageEditingTaskType::BackgroundReplacement => "背景替换"
-    ImageEditingTaskType::ObjectRemoval => "物体移除"
-    ImageEditingTaskType::FaceEditing => "人脸编辑"
-    ImageEditingTaskType::BeautyRetouch => "美颜"
-    ImageEditingTaskType::Makeup => "妆容"
-    ImageEditingTaskType::AgeTransformation => "年龄变换"
-    ImageEditingTaskType::ExpressionEditing => "表情编辑"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 抠图方法 | " + (match config.cutout_method {
-    CutoutMethod::GrabCut => "GrabCut"
-    CutoutMethod::DeepLab => "DeepLab"
-    CutoutMethod::U2Net => "U2Net"
-    CutoutMethod::MODNet => "MODNet"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 移除方法 | " + (match config.removal_method {
-    ObjectRemovalMethod::Inpainting => "图像修复"
-    ObjectRemovalMethod::ContentAwareFill => "内容感知填充"
-    ObjectRemovalMethod::PatchMatch => "PatchMatch"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 美颜强度 | " + config.beauty_strength.to_string() + " |\n"
-  report = report + "| 磨皮强度 | " + config.skin_smoothing.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageEditingTaskType::SmartCutout => "智能抠图"
+      ImageEditingTaskType::BackgroundReplacement => "背景替换"
+      ImageEditingTaskType::ObjectRemoval => "物体移除"
+      ImageEditingTaskType::FaceEditing => "人脸编辑"
+      ImageEditingTaskType::BeautyRetouch => "美颜"
+      ImageEditingTaskType::Makeup => "妆容"
+      ImageEditingTaskType::AgeTransformation => "年龄变换"
+      ImageEditingTaskType::ExpressionEditing => "表情编辑"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 抠图方法 | " +
+    (match config.cutout_method {
+      CutoutMethod::GrabCut => "GrabCut"
+      CutoutMethod::DeepLab => "DeepLab"
+      CutoutMethod::U2Net => "U2Net"
+      CutoutMethod::MODNet => "MODNet"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 移除方法 | " +
+    (match config.removal_method {
+      ObjectRemovalMethod::Inpainting => "图像修复"
+      ObjectRemovalMethod::ContentAwareFill => "内容感知填充"
+      ObjectRemovalMethod::PatchMatch => "PatchMatch"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 美颜强度 | " +
+    config.beauty_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 磨皮强度 | " +
+    config.skin_smoothing.to_string() +
+    " |\n"
   report = report + "| 美白强度 | " + config.whitening.to_string() + " |\n"
-  report = report + "| 瘦脸强度 | " + config.face_thinning.to_string() + " |\n"
-  report = report + "| 大眼强度 | " + config.eye_enlargement.to_string() + " |\n"
-  report = report + "| 妆容强度 | " + config.makeup_strength.to_string() + " |\n"
+  report = report +
+    "| 瘦脸强度 | " +
+    config.face_thinning.to_string() +
+    " |\n"
+  report = report +
+    "| 大眼强度 | " +
+    config.eye_enlargement.to_string() +
+    " |\n"
+  report = report +
+    "| 妆容强度 | " +
+    config.makeup_strength.to_string() +
+    " |\n"
   report = report + "| 目标年龄 | " + config.target_age.to_string() + " |\n"
   report = report + "| 目标表情 | " + config.target_expression + " |\n"
 

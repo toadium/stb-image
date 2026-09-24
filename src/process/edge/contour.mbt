@@ -23,15 +23,22 @@ pub fn find_contours(
 ) -> Array[Contour] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("find_contours: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "find_contours: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("find_contours: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "find_contours: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "find_contours: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "find_contours: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let w = img.width
@@ -129,19 +136,28 @@ pub fn draw_contours(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("draw_contours: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "draw_contours: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("draw_contours: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "draw_contours: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "draw_contours: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "draw_contours: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if color.length() == 0 {
-    raise @types.LoadError::DecodeFailed("draw_contours: color数组不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "draw_contours: color数组不能为空",
+    )
   }
   let ch = img.channels
   let w = img.width

@@ -4,44 +4,32 @@
 ///|
 /// 窗宽窗位配置
 pub(all) struct WindowLevel {
-  window_width : Double  // 窗宽
-  window_level : Double  // 窗位
+  window_width : Double // 窗宽
+  window_level : Double // 窗位
 }
 
 ///|
 /// 创建默认窗宽窗位（肺窗）
 pub fn window_level_lung() -> WindowLevel {
-  WindowLevel::{
-    window_width: 1500.0,
-    window_level: -600.0,
-  }
+  WindowLevel::{ window_width: 1500.0, window_level: -600.0 }
 }
 
 ///|
 /// 创建纵隔窗
 pub fn window_level_mediastinum() -> WindowLevel {
-  WindowLevel::{
-    window_width: 400.0,
-    window_level: 40.0,
-  }
+  WindowLevel::{ window_width: 400.0, window_level: 40.0 }
 }
 
 ///|
 /// 创建骨窗
 pub fn window_level_bone() -> WindowLevel {
-  WindowLevel::{
-    window_width: 2000.0,
-    window_level: 400.0,
-  }
+  WindowLevel::{ window_width: 2000.0, window_level: 400.0 }
 }
 
 ///|
 /// 创建脑窗
 pub fn window_level_brain() -> WindowLevel {
-  WindowLevel::{
-    window_width: 80.0,
-    window_level: 40.0,
-  }
+  WindowLevel::{ window_width: 80.0, window_level: 40.0 }
 }
 
 ///|
@@ -67,12 +55,17 @@ pub fn apply_window_level(
       } else if raw >= high {
         255.0
       } else {
-        ((raw - low) / config.window_width * 255.0)
+        (raw - low) / config.window_width * 255.0
       }
       out_data[y * w + x] = mapped.min(255.0).max(0.0).to_int().to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -82,7 +75,7 @@ pub fn medical_colormap(
   img : @types.Image,
   colormap? : String = "hot",
 ) -> @types.Image {
-let cmap = colormap
+  let cmap = colormap
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -90,11 +83,15 @@ let cmap = colormap
   for y in 0..<h {
     for x in 0..<w {
       let idx = (y * w + x) * channels
-      let gray = if channels >= 1 { img.data[idx].to_double() / 255.0 } else { 0.0 }
+      let gray = if channels >= 1 {
+        img.data[idx].to_double() / 255.0
+      } else {
+        0.0
+      }
       let out_idx = (y * w + x) * 3
       // 多种伪彩色映射
       let (r, g, b) = match cmap {
-        "hot" => {
+        "hot" =>
           // 黑 -> 红 -> 黄 -> 白
           if gray < 0.33 {
             ((gray / 0.33 * 255.0).to_int(), 0, 0)
@@ -103,27 +100,21 @@ let cmap = colormap
           } else {
             (255, 255, ((gray - 0.66) / 0.34 * 255.0).to_int())
           }
-        }
-        "cool" => {
+        "cool" =>
           // 青 -> 品红
           ((gray * 255.0).to_int(), ((1.0 - gray) * 255.0).to_int(), 255)
-        }
-        "spring" => {
+        "spring" =>
           // 品红 -> 黄
-          (255, ((gray * 255.0).to_int()), ((1.0 - gray) * 255.0).to_int())
-        }
-        "summer" => {
+          (255, (gray * 255.0).to_int(), ((1.0 - gray) * 255.0).to_int())
+        "summer" =>
           // 绿 -> 黄
           ((gray * 128.0).to_int(), (128.0 + gray * 127.0).to_int(), 0)
-        }
-        "autumn" => {
+        "autumn" =>
           // 红 -> 黄
           (255, (gray * 255.0).to_int(), 0)
-        }
-        "winter" => {
+        "winter" =>
           // 蓝 -> 绿
           (0, (gray * 255.0).to_int(), ((1.0 - gray) * 255.0).to_int())
-        }
         "bone" => {
           // 骨色：黑 -> 灰 -> 白（带一点蓝调）
           let v = (gray * 255.0).to_int()
@@ -132,7 +123,11 @@ let cmap = colormap
         "pink" => {
           // 粉色：灰 -> 粉
           let v = (gray * 255.0).to_int()
-          (v.min(255), (v.to_double() * 0.6).to_int().min(255), (v.to_double() * 0.7).to_int().min(255))
+          (
+            v.min(255),
+            (v.to_double() * 0.6).to_int().min(255),
+            (v.to_double() * 0.7).to_int().min(255),
+          )
         }
         _ => {
           // 灰度
@@ -145,7 +140,12 @@ let cmap = colormap
       out_data[out_idx + 2] = b.min(255).max(0).to_byte()
     }
   }
-  @types.Image::{ width: w, height: h, channels: 3, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -155,8 +155,8 @@ pub fn medical_contrast_enhance(
   clip_limit? : Double = 2.0,
   tile_size? : Int = 8,
 ) -> @types.Image {
-  let clip = clip_limit
-  let tile = tile_size
+  let _ = clip_limit
+  let _ = tile_size
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -167,7 +167,9 @@ pub fn medical_contrast_enhance(
     let r = img.data[idx].to_int()
     let g = if channels >= 2 { img.data[idx + 1].to_int() } else { r }
     let b = if channels >= 3 { img.data[idx + 2].to_int() } else { r }
-    gray[i] = (0.299 * r.to_double() + 0.587 * g.to_double() + 0.114 * b.to_double()).to_int()
+    gray[i] = (0.299 * r.to_double() +
+    0.587 * g.to_double() +
+    0.114 * b.to_double()).to_int()
   }
   // 全局直方图均衡化（简化版）
   let histogram : Array[Int] = Array::make(256, 0)
@@ -193,7 +195,12 @@ pub fn medical_contrast_enhance(
     }
     out_data[i] = equalized.min(255).max(0).to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -231,7 +238,8 @@ pub fn medical_denoise(
           let cw = @math.exp(-(west.abs() / k) * (west.abs() / k))
           // 更新
           let lambda = 0.25
-          next[idx] = center + lambda * (cn * north + cs * south + ce * east + cw * west)
+          next[idx] = center +
+            lambda * (cn * north + cs * south + ce * east + cw * west)
         }
       }
     }
@@ -240,7 +248,8 @@ pub fn medical_denoise(
       for x in 0..<w {
         if y == 0 || y == h - 1 || x == 0 || x == w - 1 {
           for c in 0..<channels {
-            next[(y * w + x) * channels + c] = current[(y * w + x) * channels + c]
+            next[(y * w + x) * channels + c] = current[(y * w + x) * channels +
+              c]
           }
         }
       }
@@ -251,7 +260,12 @@ pub fn medical_denoise(
   for i in 0..<(w * h * channels) {
     out_data[i] = current[i].min(255.0).max(0.0).to_int().to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -263,7 +277,7 @@ pub fn measure_distance(
   y2 : Int,
   pixel_spacing? : Double = 1.0,
 ) -> Double {
-let spacing = pixel_spacing
+  let spacing = pixel_spacing
   let dx = (x2 - x1).to_double()
   let dy = (y2 - y1).to_double()
   (dx * dx + dy * dy).sqrt() * spacing
@@ -271,11 +285,8 @@ let spacing = pixel_spacing
 
 ///|
 /// 测量图像中区域的面积（像素面积）
-pub fn measure_area(
-  mask : @types.Image,
-  pixel_area? : Double = 1.0,
-) -> Double {
-let area_per_pixel = pixel_area
+pub fn measure_area(mask : @types.Image, pixel_area? : Double = 1.0) -> Double {
+  let area_per_pixel = pixel_area
   let w = mask.width
   let h = mask.height
   let channels = mask.channels

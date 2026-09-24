@@ -42,13 +42,20 @@ pub(all) enum DistanceMetric {
 
 ///|
 /// 计算欧氏距离
-pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn euclidean_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   // 输入验证
   if a.length() == 0 {
-    raise @types.LoadError::DecodeFailed("euclidean_distance: 向量a不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "euclidean_distance: 向量a不能为空",
+    )
   }
   if b.length() == 0 {
-    raise @types.LoadError::DecodeFailed("euclidean_distance: 向量b不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "euclidean_distance: 向量b不能为空",
+    )
   }
 
   let n = if a.length() < b.length() { a.length() } else { b.length() }
@@ -62,13 +69,20 @@ pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double raise 
 
 ///|
 /// 计算曼哈顿距离
-pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn manhattan_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   // 输入验证
   if a.length() == 0 {
-    raise @types.LoadError::DecodeFailed("manhattan_distance: 向量a不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "manhattan_distance: 向量a不能为空",
+    )
   }
   if b.length() == 0 {
-    raise @types.LoadError::DecodeFailed("manhattan_distance: 向量b不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "manhattan_distance: 向量b不能为空",
+    )
   }
 
   let n = if a.length() < b.length() { a.length() } else { b.length() }
@@ -81,7 +95,10 @@ pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double raise 
 
 ///|
 /// 计算余弦相似度（返回距离 = 1 - 相似度）
-pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn cosine_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   // 输入验证
   if a.length() == 0 {
     raise @types.LoadError::DecodeFailed("cosine_distance: 向量a不能为空")
@@ -109,13 +126,20 @@ pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double raise @ty
 
 ///|
 /// 计算切比雪夫距离
-pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn chebyshev_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   // 输入验证
   if a.length() == 0 {
-    raise @types.LoadError::DecodeFailed("chebyshev_distance: 向量a不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "chebyshev_distance: 向量a不能为空",
+    )
   }
   if b.length() == 0 {
-    raise @types.LoadError::DecodeFailed("chebyshev_distance: 向量b不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "chebyshev_distance: 向量b不能为空",
+    )
   }
 
   let n = if a.length() < b.length() { a.length() } else { b.length() }
@@ -138,10 +162,14 @@ pub fn compute_distance(
 ) -> Double raise @types.LoadError {
   // 输入验证
   if a.length() == 0 {
-    raise @types.LoadError::DecodeFailed("compute_distance: 向量a不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "compute_distance: 向量a不能为空",
+    )
   }
   if b.length() == 0 {
-    raise @types.LoadError::DecodeFailed("compute_distance: 向量b不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "compute_distance: 向量b不能为空",
+    )
   }
 
   match metric {
@@ -163,11 +191,7 @@ pub fn knn_create(
     raise @types.LoadError::DecodeFailed("knn_create: k必须大于0")
   }
 
-  KnnClassifier::{
-    samples: [],
-    k,
-    distance_metric,
-  }
+  KnnClassifier::{ samples: [], k, distance_metric }
 }
 
 ///|
@@ -179,7 +203,9 @@ pub fn knn_add_sample(
 ) -> KnnClassifier raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("knn_add_sample: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "knn_add_sample: 特征向量不能为空",
+    )
   }
   if label.length() == 0 {
     raise @types.LoadError::DecodeFailed("knn_add_sample: 标签不能为空")
@@ -202,11 +228,14 @@ pub fn knn_add_samples(
 ) -> KnnClassifier raise @types.LoadError {
   // 输入验证
   if samples.length() == 0 {
-    raise @types.LoadError::DecodeFailed("knn_add_samples: 样本列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "knn_add_samples: 样本列表不能为空",
+    )
   }
 
   let new_samples = classifier.samples
-  for (features, label) in samples {
+  for _tup0 in samples {
+    let (features, label) = _tup0
     new_samples.push(TrainingSample::{ features, label })
   }
   KnnClassifier::{
@@ -224,10 +253,14 @@ pub fn knn_predict(
 ) -> ClassificationResult raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("knn_predict: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "knn_predict: 特征向量不能为空",
+    )
   }
   if classifier.samples.length() == 0 {
-    raise @types.LoadError::DecodeFailed("knn_predict: 分类器没有训练样本")
+    raise @types.LoadError::DecodeFailed(
+      "knn_predict: 分类器没有训练样本",
+    )
   }
 
   let metric = match classifier.distance_metric {
@@ -243,7 +276,7 @@ pub fn knn_predict(
     distances.push((dist, sample.label))
   }
   // 按距离排序（冒泡排序，简单实现）
-  for i in 0..<distances.length() {
+  for _ in 0..<distances.length() {
     for j in 0..<(distances.length() - 1) {
       if distances[j].0 > distances[j + 1].0 {
         let temp = distances[j]
@@ -253,7 +286,11 @@ pub fn knn_predict(
     }
   }
   // 取前 k 个最近邻
-  let k = if classifier.k < distances.length() { classifier.k } else { distances.length() }
+  let k = if classifier.k < distances.length() {
+    classifier.k
+  } else {
+    distances.length()
+  }
   let top_k : Array[(String, Double)] = []
   let label_votes : Array[(String, Int)] = []
   for i in 0..<k {
@@ -275,18 +312,19 @@ pub fn knn_predict(
   // 找得票最多的标签
   let mut best_label = ""
   let mut best_votes = 0
-  for (label, votes) in label_votes {
+  for _tup1 in label_votes {
+    let (label, votes) = _tup1
     if votes > best_votes {
       best_votes = votes
       best_label = label
     }
   }
-  let confidence = if k > 0 { best_votes.to_double() / k.to_double() } else { 0.0 }
-  ClassificationResult::{
-    label: best_label,
-    confidence,
-    top_k,
+  let confidence = if k > 0 {
+    best_votes.to_double() / k.to_double()
+  } else {
+    0.0
   }
+  ClassificationResult::{ label: best_label, confidence, top_k }
 }
 
 ///|
@@ -295,10 +333,7 @@ pub fn template_matcher_create(
   distance_metric? : String = "euclidean",
 ) -> TemplateMatcher {
   // 输入验证：distance_metric 不做强制验证，使用默认值兜底
-  TemplateMatcher::{
-    templates: [],
-    distance_metric,
-  }
+  TemplateMatcher::{ templates: [], distance_metric }
 }
 
 ///|
@@ -310,10 +345,14 @@ pub fn template_matcher_add(
 ) -> TemplateMatcher raise @types.LoadError {
   // 输入验证
   if template.length() == 0 {
-    raise @types.LoadError::DecodeFailed("template_matcher_add: 模板特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "template_matcher_add: 模板特征向量不能为空",
+    )
   }
   if label.length() == 0 {
-    raise @types.LoadError::DecodeFailed("template_matcher_add: 标签不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "template_matcher_add: 标签不能为空",
+    )
   }
 
   let new_templates = matcher.templates
@@ -332,10 +371,14 @@ pub fn template_matcher_predict(
 ) -> ClassificationResult raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("template_matcher_predict: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "template_matcher_predict: 特征向量不能为空",
+    )
   }
   if matcher.templates.length() == 0 {
-    raise @types.LoadError::DecodeFailed("template_matcher_predict: 模板匹配器没有模板")
+    raise @types.LoadError::DecodeFailed(
+      "template_matcher_predict: 模板匹配器没有模板",
+    )
   }
 
   let metric = match matcher.distance_metric {
@@ -346,12 +389,13 @@ pub fn template_matcher_predict(
   }
   // 计算与所有模板的距离
   let distances : Array[(Double, String)] = []
-  for (label, template) in matcher.templates {
+  for _tup2 in matcher.templates {
+    let (label, template) = _tup2
     let dist = compute_distance(features, template, metric)
     distances.push((dist, label))
   }
   // 按距离排序
-  for i in 0..<distances.length() {
+  for _ in 0..<distances.length() {
     for j in 0..<(distances.length() - 1) {
       if distances[j].0 > distances[j + 1].0 {
         let temp = distances[j]
@@ -371,32 +415,32 @@ pub fn template_matcher_predict(
   if distances.length() > 0 {
     let (best_dist, best_label) = distances[0]
     let confidence = if best_dist > 0.0 { 1.0 / (1.0 + best_dist) } else { 1.0 }
-    ClassificationResult::{
-      label: best_label,
-      confidence,
-      top_k,
-    }
+    ClassificationResult::{ label: best_label, confidence, top_k }
   } else {
-    ClassificationResult::{
-      label: "",
-      confidence: 0.0,
-      top_k: [],
-    }
+    ClassificationResult::{ label: "", confidence: 0.0, top_k: [] }
   }
 }
 
 ///|
 /// 特征归一化（Min-Max 归一化到 [0, 1]）
-pub fn normalize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+pub fn normalize_features(
+  features : Array[Double],
+) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("normalize_features: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "normalize_features: 特征向量不能为空",
+    )
   }
   let mut min_val = features[0]
   let mut max_val = features[0]
   for v in features {
-    if v < min_val { min_val = v }
-    if v > max_val { max_val = v }
+    if v < min_val {
+      min_val = v
+    }
+    if v > max_val {
+      max_val = v
+    }
   }
   let range = max_val - min_val
   let normalized : Array[Double] = []
@@ -414,10 +458,14 @@ pub fn normalize_features(features : Array[Double]) -> Array[Double] raise @type
 
 ///|
 /// 特征标准化（Z-score 标准化，均值0，标准差1）
-pub fn standardize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+pub fn standardize_features(
+  features : Array[Double],
+) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if features.length() == 0 {
-    raise @types.LoadError::DecodeFailed("standardize_features: 特征向量不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "standardize_features: 特征向量不能为空",
+    )
   }
   // 计算均值
   let mut sum = 0.0
@@ -431,7 +479,11 @@ pub fn standardize_features(features : Array[Double]) -> Array[Double] raise @ty
     let diff = v - mean
     sum_sq += diff * diff
   }
-  let std = if sum_sq > 0.0 { (sum_sq / features.length().to_double()).sqrt() } else { 1.0 }
+  let std = if sum_sq > 0.0 {
+    (sum_sq / features.length().to_double()).sqrt()
+  } else {
+    1.0
+  }
   // 标准化
   let standardized : Array[Double] = []
   for v in features {

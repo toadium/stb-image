@@ -2,10 +2,12 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_of(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn read_float_le_of(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -15,10 +17,18 @@ fn read_float_le_of(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn clamp_int_of(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
+///|
 fn img16_to_img8_of(img : @types.Image16) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -28,9 +38,15 @@ fn img16_to_img8_of(img : @types.Image16) -> @types.Image {
     let v16 = read_u16_le_of(img.data, i * 2)
     data8[i] = (v16 / 257).to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
 }
 
+///|
 fn imgf_to_img8_of(img : @types.ImageF) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -41,7 +57,12 @@ fn imgf_to_img8_of(img : @types.ImageF) -> @types.Image {
     let v8 = clamp_int_of((vf * 255.0F).to_int(), 0, 255)
     data8[i] = v8.to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
 }
 
 // ========== Lucas-Kanade 16-bit ==========
@@ -57,40 +78,62 @@ pub fn lucas_kanade_16(
 ) -> Array[FlowResult] raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 前一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 前一帧图像尺寸必须大于0",
+    )
   }
   if prev.channels < 1 || prev.channels > 4 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 前一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 前一帧通道数必须在1-4之间",
+    )
   }
   let prev_expected_size = prev.width * prev.height * prev.channels * 2
   if prev.data.length() != prev_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "lucas_kanade_16: 前一帧数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+      "lucas_kanade_16: 前一帧数据大小不匹配，期望 " +
+      prev_expected_size.to_string() +
+      "，实际 " +
+      prev.data.length().to_string(),
     )
   }
   if next.width <= 0 || next.height <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 后一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 后一帧图像尺寸必须大于0",
+    )
   }
   if next.channels < 1 || next.channels > 4 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 后一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 后一帧通道数必须在1-4之间",
+    )
   }
   let next_expected_size = next.width * next.height * next.channels * 2
   if next.data.length() != next_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "lucas_kanade_16: 后一帧数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+      "lucas_kanade_16: 后一帧数据大小不匹配，期望 " +
+      next_expected_size.to_string() +
+      "，实际 " +
+      next.data.length().to_string(),
     )
   }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 两帧图像尺寸必须一致",
+    )
   }
   if points.length() == 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: 点列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: 点列表不能为空",
+    )
   }
   if window_size <= 0 || window_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: window_size必须为正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: window_size必须为正奇数",
+    )
   }
   if max_iter <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_16: max_iter必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_16: max_iter必须大于0",
+    )
   }
 
   let prev8 = img16_to_img8_of(prev)
@@ -111,40 +154,62 @@ pub fn lucas_kanade_f(
 ) -> Array[FlowResult] raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 前一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 前一帧图像尺寸必须大于0",
+    )
   }
   if prev.channels < 1 || prev.channels > 4 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 前一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 前一帧通道数必须在1-4之间",
+    )
   }
   let prev_expected_size = prev.width * prev.height * prev.channels * 4
   if prev.data.length() != prev_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "lucas_kanade_f: 前一帧数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+      "lucas_kanade_f: 前一帧数据大小不匹配，期望 " +
+      prev_expected_size.to_string() +
+      "，实际 " +
+      prev.data.length().to_string(),
     )
   }
   if next.width <= 0 || next.height <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 后一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 后一帧图像尺寸必须大于0",
+    )
   }
   if next.channels < 1 || next.channels > 4 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 后一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 后一帧通道数必须在1-4之间",
+    )
   }
   let next_expected_size = next.width * next.height * next.channels * 4
   if next.data.length() != next_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "lucas_kanade_f: 后一帧数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+      "lucas_kanade_f: 后一帧数据大小不匹配，期望 " +
+      next_expected_size.to_string() +
+      "，实际 " +
+      next.data.length().to_string(),
     )
   }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 两帧图像尺寸必须一致",
+    )
   }
   if points.length() == 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: 点列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: 点列表不能为空",
+    )
   }
   if window_size <= 0 || window_size % 2 == 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: window_size必须为正奇数")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: window_size必须为正奇数",
+    )
   }
   if max_iter <= 0 {
-    raise @types.LoadError::DecodeFailed("lucas_kanade_f: max_iter必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "lucas_kanade_f: max_iter必须大于0",
+    )
   }
 
   let prev8 = imgf_to_img8_of(prev)
@@ -164,37 +229,55 @@ pub fn horn_schunck_16(
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: 前一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: 前一帧图像尺寸必须大于0",
+    )
   }
   if prev.channels < 1 || prev.channels > 4 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: 前一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: 前一帧通道数必须在1-4之间",
+    )
   }
   let prev_expected_size = prev.width * prev.height * prev.channels * 2
   if prev.data.length() != prev_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "horn_schunck_16: 前一帧数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+      "horn_schunck_16: 前一帧数据大小不匹配，期望 " +
+      prev_expected_size.to_string() +
+      "，实际 " +
+      prev.data.length().to_string(),
     )
   }
   if next.width <= 0 || next.height <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: 后一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: 后一帧图像尺寸必须大于0",
+    )
   }
   if next.channels < 1 || next.channels > 4 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: 后一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: 后一帧通道数必须在1-4之间",
+    )
   }
   let next_expected_size = next.width * next.height * next.channels * 2
   if next.data.length() != next_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "horn_schunck_16: 后一帧数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+      "horn_schunck_16: 后一帧数据大小不匹配，期望 " +
+      next_expected_size.to_string() +
+      "，实际 " +
+      next.data.length().to_string(),
     )
   }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: 两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: 两帧图像尺寸必须一致",
+    )
   }
   if alpha <= 0.0F {
     raise @types.LoadError::DecodeFailed("horn_schunck_16: alpha必须大于0")
   }
   if iterations <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_16: iterations必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_16: iterations必须大于0",
+    )
   }
 
   let prev8 = img16_to_img8_of(prev)
@@ -214,37 +297,55 @@ pub fn horn_schunck_f(
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: 前一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: 前一帧图像尺寸必须大于0",
+    )
   }
   if prev.channels < 1 || prev.channels > 4 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: 前一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: 前一帧通道数必须在1-4之间",
+    )
   }
   let prev_expected_size = prev.width * prev.height * prev.channels * 4
   if prev.data.length() != prev_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "horn_schunck_f: 前一帧数据大小不匹配，期望 " + prev_expected_size.to_string() + "，实际 " + prev.data.length().to_string(),
+      "horn_schunck_f: 前一帧数据大小不匹配，期望 " +
+      prev_expected_size.to_string() +
+      "，实际 " +
+      prev.data.length().to_string(),
     )
   }
   if next.width <= 0 || next.height <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: 后一帧图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: 后一帧图像尺寸必须大于0",
+    )
   }
   if next.channels < 1 || next.channels > 4 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: 后一帧通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: 后一帧通道数必须在1-4之间",
+    )
   }
   let next_expected_size = next.width * next.height * next.channels * 4
   if next.data.length() != next_expected_size {
     raise @types.LoadError::DecodeFailed(
-      "horn_schunck_f: 后一帧数据大小不匹配，期望 " + next_expected_size.to_string() + "，实际 " + next.data.length().to_string(),
+      "horn_schunck_f: 后一帧数据大小不匹配，期望 " +
+      next_expected_size.to_string() +
+      "，实际 " +
+      next.data.length().to_string(),
     )
   }
   if prev.width != next.width || prev.height != next.height {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: 两帧图像尺寸必须一致")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: 两帧图像尺寸必须一致",
+    )
   }
   if alpha <= 0.0F {
     raise @types.LoadError::DecodeFailed("horn_schunck_f: alpha必须大于0")
   }
   if iterations <= 0 {
-    raise @types.LoadError::DecodeFailed("horn_schunck_f: iterations必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "horn_schunck_f: iterations必须大于0",
+    )
   }
 
   let prev8 = imgf_to_img8_of(prev)
@@ -264,15 +365,22 @@ pub fn compute_glcm_16(
 ) -> Array[Array[Int]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("compute_glcm_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("compute_glcm_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "compute_glcm_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "compute_glcm_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels <= 0 {
@@ -295,15 +403,22 @@ pub fn compute_glcm_f(
 ) -> Array[Array[Int]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("compute_glcm_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("compute_glcm_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "compute_glcm_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "compute_glcm_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels <= 0 {
@@ -324,19 +439,28 @@ pub fn glcm_features_multi_direction_16(
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "glcm_features_multi_direction_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "glcm_features_multi_direction_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels <= 0 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_16: levels必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_16: levels必须大于0",
+    )
   }
 
   let img8 = img16_to_img8_of(img)
@@ -353,19 +477,28 @@ pub fn glcm_features_multi_direction_f(
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "glcm_features_multi_direction_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "glcm_features_multi_direction_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels <= 0 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction_f: levels必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction_f: levels必须大于0",
+    )
   }
 
   let img8 = imgf_to_img8_of(img)

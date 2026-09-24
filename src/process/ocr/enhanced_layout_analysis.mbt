@@ -41,12 +41,12 @@ pub(all) struct TextLineAttributes {
   width : Int
   height : Int
   font_size : Double
-  font_weight : String  // "normal" / "bold" / "light"
+  font_weight : String // "normal" / "bold" / "light"
   is_indented : Bool
   indent_level : Int
   line_spacing : Double
   text : String
-  alignment : String  // "left" / "center" / "right" / "justify"
+  alignment : String // "left" / "center" / "right" / "justify"
 }
 
 ///|
@@ -114,13 +114,19 @@ pub fn detect_layout_type(
 ) -> LayoutType raise @types.LoadError {
   // 输入验证
   if text_lines.length() == 0 {
-    raise @types.LoadError::DecodeFailed("detect_layout_type: 文本行列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "detect_layout_type: 文本行列表不能为空",
+    )
   }
   if page_width <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_layout_type: 页面宽度必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_layout_type: 页面宽度必须大于0",
+    )
   }
   if page_height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_layout_type: 页面高度必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_layout_type: 页面高度必须大于0",
+    )
   }
   // 统计每行的水平覆盖范围
   let mut full_width_count = 0
@@ -160,17 +166,25 @@ pub fn detect_header_footer(
 ) -> (Int, Int) raise @types.LoadError {
   // 输入验证
   if text_lines.length() == 0 {
-    raise @types.LoadError::DecodeFailed("detect_header_footer: 文本行列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "detect_header_footer: 文本行列表不能为空",
+    )
   }
   if page_height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_header_footer: 页面高度必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_header_footer: 页面高度必须大于0",
+    )
   }
   // 找出最顶部和最底部的文本行
   let mut min_y = page_height
   let mut max_y = 0
   for line in text_lines {
-    if line.y < min_y { min_y = line.y }
-    if line.y + line.height > max_y { max_y = line.y + line.height }
+    if line.y < min_y {
+      min_y = line.y
+    }
+    if line.y + line.height > max_y {
+      max_y = line.y + line.height
+    }
   }
   // 页眉：页面顶部 10% 区域内的文本
   let header_threshold = page_height / 10
@@ -214,9 +228,7 @@ pub fn detect_column_boundaries(
       boundaries.push(col_width * 2 - 20)
       boundaries.push(col_width * 2 + 20)
     }
-    _ => {
-      boundaries.push(page_width)
-    }
+    _ => boundaries.push(page_width)
   }
   boundaries.push(page_width)
   boundaries
@@ -252,18 +264,30 @@ pub fn is_heading_line(
 
 ///|
 /// 检测列表项
-pub fn detect_list_item(
-  line : TextLineAttributes,
-) -> ListItemInfo {
+pub fn detect_list_item(line : TextLineAttributes) -> ListItemInfo {
   let text = line.text
   if text.length() == 0 {
-    return ListItemInfo::{ item_type: ListItemType::None, marker: "", level: 0, number: 0 }
+    return ListItemInfo::{
+      item_type: ListItemType::None,
+      marker: "",
+      level: 0,
+      number: 0,
+    }
   }
   // 检测项目符号
   let first_char = text[0]
-  if first_char == '•' || first_char == '-' || first_char == '*' || first_char == '○' || first_char == '●' {
+  if first_char == '•' ||
+    first_char == '-' ||
+    first_char == '*' ||
+    first_char == '○' ||
+    first_char == '●' {
     let level = if line.is_indented { line.indent_level } else { 0 }
-    return ListItemInfo::{ item_type: ListItemType::Bullet, marker: "•", level, number: 0 }
+    return ListItemInfo::{
+      item_type: ListItemType::Bullet,
+      marker: "•",
+      level,
+      number: 0,
+    }
   }
   // 检测数字编号 (1. 2. 3. 或 1) 2) 3))
   let mut num_end = 0
@@ -282,35 +306,52 @@ pub fn detect_list_item(
       let number_str = "1"
       let number = 0
       let level = if line.is_indented { line.indent_level } else { 0 }
-      return ListItemInfo::{ item_type: ListItemType::Numbered, marker: number_str, level, number }
+      return ListItemInfo::{
+        item_type: ListItemType::Numbered,
+        marker: number_str,
+        level,
+        number,
+      }
     }
   }
   // 检测复选框
-  if text.length() >= 3 && text[0] == '[' && (text[1] == ' ' || text[1] == 'x' || text[1] == 'X') && text[2] == ']' {
+  if text.length() >= 3 &&
+    text[0] == '[' &&
+    (text[1] == ' ' || text[1] == 'x' || text[1] == 'X') &&
+    text[2] == ']' {
     let level = if line.is_indented { line.indent_level } else { 0 }
-    return ListItemInfo::{ item_type: ListItemType::Checkbox, marker: "[ ]", level, number: 0 }
+    return ListItemInfo::{
+      item_type: ListItemType::Checkbox,
+      marker: "[ ]",
+      level,
+      number: 0,
+    }
   }
-  ListItemInfo::{ item_type: ListItemType::None, marker: "", level: 0, number: 0 }
+  ListItemInfo::{
+    item_type: ListItemType::None,
+    marker: "",
+    level: 0,
+    number: 0,
+  }
 }
 
 ///|
 /// 判断是否为代码块（基于缩进和等宽字体特征）
-pub fn is_code_block_line(
-  line : TextLineAttributes,
-  avg_indent : Int,
-) -> Bool {
+pub fn is_code_block_line(line : TextLineAttributes, avg_indent : Int) -> Bool {
   // 代码块特征：缩进大于平均缩进、包含特殊字符、等宽字体
-  let has_code_chars = line.text.length() > 0 || line.text.length() > 0 || line.text.length() > 0 || line.text.length() > 0 || line.text.length() > 0 || line.text.length() > 0
+  let has_code_chars = line.text.length() > 0 ||
+    line.text.length() > 0 ||
+    line.text.length() > 0 ||
+    line.text.length() > 0 ||
+    line.text.length() > 0 ||
+    line.text.length() > 0
   let is_indented = line.indent_level > 0 || line.x > avg_indent + 20
   is_indented && has_code_chars
 }
 
 ///|
 /// 判断是否为引用块（基于左边距和竖线）
-pub fn is_quote_line(
-  line : TextLineAttributes,
-  avg_x : Int,
-) -> Bool {
+pub fn is_quote_line(line : TextLineAttributes, avg_x : Int) -> Bool {
   // 引用块特征：左边距大于平均值、可能以 > 开头
   let starts_with_quote = line.text.length() > 0 && line.text[0] == '>'
   let is_indented = line.x > avg_x + 30
@@ -334,7 +375,8 @@ pub fn segment_paragraphs(
     let gap = curr.y - (prev.y + prev.height)
     let avg_line_height = (prev.height + curr.height).to_double() / 2.0
     // 段落分割条件：行间距大于 1.5 倍行高，或当前行有首行缩进
-    let is_new_paragraph = gap.to_double() > avg_line_height * 1.5 || curr.is_indented
+    let is_new_paragraph = gap.to_double() > avg_line_height * 1.5 ||
+      curr.is_indented
     if is_new_paragraph && current_paragraph.length() > 0 {
       paragraphs.push(current_paragraph.copy())
       current_paragraph.clear()
@@ -356,14 +398,16 @@ pub fn smart_reading_order(
 ) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if elements.length() == 0 {
-    raise @types.LoadError::DecodeFailed("smart_reading_order: 文档元素列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "smart_reading_order: 文档元素列表不能为空",
+    )
   }
   let indices : Array[Int] = []
   for i in 0..<elements.length() {
     indices.push(i)
   }
   // 按列分组，然后在列内按 y 排序
-  let num_columns = match layout_type {
+  let _ = match layout_type {
     LayoutType::DoubleColumn => 2
     LayoutType::TripleColumn => 3
     _ => 1
@@ -397,13 +441,19 @@ pub fn build_enhanced_elements(
 ) -> EnhancedDocument raise @types.LoadError {
   // 输入验证
   if lines.length() == 0 {
-    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 文本行列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "build_enhanced_elements: 文本行列表不能为空",
+    )
   }
   if page_width <= 0 {
-    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 页面宽度必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "build_enhanced_elements: 页面宽度必须大于0",
+    )
   }
   if page_height <= 0 {
-    raise @types.LoadError::DecodeFailed("build_enhanced_elements: 页面高度必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "build_enhanced_elements: 页面高度必须大于0",
+    )
   }
   // 1. 检测布局类型
   let layout = detect_layout_type(lines, page_width, page_height)
@@ -416,7 +466,11 @@ pub fn build_enhanced_elements(
   for line in lines {
     total_font_size += line.font_size
   }
-  let avg_font_size = if lines.length() > 0 { total_font_size / lines.length().to_double() } else { 16.0 }
+  let avg_font_size = if lines.length() > 0 {
+    total_font_size / lines.length().to_double()
+  } else {
+    16.0
+  }
   // 5. 计算平均 x 坐标
   let mut total_x = 0
   for line in lines {
@@ -508,22 +562,25 @@ pub fn enhanced_document_to_markdown(
   doc : EnhancedDocument,
   include_header_footer? : Bool = false,
 ) -> String {
-  let include = include_header_footer
+  let include_flag = include_header_footer
   let mut md = ""
   // 输出布局信息（作为 HTML 注释）
-  md = md + "<!-- 布局类型: " + (match doc.layout_type {
-    LayoutType::SingleColumn => "单栏"
-    LayoutType::DoubleColumn => "双栏"
-    LayoutType::TripleColumn => "三栏"
-    LayoutType::MixedLayout => "混合布局"
-    LayoutType::UnknownLayout => "未知"
-  }) + " -->\n\n"
+  md = md +
+    "<!-- 布局类型: " +
+    (match doc.layout_type {
+      LayoutType::SingleColumn => "单栏"
+      LayoutType::DoubleColumn => "双栏"
+      LayoutType::TripleColumn => "三栏"
+      LayoutType::MixedLayout => "混合布局"
+      LayoutType::UnknownLayout => "未知"
+    }) +
+    " -->\n\n"
   // 按阅读顺序输出元素
   for idx in doc.reading_order {
     if idx < doc.elements.length() {
       let element = doc.elements[idx]
       // 跳过页眉页脚（除非指定包含）
-      if !include && (element.is_header || element.is_footer) {
+      if !include_flag && (element.is_header || element.is_footer) {
         continue
       }
       // 转换元素
@@ -540,7 +597,8 @@ pub fn enhanced_document_to_markdown(
         MarkdownElementType::Table => element.content + "\n"
         MarkdownElementType::Image => "![图片](" + element.content + ")\n\n"
         MarkdownElementType::Quote => "> " + element.content + "\n\n"
-        MarkdownElementType::CodeBlock => "```\n" + element.content + "\n```\n\n"
+        MarkdownElementType::CodeBlock =>
+          "```\n" + element.content + "\n```\n\n"
         MarkdownElementType::HorizontalRule => "---\n\n"
         MarkdownElementType::PageBreak => "\n\n---\n\n"
         MarkdownElementType::Unknown => element.content + "\n\n"
@@ -578,10 +636,14 @@ pub fn enhanced_element_distribution(
       MarkdownElementType::Image => image_count += 1
       MarkdownElementType::Quote => quote_count += 1
       MarkdownElementType::CodeBlock => code_count += 1
-      _ => {()}
+      _ => ()
     }
-    if element.is_header { header_count += 1 }
-    if element.is_footer { footer_count += 1 }
+    if element.is_header {
+      header_count += 1
+    }
+    if element.is_footer {
+      footer_count += 1
+    }
   }
   [
     ("标题", title_count),

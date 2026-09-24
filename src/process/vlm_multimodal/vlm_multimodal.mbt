@@ -245,7 +245,9 @@ pub fn compute_image_text_similarity(
   let text_embedding : Array[Double] = []
   for i in 0..<config.projection_dim {
     let img_val = mean * 0.01 + std_dev * 0.005 + (i % 10).to_double() * 0.001
-    let txt_val = text_len * 0.01 + text_hash * 0.0001 + (i % 10).to_double() * 0.001
+    let txt_val = text_len * 0.01 +
+      text_hash * 0.0001 +
+      (i % 10).to_double() * 0.001
     image_embedding.push(img_val)
     text_embedding.push(txt_val)
   }
@@ -290,13 +292,22 @@ pub fn fuse_modalities(
   let weights : Array[Double] = []
 
   for i in 0..<dim {
-    let img_val = if i < image_features.length() { image_features[i] } else { 0.0 }
-    let txt_val = if i < text_features.length() { text_features[i] } else { 0.0 }
+    let img_val = if i < image_features.length() {
+      image_features[i]
+    } else {
+      0.0
+    }
+    let txt_val = if i < text_features.length() {
+      text_features[i]
+    } else {
+      0.0
+    }
 
     let fused_val = match config.strategy {
       MultimodalFusionStrategy::EarlyFusion => (img_val + txt_val) / 2.0
       MultimodalFusionStrategy::LateFusion => img_val * 0.6 + txt_val * 0.4
-      MultimodalFusionStrategy::HybridFusion => (img_val + txt_val) * 0.5 + img_val * 0.25
+      MultimodalFusionStrategy::HybridFusion =>
+        (img_val + txt_val) * 0.5 + img_val * 0.25
       MultimodalFusionStrategy::CrossAttention => img_val * 0.7 + txt_val * 0.3
       MultimodalFusionStrategy::TensorFusion => img_val * txt_val
       MultimodalFusionStrategy::GatedFusion => img_val * 0.5 + txt_val * 0.5
@@ -324,7 +335,7 @@ pub fn diffusion_generate(
   seed : Int,
 ) -> DiffusionResult {
   let size = config.image_size
-  let total = size * size
+  let _ = size * size
   let out : Array[Byte] = []
 
   // 简化的扩散生成：基于prompt的程序化图像
@@ -352,7 +363,12 @@ pub fn diffusion_generate(
   }
 
   DiffusionResult::{
-    image: @types.Image::{ width: size, height: size, channels: 3, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: size,
+      height: size,
+      channels: 3,
+      data: Bytes::from_array(out),
+    },
     num_steps: config.num_inference_steps,
     guidance_scale: config.guidance_scale,
     prompt,
@@ -369,7 +385,12 @@ pub fn text_to_image(
   config : GenerativeAIConfig,
   seed : Int,
 ) -> GenerativeAIResult {
-  let diffusion_result = diffusion_generate(prompt, "", config.diffusion_config, seed)
+  let diffusion_result = diffusion_generate(
+    prompt,
+    "",
+    config.diffusion_config,
+    seed,
+  )
 
   GenerativeAIResult::{
     task_type: GenerativeAITaskType::TextToImage,
@@ -408,7 +429,13 @@ pub fn image_to_text(
     "bright"
   }
 
-  let caption = "A " + brightness + " image with " + w.to_string() + "x" + h.to_string() + " resolution."
+  let caption = "A " +
+    brightness +
+    " image with " +
+    w.to_string() +
+    "x" +
+    h.to_string() +
+    " resolution."
 
   GenerativeAIResult::{
     task_type: GenerativeAITaskType::ImageToText,
@@ -429,40 +456,53 @@ pub fn vlm_report_to_string(
   let mut report = "## 视觉语言模型报告\n\n"
   report = report + "### 模型信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 模型类型 | " + (match model_type {
-    VisionLanguageModelType::CLIP => "CLIP"
-    VisionLanguageModelType::BLIP => "BLIP"
-    VisionLanguageModelType::ALIGN => "ALIGN"
-    VisionLanguageModelType::LLaVA => "LLaVA"
-    VisionLanguageModelType::QwenVL => "Qwen-VL"
-    VisionLanguageModelType::InternVL => "InternVL"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 投影维度 | " + embedding.projection_dim.to_string() + " |\n"
-  report = report + "| 图文相似度 | " + (embedding.similarity * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 模型类型 | " +
+    (match model_type {
+      VisionLanguageModelType::CLIP => "CLIP"
+      VisionLanguageModelType::BLIP => "BLIP"
+      VisionLanguageModelType::ALIGN => "ALIGN"
+      VisionLanguageModelType::LLaVA => "LLaVA"
+      VisionLanguageModelType::QwenVL => "Qwen-VL"
+      VisionLanguageModelType::InternVL => "InternVL"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 投影维度 | " +
+    embedding.projection_dim.to_string() +
+    " |\n"
+  report = report +
+    "| 图文相似度 | " +
+    (embedding.similarity * 100.0).to_string() +
+    "% |\n"
 
   report
 }
 
 ///|
 /// 生成多模态融合报告
-pub fn fusion_report_to_string(
-  result : FusionResult,
-) -> String {
+pub fn fusion_report_to_string(result : FusionResult) -> String {
   let mut report = "## 多模态融合报告\n\n"
   report = report + "### 融合信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 融合策略 | " + (match result.fusion_strategy {
-    MultimodalFusionStrategy::EarlyFusion => "早期融合"
-    MultimodalFusionStrategy::LateFusion => "晚期融合"
-    MultimodalFusionStrategy::HybridFusion => "混合融合"
-    MultimodalFusionStrategy::CrossAttention => "交叉注意力"
-    MultimodalFusionStrategy::TensorFusion => "张量融合"
-    MultimodalFusionStrategy::GatedFusion => "门控融合"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 融合策略 | " +
+    (match result.fusion_strategy {
+      MultimodalFusionStrategy::EarlyFusion => "早期融合"
+      MultimodalFusionStrategy::LateFusion => "晚期融合"
+      MultimodalFusionStrategy::HybridFusion => "混合融合"
+      MultimodalFusionStrategy::CrossAttention => "交叉注意力"
+      MultimodalFusionStrategy::TensorFusion => "张量融合"
+      MultimodalFusionStrategy::GatedFusion => "门控融合"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 隐藏维度 | " + result.hidden_dim.to_string() + " |\n"
-  report = report + "| 模态数量 | " + result.modality_weights.length().to_string() + " |\n"
+  report = report +
+    "| 模态数量 | " +
+    result.modality_weights.length().to_string() +
+    " |\n"
 
   report
 }

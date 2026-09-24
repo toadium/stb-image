@@ -3,7 +3,13 @@
 
 ///|
 fn clamp_i_p(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
 ///|
@@ -40,7 +46,9 @@ fn write_f32_p(data : Array[Byte], offset : Int, v : Float) -> Unit {
 
 ///|
 /// 高斯金字塔下采样 16-bit 版本。
-pub fn pyr_down_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn pyr_down_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("pyr_down_16 仅支持 channels=1/3/4")
   }
@@ -120,7 +128,11 @@ pub fn pyr_down_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
             }
           }
         }
-        write_f32_p(out, ((y * new_w + x) * ch + c) * 4, sum / Float::from_int(count))
+        write_f32_p(
+          out,
+          ((y * new_w + x) * ch + c) * 4,
+          sum / Float::from_int(count),
+        )
       }
     }
   }
@@ -281,6 +293,7 @@ pub fn pyr_up_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
 
 // ========== laplacian_diff 16-bit ==========
 
+///|
 fn laplacian_diff_p16(a : @types.Image16, b : @types.Image16) -> @types.Image16 {
   let ch = a.channels
   let w = a.width
@@ -304,7 +317,13 @@ fn laplacian_diff_p16(a : @types.Image16, b : @types.Image16) -> @types.Image16 
         let va = a_int[(y * w + x) * ch + c]
         let vb = b_int[(by * bw + bx) * ch + c]
         let diff = va - vb + 32768
-        let clamped = if diff < 0 { 0 } else if diff > 65535 { 65535 } else { diff }
+        let clamped = if diff < 0 {
+          0
+        } else if diff > 65535 {
+          65535
+        } else {
+          diff
+        }
         write_u16_p(out, ((y * w + x) * ch + c) * 2, clamped)
       }
     }
@@ -319,6 +338,7 @@ fn laplacian_diff_p16(a : @types.Image16, b : @types.Image16) -> @types.Image16 
 
 // ========== laplacian_diff float ==========
 
+///|
 fn laplacian_diff_pf(a : @types.ImageF, b : @types.ImageF) -> @types.ImageF {
   let ch = a.channels
   let w = a.width

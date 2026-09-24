@@ -7,7 +7,12 @@ fn make_img16_hist(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_hist(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -116,15 +126,24 @@ test "histogram_normalize_16: stretches range" {
     data[i * 2] = b'\x20'
     data[i * 2 + 1] = b'\x4E'
   }
-  let img2 = @types.Image16::{ width: 4, height: 4, channels: 1, data: Bytes::from_array(data) }
+  let img2 = @types.Image16::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = histogram_normalize_16(img2)
   // 归一化后最小值应为 0，最大值应为 65535
   let mut min_v = 65535
   let mut max_v = 0
   for i in 0..<16 {
     let v = read_u16_at_h(result.data, i * 2)
-    if v < min_v { min_v = v }
-    if v > max_v { max_v = v }
+    if v < min_v {
+      min_v = v
+    }
+    if v > max_v {
+      max_v = v
+    }
   }
   assert_eq(min_v, 0)
   assert_eq(max_v, 65535)

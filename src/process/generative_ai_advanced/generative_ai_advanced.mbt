@@ -328,7 +328,11 @@ pub fn simulate_gan_generation(
   config : GANConfig,
   sampling_config : SamplingConfig,
 ) -> GenerationResult {
-  let noise = generate_noise(sampling_config.num_samples, config.latent_dim, sampling_config.seed)
+  let noise = generate_noise(
+    sampling_config.num_samples,
+    config.latent_dim,
+    sampling_config.seed,
+  )
   let samples : Array[Array[Double]] = []
   let image_size = config.image_size
   let num_channels = config.in_channels
@@ -374,7 +378,13 @@ pub fn simulate_vae_reconstruction(
       // 简化的重构：添加噪声
       let noise = 0.05
       let reconstructed = input[i] + noise
-      let clamped = if reconstructed > 1.0 { 1.0 } else if reconstructed < 0.0 { 0.0 } else { reconstructed }
+      let clamped = if reconstructed > 1.0 {
+        1.0
+      } else if reconstructed < 0.0 {
+        0.0
+      } else {
+        reconstructed
+      }
       sample.push(clamped)
     }
     samples.push(sample)
@@ -405,29 +415,49 @@ pub fn generative_ai_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    GenerativeAITaskType::DiffusionModel => "扩散模型"
-    GenerativeAITaskType::GAN => "GAN"
-    GenerativeAITaskType::VAE => "VAE"
-    GenerativeAITaskType::FlowModel => "流模型"
-    GenerativeAITaskType::AutoregressiveModel => "自回归模型"
-    GenerativeAITaskType::EnergyBasedModel => "能量模型"
-    GenerativeAITaskType::TextToImage => "文生图"
-    GenerativeAITaskType::ImageToImage => "图生图"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      GenerativeAITaskType::DiffusionModel => "扩散模型"
+      GenerativeAITaskType::GAN => "GAN"
+      GenerativeAITaskType::VAE => "VAE"
+      GenerativeAITaskType::FlowModel => "流模型"
+      GenerativeAITaskType::AutoregressiveModel => "自回归模型"
+      GenerativeAITaskType::EnergyBasedModel => "能量模型"
+      GenerativeAITaskType::TextToImage => "文生图"
+      GenerativeAITaskType::ImageToImage => "图生图"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 模型类型 | " + result.model_type + " |\n"
-  report = report + "| 生成样本数 | " + result.num_samples.to_string() + " |\n"
-  report = report + "| 图像尺寸 | " + result.image_size.to_string() + "x" + result.image_size.to_string() + " |\n"
+  report = report +
+    "| 生成样本数 | " +
+    result.num_samples.to_string() +
+    " |\n"
+  report = report +
+    "| 图像尺寸 | " +
+    result.image_size.to_string() +
+    "x" +
+    result.image_size.to_string() +
+    " |\n"
   report = report + "| 通道数 | " + result.num_channels.to_string() + " |\n"
-  report = report + "| 推理时间 | " + result.inference_time_ms.to_string() + " ms |\n"
+  report = report +
+    "| 推理时间 | " +
+    result.inference_time_ms.to_string() +
+    " ms |\n"
 
   report = report + "\n### 质量指标\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| FID分数 | " + result.fid_score.to_string() + " |\n"
   report = report + "| IS分数 | " + result.is_score.to_string() + " |\n"
-  report = report + "| 精度 | " + (result.precision * 100.0).to_string() + "% |\n"
-  report = report + "| 召回率 | " + (result.recall * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 精度 | " +
+    (result.precision * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 召回率 | " +
+    (result.recall * 100.0).to_string() +
+    "% |\n"
 
   report = report + "\n### 配置\n\n"
   report = report + config_description + "\n"

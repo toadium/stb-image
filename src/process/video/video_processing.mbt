@@ -18,13 +18,7 @@ pub fn video_frames_new(
   fps? : Double = 30.0,
 ) -> VideoFrames {
   if frames.length() == 0 {
-    return VideoFrames::{
-      frames: [],
-      width: 0,
-      height: 0,
-      channels: 1,
-      fps,
-    }
+    return VideoFrames::{ frames: [], width: 0, height: 0, channels: 1, fps }
   }
   let first = frames[0]
   VideoFrames::{
@@ -38,18 +32,13 @@ pub fn video_frames_new(
 
 ///|
 /// 获取帧数
-pub fn video_frame_count(
-  video : VideoFrames,
-) -> Int {
+pub fn video_frame_count(video : VideoFrames) -> Int {
   video.frames.length()
 }
 
 ///|
 /// 获取指定帧
-pub fn video_get_frame(
-  video : VideoFrames,
-  index : Int,
-) -> @types.Image? {
+pub fn video_get_frame(video : VideoFrames, index : Int) -> @types.Image? {
   if index >= 0 && index < video.frames.length() {
     Some(video.frames[index])
   } else {
@@ -65,7 +54,7 @@ pub fn interpolate_frames(
   frame2 : @types.Image,
   num_frames? : Int = 1,
 ) -> Array[@types.Image] {
-let n = num_frames
+  let n = num_frames
   if frame1.width != frame2.width || frame1.height != frame2.height {
     return []
   }
@@ -83,11 +72,20 @@ let n = num_frames
           let v1 = frame1.data[idx + c].to_double()
           let v2 = frame2.data[idx + c].to_double()
           let interpolated = v1 * (1.0 - alpha) + v2 * alpha
-          out_data[idx + c] = interpolated.min(255.0).max(0.0).to_int().to_byte()
+          out_data[idx + c] = interpolated
+            .min(255.0)
+            .max(0.0)
+            .to_int()
+            .to_byte()
         }
       }
     }
-    result.push(@types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) })
+    result.push(@types.Image::{
+      width: w,
+      height: h,
+      channels,
+      data: Bytes::from_array(out_data),
+    })
   }
   result
 }
@@ -98,7 +96,7 @@ pub fn video_fade_in(
   video : VideoFrames,
   duration_frames? : Int = 30,
 ) -> VideoFrames {
-let duration = duration_frames
+  let duration = duration_frames
   let frames = video.frames
   let result : Array[@types.Image] = []
   for i in 0..<frames.length() {
@@ -118,7 +116,12 @@ let duration = duration_frames
           }
         }
       }
-      result.push(@types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) })
+      result.push(@types.Image::{
+        width: w,
+        height: h,
+        channels,
+        data: Bytes::from_array(out_data),
+      })
     } else {
       result.push(frame)
     }
@@ -138,7 +141,7 @@ pub fn video_fade_out(
   video : VideoFrames,
   duration_frames? : Int = 30,
 ) -> VideoFrames {
-let duration = duration_frames
+  let duration = duration_frames
   let frames = video.frames
   let n = frames.length()
   let result : Array[@types.Image] = []
@@ -159,7 +162,12 @@ let duration = duration_frames
           }
         }
       }
-      result.push(@types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) })
+      result.push(@types.Image::{
+        width: w,
+        height: h,
+        channels,
+        data: Bytes::from_array(out_data),
+      })
     } else {
       result.push(frame)
     }
@@ -175,11 +183,8 @@ let duration = duration_frames
 
 ///|
 /// 视频抽帧（按间隔抽取帧）
-pub fn video_sample(
-  video : VideoFrames,
-  interval? : Int = 2,
-) -> VideoFrames {
-let step = interval
+pub fn video_sample(video : VideoFrames, interval? : Int = 2) -> VideoFrames {
+  let step = interval
   let frames = video.frames
   let result : Array[@types.Image] = []
   let mut i = 0
@@ -198,9 +203,7 @@ let step = interval
 
 ///|
 /// 视频倒放
-pub fn video_reverse(
-  video : VideoFrames,
-) -> VideoFrames {
+pub fn video_reverse(video : VideoFrames) -> VideoFrames {
   let frames = video.frames
   let result : Array[@types.Image] = []
   let mut i = frames.length() - 1
@@ -219,10 +222,7 @@ pub fn video_reverse(
 
 ///|
 /// 视频拼接（将两个视频首尾相接）
-pub fn video_concat(
-  video1 : VideoFrames,
-  video2 : VideoFrames,
-) -> VideoFrames {
+pub fn video_concat(video1 : VideoFrames, video2 : VideoFrames) -> VideoFrames {
   let frames : Array[@types.Image] = []
   for frame in video1.frames {
     frames.push(frame)
@@ -251,12 +251,15 @@ pub fn create_animation(
 
 ///|
 /// 视频帧平均（将多帧平均为一帧，用于降噪）
-pub fn video_frame_average(
-  video : VideoFrames,
-) -> @types.Image {
+pub fn video_frame_average(video : VideoFrames) -> @types.Image {
   let frames = video.frames
   if frames.length() == 0 {
-    return @types.Image::{ width: 1, height: 1, channels: 1, data: Bytes::from_array([b'\x00']) }
+    return @types.Image::{
+      width: 1,
+      height: 1,
+      channels: 1,
+      data: Bytes::from_array([b'\x00']),
+    }
   }
   let w = video.width
   let h = video.height
@@ -272,5 +275,10 @@ pub fn video_frame_average(
   for i in 0..<(w * h * channels) {
     out_data[i] = (sum[i] / n).min(255.0).max(0.0).to_int().to_byte()
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }

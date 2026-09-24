@@ -40,6 +40,10 @@ pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_tiff_pure(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn decode_vp8_frame(Bytes, Int) -> @types.Image raise @types.LoadError
+
+pub fn decode_vp8_inter_frame(Bytes, Int, Vp8ReferenceFrames) -> (@types.Image, Vp8ReferenceFrames) raise @types.LoadError
+
 pub fn decode_webp_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn encode_apng_pure(@types.PngAnimation) -> Bytes raise @types.LoadError
@@ -78,6 +82,8 @@ pub fn encode_tga_pure(@types.Image) -> Bytes
 
 pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
 
+pub fn encode_webp_lossy_full(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+
 pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
 pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
@@ -89,7 +95,21 @@ pub fn tiff_packbits_decode(Bytes) -> Array[Byte] raise @types.LoadError
 // Errors
 
 // Types and methods
+pub struct Vp8ReferenceFrames {
+  last_y : Array[Int]
+  last_u : Array[Int]
+  last_v : Array[Int]
+  golden_y : Array[Int]
+  golden_u : Array[Int]
+  golden_v : Array[Int]
+  altref_y : Array[Int]
+  altref_u : Array[Int]
+  altref_v : Array[Int]
+  width : Int
+  height : Int
+}
 
 // Type aliases
 
 // Traits
+

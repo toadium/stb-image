@@ -265,10 +265,7 @@ pub fn create_replay_buffer(
 
 ///|
 /// 选择动作（epsilon-greedy）
-pub fn select_action(
-  agent : RLAgent,
-  state_idx : Int,
-) -> Int {
+pub fn select_action(agent : RLAgent, state_idx : Int) -> Int {
   let mut state = 42
   state = (state * 11035 + 12345) % 1000000
   let random_val = (state % 1000).to_double() / 1000.0
@@ -408,7 +405,9 @@ pub fn simulate_rl_training(
   for episode in 0..<config.num_episodes {
     // 模拟单回合奖励
     let progress = episode.to_double() / config.num_episodes.to_double()
-    let episode_reward = -100.0 + progress * 200.0 + (episode % 10).to_double() * 5.0
+    let episode_reward = -100.0 +
+      progress * 200.0 +
+      (episode % 10).to_double() * 5.0
     reward_history.push(episode_reward)
     total_reward += episode_reward
 
@@ -481,8 +480,12 @@ pub fn evaluate_policy(
   let mut min_reward = 1000000000.0
   let mut max_reward = -1000000000.0
   for r in rewards {
-    if r < min_reward { min_reward = r }
-    if r > max_reward { max_reward = r }
+    if r < min_reward {
+      min_reward = r
+    }
+    if r > max_reward {
+      max_reward = r
+    }
   }
 
   PolicyEvaluationResult::{
@@ -512,43 +515,76 @@ pub fn reinforcement_learning_report_to_string(
   report = report + "| 动作数 | " + env.num_actions.to_string() + " |\n"
   report = report + "| 状态维度 | " + env.state_dim.to_string() + " |\n"
   report = report + "| 动作维度 | " + env.action_dim.to_string() + " |\n"
-  report = report + "| 离散动作 | " + (if env.is_discrete { "是" } else { "否" }) + " |\n"
+  report = report +
+    "| 离散动作 | " +
+    (if env.is_discrete { "是" } else { "否" }) +
+    " |\n"
   report = report + "| 最大步数 | " + env.max_steps.to_string() + " |\n"
 
   report = report + "\n### 算法配置\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + (match config.algorithm {
-    RLAlgorithm::QLearning => "Q-Learning"
-    RLAlgorithm::DQN => "DQN"
-    RLAlgorithm::DoubleDQN => "Double DQN"
-    RLAlgorithm::DuelingDQN => "Dueling DQN"
-    RLAlgorithm::PPO => "PPO"
-    RLAlgorithm::A2C => "A2C"
-    RLAlgorithm::DDPG => "DDPG"
-    RLAlgorithm::SAC => "SAC"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 探索策略 | " + (match config.exploration_strategy {
-    ExplorationStrategy::EpsilonGreedy => "Epsilon-Greedy"
-    ExplorationStrategy::Boltzmann => "Boltzmann"
-    ExplorationStrategy::UCB => "UCB"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 训练回合数 | " + config.num_episodes.to_string() + " |\n"
+  report = report +
+    "| 算法 | " +
+    (match config.algorithm {
+      RLAlgorithm::QLearning => "Q-Learning"
+      RLAlgorithm::DQN => "DQN"
+      RLAlgorithm::DoubleDQN => "Double DQN"
+      RLAlgorithm::DuelingDQN => "Dueling DQN"
+      RLAlgorithm::PPO => "PPO"
+      RLAlgorithm::A2C => "A2C"
+      RLAlgorithm::DDPG => "DDPG"
+      RLAlgorithm::SAC => "SAC"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 探索策略 | " +
+    (match config.exploration_strategy {
+      ExplorationStrategy::EpsilonGreedy => "Epsilon-Greedy"
+      ExplorationStrategy::Boltzmann => "Boltzmann"
+      ExplorationStrategy::UCB => "UCB"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 训练回合数 | " +
+    config.num_episodes.to_string() +
+    " |\n"
   report = report + "| 学习率 | " + config.learning_rate.to_string() + " |\n"
   report = report + "| 折扣因子 | " + config.gamma.to_string() + " |\n"
-  report = report + "| 初始Epsilon | " + config.epsilon_start.to_string() + " |\n"
-  report = report + "| 最终Epsilon | " + config.epsilon_end.to_string() + " |\n"
+  report = report +
+    "| 初始Epsilon | " +
+    config.epsilon_start.to_string() +
+    " |\n"
+  report = report +
+    "| 最终Epsilon | " +
+    config.epsilon_end.to_string() +
+    " |\n"
   report = report + "| 批次大小 | " + config.batch_size.to_string() + " |\n"
-  report = report + "| 缓冲区大小 | " + config.buffer_size.to_string() + " |\n"
+  report = report +
+    "| 缓冲区大小 | " +
+    config.buffer_size.to_string() +
+    " |\n"
 
   report = report + "\n### 训练结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 总奖励 | " + result.total_reward.to_string() + " |\n"
-  report = report + "| 平均奖励 | " + result.average_reward.to_string() + " |\n"
-  report = report + "| 最终Epsilon | " + result.final_epsilon.to_string() + " |\n"
-  report = report + "| 收敛回合 | " + result.convergence_episode.to_string() + " |\n"
-  report = report + "| 训练时间 | " + result.training_time_s.to_string() + " s |\n"
+  report = report +
+    "| 平均奖励 | " +
+    result.average_reward.to_string() +
+    " |\n"
+  report = report +
+    "| 最终Epsilon | " +
+    result.final_epsilon.to_string() +
+    " |\n"
+  report = report +
+    "| 收敛回合 | " +
+    result.convergence_episode.to_string() +
+    " |\n"
+  report = report +
+    "| 训练时间 | " +
+    result.training_time_s.to_string() +
+    " s |\n"
 
   report
 }

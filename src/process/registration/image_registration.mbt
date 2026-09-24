@@ -4,68 +4,48 @@
 ///|
 /// 配准结果
 pub(all) struct RegistrationResult {
-  dx : Double  // x 方向平移
-  dy : Double  // y 方向平移
-  rotation : Double  // 旋转角度（弧度）
-  scale : Double  // 缩放因子
-  confidence : Double  // 配准置信度
+  dx : Double // x 方向平移
+  dy : Double // y 方向平移
+  rotation : Double // 旋转角度（弧度）
+  scale : Double // 缩放因子
+  confidence : Double // 配准置信度
 }
 
 ///|
 /// 仿射变换矩阵
 pub(all) struct AffineTransform {
-  a : Double  // 缩放+旋转
-  b : Double  // 剪切+旋转
-  c : Double  // x 平移
-  d : Double  // 剪切+旋转
-  e : Double  // 缩放+旋转
-  f : Double  // y 平移
+  a : Double // 缩放+旋转
+  b : Double // 剪切+旋转
+  c : Double // x 平移
+  d : Double // 剪切+旋转
+  e : Double // 缩放+旋转
+  f : Double // y 平移
 }
 
 ///|
 /// 创建恒等变换
 pub fn affine_identity() -> AffineTransform {
-  AffineTransform::{
-    a: 1.0, b: 0.0, c: 0.0,
-    d: 0.0, e: 1.0, f: 0.0,
-  }
+  AffineTransform::{ a: 1.0, b: 0.0, c: 0.0, d: 0.0, e: 1.0, f: 0.0 }
 }
 
 ///|
 /// 创建平移变换
-pub fn affine_translation(
-  dx : Double,
-  dy : Double,
-) -> AffineTransform {
-  AffineTransform::{
-    a: 1.0, b: 0.0, c: dx,
-    d: 0.0, e: 1.0, f: dy,
-  }
+pub fn affine_translation(dx : Double, dy : Double) -> AffineTransform {
+  AffineTransform::{ a: 1.0, b: 0.0, c: dx, d: 0.0, e: 1.0, f: dy }
 }
 
 ///|
 /// 创建旋转变换（围绕原点）
-pub fn affine_rotation(
-  angle : Double,
-) -> AffineTransform {
+pub fn affine_rotation(angle : Double) -> AffineTransform {
   let cos_a = @math.cos(angle)
   let sin_a = @math.sin(angle)
-  AffineTransform::{
-    a: cos_a, b: -sin_a, c: 0.0,
-    d: sin_a, e: cos_a, f: 0.0,
-  }
+  AffineTransform::{ a: cos_a, b: -sin_a, c: 0.0, d: sin_a, e: cos_a, f: 0.0 }
 }
 
 ///|
 /// 创建缩放变换
-pub fn affine_scale(
-  sx : Double,
-  sy : Double,
-) -> AffineTransform {
-  AffineTransform::{
-    a: sx, b: 0.0, c: 0.0,
-    d: 0.0, e: sy, f: 0.0,
-  }
+pub fn affine_scale(sx : Double, sy : Double) -> AffineTransform {
+  AffineTransform::{ a: sx, b: 0.0, c: 0.0, d: 0.0, e: sy, f: 0.0 }
 }
 
 ///|
@@ -98,9 +78,7 @@ pub fn affine_apply(
 
 ///|
 /// 计算图像的灰度图
-fn to_gray(
-  img : @types.Image,
-) -> Array[Double] {
+fn to_gray(img : @types.Image) -> Array[Double] {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -122,9 +100,15 @@ pub fn estimate_translation(
   img2 : @types.Image,
   max_offset? : Int = 20,
 ) -> RegistrationResult {
-let max_off = max_offset
+  let max_off = max_offset
   if img1.width != img2.width || img1.height != img2.height {
-    return RegistrationResult::{ dx: 0.0, dy: 0.0, rotation: 0.0, scale: 1.0, confidence: 0.0 }
+    return RegistrationResult::{
+      dx: 0.0,
+      dy: 0.0,
+      rotation: 0.0,
+      scale: 1.0,
+      confidence: 0.0,
+    }
   }
   let w = img1.width
   let h = img1.height
@@ -143,8 +127,8 @@ let max_off = max_offset
   let mut best_dx = 0
   let mut best_dy = 0
   let mut best_corr = -10000000000.0
-  for dy in (-max_off)..<(max_off + 1) {
-    for dx in (-max_off)..<(max_off + 1) {
+  for dy in -max_off..<(max_off + 1) {
+    for dx in -max_off..<(max_off + 1) {
       let mut corr = 0.0
       let mut var1 = 0.0
       let mut var2 = 0.0
@@ -178,7 +162,11 @@ let max_off = max_offset
     dy: best_dy.to_double(),
     rotation: 0.0,
     scale: 1.0,
-    confidence: if best_corr > 0.0 { best_corr } else { 0.0 },
+    confidence: if best_corr > 0.0 {
+      best_corr
+    } else {
+      0.0
+    },
   }
 }
 
@@ -236,7 +224,12 @@ pub fn warp_affine_transform(
       }
     }
   }
-  @types.Image::{ width: ow, height: oh, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: ow,
+    height: oh,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|

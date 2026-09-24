@@ -176,8 +176,12 @@ pub fn create_default_robot_vision_config() -> RobotVisionConfig {
     num_joints: 6,
     end_effector_type: "parallel_jaw",
     camera_intrinsics: [500.0, 0.0, 320.0, 0.0, 500.0, 240.0, 0.0, 0.0, 1.0],
-    camera_extrinsics: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
-    hand_eye_transform: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+    camera_extrinsics: [
+      1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+    ],
+    hand_eye_transform: [
+      1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+    ],
     control_frequency: 100,
     planning_time_limit: 5.0,
     collision_margin: 0.05,
@@ -205,8 +209,12 @@ pub fn estimate_object_pose(
   let px = config.camera_intrinsics[2]
   let py = config.camera_intrinsics[5]
 
-  let depth_idx = (cy.to_int() * 640 + cx.to_int())
-  let depth = if depth_idx < depth_image.length() { depth_image[depth_idx] } else { 1.0 }
+  let depth_idx = cy.to_int() * 640 + cx.to_int()
+  let depth = if depth_idx < depth_image.length() {
+    depth_image[depth_idx]
+  } else {
+    1.0
+  }
 
   let x = (cx - px) * depth / fx
   let y = (cy - py) * depth / fy
@@ -262,9 +270,18 @@ pub fn plan_arm_trajectory(
     let t = i.to_double() / (num_points - 1).to_double()
 
     let position : Array[Double] = []
-    position.push(start_pose.position[0] + (goal_pose.position[0] - start_pose.position[0]) * t)
-    position.push(start_pose.position[1] + (goal_pose.position[1] - start_pose.position[1]) * t)
-    position.push(start_pose.position[2] + (goal_pose.position[2] - start_pose.position[2]) * t)
+    position.push(
+      start_pose.position[0] +
+      (goal_pose.position[0] - start_pose.position[0]) * t,
+    )
+    position.push(
+      start_pose.position[1] +
+      (goal_pose.position[1] - start_pose.position[1]) * t,
+    )
+    position.push(
+      start_pose.position[2] +
+      (goal_pose.position[2] - start_pose.position[2]) * t,
+    )
 
     let joint_positions : Array[Double] = []
     for _ in 0..<config.num_joints {
@@ -403,43 +420,64 @@ pub fn robot_vision_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    RobotVisionTaskType::VisualServoing => "视觉伺服"
-    RobotVisionTaskType::ObjectGrasping => "物体抓取"
-    RobotVisionTaskType::SLAMEnhanced => "SLAM增强"
-    RobotVisionTaskType::Reconstruction3D => "3D重建"
-    RobotVisionTaskType::ArmControl => "机械臂控制"
-    RobotVisionTaskType::MobileNavigation => "移动机器人导航"
-    RobotVisionTaskType::HumanRobotInteraction => "人机交互"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 机器人类型 | " + (match config.robot_type {
-    RobotType::Manipulator => "机械臂"
-    RobotType::MobileRobot => "移动机器人"
-    RobotType::Humanoid => "人形机器人"
-    RobotType::Drone => "无人机"
-    RobotType::Wheeled => "轮式"
-    RobotType::Legged => "腿式"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 视觉伺服类型 | " + (match config.visual_servoing_type {
-    VisualServoingType::PositionBased => "基于位置"
-    VisualServoingType::ImageBased => "基于图像"
-    VisualServoingType::Hybrid => "混合"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 抓取类型 | " + (match config.grasp_type {
-    GraspType::ParallelJaw => "平行夹爪"
-    GraspType::SuctionCup => "吸盘"
-    GraspType::MultiFinger => "多指"
-    GraspType::Hook => "钩子"
-    GraspType::Magnetic => "磁吸"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      RobotVisionTaskType::VisualServoing => "视觉伺服"
+      RobotVisionTaskType::ObjectGrasping => "物体抓取"
+      RobotVisionTaskType::SLAMEnhanced => "SLAM增强"
+      RobotVisionTaskType::Reconstruction3D => "3D重建"
+      RobotVisionTaskType::ArmControl => "机械臂控制"
+      RobotVisionTaskType::MobileNavigation => "移动机器人导航"
+      RobotVisionTaskType::HumanRobotInteraction => "人机交互"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 机器人类型 | " +
+    (match config.robot_type {
+      RobotType::Manipulator => "机械臂"
+      RobotType::MobileRobot => "移动机器人"
+      RobotType::Humanoid => "人形机器人"
+      RobotType::Drone => "无人机"
+      RobotType::Wheeled => "轮式"
+      RobotType::Legged => "腿式"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 视觉伺服类型 | " +
+    (match config.visual_servoing_type {
+      VisualServoingType::PositionBased => "基于位置"
+      VisualServoingType::ImageBased => "基于图像"
+      VisualServoingType::Hybrid => "混合"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 抓取类型 | " +
+    (match config.grasp_type {
+      GraspType::ParallelJaw => "平行夹爪"
+      GraspType::SuctionCup => "吸盘"
+      GraspType::MultiFinger => "多指"
+      GraspType::Hook => "钩子"
+      GraspType::Magnetic => "磁吸"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 关节数 | " + config.num_joints.to_string() + " |\n"
-  report = report + "| 控制频率 | " + config.control_frequency.to_string() + " Hz |\n"
-  report = report + "| 规划时间限制 | " + config.planning_time_limit.to_string() + " s |\n"
-  report = report + "| 碰撞余量 | " + config.collision_margin.to_string() + " m |\n"
+  report = report +
+    "| 控制频率 | " +
+    config.control_frequency.to_string() +
+    " Hz |\n"
+  report = report +
+    "| 规划时间限制 | " +
+    config.planning_time_limit.to_string() +
+    " s |\n"
+  report = report +
+    "| 碰撞余量 | " +
+    config.collision_margin.to_string() +
+    " m |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

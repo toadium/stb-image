@@ -3,10 +3,12 @@
 
 // ========== 辅助函数 ==========
 
+///|
 fn read_u16_le_seg(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
+///|
 fn read_float_le_seg(data : Bytes, offset : Int) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
@@ -16,10 +18,18 @@ fn read_float_le_seg(data : Bytes, offset : Int) -> Float {
   Float::reinterpret_from_int(bits)
 }
 
+///|
 fn clamp_int_seg(v : Int, lo : Int, hi : Int) -> Int {
-  if v < lo { lo } else if v > hi { hi } else { v }
+  if v < lo {
+    lo
+  } else if v > hi {
+    hi
+  } else {
+    v
+  }
 }
 
+///|
 fn img16_to_img8(img : @types.Image16) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -29,9 +39,15 @@ fn img16_to_img8(img : @types.Image16) -> @types.Image {
     let v16 = read_u16_le_seg(img.data, i * 2)
     data8[i] = (v16 / 257).to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
 }
 
+///|
 fn imgf_to_img8(img : @types.ImageF) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -42,7 +58,12 @@ fn imgf_to_img8(img : @types.ImageF) -> @types.Image {
     let v8 = clamp_int_seg((vf * 255.0F).to_int(), 0, 255)
     data8[i] = v8.to_byte()
   }
-  @types.Image::{ width: w, height: h, channels: ch, data: Bytes::from_array(data8) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data8),
+  }
 }
 
 // ========== Watershed 16-bit ==========
@@ -59,7 +80,9 @@ pub fn watershed_16(
 
 ///|
 /// 16-bit 自动 Watershed 分割。
-pub fn watershed_auto_16(img : @types.Image16) -> (Array[Int], Int) raise @types.LoadError {
+pub fn watershed_auto_16(
+  img : @types.Image16,
+) -> (Array[Int], Int) raise @types.LoadError {
   let img8 = img16_to_img8(img)
   watershed_auto(img8)
 }
@@ -78,7 +101,9 @@ pub fn watershed_f(
 
 ///|
 /// float 自动 Watershed 分割。
-pub fn watershed_auto_f(img : @types.ImageF) -> (Array[Int], Int) raise @types.LoadError {
+pub fn watershed_auto_f(
+  img : @types.ImageF,
+) -> (Array[Int], Int) raise @types.LoadError {
   let img8 = imgf_to_img8(img)
   watershed_auto(img8)
 }

@@ -99,7 +99,7 @@ pub(all) struct EntityLinkingResult {
   candidate_scores : Array[Double]
   linked_entity : String
   confidence : Double
-  method : EntityLinkingMethod
+  method_type : EntityLinkingMethod
   num_candidates : Int
 }
 
@@ -110,7 +110,7 @@ pub(all) struct RelationExtractionResult {
   target_entity : String
   relation_type : String
   confidence : Double
-  method : RelationExtractionMethod
+  method_type : RelationExtractionMethod
   sentence : String
   evidence_span : Array[Int]
 }
@@ -122,7 +122,7 @@ pub(all) struct KnowledgeReasoningResult {
   answer : String
   confidence : Double
   reasoning_path : Array[String]
-  method : KnowledgeReasoningMethod
+  method_type : KnowledgeReasoningMethod
   num_hops : Int
   supporting_facts : Array[String]
 }
@@ -172,7 +172,7 @@ pub fn create_default_kg_config() -> KGConfig {
 ///|
 /// 创建空知识图谱
 pub fn create_empty_knowledge_graph(
-  method : KGConstructionMethod,
+  method_type : KGConstructionMethod,
 ) -> KnowledgeGraph {
   KnowledgeGraph::{
     entities: [],
@@ -181,16 +181,13 @@ pub fn create_empty_knowledge_graph(
     num_relations: 0,
     num_entity_types: 0,
     num_relation_types: 0,
-    construction_method: method,
+    construction_method: method_type,
   }
 }
 
 ///|
 /// 添加实体到知识图谱
-pub fn add_entity(
-  kg : KnowledgeGraph,
-  entity : KGEntity,
-) -> KnowledgeGraph {
+pub fn add_entity(kg : KnowledgeGraph, entity : KGEntity) -> KnowledgeGraph {
   let new_entities = kg.entities
   new_entities.push(entity)
 
@@ -273,7 +270,7 @@ pub fn link_entity(
     candidate_scores,
     linked_entity: best_entity,
     confidence: best_score,
-    method: config.entity_linking_method,
+    method_type: config.entity_linking_method,
     num_candidates: candidate_entities.length(),
   }
 }
@@ -288,12 +285,12 @@ pub fn extract_relation(
 ) -> RelationExtractionResult {
   // 简化的关系抽取：基于关键词匹配
   let relation_types = [
-    "is_a", "part_of", "located_in", "works_for",
-    "has_property", "caused_by", "similar_to", "contradicts"
+    "is_a", "part_of", "located_in", "works_for", "has_property", "caused_by", "similar_to",
+    "contradicts",
   ]
   let keywords = [
-    "is a", "part of", "located in", "works for",
-    "has", "caused by", "similar to", "contradicts"
+    "is a", "part of", "located in", "works for", "has", "caused by", "similar to",
+    "contradicts",
   ]
 
   let mut best_relation = "related_to"
@@ -312,7 +309,7 @@ pub fn extract_relation(
     target_entity,
     relation_type: best_relation,
     confidence: best_confidence,
-    method: config.relation_extraction_method,
+    method_type: config.relation_extraction_method,
     sentence,
     evidence_span: [0, sentence.length()],
   }
@@ -365,7 +362,7 @@ pub fn reason_over_kg(
     answer,
     confidence,
     reasoning_path,
-    method: config.reasoning_method,
+    method_type: config.reasoning_method,
     num_hops,
     supporting_facts,
   }
@@ -414,9 +411,7 @@ pub fn train_kg_embedding(
 
 ///|
 /// 计算知识图谱统计
-pub fn compute_kg_statistics(
-  kg : KnowledgeGraph,
-) -> (Double, Double, Double) {
+pub fn compute_kg_statistics(kg : KnowledgeGraph) -> (Double, Double, Double) {
   // 计算平均度、密度、聚类系数
   let total_degree = kg.num_relations * 2
   let avg_degree = if kg.num_entities > 0 {
@@ -430,7 +425,8 @@ pub fn compute_kg_statistics(
   } else {
     1
   }
-  let density = kg.num_relations.to_double() / max_possible_relations.to_double()
+  let density = kg.num_relations.to_double() /
+    max_possible_relations.to_double()
 
   // 简化的聚类系数
   let clustering_coefficient = 0.3
@@ -456,51 +452,87 @@ pub fn knowledge_graph_report_to_string(
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 实体数 | " + kg.num_entities.to_string() + " |\n"
   report = report + "| 关系数 | " + kg.num_relations.to_string() + " |\n"
-  report = report + "| 实体类型数 | " + kg.num_entity_types.to_string() + " |\n"
-  report = report + "| 关系类型数 | " + kg.num_relation_types.to_string() + " |\n"
+  report = report +
+    "| 实体类型数 | " +
+    kg.num_entity_types.to_string() +
+    " |\n"
+  report = report +
+    "| 关系类型数 | " +
+    kg.num_relation_types.to_string() +
+    " |\n"
   report = report + "| 平均度 | " + avg_degree.to_string() + " |\n"
   report = report + "| 密度 | " + density.to_string() + " |\n"
   report = report + "| 聚类系数 | " + clustering.to_string() + " |\n"
 
   report = report + "\n### 构建配置\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 构建方法 | " + (match kg.construction_method {
-    KGConstructionMethod::RuleBased => "基于规则"
-    KGConstructionMethod::Statistical => "统计"
-    KGConstructionMethod::Neural => "神经"
-    KGConstructionMethod::Hybrid => "混合"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 实体链接方法 | " + (match config.entity_linking_method {
-    EntityLinkingMethod::StringMatching => "字符串匹配"
-    EntityLinkingMethod::VectorSimilarity => "向量相似度"
-    EntityLinkingMethod::Neural => "神经"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 关系抽取方法 | " + (match config.relation_extraction_method {
-    RelationExtractionMethod::PatternBased => "基于模式"
-    RelationExtractionMethod::Neural => "神经"
-    RelationExtractionMethod::OpenIE => "开放IE"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 推理方法 | " + (match config.reasoning_method {
-    KnowledgeReasoningMethod::RuleBased => "基于规则"
-    KnowledgeReasoningMethod::EmbeddingBased => "基于嵌入"
-    KnowledgeReasoningMethod::Neural => "神经"
-    KnowledgeReasoningMethod::GraphNeuralNetwork => "图神经网络"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 嵌入维度 | " + config.embedding_dim.to_string() + " |\n"
-  report = report + "| 置信度阈值 | " + config.confidence_threshold.to_string() + " |\n"
+  report = report +
+    "| 构建方法 | " +
+    (match kg.construction_method {
+      KGConstructionMethod::RuleBased => "基于规则"
+      KGConstructionMethod::Statistical => "统计"
+      KGConstructionMethod::Neural => "神经"
+      KGConstructionMethod::Hybrid => "混合"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 实体链接方法 | " +
+    (match config.entity_linking_method {
+      EntityLinkingMethod::StringMatching => "字符串匹配"
+      EntityLinkingMethod::VectorSimilarity => "向量相似度"
+      EntityLinkingMethod::Neural => "神经"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 关系抽取方法 | " +
+    (match config.relation_extraction_method {
+      RelationExtractionMethod::PatternBased => "基于模式"
+      RelationExtractionMethod::Neural => "神经"
+      RelationExtractionMethod::OpenIE => "开放IE"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 推理方法 | " +
+    (match config.reasoning_method {
+      KnowledgeReasoningMethod::RuleBased => "基于规则"
+      KnowledgeReasoningMethod::EmbeddingBased => "基于嵌入"
+      KnowledgeReasoningMethod::Neural => "神经"
+      KnowledgeReasoningMethod::GraphNeuralNetwork => "图神经网络"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 嵌入维度 | " +
+    config.embedding_dim.to_string() +
+    " |\n"
+  report = report +
+    "| 置信度阈值 | " +
+    config.confidence_threshold.to_string() +
+    " |\n"
   report = report + "| 最大跳数 | " + config.max_hops.to_string() + " |\n"
 
   report = report + "\n### 嵌入训练\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 模型类型 | " + embedding.model_type + " |\n"
-  report = report + "| 实体嵌入数 | " + embedding.num_entities.to_string() + " |\n"
-  report = report + "| 关系嵌入数 | " + embedding.num_relations.to_string() + " |\n"
-  report = report + "| 嵌入维度 | " + embedding.embedding_dim.to_string() + " |\n"
-  report = report + "| 训练损失 | " + embedding.training_loss.to_string() + " |\n"
+  report = report +
+    "| 实体嵌入数 | " +
+    embedding.num_entities.to_string() +
+    " |\n"
+  report = report +
+    "| 关系嵌入数 | " +
+    embedding.num_relations.to_string() +
+    " |\n"
+  report = report +
+    "| 嵌入维度 | " +
+    embedding.embedding_dim.to_string() +
+    " |\n"
+  report = report +
+    "| 训练损失 | " +
+    embedding.training_loss.to_string() +
+    " |\n"
 
   report
 }

@@ -10,7 +10,7 @@ pub(all) struct HandwritingOcrConfig {
   max_char_height : Int
   target_size : Int
   distance_metric : String
-  flexibility : Double  // 0.0-1.0，越高越灵活
+  flexibility : Double // 0.0-1.0，越高越灵活
   use_slant_correction : Bool
 }
 
@@ -36,10 +36,11 @@ pub fn generate_handwriting_templates(
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   let chars = if char_set == "digits+letters" {
-    ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-     "U", "V", "W", "X", "Y", "Z"]
+    [
+      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E",
+      "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+      "U", "V", "W", "X", "Y", "Z",
+    ]
   } else {
     ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
   }
@@ -62,21 +63,27 @@ fn generate_handwriting_char_template(
 ) -> Array[Double] {
   let size = 16
   let features : Array[Double] = Array::make(size * size, 0.0)
-  let seed = if char.length() > 0 { char[0].to_int() + variant * 100 } else { 0 }
+  let seed = if char.length() > 0 {
+    char[0].to_int() + variant * 100
+  } else {
+    0
+  }
   // 手写体特征：更随机、更灵活的形状
   for y in 0..<size {
     for x in 0..<size {
       // 基础哈希
       let h1 = (seed * 31 + x * 17 + y * 13) % 100
       // 变体哈希
-      let h2 = (seed * 7 + (x + variant * 3) * 11 + (y + variant * 2) * 19) % 100
+      let h2 = (seed * 7 + (x + variant * 3) * 11 + (y + variant * 2) * 19) %
+        100
       // 中心权重（手写体通常居中但有偏移）
       let center_x = 8 + (variant - 1) * 2
-      let center_y = 8 + (variant % 2) * 2
-      let center_dist = ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y)).to_double()
+      let center_y = 8 + variant % 2 * 2
+      let center_dist = ((x - center_x) * (x - center_x) +
+      (y - center_y) * (y - center_y)).to_double()
       let center_factor = 1.0 - center_dist / 128.0
       // 手写体灵活性：更宽松的阈值
-      let threshold = 35 + (center_factor * 30.0).to_int() + (h2 / 5)
+      let threshold = 35 + (center_factor * 30.0).to_int() + h2 / 5
       if h1 < threshold {
         features[y * size + x] = 1.0
       }
@@ -93,15 +100,22 @@ pub fn correct_slant(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("correct_slant: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "correct_slant: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("correct_slant: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "correct_slant: 仅支持单通道灰度图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "correct_slant: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "correct_slant: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -134,8 +148,8 @@ fn estimate_slant_angle(img : @types.Image) -> Double {
       for x in 0..<w {
         if data[y * w + x].to_int() > 128 {
           let new_x = ((x.to_double() - w.to_double() / 2.0) * cos_a -
-                       (y.to_double() - h.to_double() / 2.0) * sin_a +
-                       w.to_double() / 2.0).to_int()
+          (y.to_double() - h.to_double() / 2.0) * sin_a +
+          w.to_double() / 2.0).to_int()
           if new_x >= 0 && new_x < w {
             projection[new_x] += 1
           }
@@ -203,10 +217,18 @@ fn segment_handwriting_chars(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -219,10 +241,13 @@ fn segment_handwriting_chars(
     let ratio = if rh > 0 { rw.to_double() / rh.to_double() } else { 0.0 }
     let min_ratio = 0.3 * (1.0 + cfg.flexibility)
     let max_ratio = 3.0 * (1.0 + cfg.flexibility)
-    if rw >= cfg.min_char_width && rw <= cfg.max_char_width &&
-       rh >= cfg.min_char_height && rh <= cfg.max_char_height &&
-       ratio > min_ratio && ratio < max_ratio &&
-       area[label] > 15 {
+    if rw >= cfg.min_char_width &&
+      rw <= cfg.max_char_width &&
+      rh >= cfg.min_char_height &&
+      rh <= cfg.max_char_height &&
+      ratio > min_ratio &&
+      ratio < max_ratio &&
+      area[label] > 15 {
       regions.push((min_x[label], min_y[label], rw, rh))
     }
   }
@@ -237,15 +262,22 @@ pub fn recognize_handwriting(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_handwriting: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_handwriting: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -255,13 +287,19 @@ pub fn recognize_handwriting(
   }
   // 配置验证
   if cfg.min_char_width <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting: min_char_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: min_char_width必须大于0",
+    )
   }
   if cfg.max_char_width < cfg.min_char_width {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting: max_char_width不能小于min_char_width")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: max_char_width不能小于min_char_width",
+    )
   }
   if cfg.target_size <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting: target_size必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting: target_size必须大于0",
+    )
   }
   // 1. 预处理
   let mut preprocessed = ocr_preprocess(img)
@@ -277,13 +315,25 @@ pub fn recognize_handwriting(
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup0 in char_regions {
+    let (x, y, w, h) = _tup0
     // 提取字符图像
-    let char_img = extract_handwriting_char_region(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_handwriting_char_region(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 提取特征
     let features = extract_handwriting_char_features(char_img, 16)
     // 模板匹配（多变体投票）
-    let result = match_handwriting_template(features, templates, cfg.distance_metric)
+    let result = match_handwriting_template(
+      features,
+      templates,
+      cfg.distance_metric,
+    )
     text += result.0
     total_confidence += result.1
     char_results.push(OcrCharResult::{
@@ -300,11 +350,7 @@ pub fn recognize_handwriting(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -323,20 +369,30 @@ fn extract_handwriting_char_region(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -367,7 +423,11 @@ fn extract_handwriting_char_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -383,7 +443,8 @@ fn match_handwriting_template(
 ) -> (String, Double) {
   // 收集所有变体的预测
   let label_votes : Array[(String, Double)] = []
-  for (label_full, template) in templates {
+  for _tup1 in templates {
+    let (label_full, template) = _tup1
     let dist = match distance_metric {
       "manhattan" => manhattan_hw(features, template)
       "cosine" => cosine_hw(features, template)
@@ -413,13 +474,18 @@ fn match_handwriting_template(
   // 找得票最多的标签
   let mut best_label = "?"
   let mut best_votes = 0.0
-  for (label, votes) in label_votes {
+  for _tup2 in label_votes {
+    let (label, votes) = _tup2
     if votes > best_votes {
       best_votes = votes
       best_label = label
     }
   }
-  let total_votes = if templates.length() > 0 { templates.length().to_double() / 3.0 } else { 1.0 }
+  let total_votes = if templates.length() > 0 {
+    templates.length().to_double() / 3.0
+  } else {
+    1.0
+  }
   let confidence = best_votes / total_votes
   (best_label, confidence)
 }

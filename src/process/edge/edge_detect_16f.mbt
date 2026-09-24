@@ -34,18 +34,27 @@ fn write_f32_le_e(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 ///|
 /// 16-bit Sobel 边缘检测。先转灰度，然后计算梯度幅值。
 /// 输出为单通道灰度图（channels=1）的 Image16。
-pub fn edge_detect_sobel_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn edge_detect_sobel_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_sobel_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_sobel_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_sobel_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_sobel_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_sobel_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_sobel_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -131,18 +140,27 @@ pub fn edge_detect_sobel_16(img : @types.Image16) -> @types.Image16 raise @types
 ///|
 /// float Sobel 边缘检测。先转灰度，然后计算梯度幅值。
 /// 输出为单通道灰度图（channels=1）的 ImageF。
-pub fn edge_detect_sobel_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn edge_detect_sobel_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_sobel_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_sobel_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_sobel_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_sobel_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_sobel_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_sobel_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -227,18 +245,27 @@ pub fn edge_detect_sobel_f(img : @types.ImageF) -> @types.ImageF raise @types.Lo
 /// 16-bit Laplacian 边缘检测。使用 3x3 Laplacian 核：
 /// [0, 1, 0; 1, -4, 1; 0, 1, 0]
 /// 输出单通道灰度图（channels=1）的 Image16，值为梯度绝对值。
-pub fn edge_detect_laplacian_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn edge_detect_laplacian_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_laplacian_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_laplacian_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_laplacian_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_laplacian_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_laplacian_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_laplacian_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -310,18 +337,27 @@ pub fn edge_detect_laplacian_16(img : @types.Image16) -> @types.Image16 raise @t
 /// float Laplacian 边缘检测。使用 3x3 Laplacian 核：
 /// [0, 1, 0; 1, -4, 1; 0, 1, 0]
 /// 输出单通道灰度图（channels=1）的 ImageF，值为梯度绝对值。
-pub fn edge_detect_laplacian_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn edge_detect_laplacian_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_laplacian_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_laplacian_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_laplacian_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_laplacian_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_laplacian_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_laplacian_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -390,18 +426,27 @@ pub fn edge_detect_laplacian_f(img : @types.ImageF) -> @types.ImageF raise @type
 /// Gx = [-1, 0, 1; -1, 0, 1; -1, 0, 1]
 /// Gy = [-1, -1, -1; 0, 0, 0; 1, 1, 1]
 /// 输出单通道灰度图（channels=1）的 Image16。
-pub fn edge_detect_prewitt_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn edge_detect_prewitt_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_prewitt_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_prewitt_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_prewitt_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_prewitt_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_prewitt_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_prewitt_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -478,18 +523,27 @@ pub fn edge_detect_prewitt_16(img : @types.Image16) -> @types.Image16 raise @typ
 ///|
 /// float Prewitt 边缘检测。使用两个 3x3 Prewitt 核计算梯度幅值。
 /// 输出单通道灰度图（channels=1）的 ImageF。
-pub fn edge_detect_prewitt_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn edge_detect_prewitt_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("edge_detect_prewitt_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_prewitt_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("edge_detect_prewitt_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "edge_detect_prewitt_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "edge_detect_prewitt_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "edge_detect_prewitt_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 

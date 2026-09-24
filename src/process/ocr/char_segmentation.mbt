@@ -27,15 +27,22 @@ pub fn drop_fall_segmentation(
 ) -> DropFallResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("drop_fall_segmentation: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "drop_fall_segmentation: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("drop_fall_segmentation: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "drop_fall_segmentation: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "drop_fall_segmentation: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "drop_fall_segmentation: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
 
@@ -57,7 +64,11 @@ pub fn drop_fall_segmentation(
     // 检查下方三个方向：左下、正下、右下
     let left = if x > 0 { data[(y + 1) * w + (x - 1)].to_int() } else { 255 }
     let center = data[(y + 1) * w + x].to_int()
-    let right = if x < w - 1 { data[(y + 1) * w + (x + 1)].to_int() } else { 255 }
+    let right = if x < w - 1 {
+      data[(y + 1) * w + (x + 1)].to_int()
+    } else {
+      255
+    }
     // 水滴优先向黑色像素（前景）移动
     if center < 128 {
       // 正下是黑色，继续向下
@@ -84,8 +95,12 @@ pub fn drop_fall_segmentation(
       y += 1
     }
     // 边界检查
-    if x < 0 { x = 0 }
-    if x >= w { x = w - 1 }
+    if x < 0 {
+      x = 0
+    }
+    if x >= w {
+      x = w - 1
+    }
   }
   path.push((x, y))
   // 从路径中提取分割点
@@ -128,22 +143,33 @@ pub fn detect_touching_chars(
 ) -> Array[Int] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_touching_chars: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_touching_chars: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_touching_chars: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_touching_chars: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_touching_chars: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "detect_touching_chars: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if min_char_width <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_touching_chars: min_char_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_touching_chars: min_char_width必须大于0",
+    )
   }
   if max_char_width < min_char_width {
-    raise @types.LoadError::DecodeFailed("detect_touching_chars: max_char_width不能小于min_char_width")
+    raise @types.LoadError::DecodeFailed(
+      "detect_touching_chars: max_char_width不能小于min_char_width",
+    )
   }
 
   let w = img.width
@@ -161,8 +187,10 @@ pub fn detect_touching_chars(
   // 找局部最小值（可能的分割点）
   let minima : Array[Int] = []
   for x in 2..<(w - 2) {
-    if projection[x] < projection[x - 1] && projection[x] <= projection[x + 1] &&
-       projection[x] < projection[x - 2] && projection[x] <= projection[x + 2] {
+    if projection[x] < projection[x - 1] &&
+      projection[x] <= projection[x + 1] &&
+      projection[x] < projection[x - 2] &&
+      projection[x] <= projection[x + 2] {
       minima.push(x)
     }
   }
@@ -192,22 +220,33 @@ pub fn segment_by_connected_components(
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("segment_by_connected_components: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "segment_by_connected_components: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("segment_by_connected_components: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "segment_by_connected_components: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "segment_by_connected_components: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "segment_by_connected_components: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if min_area < 0 {
-    raise @types.LoadError::DecodeFailed("segment_by_connected_components: min_area不能为负数")
+    raise @types.LoadError::DecodeFailed(
+      "segment_by_connected_components: min_area不能为负数",
+    )
   }
   if max_area < min_area {
-    raise @types.LoadError::DecodeFailed("segment_by_connected_components: max_area不能小于min_area")
+    raise @types.LoadError::DecodeFailed(
+      "segment_by_connected_components: max_area不能小于min_area",
+    )
   }
 
   let w = img.width
@@ -250,10 +289,18 @@ pub fn segment_by_connected_components(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -280,13 +327,19 @@ pub fn merge_small_segments(
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if segments.length() == 0 {
-    raise @types.LoadError::DecodeFailed("merge_small_segments: 分割区域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "merge_small_segments: 分割区域列表不能为空",
+    )
   }
   if min_width <= 0 {
-    raise @types.LoadError::DecodeFailed("merge_small_segments: min_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "merge_small_segments: min_width必须大于0",
+    )
   }
   if min_height <= 0 {
-    raise @types.LoadError::DecodeFailed("merge_small_segments: min_height必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "merge_small_segments: min_height必须大于0",
+    )
   }
 
   let merged : Array[(Int, Int, Int, Int)] = []
@@ -319,7 +372,12 @@ pub fn merge_small_segments(
     let new_y = min(py, cy)
     let new_max_x = max(px + pw, cx + cw)
     let new_max_y = max(py + ph, cy + ch)
-    merged[merged.length() - 1] = (new_x, new_y, new_max_x - new_x, new_max_y - new_y)
+    merged[merged.length() - 1] = (
+      new_x,
+      new_y,
+      new_max_x - new_x,
+      new_max_y - new_y,
+    )
   }
   merged
 }
@@ -335,26 +393,37 @@ pub fn filter_noise_segments(
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if segments.length() == 0 {
-    raise @types.LoadError::DecodeFailed("filter_noise_segments: 分割区域列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "filter_noise_segments: 分割区域列表不能为空",
+    )
   }
   if img_width <= 0 || img_height <= 0 {
-    raise @types.LoadError::DecodeFailed("filter_noise_segments: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "filter_noise_segments: 图像尺寸必须大于0",
+    )
   }
   if min_area_ratio < 0.0 || min_area_ratio > 1.0 {
-    raise @types.LoadError::DecodeFailed("filter_noise_segments: min_area_ratio必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "filter_noise_segments: min_area_ratio必须在0-1之间",
+    )
   }
   if max_area_ratio < 0.0 || max_area_ratio > 1.0 {
-    raise @types.LoadError::DecodeFailed("filter_noise_segments: max_area_ratio必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "filter_noise_segments: max_area_ratio必须在0-1之间",
+    )
   }
   if max_area_ratio < min_area_ratio {
-    raise @types.LoadError::DecodeFailed("filter_noise_segments: max_area_ratio不能小于min_area_ratio")
+    raise @types.LoadError::DecodeFailed(
+      "filter_noise_segments: max_area_ratio不能小于min_area_ratio",
+    )
   }
 
   let img_area = img_width * img_height
   let min_area = (img_area.to_double() * min_area_ratio).to_int()
   let max_area = (img_area.to_double() * max_area_ratio).to_int()
   let filtered : Array[(Int, Int, Int, Int)] = []
-  for (x, y, w, h) in segments {
+  for _tup0 in segments {
+    let (x, y, w, h) = _tup0
     let area = w * h
     if area >= min_area && area <= max_area {
       filtered.push((x, y, w, h))
@@ -376,31 +445,47 @@ pub fn complete_char_segmentation(
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("complete_char_segmentation: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "complete_char_segmentation: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("complete_char_segmentation: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "complete_char_segmentation: 仅支持单通道二值图",
+    )
   }
   let expected_size = img.width * img.height
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "complete_char_segmentation: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "complete_char_segmentation: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if min_char_width <= 0 {
-    raise @types.LoadError::DecodeFailed("complete_char_segmentation: min_char_width必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "complete_char_segmentation: min_char_width必须大于0",
+    )
   }
   if max_char_width < min_char_width {
-    raise @types.LoadError::DecodeFailed("complete_char_segmentation: max_char_width不能小于min_char_width")
+    raise @types.LoadError::DecodeFailed(
+      "complete_char_segmentation: max_char_width不能小于min_char_width",
+    )
   }
 
   let w = img.width
   let h = img.height
   // 1. 连通域初步分割
-  let segments = segment_by_connected_components(img, min_area=5, max_area=100000)
+  let segments = segment_by_connected_components(
+    img,
+    min_area=5,
+    max_area=100000,
+  )
   // 2. 检测粘连字符（宽度过大的区域）
   let final_segments : Array[(Int, Int, Int, Int)] = []
-  for (x, y, sw, sh) in segments {
+  for _tup1 in segments {
+    let (x, y, sw, sh) = _tup1
     if sw > max_char_width && sh > min_char_width {
       // 可能是粘连字符，尝试滴水算法分割
       // 裁剪这个区域
@@ -410,7 +495,8 @@ pub fn complete_char_segmentation(
           let drop_result = drop_fall_segmentation(si)
           if drop_result.success && drop_result.char_regions.length() > 1 {
             // 分割成功，添加子区域
-            for (rx1, rx2) in drop_result.char_regions {
+            for _tup2 in drop_result.char_regions {
+              let (rx1, rx2) = _tup2
               let rw = rx2 - rx1 + 1
               if rw >= min_char_width {
                 final_segments.push((x + rx1, y, rw, sh))
@@ -421,18 +507,24 @@ pub fn complete_char_segmentation(
             final_segments.push((x, y, sw, sh))
           }
         }
-        None => {
-          final_segments.push((x, y, sw, sh))
-        }
+        None => final_segments.push((x, y, sw, sh))
       }
     } else {
       final_segments.push((x, y, sw, sh))
     }
   }
   // 3. 后处理：合并过小的区域
-  let merged = merge_small_segments(final_segments, min_char_width, min_char_width)
+  let merged = merge_small_segments(
+    final_segments, min_char_width, min_char_width,
+  )
   // 4. 过滤噪声
-  let filtered = filter_noise_segments(merged, w, h, min_area_ratio=0.0005, max_area_ratio=0.8)
+  let filtered = filter_noise_segments(
+    merged,
+    w,
+    h,
+    min_area_ratio=0.0005,
+    max_area_ratio=0.8,
+  )
   filtered
 }
 
@@ -456,21 +548,35 @@ fn crop_sub_image(
   for yy in 0..<height {
     for xx in 0..<width {
       for c in 0..<ch {
-        out[(yy * width + xx) * ch + c] = data[((y + yy) * w + (x + xx)) * ch + c]
+        out[(yy * width + xx) * ch + c] = data[((y + yy) * w + (x + xx)) * ch +
+          c]
       }
     }
   }
-  Some(@types.Image::{ width, height, channels: ch, data: Bytes::from_array(out) })
+  Some(@types.Image::{
+    width,
+    height,
+    channels: ch,
+    data: Bytes::from_array(out),
+  })
 }
 
 ///|
 /// 辅助函数：最小值
 fn min_seg(a : Int, b : Int) -> Int {
-  if a < b { a } else { b }
+  if a < b {
+    a
+  } else {
+    b
+  }
 }
 
 ///|
 /// 辅助函数：最大值
 fn max_seg(a : Int, b : Int) -> Int {
-  if a > b { a } else { b }
+  if a > b {
+    a
+  } else {
+    b
+  }
 }

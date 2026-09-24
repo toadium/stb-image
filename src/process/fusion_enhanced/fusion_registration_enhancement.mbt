@@ -109,7 +109,12 @@ pub fn fuse_weighted_average(
   weights : Array[Double],
 ) -> @types.Image {
   if images.length() == 0 {
-    return @types.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) }
+    return @types.Image::{
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: Bytes::from_array([]),
+    }
   }
 
   let w = images[0].width
@@ -126,20 +131,34 @@ pub fn fuse_weighted_average(
       weight_sum += weight
     }
     let avg = if weight_sum > 0.0 { sum / weight_sum } else { 0.0 }
-    let clamped = if avg < 0.0 { 0.0 } else if avg > 255.0 { 255.0 } else { avg }
+    let clamped = if avg < 0.0 {
+      0.0
+    } else if avg > 255.0 {
+      255.0
+    } else {
+      avg
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: images[0].channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: images[0].channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 最大值融合
-pub fn fuse_maximum(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_maximum(images : Array[@types.Image]) -> @types.Image {
   if images.length() == 0 {
-    return @types.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) }
+    return @types.Image::{
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: Bytes::from_array([]),
+    }
   }
 
   let w = images[0].width
@@ -158,16 +177,24 @@ pub fn fuse_maximum(
     out.push(max_val.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: images[0].channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: images[0].channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 最小值融合
-pub fn fuse_minimum(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_minimum(images : Array[@types.Image]) -> @types.Image {
   if images.length() == 0 {
-    return @types.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) }
+    return @types.Image::{
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: Bytes::from_array([]),
+    }
   }
 
   let w = images[0].width
@@ -186,14 +213,17 @@ pub fn fuse_minimum(
     out.push(min_val.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: images[0].channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: images[0].channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 简单均值融合
-pub fn fuse_simple_mean(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_simple_mean(images : Array[@types.Image]) -> @types.Image {
   let weights : Array[Double] = []
   for _ in 0..<images.length() {
     weights.push(1.0 / images.length().to_double())
@@ -203,13 +233,10 @@ pub fn fuse_simple_mean(
 
 ///|
 /// 高斯模糊（用于金字塔）
-pub fn gaussian_blur_fe(
-  img : @types.Image,
-  kernel_size : Int,
-) -> @types.Image {
+pub fn gaussian_blur_fe(img : @types.Image, kernel_size : Int) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let radius = kernel_size / 2
 
@@ -223,26 +250,42 @@ pub fn gaussian_blur_fe(
           let ny = y + dy
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
             let dist = (dx * dx + dy * dy).to_double()
-            let weight = (0.0 - dist / (2.0 * radius.to_double() * radius.to_double()))* 0.1
+            let weight = (
+                0.0 - dist / (2.0 * radius.to_double() * radius.to_double())
+              ) *
+              0.1
             sum += img.data[ny * w + nx].to_double() * weight
             weight_sum += weight
           }
         }
       }
-      let avg = if weight_sum > 0.0 { sum / weight_sum } else { img.data[y * w + x].to_double() }
-      let clamped = if avg < 0.0 { 0.0 } else if avg > 255.0 { 255.0 } else { avg }
+      let avg = if weight_sum > 0.0 {
+        sum / weight_sum
+      } else {
+        img.data[y * w + x].to_double()
+      }
+      let clamped = if avg < 0.0 {
+        0.0
+      } else if avg > 255.0 {
+        255.0
+      } else {
+        avg
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 图像下采样（2x）
-pub fn downsample_fe(
-  img : @types.Image,
-) -> @types.Image {
+pub fn downsample_fe(img : @types.Image) -> @types.Image {
   let w = img.width / 2
   let h = img.height / 2
   let out : Array[Byte] = []
@@ -260,14 +303,17 @@ pub fn downsample_fe(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 图像上采样（2x，双线性）
-pub fn upsample_fe(
-  img : @types.Image,
-) -> @types.Image {
+pub fn upsample_fe(img : @types.Image) -> @types.Image {
   let w = img.width * 2
   let h = img.height * 2
   let out : Array[Byte] = []
@@ -283,10 +329,34 @@ pub fn upsample_fe(
       let fx = src_x - x0.to_double()
       let fy = src_y - y0.to_double()
 
-      let cx0 = if x0 < 0 { 0 } else if x0 >= img.width { img.width - 1 } else { x0 }
-      let cy0 = if y0 < 0 { 0 } else if y0 >= img.height { img.height - 1 } else { y0 }
-      let cx1 = if x1 < 0 { 0 } else if x1 >= img.width { img.width - 1 } else { x1 }
-      let cy1 = if y1 < 0 { 0 } else if y1 >= img.height { img.height - 1 } else { y1 }
+      let cx0 = if x0 < 0 {
+        0
+      } else if x0 >= img.width {
+        img.width - 1
+      } else {
+        x0
+      }
+      let cy0 = if y0 < 0 {
+        0
+      } else if y0 >= img.height {
+        img.height - 1
+      } else {
+        y0
+      }
+      let cx1 = if x1 < 0 {
+        0
+      } else if x1 >= img.width {
+        img.width - 1
+      } else {
+        x1
+      }
+      let cy1 = if y1 < 0 {
+        0
+      } else if y1 >= img.height {
+        img.height - 1
+      } else {
+        y1
+      }
 
       let p00 = img.data[cy0 * img.width + cx0].to_double()
       let p01 = img.data[cy0 * img.width + cx1].to_double()
@@ -296,12 +366,23 @@ pub fn upsample_fe(
       let top = p00 * (1.0 - fx) + p01 * fx
       let bottom = p10 * (1.0 - fx) + p11 * fx
       let value = top * (1.0 - fy) + bottom * fy
-      let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      let clamped = if value < 0.0 {
+        0.0
+      } else if value > 255.0 {
+        255.0
+      } else {
+        value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -311,7 +392,16 @@ pub fn fuse_laplacian_pyramid(
   levels : Int,
 ) -> @types.Image {
   if images.length() < 2 {
-    return if images.length() == 1 { images[0] } else { @types.Image::{ width: 0, height: 0, channels: 1, data: Bytes::from_array([]) } }
+    return if images.length() == 1 {
+      images[0]
+    } else {
+      @types.Image::{
+        width: 0,
+        height: 0,
+        channels: 1,
+        data: Bytes::from_array([]),
+      }
+    }
   }
 
   // 简化：直接加权平均
@@ -441,28 +531,33 @@ pub fn apply_translation(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 计算融合质量（空间频率）
-pub fn calculate_fusion_quality(
-  fused : @types.Image,
-) -> Double {
+pub fn calculate_fusion_quality(fused : @types.Image) -> Double {
   let w = fused.width
   let h = fused.height
   let mut sf = 0.0
 
   for y in 0..<h {
     for x in 0..<(w - 1) {
-      let diff = fused.data[y * w + x + 1].to_double() - fused.data[y * w + x].to_double()
+      let diff = fused.data[y * w + x + 1].to_double() -
+        fused.data[y * w + x].to_double()
       sf += diff * diff
     }
   }
 
   for y in 0..<(h - 1) {
     for x in 0..<w {
-      let diff = fused.data[(y + 1) * w + x].to_double() - fused.data[y * w + x].to_double()
+      let diff = fused.data[(y + 1) * w + x].to_double() -
+        fused.data[y * w + x].to_double()
       sf += diff * diff
     }
   }
@@ -503,9 +598,18 @@ pub fn fusion_report_to_string(
     "未知"
   }
   report = report + "| 算法 | " + algo_str + " |\n"
-  report = report + "| 融合图像数 | " + result.num_images.to_string() + " |\n"
-  report = report + "| 处理耗时 | " + result.processing_time_ms.to_string() + "ms |\n"
-  report = report + "| 融合质量(空间频率) | " + quality.to_string() + " |\n"
+  report = report +
+    "| 融合图像数 | " +
+    result.num_images.to_string() +
+    " |\n"
+  report = report +
+    "| 处理耗时 | " +
+    result.processing_time_ms.to_string() +
+    "ms |\n"
+  report = report +
+    "| 融合质量(空间频率) | " +
+    quality.to_string() +
+    " |\n"
 
   report
 }

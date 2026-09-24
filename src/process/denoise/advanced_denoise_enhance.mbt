@@ -107,7 +107,7 @@ pub fn mean_filter_denoise(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let radius = kernel_size / 2
 
@@ -125,13 +125,28 @@ pub fn mean_filter_denoise(
           }
         }
       }
-      let avg = if count > 0 { sum / count.to_double() } else { img.data[y * w + x].to_double() }
-      let clamped = if avg < 0.0 { 0.0 } else if avg > 255.0 { 255.0 } else { avg }
+      let avg = if count > 0 {
+        sum / count.to_double()
+      } else {
+        img.data[y * w + x].to_double()
+      }
+      let clamped = if avg < 0.0 {
+        0.0
+      } else if avg > 255.0 {
+        255.0
+      } else {
+        avg
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -142,7 +157,7 @@ pub fn median_filter_denoise(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let radius = kernel_size / 2
 
@@ -173,7 +188,12 @@ pub fn median_filter_denoise(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -185,7 +205,7 @@ pub fn gaussian_filter_denoise(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let radius = kernel_size / 2
 
@@ -195,7 +215,7 @@ pub fn gaussian_filter_denoise(
   for dy in -radius..<(radius + 1) {
     for dx in -radius..<(radius + 1) {
       let dist = (dx * dx + dy * dy).to_double()
-      let weight = (0.0 - dist / (2.0 * sigma * sigma)) * 0.1  // 简化的 exp
+      let weight = (0.0 - dist / (2.0 * sigma * sigma)) * 0.1 // 简化的 exp
       kernel.push(weight)
       kernel_sum += weight
     }
@@ -219,12 +239,23 @@ pub fn gaussian_filter_denoise(
           idx += 1
         }
       }
-      let clamped = if sum < 0.0 { 0.0 } else if sum > 255.0 { 255.0 } else { sum }
+      let clamped = if sum < 0.0 {
+        0.0
+      } else if sum > 255.0 {
+        255.0
+      } else {
+        sum
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -237,7 +268,7 @@ pub fn bilateral_filter_denoise(
 ) -> @types.Image {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
   let radius = kernel_size / 2
 
@@ -253,10 +284,12 @@ pub fn bilateral_filter_denoise(
           if nx >= 0 && nx < w && ny >= 0 && ny < h {
             let current = img.data[ny * w + nx].to_double()
             let color_diff = (current - center).abs()
-            let space_dist = ((dx * dx + dy * dy).to_double()).sqrt()
+            let space_dist = (dx * dx + dy * dy).to_double().sqrt()
             // 简化的高斯权重
-            let color_weight = 1.0 / (1.0 + color_diff * color_diff / (sigma_color * sigma_color))
-            let space_weight = 1.0 / (1.0 + space_dist * space_dist / (sigma_space * sigma_space))
+            let color_weight = 1.0 /
+              (1.0 + color_diff * color_diff / (sigma_color * sigma_color))
+            let space_weight = 1.0 /
+              (1.0 + space_dist * space_dist / (sigma_space * sigma_space))
             let weight = color_weight * space_weight
             sum += current * weight
             weight_sum += weight
@@ -264,19 +297,28 @@ pub fn bilateral_filter_denoise(
         }
       }
       let result = if weight_sum > 0.0 { sum / weight_sum } else { center }
-      let clamped = if result < 0.0 { 0.0 } else if result > 255.0 { 255.0 } else { result }
+      let clamped = if result < 0.0 {
+        0.0
+      } else if result > 255.0 {
+        255.0
+      } else {
+        result
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 计算噪声水平
-pub fn calculate_noise_level(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_noise_level(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -287,7 +329,13 @@ pub fn calculate_noise_level(
     for x in 1..<(w - 1) {
       let idx = y * w + x
       let center = img.data[idx].to_double()
-      let avg = (img.data[idx - 1].to_double() + img.data[idx + 1].to_double() + img.data[idx - w].to_double() + img.data[idx + w].to_double()) / 4.0
+      let avg = (
+          img.data[idx - 1].to_double() +
+          img.data[idx + 1].to_double() +
+          img.data[idx - w].to_double() +
+          img.data[idx + w].to_double()
+        ) /
+        4.0
       noise += (center - avg) * (center - avg)
     }
   }
@@ -297,9 +345,7 @@ pub fn calculate_noise_level(
 
 ///|
 /// 直方图均衡化
-pub fn histogram_equalization_enhance(
-  img : @types.Image,
-) -> @types.Image {
+pub fn histogram_equalization_enhance(img : @types.Image) -> @types.Image {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -334,11 +380,22 @@ pub fn histogram_equalization_enhance(
     } else {
       pixel
     }
-    let clamped = if equalized < 0 { 0 } else if equalized > 255 { 255 } else { equalized }
+    let clamped = if equalized < 0 {
+      0
+    } else if equalized > 255 {
+      255
+    } else {
+      equalized
+    }
     out.push(clamped.to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -359,19 +416,30 @@ pub fn gamma_correction_enhance(
       if gamma == 1.0 {
         pixel
       } else if gamma > 1.0 {
-        pixel * pixel  // 简化
+        pixel * pixel // 简化
       } else {
-        pixel.sqrt()  // 简化
+        pixel.sqrt() // 简化
       }
     } else {
       pixel
     }
     let value = corrected * 255.0
-    let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+    let clamped = if value < 0.0 {
+      0.0
+    } else if value > 255.0 {
+      255.0
+    } else {
+      value
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -392,18 +460,27 @@ pub fn unsharp_mask_enhance(
     let original = img.data[i].to_double()
     let blur = blurred.data[i].to_double()
     let sharpened = original + amount * (original - blur)
-    let clamped = if sharpened < 0.0 { 0.0 } else if sharpened > 255.0 { 255.0 } else { sharpened }
+    let clamped = if sharpened < 0.0 {
+      0.0
+    } else if sharpened > 255.0 {
+      255.0
+    } else {
+      sharpened
+    }
     out.push(clamped.to_int().to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 计算图像亮度
-pub fn calculate_brightness(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_brightness(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -416,9 +493,7 @@ pub fn calculate_brightness(
 
 ///|
 /// 计算图像对比度
-pub fn calculate_contrast(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_contrast(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -434,9 +509,7 @@ pub fn calculate_contrast(
 
 ///|
 /// 计算图像锐度
-pub fn calculate_sharpness(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_sharpness(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -467,9 +540,19 @@ pub fn denoise_image(
   } else if config.algorithm == DenoiseAlgorithm::GaussianFilter {
     gaussian_filter_denoise(img, config.kernel_size, config.sigma_space)
   } else if config.algorithm == DenoiseAlgorithm::BilateralFilter {
-    bilateral_filter_denoise(img, config.kernel_size, config.sigma_color, config.sigma_space)
+    bilateral_filter_denoise(
+      img,
+      config.kernel_size,
+      config.sigma_color,
+      config.sigma_space,
+    )
   } else {
-    bilateral_filter_denoise(img, config.kernel_size, config.sigma_color, config.sigma_space)
+    bilateral_filter_denoise(
+      img,
+      config.kernel_size,
+      config.sigma_color,
+      config.sigma_space,
+    )
   }
 
   let noise_after = calculate_noise_level(result)
@@ -537,9 +620,7 @@ pub fn enhance_image_advanced(
 
 ///|
 /// 获取降噪算法名称
-pub fn denoise_algorithm_to_string(
-  algorithm : DenoiseAlgorithm,
-) -> String {
+pub fn denoise_algorithm_to_string(algorithm : DenoiseAlgorithm) -> String {
   if algorithm == DenoiseAlgorithm::MeanFilter {
     "均值滤波"
   } else if algorithm == DenoiseAlgorithm::MedianFilter {
@@ -567,16 +648,28 @@ pub fn denoise_algorithm_to_string(
 
 ///|
 /// 生成降噪报告
-pub fn denoise_report_to_string(
-  result : DenoiseResult,
-) -> String {
+pub fn denoise_report_to_string(result : DenoiseResult) -> String {
   let mut report = "## 图像降噪报告\n\n"
   report = report + "### 降噪信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + denoise_algorithm_to_string(result.algorithm) + " |\n"
-  report = report + "| 降噪前噪声水平 | " + result.noise_level_before.to_string() + " |\n"
-  report = report + "| 降噪后噪声水平 | " + result.noise_level_after.to_string() + " |\n"
-  report = report + "| 噪声降低 | " + ((result.noise_level_before - result.noise_level_after) * 100.0 / result.noise_level_before).to_string() + "% |\n"
+  report = report +
+    "| 算法 | " +
+    denoise_algorithm_to_string(result.algorithm) +
+    " |\n"
+  report = report +
+    "| 降噪前噪声水平 | " +
+    result.noise_level_before.to_string() +
+    " |\n"
+  report = report +
+    "| 降噪后噪声水平 | " +
+    result.noise_level_after.to_string() +
+    " |\n"
+  report = report +
+    "| 噪声降低 | " +
+    ((result.noise_level_before - result.noise_level_after) *
+    100.0 /
+    result.noise_level_before).to_string() +
+    "% |\n"
   report = report + "| PSNR | " + result.psnr.to_string() + " dB |\n"
   report = report + "| SSIM | " + result.ssim.to_string() + " |\n"
   report = report + "| 降噪强度 | " + result.strength.to_string() + " |\n"

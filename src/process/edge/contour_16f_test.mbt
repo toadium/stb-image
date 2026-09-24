@@ -1,5 +1,6 @@
 // contour 16-bit/float 测试
 
+///|
 test "find_contours_16 basic" {
   let w = 16
   let h = 16
@@ -13,11 +14,17 @@ test "find_contours_16 basic" {
       data[idx + 1] = b'\xFF'
     }
   }
-  let img = @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let contours = @edge.find_contours_16(img)
   assert_true(contours.length() >= 1)
 }
 
+///|
 test "find_contours_f basic" {
   let w = 16
   let h = 16
@@ -34,17 +41,28 @@ test "find_contours_f basic" {
       data[idx + 3] = ((bits >> 24) & 0xFF).to_byte()
     }
   }
-  let img = @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let contours = @edge.find_contours_f(img)
   assert_true(contours.length() >= 1)
 }
 
+///|
 test "draw_contours_16 basic" {
   let w = 16
   let h = 16
   let ch = 3
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
-  let img = @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let contours : Array[@edge.Contour] = []
   let color : Array[Int] = [65535, 0, 0]
   let out = @edge.draw_contours_16(img, contours, color)
@@ -53,12 +71,18 @@ test "draw_contours_16 basic" {
   assert_eq(out.channels, ch)
 }
 
+///|
 test "draw_contours_f basic" {
   let w = 16
   let h = 16
   let ch = 3
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
-  let img = @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  let img = @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
   let contours : Array[@edge.Contour] = []
   let color : Array[Float] = [1.0F, 0.0F, 0.0F]
   let out = @edge.draw_contours_f(img, contours, color)

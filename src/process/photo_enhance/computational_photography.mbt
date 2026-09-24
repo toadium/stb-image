@@ -105,7 +105,10 @@ pub fn create_default_panorama_config() -> PanoramaConfig {
 
 ///|
 /// 创建默认景深配置
-pub fn create_default_dof_config(width : Int, height : Int) -> DepthOfFieldConfig {
+pub fn create_default_dof_config(
+  width : Int,
+  height : Int,
+) -> DepthOfFieldConfig {
   DepthOfFieldConfig::{
     focal_point_x: width / 2,
     focal_point_y: height / 2,
@@ -139,8 +142,12 @@ pub fn detect_exposure_type(img : @types.Image) -> (ExposureType, Double) {
     for x in 0..<w {
       let pixel = img.data[y * w + x].to_double()
       sum += pixel
-      if pixel < 50.0 { underexposed += 1 }
-      if pixel > 230.0 { overexposed += 1 }
+      if pixel < 50.0 {
+        underexposed += 1
+      }
+      if pixel > 230.0 {
+        overexposed += 1
+      }
     }
   }
 
@@ -168,8 +175,12 @@ pub fn hdr_merge(
 ) -> HdrImage {
   if images.length() == 0 {
     return HdrImage::{
-      width: 0, height: 0, channels: 1,
-      data: [], exposure_values: [], num_exposures: 0,
+      width: 0,
+      height: 0,
+      channels: 1,
+      data: [],
+      exposure_values: [],
+      num_exposures: 0,
     }
   }
 
@@ -187,7 +198,11 @@ pub fn hdr_merge(
         let img = images[i]
         if x < img.width && y < img.height {
           let pixel = img.data[y * img.width + x].to_double() / 255.0
-          let weight = if pixel < 0.5 { pixel * 2.0 } else { (1.0 - pixel) * 2.0 }
+          let weight = if pixel < 0.5 {
+            pixel * 2.0
+          } else {
+            (1.0 - pixel) * 2.0
+          }
           sum += pixel * weight
           weight_sum += weight
         }
@@ -199,8 +214,12 @@ pub fn hdr_merge(
   }
 
   HdrImage::{
-    width: w, height: h, channels: first.channels,
-    data: hdr_data, exposure_values: exposures, num_exposures: images.length(),
+    width: w,
+    height: h,
+    channels: first.channels,
+    data: hdr_data,
+    exposure_values: exposures,
+    num_exposures: images.length(),
   }
 }
 
@@ -222,7 +241,12 @@ pub fn tone_map(hdr : HdrImage, config : ToneMappingConfig) -> @types.Image {
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: hdr.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: hdr.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -232,7 +256,13 @@ pub fn stitch_panorama(
   config : PanoramaConfig,
 ) -> PanoramaResult {
   if images.length() == 0 {
-    return PanoramaResult::{ width: 0, height: 0, num_images: 0, inliers: 0, confidence: 0.0 }
+    return PanoramaResult::{
+      width: 0,
+      height: 0,
+      num_images: 0,
+      inliers: 0,
+      confidence: 0.0,
+    }
   }
 
   let first = images[0]
@@ -257,7 +287,8 @@ pub fn apply_depth_of_field(
   let w = img.width
   let h = img.height
   let out : Array[Byte] = Array::make(w * h, b'\x00')
-  let max_dist = ((w / 2).to_double() * (w / 2).to_double() + (h / 2).to_double() * (h / 2).to_double()).sqrt()
+  let max_dist = ((w / 2).to_double() * (w / 2).to_double() +
+  (h / 2).to_double() * (h / 2).to_double()).sqrt()
 
   for y in 0..<h {
     for x in 0..<w {
@@ -273,7 +304,12 @@ pub fn apply_depth_of_field(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -297,7 +333,12 @@ pub fn enhance_night(
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -309,12 +350,25 @@ pub fn computational_photography_report(
   let mut report = "## 计算摄影处理报告\n\n"
   report = report + "### HDR 信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 尺寸 | " + hdr.width.to_string() + "x" + hdr.height.to_string() + " |\n"
+  report = report +
+    "| 尺寸 | " +
+    hdr.width.to_string() +
+    "x" +
+    hdr.height.to_string() +
+    " |\n"
   report = report + "| 曝光数 | " + hdr.num_exposures.to_string() + " |\n\n"
   report = report + "### 全景拼接信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 拼接尺寸 | " + panorama.width.to_string() + "x" + panorama.height.to_string() + " |\n"
+  report = report +
+    "| 拼接尺寸 | " +
+    panorama.width.to_string() +
+    "x" +
+    panorama.height.to_string() +
+    " |\n"
   report = report + "| 图像数 | " + panorama.num_images.to_string() + " |\n"
-  report = report + "| 置信度 | " + (panorama.confidence * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 置信度 | " +
+    (panorama.confidence * 100.0).to_string() +
+    "% |\n"
   report
 }

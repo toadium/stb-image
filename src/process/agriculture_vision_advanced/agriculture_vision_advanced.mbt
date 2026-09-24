@@ -234,9 +234,9 @@ pub fn detect_crops(
     state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 200)
     state = (state * 11035 + 12345) % 1000000
-    let w = (state % 100) + 100
+    let w = state % 100 + 100
     state = (state * 11035 + 12345) % 1000000
-    let h = (state % 100) + 100
+    let h = state % 100 + 100
     state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
@@ -274,12 +274,15 @@ pub fn detect_diseases(
   let diseases : Array[DiseaseDetectionResult] = []
 
   let disease_types = [
-    DiseaseType::Rust, DiseaseType::Blight, DiseaseType::Mildew,
-    DiseaseType::Spot, DiseaseType::Healthy
+    DiseaseType::Rust,
+    DiseaseType::Blight,
+    DiseaseType::Mildew,
+    DiseaseType::Spot,
+    DiseaseType::Healthy,
   ]
   let recommendations = [
-    "Apply fungicide", "Remove infected leaves", "Improve air circulation",
-    "Adjust watering", "No action needed"
+    "Apply fungicide", "Remove infected leaves", "Improve air circulation", "Adjust watering",
+    "No action needed",
   ]
 
   let mut state = 42
@@ -291,9 +294,9 @@ pub fn detect_diseases(
     state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 100)
     state = (state * 11035 + 12345) % 1000000
-    let w = (state % 50) + 30
+    let w = state % 50 + 30
     state = (state * 11035 + 12345) % 1000000
-    let h = (state % 50) + 30
+    let h = state % 50 + 30
     state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.4 + 0.6
     state = (state * 11035 + 12345) % 1000000
@@ -307,7 +310,8 @@ pub fn detect_diseases(
 
     let disease_type = disease_types[i % disease_types.length()]
     let recommendation = recommendations[i % recommendations.length()]
-    let is_critical = severity > config.disease_severity_threshold && disease_type != DiseaseType::Healthy
+    let is_critical = severity > config.disease_severity_threshold &&
+      disease_type != DiseaseType::Healthy
 
     let disease = DiseaseDetectionResult::{
       disease_id: i,
@@ -337,12 +341,15 @@ pub fn detect_pests(
   let pests : Array[PestDetectionResult] = []
 
   let pest_types = [
-    PestType::Aphid, PestType::Caterpillar, PestType::Beetle,
-    PestType::Mite, PestType::Healthy
+    PestType::Aphid,
+    PestType::Caterpillar,
+    PestType::Beetle,
+    PestType::Mite,
+    PestType::Healthy,
   ]
   let recommendations = [
-    "Apply insecticide", "Introduce natural predators", "Use pheromone traps",
-    "Remove affected plants", "No action needed"
+    "Apply insecticide", "Introduce natural predators", "Use pheromone traps", "Remove affected plants",
+    "No action needed",
   ]
 
   let mut state = 42
@@ -360,7 +367,8 @@ pub fn detect_pests(
 
     let pest_type = pest_types[i % pest_types.length()]
     let recommendation = recommendations[i % recommendations.length()]
-    let is_critical = infestation > config.pest_infestation_threshold && pest_type != PestType::Healthy
+    let is_critical = infestation > config.pest_infestation_threshold &&
+      pest_type != PestType::Healthy
 
     let pest = PestDetectionResult::{
       pest_id: i,
@@ -389,9 +397,7 @@ pub fn predict_yield(
   config : AgricultureVisionConfig,
 ) -> YieldPredictionResult {
   // 简化的产量预测
-  let base_yields = [
-    5.0, 6.0, 8.0, 3.0, 2.5, 40.0, 20.0, 30.0, 15.0, 5.0
-  ]
+  let base_yields = [5.0, 6.0, 8.0, 3.0, 2.5, 40.0, 20.0, 30.0, 15.0, 5.0]
   let crop_idx = match crop_type {
     CropType::Wheat => 0
     CropType::Rice => 1
@@ -450,8 +456,10 @@ pub fn analyze_soil(
   state = (state * 11035 + 12345) % 1000000
   let temperature = 15.0 + (state % 1000).to_double() / 100.0
 
-  let fertility = (nitrogen + phosphorus + potassium + organic_matter * 10.0) / 4.0
-  let is_ph_optimal = ph >= config.soil_ph_optimal_min && ph <= config.soil_ph_optimal_max
+  let fertility = (nitrogen + phosphorus + potassium + organic_matter * 10.0) /
+    4.0
+  let is_ph_optimal = ph >= config.soil_ph_optimal_min &&
+    ph <= config.soil_ph_optimal_max
 
   let recommendation = if is_ph_optimal && fertility > 50.0 {
     "Soil is optimal for planting"
@@ -486,35 +494,62 @@ pub fn agriculture_vision_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    AgricultureVisionTaskType::CropIdentification => "作物识别"
-    AgricultureVisionTaskType::PestDetection => "虫害检测"
-    AgricultureVisionTaskType::DiseaseDetection => "病害检测"
-    AgricultureVisionTaskType::YieldPrediction => "产量预测"
-    AgricultureVisionTaskType::SoilAnalysis => "土壤分析"
-    AgricultureVisionTaskType::WeedDetection => "杂草检测"
-    AgricultureVisionTaskType::GrowthMonitoring => "生长监测"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 作物类型 | " + (match config.crop_type {
-    CropType::Wheat => "小麦"
-    CropType::Rice => "水稻"
-    CropType::Corn => "玉米"
-    CropType::Soybean => "大豆"
-    CropType::Cotton => "棉花"
-    CropType::Tomato => "番茄"
-    CropType::Potato => "土豆"
-    CropType::Apple => "苹果"
-    CropType::Grape => "葡萄"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
-  report = report + "| 病害严重度阈值 | " + config.disease_severity_threshold.to_string() + " |\n"
-  report = report + "| 虫害侵扰阈值 | " + config.pest_infestation_threshold.to_string() + " |\n"
-  report = report + "| 多光谱 | " + (if config.use_multispectral { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| NDVI | " + (if config.use_ndvi { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 无人机高度 | " + config.drone_altitude.to_string() + " m |\n"
-  report = report + "| 自动推荐 | " + (if config.auto_recommendation { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      AgricultureVisionTaskType::CropIdentification => "作物识别"
+      AgricultureVisionTaskType::PestDetection => "虫害检测"
+      AgricultureVisionTaskType::DiseaseDetection => "病害检测"
+      AgricultureVisionTaskType::YieldPrediction => "产量预测"
+      AgricultureVisionTaskType::SoilAnalysis => "土壤分析"
+      AgricultureVisionTaskType::WeedDetection => "杂草检测"
+      AgricultureVisionTaskType::GrowthMonitoring => "生长监测"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 作物类型 | " +
+    (match config.crop_type {
+      CropType::Wheat => "小麦"
+      CropType::Rice => "水稻"
+      CropType::Corn => "玉米"
+      CropType::Soybean => "大豆"
+      CropType::Cotton => "棉花"
+      CropType::Tomato => "番茄"
+      CropType::Potato => "土豆"
+      CropType::Apple => "苹果"
+      CropType::Grape => "葡萄"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 病害严重度阈值 | " +
+    config.disease_severity_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 虫害侵扰阈值 | " +
+    config.pest_infestation_threshold.to_string() +
+    " |\n"
+  report = report +
+    "| 多光谱 | " +
+    (if config.use_multispectral { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| NDVI | " +
+    (if config.use_ndvi { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 无人机高度 | " +
+    config.drone_altitude.to_string() +
+    " m |\n"
+  report = report +
+    "| 自动推荐 | " +
+    (if config.auto_recommendation { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

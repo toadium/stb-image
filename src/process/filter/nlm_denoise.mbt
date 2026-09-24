@@ -15,15 +15,22 @@ pub fn nlm_denoise(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("nlm_denoise: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("nlm_denoise: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "nlm_denoise: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "nlm_denoise: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if patch_size < 1 || patch_size > 10 {
@@ -254,7 +261,9 @@ pub fn nlm_denoise_fast(
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("nlm_denoise_fast: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "nlm_denoise_fast: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -264,7 +273,10 @@ pub fn nlm_denoise_fast(
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "nlm_denoise_fast: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "nlm_denoise_fast: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if patch_size < 1 || patch_size > 10 {

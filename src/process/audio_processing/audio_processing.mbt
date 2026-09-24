@@ -1,7 +1,8 @@
 // 语音处理与音频分析（v50.0.0）
 
 // 近似正弦函数
-fn sin_approx(x: Double) -> Double {
+///|
+fn sin_approx(x : Double) -> Double {
   // 简化的泰勒级数展开
   let x2 = x * x
   let x3 = x2 * x
@@ -9,7 +10,6 @@ fn sin_approx(x: Double) -> Double {
   let x7 = x5 * x2
   x - x3 / 6.0 + x5 / 120.0 - x7 / 5040.0
 }
-
 
 // 语音识别、说话人识别、情感语音、音频分类、音乐信息检索、声纹识别
 
@@ -258,10 +258,7 @@ pub fn generate_sine_wave(
 
 ///|
 /// 预加重
-pub fn pre_emphasis(
-  audio : AudioData,
-  coeff : Double,
-) -> AudioData {
+pub fn pre_emphasis(audio : AudioData, coeff : Double) -> AudioData {
   let emphasized : Array[Double] = []
   emphasized.push(audio.samples[0])
 
@@ -275,15 +272,12 @@ pub fn pre_emphasis(
 
 ///|
 /// 计算MFCC特征（简化版）
-pub fn compute_mfcc(
-  audio : AudioData,
-  config : AudioConfig,
-) -> AudioFeatures {
+pub fn compute_mfcc(audio : AudioData, config : AudioConfig) -> AudioFeatures {
   let num_frames = audio.num_samples / config.hop_length
   let features : Array[Array[Double]] = []
 
   let mut state = 42
-  for frame_idx in 0..<num_frames {
+  for _ in 0..<num_frames {
     let frame : Array[Double] = []
     for _ in 0..<config.n_mfcc {
       state = (state * 11035 + 12345) % 1000000
@@ -313,7 +307,7 @@ pub fn compute_mel_spectrogram(
   let features : Array[Array[Double]] = []
 
   let mut state = 42
-  for frame_idx in 0..<num_frames {
+  for _ in 0..<num_frames {
     let frame : Array[Double] = []
     for _ in 0..<config.n_mels {
       state = (state * 11035 + 12345) % 1000000
@@ -341,7 +335,9 @@ pub fn recognize_speech(
   config : AudioConfig,
 ) -> SpeechRecognitionResult {
   // 简化的语音识别：基于音频特征生成虚拟文本
-  let words = ["hello", "world", "this", "is", "a", "test", "of", "speech", "recognition"]
+  let words = [
+    "hello", "world", "this", "is", "a", "test", "of", "speech", "recognition",
+  ]
   let num_words = (audio.duration_s * 2.0).to_int()
   let selected_words : Array[String] = []
   let timestamps : Array[Double] = []
@@ -417,9 +413,7 @@ pub fn identify_speaker(
 
 ///|
 /// 情感语音识别（简化版）
-pub fn recognize_speech_emotion(
-  audio : AudioData,
-) -> SpeechEmotionResult {
+pub fn recognize_speech_emotion(audio : AudioData) -> SpeechEmotionResult {
   let emotions = [
     SpeechEmotionType::Neutral,
     SpeechEmotionType::Happy,
@@ -469,11 +463,9 @@ pub fn recognize_speech_emotion(
 
 ///|
 /// 音乐信息检索（简化版）
-pub fn extract_music_features(
-  audio : AudioData,
-) -> MusicIRResult {
+pub fn extract_music_features(audio : AudioData) -> MusicIRResult {
   // 简化的音乐特征提取
-  let tempo = 60.0 + (audio.duration_s * 10.0) % 120.0
+  let tempo = 60.0 + audio.duration_s * 10.0 % 120.0
   let keys = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
   let modes = ["major", "minor"]
   let genres = ["pop", "rock", "jazz", "classical", "electronic", "hip-hop"]
@@ -601,39 +593,51 @@ pub fn audio_processing_report_to_string(
   report = report + "| 采样数 | " + audio.num_samples.to_string() + " |\n"
   report = report + "| 时长 | " + audio.duration_s.to_string() + " s |\n"
   report = report + "| 位深 | " + audio.bit_depth.to_string() + " bit |\n"
-  report = report + "| 单声道 | " + (if audio.is_mono { "是" } else { "否" }) + " |\n"
+  report = report +
+    "| 单声道 | " +
+    (if audio.is_mono { "是" } else { "否" }) +
+    " |\n"
 
   report = report + "\n### 任务配置\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    AudioTaskType::SpeechRecognition => "语音识别"
-    AudioTaskType::SpeakerIdentification => "说话人识别"
-    AudioTaskType::SpeakerVerification => "说话人验证"
-    AudioTaskType::EmotionRecognition => "情感语音识别"
-    AudioTaskType::AudioClassification => "音频分类"
-    AudioTaskType::MusicInformationRetrieval => "音乐信息检索"
-    AudioTaskType::VoiceActivityDetection => "语音活动检测"
-    AudioTaskType::NoiseReduction => "降噪"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| ASR模型 | " + (match config.asr_model {
-    ASRModelType::GMMHMM => "GMM-HMM"
-    ASRModelType::DNNHMM => "DNN-HMM"
-    ASRModelType::CTC => "CTC"
-    ASRModelType::Attention => "Attention"
-    ASRModelType::Transformer => "Transformer"
-    ASRModelType::Conformer => "Conformer"
-    ASRModelType::Whisper => "Whisper"
-    ASRModelType::Wav2Vec => "Wav2Vec"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征类型 | " + (match config.feature_type {
-    AudioFeatureType::MFCC => "MFCC"
-    AudioFeatureType::MelSpectrogram => "梅尔频谱图"
-    AudioFeatureType::Spectrogram => "频谱图"
-    AudioFeatureType::Chroma => "色度特征"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      AudioTaskType::SpeechRecognition => "语音识别"
+      AudioTaskType::SpeakerIdentification => "说话人识别"
+      AudioTaskType::SpeakerVerification => "说话人验证"
+      AudioTaskType::EmotionRecognition => "情感语音识别"
+      AudioTaskType::AudioClassification => "音频分类"
+      AudioTaskType::MusicInformationRetrieval => "音乐信息检索"
+      AudioTaskType::VoiceActivityDetection => "语音活动检测"
+      AudioTaskType::NoiseReduction => "降噪"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| ASR模型 | " +
+    (match config.asr_model {
+      ASRModelType::GMMHMM => "GMM-HMM"
+      ASRModelType::DNNHMM => "DNN-HMM"
+      ASRModelType::CTC => "CTC"
+      ASRModelType::Attention => "Attention"
+      ASRModelType::Transformer => "Transformer"
+      ASRModelType::Conformer => "Conformer"
+      ASRModelType::Whisper => "Whisper"
+      ASRModelType::Wav2Vec => "Wav2Vec"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征类型 | " +
+    (match config.feature_type {
+      AudioFeatureType::MFCC => "MFCC"
+      AudioFeatureType::MelSpectrogram => "梅尔频谱图"
+      AudioFeatureType::Spectrogram => "频谱图"
+      AudioFeatureType::Chroma => "色度特征"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 帧长度 | " + config.frame_length.to_string() + " |\n"
   report = report + "| 跳数 | " + config.hop_length.to_string() + " |\n"
   report = report + "| MFCC系数 | " + config.n_mfcc.to_string() + " |\n"

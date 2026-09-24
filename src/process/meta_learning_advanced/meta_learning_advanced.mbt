@@ -241,10 +241,7 @@ fn init_parameters(num_params : Int) -> Array[Double] {
 
 ///|
 /// MAML训练
-pub fn train_maml(
-  num_params : Int,
-  config : MetaLearningConfig,
-) -> MAMLResult {
+pub fn train_maml(num_params : Int, config : MetaLearningConfig) -> MAMLResult {
   let initial_params = init_parameters(num_params)
   let meta_params = init_parameters(num_params)
 
@@ -309,7 +306,11 @@ pub fn train_protonet(
   config : MetaLearningConfig,
 ) -> ProtoNetResult {
   let num_classes = config.num_way
-  let feature_dim = if support_data.length() > 0 { support_data[0].length() } else { 1 }
+  let feature_dim = if support_data.length() > 0 {
+    support_data[0].length()
+  } else {
+    1
+  }
 
   // 计算原型
   let prototypes : Array[Array[Double]] = []
@@ -389,9 +390,9 @@ pub fn train_relation_net(
   config : MetaLearningConfig,
 ) -> RelationNetResult {
   let relation_scores : Array[Array[Double]] = []
-  for q in 0..<query_data.length() {
+  for _ in 0..<query_data.length() {
     let scores : Array[Double] = []
-    for c in 0..<config.num_way {
+    for _ in 0..<config.num_way {
       scores.push(1.0 / config.num_way.to_double())
     }
     relation_scores.push(scores)
@@ -455,61 +456,91 @@ pub fn meta_learning_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    MetaLearningTaskType::FewShotClassification => "少样本分类"
-    MetaLearningTaskType::FewShotRegression => "少样本回归"
-    MetaLearningTaskType::MetaOptimization => "元优化"
-    MetaLearningTaskType::MetaArchitecture => "元架构"
-    MetaLearningTaskType::MetaLearningRate => "元学习率"
-    MetaLearningTaskType::MetaDataAugmentation => "元数据增强"
-    MetaLearningTaskType::MetaRegularization => "元正则化"
-    MetaLearningTaskType::MetaFeatureSelection => "元特征选择"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 元学习算法 | " + (match config.algorithm_type {
-    MetaLearningAlgorithmType::MAML => "MAML"
-    MetaLearningAlgorithmType::Reptile => "Reptile"
-    MetaLearningAlgorithmType::MetaSGD => "Meta-SGD"
-    MetaLearningAlgorithmType::FOMAML => "FOMAML"
-    MetaLearningAlgorithmType::IMAML => "IMAML"
-    MetaLearningAlgorithmType::MetaCurvature => "Meta-Curvature"
-    MetaLearningAlgorithmType::LEO => "LEO"
-    MetaLearningAlgorithmType::SNAIL => "SNAIL"
-    MetaLearningAlgorithmType::ProtoNet => "ProtoNet"
-    MetaLearningAlgorithmType::MatchingNet => "MatchingNet"
-    MetaLearningAlgorithmType::RelationNet => "RelationNet"
-    MetaLearningAlgorithmType::TADAM => "TADAM"
-    MetaLearningAlgorithmType::FEAT => "FEAT"
-    MetaLearningAlgorithmType::MetaOptNet => "MetaOptNet"
-    MetaLearningAlgorithmType::R2D2 => "R2D2"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 优化器 | " + (match config.optimizer_type {
-    MetaOptimizerType::SGD => "SGD"
-    MetaOptimizerType::Adam => "Adam"
-    MetaOptimizerType::RMSprop => "RMSprop"
-    MetaOptimizerType::Adagrad => "Adagrad"
-    MetaOptimizerType::MetaLearnedOptimizer => "元学习优化器"
-    MetaOptimizerType::LearnedOptimizer => "学习优化器"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 任务分布 | " + (match config.task_distribution {
-    TaskDistributionType::Uniform => "均匀分布"
-    TaskDistributionType::Curriculum => "课程学习"
-    TaskDistributionType::HardNegative => "难例挖掘"
-    TaskDistributionType::Diversity => "多样性"
-    TaskDistributionType::Weighted => "加权分布"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      MetaLearningTaskType::FewShotClassification => "少样本分类"
+      MetaLearningTaskType::FewShotRegression => "少样本回归"
+      MetaLearningTaskType::MetaOptimization => "元优化"
+      MetaLearningTaskType::MetaArchitecture => "元架构"
+      MetaLearningTaskType::MetaLearningRate => "元学习率"
+      MetaLearningTaskType::MetaDataAugmentation => "元数据增强"
+      MetaLearningTaskType::MetaRegularization => "元正则化"
+      MetaLearningTaskType::MetaFeatureSelection => "元特征选择"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 元学习算法 | " +
+    (match config.algorithm_type {
+      MetaLearningAlgorithmType::MAML => "MAML"
+      MetaLearningAlgorithmType::Reptile => "Reptile"
+      MetaLearningAlgorithmType::MetaSGD => "Meta-SGD"
+      MetaLearningAlgorithmType::FOMAML => "FOMAML"
+      MetaLearningAlgorithmType::IMAML => "IMAML"
+      MetaLearningAlgorithmType::MetaCurvature => "Meta-Curvature"
+      MetaLearningAlgorithmType::LEO => "LEO"
+      MetaLearningAlgorithmType::SNAIL => "SNAIL"
+      MetaLearningAlgorithmType::ProtoNet => "ProtoNet"
+      MetaLearningAlgorithmType::MatchingNet => "MatchingNet"
+      MetaLearningAlgorithmType::RelationNet => "RelationNet"
+      MetaLearningAlgorithmType::TADAM => "TADAM"
+      MetaLearningAlgorithmType::FEAT => "FEAT"
+      MetaLearningAlgorithmType::MetaOptNet => "MetaOptNet"
+      MetaLearningAlgorithmType::R2D2 => "R2D2"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 优化器 | " +
+    (match config.optimizer_type {
+      MetaOptimizerType::SGD => "SGD"
+      MetaOptimizerType::Adam => "Adam"
+      MetaOptimizerType::RMSprop => "RMSprop"
+      MetaOptimizerType::Adagrad => "Adagrad"
+      MetaOptimizerType::MetaLearnedOptimizer => "元学习优化器"
+      MetaOptimizerType::LearnedOptimizer => "学习优化器"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 任务分布 | " +
+    (match config.task_distribution {
+      TaskDistributionType::Uniform => "均匀分布"
+      TaskDistributionType::Curriculum => "课程学习"
+      TaskDistributionType::HardNegative => "难例挖掘"
+      TaskDistributionType::Diversity => "多样性"
+      TaskDistributionType::Weighted => "加权分布"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| N-way | " + config.num_way.to_string() + " |\n"
   report = report + "| K-shot | " + config.num_shot.to_string() + " |\n"
   report = report + "| Query数 | " + config.num_query.to_string() + " |\n"
-  report = report + "| 元迭代次数 | " + config.num_meta_iterations.to_string() + " |\n"
-  report = report + "| 每批任务数 | " + config.num_tasks_per_batch.to_string() + " |\n"
-  report = report + "| 内部学习率 | " + config.inner_learning_rate.to_string() + " |\n"
-  report = report + "| 元学习率 | " + config.meta_learning_rate.to_string() + " |\n"
-  report = report + "| 内部步数 | " + config.num_inner_steps.to_string() + " |\n"
-  report = report + "| 一阶近似 | " + (if config.first_order { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 元迭代次数 | " +
+    config.num_meta_iterations.to_string() +
+    " |\n"
+  report = report +
+    "| 每批任务数 | " +
+    config.num_tasks_per_batch.to_string() +
+    " |\n"
+  report = report +
+    "| 内部学习率 | " +
+    config.inner_learning_rate.to_string() +
+    " |\n"
+  report = report +
+    "| 元学习率 | " +
+    config.meta_learning_rate.to_string() +
+    " |\n"
+  report = report +
+    "| 内部步数 | " +
+    config.num_inner_steps.to_string() +
+    " |\n"
+  report = report +
+    "| 一阶近似 | " +
+    (if config.first_order { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

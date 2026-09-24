@@ -4,5 +4,4 @@ import {
 }
 
 import {
-  "walkzzz/image/src/lib",
 } for "test"

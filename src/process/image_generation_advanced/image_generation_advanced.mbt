@@ -275,9 +275,7 @@ pub fn diffuse_sample(
 
 ///|
 /// 文本到图像生成（简化版）
-pub fn text_to_image(
-  config : ImageGenerationConfig,
-) -> TextToImageResult {
+pub fn text_to_image(config : ImageGenerationConfig) -> TextToImageResult {
   let images : Array[GeneratedImage] = []
 
   for i in 0..<config.num_images {
@@ -313,7 +311,9 @@ pub fn text_to_image(
     num_inference_steps: config.num_inference_steps,
     guidance_scale: config.guidance_scale,
     seed: config.seed,
-    total_generation_time_ms: config.num_images.to_double() * config.num_inference_steps.to_double() * 100.0,
+    total_generation_time_ms: config.num_images.to_double() *
+    config.num_inference_steps.to_double() *
+    100.0,
   }
 }
 
@@ -332,8 +332,13 @@ pub fn image_to_image(
     // 混合输入图像和噪声
     let mixed : Array[Double] = []
     for j in 0..<noise.length() {
-      let input_val = if j < input_image.length() { input_image[j] / 127.5 - 1.0 } else { 0.0 }
-      let mixed_val = input_val * (1.0 - config.strength) + noise[j] * config.strength
+      let input_val = if j < input_image.length() {
+        input_image[j] / 127.5 - 1.0
+      } else {
+        0.0
+      }
+      let mixed_val = input_val * (1.0 - config.strength) +
+        noise[j] * config.strength
       mixed.push(mixed_val)
     }
 
@@ -366,7 +371,9 @@ pub fn image_to_image(
     num_inference_steps: config.num_inference_steps,
     guidance_scale: config.guidance_scale,
     seed: config.seed,
-    total_generation_time_ms: config.num_images.to_double() * config.num_inference_steps.to_double() * 100.0,
+    total_generation_time_ms: config.num_images.to_double() *
+    config.num_inference_steps.to_double() *
+    100.0,
   }
 }
 
@@ -423,9 +430,14 @@ pub fn transfer_style(
   let stylized : Array[Double] = []
 
   for i in 0..<content_image.length() {
-    let content_val = if i < content_image.length() { content_image[i] } else { 0.0 }
+    let content_val = if i < content_image.length() {
+      content_image[i]
+    } else {
+      0.0
+    }
     let style_val = if i < style_image.length() { style_image[i] } else { 0.0 }
-    let mixed = content_val * config.content_strength + style_val * config.style_strength
+    let mixed = content_val * config.content_strength +
+      style_val * config.style_strength
     let total = config.content_strength + config.style_strength
     let final_val = if total > 0.0 { mixed / total } else { content_val }
     if final_val < 0.0 {
@@ -467,41 +479,64 @@ pub fn image_generation_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageGenerationTaskType::TextToImage => "文本到图像"
-    ImageGenerationTaskType::ImageToImage => "图像到图像"
-    ImageGenerationTaskType::Inpainting => "图像修复"
-    ImageGenerationTaskType::Outpainting => "图像外扩"
-    ImageGenerationTaskType::StyleTransfer => "风格迁移"
-    ImageGenerationTaskType::SuperResolution => "超分辨率"
-    ImageGenerationTaskType::Colorization => "图像上色"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 模型类型 | " + (match config.model_type {
-    GenerativeModelType::Diffusion => "扩散模型"
-    GenerativeModelType::GAN => "GAN"
-    GenerativeModelType::VAE => "VAE"
-    GenerativeModelType::Flow => "流模型"
-    GenerativeModelType::Autoregressive => "自回归"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 扩散模型 | " + (match config.diffusion_model {
-    DiffusionModelType::DDPM => "DDPM"
-    DiffusionModelType::DDIM => "DDIM"
-    DiffusionModelType::StableDiffusion => "Stable Diffusion"
-    DiffusionModelType::ControlNet => "ControlNet"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| GAN类型 | " + (match config.gan_type {
-    GANType::StyleGAN => "StyleGAN"
-    GANType::StyleGAN2 => "StyleGAN2"
-    GANType::CycleGAN => "CycleGAN"
-    GANType::Pix2Pix => "Pix2Pix"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 分辨率 | " + config.width.to_string() + "x" + config.height.to_string() + " |\n"
-  report = report + "| 推理步数 | " + config.num_inference_steps.to_string() + " |\n"
-  report = report + "| 引导系数 | " + config.guidance_scale.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageGenerationTaskType::TextToImage => "文本到图像"
+      ImageGenerationTaskType::ImageToImage => "图像到图像"
+      ImageGenerationTaskType::Inpainting => "图像修复"
+      ImageGenerationTaskType::Outpainting => "图像外扩"
+      ImageGenerationTaskType::StyleTransfer => "风格迁移"
+      ImageGenerationTaskType::SuperResolution => "超分辨率"
+      ImageGenerationTaskType::Colorization => "图像上色"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 模型类型 | " +
+    (match config.model_type {
+      GenerativeModelType::Diffusion => "扩散模型"
+      GenerativeModelType::GAN => "GAN"
+      GenerativeModelType::VAE => "VAE"
+      GenerativeModelType::Flow => "流模型"
+      GenerativeModelType::Autoregressive => "自回归"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 扩散模型 | " +
+    (match config.diffusion_model {
+      DiffusionModelType::DDPM => "DDPM"
+      DiffusionModelType::DDIM => "DDIM"
+      DiffusionModelType::StableDiffusion => "Stable Diffusion"
+      DiffusionModelType::ControlNet => "ControlNet"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| GAN类型 | " +
+    (match config.gan_type {
+      GANType::StyleGAN => "StyleGAN"
+      GANType::StyleGAN2 => "StyleGAN2"
+      GANType::CycleGAN => "CycleGAN"
+      GANType::Pix2Pix => "Pix2Pix"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 分辨率 | " +
+    config.width.to_string() +
+    "x" +
+    config.height.to_string() +
+    " |\n"
+  report = report +
+    "| 推理步数 | " +
+    config.num_inference_steps.to_string() +
+    " |\n"
+  report = report +
+    "| 引导系数 | " +
+    config.guidance_scale.to_string() +
+    " |\n"
   report = report + "| 生成数量 | " + config.num_images.to_string() + " |\n"
   report = report + "| 随机种子 | " + config.seed.to_string() + " |\n"
   report = report + "| 提示词 | " + config.prompt + " |\n"

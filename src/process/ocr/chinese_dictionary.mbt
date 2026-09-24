@@ -4,14 +4,14 @@
 ///|
 /// 汉字结构类型
 pub(all) enum DictCharStructure {
-  LeftRight        // 左右结构
-  UpDown           // 上下结构
-  LeftMiddleRight  // 左中右结构
-  UpMiddleDown     // 上中下结构
-  Surround         // 包围结构
-  HalfSurround     // 半包围结构
-  Independent      // 独体字
-  Complex          // 复杂结构
+  LeftRight // 左右结构
+  UpDown // 上下结构
+  LeftMiddleRight // 左中右结构
+  UpMiddleDown // 上中下结构
+  Surround // 包围结构
+  HalfSurround // 半包围结构
+  Independent // 独体字
+  Complex // 复杂结构
 } derive(Eq)
 
 ///|
@@ -19,7 +19,7 @@ pub(all) enum DictCharStructure {
 pub(all) struct DictComponent {
   name : String
   stroke_count : Int
-  position : String  // "left" / "right" / "top" / "bottom" / "outer" / "inner"
+  position : String // "left" / "right" / "top" / "bottom" / "outer" / "inner"
   width_ratio : Double
   height_ratio : Double
 }
@@ -34,8 +34,8 @@ pub(all) struct DictCharEntry {
   structure : DictCharStructure
   radical : String
   components : Array[DictComponent]
-  frequency : Int  // 使用频率（1-10000）
-  level : String   // "一级" / "二级" / "三级"
+  frequency : Int // 使用频率（1-10000）
+  level : String // "一级" / "二级" / "三级"
 }
 
 ///|
@@ -84,8 +84,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::LeftRight,
       radical: "白",
       components: [
-        DictComponent::{ name: "白", stroke_count: 5, position: "left", width_ratio: 0.45, height_ratio: 1.0 },
-        DictComponent::{ name: "勺", stroke_count: 3, position: "right", width_ratio: 0.55, height_ratio: 1.0 },
+        DictComponent::{
+          name: "白",
+          stroke_count: 5,
+          position: "left",
+          width_ratio: 0.45,
+          height_ratio: 1.0,
+        },
+        DictComponent::{
+          name: "勺",
+          stroke_count: 3,
+          position: "right",
+          width_ratio: 0.55,
+          height_ratio: 1.0,
+        },
       ],
       frequency: 10000,
       level: "一级",
@@ -109,8 +121,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::UpDown,
       radical: "日",
       components: [
-        DictComponent::{ name: "日", stroke_count: 4, position: "top", width_ratio: 1.0, height_ratio: 0.45 },
-        DictComponent::{ name: "疋", stroke_count: 5, position: "bottom", width_ratio: 1.0, height_ratio: 0.55 },
+        DictComponent::{
+          name: "日",
+          stroke_count: 4,
+          position: "top",
+          width_ratio: 1.0,
+          height_ratio: 0.45,
+        },
+        DictComponent::{
+          name: "疋",
+          stroke_count: 5,
+          position: "bottom",
+          width_ratio: 1.0,
+          height_ratio: 0.55,
+        },
       ],
       frequency: 9800,
       level: "一级",
@@ -156,8 +180,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::LeftRight,
       radical: "戈",
       components: [
-        DictComponent::{ name: "手", stroke_count: 4, position: "left", width_ratio: 0.4, height_ratio: 1.0 },
-        DictComponent::{ name: "戈", stroke_count: 3, position: "right", width_ratio: 0.6, height_ratio: 1.0 },
+        DictComponent::{
+          name: "手",
+          stroke_count: 4,
+          position: "left",
+          width_ratio: 0.4,
+          height_ratio: 1.0,
+        },
+        DictComponent::{
+          name: "戈",
+          stroke_count: 3,
+          position: "right",
+          width_ratio: 0.6,
+          height_ratio: 1.0,
+        },
       ],
       frequency: 9400,
       level: "一级",
@@ -170,8 +206,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::HalfSurround,
       radical: "土",
       components: [
-        DictComponent::{ name: "土", stroke_count: 3, position: "left", width_ratio: 0.4, height_ratio: 1.0 },
-        DictComponent::{ name: "才", stroke_count: 3, position: "right", width_ratio: 0.6, height_ratio: 1.0 },
+        DictComponent::{
+          name: "土",
+          stroke_count: 3,
+          position: "left",
+          width_ratio: 0.4,
+          height_ratio: 1.0,
+        },
+        DictComponent::{
+          name: "才",
+          stroke_count: 3,
+          position: "right",
+          width_ratio: 0.6,
+          height_ratio: 1.0,
+        },
       ],
       frequency: 9300,
       level: "一级",
@@ -184,8 +232,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::UpDown,
       radical: "月",
       components: [
-        DictComponent::{ name: "𠂇", stroke_count: 2, position: "top", width_ratio: 1.0, height_ratio: 0.35 },
-        DictComponent::{ name: "月", stroke_count: 4, position: "bottom", width_ratio: 1.0, height_ratio: 0.65 },
+        DictComponent::{
+          name: "𠂇",
+          stroke_count: 2,
+          position: "top",
+          width_ratio: 1.0,
+          height_ratio: 0.35,
+        },
+        DictComponent::{
+          name: "月",
+          stroke_count: 4,
+          position: "bottom",
+          width_ratio: 1.0,
+          height_ratio: 0.65,
+        },
       ],
       frequency: 9200,
       level: "一级",
@@ -220,8 +280,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::Surround,
       radical: "囗",
       components: [
-        DictComponent::{ name: "囗", stroke_count: 3, position: "outer", width_ratio: 1.0, height_ratio: 1.0 },
-        DictComponent::{ name: "玉", stroke_count: 5, position: "inner", width_ratio: 0.7, height_ratio: 0.7 },
+        DictComponent::{
+          name: "囗",
+          stroke_count: 3,
+          position: "outer",
+          width_ratio: 1.0,
+          height_ratio: 1.0,
+        },
+        DictComponent::{
+          name: "玉",
+          stroke_count: 5,
+          position: "inner",
+          width_ratio: 0.7,
+          height_ratio: 0.7,
+        },
       ],
       frequency: 8900,
       level: "一级",
@@ -234,8 +306,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::LeftRight,
       radical: "口",
       components: [
-        DictComponent::{ name: "口", stroke_count: 3, position: "left", width_ratio: 0.35, height_ratio: 0.6 },
-        DictComponent::{ name: "禾", stroke_count: 5, position: "right", width_ratio: 0.65, height_ratio: 1.0 },
+        DictComponent::{
+          name: "口",
+          stroke_count: 3,
+          position: "left",
+          width_ratio: 0.35,
+          height_ratio: 0.6,
+        },
+        DictComponent::{
+          name: "禾",
+          stroke_count: 5,
+          position: "right",
+          width_ratio: 0.65,
+          height_ratio: 1.0,
+        },
       ],
       frequency: 8800,
       level: "一级",
@@ -248,8 +332,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::LeftRight,
       radical: "日",
       components: [
-        DictComponent::{ name: "日", stroke_count: 4, position: "left", width_ratio: 0.4, height_ratio: 0.7 },
-        DictComponent::{ name: "寸", stroke_count: 3, position: "right", width_ratio: 0.6, height_ratio: 0.6 },
+        DictComponent::{
+          name: "日",
+          stroke_count: 4,
+          position: "left",
+          width_ratio: 0.4,
+          height_ratio: 0.7,
+        },
+        DictComponent::{
+          name: "寸",
+          stroke_count: 3,
+          position: "right",
+          width_ratio: 0.6,
+          height_ratio: 0.6,
+        },
       ],
       frequency: 8700,
       level: "一级",
@@ -262,8 +358,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::LeftRight,
       radical: "土",
       components: [
-        DictComponent::{ name: "土", stroke_count: 3, position: "left", width_ratio: 0.35, height_ratio: 1.0 },
-        DictComponent::{ name: "也", stroke_count: 3, position: "right", width_ratio: 0.65, height_ratio: 1.0 },
+        DictComponent::{
+          name: "土",
+          stroke_count: 3,
+          position: "left",
+          width_ratio: 0.35,
+          height_ratio: 1.0,
+        },
+        DictComponent::{
+          name: "也",
+          stroke_count: 3,
+          position: "right",
+          width_ratio: 0.65,
+          height_ratio: 1.0,
+        },
       ],
       frequency: 8600,
       level: "一级",
@@ -276,8 +384,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::UpDown,
       radical: "凵",
       components: [
-        DictComponent::{ name: "凵", stroke_count: 2, position: "top", width_ratio: 1.0, height_ratio: 0.5 },
-        DictComponent::{ name: "凵", stroke_count: 2, position: "bottom", width_ratio: 1.0, height_ratio: 0.5 },
+        DictComponent::{
+          name: "凵",
+          stroke_count: 2,
+          position: "top",
+          width_ratio: 1.0,
+          height_ratio: 0.5,
+        },
+        DictComponent::{
+          name: "凵",
+          stroke_count: 2,
+          position: "bottom",
+          width_ratio: 1.0,
+          height_ratio: 0.5,
+        },
       ],
       frequency: 8500,
       level: "一级",
@@ -312,8 +432,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::UpDown,
       radical: "覀",
       components: [
-        DictComponent::{ name: "覀", stroke_count: 6, position: "top", width_ratio: 1.0, height_ratio: 0.55 },
-        DictComponent::{ name: "女", stroke_count: 3, position: "bottom", width_ratio: 0.6, height_ratio: 0.45 },
+        DictComponent::{
+          name: "覀",
+          stroke_count: 6,
+          position: "top",
+          width_ratio: 1.0,
+          height_ratio: 0.55,
+        },
+        DictComponent::{
+          name: "女",
+          stroke_count: 3,
+          position: "bottom",
+          width_ratio: 0.6,
+          height_ratio: 0.45,
+        },
       ],
       frequency: 8200,
       level: "一级",
@@ -326,8 +458,20 @@ fn get_dict_common_chinese_chars() -> Array[DictCharEntry] {
       structure: DictCharStructure::UpDown,
       radical: "人",
       components: [
-        DictComponent::{ name: "人", stroke_count: 2, position: "top", width_ratio: 0.8, height_ratio: 0.35 },
-        DictComponent::{ name: "云", stroke_count: 4, position: "bottom", width_ratio: 1.0, height_ratio: 0.65 },
+        DictComponent::{
+          name: "人",
+          stroke_count: 2,
+          position: "top",
+          width_ratio: 0.8,
+          height_ratio: 0.35,
+        },
+        DictComponent::{
+          name: "云",
+          stroke_count: 4,
+          position: "bottom",
+          width_ratio: 1.0,
+          height_ratio: 0.65,
+        },
       ],
       frequency: 8100,
       level: "一级",
@@ -370,7 +514,9 @@ pub fn lookup_by_radical(
 ) -> Array[DictCharEntry] raise @types.LoadError {
   // 输入验证
   if radical.length() == 0 {
-    raise @types.LoadError::DecodeFailed("lookup_by_radical: 部首不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "lookup_by_radical: 部首不能为空",
+    )
   }
   let results : Array[DictCharEntry] = []
   for char in dict.chars {
@@ -452,17 +598,18 @@ pub fn calculate_chinese_similarity(
       }
     }
   }
-  let total_components = if char1.components.length() > char2.components.length() {
+  let total_components = if char1.components.length() >
+    char2.components.length() {
     char1.components.length()
   } else {
     char2.components.length()
   }
   if total_components > 0 {
-    score += (component_match.to_double() / total_components.to_double()) * 0.3
+    score += component_match.to_double() / total_components.to_double() * 0.3
   } else {
-    // 都是独体字
     score += 0.15
   }
+  // 都是独体字
   score
 }
 
@@ -475,10 +622,14 @@ pub fn find_similar_chinese_chars(
 ) -> Array[DictCharMatch] raise @types.LoadError {
   // 输入验证
   if target_char.length() == 0 {
-    raise @types.LoadError::DecodeFailed("find_similar_chinese_chars: 目标字符不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "find_similar_chinese_chars: 目标字符不能为空",
+    )
   }
   if top_n <= 0 {
-    raise @types.LoadError::DecodeFailed("find_similar_chinese_chars: 返回数量必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "find_similar_chinese_chars: 返回数量必须大于0",
+    )
   }
   let n = top_n
   let target_entry = lookup_char(dict, target_char)
@@ -504,7 +655,12 @@ pub fn find_similar_chinese_chars(
               similarity,
               structure_match: target.structure == char.structure,
               component_match_count: component_match,
-              total_components: if target.components.length() > char.components.length() { target.components.length() } else { char.components.length() },
+              total_components: if target.components.length() >
+                char.components.length() {
+                target.components.length()
+              } else {
+                char.components.length()
+              },
               stroke_diff: (target.stroke_count - char.stroke_count).abs(),
             })
           }
@@ -521,7 +677,7 @@ pub fn find_similar_chinese_chars(
         }
       }
     }
-    None => {()}
+    None => ()
   }
   // 返回前 n 个
   let results : Array[DictCharMatch] = []
@@ -537,7 +693,7 @@ pub fn find_similar_chinese_chars(
 pub fn lookup_char(
   dict : DictChineseDict,
   char : String,
-) -> Option[DictCharEntry] raise @types.LoadError {
+) -> DictCharEntry? raise @types.LoadError {
   // 输入验证
   if char.length() == 0 {
     raise @types.LoadError::DecodeFailed("lookup_char: 字符不能为空")
@@ -576,8 +732,12 @@ pub fn recognize_by_components(
         }
       }
     }
-    let total_detected = if detected_components.length() > 0 { detected_components.length() } else { 1 }
-    score += (component_match.to_double() / total_detected.to_double()) * 0.4
+    let total_detected = if detected_components.length() > 0 {
+      detected_components.length()
+    } else {
+      1
+    }
+    score += component_match.to_double() / total_detected.to_double() * 0.4
     // 笔画数匹配
     if stroke_hint > 0 {
       let stroke_diff = (char.stroke_count - stroke_hint).abs()
@@ -610,9 +770,7 @@ pub fn recognize_by_components(
 
 ///|
 /// 生成中文字库统计报告
-pub fn generate_chinese_dictionary_report(
-  dict : DictChineseDict,
-) -> String {
+pub fn generate_chinese_dictionary_report(dict : DictChineseDict) -> String {
   let mut report = "## 中文字库统计报告\n\n"
   report = report + "### 整体统计\n\n"
   report = report + "| 指标 | 数值 |\n"
@@ -622,7 +780,8 @@ pub fn generate_chinese_dictionary_report(
   report = report + "| 二级字 | " + dict.level2_count.to_string() + " |\n"
   report = report + "| 三级字 | " + dict.level3_count.to_string() + " |\n\n"
   report = report + "### 高频汉字 TOP 10\n\n"
-  report = report + "| 排名 | 汉字 | 拼音 | 笔画 | 结构 | 部首 | 频率 |\n"
+  report = report +
+    "| 排名 | 汉字 | 拼音 | 笔画 | 结构 | 部首 | 频率 |\n"
   report = report + "|------|------|------|------|------|------|------|\n"
   // 按频率排序（简化：直接取前10个）
   let limit = if dict.chars.length() < 10 { dict.chars.length() } else { 10 }
@@ -639,7 +798,22 @@ pub fn generate_chinese_dictionary_report(
       DictCharStructure::Independent => "独体"
       DictCharStructure::Complex => "复杂"
     }
-    report = report + "| " + (i + 1).to_string() + " | " + char.char + " | " + pinyin_str + " | " + char.stroke_count.to_string() + " | " + structure_str + " | " + char.radical + " | " + char.frequency.to_string() + " |\n"
+    report = report +
+      "| " +
+      (i + 1).to_string() +
+      " | " +
+      char.char +
+      " | " +
+      pinyin_str +
+      " | " +
+      char.stroke_count.to_string() +
+      " | " +
+      structure_str +
+      " | " +
+      char.radical +
+      " | " +
+      char.frequency.to_string() +
+      " |\n"
   }
   report
 }

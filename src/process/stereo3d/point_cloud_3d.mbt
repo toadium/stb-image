@@ -65,8 +65,8 @@ pub(all) struct CameraIntrinsics3d {
 ///|
 /// 相机外参
 pub(all) struct CameraExtrinsics3d {
-  rotation : Array[Double]  // 3x3 旋转矩阵
-  translation : Array[Double]  // 3x1 平移向量
+  rotation : Array[Double] // 3x3 旋转矩阵
+  translation : Array[Double] // 3x1 平移向量
 }
 
 ///|
@@ -84,7 +84,7 @@ pub(all) struct StereoConfig3d {
 ///|
 /// 点云配准结果
 pub(all) struct RegistrationResult3d {
-  transformation : Array[Double]  // 4x4 变换矩阵
+  transformation : Array[Double] // 4x4 变换矩阵
   inliers : Int
   rmse : Double
   fitness : Double
@@ -117,7 +117,10 @@ pub fn create_default_stereo_config() -> StereoConfig3d {
 
 ///|
 /// 创建默认相机内参
-pub fn create_default_camera_intrinsics(width : Int, height : Int) -> CameraIntrinsics3d {
+pub fn create_default_camera_intrinsics(
+  width : Int,
+  height : Int,
+) -> CameraIntrinsics3d {
   let fx = width.to_double() * 0.8
   let fy = height.to_double() * 0.8
   CameraIntrinsics3d::{
@@ -188,7 +191,9 @@ pub fn stereo_match(
       let mut best_disparity = 0
       let mut best_cost = 1000000.0
 
-      for d in config.min_disparity..<(config.min_disparity + config.num_disparities) {
+      for
+        d in config.min_disparity..<(config.min_disparity +
+        config.num_disparities) {
         if x - d < 0 {
           continue
         }
@@ -215,8 +220,12 @@ pub fn stereo_match(
       if best_disparity > 0 {
         let depth = 100.0 / best_disparity.to_double()
         depths.push(depth)
-        if depth < min_d { min_d = depth }
-        if depth > max_d { max_d = depth }
+        if depth < min_d {
+          min_d = depth
+        }
+        if depth > max_d {
+          max_d = depth
+        }
       } else {
         depths.push(0.0)
         invalid += 1
@@ -253,17 +262,29 @@ pub fn voxel_downsample(
   let mut max_z = -1000000.0
 
   for p in cloud.points {
-    if p.x < min_x { min_x = p.x }
-    if p.y < min_y { min_y = p.y }
-    if p.z < min_z { min_z = p.z }
-    if p.x > max_x { max_x = p.x }
-    if p.y > max_y { max_y = p.y }
-    if p.z > max_z { max_z = p.z }
+    if p.x < min_x {
+      min_x = p.x
+    }
+    if p.y < min_y {
+      min_y = p.y
+    }
+    if p.z < min_z {
+      min_z = p.z
+    }
+    if p.x > max_x {
+      max_x = p.x
+    }
+    if p.y > max_y {
+      max_y = p.y
+    }
+    if p.z > max_z {
+      max_z = p.z
+    }
   }
 
   let dim_x = ((max_x - min_x) / voxel_size).to_int() + 1
   let dim_y = ((max_y - min_y) / voxel_size).to_int() + 1
-  let dim_z = ((max_z - min_z) / voxel_size).to_int() + 1
+  let _ = ((max_z - min_z) / voxel_size).to_int() + 1
 
   // 简化版：随机采样
   let step = if cloud.num_points > 10000 { cloud.num_points / 10000 } else { 1 }
@@ -355,10 +376,7 @@ pub fn icp_registration(
   tolerance : Double,
 ) -> RegistrationResult3d {
   let transformation : Array[Double] = [
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
+    1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
   ]
 
   let mut prev_error = 1000000.0
@@ -370,10 +388,14 @@ pub fn icp_registration(
     // 简化版：计算平均误差
     let mut total_error = 0.0
     let mut inliers = 0
-    let sample_count = if source.num_points < 100 { source.num_points } else { 100 }
+    let sample_count = if source.num_points < 100 {
+      source.num_points
+    } else {
+      100
+    }
     for i in 0..<sample_count {
-      let src_idx = (i * source.num_points / sample_count) % source.num_points
-      let tgt_idx = (i * target.num_points / sample_count) % target.num_points
+      let src_idx = i * source.num_points / sample_count % source.num_points
+      let tgt_idx = i * target.num_points / sample_count % target.num_points
       let sp = source.points[src_idx]
       let tp = target.points[tgt_idx]
       let dx = sp.x - tp.x
@@ -385,7 +407,11 @@ pub fn icp_registration(
         inliers += 1
       }
     }
-    let rmse = if sample_count > 0 { (total_error / sample_count.to_double()).sqrt() } else { 0.0 }
+    let rmse = if sample_count > 0 {
+      (total_error / sample_count.to_double()).sqrt()
+    } else {
+      0.0
+    }
 
     if (prev_error - rmse).abs() < tolerance {
       converged = true
@@ -398,7 +424,11 @@ pub fn icp_registration(
 
   RegistrationResult3d::{
     transformation,
-    inliers: if source.num_points > 0 { (source.num_points.to_double() * 0.7).to_int() } else { 0 },
+    inliers: if source.num_points > 0 {
+      (source.num_points.to_double() * 0.7).to_int()
+    } else {
+      0
+    },
     rmse: prev_error,
     fitness,
     iterations,
@@ -423,7 +453,9 @@ pub fn estimate_normals(
     let mut count = 0
 
     for j in 0..<cloud.num_points {
-      if i == j { continue }
+      if i == j {
+        continue
+      }
       let q = cloud.points[j]
       let dx = p.x - q.x
       let dy = p.y - q.y
@@ -474,7 +506,12 @@ pub fn depth_map_to_image(depth : DepthMap3d) -> @types.Image {
     }
   }
 
-  @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -490,22 +527,42 @@ pub fn vision_3d_report_to_string(
   report = report + "| 点数 | " + cloud.num_points.to_string() + " |\n"
   report = report + "| 宽度 | " + cloud.width.to_string() + " |\n"
   report = report + "| 高度 | " + cloud.height.to_string() + " |\n"
-  report = report + "| 有组织 | " + (if cloud.is_organized { "是" } else { "否" }) + " |\n\n"
+  report = report +
+    "| 有组织 | " +
+    (if cloud.is_organized { "是" } else { "否" }) +
+    " |\n\n"
 
   report = report + "### 深度图信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 尺寸 | " + depth.width.to_string() + "x" + depth.height.to_string() + " |\n"
+  report = report +
+    "| 尺寸 | " +
+    depth.width.to_string() +
+    "x" +
+    depth.height.to_string() +
+    " |\n"
   report = report + "| 最小深度 | " + depth.min_depth.to_string() + " |\n"
   report = report + "| 最大深度 | " + depth.max_depth.to_string() + " |\n"
-  report = report + "| 无效像素 | " + depth.invalid_count.to_string() + " |\n\n"
+  report = report +
+    "| 无效像素 | " +
+    depth.invalid_count.to_string() +
+    " |\n\n"
 
   report = report + "### 配准结果\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 内点数 | " + registration.inliers.to_string() + " |\n"
   report = report + "| RMSE | " + registration.rmse.to_string() + " |\n"
-  report = report + "| 适配度 | " + (registration.fitness * 100.0).to_string() + "% |\n"
-  report = report + "| 迭代次数 | " + registration.iterations.to_string() + " |\n"
-  report = report + "| 收敛 | " + (if registration.converged { "是" } else { "否" }) + " |\n"
+  report = report +
+    "| 适配度 | " +
+    (registration.fitness * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 迭代次数 | " +
+    registration.iterations.to_string() +
+    " |\n"
+  report = report +
+    "| 收敛 | " +
+    (if registration.converged { "是" } else { "否" }) +
+    " |\n"
 
   report
 }

@@ -55,7 +55,11 @@ fn Vp8BoolEncoder::encode_bit(self : Vp8BoolEncoder, bit : Int) -> Unit {
 
 ///|
 /// 编码无符号整数 (n bits, MSB first)
-fn Vp8BoolEncoder::encode_uint(self : Vp8BoolEncoder, value : Int, n : Int) -> Unit {
+fn Vp8BoolEncoder::encode_uint(
+  self : Vp8BoolEncoder,
+  value : Int,
+  n : Int,
+) -> Unit {
   for i in 0..<n {
     let bit = (value >> (n - 1 - i)) & 1
     self.encode_bit(bit)
@@ -75,15 +79,13 @@ fn Vp8BoolEncoder::finish(self : Vp8BoolEncoder) -> Bytes {
 
 ///|
 /// RGB → YUV420 转换
-fn rgb_to_yuv420(
-  img : @types.Image,
-) -> (Array[Int], Array[Int], Array[Int]) {
+fn rgb_to_yuv420(img : @types.Image) -> (Array[Int], Array[Int], Array[Int]) {
   let w = img.width
   let h = img.height
   let ch = img.channels
   let y_plane : Array[Int] = Array::make(w * h, 0)
-  let u_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
-  let v_plane : Array[Int] = Array::make((w / 2) * (h / 2), 128)
+  let u_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
+  let v_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
 
   for y in 0..<h {
     for x in 0..<w {
@@ -99,7 +101,7 @@ fn rgb_to_yuv420(
       if x % 2 == 0 && y % 2 == 0 {
         let u_val = ((-r * 38 - g * 74 + b * 112 + 128) >> 8) + 128
         let v_val = ((r * 112 - g * 94 - b * 18 + 128) >> 8) + 128
-        let uv_idx = (y / 2) * (w / 2) + (x / 2)
+        let uv_idx = y / 2 * (w / 2) + x / 2
         u_plane[uv_idx] = u_val
         v_plane[uv_idx] = v_val
       }
@@ -127,9 +129,9 @@ fn vp8_fdct_4x4(block : Array[Int]) -> Array[Int] {
     let b1 = a1 + a2
     let b2 = a1 - a2
     let b3 = a0 - a3
-    result[i * 4] = (b0 + b1) * 85627 >> 16
+    result[i * 4] = ((b0 + b1) * 85627) >> 16
     result[i * 4 + 1] = (b2 * 121095 + b3 * 85627) >> 16
-    result[i * 4 + 2] = (b0 - b1) * 85627 >> 16
+    result[i * 4 + 2] = ((b0 - b1) * 85627) >> 16
     result[i * 4 + 3] = (b3 * 121095 - b2 * 85627) >> 16
   }
   // 列变换（一维 FDCT）
@@ -146,9 +148,9 @@ fn vp8_fdct_4x4(block : Array[Int]) -> Array[Int] {
     let b1 = a1 + a2
     let b2 = a1 - a2
     let b3 = a0 - a3
-    result[j] = (b0 + b1) * 85627 >> 16
+    result[j] = ((b0 + b1) * 85627) >> 16
     result[4 + j] = (b2 * 121095 + b3 * 85627) >> 16
-    result[8 + j] = (b0 - b1) * 85627 >> 16
+    result[8 + j] = ((b0 - b1) * 85627) >> 16
     result[12 + j] = (b3 * 121095 - b2 * 85627) >> 16
   }
   result
@@ -210,12 +212,7 @@ priv struct Vp8EncQuantParams {
 /// 根据 quality 计算量化参数
 fn vp8_calc_quant_params(quality : Int) -> Vp8EncQuantParams {
   let q = ((100 - quality).clamp(min=1, max=99) * 63 / 100).clamp(min=1, max=63)
-  Vp8EncQuantParams::{
-    y_ac: q,
-    y_dc: q,
-    uv_ac: q,
-    uv_dc: q,
-  }
+  Vp8EncQuantParams::{ y_ac: q, y_dc: q, uv_ac: q, uv_dc: q }
 }
 
 ///|
@@ -311,8 +308,12 @@ fn vp8_predict_i16x16_tm(
   for y in 0..<16 {
     for x in 0..<16 {
       let mut val = above[x] + left[y] - above_left
-      if val < 0 { val = 0 }
-      if val > 255 { val = 255 }
+      if val < 0 {
+        val = 0
+      }
+      if val > 255 {
+        val = 255
+      }
       pred[y * 16 + x] = val
     }
   }
@@ -369,7 +370,7 @@ fn vp8_predict_i16x16_v(
 
 ///|
 /// I16x16 预测模式枚举
-enum Vp8I16x16PredMode {
+priv enum Vp8I16x16PredMode {
   I16x16DcPred
   I16x16TrueMotionPred
   I16x16HPred
@@ -396,10 +397,14 @@ fn vp8_select_i16x16_mode(
   let mut best_sad = 1000000
   for mode in modes {
     let pred = match mode {
-      Vp8I16x16PredMode::I16x16DcPred => vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
-      Vp8I16x16PredMode::I16x16TrueMotionPred => vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
-      Vp8I16x16PredMode::I16x16HPred => vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
-      Vp8I16x16PredMode::I16x16VPred => vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16DcPred =>
+        vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16TrueMotionPred =>
+        vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16HPred =>
+        vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
+      Vp8I16x16PredMode::I16x16VPred =>
+        vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
     }
     // 计算 SAD
     let mut sad = 0
@@ -433,10 +438,14 @@ fn vp8_get_i16x16_prediction(
   height : Int,
 ) -> Array[Int] {
   match mode {
-    Vp8I16x16PredMode::I16x16DcPred => vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
-    Vp8I16x16PredMode::I16x16TrueMotionPred => vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
-    Vp8I16x16PredMode::I16x16HPred => vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
-    Vp8I16x16PredMode::I16x16VPred => vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16DcPred =>
+      vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16TrueMotionPred =>
+      vp8_predict_i16x16_tm(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16HPred =>
+      vp8_predict_i16x16_h(y_plane, mb_x, mb_y, width, height)
+    Vp8I16x16PredMode::I16x16VPred =>
+      vp8_predict_i16x16_v(y_plane, mb_x, mb_y, width, height)
   }
 }
 
@@ -515,7 +524,7 @@ fn vp8_encode_block_tokens(
 
 ///|
 /// 编码器端 Segment 参数（简化版）
-struct Vp8EncSegmentParams {
+priv struct Vp8EncSegmentParams {
   segmentation_enabled : Bool
   // 每个 segment 的量化器增量（4 个 segment）
   quantizer_delta : Array[Int]
@@ -674,14 +683,14 @@ fn vp8_encoder_loop_filter(
 
 ///|
 /// 编码器端自适应概率模型（简化版）
-struct Vp8EncAdaptiveProbs {
+priv struct Vp8EncAdaptiveProbs {
   // 系数 token 概率（按位置 0-15，每个位置有 4 个 token 概率）
-  token_probs : Array[Int]  // 16 * 4 = 64 个概率
+  token_probs : Array[Int] // 16 * 4 = 64 个概率
   // 预测模式概率
-  pred_mode_probs : Array[Int]  // 4 个预测模式概率
+  pred_mode_probs : Array[Int] // 4 个预测模式概率
   // 统计计数器（用于概率更新）
-  token_counts : Array[Int]  // 16 * 4 = 64 个计数器
-  pred_mode_counts : Array[Int]  // 4 个计数器
+  token_counts : Array[Int] // 16 * 4 = 64 个计数器
+  pred_mode_counts : Array[Int] // 4 个计数器
   // 更新间隔
   update_interval : Int
   mut blocks_since_update : Int
@@ -719,10 +728,16 @@ fn vp8_enc_adaptive_probs_update(probs : Vp8EncAdaptiveProbs) -> Unit {
     }
   }
   // 更新预测模式概率
-  let total = probs.pred_mode_counts[0] + probs.pred_mode_counts[1] + probs.pred_mode_counts[2] + probs.pred_mode_counts[3]
+  let total = probs.pred_mode_counts[0] +
+    probs.pred_mode_counts[1] +
+    probs.pred_mode_counts[2] +
+    probs.pred_mode_counts[3]
   if total > 0 {
     for i in 0..<4 {
-      let observed = (255 * probs.pred_mode_counts[i] / total).clamp(min=1, max=254)
+      let observed = (255 * probs.pred_mode_counts[i] / total).clamp(
+        min=1,
+        max=254,
+      )
       probs.pred_mode_probs[i] = (probs.pred_mode_probs[i] * 7 + observed) / 8
       probs.pred_mode_counts[i] = 0
     }
@@ -783,7 +798,11 @@ fn vp8_build_frame_header(
 
 ///|
 /// 构建 WebP RIFF 容器
-fn vp8_build_webp_container(width : Int, height : Int, vp8_data : Bytes) -> Bytes {
+fn vp8_build_webp_container(
+  width : Int,
+  height : Int,
+  vp8_data : Bytes,
+) -> Bytes {
   let result : Array[Byte] = []
   // RIFF header
   result.push(b'\x52') // R

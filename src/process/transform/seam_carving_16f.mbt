@@ -97,14 +97,26 @@ pub fn remove_vertical_seam_16(
     let seam_x = seam[y]
     for x in 0..<seam_x {
       for c in 0..<ch {
-        out[((y * new_w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[((y * new_w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) *
+          2]
+        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[(
+            (y * w + x) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
     for x in seam_x..<new_w {
       for c in 0..<ch {
-        out[((y * new_w + x) * ch + c) * 2] = img.data[((y * w + x + 1) * ch + c) * 2]
-        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[((y * w + x + 1) * ch + c) * 2 + 1]
+        out[((y * new_w + x) * ch + c) * 2] = img.data[(
+            (y * w + x + 1) * ch + c
+          ) *
+          2]
+        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[(
+            (y * w + x + 1) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
   }
@@ -132,14 +144,22 @@ pub fn remove_vertical_seam_f(
     for x in 0..<seam_x {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[(
+              (y * w + x) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }
     for x in seam_x..<new_w {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[((y * w + x + 1) * ch + c) * 4 + b]
+          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[(
+              (y * w + x + 1) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }
@@ -168,13 +188,20 @@ pub fn remove_horizontal_seam_16(
     for y in 0..<seam_y {
       for c in 0..<ch {
         out[((y * w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[((y * w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[((y * w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) *
+          2 +
+          1]
       }
     }
     for y in seam_y..<new_h {
       for c in 0..<ch {
-        out[((y * w + x) * ch + c) * 2] = img.data[(((y + 1) * w + x) * ch + c) * 2]
-        out[((y * w + x) * ch + c) * 2 + 1] = img.data[(((y + 1) * w + x) * ch + c) * 2 + 1]
+        out[((y * w + x) * ch + c) * 2] = img.data[(((y + 1) * w + x) * ch + c) *
+          2]
+        out[((y * w + x) * ch + c) * 2 + 1] = img.data[(
+            ((y + 1) * w + x) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
   }
@@ -202,14 +229,20 @@ pub fn remove_horizontal_seam_f(
     for y in 0..<seam_y {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[((y * w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) *
+            4 +
+            b]
         }
       }
     }
     for y in seam_y..<new_h {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * w + x) * ch + c) * 4 + b] = img.data[(((y + 1) * w + x) * ch + c) * 4 + b]
+          out[((y * w + x) * ch + c) * 4 + b] = img.data[(
+              ((y + 1) * w + x) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }
@@ -224,7 +257,10 @@ pub fn remove_horizontal_seam_f(
 
 ///|
 /// 插入垂直 seam 16-bit 版本
-fn insert_vertical_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.Image16 {
+fn insert_vertical_seam_16(
+  img : @types.Image16,
+  seam : Array[Int],
+) -> @types.Image16 {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -234,18 +270,37 @@ fn insert_vertical_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.Im
     let seam_x = seam[y]
     for x in 0..<seam_x {
       for c in 0..<ch {
-        out[((y * new_w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[((y * new_w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) *
+          2]
+        out[((y * new_w + x) * ch + c) * 2 + 1] = img.data[(
+            (y * w + x) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
     for c in 0..<ch {
-      out[((y * new_w + seam_x) * ch + c) * 2] = img.data[((y * w + seam_x) * ch + c) * 2]
-      out[((y * new_w + seam_x) * ch + c) * 2 + 1] = img.data[((y * w + seam_x) * ch + c) * 2 + 1]
+      out[((y * new_w + seam_x) * ch + c) * 2] = img.data[(
+          (y * w + seam_x) * ch + c
+        ) *
+        2]
+      out[((y * new_w + seam_x) * ch + c) * 2 + 1] = img.data[(
+          (y * w + seam_x) * ch + c
+        ) *
+        2 +
+        1]
     }
     for x in seam_x..<w {
       for c in 0..<ch {
-        out[((y * new_w + x + 1) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[((y * new_w + x + 1) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[((y * new_w + x + 1) * ch + c) * 2] = img.data[(
+            (y * w + x) * ch + c
+          ) *
+          2]
+        out[((y * new_w + x + 1) * ch + c) * 2 + 1] = img.data[(
+            (y * w + x) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
   }
@@ -259,7 +314,10 @@ fn insert_vertical_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.Im
 
 ///|
 /// 插入垂直 seam float 版本
-fn insert_vertical_seam_f(img : @types.ImageF, seam : Array[Int]) -> @types.ImageF {
+fn insert_vertical_seam_f(
+  img : @types.ImageF,
+  seam : Array[Int],
+) -> @types.ImageF {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -270,19 +328,31 @@ fn insert_vertical_seam_f(img : @types.ImageF, seam : Array[Int]) -> @types.Imag
     for x in 0..<seam_x {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[((y * new_w + x) * ch + c) * 4 + b] = img.data[(
+              (y * w + x) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }
     for c in 0..<ch {
       for b in 0..<4 {
-        out[((y * new_w + seam_x) * ch + c) * 4 + b] = img.data[((y * w + seam_x) * ch + c) * 4 + b]
+        out[((y * new_w + seam_x) * ch + c) * 4 + b] = img.data[(
+            (y * w + seam_x) * ch + c
+          ) *
+          4 +
+          b]
       }
     }
     for x in seam_x..<w {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * new_w + x + 1) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[((y * new_w + x + 1) * ch + c) * 4 + b] = img.data[(
+              (y * w + x) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }
@@ -297,7 +367,10 @@ fn insert_vertical_seam_f(img : @types.ImageF, seam : Array[Int]) -> @types.Imag
 
 ///|
 /// 插入水平 seam 16-bit 版本
-fn insert_horizontal_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.Image16 {
+fn insert_horizontal_seam_16(
+  img : @types.Image16,
+  seam : Array[Int],
+) -> @types.Image16 {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -308,17 +381,31 @@ fn insert_horizontal_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.
     for y in 0..<seam_y {
       for c in 0..<ch {
         out[((y * w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[((y * w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[((y * w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) *
+          2 +
+          1]
       }
     }
     for c in 0..<ch {
-      out[((seam_y * w + x) * ch + c) * 2] = img.data[((seam_y * w + x) * ch + c) * 2]
-      out[((seam_y * w + x) * ch + c) * 2 + 1] = img.data[((seam_y * w + x) * ch + c) * 2 + 1]
+      out[((seam_y * w + x) * ch + c) * 2] = img.data[(
+          (seam_y * w + x) * ch + c
+        ) *
+        2]
+      out[((seam_y * w + x) * ch + c) * 2 + 1] = img.data[(
+          (seam_y * w + x) * ch + c
+        ) *
+        2 +
+        1]
     }
     for y in seam_y..<h {
       for c in 0..<ch {
-        out[(((y + 1) * w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) * 2]
-        out[(((y + 1) * w + x) * ch + c) * 2 + 1] = img.data[((y * w + x) * ch + c) * 2 + 1]
+        out[(((y + 1) * w + x) * ch + c) * 2] = img.data[((y * w + x) * ch + c) *
+          2]
+        out[(((y + 1) * w + x) * ch + c) * 2 + 1] = img.data[(
+            (y * w + x) * ch + c
+          ) *
+          2 +
+          1]
       }
     }
   }
@@ -332,7 +419,10 @@ fn insert_horizontal_seam_16(img : @types.Image16, seam : Array[Int]) -> @types.
 
 ///|
 /// 插入水平 seam float 版本
-fn insert_horizontal_seam_f(img : @types.ImageF, seam : Array[Int]) -> @types.ImageF {
+fn insert_horizontal_seam_f(
+  img : @types.ImageF,
+  seam : Array[Int],
+) -> @types.ImageF {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -343,19 +433,29 @@ fn insert_horizontal_seam_f(img : @types.ImageF, seam : Array[Int]) -> @types.Im
     for y in 0..<seam_y {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[((y * w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[((y * w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) *
+            4 +
+            b]
         }
       }
     }
     for c in 0..<ch {
       for b in 0..<4 {
-        out[((seam_y * w + x) * ch + c) * 4 + b] = img.data[((seam_y * w + x) * ch + c) * 4 + b]
+        out[((seam_y * w + x) * ch + c) * 4 + b] = img.data[(
+            (seam_y * w + x) * ch + c
+          ) *
+          4 +
+          b]
       }
     }
     for y in seam_y..<h {
       for c in 0..<ch {
         for b in 0..<4 {
-          out[(((y + 1) * w + x) * ch + c) * 4 + b] = img.data[((y * w + x) * ch + c) * 4 + b]
+          out[(((y + 1) * w + x) * ch + c) * 4 + b] = img.data[(
+              (y * w + x) * ch + c
+            ) *
+            4 +
+            b]
         }
       }
     }

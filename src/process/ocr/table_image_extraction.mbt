@@ -4,9 +4,9 @@
 ///|
 /// 表格线检测结果
 pub(all) struct TableDetectionResult {
-  horizontal_lines : Array[(Int, Int, Int)]  // (y, x_start, x_end)
-  vertical_lines : Array[(Int, Int, Int)]    // (x, y_start, y_end)
-  intersections : Array[(Int, Int)]           // (x, y) 交叉点
+  horizontal_lines : Array[(Int, Int, Int)] // (y, x_start, x_end)
+  vertical_lines : Array[(Int, Int, Int)] // (x, y_start, y_end)
+  intersections : Array[(Int, Int)] // (x, y) 交叉点
   num_rows : Int
   num_cols : Int
   confidence : Double
@@ -51,7 +51,7 @@ pub(all) struct ExtractedImage {
   y : Int
   width : Int
   height : Int
-  image_type : String  // "photo" / "diagram" / "chart" / "logo" / "signature"
+  image_type : String // "photo" / "diagram" / "chart" / "logo" / "signature"
   confidence : Double
   aspect_ratio : Double
   fill_ratio : Double
@@ -68,22 +68,33 @@ pub fn detect_horizontal_table_lines(
 ) -> Array[(Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_table_lines: 图像尺寸必须大于0",
+    )
   }
   if binary_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_table_lines: 仅支持单通道二值图",
+    )
   }
   let expected_size = binary_img.width * binary_img.height
   if binary_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_horizontal_table_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+      "detect_horizontal_table_lines: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      binary_img.data.length().to_string(),
     )
   }
   if min_length <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 最小线长必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_table_lines: 最小线长必须大于0",
+    )
   }
   if max_gap < 0 {
-    raise @types.LoadError::DecodeFailed("detect_horizontal_table_lines: 最大间隙不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "detect_horizontal_table_lines: 最大间隙不能为负",
+    )
   }
   let min_len = min_length
   let max_g = max_gap
@@ -147,22 +158,33 @@ pub fn detect_vertical_table_lines(
 ) -> Array[(Int, Int, Int)] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_table_lines: 图像尺寸必须大于0",
+    )
   }
   if binary_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_table_lines: 仅支持单通道二值图",
+    )
   }
   let expected_size = binary_img.width * binary_img.height
   if binary_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_vertical_table_lines: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+      "detect_vertical_table_lines: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      binary_img.data.length().to_string(),
     )
   }
   if min_length <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 最小线长必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_table_lines: 最小线长必须大于0",
+    )
   }
   if max_gap < 0 {
-    raise @types.LoadError::DecodeFailed("detect_vertical_table_lines: 最大间隙不能为负")
+    raise @types.LoadError::DecodeFailed(
+      "detect_vertical_table_lines: 最大间隙不能为负",
+    )
   }
   let min_len = min_length
   let max_g = max_gap
@@ -223,8 +245,10 @@ pub fn find_line_intersections(
   v_lines : Array[(Int, Int, Int)],
 ) -> Array[(Int, Int)] {
   let intersections : Array[(Int, Int)] = []
-  for (hy, hsx, hex) in h_lines {
-    for (vx, vsy, vey) in v_lines {
+  for _tup0 in h_lines {
+    let (hy, hsx, hex) = _tup0
+    for _tup1 in v_lines {
+      let (vx, vsy, vey) = _tup1
       if vx >= hsx && vx <= hex && hy >= vsy && hy <= vey {
         intersections.push((vx, hy))
       }
@@ -241,34 +265,52 @@ pub fn detect_table_enhanced(
 ) -> Array[EnhancedTableResult] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_table_enhanced: 图像尺寸必须大于0",
+    )
   }
   if binary_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_table_enhanced: 仅支持单通道二值图",
+    )
   }
   let expected_size = binary_img.width * binary_img.height
   if binary_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_table_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+      "detect_table_enhanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      binary_img.data.length().to_string(),
     )
   }
   if min_table_size <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_table_enhanced: 最小表格尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_table_enhanced: 最小表格尺寸必须大于0",
+    )
   }
   let min_size = min_table_size
-  let h_lines = detect_horizontal_table_lines(binary_img, min_length=50, max_gap=3)
-  let v_lines = detect_vertical_table_lines(binary_img, min_length=50, max_gap=3)
+  let h_lines = detect_horizontal_table_lines(
+    binary_img,
+    min_length=50,
+    max_gap=3,
+  )
+  let v_lines = detect_vertical_table_lines(
+    binary_img,
+    min_length=50,
+    max_gap=3,
+  )
   let intersections = find_line_intersections(h_lines, v_lines)
-  
+
   let results : Array[EnhancedTableResult] = []
-  
+
   if h_lines.length() < 2 || v_lines.length() < 2 {
     return results
   }
-  
+
   // 提取唯一的行 y 坐标和列 x 坐标
   let row_ys : Array[Int] = []
-  for (y, _, _) in h_lines {
+  for _tup2 in h_lines {
+    let (y, _, _) = _tup2
     let mut exists = false
     for ry in row_ys {
       if (ry - y).abs() <= 3 {
@@ -280,9 +322,10 @@ pub fn detect_table_enhanced(
       row_ys.push(y)
     }
   }
-  
+
   let col_xs : Array[Int] = []
-  for (x, _, _) in v_lines {
+  for _tup3 in v_lines {
+    let (x, _, _) = _tup3
     let mut exists = false
     for cx in col_xs {
       if (cx - x).abs() <= 3 {
@@ -294,7 +337,7 @@ pub fn detect_table_enhanced(
       col_xs.push(x)
     }
   }
-  
+
   // 排序
   for i in 0..<row_ys.length() {
     for j in 0..<(row_ys.length() - i - 1) {
@@ -314,23 +357,23 @@ pub fn detect_table_enhanced(
       }
     }
   }
-  
+
   let num_rows = row_ys.length() - 1
   let num_cols = col_xs.length() - 1
-  
+
   if num_rows < 1 || num_cols < 1 {
     return results
   }
-  
+
   let table_x = col_xs[0]
   let table_y = row_ys[0]
   let table_width = col_xs[col_xs.length() - 1] - table_x
   let table_height = row_ys[row_ys.length() - 1] - table_y
-  
+
   if table_width < min_size || table_height < min_size {
     return results
   }
-  
+
   // 构建单元格
   let cells : Array[TableCellContent] = []
   for row in 0..<num_rows {
@@ -355,7 +398,7 @@ pub fn detect_table_enhanced(
       cells.push(cell)
     }
   }
-  
+
   let detection = TableDetectionResult::{
     horizontal_lines: h_lines,
     vertical_lines: v_lines,
@@ -364,7 +407,7 @@ pub fn detect_table_enhanced(
     num_cols,
     confidence: 0.85,
   }
-  
+
   let result = EnhancedTableResult::{
     x: table_x,
     y: table_y,
@@ -378,16 +421,14 @@ pub fn detect_table_enhanced(
     detection,
     confidence: 0.85,
   }
-  
+
   results.push(result)
   results
 }
 
 ///|
 /// 表格转 Markdown（增强版，支持单元格内容）
-pub fn enhanced_table_to_markdown(
-  table : EnhancedTableResult,
-) -> String {
+pub fn enhanced_table_to_markdown(table : EnhancedTableResult) -> String {
   let mut md = ""
   // 表头
   if table.has_header && table.rows > 0 {
@@ -397,7 +438,7 @@ pub fn enhanced_table_to_markdown(
       md = md + cell_text + " | "
     }
     md = md + "\n| "
-    for col in 0..<table.cols {
+    for _ in 0..<table.cols {
       md = md + "--- | "
     }
     md = md + "\n"
@@ -425,11 +466,7 @@ pub fn enhanced_table_to_markdown(
 
 ///|
 /// 获取单元格文本
-fn get_cell_text(
-  table : EnhancedTableResult,
-  row : Int,
-  col : Int,
-) -> String {
+fn get_cell_text(table : EnhancedTableResult, row : Int, col : Int) -> String {
   for cell in table.cells {
     if cell.row == row && cell.col == col {
       return cell.text
@@ -449,7 +486,7 @@ pub fn extract_images_enhanced(
   let h = binary_img.height
   let images : Array[ExtractedImage] = []
   let visited : Array[Bool] = []
-  for i in 0..<(w * h) {
+  for _ in 0..<(w * h) {
     visited.push(false)
   }
   for y in 0..<h {
@@ -471,18 +508,32 @@ pub fn extract_images_enhanced(
           let cx_opt = stack_x.pop()
           let cy_opt = stack_y.pop()
           match cx_opt {
-            Some(cx) => {
+            Some(cx) =>
               match cy_opt {
                 Some(cy) => {
                   area += 1
-                  if cx < min_x { min_x = cx }
-                  if cx > max_x { max_x = cx }
-                  if cy < min_y { min_y = cy }
-                  if cy > max_y { max_y = cy }
+                  if cx < min_x {
+                    min_x = cx
+                  }
+                  if cx > max_x {
+                    max_x = cx
+                  }
+                  if cy < min_y {
+                    min_y = cy
+                  }
+                  if cy > max_y {
+                    max_y = cy
+                  }
                   // 边缘检测：检查是否有白色邻域
                   let mut is_edge = false
-                  let neighbors = [(cx - 1, cy), (cx + 1, cy), (cx, cy - 1), (cx, cy + 1)]
-                  for (nx, ny) in neighbors {
+                  let neighbors = [
+                    (cx - 1, cy),
+                    (cx + 1, cy),
+                    (cx, cy - 1),
+                    (cx, cy + 1),
+                  ]
+                  for _tup4 in neighbors {
+                    let (nx, ny) = _tup4
                     if nx >= 0 && nx < w && ny >= 0 && ny < h {
                       let nidx = ny * w + nx
                       if !visited[nidx] && binary_img.data[nidx].to_int() >= 128 {
@@ -499,20 +550,23 @@ pub fn extract_images_enhanced(
                     edge_pixels += 1
                   }
                 }
-                None => {()}
+                None => ()
               }
-            }
-            None => {()}
+            None => ()
           }
         }
         let region_width = max_x - min_x + 1
         let region_height = max_y - min_y + 1
         if area >= min && region_width > 20 && region_height > 20 {
-          let fill_ratio = area.to_double() / (region_width * region_height).to_double()
-          let aspect_ratio = region_width.to_double() / region_height.to_double()
+          let fill_ratio = area.to_double() /
+            (region_width * region_height).to_double()
+          let aspect_ratio = region_width.to_double() /
+            region_height.to_double()
           let edge_density = edge_pixels.to_double() / area.to_double()
           // 图片类型判断
-          let image_type = if fill_ratio > 0.9 && aspect_ratio > 0.8 && aspect_ratio < 1.2 {
+          let image_type = if fill_ratio > 0.9 &&
+            aspect_ratio > 0.8 &&
+            aspect_ratio < 1.2 {
             "logo"
           } else if fill_ratio > 0.8 {
             "diagram"
@@ -549,15 +603,24 @@ pub fn generate_image_extraction_report(
   images : Array[ExtractedImage],
 ) -> String {
   let mut report = "## 图片提取报告\n\n"
-  report = report + "共提取 " + images.length().to_string() + " 张图片\n\n"
-  report = report + "| 序号 | 类型 | 位置 | 尺寸 | 宽高比 | 填充率 | 置信度 | 文件名 |\n"
-  report = report + "|------|------|------|------|--------|--------|--------|--------|\n"
+  report = report +
+    "共提取 " +
+    images.length().to_string() +
+    " 张图片\n\n"
+  report = report +
+    "| 序号 | 类型 | 位置 | 尺寸 | 宽高比 | 填充率 | 置信度 | 文件名 |\n"
+  report = report +
+    "|------|------|------|------|--------|--------|--------|--------|\n"
   for i in 0..<images.length() {
     let img = images[i]
     report = report + "| " + (i + 1).to_string() + " | "
     report = report + img.image_type + " | "
     report = report + "(" + img.x.to_string() + "," + img.y.to_string() + ") | "
-    report = report + img.width.to_string() + "x" + img.height.to_string() + " | "
+    report = report +
+      img.width.to_string() +
+      "x" +
+      img.height.to_string() +
+      " | "
     report = report + img.aspect_ratio.to_string() + " | "
     report = report + (img.fill_ratio * 100.0).to_string() + "% | "
     report = report + (img.confidence * 100.0).to_string() + "% | "

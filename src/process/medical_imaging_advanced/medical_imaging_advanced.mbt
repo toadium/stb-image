@@ -213,10 +213,10 @@ pub fn segment_medical_image(
   let class_names = ["background", "organ", "lesion", "other"]
 
   let mut state = 42
-  for y in 0..<height {
+  for _ in 0..<height {
     let row : Array[Int] = []
     let conf_row : Array[Double] = []
-    for x in 0..<width {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
       let class_idx = state % 4
       row.push(class_idx)
@@ -259,8 +259,11 @@ pub fn detect_lesions(
   let lesions : Array[DetectedLesion] = []
 
   let lesion_types = [
-    LesionType::Tumor, LesionType::Nodule, LesionType::Cyst,
-    LesionType::Calcification, LesionType::Unknown
+    LesionType::Tumor,
+    LesionType::Nodule,
+    LesionType::Cyst,
+    LesionType::Calcification,
+    LesionType::Unknown,
   ]
 
   let mut state = 42
@@ -272,9 +275,9 @@ pub fn detect_lesions(
     state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 100)
     state = (state * 11035 + 12345) % 1000000
-    let w = (state % 50) + 20
+    let w = state % 50 + 20
     state = (state * 11035 + 12345) % 1000000
-    let h = (state % 50) + 20
+    let h = state % 50 + 20
     state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
     state = (state * 11035 + 12345) % 1000000
@@ -301,7 +304,10 @@ pub fn detect_lesions(
       severity,
       volume,
       surface_area: volume * 0.8,
-      location: [x.to_double() + w.to_double() / 2.0, y.to_double() + h.to_double() / 2.0],
+      location: [
+        x.to_double() + w.to_double() / 2.0,
+        y.to_double() + h.to_double() / 2.0,
+      ],
       is_malignant,
       malignancy_risk,
     }
@@ -324,19 +330,23 @@ pub fn segment_organ(
   let mask : Array[Array[Bool]] = []
   let mut state = 42
 
-  for y in 0..<height {
+  for _ in 0..<height {
     let row : Array[Bool] = []
-    for x in 0..<width {
+    for _ in 0..<width {
       state = (state * 11035 + 12345) % 1000000
-      let is_organ = (state % 10) < 3
+      let is_organ = state % 10 < 3
       row.push(is_organ)
     }
     mask.push(row)
   }
 
-  let volume = width.to_double() * height.to_double() * config.slice_thickness * 0.3
+  let volume = width.to_double() *
+    height.to_double() *
+    config.slice_thickness *
+    0.3
   let normal_volumes = [
-    1500.0, 300.0, 6000.0, 1500.0, 300.0, 200.0, 100.0, 1500.0, 2000.0, 10000.0, 5000.0, 1000.0
+    1500.0, 300.0, 6000.0, 1500.0, 300.0, 200.0, 100.0, 1500.0, 2000.0, 10000.0,
+    5000.0, 1000.0,
   ]
   let organ_idx = match organ_type {
     OrganType::Brain => 0
@@ -472,46 +482,61 @@ pub fn medical_imaging_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    MedicalImagingTaskType::ImageSegmentation => "图像分割"
-    MedicalImagingTaskType::LesionDetection => "病灶检测"
-    MedicalImagingTaskType::OrganSegmentation => "器官分割"
-    MedicalImagingTaskType::Radiomics => "放射组学"
-    MedicalImagingTaskType::ImageRegistration => "图像配准"
-    MedicalImagingTaskType::Reconstruction3D => "三维重建"
-    MedicalImagingTaskType::DiseaseClassification => "疾病分类"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 图像类型 | " + (match config.image_type {
-    MedicalImageType::XRay => "X射线"
-    MedicalImageType::CT => "CT"
-    MedicalImageType::MRI => "MRI"
-    MedicalImageType::Ultrasound => "超声"
-    MedicalImageType::PET => "PET"
-    MedicalImageType::Mammography => "乳腺X线"
-    MedicalImageType::Endoscopy => "内镜"
-    MedicalImageType::Histopathology => "组织病理"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 目标器官 | " + (match config.target_organ {
-    OrganType::Brain => "脑"
-    OrganType::Heart => "心脏"
-    OrganType::Lung => "肺"
-    OrganType::Liver => "肝"
-    OrganType::Kidney => "肾"
-    OrganType::Spleen => "脾"
-    OrganType::Pancreas => "胰腺"
-    OrganType::Stomach => "胃"
-    OrganType::Intestine => "肠"
-    OrganType::Bone => "骨"
-    OrganType::Muscle => "肌肉"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      MedicalImagingTaskType::ImageSegmentation => "图像分割"
+      MedicalImagingTaskType::LesionDetection => "病灶检测"
+      MedicalImagingTaskType::OrganSegmentation => "器官分割"
+      MedicalImagingTaskType::Radiomics => "放射组学"
+      MedicalImagingTaskType::ImageRegistration => "图像配准"
+      MedicalImagingTaskType::Reconstruction3D => "三维重建"
+      MedicalImagingTaskType::DiseaseClassification => "疾病分类"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 图像类型 | " +
+    (match config.image_type {
+      MedicalImageType::XRay => "X射线"
+      MedicalImageType::CT => "CT"
+      MedicalImageType::MRI => "MRI"
+      MedicalImageType::Ultrasound => "超声"
+      MedicalImageType::PET => "PET"
+      MedicalImageType::Mammography => "乳腺X线"
+      MedicalImageType::Endoscopy => "内镜"
+      MedicalImageType::Histopathology => "组织病理"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 目标器官 | " +
+    (match config.target_organ {
+      OrganType::Brain => "脑"
+      OrganType::Heart => "心脏"
+      OrganType::Lung => "肺"
+      OrganType::Liver => "肝"
+      OrganType::Kidney => "肾"
+      OrganType::Spleen => "脾"
+      OrganType::Pancreas => "胰腺"
+      OrganType::Stomach => "胃"
+      OrganType::Intestine => "肠"
+      OrganType::Bone => "骨"
+      OrganType::Muscle => "肌肉"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 分割方法 | " + config.segmentation_method + " |\n"
-  report = report + "| 检测阈值 | " + config.detection_threshold.to_string() + " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.to_string() +
+    " |\n"
   report = report + "| 窗位 | " + config.window_level.to_string() + " |\n"
   report = report + "| 窗宽 | " + config.window_width.to_string() + " |\n"
-  report = report + "| 3D模式 | " + (if config.use_3d { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 3D模式 | " +
+    (if config.use_3d { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

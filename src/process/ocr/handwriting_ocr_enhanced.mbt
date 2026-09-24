@@ -10,8 +10,8 @@ pub(all) struct HandwritingOcrEnhancedConfig {
   max_char_height : Int
   target_size : Int
   distance_metric : String
-  num_variants : Int  // 每字符变体数量
-  elasticity : Double  // 弹性匹配程度 0.0-1.0
+  num_variants : Int // 每字符变体数量
+  elasticity : Double // 弹性匹配程度 0.0-1.0
   use_slant_correction : Bool
   use_elastic_matching : Bool
   use_stroke_features : Bool
@@ -40,11 +40,11 @@ pub fn handwriting_ocr_enhanced_default_config() -> HandwritingOcrEnhancedConfig
 ///|
 /// 手写体笔画特征
 pub(all) struct HandwritingStrokeFeatures {
-  num_strokes : Int  // 估计笔画数
-  stroke_directions : Array[Double]  // 主要笔画方向（弧度）
-  stroke_lengths : Array[Double]  // 笔画长度
-  connectivity : Double  // 连通性（连笔程度）
-  curvature : Double  // 曲率（弯曲程度）
+  num_strokes : Int // 估计笔画数
+  stroke_directions : Array[Double] // 主要笔画方向（弧度）
+  stroke_lengths : Array[Double] // 笔画长度
+  connectivity : Double // 连通性（连笔程度）
+  curvature : Double // 曲率（弯曲程度）
 }
 
 ///|
@@ -57,17 +57,19 @@ pub fn generate_enhanced_handwriting_templates(
   let chars = if char_set == "digits" {
     ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
   } else {
-    ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-     "U", "V", "W", "X", "Y", "Z",
-     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-     "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-     "u", "v", "w", "x", "y", "z"]
+    [
+      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E",
+      "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+      "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
+      "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
+      "y", "z",
+    ]
   }
   for char in chars {
     for variant in 0..<num_variants {
-      let template = generate_enhanced_handwriting_char_template(char, variant, num_variants)
+      let template = generate_enhanced_handwriting_char_template(
+        char, variant, num_variants,
+      )
       let label = char + "_v" + variant.to_string()
       templates.push((label, template))
     }
@@ -84,18 +86,25 @@ fn generate_enhanced_handwriting_char_template(
 ) -> Array[Double] {
   let size = 32
   let features : Array[Double] = Array::make(size * size, 0.0)
-  let seed = if char.length() > 0 { char[0].to_int() + variant * 137 } else { 0 }
+  let seed = if char.length() > 0 {
+    char[0].to_int() + variant * 137
+  } else {
+    0
+  }
   // 变体参数（每个变体有不同的倾斜、宽度、位置）
-  let slant = ((variant - num_variants / 2) * 3).to_double()  // 倾斜角度
-  let width_scale = 0.85 + (variant % 3).to_double() * 0.1  // 宽度缩放
-  let y_offset = (variant % 2) * 2 - 1  // 垂直偏移
+  let slant = ((variant - num_variants / 2) * 3).to_double() // 倾斜角度
+  let width_scale = 0.85 + (variant % 3).to_double() * 0.1 // 宽度缩放
+  let y_offset = variant % 2 * 2 - 1 // 垂直偏移
   let center_x = (size.to_double() / 2.0 * width_scale).to_int()
   let center_y = size / 2 + y_offset
   for y in 0..<size {
     for x in 0..<size {
       // 应用倾斜变换
       let slant_rad = slant * 3.141592653589793 / 180.0
-      let transformed_x = (x.to_double() - center_x.to_double()) - (y.to_double() - center_y.to_double()) * @math.tan(slant_rad) + center_x.to_double()
+      let transformed_x = x.to_double() -
+        center_x.to_double() -
+        (y.to_double() - center_y.to_double()) * @math.tan(slant_rad) +
+        center_x.to_double()
       let tx = transformed_x.to_int()
       // 多层哈希
       let h1 = (seed * 31 + tx * 17 + y * 13) % 100
@@ -103,8 +112,10 @@ fn generate_enhanced_handwriting_char_template(
       let h3 = ((seed << 2) ^ (tx << 1) ^ y) % 100
       let combined = (h1 * 4 + h2 * 3 + h3 * 2) / 9
       // 中心权重（手写体通常居中但有偏移）
-      let center_dist = ((tx - center_x) * (tx - center_x) + (y - center_y) * (y - center_y)).to_double()
-      let center_factor = 1.0 - center_dist / (size.to_double() * size.to_double() / 2.5)
+      let center_dist = ((tx - center_x) * (tx - center_x) +
+      (y - center_y) * (y - center_y)).to_double()
+      let center_factor = 1.0 -
+        center_dist / (size.to_double() * size.to_double() / 2.5)
       // 弹性变形（边缘更模糊）
       let edge_factor = if tx < 2 || tx >= size - 2 || y < 2 || y >= size - 2 {
         0.6
@@ -127,15 +138,22 @@ pub fn extract_handwriting_stroke_features(
 ) -> HandwritingStrokeFeatures raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("extract_handwriting_stroke_features: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "extract_handwriting_stroke_features: 图像尺寸必须大于0",
+    )
   }
   if char_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("extract_handwriting_stroke_features: 仅支持单通道灰度图")
+    raise @types.LoadError::DecodeFailed(
+      "extract_handwriting_stroke_features: 仅支持单通道灰度图",
+    )
   }
   let expected_size = char_img.width * char_img.height
   if char_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "extract_handwriting_stroke_features: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + char_img.data.length().to_string(),
+      "extract_handwriting_stroke_features: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      char_img.data.length().to_string(),
     )
   }
   let w = char_img.width
@@ -155,10 +173,20 @@ pub fn extract_handwriting_stroke_features(
         while stack.length() > 0 {
           match stack.pop() {
             Some((cx, cy)) => {
-              let neighbors = [(cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)]
-              for (nx, ny) in neighbors {
-                if nx >= 0 && nx < w && ny >= 0 && ny < h &&
-                   data[ny * w + nx].to_int() > 128 && labels[ny * w + nx] == 0 {
+              let neighbors = [
+                (cx + 1, cy),
+                (cx - 1, cy),
+                (cx, cy + 1),
+                (cx, cy - 1),
+              ]
+              for _tup0 in neighbors {
+                let (nx, ny) = _tup0
+                if nx >= 0 &&
+                  nx < w &&
+                  ny >= 0 &&
+                  ny < h &&
+                  data[ny * w + nx].to_int() > 128 &&
+                  labels[ny * w + nx] == 0 {
                   labels[ny * w + nx] = num_components
                   stack.push((nx, ny))
                 }
@@ -176,8 +204,10 @@ pub fn extract_handwriting_stroke_features(
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       if data[y * w + x].to_int() > 128 {
-        let gx = data[y * w + x + 1].to_int().to_double() - data[y * w + x - 1].to_int().to_double()
-        let gy = data[(y + 1) * w + x].to_int().to_double() - data[(y - 1) * w + x].to_int().to_double()
+        let gx = data[y * w + x + 1].to_int().to_double() -
+          data[y * w + x - 1].to_int().to_double()
+        let gy = data[(y + 1) * w + x].to_int().to_double() -
+          data[(y - 1) * w + x].to_int().to_double()
         let grad = (gx * gx + gy * gy).sqrt()
         if grad > 10.0 {
           let angle = @math.atan2(gy, gx)
@@ -205,7 +235,11 @@ pub fn extract_handwriting_stroke_features(
     let mut prev_angle = directions[0]
     for i in 1..<directions.length() {
       let diff = (directions[i] - prev_angle).abs()
-      curvature += if diff > 3.141592653589793 { 6.283185307179586 - diff } else { diff }
+      curvature += if diff > 3.141592653589793 {
+        6.283185307179586 - diff
+      } else {
+        diff
+      }
       prev_angle = directions[i]
     }
     curvature = curvature / directions.length().to_double()
@@ -227,7 +261,11 @@ pub fn elastic_match(
   elasticity? : Double = 0.5,
   grid_size? : Int = 16,
 ) -> Double {
-  let n = if features.length() < template.length() { features.length() } else { template.length() }
+  let n = if features.length() < template.length() {
+    features.length()
+  } else {
+    template.length()
+  }
   // 基础距离
   let mut base_dist = 0.0
   for i in 0..<n {
@@ -240,7 +278,7 @@ pub fn elastic_match(
   let mut local_similarity = 0.0
   for block in 0..<grid_size {
     let start = block * cell
-    let end = if (start + cell) < n { start + cell } else { n }
+    let end = if start + cell < n { start + cell } else { n }
     let mut block_dist = 0.0
     for i in start..<end {
       let diff = features[i] - template[i]
@@ -279,8 +317,9 @@ pub fn segment_cursive_chars(
   // 检测分割点（投影局部最小值）
   let split_points : Array[Int] = []
   for x in 2..<(w - 2) {
-    if projection[x] < projection[x - 1] && projection[x] < projection[x + 1] &&
-       projection[x] < h / 10 {
+    if projection[x] < projection[x - 1] &&
+      projection[x] < projection[x + 1] &&
+      projection[x] < h / 10 {
       split_points.push(x)
     }
   }
@@ -296,8 +335,12 @@ pub fn segment_cursive_chars(
       for x in prev_x..<split_x {
         for y in 0..<h {
           if data[y * w + x].to_int() > 128 {
-            if y < min_y { min_y = y }
-            if y > max_y { max_y = y }
+            if y < min_y {
+              min_y = y
+            }
+            if y > max_y {
+              max_y = y
+            }
           }
         }
       }
@@ -315,8 +358,12 @@ pub fn segment_cursive_chars(
     for x in prev_x..<w {
       for y in 0..<h {
         if data[y * w + x].to_int() > 128 {
-          if y < min_y { min_y = y }
-          if y > max_y { max_y = y }
+          if y < min_y {
+            min_y = y
+          }
+          if y > max_y {
+            max_y = y
+          }
         }
       }
     }
@@ -353,15 +400,22 @@ pub fn recognize_handwriting_enhanced(
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_enhanced: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_enhanced: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("recognize_handwriting_enhanced: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "recognize_handwriting_enhanced: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "recognize_handwriting_enhanced: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "recognize_handwriting_enhanced: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let cfg = match config {
@@ -376,29 +430,52 @@ pub fn recognize_handwriting_enhanced(
   }
   // 3. 连笔字符分割
   let char_regions = if cfg.use_elastic_matching {
-    segment_cursive_chars(preprocessed, min_char_width=cfg.min_char_width, max_char_width=cfg.max_char_width)
+    segment_cursive_chars(
+      preprocessed,
+      min_char_width=cfg.min_char_width,
+      max_char_width=cfg.max_char_width,
+    )
   } else {
     segment_handwriting_chars_simple(preprocessed, cfg)
   }
   // 4. 生成增强手写体模板
-  let templates = generate_enhanced_handwriting_templates(char_set="digits+letters", num_variants=cfg.num_variants)
+  let templates = generate_enhanced_handwriting_templates(
+    char_set="digits+letters",
+    num_variants=cfg.num_variants,
+  )
   // 5. 对每个字符进行识别
   let char_results : Array[OcrCharResult] = []
   let mut text = ""
   let mut total_confidence = 0.0
-  for (x, y, w, h) in char_regions {
+  for _tup1 in char_regions {
+    let (x, y, w, h) = _tup1
     // 提取字符图像
-    let char_img = extract_handwriting_char_region_enhanced(preprocessed, x, y, w, h, cfg.target_size)
+    let char_img = extract_handwriting_char_region_enhanced(
+      preprocessed,
+      x,
+      y,
+      w,
+      h,
+      cfg.target_size,
+    )
     // 提取网格特征
     let features = extract_handwriting_grid_features(char_img, 16)
     // 提取笔画特征（如果启用）
     let stroke_features = if cfg.use_stroke_features {
       extract_handwriting_stroke_features(char_img)
     } else {
-      HandwritingStrokeFeatures::{ num_strokes: 0, stroke_directions: [], stroke_lengths: [], connectivity: 0.0, curvature: 0.0 }
+      HandwritingStrokeFeatures::{
+        num_strokes: 0,
+        stroke_directions: [],
+        stroke_lengths: [],
+        connectivity: 0.0,
+        curvature: 0.0,
+      }
     }
     // 模板匹配（多变体投票 + 弹性匹配）
-    let result = match_handwriting_enhanced(features, templates, stroke_features, cfg)
+    let result = match_handwriting_enhanced(
+      features, templates, stroke_features, cfg,
+    )
     // 后处理（如果启用）
     let (final_char, final_conf) = if cfg.use_postprocessing {
       handwriting_postprocess(result.0, result.1)
@@ -421,11 +498,7 @@ pub fn recognize_handwriting_enhanced(
   } else {
     0.0
   }
-  OcrResult::{
-    text,
-    confidence: avg_confidence,
-    characters: char_results,
-  }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
 }
 
 ///|
@@ -469,10 +542,18 @@ fn segment_handwriting_chars_simple(
       let label = labels[y * w + x]
       if label > 0 {
         area[label] += 1
-        if x < min_x[label] { min_x[label] = x }
-        if x > max_x[label] { max_x[label] = x }
-        if y < min_y[label] { min_y[label] = y }
-        if y > max_y[label] { max_y[label] = y }
+        if x < min_x[label] {
+          min_x[label] = x
+        }
+        if x > max_x[label] {
+          max_x[label] = x
+        }
+        if y < min_y[label] {
+          min_y[label] = y
+        }
+        if y > max_y[label] {
+          max_y[label] = y
+        }
       }
     }
   }
@@ -480,9 +561,11 @@ fn segment_handwriting_chars_simple(
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
-    if rw >= cfg.min_char_width && rw <= cfg.max_char_width &&
-       rh >= cfg.min_char_height && rh <= cfg.max_char_height &&
-       area[label] > 15 {
+    if rw >= cfg.min_char_width &&
+      rw <= cfg.max_char_width &&
+      rh >= cfg.min_char_height &&
+      rh <= cfg.max_char_height &&
+      area[label] > 15 {
       regions.push((min_x[label], min_y[label], rw, rh))
     }
   }
@@ -505,20 +588,30 @@ fn extract_handwriting_char_region_enhanced(
   let crop_h = if y + height > h { h - y } else { height }
   if crop_w <= 0 || crop_h <= 0 {
     let empty : Array[Byte] = Array::make(target_size * target_size, b'\x00')
-    return @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(empty) }
+    return @types.Image::{
+      width: target_size,
+      height: target_size,
+      channels: 1,
+      data: Bytes::from_array(empty),
+    }
   }
   let out : Array[Byte] = Array::make(target_size * target_size, b'\x00')
   let data = img.data
   for py in 0..<target_size {
     for px in 0..<target_size {
-      let src_x = x + (px * crop_w / target_size)
-      let src_y = y + (py * crop_h / target_size)
+      let src_x = x + px * crop_w / target_size
+      let src_y = y + py * crop_h / target_size
       if src_x < w && src_y < h {
         out[py * target_size + px] = data[src_y * w + src_x]
       }
     }
   }
-  @types.Image::{ width: target_size, height: target_size, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: target_size,
+    height: target_size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
@@ -549,7 +642,11 @@ fn extract_handwriting_grid_features(
           }
         }
       }
-      let density = if total > 0 { count.to_double() / total.to_double() } else { 0.0 }
+      let density = if total > 0 {
+        count.to_double() / total.to_double()
+      } else {
+        0.0
+      }
       features.push(density)
     }
   }
@@ -566,12 +663,17 @@ fn match_handwriting_enhanced(
 ) -> (String, Double) {
   // 收集所有变体的预测
   let label_votes : Array[(String, Double)] = []
-  for (label_full, template) in templates {
+  for _tup2 in templates {
+    let (label_full, template) = _tup2
     // 弹性匹配（如果启用）
     let dist = if cfg.use_elastic_matching {
       elastic_match(features, template, elasticity=cfg.elasticity, grid_size=16)
     } else {
-      let n = if features.length() < template.length() { features.length() } else { template.length() }
+      let n = if features.length() < template.length() {
+        features.length()
+      } else {
+        template.length()
+      }
       let mut sum_sq = 0.0
       for i in 0..<n {
         let diff = features[i] - template[i]
@@ -602,13 +704,18 @@ fn match_handwriting_enhanced(
   let mut best_label = "?"
   let mut best_votes = 0.0
   let mut total_votes = 0.0
-  for (label, votes) in label_votes {
+  for _tup3 in label_votes {
+    let (label, votes) = _tup3
     total_votes += votes
     if votes > best_votes {
       best_votes = votes
       best_label = label
     }
   }
-  let confidence = if total_votes > 0.0 { best_votes / total_votes } else { 0.0 }
+  let confidence = if total_votes > 0.0 {
+    best_votes / total_votes
+  } else {
+    0.0
+  }
   (best_label, confidence)
 }

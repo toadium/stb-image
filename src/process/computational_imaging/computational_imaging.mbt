@@ -155,20 +155,23 @@ pub fn create_default_phase_config() -> PhaseRetrievalConfig {
 
 ///|
 /// 创建默认编码孔径模式
-pub fn create_default_coded_aperture(
-  size : Int,
-) -> CodedAperturePattern {
+pub fn create_default_coded_aperture(size : Int) -> CodedAperturePattern {
   let total = size * size
   let out : Array[Byte] = []
   let mut state = 42
 
   for _ in 0..<total {
     state = (state * 11035 + 12345) % 1000000
-    let value = if (state % 2) == 0 { 255 } else { 0 }
+    let value = if state % 2 == 0 { 255 } else { 0 }
     out.push(value.to_byte())
   }
 
-  let pattern = @types.Image::{ width: size, height: size, channels: 1, data: Bytes::from_array(out) }
+  let pattern = @types.Image::{
+    width: size,
+    height: size,
+    channels: 1,
+    data: Bytes::from_array(out),
+  }
 
   CodedAperturePattern::{
     pattern,
@@ -208,7 +211,12 @@ pub fn generate_sample_lightfield(
         }
       }
 
-      views.push(@types.Image::{ width: w, height: h, channels: base_image.channels, data: Bytes::from_array(out) })
+      views.push(@types.Image::{
+        width: w,
+        height: h,
+        channels: base_image.channels,
+        data: Bytes::from_array(out),
+      })
     }
   }
 
@@ -230,7 +238,12 @@ pub fn lightfield_refocus(
 ) -> RefocusResult {
   if lightfield.views.length() == 0 {
     return RefocusResult::{
-      image: @types.Image::{ width: 1, height: 1, channels: 1, data: Bytes::make(1, b'\x00') },
+      image: @types.Image::{
+        width: 1,
+        height: 1,
+        channels: 1,
+        data: Bytes::make(1, b'\x00'),
+      },
       focus_depth,
       aperture_size,
       num_views_used: 0,
@@ -286,13 +299,28 @@ pub fn lightfield_refocus(
   // 归一化
   let out : Array[Byte] = []
   for i in 0..<total {
-    let value = if num_views_used > 0 { accumulator[i] / num_views_used.to_double() } else { 0.0 }
-    let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+    let value = if num_views_used > 0 {
+      accumulator[i] / num_views_used.to_double()
+    } else {
+      0.0
+    }
+    let clamped = if value < 0.0 {
+      0.0
+    } else if value > 255.0 {
+      255.0
+    } else {
+      value
+    }
     out.push(clamped.to_int().to_byte())
   }
 
   RefocusResult::{
-    image: @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels,
+      data: Bytes::from_array(out),
+    },
     focus_depth,
     aperture_size,
     num_views_used,
@@ -308,7 +336,12 @@ pub fn synthesize_view(
 ) -> ViewSynthesisResult {
   if lightfield.views.length() < 4 {
     return ViewSynthesisResult::{
-      image: @types.Image::{ width: 1, height: 1, channels: 1, data: Bytes::make(1, b'\x00') },
+      image: @types.Image::{
+        width: 1,
+        height: 1,
+        channels: 1,
+        data: Bytes::make(1, b'\x00'),
+      },
       view_position: [target_x, target_y],
       num_source_views: 0,
       interpolation_method: "none",
@@ -344,15 +377,26 @@ pub fn synthesize_view(
   let out : Array[Byte] = []
   for i in 0..<total {
     let value = v00.data[i].to_double() * (1.0 - wx) * (1.0 - wy) +
-                v01.data[i].to_double() * wx * (1.0 - wy) +
-                v10.data[i].to_double() * (1.0 - wx) * wy +
-                v11.data[i].to_double() * wx * wy
-    let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      v01.data[i].to_double() * wx * (1.0 - wy) +
+      v10.data[i].to_double() * (1.0 - wx) * wy +
+      v11.data[i].to_double() * wx * wy
+    let clamped = if value < 0.0 {
+      0.0
+    } else if value > 255.0 {
+      255.0
+    } else {
+      value
+    }
     out.push(clamped.to_int().to_byte())
   }
 
   ViewSynthesisResult::{
-    image: @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels,
+      data: Bytes::from_array(out),
+    },
     view_position: [target_x, target_y],
     num_source_views: 4,
     interpolation_method: "bilinear",
@@ -369,7 +413,7 @@ pub fn generate_hologram(
 ) -> Hologram {
   let w = image.width
   let h = image.height
-  let total = w * h
+  let _ = w * h
   let intensity_out : Array[Byte] = []
   let phase_out : Array[Byte] = []
 
@@ -380,12 +424,16 @@ pub fn generate_hologram(
       let gray = image.data[idx].to_double() / 255.0
 
       // 简化的相位计算
-      let phase = (x.to_double() * x.to_double() + y.to_double() * y.to_double()) *
-                  3.14159 / (wavelength * distance)
-      let phase_norm = ((phase % 6.28318) / 6.28318 * 255.0)
+      let phase = (
+          x.to_double() * x.to_double() + y.to_double() * y.to_double()
+        ) *
+        3.14159 /
+        (wavelength * distance)
+      let phase_norm = phase % 6.28318 / 6.28318 * 255.0
 
       // 干涉图样
-      let interference = gray * 127.0 + 128.0 * (0.5 + 0.5 * cos_approx(phase_norm))
+      let interference = gray * 127.0 +
+        128.0 * (0.5 + 0.5 * cos_approx(phase_norm))
 
       intensity_out.push(interference.to_int().to_byte())
       phase_out.push(phase_norm.to_int().to_byte())
@@ -393,8 +441,18 @@ pub fn generate_hologram(
   }
 
   Hologram::{
-    intensity: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(intensity_out) },
-    phase: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(phase_out) },
+    intensity: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(intensity_out),
+    },
+    phase: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(phase_out),
+    },
     hologram_type: HologramType::Fresnel,
     wavelength,
     distance,
@@ -404,12 +462,10 @@ pub fn generate_hologram(
 
 ///|
 /// 全息图重建（简化版）
-pub fn reconstruct_hologram(
-  hologram : Hologram,
-) -> ImagingReconstructionResult {
+pub fn reconstruct_hologram(hologram : Hologram) -> ImagingReconstructionResult {
   let w = hologram.intensity.width
   let h = hologram.intensity.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   // 简化的重建：直接使用强度图的逆变换
@@ -419,13 +475,24 @@ pub fn reconstruct_hologram(
       let value = hologram.intensity.data[idx].to_double()
       // 简化的重建：对比度增强
       let reconstructed = (value - 128.0) * 1.5 + 128.0
-      let clamped = if reconstructed < 0.0 { 0.0 } else if reconstructed > 255.0 { 255.0 } else { reconstructed }
+      let clamped = if reconstructed < 0.0 {
+        0.0
+      } else if reconstructed > 255.0 {
+        255.0
+      } else {
+        reconstructed
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
   ImagingReconstructionResult::{
-    image: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     algorithm: ComputationalImagingAlgorithm::Holography,
     num_iterations: 1,
     convergence_error: 0.0,
@@ -455,7 +522,9 @@ pub fn ct_reconstruct_fbp(
     for angle_idx in 0..<projections.num_angles {
       if angle_idx < projections.projections.length() {
         let proj = projections.projections[angle_idx]
-        let angle = angle_idx.to_double() * projections.angular_range / projections.num_angles.to_double()
+        let angle = angle_idx.to_double() *
+          projections.angular_range /
+          projections.num_angles.to_double()
         let cos_a = cos_approx(angle)
         let sin_a = sin_approx(angle)
 
@@ -468,7 +537,8 @@ pub fn ct_reconstruct_fbp(
 
             if detector_idx >= 0 && detector_idx < num_detectors {
               let idx = y * output_size + x
-              let value = out[idx].to_double() + proj.data[detector_idx].to_double() * 0.1
+              let value = out[idx].to_double() +
+                proj.data[detector_idx].to_double() * 0.1
               let clamped = if value > 255.0 { 255.0 } else { value }
               out[idx] = clamped.to_int().to_byte()
             }
@@ -479,7 +549,12 @@ pub fn ct_reconstruct_fbp(
   }
 
   ImagingReconstructionResult::{
-    image: @types.Image::{ width: output_size, height: output_size, channels: 1, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: output_size,
+      height: output_size,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     algorithm: ComputationalImagingAlgorithm::ComputedTomography,
     num_iterations: 1,
     convergence_error: 0.0,
@@ -520,13 +595,25 @@ pub fn phase_retrieval(
   // 生成重建图像
   let out : Array[Byte] = []
   for i in 0..<total {
-    let value = magnitude.data[i].to_double() * (0.5 + 0.5 * cos_approx(phase[i]))
-    let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+    let value = magnitude.data[i].to_double() *
+      (0.5 + 0.5 * cos_approx(phase[i]))
+    let clamped = if value < 0.0 {
+      0.0
+    } else if value > 255.0 {
+      255.0
+    } else {
+      value
+    }
     out.push(clamped.to_int().to_byte())
   }
 
   ImagingReconstructionResult::{
-    image: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     algorithm: ComputationalImagingAlgorithm::PhaseRetrieval,
     num_iterations: config.num_iterations,
     convergence_error: error,
@@ -544,13 +631,13 @@ pub fn coded_aperture_reconstruct(
 ) -> ImagingReconstructionResult {
   let w = measurement.width
   let h = measurement.height
-  let total = w * h
+  let _ = w * h
   let out : Array[Byte] = []
 
   // 简化的反卷积重建
   for y in 0..<h {
     for x in 0..<w {
-      let idx = y * w + x
+      let _ = y * w + x
       let mut sum = 0.0
       let mut count = 0
 
@@ -560,7 +647,8 @@ pub fn coded_aperture_reconstruct(
           let src_x = x + dx
           let src_y = y + dy
           if src_x >= 0 && src_x < w && src_y >= 0 && src_y < h {
-            let pat_idx = ((src_y % pattern.pattern_size) * pattern.pattern_size + (src_x % pattern.pattern_size))
+            let pat_idx = src_y % pattern.pattern_size * pattern.pattern_size +
+              src_x % pattern.pattern_size
             if pattern.pattern.data[pat_idx].to_int() > 128 {
               sum += measurement.data[src_y * w + src_x].to_double()
               count += 1
@@ -570,13 +658,24 @@ pub fn coded_aperture_reconstruct(
       }
 
       let value = if count > 0 { sum / count.to_double() } else { 0.0 }
-      let clamped = if value < 0.0 { 0.0 } else if value > 255.0 { 255.0 } else { value }
+      let clamped = if value < 0.0 {
+        0.0
+      } else if value > 255.0 {
+        255.0
+      } else {
+        value
+      }
       out.push(clamped.to_int().to_byte())
     }
   }
 
   ImagingReconstructionResult::{
-    image: @types.Image::{ width: w, height: h, channels: 1, data: Bytes::from_array(out) },
+    image: @types.Image::{
+      width: w,
+      height: h,
+      channels: 1,
+      data: Bytes::from_array(out),
+    },
     algorithm: ComputationalImagingAlgorithm::CodedAperture,
     num_iterations: 1,
     convergence_error: 0.0,
@@ -596,22 +695,39 @@ pub fn computational_imaging_report_to_string(
   report = report + "### 重建信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 算法 | " + algorithm_name + " |\n"
-  report = report + "| 迭代次数 | " + result.num_iterations.to_string() + " |\n"
-  report = report + "| 收敛误差 | " + result.convergence_error.to_string() + " |\n"
-  report = report + "| 重建时间 | " + result.reconstruction_time_ms.to_string() + " ms |\n"
+  report = report +
+    "| 迭代次数 | " +
+    result.num_iterations.to_string() +
+    " |\n"
+  report = report +
+    "| 收敛误差 | " +
+    result.convergence_error.to_string() +
+    " |\n"
+  report = report +
+    "| 重建时间 | " +
+    result.reconstruction_time_ms.to_string() +
+    " ms |\n"
   report = report + "| PSNR | " + result.psnr.to_string() + " dB |\n"
   report = report + "| SSIM | " + result.ssim.to_string() + " |\n"
-  report = report + "| 图像尺寸 | " + result.image.width.to_string() + "x" + result.image.height.to_string() + " |\n"
+  report = report +
+    "| 图像尺寸 | " +
+    result.image.width.to_string() +
+    "x" +
+    result.image.height.to_string() +
+    " |\n"
 
   report
 }
 
 // 辅助函数：Double 的近似三角函数
+
+///|
 fn cos_approx(x : Double) -> Double {
   let x2 = x * x
   1.0 - x2 / 2.0 + x2 * x2 / 24.0
 }
 
+///|
 fn sin_approx(x : Double) -> Double {
   let x2 = x * x
   x - x * x2 / 6.0 + x * x2 * x2 / 120.0

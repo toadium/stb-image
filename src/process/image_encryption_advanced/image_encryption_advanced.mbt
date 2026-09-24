@@ -273,7 +273,13 @@ pub fn encrypt_image(
 ) -> EncryptionResult {
   let image_bytes : Array[Byte] = []
   for value in image {
-    let int_val = if value < 0.0 { 0 } else if value > 255.0 { 255 } else { value.to_int() }
+    let int_val = if value < 0.0 {
+      0
+    } else if value > 255.0 {
+      255
+    } else {
+      value.to_int()
+    }
     let b : Byte = int_val.to_byte()
     image_bytes.push(b)
   }
@@ -348,15 +354,29 @@ pub fn chaotic_encrypt(
 ) -> ChaoticEncryptionResult {
   let image_bytes : Array[Byte] = []
   for value in image {
-    let int_val = if value < 0.0 { 0 } else if value > 255.0 { 255 } else { value.to_int() }
+    let int_val = if value < 0.0 {
+      0
+    } else if value > 255.0 {
+      255
+    } else {
+      value.to_int()
+    }
     let b : Byte = int_val.to_byte()
     image_bytes.push(b)
   }
 
   // 简化的Logistic混沌序列
   let chaotic_key : Array[Byte] = []
-  let mut x = if config.initial_condition.length() > 0 { config.initial_condition[0] } else { 0.5 }
-  let r = if config.control_parameters.length() > 0 { config.control_parameters[0] } else { 3.99 }
+  let mut x = if config.initial_condition.length() > 0 {
+    config.initial_condition[0]
+  } else {
+    0.5
+  }
+  let r = if config.control_parameters.length() > 0 {
+    config.control_parameters[0]
+  } else {
+    3.99
+  }
 
   for _ in 0..<image_bytes.length() {
     x = r * x * (1.0 - x)
@@ -491,58 +511,85 @@ pub fn image_encryption_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    ImageEncryptionTaskType::SymmetricEncryption => "对称加密"
-    ImageEncryptionTaskType::AsymmetricEncryption => "非对称加密"
-    ImageEncryptionTaskType::ChaoticEncryption => "混沌加密"
-    ImageEncryptionTaskType::DNAEncryption => "DNA加密"
-    ImageEncryptionTaskType::OpticalEncryption => "光学加密"
-    ImageEncryptionTaskType::Steganography => "隐写术"
-    ImageEncryptionTaskType::DigitalWatermark => "数字水印"
-    ImageEncryptionTaskType::HomomorphicEncryption => "同态加密"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 加密算法 | " + (match config.encryption_algorithm {
-    EncryptionAlgorithmType::AES => "AES"
-    EncryptionAlgorithmType::DES => "DES"
-    EncryptionAlgorithmType::RSA => "RSA"
-    EncryptionAlgorithmType::ECC => "ECC"
-    EncryptionAlgorithmType::ChaCha20 => "ChaCha20"
-    EncryptionAlgorithmType::Blowfish => "Blowfish"
-    EncryptionAlgorithmType::Twofish => "Twofish"
-    EncryptionAlgorithmType::Serpent => "Serpent"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 密钥长度 | " + config.key_size.to_string() + " bits |\n"
-  report = report + "| 混沌系统 | " + (match config.chaotic_system {
-    ChaoticSystemType::Logistic => "Logistic"
-    ChaoticSystemType::Henon => "Henon"
-    ChaoticSystemType::Lorenz => "Lorenz"
-    ChaoticSystemType::Rossler => "Rossler"
-    ChaoticSystemType::Chen => "Chen"
-    ChaoticSystemType::Hyperchaotic => "超混沌"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| DNA编码 | " + (match config.dna_encoding {
-    DNAEncodingType::Binary => "二进制"
-    DNAEncodingType::Complement => "互补"
-    DNAEncodingType::Addition => "加法"
-    DNAEncodingType::Subtraction => "减法"
-    DNAEncodingType::XOR => "异或"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 隐写类型 | " + (match config.steganography_type {
-    SteganographyType::LSB => "LSB"
-    SteganographyType::MSB => "MSB"
-    SteganographyType::DCTDomain => "DCT域"
-    SteganographyType::DWTomain => "DWT域"
-    SteganographyType::FFTomain => "FFT域"
-    SteganographyType::SpreadSpectrum => "扩频"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 水印强度 | " + config.watermark_strength.to_string() + " |\n"
-  report = report + "| 使用盐 | " + (if config.use_salt { "开启" } else { "关闭" }) + " |\n"
-  report = report + "| 使用IV | " + (if config.use_iv { "开启" } else { "关闭" }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      ImageEncryptionTaskType::SymmetricEncryption => "对称加密"
+      ImageEncryptionTaskType::AsymmetricEncryption => "非对称加密"
+      ImageEncryptionTaskType::ChaoticEncryption => "混沌加密"
+      ImageEncryptionTaskType::DNAEncryption => "DNA加密"
+      ImageEncryptionTaskType::OpticalEncryption => "光学加密"
+      ImageEncryptionTaskType::Steganography => "隐写术"
+      ImageEncryptionTaskType::DigitalWatermark => "数字水印"
+      ImageEncryptionTaskType::HomomorphicEncryption => "同态加密"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 加密算法 | " +
+    (match config.encryption_algorithm {
+      EncryptionAlgorithmType::AES => "AES"
+      EncryptionAlgorithmType::DES => "DES"
+      EncryptionAlgorithmType::RSA => "RSA"
+      EncryptionAlgorithmType::ECC => "ECC"
+      EncryptionAlgorithmType::ChaCha20 => "ChaCha20"
+      EncryptionAlgorithmType::Blowfish => "Blowfish"
+      EncryptionAlgorithmType::Twofish => "Twofish"
+      EncryptionAlgorithmType::Serpent => "Serpent"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 密钥长度 | " +
+    config.key_size.to_string() +
+    " bits |\n"
+  report = report +
+    "| 混沌系统 | " +
+    (match config.chaotic_system {
+      ChaoticSystemType::Logistic => "Logistic"
+      ChaoticSystemType::Henon => "Henon"
+      ChaoticSystemType::Lorenz => "Lorenz"
+      ChaoticSystemType::Rossler => "Rossler"
+      ChaoticSystemType::Chen => "Chen"
+      ChaoticSystemType::Hyperchaotic => "超混沌"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| DNA编码 | " +
+    (match config.dna_encoding {
+      DNAEncodingType::Binary => "二进制"
+      DNAEncodingType::Complement => "互补"
+      DNAEncodingType::Addition => "加法"
+      DNAEncodingType::Subtraction => "减法"
+      DNAEncodingType::XOR => "异或"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 隐写类型 | " +
+    (match config.steganography_type {
+      SteganographyType::LSB => "LSB"
+      SteganographyType::MSB => "MSB"
+      SteganographyType::DCTDomain => "DCT域"
+      SteganographyType::DWTomain => "DWT域"
+      SteganographyType::FFTomain => "FFT域"
+      SteganographyType::SpreadSpectrum => "扩频"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 水印强度 | " +
+    config.watermark_strength.to_string() +
+    " |\n"
+  report = report +
+    "| 使用盐 | " +
+    (if config.use_salt { "开启" } else { "关闭" }) +
+    " |\n"
+  report = report +
+    "| 使用IV | " +
+    (if config.use_iv { "开启" } else { "关闭" }) +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

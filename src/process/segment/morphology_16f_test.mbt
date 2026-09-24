@@ -7,7 +7,12 @@ fn make_img16_morph(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_morph(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -106,7 +116,12 @@ test "erode_16: erode <= original" {
   let data = img.data.to_array()
   data[12 * 2] = b'\x00'
   data[12 * 2 + 1] = b'\x00'
-  let img2 = @types.Image16::{ width: 5, height: 5, channels: 1, data: Bytes::from_array(data) }
+  let img2 = @types.Image16::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = erode_16(img2)
   // 腐蚀后中心3x3区域应该都是0
   for y in 1..<4 {
@@ -125,7 +140,12 @@ test "dilate_16: dilate >= original" {
   let data = img.data.to_array()
   data[12 * 2] = b'\xFF'
   data[12 * 2 + 1] = b'\xFF'
-  let img2 = @types.Image16::{ width: 5, height: 5, channels: 1, data: Bytes::from_array(data) }
+  let img2 = @types.Image16::{
+    width: 5,
+    height: 5,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
   let result = dilate_16(img2)
   // 膨胀后中心3x3区域应该都是65535
   for y in 1..<4 {

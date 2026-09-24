@@ -192,8 +192,10 @@ pub fn detect_faces(
           let py = by * block_size + y
           if px > 0 && px < w - 1 && py > 0 && py < h - 1 {
             let idx = py * w + px
-            let gx = img.data[idx + 1].to_double() - img.data[idx - 1].to_double()
-            let gy = img.data[idx + w].to_double() - img.data[idx - w].to_double()
+            let gx = img.data[idx + 1].to_double() -
+              img.data[idx - 1].to_double()
+            let gy = img.data[idx + w].to_double() -
+              img.data[idx - w].to_double()
             response += (gx * gx + gy * gy).sqrt()
           }
         }
@@ -210,15 +212,20 @@ pub fn detect_faces(
   // 生成简化的人脸检测结果
   let face_width = 100.0
   let face_height = 120.0
-  let bounding_box = [center_x - face_width / 2.0, center_y - face_height / 2.0, face_width, face_height]
+  let bounding_box = [
+    center_x - face_width / 2.0,
+    center_y - face_height / 2.0,
+    face_width,
+    face_height,
+  ]
 
   // 5 个关键点（双眼、鼻尖、嘴角）
   let landmarks : Array[Array[Double]] = []
-  landmarks.push([center_x - 20.0, center_y - 20.0])  // 左眼
-  landmarks.push([center_x + 20.0, center_y - 20.0])  // 右眼
-  landmarks.push([center_x, center_y])  // 鼻尖
-  landmarks.push([center_x - 15.0, center_y + 25.0])  // 左嘴角
-  landmarks.push([center_x + 15.0, center_y + 25.0])  // 右嘴角
+  landmarks.push([center_x - 20.0, center_y - 20.0]) // 左眼
+  landmarks.push([center_x + 20.0, center_y - 20.0]) // 右眼
+  landmarks.push([center_x, center_y]) // 鼻尖
+  landmarks.push([center_x - 15.0, center_y + 25.0]) // 左嘴角
+  landmarks.push([center_x + 15.0, center_y + 25.0]) // 右嘴角
 
   let face = FaceDetectionResult::{
     bounding_box,
@@ -274,7 +281,11 @@ pub fn extract_face_feature(
   }
 
   let mean = if count > 0 { sum / count.to_double() } else { 0.0 }
-  let variance = if count > 0 { sum_sq / count.to_double() - mean * mean } else { 0.0 }
+  let variance = if count > 0 {
+    sum_sq / count.to_double() - mean * mean
+  } else {
+    0.0
+  }
   let std_dev = if variance > 0.0 { variance.sqrt() } else { 0.0 }
 
   // 生成特征向量（简化版：用统计特征填充）
@@ -290,12 +301,7 @@ pub fn extract_face_feature(
   }
   let norm = if norm_sq > 0.0 { norm_sq.sqrt() } else { 1.0 }
 
-  FaceFeature::{
-    vector,
-    dimension,
-    norm,
-    is_normalized: false,
-  }
+  FaceFeature::{ vector, dimension, norm, is_normalized: false }
 }
 
 ///|
@@ -373,7 +379,11 @@ pub fn recognize_face_in_database(
     FaceRecognitionResult::{
       face_id: 0,
       identity: "unknown",
-      confidence: if best_similarity > 0.0 { best_similarity } else { 0.0 },
+      confidence: if best_similarity > 0.0 {
+        best_similarity
+      } else {
+        0.0
+      },
       similarity: best_similarity,
       is_known: false,
       matched_face_id: -1,
@@ -411,7 +421,11 @@ pub fn recognize_expression(
       }
     }
   }
-  mouth_brightness = if count > 0 { mouth_brightness / count.to_double() } else { 0.0 }
+  mouth_brightness = if count > 0 {
+    mouth_brightness / count.to_double()
+  } else {
+    0.0
+  }
 
   // 简化的表情分类
   let mut expression = ExpressionType::Neutral
@@ -421,9 +435,9 @@ pub fn recognize_expression(
   if mouth_brightness > 150.0 {
     expression = ExpressionType::Happy
     confidence = 0.6
-    probabilities.push(0.1)  // Neutral
-    probabilities.push(0.6)  // Happy
-    probabilities.push(0.1)  // Sad
+    probabilities.push(0.1) // Neutral
+    probabilities.push(0.6) // Happy
+    probabilities.push(0.1) // Sad
     probabilities.push(0.05) // Angry
     probabilities.push(0.05) // Surprise
     probabilities.push(0.05) // Fear
@@ -515,7 +529,11 @@ pub fn estimate_age_gender(
       }
     }
   }
-  texture_complexity = if count > 0 { texture_complexity / count.to_double() } else { 0.0 }
+  texture_complexity = if count > 0 {
+    texture_complexity / count.to_double()
+  } else {
+    0.0
+  }
 
   // 简化的年龄估计（纹理越复杂，年龄越大）
   let age = 20.0 + texture_complexity * 2.0
@@ -572,8 +590,18 @@ pub fn evaluate_face_quality(
   sharpness = if count > 0 { sharpness / count.to_double() } else { 0.0 }
 
   // 综合质量评分（亮度 40% + 锐度 60%）
-  let brightness_score = if brightness > 80.0 && brightness < 180.0 { 1.0 } else { 0.5 }
-  let sharpness_score = if sharpness > 20.0 { 1.0 } else if sharpness > 10.0 { 0.7 } else { 0.4 }
+  let brightness_score = if brightness > 80.0 && brightness < 180.0 {
+    1.0
+  } else {
+    0.5
+  }
+  let sharpness_score = if sharpness > 20.0 {
+    1.0
+  } else if sharpness > 10.0 {
+    0.7
+  } else {
+    0.4
+  }
 
   brightness_score * 0.4 + sharpness_score * 0.6
 }
@@ -587,7 +615,11 @@ pub fn analyze_face_attributes(
   config : FaceRecognitionConfig,
 ) -> FaceAttributeAnalysis {
   let feature = extract_face_feature(img, face, config)
-  let recognition = recognize_face_in_database(database, feature, face.bounding_box)
+  let recognition = recognize_face_in_database(
+    database,
+    feature,
+    face.bounding_box,
+  )
   let expression = recognize_expression(img, face)
   let age_gender = estimate_age_gender(img, face)
   let quality = evaluate_face_quality(img, face)
@@ -636,39 +668,92 @@ pub fn face_recognition_report_to_string(
   let mut report = "## 人脸识别与表情识别报告\n\n"
   report = report + "### 人脸检测\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 检测置信度 | " + (analysis.detection.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 关键点数量 | " + analysis.detection.num_landmarks.to_string() + " |\n"
-  report = report + "| 是否正面 | " + (if analysis.detection.is_frontal { "是" } else { "否" }) + " |\n"
-  report = report + "| 偏航角 | " + analysis.detection.yaw.to_string() + "° |\n"
-  report = report + "| 俯仰角 | " + analysis.detection.pitch.to_string() + "° |\n"
-  report = report + "| 翻滚角 | " + analysis.detection.roll.to_string() + "° |\n\n"
+  report = report +
+    "| 检测置信度 | " +
+    (analysis.detection.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 关键点数量 | " +
+    analysis.detection.num_landmarks.to_string() +
+    " |\n"
+  report = report +
+    "| 是否正面 | " +
+    (if analysis.detection.is_frontal { "是" } else { "否" }) +
+    " |\n"
+  report = report +
+    "| 偏航角 | " +
+    analysis.detection.yaw.to_string() +
+    "° |\n"
+  report = report +
+    "| 俯仰角 | " +
+    analysis.detection.pitch.to_string() +
+    "° |\n"
+  report = report +
+    "| 翻滚角 | " +
+    analysis.detection.roll.to_string() +
+    "° |\n\n"
 
   report = report + "### 人脸识别\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 身份 | " + analysis.recognition.identity + " |\n"
-  report = report + "| 是否已知 | " + (if analysis.recognition.is_known { "是" } else { "否" }) + " |\n"
-  report = report + "| 相似度 | " + (analysis.recognition.similarity * 100.0).to_string() + "% |\n"
-  report = report + "| 匹配置信度 | " + (analysis.recognition.confidence * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 是否已知 | " +
+    (if analysis.recognition.is_known { "是" } else { "否" }) +
+    " |\n"
+  report = report +
+    "| 相似度 | " +
+    (analysis.recognition.similarity * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 匹配置信度 | " +
+    (analysis.recognition.confidence * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 表情识别\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 表情 | " + analysis.expression.dominant_expression + " |\n"
-  report = report + "| 置信度 | " + (analysis.expression.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 类别数 | " + analysis.expression.num_classes.to_string() + " |\n\n"
+  report = report +
+    "| 表情 | " +
+    analysis.expression.dominant_expression +
+    " |\n"
+  report = report +
+    "| 置信度 | " +
+    (analysis.expression.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 类别数 | " +
+    analysis.expression.num_classes.to_string() +
+    " |\n\n"
 
   report = report + "### 年龄性别估计\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 估计年龄 | " + analysis.age_gender.age.to_string() + " 岁 |\n"
-  report = report + "| 年龄范围 | " + analysis.age_gender.age_range[0].to_string() + " - " + analysis.age_gender.age_range[1].to_string() + " 岁 |\n"
+  report = report +
+    "| 估计年龄 | " +
+    analysis.age_gender.age.to_string() +
+    " 岁 |\n"
+  report = report +
+    "| 年龄范围 | " +
+    analysis.age_gender.age_range[0].to_string() +
+    " - " +
+    analysis.age_gender.age_range[1].to_string() +
+    " 岁 |\n"
   report = report + "| 性别 | " + analysis.age_gender.gender + " |\n"
-  report = report + "| 性别置信度 | " + (analysis.age_gender.gender_confidence * 100.0).to_string() + "% |\n\n"
+  report = report +
+    "| 性别置信度 | " +
+    (analysis.age_gender.gender_confidence * 100.0).to_string() +
+    "% |\n\n"
 
   report = report + "### 人脸质量\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 综合质量 | " + (analysis.face_quality * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 综合质量 | " +
+    (analysis.face_quality * 100.0).to_string() +
+    "% |\n"
   report = report + "| 亮度 | " + analysis.brightness.to_string() + " |\n"
   report = report + "| 锐度 | " + analysis.sharpness.to_string() + " |\n"
-  report = report + "| 遮挡率 | " + (analysis.occlusion_rate * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 遮挡率 | " +
+    (analysis.occlusion_rate * 100.0).to_string() +
+    "% |\n"
 
   report
 }

@@ -221,8 +221,8 @@ pub fn detect_objects_iv(
       if std_dev > 30.0 {
         let confidence = if std_dev > 50.0 { 0.8 } else { 0.6 }
         if confidence >= config.confidence_threshold {
-          let bx = (gx.to_double()) * (grid_size.to_double())
-          let by = (gy.to_double()) * (grid_size.to_double())
+          let bx = gx.to_double() * grid_size.to_double()
+          let by = gy.to_double() * grid_size.to_double()
           let bw = grid_size.to_double()
           let bh = grid_size.to_double()
           let bbox : Array[Double] = [bx, by, bw, bh]
@@ -293,16 +293,8 @@ pub fn recognize_traffic_signs(
   let detections = detect_objects_iv(image, config)
 
   for det in detections {
-    let sign_type = if det.confidence > 0.7 {
-      "speed_limit"
-    } else {
-      "warning"
-    }
-    let sign_value = if sign_type == "speed_limit" {
-      "60"
-    } else {
-      "caution"
-    }
+    let sign_type = if det.confidence > 0.7 { "speed_limit" } else { "warning" }
+    let sign_value = if sign_type == "speed_limit" { "60" } else { "caution" }
 
     results.push(TrafficSignResult::{
       sign_type,
@@ -326,11 +318,7 @@ pub fn detect_defects(
   let detections = detect_objects_iv(image, config)
 
   for det in detections {
-    let defect_type = if det.confidence > 0.7 {
-      "crack"
-    } else {
-      "scratch"
-    }
+    let defect_type = if det.confidence > 0.7 { "crack" } else { "scratch" }
     let severity = if det.confidence > 0.8 {
       "high"
     } else if det.confidence > 0.6 {
@@ -409,7 +397,11 @@ pub fn detect_intrusion(
     intrusion_region,
     object_type,
     timestamp: 0.0,
-    num_intrusions: if is_intrusion { 1 } else { 0 },
+    num_intrusions: if is_intrusion {
+      1
+    } else {
+      0
+    },
   }
 }
 
@@ -423,11 +415,7 @@ pub fn detect_crops(
   let detections = detect_objects_iv(image, config)
 
   for det in detections {
-    let crop_type = if det.confidence > 0.7 {
-      "wheat"
-    } else {
-      "corn"
-    }
+    let crop_type = if det.confidence > 0.7 { "wheat" } else { "corn" }
     let health_status = if det.confidence > 0.8 {
       "healthy"
     } else if det.confidence > 0.6 {
@@ -435,11 +423,7 @@ pub fn detect_crops(
     } else {
       "stressed"
     }
-    let growth_stage = if det.confidence > 0.7 {
-      "mature"
-    } else {
-      "growing"
-    }
+    let growth_stage = if det.confidence > 0.7 { "mature" } else { "growing" }
 
     results.push(CropDetectionResult::{
       crop_type,
@@ -462,7 +446,7 @@ pub fn detect_stars(
 ) -> StarDetectionResult {
   let w = image.width
   let h = image.height
-  let total = w * h
+  let _ = w * h
   let stars : Array[Array[Double]] = []
   let magnitudes : Array[Double] = []
 
@@ -525,8 +509,14 @@ pub fn intelligent_vision_report_to_string(
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 任务类型 | " + task_name + " |\n"
   report = report + "| 检测数量 | " + num_results.to_string() + " |\n"
-  report = report + "| 平均置信度 | " + (avg_confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 置信度阈值 | " + (config.confidence_threshold * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 平均置信度 | " +
+    (avg_confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 置信度阈值 | " +
+    (config.confidence_threshold * 100.0).to_string() +
+    "% |\n"
   report = report + "| 模型类型 | " + config.model_type + " |\n"
   report = report + "| 输入尺寸 | " + config.input_size.to_string() + " |\n"
 

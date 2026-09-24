@@ -21,10 +21,10 @@ pub(all) struct RemoteSensingImage {
   bands : Int
   data : Array[Double]
   image_type : RemoteSensingImageType
-  wavelength : Array[Double]  // 每个波段的波长（nm）
-  resolution : Double  // 空间分辨率（米）
+  wavelength : Array[Double] // 每个波段的波长（nm）
+  resolution : Double // 空间分辨率（米）
   acquisition_date : String
-  cloud_cover : Double  // 云量百分比
+  cloud_cover : Double // 云量百分比
 }
 
 ///|
@@ -71,11 +71,11 @@ pub(all) struct ChangeDetectionResult {
 ///|
 /// 植被指数
 pub(all) struct VegetationIndices {
-  ndvi : Array[Double]  // 归一化植被指数
-  ndwi : Array[Double]  // 归一化水体指数
-  ndbi : Array[Double]  // 归一化建筑指数
-  evi : Array[Double]   // 增强植被指数
-  savi : Array[Double]  // 土壤调整植被指数
+  ndvi : Array[Double] // 归一化植被指数
+  ndwi : Array[Double] // 归一化水体指数
+  ndbi : Array[Double] // 归一化建筑指数
+  evi : Array[Double] // 增强植被指数
+  savi : Array[Double] // 土壤调整植被指数
   msavi : Array[Double] // 修正土壤调整植被指数
 }
 
@@ -87,7 +87,7 @@ pub(all) struct SpectralSignature {
   num_bands : Int
   mean_reflectance : Double
   std_reflectance : Double
-  absorption_features : Array[(Double, Double)]  // (波长, 深度)
+  absorption_features : Array[(Double, Double)] // (波长, 深度)
 }
 
 ///|
@@ -136,7 +136,7 @@ pub fn create_default_remote_sensing_image(
     wavelength,
     resolution: 10.0,
     acquisition_date: "2024-01-01",
-    cloud_cover: 0.0
+    cloud_cover: 0.0,
   }
 }
 
@@ -227,14 +227,7 @@ pub fn calculate_all_vegetation_indices(
   let ndwi = if image.bands > 4 { calculate_ndwi(image, 1, 3) } else { [] }
   let ndbi = if image.bands > 5 { calculate_ndbi(image, 4, 3) } else { [] }
 
-  VegetationIndices::{
-    ndvi,
-    ndwi,
-    ndbi,
-    evi: ndvi,
-    savi: ndvi,
-    msavi: ndvi
-  }
+  VegetationIndices::{ ndvi, ndwi, ndbi, evi: ndvi, savi: ndvi, msavi: ndvi }
 }
 
 ///|
@@ -251,35 +244,43 @@ pub fn classify_land_cover_simple(
   let ndwi = if image.bands > 4 { calculate_ndwi(image, 1, 3) } else { [] }
 
   for i in 0..<total {
-    let mut label = 10  // Unknown
+    let mut label = 10 // Unknown
     if ndvi.length() > 0 && ndwi.length() > 0 {
       let n = ndvi[i]
       let w_idx = ndwi[i]
       if w_idx > 0.3 {
-        label = 0  // Water
+        label = 0 // Water
       } else if n > 0.6 {
-        label = 1  // Forest
+        label = 1 // Forest
       } else if n > 0.3 {
-        label = 2  // Grassland
+        label = 2 // Grassland
       } else if n > 0.1 {
-        label = 3  // Cropland
+        label = 3 // Cropland
       } else if n < -0.1 {
-        label = 4  // Urban
+        label = 4 // Urban
       } else {
-        label = 5  // Barren
+        label = 5 // Barren
       }
     }
     labels.push(label)
   }
 
   let class_names : Array[String] = [
-    "Water", "Forest", "Grassland", "Cropland", "Urban",
-    "Barren", "Wetland", "Snow", "Cloud", "Shadow", "Unknown",
+    "Water", "Forest", "Grassland", "Cropland", "Urban", "Barren", "Wetland", "Snow",
+    "Cloud", "Shadow", "Unknown",
   ]
   let class_colors : Array[(Int, Int, Int)] = [
-    (0, 0, 255), (0, 128, 0), (128, 255, 0), (255, 255, 0),
-    (255, 0, 0), (128, 128, 128), (0, 255, 255), (255, 255, 255),
-    (200, 200, 200), (50, 50, 50), (0, 0, 0),
+    (0, 0, 255),
+    (0, 128, 0),
+    (128, 255, 0),
+    (255, 255, 0),
+    (255, 0, 0),
+    (128, 128, 128),
+    (0, 255, 255),
+    (255, 255, 255),
+    (200, 200, 200),
+    (50, 50, 50),
+    (0, 0, 0),
   ]
 
   ClassificationResult::{
@@ -290,7 +291,7 @@ pub fn classify_land_cover_simple(
     class_colors,
     num_classes: 11,
     overall_accuracy: 0.0,
-    kappa_coefficient: 0.0
+    kappa_coefficient: 0.0,
   }
 }
 
@@ -317,7 +318,11 @@ pub fn detect_changes_simple(
         sum_diff += diff * diff
       }
     }
-    let intensity = if image1.bands > 0 { (sum_diff / image1.bands.to_double()).sqrt() } else { 0.0 }
+    let intensity = if image1.bands > 0 {
+      (sum_diff / image1.bands.to_double()).sqrt()
+    } else {
+      0.0
+    }
     change_intensity.push(intensity)
     let changed = intensity > threshold
     change_mask.push(changed)
@@ -326,7 +331,11 @@ pub fn detect_changes_simple(
     }
   }
 
-  let change_percentage = if total > 0 { num_changed.to_double() / total.to_double() * 100.0 } else { 0.0 }
+  let change_percentage = if total > 0 {
+    num_changed.to_double() / total.to_double() * 100.0
+  } else {
+    0.0
+  }
 
   ChangeDetectionResult::{
     width: w,
@@ -373,7 +382,11 @@ pub fn calculate_texture_features(
   }
 
   let mean = if count > 0 { sum / count.to_double() } else { 0.0 }
-  let variance = if count > 0 { sum_sq / count.to_double() - mean * mean } else { 0.0 }
+  let variance = if count > 0 {
+    sum_sq / count.to_double() - mean * mean
+  } else {
+    0.0
+  }
 
   // 计算熵
   let mut entropy = 0.0
@@ -394,7 +407,9 @@ pub fn calculate_texture_features(
       e += p * p
     }
     e
-  } else { 0.0 }
+  } else {
+    0.0
+  }
   let correlation = 0.5
   let dissimilarity = variance.sqrt()
 
@@ -433,7 +448,11 @@ pub fn calculate_spectral_signature(
   }
 
   let mean = if image.bands > 0 { sum / image.bands.to_double() } else { 0.0 }
-  let variance = if image.bands > 0 { sum_sq / image.bands.to_double() - mean * mean } else { 0.0 }
+  let variance = if image.bands > 0 {
+    sum_sq / image.bands.to_double() - mean * mean
+  } else {
+    0.0
+  }
   let std = if variance > 0.0 { variance.sqrt() } else { 0.0 }
 
   // 简化的吸收特征检测
@@ -482,7 +501,11 @@ pub fn calculate_remote_sensing_quality(
   }
 
   let mean = if total > 0 { sum / total.to_double() } else { 0.0 }
-  let variance = if total > 0 { sum_sq / total.to_double() - mean * mean } else { 0.0 }
+  let variance = if total > 0 {
+    sum_sq / total.to_double() - mean * mean
+  } else {
+    0.0
+  }
   let std = if variance > 0.0 { variance.sqrt() } else { 1.0 }
   let snr = if std > 0.0 { mean / std } else { 0.0 }
 
@@ -530,9 +553,17 @@ pub fn remote_sensing_report_to_string(
     "未知"
   }
   report = report + "| 类型 | " + type_str + " |\n"
-  report = report + "| 尺寸 | " + image.width.to_string() + "x" + image.height.to_string() + " |\n"
+  report = report +
+    "| 尺寸 | " +
+    image.width.to_string() +
+    "x" +
+    image.height.to_string() +
+    " |\n"
   report = report + "| 波段数 | " + image.bands.to_string() + " |\n"
-  report = report + "| 空间分辨率 | " + image.resolution.to_string() + "m |\n"
+  report = report +
+    "| 空间分辨率 | " +
+    image.resolution.to_string() +
+    "m |\n"
   report = report + "| 获取日期 | " + image.acquisition_date + " |\n"
   report = report + "| 云量 | " + image.cloud_cover.to_string() + "% |\n\n"
 
@@ -540,23 +571,48 @@ pub fn remote_sensing_report_to_string(
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| SNR | " + quality.snr.to_string() + " dB |\n"
   report = report + "| 云量 | " + quality.cloud_cover.to_string() + "% |\n"
-  report = report + "| 几何精度 | " + (quality.geometric_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 辐射精度 | " + (quality.radiometric_accuracy * 100.0).to_string() + "% |\n"
-  report = report + "| 综合质量 | " + quality.overall_quality.to_string() + "/5.0 |\n\n"
+  report = report +
+    "| 几何精度 | " +
+    (quality.geometric_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 辐射精度 | " +
+    (quality.radiometric_accuracy * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 综合质量 | " +
+    quality.overall_quality.to_string() +
+    "/5.0 |\n\n"
 
   report = report + "### 地物分类统计\n\n"
   report = report + "| 类别 | 颜色(RGB) |\n|------|-----------|\n"
   for i in 0..<classification.num_classes {
-    if i < classification.class_names.length() && i < classification.class_colors.length() {
+    if i < classification.class_names.length() &&
+      i < classification.class_colors.length() {
       let color = classification.class_colors[i]
-      report = report + "| " + classification.class_names[i] + " | " + color.0.to_string() + "," + color.1.to_string() + "," + color.2.to_string() + " |\n"
+      report = report +
+        "| " +
+        classification.class_names[i] +
+        " | " +
+        color.0.to_string() +
+        "," +
+        color.1.to_string() +
+        "," +
+        color.2.to_string() +
+        " |\n"
     }
   }
 
   report = report + "\n### 变化检测\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 变化像素数 | " + changes.num_changed_pixels.to_string() + " |\n"
-  report = report + "| 变化百分比 | " + changes.change_percentage.to_string() + "% |\n"
+  report = report +
+    "| 变化像素数 | " +
+    changes.num_changed_pixels.to_string() +
+    " |\n"
+  report = report +
+    "| 变化百分比 | " +
+    changes.change_percentage.to_string() +
+    "% |\n"
   report = report + "| 变化阈值 | " + changes.threshold.to_string() + " |\n"
 
   report

@@ -129,12 +129,11 @@ fn get_symbol_map() -> Array[(String, String, String)] {
 
 ///|
 /// 识别文本中的符号
-pub fn recognize_symbols_markdown(
-  text : String,
-) -> Array[MarkdownSymbol] {
+pub fn recognize_symbols_markdown(text : String) -> Array[MarkdownSymbol] {
   let symbols = get_symbol_map()
   let results : Array[MarkdownSymbol] = []
-  for (symbol, unicode, category) in symbols {
+  for _tup0 in symbols {
+    let (symbol, unicode, category) = _tup0
     // 简化版：检查符号是否在文本中（通过长度判断）
     if text.length() > 0 {
       results.push(MarkdownSymbol::{
@@ -158,26 +157,35 @@ pub fn detect_image_regions_markdown(
 ) -> Array[MarkdownImage] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_image_regions_markdown: 图像尺寸必须大于0",
+    )
   }
   if binary_img.channels != 1 {
-    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 仅支持单通道二值图")
+    raise @types.LoadError::DecodeFailed(
+      "detect_image_regions_markdown: 仅支持单通道二值图",
+    )
   }
   let expected_size = binary_img.width * binary_img.height
   if binary_img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "detect_image_regions_markdown: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + binary_img.data.length().to_string(),
+      "detect_image_regions_markdown: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      binary_img.data.length().to_string(),
     )
   }
   if min_area <= 0 {
-    raise @types.LoadError::DecodeFailed("detect_image_regions_markdown: 最小区域面积必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "detect_image_regions_markdown: 最小区域面积必须大于0",
+    )
   }
   let min = min_area
   let w = binary_img.width
   let h = binary_img.height
   let regions : Array[MarkdownImage] = []
   let visited : Array[Bool] = []
-  for i in 0..<(w * h) {
+  for _ in 0..<(w * h) {
     visited.push(false)
   }
   for y in 0..<h {
@@ -198,16 +206,30 @@ pub fn detect_image_regions_markdown(
           let cx_opt = stack_x.pop()
           let cy_opt = stack_y.pop()
           match cx_opt {
-            Some(cx) => {
+            Some(cx) =>
               match cy_opt {
                 Some(cy) => {
                   area += 1
-                  if cx < min_x { min_x = cx }
-                  if cx > max_x { max_x = cx }
-                  if cy < min_y { min_y = cy }
-                  if cy > max_y { max_y = cy }
-                  let neighbors = [(cx - 1, cy), (cx + 1, cy), (cx, cy - 1), (cx, cy + 1)]
-                  for (nx, ny) in neighbors {
+                  if cx < min_x {
+                    min_x = cx
+                  }
+                  if cx > max_x {
+                    max_x = cx
+                  }
+                  if cy < min_y {
+                    min_y = cy
+                  }
+                  if cy > max_y {
+                    max_y = cy
+                  }
+                  let neighbors = [
+                    (cx - 1, cy),
+                    (cx + 1, cy),
+                    (cx, cy - 1),
+                    (cx, cy + 1),
+                  ]
+                  for _tup1 in neighbors {
+                    let (nx, ny) = _tup1
                     if nx >= 0 && nx < w && ny >= 0 && ny < h {
                       let nidx = ny * w + nx
                       if !visited[nidx] && binary_img.data[nidx].to_int() < 128 {
@@ -218,16 +240,16 @@ pub fn detect_image_regions_markdown(
                     }
                   }
                 }
-                None => {()}
+                None => ()
               }
-            }
-            None => {()}
+            None => ()
           }
         }
         let region_width = max_x - min_x + 1
         let region_height = max_y - min_y + 1
         if area >= min && region_width > 20 && region_height > 20 {
-          let fill_ratio = area.to_double() / (region_width * region_height).to_double()
+          let fill_ratio = area.to_double() /
+            (region_width * region_height).to_double()
           let image_type = if fill_ratio > 0.8 {
             "diagram"
           } else if fill_ratio > 0.5 {
@@ -275,25 +297,32 @@ pub fn classify_markdown_element(
 
 ///|
 /// 表格数据转 Markdown
-pub fn markdown_table_to_string(
-  table : MarkdownTable,
-) -> String {
+pub fn markdown_table_to_string(table : MarkdownTable) -> String {
   let mut md = ""
   if table.has_header && table.rows > 0 {
     md = md + "| "
     for col in 0..<table.cols {
-      let cell_text = if col < table.cells[0].length() { table.cells[0][col] } else { "" }
+      let cell_text = if col < table.cells[0].length() {
+        table.cells[0][col]
+      } else {
+        ""
+      }
       md = md + cell_text + " | "
     }
     md = md + "\n| "
-    for col in 0..<table.cols {
+    for _ in 0..<table.cols {
       md = md + "--- | "
     }
     md = md + "\n"
     for row in 1..<table.rows {
       md = md + "| "
       for col in 0..<table.cols {
-        let cell_text = if row < table.cells.length() && col < table.cells[row].length() { table.cells[row][col] } else { "" }
+        let cell_text = if row < table.cells.length() &&
+          col < table.cells[row].length() {
+          table.cells[row][col]
+        } else {
+          ""
+        }
         md = md + cell_text + " | "
       }
       md = md + "\n"
@@ -302,7 +331,12 @@ pub fn markdown_table_to_string(
     for row in 0..<table.rows {
       md = md + "| "
       for col in 0..<table.cols {
-        let cell_text = if row < table.cells.length() && col < table.cells[row].length() { table.cells[row][col] } else { "" }
+        let cell_text = if row < table.cells.length() &&
+          col < table.cells[row].length() {
+          table.cells[row][col]
+        } else {
+          ""
+        }
         md = md + cell_text + " | "
       }
       md = md + "\n"
@@ -341,9 +375,7 @@ pub fn determine_reading_order_markdown(
 
 ///|
 /// Markdown 元素转字符串
-fn markdown_element_to_string(
-  element : MarkdownElement,
-) -> String {
+fn markdown_element_to_string(element : MarkdownElement) -> String {
   match element.element_type {
     MarkdownElementType::Title => "# " + element.content + "\n\n"
     MarkdownElementType::Heading1 => "## " + element.content + "\n\n"
@@ -363,9 +395,7 @@ fn markdown_element_to_string(
 
 ///|
 /// 完整文档转 Markdown（1:1 还原）
-pub fn markdown_document_to_string(
-  doc : MarkdownDocument,
-) -> String {
+pub fn markdown_document_to_string(doc : MarkdownDocument) -> String {
   let mut md = ""
   if doc.title.length() > 0 {
     md = md + "# " + doc.title + "\n\n"
@@ -386,7 +416,9 @@ pub fn build_markdown_document(
 ) -> MarkdownDocument raise @types.LoadError {
   // 输入验证
   if ocr_result.blocks.length() == 0 {
-    raise @types.LoadError::DecodeFailed("build_markdown_document: OCR结果的文本块列表不能为空")
+    raise @types.LoadError::DecodeFailed(
+      "build_markdown_document: OCR结果的文本块列表不能为空",
+    )
   }
   let doc_title = match title {
     Some(v) => v
@@ -430,7 +462,21 @@ pub fn generate_markdown_image_placeholder(
   image : MarkdownImage,
   index : Int,
 ) -> String {
-  "![图片" + index.to_string() + "（" + image.image_type + "，位置：" + image.x.to_string() + "," + image.y.to_string() + "，尺寸：" + image.width.to_string() + "x" + image.height.to_string() + "）](image_" + index.to_string() + ".png)"
+  "![图片" +
+  index.to_string() +
+  "（" +
+  image.image_type +
+  "，位置：" +
+  image.x.to_string() +
+  "," +
+  image.y.to_string() +
+  "，尺寸：" +
+  image.width.to_string() +
+  "x" +
+  image.height.to_string() +
+  "）](image_" +
+  index.to_string() +
+  ".png)"
 }
 
 ///|
@@ -458,7 +504,7 @@ pub fn analyze_markdown_element_distribution(
       MarkdownElementType::Image => image_count += 1
       MarkdownElementType::Quote => quote_count += 1
       MarkdownElementType::CodeBlock => code_count += 1
-      _ => {()}
+      _ => ()
     }
   }
   [

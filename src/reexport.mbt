@@ -283,27 +283,47 @@ pub let adjust_hue : (@types.Image, Float) -> @types.Image raise @types.LoadErro
 
 ///|
 pub let adjust_gamma : (@types.Image, Float) -> @types.Image raise @types.LoadError = @color.adjust_gamma
+
+///|
 pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @color.adjust_gamma_16
+
+///|
 pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_gamma_f
 
 ///|
 pub let adaptive_threshold_mean : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
+
+///|
 pub let adaptive_threshold_mean_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_mean_16
+
+///|
 pub let adaptive_threshold_mean_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_mean_f
 
 ///|
 pub let adaptive_threshold_gaussian : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_gaussian
+
+///|
 pub let adaptive_threshold_gaussian_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_gaussian_16
+
+///|
 pub let adaptive_threshold_gaussian_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_gaussian_f
 
 ///|
 pub let bilateral_filter : (@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError = @filter.bilateral_filter
+
+///|
 pub let bilateral_filter_16 : (@types.Image16, Int, Float, Float) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_16
+
+///|
 pub let bilateral_filter_f : (@types.ImageF, Int, Float, Float) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_f
 
 ///|
 pub let bilateral_filter_fast : (@types.Image, Int, Float, Float, Int) -> @types.Image raise @types.LoadError = @filter.bilateral_filter_fast
+
+///|
 pub let bilateral_filter_fast_16 : (@types.Image16, Int, Float, Float, Int) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_fast_16
+
+///|
 pub let bilateral_filter_fast_f : (@types.ImageF, Int, Float, Float, Int) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_fast_f
 
 ///|
@@ -317,12 +337,24 @@ pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadErro
 
 ///|
 pub let build_gaussian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
-pub let build_gaussian_pyramid_16 : (@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError = @transform.build_gaussian_pyramid_16
+
+///|
+pub let build_gaussian_pyramid_16 : (@types.Image16, Int) -> Array[
+  @types.Image16,
+] raise @types.LoadError = @transform.build_gaussian_pyramid_16
+
+///|
 pub let build_gaussian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_gaussian_pyramid_f
 
 ///|
 pub let build_laplacian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_laplacian_pyramid
-pub let build_laplacian_pyramid_16 : (@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError = @transform.build_laplacian_pyramid_16
+
+///|
+pub let build_laplacian_pyramid_16 : (@types.Image16, Int) -> Array[
+  @types.Image16,
+] raise @types.LoadError = @transform.build_laplacian_pyramid_16
+
+///|
 pub let build_laplacian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_laplacian_pyramid_float
 
 ///|
@@ -432,7 +464,11 @@ pub fn dehaze_f(
 
 ///|
 pub let draw_contours : (@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError = @edge.draw_contours
+
+///|
 pub let draw_contours_16 : (@types.Image16, Array[@edge.Contour], Array[Int]) -> @types.Image16 raise @types.LoadError = @edge.draw_contours_16
+
+///|
 pub let draw_contours_f : (@types.ImageF, Array[@edge.Contour], Array[Float]) -> @types.ImageF raise @types.LoadError = @edge.draw_contours_f
 
 ///|
@@ -453,7 +489,11 @@ pub let crop_f : (@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @typ
 
 ///|
 pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
+
+///|
 pub let dilate_16 : (@types.Image16) -> @types.Image16 = @segment.dilate_16
+
+///|
 pub let dilate_f : (@types.ImageF) -> @types.ImageF = @segment.dilate_f
 
 ///|
@@ -543,7 +583,16 @@ pub fn draw_rectangle_16(
   thickness? : Int = 1,
   fill? : Bool = false,
 ) -> @types.Image16 {
-  @transform.draw_rectangle_16(arg0, arg1, arg2, arg3, arg4, arg5, thickness~, fill~)
+  @transform.draw_rectangle_16(
+    arg0,
+    arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    thickness~,
+    fill~,
+  )
 }
 
 ///|
@@ -593,7 +642,16 @@ pub fn draw_rectangle_f(
   thickness? : Int = 1,
   fill? : Bool = false,
 ) -> @types.ImageF {
-  @transform.draw_rectangle_f(arg0, arg1, arg2, arg3, arg4, arg5, thickness~, fill~)
+  @transform.draw_rectangle_f(
+    arg0,
+    arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    thickness~,
+    fill~,
+  )
 }
 
 ///|
@@ -624,12 +682,20 @@ pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise
 
 ///|
 pub let edge_detect_laplacian : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_laplacian
+
+///|
 pub let edge_detect_laplacian_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @edge.edge_detect_laplacian_16
+
+///|
 pub let edge_detect_laplacian_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @edge.edge_detect_laplacian_f
 
 ///|
 pub let edge_detect_prewitt : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_prewitt
+
+///|
 pub let edge_detect_prewitt_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @edge.edge_detect_prewitt_16
+
+///|
 pub let edge_detect_prewitt_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @edge.edge_detect_prewitt_f
 
 ///|
@@ -643,17 +709,29 @@ pub let edge_detect_sobel_f : (@types.ImageF) -> @types.ImageF raise @types.Load
 
 ///|
 pub let erode : (@types.Image) -> @types.Image = @segment.erode
+
+///|
 pub let erode_16 : (@types.Image16) -> @types.Image16 = @segment.erode_16
+
+///|
 pub let erode_f : (@types.ImageF) -> @types.ImageF = @segment.erode_f
 
 ///|
 pub let fft_2d : (@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d
+
+///|
 pub let fft_2d_16 : (@types.Image16) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d_16
+
+///|
 pub let fft_2d_f : (@types.ImageF) -> Array[@frequency.FFTResult] raise @types.LoadError = @frequency.fft_2d_f
 
 ///|
 pub let fft_magnitude : (@frequency.FFTResult, Bool) -> @types.Image = @frequency.fft_magnitude
+
+///|
 pub let fft_magnitude_16 : (@frequency.FFTResult, Bool) -> @types.Image16 = @frequency.fft_magnitude_16
+
+///|
 pub let fft_magnitude_f : (@frequency.FFTResult, Bool) -> @types.ImageF = @frequency.fft_magnitude_f
 
 ///|
@@ -1000,12 +1078,20 @@ pub fn hough_lines_nms(
 
 ///|
 pub let find_contours : (@types.Image) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours
+
+///|
 pub let find_contours_16 : (@types.Image16) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_16
+
+///|
 pub let find_contours_f : (@types.ImageF) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_f
 
 ///|
 pub let floyd_steinberg : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.floyd_steinberg
+
+///|
 pub let floyd_steinberg_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.floyd_steinberg_16
+
+///|
 pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.floyd_steinberg_f
 
 ///|
@@ -1166,7 +1252,11 @@ pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_t
 
 ///|
 pub let haar_inverse_transform_2d : (@frequency.HaarWaveletResult) -> @types.Image = @frequency.haar_inverse_transform_2d
+
+///|
 pub let haar_inverse_transform_2d_16 : (@frequency.HaarWaveletResult) -> @types.Image16 = @frequency.haar_inverse_transform_2d_16
+
+///|
 pub let haar_inverse_transform_2d_f : (@frequency.HaarWaveletResult) -> @types.ImageF = @frequency.haar_inverse_transform_2d_f
 
 ///|
@@ -1228,32 +1318,56 @@ pub fn haar_denoise_f(
 
 ///|
 pub let histogram : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.histogram
+
+///|
 pub let histogram_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.histogram_16
+
+///|
 pub let histogram_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.histogram_f
 
 ///|
 pub let histogram_equalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_equalize
+
+///|
 pub let histogram_equalize_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_equalize_16
+
+///|
 pub let histogram_equalize_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_equalize_f
 
 ///|
 pub let histogram_normalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_normalize
+
+///|
 pub let histogram_normalize_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_normalize_16
+
+///|
 pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_normalize_f
 
 ///|
 pub let ahash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.ahash
+
+///|
 pub let ahash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.ahash_16
+
+///|
 pub let ahash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.ahash_f
 
 ///|
 pub let dhash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.dhash
+
+///|
 pub let dhash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.dhash_16
+
+///|
 pub let dhash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.dhash_f
 
 ///|
 pub let phash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.phash
+
+///|
 pub let phash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.phash_16
+
+///|
 pub let phash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.phash_f
 
 ///|
@@ -1261,12 +1375,20 @@ pub let hamming_distance : (Array[Int], Array[Int]) -> Int raise @types.LoadErro
 
 ///|
 pub let dct_2d : (@types.Image) -> Array[Array[Double]] = @frequency.dct_2d
+
+///|
 pub let dct_2d_16 : (@types.Image16) -> Array[Array[Double]] = @frequency.dct_2d_16
+
+///|
 pub let dct_2d_f : (@types.ImageF) -> Array[Array[Double]] = @frequency.dct_2d_f
 
 ///|
 pub let idct_2d : (Array[Array[Double]]) -> @types.Image = @frequency.idct_2d
+
+///|
 pub let idct_2d_16 : (Array[Array[Double]]) -> @types.Image16 = @frequency.idct_2d_16
+
+///|
 pub let idct_2d_f : (Array[Array[Double]]) -> @types.ImageF = @frequency.idct_2d_f
 
 ///|
@@ -1295,7 +1417,11 @@ pub fn reinhard_tonemap_f(
 
 ///|
 pub let gamma_tonemap : (@types.ImageF, Float) -> @types.Image raise @types.LoadError = @color.gamma_tonemap
+
+///|
 pub let gamma_tonemap_16 : (@types.ImageF, Float) -> @types.Image16 raise @types.LoadError = @color.gamma_tonemap_16
+
+///|
 pub let gamma_tonemap_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.gamma_tonemap_f
 
 ///|
@@ -1351,32 +1477,56 @@ pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> F
 
 ///|
 pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_matching
+
+///|
 pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image16 raise @types.LoadError = @feature.histogram_matching_16
+
+///|
 pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_matching_f
 
 ///|
 pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb
+
+///|
 pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb_16
+
+///|
 pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsl_to_rgb_f
 
 ///|
 pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb
+
+///|
 pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb_16
+
+///|
 pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsv_to_rgb_f
 
 ///|
 pub let ifft_2d : (@frequency.FFTResult) -> @types.Image = @frequency.ifft_2d
+
+///|
 pub let ifft_2d_16 : (@frequency.FFTResult) -> @types.Image16 = @frequency.ifft_2d_16
+
+///|
 pub let ifft_2d_f : (@frequency.FFTResult) -> @types.ImageF = @frequency.ifft_2d_f
 
 ///|
 pub let integral_image : (@types.Image) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image
+
+///|
 pub let integral_image_16 : (@types.Image16) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image_16
+
+///|
 pub let integral_image_f : (@types.ImageF) -> @feature.IntegralImage raise @types.LoadError = @feature.integral_image_f
 
 ///|
 pub let integral_image_sq : (@types.Image) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq
+
+///|
 pub let integral_image_sq_16 : (@types.Image16) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_16
+
+///|
 pub let integral_image_sq_f : (@types.ImageF) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_f
 
 ///|
@@ -1400,12 +1550,20 @@ pub let integral_variance : (
 
 ///|
 pub let invert : (@types.Image) -> @types.Image raise @types.LoadError = @color.invert
+
+///|
 pub let invert_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.invert_16
+
+///|
 pub let invert_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.invert_f
 
 ///|
 pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
+
+///|
 pub let kmeans_quantize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.kmeans_quantize_16
+
+///|
 pub let kmeans_quantize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @color.kmeans_quantize_f
 
 ///|
@@ -1437,12 +1595,20 @@ pub fn kmeans_segment_f(
 
 ///|
 pub let lbp : (@types.Image) -> @types.Image raise @types.LoadError = @feature.lbp
+
+///|
 pub let lbp_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.lbp_16
+
+///|
 pub let lbp_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.lbp_f
 
 ///|
 pub let lbp_uniform : (@types.Image) -> @types.Image raise @types.LoadError = @feature.lbp_uniform
+
+///|
 pub let lbp_uniform_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @feature.lbp_uniform_16
+
+///|
 pub let lbp_uniform_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.lbp_uniform_f
 
 ///|
@@ -1510,27 +1676,47 @@ pub fn nlm_denoise_fast_f(
 
 ///|
 pub let median_cut : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.median_cut
+
+///|
 pub let median_cut_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.median_cut_16
+
+///|
 pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.median_cut_f
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
+
+///|
 pub let morph_close_16 : (@types.Image16) -> @types.Image16 = @segment.morph_close_16
+
+///|
 pub let morph_close_f : (@types.ImageF) -> @types.ImageF = @segment.morph_close_f
 
 ///|
 pub let morph_gradient : (@types.Image) -> @types.Image = @segment.morph_gradient
+
+///|
 pub let morph_gradient_16 : (@types.Image16) -> @types.Image16 = @segment.morph_gradient_16
+
+///|
 pub let morph_gradient_f : (@types.ImageF) -> @types.ImageF = @segment.morph_gradient_f
 
 ///|
 pub let morph_tophat : (@types.Image) -> @types.Image = @segment.morph_tophat
+
+///|
 pub let morph_tophat_16 : (@types.Image16) -> @types.Image16 = @segment.morph_tophat_16
+
+///|
 pub let morph_tophat_f : (@types.ImageF) -> @types.ImageF = @segment.morph_tophat_f
 
 ///|
 pub let morph_blackhat : (@types.Image) -> @types.Image = @segment.morph_blackhat
+
+///|
 pub let morph_blackhat_16 : (@types.Image16) -> @types.Image16 = @segment.morph_blackhat_16
+
+///|
 pub let morph_blackhat_f : (@types.ImageF) -> @types.ImageF = @segment.morph_blackhat_f
 
 ///|
@@ -1547,52 +1733,92 @@ pub let se_ellipse : (Int) -> @segment.StructuringElement = @segment.se_ellipse
 
 ///|
 pub let erode_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.erode_custom
+
+///|
 pub let erode_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.erode_custom_16
+
+///|
 pub let erode_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.erode_custom_f
 
 ///|
 pub let dilate_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.dilate_custom
+
+///|
 pub let dilate_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.dilate_custom_16
+
+///|
 pub let dilate_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.dilate_custom_f
 
 ///|
 pub let morph_open_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_open_custom
+
+///|
 pub let morph_open_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.morph_open_custom_16
+
+///|
 pub let morph_open_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.morph_open_custom_f
 
 ///|
 pub let morph_close_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.morph_close_custom
+
+///|
 pub let morph_close_custom_16 : (@types.Image16, @segment.StructuringElement) -> @types.Image16 = @segment.morph_close_custom_16
+
+///|
 pub let morph_close_custom_f : (@types.ImageF, @segment.StructuringElement) -> @types.ImageF = @segment.morph_close_custom_f
 
 ///|
 pub let morph_open : (@types.Image) -> @types.Image = @segment.morph_open
+
+///|
 pub let morph_open_16 : (@types.Image16) -> @types.Image16 = @segment.morph_open_16
+
+///|
 pub let morph_open_f : (@types.ImageF) -> @types.ImageF = @segment.morph_open_f
 
 ///|
 pub let mse : (@types.Image, @types.Image) -> Double raise @types.LoadError = @feature.mse
+
+///|
 pub let mse_16 : (@types.Image16, @types.Image16) -> Double raise @types.LoadError = @feature.mse_16
+
+///|
 pub let mse_f : (@types.ImageF, @types.ImageF) -> Double raise @types.LoadError = @feature.mse_f
 
 ///|
 pub let premultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.premultiply_alpha
+
+///|
 pub let premultiply_alpha_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.premultiply_alpha_16
+
+///|
 pub let premultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.premultiply_alpha_f
 
 ///|
 pub let psnr : (@types.Image, @types.Image) -> Double raise @types.LoadError = @feature.psnr
+
+///|
 pub let psnr_16 : (@types.Image16, @types.Image16) -> Double raise @types.LoadError = @feature.psnr_16
+
+///|
 pub let psnr_f : (@types.ImageF, @types.ImageF) -> Double raise @types.LoadError = @feature.psnr_f
 
 ///|
 pub let pyr_down : (@types.Image) -> @types.Image raise @types.LoadError = @transform.pyr_down
+
+///|
 pub let pyr_down_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @transform.pyr_down_16
+
+///|
 pub let pyr_down_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @transform.pyr_down_f
 
 ///|
 pub let pyr_up : (@types.Image) -> @types.Image raise @types.LoadError = @transform.pyr_up
+
+///|
 pub let pyr_up_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @transform.pyr_up_16
+
+///|
 pub let pyr_up_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @transform.pyr_up_f
 
 ///|
@@ -1606,52 +1832,92 @@ pub fn region_growing_segment(
 
 ///|
 pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl
+
+///|
 pub let rgb_to_hsl_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_16
+
+///|
 pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_f
 
 ///|
 pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv
+
+///|
 pub let rgb_to_hsv_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_16
+
+///|
 pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_f
 
 ///|
 pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr
+
+///|
 pub let rgb_to_ycbcr_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr_16
+
+///|
 pub let rgb_to_ycbcr_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_ycbcr_f
 
 ///|
 pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb
+
+///|
 pub let ycbcr_to_rgb_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb_16
+
+///|
 pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.ycbcr_to_rgb_f
 
 ///|
 pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz
+
+///|
 pub let rgb_to_xyz_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_16
+
+///|
 pub let rgb_to_xyz_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_f
 
 ///|
 pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb
+
+///|
 pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb_16
+
+///|
 pub let xyz_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.xyz_to_rgb_f
 
 ///|
 pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab
+
+///|
 pub let rgb_to_lab_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_16
+
+///|
 pub let rgb_to_lab_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_f
 
 ///|
 pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb
+
+///|
 pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb_16
+
+///|
 pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.lab_to_rgb_f
 
 ///|
 pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk
+
+///|
 pub let rgb_to_cmyk_16 : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk_16
+
+///|
 pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) raise @types.LoadError = @color.rgb_to_cmyk_f
 
 ///|
 pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb
+
+///|
 pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb_16
+
+///|
 pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.cmyk_to_rgb_f
 
 ///|
@@ -1692,7 +1958,11 @@ pub let segment_to_color : (@segment.SegmentLabelImage) -> @types.Image raise @t
 
 ///|
 pub let sharpen : (@types.Image, Float) -> @types.Image raise @types.LoadError = @filter.sharpen
+
+///|
 pub let sharpen_16 : (@types.Image16, Float) -> @types.Image16 raise @types.LoadError = @filter.sharpen_16
+
+///|
 pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @filter.sharpen_f
 
 ///|
@@ -1793,32 +2063,56 @@ pub fn msrcr_f(
 
 ///|
 pub let ssim : (@types.Image, @types.Image) -> Double raise @types.LoadError = @feature.ssim
+
+///|
 pub let ssim_16 : (@types.Image16, @types.Image16) -> Double raise @types.LoadError = @feature.ssim_16
+
+///|
 pub let ssim_f : (@types.ImageF, @types.ImageF) -> Double raise @types.LoadError = @feature.ssim_f
 
 ///|
 pub let threshold_otsu : (@types.Image) -> @types.Image raise @types.LoadError = @color.threshold_otsu
+
+///|
 pub let threshold_otsu_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.threshold_otsu_16
+
+///|
 pub let threshold_otsu_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.threshold_otsu_f
 
 ///|
 pub let to_grayscale : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_grayscale
+
+///|
 pub let to_grayscale_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_grayscale_16
+
+///|
 pub let to_grayscale_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_grayscale_f
 
 ///|
 pub let to_rgb : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgb
+
+///|
 pub let to_rgb_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_rgb_16
+
+///|
 pub let to_rgb_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_rgb_f
 
 ///|
 pub let to_rgba : (@types.Image) -> @types.Image raise @types.LoadError = @color.to_rgba
+
+///|
 pub let to_rgba_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.to_rgba_16
+
+///|
 pub let to_rgba_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.to_rgba_f
 
 ///|
 pub let unpremultiply_alpha : (@types.Image) -> @types.Image raise @types.LoadError = @color.unpremultiply_alpha
+
+///|
 pub let unpremultiply_alpha_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = @color.unpremultiply_alpha_16
+
+///|
 pub let unpremultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.unpremultiply_alpha_f
 
 ///|
@@ -1828,12 +2122,16 @@ pub let warp_affine : (
   Int,
   Int,
 ) -> @types.Image = @transform.warp_affine
+
+///|
 pub let warp_affine_16 : (
   @types.Image16,
   (Float, Float, Float, Float, Float, Float),
   Int,
   Int,
 ) -> @types.Image16 = @transform.warp_affine_16
+
+///|
 pub let warp_affine_f : (
   @types.ImageF,
   (Float, Float, Float, Float, Float, Float),
@@ -1843,12 +2141,20 @@ pub let warp_affine_f : (
 
 ///|
 pub let watershed : (@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed
+
+///|
 pub let watershed_16 : (@types.Image16, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_16
+
+///|
 pub let watershed_f : (@types.ImageF, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_f
 
 ///|
 pub let watershed_auto : (@types.Image) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto
+
+///|
 pub let watershed_auto_16 : (@types.Image16) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_16
+
+///|
 pub let watershed_auto_f : (@types.ImageF) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_f
 
 ///|
@@ -1870,7 +2176,11 @@ pub type SuperpixelResult = @segment.SuperpixelResult
 
 ///|
 pub let slic : (@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic
+
+///|
 pub let slic_16 : (@types.Image16, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_16
+
+///|
 pub let slic_f : (@types.ImageF, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_f
 
 ///|
@@ -1952,12 +2262,16 @@ pub let warp_perspective : (
   Int,
   Int,
 ) -> @types.Image = @transform.warp_perspective
+
+///|
 pub let warp_perspective_16 : (
   @types.Image16,
   @transform.PerspectiveMatrix,
   Int,
   Int,
 ) -> @types.Image16 = @transform.warp_perspective_16
+
+///|
 pub let warp_perspective_f : (
   @types.ImageF,
   @transform.PerspectiveMatrix,
@@ -1972,7 +2286,7 @@ pub let get_affine_transform : (Array[(Float, Float)], Array[(Float, Float)]) ->
 pub let get_rotation_matrix_2d : ((Float, Float), Float, Float) -> @transform.AffineMatrix = @transform.get_rotation_matrix_2d
 
 ///|
-pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] raise @types.LoadError = @edge.convex_hull
+pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] = @edge.convex_hull
 
 ///|
 pub fn approx_poly_dp(
@@ -1984,7 +2298,7 @@ pub fn approx_poly_dp(
 }
 
 ///|
-pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments raise @types.LoadError = @edge.image_moments
+pub let image_moments : (Array[@edge.ContourPoint]) -> @edge.Moments = @edge.image_moments
 
 ///|
 pub let hu_moments : (@edge.Moments) -> Array[Double] raise @types.LoadError = @edge.hu_moments
@@ -1993,7 +2307,7 @@ pub let hu_moments : (@edge.Moments) -> Array[Double] raise @types.LoadError = @
 pub let min_enclosing_circle : (Array[@edge.ContourPoint]) -> (
   @edge.ContourPoint,
   Float,
-) raise @types.LoadError = @edge.min_enclosing_circle
+) = @edge.min_enclosing_circle
 
 ///|
 pub fn hough_circles(
@@ -2105,13 +2419,29 @@ pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @t
 
 ///|
 pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
+
+///|
 pub let compute_energy_16 : (@types.Image16) -> Array[Double] = @transform.compute_energy_16
+
+///|
 pub let compute_energy_f : (@types.ImageF) -> Array[Double] = @transform.compute_energy_f
+
+///|
 pub let remove_vertical_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_vertical_seam_16
+
+///|
 pub let remove_vertical_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_vertical_seam_f
+
+///|
 pub let remove_horizontal_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_horizontal_seam_16
+
+///|
 pub let remove_horizontal_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_horizontal_seam_f
+
+///|
 pub let seam_carve_resize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @transform.seam_carve_resize_16
+
+///|
 pub let seam_carve_resize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.seam_carve_resize_f
 
 ///|
@@ -2119,6 +2449,8 @@ pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.dec
 
 ///|
 pub let decode_webp : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_webp_pure
+
+///|
 pub let decode_vp8_frame : (Bytes, Int) -> @types.Image raise @types.LoadError = @codec.decode_vp8_frame
 
 ///|
@@ -2258,7 +2590,11 @@ pub let compute_stats_f : (@types.ImageF) -> @util.ImageStatsF = @util.compute_s
 
 ///|
 pub let convolve : (@types.Image, Array[Float], Float, Float) -> @types.Image raise @types.LoadError = @filter.convolve
+
+///|
 pub let convolve_16 : (@types.Image16, Array[Float], Float, Float) -> @types.Image16 raise @types.LoadError = @filter.convolve_16
+
+///|
 pub let convolve_f : (@types.ImageF, Array[Float], Float, Float) -> @types.ImageF raise @types.LoadError = @filter.convolve_f
 
 ///|
@@ -2269,7 +2605,11 @@ pub let fill_alpha : (@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise
 
 ///|
 pub let flip_vertical : (@types.Image) -> @types.Image = @transform.flip_vertical
+
+///|
 pub let flip_vertical_16 : (@types.Image16) -> @types.Image16 = @transform.flip_vertical_16
+
+///|
 pub let flip_vertical_f : (@types.ImageF) -> @types.ImageF = @transform.flip_vertical_f
 
 ///|
@@ -2340,7 +2680,11 @@ pub let tile : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError =
 
 ///|
 pub let transpose : (@types.Image) -> @types.Image = @util.transpose
+
+///|
 pub let transpose_16 : (@types.Image16) -> @types.Image16 = @transform.transpose_16
+
+///|
 pub let transpose_f : (@types.ImageF) -> @types.ImageF = @transform.transpose_f
 
 ///|
@@ -2422,7 +2766,9 @@ pub fn ocr_preprocess(
 }
 
 ///|
-pub fn document_enhance(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn document_enhance(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @ocr.document_enhance(img)
 }
 
@@ -2489,7 +2835,9 @@ pub fn adaptive_threshold_ocr(
 }
 
 ///|
-pub fn otsu_threshold(img : @types.Image) -> @types.Image raise @types.LoadError {
+pub fn otsu_threshold(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @ocr.otsu_threshold(img)
 }
 
@@ -2675,7 +3023,13 @@ pub fn filter_noise_segments(
   min_area_ratio? : Double = 0.001,
   max_area_ratio? : Double = 0.5,
 ) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
-  @ocr.filter_noise_segments(segments, img_width, img_height, min_area_ratio~, max_area_ratio~)
+  @ocr.filter_noise_segments(
+    segments,
+    img_width,
+    img_height,
+    min_area_ratio~,
+    max_area_ratio~,
+  )
 }
 
 ///|
@@ -2771,22 +3125,34 @@ pub type TemplateMatcher = @ocr.TemplateMatcher
 pub type DistanceMetric = @ocr.DistanceMetric
 
 ///|
-pub fn euclidean_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn euclidean_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   @ocr.euclidean_distance(a, b)
 }
 
 ///|
-pub fn manhattan_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn manhattan_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   @ocr.manhattan_distance(a, b)
 }
 
 ///|
-pub fn cosine_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn cosine_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   @ocr.cosine_distance(a, b)
 }
 
 ///|
-pub fn chebyshev_distance(a : Array[Double], b : Array[Double]) -> Double raise @types.LoadError {
+pub fn chebyshev_distance(
+  a : Array[Double],
+  b : Array[Double],
+) -> Double raise @types.LoadError {
   @ocr.chebyshev_distance(a, b)
 }
 
@@ -2857,12 +3223,16 @@ pub fn template_matcher_predict(
 }
 
 ///|
-pub fn normalize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+pub fn normalize_features(
+  features : Array[Double],
+) -> Array[Double] raise @types.LoadError {
   @ocr.normalize_features(features)
 }
 
 ///|
-pub fn standardize_features(features : Array[Double]) -> Array[Double] raise @types.LoadError {
+pub fn standardize_features(
+  features : Array[Double],
+) -> Array[Double] raise @types.LoadError {
   @ocr.standardize_features(features)
 }
 
@@ -2943,7 +3313,9 @@ pub fn postprocess_default_config() -> @ocr.PostProcessConfig {
 }
 
 ///|
-pub fn dictionary_create(words : Array[String]) -> @ocr.Dictionary raise @types.LoadError {
+pub fn dictionary_create(
+  words : Array[String],
+) -> @ocr.Dictionary raise @types.LoadError {
   @ocr.dictionary_create(words)
 }
 
@@ -2990,13 +3362,21 @@ pub fn ocr_postprocess(
   ngram_model? : @ocr.NgramModel,
 ) -> @ocr.OcrResult raise @types.LoadError {
   match config {
-    Some(c) => match dictionary {
-      Some(d) => match ngram_model {
-        Some(n) => @ocr.ocr_postprocess(result, config=c, dictionary=d, ngram_model=n)
-        None => @ocr.ocr_postprocess(result, config=c, dictionary=d)
+    Some(c) =>
+      match dictionary {
+        Some(d) =>
+          match ngram_model {
+            Some(n) =>
+              @ocr.ocr_postprocess(
+                result,
+                config=c,
+                dictionary=d,
+                ngram_model=n,
+              )
+            None => @ocr.ocr_postprocess(result, config=c, dictionary=d)
+          }
+        None => @ocr.ocr_postprocess(result, config=c)
       }
-      None => @ocr.ocr_postprocess(result, config=c)
-    }
     None => @ocr.ocr_postprocess(result)
   }
 }
@@ -3201,7 +3581,8 @@ pub fn ensemble_predict(
   config? : @ocr.EnsembleConfig,
 ) -> @ocr.ClassificationResult raise @types.LoadError {
   match config {
-    Some(c) => @ocr.ensemble_predict(features, knn_classifier, templates, config=c)
+    Some(c) =>
+      @ocr.ensemble_predict(features, knn_classifier, templates, config=c)
     None => @ocr.ensemble_predict(features, knn_classifier, templates)
   }
 }
@@ -3239,9 +3620,7 @@ pub fn compute_reading_order(
 }
 
 ///|
-pub fn extract_title(
-  structure : @ocr.DocumentStructure,
-) -> String {
+pub fn extract_title(structure : @ocr.DocumentStructure) -> String {
   @ocr.extract_title(structure)
 }
 
@@ -3449,9 +3828,7 @@ pub fn extract_gabor_ocr_features(
 }
 
 ///|
-pub fn extract_directional_features(
-  char_img : @types.Image,
-) -> Array[Double] {
+pub fn extract_directional_features(char_img : @types.Image) -> Array[Double] {
   @ocr.extract_directional_features(char_img)
 }
 
@@ -3814,9 +4191,7 @@ pub fn apply_homography(
 }
 
 ///|
-pub fn invert_homography(
-  h : @stitch.Homography,
-) -> @stitch.Homography? {
+pub fn invert_homography(h : @stitch.Homography) -> @stitch.Homography? {
   @stitch.invert_homography(h)
 }
 
@@ -3845,7 +4220,13 @@ pub fn estimate_homography_ransac(
   iterations? : Int = 1000,
   threshold? : Double = 3.0,
 ) -> (@stitch.Homography?, Array[@stitch.MatchPair]) {
-  @stitch.estimate_homography_ransac(matches, query_points, train_points, iterations~, threshold~)
+  @stitch.estimate_homography_ransac(
+    matches,
+    query_points,
+    train_points,
+    iterations~,
+    threshold~,
+  )
 }
 
 ///|
@@ -3894,7 +4275,12 @@ pub fn super_resolution_edge_preserving(
   edge_threshold? : Double = 30.0,
   sharpen_amount? : Double = 0.5,
 ) -> @types.Image {
-  @superres.super_resolution_edge_preserving(img, scale, edge_threshold~, sharpen_amount~)
+  @superres.super_resolution_edge_preserving(
+    img,
+    scale,
+    edge_threshold~,
+    sharpen_amount~,
+  )
 }
 
 ///|
@@ -3909,16 +4295,12 @@ pub fn super_resolution(
 }
 
 ///|
-pub fn upscale_2x(
-  img : @types.Image,
-) -> @types.Image {
+pub fn upscale_2x(img : @types.Image) -> @types.Image {
   @superres.upscale_2x(img)
 }
 
 ///|
-pub fn upscale_4x(
-  img : @types.Image,
-) -> @types.Image {
+pub fn upscale_4x(img : @types.Image) -> @types.Image {
   @superres.upscale_4x(img)
 }
 
@@ -3928,23 +4310,17 @@ pub fn upscale_4x(
 pub type Code128Charset = @barcode.Code128Charset
 
 ///|
-pub fn decode_code128(
-  img : @types.Image,
-) -> @barcode.BarcodeResult? {
+pub fn decode_code128(img : @types.Image) -> @barcode.BarcodeResult? {
   @barcode.decode_code128(img)
 }
 
 ///|
-pub fn decode_upca(
-  img : @types.Image,
-) -> @barcode.BarcodeResult? {
+pub fn decode_upca(img : @types.Image) -> @barcode.BarcodeResult? {
   @barcode.decode_upca(img)
 }
 
 ///|
-pub fn decode_code39(
-  img : @types.Image,
-) -> @barcode.BarcodeResult? {
+pub fn decode_code39(img : @types.Image) -> @barcode.BarcodeResult? {
   @barcode.decode_code39(img)
 }
 
@@ -3961,9 +4337,7 @@ pub fn decode_linear_barcode(
 pub type QrDecodeResult = @barcode.QrDecodeResult
 
 ///|
-pub fn decode_qrcode_full(
-  img : @types.Image,
-) -> @barcode.QrDecodeResult? {
+pub fn decode_qrcode_full(img : @types.Image) -> @barcode.QrDecodeResult? {
   @barcode.decode_qrcode_full(img)
 }
 
@@ -3995,18 +4369,12 @@ pub fn oil_paint(
 }
 
 ///|
-pub fn sketch(
-  img : @types.Image,
-  blend? : Double = 0.7,
-) -> @types.Image {
+pub fn sketch(img : @types.Image, blend? : Double = 0.7) -> @types.Image {
   @stylize.sketch(img, blend~)
 }
 
 ///|
-pub fn watercolor(
-  img : @types.Image,
-  blur_radius? : Int = 5,
-) -> @types.Image {
+pub fn watercolor(img : @types.Image, blur_radius? : Int = 5) -> @types.Image {
   @stylize.watercolor(img, blur_radius~)
 }
 
@@ -4250,9 +4618,9 @@ pub fn denoise_median(
 ///|
 pub fn denoise(
   img : @types.Image,
-  method : String,
+  method_type : String,
 ) -> @types.Image raise @types.LoadError {
-  @enhance.denoise(img, method)
+  @enhance.denoise(img, method_type)
 }
 
 // ==================== 图像分割（v12.2.0） ====================
@@ -4344,34 +4712,22 @@ pub fn draw_detections(
 pub type QualityMetrics = @quality.QualityMetrics
 
 ///|
-pub fn compute_mse(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_mse(img1 : @types.Image, img2 : @types.Image) -> Double {
   @quality.compute_mse(img1, img2)
 }
 
 ///|
-pub fn compute_mae(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_mae(img1 : @types.Image, img2 : @types.Image) -> Double {
   @quality.compute_mae(img1, img2)
 }
 
 ///|
-pub fn compute_psnr(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_psnr(img1 : @types.Image, img2 : @types.Image) -> Double {
   @quality.compute_psnr(img1, img2)
 }
 
 ///|
-pub fn compute_ssim(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_ssim(img1 : @types.Image, img2 : @types.Image) -> Double {
   @quality.compute_ssim(img1, img2)
 }
 
@@ -4384,10 +4740,7 @@ pub fn compute_quality_metrics(
 }
 
 ///|
-pub fn images_equal(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Bool {
+pub fn images_equal(img1 : @types.Image, img2 : @types.Image) -> Bool {
   @quality.images_equal(img1, img2)
 }
 
@@ -4427,9 +4780,7 @@ pub fn fuse_multifocus(
 }
 
 ///|
-pub fn fuse_exposure(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_exposure(images : Array[@types.Image]) -> @types.Image {
   @fusion.fuse_exposure(images)
 }
 
@@ -4467,17 +4818,12 @@ pub fn affine_translation(
 }
 
 ///|
-pub fn affine_rotation(
-  angle : Double,
-) -> @registration.AffineTransform {
+pub fn affine_rotation(angle : Double) -> @registration.AffineTransform {
   @registration.affine_rotation(angle)
 }
 
 ///|
-pub fn affine_scale(
-  sx : Double,
-  sy : Double,
-) -> @registration.AffineTransform {
+pub fn affine_scale(sx : Double, sy : Double) -> @registration.AffineTransform {
   @registration.affine_scale(sx, sy)
 }
 
@@ -4539,9 +4885,7 @@ pub fn video_frames_new(
 }
 
 ///|
-pub fn video_frame_count(
-  video : @video.VideoFrames,
-) -> Int {
+pub fn video_frame_count(video : @video.VideoFrames) -> Int {
   @video.video_frame_count(video)
 }
 
@@ -4587,9 +4931,7 @@ pub fn video_sample(
 }
 
 ///|
-pub fn video_reverse(
-  video : @video.VideoFrames,
-) -> @video.VideoFrames {
+pub fn video_reverse(video : @video.VideoFrames) -> @video.VideoFrames {
   @video.video_reverse(video)
 }
 
@@ -4610,9 +4952,7 @@ pub fn create_animation(
 }
 
 ///|
-pub fn video_frame_average(
-  video : @video.VideoFrames,
-) -> @types.Image {
+pub fn video_frame_average(video : @video.VideoFrames) -> @types.Image {
   @video.video_frame_average(video)
 }
 
@@ -4744,10 +5084,7 @@ pub fn measure_distance(
 }
 
 ///|
-pub fn measure_area(
-  mask : @types.Image,
-  pixel_area? : Double = 1.0,
-) -> Double {
+pub fn measure_area(mask : @types.Image, pixel_area? : Double = 1.0) -> Double {
   @medical.measure_area(mask, pixel_area~)
 }
 
@@ -4763,30 +5100,21 @@ pub fn multispectral_new(
   bands : Array[@types.Image],
   band_names? : Array[String] = [],
 ) -> @remote_sensing.MultispectralImage {
-  @remote_sensing.multispectral_new(width, height, bands, band_names=band_names)
+  @remote_sensing.multispectral_new(width, height, bands, band_names~)
 }
 
 ///|
-pub fn compute_ndvi(
-  nir : @types.Image,
-  red : @types.Image,
-) -> @types.Image {
+pub fn compute_ndvi(nir : @types.Image, red : @types.Image) -> @types.Image {
   @remote_sensing.compute_ndvi(nir, red)
 }
 
 ///|
-pub fn compute_ndwi(
-  green : @types.Image,
-  nir : @types.Image,
-) -> @types.Image {
+pub fn compute_ndwi(green : @types.Image, nir : @types.Image) -> @types.Image {
   @remote_sensing.compute_ndwi(green, nir)
 }
 
 ///|
-pub fn compute_ndbi(
-  swir : @types.Image,
-  nir : @types.Image,
-) -> @types.Image {
+pub fn compute_ndbi(swir : @types.Image, nir : @types.Image) -> @types.Image {
   @remote_sensing.compute_ndbi(swir, nir)
 }
 
@@ -4836,9 +5164,7 @@ pub fn land_cover_classification(
 }
 
 ///|
-pub fn classification_colormap(
-  classification : @types.Image,
-) -> @types.Image {
+pub fn classification_colormap(classification : @types.Image) -> @types.Image {
   @remote_sensing.classification_colormap(classification)
 }
 
@@ -4862,9 +5188,7 @@ pub fn embed_watermark_lsb(
 }
 
 ///|
-pub fn extract_watermark_lsb(
-  stego : @types.Image,
-) -> @types.Image {
+pub fn extract_watermark_lsb(stego : @types.Image) -> @types.Image {
   @watermark.extract_watermark_lsb(stego)
 }
 
@@ -4900,7 +5224,11 @@ pub fn watermark_robustness_test(
   original_watermark : @types.Image,
   noise_level? : Double = 10.0,
 ) -> Double {
-  @watermark.watermark_robustness_test(watermarked, original_watermark, noise_level~)
+  @watermark.watermark_robustness_test(
+    watermarked,
+    original_watermark,
+    noise_level~,
+  )
 }
 
 ///|
@@ -4957,18 +5285,18 @@ pub fn search_similar_images(
   db : @retrieval.ImageDatabase,
   query : @retrieval.ImageFeature,
   top_k? : Int = 5,
-  method? : String = "cosine",
+  method_type? : String = "cosine",
 ) -> Array[@retrieval.SearchResult] {
-  @retrieval.search_similar_images(db, query, top_k~, method~)
+  @retrieval.search_similar_images(db, query, top_k~, method_type~)
 }
 
 ///|
 pub fn image_similarity(
   img1 : @types.Image,
   img2 : @types.Image,
-  method? : String = "cosine",
+  method_type? : String = "cosine",
 ) -> Double {
-  @retrieval.image_similarity(img1, img2, method~)
+  @retrieval.image_similarity(img1, img2, method_type~)
 }
 
 ///|
@@ -4979,9 +5307,7 @@ pub fn batch_extract_features(
 }
 
 ///|
-pub fn database_size(
-  db : @retrieval.ImageDatabase,
-) -> Int {
+pub fn database_size(db : @retrieval.ImageDatabase) -> Int {
   @retrieval.database_size(db)
 }
 
@@ -5017,25 +5343,17 @@ pub fn decrypt_image_logistic(
 }
 
 ///|
-pub fn encrypt_image_xor(
-  img : @types.Image,
-  key : String,
-) -> @types.Image {
+pub fn encrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
   @encryption.encrypt_image_xor(img, key)
 }
 
 ///|
-pub fn decrypt_image_xor(
-  img : @types.Image,
-  key : String,
-) -> @types.Image {
+pub fn decrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
   @encryption.decrypt_image_xor(img, key)
 }
 
 ///|
-pub fn histogram_entropy(
-  img : @types.Image,
-) -> Double {
+pub fn histogram_entropy(img : @types.Image) -> Double {
   @encryption.histogram_entropy(img)
 }
 
@@ -5121,18 +5439,16 @@ pub fn clahe_enhance(
 }
 
 ///|
-pub fn white_balance(
-  img : @types.Image,
-) -> @types.Image {
+pub fn white_balance(img : @types.Image) -> @types.Image {
   @photo_enhance.white_balance(img)
 }
 
 ///|
 pub fn batch_photo_enhance(
   images : Array[@types.Image],
-  method : String,
+  method_type : String,
 ) -> Array[@types.Image] {
-  @photo_enhance.batch_photo_enhance(images, method)
+  @photo_enhance.batch_photo_enhance(images, method_type)
 }
 
 // ==================== 扫描版文档 OCR 增强（v12.16.0） ====================
@@ -5193,23 +5509,17 @@ pub fn batch_scan_ocr(
 }
 
 ///|
-pub fn ocr_result_to_text(
-  result : @ocr.OCRPageResult,
-) -> String {
+pub fn ocr_result_to_text(result : @ocr.OCRPageResult) -> String {
   @ocr.ocr_result_to_text(result)
 }
 
 ///|
-pub fn ocr_result_to_hocr(
-  result : @ocr.OCRPageResult,
-) -> String {
+pub fn ocr_result_to_hocr(result : @ocr.OCRPageResult) -> String {
   @ocr.ocr_result_to_hocr(result)
 }
 
 ///|
-pub fn ocr_result_to_json(
-  result : @ocr.OCRPageResult,
-) -> String {
+pub fn ocr_result_to_json(result : @ocr.OCRPageResult) -> String {
   @ocr.ocr_result_to_json(result)
 }
 
@@ -5234,9 +5544,7 @@ pub type MarkdownSymbol = @ocr.MarkdownSymbol
 pub type MarkdownDocument = @ocr.MarkdownDocument
 
 ///|
-pub fn recognize_symbols_markdown(
-  text : String,
-) -> Array[@ocr.MarkdownSymbol] {
+pub fn recognize_symbols_markdown(text : String) -> Array[@ocr.MarkdownSymbol] {
   @ocr.recognize_symbols_markdown(text)
 }
 
@@ -5257,9 +5565,7 @@ pub fn classify_markdown_element(
 }
 
 ///|
-pub fn markdown_table_to_string(
-  table : @ocr.MarkdownTable,
-) -> String {
+pub fn markdown_table_to_string(table : @ocr.MarkdownTable) -> String {
   @ocr.markdown_table_to_string(table)
 }
 
@@ -5271,9 +5577,7 @@ pub fn determine_reading_order_markdown(
 }
 
 ///|
-pub fn markdown_document_to_string(
-  doc : @ocr.MarkdownDocument,
-) -> String {
+pub fn markdown_document_to_string(doc : @ocr.MarkdownDocument) -> String {
   @ocr.markdown_document_to_string(doc)
 }
 
@@ -5364,9 +5668,7 @@ pub fn is_heading_line(
 }
 
 ///|
-pub fn detect_list_item(
-  line : @ocr.TextLineAttributes,
-) -> @ocr.ListItemInfo {
+pub fn detect_list_item(line : @ocr.TextLineAttributes) -> @ocr.ListItemInfo {
   @ocr.detect_list_item(line)
 }
 
@@ -5379,10 +5681,7 @@ pub fn is_code_block_line(
 }
 
 ///|
-pub fn is_quote_line(
-  line : @ocr.TextLineAttributes,
-  avg_x : Int,
-) -> Bool {
+pub fn is_quote_line(line : @ocr.TextLineAttributes, avg_x : Int) -> Bool {
   @ocr.is_quote_line(line, avg_x)
 }
 
@@ -5475,9 +5774,7 @@ pub fn detect_table_enhanced(
 }
 
 ///|
-pub fn enhanced_table_to_markdown(
-  table : @ocr.EnhancedTableResult,
-) -> String {
+pub fn enhanced_table_to_markdown(table : @ocr.EnhancedTableResult) -> String {
   @ocr.enhanced_table_to_markdown(table)
 }
 
@@ -5530,26 +5827,17 @@ pub type ErrorAnalysisReport = @ocr.ErrorAnalysisReport
 pub type PerformanceBenchmark = @ocr.PerformanceBenchmark
 
 ///|
-pub fn calculate_char_accuracy(
-  expected : String,
-  actual : String,
-) -> Double {
+pub fn calculate_char_accuracy(expected : String, actual : String) -> Double {
   @ocr.calculate_char_accuracy(expected, actual)
 }
 
 ///|
-pub fn calculate_word_accuracy(
-  expected : String,
-  actual : String,
-) -> Double {
+pub fn calculate_word_accuracy(expected : String, actual : String) -> Double {
   @ocr.calculate_word_accuracy(expected, actual)
 }
 
 ///|
-pub fn calculate_edit_distance(
-  s1 : String,
-  s2 : String,
-) -> Int {
+pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int {
   @ocr.calculate_edit_distance(s1, s2)
 }
 
@@ -5584,7 +5872,12 @@ pub fn check_accuracy_threshold(
   min_word_accuracy? : Double = 0.90,
   min_f1_score? : Double = 0.92,
 ) -> (Bool, Array[String]) raise @types.LoadError {
-  @ocr.check_accuracy_threshold(stats, min_char_accuracy~, min_word_accuracy~, min_f1_score~)
+  @ocr.check_accuracy_threshold(
+    stats,
+    min_char_accuracy~,
+    min_word_accuracy~,
+    min_f1_score~,
+  )
 }
 
 // ==================== OCR 后处理纠错（v12.22.0 P1 准确率提升） ====================
@@ -5621,9 +5914,7 @@ pub fn correct_similar_chars(
 }
 
 ///|
-pub fn correct_common_patterns(
-  text : String,
-) -> @ocr.CorrectionResult {
+pub fn correct_common_patterns(text : String) -> @ocr.CorrectionResult {
   @ocr.correct_common_patterns(text)
 }
 
@@ -5728,7 +6019,7 @@ pub fn find_similar_chinese_chars(
 pub fn lookup_char(
   dict : @ocr.DictChineseDict,
   char : String,
-) -> Option[@ocr.DictCharEntry] raise @types.LoadError {
+) -> @ocr.DictCharEntry? raise @types.LoadError {
   @ocr.lookup_char(dict, char)
 }
 
@@ -5739,7 +6030,12 @@ pub fn recognize_by_components(
   detected_components : Array[String],
   stroke_count_hint? : Int = 0,
 ) -> Array[(String, Double)] {
-  @ocr.recognize_by_components(dict, detected_structure, detected_components, stroke_count_hint~)
+  @ocr.recognize_by_components(
+    dict,
+    detected_structure,
+    detected_components,
+    stroke_count_hint~,
+  )
 }
 
 ///|
@@ -5812,9 +6108,7 @@ pub fn generate_robustness_report(
 }
 
 ///|
-pub fn robustness_report_to_string(
-  report : @ocr.RobustnessReport,
-) -> String {
+pub fn robustness_report_to_string(report : @ocr.RobustnessReport) -> String {
   @ocr.robustness_report_to_string(report)
 }
 
@@ -5898,17 +6192,12 @@ pub fn generate_batch_summary(
 }
 
 ///|
-pub fn batch_summary_to_string(
-  summary : @ocr.BatchResultSummary,
-) -> String {
+pub fn batch_summary_to_string(summary : @ocr.BatchResultSummary) -> String {
   @ocr.batch_summary_to_string(summary)
 }
 
 ///|
-pub fn progress_bar_to_string(
-  progress : Double,
-  width? : Int = 30,
-) -> String {
+pub fn progress_bar_to_string(progress : Double, width? : Int = 30) -> String {
   @ocr.progress_bar_to_string(progress, width~)
 }
 
@@ -6035,7 +6324,9 @@ pub fn dense_forward(
   out_features : Int,
   activation : String,
 ) -> Array[Double] {
-  @ocr.dense_forward(input, weights, biases, in_features, out_features, activation)
+  @ocr.dense_forward(
+    input, weights, biases, in_features, out_features, activation,
+  )
 }
 
 ///|
@@ -6057,10 +6348,7 @@ pub fn create_training_sample(
 }
 
 ///|
-pub fn cross_entropy_loss(
-  predicted : Array[Double],
-  target : Int,
-) -> Double {
+pub fn cross_entropy_loss(predicted : Array[Double], target : Int) -> Double {
   @ocr.cross_entropy_loss(predicted, target)
 }
 
@@ -6074,7 +6362,9 @@ pub fn create_training_history(
   learning_rate : Double,
   time_ms : Double,
 ) -> @ocr.DLTrainingHistory {
-  @ocr.create_training_history(epoch, train_loss, train_accuracy, val_loss, val_accuracy, learning_rate, time_ms)
+  @ocr.create_training_history(
+    epoch, train_loss, train_accuracy, val_loss, val_accuracy, learning_rate, time_ms,
+  )
 }
 
 ///|
@@ -6095,9 +6385,7 @@ pub fn save_model(
 }
 
 ///|
-pub fn load_model(
-  path : String,
-) -> Option[@ocr.DLCnnModelConfig] {
+pub fn load_model(path : String) -> @ocr.DLCnnModelConfig? {
   @ocr.load_model(path)
 }
 
@@ -6426,7 +6714,9 @@ pub fn initialize_tracking(
   roi_height : Int,
   label : String,
 ) -> @video.TrackedObject {
-  @video.initialize_tracking(first_frame, roi_x, roi_y, roi_width, roi_height, label)
+  @video.initialize_tracking(
+    first_frame, roi_x, roi_y, roi_width, roi_height, label,
+  )
 }
 
 ///|
@@ -6459,9 +6749,9 @@ pub fn detect_scene_change(
 pub fn extract_keyframes(
   frames : Array[@types.Image],
   fps : Double,
-  method? : String = "auto",
+  method_type? : String = "auto",
 ) -> Array[@video.Keyframe] {
-  @video.extract_keyframes(frames, fps, method~)
+  @video.extract_keyframes(frames, fps, method_type~)
 }
 
 ///|
@@ -6517,7 +6807,10 @@ pub fn create_default_panorama_config() -> @photo_enhance.PanoramaConfig {
 }
 
 ///|
-pub fn create_default_dof_config(width : Int, height : Int) -> @photo_enhance.DepthOfFieldConfig {
+pub fn create_default_dof_config(
+  width : Int,
+  height : Int,
+) -> @photo_enhance.DepthOfFieldConfig {
   @photo_enhance.create_default_dof_config(width, height)
 }
 
@@ -6527,7 +6820,9 @@ pub fn create_default_night_config() -> @photo_enhance.NightEnhanceConfig {
 }
 
 ///|
-pub fn detect_exposure_type(img : @types.Image) -> (@photo_enhance.ExposureType, Double) {
+pub fn detect_exposure_type(
+  img : @types.Image,
+) -> (@photo_enhance.ExposureType, Double) {
   @photo_enhance.detect_exposure_type(img)
 }
 
@@ -6540,7 +6835,10 @@ pub fn hdr_merge(
 }
 
 ///|
-pub fn tone_map(hdr : @photo_enhance.HdrImage, config : @photo_enhance.ToneMappingConfig) -> @types.Image {
+pub fn tone_map(
+  hdr : @photo_enhance.HdrImage,
+  config : @photo_enhance.ToneMappingConfig,
+) -> @types.Image {
   @photo_enhance.tone_map(hdr, config)
 }
 
@@ -6651,7 +6949,9 @@ pub fn calculate_detection_metrics(
   ground_truth : Array[@detection.YoloBoundingBox],
   iou_threshold : Double,
 ) -> @detection.YoloDetectionMetrics raise @types.LoadError {
-  @detection.calculate_detection_metrics(predictions, ground_truth, iou_threshold)
+  @detection.calculate_detection_metrics(
+    predictions, ground_truth, iou_threshold,
+  )
 }
 
 ///|
@@ -6746,7 +7046,9 @@ pub fn grabcut_segmentation(
   rect_h : Int,
   config : @segmentation.GrabCutConfig,
 ) -> @segmentation.SemanticSegmentationResult {
-  @segmentation.grabcut_segmentation(img, rect_x, rect_y, rect_w, rect_h, config)
+  @segmentation.grabcut_segmentation(
+    img, rect_x, rect_y, rect_w, rect_h, config,
+  )
 }
 
 ///|
@@ -6755,7 +7057,9 @@ pub fn calculate_segmentation_metrics(
   ground_truth : Array[Int],
   num_classes : Int,
 ) -> @segmentation.SegmentationMetrics {
-  @segmentation.calculate_segmentation_metrics(prediction, ground_truth, num_classes)
+  @segmentation.calculate_segmentation_metrics(
+    prediction, ground_truth, num_classes,
+  )
 }
 
 ///|
@@ -6808,7 +7112,10 @@ pub fn create_default_stereo_config_3d() -> @stereo3d.StereoConfig3d {
 }
 
 ///|
-pub fn create_default_camera_intrinsics_3d(width : Int, height : Int) -> @stereo3d.CameraIntrinsics3d {
+pub fn create_default_camera_intrinsics_3d(
+  width : Int,
+  height : Int,
+) -> @stereo3d.CameraIntrinsics3d {
   @stereo3d.create_default_camera_intrinsics(width, height)
 }
 
@@ -6910,7 +7217,9 @@ pub fn create_default_medical_segmentation_config() -> @medical.MedicalSegmentat
 }
 
 ///|
-pub fn create_default_window_level_medical(preset : String) -> @medical.WindowLevelConfig {
+pub fn create_default_window_level_medical(
+  preset : String,
+) -> @medical.WindowLevelConfig {
   @medical.create_default_window_level(preset)
 }
 
@@ -7102,7 +7411,9 @@ pub fn remote_sensing_report_to_string_rs(
   changes : @remote_sensing.ChangeDetectionResult,
   quality : @remote_sensing.RemoteSensingQuality,
 ) -> String {
-  @remote_sensing.remote_sensing_report_to_string(image, classification, changes, quality)
+  @remote_sensing.remote_sensing_report_to_string(
+    image, classification, changes, quality,
+  )
 }
 
 // ==================== 图像加密与水印增强（v21.0.0） ====================
@@ -7442,18 +7753,12 @@ pub fn bicubic_interpolate_sr(
 }
 
 ///|
-pub fn sharpen_image_sr(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn sharpen_image_sr(img : @types.Image, strength : Double) -> @types.Image {
   @superres.sharpen_image(img, strength)
 }
 
 ///|
-pub fn denoise_image_sr(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn denoise_image_sr(img : @types.Image, strength : Double) -> @types.Image {
   @superres.denoise_image(img, strength)
 }
 
@@ -7554,10 +7859,7 @@ pub fn calculate_texture_features_st(
 }
 
 ///|
-pub fn cartoonize_st(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn cartoonize_st(img : @types.Image, strength : Double) -> @types.Image {
   @style_transfer.cartoonize(img, strength)
 }
 
@@ -7571,10 +7873,7 @@ pub fn oil_painting_st(
 }
 
 ///|
-pub fn sketch_effect_st(
-  img : @types.Image,
-  strength : Double,
-) -> @types.Image {
+pub fn sketch_effect_st(img : @types.Image, strength : Double) -> @types.Image {
   @style_transfer.sketch_effect(img, strength)
 }
 
@@ -7594,7 +7893,9 @@ pub fn style_transfer_report_to_string_st(
   style_stats : @style_transfer.ColorStatistics,
   texture : @style_transfer.StyleTransferTextureFeatures,
 ) -> String {
-  @style_transfer.style_transfer_report_to_string(result, content_stats, style_stats, texture)
+  @style_transfer.style_transfer_report_to_string(
+    result, content_stats, style_stats, texture,
+  )
 }
 
 // ==================== 图像修复增强（v25.0.0） ====================
@@ -7691,9 +7992,7 @@ pub fn dehaze_ip(
 }
 
 ///|
-pub fn derain_morphological_ip(
-  img : @types.Image,
-) -> @inpainting.DerainResult {
+pub fn derain_morphological_ip(img : @types.Image) -> @inpainting.DerainResult {
   @inpainting.derain_morphological(img)
 }
 
@@ -7754,23 +8053,17 @@ pub fn fuse_weighted_average_fe(
 }
 
 ///|
-pub fn fuse_maximum_fe(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_maximum_fe(images : Array[@types.Image]) -> @types.Image {
   @fusion_enhanced.fuse_maximum(images)
 }
 
 ///|
-pub fn fuse_minimum_fe(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_minimum_fe(images : Array[@types.Image]) -> @types.Image {
   @fusion_enhanced.fuse_minimum(images)
 }
 
 ///|
-pub fn fuse_simple_mean_fe(
-  images : Array[@types.Image],
-) -> @types.Image {
+pub fn fuse_simple_mean_fe(images : Array[@types.Image]) -> @types.Image {
   @fusion_enhanced.fuse_simple_mean(images)
 }
 
@@ -7817,9 +8110,7 @@ pub fn apply_translation_fe(
 }
 
 ///|
-pub fn calculate_fusion_quality_fe(
-  fused : @types.Image,
-) -> Double {
+pub fn calculate_fusion_quality_fe(fused : @types.Image) -> Double {
   @fusion_enhanced.calculate_fusion_quality(fused)
 }
 
@@ -7900,9 +8191,7 @@ pub fn analyze_texture_fs(
 }
 
 ///|
-pub fn analyze_edges_fs(
-  img : @types.Image,
-) -> @forensics.EdgeAnalysisResult {
+pub fn analyze_edges_fs(img : @types.Image) -> @forensics.EdgeAnalysisResult {
   @forensics.analyze_edges(img)
 }
 
@@ -8035,38 +8324,27 @@ pub fn create_default_compression_config_cp() -> @compression.CompressionConfig 
 }
 
 ///|
-pub fn run_length_encode_cp(
-  data : Bytes,
-) -> Bytes {
+pub fn run_length_encode_cp(data : Bytes) -> Bytes {
   @compression.run_length_encode(data)
 }
 
 ///|
-pub fn run_length_decode_cp(
-  data : Bytes,
-) -> Bytes {
+pub fn run_length_decode_cp(data : Bytes) -> Bytes {
   @compression.run_length_decode(data)
 }
 
 ///|
-pub fn calculate_image_entropy_cp(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_image_entropy_cp(img : @types.Image) -> Double {
   @compression.calculate_image_entropy(img)
 }
 
 ///|
-pub fn quantize_image_cp(
-  img : @types.Image,
-  levels : Int,
-) -> @types.Image {
+pub fn quantize_image_cp(img : @types.Image, levels : Int) -> @types.Image {
   @compression.quantize_image(img, levels)
 }
 
 ///|
-pub fn predictive_encode_cp(
-  img : @types.Image,
-) -> Bytes {
+pub fn predictive_encode_cp(img : @types.Image) -> Bytes {
   @compression.predictive_encode(img)
 }
 
@@ -8094,7 +8372,9 @@ pub fn calculate_compression_quality_cp(
   original_size : Int,
   compressed_size : Int,
 ) -> @compression.CompressionQualityMetrics {
-  @compression.calculate_compression_quality(original, compressed, original_size, compressed_size)
+  @compression.calculate_compression_quality(
+    original, compressed, original_size, compressed_size,
+  )
 }
 
 ///|
@@ -8189,16 +8469,12 @@ pub fn bilateral_filter_denoise_dn(
 }
 
 ///|
-pub fn calculate_noise_level_dn(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_noise_level_dn(img : @types.Image) -> Double {
   @denoise.calculate_noise_level(img)
 }
 
 ///|
-pub fn histogram_equalization_enhance_dn(
-  img : @types.Image,
-) -> @types.Image {
+pub fn histogram_equalization_enhance_dn(img : @types.Image) -> @types.Image {
   @denoise.histogram_equalization_enhance(img)
 }
 
@@ -8220,23 +8496,17 @@ pub fn unsharp_mask_enhance_dn(
 }
 
 ///|
-pub fn calculate_brightness_dn(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_brightness_dn(img : @types.Image) -> Double {
   @denoise.calculate_brightness(img)
 }
 
 ///|
-pub fn calculate_contrast_dn(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_contrast_dn(img : @types.Image) -> Double {
   @denoise.calculate_contrast(img)
 }
 
 ///|
-pub fn calculate_sharpness_dn(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_sharpness_dn(img : @types.Image) -> Double {
   @denoise.calculate_sharpness(img)
 }
 
@@ -8257,9 +8527,7 @@ pub fn enhance_image_advanced_dn(
 }
 
 ///|
-pub fn denoise_report_to_string_dn(
-  result : @denoise.DenoiseResult,
-) -> String {
+pub fn denoise_report_to_string_dn(result : @denoise.DenoiseResult) -> String {
   @denoise.denoise_report_to_string(result)
 }
 
@@ -8460,9 +8728,7 @@ pub fn detect_loop_closure_sl(
 }
 
 ///|
-pub fn initialize_slam_sl(
-  config : @slam.SLAMConfig,
-) -> @slam.SLAMState {
+pub fn initialize_slam_sl(config : @slam.SLAMConfig) -> @slam.SLAMState {
   @slam.initialize_slam(config)
 }
 
@@ -8476,9 +8742,7 @@ pub fn process_frame_slam_sl(
 }
 
 ///|
-pub fn slam_report_to_string_sl(
-  state : @slam.SLAMState,
-) -> String {
+pub fn slam_report_to_string_sl(state : @slam.SLAMState) -> String {
   @slam.slam_report_to_string(state)
 }
 
@@ -8928,7 +9192,11 @@ pub fn generate_scene_graph_su(
 pub fn understand_scene_su(
   img : @types.Image,
   config : @scene_understanding.SceneUnderstandingConfig,
-) -> (@scene_understanding.SceneClassificationResult, @scene_understanding.ImageCaptioningResult, @scene_understanding.SceneGraph) {
+) -> (
+  @scene_understanding.SceneClassificationResult,
+  @scene_understanding.ImageCaptioningResult,
+  @scene_understanding.SceneGraph,
+) {
   @scene_understanding.understand_scene(img, config)
 }
 
@@ -8939,7 +9207,9 @@ pub fn scene_understanding_report_to_string_su(
   vqa : @scene_understanding.VisualQuestionAnsweringResult,
   scene_graph : @scene_understanding.SceneGraph,
 ) -> String {
-  @scene_understanding.scene_understanding_report_to_string(classification, caption, vqa, scene_graph)
+  @scene_understanding.scene_understanding_report_to_string(
+    classification, caption, vqa, scene_graph,
+  )
 }
 
 // ==================== 神经渲染与 3D 重建（v36.0.0） ====================
@@ -9125,7 +9395,9 @@ pub fn lightfield_refocus_ci(
   focus_depth : Double,
   aperture_size : Double,
 ) -> @computational_imaging.RefocusResult {
-  @computational_imaging.lightfield_refocus(lightfield, focus_depth, aperture_size)
+  @computational_imaging.lightfield_refocus(
+    lightfield, focus_depth, aperture_size,
+  )
 }
 
 ///|
@@ -9144,7 +9416,9 @@ pub fn generate_hologram_ci(
   distance : Double,
   pixel_size : Double,
 ) -> @computational_imaging.Hologram {
-  @computational_imaging.generate_hologram(image, wavelength, distance, pixel_size)
+  @computational_imaging.generate_hologram(
+    image, wavelength, distance, pixel_size,
+  )
 }
 
 ///|
@@ -9183,7 +9457,9 @@ pub fn computational_imaging_report_to_string_ci(
   result : @computational_imaging.ImagingReconstructionResult,
   algorithm_name : String,
 ) -> String {
-  @computational_imaging.computational_imaging_report_to_string(result, algorithm_name)
+  @computational_imaging.computational_imaging_report_to_string(
+    result, algorithm_name,
+  )
 }
 
 // ==================== 视觉语言模型与多模态融合（v38.0.0） ====================
@@ -9417,7 +9693,9 @@ pub fn intelligent_vision_report_to_string_iv(
   avg_confidence : Double,
   config : @intelligent_vision.IntelligentVisionConfig,
 ) -> String {
-  @intelligent_vision.intelligent_vision_report_to_string(task_name, num_results, avg_confidence, config)
+  @intelligent_vision.intelligent_vision_report_to_string(
+    task_name, num_results, avg_confidence, config,
+  )
 }
 
 // ==================== 高级成像技术（v40.0.0） ====================
@@ -9469,7 +9747,9 @@ pub fn quantum_ghost_imaging_ai(
   height : Int,
   algorithm : @advanced_imaging.QuantumImagingAlgorithm,
 ) -> @types.Image {
-  @advanced_imaging.quantum_ghost_imaging(num_patterns, width, height, algorithm)
+  @advanced_imaging.quantum_ghost_imaging(
+    num_patterns, width, height, algorithm,
+  )
 }
 
 ///|
@@ -9487,7 +9767,9 @@ pub fn generate_hyperspectral_cube_ai(
   start_wavelength : Double,
   end_wavelength : Double,
 ) -> @advanced_imaging.HyperspectralData {
-  @advanced_imaging.generate_hyperspectral_cube(base_image, num_bands, start_wavelength, end_wavelength)
+  @advanced_imaging.generate_hyperspectral_cube(
+    base_image, num_bands, start_wavelength, end_wavelength,
+  )
 }
 
 ///|
@@ -9497,7 +9779,9 @@ pub fn analyze_polarization_ai(
   images_90deg : @types.Image,
   images_135deg : @types.Image,
 ) -> @advanced_imaging.PolarizationData {
-  @advanced_imaging.analyze_polarization(images_0deg, images_45deg, images_90deg, images_135deg)
+  @advanced_imaging.analyze_polarization(
+    images_0deg, images_45deg, images_90deg, images_135deg,
+  )
 }
 
 ///|
@@ -9507,7 +9791,9 @@ pub fn thermal_to_temperature_ai(
   min_temp : Double,
   max_temp : Double,
 ) -> @advanced_imaging.ThermalData {
-  @advanced_imaging.thermal_to_temperature(thermal_image, emissivity, min_temp, max_temp)
+  @advanced_imaging.thermal_to_temperature(
+    thermal_image, emissivity, min_temp, max_temp,
+  )
 }
 
 ///|
@@ -9525,7 +9811,9 @@ pub fn ultrasound_synthesize_ai(
   frequency_mhz : Double,
   depth_cm : Double,
 ) -> @advanced_imaging.UltrasoundData {
-  @advanced_imaging.ultrasound_synthesize(width, height, frequency_mhz, depth_cm)
+  @advanced_imaging.ultrasound_synthesize(
+    width, height, frequency_mhz, depth_cm,
+  )
 }
 
 ///|
@@ -9554,4 +9842,3 @@ pub fn advanced_imaging_report_to_string_ai(
 ) -> String {
   @advanced_imaging.advanced_imaging_report_to_string(modality, image, config)
 }
-

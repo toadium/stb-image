@@ -29,15 +29,22 @@ pub fn adjust_brightness_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_brightness_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_brightness_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -74,18 +81,28 @@ pub fn adjust_brightness_16(
 
 ///|
 /// float 亮度调整。delta 为浮点偏移量
-pub fn adjust_brightness_f(img : @types.ImageF, delta : Float) -> @types.ImageF raise @types.LoadError {
+pub fn adjust_brightness_f(
+  img : @types.ImageF,
+  delta : Float,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_brightness_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_brightness_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_brightness_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_brightness_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -122,19 +139,28 @@ pub fn adjust_contrast_16(
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_contrast_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_contrast_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if factor < 0.0F {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_16: factor必须大于等于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_16: factor必须大于等于0",
+    )
   }
   let n = img.width * img.height
   let ch = img.channels
@@ -171,22 +197,34 @@ pub fn adjust_contrast_16(
 
 ///|
 /// float 对比度调整。factor=1.0 为原图，以 0.5 为中心
-pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF raise @types.LoadError {
+pub fn adjust_contrast_f(
+  img : @types.ImageF,
+  factor : Float,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_contrast_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_contrast_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if factor < 0.0F {
-    raise @types.LoadError::DecodeFailed("adjust_contrast_f: factor必须大于等于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_contrast_f: factor必须大于等于0",
+    )
   }
   let n = img.width * img.height
   let ch = img.channels
@@ -217,18 +255,28 @@ pub fn adjust_contrast_f(img : @types.ImageF, factor : Float) -> @types.ImageF r
 ///|
 /// 16-bit Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 以 65535 为满量程。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 raise @types.LoadError {
+pub fn adjust_gamma_16(
+  img : @types.Image16,
+  gamma : Float,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_gamma_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_gamma_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {
@@ -246,7 +294,13 @@ pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 ra
       let normalized = Float::from_int(val) / 65535.0F
       let corrected = @math.powf(normalized, gamma)
       let new_val = (corrected * 65535.0F + 0.5F).to_int()
-      let clamped = if new_val < 0 { 0 } else if new_val > 65535 { 65535 } else { new_val }
+      let clamped = if new_val < 0 {
+        0
+      } else if new_val > 65535 {
+        65535
+      } else {
+        new_val
+      }
       write_u16_le_c(out, offset, clamped)
     }
     if ch == 4 {
@@ -266,18 +320,28 @@ pub fn adjust_gamma_16(img : @types.Image16, gamma : Float) -> @types.Image16 ra
 ///|
 /// float Gamma 校正。gamma=1.0 为原图，>1 变暗，<1 变亮。
 /// 以 1.0 为满量程。仅影响颜色通道，alpha 不变。
-pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF raise @types.LoadError {
+pub fn adjust_gamma_f(
+  img : @types.ImageF,
+  gamma : Float,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("adjust_gamma_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "adjust_gamma_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "adjust_gamma_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "adjust_gamma_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if gamma <= 0.0F {
@@ -292,7 +356,13 @@ pub fn adjust_gamma_f(img : @types.ImageF, gamma : Float) -> @types.ImageF raise
     for c in 0..<color_ch {
       let offset = i * bpp + c * 4
       let val = read_float_le(img.data, offset)
-      let corrected = if val < 0.0F { 0.0F } else if val > 1.0F { 1.0F } else { @math.powf(val, gamma) }
+      let corrected = if val < 0.0F {
+        0.0F
+      } else if val > 1.0F {
+        1.0F
+      } else {
+        @math.powf(val, gamma)
+      }
       write_f32_le(out, offset, corrected)
     }
     if ch == 4 {
@@ -318,12 +388,17 @@ pub fn invert_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError 
     raise @types.LoadError::DecodeFailed("invert_16: 图像尺寸必须大于0")
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("invert_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "invert_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "invert_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "invert_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -359,12 +434,17 @@ pub fn invert_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("invert_f: 图像尺寸必须大于0")
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("invert_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "invert_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "invert_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "invert_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -396,18 +476,27 @@ pub fn invert_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
 ///|
 /// 16-bit 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
 /// 输出 channels=1 的 16-bit 灰度图。
-pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
+pub fn to_grayscale_16(
+  img : @types.Image16,
+) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("to_grayscale_16: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_16: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("to_grayscale_16: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_16: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 2
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "to_grayscale_16: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "to_grayscale_16: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height
@@ -419,7 +508,10 @@ pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 raise @types.Load
       let r = read_u16_le_c(img.data, i * bpp)
       let g = read_u16_le_c(img.data, i * bpp + 2)
       let b = read_u16_le_c(img.data, i * bpp + 4)
-      let y = (Float::from_int(r) * 0.299F + Float::from_int(g) * 0.587F + Float::from_int(b) * 0.114F + 0.5F).to_int()
+      let y = (Float::from_int(r) * 0.299F +
+      Float::from_int(g) * 0.587F +
+      Float::from_int(b) * 0.114F +
+      0.5F).to_int()
       let clamped = if y < 0 { 0 } else if y > 65535 { 65535 } else { y }
       write_u16_le_c(out, i * 2, clamped)
     } else {
@@ -438,18 +530,27 @@ pub fn to_grayscale_16(img : @types.Image16) -> @types.Image16 raise @types.Load
 ///|
 /// float 转灰度。ITU-R BT.601: Y = 0.299R + 0.587G + 0.114B。
 /// 输出 channels=1 的 float 灰度图。
-pub fn to_grayscale_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
+pub fn to_grayscale_f(
+  img : @types.ImageF,
+) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("to_grayscale_f: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_f: 图像尺寸必须大于0",
+    )
   }
   if img.channels < 1 || img.channels > 4 {
-    raise @types.LoadError::DecodeFailed("to_grayscale_f: 通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "to_grayscale_f: 通道数必须在1-4之间",
+    )
   }
   let expected_size = img.width * img.height * img.channels * 4
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "to_grayscale_f: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "to_grayscale_f: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   let n = img.width * img.height

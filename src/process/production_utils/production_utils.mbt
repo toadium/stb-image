@@ -43,7 +43,12 @@ pub fn validate_image(img : @types.Image) -> ImageValidationResult {
   let expected_size = img.width * img.height * img.channels
   let actual_size = img.data.length()
   if actual_size != expected_size {
-    errors.push("数据大小不匹配：期望 " + expected_size.to_string() + "，实际 " + actual_size.to_string())
+    errors.push(
+      "数据大小不匹配：期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      actual_size.to_string(),
+    )
   }
 
   // 检查潜在的整数溢出
@@ -68,7 +73,9 @@ pub fn validate_image(img : @types.Image) -> ImageValidationResult {
 
 ///|
 /// 验证图像并在无效时抛出错误
-pub fn validate_image_or_raise(img : @types.Image) -> Unit raise @types.LoadError {
+pub fn validate_image_or_raise(
+  img : @types.Image,
+) -> Unit raise @types.LoadError {
   let result = validate_image(img)
   if !result.is_valid {
     let mut error_msg = "图像验证失败："
@@ -81,7 +88,10 @@ pub fn validate_image_or_raise(img : @types.Image) -> Unit raise @types.LoadErro
 
 ///|
 /// 验证图像通道数
-pub fn validate_channels(img : @types.Image, expected_channels : Array[Int]) -> Bool {
+pub fn validate_channels(
+  img : @types.Image,
+  expected_channels : Array[Int],
+) -> Bool {
   for ch in expected_channels {
     if img.channels == ch {
       return true
@@ -106,17 +116,32 @@ pub fn validate_channels_or_raise(
       expected_str = expected_str + expected_channels[i].to_string()
     }
     raise @types.LoadError::DecodeFailed(
-      function_name + " 需要通道数为 [" + expected_str + "]，实际为 " + img.channels.to_string(),
+      function_name +
+      " 需要通道数为 [" +
+      expected_str +
+      "]，实际为 " +
+      img.channels.to_string(),
     )
   }
 }
 
 ///|
 /// 验证参数范围
-pub fn validate_range(value : Double, min : Double, max : Double, param_name : String) -> Result[Unit, String] {
+pub fn validate_range(
+  value : Double,
+  min : Double,
+  max : Double,
+  param_name : String,
+) -> Result[Unit, String] {
   if value < min || value > max {
     Result::Err(
-      param_name + " 必须在 [" + min.to_string() + ", " + max.to_string() + "] 范围内，实际为 " + value.to_string(),
+      param_name +
+      " 必须在 [" +
+      min.to_string() +
+      ", " +
+      max.to_string() +
+      "] 范围内，实际为 " +
+      value.to_string(),
     )
   } else {
     Result::Ok(())
@@ -133,19 +158,28 @@ pub fn validate_range_or_raise(
 ) -> Unit raise @types.LoadError {
   let result = validate_range(value, min, max, param_name)
   match result {
-    Result::Err(msg) => {
-      raise @types.LoadError::DecodeFailed(msg)
-    }
+    Result::Err(msg) => raise @types.LoadError::DecodeFailed(msg)
     Result::Ok(_) => ()
   }
 }
 
 ///|
 /// 验证整数参数范围
-pub fn validate_int_range(value : Int, min : Int, max : Int, param_name : String) -> Result[Unit, String] {
+pub fn validate_int_range(
+  value : Int,
+  min : Int,
+  max : Int,
+  param_name : String,
+) -> Result[Unit, String] {
   if value < min || value > max {
     Result::Err(
-      param_name + " 必须在 [" + min.to_string() + ", " + max.to_string() + "] 范围内，实际为 " + value.to_string(),
+      param_name +
+      " 必须在 [" +
+      min.to_string() +
+      ", " +
+      max.to_string() +
+      "] 范围内，实际为 " +
+      value.to_string(),
     )
   } else {
     Result::Ok(())
@@ -162,9 +196,7 @@ pub fn validate_int_range_or_raise(
 ) -> Unit raise @types.LoadError {
   let result = validate_int_range(value, min, max, param_name)
   match result {
-    Result::Err(msg) => {
-      raise @types.LoadError::DecodeFailed(msg)
-    }
+    Result::Err(msg) => raise @types.LoadError::DecodeFailed(msg)
     Result::Ok(_) => ()
   }
 }
@@ -332,12 +364,18 @@ pub fn calculate_retry_delay(config : RetryConfig, attempt : Int) -> Double {
 pub fn validation_result_to_string(result : ImageValidationResult) -> String {
   let mut report = "## 图像验证报告\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 验证结果 | " + (if result.is_valid { "通过" } else { "失败" }) + " |\n"
+  report = report +
+    "| 验证结果 | " +
+    (if result.is_valid { "通过" } else { "失败" }) +
+    " |\n"
   report = report + "| 宽度 | " + result.width.to_string() + " |\n"
   report = report + "| 高度 | " + result.height.to_string() + " |\n"
   report = report + "| 通道数 | " + result.channels.to_string() + " |\n"
   report = report + "| 数据大小 | " + result.data_size.to_string() + " |\n"
-  report = report + "| 期望数据大小 | " + result.expected_data_size.to_string() + " |\n"
+  report = report +
+    "| 期望数据大小 | " +
+    result.expected_data_size.to_string() +
+    " |\n"
 
   if result.errors.length() > 0 {
     report = report + "\n### 错误\n\n"

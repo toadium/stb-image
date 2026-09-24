@@ -192,10 +192,7 @@ pub fn create_multimodal_data(
 
 ///|
 /// 计算余弦相似度
-pub fn cosine_similarity(
-  vec1 : Array[Double],
-  vec2 : Array[Double],
-) -> Double {
+pub fn cosine_similarity(vec1 : Array[Double], vec2 : Array[Double]) -> Double {
   let mut dot_product = 0.0
   let mut norm1 = 0.0
   let mut norm2 = 0.0
@@ -212,7 +209,7 @@ pub fn cosine_similarity(
     norm2 += vec2[i] * vec2[i]
   }
 
-  let denom = (norm1 * norm2)
+  let denom = norm1 * norm2
   if denom > 0.0 {
     dot_product / denom
   } else {
@@ -247,10 +244,26 @@ pub fn fuse_multimodal(
 
   // 简化的注意力融合
   for i in 0..<config.feature_dim {
-    let img_val = if i < data.image_features.length() { data.image_features[i] } else { 0.0 }
-    let txt_val = if i < data.text_features.length() { data.text_features[i] } else { 0.0 }
-    let aud_val = if i < data.audio_features.length() { data.audio_features[i] } else { 0.0 }
-    let vid_val = if i < data.video_features.length() { data.video_features[i] } else { 0.0 }
+    let img_val = if i < data.image_features.length() {
+      data.image_features[i]
+    } else {
+      0.0
+    }
+    let txt_val = if i < data.text_features.length() {
+      data.text_features[i]
+    } else {
+      0.0
+    }
+    let aud_val = if i < data.audio_features.length() {
+      data.audio_features[i]
+    } else {
+      0.0
+    }
+    let vid_val = if i < data.video_features.length() {
+      data.video_features[i]
+    } else {
+      0.0
+    }
 
     // 简化的加权平均
     let fused_val = (img_val + txt_val + aud_val + vid_val) / 4.0
@@ -309,7 +322,11 @@ pub fn cross_modal_retrieval(
   }
 
   // 简化的排序：直接取前top_k
-  let num_retrieved = if top_k < scores.length() { top_k } else { scores.length() }
+  let num_retrieved = if top_k < scores.length() {
+    top_k
+  } else {
+    scores.length()
+  }
   for i in 0..<num_retrieved {
     retrieved_ids.push(scores[i].1)
     retrieved_scores.push(scores[i].0)
@@ -338,30 +355,45 @@ pub fn multimodal_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    MultimodalTaskType::MultimodalFusion => "多模态融合"
-    MultimodalTaskType::CrossModalRetrieval => "跨模态检索"
-    MultimodalTaskType::ImageTextGeneration => "图文生成"
-    MultimodalTaskType::VideoUnderstanding => "视频理解"
-    MultimodalTaskType::AudioVisual => "音频视觉"
-    MultimodalTaskType::MultimodalReasoning => "多模态推理"
-    MultimodalTaskType::MultimodalTranslation => "多模态翻译"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 融合策略 | " + (match config.fusion_strategy {
-    FusionStrategy::EarlyFusion => "早期融合"
-    FusionStrategy::LateFusion => "晚期融合"
-    FusionStrategy::HybridFusion => "混合融合"
-    FusionStrategy::AttentionFusion => "注意力融合"
-    FusionStrategy::CrossAttentionFusion => "交叉注意力融合"
-    FusionStrategy::TensorFusion => "张量融合"
-    FusionStrategy::GatedFusion => "门控融合"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 特征维度 | " + config.feature_dim.to_string() + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      MultimodalTaskType::MultimodalFusion => "多模态融合"
+      MultimodalTaskType::CrossModalRetrieval => "跨模态检索"
+      MultimodalTaskType::ImageTextGeneration => "图文生成"
+      MultimodalTaskType::VideoUnderstanding => "视频理解"
+      MultimodalTaskType::AudioVisual => "音频视觉"
+      MultimodalTaskType::MultimodalReasoning => "多模态推理"
+      MultimodalTaskType::MultimodalTranslation => "多模态翻译"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 融合策略 | " +
+    (match config.fusion_strategy {
+      FusionStrategy::EarlyFusion => "早期融合"
+      FusionStrategy::LateFusion => "晚期融合"
+      FusionStrategy::HybridFusion => "混合融合"
+      FusionStrategy::AttentionFusion => "注意力融合"
+      FusionStrategy::CrossAttentionFusion => "交叉注意力融合"
+      FusionStrategy::TensorFusion => "张量融合"
+      FusionStrategy::GatedFusion => "门控融合"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 特征维度 | " +
+    config.feature_dim.to_string() +
+    " |\n"
   report = report + "| 隐藏维度 | " + config.hidden_dim.to_string() + " |\n"
-  report = report + "| 注意力头数 | " + config.num_attention_heads.to_string() + " |\n"
-  report = report + "| 融合层数 | " + config.num_fusion_layers.to_string() + " |\n"
+  report = report +
+    "| 注意力头数 | " +
+    config.num_attention_heads.to_string() +
+    " |\n"
+  report = report +
+    "| 融合层数 | " +
+    config.num_fusion_layers.to_string() +
+    " |\n"
   report = report + "| 温度 | " + config.temperature.to_string() + " |\n"
 
   report = report + "\n### 结果\n\n"

@@ -248,7 +248,10 @@ pub fn compute_self_attention(
       // 简化的点积
       let mut score = 0.0
       for d in 0..<head_dim {
-        if i < query.length() && j < key.length() && d < query[i].length() && d < key[j].length() {
+        if i < query.length() &&
+          j < key.length() &&
+          d < query[i].length() &&
+          d < key[j].length() {
           score += query[i][d] * key[j][d]
         }
       }
@@ -286,7 +289,7 @@ pub fn transformer_forward(
 
   // 简化的前向传播
   let hidden_states : Array[Array[Double]] = []
-  for i in 0..<seq_length {
+  for _ in 0..<seq_length {
     let state : Array[Double] = []
     for _ in 0..<hidden_dim {
       state.push(0.1)
@@ -299,7 +302,11 @@ pub fn transformer_forward(
     input_embeddings,
     input_embeddings,
     seq_length,
-    if hidden_dim > 64 { 64 } else { hidden_dim }
+    if hidden_dim > 64 {
+      64
+    } else {
+      hidden_dim
+    },
   )
 
   TransformerLayerOutput::{
@@ -360,39 +367,57 @@ pub fn dl_advanced_report_to_string(
 
   report = report + "### 任务信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 任务类型 | " + (match task_type {
-    DLAdvancedTaskType::Transformer => "Transformer"
-    DLAdvancedTaskType::AttentionMechanism => "注意力机制"
-    DLAdvancedTaskType::PretrainedModel => "预训练模型"
-    DLAdvancedTaskType::FineTuning => "微调"
-    DLAdvancedTaskType::TransferLearning => "迁移学习"
-    DLAdvancedTaskType::SelfSupervisedLearning => "自监督学习"
-    DLAdvancedTaskType::ContrastiveLearning => "对比学习"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 架构 | " + (match config.architecture {
-    TransformerArchitecture::EncoderOnly => "仅编码器"
-    TransformerArchitecture::DecoderOnly => "仅解码器"
-    TransformerArchitecture::EncoderDecoder => "编码器-解码器"
-    TransformerArchitecture::VisionTransformer => "视觉Transformer"
-    TransformerArchitecture::SwinTransformer => "Swin Transformer"
-    _ => "未知"
-  }) + " |\n"
-  report = report + "| 注意力类型 | " + (match config.attention_type {
-    AttentionType::SelfAttention => "自注意力"
-    AttentionType::MultiHeadAttention => "多头注意力"
-    AttentionType::CrossAttention => "交叉注意力"
-    AttentionType::SparseAttention => "稀疏注意力"
-    AttentionType::LinearAttention => "线性注意力"
-    AttentionType::FlashAttention => "FlashAttention"
-    _ => "未知"
-  }) + " |\n"
+  report = report +
+    "| 任务类型 | " +
+    (match task_type {
+      DLAdvancedTaskType::Transformer => "Transformer"
+      DLAdvancedTaskType::AttentionMechanism => "注意力机制"
+      DLAdvancedTaskType::PretrainedModel => "预训练模型"
+      DLAdvancedTaskType::FineTuning => "微调"
+      DLAdvancedTaskType::TransferLearning => "迁移学习"
+      DLAdvancedTaskType::SelfSupervisedLearning => "自监督学习"
+      DLAdvancedTaskType::ContrastiveLearning => "对比学习"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 架构 | " +
+    (match config.architecture {
+      TransformerArchitecture::EncoderOnly => "仅编码器"
+      TransformerArchitecture::DecoderOnly => "仅解码器"
+      TransformerArchitecture::EncoderDecoder => "编码器-解码器"
+      TransformerArchitecture::VisionTransformer => "视觉Transformer"
+      TransformerArchitecture::SwinTransformer => "Swin Transformer"
+      _ => "未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 注意力类型 | " +
+    (match config.attention_type {
+      AttentionType::SelfAttention => "自注意力"
+      AttentionType::MultiHeadAttention => "多头注意力"
+      AttentionType::CrossAttention => "交叉注意力"
+      AttentionType::SparseAttention => "稀疏注意力"
+      AttentionType::LinearAttention => "线性注意力"
+      AttentionType::FlashAttention => "FlashAttention"
+      _ => "未知"
+    }) +
+    " |\n"
   report = report + "| 层数 | " + config.num_layers.to_string() + " |\n"
   report = report + "| 隐藏维度 | " + config.hidden_dim.to_string() + " |\n"
-  report = report + "| 注意力头数 | " + config.num_heads.to_string() + " |\n"
-  report = report + "| 中间维度 | " + config.intermediate_dim.to_string() + " |\n"
+  report = report +
+    "| 注意力头数 | " +
+    config.num_heads.to_string() +
+    " |\n"
+  report = report +
+    "| 中间维度 | " +
+    config.intermediate_dim.to_string() +
+    " |\n"
   report = report + "| Dropout率 | " + config.dropout_rate.to_string() + " |\n"
-  report = report + "| 最大位置嵌入 | " + config.max_position_embeddings.to_string() + " |\n"
+  report = report +
+    "| 最大位置嵌入 | " +
+    config.max_position_embeddings.to_string() +
+    " |\n"
 
   report = report + "\n### 结果\n\n"
   report = report + result_description + "\n"

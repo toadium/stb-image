@@ -35,6 +35,7 @@ fn make_imgf_r(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
   }
 }
 
+///|
 test "ssr_16 basic" {
   let img = make_img16_r(4, 4, 3, 128)
   let out = @color.ssr_16(img, sigma=10.0F)
@@ -43,6 +44,7 @@ test "ssr_16 basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "ssr_f basic" {
   let img = make_imgf_r(4, 4, 3, 0.5F)
   let out = @color.ssr_f(img, sigma=10.0F)
@@ -51,6 +53,7 @@ test "ssr_f basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "msr_16 basic" {
   let img = make_img16_r(4, 4, 3, 128)
   let out = @color.msr_16(img, sigmas=[5.0F, 10.0F])
@@ -59,6 +62,7 @@ test "msr_16 basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "msr_f basic" {
   let img = make_imgf_r(4, 4, 3, 0.5F)
   let out = @color.msr_f(img, sigmas=[5.0F, 10.0F])
@@ -67,6 +71,7 @@ test "msr_f basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "msrcr_16 basic" {
   let img = make_img16_r(4, 4, 3, 128)
   let out = @color.msrcr_16(img, sigmas=[5.0F, 10.0F])
@@ -75,6 +80,7 @@ test "msrcr_16 basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "msrcr_f basic" {
   let img = make_imgf_r(4, 4, 3, 0.5F)
   let out = @color.msrcr_f(img, sigmas=[5.0F, 10.0F])
@@ -83,12 +89,14 @@ test "msrcr_f basic" {
   assert_eq(out.channels, 3)
 }
 
+///|
 test "ssr_16 grayscale" {
   let img = make_img16_r(4, 4, 1, 128)
   let out = @color.ssr_16(img, sigma=10.0F)
   assert_eq(out.channels, 1)
 }
 
+///|
 test "ssr_f rgba" {
   let img = make_imgf_r(4, 4, 4, 0.5F)
   let out = @color.ssr_f(img, sigma=10.0F)

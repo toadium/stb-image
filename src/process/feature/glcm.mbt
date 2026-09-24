@@ -25,19 +25,28 @@ pub fn compute_glcm(
 ) -> Array[Array[Int]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("compute_glcm: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("compute_glcm: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "compute_glcm: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "compute_glcm: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if dx == 0 && dy == 0 {
-    raise @types.LoadError::DecodeFailed("compute_glcm: dx和dy不能同时为0")
+    raise @types.LoadError::DecodeFailed(
+      "compute_glcm: dx和dy不能同时为0",
+    )
   }
   if levels < 2 || levels > 256 {
     raise @types.LoadError::DecodeFailed("levels 必须在 2..256 之间")
@@ -190,19 +199,28 @@ pub fn glcm_features_multi_direction(
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction: 图像尺寸必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction: 图像尺寸必须大于0",
+    )
   }
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction: 仅支持 channels=1/3/4")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction: 仅支持 channels=1/3/4",
+    )
   }
   let expected_size = img.width * img.height * img.channels
   if img.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "glcm_features_multi_direction: 数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img.data.length().to_string(),
+      "glcm_features_multi_direction: 数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img.data.length().to_string(),
     )
   }
   if levels < 2 || levels > 256 {
-    raise @types.LoadError::DecodeFailed("glcm_features_multi_direction: levels必须在2..256之间")
+    raise @types.LoadError::DecodeFailed(
+      "glcm_features_multi_direction: levels必须在2..256之间",
+    )
   }
 
   let directions = [(1, 0), (1, 1), (0, 1), (-1, 1)]

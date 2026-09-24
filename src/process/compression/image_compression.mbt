@@ -97,9 +97,7 @@ pub fn create_default_compression_config() -> CompressionConfig {
 
 ///|
 /// 游程编码（RLE）
-pub fn run_length_encode(
-  data : Bytes,
-) -> Bytes {
+pub fn run_length_encode(data : Bytes) -> Bytes {
   let len = data.length()
   let encoded : Array[Byte] = []
 
@@ -124,9 +122,7 @@ pub fn run_length_encode(
 
 ///|
 /// 游程解码
-pub fn run_length_decode(
-  data : Bytes,
-) -> Bytes {
+pub fn run_length_decode(data : Bytes) -> Bytes {
   let len = data.length()
   let decoded : Array[Byte] = []
 
@@ -145,9 +141,7 @@ pub fn run_length_decode(
 
 ///|
 /// 计算图像熵
-pub fn calculate_image_entropy(
-  img : @types.Image,
-) -> Double {
+pub fn calculate_image_entropy(img : @types.Image) -> Double {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -174,10 +168,7 @@ pub fn calculate_image_entropy(
 
 ///|
 /// 量化（均匀量化）
-pub fn quantize_image(
-  img : @types.Image,
-  levels : Int,
-) -> @types.Image {
+pub fn quantize_image(img : @types.Image, levels : Int) -> @types.Image {
   let w = img.width
   let h = img.height
   let total = w * h
@@ -186,22 +177,31 @@ pub fn quantize_image(
 
   for i in 0..<total {
     let pixel = img.data[i].to_int()
-    let quantized = (pixel / step) * step + step / 2
-    let clamped = if quantized < 0 { 0 } else if quantized > 255 { 255 } else { quantized }
+    let quantized = pixel / step * step + step / 2
+    let clamped = if quantized < 0 {
+      0
+    } else if quantized > 255 {
+      255
+    } else {
+      quantized
+    }
     out.push(clamped.to_byte())
   }
 
-  @types.Image::{ width: w, height: h, channels: img.channels, data: Bytes::from_array(out) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: img.channels,
+    data: Bytes::from_array(out),
+  }
 }
 
 ///|
 /// 预测编码（差分脉冲编码调制 DPCM）
-pub fn predictive_encode(
-  img : @types.Image,
-) -> Bytes {
+pub fn predictive_encode(img : @types.Image) -> Bytes {
   let w = img.width
   let h = img.height
-  let total = w * h
+  let _ = w * h
   let diff : Array[Byte] = []
 
   for y in 0..<h {
@@ -216,7 +216,13 @@ pub fn predictive_encode(
         128
       }
       let difference = current - predictor
-      let clamped = if difference < -128 { -128 } else if difference > 127 { 127 } else { difference }
+      let clamped = if difference < -128 {
+        -128
+      } else if difference > 127 {
+        127
+      } else {
+        difference
+      }
       diff.push((clamped + 128).to_byte())
     }
   }
@@ -274,7 +280,7 @@ pub fn calculate_compression_quality(
 
   // PSNR
   let psnr = if mse > 0.0 {
-    10.0 * (65025.0 / mse) * 0.1  // 简化的 log10
+    10.0 * (65025.0 / mse) * 0.1 // 简化的 log10
   } else {
     100.0
   }
@@ -305,19 +311,47 @@ pub fn calculate_compression_quality(
 
   let c1 = 6.5025
   let c2 = 58.5225
-  let ssim = if (var1 + var2 + c2) > 0.0 {
-    ((2.0 * mean1 * mean2 + c1) * (2.0 * cov + c2)) / ((mean1 * mean1 + mean2 * mean2 + c1) * (var1 + var2 + c2))
+  let ssim = if var1 + var2 + c2 > 0.0 {
+    (2.0 * mean1 * mean2 + c1) *
+    (2.0 * cov + c2) /
+    ((mean1 * mean1 + mean2 * mean2 + c1) * (var1 + var2 + c2))
   } else {
     1.0
   }
 
-  let compression_ratio = calculate_compression_ratio(original_size, compressed_size)
+  let compression_ratio = calculate_compression_ratio(
+    original_size, compressed_size,
+  )
   let bpp = calculate_bits_per_pixel(compressed_size, w, h)
 
   // 综合质量评分（PSNR 40% + SSIM 40% + 压缩比 20%）
-  let psnr_score = if psnr > 40.0 { 1.0 } else if psnr > 30.0 { 0.8 } else if psnr > 20.0 { 0.6 } else { 0.4 }
-  let ssim_score = if ssim > 0.95 { 1.0 } else if ssim > 0.9 { 0.85 } else if ssim > 0.8 { 0.7 } else { 0.5 }
-  let ratio_score = if compression_ratio > 20.0 { 1.0 } else if compression_ratio > 10.0 { 0.8 } else if compression_ratio > 5.0 { 0.6 } else { 0.4 }
+  let psnr_score = if psnr > 40.0 {
+    1.0
+  } else if psnr > 30.0 {
+    0.8
+  } else if psnr > 20.0 {
+    0.6
+  } else {
+    0.4
+  }
+  let ssim_score = if ssim > 0.95 {
+    1.0
+  } else if ssim > 0.9 {
+    0.85
+  } else if ssim > 0.8 {
+    0.7
+  } else {
+    0.5
+  }
+  let ratio_score = if compression_ratio > 20.0 {
+    1.0
+  } else if compression_ratio > 10.0 {
+    0.8
+  } else if compression_ratio > 5.0 {
+    0.6
+  } else {
+    0.4
+  }
   let overall_quality = psnr_score * 0.4 + ssim_score * 0.4 + ratio_score * 0.2
 
   CompressionQualityMetrics::{
@@ -379,9 +413,7 @@ pub fn compress_jpeg_simple(
 
 ///|
 /// PNG 风格压缩（预测 + RLE）
-pub fn compress_png_simple(
-  img : @types.Image,
-) -> CompressionResult {
+pub fn compress_png_simple(img : @types.Image) -> CompressionResult {
   let w = img.width
   let h = img.height
   let original_size = w * h
@@ -426,8 +458,14 @@ pub fn compress_image(
       compressed_data: compressed,
       original_size,
       compressed_size,
-      compression_ratio: calculate_compression_ratio(original_size, compressed_size),
-      bits_per_pixel: calculate_bits_per_pixel(compressed_size, img.width, img.height),
+      compression_ratio: calculate_compression_ratio(
+        original_size, compressed_size,
+      ),
+      bits_per_pixel: calculate_bits_per_pixel(
+        compressed_size,
+        img.width,
+        img.height,
+      ),
       algorithm: CompressionAlgorithm::RunLengthEncoding,
       quality: 100.0,
       processing_time_ms: 0.0,
@@ -476,11 +514,26 @@ pub fn compression_report_to_string(
   let mut report = "## 图像压缩报告\n\n"
   report = report + "### 压缩信息\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 算法 | " + compression_algorithm_to_string(result.algorithm) + " |\n"
-  report = report + "| 原始大小 | " + result.original_size.to_string() + " 字节 |\n"
-  report = report + "| 压缩大小 | " + result.compressed_size.to_string() + " 字节 |\n"
-  report = report + "| 压缩比 | " + result.compression_ratio.to_string() + ":1 |\n"
-  report = report + "| 每像素位数 | " + result.bits_per_pixel.to_string() + " bpp |\n"
+  report = report +
+    "| 算法 | " +
+    compression_algorithm_to_string(result.algorithm) +
+    " |\n"
+  report = report +
+    "| 原始大小 | " +
+    result.original_size.to_string() +
+    " 字节 |\n"
+  report = report +
+    "| 压缩大小 | " +
+    result.compressed_size.to_string() +
+    " 字节 |\n"
+  report = report +
+    "| 压缩比 | " +
+    result.compression_ratio.to_string() +
+    ":1 |\n"
+  report = report +
+    "| 每像素位数 | " +
+    result.bits_per_pixel.to_string() +
+    " bpp |\n"
   report = report + "| 质量设置 | " + result.quality.to_string() + " |\n\n"
 
   report = report + "### 质量评估\n\n"
@@ -488,7 +541,10 @@ pub fn compression_report_to_string(
   report = report + "| PSNR | " + metrics.psnr.to_string() + " dB |\n"
   report = report + "| SSIM | " + metrics.ssim.to_string() + " |\n"
   report = report + "| MSE | " + metrics.mse.to_string() + " |\n"
-  report = report + "| 综合质量 | " + (metrics.overall_quality * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 综合质量 | " +
+    (metrics.overall_quality * 100.0).to_string() +
+    "% |\n"
 
   report
 }

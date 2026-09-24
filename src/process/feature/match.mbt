@@ -20,10 +20,14 @@ pub fn sift_match(
 ) -> Array[SiftMatch] raise @types.LoadError {
   // 参数验证
   if max_distance <= 0.0F {
-    raise @types.LoadError::DecodeFailed("sift_match: max_distance必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "sift_match: max_distance必须大于0",
+    )
   }
   if ratio_test <= 0.0F || ratio_test >= 1.0F {
-    raise @types.LoadError::DecodeFailed("sift_match: ratio_test必须在0-1之间")
+    raise @types.LoadError::DecodeFailed(
+      "sift_match: ratio_test必须在0-1之间",
+    )
   }
   // 空数组直接返回空结果
   if query.length() == 0 || train.length() == 0 {
@@ -73,10 +77,14 @@ pub fn ransac_homography(
 ) -> Array[Float]? raise @types.LoadError {
   // 参数验证
   if iterations <= 0 {
-    raise @types.LoadError::DecodeFailed("ransac_homography: iterations必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "ransac_homography: iterations必须大于0",
+    )
   }
   if threshold <= 0.0F {
-    raise @types.LoadError::DecodeFailed("ransac_homography: threshold必须大于0")
+    raise @types.LoadError::DecodeFailed(
+      "ransac_homography: threshold必须大于0",
+    )
   }
 
   let n = matches.length()

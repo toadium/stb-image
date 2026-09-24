@@ -4,7 +4,10 @@
 /// 均方误差（MSE）。计算两幅图像对应像素的均方误差。
 /// 两幅图像必须具有相同的尺寸和通道数。
 /// 返回 Double 类型的 MSE 值。
-pub fn mse(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.LoadError {
+pub fn mse(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double raise @types.LoadError {
   // 输入验证
   if img1.width <= 0 || img1.height <= 0 {
     raise @types.LoadError::DecodeFailed("mse: 图像1尺寸必须大于0")
@@ -13,26 +16,38 @@ pub fn mse(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.Load
     raise @types.LoadError::DecodeFailed("mse: 图像2尺寸必须大于0")
   }
   if img1.channels < 1 || img1.channels > 4 {
-    raise @types.LoadError::DecodeFailed("mse: 图像1通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "mse: 图像1通道数必须在1-4之间",
+    )
   }
   if img2.channels < 1 || img2.channels > 4 {
-    raise @types.LoadError::DecodeFailed("mse: 图像2通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "mse: 图像2通道数必须在1-4之间",
+    )
   }
   if img1.width != img2.width || img1.height != img2.height {
     raise @types.LoadError::DecodeFailed("mse: 两幅图像尺寸必须相同")
   }
   if img1.channels != img2.channels {
-    raise @types.LoadError::DecodeFailed("mse: 两幅图像通道数必须相同")
+    raise @types.LoadError::DecodeFailed(
+      "mse: 两幅图像通道数必须相同",
+    )
   }
   let expected_size = img1.width * img1.height * img1.channels
   if img1.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "mse: 图像1数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+      "mse: 图像1数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img1.data.length().to_string(),
     )
   }
   if img2.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "mse: 图像2数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+      "mse: 图像2数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img2.data.length().to_string(),
     )
   }
 
@@ -49,7 +64,10 @@ pub fn mse(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.Load
 /// 峰值信噪比（PSNR）。基于 MSE 计算 PSNR（单位 dB）。
 /// 若两幅图像完全相同（MSE=0），返回 Infinity。
 /// 两幅图像必须具有相同的尺寸和通道数。
-pub fn psnr(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.LoadError {
+pub fn psnr(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double raise @types.LoadError {
   // 输入验证
   if img1.width <= 0 || img1.height <= 0 {
     raise @types.LoadError::DecodeFailed("psnr: 图像1尺寸必须大于0")
@@ -58,26 +76,38 @@ pub fn psnr(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.Loa
     raise @types.LoadError::DecodeFailed("psnr: 图像2尺寸必须大于0")
   }
   if img1.channels < 1 || img1.channels > 4 {
-    raise @types.LoadError::DecodeFailed("psnr: 图像1通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "psnr: 图像1通道数必须在1-4之间",
+    )
   }
   if img2.channels < 1 || img2.channels > 4 {
-    raise @types.LoadError::DecodeFailed("psnr: 图像2通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "psnr: 图像2通道数必须在1-4之间",
+    )
   }
   if img1.width != img2.width || img1.height != img2.height {
     raise @types.LoadError::DecodeFailed("psnr: 两幅图像尺寸必须相同")
   }
   if img1.channels != img2.channels {
-    raise @types.LoadError::DecodeFailed("psnr: 两幅图像通道数必须相同")
+    raise @types.LoadError::DecodeFailed(
+      "psnr: 两幅图像通道数必须相同",
+    )
   }
   let expected_size = img1.width * img1.height * img1.channels
   if img1.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "psnr: 图像1数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+      "psnr: 图像1数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img1.data.length().to_string(),
     )
   }
   if img2.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "psnr: 图像2数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+      "psnr: 图像2数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img2.data.length().to_string(),
     )
   }
 
@@ -92,7 +122,10 @@ pub fn psnr(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.Loa
 /// 结构相似性指数（SSIM）。在 8x8 局部窗口上计算 SSIM 均值。
 /// 两幅图像必须具有相同的尺寸和通道数。
 /// 返回 Double 类型的 SSIM 值，范围.围 [-1, 1]，越接近 1 越相似。
-pub fn ssim(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.LoadError {
+pub fn ssim(
+  img1 : @types.Image,
+  img2 : @types.Image,
+) -> Double raise @types.LoadError {
   // 输入验证
   if img1.width <= 0 || img1.height <= 0 {
     raise @types.LoadError::DecodeFailed("ssim: 图像1尺寸必须大于0")
@@ -101,26 +134,38 @@ pub fn ssim(img1 : @types.Image, img2 : @types.Image) -> Double raise @types.Loa
     raise @types.LoadError::DecodeFailed("ssim: 图像2尺寸必须大于0")
   }
   if img1.channels < 1 || img1.channels > 4 {
-    raise @types.LoadError::DecodeFailed("ssim: 图像1通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "ssim: 图像1通道数必须在1-4之间",
+    )
   }
   if img2.channels < 1 || img2.channels > 4 {
-    raise @types.LoadError::DecodeFailed("ssim: 图像2通道数必须在1-4之间")
+    raise @types.LoadError::DecodeFailed(
+      "ssim: 图像2通道数必须在1-4之间",
+    )
   }
   if img1.width != img2.width || img1.height != img2.height {
     raise @types.LoadError::DecodeFailed("ssim: 两幅图像尺寸必须相同")
   }
   if img1.channels != img2.channels {
-    raise @types.LoadError::DecodeFailed("ssim: 两幅图像通道数必须相同")
+    raise @types.LoadError::DecodeFailed(
+      "ssim: 两幅图像通道数必须相同",
+    )
   }
   let expected_size = img1.width * img1.height * img1.channels
   if img1.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ssim: 图像1数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img1.data.length().to_string(),
+      "ssim: 图像1数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img1.data.length().to_string(),
     )
   }
   if img2.data.length() != expected_size {
     raise @types.LoadError::DecodeFailed(
-      "ssim: 图像2数据大小不匹配，期望 " + expected_size.to_string() + "，实际 " + img2.data.length().to_string(),
+      "ssim: 图像2数据大小不匹配，期望 " +
+      expected_size.to_string() +
+      "，实际 " +
+      img2.data.length().to_string(),
     )
   }
 

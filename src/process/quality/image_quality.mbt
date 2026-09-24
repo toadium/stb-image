@@ -4,18 +4,15 @@
 ///|
 /// 图像质量评估结果
 pub(all) struct QualityMetrics {
-  mse : Double  // 均方误差
-  mae : Double  // 平均绝对误差
-  psnr : Double  // 峰值信噪比（dB）
-  ssim : Double  // 结构相似性
+  mse : Double // 均方误差
+  mae : Double // 平均绝对误差
+  psnr : Double // 峰值信噪比（dB）
+  ssim : Double // 结构相似性
 }
 
 ///|
 /// 计算均方误差（MSE）
-pub fn compute_mse(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_mse(img1 : @types.Image, img2 : @types.Image) -> Double {
   if img1.width != img2.width || img1.height != img2.height {
     return -1.0
   }
@@ -29,21 +26,23 @@ pub fn compute_mse(
       let idx = (y * w + x) * img1.channels
       let idx2 = (y * w + x) * img2.channels
       for c in 0..<channels {
-        let diff = img1.data[idx + c].to_double() - img2.data[idx2 + c].to_double()
+        let diff = img1.data[idx + c].to_double() -
+          img2.data[idx2 + c].to_double()
         sum += diff * diff
         count += 1
       }
     }
   }
-  if count > 0 { sum / count.to_double() } else { 0.0 }
+  if count > 0 {
+    sum / count.to_double()
+  } else {
+    0.0
+  }
 }
 
 ///|
 /// 计算平均绝对误差（MAE）
-pub fn compute_mae(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_mae(img1 : @types.Image, img2 : @types.Image) -> Double {
   if img1.width != img2.width || img1.height != img2.height {
     return -1.0
   }
@@ -57,27 +56,29 @@ pub fn compute_mae(
       let idx = (y * w + x) * img1.channels
       let idx2 = (y * w + x) * img2.channels
       for c in 0..<channels {
-        let diff = (img1.data[idx + c].to_double() - img2.data[idx2 + c].to_double()).abs()
+        let diff = (img1.data[idx + c].to_double() -
+        img2.data[idx2 + c].to_double()).abs()
         sum += diff
         count += 1
       }
     }
   }
-  if count > 0 { sum / count.to_double() } else { 0.0 }
+  if count > 0 {
+    sum / count.to_double()
+  } else {
+    0.0
+  }
 }
 
 ///|
 /// 计算峰值信噪比（PSNR）
-pub fn compute_psnr(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_psnr(img1 : @types.Image, img2 : @types.Image) -> Double {
   let mse = compute_mse(img1, img2)
   if mse < 0.0 {
     return -1.0
   }
   if mse < 0.000001 {
-    return 100.0  // 几乎完全相同
+    return 100.0 // 几乎完全相同
   }
   let max_pixel = 255.0
   10.0 * @math.log10(max_pixel * max_pixel / mse)
@@ -86,10 +87,7 @@ pub fn compute_psnr(
 ///|
 /// 计算结构相似性（SSIM，简化版）
 /// 使用全局统计量，不使用滑动窗口
-pub fn compute_ssim(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Double {
+pub fn compute_ssim(img1 : @types.Image, img2 : @types.Image) -> Double {
   if img1.width != img2.width || img1.height != img2.height {
     return -1.0
   }
@@ -136,11 +134,15 @@ pub fn compute_ssim(
   var2 = var2 / n
   covar = covar / n
   // SSIM 公式
-  let c1 = (0.01 * 255.0) * (0.01 * 255.0)
-  let c2 = (0.03 * 255.0) * (0.03 * 255.0)
+  let c1 = 0.01 * 255.0 * (0.01 * 255.0)
+  let c2 = 0.03 * 255.0 * (0.03 * 255.0)
   let numerator = (2.0 * mean1 * mean2 + c1) * (2.0 * covar + c2)
   let denominator = (mean1 * mean1 + mean2 * mean2 + c1) * (var1 + var2 + c2)
-  if denominator > 0.0 { numerator / denominator } else { 0.0 }
+  if denominator > 0.0 {
+    numerator / denominator
+  } else {
+    0.0
+  }
 }
 
 ///|
@@ -153,21 +155,15 @@ pub fn compute_quality_metrics(
   let mae = compute_mae(img1, img2)
   let psnr = compute_psnr(img1, img2)
   let ssim = compute_ssim(img1, img2)
-  QualityMetrics::{
-    mse,
-    mae,
-    psnr,
-    ssim,
-  }
+  QualityMetrics::{ mse, mae, psnr, ssim }
 }
 
 ///|
 /// 比较两张图像是否相同（像素级）
-pub fn images_equal(
-  img1 : @types.Image,
-  img2 : @types.Image,
-) -> Bool {
-  if img1.width != img2.width || img1.height != img2.height || img1.channels != img2.channels {
+pub fn images_equal(img1 : @types.Image, img2 : @types.Image) -> Bool {
+  if img1.width != img2.width ||
+    img1.height != img2.height ||
+    img1.channels != img2.channels {
     return false
   }
   let w = img1.width
@@ -222,5 +218,10 @@ pub fn compute_diff_image(
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels: out_channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: out_channels,
+    data: Bytes::from_array(out_data),
+  }
 }

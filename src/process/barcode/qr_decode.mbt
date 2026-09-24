@@ -6,7 +6,7 @@
 pub(all) struct QrDecodeResult {
   data : String
   version : Int
-  error_correction_level : String  // "L" / "M" / "Q" / "H"
+  error_correction_level : String // "L" / "M" / "Q" / "H"
   mask_pattern : Int
   confidence : Double
   corrected_errors : Int
@@ -17,14 +17,38 @@ pub(all) struct QrDecodeResult {
 /// 高2位：纠错级别，低3位：掩码模式
 let qr_format_info_table : Array[(Int, Int, Int)] = [
   // (format_bits, ec_level, mask_pattern)
-  (0x5412, 0, 0), (0x5125, 0, 1), (0x5E7C, 0, 2), (0x5B4B, 0, 3),
-  (0x45F9, 0, 4), (0x40CE, 0, 5), (0x4F97, 0, 6), (0x4AA0, 0, 7),
-  (0x77C4, 1, 0), (0x72F3, 1, 1), (0x7DAA, 1, 2), (0x789D, 1, 3),
-  (0x662F, 1, 4), (0x6318, 1, 5), (0x6C41, 1, 6), (0x6976, 1, 7),
-  (0x1689, 2, 0), (0x13BE, 2, 1), (0x1CE7, 2, 2), (0x19D0, 2, 3),
-  (0x0762, 2, 4), (0x0255, 2, 5), (0x0D0C, 2, 6), (0x083B, 2, 7),
-  (0x355F, 3, 0), (0x3068, 3, 1), (0x3F31, 3, 2), (0x3A06, 3, 3),
-  (0x24B4, 3, 4), (0x2183, 3, 5), (0x2EDA, 3, 6), (0x2BED, 3, 7),
+  (0x5412, 0, 0),
+  (0x5125, 0, 1),
+  (0x5E7C, 0, 2),
+  (0x5B4B, 0, 3),
+  (0x45F9, 0, 4),
+  (0x40CE, 0, 5),
+  (0x4F97, 0, 6),
+  (0x4AA0, 0, 7),
+  (0x77C4, 1, 0),
+  (0x72F3, 1, 1),
+  (0x7DAA, 1, 2),
+  (0x789D, 1, 3),
+  (0x662F, 1, 4),
+  (0x6318, 1, 5),
+  (0x6C41, 1, 6),
+  (0x6976, 1, 7),
+  (0x1689, 2, 0),
+  (0x13BE, 2, 1),
+  (0x1CE7, 2, 2),
+  (0x19D0, 2, 3),
+  (0x0762, 2, 4),
+  (0x0255, 2, 5),
+  (0x0D0C, 2, 6),
+  (0x083B, 2, 7),
+  (0x355F, 3, 0),
+  (0x3068, 3, 1),
+  (0x3F31, 3, 2),
+  (0x3A06, 3, 3),
+  (0x24B4, 3, 4),
+  (0x2183, 3, 5),
+  (0x2EDA, 3, 6),
+  (0x2BED, 3, 7),
 ]
 
 ///|
@@ -39,9 +63,7 @@ let qr_version_capacity_l : Array[Int] = [
 
 ///|
 /// 解码 QR Code（完整版本）
-pub fn decode_qrcode_full(
-  img : @types.Image,
-) -> QrDecodeResult? {
+pub fn decode_qrcode_full(img : @types.Image) -> QrDecodeResult? {
   let w = img.width
   let h = img.height
   let data = img.data
@@ -64,7 +86,7 @@ pub fn decode_qrcode_full(
   let dist13 = ((p1.x - p3.x) * (p1.x - p3.x) + (p1.y - p3.y) * (p1.y - p3.y)).sqrt()
   let modules_between = dist12.max(dist13) / module_size
   let version = ((modules_between - 10.0) / 4.0 + 1.0).to_int().max(1).min(10)
-  let qr_size = 17 + version * 4  // 版本 N 的模块数 = 17 + 4N
+  let qr_size = 17 + version * 4 // 版本 N 的模块数 = 17 + 4N
   // 4. 计算 QR Code 区域边界
   let min_x = p1.x.min(p2.x).min(p3.x).to_int()
   let min_y = p1.y.min(p2.y).min(p3.y).to_int()
@@ -105,9 +127,7 @@ pub fn decode_qrcode_full(
 
 ///|
 /// 检测 QR Code 定位图案（完整版，返回更多信息）
-fn detect_qr_finder_patterns_full(
-  img : @types.Image,
-) -> Array[QrFinderPattern] {
+fn detect_qr_finder_patterns_full(img : @types.Image) -> Array[QrFinderPattern] {
   // 复用已有的检测函数
   detect_qr_finder_patterns(img)
 }
@@ -135,8 +155,12 @@ fn sample_qr_modules(
       let sample_size = 3
       for dy in 0..<sample_size {
         for dx in 0..<sample_size {
-          let px = roi_x + (col.to_double() * cell_w + (dx.to_double() + 0.5) * cell_w / sample_size.to_double()).to_int()
-          let py = roi_y + (row.to_double() * cell_h + (dy.to_double() + 0.5) * cell_h / sample_size.to_double()).to_int()
+          let px = roi_x +
+            (col.to_double() * cell_w +
+            (dx.to_double() + 0.5) * cell_w / sample_size.to_double()).to_int()
+          let py = roi_y +
+            (row.to_double() * cell_h +
+            (dy.to_double() + 0.5) * cell_h / sample_size.to_double()).to_int()
           if px >= 0 && px < img_w && py >= 0 && py < img_h {
             sum += data[py * img_w + px].to_int()
             count += 1
@@ -152,10 +176,7 @@ fn sample_qr_modules(
 
 ///|
 /// 读取 QR Code 格式信息
-fn read_qr_format_info(
-  modules : Array[Int],
-  qr_size : Int,
-) -> Int {
+fn read_qr_format_info(modules : Array[Int], qr_size : Int) -> Int {
   // 格式信息存储在两个位置：
   // 1. 左上角定位图案周围（15位）
   // 2. 右上角和左下角（15位）
@@ -165,8 +186,21 @@ fn read_qr_format_info(
   // 行 8，列 0-5 和 7-8（共 8 位）
   // 列 8，行 0-5 和 7（共 7 位）
   let positions = [
-    (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (8, 5), (8, 7), (8, 8),
-    (7, 8), (5, 8), (4, 8), (3, 8), (2, 8), (1, 8), (0, 8),
+    (8, 0),
+    (8, 1),
+    (8, 2),
+    (8, 3),
+    (8, 4),
+    (8, 5),
+    (8, 7),
+    (8, 8),
+    (7, 8),
+    (5, 8),
+    (4, 8),
+    (3, 8),
+    (2, 8),
+    (1, 8),
+    (0, 8),
   ]
   for i in 0..<15 {
     let (row, col) = positions[i]
@@ -179,7 +213,8 @@ fn read_qr_format_info(
   // 在表中查找最接近的格式信息
   let mut best_match = -1
   let mut best_dist = 16
-  for (bits, _, _) in qr_format_info_table {
+  for _tup0 in qr_format_info_table {
+    let (bits, _, _) = _tup0
     let dist = hamming_distance(format_bits, bits)
     if dist < best_dist {
       best_dist = dist
@@ -191,10 +226,7 @@ fn read_qr_format_info(
 
 ///|
 /// 计算汉明距离
-fn hamming_distance(
-  a : Int,
-  b : Int,
-) -> Int {
+fn hamming_distance(a : Int, b : Int) -> Int {
   let xor = a ^ b
   let mut count = 0
   let mut x = xor
@@ -207,15 +239,14 @@ fn hamming_distance(
 
 ///|
 /// 解码格式信息
-fn decode_format_info(
-  format_bits : Int,
-) -> (Int, Int) {
-  for (bits, ec, mask) in qr_format_info_table {
+fn decode_format_info(format_bits : Int) -> (Int, Int) {
+  for _tup1 in qr_format_info_table {
+    let (bits, ec, mask) = _tup1
     if bits == format_bits {
       return (ec, mask)
     }
   }
-  (0, 0)  // 默认
+  (0, 0) // 默认
 }
 
 ///|
@@ -237,10 +268,10 @@ fn apply_qr_mask(
         1 => row % 2 == 0
         2 => col % 3 == 0
         3 => (row + col) % 3 == 0
-        4 => ((row / 2) + (col / 3)) % 2 == 0
-        5 => ((row * col) % 2) + ((row * col) % 3) == 0
-        6 => (((row * col) % 2) + ((row * col) % 3)) % 2 == 0
-        7 => (((row + col) % 2) + ((row * col) % 3)) % 2 == 0
+        4 => (row / 2 + col / 3) % 2 == 0
+        5 => row * col % 2 + row * col % 3 == 0
+        6 => (row * col % 2 + row * col % 3) % 2 == 0
+        7 => ((row + col) % 2 + row * col % 3) % 2 == 0
         _ => false
       }
       if should_invert {
@@ -253,11 +284,7 @@ fn apply_qr_mask(
 
 ///|
 /// 判断是否是功能模块
-fn is_function_module(
-  row : Int,
-  col : Int,
-  qr_size : Int,
-) -> Bool {
+fn is_function_module(row : Int, col : Int, qr_size : Int) -> Bool {
   // 左上角定位图案（8x8）
   if row < 9 && col < 9 {
     return true
@@ -329,10 +356,7 @@ fn extract_qr_data_bits(
 
 ///|
 /// 解码 QR Code 数据
-fn decode_qr_data(
-  bits : Array[Int],
-  version : Int,
-) -> (String, Int) {
+fn decode_qr_data(bits : Array[Int], version : Int) -> (String, Int) {
   if bits.length() < 4 {
     return ("", 0)
   }
@@ -344,10 +368,10 @@ fn decode_qr_data(
   let mut pos = 4
   // 根据模式读取字符计数
   let char_count_bits = match mode {
-    1 => 10  // 数字
-    2 => 9   // 字母数字
-    4 => 8   // 字节
-    8 => 8   // 中文（Kanji）
+    1 => 10 // 数字
+    2 => 9 // 字母数字
+    4 => 8 // 字节
+    8 => 8 // 中文（Kanji）
     _ => 8
   }
   let mut char_count = 0
@@ -365,7 +389,13 @@ fn decode_qr_data(
       let mut i = 0
       while i < char_count && pos + 10 <= bits.length() {
         let remaining = char_count - i
-        let bits_needed = if remaining >= 3 { 10 } else if remaining == 2 { 7 } else { 4 }
+        let bits_needed = if remaining >= 3 {
+          10
+        } else if remaining == 2 {
+          7
+        } else {
+          4
+        }
         let mut value = 0
         for j in 0..<bits_needed {
           if pos + j < bits.length() {
@@ -375,7 +405,7 @@ fn decode_qr_data(
         pos += bits_needed
         if remaining >= 3 {
           result += (value / 100).to_string()
-          result += ((value / 10) % 10).to_string()
+          result += (value / 10 % 10).to_string()
           result += (value % 10).to_string()
           i += 3
         } else if remaining == 2 {
@@ -437,17 +467,16 @@ fn decode_qr_data(
         pos += 8
         // 简单 ASCII 解码
         if byte >= 32 && byte < 127 {
-          result += byte.to_char().to_string()
+          result += byte.to_char().map(c => c.to_string()).unwrap_or("")
         } else {
           result += "?"
         }
         i += 1
       }
     }
-    _ => {
+    _ =>
       // 其他模式暂不支持，返回空
       result = ""
-    }
   }
   (result, pos)
 }

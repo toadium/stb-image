@@ -34,6 +34,7 @@ fn read_u16(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 
+///|
 test "gamma_tonemap_f basic" {
   let img = make_imgf_tm(2, 2, 3, 1.0F)
   let out = @color.gamma_tonemap_f(img, 1.0F)
@@ -44,6 +45,7 @@ test "gamma_tonemap_f basic" {
   assert_true(v >= 0.99F && v <= 1.01F)
 }
 
+///|
 test "gamma_tonemap_f darkens" {
   let img = make_imgf_tm(2, 2, 3, 0.25F)
   let out = @color.gamma_tonemap_f(img, 2.0F)
@@ -52,6 +54,7 @@ test "gamma_tonemap_f darkens" {
   assert_true(v >= 0.99F && v <= 1.01F)
 }
 
+///|
 test "gamma_tonemap_16 basic" {
   let img = make_imgf_tm(2, 2, 3, 1.0F)
   let out = @color.gamma_tonemap_16(img, 1.0F)
@@ -62,6 +65,7 @@ test "gamma_tonemap_16 basic" {
   assert_true(v >= 65000)
 }
 
+///|
 test "reinhard_tonemap_f basic" {
   let img = make_imgf_tm(2, 2, 3, 1.0F)
   let out = @color.reinhard_tonemap_f(img)
@@ -72,6 +76,7 @@ test "reinhard_tonemap_f basic" {
   assert_true(v > 0.0F && v <= 1.0F)
 }
 
+///|
 test "reinhard_tonemap_f with key" {
   let img = make_imgf_tm(2, 2, 3, 1.0F)
   let out = @color.reinhard_tonemap_f(img, key=0.5F)
@@ -79,6 +84,7 @@ test "reinhard_tonemap_f with key" {
   assert_true(v > 0.0F && v <= 1.0F)
 }
 
+///|
 test "reinhard_tonemap_16 basic" {
   let img = make_imgf_tm(2, 2, 3, 1.0F)
   let out = @color.reinhard_tonemap_16(img)
@@ -89,6 +95,7 @@ test "reinhard_tonemap_16 basic" {
   assert_true(v > 0 && v <= 65535)
 }
 
+///|
 test "gamma_tonemap_f zero image" {
   let img = make_imgf_tm(2, 2, 3, 0.0F)
   let out = @color.gamma_tonemap_f(img, 1.0F)
@@ -96,6 +103,7 @@ test "gamma_tonemap_f zero image" {
   assert_eq(v, 0.0F)
 }
 
+///|
 test "gamma_tonemap_16 zero image" {
   let img = make_imgf_tm(2, 2, 3, 0.0F)
   let out = @color.gamma_tonemap_16(img, 1.0F)

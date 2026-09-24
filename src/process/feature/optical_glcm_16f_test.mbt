@@ -7,7 +7,12 @@ fn make_img16_og(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
-  @types.Image16::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.Image16::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 ///|
@@ -20,7 +25,12 @@ fn make_imgf_og(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
     data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
     data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
   }
-  @types.ImageF::{ width: w, height: h, channels: ch, data: Bytes::from_array(data) }
+  @types.ImageF::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: Bytes::from_array(data),
+  }
 }
 
 // ========== Lucas-Kanade ==========
@@ -57,7 +67,7 @@ test "lucas_kanade_f: basic" {
 test "horn_schunck_16: basic" {
   let prev = make_img16_og(16, 16, 1, 30000)
   let next = make_img16_og(16, 16, 1, 30000)
-  let (u, v) = horn_schunck_16(prev, next, iterations = 10)
+  let (u, v) = horn_schunck_16(prev, next, iterations=10)
   assert_eq(u.length(), 16 * 16)
   assert_eq(v.length(), 16 * 16)
   let _ = prev
@@ -70,7 +80,7 @@ test "horn_schunck_16: basic" {
 test "horn_schunck_f: basic" {
   let prev = make_imgf_og(16, 16, 1, 0.5F)
   let next = make_imgf_og(16, 16, 1, 0.5F)
-  let (u, v) = horn_schunck_f(prev, next, iterations = 10)
+  let (u, v) = horn_schunck_f(prev, next, iterations=10)
   assert_eq(u.length(), 16 * 16)
   assert_eq(v.length(), 16 * 16)
   let _ = prev

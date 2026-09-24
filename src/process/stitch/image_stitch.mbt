@@ -36,13 +36,13 @@ pub(all) struct Homography {
 ///|
 /// 图像拼接配置
 pub(all) struct StitchConfig {
-  max_features : Int  // 最大特征点数
-  ratio_threshold : Double  // Lowe 比率测试阈值
-  ransac_iterations : Int  // RANSAC 迭代次数
-  ransac_threshold : Double  // RANSAC 内点阈值（像素）
-  min_inliers : Int  // 最小内点数
-  blend_width : Int  // 融合宽度（像素）
-  use_multi_band : Bool  // 是否使用多频段融合
+  max_features : Int // 最大特征点数
+  ratio_threshold : Double // Lowe 比率测试阈值
+  ransac_iterations : Int // RANSAC 迭代次数
+  ransac_threshold : Double // RANSAC 内点阈值（像素）
+  min_inliers : Int // 最小内点数
+  blend_width : Int // 融合宽度（像素）
+  use_multi_band : Bool // 是否使用多频段融合
 }
 
 ///|
@@ -63,9 +63,15 @@ pub fn stitch_default_config() -> StitchConfig {
 /// 创建单位单应性矩阵
 pub fn identity_homography() -> Homography {
   Homography::{
-    h00: 1.0, h01: 0.0, h02: 0.0,
-    h10: 0.0, h11: 1.0, h12: 0.0,
-    h20: 0.0, h21: 0.0, h22: 1.0,
+    h00: 1.0,
+    h01: 0.0,
+    h02: 0.0,
+    h10: 0.0,
+    h11: 1.0,
+    h12: 0.0,
+    h20: 0.0,
+    h21: 0.0,
+    h22: 1.0,
   }
 }
 
@@ -84,9 +90,7 @@ pub fn apply_homography(
 
 ///|
 /// 计算单应性矩阵的逆
-pub fn invert_homography(
-  h : Homography,
-) -> Homography? {
+pub fn invert_homography(h : Homography) -> Homography? {
   // 计算 3x3 矩阵的逆
   let a = h.h00
   let b = h.h01
@@ -138,9 +142,22 @@ pub fn detect_features_simple(
   // 简化版 FAST 角点检测
   let threshold = 50
   let circle_offsets = [
-    (0, -3), (1, -3), (2, -2), (3, -1), (3, 0), (3, 1),
-    (2, 2), (1, 3), (0, 3), (-1, 3), (-2, 2), (-3, 1),
-    (-3, 0), (-3, -1), (-2, -2), (-1, -3),
+    (0, -3),
+    (1, -3),
+    (2, -2),
+    (3, -1),
+    (3, 0),
+    (3, 1),
+    (2, 2),
+    (1, 3),
+    (0, 3),
+    (-1, 3),
+    (-2, 2),
+    (-3, 1),
+    (-3, 0),
+    (-3, -1),
+    (-2, -2),
+    (-1, -3),
   ]
   for y in 4..<(h - 4) {
     for x in 4..<(w - 4) {
@@ -152,7 +169,8 @@ pub fn detect_features_simple(
       let mut max_dark = 0
       let mut cur_bright = 0
       let mut cur_dark = 0
-      for (dx, dy) in circle_offsets {
+      for _tup0 in circle_offsets {
+        let (dx, dy) = _tup0
         let px = data[(y + dy) * w + (x + dx)].to_int()
         if px > center + threshold {
           cur_bright += 1
@@ -173,7 +191,7 @@ pub fn detect_features_simple(
       }
       if max_bright >= 9 || max_dark >= 9 {
         // 计算响应值（简化版）
-        let response = (max_bright.max(max_dark)).to_double()
+        let response = max_bright.max(max_dark).to_double()
         features.push(FeaturePoint::{
           x: x.to_double(),
           y: y.to_double(),
@@ -299,10 +317,7 @@ pub fn match_features(
 
 ///|
 /// 计算描述子距离（欧氏距离）
-fn descriptor_distance(
-  d1 : Array[Double],
-  d2 : Array[Double],
-) -> Double {
+fn descriptor_distance(d1 : Array[Double], d2 : Array[Double]) -> Double {
   let n = if d1.length() < d2.length() { d1.length() } else { d2.length() }
   let mut sum = 0.0
   for i in 0..<n {
@@ -349,8 +364,14 @@ pub fn estimate_homography_ransac(
         // 计算内点
         let inliers : Array[MatchPair] = []
         for m in matches {
-          let (qx, qy) = (query_points[m.query_idx].x, query_points[m.query_idx].y)
-          let (tx, ty) = (train_points[m.train_idx].x, train_points[m.train_idx].y)
+          let (qx, qy) = (
+            query_points[m.query_idx].x,
+            query_points[m.query_idx].y,
+          )
+          let (tx, ty) = (
+            train_points[m.train_idx].x,
+            train_points[m.train_idx].y,
+          )
           let (px, py) = apply_homography(homography, qx, qy)
           let dist = ((px - tx) * (px - tx) + (py - ty) * (py - ty)).sqrt()
           if dist < thresh {
@@ -371,10 +392,7 @@ pub fn estimate_homography_ransac(
 
 ///|
 /// 随机采样
-fn random_sample(
-  matches : Array[MatchPair],
-  count : Int,
-) -> Array[MatchPair] {
+fn random_sample(matches : Array[MatchPair], count : Int) -> Array[MatchPair] {
   let n = matches.length()
   if n < count {
     return matches
@@ -448,7 +466,7 @@ pub fn stitch_images(
   img2 : @types.Image,
   config? : StitchConfig,
 ) -> @types.Image? {
-let cfg = match config {
+  let cfg = match config {
     Some(c) => c
     None => stitch_default_config()
   }
@@ -459,7 +477,11 @@ let cfg = match config {
     return None
   }
   // 2. 特征匹配
-  let matches = match_features(features1, features2, ratio_threshold=cfg.ratio_threshold)
+  let matches = match_features(
+    features1,
+    features2,
+    ratio_threshold=cfg.ratio_threshold,
+  )
   if matches.length() < cfg.min_inliers {
     return None
   }
@@ -477,11 +499,21 @@ let cfg = match config {
         return None
       }
       // 4. 计算输出图像尺寸
-      let (out_w, out_h, offset_x, offset_y) = compute_output_size(img1, img2, homography)
+      let (out_w, out_h, offset_x, offset_y) = compute_output_size(
+        img1, img2, homography,
+      )
       // 5. 变换 img2 到输出坐标系
-      let warped = warp_image(img2, homography, out_w, out_h, offset_x, offset_y)
+      let warped = warp_image(
+        img2, homography, out_w, out_h, offset_x, offset_y,
+      )
       // 6. 将 img1 放置到输出图像
-      let result = blend_images(img1, warped, offset_x, offset_y, cfg.blend_width)
+      let result = blend_images(
+        img1,
+        warped,
+        offset_x,
+        offset_y,
+        cfg.blend_width,
+      )
       Some(result)
     }
     None => None
@@ -500,17 +532,31 @@ fn compute_output_size(
   let w2 = img2.width
   let h2 = img2.height
   // 变换 img2 的四个角点
-  let corners = [(0.0, 0.0), (w2.to_double(), 0.0), (w2.to_double(), h2.to_double()), (0.0, h2.to_double())]
+  let corners = [
+    (0.0, 0.0),
+    (w2.to_double(), 0.0),
+    (w2.to_double(), h2.to_double()),
+    (0.0, h2.to_double()),
+  ]
   let mut min_x = 0.0
   let mut max_x = w1.to_double()
   let mut min_y = 0.0
   let mut max_y = h1.to_double()
-  for (x, y) in corners {
+  for _tup1 in corners {
+    let (x, y) = _tup1
     let (nx, ny) = apply_homography(h, x, y)
-    if nx < min_x { min_x = nx }
-    if nx > max_x { max_x = nx }
-    if ny < min_y { min_y = ny }
-    if ny > max_y { max_y = ny }
+    if nx < min_x {
+      min_x = nx
+    }
+    if nx > max_x {
+      max_x = nx
+    }
+    if ny < min_y {
+      min_y = ny
+    }
+    if ny > max_y {
+      max_y = ny
+    }
   }
   let offset_x = (-min_x).to_int()
   let offset_y = (-min_y).to_int()
@@ -536,7 +582,7 @@ fn warp_image(
   let inv_h = invert_homography(h)
   let out_data : Array[Byte] = Array::make(out_w * out_h * channels, b'\x00')
   match inv_h {
-    Some(inv) => {
+    Some(inv) =>
       for y in 0..<out_h {
         for x in 0..<out_w {
           let src_x = x.to_double() - offset_x.to_double()
@@ -546,15 +592,21 @@ fn warp_image(
           let iy = orig_y.to_int()
           if ix >= 0 && ix < w && iy >= 0 && iy < hgt {
             for c in 0..<channels {
-              out_data[(y * out_w + x) * channels + c] = data[(iy * w + ix) * channels + c]
+              out_data[(y * out_w + x) * channels + c] = data[(iy * w + ix) *
+                channels +
+                c]
             }
           }
         }
       }
-    }
     None => ignore(())
   }
-  @types.Image::{ width: out_w, height: out_h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: out_w,
+    height: out_h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }
 
 ///|
@@ -582,8 +634,8 @@ fn blend_images(
       let in_img1 = x1 >= 0 && x1 < w1 && y1 >= 0 && y1 < h1
       // 检查 img2 是否覆盖该像素
       let in_img2 = data2[(y * w + x) * channels].to_int() > 0 ||
-                    data2[(y * w + x) * channels + 1].to_int() > 0 ||
-                    data2[(y * w + x) * channels + 2].to_int() > 0
+        data2[(y * w + x) * channels + 1].to_int() > 0 ||
+        data2[(y * w + x) * channels + 2].to_int() > 0
       if in_img1 && in_img2 {
         // 重叠区域：加权融合
         // 计算到 img1 右边缘的距离
@@ -602,15 +654,22 @@ fn blend_images(
       } else if in_img1 {
         // 只有 img1
         for c in 0..<channels {
-          out_data[(y * w + x) * channels + c] = data1[(y1 * w1 + x1) * channels + c]
+          out_data[(y * w + x) * channels + c] = data1[(y1 * w1 + x1) * channels +
+            c]
         }
       } else {
         // 只有 img2
         for c in 0..<channels {
-          out_data[(y * w + x) * channels + c] = data2[(y * w + x) * channels + c]
+          out_data[(y * w + x) * channels + c] = data2[(y * w + x) * channels +
+            c]
         }
       }
     }
   }
-  @types.Image::{ width: w, height: h, channels, data: Bytes::from_array(out_data) }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }

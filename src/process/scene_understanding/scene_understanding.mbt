@@ -138,12 +138,10 @@ pub fn create_default_scene_config() -> SceneUnderstandingConfig {
 /// 常见场景类型
 pub fn get_common_scene_types() -> Array[String] {
   [
-    "indoor", "outdoor", "urban", "rural", "natural",
-    "office", "home", "restaurant", "store", "street",
-    "park", "forest", "mountain", "beach", "sky",
-    "night", "daytime", "sunset", "sunrise", "cloudy",
-    "rainy", "snowy", "foggy", "sunny", "windy",
-    "crowded", "empty", "modern", "traditional", "industrial"
+    "indoor", "outdoor", "urban", "rural", "natural", "office", "home", "restaurant",
+    "store", "street", "park", "forest", "mountain", "beach", "sky", "night", "daytime",
+    "sunset", "sunrise", "cloudy", "rainy", "snowy", "foggy", "sunny", "windy", "crowded",
+    "empty", "modern", "traditional", "industrial",
   ]
 }
 
@@ -269,9 +267,19 @@ pub fn generate_caption(
   caption = "A " + brightness_desc + " " + classification.scene_type + " scene."
 
   let alternative_captions : Array[String] = []
-  alternative_captions.push("This appears to be a " + classification.scene_type + " environment.")
-  alternative_captions.push("An image showing a " + classification.scene_type + " setting.")
-  alternative_captions.push("A photograph of a " + brightness_desc + " " + classification.scene_type + ".")
+  alternative_captions.push(
+    "This appears to be a " + classification.scene_type + " environment.",
+  )
+  alternative_captions.push(
+    "An image showing a " + classification.scene_type + " setting.",
+  )
+  alternative_captions.push(
+    "A photograph of a " +
+    brightness_desc +
+    " " +
+    classification.scene_type +
+    ".",
+  )
 
   ImageCaptioningResult::{
     caption,
@@ -309,12 +317,16 @@ pub fn answer_visual_question(
   let mut answer_type = ""
   let mut confidence = 0.0
 
-  if question.contains("scene") || question.contains("environment") || question.contains("place") {
+  if question.contains("scene") ||
+    question.contains("environment") ||
+    question.contains("place") {
     answer = classification.scene_type
     question_type = "scene_recognition"
     answer_type = "open"
     confidence = classification.confidence
-  } else if question.contains("bright") || question.contains("dark") || question.contains("light") {
+  } else if question.contains("bright") ||
+    question.contains("dark") ||
+    question.contains("light") {
     if mean < 60.0 {
       answer = "dark"
     } else if mean < 120.0 {
@@ -388,10 +400,17 @@ pub fn generate_scene_graph(
     [0.0, 0.0, w.to_double() / 2.0, h.to_double() / 2.0],
     [w.to_double() / 2.0, 0.0, w.to_double() / 2.0, h.to_double() / 2.0],
     [0.0, h.to_double() / 2.0, w.to_double() / 2.0, h.to_double() / 2.0],
-    [w.to_double() / 2.0, h.to_double() / 2.0, w.to_double() / 2.0, h.to_double() / 2.0]
+    [
+      w.to_double() / 2.0,
+      h.to_double() / 2.0,
+      w.to_double() / 2.0,
+      h.to_double() / 2.0,
+    ],
   ]
 
-  let object_names = ["top_left_object", "top_right_object", "bottom_left_object", "bottom_right_object"]
+  let object_names = [
+    "top_left_object", "top_right_object", "bottom_left_object", "bottom_right_object",
+  ]
 
   for i in 0..<4 {
     let attributes : Array[String] = []
@@ -432,12 +451,7 @@ pub fn generate_scene_graph(
     confidence: 0.8,
   })
 
-  SceneGraph::{
-    nodes,
-    relations,
-    num_objects: 4,
-    num_relations: 4,
-  }
+  SceneGraph::{ nodes, relations, num_objects: 4, num_relations: 4 }
 }
 
 ///|
@@ -451,12 +465,7 @@ pub fn understand_scene(
   let scene_graph = if config.use_scene_graph {
     generate_scene_graph(img, config)
   } else {
-    SceneGraph::{
-      nodes: [],
-      relations: [],
-      num_objects: 0,
-      num_relations: 0,
-    }
+    SceneGraph::{ nodes: [], relations: [], num_objects: 0, num_relations: 0 }
   }
 
   (classification, caption, scene_graph)
@@ -476,32 +485,61 @@ pub fn scene_understanding_report_to_string(
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 场景类型 | " + classification.scene_type + " |\n"
   report = report + "| 场景类别 | " + classification.scene_category + " |\n"
-  report = report + "| 置信度 | " + (classification.confidence * 100.0).to_string() + "% |\n"
-  report = report + "| 类别数 | " + classification.num_classes.to_string() + " |\n\n"
+  report = report +
+    "| 置信度 | " +
+    (classification.confidence * 100.0).to_string() +
+    "% |\n"
+  report = report +
+    "| 类别数 | " +
+    classification.num_classes.to_string() +
+    " |\n\n"
 
   report = report + "### Top 预测\n\n"
   report = report + "| 排名 | 场景 | 置信度 |\n|------|------|------|\n"
   for i in 0..<classification.top_predictions.length() {
-    report = report + "| " + (i + 1).to_string() + " | " + classification.top_predictions[i] + " | " + (classification.top_confidences[i] * 100.0).to_string() + "% |\n"
+    report = report +
+      "| " +
+      (i + 1).to_string() +
+      " | " +
+      classification.top_predictions[i] +
+      " | " +
+      (classification.top_confidences[i] * 100.0).to_string() +
+      "% |\n"
   }
 
   report = report + "\n### 图像描述\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 主描述 | " + caption.caption + " |\n"
-  report = report + "| 置信度 | " + (caption.confidence * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 置信度 | " +
+    (caption.confidence * 100.0).to_string() +
+    "% |\n"
   report = report + "| BLEU 分数 | " + caption.bleu_score.to_string() + " |\n"
-  report = report + "| CIDEr 分数 | " + caption.cider_score.to_string() + " |\n"
-  report = report + "| 备选描述数 | " + caption.num_captions.to_string() + " |\n\n"
+  report = report +
+    "| CIDEr 分数 | " +
+    caption.cider_score.to_string() +
+    " |\n"
+  report = report +
+    "| 备选描述数 | " +
+    caption.num_captions.to_string() +
+    " |\n\n"
 
   report = report + "### 备选描述\n\n"
   for i in 0..<caption.alternative_captions.length() {
-    report = report + (i + 1).to_string() + ". " + caption.alternative_captions[i] + "\n"
+    report = report +
+      (i + 1).to_string() +
+      ". " +
+      caption.alternative_captions[i] +
+      "\n"
   }
 
   report = report + "\n### 视觉问答\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
   report = report + "| 答案 | " + vqa.answer + " |\n"
-  report = report + "| 置信度 | " + (vqa.confidence * 100.0).to_string() + "% |\n"
+  report = report +
+    "| 置信度 | " +
+    (vqa.confidence * 100.0).to_string() +
+    "% |\n"
   report = report + "| 问题类型 | " + vqa.question_type + " |\n"
   report = report + "| 答案类型 | " + vqa.answer_type + " |\n\n"
 
@@ -512,19 +550,42 @@ pub fn scene_understanding_report_to_string(
 
   report = report + "\n### 场景图\n\n"
   report = report + "| 指标 | 值 |\n|------|------|\n"
-  report = report + "| 对象数 | " + scene_graph.num_objects.to_string() + " |\n"
-  report = report + "| 关系数 | " + scene_graph.num_relations.to_string() + " |\n\n"
+  report = report +
+    "| 对象数 | " +
+    scene_graph.num_objects.to_string() +
+    " |\n"
+  report = report +
+    "| 关系数 | " +
+    scene_graph.num_relations.to_string() +
+    " |\n\n"
 
   report = report + "### 对象列表\n\n"
   report = report + "| ID | 名称 | 置信度 |\n|------|------|------|\n"
   for node in scene_graph.nodes {
-    report = report + "| " + node.object_id.to_string() + " | " + node.object_name + " | " + (node.confidence * 100.0).to_string() + "% |\n"
+    report = report +
+      "| " +
+      node.object_id.to_string() +
+      " | " +
+      node.object_name +
+      " | " +
+      (node.confidence * 100.0).to_string() +
+      "% |\n"
   }
 
   report = report + "\n### 关系列表\n\n"
-  report = report + "| 主体 | 关系 | 客体 | 置信度 |\n|------|------|------|------|\n"
+  report = report +
+    "| 主体 | 关系 | 客体 | 置信度 |\n|------|------|------|------|\n"
   for rel in scene_graph.relations {
-    report = report + "| " + rel.subject_id.to_string() + " | " + rel.relation + " | " + rel.object_id.to_string() + " | " + (rel.confidence * 100.0).to_string() + "% |\n"
+    report = report +
+      "| " +
+      rel.subject_id.to_string() +
+      " | " +
+      rel.relation +
+      " | " +
+      rel.object_id.to_string() +
+      " | " +
+      (rel.confidence * 100.0).to_string() +
+      "% |\n"
   }
 
   report
