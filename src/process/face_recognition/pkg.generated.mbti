@@ -146,4 +146,3 @@ pub(all) struct FaceRecognitionResult {
 // Type aliases
 
 // Traits
-

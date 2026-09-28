@@ -21,7 +21,7 @@ fn lcg_next(seed : Int) -> (Int, Int) {
   let a = 1103515245
   let c = 12345
   let m = 1073741824
-  let next = (a * seed + c) % m
+  let next = ((a * seed + c) % m).abs()
   (next, next)
 }
 

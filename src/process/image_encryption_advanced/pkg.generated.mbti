@@ -182,4 +182,3 @@ pub(all) enum SteganographyType {
 // Type aliases
 
 // Traits
-

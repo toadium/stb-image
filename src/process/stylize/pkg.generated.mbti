@@ -33,4 +33,3 @@ pub(all) struct StylizeConfig {
 // Type aliases
 
 // Traits
-

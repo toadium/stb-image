@@ -130,4 +130,3 @@ pub(all) struct VQAResult {
 // Type aliases
 
 // Traits
-

@@ -40,6 +40,8 @@ pub fn background_normalization(@types.Image, kernel_size? : Int) -> @types.Imag
 
 pub fn batch_correct_texts(Array[String], context_type? : String) -> Array[CorrectionResult] raise @types.LoadError
 
+pub fn batch_recognize_chars(Array[@types.Image], DLCnnModelConfig, Array[String]) -> Array[DLInferenceResult] raise @types.LoadError
+
 pub fn batch_scan_ocr(Array[@types.Image], ScanOCRConfig) -> Array[OCRPageResult] raise @types.LoadError
 
 pub fn batch_summary_to_string(BatchResultSummary) -> String
@@ -48,7 +50,17 @@ pub fn build_document_structure_tree(Array[DocumentBlock]) -> Array[DocumentTree
 
 pub fn build_enhanced_elements(Array[TextLineAttributes], Int, Int) -> EnhancedDocument raise @types.LoadError
 
+pub fn build_gaussian_kernel_lut(Double, Int) -> Array[Double] raise @types.LoadError
+
+pub fn build_grayscale_lut() -> Array[Int]
+
 pub fn build_markdown_document(OCRPageResult, title? : String) -> MarkdownDocument raise @types.LoadError
+
+pub fn build_threshold_lut(Int) -> Array[Int]
+
+pub fn cache_friendly_horizontal_projection(@types.Image) -> Array[Int] raise @types.LoadError
+
+pub fn cache_friendly_vertical_projection(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn calculate_accuracy(Array[Int], Array[Int]) -> Double
 
@@ -82,7 +94,19 @@ pub fn chinese_ocr_default_config() -> ChineseOcrConfig
 
 pub fn classify_markdown_element(TextBlock, avg_font_size? : Double) -> MarkdownElementType
 
+pub fn cnn_confusion_matrix(Array[DLTrainingSample], DLCnnModelConfig, Array[String]) -> Array[Array[Int]] raise @types.LoadError
+
 pub fn cnn_infer(Array[Double], DLCnnModelConfig, Array[String]) -> DLInferenceResult
+
+pub fn cnn_recognize_char(@types.Image, DLCnnModelConfig, Array[String]) -> DLInferenceResult raise @types.LoadError
+
+pub fn cnn_recognize_digits(@types.Image, DLCnnModelConfig) -> DLInferenceResult raise @types.LoadError
+
+pub fn cnn_recognize_letters(@types.Image, DLCnnModelConfig) -> DLInferenceResult raise @types.LoadError
+
+pub fn cnn_train(Array[DLTrainingSample], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double, Int) -> (Array[Double], Array[Double], Array[Double], Array[Double], Array[DLTrainingHistory]) raise @types.LoadError
+
+pub fn cnn_train_step(Array[Double], Int, Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError
 
 pub fn combined_features(@types.Image) -> Array[Double] raise @types.LoadError
 
@@ -114,15 +138,23 @@ pub fn create_batch_tasks(Array[String], String, String) -> Array[BatchTask] rai
 
 pub fn create_data_loader(Array[DLTrainingSample], Int, Bool) -> DataLoader raise @types.LoadError
 
+pub fn create_default_api_server_config() -> ApiServerConfig
+
 pub fn create_default_batch_config() -> BatchOcrConfig
 
 pub fn create_default_char_cnn_config(Int) -> DLCnnModelConfig
 
 pub fn create_default_chinese_dictionary() -> DictChineseDict
 
+pub fn create_default_cli_config() -> CliConfig
+
+pub fn create_default_docker_config() -> DockerConfig
+
 pub fn create_default_handwriting_config() -> HandwritingRecognitionConfig
 
 pub fn create_default_language_model() -> LanguageModelState
+
+pub fn create_default_model_package_config() -> ModelPackageConfig
 
 pub fn create_default_training_config() -> TrainingConfig
 
@@ -147,6 +179,8 @@ pub fn dataset_create() -> TrainingDataset
 pub fn dataset_stats(TrainingDataset) -> (Int, Int, Array[(String, Int)])
 
 pub fn decompose_chinese_char(String) -> ChineseCharStructure raise @types.LoadError
+
+pub fn dense_backward(Array[Double], Array[Double], Int, Int) -> (Array[Double], Array[Double], Array[Double])
 
 pub fn dense_forward(Array[Double], Array[Double], Array[Double], Int, Int, String) -> Array[Double]
 
@@ -242,6 +276,8 @@ pub fn estimate_memory_usage(Int, Int, Int, Int) -> MemoryUsageStats
 
 pub fn euclidean_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
 
+pub fn evaluate_cnn_model(Array[DLTrainingSample], DLCnnModelConfig, Array[String]) -> (Double, Double) raise @types.LoadError
+
 pub fn evaluate_scan_quality(@types.Image) -> ScanQuality raise @types.LoadError
 
 pub fn extract_all_cells(@types.Image, TableStructure, padding? : Int) -> Array[@types.Image] raise @types.LoadError
@@ -284,6 +320,14 @@ pub fn extract_title(DocumentStructure) -> String
 
 pub fn extract_zernike_moments(@types.Image, max_order? : Int) -> Array[Double] raise @types.LoadError
 
+pub fn fast_connected_components(@types.Image) -> Array[Int] raise @types.LoadError
+
+pub fn fast_downsample_2x(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn fast_gaussian_blur_1d(@types.Image, Array[Double]) -> @types.Image raise @types.LoadError
+
+pub fn fast_threshold_lut(@types.Image, Array[Int]) -> @types.Image raise @types.LoadError
+
 pub fn filter_components_by_area(OcrConnectedComponentsResult, Int, Int) -> Array[OcrConnectedComponent] raise @types.LoadError
 
 pub fn filter_components_by_aspect_ratio(OcrConnectedComponentsResult, Double, Double) -> Array[OcrConnectedComponent] raise @types.LoadError
@@ -302,6 +346,8 @@ pub fn generate_3500_chinese_templates(char_set? : String) -> Array[(String, Arr
 
 pub fn generate_accuracy_report(AccuracyStats, String) -> String
 
+pub fn generate_api_config_json(ApiServerConfig) -> String
+
 pub fn generate_batch_summary(Array[BatchTask], Double) -> BatchResultSummary raise @types.LoadError
 
 pub fn generate_chinese_char_info_db() -> Array[ChineseCharInfo]
@@ -310,9 +356,17 @@ pub fn generate_chinese_dictionary_report(DictChineseDict) -> String
 
 pub fn generate_chinese_templates(char_set? : String) -> Array[(String, Array[Double])]
 
+pub fn generate_cli_help() -> String
+
 pub fn generate_correction_report(Array[CorrectionResult]) -> String
 
+pub fn generate_deployment_package(DockerConfig, ApiServerConfig, ModelPackageConfig) -> String
+
 pub fn generate_digit_templates() -> Array[(String, Array[Double])]
+
+pub fn generate_docker_compose(DockerConfig) -> String
+
+pub fn generate_dockerfile(DockerConfig) -> String
 
 pub fn generate_english_templates(case_sensitive? : Bool) -> Array[(String, Array[Double])]
 
@@ -320,11 +374,17 @@ pub fn generate_enhanced_chinese_templates(char_set_size? : Int) -> Array[(Strin
 
 pub fn generate_enhanced_handwriting_templates(char_set? : String, num_variants? : Int) -> Array[(String, Array[Double])]
 
+pub fn generate_env_config(DeploymentEnvironment) -> String
+
 pub fn generate_handwriting_templates(char_set? : String) -> Array[(String, Array[Double])]
+
+pub fn generate_health_check_config(ApiServerConfig) -> String
 
 pub fn generate_image_extraction_report(Array[ExtractedImage]) -> String
 
 pub fn generate_markdown_image_placeholder(MarkdownImage, Int) -> String
+
+pub fn generate_model_manifest(ModelPackageConfig) -> String
 
 pub fn generate_performance_report(PerformanceBenchmark, String) -> String
 
@@ -396,6 +456,8 @@ pub fn markdown_table_to_string(MarkdownTable) -> String
 
 pub fn max_pool2d(Array[Double], Int, Int, Int, Int) -> Array[Double] raise @types.LoadError
 
+pub fn max_pool2d_backward(Array[Double], Array[Double], Int, Int, Int, Int) -> Array[Double]
+
 pub fn merge_adjacent_components(Array[OcrConnectedComponent], Int) -> Array[OcrConnectedComponent] raise @types.LoadError
 
 pub fn merge_small_segments(Array[(Int, Int, Int, Int)], Int, Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
@@ -424,6 +486,8 @@ pub fn normalize_punctuation(String, Array[String]) -> String
 
 pub fn ocr_accuracy_enhanced_default_config() -> OcrAccuracyEnhancedConfig
 
+pub fn ocr_pipeline_stats(@types.Image) -> (Int, Int, Double) raise @types.LoadError
+
 pub fn ocr_postprocess(OcrResult, config? : PostProcessConfig, dictionary? : Dictionary, ngram_model? : NgramModel) -> OcrResult raise @types.LoadError
 
 pub fn ocr_preprocess(@types.Image, binarization_method? : String) -> @types.Image raise @types.LoadError
@@ -437,6 +501,8 @@ pub fn ocr_result_to_text(OCRPageResult) -> String
 pub fn optimize_reading_order(Array[DocumentBlock], Int) -> Array[Int]
 
 pub fn otsu_threshold(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn parse_cli_args(Array[String]) -> CliConfig raise @types.LoadError
 
 pub fn postprocess_default_config() -> PostProcessConfig
 
@@ -476,6 +542,8 @@ pub fn record_training_metrics(TrainingState, TrainingMetrics) -> TrainingState
 
 pub fn relu(Double) -> Double
 
+pub fn relu_backward(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn resize_image_for_cnn(@types.Image, Int, Int) -> Array[Double] raise @types.LoadError
 
 pub fn robustness_report_to_string(RobustnessReport) -> String
@@ -510,6 +578,8 @@ pub fn shadow_removal(@types.Image, kernel_size? : Int) -> @types.Image raise @t
 
 pub fn sigmoid(Double) -> Double
 
+pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn smart_reading_order(Array[EnhancedDocumentElement], LayoutType, Array[Int]) -> Array[Int] raise @types.LoadError
 
 pub fn smart_segment_chars(@types.Image, MultilingualOcrEnhancedConfig) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError
@@ -517,6 +587,8 @@ pub fn smart_segment_chars(@types.Image, MultilingualOcrEnhancedConfig) -> Array
 pub fn smart_spacing_process(String, Array[String]) -> String
 
 pub fn softmax(Array[Double]) -> Array[Double]
+
+pub fn softmax_cross_entropy_backward(Array[Double], Int) -> Array[Double] raise @types.LoadError
 
 pub fn split_train_validation(Array[DLTrainingSample], Double, Bool) -> (Array[DLTrainingSample], Array[DLTrainingSample])
 
@@ -536,7 +608,11 @@ pub fn understand_document(@types.Image) -> DocumentStructure raise @types.LoadE
 
 pub fn understand_document_enhanced(@types.Image, config? : DocumentUnderstandingEnhancedConfig) -> (Array[DocumentBlock], Array[DocumentTreeNode], String) raise @types.LoadError
 
+pub fn unrolled_pixel_sum(@types.Image) -> Int raise @types.LoadError
+
 pub fn update_task_progress(BatchTask, Double, Int, Int) -> BatchTask
+
+pub fn update_weights_sgd(Array[Double], Array[Double], Double) -> Array[Double] raise @types.LoadError
 
 pub fn vertical_projection(@types.Image) -> ProjectionResult raise @types.LoadError
 
@@ -582,6 +658,17 @@ pub(all) struct AdvancedChineseOcrConfig {
   char_set : String
   use_radical_decomposition : Bool
   use_structure_analysis : Bool
+}
+
+pub(all) struct ApiServerConfig {
+  host : String
+  port : Int
+  max_concurrent_requests : Int
+  request_timeout_ms : Int
+  max_image_size_mb : Int
+  enable_cors : Bool
+  auth_token : String
+  rate_limit_per_minute : Int
 }
 
 pub(all) struct AugmentationConfig {
@@ -727,6 +814,18 @@ pub(all) struct ClassificationResult {
   label : String
   confidence : Double
   top_k : Array[(String, Double)]
+}
+
+pub(all) struct CliConfig {
+  input_path : String
+  output_path : String
+  output_format : String
+  language : String
+  enable_handwriting : Bool
+  enable_multilingual : Bool
+  enable_document_analysis : Bool
+  verbose : Bool
+  batch_size : Int
 }
 
 pub(all) struct CommonErrorPattern {
@@ -879,6 +978,12 @@ pub(all) struct DataLoader {
   epoch : Int
 }
 
+pub(all) enum DeploymentEnvironment {
+  Development
+  Staging
+  Production
+} derive(Eq)
+
 pub(all) struct DictCharEntry {
   char : String
   unicode : String
@@ -983,6 +1088,16 @@ pub(all) enum DistortionType {
   Noise
   Unknown
 } derive(Eq)
+
+pub(all) struct DockerConfig {
+  base_image : String
+  app_port : Int
+  memory_limit_mb : Int
+  cpu_limit : Double
+  enable_gpu : Bool
+  environment : DeploymentEnvironment
+  volumes : Array[(String, String)]
+}
 
 pub(all) struct DocumentBlock {
   block_type : DocumentBlockType
@@ -1441,6 +1556,17 @@ pub(all) struct MemoryUsageStats {
   gc_count : Int
 }
 
+pub(all) struct ModelPackageConfig {
+  model_name : String
+  version : String
+  model_path : String
+  labels_path : String
+  input_width : Int
+  input_height : Int
+  num_classes : Int
+  compression : String
+}
+
 pub(all) struct MultilingualOcrConfig {
   enable_chinese : Bool
   enable_english : Bool
@@ -1881,4 +2007,3 @@ pub(all) struct TrainingState {
 // Type aliases
 
 // Traits
-

@@ -191,4 +191,3 @@ pub(all) enum VAEType {
 // Type aliases
 
 // Traits
-

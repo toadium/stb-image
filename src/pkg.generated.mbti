@@ -17,10 +17,12 @@ import {
   "walkzzz/image/src/process/face_recognition",
   "walkzzz/image/src/process/feature",
   "walkzzz/image/src/process/forensics",
+  "walkzzz/image/src/process/forensics_enhanced",
   "walkzzz/image/src/process/frequency",
   "walkzzz/image/src/process/fusion",
   "walkzzz/image/src/process/fusion_enhanced",
   "walkzzz/image/src/process/image_generation",
+  "walkzzz/image/src/process/image_retrieval_advanced",
   "walkzzz/image/src/process/inpainting",
   "walkzzz/image/src/process/intelligent_vision",
   "walkzzz/image/src/process/medical",
@@ -127,6 +129,8 @@ pub fn align_images(@types.Image, @types.Image) -> (@types.Image, @registration.
 
 pub fn alpha_blend(@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError
 
+pub fn analyze_cfa_pattern_fe(@types.Image) -> @forensics_enhanced.CfaAnalysisResult
+
 pub fn analyze_color_distribution_fs(@types.Image) -> @forensics.ColorAnalysisResult
 
 pub fn analyze_color_quantization_fs(@types.Image) -> @forensics.ColorQuantizationResult
@@ -135,11 +139,15 @@ pub fn analyze_complex_layout(Array[@ocr.TextBlock], Int, Int) -> @ocr.ComplexLa
 
 pub fn analyze_compression_artifacts_fs(@types.Image) -> @forensics.CompressionAnalysisResult
 
+pub fn analyze_dct_coefficients_fe(@types.Image) -> @forensics_enhanced.DctCoefficientResult
+
 pub fn analyze_details_fs(@types.Image) -> @forensics.DetailAnalysisResult
 
 pub fn analyze_document_layout(@types.Image) -> @ocr.DocumentStructure raise @types.LoadError
 
 pub fn analyze_edges_fs(@types.Image) -> @forensics.EdgeAnalysisResult
+
+pub fn analyze_ela_fe(@types.Image, Int) -> @forensics_enhanced.ElaAnalysisResult raise @types.LoadError
 
 pub fn analyze_face_attributes_fr(@types.Image, @face_recognition.FaceDetectionResult, @face_recognition.FaceDatabase, @face_recognition.FaceRecognitionConfig) -> @face_recognition.FaceAttributeAnalysis
 
@@ -147,13 +155,21 @@ pub fn analyze_frequency_domain_fs(@types.Image) -> @forensics.FrequencyAnalysis
 
 pub fn analyze_geometry_fs(@types.Image) -> @forensics.GeometryAnalysisResult
 
+pub fn analyze_illumination_consistency_fe(@types.Image) -> @forensics_enhanced.IlluminationConsistencyResult
+
+pub fn analyze_jpeg_ghost_fe(@types.Image) -> @forensics_enhanced.JpegGhostResult
+
 pub fn analyze_layout_enhanced(@types.Image, config? : @ocr.DocumentUnderstandingEnhancedConfig) -> Array[@ocr.DocumentBlock] raise @types.LoadError
 
 pub fn analyze_layout_scan(@types.Image) -> Array[@ocr.TextBlock] raise @types.LoadError
 
 pub fn analyze_markdown_element_distribution(@ocr.MarkdownDocument) -> Array[(String, Int)]
 
+pub fn analyze_metadata_forensics_fe(@types.Image) -> @forensics_enhanced.MetadataForensicsResult
+
 pub fn analyze_noise_pattern_fs(@types.Image) -> @forensics.NoiseAnalysisResult
+
+pub fn analyze_noise_residual_fe(@types.Image) -> @forensics_enhanced.NoiseResidualResult
 
 pub fn analyze_polarization_ai(@types.Image, @types.Image, @types.Image, @types.Image) -> @advanced_imaging.PolarizationData
 
@@ -191,6 +207,14 @@ pub fn arnold_scramble_enc(@types.Image, @encryption.ArnoldParams) -> @encryptio
 
 pub fn augment_features(Array[Double], noise_level? : Double) -> Array[Double]
 
+pub fn augment_random_noise(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
+
+pub fn augment_random_rotation(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
+
+pub fn augment_random_scale(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
+
+pub fn augment_random_shift(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
+
 pub fn background_normalization(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
 
 pub fn barcode_default_config() -> @barcode.BarcodeConfig
@@ -204,6 +228,8 @@ pub fn batch_encrypt(Array[@types.Image], Double) -> Array[@types.Image]
 pub fn batch_extract_features(Array[(@types.Image, String)]) -> Array[@retrieval.ImageFeature]
 
 pub fn batch_photo_enhance(Array[@types.Image], String) -> Array[@types.Image]
+
+pub fn batch_recognize_chars(Array[@types.Image], @ocr.DLCnnModelConfig, Array[String]) -> Array[@ocr.DLInferenceResult] raise @types.LoadError
 
 pub fn batch_scan_ocr(Array[@types.Image], @ocr.ScanOCRConfig) -> Array[@ocr.OCRPageResult] raise @types.LoadError
 
@@ -271,11 +297,17 @@ pub fn build_document_structure_tree(Array[@ocr.DocumentBlock]) -> Array[@ocr.Do
 
 pub fn build_enhanced_elements(Array[@ocr.TextLineAttributes], Int, Int) -> @ocr.EnhancedDocument raise @types.LoadError
 
+pub fn build_gaussian_kernel_lut(Double, Int) -> Array[Double] raise @types.LoadError
+
 pub fn build_gaussian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
 pub fn build_gaussian_pyramid_16(@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError
 
 pub fn build_gaussian_pyramid_f(@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError
+
+pub fn build_grayscale_lut() -> Array[Int]
+
+pub fn build_index_advanced(Array[Array[Double]], @image_retrieval_advanced.IndexStructureType) -> @image_retrieval_advanced.IndexConstructionResult
 
 pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
@@ -284,6 +316,12 @@ pub fn build_laplacian_pyramid_16(@types.Image16, Int) -> Array[@types.Image16] 
 pub fn build_laplacian_pyramid_f(@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError
 
 pub fn build_markdown_document(@ocr.OCRPageResult, title? : String) -> @ocr.MarkdownDocument raise @types.LoadError
+
+pub fn build_threshold_lut(Int) -> Array[Int]
+
+pub fn cache_friendly_horizontal_projection(@types.Image) -> Array[Int] raise @types.LoadError
+
+pub fn cache_friendly_vertical_projection(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn calculate_accuracy(Array[Int], Array[Int]) -> Double
 
@@ -357,6 +395,8 @@ pub fn calculate_segmentation_metrics(Array[Int], Array[Int], Int) -> @segmentat
 
 pub fn calculate_sharpness_dn(@types.Image) -> Double
 
+pub fn calculate_similarity_advanced(Array[Double], Array[Double], @image_retrieval_advanced.SimilarityMetricType) -> Double
+
 pub fn calculate_similarity_cbir(Array[Double], Array[Double], @retrieval.SimilarityMetric) -> Double
 
 pub fn calculate_spectral_signature_rs(@remote_sensing.RemoteSensingImage, Int, Int) -> @remote_sensing.SpectralSignature
@@ -413,7 +453,19 @@ pub fn cmyk_to_rgb_16(Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadEr
 
 pub fn cmyk_to_rgb_f(Float, Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError
 
+pub fn cnn_confusion_matrix(Array[@ocr.DLTrainingSample], @ocr.DLCnnModelConfig, Array[String]) -> Array[Array[Int]] raise @types.LoadError
+
 pub fn cnn_infer(Array[Double], @ocr.DLCnnModelConfig, Array[String]) -> @ocr.DLInferenceResult
+
+pub fn cnn_recognize_char(@types.Image, @ocr.DLCnnModelConfig, Array[String]) -> @ocr.DLInferenceResult raise @types.LoadError
+
+pub fn cnn_recognize_digits(@types.Image, @ocr.DLCnnModelConfig) -> @ocr.DLInferenceResult raise @types.LoadError
+
+pub fn cnn_recognize_letters(@types.Image, @ocr.DLCnnModelConfig) -> @ocr.DLInferenceResult raise @types.LoadError
+
+pub fn cnn_train(Array[@ocr.DLTrainingSample], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double, Int) -> (Array[Double], Array[Double], Array[Double], Array[Double], Array[@ocr.DLTrainingHistory]) raise @types.LoadError
+
+pub fn cnn_train_step(Array[Double], Int, Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError
 
 pub fn coded_aperture_reconstruct_ci(@types.Image, @computational_imaging.CodedAperturePattern) -> @computational_imaging.ImagingReconstructionResult
 
@@ -541,6 +593,8 @@ pub fn create_default_action_config_pe() -> @pose_estimation.ActionRecognitionCo
 
 pub fn create_default_advanced_imaging_config_ai(@advanced_imaging.ImagingModality) -> @advanced_imaging.AdvancedImagingConfig
 
+pub fn create_default_api_server_config() -> @ocr.ApiServerConfig
+
 pub fn create_default_arnold_params_enc() -> @encryption.ArnoldParams
 
 pub fn create_default_batch_config() -> @ocr.BatchOcrConfig
@@ -555,6 +609,8 @@ pub fn create_default_char_cnn_config(Int) -> @ocr.DLCnnModelConfig
 
 pub fn create_default_chinese_dictionary() -> @ocr.DictChineseDict
 
+pub fn create_default_cli_config() -> @ocr.CliConfig
+
 pub fn create_default_coded_aperture_ci(Int) -> @computational_imaging.CodedAperturePattern
 
 pub fn create_default_color_histogram_config_cbir() -> @retrieval.ColorHistogramConfig
@@ -564,6 +620,8 @@ pub fn create_default_compression_config_cp() -> @compression.CompressionConfig
 pub fn create_default_denoise_config_dn() -> @denoise.DenoiseConfig
 
 pub fn create_default_diffusion_config_vlm() -> @vlm_multimodal.DiffusionConfig
+
+pub fn create_default_docker_config() -> @ocr.DockerConfig
 
 pub fn create_default_dof_config(Int, Int) -> @photo_enhance.DepthOfFieldConfig
 
@@ -609,6 +667,8 @@ pub fn create_default_lightfield_camera_ci() -> @computational_imaging.LightFiel
 
 pub fn create_default_medical_segmentation_config() -> @medical.MedicalSegmentationConfig
 
+pub fn create_default_model_package_config() -> @ocr.ModelPackageConfig
+
 pub fn create_default_nerf_config_nr() -> @neural_rendering.NeRFConfig
 
 pub fn create_default_night_config() -> @photo_enhance.NightEnhanceConfig
@@ -624,6 +684,8 @@ pub fn create_default_registration_config_advanced_ra() -> @registration_advance
 pub fn create_default_registration_config_fe() -> @fusion_enhanced.RegistrationConfig
 
 pub fn create_default_remote_sensing_image(Int, Int, Int) -> @remote_sensing.RemoteSensingImage
+
+pub fn create_default_retrieval_config() -> @image_retrieval_advanced.ImageRetrievalConfig
 
 pub fn create_default_scene_config_su() -> @scene_understanding.SceneUnderstandingConfig
 
@@ -779,6 +841,8 @@ pub fn denoise_nlm(@types.Image, config? : @enhance.NlmConfig) -> @types.Image r
 
 pub fn denoise_report_to_string_dn(@denoise.DenoiseResult) -> String
 
+pub fn dense_backward(Array[Double], Array[Double], Int, Int) -> (Array[Double], Array[Double], Array[Double])
+
 pub fn dense_forward(Array[Double], Array[Double], Array[Double], Int, Int, String) -> Array[Double]
 
 pub fn depth_map_to_image_3d(@stereo3d.DepthMap3d) -> @types.Image
@@ -798,6 +862,8 @@ pub fn deskew(@types.Image) -> @types.Image raise @types.LoadError
 pub fn detect_changes_simple_rs(@remote_sensing.RemoteSensingImage, @remote_sensing.RemoteSensingImage, Double) -> @remote_sensing.ChangeDetectionResult
 
 pub fn detect_char_language(@types.Image) -> @ocr.LanguageType raise @types.LoadError
+
+pub fn detect_clone_regions_fe(@types.Image, Int, Double) -> @forensics_enhanced.CloneDetectionResult raise @types.LoadError
 
 pub fn detect_column_boundaries(Array[@ocr.TextLineAttributes], Int, @ocr.LayoutType) -> Array[Int]
 
@@ -868,6 +934,8 @@ pub fn detect_skew_angle_robust(@types.Image) -> Double raise @types.LoadError
 pub fn detect_stars_iv(@types.Image, @intelligent_vision.IntelligentVisionConfig) -> @intelligent_vision.StarDetectionResult
 
 pub fn detect_table_enhanced(@types.Image, min_table_size? : Int) -> Array[@ocr.EnhancedTableResult] raise @types.LoadError
+
+pub fn detect_tamper_comprehensive_fe(@types.Image, Int) -> @forensics_enhanced.TamperDetectionResult raise @types.LoadError
 
 pub fn detect_text_lines_projection(@types.Image, min_height? : Int, max_gap? : Int) -> Array[@ocr.TextLineInfo] raise @types.LoadError
 
@@ -1095,6 +1163,8 @@ pub fn euclidean_distance(Array[Double], Array[Double]) -> Double raise @types.L
 
 pub fn euclidean_distance_cbir_api(Array[Double], Array[Double]) -> Double
 
+pub fn evaluate_cnn_model(Array[@ocr.DLTrainingSample], @ocr.DLCnnModelConfig, Array[String]) -> (Double, Double) raise @types.LoadError
+
 pub fn evaluate_encryption_quality(@types.Image, @types.Image) -> @encryption.EncryptionQuality
 
 pub fn evaluate_face_quality_fr(@types.Image, @face_recognition.FaceDetectionResult) -> Double
@@ -1102,6 +1172,8 @@ pub fn evaluate_face_quality_fr(@types.Image, @face_recognition.FaceDetectionRes
 pub fn evaluate_image_encryption_quality_enc(@types.Image, @types.Image) -> @encryption.ImageEncryptionQuality
 
 pub fn evaluate_scan_quality(@types.Image) -> @ocr.ScanQuality raise @types.LoadError
+
+pub fn expand_query_advanced(Array[Double], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.QueryExpansionResult
 
 pub fn extract_all_cells(@types.Image, @ocr.TableStructure, padding? : Int) -> Array[@types.Image] raise @types.LoadError
 
@@ -1126,6 +1198,8 @@ pub fn extract_document_text(Array[@ocr.DocumentBlock], include_headers? : Bool,
 pub fn extract_face_feature_fr(@types.Image, @face_recognition.FaceDetectionResult, @face_recognition.FaceRecognitionConfig) -> @face_recognition.FaceFeature
 
 pub fn extract_features(@ocr.DLFeatureExtractor, @types.Image) -> Array[Double]
+
+pub fn extract_features_advanced(Array[Double], Int, Int, @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.FeatureExtractionResult
 
 pub fn extract_gabor_ocr_features(@types.Image, num_orientations? : Int, num_frequencies? : Int) -> Array[Double]
 
@@ -1172,6 +1246,14 @@ pub fn face_recognition_report_to_string_fr(@face_recognition.FaceAttributeAnaly
 pub fn failure_reason() -> String
 
 pub fn false_color_composite(@types.Image, @types.Image, @types.Image) -> @types.Image
+
+pub fn fast_connected_components(@types.Image) -> Array[Int] raise @types.LoadError
+
+pub fn fast_downsample_2x(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn fast_gaussian_blur_1d(@types.Image, Array[Double]) -> @types.Image raise @types.LoadError
+
+pub fn fast_threshold_lut(@types.Image, Array[Int]) -> @types.Image raise @types.LoadError
 
 pub fn feature_based_registration_ra(@types.Image, @types.Image, @registration_advanced.RegistrationConfigAdvanced) -> @registration_advanced.RegistrationResultAdvanced
 
@@ -1301,6 +1383,8 @@ pub fn generate_3500_chinese_templates(char_set? : String) -> Array[(String, Arr
 
 pub fn generate_accuracy_report(@ocr.AccuracyStats, String) -> String
 
+pub fn generate_api_config_json(@ocr.ApiServerConfig) -> String
+
 pub fn generate_batch_summary(Array[@ocr.BatchTask], Double) -> @ocr.BatchResultSummary raise @types.LoadError
 
 pub fn generate_caption_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.ImageCaptioningResult
@@ -1311,9 +1395,17 @@ pub fn generate_chinese_dictionary_report(@ocr.DictChineseDict) -> String
 
 pub fn generate_chinese_templates(char_set? : String) -> Array[(String, Array[Double])]
 
+pub fn generate_cli_help() -> String
+
 pub fn generate_correction_report(Array[@ocr.CorrectionResult]) -> String
 
+pub fn generate_deployment_package(@ocr.DockerConfig, @ocr.ApiServerConfig, @ocr.ModelPackageConfig) -> String
+
 pub fn generate_digit_templates() -> Array[(String, Array[Double])]
+
+pub fn generate_docker_compose(@ocr.DockerConfig) -> String
+
+pub fn generate_dockerfile(@ocr.DockerConfig) -> String
 
 pub fn generate_english_templates(case_sensitive? : Bool) -> Array[(String, Array[Double])]
 
@@ -1321,9 +1413,13 @@ pub fn generate_enhanced_chinese_templates(char_set_size? : Int) -> Array[(Strin
 
 pub fn generate_enhanced_handwriting_templates(char_set? : String, num_variants? : Int) -> Array[(String, Array[Double])]
 
+pub fn generate_env_config(@ocr.DeploymentEnvironment) -> String
+
 pub fn generate_from_latent_ig(@image_generation.LatentVector, @image_generation.GenerationConfig) -> @image_generation.GenerationResult
 
 pub fn generate_handwriting_templates(char_set? : String) -> Array[(String, Array[Double])]
+
+pub fn generate_health_check_config(@ocr.ApiServerConfig) -> String
 
 pub fn generate_hologram_ci(@types.Image, Double, Double, Double) -> @computational_imaging.Hologram
 
@@ -1332,6 +1428,8 @@ pub fn generate_hyperspectral_cube_ai(@types.Image, Int, Double, Double) -> @adv
 pub fn generate_image_extraction_report(Array[@ocr.ExtractedImage]) -> String
 
 pub fn generate_markdown_image_placeholder(@ocr.MarkdownImage, Int) -> String
+
+pub fn generate_model_manifest(@ocr.ModelPackageConfig) -> String
 
 pub fn generate_performance_report(@ocr.PerformanceBenchmark, String) -> String
 
@@ -1549,6 +1647,8 @@ pub fn image_database_new() -> @retrieval.ImageDatabase
 
 pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
 
+pub fn image_retrieval_report_to_string_advanced(@image_retrieval_advanced.ImageRetrievalTaskType, @image_retrieval_advanced.ImageRetrievalConfig, String) -> String
+
 pub fn image_similarity(@types.Image, @types.Image, method_type? : String) -> Double
 
 pub fn image_to_text_vlm(@types.Image, @vlm_multimodal.GenerativeAIConfig) -> @vlm_multimodal.GenerativeAIResult
@@ -1735,6 +1835,8 @@ pub fn match_features(Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], 
 
 pub fn max_pool2d(Array[Double], Int, Int, Int, Int) -> Array[Double] raise @types.LoadError
 
+pub fn max_pool2d_backward(Array[Double], Array[Double], Int, Int, Int, Int) -> Array[Double]
+
 pub fn mean_filter_denoise_dn(@types.Image, Int) -> @types.Image
 
 pub fn mean_value(@types.Image) -> Float
@@ -1901,6 +2003,8 @@ pub fn normalized_cross_correlation_ra(@types.Image, @types.Image) -> Double
 
 pub fn ocr_accuracy_enhanced_default_config() -> @ocr.OcrAccuracyEnhancedConfig
 
+pub fn ocr_pipeline_stats(@types.Image) -> (Int, Int, Double) raise @types.LoadError
+
 pub fn ocr_postprocess(@ocr.OcrResult, config? : @ocr.PostProcessConfig, dictionary? : @ocr.Dictionary, ngram_model? : @ocr.NgramModel) -> @ocr.OcrResult raise @types.LoadError
 
 pub fn ocr_preprocess(@types.Image, binarization_method? : String) -> @types.Image raise @types.LoadError
@@ -1934,6 +2038,8 @@ pub fn otsu_threshold_value(@types.Image) -> Double
 pub fn outpaint_image_ig(@types.Image, Int, Int, @image_generation.EditingConfig) -> @image_generation.EditingResult
 
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+
+pub fn parse_cli_args(Array[String]) -> @ocr.CliConfig raise @types.LoadError
 
 pub fn pet_synthesize_ai(Int, Int, String) -> @advanced_imaging.PETData
 
@@ -2069,7 +2175,11 @@ pub fn reinhard_tonemap_16(@types.ImageF, key? : Float) -> @types.Image16 raise 
 
 pub fn reinhard_tonemap_f(@types.ImageF, key? : Float) -> @types.ImageF raise @types.LoadError
 
+pub fn relevance_feedback_advanced(Array[Double], Array[Int], Array[Int], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.RelevanceFeedbackResult
+
 pub fn relu(Double) -> Double
+
+pub fn relu_backward(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn remote_sensing_report_to_string_rs(@remote_sensing.RemoteSensingImage, @remote_sensing.ClassificationResult, @remote_sensing.ChangeDetectionResult, @remote_sensing.RemoteSensingQuality) -> String
 
@@ -2110,6 +2220,8 @@ pub fn resize_to_contain(@types.Image, Int, Int, Array[Byte]) -> @types.Image ra
 pub fn resize_to_cover(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn retrieval_report_to_string_cbir(@retrieval.CBIRRetrievalResultList, @retrieval.CBIRImageFeature) -> String
+
+pub fn retrieve_images_advanced(Array[Double], Int, Int, Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.RetrievalResult
 
 pub fn retrieve_images_cbir(@retrieval.CBIRImageFeature, @retrieval.CBIRImageIndex, Int, @retrieval.SimilarityMetric) -> @retrieval.CBIRRetrievalResultList
 
@@ -2255,6 +2367,8 @@ pub fn sift_match(Array[@feature.SiftDescriptor], Array[@feature.SiftDescriptor]
 
 pub fn sigmoid(Double) -> Double
 
+pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn sketch(@types.Image, blend? : Double) -> @types.Image
@@ -2276,6 +2390,8 @@ pub fn smart_segment_chars(@types.Image, @ocr.MultilingualOcrEnhancedConfig) -> 
 pub fn smart_spacing_process(String, Array[String]) -> String
 
 pub fn softmax(Array[Double]) -> Array[Double]
+
+pub fn softmax_cross_entropy_backward(Array[Double], Int) -> Array[Double] raise @types.LoadError
 
 pub fn source_verification_report_to_string_fs(@forensics.SourceVerificationResult) -> String
 
@@ -2425,6 +2541,8 @@ pub fn unpremultiply_alpha_16(@types.Image16) -> @types.Image16 raise @types.Loa
 
 pub fn unpremultiply_alpha_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
+pub fn unrolled_pixel_sum(@types.Image) -> Int raise @types.LoadError
+
 pub fn unsharp_mask_enhance_dn(@types.Image, Double, Int) -> @types.Image
 
 pub fn update_object_tracking(Array[@detection.YoloTrackedObject], @detection.YoloDetectionResult, Int) -> Array[@detection.YoloTrackedObject] raise @types.LoadError
@@ -2432,6 +2550,8 @@ pub fn update_object_tracking(Array[@detection.YoloTrackedObject], @detection.Yo
 pub fn update_task_progress(@ocr.BatchTask, Double, Int, Int) -> @ocr.BatchTask
 
 pub fn update_tracking(@video.TrackedObject, @types.Image) -> @video.TrackedObject
+
+pub fn update_weights_sgd(Array[Double], Array[Double], Double) -> Array[Double] raise @types.LoadError
 
 pub fn upscale_2x(@types.Image) -> @types.Image
 
@@ -2642,6 +2762,8 @@ pub using @neural_rendering {type CameraParams as CameraParamsNR}
 
 pub using @slam {type CameraPose as CameraPoseSL}
 
+pub using @forensics_enhanced {type CfaAnalysisResult}
+
 pub using @remote_sensing {type ChangeDetectionResult}
 
 pub using @encryption {type ChaoticParams}
@@ -2661,6 +2783,8 @@ pub using @ocr {type ChineseRadical}
 pub using @edge {type Circle}
 
 pub using @ocr {type ClassificationResult}
+
+pub using @forensics_enhanced {type CloneDetectionResult}
 
 pub using @barcode {type Code128Charset}
 
@@ -2740,6 +2864,8 @@ pub using @ocr {type DLTrainingSample}
 
 pub using @ocr {type DataLoader}
 
+pub using @forensics_enhanced {type DctCoefficientResult}
+
 pub using @intelligent_vision {type DefectDetectionResult as DefectDetectionResultIV}
 
 pub using @inpainting {type DehazeAlgorithm}
@@ -2753,6 +2879,8 @@ pub using @denoise {type DenoiseAlgorithm}
 pub using @denoise {type DenoiseConfig}
 
 pub using @denoise {type DenoiseResult}
+
+pub using @ocr {type DeploymentEnvironment}
 
 pub using @stereo3d {type DepthMap3d}
 
@@ -2820,6 +2948,8 @@ pub using @image_generation {type EditingConfig as EditingConfigIG}
 
 pub using @image_generation {type EditingResult as EditingResultIG}
 
+pub using @forensics_enhanced {type ElaAnalysisResult}
+
 pub using @encryption {type EncryptionAlgorithm}
 
 pub using @encryption {type EncryptionConfig}
@@ -2883,6 +3013,10 @@ pub using @face_recognition {type FaceRecognitionAlgorithm as FaceRecognitionAlg
 pub using @face_recognition {type FaceRecognitionConfig as FaceRecognitionConfigFR}
 
 pub using @face_recognition {type FaceRecognitionResult as FaceRecognitionResultFR}
+
+pub using @image_retrieval_advanced {type FeatureDescriptorType}
+
+pub using @image_retrieval_advanced {type FeatureExtractionResult}
 
 pub using @registration_advanced {type FeatureMatch as FeatureMatchRA}
 
@@ -2984,6 +3118,8 @@ pub using @pose_estimation {type HumanPose as HumanPosePE}
 
 pub using @advanced_imaging {type HyperspectralData as HyperspectralDataAI}
 
+pub using @forensics_enhanced {type IlluminationConsistencyResult}
+
 pub using @types {type Image}
 
 pub using @types {type Image16}
@@ -3010,6 +3146,10 @@ pub using @types {type ImageInfo}
 
 pub using @superres {type ImageQualityMetrics}
 
+pub using @image_retrieval_advanced {type ImageRetrievalConfig}
+
+pub using @image_retrieval_advanced {type ImageRetrievalTaskType}
+
 pub using @forensics {type ImageSourceType}
 
 pub using @util {type ImageStats}
@@ -3019,6 +3159,10 @@ pub using @util {type ImageStatsF}
 pub using @advanced_imaging {type ImagingModality as ImagingModalityAI}
 
 pub using @computational_imaging {type ImagingReconstructionResult as ImagingReconstructionResultCI}
+
+pub using @image_retrieval_advanced {type IndexConstructionResult}
+
+pub using @image_retrieval_advanced {type IndexStructureType}
 
 pub using @intelligent_vision {type IndustrialInspectionTask as IndustrialInspectionTaskIV}
 
@@ -3043,6 +3187,8 @@ pub using @intelligent_vision {type IntelligentVisionConfig as IntelligentVision
 pub using @superres {type InterpolationConfig}
 
 pub using @intelligent_vision {type IntrusionDetectionResult as IntrusionDetectionResultIV}
+
+pub using @forensics_enhanced {type JpegGhostResult}
 
 pub using @segmentation {type KMeansConfig}
 
@@ -3128,6 +3274,8 @@ pub using @ocr {type MemoryUsageStats}
 
 pub using @stereo3d {type Mesh3d}
 
+pub using @forensics_enhanced {type MetadataForensicsResult}
+
 pub using @edge {type Moments}
 
 pub using @ocr {type MultilingualOcrConfig}
@@ -3149,6 +3297,8 @@ pub using @photo_enhance {type NightEnhanceConfig}
 pub using @enhance {type NlmConfig}
 
 pub using @forensics {type NoiseAnalysisResult}
+
+pub using @forensics_enhanced {type NoiseResidualResult}
 
 pub using @denoise {type NoiseType}
 
@@ -3232,6 +3382,8 @@ pub using @compression {type QuantizationTableType}
 
 pub using @advanced_imaging {type QuantumImagingAlgorithm as QuantumImagingAlgorithmAI}
 
+pub using @image_retrieval_advanced {type QueryExpansionResult}
+
 pub using @neural_rendering {type Ray as RayNR}
 
 pub using @neural_rendering {type ReconstructionAlgorithm as ReconstructionAlgorithmNR}
@@ -3258,6 +3410,8 @@ pub using @stereo3d {type RegistrationResult3d}
 
 pub using @registration_advanced {type RegistrationResultAdvanced}
 
+pub using @image_retrieval_advanced {type RelevanceFeedbackResult}
+
 pub using @remote_sensing {type RemoteSensingImage}
 
 pub using @remote_sensing {type RemoteSensingImageType}
@@ -3269,6 +3423,8 @@ pub using @neural_rendering {type RenderingResult as RenderingResultNR}
 pub using @types {type ResizeEdge}
 
 pub using @types {type ResizeFilter}
+
+pub using @image_retrieval_advanced {type RetrievalResult}
 
 pub using @intelligent_vision {type RobotVisionTask as RobotVisionTaskIV}
 
@@ -3323,6 +3479,10 @@ pub using @feature {type SiftMatch}
 pub using @ocr {type SimilarCharMapping}
 
 pub using @retrieval {type SimilarityMetric}
+
+pub using @image_retrieval_advanced {type SimilarityMetricType}
+
+pub using @image_retrieval_advanced {type SimilarityResult}
 
 pub using @pose_estimation {type SkeletonConnection as SkeletonConnectionPE}
 
@@ -3385,6 +3545,8 @@ pub using @ocr {type TableLine}
 pub using @ocr {type TableLineType}
 
 pub using @ocr {type TableStructure}
+
+pub using @forensics_enhanced {type TamperDetectionResult}
 
 pub using @feature {type TemplateMatchMethod}
 
@@ -3493,4 +3655,3 @@ pub using @detection {type YoloTrackedObject}
 pub using @detection {type YoloTrackingResult}
 
 // Traits
-

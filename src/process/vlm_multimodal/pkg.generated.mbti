@@ -160,4 +160,3 @@ pub(all) struct VisionTextEmbedding {
 // Type aliases
 
 // Traits
-

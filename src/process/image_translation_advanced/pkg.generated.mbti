@@ -214,4 +214,3 @@ pub(all) enum WeatherType {
 // Type aliases
 
 // Traits
-

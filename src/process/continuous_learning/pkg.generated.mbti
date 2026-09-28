@@ -136,4 +136,3 @@ pub(all) enum ReplayMethod {
 // Type aliases
 
 // Traits
-

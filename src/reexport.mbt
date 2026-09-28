@@ -6413,6 +6413,156 @@ pub fn cosine_similarity(
   @ocr.cosine_similarity(feat1, feat2)
 }
 
+// ==================== CNN 深度学习增强（v13.0.0） ====================
+
+///|
+pub fn relu_backward(
+  grad : Array[Double],
+  fwd : Array[Double],
+) -> Array[Double] {
+  @ocr.relu_backward(grad, fwd)
+}
+
+///|
+pub fn sigmoid_backward(
+  grad : Array[Double],
+  fwd : Array[Double],
+) -> Array[Double] {
+  @ocr.sigmoid_backward(grad, fwd)
+}
+
+///|
+pub fn softmax_cross_entropy_backward(
+  predicted : Array[Double],
+  target : Int,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.softmax_cross_entropy_backward(predicted, target)
+}
+
+///|
+pub fn dense_backward(
+  grad_output : Array[Double],
+  weights : Array[Double],
+  in_features : Int,
+  out_features : Int,
+) -> (Array[Double], Array[Double], Array[Double]) {
+  @ocr.dense_backward(grad_output, weights, in_features, out_features)
+}
+
+///|
+pub fn max_pool2d_backward(
+  grad_output : Array[Double],
+  input : Array[Double],
+  in_h : Int,
+  in_w : Int,
+  in_c : Int,
+  pool_size : Int,
+) -> Array[Double] {
+  @ocr.max_pool2d_backward(grad_output, input, in_h, in_w, in_c, pool_size)
+}
+
+///|
+pub fn update_weights_sgd(
+  weights : Array[Double],
+  gradients : Array[Double],
+  learning_rate : Double,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.update_weights_sgd(weights, gradients, learning_rate)
+}
+
+///|
+pub fn cnn_train_step(
+  input : Array[Double],
+  target : Int,
+  conv_weights : Array[Double],
+  conv_bias : Array[Double],
+  dense_weights : Array[Double],
+  dense_bias : Array[Double],
+  in_h : Int,
+  in_w : Int,
+  in_c : Int,
+  conv_out_c : Int,
+  k_size : Int,
+  num_classes : Int,
+  learning_rate : Double,
+) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError {
+  @ocr.cnn_train_step(
+    input, target, conv_weights, conv_bias, dense_weights, dense_bias, in_h, in_w,
+    in_c, conv_out_c, k_size, num_classes, learning_rate,
+  )
+}
+
+///|
+pub fn cnn_train(
+  samples : Array[@ocr.DLTrainingSample],
+  conv_weights : Array[Double],
+  conv_bias : Array[Double],
+  dense_weights : Array[Double],
+  dense_bias : Array[Double],
+  in_h : Int,
+  in_w : Int,
+  in_c : Int,
+  conv_out_c : Int,
+  k_size : Int,
+  num_classes : Int,
+  learning_rate : Double,
+  epochs : Int,
+) -> (
+  Array[Double],
+  Array[Double],
+  Array[Double],
+  Array[Double],
+  Array[@ocr.DLTrainingHistory],
+) raise @types.LoadError {
+  @ocr.cnn_train(
+    samples, conv_weights, conv_bias, dense_weights, dense_bias, in_h, in_w, in_c,
+    conv_out_c, k_size, num_classes, learning_rate, epochs,
+  )
+}
+
+///|
+pub fn cnn_recognize_char(
+  img : @types.Image,
+  config : @ocr.DLCnnModelConfig,
+  labels : Array[String],
+) -> @ocr.DLInferenceResult raise @types.LoadError {
+  @ocr.cnn_recognize_char(img, config, labels)
+}
+
+///|
+pub fn cnn_recognize_digits(
+  img : @types.Image,
+  config : @ocr.DLCnnModelConfig,
+) -> @ocr.DLInferenceResult raise @types.LoadError {
+  @ocr.cnn_recognize_digits(img, config)
+}
+
+///|
+pub fn cnn_recognize_letters(
+  img : @types.Image,
+  config : @ocr.DLCnnModelConfig,
+) -> @ocr.DLInferenceResult raise @types.LoadError {
+  @ocr.cnn_recognize_letters(img, config)
+}
+
+///|
+pub fn evaluate_cnn_model(
+  test_samples : Array[@ocr.DLTrainingSample],
+  config : @ocr.DLCnnModelConfig,
+  labels : Array[String],
+) -> (Double, Double) raise @types.LoadError {
+  @ocr.evaluate_cnn_model(test_samples, config, labels)
+}
+
+///|
+pub fn cnn_confusion_matrix(
+  test_samples : Array[@ocr.DLTrainingSample],
+  config : @ocr.DLCnnModelConfig,
+  labels : Array[String],
+) -> Array[Array[Int]] raise @types.LoadError {
+  @ocr.cnn_confusion_matrix(test_samples, config, labels)
+}
+
 // ==================== OCR 模型训练框架（v13.1.0） ====================
 
 ///|
@@ -6474,6 +6624,38 @@ pub fn calculate_learning_rate(
   val_loss : Double,
 ) -> Double raise @types.LoadError {
   @ocr.calculate_learning_rate(config, epoch, current_lr, val_loss)
+}
+
+///|
+pub fn augment_random_rotation(
+  sample : @ocr.DLTrainingSample,
+  angle_range : Double,
+) -> @ocr.DLTrainingSample {
+  @ocr.augment_random_rotation(sample, angle_range)
+}
+
+///|
+pub fn augment_random_shift(
+  sample : @ocr.DLTrainingSample,
+  shift_range : Double,
+) -> @ocr.DLTrainingSample {
+  @ocr.augment_random_shift(sample, shift_range)
+}
+
+///|
+pub fn augment_random_scale(
+  sample : @ocr.DLTrainingSample,
+  scale_range : Double,
+) -> @ocr.DLTrainingSample {
+  @ocr.augment_random_scale(sample, scale_range)
+}
+
+///|
+pub fn augment_random_noise(
+  sample : @ocr.DLTrainingSample,
+  noise_level : Double,
+) -> @ocr.DLTrainingSample {
+  @ocr.augment_random_noise(sample, noise_level)
 }
 
 ///|
@@ -6545,6 +6727,167 @@ pub fn compute_per_class_accuracy(
   confusion_matrix : Array[Array[Int]],
 ) -> Array[Double] {
   @ocr.compute_per_class_accuracy(confusion_matrix)
+}
+
+// ==================== OCR 性能优化（v13.5.0） ====================
+
+///|
+pub fn build_grayscale_lut() -> Array[Int] {
+  @ocr.build_grayscale_lut()
+}
+
+///|
+pub fn build_threshold_lut(threshold : Int) -> Array[Int] {
+  @ocr.build_threshold_lut(threshold)
+}
+
+///|
+pub fn fast_threshold_lut(
+  img : @types.Image,
+  lut : Array[Int],
+) -> @types.Image raise @types.LoadError {
+  @ocr.fast_threshold_lut(img, lut)
+}
+
+///|
+pub fn cache_friendly_horizontal_projection(
+  img : @types.Image,
+) -> Array[Int] raise @types.LoadError {
+  @ocr.cache_friendly_horizontal_projection(img)
+}
+
+///|
+pub fn cache_friendly_vertical_projection(
+  img : @types.Image,
+) -> Array[Int] raise @types.LoadError {
+  @ocr.cache_friendly_vertical_projection(img)
+}
+
+///|
+pub fn unrolled_pixel_sum(img : @types.Image) -> Int raise @types.LoadError {
+  @ocr.unrolled_pixel_sum(img)
+}
+
+///|
+pub fn fast_connected_components(
+  binary_img : @types.Image,
+) -> Array[Int] raise @types.LoadError {
+  @ocr.fast_connected_components(binary_img)
+}
+
+///|
+pub fn build_gaussian_kernel_lut(
+  sigma : Double,
+  radius : Int,
+) -> Array[Double] raise @types.LoadError {
+  @ocr.build_gaussian_kernel_lut(sigma, radius)
+}
+
+///|
+pub fn fast_gaussian_blur_1d(
+  img : @types.Image,
+  kernel : Array[Double],
+) -> @types.Image raise @types.LoadError {
+  @ocr.fast_gaussian_blur_1d(img, kernel)
+}
+
+///|
+pub fn batch_recognize_chars(
+  images : Array[@types.Image],
+  config : @ocr.DLCnnModelConfig,
+  labels : Array[String],
+) -> Array[@ocr.DLInferenceResult] raise @types.LoadError {
+  @ocr.batch_recognize_chars(images, config, labels)
+}
+
+///|
+pub fn ocr_pipeline_stats(
+  img : @types.Image,
+) -> (Int, Int, Double) raise @types.LoadError {
+  @ocr.ocr_pipeline_stats(img)
+}
+
+///|
+pub fn fast_downsample_2x(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  @ocr.fast_downsample_2x(img)
+}
+
+// ==================== OCR 部署工具（v13.6.0） ====================
+
+///|
+pub type DeploymentEnvironment = @ocr.DeploymentEnvironment
+
+///|
+pub fn create_default_cli_config() -> @ocr.CliConfig {
+  @ocr.create_default_cli_config()
+}
+
+///|
+pub fn create_default_api_server_config() -> @ocr.ApiServerConfig {
+  @ocr.create_default_api_server_config()
+}
+
+///|
+pub fn create_default_docker_config() -> @ocr.DockerConfig {
+  @ocr.create_default_docker_config()
+}
+
+///|
+pub fn create_default_model_package_config() -> @ocr.ModelPackageConfig {
+  @ocr.create_default_model_package_config()
+}
+
+///|
+pub fn generate_dockerfile(config : @ocr.DockerConfig) -> String {
+  @ocr.generate_dockerfile(config)
+}
+
+///|
+pub fn generate_docker_compose(config : @ocr.DockerConfig) -> String {
+  @ocr.generate_docker_compose(config)
+}
+
+///|
+pub fn generate_api_config_json(config : @ocr.ApiServerConfig) -> String {
+  @ocr.generate_api_config_json(config)
+}
+
+///|
+pub fn generate_cli_help() -> String {
+  @ocr.generate_cli_help()
+}
+
+///|
+pub fn parse_cli_args(
+  args : Array[String],
+) -> @ocr.CliConfig raise @types.LoadError {
+  @ocr.parse_cli_args(args)
+}
+
+///|
+pub fn generate_model_manifest(config : @ocr.ModelPackageConfig) -> String {
+  @ocr.generate_model_manifest(config)
+}
+
+///|
+pub fn generate_env_config(env : @ocr.DeploymentEnvironment) -> String {
+  @ocr.generate_env_config(env)
+}
+
+///|
+pub fn generate_health_check_config(config : @ocr.ApiServerConfig) -> String {
+  @ocr.generate_health_check_config(config)
+}
+
+///|
+pub fn generate_deployment_package(
+  docker_config : @ocr.DockerConfig,
+  api_config : @ocr.ApiServerConfig,
+  model_config : @ocr.ModelPackageConfig,
+) -> String {
+  @ocr.generate_deployment_package(docker_config, api_config, model_config)
 }
 
 // ==================== 手写体识别支持（v13.2.0） ====================
@@ -7701,6 +8044,121 @@ pub fn retrieval_report_to_string_cbir(
   @retrieval.retrieval_report_to_string(results, query_feature)
 }
 
+// ==================== 图像检索高级（v22.0.0） ====================
+
+///|
+pub type ImageRetrievalTaskType = @image_retrieval_advanced.ImageRetrievalTaskType
+
+///|
+pub type FeatureDescriptorType = @image_retrieval_advanced.FeatureDescriptorType
+
+///|
+pub type SimilarityMetricType = @image_retrieval_advanced.SimilarityMetricType
+
+///|
+pub type IndexStructureType = @image_retrieval_advanced.IndexStructureType
+
+///|
+pub type RetrievalResult = @image_retrieval_advanced.RetrievalResult
+
+///|
+pub type FeatureExtractionResult = @image_retrieval_advanced.FeatureExtractionResult
+
+///|
+pub type SimilarityResult = @image_retrieval_advanced.SimilarityResult
+
+///|
+pub type IndexConstructionResult = @image_retrieval_advanced.IndexConstructionResult
+
+///|
+pub type QueryExpansionResult = @image_retrieval_advanced.QueryExpansionResult
+
+///|
+pub type RelevanceFeedbackResult = @image_retrieval_advanced.RelevanceFeedbackResult
+
+///|
+pub type ImageRetrievalConfig = @image_retrieval_advanced.ImageRetrievalConfig
+
+///|
+pub fn create_default_retrieval_config() -> @image_retrieval_advanced.ImageRetrievalConfig {
+  @image_retrieval_advanced.create_default_retrieval_config()
+}
+
+///|
+pub fn extract_features_advanced(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  config : @image_retrieval_advanced.ImageRetrievalConfig,
+) -> @image_retrieval_advanced.FeatureExtractionResult {
+  @image_retrieval_advanced.extract_features(image, width, height, config)
+}
+
+///|
+pub fn calculate_similarity_advanced(
+  features1 : Array[Double],
+  features2 : Array[Double],
+  metric : @image_retrieval_advanced.SimilarityMetricType,
+) -> Double {
+  @image_retrieval_advanced.calculate_similarity(features1, features2, metric)
+}
+
+///|
+pub fn retrieve_images_advanced(
+  query_image : Array[Double],
+  query_width : Int,
+  query_height : Int,
+  database_images : Array[Array[Double]],
+  config : @image_retrieval_advanced.ImageRetrievalConfig,
+) -> @image_retrieval_advanced.RetrievalResult {
+  @image_retrieval_advanced.retrieve_images(
+    query_image, query_width, query_height, database_images, config,
+  )
+}
+
+///|
+pub fn build_index_advanced(
+  features : Array[Array[Double]],
+  index_type : @image_retrieval_advanced.IndexStructureType,
+) -> @image_retrieval_advanced.IndexConstructionResult {
+  @image_retrieval_advanced.build_index(features, index_type)
+}
+
+///|
+pub fn expand_query_advanced(
+  original_query : Array[Double],
+  relevant_features : Array[Array[Double]],
+  config : @image_retrieval_advanced.ImageRetrievalConfig,
+) -> @image_retrieval_advanced.QueryExpansionResult {
+  @image_retrieval_advanced.expand_query(
+    original_query, relevant_features, config,
+  )
+}
+
+///|
+pub fn relevance_feedback_advanced(
+  original_query : Array[Double],
+  relevant_indices : Array[Int],
+  irrelevant_indices : Array[Int],
+  database_features : Array[Array[Double]],
+  config : @image_retrieval_advanced.ImageRetrievalConfig,
+) -> @image_retrieval_advanced.RelevanceFeedbackResult {
+  @image_retrieval_advanced.relevance_feedback(
+    original_query, relevant_indices, irrelevant_indices, database_features, config,
+  )
+}
+
+///|
+pub fn image_retrieval_report_to_string_advanced(
+  task_type : @image_retrieval_advanced.ImageRetrievalTaskType,
+  config : @image_retrieval_advanced.ImageRetrievalConfig,
+  result_description : String,
+) -> String {
+  @image_retrieval_advanced.image_retrieval_report_to_string(
+    task_type, config, result_description,
+  )
+}
+
 // ==================== 图像超分辨率增强（v23.0.0） ====================
 
 ///|
@@ -8293,6 +8751,102 @@ pub fn enhanced_verification_report_to_string_fs(
   result : @forensics.EnhancedVerificationResult,
 ) -> String {
   @forensics.enhanced_verification_report_to_string(result)
+}
+
+// ==================== 图像来源鉴定增强（v27.1.0） ====================
+
+///|
+pub type ElaAnalysisResult = @forensics_enhanced.ElaAnalysisResult
+
+///|
+pub type NoiseResidualResult = @forensics_enhanced.NoiseResidualResult
+
+///|
+pub type DctCoefficientResult = @forensics_enhanced.DctCoefficientResult
+
+///|
+pub type CloneDetectionResult = @forensics_enhanced.CloneDetectionResult
+
+///|
+pub type IlluminationConsistencyResult = @forensics_enhanced.IlluminationConsistencyResult
+
+///|
+pub type TamperDetectionResult = @forensics_enhanced.TamperDetectionResult
+
+///|
+pub type MetadataForensicsResult = @forensics_enhanced.MetadataForensicsResult
+
+///|
+pub type JpegGhostResult = @forensics_enhanced.JpegGhostResult
+
+///|
+pub type CfaAnalysisResult = @forensics_enhanced.CfaAnalysisResult
+
+///|
+pub fn analyze_ela_fe(
+  img : @types.Image,
+  quality_level : Int,
+) -> @forensics_enhanced.ElaAnalysisResult raise @types.LoadError {
+  @forensics_enhanced.analyze_ela(img, quality_level)
+}
+
+///|
+pub fn analyze_noise_residual_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.NoiseResidualResult {
+  @forensics_enhanced.analyze_noise_residual(img)
+}
+
+///|
+pub fn analyze_dct_coefficients_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.DctCoefficientResult {
+  @forensics_enhanced.analyze_dct_coefficients(img)
+}
+
+///|
+pub fn detect_clone_regions_fe(
+  img : @types.Image,
+  block_size : Int,
+  threshold : Double,
+) -> @forensics_enhanced.CloneDetectionResult raise @types.LoadError {
+  @forensics_enhanced.detect_clone_regions(img, block_size, threshold)
+}
+
+///|
+pub fn analyze_illumination_consistency_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.IlluminationConsistencyResult {
+  @forensics_enhanced.analyze_illumination_consistency(img)
+}
+
+///|
+pub fn analyze_metadata_forensics_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.MetadataForensicsResult {
+  @forensics_enhanced.analyze_metadata_forensics(img)
+}
+
+///|
+pub fn analyze_jpeg_ghost_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.JpegGhostResult {
+  @forensics_enhanced.analyze_jpeg_ghost(img)
+}
+
+///|
+pub fn analyze_cfa_pattern_fe(
+  img : @types.Image,
+) -> @forensics_enhanced.CfaAnalysisResult {
+  @forensics_enhanced.analyze_cfa_pattern(img)
+}
+
+///|
+pub fn detect_tamper_comprehensive_fe(
+  img : @types.Image,
+  ela_quality : Int,
+) -> @forensics_enhanced.TamperDetectionResult raise @types.LoadError {
+  @forensics_enhanced.detect_tamper_comprehensive(img, ela_quality)
 }
 
 // ==================== 图像压缩与编码优化（v28.0.0） ====================

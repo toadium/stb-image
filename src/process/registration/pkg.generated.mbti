@@ -47,4 +47,3 @@ pub(all) struct RegistrationResult {
 // Type aliases
 
 // Traits
-

@@ -160,4 +160,3 @@ pub(all) enum VisualServoingType {
 // Type aliases
 
 // Traits
-

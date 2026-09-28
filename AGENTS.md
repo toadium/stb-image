@@ -11,9 +11,9 @@ You can browse and install extra skills here:
 
 | 属性 | 值 |
 |------|-----|
-| 版本 | 0.4.12 (mooncakes) / v5.5.0 (功能迭代) |
-| 测试 | 1198 × 4 目标 (native/wasm-gc/js/wasm) |
-| API | 283 公开函数 + 47 类型 |
+| 版本 | 0.4.12 (mooncakes) / v29.0.0 (功能迭代) |
+| 测试 | 2443 × 4 目标 (native/wasm-gc/js/wasm) |
+| API | 334 公开函数 + 69 类型 |
 | 格式 | 15 种编解码 (PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP) |
 | 覆盖率 | 90.4% |
 

@@ -189,4 +189,3 @@ pub(all) enum LinkageType {
 // Type aliases
 
 // Traits
-

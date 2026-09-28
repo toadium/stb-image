@@ -79,4 +79,3 @@ pub fn sharpen_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 // Type aliases
 
 // Traits
-

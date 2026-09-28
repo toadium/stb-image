@@ -1,6 +1,7 @@
 // 天文图像处理高级（v60.0.0）
 
 // 辅助函数
+
 ///|
 fn log_approx(x : Double) -> Double {
   if x <= 0.0 {

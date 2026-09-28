@@ -175,4 +175,3 @@ pub(all) struct SegmentationResult {
 // Type aliases
 
 // Traits
-

@@ -51,4 +51,3 @@ pub(all) struct StreamInfo {
 pub using @types {type ImageFormat}
 
 // Traits
-

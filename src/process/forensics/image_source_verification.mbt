@@ -413,7 +413,12 @@ pub fn analyze_edges(img : @types.Image) -> EdgeAnalysisResult {
             if dx == 0 && dy == 0 {
               continue
             }
-            let nidx = (y + dy) * w + (x + dx)
+            let ny = y + dy
+            let nx = x + dx
+            if ny < 1 || ny > h - 2 || nx < 1 || nx > w - 2 {
+              continue
+            }
+            let nidx = ny * w + nx
             let ngx = img.data[nidx + 1].to_double() -
               img.data[nidx - 1].to_double()
             let ngy = img.data[nidx + w].to_double() -

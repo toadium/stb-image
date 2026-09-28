@@ -147,4 +147,3 @@ pub(all) enum SearchSpaceType {
 // Type aliases
 
 // Traits
-

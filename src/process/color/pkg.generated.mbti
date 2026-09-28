@@ -233,4 +233,3 @@ pub(all) enum Colormap {
 // Type aliases
 
 // Traits
-

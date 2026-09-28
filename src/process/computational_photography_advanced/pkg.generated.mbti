@@ -199,4 +199,3 @@ pub(all) enum PanoramaStitchingMethod {
 // Type aliases
 
 // Traits
-

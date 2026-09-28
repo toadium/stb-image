@@ -269,11 +269,11 @@ pub fn classify_land_cover(
     let row : Array[Int] = []
     let conf_row : Array[Double] = []
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = (state * 11035 + 12345).abs() % 1000000
       let class_idx = state % class_names.length()
       row.push(class_idx)
       class_distribution[class_idx] += 1.0
-      state = (state * 11035 + 12345) % 1000000
+      state = (state * 11035 + 12345).abs() % 1000000
       let conf = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
       conf_row.push(conf)
     }
@@ -329,15 +329,15 @@ pub fn detect_remote_sensing_objects(
   let num_objects = 10
 
   for i in 0..<num_objects {
-    state = (state * 11035 + 12345) % 1000000
+    state = (state * 11035 + 12345).abs() % 1000000
     let x = (state % width).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = (state * 11035 + 12345).abs() % 1000000
     let y = (state % height).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = (state * 11035 + 12345).abs() % 1000000
     let w = (state % 100 + 20).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = (state * 11035 + 12345).abs() % 1000000
     let h = (state % 100 + 20).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = (state * 11035 + 12345).abs() % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
     let bbox : Array[Double] = []
@@ -389,7 +389,7 @@ pub fn detect_changes(
     let row : Array[Bool] = []
     let mask_row : Array[Int] = []
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = (state * 11035 + 12345).abs() % 1000000
       let is_change = (state % 100).to_double() / 100.0 <
         config.change_threshold
       row.push(is_change)

@@ -126,4 +126,3 @@ pub(all) struct VisualQuestionAnsweringResult {
 // Type aliases
 
 // Traits
-

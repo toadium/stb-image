@@ -115,4 +115,3 @@ pub(all) enum NoiseType {
 // Type aliases
 
 // Traits
-
