@@ -2405,3 +2405,76 @@ flowchart LR
 - [x] v27.0.0：图像来源鉴定（AI生成检测） ✅ 2026-09-28 — 21已有函数+42测试+修复analyze_edges越界，2359×4全绿6.0.0：图像来源鉴定增强 ✅ 2026-09-28 — 10新函数+9新类型+21测试，2380×4全绿
 - [x] v28.0.0：图像压缩与编码优化 ✅ 2026-09-28 — 20已有函数+32测试，2412×4全绿
 - [x] v29.0.0：高级图像降噪与增强算法 ✅ 2026-09-28 — 15已有函数+31测试，2443×4全绿
+- [x] v30.0.0：高级图像配准算法 ✅ 2026-09-28 — stitch 8已有函数+13测试 + quality 7已有函数+8测试，2464×4全绿
+- [x] v31.0.0：SLAM 同时定位与地图构建 ✅ 2026-09-28 — slam 9已有函数+12测试，2476×4全绿
+- [x] v32.0.0：人体姿态估计与动作识别 ✅ 2026-09-28 — pose_estimation 12已有函数+14测试，2490×4全绿
+- [x] v33.0.0：人脸识别与表情识别 ✅ 2026-09-28 — face_recognition 12已有函数+13测试，2503×4全绿
+- [x] v34.0.0：图像生成与编辑 ✅ 2026-09-28 — image_generation 13已有函数+14测试，2517×4全绿
+---
+
+## 远期迭代计划（v35.0.0 ~ v50.0.0+）— 草案 v1 待确认
+
+> 制定日期：2026-09-29 | 基线：v34.0.0 / 2517×4 全绿 | 负责人：用户（路线图驱动）
+>
+> **依据**：src/process 下 44 个模块有源码无测试（测试覆盖路径）+ 新功能空白（格式/性能/生态）。
+> **约束**：纯 MoonBit、四目标、不破坏 API、新 pub fn 须 re-export、每环四目标全绿。
+> **状态**：草案，方向与分批待用户确认后再执行。
+
+### 阶段一：AI/机器学习测试覆盖（v35.0.0 ~ v37.0.0）
+
+| 版本 | 模块 | 领域 | 状态 |
+|------|------|------|------|
+| v35.0.0 | dl_advanced + image_classification_advanced + image_clustering_advanced | 深度学习/分类/聚类 | ✅ 2026-09-29 — 20已有函数+32测试，2549×4全绿 |
+| v36.0.0 | automl_advanced + automl_nas + model_compression + model_compression_advanced | AutoML/NAS/模型压缩 | ✅ 2026-09-29 — 35已有函数+35测试+修复LCG溢出，2584×4全绿 |
+| v37.0.0 | federated_learning + meta_learning_advanced + transfer_learning_advanced + continuous_learning + reinforcement_learning | 联邦/元/迁移/持续/强化学习 | ✅ 2026-09-29 — 52已有函数+49测试，2633×4全绿 |
+
+### 阶段二：生成式 AI 测试覆盖（v38.0.0 ~ v39.0.0）
+
+| 版本 | 模块 | 领域 | 状态 |
+|------|------|------|------|
+| v38.0.0 | generative_ai_advanced + image_generation_advanced + neural_rendering | 生成式 AI/神经渲染 | ✅ 2026-09-29 — 29已有函数+28测试，2661×4全绿 |
+| v39.0.0 | image_editing_advanced + image_colorization_advanced + image_restoration_advanced + image_translation_advanced | 编辑/上色/修复/翻译 | ✅ 2026-09-29 — 27已有函数+27测试，2688×4全绿 |
+
+### 阶段三：多模态/NLP 测试覆盖（v40.0.0）
+
+| 版本 | 模块 | 领域 | 状态 |
+|------|------|------|------|
+| v40.0.0 | multimodal_advanced + vlm_multimodal + nlp_advanced + knowledge_graph | 多模态/VLM/NLP/知识图谱 | ✅ 2026-09-29 — 35已有函数+63测试，2751×4全绿 |
+
+### 阶段四：领域视觉测试覆盖（v41.0.0 ~ v43.0.0）
+
+| 版本 | 模块 | 领域 | 状态 |
+|------|------|------|------|
+| v41.0.0 | agriculture_vision_advanced + astronomy_imaging_advanced + industrial_inspection_advanced | 农业/天文/工业 | ✅ 2026-09-29 — 19已有函数+26测试+修复LCG溢出，2777×4全绿 |
+| v42.0.0 | autonomous_driving_advanced + robot_vision_advanced + security_surveillance_advanced | 自动驾驶/机器人/安防 | ✅ 2026-09-29 — 21已有函数+25测试+修复LCG溢出，2802×4全绿 |
+| v43.0.0 | intelligent_vision + scene_understanding | 智能视觉/场景理解 | ✅ 2026-09-29 — 17已有函数+22测试，2824×4全绿 |
+
+### 阶段五：计算成像与杂项测试覆盖（v44.0.0 ~ v45.0.0）
+
+| 版本 | 模块 | 领域 |
+|------|------|------|
+| v44.0.0 | computational_imaging + computational_photography_advanced + advanced_imaging + photo_enhance | 计算成像/摄影/增强 | ✅ 2026-09-29 — 50已有函数+50测试+修复LCG溢出5处，2874×4全绿 |
+| v45.0.0 | video_processing_advanced + audio_processing + barcode + cv_advanced + production_utils | 视频/音频/条码/CV/工具 | ✅ 2026-09-29 — 56已有函数+60测试+修复LCG溢出17处，2934×4全绿 |
+
+### 阶段六：表示学习与可解释 AI（v46.0.0）
+
+| 版本 | 模块 | 领域 |
+|------|------|------|
+| v46.0.0 | feature_learning_advanced + representation_learning_advanced + graph_neural + explainable_ai + image_dimensionality_reduction | 特征/表示学习/GNN/可解释/降维 | ✅ 2026-09-29 — 36已有函数+36测试+修复LCG溢出9处，2970×4全绿 |
+
+### 阶段七：新功能开发（v47.0.0+）
+
+| 版本 | 方向 | 说明 |
+|------|------|------|
+| v47.0.0 | 格式扩展 | AVIF/HEIF/JPEG-XL 解码（纯 MoonBit） |
+| v48.0.0 | 性能优化 | SIMD 友好算法重写 + 缓存优化 + 大图分块 |
+| v49.0.0 | 生态建设 | CLI 工具 + 插件系统 + 批处理流水线 |
+| v50.0.0 | API 稳定化 | v1.0 发布候选：API 审计 + 文档固化 + 兼容性矩阵 |
+
+### 验收标准（每环）
+
+- 四目标 `moon check` + `moon test` 全绿（native/wasm-gc/js/wasm）
+- 0 errors，warning 须真正修复不可忽略
+- 新增 pub fn 须在 src/reexport.mbt 注册
+- roadmap.md + changelog.md 同步更新
+- 测试覆盖路径：为已有函数补测试；新功能路径：实现 + 测试 + re-export

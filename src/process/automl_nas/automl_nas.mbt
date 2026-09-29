@@ -202,7 +202,7 @@ pub fn generate_random_architecture(
 
   let mut state = 42
   for _ in 0..<num_layers {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let layer_idx = state % layer_types.length()
     let layer = layer_types[layer_idx]
     layers.push(layer)
@@ -243,13 +243,13 @@ pub fn generate_random_architecture(
 /// 生成随机超参数配置
 pub fn generate_random_hyperparameters() -> HyperparameterConfig {
   let mut state = 42
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let lr = 0.0001 + (state % 1000).to_double() / 1000.0 * 0.01
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let batch = 16 + state % 8 * 16
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let dropout = (state % 100).to_double() / 100.0 * 0.5
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let hidden = 64 + state % 8 * 64
 
   HyperparameterConfig::{

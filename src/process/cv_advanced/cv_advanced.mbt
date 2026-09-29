@@ -241,7 +241,7 @@ pub fn recognize_action(
 
   let mut state = 42
   for i in 0..<actions.length() {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let score = (state % 1000).to_double() / 1000.0
     all_scores.push(score)
 
@@ -291,11 +291,11 @@ pub fn parse_scene(
 
   let mut state = 42
   for _ in 0..<config.num_scene_classes {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     class_distribution.push((state % 1000).to_double() / 1000.0)
   }
 
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let scene_idx = state % scene_types.length()
 
   SceneParsingResult::{
@@ -357,7 +357,7 @@ pub fn generate_caption(image_id : String) -> ImageCaptioningResult {
 
   let mut state = 42
   for _ in captions {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     all_scores.push((state % 1000).to_double() / 1000.0)
   }
 

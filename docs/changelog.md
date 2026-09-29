@@ -180,11 +180,11 @@
 | **v27.1.0** | **图像来源鉴定增强 - 提升准确性：UI元素检测(窗口边框/工具栏/按钮)、文字区域检测(密集小边缘)、几何形状分析(水平/垂直/对角边缘比例)、颜色量化分析(唯一颜色数/调色板大小/颜色集中度)、纯色区域分析、边缘方向分析、像素值分布分析、智能决策引擎(规则决策树)、增强特征与基础特征加权融合、置信度校准、详细鉴定报告** | **1725** |
 | **v28.0.0** | **图像压缩与编码优化 - 11种压缩算法(RLE/霍夫曼/算术/LZW/Deflate/JPEG/JPEG2000/WebP/AVIF/PNG)、游程编码/解码、图像熵计算、均匀量化、预测编码(DPCM)、压缩比计算、每像素位数计算、压缩质量评估(PSNR/SSIM/MSE/综合质量)、JPEG风格压缩(量化+预测+RLE)、PNG风格压缩(预测+RLE)、压缩报告生成** | **1725** |
 | **v29.0.0** | **高级图像降噪与增强算法 - 11种降噪算法(均值/中值/高斯/双边/非局部均值/维纳/全变分/小波/BM3D/深度学习)、11种增强算法(直方图均衡/CLAHE/Gamma/USM/Retinex/同态滤波/色彩平衡/对比度拉伸/自适应阈值/深度学习)、噪声水平估计、亮度/对比度/锐度计算、降噪质量评估(PSNR/SSIM/噪声降低率)、增强效果评估、降噪/增强报告生成** | **1725** |
-| **v30.0.0** | **高级图像配准算法 - 10种配准算法(相位相关/基于特征/基于强度/互信息/NCC/SSD/光流/Demons/B样条)、9种变换类型(平移/刚性/相似/仿射/透视/多项式/薄板样条/B样条)、Harris角点检测、特征点匹配、仿射变换估计与应用、平移变换应用、归一化互相关(NCC)、互信息计算、配准质量评估(相关系数/互信息/RMSE)、多分辨率配准、鲁棒估计、配准报告生成** | **1725** |
-| **v31.0.0** | **SLAM 同时定位与地图构建 - 9种SLAM算法(MonoSLAM/ORBSLAM/LSD_SLAM/SVO/DSO/PTAM/KinectFusion/ElasticFusion)、相机位姿估计、3D地图点构建、关键帧管理、特征点检测与跟踪(Harris角点+光流块匹配)、三角化3D点、回环检测、位姿图优化、相机内参配置、SLAM系统初始化与帧处理、轨迹记录、SLAM报告生成** | **1725** |
-| **v32.0.0** | **人体姿态估计与动作识别 - 9种姿态估计算法(OpenPose/MediaPipe/AlphaPose/HRNet/SimpleBaseline/DeepPose/PoseNet/MoveNet)、9种动作识别算法(C3D/I3D/TwoStream/TSN/TRN/SlowFast/TimeSformer/VideoMAE)、COCO 17关键点检测、骨架连接提取、关节角度计算、动作分类(站立/行走/蹲下/举手/交叉手臂)、10种手势识别(张开手掌/拳头/指向/胜利/点赞/倒赞/OK/和平/摇滚)、姿态可视化(关键点+骨架绘制)、姿态估计与动作识别报告生成** | **1725** |
-| **v33.0.0** | **人脸识别与表情识别 - 8种人脸检测算法(Haar/HOG-SVM/MTCNN/RetinaFace/YOLOFace/BlazeFace/FaceBoxes)、8种人脸识别算法(FaceNet/ArcFace/CosFace/SphereFace/DeepFace/VGGFace/InsightFace)、9种表情识别(中性/开心/悲伤/愤怒/惊讶/恐惧/厌恶/轻蔑)、人脸5关键点检测、人脸特征提取(512维)、余弦相似度计算、人脸库管理、年龄性别估计、人脸质量评估(亮度/锐度/遮挡)、完整人脸属性分析、人脸识别报告生成** | **1725** |
-| **v34.0.0** | **图像生成与编辑 - 11种生成算法(GAN/DCGAN/StyleGAN/CycleGAN/Pix2Pix/ProGAN/BigGAN/VQGAN/扩散模型/VAE)、10种编辑算法(修复/外扩/超分/上色/风格迁移/人脸编辑/背景移除/物体移除/图像合成)、潜空间向量生成、从潜空间生成图像、随机图像生成、图像修复(邻域平均)、图像外扩(边缘扩展)、图像上色(伪彩色映射)、图像合成(Alpha混合)、背景移除(边缘检测)、图像编辑主入口、生成/编辑报告生成** | **1725** |
+| **v30.0.0** | **高级图像配准算法 - 图像拼接(stitch模块8函数: 特征点检测/特征匹配/RANSAC单应性估计/单应性变换/图像拼接) + 图像质量评估(quality模块7函数: MSE/MAE/PSNR/SSIM/综合质量指标/图像比较/差值图像)，21新测试** | **2464** |
+| **v31.0.0** | **SLAM 同时定位与地图构建 - slam模块9已有函数(默认配置/特征检测/特征跟踪/位姿估计/三角化/回环检测/系统初始化/帧处理/报告生成)，12新测试** | **2476** |
+| **v32.0.0** | **人体姿态估计与动作识别 - pose_estimation模块12已有函数(默认配置/COCO关键点/骨架连接/关键点检测/骨架提取/关节角度/动作识别/手势识别/姿态可视化/报告生成)，14新测试** | **2490** |
+| **v33.0.0** | **人脸识别与表情识别 - face_recognition模块12已有函数(默认配置/人脸库/人脸检测/特征提取/余弦相似度/添加人脸/人脸识别/表情识别/年龄性别/质量评估/属性分析/报告生成)，13新测试** | **2503** |
+| **v34.0.0** | **图像生成与编辑 - image_generation模块13已有函数(默认配置/潜向量/从潜向量生成/随机生成/修复/外扩/上色/合成/背景移除/编辑主入口/报告生成)，14新测试** | **2517** |
 | **v35.0.0** | **场景理解与图像描述 - 10种场景分类算法(ResNet/VGG/Inception/EfficientNet/VisionTransformer/Swin/ConvNeXt/DenseNet/MobileNet)、9种图像描述算法(ShowAndTell/ShowAttendAndTell/UpDown/Transformer/Oscar/VinVL/BLIP/CLIP)、9种视觉问答算法(VQA/VisualBERT/LXMERT/UNITER/ViLBERT/CLIP_VQA/BLIP_VQA/GPT4V)、30种常见场景类型、场景分类(基于统计特征)、图像描述生成(模板化)、视觉问答(规则化)、场景图生成(对象+关系)、完整场景理解、场景理解报告生成** | **1725** |
 | **v36.0.0** | **神经渲染与 3D 重建 - 9种神经渲染算法(NeRF/NeRFStudio/InstantNGP/Plenoxels/TensoRF/GaussianSplatting/DreamFusion/StableDiffusion3D)、7种3D重建算法(MVS/SfM/光度立体/阴影恢复形状/散焦深度/聚焦深度/激光雷达融合)、射线生成、体渲染、NeRF渲染、3D高斯泼溅渲染、示例高斯生成、多视图立体重建、点云可视化、渲染/重建报告生成** | **1725** |
 | **v37.0.0** | **计算成像与光场成像 - 9种计算成像算法(光场/全息/CT/相位恢复/编码孔径/单像素/鬼成像/叠层成像)、4种光场表示、6种全息图类型、光场相机参数、光场数据、光场重聚焦、视角合成(双线性插值)、计算全息图生成、全息图重建、CT滤波反投影(FBP)、相位恢复(Gerchberg-Saxton)、编码孔径成像重建、计算成像报告生成** | **1725** |
@@ -1317,3 +1317,130 @@
   - 质量评估：噪声水平/亮度/对比度/锐度计算
   - 综合降噪与增强：denoise_image/enhance_image_advanced/报告生成
   - 2443×4全绿（native/wasm-gc/js/wasm）
+## v30.0.0 - 高级图像配准算法
+- 新增 stitch 模块测试：8已有函数+13测试
+  - 图像拼接配置、单位单应性矩阵、单应性变换应用与求逆
+  - 简单特征检测(FAST角点)、特征匹配(Lowe比率测试)
+  - RANSAC单应性估计、图像拼接
+- 新增 quality 模块测试：7已有函数+8测试
+  - MSE/MAE/PSNR/SSIM 计算
+  - 综合质量指标、图像比较、差值图像
+  - 2464×4全绿（native/wasm-gc/js/wasm）
+## v31.0.0 - SLAM 同时定位与地图构建
+- 新增 slam 模块测试：9已有函数+12测试
+  - 默认配置、特征检测(Harris角点)、特征跟踪(光流块匹配)
+  - 相机位姿估计、三角化3D点、回环检测
+  - SLAM系统初始化、帧处理(首帧+多帧)、报告生成
+  - 2476×4全绿（native/wasm-gc/js/wasm）
+## v32.0.0 - 人体姿态估计与动作识别
+- 新增 pose_estimation 模块测试：12已有函数+14测试
+  - 默认配置(姿态+动作)、COCO 17关键点名称、骨架连接
+  - 关键点检测(渐变+纯色)、骨架提取、关节角度(正常+越界)
+  - 动作识别(空列表+有姿态)、手势识别、姿态可视化、报告生成
+  - 2490×4全绿（native/wasm-gc/js/wasm）
+## v33.0.0 - 人脸识别与表情识别
+- 新增 face_recognition 模块测试：12已有函数+13测试
+  - 默认配置、空人脸库、人脸检测、特征提取
+  - 余弦相似度(相同特征+不同维度)、添加人脸、空库识别
+  - 表情识别、年龄性别估计、质量评估、属性分析、报告生成
+  - 2503×4全绿（native/wasm-gc/js/wasm）
+## v34.0.0 - 图像生成与编辑
+- 新增 image_generation 模块测试：13已有函数+14测试
+  - 默认配置(生成+编辑)、随机潜向量、从潜向量生成、随机图像生成
+  - 图像修复、图像外扩、图像上色、图像合成、背景移除
+  - 编辑主入口(修复+上色)、生成报告、编辑报告
+  - 2517×4全绿（native/wasm-gc/js/wasm）
+## v35.0.0 — 深度学习/分类/聚类测试覆盖 (2026-09-29)
+
+- 为 dl_advanced + image_classification_advanced + image_clustering_advanced 三模块补测试
+- dl_advanced 7已有函数+10测试：Transformer配置/预训练配置/微调配置/自注意力/前向传播/微调模拟/报告
+- image_classification_advanced 6已有函数+9测试：分类配置/图像分类/多标签分类/集成分类/训练分类器/报告
+- image_clustering_advanced 7已有函数+13测试：聚类配置/K-Means/DBSCAN/层次聚类/轮廓系数/图像聚类/报告
+- 2549×4全绿（native/wasm-gc/js/wasm），+32测试
+## v36.0.0 — AutoML/NAS/模型压缩测试覆盖 (2026-09-29)
+
+- 为 automl_advanced + automl_nas + model_compression + model_compression_advanced 四模块补测试
+- automl_advanced 7已有函数+7测试：AutoML/HPO/NAS/模型选择/特征工程/报告
+- automl_nas 8已有函数+8测试：NAS配置/HPO配置/架构生成/超参数生成/模型评估/NAS/HPO/报告
+- model_compression 13已有函数+13测试：量化/剪枝/蒸馏/低秩/优化/部署配置+操作+报告
+- model_compression_advanced 7已有函数+7测试：高级量化/剪枝/蒸馏/低秩/综合压缩/报告
+- 修复 automl_nas LCG 乘法 Int32 溢出（reinterpret_as_uint 保证非负）
+- 2584×4全绿（native/wasm-gc/js/wasm），+35测试
+## v37.0.0 — 联邦/元/迁移/持续/强化学习测试覆盖 (2026-09-29)
+
+- 为 federated_learning + meta_learning_advanced + transfer_learning_advanced + continuous_learning + reinforcement_learning 五模块补测试
+- federated_learning 12已有函数+11测试：联邦配置/DP/HE/MPC/客户端/噪声/加解密/隐私评估/训练模拟/报告
+- meta_learning_advanced 8已有函数+8测试：元学习配置/MAML/Reptile/匹配网络/原型网络/关系网络/报告
+- transfer_learning_advanced 9已有函数+9测试：迁移配置/预训练/微调/迁移/域适应/少样本/多任务/蒸馏/报告
+- continuous_learning 11已有函数+10测试：持续配置/EWC/记忆缓冲/任务序列/采样/损失/Fisher/模拟/报告
+- reinforcement_learning 12已有函数+11测试：RL配置/环境/代理/动作选择/Q更新/回放缓冲/经验/策略评估/训练模拟/报告
+- 2633×4全绿（native/wasm-gc/js/wasm），+49测试
+## v38.0.0 — 生成式AI/神经渲染测试覆盖 (202&6-09-29)
+
+- 为 generative_ai_advanced + image_generation_advanced + neural_rendering 三模块补测试
+- generative_ai_advanced 9已有函数+9测试：扩散/GAN/VAE/采样配置/噪声生成/扩散采样/GAN生成/VAE重建/报告
+- image_generation_advanced 8已有函数+8测试：生成配置/噪声/扩散采样/文生图/图生图/修复/风格迁移/报告
+- neural_rendering 12已有函数+11测试：相机/NeRF/高斯配置/光线/高斯采样/NeRF渲染/高斯泼溅/点云可视化/立体重建/报告
+- 2661×4全绿（native/wasm-gc/js/wasm），+28测试
+## v39.0.0 — 编辑/上色/修复/翻译测试覆盖 (2026-09-29)
+
+- 为 image_editing_advanced + image_colorization_advanced + image_restoration_advanced + image_translation_advanced 四模块补测试
+- image_editing_advanced 6已有函数+6测试：编辑配置/智能抠图/物体移除/背景替换/美颜/报告
+- image_colorization_advanced 7已有函数+7测试：上色配置/自动上色/参考上色/老照片上色/色彩增强/色彩迁移/报告
+- image_restoration_advanced 7已有函数+7测试：修复配置/去噪/去模糊/去雾/超分辨率/老照片修复/报告
+- image_translation_advanced 7已有函数+7测试：翻译配置/图像翻译/风格迁移/季节迁移/天气迁移/昼夜迁移/报告
+- 2688×4全绿（native/wasm-gc/js/wasm），+27测试
+## v40.0.0 — 多模态/VLM/NLP/知识图谱测试覆盖 (2026-09-29)
+
+- 为 multimodal_advanced + vlm_multimodal + nlp_advanced + knowledge_graph 四模块补测试
+- multimodal_advanced 6已有函数+14测试：默认配置/多模态数据创建/余弦相似度/多模态融合/跨模态检索/报告
+- vlm_multimodal 11已有函数+15测试：VLM/融合/扩散/生成式AI配置/图文相似度/模态融合/扩散生成/文生图/图生文/报告
+- nlp_advanced 8已有函数+19测试：NLP配置/分词/文本分类/NER/情感分析/摘要/嵌入/报告
+- knowledge_graph 10已有函数+15测试：KG配置/空图创建/实体添加/关系添加/实体链接/关系抽取/知识推理/嵌入训练/统计/报告
+- 2751×4全绿（native/wasm-gc/js/wasm），+63测试
+## v41.0.0 — 农业/天文/工业视觉测试覆盖 (2026-09-29)
+
+- 为 agriculture_vision_advanced + astronomy_imaging_advanced + industrial_inspection_advanced 三模块补测试
+- agriculture_vision_advanced 7已有函数+9测试：农业配置/作物检测/病害检测/虫害检测/产量预测/土壤分析/报告
+- astronomy_imaging_advanced 6已有函数+8测试：天文配置/天体检测/星系分类/测光/图像叠加/报告+修复LCG溢出
+- industrial_inspection_advanced 6已有函数+9测试：工业配置/缺陷检测/尺寸测量/表面质量/异常检测/报告
+- 2777×4全绿（native/wasm-gc/js/wasm），+26测试
+## v42.0.0 — 自动驾驶/机器人/安防视觉测试覆盖 (2026-09-29)
+
+- 为 autonomous_driving_advanced + robot_vision_advanced + security_surveillance_advanced 三模块补测试
+- autonomous_driving_advanced 7已有函数+9测试：AD配置/传感器数据/检测目标/传感器融合/路径规划/决策控制/报告
+- robot_vision_advanced 7已有函数+7测试：机器人配置/位姿估计/抓取规划/机械臂轨迹/视觉伺服/点云生成/报告
+- security_surveillance_advanced 7已有函数+9测试：安防配置/人员检测/入侵检测/行为分析/人群分析/车牌识别/报告+修复LCG溢出
+- 2802×4全绿（native/wasm-gc/js/wasm），+25测试
+## v43.0.0 — 智能视觉/场景理解测试覆盖 (2026-09-29)
+
+- 为 intelligent_vision + scene_understanding 两模块补测试
+- intelligent_vision 9已有函数+11测试：智能配置/目标检测/车道线/交通标志/缺陷检测/入侵检测/作物检测/星体检测/报告
+- scene_understanding 8已有函数+11测试：场景配置/场景类型/场景分类/描述生成/视觉问答/场景图/完整理解/报告
+- 2824×4全绿（native/wasm-gc/js/wasm），+22测试
+## v44.0.0 — 计算成像/摄影/增强测试覆盖 (2026-09-29)
+
+- 为 computational_imaging + computational_photography_advanced + advanced_imaging + photo_enhance 四模块补测试
+- computational_imaging 12已有函数+12测试：光场相机/相位配置/编码孔径/光场生成/重聚焦/视角合成/全息图/全息重建/CT重建/相位恢复/编码孔径重建/报告+修复LCG溢出2处
+- computational_photography_advanced 9已有函数+9测试：计算摄影配置/HDR成像/色调映射/全景拼接/景深合成/多帧降噪/去模糊/去雾/报告
+- advanced_imaging 11已有函数+11测试：高级成像配置/量子鬼成像/红外伪彩色/高光谱/偏振分析/热成像/X射线/超声/MRI/PET/报告+修复LCG溢出3处
+- photo_enhance 18已有函数+18测试：HDR配置/全景配置/景深配置/夜景配置/曝光检测/HDR融合/色调映射/全景拼接/景深模拟/夜景增强/报告/低光配置/低光增强/去运动模糊/色彩增强/CLAHE/白平衡/批量增强
+- 2874×4全绿（native/wasm-gc/js/wasm），+50测试
+## v45.0.0 — 视频/音频/条码/CV/工具测试覆盖 (2026-09-29)
+
+- 为 video_processing_advanced + audio_processing + barcode + cv_advanced + production_utils 五模块补测试
+- video_processing_advanced 5已有函数+5测试：视频配置/增强/超分/摘要/报告+修复LCG溢出2处
+- audio_processing 12已有函数+12测试：音频配置/创建/正弦波/预加重/MFCC/Mel频谱/语音识别/说话人识别/情感识别/音乐特征/语音活动检测/报告+修复LCG溢出11处
+- barcode 11已有函数+11测试：条码配置/EAN13/QR检测/QR解码/条码解码/Code128/UPC-A/Code39/线性条码/QR全解码/Reed-Solomon
+- cv_advanced 9已有函数+9测试：CV配置/跟踪对象/IoU/更新跟踪/动作识别/场景解析/视觉问答/字幕生成/报告+修复LCG溢出4处
+- production_utils 19已有函数+23测试：图像验证/通道验证/范围验证/像素钳位/索引验证/性能计时/内存统计/生产错误/重试配置/报告
+- 2934×4全绿（native/wasm-gc/js/wasm），+60测试
+## v46.0.0 — 表示学习与可解释AI测试覆盖 (2026-09-29)
+
+- 为 feature_learning_advanced + representation_learning_advanced + graph_neural + explainable_ai + image_dimensionality_reduction 五模块补测试
+- feature_learning_advanced 7已有函数+7测试：特征学习配置/特征提取/特征选择/特征变换/特征融合/特征学习/报告
+- representation_learning_advanced 7已有函数+7测试：表示学习配置/自编码器/VAE/GAN/对比学习/表示学习/报告+修复LCG溢出1处
+- graph_neural 8已有函数+8测试：GNN配置/推理配置/随机图/图卷积/图注意力/关系预测/社区检测/报告+修复LCG溢出5处
+- explainable_ai 7已有函数+7测试：可解释AI配置/特征重要性/显著性图/混淆矩阵/ROC曲线/特征图可视化/报告
+- image_dimensionality_reduction 7已有函数+7测试：降维配置/PCA/t-SNE/UMAP/降维/特征选择/报告+修复LCG溢出3处
+- 2970×4全绿（native/wasm-gc/js/wasm），+36测试

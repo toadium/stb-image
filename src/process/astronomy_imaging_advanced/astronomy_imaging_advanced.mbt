@@ -266,15 +266,15 @@ pub fn detect_celestial_objects(
   let num_objects = 20
 
   for i in 0..<num_objects {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = (state % width).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = (state % height).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let brightness = (state % 1000).to_double() / 10.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let snr = (state % 1000).to_double() / 100.0 + 3.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.2 + 0.8
 
     let magnitude = 25.0 - 2.5 * log_approx(brightness / 1000.0)
@@ -339,17 +339,17 @@ pub fn classify_galaxies(
   let mut state = 42
   for obj in objects {
     if obj.object_type == CelestialObjectType::Galaxy {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let morph_idx = state % morphologies.length()
       let morphology = morphologies[morph_idx]
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let redshift = (state % 1000).to_double() / 1000.0
 
       let all_scores : Array[Double] = []
       for _ in morphologies {
-        state = (state * 11035 + 12345) % 1000000
+        state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
         all_scores.push((state % 1000).to_double() / 1000.0)
       }
 

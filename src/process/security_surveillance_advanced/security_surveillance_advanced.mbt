@@ -201,15 +201,15 @@ pub fn detect_people(
   let num_people = 5
 
   for i in 0..<num_people {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = state % (width - 200)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = state % (height - 400)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let w = state % 100 + 80
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let h = state % 200 + 150
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
     let bbox : Array[Int] = []
@@ -221,9 +221,9 @@ pub fn detect_people(
     let face_embedding : Array[Double] = []
     let body_embedding : Array[Double] = []
     for _ in 0..<128 {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       face_embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       body_embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
     }
 
@@ -389,7 +389,7 @@ pub fn recognize_license_plate(
 
   let mut state = 42
   for i in 0..<7 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     if i < 3 {
       let char_idx = state % 8
       plate = plate + plate_chars[char_idx].to_string()

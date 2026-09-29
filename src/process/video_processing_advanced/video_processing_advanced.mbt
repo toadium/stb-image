@@ -370,11 +370,11 @@ pub fn summarize_video(
   }
 
   for _ in 0..<num_keyframes {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let idx = state % frames.length()
     keyframes.push(frames[idx])
     keyframe_indices.push(idx)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let score = (state % 1000).to_double() / 1000.0
     importance_scores.push(score)
   }

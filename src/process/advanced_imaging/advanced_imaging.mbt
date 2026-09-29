@@ -166,7 +166,7 @@ pub fn quantum_ghost_imaging(
     let pattern : Array[Bool] = []
     let mut bucket_signal = 0.0
     for _ in 0..<total {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let is_on = state % 2 == 0
       pattern.push(is_on)
       if is_on {
@@ -511,7 +511,7 @@ pub fn ultrasound_synthesize(
   let mut state = 42
   for y in 0..<height {
     for x in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise = (state % 1000).to_double() / 1000.0
 
       // 简化的B模式：扇形扫描+斑点噪声
@@ -660,7 +660,7 @@ pub fn pet_synthesize(
   let mut state = 42
   for y in 0..<height {
     for x in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise = (state % 1000).to_double() / 1000.0
 
       let dx = x.to_double() - center_x

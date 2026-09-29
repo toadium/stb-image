@@ -161,7 +161,7 @@ pub fn create_default_coded_aperture(size : Int) -> CodedAperturePattern {
   let mut state = 42
 
   for _ in 0..<total {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = if state % 2 == 0 { 255 } else { 0 }
     out.push(value.to_byte())
   }
@@ -585,7 +585,7 @@ pub fn phase_retrieval(
     // 简化的迭代：随机扰动相位
     let mut state = iter * 11035 + 12345
     for i in 0..<total {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let perturbation = (state % 1000).to_double() / 1000.0 - 0.5
       phase[i] += perturbation * 0.01
     }

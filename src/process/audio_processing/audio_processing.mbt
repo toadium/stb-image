@@ -281,7 +281,7 @@ pub fn compute_mfcc(audio : AudioData, config : AudioConfig) -> AudioFeatures {
   for _ in 0..<num_frames {
     let frame : Array[Double] = []
     for _ in 0..<config.n_mfcc {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       frame.push((state % 1000).to_double() / 1000.0 - 0.5)
     }
     features.push(frame)
@@ -311,7 +311,7 @@ pub fn compute_mel_spectrogram(
   for _ in 0..<num_frames {
     let frame : Array[Double] = []
     for _ in 0..<config.n_mels {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let value = (state % 1000).to_double() / 1000.0
       frame.push(value * value)
     }
@@ -345,7 +345,7 @@ pub fn recognize_speech(
 
   let mut state = 42
   for i in 0..<num_words {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let word_idx = state % words.length()
     selected_words.push(words[word_idx])
     timestamps.push(i.to_double() * 0.5)
@@ -384,7 +384,7 @@ pub fn identify_speaker(
 
   let mut state = 42
   for speaker in known_speakers {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let score = (state % 1000).to_double() / 1000.0
     all_scores.push(score)
 
@@ -396,7 +396,7 @@ pub fn identify_speaker(
 
   let embedding : Array[Double] = []
   for _ in 0..<128 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
   }
 
@@ -429,7 +429,7 @@ pub fn recognize_speech_emotion(audio : AudioData) -> SpeechEmotionResult {
 
   let mut state = 42
   for i in 0..<emotions.length() {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let score = (state % 1000).to_double() / 1000.0
     all_scores.push(score)
 
@@ -474,18 +474,18 @@ pub fn extract_music_features(audio : AudioData) -> MusicIRResult {
   let instruments = ["piano", "guitar", "drums", "bass", "violin", "flute"]
 
   let mut state = 42
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let key = keys[state % keys.length()]
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let mode = modes[state % modes.length()]
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let genre = genres[state % genres.length()]
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let mood = moods[state % moods.length()]
 
   let selected_instruments : Array[String] = []
   for _ in 0..<3 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     selected_instruments.push(instruments[state % instruments.length()])
   }
 

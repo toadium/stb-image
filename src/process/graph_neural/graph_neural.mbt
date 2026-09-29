@@ -197,10 +197,10 @@ pub fn create_random_graph(
   for i in 0..<num_nodes {
     let features : Array[Double] = []
     for _ in 0..<num_features {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       features.push((state % 1000).to_double() / 1000.0)
     }
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let label = state % 10
 
     nodes.push(GraphNode::{
@@ -215,11 +215,11 @@ pub fn create_random_graph(
 
   // 创建边
   for _ in 0..<num_edges {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let src = state % num_nodes
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let tgt = state % num_nodes
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let weight = (state % 1000).to_double() / 1000.0
 
     if src != tgt {
