@@ -28,6 +28,7 @@ import {
   "walkzzz/image/src/process/medical",
   "walkzzz/image/src/process/neural_rendering",
   "walkzzz/image/src/process/ocr",
+  "walkzzz/image/src/process/performance",
   "walkzzz/image/src/process/photo_enhance",
   "walkzzz/image/src/process/pose_estimation",
   "walkzzz/image/src/process/quality",
@@ -323,6 +324,10 @@ pub fn build_laplacian_pyramid_f(@types.ImageF, Int) -> Array[@types.ImageF] rai
 pub fn build_markdown_document(@ocr.OCRPageResult, title? : String) -> @ocr.MarkdownDocument raise @types.LoadError
 
 pub fn build_threshold_lut(Int) -> Array[Int]
+
+pub fn bulk_copy_4x(Bytes, Int, Array[Byte], Int, Int) -> Unit
+
+pub fn bulk_fill_4x(Array[Byte], Int, Int, Byte) -> Unit
 
 pub fn cache_friendly_horizontal_projection(@types.Image) -> Array[Int] raise @types.LoadError
 
@@ -814,6 +819,8 @@ pub fn decrypt_image_logistic(@types.Image, key? : Double, mu? : Double) -> @typ
 
 pub fn decrypt_image_xor(@types.Image, String) -> @types.Image
 
+pub fn default_tile_config() -> @performance.TileConfig
+
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
 pub fn dehaze_16(@types.Image16, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image16 raise @types.LoadError
@@ -1237,6 +1244,8 @@ pub fn extract_text_line_image(@types.Image, @ocr.TextLineInfo, padding? : Int) 
 pub fn extract_text_lines(@types.Image) -> Array[@types.Image] raise @types.LoadError
 
 pub fn extract_text_watermark(@types.Image, Int, key? : Int) -> String
+
+pub fn extract_tile(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn extract_title(@ocr.DocumentStructure) -> String
 
@@ -2024,6 +2033,8 @@ pub fn normalize_punctuation(String, Array[String]) -> String
 
 pub fn normalized_cross_correlation_ra(@types.Image, @types.Image) -> Double
 
+pub fn num_tiles(Int, Int, @performance.TileConfig) -> (Int, Int)
+
 pub fn ocr_accuracy_enhanced_default_config() -> @ocr.OcrAccuracyEnhancedConfig
 
 pub fn ocr_pipeline_stats(@types.Image) -> (Int, Int, Double) raise @types.LoadError
@@ -2063,6 +2074,8 @@ pub fn outpaint_image_ig(@types.Image, Int, Int, @image_generation.EditingConfig
 pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
 pub fn parse_cli_args(Array[String]) -> @ocr.CliConfig raise @types.LoadError
+
+pub fn paste_tile(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn pet_synthesize_ai(Int, Int, String) -> @advanced_imaging.PETData
 
@@ -2511,6 +2524,8 @@ pub fn threshold_otsu_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 pub fn threshold_segmentation(@types.Image, Double) -> @segmentation.SemanticSegmentationResult
 
 pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+
+pub fn tile_region(Int, Int, @performance.TileConfig) -> (Int, Int, Int, Int)
 
 pub fn to_grayscale(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -3596,6 +3611,8 @@ pub using @forensics {type TextureAnalysisResult}
 pub using @remote_sensing {type TextureFeatures}
 
 pub using @advanced_imaging {type ThermalData as ThermalDataAI}
+
+pub using @performance {type TileConfig}
 
 pub using @photo_enhance {type ToneMappingConfig}
 

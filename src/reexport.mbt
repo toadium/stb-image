@@ -10438,3 +10438,70 @@ pub fn advanced_imaging_report_to_string_ai(
 ) -> String {
   @advanced_imaging.advanced_imaging_report_to_string(modality, image, config)
 }
+
+///|
+// v48.0.0 性能优化模块
+pub type TileConfig = @performance.TileConfig
+
+///|
+pub let default_tile_config : () -> @performance.TileConfig = @performance.default_tile_config
+
+///|
+pub fn num_tiles(
+  width : Int,
+  height : Int,
+  config : @performance.TileConfig,
+) -> (Int, Int) {
+  @performance.num_tiles(width, height, config)
+}
+
+///|
+pub fn tile_region(
+  tile_col : Int,
+  tile_row : Int,
+  config : @performance.TileConfig,
+) -> (Int, Int, Int, Int) {
+  @performance.tile_region(tile_col, tile_row, config)
+}
+
+///|
+pub fn extract_tile(
+  img : @types.Image,
+  x0 : Int,
+  y0 : Int,
+  tile_w : Int,
+  tile_h : Int,
+) -> @types.Image raise @types.LoadError {
+  @performance.extract_tile(img, x0, y0, tile_w, tile_h)
+}
+
+///|
+pub fn paste_tile(
+  img : @types.Image,
+  tile : @types.Image,
+  x0 : Int,
+  y0 : Int,
+) -> @types.Image raise @types.LoadError {
+  @performance.paste_tile(img, tile, x0, y0)
+}
+
+///|
+pub fn bulk_copy_4x(
+  src : Bytes,
+  src_offset : Int,
+  dst : Array[Byte],
+  dst_offset : Int,
+  len : Int,
+) -> Unit {
+  @performance.bulk_copy_4x(src, src_offset, dst, dst_offset, len)
+}
+
+///|
+pub fn bulk_fill_4x(
+  dst : Array[Byte],
+  offset : Int,
+  len : Int,
+  value : Byte,
+) -> Unit {
+  @performance.bulk_fill_4x(dst, offset, len, value)
+}
