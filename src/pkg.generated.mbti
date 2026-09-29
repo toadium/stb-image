@@ -48,6 +48,7 @@ import {
   "walkzzz/image/src/process/video",
   "walkzzz/image/src/process/vlm_multimodal",
   "walkzzz/image/src/process/watermark",
+  "walkzzz/image/src/pure/codec",
   "walkzzz/image/src/types",
   "walkzzz/image/src/util",
 }
@@ -214,6 +215,10 @@ pub fn augment_random_rotation(@ocr.DLTrainingSample, Double) -> @ocr.DLTraining
 pub fn augment_random_scale(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
 
 pub fn augment_random_shift(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
+
+pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn avif_info(Bytes) -> @codec.AvifInfo raise @types.LoadError
 
 pub fn background_normalization(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
 
@@ -1553,6 +1558,10 @@ pub fn hdr_to_ldr_gamma(Float) -> Unit
 
 pub fn hdr_to_ldr_scale(Float) -> Unit
 
+pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn heif_info(Bytes) -> @codec.HeifInfo raise @types.LoadError
+
 pub fn histogram(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn histogram_16(@types.Image16) -> Array[Int] raise @types.LoadError
@@ -1725,15 +1734,29 @@ pub fn invert_homography(@stitch.Homography) -> @stitch.Homography?
 
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
+pub fn is_avif_format(Bytes) -> Bool
+
 pub fn is_code_block_line(@ocr.TextLineAttributes, Int) -> Bool
 
 pub fn is_hdr_from_bytes(Bytes) -> Bool
 
 pub fn is_heading_line(@ocr.TextLineAttributes, Double) -> (Bool, Int)
 
+pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_jpegxl_codestream(Bytes) -> Bool
+
+pub fn is_jpegxl_container(Bytes) -> Bool
+
+pub fn is_jpegxl_format(Bytes) -> Bool
+
 pub fn is_quote_line(@ocr.TextLineAttributes, Int) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
+
+pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn jpegxl_info(Bytes) -> @codec.JpegXlInfo raise @types.LoadError
 
 pub fn key_sensitivity_test(@types.Image, Double, delta? : Double) -> Double
 

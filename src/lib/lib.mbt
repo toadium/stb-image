@@ -124,6 +124,42 @@ pub fn detect_format(data : Bytes) -> @types.ImageFormat {
     }
     return @types.ImageFormat::Ico
   }
+  // JPEG-XL: 裸码流 0xFF 0x0A 或 ISOBMFF 容器
+  if len >= 2 && data[0].to_int() == 0xFF && data[1].to_int() == 0x0A {
+    return @types.ImageFormat::JpegXl
+  }
+  if len >= 12 &&
+    data[0].to_int() == 0x00 &&
+    data[1].to_int() == 0x00 &&
+    data[2].to_int() == 0x00 &&
+    data[3].to_int() == 0x0C &&
+    data[4].to_int() == 0x4A &&
+    data[5].to_int() == 0x58 &&
+    data[6].to_int() == 0x4C &&
+    data[7].to_int() == 0x20 {
+    return @types.ImageFormat::JpegXl
+  }
+  // AVIF/HEIF: ftyp box (bytes 4-7 = "ftyp")
+  if len >= 12 &&
+    data[4].to_int() == 0x66 &&
+    data[5].to_int() == 0x74 &&
+    data[6].to_int() == 0x79 &&
+    data[7].to_int() == 0x70 {
+    let b8 = data[8].to_int()
+    let b9 = data[9].to_int()
+    let b10 = data[10].to_int()
+    let b11 = data[11].to_int()
+    // AVIF: "avif" (0x61 0x76 0x69 0x66) or "avis" (0x61 0x76 0x69 0x73)
+    if b8 == 0x61 && b9 == 0x76 && b10 == 0x69 && (b11 == 0x66 || b11 == 0x73) {
+      return @types.ImageFormat::Avif
+    }
+    // HEIF: "heic", "heix", "hevc", "mif1"
+    if (b8 == 0x68 && b9 == 0x65 && b10 == 0x69 && (b11 == 0x63 || b11 == 0x78)) ||
+      (b8 == 0x68 && b9 == 0x65 && b10 == 0x76 && b11 == 0x63) ||
+      (b8 == 0x6D && b9 == 0x69 && b10 == 0x66 && b11 == 0x31) {
+      return @types.ImageFormat::Heif
+    }
+  }
   @types.ImageFormat::Unknown
 }
 
@@ -160,6 +196,9 @@ pub fn load_from_bytes_auto(
       raise @types.LoadError::DecodeFailed(
         "APNG 格式需要显式调用 decode_apng_pure",
       )
+    @types.ImageFormat::Avif => @codec.avif_decode(data)
+    @types.ImageFormat::Heif => @codec.heif_decode(data)
+    @types.ImageFormat::JpegXl => @codec.jpegxl_decode(data)
     @types.ImageFormat::Unknown =>
       raise @types.LoadError::DecodeFailed(
         "不支持或无法识别的格式（TGA 无 magic bytes，需显式调用 decode_tga_pure）",

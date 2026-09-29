@@ -6,6 +6,10 @@ import {
 }
 
 // Values
+pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
+
 pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
 
 pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
@@ -86,6 +90,24 @@ pub fn encode_webp_lossy_full(@types.Image, quality? : Int) -> Bytes raise @type
 
 pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
+pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn heif_info(Bytes) -> HeifInfo raise @types.LoadError
+
+pub fn is_avif_format(Bytes) -> Bool
+
+pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_jpegxl_codestream(Bytes) -> Bool
+
+pub fn is_jpegxl_container(Bytes) -> Bool
+
+pub fn is_jpegxl_format(Bytes) -> Bool
+
+pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn jpegxl_info(Bytes) -> JpegXlInfo raise @types.LoadError
+
 pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
 
 pub fn tiff_lzw_decode(Bytes) -> Array[Byte] raise @types.LoadError
@@ -95,6 +117,31 @@ pub fn tiff_packbits_decode(Bytes) -> Array[Byte] raise @types.LoadError
 // Errors
 
 // Types and methods
+pub struct AvifInfo {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+}
+
+pub struct HeifInfo {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+}
+
+pub struct JpegXlInfo {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  is_lossless : Bool
+}
+
 pub struct Vp8ReferenceFrames {
   last_y : Array[Int]
   last_u : Array[Int]

@@ -67,6 +67,9 @@ pub(all) enum ImageFormat {
   Cur
   Icns
   Apng
+  Avif
+  Heif
+  JpegXl
   Unknown
 } derive(Eq, @debug.Debug)
 

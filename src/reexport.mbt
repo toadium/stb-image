@@ -2512,6 +2512,48 @@ pub let decode_apng : (Bytes) -> @types.PngAnimation raise @types.LoadError = @c
 ///|
 pub let encode_apng : (@types.PngAnimation) -> Bytes raise @types.LoadError = @codec.encode_apng_pure
 
+///|
+// AVIF 格式支持
+pub let is_avif_format : (Bytes) -> Bool = @codec.is_avif_format
+
+///|
+pub fn avif_info(data : Bytes) -> @codec.AvifInfo raise @types.LoadError {
+  @codec.avif_info(data)
+}
+
+///|
+pub let avif_decode : (Bytes) -> @types.Image raise @types.LoadError = @codec.avif_decode
+
+///|
+// HEIF 格式支持
+pub let is_heif_format : (Bytes) -> Bool = @codec.is_heif_format
+
+///|
+pub fn heif_info(data : Bytes) -> @codec.HeifInfo raise @types.LoadError {
+  @codec.heif_info(data)
+}
+
+///|
+pub let heif_decode : (Bytes) -> @types.Image raise @types.LoadError = @codec.heif_decode
+
+///|
+// JPEG-XL 格式支持
+pub let is_jpegxl_format : (Bytes) -> Bool = @codec.is_jpegxl_format
+
+///|
+pub let is_jpegxl_codestream : (Bytes) -> Bool = @codec.is_jpegxl_codestream
+
+///|
+pub let is_jpegxl_container : (Bytes) -> Bool = @codec.is_jpegxl_container
+
+///|
+pub fn jpegxl_info(data : Bytes) -> @codec.JpegXlInfo raise @types.LoadError {
+  @codec.jpegxl_info(data)
+}
+
+///|
+pub let jpegxl_decode : (Bytes) -> @types.Image raise @types.LoadError = @codec.jpegxl_decode
+
 // From meta/
 
 ///|
