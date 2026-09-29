@@ -266,7 +266,7 @@ fn cosine_similarity(v1 : Array[Double], v2 : Array[Double]) -> Double {
     norm1 += v1[i] * v1[i]
     norm2 += v2[i] * v2[i]
   }
-  let denom = norm1 * norm2
+  let denom = norm1.sqrt() * norm2.sqrt()
   if denom > 0.0 {
     dot / denom
   } else {

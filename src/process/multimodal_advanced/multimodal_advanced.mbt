@@ -209,7 +209,7 @@ pub fn cosine_similarity(vec1 : Array[Double], vec2 : Array[Double]) -> Double {
     norm2 += vec2[i] * vec2[i]
   }
 
-  let denom = norm1 * norm2
+  let denom = norm1.sqrt() * norm2.sqrt()
   if denom > 0.0 {
     dot_product / denom
   } else {
