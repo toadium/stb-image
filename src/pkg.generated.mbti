@@ -30,6 +30,7 @@ import {
   "walkzzz/image/src/process/ocr",
   "walkzzz/image/src/process/performance",
   "walkzzz/image/src/process/photo_enhance",
+  "walkzzz/image/src/process/pipeline",
   "walkzzz/image/src/process/pose_estimation",
   "walkzzz/image/src/process/quality",
   "walkzzz/image/src/process/registration",
@@ -231,6 +232,8 @@ pub fn batch_embed_watermark(Array[@types.Image], @types.Image, key? : Int) -> A
 
 pub fn batch_encrypt(Array[@types.Image], Double) -> Array[@types.Image]
 
+pub fn batch_execute(Array[@pipeline.BatchTask]) -> @pipeline.BatchResult
+
 pub fn batch_extract_features(Array[(@types.Image, String)]) -> Array[@retrieval.ImageFeature]
 
 pub fn batch_photo_enhance(Array[@types.Image], String) -> Array[@types.Image]
@@ -238,6 +241,8 @@ pub fn batch_photo_enhance(Array[@types.Image], String) -> Array[@types.Image]
 pub fn batch_recognize_chars(Array[@types.Image], @ocr.DLCnnModelConfig, Array[String]) -> Array[@ocr.DLInferenceResult] raise @types.LoadError
 
 pub fn batch_scan_ocr(Array[@types.Image], @ocr.ScanOCRConfig) -> Array[@ocr.OCRPageResult] raise @types.LoadError
+
+pub fn batch_summary(@pipeline.BatchResult) -> String
 
 pub fn batch_summary_to_string(@ocr.BatchResultSummary) -> String
 
@@ -456,6 +461,10 @@ pub fn classify_land_cover_simple_rs(@remote_sensing.RemoteSensingImage) -> @rem
 pub fn classify_markdown_element(@ocr.TextBlock, avg_font_size? : Double) -> @ocr.MarkdownElementType
 
 pub fn classify_scene_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.SceneClassificationResult
+
+pub fn cli_help() -> String
+
+pub fn cli_parse(Array[String]) -> @pipeline.CliCommand
 
 pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError
 
@@ -818,6 +827,8 @@ pub fn decompose_chinese_char(String) -> @ocr.ChineseCharStructure raise @types.
 pub fn decrypt_image_logistic(@types.Image, key? : Double, mu? : Double) -> @types.Image
 
 pub fn decrypt_image_xor(@types.Image, String) -> @types.Image
+
+pub fn default_batch_config() -> @pipeline.BatchConfig
 
 pub fn default_tile_config() -> @performance.TileConfig
 
@@ -2089,6 +2100,12 @@ pub fn phash_16(@types.Image16) -> Array[Int] raise @types.LoadError
 
 pub fn phash_f(@types.ImageF) -> Array[Int] raise @types.LoadError
 
+pub fn pipeline_describe(@pipeline.Pipeline) -> String
+
+pub fn pipeline_len(@pipeline.Pipeline) -> Int
+
+pub fn pipeline_new() -> @pipeline.Pipeline
+
 pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn point_cloud_new() -> @stereo3d.PointCloud
@@ -2768,9 +2785,13 @@ pub using @barcode {type BarcodeResult}
 
 pub using @barcode {type BarcodeType}
 
+pub using @pipeline {type BatchConfig}
+
 pub using @ocr {type BatchOcrConfig}
 
 pub using @ocr {type BatchProgress}
+
+pub using @pipeline {type BatchResult}
 
 pub using @ocr {type BatchResultSummary}
 
@@ -2821,6 +2842,8 @@ pub using @ocr {type ChineseRadical}
 pub using @edge {type Circle}
 
 pub using @ocr {type ClassificationResult}
+
+pub using @pipeline {type CliCommand}
 
 pub using @forensics_enhanced {type CloneDetectionResult}
 
@@ -3356,6 +3379,8 @@ pub using @ocr {type OcrErrorType}
 
 pub using @ocr {type OcrResult}
 
+pub using @pipeline {type Operation}
+
 pub using @video {type OpticalFlowField}
 
 pub using @video {type OpticalFlowVector}
@@ -3383,6 +3408,10 @@ pub using @ocr {type PerformanceBenchmark}
 pub using @transform {type PerspectiveMatrix}
 
 pub using @computational_imaging {type PhaseRetrievalConfig as PhaseRetrievalConfigCI}
+
+pub using @pipeline {type Pipeline}
+
+pub using @pipeline {type BatchTask as PipelineBatchTask}
 
 pub using @types {type PngAnimation}
 

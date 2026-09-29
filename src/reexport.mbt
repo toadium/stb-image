@@ -10505,3 +10505,58 @@ pub fn bulk_fill_4x(
 ) -> Unit {
   @performance.bulk_fill_4x(dst, offset, len, value)
 }
+
+///|
+// v49.0.0 生态建设模块
+pub type Pipeline = @pipeline.Pipeline
+
+///|
+pub type BatchConfig = @pipeline.BatchConfig
+
+///|
+pub type PipelineBatchTask = @pipeline.BatchTask
+
+///|
+pub type BatchResult = @pipeline.BatchResult
+
+///|
+pub type CliCommand = @pipeline.CliCommand
+
+///|
+pub type Operation = @pipeline.Operation
+
+///|
+pub let pipeline_new : () -> @pipeline.Pipeline = @pipeline.pipeline_new
+
+///|
+pub fn pipeline_describe(p : @pipeline.Pipeline) -> String {
+  @pipeline.pipeline_describe(p)
+}
+
+///|
+pub fn pipeline_len(p : @pipeline.Pipeline) -> Int {
+  @pipeline.pipeline_len(p)
+}
+
+///|
+pub let default_batch_config : () -> @pipeline.BatchConfig = @pipeline.default_batch_config
+
+///|
+pub fn batch_execute(
+  tasks : Array[@pipeline.BatchTask],
+) -> @pipeline.BatchResult {
+  @pipeline.batch_execute(tasks)
+}
+
+///|
+pub fn batch_summary(result : @pipeline.BatchResult) -> String {
+  @pipeline.batch_summary(result)
+}
+
+///|
+pub fn cli_parse(args : Array[String]) -> @pipeline.CliCommand {
+  @pipeline.cli_parse(args)
+}
+
+///|
+pub let cli_help : () -> String = @pipeline.cli_help
