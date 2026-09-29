@@ -537,16 +537,3 @@ pub fn federated_learning_report_to_string(
 
   report
 }
-
-// 辅助函数
-
-///|
-fn log_approx(x : Double) -> Double {
-  // 简化的自然对数近似
-  let _ = x
-  let mut result = 0.0
-  let y = (x - 1.0) / (x + 1.0)
-  let y2 = y * y
-  result = 2.0 * (y + y * y2 / 3.0 + y * y2 * y2 / 5.0)
-  result
-}

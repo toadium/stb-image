@@ -2,16 +2,6 @@
 // 仿射变换/平移估计/图像对齐
 
 ///|
-fn make_reg_img(w : Int, h : Int, value : Byte) -> @types.Image {
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(Array::make(w * h, value)),
-  }
-}
-
-///|
 fn make_varied_reg_img(w : Int, h : Int) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {

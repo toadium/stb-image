@@ -171,6 +171,7 @@ pub fn detect_defects(
   height : Int,
   config : IndustrialInspectionConfig,
 ) -> Array[DetectedDefect] {
+  ignore(image)
   let defects : Array[DetectedDefect] = []
 
   // 简化的缺陷检测：基于图像强度变化
@@ -239,6 +240,10 @@ pub fn measure_dimensions(
   calibration_factor : Double,
   config : IndustrialInspectionConfig,
 ) -> Array[DimensionalMeasurementResult] {
+  ignore(calibration_factor)
+  ignore(height)
+  ignore(image)
+  ignore(width)
   let measurements : Array[DimensionalMeasurementResult] = []
 
   // 简化的尺寸测量
@@ -284,6 +289,8 @@ pub fn evaluate_surface_quality(
   defects : Array[DetectedDefect],
   config : IndustrialInspectionConfig,
 ) -> SurfaceQualityResult {
+  ignore(config)
+  ignore(image)
   // 简化的表面质量评估
   let defect_area_ratio = if defects.length() > 0 {
     let mut total_area = 0.0
@@ -338,6 +345,8 @@ pub fn detect_anomalies(
   height : Int,
   config : IndustrialInspectionConfig,
 ) -> AnomalyDetectionResult {
+  ignore(height)
+  ignore(width)
   // 简化的异常检测：计算与参考图像的差异
   let mut total_error = 0.0
   let anomaly_map : Array[Array[Double]] = []

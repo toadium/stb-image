@@ -294,6 +294,7 @@ pub fn reference_based_colorization(
   height : Int,
   config : ImageColorizationConfig,
 ) -> ReferenceColorizationResult {
+  ignore(config)
   let colorized : Array[Double] = []
   let transfer_map : Array[Array[Double]] = []
   let mut state = 42

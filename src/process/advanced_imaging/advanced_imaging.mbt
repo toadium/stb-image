@@ -152,6 +152,7 @@ pub fn quantum_ghost_imaging(
   height : Int,
   algorithm : QuantumImagingAlgorithm,
 ) -> @types.Image {
+  ignore(algorithm)
   let total = width * height
   let out : Array[Byte] = []
   let accumulator : Array[Double] = []
@@ -208,6 +209,7 @@ pub fn infrared_pseudocolor(
   infrared_image : @types.Image,
   ir_type : InfraredImagingType,
 ) -> @types.Image {
+  ignore(ir_type)
   let w = infrared_image.width
   let h = infrared_image.height
   let total = w * h

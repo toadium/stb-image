@@ -57,7 +57,7 @@ let qr_ec_level_names : Array[String] = ["M", "L", "H", "Q"]
 
 ///|
 /// QR Code 版本 1-10 的容量表（字节模式，EC级别 L）
-let qr_version_capacity_l : Array[Int] = [
+let _qr_version_capacity_l : Array[Int] = [
   17, 32, 53, 78, 106, 134, 154, 192, 230, 271,
 ]
 
@@ -113,7 +113,7 @@ pub fn decode_qrcode_full(img : @types.Image) -> QrDecodeResult? {
     return None
   }
   // 9. 解码数据
-  let (decoded, bytes_used) = decode_qr_data(data_bits, version)
+  let (decoded, _bytes_used) = decode_qr_data(data_bits, version)
   // 10. 返回结果
   Some(QrDecodeResult::{
     data: decoded,
@@ -313,7 +313,7 @@ fn is_function_module(row : Int, col : Int, qr_size : Int) -> Bool {
 fn extract_qr_data_bits(
   modules : Array[Int],
   qr_size : Int,
-  version : Int,
+  _version : Int,
 ) -> Array[Int] {
   let bits : Array[Int] = []
   let mut col = qr_size - 1
@@ -356,7 +356,7 @@ fn extract_qr_data_bits(
 
 ///|
 /// 解码 QR Code 数据
-fn decode_qr_data(bits : Array[Int], version : Int) -> (String, Int) {
+fn decode_qr_data(bits : Array[Int], _version : Int) -> (String, Int) {
   if bits.length() < 4 {
     return ("", 0)
   }
@@ -487,6 +487,7 @@ pub fn reed_solomon_decode(
   data : Array[Int],
   ec_bytes : Int,
 ) -> (Array[Int], Int) {
+  ignore(ec_bytes)
   // 简化版：不做实际纠错，只返回原始数据
   // 完整的 RS 解码需要 GF(256) 运算和 Berlekamp-Massey 算法
   (data.copy(), 0)

@@ -163,8 +163,8 @@ pub fn detect_features_simple(
     for x in 4..<(w - 4) {
       let center = data[y * w + x].to_int()
       // 检查连续 N 个点是否都比中心亮或暗
-      let mut bright_count = 0
-      let mut dark_count = 0
+      let mut _bright_count = 0
+      let mut _dark_count = 0
       let mut max_bright = 0
       let mut max_dark = 0
       let mut cur_bright = 0
@@ -432,12 +432,12 @@ fn compute_homography_dlt(
   // 这里使用简化的最小二乘法
   let (x1, y1) = src[0]
   let (u1, v1) = dst[0]
-  let (x2, y2) = src[1]
-  let (u2, v2) = dst[1]
-  let (x3, y3) = src[2]
-  let (u3, v3) = dst[2]
-  let (x4, y4) = src[3]
-  let (u4, v4) = dst[3]
+  let (x2, _y2) = src[1]
+  let (u2, _v2) = dst[1]
+  let (_x3, y3) = src[2]
+  let (_u3, v3) = dst[2]
+  let (_x4, _y4) = src[3]
+  let (_u4, _v4) = dst[3]
   // 构建 8x8 线性方程组（简化版，直接求解）
   // 这里使用近似方法：假设 h22 = 1，求解其他 8 个参数
   // 由于完整的 DLT 比较复杂，这里使用简化的仿射变换近似

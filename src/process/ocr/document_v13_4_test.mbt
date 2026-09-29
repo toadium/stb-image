@@ -151,7 +151,7 @@ test "extract_document_text: 提取文本" {
 test "document_statistics_enhanced: 增强统计" {
   let img = make_doc_img(64, 64)
   let blocks = analyze_layout_enhanced(img)
-  let (total, titles, paras, lists, tables, images, others) = document_statistics_enhanced(
+  let (total, titles, paras, _lists, _tables, _images, _others) = document_statistics_enhanced(
     blocks,
   )
   assert_true(total >= 0)

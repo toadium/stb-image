@@ -255,6 +255,8 @@ pub fn fuse_sensors(
   sensor_data_list : Array[SensorData],
   config : ADConfig,
 ) -> Array[ADDetectedObject] {
+  ignore(config)
+  ignore(sensor_data_list)
   let fused_objects : Array[ADDetectedObject] = []
 
   // 简化的融合：基于传感器数据生成虚拟目标
@@ -342,20 +344,6 @@ pub fn plan_path(
 }
 
 ///|
-/// 近似平方根
-fn sqrt_approx(x : Double) -> Double {
-  if x <= 0.0 {
-    0.0
-  } else {
-    let mut z = x
-    let mut y = (z + 1.0) / 2.0
-    for _ in 0..<20 {
-      z = y
-      y = (z + x / z) / 2.0
-    }
-    y
-  }
-}
 
 ///|
 /// 决策控制（简化版）
@@ -365,6 +353,8 @@ pub fn decision_control(
   detected_objects : Array[ADDetectedObject],
   config : ADConfig,
 ) -> ControlCommand {
+  ignore(config)
+  ignore(planned_path)
   let target_velocity = 10.0
   let mut throttle = 0.3
   let mut brake = 0.0

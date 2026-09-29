@@ -408,6 +408,7 @@ pub fn image_to_text(
   image : @types.Image,
   config : GenerativeAIConfig,
 ) -> GenerativeAIResult {
+  ignore(config)
   let w = image.width
   let h = image.height
   let total = w * h

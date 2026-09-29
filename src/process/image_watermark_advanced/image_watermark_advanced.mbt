@@ -224,7 +224,7 @@ pub fn create_default_watermark_config() -> ImageWatermarkConfig {
 fn lsb_embed(
   image : Array[Double],
   watermark : Array[Byte],
-  strength : Double,
+  _strength : Double,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let mut wm_idx = 0
@@ -315,6 +315,8 @@ pub fn detect_watermark(
   watermark_size : Int,
   config : ImageWatermarkConfig,
 ) -> WatermarkDetectionResult {
+  ignore(height)
+  ignore(width)
   let detected = lsb_extract(image, watermark_size)
   let mut match_count = 0
 

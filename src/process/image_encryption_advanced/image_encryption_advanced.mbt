@@ -271,6 +271,8 @@ pub fn encrypt_image(
   key : Array[Byte],
   config : ImageEncryptionConfig,
 ) -> EncryptionResult {
+  ignore(height)
+  ignore(width)
   let image_bytes : Array[Byte] = []
   for value in image {
     let int_val = if value < 0.0 {
@@ -352,6 +354,8 @@ pub fn chaotic_encrypt(
   height : Int,
   config : ImageEncryptionConfig,
 ) -> ChaoticEncryptionResult {
+  ignore(height)
+  ignore(width)
   let image_bytes : Array[Byte] = []
   for value in image {
     let int_val = if value < 0.0 {

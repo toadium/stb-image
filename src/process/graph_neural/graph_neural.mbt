@@ -420,6 +420,7 @@ pub fn predict_relation(
   target_id : Int,
   config : RelationReasoningConfig,
 ) -> RelationPredictionResult {
+  ignore(config)
   let all_scores : Array[Double] = []
   let mut max_score = 0.0
   let mut best_relation = RelationType::Unknown

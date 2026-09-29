@@ -212,6 +212,7 @@ pub fn detect_column_boundaries(
   page_width : Int,
   layout_type : LayoutType,
 ) -> Array[Int] {
+  ignore(text_lines)
   let boundaries : Array[Int] = []
   boundaries.push(0)
   match layout_type {
@@ -291,7 +292,7 @@ pub fn detect_list_item(line : TextLineAttributes) -> ListItemInfo {
   }
   // 检测数字编号 (1. 2. 3. 或 1) 2) 3))
   let mut num_end = 0
-  let mut has_number = true
+  let mut _has_number = true
   for i in 0..<text.length() {
     let c = text[i]
     if c >= '0' && c <= '9' {
@@ -396,6 +397,7 @@ pub fn smart_reading_order(
   layout_type : LayoutType,
   column_boundaries : Array[Int],
 ) -> Array[Int] raise @types.LoadError {
+  ignore(column_boundaries)
   // 输入验证
   if elements.length() == 0 {
     raise @types.LoadError::DecodeFailed(

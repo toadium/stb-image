@@ -278,6 +278,7 @@ pub fn ocr_postprocess(
   dictionary? : Dictionary,
   ngram_model? : NgramModel,
 ) -> OcrResult raise @types.LoadError {
+  ignore(ngram_model)
   // 输入验证
   if result.characters.length() == 0 && result.text.length() == 0 {
     raise @types.LoadError::DecodeFailed(

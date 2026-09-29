@@ -61,7 +61,7 @@ test "evaluate_surface_quality: evaluates quality with defects" {
 test "evaluate_surface_quality: no defects gives excellent grade" {
   let config = create_default_industrial_config()
   let image : Array[Double] = []
-  for i in 0..<10000 {
+  for _ in 0..<10000 {
     image.push(128.0)
   }
   let quality = evaluate_surface_quality(image, 100, 100, [], config)
@@ -76,7 +76,7 @@ test "detect_anomalies: detects difference from reference" {
   let config = create_default_industrial_config()
   let image : Array[Double] = []
   let reference : Array[Double] = []
-  for i in 0..<1000 {
+  for _ in 0..<1000 {
     image.push(100.0)
     reference.push(100.0)
   }
@@ -90,7 +90,7 @@ test "detect_anomalies: detects anomaly" {
   let config = create_default_industrial_config()
   let image : Array[Double] = []
   let reference : Array[Double] = []
-  for i in 0..<1000 {
+  for _ in 0..<1000 {
     image.push(200.0)
     reference.push(100.0)
   }

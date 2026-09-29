@@ -181,8 +181,8 @@ fn binarize_scanline(pixels : Array[Int]) -> Array[Int] {
 fn decode_ean13_from_binary(
   binary : Array[Int],
   y : Int,
-  img_width : Int,
-  img_height : Int,
+  _img_width : Int,
+  _img_height : Int,
 ) -> BarcodeResult? {
   let w = binary.length()
   if w < 95 { // EAN-13 至少需要 95 个模块

@@ -457,6 +457,7 @@ pub fn dehaze_image(
   height : Int,
   config : ImageRestorationConfig,
 ) -> DehazingResult {
+  ignore(config)
   let dehazed : Array[Double] = []
   let transmission : Array[Double] = []
   let atmospheric : Array[Double] = []

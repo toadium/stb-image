@@ -400,19 +400,19 @@ pub fn structure_based_filter(
   // 筛选候选字
   let candidates : Array[ChineseCharInfo] = []
   for info in char_db {
-    let mut score = 0
+    let mut _score = 0
     // 结构类型匹配
     if info.structure_type == estimated_structure {
-      score += 3
+      _score += 3
     }
     // 复杂度匹配
     if info.complexity == estimated_complexity {
-      score += 2
+      _score += 2
     } else if (info.complexity - estimated_complexity).abs() <= 1 {
-      score += 1
+      _score += 1
     }
     // 常用等级（优先常用字）
-    score += (6 - info.common_grade).max(0)
+    _score += (6 - info.common_grade).max(0)
     candidates.push(info)
     // 按分数排序（简单冒泡）
     let mut i = candidates.length() - 1
@@ -754,7 +754,7 @@ fn match_enhanced_template(
   char_img : @types.Image,
   templates : Array[(String, Array[Double])],
   candidates : Array[ChineseCharInfo],
-  stroke_features : Array[Double],
+  _stroke_features : Array[Double],
   cfg : EnhancedChineseOcrConfig,
 ) -> (String, Double) {
   let w = char_img.width

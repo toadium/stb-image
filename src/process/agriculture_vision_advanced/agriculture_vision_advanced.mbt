@@ -223,6 +223,7 @@ pub fn detect_crops(
   height : Int,
   config : AgricultureVisionConfig,
 ) -> Array[CropDetectionResult] {
+  ignore(image)
   let crops : Array[CropDetectionResult] = []
 
   let mut state = 42
@@ -271,6 +272,7 @@ pub fn detect_diseases(
   height : Int,
   config : AgricultureVisionConfig,
 ) -> Array[DiseaseDetectionResult] {
+  ignore(image)
   let diseases : Array[DiseaseDetectionResult] = []
 
   let disease_types = [
@@ -338,6 +340,9 @@ pub fn detect_pests(
   height : Int,
   config : AgricultureVisionConfig,
 ) -> Array[PestDetectionResult] {
+  ignore(height)
+  ignore(image)
+  ignore(width)
   let pests : Array[PestDetectionResult] = []
 
   let pest_types = [
@@ -396,6 +401,7 @@ pub fn predict_yield(
   health_index : Double,
   config : AgricultureVisionConfig,
 ) -> YieldPredictionResult {
+  ignore(config)
   // 简化的产量预测
   let base_yields = [5.0, 6.0, 8.0, 3.0, 2.5, 40.0, 20.0, 30.0, 15.0, 5.0]
   let crop_idx = match crop_type {
@@ -439,6 +445,7 @@ pub fn analyze_soil(
   soil_image : Array[Double],
   config : AgricultureVisionConfig,
 ) -> SoilAnalysisResult {
+  ignore(soil_image)
   // 简化的土壤分析
   let mut state = 42
   state = (state * 11035 + 12345) % 1000000

@@ -17,21 +17,6 @@ fn log_approx(x : Double) -> Double {
   }
 }
 
-///|
-fn sqrt_approx(x : Double) -> Double {
-  if x <= 0.0 {
-    0.0
-  } else {
-    let mut z = x
-    let mut y = (z + 1.0) / 2.0
-    for _ in 0..<20 {
-      z = y
-      y = (z + x / z) / 2.0
-    }
-    y
-  }
-}
-
 // 天体检测、星系分类、测光、光谱分析、图像叠加、宇宙学参数估计
 
 ///|
@@ -260,6 +245,7 @@ pub fn detect_celestial_objects(
   height : Int,
   config : AstronomyImagingConfig,
 ) -> Array[DetectedCelestialObject] {
+  ignore(image)
   let objects : Array[DetectedCelestialObject] = []
 
   let mut state = 42
@@ -327,6 +313,7 @@ pub fn classify_galaxies(
   objects : Array[DetectedCelestialObject],
   config : AstronomyImagingConfig,
 ) -> Array[GalaxyClassificationResult] {
+  ignore(config)
   let results : Array[GalaxyClassificationResult] = []
 
   let morphologies = [

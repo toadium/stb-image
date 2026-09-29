@@ -214,6 +214,7 @@ pub fn estimate_camera_pose(
   config : SLAMConfig,
   prev_pose : CameraPose,
 ) -> CameraPose {
+  ignore(config)
   // 简化的位姿估计：基于平均视差
   let avg_parallax = tracking_result.parallax
   let forward_motion = avg_parallax * 0.01
@@ -321,6 +322,7 @@ pub fn detect_loop_closure(
 ///|
 /// 初始化 SLAM 系统
 pub fn initialize_slam(config : SLAMConfig) -> SLAMState {
+  ignore(config)
   let initial_pose = CameraPose::{
     position: [0.0, 0.0, 0.0],
     rotation: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],

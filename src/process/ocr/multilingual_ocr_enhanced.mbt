@@ -436,6 +436,7 @@ pub fn language_model_postprocess(
   char_languages : Array[String],
   confidences : Array[Double],
 ) -> (String, Array[Double]) {
+  ignore(char_languages)
   // 简化版语言模型：基于常见模式的纠错
   let corrected_text = text
   let adjusted_confidences = confidences

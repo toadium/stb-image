@@ -562,6 +562,7 @@ pub fn extract_keyframes(
   fps : Double,
   method_type? : String = "auto",
 ) -> Array[Keyframe] {
+  ignore(method_type)
   let keyframes : Array[Keyframe] = []
 
   if frames.length() == 0 {

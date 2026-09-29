@@ -304,6 +304,7 @@ pub fn pca_reduce(
   num_components : Int,
   config : DimensionalityReductionConfig,
 ) -> PCAResult {
+  ignore(config)
   let num_samples = data.length()
   let original_dim = if num_samples > 0 { data[0].length() } else { 0 }
 
@@ -431,20 +432,6 @@ pub fn pca_reduce(
 }
 
 ///|
-/// 简化的平方根（降维模块）
-fn sqrt_approx_dr(x : Double) -> Double {
-  if x <= 0.0 {
-    0.0
-  } else {
-    let mut z = x
-    let mut y = (z + 1.0) / 2.0
-    for _ in 0..<20 {
-      z = y
-      y = (z + x / z) / 2.0
-    }
-    y
-  }
-}
 
 ///|
 /// 简化的t-SNE（使用随机初始化和简单梯度下降）

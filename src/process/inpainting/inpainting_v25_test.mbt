@@ -1,15 +1,5 @@
 // v25.0.0 图像修复增强测试 - inpainting 模块
-// 图像修复/去雾/去雨：Telea/NavierStokes/FastMarching/PatchMatch、暗通道/CLAHE去雾、形态学去雨
-
-///|
-fn make_inpaint_img(w : Int, h : Int, value : Byte) -> @types.Image {
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(Array::make(w * h, value)),
-  }
-}
+// 图像修复/去雾/去雨：Telea/NavierStrokes/FastMarching/PatchMatch、暗通道/CLAHE去雾、形态学去雨
 
 ///|
 fn make_varied_inpaint_img(w : Int, h : Int) -> @types.Image {

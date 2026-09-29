@@ -1,20 +1,6 @@
 // v33.0.0 人脸识别与表情识别测试 — face_recognition 模块 12 函数
 
 ///|
-fn create_solid_fr(w : Int, h : Int, v : Int) -> @types.Image {
-  let data : Array[Byte] = []
-  for _ in 0..<(w * h) {
-    data.push(v.to_byte())
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(data),
-  }
-}
-
-///|
 fn create_gradient_fr(w : Int, h : Int) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {

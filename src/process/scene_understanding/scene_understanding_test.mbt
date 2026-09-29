@@ -13,22 +13,6 @@ fn create_test_image_su(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn create_gradient_image_su(w : Int, h : Int) -> @types.Image {
-  let data : Array[Byte] = []
-  for y in 0..<h {
-    for x in 0..<w {
-      data.push(((x + y) % 256).to_byte())
-    }
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(data),
-  }
-}
-
-///|
 test "create_default_scene_config: returns ViT+BLIP config" {
   let config = create_default_scene_config()
   assert_eq(config.classification_threshold, 0.5)

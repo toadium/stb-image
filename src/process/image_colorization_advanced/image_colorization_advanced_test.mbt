@@ -24,8 +24,8 @@ test "automatic_colorization: 自动上色" {
 test "reference_based_colorization: 参考图上色" {
   let config = create_default_colorization_config()
   let gray = [0.1, 0.3, 0.5, 0.7]
-  let ref = [0.9, 0.8, 0.7, 0.6]
-  let result = reference_based_colorization(gray, ref, 2, 2, config)
+  let ref_colors = [0.9, 0.8, 0.7, 0.6]
+  let result = reference_based_colorization(gray, ref_colors, 2, 2, config)
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.matched_regions >= 0)

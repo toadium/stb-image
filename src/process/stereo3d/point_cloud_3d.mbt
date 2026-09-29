@@ -387,7 +387,7 @@ pub fn icp_registration(
     iterations = iter + 1
     // 简化版：计算平均误差
     let mut total_error = 0.0
-    let mut inliers = 0
+    let mut _inliers = 0
     let sample_count = if source.num_points < 100 {
       source.num_points
     } else {
@@ -404,7 +404,7 @@ pub fn icp_registration(
       let dist = (dx * dx + dy * dy + dz * dz).sqrt()
       total_error += dist
       if dist < tolerance * 10.0 {
-        inliers += 1
+        _inliers += 1
       }
     }
     let rmse = if sample_count > 0 {

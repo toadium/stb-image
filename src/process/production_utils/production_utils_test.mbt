@@ -54,13 +54,13 @@ test "validate_channels_or_raise: 匹配通道不抛异常" {
 ///|
 test "validate_range: 有效范围" {
   let result = validate_range(0.5, 0.0, 1.0, "test")
-  assert_true(result.is_ok())
+  assert_true(result is Ok(_))
 }
 
 ///|
 test "validate_range: 无效范围" {
   let result = validate_range(1.5, 0.0, 1.0, "test")
-  assert_true(result.is_err())
+  assert_true(result is Err(_))
 }
 
 ///|
@@ -74,13 +74,13 @@ test "validate_range_or_raise: 有效范围不抛异常" {
 ///|
 test "validate_int_range: 有效范围" {
   let result = validate_int_range(5, 0, 10, "test")
-  assert_true(result.is_ok())
+  assert_true(result is Ok(_))
 }
 
 ///|
 test "validate_int_range: 无效范围" {
   let result = validate_int_range(15, 0, 10, "test")
-  assert_true(result.is_err())
+  assert_true(result is Err(_))
 }
 
 ///|

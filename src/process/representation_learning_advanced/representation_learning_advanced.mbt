@@ -323,21 +323,6 @@ fn decode_simple(
 }
 
 ///|
-/// 近似正弦函数（表示学习模块）
-fn sin_approx_rl(x : Double) -> Double {
-  // 简化的正弦近似
-  let mut result = x
-  let mut term = x
-  for i in 1..<10 {
-    term = term * x * x / (2.0 * i.to_double() * (2.0 * i.to_double() + 1.0))
-    if i % 2 == 1 {
-      result -= term
-    } else {
-      result += term
-    }
-  }
-  result
-}
 
 ///|
 /// 自编码器训练

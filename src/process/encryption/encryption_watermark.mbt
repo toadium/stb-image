@@ -344,7 +344,7 @@ pub fn extract_watermark_lsb(
   let h = img.height
   let total = w * h
   let watermark : Array[Byte] = []
-  let bits_needed = watermark_length * 8
+  let _bits_needed = watermark_length * 8
 
   for byte_idx in 0..<watermark_length {
     let mut byte_value = 0

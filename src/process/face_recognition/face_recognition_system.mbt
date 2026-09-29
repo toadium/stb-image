@@ -170,6 +170,7 @@ pub fn detect_faces(
   img : @types.Image,
   config : FaceRecognitionConfig,
 ) -> Array[FaceDetectionResult] {
+  ignore(config)
   let w = img.width
   let h = img.height
   let faces : Array[FaceDetectionResult] = []

@@ -259,8 +259,8 @@ pub fn create_default_feature_learning_config() -> FeatureLearningConfig {
 /// 简化的特征提取（使用统计特征）
 fn extract_statistical_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  _width : Int,
+  _height : Int,
 ) -> Array[Double] {
   let features : Array[Double] = []
 

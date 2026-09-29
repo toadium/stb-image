@@ -2,16 +2,6 @@
 // Sauvola 阈值、Niblack 阈值、OCR 自适应阈值
 
 ///|
-/// 辅助函数：限制字节范围
-fn clamp_byte_ocr(v : Int) -> Byte {
-  if v < 0 {
-    b'\x00'
-  } else if v > 255 {
-    b'\xFF'
-  } else {
-    v.to_byte()
-  }
-}
 
 ///|
 /// 辅助函数：计算局部窗口的均值和标准差

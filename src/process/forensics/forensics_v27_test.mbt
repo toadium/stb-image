@@ -37,7 +37,7 @@ fn create_noise_image_v27(w : Int, h : Int) -> @types.Image {
 /// 创建渐变图像
 fn create_gradient_image_v27(w : Int, h : Int) -> @types.Image {
   let data : Array[Byte] = []
-  for y in 0..<h {
+  for _ in 0..<h {
     for x in 0..<w {
       let v = x * 255 / w % 256
       data.push(v.to_byte())

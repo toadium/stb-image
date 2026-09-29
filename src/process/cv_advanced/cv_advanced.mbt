@@ -231,6 +231,7 @@ pub fn recognize_action(
   num_frames : Int,
   config : CVAdvancedConfig,
 ) -> ActionRecognitionResult {
+  ignore(config)
   let actions = [
     "running", "walking", "jumping", "sitting", "standing", "lying", "eating", "drinking",
     "reading", "writing",
@@ -282,6 +283,8 @@ pub fn parse_scene(
   height : Int,
   config : CVAdvancedConfig,
 ) -> SceneParsingResult {
+  ignore(height)
+  ignore(width)
   let scene_types = [
     "indoor", "outdoor", "urban", "rural", "forest", "beach", "mountain", "desert",
     "snow", "water",

@@ -658,6 +658,7 @@ pub fn calculate_segmentation_metrics(
   ground_truth : Array[Int],
   num_classes : Int,
 ) -> SegmentationMetrics {
+  ignore(num_classes)
   let total = prediction.length()
   let mut tp = 0
   let mut fp = 0

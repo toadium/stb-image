@@ -391,6 +391,7 @@ pub fn fuse_laplacian_pyramid(
   images : Array[@types.Image],
   levels : Int,
 ) -> @types.Image {
+  ignore(levels)
   if images.length() < 2 {
     return if images.length() == 1 {
       images[0]

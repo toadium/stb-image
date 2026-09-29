@@ -322,6 +322,7 @@ pub fn visual_servoing(
   desired_pose : ObjectPose,
   config : RobotVisionConfig,
 ) -> Array[Double] {
+  ignore(config)
   // 简化的视觉伺服：计算位置误差并生成控制量
   let error : Array[Double] = []
   error.push(desired_pose.position[0] - current_pose.position[0])
@@ -345,6 +346,7 @@ pub fn generate_point_cloud(
   rgb_image : Array[Array[Int]],
   config : RobotVisionConfig,
 ) -> PointCloudData {
+  ignore(rgb_image)
   let points : Array[Array[Double]] = []
   let colors : Array[Array[Int]] = []
   let normals : Array[Array[Double]] = []

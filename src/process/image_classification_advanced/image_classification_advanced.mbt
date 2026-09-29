@@ -278,6 +278,8 @@ pub fn classify_image(
   height : Int,
   config : ImageClassificationConfig,
 ) -> ClassificationResult {
+  ignore(height)
+  ignore(width)
   let features = extract_simple_features(image, config.num_classes)
 
   // 简化的分类逻辑：基于特征的简单加权
@@ -359,6 +361,9 @@ pub fn classify_multi_label(
   threshold : Double,
   config : ImageClassificationConfig,
 ) -> MultiLabelClassificationResult {
+  ignore(config)
+  ignore(height)
+  ignore(width)
   let features = extract_simple_features(image, num_labels)
 
   let probabilities : Array[Double] = []

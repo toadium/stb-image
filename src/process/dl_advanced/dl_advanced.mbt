@@ -238,6 +238,7 @@ pub fn compute_self_attention(
   seq_length : Int,
   head_dim : Int,
 ) -> AttentionWeights {
+  ignore(value)
   let weights : Array[Array[Double]] = []
 
   // 简化的注意力计算

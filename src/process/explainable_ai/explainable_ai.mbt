@@ -394,8 +394,8 @@ pub fn generate_roc_curve(
 
     let mut tp = 0
     let mut fp = 0
-    let mut tn = 0
-    let mut false_neg = 0
+    let mut _tn = 0
+    let mut _false_neg = 0
 
     for i in 0..<total {
       let predicted = if scores[i] >= threshold { 1 } else { 0 }
@@ -404,9 +404,9 @@ pub fn generate_roc_curve(
       } else if predicted == 1 && labels[i] == 0 {
         fp += 1
       } else if predicted == 0 && labels[i] == 0 {
-        tn += 1
+        _tn += 1
       } else {
-        false_neg += 1
+        _false_neg += 1
       }
     }
 

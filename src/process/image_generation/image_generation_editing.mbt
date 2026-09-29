@@ -235,6 +235,7 @@ pub fn inpaint_image(
   mask : @types.Image,
   config : EditingConfig,
 ) -> EditingResult {
+  ignore(config)
   let w = img.width
   let h = img.height
   let total = w * h
@@ -295,6 +296,7 @@ pub fn outpaint_image(
   new_height : Int,
   config : EditingConfig,
 ) -> EditingResult {
+  ignore(config)
   let w = img.width
   let h = img.height
   let _ = new_width * new_height
@@ -470,6 +472,7 @@ pub fn remove_background(
   img : @types.Image,
   config : EditingConfig,
 ) -> EditingResult {
+  ignore(config)
   let w = img.width
   let h = img.height
   let _ = w * h

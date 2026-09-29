@@ -411,7 +411,7 @@ pub fn recognize_multilingual(
 /// 多语言字符分割
 fn segment_multilingual_chars(
   img : @types.Image,
-  cfg : MultilingualOcrConfig,
+  _cfg : MultilingualOcrConfig,
 ) -> Array[(Int, Int, Int, Int)] {
   let w = img.width
   let h = img.height

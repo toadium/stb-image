@@ -719,6 +719,9 @@ pub fn save_model(
   weights : Array[Double],
   path : String,
 ) -> Bool {
+  ignore(config)
+  ignore(path)
+  ignore(weights)
   // 简化版：实际应序列化权重
   true
 }
@@ -726,6 +729,7 @@ pub fn save_model(
 ///|
 /// 模型加载
 pub fn load_model(path : String) -> DLCnnModelConfig? {
+  ignore(path)
   // 简化版：实际应反序列化权重
   None
 }

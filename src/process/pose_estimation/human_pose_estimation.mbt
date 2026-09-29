@@ -190,6 +190,7 @@ pub fn detect_keypoints(
   img : @types.Image,
   config : PoseEstimationConfig,
 ) -> Array[HumanPose] {
+  ignore(config)
   let w = img.width
   let h = img.height
   let poses : Array[HumanPose] = []
@@ -451,6 +452,7 @@ pub fn recognize_action(
   poses : Array[HumanPose],
   config : ActionRecognitionConfig,
 ) -> ActionRecognitionResult {
+  ignore(config)
   if poses.length() == 0 {
     return ActionRecognitionResult::{
       action_name: "unknown",

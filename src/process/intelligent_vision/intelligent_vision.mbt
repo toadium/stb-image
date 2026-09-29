@@ -248,6 +248,7 @@ pub fn detect_lanes(
   image : @types.Image,
   config : IntelligentVisionConfig,
 ) -> LaneDetectionResult {
+  ignore(config)
   let w = image.width
   let h = image.height
   let lanes : Array[Array[Array[Double]]] = []
@@ -444,6 +445,7 @@ pub fn detect_stars(
   image : @types.Image,
   config : IntelligentVisionConfig,
 ) -> StarDetectionResult {
+  ignore(config)
   let w = image.width
   let h = image.height
   let _ = w * h

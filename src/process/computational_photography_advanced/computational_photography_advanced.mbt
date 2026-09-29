@@ -238,6 +238,7 @@ pub fn create_hdr_image(
   height : Int,
   config : ComputationalPhotographyConfig,
 ) -> HDRImage {
+  ignore(config)
   let hdr_data : Array[Double] = []
   let num_pixels = width * height * 3
 
@@ -405,6 +406,7 @@ pub fn multi_frame_denoise(
   height : Int,
   config : ComputationalPhotographyConfig,
 ) -> MultiFrameDenoisingResult {
+  ignore(config)
   let denoised : Array[Double] = []
   let num_pixels = width * height * 3
 
