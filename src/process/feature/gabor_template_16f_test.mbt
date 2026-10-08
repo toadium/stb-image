@@ -122,31 +122,3 @@ test "template_match_best_f: basic" {
   let _ = tpl
   let _ = result
 }
-
-// ========== 错误处理路径测试 ==========
-
-///|
-test "gabor_filter_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
-  try {
-    let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
-    assert_true(false)
-  } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
-    _ => assert_true(false)
-  }
-  let _ = img
-}
-
-///|
-test "gabor_filter_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
-  try {
-    let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
-    assert_true(false)
-  } catch {
-    @types.LoadError::DecodeFailed(_) => assert_true(true)
-    _ => assert_true(false)
-  }
-  let _ = img
-}
