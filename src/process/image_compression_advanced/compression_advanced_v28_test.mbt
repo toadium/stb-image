@@ -13,7 +13,7 @@ fn create_flat_data(w : Int, h : Int, value : Double) -> Array[Double] {
 ///|
 fn create_gradient_data(w : Int, h : Int) -> Array[Double] {
   let data : Array[Double] = []
-  for y in 0..<h {
+  for _ in 0..<h {
     for x in 0..<w {
       data.push((x * 255 / w).to_double())
     }

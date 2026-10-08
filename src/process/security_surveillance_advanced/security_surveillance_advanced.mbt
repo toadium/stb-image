@@ -195,6 +195,8 @@ pub fn detect_people(
   height : Int,
   config : SecuritySurveillanceConfig,
 ) -> Array[DetectedPerson] {
+  ignore(config)
+  ignore(image)
   let people : Array[DetectedPerson] = []
 
   let mut state = 42
@@ -301,6 +303,7 @@ pub fn analyze_behavior(
   person : DetectedPerson,
   config : SecuritySurveillanceConfig,
 ) -> BehaviorAnalysisResult {
+  ignore(config)
   // 简化的行为分析：基于速度
   let speed = person.velocity[0] * person.velocity[0] +
     person.velocity[1] * person.velocity[1]
@@ -333,7 +336,7 @@ pub fn analyze_behavior(
 
 ///|
 /// 近似平方根
-fn sqrt_approx(x : Double) -> Double {
+fn _sqrt_approx(x : Double) -> Double {
   if x <= 0.0 {
     0.0
   } else {
@@ -355,6 +358,7 @@ pub fn analyze_crowd(
   height : Int,
   config : SecuritySurveillanceConfig,
 ) -> CrowdAnalysisResult {
+  ignore(config)
   let num_people = people.length()
   let area = width.to_double() * height.to_double()
   let density = num_people.to_double() / area * 10000.0
@@ -383,6 +387,10 @@ pub fn recognize_license_plate(
   height : Int,
   config : SecuritySurveillanceConfig,
 ) -> LicensePlateResult {
+  ignore(config)
+  ignore(height)
+  ignore(width)
+  ignore(image)
   // 简化的车牌识别：生成虚拟车牌号
   let plate_chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
   let mut plate = ""

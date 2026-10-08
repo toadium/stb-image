@@ -172,3 +172,4 @@ pub(all) enum SimilarityMetric {
 // Type aliases
 
 // Traits
+

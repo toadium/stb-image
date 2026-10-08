@@ -118,7 +118,7 @@ fn Vp8BoolDecoder::read_bool(self : Vp8BoolDecoder, prob : Int) -> Int {
 }
 
 ///|
-fn Vp8BoolDecoder::read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
+fn Vp8BoolDecoder::_read_literal(self : Vp8BoolDecoder, num_bits : Int) -> Int {
   // 读取指定位数的字面值（概率 128）
   let mut v = 0
   for _ in 0..<num_bits {
@@ -421,13 +421,13 @@ fn vp8_parse_dc_coeffs_16x16(
 ///|
 priv struct Vp8FrameHeader {
   key_frame : Bool
-  version : Int
-  show_frame : Bool
-  first_part_size : Int
+  _version : Int
+  _show_frame : Bool
+  _first_part_size : Int
   width : Int
   height : Int
-  horizontal_scale : Int
-  vertical_scale : Int
+  _horizontal_scale : Int
+  _vertical_scale : Int
 }
 
 ///|
@@ -465,13 +465,13 @@ fn parse_vp8_frame_header(br : Vp8BitReader) -> Vp8FrameHeader {
 
   Vp8FrameHeader::{
     key_frame,
-    version,
-    show_frame,
-    first_part_size,
+    _version: version,
+    _show_frame: show_frame,
+    _first_part_size: first_part_size,
     width,
     height,
-    horizontal_scale,
-    vertical_scale,
+    _horizontal_scale: horizontal_scale,
+    _vertical_scale: vertical_scale,
   }
 }
 
@@ -859,7 +859,7 @@ fn vp8_intra_predict_16x16(
 ///   left[2]     P[2][0]   P[2][1]   P[2][2]   P[2][3]
 ///   left[3]     P[3][0]   P[3][1]   P[3][2]   P[3][3]
 ///   left[4..7]
-fn vp8_intra_predict_4x4(
+fn _vp8_intra_predict_4x4(
   mode : Vp8I4x4Mode,
   above : Array[Int],
   left : Array[Int],
@@ -1067,7 +1067,7 @@ fn vp8_parse_i16x16_mode(
 
 ///|
 /// 解析 I4x4 预测模式（10种模式）
-fn vp8_parse_i4x4_mode(
+fn _vp8_parse_i4x4_mode(
   bd : Vp8BoolDecoder,
   probs : Vp8MbModeProbs,
 ) -> Vp8I4x4Mode {
@@ -1149,7 +1149,7 @@ fn vp8_parse_uv_mode(
 ///|
 /// 解析子宏块类型（I16x16 vs I4x4）
 /// 返回 true 表示使用 I16x16，false 表示使用 I4x4
-fn vp8_parse_submb_type(bd : Vp8BoolDecoder, probs : Vp8MbModeProbs) -> Bool {
+fn _vp8_parse_submb_type(bd : Vp8BoolDecoder, probs : Vp8MbModeProbs) -> Bool {
   let use_i16x16 = bd.read_bool(probs.submb_type_prob) == 1
   if use_i16x16 {
     probs.submb_type_count += 1
@@ -1223,18 +1223,18 @@ fn Vp8MbModeProbs::update(self : Vp8MbModeProbs) -> Unit {
 /// VP8 环路滤波参数
 priv struct Vp8LoopFilterParams {
   filter_level : Int // 基础滤波级别 (0-63)
-  inner_filter_level : Int // 内部滤波级别
-  sharpness_level : Int // 锐化级别 (0-7)
+  _inner_filter_level : Int // 内部滤波级别
+  _sharpness_level : Int // 锐化级别 (0-7)
   segment_deltas : Array[Int] // 每个 segment 的滤波增量
   mode_ref_deltas : Array[Int] // 模式/参考帧的滤波增量
 }
 
 ///|
-fn Vp8LoopFilterParams::new() -> Vp8LoopFilterParams {
+fn Vp8LoopFilterParams::_new() -> Vp8LoopFilterParams {
   Vp8LoopFilterParams::{
     filter_level: 0,
-    inner_filter_level: 0,
-    sharpness_level: 0,
+    _inner_filter_level: 0,
+    _sharpness_level: 0,
     segment_deltas: [0, 0, 0, 0],
     mode_ref_deltas: [0, 0, 0, 0],
   }
@@ -1242,7 +1242,7 @@ fn Vp8LoopFilterParams::new() -> Vp8LoopFilterParams {
 
 ///|
 /// 计算宏块的实际滤波级别
-fn vp8_calc_filter_level(
+fn _vp8_calc_filter_level(
   params : Vp8LoopFilterParams,
   segment_id : Int,
   is_i16x16 : Bool,
@@ -1549,12 +1549,6 @@ fn Vp8MotionVector::new() -> Vp8MotionVector {
 }
 
 ///|
-/// 宏块类型（帧内/帧间）
-priv enum Vp8MbType {
-  MbIntra // 帧内预测
-  MbInter // 帧间预测（运动补偿）
-  MbSkip // 跳过宏块（使用零运动向量，无残差）
-}
 
 ///|
 /// 参考帧管理
@@ -1614,7 +1608,7 @@ fn Vp8ReferenceFrames::update(
 ///|
 /// 运动补偿（整数像素精度）
 /// 从参考帧中获取 16x16 宏块的预测像素
-fn vp8_motion_compensate_16x16(
+fn _vp8_motion_compensate_16x16(
   ref_y : Array[Int],
   ref_u : Array[Int],
   ref_v : Array[Int],
@@ -1988,10 +1982,11 @@ fn vp8_parse_full_motion_vector(
 ///|
 /// 解析运动向量（简化实现，使用默认概率）
 /// VP8 运动向量使用 1/4 像素精度，这里简化为整数精度
-fn vp8_parse_motion_vector(
+fn _vp8_parse_motion_vector(
   bd : Vp8BoolDecoder,
   pred_mv : Vp8MotionVector,
 ) -> Vp8MotionVector {
+  ignore(bd)
   let mv = Vp8MotionVector::new()
   // 简化实现：使用预测运动向量 + 小的残差
   // 完整实现需要解析运动向量残差（使用 Golomb 编码）

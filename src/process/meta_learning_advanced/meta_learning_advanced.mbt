@@ -305,6 +305,7 @@ pub fn train_protonet(
   query_data : Array[Array[Double]],
   config : MetaLearningConfig,
 ) -> ProtoNetResult {
+  ignore(query_data)
   let num_classes = config.num_way
   let feature_dim = if support_data.length() > 0 {
     support_data[0].length()
@@ -389,6 +390,7 @@ pub fn train_relation_net(
   query_data : Array[Double],
   config : MetaLearningConfig,
 ) -> RelationNetResult {
+  ignore(support_data)
   let relation_scores : Array[Array[Double]] = []
   for _ in 0..<query_data.length() {
     let scores : Array[Double] = []

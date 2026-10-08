@@ -2,7 +2,7 @@
 // 仿射变换/平移估计/图像对齐
 
 ///|
-fn make_reg_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn _make_reg_img(w : Int, h : Int, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

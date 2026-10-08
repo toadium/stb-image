@@ -370,6 +370,7 @@ pub fn augment_random_rotation(
   sample : DLTrainingSample,
   angle_range : Double,
 ) -> DLTrainingSample {
+  ignore(angle_range)
   // 简化版：实际应旋转图像
   sample
 }
@@ -380,6 +381,7 @@ pub fn augment_random_shift(
   sample : DLTrainingSample,
   shift_range : Double,
 ) -> DLTrainingSample {
+  ignore(shift_range)
   // 简化版：实际应平移图像
   sample
 }
@@ -390,6 +392,7 @@ pub fn augment_random_scale(
   sample : DLTrainingSample,
   scale_range : Double,
 ) -> DLTrainingSample {
+  ignore(scale_range)
   // 简化版：实际应缩放图像
   sample
 }
@@ -626,6 +629,7 @@ pub fn split_train_validation(
   validation_split : Double,
   shuffle : Bool,
 ) -> (Array[DLTrainingSample], Array[DLTrainingSample]) {
+  ignore(shuffle)
   let total = samples.length()
   let val_count = (total.to_double() * validation_split).to_int()
   let train_count = total - val_count

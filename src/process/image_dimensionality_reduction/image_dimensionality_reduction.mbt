@@ -304,6 +304,7 @@ pub fn pca_reduce(
   num_components : Int,
   config : DimensionalityReductionConfig,
 ) -> PCAResult {
+  ignore(config)
   let num_samples = data.length()
   let original_dim = if num_samples > 0 { data[0].length() } else { 0 }
 
@@ -432,7 +433,7 @@ pub fn pca_reduce(
 
 ///|
 /// 简化的平方根（降维模块）
-fn sqrt_approx_dr(x : Double) -> Double {
+fn _sqrt_approx_dr(x : Double) -> Double {
   if x <= 0.0 {
     0.0
   } else {

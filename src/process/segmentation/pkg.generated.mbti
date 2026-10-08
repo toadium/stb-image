@@ -14,21 +14,21 @@ pub fn create_default_kmeans_config() -> KMeansConfig
 
 pub fn create_default_watershed_config() -> WatershedConfig
 
-pub fn grabcut_segmentation(@types.Image, Int, Int, Int, Int, GrabCutConfig) -> SemanticSegmentationResult
+pub fn grabcut_segmentation(@types.Image, Int, Int, Int, Int, GrabCutConfig) -> SemanticSegmentationResult raise @types.LoadError
 
-pub fn kmeans_segmentation(@types.Image, KMeansConfig) -> SemanticSegmentationResult
+pub fn kmeans_segmentation(@types.Image, KMeansConfig) -> SemanticSegmentationResult raise @types.LoadError
 
-pub fn otsu_threshold_value(@types.Image) -> Double
+pub fn otsu_threshold_value(@types.Image) -> Double raise @types.LoadError
 
 pub fn segmentation_report_to_string(SemanticSegmentationResult, SegmentationMetrics) -> String
 
 pub fn segmentation_to_image(SemanticSegmentationResult) -> @types.Image
 
-pub fn superpixel_segmentation(@types.Image, Int) -> SuperpixelResult
+pub fn superpixel_segmentation(@types.Image, Int) -> SuperpixelResult raise @types.LoadError
 
-pub fn threshold_segmentation(@types.Image, Double) -> SemanticSegmentationResult
+pub fn threshold_segmentation(@types.Image, Double) -> SemanticSegmentationResult raise @types.LoadError
 
-pub fn watershed_segmentation(@types.Image, WatershedConfig) -> SemanticSegmentationResult
+pub fn watershed_segmentation(@types.Image, WatershedConfig) -> SemanticSegmentationResult raise @types.LoadError
 
 // Errors
 
@@ -112,3 +112,4 @@ pub(all) struct WatershedConfig {
 // Type aliases
 
 // Traits
+

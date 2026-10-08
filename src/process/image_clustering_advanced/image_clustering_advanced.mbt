@@ -353,6 +353,7 @@ pub fn dbscan_clustering(
   min_samples : Int,
   config : ImageClusteringConfig,
 ) -> DBSCANResult {
+  ignore(config)
   let num_samples = data.length()
   let labels : Array[Int] = []
   for _ in 0..<num_samples {

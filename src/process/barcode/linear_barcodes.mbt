@@ -150,7 +150,26 @@ fn code128_char_b(code : Int) -> String {
 
 ///|
 /// 识别 Code128 条形码
-pub fn decode_code128(img : @types.Image) -> BarcodeResult? {
+pub fn decode_code128(
+  img : @types.Image,
+) -> BarcodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_code128: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_code128: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "decode_code128: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let data = img.data
@@ -301,7 +320,22 @@ fn match_code128_symbol(scan_line : Array[Int], start : Int) -> (Int, Int) {
 
 ///|
 /// 识别 UPC-A 条形码
-pub fn decode_upca(img : @types.Image) -> BarcodeResult? {
+pub fn decode_upca(img : @types.Image) -> BarcodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_upca: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_upca: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("decode_upca: 数据大小不匹配")
+  }
   // UPC-A 与 EAN-13 兼容（UPC-A 是 EAN-13 第一位为 0 的特例）
   let result = decode_ean13(img)
   match result {
@@ -390,7 +424,24 @@ let code39_start_pattern : Array[Int] = [1, 2, 1, 1, 2, 1, 2, 1, 1]
 
 ///|
 /// 识别 Code39 条形码
-pub fn decode_code39(img : @types.Image) -> BarcodeResult? {
+pub fn decode_code39(
+  img : @types.Image,
+) -> BarcodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_code39: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_code39: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("decode_code39: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let data = img.data
@@ -463,7 +514,26 @@ pub fn decode_code39(img : @types.Image) -> BarcodeResult? {
 
 ///|
 /// 通用一维码识别（自动尝试所有类型）
-pub fn decode_linear_barcode(img : @types.Image) -> Array[BarcodeResult] {
+pub fn decode_linear_barcode(
+  img : @types.Image,
+) -> Array[BarcodeResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_linear_barcode: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_linear_barcode: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "decode_linear_barcode: 数据大小不匹配",
+    )
+  }
   let results : Array[BarcodeResult] = []
   // 尝试 EAN-13
   let ean13 = decode_ean13(img)

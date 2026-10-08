@@ -84,7 +84,7 @@ test "detect_scene_change: 相同帧无切换" {
 test "detect_scene_change: 差异大帧有切换" {
   let frame1 = make_frame(32, 32, b'\x00')
   let frame2 = make_frame(32, 32, b'\xFF')
-  let (changed, score) = detect_scene_change(frame1, frame2)
+  let (_, score) = detect_scene_change(frame1, frame2)
   assert_true(score > 0.0)
 }
 

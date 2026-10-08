@@ -465,6 +465,7 @@ pub fn feature_based_registration(
   img2 : @types.Image,
   config : RegistrationConfigAdvanced,
 ) -> RegistrationResultAdvanced {
+  ignore(config)
   // 检测特征点
   let points1 = detect_harris_corners(img1, 100000.0)
   let points2 = detect_harris_corners(img2, 100000.0)

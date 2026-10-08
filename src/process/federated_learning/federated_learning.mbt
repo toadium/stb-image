@@ -541,7 +541,7 @@ pub fn federated_learning_report_to_string(
 // 辅助函数
 
 ///|
-fn log_approx(x : Double) -> Double {
+fn _log_approx(x : Double) -> Double {
   // 简化的自然对数近似
   let _ = x
   let mut result = 0.0

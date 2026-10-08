@@ -33,7 +33,39 @@ pub fn multispectral_new(
 ///|
 /// 计算 NDVI（归一化植被指数）
 /// NDVI = (NIR - Red) / (NIR + Red)
-pub fn compute_ndvi(nir : @types.Image, red : @types.Image) -> @types.Image {
+pub fn compute_ndvi(
+  nir : @types.Image,
+  red : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if nir.width <= 0 || nir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndvi: 图像尺寸必须大于0",
+    )
+  }
+  if nir.channels < 1 || nir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndvi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_nir = nir.width * nir.height * nir.channels
+  if nir.data.length() != expected_size_nir {
+    raise @types.LoadError::DecodeFailed("compute_ndvi: 数据大小不匹配")
+  }
+  if red.width <= 0 || red.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndvi: 图像尺寸必须大于0",
+    )
+  }
+  if red.channels < 1 || red.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndvi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_red = red.width * red.height * red.channels
+  if red.data.length() != expected_size_red {
+    raise @types.LoadError::DecodeFailed("compute_ndvi: 数据大小不匹配")
+  }
   if nir.width != red.width || nir.height != red.height {
     return nir
   }
@@ -63,7 +95,39 @@ pub fn compute_ndvi(nir : @types.Image, red : @types.Image) -> @types.Image {
 ///|
 /// 计算 NDWI（归一化水指数）
 /// NDWI = (Green - NIR) / (Green + NIR)
-pub fn compute_ndwi(green : @types.Image, nir : @types.Image) -> @types.Image {
+pub fn compute_ndwi(
+  green : @types.Image,
+  nir : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if green.width <= 0 || green.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndwi: 图像尺寸必须大于0",
+    )
+  }
+  if green.channels < 1 || green.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndwi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_green = green.width * green.height * green.channels
+  if green.data.length() != expected_size_green {
+    raise @types.LoadError::DecodeFailed("compute_ndwi: 数据大小不匹配")
+  }
+  if nir.width <= 0 || nir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndwi: 图像尺寸必须大于0",
+    )
+  }
+  if nir.channels < 1 || nir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndwi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_nir = nir.width * nir.height * nir.channels
+  if nir.data.length() != expected_size_nir {
+    raise @types.LoadError::DecodeFailed("compute_ndwi: 数据大小不匹配")
+  }
   if green.width != nir.width || green.height != nir.height {
     return green
   }
@@ -92,7 +156,39 @@ pub fn compute_ndwi(green : @types.Image, nir : @types.Image) -> @types.Image {
 ///|
 /// 计算 NDBI（归一化建筑指数）
 /// NDBI = (SWIR - NIR) / (SWIR + NIR)
-pub fn compute_ndbi(swir : @types.Image, nir : @types.Image) -> @types.Image {
+pub fn compute_ndbi(
+  swir : @types.Image,
+  nir : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if swir.width <= 0 || swir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndbi: 图像尺寸必须大于0",
+    )
+  }
+  if swir.channels < 1 || swir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndbi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_swir = swir.width * swir.height * swir.channels
+  if swir.data.length() != expected_size_swir {
+    raise @types.LoadError::DecodeFailed("compute_ndbi: 数据大小不匹配")
+  }
+  if nir.width <= 0 || nir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndbi: 图像尺寸必须大于0",
+    )
+  }
+  if nir.channels < 1 || nir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_ndbi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_nir = nir.width * nir.height * nir.channels
+  if nir.data.length() != expected_size_nir {
+    raise @types.LoadError::DecodeFailed("compute_ndbi: 数据大小不匹配")
+  }
   if swir.width != nir.width || swir.height != nir.height {
     return swir
   }
@@ -125,7 +221,50 @@ pub fn compute_evi(
   nir : @types.Image,
   red : @types.Image,
   blue : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if nir.width <= 0 || nir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 图像尺寸必须大于0",
+    )
+  }
+  if nir.channels < 1 || nir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_nir = nir.width * nir.height * nir.channels
+  if nir.data.length() != expected_size_nir {
+    raise @types.LoadError::DecodeFailed("compute_evi: 数据大小不匹配")
+  }
+  if red.width <= 0 || red.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 图像尺寸必须大于0",
+    )
+  }
+  if red.channels < 1 || red.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_red = red.width * red.height * red.channels
+  if red.data.length() != expected_size_red {
+    raise @types.LoadError::DecodeFailed("compute_evi: 数据大小不匹配")
+  }
+  if blue.width <= 0 || blue.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 图像尺寸必须大于0",
+    )
+  }
+  if blue.channels < 1 || blue.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_evi: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_blue = blue.width * blue.height * blue.channels
+  if blue.data.length() != expected_size_blue {
+    raise @types.LoadError::DecodeFailed("compute_evi: 数据大小不匹配")
+  }
   if nir.width != red.width ||
     nir.height != red.height ||
     nir.width != blue.width ||
@@ -165,7 +304,56 @@ pub fn false_color_composite(
   nir : @types.Image,
   red : @types.Image,
   green : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if nir.width <= 0 || nir.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if nir.channels < 1 || nir.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_nir = nir.width * nir.height * nir.channels
+  if nir.data.length() != expected_size_nir {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 数据大小不匹配",
+    )
+  }
+  if red.width <= 0 || red.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if red.channels < 1 || red.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_red = red.width * red.height * red.channels
+  if red.data.length() != expected_size_red {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 数据大小不匹配",
+    )
+  }
+  if green.width <= 0 || green.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if green.channels < 1 || green.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_green = green.width * green.height * green.channels
+  if green.data.length() != expected_size_green {
+    raise @types.LoadError::DecodeFailed(
+      "false_color_composite: 数据大小不匹配",
+    )
+  }
   if nir.width != red.width ||
     nir.height != red.height ||
     nir.width != green.width ||
@@ -199,7 +387,56 @@ pub fn true_color_composite(
   red : @types.Image,
   green : @types.Image,
   blue : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if red.width <= 0 || red.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if red.channels < 1 || red.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_red = red.width * red.height * red.channels
+  if red.data.length() != expected_size_red {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 数据大小不匹配",
+    )
+  }
+  if green.width <= 0 || green.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if green.channels < 1 || green.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_green = green.width * green.height * green.channels
+  if green.data.length() != expected_size_green {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 数据大小不匹配",
+    )
+  }
+  if blue.width <= 0 || blue.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 图像尺寸必须大于0",
+    )
+  }
+  if blue.channels < 1 || blue.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_blue = blue.width * blue.height * blue.channels
+  if blue.data.length() != expected_size_blue {
+    raise @types.LoadError::DecodeFailed(
+      "true_color_composite: 数据大小不匹配",
+    )
+  }
   if red.width != green.width ||
     red.height != green.height ||
     red.width != blue.width ||
@@ -232,7 +469,24 @@ pub fn vegetation_coverage(
   ndvi : @types.Image,
   ndvi_soil? : Double = 0.2,
   ndvi_veg? : Double = 0.8,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if ndvi.width <= 0 || ndvi.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "vegetation_coverage: 图像尺寸必须大于0",
+    )
+  }
+  if ndvi.channels < 1 || ndvi.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "vegetation_coverage: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = ndvi.width * ndvi.height * ndvi.channels
+  if ndvi.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "vegetation_coverage: 数据大小不匹配",
+    )
+  }
   let soil = ndvi_soil
   let veg = ndvi_veg
   let w = ndvi.width
@@ -268,7 +522,56 @@ pub fn land_cover_classification(
   ndvi : @types.Image,
   ndwi : @types.Image,
   ndbi : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if ndvi.width <= 0 || ndvi.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 图像尺寸必须大于0",
+    )
+  }
+  if ndvi.channels < 1 || ndvi.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_ndvi = ndvi.width * ndvi.height * ndvi.channels
+  if ndvi.data.length() != expected_size_ndvi {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 数据大小不匹配",
+    )
+  }
+  if ndwi.width <= 0 || ndwi.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 图像尺寸必须大于0",
+    )
+  }
+  if ndwi.channels < 1 || ndwi.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_ndwi = ndwi.width * ndwi.height * ndwi.channels
+  if ndwi.data.length() != expected_size_ndwi {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 数据大小不匹配",
+    )
+  }
+  if ndbi.width <= 0 || ndbi.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 图像尺寸必须大于0",
+    )
+  }
+  if ndbi.channels < 1 || ndbi.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size_ndbi = ndbi.width * ndbi.height * ndbi.channels
+  if ndbi.data.length() != expected_size_ndbi {
+    raise @types.LoadError::DecodeFailed(
+      "land_cover_classification: 数据大小不匹配",
+    )
+  }
   if ndvi.width != ndwi.width ||
     ndvi.height != ndwi.height ||
     ndvi.width != ndbi.width ||
@@ -310,7 +613,28 @@ pub fn land_cover_classification(
 
 ///|
 /// 分类图彩色可视化
-pub fn classification_colormap(classification : @types.Image) -> @types.Image {
+pub fn classification_colormap(
+  classification : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if classification.width <= 0 || classification.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "classification_colormap: 图像尺寸必须大于0",
+    )
+  }
+  if classification.channels < 1 || classification.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "classification_colormap: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = classification.width *
+    classification.height *
+    classification.channels
+  if classification.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "classification_colormap: 数据大小不匹配",
+    )
+  }
   let w = classification.width
   let h = classification.height
   let out_data : Array[Byte] = Array::make(w * h * 3, b'\x00')

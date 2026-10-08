@@ -6,21 +6,21 @@ import {
 }
 
 // Values
-pub fn calculate_color_statistics(@types.Image) -> ColorStatistics
+pub fn calculate_color_statistics(@types.Image) -> ColorStatistics raise @types.LoadError
 
-pub fn calculate_texture_features(@types.Image) -> StyleTransferTextureFeatures
+pub fn calculate_texture_features(@types.Image) -> StyleTransferTextureFeatures raise @types.LoadError
 
-pub fn cartoonize(@types.Image, Double) -> @types.Image
+pub fn cartoonize(@types.Image, Double) -> @types.Image raise @types.LoadError
 
-pub fn color_transfer(@types.Image, @types.Image, Double) -> @types.Image
+pub fn color_transfer(@types.Image, @types.Image, Double) -> @types.Image raise @types.LoadError
 
 pub fn create_default_style_transfer_config() -> StyleTransferConfig
 
-pub fn oil_painting(@types.Image, Int, Int) -> @types.Image
+pub fn oil_painting(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
-pub fn sketch_effect(@types.Image, Double) -> @types.Image
+pub fn sketch_effect(@types.Image, Double) -> @types.Image raise @types.LoadError
 
-pub fn style_transfer(@types.Image, @types.Image, StyleTransferConfig) -> StyleTransferResult
+pub fn style_transfer(@types.Image, @types.Image, StyleTransferConfig) -> StyleTransferResult raise @types.LoadError
 
 pub fn style_transfer_report_to_string(StyleTransferResult, ColorStatistics, ColorStatistics, StyleTransferTextureFeatures) -> String
 
@@ -105,3 +105,4 @@ pub(all) struct StyleTransferTextureFeatures {
 // Type aliases
 
 // Traits
+

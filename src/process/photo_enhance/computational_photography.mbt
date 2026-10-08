@@ -226,6 +226,7 @@ pub fn hdr_merge(
 ///|
 /// 色调映射（简化版，返回处理后的 Image）
 pub fn tone_map(hdr : HdrImage, config : ToneMappingConfig) -> @types.Image {
+  ignore(config)
   let w = hdr.width
   let h = hdr.height
   let out : Array[Byte] = Array::make(w * h, b'\x00')
@@ -255,6 +256,7 @@ pub fn stitch_panorama(
   images : Array[@types.Image],
   config : PanoramaConfig,
 ) -> PanoramaResult {
+  ignore(config)
   if images.length() == 0 {
     return PanoramaResult::{
       width: 0,

@@ -99,3 +99,4 @@ pub(all) enum ResizeFilter {
 // Type aliases
 
 // Traits
+

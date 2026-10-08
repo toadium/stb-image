@@ -600,7 +600,7 @@ pub fn extract_char_image(
 
 ///|
 /// 辅助函数：最小值
-fn min_proj(a : Int, b : Int) -> Int {
+fn _min_proj(a : Int, b : Int) -> Int {
   if a < b {
     a
   } else {
@@ -610,7 +610,7 @@ fn min_proj(a : Int, b : Int) -> Int {
 
 ///|
 /// 辅助函数：最大值
-fn max_proj(a : Int, b : Int) -> Int {
+fn _max_proj(a : Int, b : Int) -> Int {
   if a > b {
     a
   } else {

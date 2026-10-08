@@ -123,3 +123,4 @@ pub(all) struct LatentVector {
 // Type aliases
 
 // Traits
+

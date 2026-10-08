@@ -194,6 +194,7 @@ pub fn extract_lbp_feature(
   img : @types.Image,
   config : LBPConfig,
 ) -> CBIRImageFeature {
+  ignore(config)
   let w = img.width
   let h = img.height
   let _ = w * h

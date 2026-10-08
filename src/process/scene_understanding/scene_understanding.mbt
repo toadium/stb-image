@@ -151,6 +151,7 @@ pub fn classify_scene(
   img : @types.Image,
   config : SceneUnderstandingConfig,
 ) -> SceneClassificationResult {
+  ignore(config)
   let w = img.width
   let h = img.height
   let total = w * h
@@ -159,7 +160,8 @@ pub fn classify_scene(
   let mut sum = 0.0
   let mut sum_sq = 0.0
   let mut edge_count = 0
-  let mut color_variation = 0.0
+  let color_variation = 0.0
+  ignore(color_variation)
 
   for y in 0..<h {
     for x in 0..<w {
@@ -389,6 +391,7 @@ pub fn generate_scene_graph(
   img : @types.Image,
   config : SceneUnderstandingConfig,
 ) -> SceneGraph {
+  ignore(config)
   let w = img.width
   let h = img.height
 

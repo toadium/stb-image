@@ -401,6 +401,7 @@ pub fn structure_based_filter(
   let candidates : Array[ChineseCharInfo] = []
   for info in char_db {
     let mut score = 0
+    ignore(score)
     // 结构类型匹配
     if info.structure_type == estimated_structure {
       score += 3
@@ -757,6 +758,7 @@ fn match_enhanced_template(
   stroke_features : Array[Double],
   cfg : EnhancedChineseOcrConfig,
 ) -> (String, Double) {
+  ignore(stroke_features)
   let w = char_img.width
   let h = char_img.height
   let data = char_img.data

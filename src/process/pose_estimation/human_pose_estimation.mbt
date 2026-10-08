@@ -189,7 +189,25 @@ pub fn get_coco_skeleton_connections() -> Array[Array[Int]] {
 pub fn detect_keypoints(
   img : @types.Image,
   config : PoseEstimationConfig,
-) -> Array[HumanPose] {
+) -> Array[HumanPose] raise @types.LoadError {
+  ignore(config)
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_keypoints: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_keypoints: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_keypoints: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let poses : Array[HumanPose] = []
@@ -451,6 +469,7 @@ pub fn recognize_action(
   poses : Array[HumanPose],
   config : ActionRecognitionConfig,
 ) -> ActionRecognitionResult {
+  ignore(config)
   if poses.length() == 0 {
     return ActionRecognitionResult::{
       action_name: "unknown",
@@ -590,7 +609,27 @@ pub fn recognize_gesture(pose : HumanPose) -> GestureRecognitionResult {
 
 ///|
 /// 可视化姿态（在图像上绘制骨架）
-pub fn visualize_pose(img : @types.Image, pose : HumanPose) -> @types.Image {
+pub fn visualize_pose(
+  img : @types.Image,
+  pose : HumanPose,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_pose: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_pose: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_pose: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h

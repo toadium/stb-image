@@ -430,7 +430,7 @@ fn cosine_distance_local(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 辅助函数：最大值
-fn max_ocr(a : Int, b : Int) -> Int {
+fn _max_ocr(a : Int, b : Int) -> Int {
   if a > b {
     a
   } else {

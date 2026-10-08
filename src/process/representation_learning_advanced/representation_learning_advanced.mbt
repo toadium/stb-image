@@ -324,7 +324,7 @@ fn decode_simple(
 
 ///|
 /// 近似正弦函数（表示学习模块）
-fn sin_approx_rl(x : Double) -> Double {
+fn _sin_approx_rl(x : Double) -> Double {
   // 简化的正弦近似
   let mut result = x
   let mut term = x

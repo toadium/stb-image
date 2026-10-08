@@ -421,7 +421,7 @@ pub fn cnn_confusion_matrix(
   }
   let n = config.num_classes
   let matrix : Array[Array[Int]] = []
-  for i in 0..<n {
+  for _ in 0..<n {
     let row : Array[Int] = Array::make(n, 0)
     matrix.push(row)
   }

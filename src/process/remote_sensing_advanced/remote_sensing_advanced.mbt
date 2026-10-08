@@ -253,6 +253,8 @@ pub fn classify_land_cover(
   height : Int,
   config : RemoteSensingConfig,
 ) -> LandCoverClassificationResult {
+  ignore(config)
+  ignore(image)
   let classification_map : Array[Array[Int]] = []
   let confidence_map : Array[Array[Double]] = []
   let class_names = [
@@ -315,6 +317,7 @@ pub fn detect_remote_sensing_objects(
   height : Int,
   config : RemoteSensingConfig,
 ) -> Array[DetectedRemoteSensingObject] {
+  ignore(image)
   let objects : Array[DetectedRemoteSensingObject] = []
 
   let object_types = [
@@ -379,6 +382,8 @@ pub fn detect_changes(
   height : Int,
   config : RemoteSensingConfig,
 ) -> ChangeDetectionResult {
+  ignore(image2)
+  ignore(image1)
   let change_map : Array[Array[Bool]] = []
   let change_mask : Array[Array[Int]] = []
   let mut num_changes = 0

@@ -203,16 +203,16 @@ fn vp8_fwht_4x4(block : Array[Int]) -> Array[Int] {
 /// VP8 量化参数
 priv struct Vp8EncQuantParams {
   y_ac : Int
-  y_dc : Int
-  uv_ac : Int
-  uv_dc : Int
+  _y_dc : Int
+  _uv_ac : Int
+  _uv_dc : Int
 }
 
 ///|
 /// 根据 quality 计算量化参数
 fn vp8_calc_quant_params(quality : Int) -> Vp8EncQuantParams {
   let q = ((100 - quality).clamp(min=1, max=99) * 63 / 100).clamp(min=1, max=63)
-  Vp8EncQuantParams::{ y_ac: q, y_dc: q, uv_ac: q, uv_dc: q }
+  Vp8EncQuantParams::{ y_ac: q, _y_dc: q, _uv_ac: q, _uv_dc: q }
 }
 
 ///|
@@ -353,6 +353,7 @@ fn vp8_predict_i16x16_v(
   width : Int,
   height : Int,
 ) -> Array[Int] {
+  ignore(height)
   let pred = Array::make(256, 128)
   if mb_y > 0 {
     for x in 0..<16 {
@@ -529,7 +530,7 @@ priv struct Vp8EncSegmentParams {
   // 每个 segment 的量化器增量（4 个 segment）
   quantizer_delta : Array[Int]
   // 每个 segment 的滤波级别增量（4 个 segment）
-  filter_level_delta : Array[Int]
+  _filter_level_delta : Array[Int]
   // 每个宏块的 segment ID
   segment_id_map : Array[Int]
 }
@@ -542,6 +543,7 @@ fn vp8_enc_segment_params_new(
   height : Int,
   base_quant : Int,
 ) -> Vp8EncSegmentParams {
+  ignore(base_quant)
   let mb_w = (width + 15) / 16
   let mb_h = (height + 15) / 16
   let total_mbs = mb_w * mb_h
@@ -590,7 +592,7 @@ fn vp8_enc_segment_params_new(
   Vp8EncSegmentParams::{
     segmentation_enabled: true,
     quantizer_delta,
-    filter_level_delta,
+    _filter_level_delta: filter_level_delta,
     segment_id_map,
   }
 }
@@ -747,7 +749,7 @@ fn vp8_enc_adaptive_probs_update(probs : Vp8EncAdaptiveProbs) -> Unit {
 
 ///|
 /// 记录 token 统计
-fn vp8_enc_adaptive_probs_record_token(
+fn _vp8_enc_adaptive_probs_record_token(
   probs : Vp8EncAdaptiveProbs,
   pos : Int,
   token_type : Int,

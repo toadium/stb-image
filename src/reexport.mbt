@@ -4121,7 +4121,7 @@ pub fn barcode_default_config() -> @barcode.BarcodeConfig {
 pub fn decode_ean13(
   img : @types.Image,
   config? : @barcode.BarcodeConfig,
-) -> @barcode.BarcodeResult? {
+) -> @barcode.BarcodeResult? raise @types.LoadError {
   match config {
     Some(c) => @barcode.decode_ean13(img, config=c)
     None => @barcode.decode_ean13(img)
@@ -4131,7 +4131,7 @@ pub fn decode_ean13(
 ///|
 pub fn detect_qr_finder_patterns(
   img : @types.Image,
-) -> Array[@barcode.QrFinderPattern] {
+) -> Array[@barcode.QrFinderPattern] raise @types.LoadError {
   @barcode.detect_qr_finder_patterns(img)
 }
 
@@ -4139,7 +4139,7 @@ pub fn detect_qr_finder_patterns(
 pub fn decode_qrcode(
   img : @types.Image,
   config? : @barcode.BarcodeConfig,
-) -> @barcode.BarcodeResult? {
+) -> @barcode.BarcodeResult? raise @types.LoadError {
   match config {
     Some(c) => @barcode.decode_qrcode(img, config=c)
     None => @barcode.decode_qrcode(img)
@@ -4150,7 +4150,7 @@ pub fn decode_qrcode(
 pub fn decode_barcode(
   img : @types.Image,
   config? : @barcode.BarcodeConfig,
-) -> Array[@barcode.BarcodeResult] {
+) -> Array[@barcode.BarcodeResult] raise @types.LoadError {
   match config {
     Some(c) => @barcode.decode_barcode(img, config=c)
     None => @barcode.decode_barcode(img)
@@ -4310,24 +4310,30 @@ pub fn upscale_4x(img : @types.Image) -> @types.Image {
 pub type Code128Charset = @barcode.Code128Charset
 
 ///|
-pub fn decode_code128(img : @types.Image) -> @barcode.BarcodeResult? {
+pub fn decode_code128(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? raise @types.LoadError {
   @barcode.decode_code128(img)
 }
 
 ///|
-pub fn decode_upca(img : @types.Image) -> @barcode.BarcodeResult? {
+pub fn decode_upca(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? raise @types.LoadError {
   @barcode.decode_upca(img)
 }
 
 ///|
-pub fn decode_code39(img : @types.Image) -> @barcode.BarcodeResult? {
+pub fn decode_code39(
+  img : @types.Image,
+) -> @barcode.BarcodeResult? raise @types.LoadError {
   @barcode.decode_code39(img)
 }
 
 ///|
 pub fn decode_linear_barcode(
   img : @types.Image,
-) -> Array[@barcode.BarcodeResult] {
+) -> Array[@barcode.BarcodeResult] raise @types.LoadError {
   @barcode.decode_linear_barcode(img)
 }
 
@@ -4337,7 +4343,9 @@ pub fn decode_linear_barcode(
 pub type QrDecodeResult = @barcode.QrDecodeResult
 
 ///|
-pub fn decode_qrcode_full(img : @types.Image) -> @barcode.QrDecodeResult? {
+pub fn decode_qrcode_full(
+  img : @types.Image,
+) -> @barcode.QrDecodeResult? raise @types.LoadError {
   @barcode.decode_qrcode_full(img)
 }
 
@@ -4849,7 +4857,7 @@ pub fn estimate_translation(
   img1 : @types.Image,
   img2 : @types.Image,
   max_offset? : Int = 20,
-) -> @registration.RegistrationResult {
+) -> @registration.RegistrationResult raise @types.LoadError {
   @registration.estimate_translation(img1, img2, max_offset~)
 }
 
@@ -4859,7 +4867,7 @@ pub fn warp_affine_transform(
   transform : @registration.AffineTransform,
   out_width? : Int = 0,
   out_height? : Int = 0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @registration.warp_affine_transform(img, transform, out_width~, out_height~)
 }
 
@@ -4867,7 +4875,7 @@ pub fn warp_affine_transform(
 pub fn align_images(
   img1 : @types.Image,
   img2 : @types.Image,
-) -> (@types.Image, @registration.RegistrationResult) {
+) -> (@types.Image, @registration.RegistrationResult) raise @types.LoadError {
   @registration.align_images(img1, img2)
 }
 
@@ -5104,17 +5112,26 @@ pub fn multispectral_new(
 }
 
 ///|
-pub fn compute_ndvi(nir : @types.Image, red : @types.Image) -> @types.Image {
+pub fn compute_ndvi(
+  nir : @types.Image,
+  red : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.compute_ndvi(nir, red)
 }
 
 ///|
-pub fn compute_ndwi(green : @types.Image, nir : @types.Image) -> @types.Image {
+pub fn compute_ndwi(
+  green : @types.Image,
+  nir : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.compute_ndwi(green, nir)
 }
 
 ///|
-pub fn compute_ndbi(swir : @types.Image, nir : @types.Image) -> @types.Image {
+pub fn compute_ndbi(
+  swir : @types.Image,
+  nir : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.compute_ndbi(swir, nir)
 }
 
@@ -5123,7 +5140,7 @@ pub fn compute_evi(
   nir : @types.Image,
   red : @types.Image,
   blue : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.compute_evi(nir, red, blue)
 }
 
@@ -5132,7 +5149,7 @@ pub fn false_color_composite(
   nir : @types.Image,
   red : @types.Image,
   green : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.false_color_composite(nir, red, green)
 }
 
@@ -5141,7 +5158,7 @@ pub fn true_color_composite(
   red : @types.Image,
   green : @types.Image,
   blue : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.true_color_composite(red, green, blue)
 }
 
@@ -5150,7 +5167,7 @@ pub fn vegetation_coverage(
   ndvi : @types.Image,
   ndvi_soil? : Double = 0.2,
   ndvi_veg? : Double = 0.8,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.vegetation_coverage(ndvi, ndvi_soil~, ndvi_veg~)
 }
 
@@ -5159,12 +5176,14 @@ pub fn land_cover_classification(
   ndvi : @types.Image,
   ndwi : @types.Image,
   ndbi : @types.Image,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.land_cover_classification(ndvi, ndwi, ndbi)
 }
 
 ///|
-pub fn classification_colormap(classification : @types.Image) -> @types.Image {
+pub fn classification_colormap(
+  classification : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @remote_sensing.classification_colormap(classification)
 }
 
@@ -5329,7 +5348,7 @@ pub fn encrypt_image_logistic(
   img : @types.Image,
   key? : Double = 0.123456789,
   mu? : Double = 3.99,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @encryption.encrypt_image_logistic(img, key~, mu~)
 }
 
@@ -5338,22 +5357,28 @@ pub fn decrypt_image_logistic(
   img : @types.Image,
   key? : Double = 0.123456789,
   mu? : Double = 3.99,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @encryption.decrypt_image_logistic(img, key~, mu~)
 }
 
 ///|
-pub fn encrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
+pub fn encrypt_image_xor(
+  img : @types.Image,
+  key : String,
+) -> @types.Image raise @types.LoadError {
   @encryption.encrypt_image_xor(img, key)
 }
 
 ///|
-pub fn decrypt_image_xor(img : @types.Image, key : String) -> @types.Image {
+pub fn decrypt_image_xor(
+  img : @types.Image,
+  key : String,
+) -> @types.Image raise @types.LoadError {
   @encryption.decrypt_image_xor(img, key)
 }
 
 ///|
-pub fn histogram_entropy(img : @types.Image) -> Double {
+pub fn histogram_entropy(img : @types.Image) -> Double raise @types.LoadError {
   @encryption.histogram_entropy(img)
 }
 
@@ -5361,7 +5386,7 @@ pub fn histogram_entropy(img : @types.Image) -> Double {
 pub fn adjacent_correlation(
   img : @types.Image,
   direction? : String = "horizontal",
-) -> Double {
+) -> Double raise @types.LoadError {
   @encryption.adjacent_correlation(img, direction~)
 }
 
@@ -5369,7 +5394,7 @@ pub fn adjacent_correlation(
 pub fn evaluate_encryption_quality(
   original : @types.Image,
   encrypted : @types.Image,
-) -> @encryption.EncryptionQuality {
+) -> @encryption.EncryptionQuality raise @types.LoadError {
   @encryption.evaluate_encryption_quality(original, encrypted)
 }
 
@@ -5378,7 +5403,7 @@ pub fn key_sensitivity_test(
   img : @types.Image,
   key : Double,
   delta? : Double = 0.0000001,
-) -> Double {
+) -> Double raise @types.LoadError {
   @encryption.key_sensitivity_test(img, key, delta~)
 }
 
@@ -5386,7 +5411,7 @@ pub fn key_sensitivity_test(
 pub fn batch_encrypt(
   images : Array[@types.Image],
   key : Double,
-) -> Array[@types.Image] {
+) -> Array[@types.Image] raise @types.LoadError {
   @encryption.batch_encrypt(images, key)
 }
 
@@ -7347,12 +7372,14 @@ pub fn create_default_grabcut_config() -> @segmentation.GrabCutConfig {
 pub fn threshold_segmentation(
   img : @types.Image,
   threshold : Double,
-) -> @segmentation.SemanticSegmentationResult {
+) -> @segmentation.SemanticSegmentationResult raise @types.LoadError {
   @segmentation.threshold_segmentation(img, threshold)
 }
 
 ///|
-pub fn otsu_threshold_value(img : @types.Image) -> Double {
+pub fn otsu_threshold_value(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @segmentation.otsu_threshold_value(img)
 }
 
@@ -7360,7 +7387,7 @@ pub fn otsu_threshold_value(img : @types.Image) -> Double {
 pub fn kmeans_segmentation(
   img : @types.Image,
   config : @segmentation.KMeansConfig,
-) -> @segmentation.SemanticSegmentationResult {
+) -> @segmentation.SemanticSegmentationResult raise @types.LoadError {
   @segmentation.kmeans_segmentation(img, config)
 }
 
@@ -7368,7 +7395,7 @@ pub fn kmeans_segmentation(
 pub fn superpixel_segmentation(
   img : @types.Image,
   num_superpixels : Int,
-) -> @segmentation.SuperpixelResult {
+) -> @segmentation.SuperpixelResult raise @types.LoadError {
   @segmentation.superpixel_segmentation(img, num_superpixels)
 }
 
@@ -7376,7 +7403,7 @@ pub fn superpixel_segmentation(
 pub fn watershed_segmentation(
   img : @types.Image,
   config : @segmentation.WatershedConfig,
-) -> @segmentation.SemanticSegmentationResult {
+) -> @segmentation.SemanticSegmentationResult raise @types.LoadError {
   @segmentation.watershed_segmentation(img, config)
 }
 
@@ -7388,7 +7415,7 @@ pub fn grabcut_segmentation(
   rect_w : Int,
   rect_h : Int,
   config : @segmentation.GrabCutConfig,
-) -> @segmentation.SemanticSegmentationResult {
+) -> @segmentation.SemanticSegmentationResult raise @types.LoadError {
   @segmentation.grabcut_segmentation(
     img, rect_x, rect_y, rect_w, rect_h, config,
   )
@@ -7727,7 +7754,7 @@ pub fn calculate_texture_features_rs(
   x : Int,
   y : Int,
   window_size : Int,
-) -> @remote_sensing.TextureFeatures {
+) -> @remote_sensing.TextureFeatures raise @types.LoadError {
   @remote_sensing.calculate_texture_features(image, x, y, window_size)
 }
 
@@ -7799,7 +7826,7 @@ pub fn create_default_arnold_params_enc() -> @encryption.ArnoldParams {
 pub fn xor_encrypt_enc(
   img : @types.Image,
   key : Array[Byte],
-) -> @encryption.EncryptionResult {
+) -> @encryption.EncryptionResult raise @types.LoadError {
   @encryption.xor_encrypt(img, key)
 }
 
@@ -7815,7 +7842,7 @@ pub fn xor_decrypt_enc(
 pub fn chaotic_encrypt_enc(
   img : @types.Image,
   params : @encryption.ChaoticParams,
-) -> @encryption.EncryptionResult {
+) -> @encryption.EncryptionResult raise @types.LoadError {
   @encryption.chaotic_encrypt(img, params)
 }
 
@@ -7823,7 +7850,7 @@ pub fn chaotic_encrypt_enc(
 pub fn arnold_scramble_enc(
   img : @types.Image,
   params : @encryption.ArnoldParams,
-) -> @encryption.EncryptionResult {
+) -> @encryption.EncryptionResult raise @types.LoadError {
   @encryption.arnold_scramble(img, params)
 }
 
@@ -7832,7 +7859,7 @@ pub fn embed_watermark_lsb_enc(
   img : @types.Image,
   watermark : Array[Byte],
   strength : Int,
-) -> (@types.Image, @encryption.WatermarkInfo) {
+) -> (@types.Image, @encryption.WatermarkInfo) raise @types.LoadError {
   @encryption.embed_watermark_lsb(img, watermark, strength)
 }
 
@@ -7841,7 +7868,7 @@ pub fn extract_watermark_lsb_enc(
   img : @types.Image,
   watermark_length : Int,
   strength : Int,
-) -> @encryption.WatermarkExtractionResult {
+) -> @encryption.WatermarkExtractionResult raise @types.LoadError {
   @encryption.extract_watermark_lsb(img, watermark_length, strength)
 }
 
@@ -7852,12 +7879,14 @@ pub fn embed_visible_watermark_enc(
   x : Int,
   y : Int,
   opacity : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @encryption.embed_visible_watermark(img, watermark_text, x, y, opacity)
 }
 
 ///|
-pub fn calculate_image_entropy_enc(img : @types.Image) -> Double {
+pub fn calculate_image_entropy_enc(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @encryption.calculate_image_entropy(img)
 }
 
@@ -7865,7 +7894,7 @@ pub fn calculate_image_entropy_enc(img : @types.Image) -> Double {
 pub fn calculate_correlation_enc(
   img1 : @types.Image,
   img2 : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
   @encryption.calculate_correlation(img1, img2)
 }
 
@@ -7873,7 +7902,7 @@ pub fn calculate_correlation_enc(
 pub fn calculate_psnr_enc(
   original : @types.Image,
   encrypted : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
   @encryption.calculate_psnr(original, encrypted)
 }
 
@@ -7881,7 +7910,7 @@ pub fn calculate_psnr_enc(
 pub fn evaluate_image_encryption_quality_enc(
   original : @types.Image,
   encrypted : @types.Image,
-) -> @encryption.ImageEncryptionQuality {
+) -> @encryption.ImageEncryptionQuality raise @types.LoadError {
   @encryption.evaluate_image_encryption_quality(original, encrypted)
 }
 
@@ -8296,7 +8325,7 @@ pub fn create_default_style_transfer_config_st() -> @style_transfer.StyleTransfe
 ///|
 pub fn calculate_color_statistics_st(
   img : @types.Image,
-) -> @style_transfer.ColorStatistics {
+) -> @style_transfer.ColorStatistics raise @types.LoadError {
   @style_transfer.calculate_color_statistics(img)
 }
 
@@ -8305,19 +8334,22 @@ pub fn color_transfer_st(
   content : @types.Image,
   style : @types.Image,
   strength : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @style_transfer.color_transfer(content, style, strength)
 }
 
 ///|
 pub fn calculate_texture_features_st(
   img : @types.Image,
-) -> @style_transfer.StyleTransferTextureFeatures {
+) -> @style_transfer.StyleTransferTextureFeatures raise @types.LoadError {
   @style_transfer.calculate_texture_features(img)
 }
 
 ///|
-pub fn cartoonize_st(img : @types.Image, strength : Double) -> @types.Image {
+pub fn cartoonize_st(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image raise @types.LoadError {
   @style_transfer.cartoonize(img, strength)
 }
 
@@ -8326,12 +8358,15 @@ pub fn oil_painting_st(
   img : @types.Image,
   radius : Int,
   intensity_levels : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @style_transfer.oil_painting(img, radius, intensity_levels)
 }
 
 ///|
-pub fn sketch_effect_st(img : @types.Image, strength : Double) -> @types.Image {
+pub fn sketch_effect_st(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image raise @types.LoadError {
   @style_transfer.sketch_effect(img, strength)
 }
 
@@ -8340,7 +8375,7 @@ pub fn style_transfer_st(
   content : @types.Image,
   style : @types.Image,
   config : @style_transfer.StyleTransferConfig,
-) -> @style_transfer.StyleTransferResult {
+) -> @style_transfer.StyleTransferResult raise @types.LoadError {
   @style_transfer.style_transfer(content, style, config)
 }
 
@@ -8623,47 +8658,49 @@ pub fn create_default_source_verification_config_fs() -> @forensics.SourceVerifi
 ///|
 pub fn analyze_noise_pattern_fs(
   img : @types.Image,
-) -> @forensics.NoiseAnalysisResult {
+) -> @forensics.NoiseAnalysisResult raise @types.LoadError {
   @forensics.analyze_noise_pattern(img)
 }
 
 ///|
 pub fn analyze_frequency_domain_fs(
   img : @types.Image,
-) -> @forensics.FrequencyAnalysisResult {
+) -> @forensics.FrequencyAnalysisResult raise @types.LoadError {
   @forensics.analyze_frequency_domain(img)
 }
 
 ///|
 pub fn analyze_color_distribution_fs(
   img : @types.Image,
-) -> @forensics.ColorAnalysisResult {
+) -> @forensics.ColorAnalysisResult raise @types.LoadError {
   @forensics.analyze_color_distribution(img)
 }
 
 ///|
 pub fn analyze_texture_fs(
   img : @types.Image,
-) -> @forensics.TextureAnalysisResult {
+) -> @forensics.TextureAnalysisResult raise @types.LoadError {
   @forensics.analyze_texture(img)
 }
 
 ///|
-pub fn analyze_edges_fs(img : @types.Image) -> @forensics.EdgeAnalysisResult {
+pub fn analyze_edges_fs(
+  img : @types.Image,
+) -> @forensics.EdgeAnalysisResult raise @types.LoadError {
   @forensics.analyze_edges(img)
 }
 
 ///|
 pub fn analyze_compression_artifacts_fs(
   img : @types.Image,
-) -> @forensics.CompressionAnalysisResult {
+) -> @forensics.CompressionAnalysisResult raise @types.LoadError {
   @forensics.analyze_compression_artifacts(img)
 }
 
 ///|
 pub fn analyze_details_fs(
   img : @types.Image,
-) -> @forensics.DetailAnalysisResult {
+) -> @forensics.DetailAnalysisResult raise @types.LoadError {
   @forensics.analyze_details(img)
 }
 
@@ -8671,7 +8708,7 @@ pub fn analyze_details_fs(
 pub fn verify_image_source_fs(
   img : @types.Image,
   config : @forensics.SourceVerificationConfig,
-) -> @forensics.SourceVerificationResult {
+) -> @forensics.SourceVerificationResult raise @types.LoadError {
   @forensics.verify_image_source(img, config)
 }
 
@@ -8713,28 +8750,28 @@ pub fn create_default_enhanced_verification_config_fs() -> @forensics.EnhancedVe
 ///|
 pub fn detect_ui_elements_fs(
   img : @types.Image,
-) -> @forensics.UIDetectionResult {
+) -> @forensics.UIDetectionResult raise @types.LoadError {
   @forensics.detect_ui_elements(img)
 }
 
 ///|
 pub fn detect_text_regions_fs(
   img : @types.Image,
-) -> @forensics.TextDetectionResult {
+) -> @forensics.TextDetectionResult raise @types.LoadError {
   @forensics.detect_text_regions(img)
 }
 
 ///|
 pub fn analyze_geometry_fs(
   img : @types.Image,
-) -> @forensics.GeometryAnalysisResult {
+) -> @forensics.GeometryAnalysisResult raise @types.LoadError {
   @forensics.analyze_geometry(img)
 }
 
 ///|
 pub fn analyze_color_quantization_fs(
   img : @types.Image,
-) -> @forensics.ColorQuantizationResult {
+) -> @forensics.ColorQuantizationResult raise @types.LoadError {
   @forensics.analyze_color_quantization(img)
 }
 
@@ -8742,7 +8779,7 @@ pub fn analyze_color_quantization_fs(
 pub fn verify_image_source_enhanced_fs(
   img : @types.Image,
   config : @forensics.EnhancedVerificationConfig,
-) -> @forensics.EnhancedVerificationResult {
+) -> @forensics.EnhancedVerificationResult raise @types.LoadError {
   @forensics.verify_image_source_enhanced(img, config)
 }
 
@@ -8888,17 +8925,22 @@ pub fn run_length_decode_cp(data : Bytes) -> Bytes {
 }
 
 ///|
-pub fn calculate_image_entropy_cp(img : @types.Image) -> Double {
+pub fn calculate_image_entropy_cp(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @compression.calculate_image_entropy(img)
 }
 
 ///|
-pub fn quantize_image_cp(img : @types.Image, levels : Int) -> @types.Image {
+pub fn quantize_image_cp(
+  img : @types.Image,
+  levels : Int,
+) -> @types.Image raise @types.LoadError {
   @compression.quantize_image(img, levels)
 }
 
 ///|
-pub fn predictive_encode_cp(img : @types.Image) -> Bytes {
+pub fn predictive_encode_cp(img : @types.Image) -> Bytes raise @types.LoadError {
   @compression.predictive_encode(img)
 }
 
@@ -8925,7 +8967,7 @@ pub fn calculate_compression_quality_cp(
   compressed : @types.Image,
   original_size : Int,
   compressed_size : Int,
-) -> @compression.CompressionQualityMetrics {
+) -> @compression.CompressionQualityMetrics raise @types.LoadError {
   @compression.calculate_compression_quality(
     original, compressed, original_size, compressed_size,
   )
@@ -8935,14 +8977,14 @@ pub fn calculate_compression_quality_cp(
 pub fn compress_jpeg_simple_cp(
   img : @types.Image,
   quality : Double,
-) -> @compression.CompressionResult {
+) -> @compression.CompressionResult raise @types.LoadError {
   @compression.compress_jpeg_simple(img, quality)
 }
 
 ///|
 pub fn compress_png_simple_cp(
   img : @types.Image,
-) -> @compression.CompressionResult {
+) -> @compression.CompressionResult raise @types.LoadError {
   @compression.compress_png_simple(img)
 }
 
@@ -8950,7 +8992,7 @@ pub fn compress_png_simple_cp(
 pub fn compress_image_cp(
   img : @types.Image,
   config : @compression.CompressionConfig,
-) -> @compression.CompressionResult {
+) -> @compression.CompressionResult raise @types.LoadError {
   @compression.compress_image(img, config)
 }
 
@@ -8991,7 +9033,7 @@ pub fn create_default_denoise_config_dn() -> @denoise.DenoiseConfig {
 pub fn mean_filter_denoise_dn(
   img : @types.Image,
   kernel_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.mean_filter_denoise(img, kernel_size)
 }
 
@@ -8999,7 +9041,7 @@ pub fn mean_filter_denoise_dn(
 pub fn median_filter_denoise_dn(
   img : @types.Image,
   kernel_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.median_filter_denoise(img, kernel_size)
 }
 
@@ -9008,7 +9050,7 @@ pub fn gaussian_filter_denoise_dn(
   img : @types.Image,
   kernel_size : Int,
   sigma : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.gaussian_filter_denoise(img, kernel_size, sigma)
 }
 
@@ -9018,17 +9060,21 @@ pub fn bilateral_filter_denoise_dn(
   kernel_size : Int,
   sigma_color : Double,
   sigma_space : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.bilateral_filter_denoise(img, kernel_size, sigma_color, sigma_space)
 }
 
 ///|
-pub fn calculate_noise_level_dn(img : @types.Image) -> Double {
+pub fn calculate_noise_level_dn(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @denoise.calculate_noise_level(img)
 }
 
 ///|
-pub fn histogram_equalization_enhance_dn(img : @types.Image) -> @types.Image {
+pub fn histogram_equalization_enhance_dn(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
   @denoise.histogram_equalization_enhance(img)
 }
 
@@ -9036,7 +9082,7 @@ pub fn histogram_equalization_enhance_dn(img : @types.Image) -> @types.Image {
 pub fn gamma_correction_enhance_dn(
   img : @types.Image,
   gamma : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.gamma_correction_enhance(img, gamma)
 }
 
@@ -9045,22 +9091,28 @@ pub fn unsharp_mask_enhance_dn(
   img : @types.Image,
   amount : Double,
   radius : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @denoise.unsharp_mask_enhance(img, amount, radius)
 }
 
 ///|
-pub fn calculate_brightness_dn(img : @types.Image) -> Double {
+pub fn calculate_brightness_dn(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @denoise.calculate_brightness(img)
 }
 
 ///|
-pub fn calculate_contrast_dn(img : @types.Image) -> Double {
+pub fn calculate_contrast_dn(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @denoise.calculate_contrast(img)
 }
 
 ///|
-pub fn calculate_sharpness_dn(img : @types.Image) -> Double {
+pub fn calculate_sharpness_dn(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
   @denoise.calculate_sharpness(img)
 }
 
@@ -9068,7 +9120,7 @@ pub fn calculate_sharpness_dn(img : @types.Image) -> Double {
 pub fn denoise_image_dn(
   img : @types.Image,
   config : @denoise.DenoiseConfig,
-) -> @denoise.DenoiseResult {
+) -> @denoise.DenoiseResult raise @types.LoadError {
   @denoise.denoise_image(img, config)
 }
 
@@ -9076,7 +9128,7 @@ pub fn denoise_image_dn(
 pub fn enhance_image_advanced_dn(
   img : @types.Image,
   algorithm : @denoise.EnhancementAlgorithm,
-) -> @denoise.EnhancementResult {
+) -> @denoise.EnhancementResult raise @types.LoadError {
   @denoise.enhance_image_advanced(img, algorithm)
 }
 
@@ -9356,7 +9408,7 @@ pub fn get_coco_skeleton_connections_pe() -> Array[Array[Int]] {
 pub fn detect_keypoints_pe(
   img : @types.Image,
   config : @pose_estimation.PoseEstimationConfig,
-) -> Array[@pose_estimation.HumanPose] {
+) -> Array[@pose_estimation.HumanPose] raise @types.LoadError {
   @pose_estimation.detect_keypoints(img, config)
 }
 
@@ -9396,7 +9448,7 @@ pub fn recognize_gesture_pe(
 pub fn visualize_pose_pe(
   img : @types.Image,
   pose : @pose_estimation.HumanPose,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
   @pose_estimation.visualize_pose(img, pose)
 }
 
@@ -9460,7 +9512,7 @@ pub fn create_face_database_fr(
 pub fn detect_faces_fr(
   img : @types.Image,
   config : @face_recognition.FaceRecognitionConfig,
-) -> Array[@face_recognition.FaceDetectionResult] {
+) -> Array[@face_recognition.FaceDetectionResult] raise @types.LoadError {
   @face_recognition.detect_faces(img, config)
 }
 
@@ -9469,7 +9521,7 @@ pub fn extract_face_feature_fr(
   img : @types.Image,
   face : @face_recognition.FaceDetectionResult,
   config : @face_recognition.FaceRecognitionConfig,
-) -> @face_recognition.FaceFeature {
+) -> @face_recognition.FaceFeature raise @types.LoadError {
   @face_recognition.extract_face_feature(img, face, config)
 }
 
@@ -9503,7 +9555,7 @@ pub fn recognize_face_in_database_fr(
 pub fn recognize_expression_fr(
   img : @types.Image,
   face : @face_recognition.FaceDetectionResult,
-) -> @face_recognition.ExpressionRecognitionResult {
+) -> @face_recognition.ExpressionRecognitionResult raise @types.LoadError {
   @face_recognition.recognize_expression(img, face)
 }
 
@@ -9511,7 +9563,7 @@ pub fn recognize_expression_fr(
 pub fn estimate_age_gender_fr(
   img : @types.Image,
   face : @face_recognition.FaceDetectionResult,
-) -> @face_recognition.AgeGenderEstimationResult {
+) -> @face_recognition.AgeGenderEstimationResult raise @types.LoadError {
   @face_recognition.estimate_age_gender(img, face)
 }
 
@@ -9519,7 +9571,7 @@ pub fn estimate_age_gender_fr(
 pub fn evaluate_face_quality_fr(
   img : @types.Image,
   face : @face_recognition.FaceDetectionResult,
-) -> Double {
+) -> Double raise @types.LoadError {
   @face_recognition.evaluate_face_quality(img, face)
 }
 
@@ -9529,7 +9581,7 @@ pub fn analyze_face_attributes_fr(
   face : @face_recognition.FaceDetectionResult,
   database : @face_recognition.FaceDatabase,
   config : @face_recognition.FaceRecognitionConfig,
-) -> @face_recognition.FaceAttributeAnalysis {
+) -> @face_recognition.FaceAttributeAnalysis raise @types.LoadError {
   @face_recognition.analyze_face_attributes(img, face, database, config)
 }
 

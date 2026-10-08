@@ -185,6 +185,8 @@ pub fn stereo_match(
   height : Int,
   config : Vision3DConfig,
 ) -> StereoMatchingResult {
+  ignore(right_image)
+  ignore(left_image)
   let disparity_map : Array[Double] = []
   let depth_map : Array[Double] = []
   let confidence_map : Array[Double] = []
@@ -232,6 +234,7 @@ pub fn estimate_depth(
   height : Int,
   config : Vision3DConfig,
 ) -> DepthMap {
+  ignore(image)
   let depth_data : Array[Double] = []
   let confidence_map : Array[Double] = []
 
@@ -273,6 +276,8 @@ pub fn reconstruct_3d(
   depth_maps : Array[DepthMap],
   config : Vision3DConfig,
 ) -> Reconstruction3DResult {
+  ignore(depth_maps)
+  ignore(images)
   let points : Array[Point3D] = []
   let vertices : Array[Array[Double]] = []
   let faces : Array[Array[Int]] = []
@@ -366,6 +371,8 @@ pub fn estimate_pose(
   target_points : Array[Array[Double]],
   config : Vision3DConfig,
 ) -> PoseEstimationResult {
+  ignore(config)
+  ignore(target_points)
   let rotation : Array[Array[Double]] = []
   for i in 0..<3 {
     let row : Array[Double] = []

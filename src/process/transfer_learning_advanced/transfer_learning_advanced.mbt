@@ -496,6 +496,7 @@ pub fn few_shot_learning(
   query_data : Array[Array[Double]],
   config : TransferLearningConfig,
 ) -> FewShotLearningResult {
+  ignore(query_data)
   let num_classes = config.num_way
   let num_support = config.num_way * config.num_shot
 
@@ -588,6 +589,8 @@ pub fn transfer_learning(
   target_data : Array[Array[Double]],
   config : TransferLearningConfig,
 ) -> TransferLearningResult {
+  ignore(target_data)
+  ignore(source_data)
   let num_layers = 10
   let layer_size = 64
 

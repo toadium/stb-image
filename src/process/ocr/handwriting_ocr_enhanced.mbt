@@ -201,6 +201,7 @@ pub fn extract_handwriting_stroke_features(
   // 计算主要笔画方向（基于梯度方向直方图）
   let directions : Array[Double] = []
   let mut total_grad = 0.0
+  ignore(total_grad)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       if data[y * w + x].to_int() > 128 {
@@ -661,6 +662,7 @@ fn match_handwriting_enhanced(
   stroke_features : HandwritingStrokeFeatures,
   cfg : HandwritingOcrEnhancedConfig,
 ) -> (String, Double) {
+  ignore(stroke_features)
   // 收集所有变体的预测
   let label_votes : Array[(String, Double)] = []
   for _tup2 in templates {

@@ -388,6 +388,7 @@ pub fn icp_registration(
     // 简化版：计算平均误差
     let mut total_error = 0.0
     let mut inliers = 0
+    ignore(inliers)
     let sample_count = if source.num_points < 100 {
       source.num_points
     } else {

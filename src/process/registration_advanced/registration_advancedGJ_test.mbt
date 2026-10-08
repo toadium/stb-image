@@ -2,7 +2,7 @@
 // 相位相关配准/归一化互相关/互信息/Harris角点/特征匹配/仿射变换估计
 
 ///|
-fn make_ra_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn _make_ra_img(w : Int, h : Int, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -91,6 +91,7 @@ test "estimate_affine_transform: 基本仿射变换估计" {
   let points2 = detect_harris_corners(img2, 0.01)
   let matches = match_feature_points(points1, points2, 100.0)
   let matrix = estimate_affine_transform(matches)
+  ignore(matrix)
   assert_true(true)
 }
 

@@ -99,7 +99,40 @@ pub fn estimate_translation(
   img1 : @types.Image,
   img2 : @types.Image,
   max_offset? : Int = 20,
-) -> RegistrationResult {
+) -> RegistrationResult raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 图像尺寸必须大于0",
+    )
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img1.width * img1.height * img1.channels
+  if img1.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 数据大小不匹配",
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 图像尺寸必须大于0",
+    )
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size2 = img2.width * img2.height * img2.channels
+  if img2.data.length() != expected_size2 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_translation: 数据大小不匹配",
+    )
+  }
   let max_off = max_offset
   if img1.width != img2.width || img1.height != img2.height {
     return RegistrationResult::{
@@ -177,7 +210,24 @@ pub fn warp_affine_transform(
   transform : AffineTransform,
   out_width? : Int = 0,
   out_height? : Int = 0,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "warp_affine_transform: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "warp_affine_transform: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "warp_affine_transform: 数据大小不匹配",
+    )
+  }
   let ow = if out_width == 0 { img.width } else { out_width }
   let oh = if out_height == 0 { img.height } else { out_height }
   let w = img.width
@@ -237,7 +287,36 @@ pub fn warp_affine_transform(
 pub fn align_images(
   img1 : @types.Image,
   img2 : @types.Image,
-) -> (@types.Image, RegistrationResult) {
+) -> (@types.Image, RegistrationResult) raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "align_images: 图像尺寸必须大于0",
+    )
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "align_images: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img1.width * img1.height * img1.channels
+  if img1.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("align_images: 数据大小不匹配")
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "align_images: 图像尺寸必须大于0",
+    )
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "align_images: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size2 = img2.width * img2.height * img2.channels
+  if img2.data.length() != expected_size2 {
+    raise @types.LoadError::DecodeFailed("align_images: 数据大小不匹配")
+  }
   let result = estimate_translation(img1, img2)
   let transform = affine_translation(-result.dx, -result.dy)
   let aligned = warp_affine_transform(img2, transform)

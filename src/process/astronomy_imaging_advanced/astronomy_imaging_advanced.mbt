@@ -18,7 +18,7 @@ fn log_approx(x : Double) -> Double {
 }
 
 ///|
-fn sqrt_approx(x : Double) -> Double {
+fn _sqrt_approx(x : Double) -> Double {
   if x <= 0.0 {
     0.0
   } else {
@@ -260,6 +260,7 @@ pub fn detect_celestial_objects(
   height : Int,
   config : AstronomyImagingConfig,
 ) -> Array[DetectedCelestialObject] {
+  ignore(image)
   let objects : Array[DetectedCelestialObject] = []
 
   let mut state = 42
@@ -327,6 +328,7 @@ pub fn classify_galaxies(
   objects : Array[DetectedCelestialObject],
   config : AstronomyImagingConfig,
 ) -> Array[GalaxyClassificationResult] {
+  ignore(config)
   let results : Array[GalaxyClassificationResult] = []
 
   let morphologies = [

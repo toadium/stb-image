@@ -98,6 +98,7 @@ pub fn correct_slant(
   img : @types.Image,
   max_slant? : Double = 15.0,
 ) -> @types.Image raise @types.LoadError {
+  ignore(max_slant)
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(

@@ -208,6 +208,8 @@ pub fn segment_medical_image(
   height : Int,
   config : MedicalImagingConfig,
 ) -> SegmentationResult {
+  ignore(config)
+  ignore(image)
   let segmentation_map : Array[Array[Int]] = []
   let confidence_map : Array[Array[Double]] = []
   let class_names = ["background", "organ", "lesion", "other"]
@@ -256,6 +258,7 @@ pub fn detect_lesions(
   height : Int,
   config : MedicalImagingConfig,
 ) -> Array[DetectedLesion] {
+  ignore(image)
   let lesions : Array[DetectedLesion] = []
 
   let lesion_types = [
@@ -326,6 +329,7 @@ pub fn segment_organ(
   organ_type : OrganType,
   config : MedicalImagingConfig,
 ) -> OrganSegmentationResult {
+  ignore(image)
   // 简化的器官分割
   let mask : Array[Array[Bool]] = []
   let mut state = 42
@@ -385,6 +389,9 @@ pub fn extract_radiomics_features(
   mask : Array[Array[Bool]],
   config : MedicalImagingConfig,
 ) -> RadiomicsFeatures {
+  ignore(config)
+  ignore(mask)
+  ignore(image)
   let first_order : Array[Double] = []
   let shape : Array[Double] = []
   let texture : Array[Double] = []
@@ -445,6 +452,11 @@ pub fn register_medical_images(
   height : Int,
   config : MedicalImagingConfig,
 ) -> RegistrationResult {
+  ignore(config)
+  ignore(height)
+  ignore(width)
+  ignore(moving_image)
+  ignore(fixed_image)
   let transformation : Array[Array[Double]] = []
   for i in 0..<4 {
     let row : Array[Double] = []

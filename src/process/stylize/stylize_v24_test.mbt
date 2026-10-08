@@ -2,7 +2,7 @@
 // 油画/素描/水彩/卡通效果
 
 ///|
-fn make_stylize_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn _make_stylize_img(w : Int, h : Int, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

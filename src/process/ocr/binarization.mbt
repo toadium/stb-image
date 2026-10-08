@@ -3,7 +3,7 @@
 
 ///|
 /// 辅助函数：限制字节范围
-fn clamp_byte_ocr(v : Int) -> Byte {
+fn _clamp_byte_ocr(v : Int) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {

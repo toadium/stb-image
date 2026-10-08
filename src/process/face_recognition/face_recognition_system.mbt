@@ -169,7 +169,23 @@ pub fn create_face_database(
 pub fn detect_faces(
   img : @types.Image,
   config : FaceRecognitionConfig,
-) -> Array[FaceDetectionResult] {
+) -> Array[FaceDetectionResult] raise @types.LoadError {
+  ignore(config)
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_faces: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_faces: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("detect_faces: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let faces : Array[FaceDetectionResult] = []
@@ -249,7 +265,24 @@ pub fn extract_face_feature(
   img : @types.Image,
   face : FaceDetectionResult,
   config : FaceRecognitionConfig,
-) -> FaceFeature {
+) -> FaceFeature raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "extract_face_feature: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "extract_face_feature: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_face_feature: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let dimension = config.feature_dimension
@@ -397,7 +430,24 @@ pub fn recognize_face_in_database(
 pub fn recognize_expression(
   img : @types.Image,
   face : FaceDetectionResult,
-) -> ExpressionRecognitionResult {
+) -> ExpressionRecognitionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_expression: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_expression: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "recognize_expression: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
 
@@ -501,7 +551,24 @@ pub fn recognize_expression(
 pub fn estimate_age_gender(
   img : @types.Image,
   face : FaceDetectionResult,
-) -> AgeGenderEstimationResult {
+) -> AgeGenderEstimationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_age_gender: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_age_gender: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "estimate_age_gender: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
 
@@ -558,7 +625,24 @@ pub fn estimate_age_gender(
 pub fn evaluate_face_quality(
   img : @types.Image,
   face : FaceDetectionResult,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_face_quality: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_face_quality: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_face_quality: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
 
@@ -613,7 +697,24 @@ pub fn analyze_face_attributes(
   face : FaceDetectionResult,
   database : FaceDatabase,
   config : FaceRecognitionConfig,
-) -> FaceAttributeAnalysis {
+) -> FaceAttributeAnalysis raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_face_attributes: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_face_attributes: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_face_attributes: 数据大小不匹配",
+    )
+  }
   let feature = extract_face_feature(img, face, config)
   let recognition = recognize_face_in_database(
     database,

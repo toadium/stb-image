@@ -207,6 +207,8 @@ pub fn volume_render(
   samples : Array[Voxel],
   config : NeRFConfig,
 ) -> (Array[Double], Double) {
+  ignore(config)
+  ignore(ray)
   // 简化的体渲染：累积颜色和密度
   let color = [0.0, 0.0, 0.0]
   let mut alpha = 0.0
@@ -234,6 +236,7 @@ pub fn render_nerf(
   camera : CameraParams,
   config : NeRFConfig,
 ) -> RenderingResult {
+  ignore(config)
   let w = camera.image_width
   let h = camera.image_height
   let total = w * h
@@ -320,6 +323,7 @@ pub fn render_gaussian_splatting(
   gaussians : Array[Gaussian3D],
   config : GaussianSplattingConfig,
 ) -> RenderingResult {
+  ignore(config)
   let w = camera.image_width
   let h = camera.image_height
   let total = w * h

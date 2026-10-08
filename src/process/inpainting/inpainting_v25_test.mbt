@@ -2,7 +2,7 @@
 // 图像修复/去雾/去雨：Telea/NavierStokes/FastMarching/PatchMatch、暗通道/CLAHE去雾、形态学去雨
 
 ///|
-fn make_inpaint_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn _make_inpaint_img(w : Int, h : Int, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

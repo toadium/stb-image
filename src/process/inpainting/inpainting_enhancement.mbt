@@ -407,6 +407,8 @@ pub fn dehaze_clahe(
   clip_limit : Double,
   tile_size : Int,
 ) -> @types.Image {
+  ignore(tile_size)
+  ignore(clip_limit)
   let w = img.width
   let h = img.height
   let total = w * h
@@ -529,6 +531,7 @@ pub fn derain_morphological(img : @types.Image) -> DerainResult {
 ///|
 /// 去雨
 pub fn derain(img : @types.Image, algorithm : DerainAlgorithm) -> DerainResult {
+  ignore(algorithm)
   derain_morphological(img)
 }
 

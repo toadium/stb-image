@@ -163,6 +163,7 @@ pub fn update_task_progress(
   current_page : Int,
   total_pages : Int,
 ) -> BatchTask {
+  ignore(current_page)
   let new_progress = if progress > 1.0 {
     1.0
   } else if progress < 0.0 {

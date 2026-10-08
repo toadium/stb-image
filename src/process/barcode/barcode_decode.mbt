@@ -119,7 +119,22 @@ let ean13_parity_patterns : Array[Array[Int]] = [
 pub fn decode_ean13(
   img : @types.Image,
   config? : BarcodeConfig,
-) -> BarcodeResult? {
+) -> BarcodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_ean13: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_ean13: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("decode_ean13: 数据大小不匹配")
+  }
   let cfg = match config {
     Some(c) => c
     None => barcode_default_config()
@@ -184,6 +199,8 @@ fn decode_ean13_from_binary(
   img_width : Int,
   img_height : Int,
 ) -> BarcodeResult? {
+  ignore(img_height)
+  ignore(img_width)
   let w = binary.length()
   if w < 95 { // EAN-13 至少需要 95 个模块
     return None
@@ -374,7 +391,26 @@ pub(all) struct QrFinderPattern {
 
 ///|
 /// 检测 QR Code 定位图案
-pub fn detect_qr_finder_patterns(img : @types.Image) -> Array[QrFinderPattern] {
+pub fn detect_qr_finder_patterns(
+  img : @types.Image,
+) -> Array[QrFinderPattern] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_qr_finder_patterns: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "detect_qr_finder_patterns: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "detect_qr_finder_patterns: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let data = img.data
@@ -553,7 +589,22 @@ fn verify_qr_pattern_vertical(
 pub fn decode_qrcode(
   img : @types.Image,
   config? : BarcodeConfig,
-) -> BarcodeResult? {
+) -> BarcodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_qrcode: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_qrcode: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("decode_qrcode: 数据大小不匹配")
+  }
   let cfg = match config {
     Some(c) => c
     None => barcode_default_config()
@@ -602,7 +653,24 @@ pub fn decode_qrcode(
 pub fn decode_barcode(
   img : @types.Image,
   config? : BarcodeConfig,
-) -> Array[BarcodeResult] {
+) -> Array[BarcodeResult] raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_barcode: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_barcode: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "decode_barcode: 数据大小不匹配",
+    )
+  }
   let results : Array[BarcodeResult] = []
   // 尝试 EAN-13
   let ean13_result = match config {

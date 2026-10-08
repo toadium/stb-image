@@ -219,7 +219,7 @@ pub fn cosine_similarity(vec1 : Array[Double], vec2 : Array[Double]) -> Double {
 
 ///|
 /// 近似平方根
-fn sqrt_approx(x : Double) -> Double {
+fn _sqrt_approx(x : Double) -> Double {
   if x <= 0.0 {
     0.0
   } else {

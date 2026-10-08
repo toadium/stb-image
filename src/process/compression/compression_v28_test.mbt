@@ -18,7 +18,7 @@ fn create_solid_img_c(w : Int, h : Int, value : Int) -> @types.Image {
 ///|
 fn create_gradient_img_c(w : Int, h : Int) -> @types.Image {
   let data : Array[Byte] = []
-  for y in 0..<h {
+  for _ in 0..<h {
     for x in 0..<w {
       let v = x * 255 / w % 256
       data.push(v.to_byte())

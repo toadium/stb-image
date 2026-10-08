@@ -104,7 +104,26 @@ pub fn create_default_style_transfer_config() -> StyleTransferConfig {
 
 ///|
 /// 计算颜色统计信息
-pub fn calculate_color_statistics(img : @types.Image) -> ColorStatistics {
+pub fn calculate_color_statistics(
+  img : @types.Image,
+) -> ColorStatistics raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_color_statistics: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_color_statistics: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_color_statistics: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -183,7 +202,41 @@ pub fn color_transfer(
   content : @types.Image,
   style : @types.Image,
   strength : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证：content
+  if content.width <= 0 || content.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 图像尺寸必须大于0",
+    )
+  }
+  if content.channels < 1 || content.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 通道数必须在1-4之间",
+    )
+  }
+  let content_expected = content.width * content.height * content.channels
+  if content.data.length() != content_expected {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 数据大小不匹配",
+    )
+  }
+  // 输入验证：style
+  if style.width <= 0 || style.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 图像尺寸必须大于0",
+    )
+  }
+  if style.channels < 1 || style.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 通道数必须在1-4之间",
+    )
+  }
+  let style_expected = style.width * style.height * style.channels
+  if style.data.length() != style_expected {
+    raise @types.LoadError::DecodeFailed(
+      "color_transfer: 数据大小不匹配",
+    )
+  }
   let content_stats = calculate_color_statistics(content)
   let style_stats = calculate_color_statistics(style)
 
@@ -226,7 +279,24 @@ pub fn color_transfer(
 /// 计算纹理特征（GLCM 简化版）
 pub fn calculate_texture_features(
   img : @types.Image,
-) -> StyleTransferTextureFeatures {
+) -> StyleTransferTextureFeatures raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -299,7 +369,25 @@ pub fn calculate_texture_features(
 
 ///|
 /// 卡通化效果
-pub fn cartoonize(img : @types.Image, strength : Double) -> @types.Image {
+pub fn cartoonize(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "cartoonize: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "cartoonize: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("cartoonize: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -364,7 +452,22 @@ pub fn oil_painting(
   img : @types.Image,
   radius : Int,
   intensity_levels : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "oil_painting: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "oil_painting: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("oil_painting: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -437,7 +540,25 @@ pub fn oil_painting(
 
 ///|
 /// 素描效果
-pub fn sketch_effect(img : @types.Image, strength : Double) -> @types.Image {
+pub fn sketch_effect(
+  img : @types.Image,
+  strength : Double,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "sketch_effect: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "sketch_effect: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("sketch_effect: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -494,7 +615,41 @@ pub fn style_transfer(
   content : @types.Image,
   style : @types.Image,
   config : StyleTransferConfig,
-) -> StyleTransferResult {
+) -> StyleTransferResult raise @types.LoadError {
+  // 输入验证：content
+  if content.width <= 0 || content.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 图像尺寸必须大于0",
+    )
+  }
+  if content.channels < 1 || content.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 通道数必须在1-4之间",
+    )
+  }
+  let content_expected = content.width * content.height * content.channels
+  if content.data.length() != content_expected {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 数据大小不匹配",
+    )
+  }
+  // 输入验证：style
+  if style.width <= 0 || style.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 图像尺寸必须大于0",
+    )
+  }
+  if style.channels < 1 || style.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 通道数必须在1-4之间",
+    )
+  }
+  let style_expected = style.width * style.height * style.channels
+  if style.data.length() != style_expected {
+    raise @types.LoadError::DecodeFailed(
+      "style_transfer: 数据大小不匹配",
+    )
+  }
   let result = if config.algorithm == StyleTransferAlgorithm::ColorTransfer {
     color_transfer(content, style, config.style_strength)
   } else if config.algorithm == StyleTransferAlgorithm::Cartoon {

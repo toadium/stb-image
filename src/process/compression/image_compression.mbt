@@ -141,7 +141,26 @@ pub fn run_length_decode(data : Bytes) -> Bytes {
 
 ///|
 /// 计算图像熵
-pub fn calculate_image_entropy(img : @types.Image) -> Double {
+pub fn calculate_image_entropy(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -168,7 +187,30 @@ pub fn calculate_image_entropy(img : @types.Image) -> Double {
 
 ///|
 /// 量化（均匀量化）
-pub fn quantize_image(img : @types.Image, levels : Int) -> @types.Image {
+pub fn quantize_image(
+  img : @types.Image,
+  levels : Int,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "quantize_image: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "quantize_image: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "quantize_image: 数据大小不匹配",
+    )
+  }
+  if levels < 2 {
+    raise @types.LoadError::DecodeFailed("quantize_image: levels 必须 >= 2")
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -198,7 +240,24 @@ pub fn quantize_image(img : @types.Image, levels : Int) -> @types.Image {
 
 ///|
 /// 预测编码（差分脉冲编码调制 DPCM）
-pub fn predictive_encode(img : @types.Image) -> Bytes {
+pub fn predictive_encode(img : @types.Image) -> Bytes raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "predictive_encode: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "predictive_encode: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "predictive_encode: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -265,7 +324,29 @@ pub fn calculate_compression_quality(
   compressed : @types.Image,
   original_size : Int,
   compressed_size : Int,
-) -> CompressionQualityMetrics {
+) -> CompressionQualityMetrics raise @types.LoadError {
+  // 输入验证
+  if original.width <= 0 || original.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_compression_quality: 图像尺寸必须大于0",
+    )
+  }
+  if original.channels < 1 || original.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_compression_quality: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = original.width * original.height * original.channels
+  if original.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_compression_quality: 数据大小不匹配",
+    )
+  }
+  if compressed.width != original.width || compressed.height != original.height {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_compression_quality: 两图像尺寸必须一致",
+    )
+  }
   let w = original.width
   let h = original.height
   let total = w * h
@@ -370,7 +451,24 @@ pub fn calculate_compression_quality(
 pub fn compress_jpeg_simple(
   img : @types.Image,
   quality : Double,
-) -> CompressionResult {
+) -> CompressionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_jpeg_simple: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_jpeg_simple: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "compress_jpeg_simple: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let original_size = w * h
@@ -413,7 +511,26 @@ pub fn compress_jpeg_simple(
 
 ///|
 /// PNG 风格压缩（预测 + RLE）
-pub fn compress_png_simple(img : @types.Image) -> CompressionResult {
+pub fn compress_png_simple(
+  img : @types.Image,
+) -> CompressionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_png_simple: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_png_simple: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "compress_png_simple: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let original_size = w * h
@@ -445,7 +562,24 @@ pub fn compress_png_simple(img : @types.Image) -> CompressionResult {
 pub fn compress_image(
   img : @types.Image,
   config : CompressionConfig,
-) -> CompressionResult {
+) -> CompressionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_image: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compress_image: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "compress_image: 数据大小不匹配",
+    )
+  }
   if config.algorithm == CompressionAlgorithm::JPEGBaseline {
     compress_jpeg_simple(img, config.quality)
   } else if config.algorithm == CompressionAlgorithm::PNG {

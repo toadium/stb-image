@@ -394,6 +394,7 @@ pub fn simulate_rl_training(
   config : RLConfig,
   env : RLEnvironment,
 ) -> RLTrainingResult {
+  ignore(env)
   let reward_history : Array[Double] = []
   let loss_history : Array[Double] = []
   let epsilon_history : Array[Double] = []
@@ -453,6 +454,8 @@ pub fn evaluate_policy(
   env : RLEnvironment,
   num_episodes : Int,
 ) -> PolicyEvaluationResult {
+  ignore(env)
+  ignore(agent)
   let rewards : Array[Double] = []
   let mut total_reward = 0.0
   let mut success_count = 0

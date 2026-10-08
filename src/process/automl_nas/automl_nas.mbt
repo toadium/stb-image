@@ -400,6 +400,7 @@ pub fn automl_report_to_string(
   config : NASConfig,
   metrics : ModelEvaluationMetrics,
 ) -> String {
+  ignore(metrics)
   let mut report = "## 神经架构搜索与AutoML报告\n\n"
 
   report = report + "### 搜索配置\n\n"

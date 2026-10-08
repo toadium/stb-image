@@ -258,7 +258,9 @@ pub fn compress_image(
   let block_size = config.block_size
 
   let mut total_coefficients = 0
+  ignore(total_coefficients)
   let mut nonzero_coefficients = 0
+  ignore(nonzero_coefficients)
 
   let mut y = 0
   while y < height {
@@ -373,6 +375,8 @@ pub fn evaluate_compression_quality(
   width : Int,
   height : Int,
 ) -> CompressionQualityResult {
+  ignore(height)
+  ignore(width)
   let mut mse = 0.0
   let mut count = 0
 
@@ -411,6 +415,10 @@ pub fn optimize_rate_distortion(
   height : Int,
   config : ImageCompressionConfig,
 ) -> RateDistortionOptimizationResult {
+  ignore(config)
+  ignore(height)
+  ignore(width)
+  ignore(image)
   let curve : Array[Array[Double]] = []
 
   let mut quality = 10

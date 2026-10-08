@@ -355,7 +355,24 @@ pub fn calculate_texture_features(
   x : Int,
   y : Int,
   window_size : Int,
-) -> TextureFeatures {
+) -> TextureFeatures raise @types.LoadError {
+  // 输入验证
+  if image.width <= 0 || image.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 图像尺寸必须大于0",
+    )
+  }
+  if image.channels < 1 || image.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = image.width * image.height * image.channels
+  if image.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_texture_features: 数据大小不匹配",
+    )
+  }
   let w = image.width
   let h = image.height
   let half = window_size / 2
