@@ -349,3 +349,57 @@ test "sharpen_f: output preserves dimensions" {
   let _ = img
   let _ = result
 }
+
+// ========== 错误处理路径测试 ==========
+
+///|
+test "box_blur_16: zero width raises" {
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  try {
+    let _ = box_blur_16(img, 3)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "box_blur_16: invalid channels raises" {
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  try {
+    let _ = box_blur_16(img, 3)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "box_blur_f: zero width raises" {
+  let img = @types.ImageF::{ width: 0, height: 8, channels: 1, data: b"" }
+  try {
+    let _ = box_blur_f(img, 3)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "box_blur_f: invalid channels raises" {
+  let img = @types.ImageF::{ width: 8, height: 8, channels: 5, data: b"" }
+  try {
+    let _ = box_blur_f(img, 3)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}

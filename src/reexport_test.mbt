@@ -857,3 +857,294 @@ test "reexport: guided_filter" {
   assert_true(result.length() == 16)
   let _ = img
 }
+
+// Batch 1a: affine and simple math
+///|
+test "reexport: affine_rotation basic" {
+  let t = affine_rotation(0.5)
+  let _ = t
+}
+///|
+test "reexport: affine_scale basic" {
+  let t = affine_scale(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_translation basic" {
+  let t = affine_translation(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_apply basic" {
+  let t = affine_translation(1.0, 2.0)
+  let (x, y) = affine_apply(t, 0.0, 0.0)
+  let _ = x
+  let _ = y
+}
+///|
+test "reexport: affine_compose basic" {
+  let t1 = affine_translation(1.0, 2.0)
+  let t2 = affine_scale(2.0, 2.0)
+  let t = affine_compose(t1, t2)
+  let _ = t
+}
+///|
+test "reexport: measure_distance basic" {
+  let d = measure_distance(0, 0, 3, 4)
+  assert_true(d >= 0.0)
+}
+///|
+test "reexport: reed_solomon_decode basic" {
+  let (data, ok) = reed_solomon_decode([1, 2, 3, 4], 2)
+  let _ = data
+  let _ = ok
+}
+// Batch 1b: image computation
+///|
+test "reexport: compute_mae basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_mae(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ssim basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_ssim(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_diff_image basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_diff_image(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_quality_metrics basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_quality_metrics(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndvi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndvi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndbi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndbi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndwi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndwi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_evi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = compute_evi(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: measure_area basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = measure_area(img)
+  let _ = img
+}
+// Batch 1c: colormap and medical
+///|
+test "reexport: classification_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = classification_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: depth_to_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = depth_to_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: disparity_to_depth basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = disparity_to_depth(img)
+  let _ = img
+}
+///|
+test "reexport: medical_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: medical_contrast_enhance basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_contrast_enhance(img)
+  let _ = img
+}
+///|
+test "reexport: medical_denoise basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_denoise(img)
+  let _ = img
+}
+///|
+test "reexport: apply_window_level basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wl = @medical.WindowLevel::{window_width: 256.0, window_level: 128.0}
+  let _ = apply_window_level(img, wl)
+  let _ = img
+}
+///|
+test "reexport: true_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = true_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: false_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = false_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: vegetation_coverage basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = vegetation_coverage(img)
+  let _ = img
+}
+///|
+test "reexport: multispectral_new basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = multispectral_new(8, 8, [img])
+  let _ = img
+}
+///|
+test "reexport: video_frames_new basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = v
+  let _ = img
+}
+///|
+test "reexport: create_animation basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = create_animation([img])
+  let _ = v
+  let _ = img
+}
+///|
+test "reexport: video_frame_count basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_frame_count(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_get_frame basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_get_frame(v, 0)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_frame_average basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_frame_average(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_reverse basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_reverse(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_sample basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_sample(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_fade_in basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_fade_in(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_fade_out basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_fade_out(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_concat basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v1 = video_frames_new([img])
+  let v2 = video_frames_new([img])
+  let _ = video_concat(v1, v2)
+  let _ = img
+  let _ = v1
+  let _ = v2
+}
+///|
+test "reexport: extract_text_watermark basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_text_watermark(img, 10)
+  let _ = img
+}
+///|
+test "reexport: embed_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wm = re_make_rgb(2, 2, Array::make(4, (255, 255, 255)))
+  let _ = embed_watermark_lsb(img, wm)
+  let _ = img
+  let _ = wm
+}
+///|
+test "reexport: extract_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_watermark_lsb(img)
+  let _ = img
+}
