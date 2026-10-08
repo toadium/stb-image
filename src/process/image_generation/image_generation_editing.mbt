@@ -140,7 +140,7 @@ pub fn generate_random_latent(dimension : Int, seed : Int) -> LatentVector {
 
   for _ in 0..<dimension {
     // 简化的伪随机数生成器（避免溢出）
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let random = (state % 1000).to_double() / 1000.0
     // 转换为近似正态分布（Box-Muller 简化版）
     let normal = (random - 0.5) * 2.0

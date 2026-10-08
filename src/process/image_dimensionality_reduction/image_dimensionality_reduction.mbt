@@ -462,7 +462,7 @@ pub fn tsne_reduce(
   for _ in 0..<num_samples {
     let r : Array[Double] = []
     for _ in 0..<num_components {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       r.push(rand_val * 0.01)
     }
@@ -474,7 +474,7 @@ pub fn tsne_reduce(
     // 简化：随机扰动
     for i in 0..<num_samples {
       for d in 0..<num_components {
-        state = (state * 11035 + 12345) % 1000000
+        state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
         let noise = (state % 1000).to_double() / 1000.0 - 0.5
         reduced[i][d] += noise * config.learning_rate * 0.001
       }
@@ -511,7 +511,7 @@ pub fn umap_reduce(
   for _ in 0..<num_samples {
     let r : Array[Double] = []
     for _ in 0..<num_components {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       r.push(rand_val * 0.1)
     }

@@ -206,7 +206,7 @@ pub fn create_sensor_data(
 
   let mut state = 42
   for _ in 0..<data_size {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     data.push((state % 1000).to_double() / 1000.0)
   }
 
@@ -270,7 +270,7 @@ pub fn fuse_sensors(
 
   let mut state = 42
   for i in 0..<5 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let obj_type = object_types[i % object_types.length()]
     let bbox : Array[Double] = []
     bbox.push((state % 100).to_double())
@@ -278,7 +278,7 @@ pub fn fuse_sensors(
     bbox.push((state % 50).to_double() + 50.0)
     bbox.push((state % 50).to_double() + 50.0)
 
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.5 + 0.5
 
     let obj = create_detected_object(i, obj_type, bbox, confidence)

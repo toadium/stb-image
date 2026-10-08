@@ -229,11 +229,11 @@ pub fn automatic_colorization(
 
   // 生成颜色调色板
   for _ in 0..<16 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let r = (state % 256).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let g = (state % 256).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let b = (state % 256).to_double()
     let color : Array[Double] = []
     color.push(r)
@@ -315,7 +315,7 @@ pub fn reference_based_colorization(
     let color = gray * 0.5 + ref_color * 0.5
     colorized.push(color)
 
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let map_val = (state % 1000).to_double() / 1000.0
     let map_row : Array[Double] = []
     map_row.push(map_val)
@@ -351,12 +351,12 @@ pub fn old_photo_colorization(
 
   for value in old_photo {
     // 简化的老照片处理：去噪 + 上色
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let noise = (state % 1000).to_double() / 1000.0 - 0.5
     let denoised = value + noise * config.noise_reduction * 10.0
 
     // 简化的上色
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let color_tint = (state % 1000).to_double() / 1000.0 * 50.0
     let r = denoised + color_tint
     let g = denoised

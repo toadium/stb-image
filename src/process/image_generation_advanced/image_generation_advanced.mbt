@@ -233,7 +233,7 @@ pub fn generate_noise(
   let mut state = seed
 
   for _ in 0..<(width * height * num_channels) {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = (state % 1000).to_double() / 500.0 - 1.0
     noise.push(value)
   }
@@ -255,7 +255,7 @@ pub fn diffuse_sample(
     // 简化的去噪过程
     let mut denoised = value
     for _ in 0..<num_steps {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise_level = (state % 1000).to_double() / 1000.0
       denoised = denoised * (1.0 - noise_level * 0.01)
     }
@@ -393,7 +393,7 @@ pub fn inpaint_image(
   for i in 0..<image.length() {
     if i < mask.length() && mask[i] {
       // 需要修复的像素
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let value = (state % 256).to_double()
       repaired.push(value)
       num_repaired += 1

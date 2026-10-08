@@ -179,17 +179,17 @@ pub fn detect_defects(
   let num_defects = 5
 
   for i in 0..<num_defects {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = state % (width - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = state % (height - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let w = state % 50 + 20
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let h = state % 50 + 20
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.5 + 0.5
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let severity = (state % 1000).to_double() / 1000.0
 
     let defect_types = [
@@ -254,7 +254,7 @@ pub fn measure_dimensions(
 
   let mut state = 42
   for i in 0..<measurement_names.length() {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let deviation = ((state % 1000).to_double() / 1000.0 - 0.5) *
       config.tolerance_default *
       2.0

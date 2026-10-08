@@ -296,7 +296,7 @@ fn init_pretrained_weights(
   for _ in 0..<num_layers {
     let layer : Array[Double] = []
     for _ in 0..<layer_size {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       layer.push(rand_val * 0.1)
     }
@@ -363,7 +363,7 @@ pub fn fine_tune_model(
       // 可训练层：微调权重
       let layer : Array[Double] = []
       for j in 0..<pretrained_weights[i].length() {
-        state = (state * 11035 + 12345) % 1000000
+        state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
         let noise = (state % 1000).to_double() / 1000.0 - 0.5
         layer.push(pretrained_weights[i][j] + noise * config.learning_rate)
       }
@@ -407,7 +407,7 @@ pub fn domain_adaptation(
   for layer in source_weights {
     let adapted_layer : Array[Double] = []
     for w in layer {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise = (state % 1000).to_double() / 1000.0 - 0.5
       adapted_layer.push(w + noise * 0.01)
     }

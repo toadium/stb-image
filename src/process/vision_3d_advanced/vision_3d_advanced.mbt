@@ -194,7 +194,7 @@ pub fn stereo_match(
   let mut state = 42
   for _ in 0..<height {
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let disparity = (state % config.disparity_range).to_double()
       disparity_map.push(disparity)
 
@@ -205,7 +205,7 @@ pub fn stereo_match(
       }
       depth_map.push(depth)
 
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
       confidence_map.push(confidence)
     }
@@ -241,13 +241,13 @@ pub fn estimate_depth(
   let mut state = 42
   for _ in 0..<height {
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let depth = config.min_depth +
         (state % 1000).to_double() /
         1000.0 *
         (config.max_depth - config.min_depth)
       depth_data.push(depth)
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
       confidence_map.push(confidence)
     }
@@ -287,17 +287,17 @@ pub fn reconstruct_3d(
   let num_points = 1000
 
   for _ in 0..<num_points {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = (state % 1000).to_double() / 100.0 - 5.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = (state % 1000).to_double() / 100.0 - 5.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let z = (state % 1000).to_double() / 100.0 - 5.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let r = (state % 256).to_double() / 255.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let g = (state % 256).to_double() / 255.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let b = (state % 256).to_double() / 255.0
 
     let point = Point3D::{

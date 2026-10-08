@@ -230,15 +230,15 @@ pub fn detect_crops(
   let num_crops = 10
 
   for i in 0..<num_crops {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = state % (width - 200)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = state % (height - 200)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let w = state % 100 + 100
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let h = state % 100 + 100
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
     let bbox : Array[Int] = []
@@ -291,17 +291,17 @@ pub fn detect_diseases(
   let num_diseases = 5
 
   for i in 0..<num_diseases {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = state % (width - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = state % (height - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let w = state % 50 + 30
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let h = state % 50 + 30
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.4 + 0.6
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let severity = (state % 1000).to_double() / 1000.0
 
     let bbox : Array[Int] = []
@@ -361,13 +361,13 @@ pub fn detect_pests(
   let num_pests = 5
 
   for i in 0..<num_pests {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let count = state % 20
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.4 + 0.6
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let infestation = count.to_double() / 20.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let damage = (state % 1000).to_double() / 1000.0
 
     let pest_type = pest_types[i % pest_types.length()]
@@ -448,19 +448,19 @@ pub fn analyze_soil(
   ignore(soil_image)
   // 简化的土壤分析
   let mut state = 42
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let ph = 5.5 + (state % 1000).to_double() / 1000.0 * 2.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let nitrogen = (state % 1000).to_double() / 10.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let phosphorus = (state % 1000).to_double() / 10.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let potassium = (state % 1000).to_double() / 10.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let organic_matter = (state % 1000).to_double() / 100.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let moisture = (state % 1000).to_double() / 10.0
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let temperature = 15.0 + (state % 1000).to_double() / 100.0
 
   let fertility = (nitrogen + phosphorus + potassium + organic_matter * 10.0) /

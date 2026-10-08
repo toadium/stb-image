@@ -226,7 +226,7 @@ fn lsb_embed(
   watermark : Array[Byte],
   _strength : Double,
 ) -> Array[Double] {
-  ignore(strength)
+
   let result : Array[Double] = []
   let mut wm_idx = 0
   let mut bit_idx = 0
@@ -360,7 +360,7 @@ pub fn attack_watermark(
   let mut state = 42
 
   for value in image {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let noise = (state % 1000).to_double() / 1000.0 - 0.5
     let mut new_value = value
 

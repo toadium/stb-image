@@ -199,8 +199,7 @@ fn decode_ean13_from_binary(
   _img_width : Int,
   _img_height : Int,
 ) -> BarcodeResult? {
-  ignore(img_height)
-  ignore(img_width)
+
   let w = binary.length()
   if w < 95 { // EAN-13 至少需要 95 个模块
     return None

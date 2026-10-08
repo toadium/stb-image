@@ -228,7 +228,7 @@ fn init_weights(num_layers : Int, layer_size : Int) -> Array[Array[Double]] {
   for _ in 0..<num_layers {
     let layer : Array[Double] = []
     for _ in 0..<layer_size {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
       layer.push(rand_val)
     }

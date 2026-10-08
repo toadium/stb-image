@@ -275,7 +275,7 @@ pub fn smart_cutout(
 
   for y in 0..<height {
     for x in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let dist_center = ((x - width / 2) * (x - width / 2) +
       (y - height / 2) * (y - height / 2)).to_double()
       let max_dist = (width * width / 4 + height * height / 4).to_double()
@@ -368,7 +368,7 @@ pub fn remove_objects(
 
   for i in 0..<image.length() {
     if i < mask.length() && mask[i] {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let value = (state % 256).to_double()
       repaired.push(value)
       num_repaired += 1

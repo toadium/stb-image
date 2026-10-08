@@ -219,10 +219,10 @@ pub fn segment_medical_image(
     let row : Array[Int] = []
     let conf_row : Array[Double] = []
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let class_idx = state % 4
       row.push(class_idx)
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let conf = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
       conf_row.push(conf)
     }
@@ -273,19 +273,19 @@ pub fn detect_lesions(
   let num_lesions = 5
 
   for i in 0..<num_lesions {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = state % (width - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = state % (height - 100)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let w = state % 50 + 20
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let h = state % 50 + 20
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let severity = (state % 1000).to_double() / 1000.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let malignancy_risk = (state % 1000).to_double() / 1000.0
 
     let bbox : Array[Int] = []
@@ -337,7 +337,7 @@ pub fn segment_organ(
   for _ in 0..<height {
     let row : Array[Bool] = []
     for _ in 0..<width {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let is_organ = state % 10 < 3
       row.push(is_organ)
     }
@@ -401,7 +401,7 @@ pub fn extract_radiomics_features(
 
   let mut state = 42
   for i in 0..<18 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = (state % 1000).to_double() / 1000.0
     first_order.push(value)
     feature_names.push("first_order_" + i.to_string())
@@ -409,7 +409,7 @@ pub fn extract_radiomics_features(
   }
 
   for i in 0..<14 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = (state % 1000).to_double() / 1000.0
     shape.push(value)
     feature_names.push("shape_" + i.to_string())
@@ -417,7 +417,7 @@ pub fn extract_radiomics_features(
   }
 
   for i in 0..<24 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = (state % 1000).to_double() / 1000.0
     texture.push(value)
     feature_names.push("texture_" + i.to_string())
@@ -425,7 +425,7 @@ pub fn extract_radiomics_features(
   }
 
   for i in 0..<40 {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let value = (state % 1000).to_double() / 1000.0
     wavelet.push(value)
     feature_names.push("wavelet_" + i.to_string())

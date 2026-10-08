@@ -528,7 +528,7 @@ pub fn train_gan(
   for _ in 0..<num_samples {
     let sample : Array[Double] = []
     for _ in 0..<output_dim {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let rand_val = (state % 1000).to_double() / 1000.0
       sample.push(rand_val * 255.0)
     }

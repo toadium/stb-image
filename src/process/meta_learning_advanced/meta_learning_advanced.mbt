@@ -232,7 +232,7 @@ fn init_parameters(num_params : Int) -> Array[Double] {
   let params : Array[Double] = []
   let mut state = 42
   for _ in 0..<num_params {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let rand_val = (state % 1000).to_double() / 1000.0 - 0.5
     params.push(rand_val * 0.1)
   }

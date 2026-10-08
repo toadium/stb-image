@@ -276,7 +276,7 @@ pub fn generate_noise(
   for _ in 0..<num_samples {
     let sample : Array[Double] = []
     for _ in 0..<latent_dim {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise = (state % 1000).to_double() / 1000.0 * 2.0 - 1.0
       sample.push(noise)
     }
@@ -301,7 +301,7 @@ pub fn simulate_diffusion_sampling(
   for _ in 0..<sampling_config.num_samples {
     let sample : Array[Double] = []
     for _ in 0..<pixels_per_image {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let pixel = (state % 1000).to_double() / 1000.0
       sample.push(pixel)
     }

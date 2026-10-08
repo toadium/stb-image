@@ -258,7 +258,7 @@ pub fn translate_image(
   let mut state = 42
 
   for value in image {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let noise = (state % 1000).to_double() / 1000.0 - 0.5
     let translated_value = value *
       (1.0 + noise * config.translation_strength * 0.1)
@@ -412,7 +412,7 @@ pub fn transfer_weather(
   let mut state = 42
 
   for value in image {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let noise = (state % 1000).to_double() / 1000.0
 
     let mut new_value = value

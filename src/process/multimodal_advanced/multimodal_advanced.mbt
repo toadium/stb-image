@@ -168,13 +168,13 @@ pub fn create_multimodal_data(
 
   let mut state = 42
   for _ in 0..<feature_dim {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     image_features.push((state % 1000).to_double() / 1000.0 - 0.5)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     text_features.push((state % 1000).to_double() / 1000.0 - 0.5)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     audio_features.push((state % 1000).to_double() / 1000.0 - 0.5)
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     video_features.push((state % 1000).to_double() / 1000.0 - 0.5)
   }
 

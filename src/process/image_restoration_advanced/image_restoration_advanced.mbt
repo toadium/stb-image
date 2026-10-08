@@ -513,7 +513,7 @@ pub fn restore_old_photo(
 
   for value in old_photo {
     // 简化的老照片修复：去噪 + 对比度增强
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let noise = (state % 1000).to_double() / 1000.0 - 0.5
     let denoised = value + noise * config.noise_reduction * 10.0
 

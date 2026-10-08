@@ -378,12 +378,12 @@ pub fn generate_point_cloud(
               point.push(z)
               points.push(point)
 
-              state = (state * 11035 + 12345) % 1000000
+              state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
               let color : Array[Int] = []
               color.push(state % 256)
-              state = (state * 11035 + 12345) % 1000000
+              state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
               color.push(state % 256)
-              state = (state * 11035 + 12345) % 1000000
+              state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
               color.push(state % 256)
               colors.push(color)
 

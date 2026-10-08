@@ -382,7 +382,7 @@ pub fn train_kg_embedding(
   for _ in 0..<kg.num_entities {
     let embedding : Array[Double] = []
     for _ in 0..<config.embedding_dim {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
     }
     entity_embeddings.push(embedding)
@@ -392,7 +392,7 @@ pub fn train_kg_embedding(
   for _ in 0..<kg.num_relation_types {
     let embedding : Array[Double] = []
     for _ in 0..<config.embedding_dim {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
     }
     relation_embeddings.push(embedding)

@@ -207,7 +207,7 @@ fn sample_hyperparameters(
   let params : Array[Double] = []
   let mut current_state = state
   for _ in 0..<num_params {
-    current_state = (current_state * 11035 + 12345) % 1000000
+    current_state = ((current_state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let rand_val = (current_state % 1000).to_double() / 1000.0
     params.push(rand_val)
   }
@@ -263,7 +263,7 @@ pub fn neural_architecture_search(
   let mut state = config.random_state
 
   for _ in 0..<num_layers {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     architecture.push(state % num_operations)
   }
 

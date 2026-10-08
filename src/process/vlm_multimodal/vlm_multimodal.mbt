@@ -344,7 +344,7 @@ pub fn diffusion_generate(
 
   for y in 0..<size {
     for x in 0..<size {
-      state = (state * 11035 + 12345) % 1000000
+      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
       let noise = (state % 1000).to_double() / 1000.0
 
       // 简化的去噪过程

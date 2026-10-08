@@ -417,18 +417,18 @@ pub fn generate_sample_gaussians(num_gaussians : Int) -> Array[Gaussian3D] {
   let mut state = 42
 
   for _ in 0..<num_gaussians {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let x = ((state % 1000).to_double() / 1000.0 - 0.5) * 2.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let y = ((state % 1000).to_double() / 1000.0 - 0.5) * 2.0
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let z = ((state % 1000).to_double() / 1000.0 - 0.5) * 2.0
 
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let r = (state % 256).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let g = (state % 256).to_double()
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let b = (state % 256).to_double()
 
     gaussians.push(Gaussian3D::{

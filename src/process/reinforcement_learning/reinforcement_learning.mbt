@@ -267,12 +267,12 @@ pub fn create_replay_buffer(
 /// 选择动作（epsilon-greedy）
 pub fn select_action(agent : RLAgent, state_idx : Int) -> Int {
   let mut state = 42
-  state = (state * 11035 + 12345) % 1000000
+  state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let random_val = (state % 1000).to_double() / 1000.0
 
   if random_val < agent.epsilon {
     // 探索：随机选择
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     state % agent.num_actions
   } else {
     // 利用：选择Q值最大的动作
@@ -380,7 +380,7 @@ pub fn sample_experiences(
 
   let mut state = 42
   for _ in 0..<actual_batch {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let idx = state % buffer.current_size
     sampled.push(buffer.buffer[idx])
   }

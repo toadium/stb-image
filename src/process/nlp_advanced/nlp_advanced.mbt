@@ -460,12 +460,12 @@ pub fn embed_text(text : String, embedding_dim : Int) -> TextEmbedding {
 
   let mut state = 42
   for _ in 0..<embedding_dim {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
   }
 
   for _ in tokens {
-    state = (state * 11035 + 12345) % 1000000
+    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     token_ids.push(state % 30000)
   }
 
