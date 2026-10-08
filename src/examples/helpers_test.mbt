@@ -139,7 +139,7 @@ fn make_rgb_image(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -165,7 +165,7 @@ fn make_gradient_image(width : Int, height : Int) -> @types.Image {
       data.push(v.to_byte())
     }
   }
-  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(data), }
 }
 
 ///|

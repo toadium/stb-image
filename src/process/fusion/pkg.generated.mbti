@@ -28,4 +28,3 @@ pub(all) struct FusionConfig {
 // Type aliases
 
 // Traits
-

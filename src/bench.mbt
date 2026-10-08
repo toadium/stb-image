@@ -7,7 +7,7 @@ fn bench_make_rgb(width : Int, height : Int) -> @types.Image {
     data[i * 3 + 1] = (i * 71 % 256).to_byte()
     data[i * 3 + 2] = (i * 113 % 256).to_byte()
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -20,7 +20,7 @@ fn bench_make_rgba(width : Int, height : Int) -> @types.Image {
     data[i * 4 + 2] = (i * 113 % 256).to_byte()
     data[i * 4 + 3] = b'\xFF'
   }
-  @types.Image::{ width, height, channels: 4, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 4, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -29,7 +29,7 @@ pub fn bench_run() -> Unit {
   let img128 = bench_make_rgb(128, 128)
   let img256 = bench_make_rgb(256, 256)
   let img_rgba128 = bench_make_rgba(128, 128)
-  let empty = @types.Image::{ width: 0, height: 0, channels: 0, data: b"" }
+  let empty = @types.Image::{ width: 0, height: 0, channels: 0, data: b"", }
 
   // === 编解码 ===
   b.bench(name="png encode 128x128", () => {
@@ -108,7 +108,7 @@ pub fn bench_run() -> Unit {
     ignore(
       @segment.slic(img128, 16, 10, 5) catch {
         _ =>
-          @segment.SuperpixelResult::{ labels: [], centers: [], num_labels: 0 }
+          @segment.SuperpixelResult::{ labels: [], centers: [], num_labels: 0, }
       },
     )
   })

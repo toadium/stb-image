@@ -14,7 +14,7 @@ fn je_make_rgb_image(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -27,7 +27,7 @@ fn je_make_gray_image(
   for p in pixels {
     data.push(p.to_byte())
   }
-  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(data), }
 }
 
 ///|

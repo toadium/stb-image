@@ -335,5 +335,5 @@ pub fn decode_gif_animation_pure(
   if frames.length() == 0 {
     raise @types.LoadError::DecodeFailed("GIF 无 Image Separator")
   }
-  @types.GifAnimation::{ frames, delays }
+  @types.GifAnimation::{ frames, delays, }
 }

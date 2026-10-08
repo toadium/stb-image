@@ -45,7 +45,7 @@ pub fn kmeans_segment(
   let n = w * h
   if n == 0 {
     return (
-      SegmentLabelImage::{ width: w, height: h, labels: [], num_regions: 0 },
+      SegmentLabelImage::{ width: w, height: h, labels: [], num_regions: 0, },
       [],
     )
   }
@@ -123,7 +123,7 @@ pub fn kmeans_segment(
     }
   }
   let regions = compute_regions(data_int, labels, w, h, ch, k)
-  (SegmentLabelImage::{ width: w, height: h, labels, num_regions: k }, regions)
+  (SegmentLabelImage::{ width: w, height: h, labels, num_regions: k, }, regions)
 }
 
 ///|

@@ -230,7 +230,11 @@ test "watershed_segmentation: 梯度图像" {
 ///|
 test "grabcut_segmentation: 基本GrabCut" {
   let img = make_bimodal_img(8, 8)
-  let config = GrabCutConfig::{ num_iterations: 3, gamma: 50.0, use_gmm: false }
+  let config = GrabCutConfig::{
+    num_iterations: 3,
+    gamma: 50.0,
+    use_gmm: false,
+  }
   let result = grabcut_segmentation(img, 2, 2, 4, 4, config)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
@@ -310,7 +314,12 @@ test "segmentation_to_image: 单类别" {
     height: 2,
     labels: [0, 0, 0, 0],
     label_info: [
-      SegmentationLabel::{ id: 0, name: "bg", color: (0, 0, 0), pixel_count: 4 },
+      SegmentationLabel::{
+        id: 0,
+        name: "bg",
+        color: (0, 0, 0),
+        pixel_count: 4,
+      },
     ],
     num_classes: 1,
     inference_time_ms: 0.0,
@@ -370,7 +379,12 @@ test "segmentation_report_to_string: 空分割" {
     height: 1,
     labels: [0],
     label_info: [
-      SegmentationLabel::{ id: 0, name: "bg", color: (0, 0, 0), pixel_count: 1 },
+      SegmentationLabel::{
+        id: 0,
+        name: "bg",
+        color: (0, 0, 0),
+        pixel_count: 1,
+      },
     ],
     num_classes: 1,
     inference_time_ms: 0.0,

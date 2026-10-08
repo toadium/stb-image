@@ -93,4 +93,3 @@ pub(all) struct InpaintingResult {
 // Type aliases
 
 // Traits
-

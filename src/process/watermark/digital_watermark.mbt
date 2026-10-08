@@ -12,7 +12,7 @@ pub(all) struct WatermarkConfig {
 ///|
 /// 创建默认水印配置
 pub fn watermark_default_config() -> WatermarkConfig {
-  WatermarkConfig::{ method_type: "lsb", strength: 1.0, key: 42 }
+  WatermarkConfig::{ method_type: "lsb", strength: 1.0, key: 42, }
 }
 
 ///|

@@ -72,5 +72,10 @@ pub fn decode_pnm_16_pure(
       out_data[i * 2 + 1] = ((v >> 8) & 0xFF).to_byte()
     }
   }
-  @types.Image16::{ width, height, channels, data: Bytes::from_array(out_data) }
+  @types.Image16::{
+    width,
+    height,
+    channels,
+    data: Bytes::from_array(out_data),
+  }
 }

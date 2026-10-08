@@ -177,5 +177,5 @@ pub fn read_exif_from_bytes(data : Bytes) -> ExifInfo? {
       _ => ()
     }
   }
-  Some(ExifInfo::{ make, model, orientation, date_time })
+  Some(ExifInfo::{ make, model, orientation, date_time, })
 }

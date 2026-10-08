@@ -154,5 +154,5 @@ pub fn slic(
   for k_idx in 0..<num_centers {
     centers.push((centers_x[k_idx], centers_y[k_idx]))
   }
-  SuperpixelResult::{ labels, centers, num_labels: num_centers }
+  SuperpixelResult::{ labels, centers, num_labels: num_centers, }
 }

@@ -121,7 +121,7 @@ pub fn create_default_kmeans_config() -> KMeansConfig {
 ///|
 /// 创建默认 GrabCut 配置
 pub fn create_default_grabcut_config() -> GrabCutConfig {
-  GrabCutConfig::{ num_iterations: 5, gamma: 50.0, use_gmm: true }
+  GrabCutConfig::{ num_iterations: 5, gamma: 50.0, use_gmm: true, }
 }
 
 ///|

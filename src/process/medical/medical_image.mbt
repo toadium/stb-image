@@ -11,25 +11,25 @@ pub(all) struct WindowLevel {
 ///|
 /// 创建默认窗宽窗位（肺窗）
 pub fn window_level_lung() -> WindowLevel {
-  WindowLevel::{ window_width: 1500.0, window_level: -600.0 }
+  WindowLevel::{ window_width: 1500.0, window_level: -600.0, }
 }
 
 ///|
 /// 创建纵隔窗
 pub fn window_level_mediastinum() -> WindowLevel {
-  WindowLevel::{ window_width: 400.0, window_level: 40.0 }
+  WindowLevel::{ window_width: 400.0, window_level: 40.0, }
 }
 
 ///|
 /// 创建骨窗
 pub fn window_level_bone() -> WindowLevel {
-  WindowLevel::{ window_width: 2000.0, window_level: 400.0 }
+  WindowLevel::{ window_width: 2000.0, window_level: 400.0, }
 }
 
 ///|
 /// 创建脑窗
 pub fn window_level_brain() -> WindowLevel {
-  WindowLevel::{ window_width: 80.0, window_level: 40.0 }
+  WindowLevel::{ window_width: 80.0, window_level: 40.0, }
 }
 
 ///|

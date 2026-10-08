@@ -136,4 +136,3 @@ pub(all) struct YoloTrackingResult {
 // Type aliases
 
 // Traits
-

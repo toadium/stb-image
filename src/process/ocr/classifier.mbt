@@ -191,7 +191,7 @@ pub fn knn_create(
     raise @types.LoadError::DecodeFailed("knn_create: k必须大于0")
   }
 
-  KnnClassifier::{ samples: [], k, distance_metric }
+  KnnClassifier::{ samples: [], k, distance_metric, }
 }
 
 ///|
@@ -212,7 +212,7 @@ pub fn knn_add_sample(
   }
 
   let new_samples = classifier.samples
-  new_samples.push(TrainingSample::{ features, label })
+  new_samples.push(TrainingSample::{ features, label, })
   KnnClassifier::{
     samples: new_samples,
     k: classifier.k,
@@ -236,7 +236,7 @@ pub fn knn_add_samples(
   let new_samples = classifier.samples
   for _tup0 in samples {
     let (features, label) = _tup0
-    new_samples.push(TrainingSample::{ features, label })
+    new_samples.push(TrainingSample::{ features, label, })
   }
   KnnClassifier::{
     samples: new_samples,
@@ -324,7 +324,7 @@ pub fn knn_predict(
   } else {
     0.0
   }
-  ClassificationResult::{ label: best_label, confidence, top_k }
+  ClassificationResult::{ label: best_label, confidence, top_k, }
 }
 
 ///|
@@ -333,7 +333,7 @@ pub fn template_matcher_create(
   distance_metric? : String = "euclidean",
 ) -> TemplateMatcher {
   // 输入验证：distance_metric 不做强制验证，使用默认值兜底
-  TemplateMatcher::{ templates: [], distance_metric }
+  TemplateMatcher::{ templates: [], distance_metric, }
 }
 
 ///|
@@ -415,9 +415,9 @@ pub fn template_matcher_predict(
   if distances.length() > 0 {
     let (best_dist, best_label) = distances[0]
     let confidence = if best_dist > 0.0 { 1.0 / (1.0 + best_dist) } else { 1.0 }
-    ClassificationResult::{ label: best_label, confidence, top_k }
+    ClassificationResult::{ label: best_label, confidence, top_k, }
   } else {
-    ClassificationResult::{ label: "", confidence: 0.0, top_k: [] }
+    ClassificationResult::{ label: "", confidence: 0.0, top_k: [], }
   }
 }
 

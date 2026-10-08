@@ -262,7 +262,6 @@ fn extract_statistical_features(
   _width : Int,
   _height : Int,
 ) -> Array[Double] {
-
   let features : Array[Double] = []
 
   // 均值

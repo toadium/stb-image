@@ -133,4 +133,3 @@ pub(all) struct VideoUnderstandingResult {
 // Type aliases
 
 // Traits
-

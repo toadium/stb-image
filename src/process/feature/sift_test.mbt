@@ -27,7 +27,7 @@ test "sift_detect 基本功能" {
 ///|
 test "sift_detect 常量图无特征" {
   let data = Bytes::from_array(Array::make(1024, b'\x80'))
-  let img = @types.Image::{ width: 32, height: 32, channels: 1, data }
+  let img = @types.Image::{ width: 32, height: 32, channels: 1, data, }
   let descs = sift_detect(img, contrast_threshold=0.01F)
   assert_eq(descs.length(), 0)
 }

@@ -119,5 +119,5 @@ pub fn decode_pnm_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   for i in 0..<pixel_bytes {
     pixels[i] = data[pos.val + i]
   }
-  @types.Image::{ width, height, channels, data: Bytes::from_array(pixels) }
+  @types.Image::{ width, height, channels, data: Bytes::from_array(pixels), }
 }

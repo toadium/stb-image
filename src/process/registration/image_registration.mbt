@@ -25,13 +25,13 @@ pub(all) struct AffineTransform {
 ///|
 /// 创建恒等变换
 pub fn affine_identity() -> AffineTransform {
-  AffineTransform::{ a: 1.0, b: 0.0, c: 0.0, d: 0.0, e: 1.0, f: 0.0 }
+  AffineTransform::{ a: 1.0, b: 0.0, c: 0.0, d: 0.0, e: 1.0, f: 0.0, }
 }
 
 ///|
 /// 创建平移变换
 pub fn affine_translation(dx : Double, dy : Double) -> AffineTransform {
-  AffineTransform::{ a: 1.0, b: 0.0, c: dx, d: 0.0, e: 1.0, f: dy }
+  AffineTransform::{ a: 1.0, b: 0.0, c: dx, d: 0.0, e: 1.0, f: dy, }
 }
 
 ///|
@@ -39,13 +39,13 @@ pub fn affine_translation(dx : Double, dy : Double) -> AffineTransform {
 pub fn affine_rotation(angle : Double) -> AffineTransform {
   let cos_a = @math.cos(angle)
   let sin_a = @math.sin(angle)
-  AffineTransform::{ a: cos_a, b: -sin_a, c: 0.0, d: sin_a, e: cos_a, f: 0.0 }
+  AffineTransform::{ a: cos_a, b: -sin_a, c: 0.0, d: sin_a, e: cos_a, f: 0.0, }
 }
 
 ///|
 /// 创建缩放变换
 pub fn affine_scale(sx : Double, sy : Double) -> AffineTransform {
-  AffineTransform::{ a: sx, b: 0.0, c: 0.0, d: 0.0, e: sy, f: 0.0 }
+  AffineTransform::{ a: sx, b: 0.0, c: 0.0, d: 0.0, e: sy, f: 0.0, }
 }
 
 ///|

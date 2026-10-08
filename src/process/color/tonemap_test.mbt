@@ -19,7 +19,7 @@ fn tm_make_imagef(
       data.push(bb[i])
     }
   }
-  @types.ImageF::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.ImageF::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -99,7 +99,7 @@ fn tm_make_imagef_rgba(
       data.push(ab[i])
     }
   }
-  @types.ImageF::{ width, height, channels: 4, data: Bytes::from_array(data) }
+  @types.ImageF::{ width, height, channels: 4, data: Bytes::from_array(data), }
 }
 
 ///|

@@ -21,7 +21,7 @@ test "create_exif_segment: starts with Exif\\0\\0" {
 
 ///|
 test "create_exif_segment: TIFF header big-endian" {
-  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "" }
+  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "", }
   let segment = create_exif_segment(info)
   assert_eq(segment[6].to_int(), 0x4D) // 'M'
   assert_eq(segment[7].to_int(), 0x4D) // 'M'
@@ -33,7 +33,12 @@ test "create_exif_segment: TIFF header big-endian" {
 
 ///|
 test "create_exif_segment: IFD entry count is 4" {
-  let info = ExifInfo::{ make: "X", model: "Y", orientation: 3, date_time: "Z" }
+  let info = ExifInfo::{
+    make: "X",
+    model: "Y",
+    orientation: 3,
+    date_time: "Z",
+  }
   let segment = create_exif_segment(info)
   // IFD0 starts at offset 14 (6 Exif + 8 TIFF header)
   assert_eq(segment[14].to_int(), 0x00)
@@ -44,7 +49,7 @@ test "create_exif_segment: IFD entry count is 4" {
 
 ///|
 test "write_exif_to_bytes: invalid JPEG raises error" {
-  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "" }
+  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "", }
   let bad_data = Bytes::from_array([b'\x00', b'\x00'])
   try {
     let _ = write_exif_to_bytes(info, bad_data)
@@ -87,7 +92,7 @@ test "write_exif_to_bytes: roundtrip with full ExifInfo" {
 
 ///|
 test "write_exif_to_bytes: roundtrip with empty strings" {
-  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "" }
+  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "", }
   let jpeg = Bytes::from_array([b'\xFF', b'\xD8', b'\xFF', b'\xD9'])
   let result = write_exif_to_bytes(info, jpeg)
   let read_back = read_exif_from_bytes(result)

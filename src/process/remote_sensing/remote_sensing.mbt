@@ -27,7 +27,7 @@ pub fn multispectral_new(
     }
     default_names
   }
-  MultispectralImage::{ width, height, bands, band_names: names }
+  MultispectralImage::{ width, height, bands, band_names: names, }
 }
 
 ///|

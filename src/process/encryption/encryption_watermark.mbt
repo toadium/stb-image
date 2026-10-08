@@ -113,7 +113,7 @@ pub fn create_default_chaotic_params() -> ChaoticParams {
 ///|
 /// 创建默认 Arnold 参数
 pub fn create_default_arnold_params() -> ArnoldParams {
-  ArnoldParams::{ iterations: 10, a: 1, b: 1 }
+  ArnoldParams::{ iterations: 10, a: 1, b: 1, }
 }
 
 ///|

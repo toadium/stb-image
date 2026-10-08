@@ -540,7 +540,7 @@ pub fn visualize_point_cloud(
     }
   }
 
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(out) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(out), }
 }
 
 ///|

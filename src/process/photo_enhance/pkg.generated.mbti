@@ -116,4 +116,3 @@ pub(all) enum ToneMappingType {
 // Type aliases
 
 // Traits
-

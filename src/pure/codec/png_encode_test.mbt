@@ -13,7 +13,7 @@ fn pe_make_image(
   for p in pixels {
     data.push(p.to_byte())
   }
-  @types.Image::{ width, height, channels, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels, data: Bytes::from_array(data), }
 }
 
 ///|

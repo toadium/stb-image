@@ -103,7 +103,7 @@ pub fn generate_punctuation_templates() -> Array[PunctuationTemplate] {
   for _tup0 in punctuations {
     let (char, width_ratio) = _tup0
     let features = generate_punctuation_features(char, width_ratio)
-    templates.push(PunctuationTemplate::{ char, features, width_ratio })
+    templates.push(PunctuationTemplate::{ char, features, width_ratio, })
   }
   templates
 }
@@ -404,7 +404,7 @@ pub fn recognize_multilingual(
   } else {
     0.0
   }
-  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results, }
 }
 
 ///|
@@ -413,7 +413,6 @@ fn segment_multilingual_chars(
   img : @types.Image,
   _cfg : MultilingualOcrConfig,
 ) -> Array[(Int, Int, Int, Int)] {
-
   let w = img.width
   let h = img.height
   let data = img.data

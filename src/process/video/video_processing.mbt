@@ -18,7 +18,7 @@ pub fn video_frames_new(
   fps? : Double = 30.0,
 ) -> VideoFrames {
   if frames.length() == 0 {
-    return VideoFrames::{ frames: [], width: 0, height: 0, channels: 1, fps }
+    return VideoFrames::{ frames: [], width: 0, height: 0, channels: 1, fps, }
   }
   let first = frames[0]
   VideoFrames::{

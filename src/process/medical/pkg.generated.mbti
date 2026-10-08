@@ -144,4 +144,3 @@ pub(all) struct WindowLevelConfig {
 // Type aliases
 
 // Traits
-

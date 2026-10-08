@@ -20,7 +20,7 @@ pub(all) struct WatershedConfig {
 ///|
 /// 创建默认分水岭配置
 pub fn watershed_default_config() -> WatershedConfig {
-  WatershedConfig::{ threshold: 10.0, min_region_size: 50, connectivity: 8 }
+  WatershedConfig::{ threshold: 10.0, min_region_size: 50, connectivity: 8, }
 }
 
 ///|
@@ -288,7 +288,7 @@ pub fn region_growing(
     region_sizes.push(size)
     label += 1
   }
-  SegmentationResult::{ labels, num_regions: label - 1, region_sizes }
+  SegmentationResult::{ labels, num_regions: label - 1, region_sizes, }
 }
 
 ///|

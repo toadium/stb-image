@@ -42,7 +42,7 @@ pub fn dictionary_create(
     )
   }
 
-  Dictionary::{ words, word_set: words }
+  Dictionary::{ words, word_set: words, }
 }
 
 ///|
@@ -77,7 +77,7 @@ pub fn dictionary_create_common_english() -> Dictionary {
     "decompress", "encrypt", "decrypt", "hash", "checksum", "signature", "test",
     "test1", "test2", "abc", "abcd", "xyz", "foo", "bar", "baz",
   ]
-  Dictionary::{ words, word_set: words }
+  Dictionary::{ words, word_set: words, }
 }
 
 ///|
@@ -218,7 +218,7 @@ pub fn ngram_create(
       }
     }
   }
-  NgramModel::{ n, bigram_counts, unigram_counts }
+  NgramModel::{ n, bigram_counts, unigram_counts, }
 }
 
 ///|

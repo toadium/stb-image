@@ -40,7 +40,7 @@ test "hough_lines: 检测垂直直线" {
 ///|
 test "hough_lines: 空图像无直线" {
   let data = Bytes::from_array(Array::make(16, b'\x00'))
-  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
   let lines = hough_lines(img, 1)
   assert_eq(lines.length(), 0)
 }
@@ -90,9 +90,9 @@ test "hough_lines: 按票数降序" {
 ///|
 test "hough_lines_nms: 去除重复直线" {
   let lines : Array[HoughLine] = [
-    HoughLine::{ rho: 10.0F, theta: 0.5F, votes: 100 },
-    HoughLine::{ rho: 10.1F, theta: 0.51F, votes: 90 },
-    HoughLine::{ rho: 50.0F, theta: 1.0F, votes: 80 },
+    HoughLine::{ rho: 10.0F, theta: 0.5F, votes: 100, },
+    HoughLine::{ rho: 10.1F, theta: 0.51F, votes: 90, },
+    HoughLine::{ rho: 50.0F, theta: 1.0F, votes: 80, },
   ]
   let result = hough_lines_nms(lines)
   // 前两个相近，应被合并
@@ -104,7 +104,7 @@ test "hough_lines_nms: 去除重复直线" {
 ///|
 test "hough_lines: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
-  let img = @types.Image::{ width: 1, height: 1, channels: 2, data }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data, }
   try {
     let _ = hough_lines(img, 1)
     assert_true(false)

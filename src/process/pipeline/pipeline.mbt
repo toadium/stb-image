@@ -40,7 +40,7 @@ pub struct Pipeline {
 ///|
 /// 创建空流水线
 pub fn pipeline_new() -> Pipeline {
-  Pipeline::{ operations: [] }
+  Pipeline::{ operations: [], }
 }
 
 ///|
@@ -123,7 +123,7 @@ pub fn batch_task(
   output_path : String,
   pipeline : Pipeline,
 ) -> BatchTask {
-  BatchTask::{ input_path, output_path, pipeline }
+  BatchTask::{ input_path, output_path, pipeline, }
 }
 
 ///|
@@ -163,7 +163,7 @@ pub fn batch_execute(tasks : Array[BatchTask]) -> BatchResult {
       })
     }
   }
-  BatchResult::{ total, succeeded, failed, results }
+  BatchResult::{ total, succeeded, failed, results, }
 }
 
 ///|

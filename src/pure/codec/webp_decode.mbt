@@ -14,7 +14,7 @@ priv struct BitReader {
 
 ///|
 fn BitReader::new(data : Bytes, start : Int) -> BitReader {
-  BitReader::{ data, pos: start, bit_buf: 0, bit_count: 0 }
+  BitReader::{ data, pos: start, bit_buf: 0, bit_count: 0, }
 }
 
 ///|
@@ -60,7 +60,7 @@ priv struct HuffmanTree {
 
 ///|
 fn HuffmanTree::new() -> HuffmanTree {
-  HuffmanTree::{ codes: [] }
+  HuffmanTree::{ codes: [], }
 }
 
 ///|
@@ -73,7 +73,7 @@ fn HuffmanTree::add_code(
   // Build a binary tree by walking the code bits MSB-first
   let mut node = 0
   if self.codes.length() == 0 {
-    self.codes.push(HuffmanCode::{ value: -1, left: -1, right: -1 })
+    self.codes.push(HuffmanCode::{ value: -1, left: -1, right: -1, })
   }
   for i in 0..<code_len {
     let bit = (code >> (code_len - 1 - i)) & 1
@@ -84,7 +84,7 @@ fn HuffmanTree::add_code(
     }
     if child == -1 {
       let new_idx = self.codes.length()
-      self.codes.push(HuffmanCode::{ value: -1, left: -1, right: -1 })
+      self.codes.push(HuffmanCode::{ value: -1, left: -1, right: -1, })
       if bit == 0 {
         self.codes[node].left = new_idx
       } else {
@@ -516,5 +516,5 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       out[i * 3 + 2] = b.to_byte()
     }
   }
-  @types.Image::{ width, height, channels, data: Bytes::from_array(out) }
+  @types.Image::{ width, height, channels, data: Bytes::from_array(out), }
 }

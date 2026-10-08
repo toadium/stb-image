@@ -51,7 +51,7 @@ test "encode_webp_lossy: quality parameter" {
 
 ///|
 test "encode_webp_lossy: invalid dimensions raises" {
-  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"", }
   try {
     let _ = @codec.encode_webp_lossy_pure(img)
     fail("expected error for zero dimensions")

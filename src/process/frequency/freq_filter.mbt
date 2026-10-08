@@ -46,10 +46,10 @@ pub fn freq_filter(
         let dist = Float::from_int(dx * dx + dy * dy).sqrt()
         let gain = filter_gain(filter_type, dist, cutoff, band_width)
         let src = data[row + x]
-        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain }
+        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain, }
       }
     }
-    let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
+    let filtered_fft = FFTResult::{ width: w, height: h, data: out_data, }
     fft_shift_inplace(filtered_fft)
     filtered.push(filtered_fft)
   }
@@ -149,10 +149,10 @@ pub fn freq_filter_gaussian(
         let dist = Float::from_int(dx * dx + dy * dy).sqrt()
         let gain = gaussian_gain(filter_type, dist, cutoff, band_width)
         let src = data[row + x]
-        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain }
+        out_data[row + x] = Complex::{ re: src.re * gain, im: src.im * gain, }
       }
     }
-    let filtered_fft = FFTResult::{ width: w, height: h, data: out_data }
+    let filtered_fft = FFTResult::{ width: w, height: h, data: out_data, }
     fft_shift_inplace(filtered_fft)
     filtered.push(filtered_fft)
   }

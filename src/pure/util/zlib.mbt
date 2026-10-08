@@ -68,7 +68,7 @@ fn build_huffman_tree(code_lengths : Array[Int], max_bits : Int) -> HuffmanTree 
       offsets[cl] += 1
     }
   }
-  HuffmanTree::{ counts, symbols }
+  HuffmanTree::{ counts, symbols, }
 }
 
 ///|
@@ -82,7 +82,7 @@ priv struct BitReader {
 
 ///|
 fn bit_reader_new(data : Bytes) -> BitReader {
-  BitReader::{ data, pos: 0, bit_buf: 0, bit_count: 0 }
+  BitReader::{ data, pos: 0, bit_buf: 0, bit_count: 0, }
 }
 
 ///|

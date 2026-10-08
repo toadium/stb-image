@@ -233,7 +233,7 @@ pub fn lbp_features(
       hist[i] /= total.to_double()
     }
   }
-  LbpFeatures::{ features: hist, num_bins, radius, num_points }
+  LbpFeatures::{ features: hist, num_bins, radius, num_points, }
 }
 
 ///|
@@ -370,7 +370,7 @@ pub fn grid_features(
       features.push(density)
     }
   }
-  GridFeatures::{ features, grid_rows, grid_cols }
+  GridFeatures::{ features, grid_rows, grid_cols, }
 }
 
 ///|

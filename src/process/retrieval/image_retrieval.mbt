@@ -28,7 +28,7 @@ pub(all) struct ImageDatabase {
 ///|
 /// 创建空的图像数据库
 pub fn image_database_new() -> ImageDatabase {
-  ImageDatabase::{ features: [], index: [] }
+  ImageDatabase::{ features: [], index: [], }
 }
 
 ///|
@@ -175,7 +175,7 @@ pub fn database_add_image(
     new_index.push(id)
   }
   new_index.push(feature.image_id)
-  ImageDatabase::{ features: new_features, index: new_index }
+  ImageDatabase::{ features: new_features, index: new_index, }
 }
 
 ///|
@@ -192,7 +192,7 @@ pub fn database_remove_image(
       new_index.push(db.index[i])
     }
   }
-  ImageDatabase::{ features: new_features, index: new_index }
+  ImageDatabase::{ features: new_features, index: new_index, }
 }
 
 ///|

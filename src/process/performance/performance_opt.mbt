@@ -15,7 +15,7 @@ pub(all) struct TileConfig {
 ///|
 /// 默认分块配置（256x256，无重叠）
 pub fn default_tile_config() -> TileConfig {
-  TileConfig::{ tile_width: 256, tile_height: 256, overlap: 0 }
+  TileConfig::{ tile_width: 256, tile_height: 256, overlap: 0, }
 }
 
 ///|

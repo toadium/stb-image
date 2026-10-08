@@ -28,7 +28,7 @@ test "read_exif_from_bytes: JPEG without EXIF returns None" {
 
 ///|
 test "ExifInfo: default values" {
-  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "" }
+  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "", }
   assert_eq(info.orientation, 1)
   assert_eq(info.make, "")
   let _ = info

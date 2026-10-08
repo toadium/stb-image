@@ -454,7 +454,7 @@ pub fn generate_scene_graph(
     confidence: 0.8,
   })
 
-  SceneGraph::{ nodes, relations, num_objects: 4, num_relations: 4 }
+  SceneGraph::{ nodes, relations, num_objects: 4, num_relations: 4, }
 }
 
 ///|
@@ -468,7 +468,7 @@ pub fn understand_scene(
   let scene_graph = if config.use_scene_graph {
     generate_scene_graph(img, config)
   } else {
-    SceneGraph::{ nodes: [], relations: [], num_objects: 0, num_relations: 0 }
+    SceneGraph::{ nodes: [], relations: [], num_objects: 0, num_relations: 0, }
   }
 
   (classification, caption, scene_graph)

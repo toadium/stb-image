@@ -30,7 +30,7 @@ pub fn decode_stream(
     }
     on_row(y, row_data)
   }
-  StreamInfo::{ width: w, height: h, channels: ch }
+  StreamInfo::{ width: w, height: h, channels: ch, }
 }
 
 ///|
@@ -69,7 +69,7 @@ pub fn decode_stream_chunked(
     on_chunk(y, block_img)
     y = end_y
   }
-  StreamInfo::{ width: w, height: h, channels: ch }
+  StreamInfo::{ width: w, height: h, channels: ch, }
 }
 
 ///|
@@ -92,5 +92,5 @@ pub fn decode_stream_channels(
     }
     on_row(y, row_data)
   }
-  StreamInfo::{ width: w, height: h, channels: ch }
+  StreamInfo::{ width: w, height: h, channels: ch, }
 }

@@ -15,7 +15,7 @@ fn qe_make_rgb_image(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -31,7 +31,7 @@ fn qe_make_rgba_image(
     data.push(p.2.to_byte())
     data.push(p.3.to_byte())
   }
-  @types.Image::{ width, height, channels: 4, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 4, data: Bytes::from_array(data), }
 }
 
 ///|

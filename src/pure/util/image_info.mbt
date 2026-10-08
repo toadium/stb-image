@@ -41,7 +41,7 @@ fn info_bmp(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 || channels <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height: height.abs(), channels })
+  Some(@types.ImageInfo::{ width, height: height.abs(), channels, })
 }
 
 ///|
@@ -56,7 +56,7 @@ fn info_qoi(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 || channels <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height, channels })
+  Some(@types.ImageInfo::{ width, height, channels, })
 }
 
 ///|
@@ -71,7 +71,7 @@ fn info_psd(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 || channels <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height, channels })
+  Some(@types.ImageInfo::{ width, height, channels, })
 }
 
 ///|
@@ -85,7 +85,7 @@ fn info_gif(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height, channels: 3 })
+  Some(@types.ImageInfo::{ width, height, channels: 3, })
 }
 
 ///|
@@ -119,7 +119,7 @@ fn info_png(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 || bit_depth <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height, channels })
+  Some(@types.ImageInfo::{ width, height, channels, })
 }
 
 ///|
@@ -154,7 +154,7 @@ fn info_jpeg(data : Bytes) -> @types.ImageInfo? {
       if width <= 0 || height <= 0 || channels <= 0 {
         return None
       }
-      return Some(@types.ImageInfo::{ width, height, channels })
+      return Some(@types.ImageInfo::{ width, height, channels, })
     }
     // 跳过其他 marker
     if pos + 3 >= len {
@@ -233,7 +233,7 @@ fn info_pnm(data : Bytes) -> @types.ImageInfo? {
   if width <= 0 || height <= 0 {
     return None
   }
-  Some(@types.ImageInfo::{ width, height, channels })
+  Some(@types.ImageInfo::{ width, height, channels, })
 }
 
 ///|

@@ -24,7 +24,7 @@ fn he_make_imagef(
       data.push(bb[i])
     }
   }
-  @types.ImageF::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.ImageF::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|

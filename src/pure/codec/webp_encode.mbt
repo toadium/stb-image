@@ -14,7 +14,7 @@ priv struct BoolEncoder {
 
 ///|
 fn BoolEncoder::new() -> BoolEncoder {
-  { output: [], low: 0, count: 0, range: 255 }
+  { output: [], low: 0, count: 0, range: 255, }
 }
 
 ///|

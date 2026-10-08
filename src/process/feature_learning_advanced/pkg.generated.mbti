@@ -222,4 +222,3 @@ pub(all) struct MetricLearningResult {
 // Type aliases
 
 // Traits
-

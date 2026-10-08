@@ -469,7 +469,7 @@ pub fn extract_cell_image(
       }
     }
   }
-  @types.Image::{ width, height, channels: ch, data: Bytes::from_array(out) }
+  @types.Image::{ width, height, channels: ch, data: Bytes::from_array(out), }
 }
 
 ///|

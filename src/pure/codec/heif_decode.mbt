@@ -123,7 +123,7 @@ pub fn heif_info(data : Bytes) -> HeifInfo raise @types.LoadError {
     )
   }
   let num_channels = if has_alpha { 4 } else { 3 }
-  HeifInfo::{ width, height, bit_depth, num_channels, has_alpha }
+  HeifInfo::{ width, height, bit_depth, num_channels, has_alpha, }
 }
 
 ///|

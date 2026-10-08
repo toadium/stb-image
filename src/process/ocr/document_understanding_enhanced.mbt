@@ -397,7 +397,7 @@ pub fn build_document_structure_tree(
       DocumentBlockType::Heading3 => 3
       _ => 4
     }
-    let node = DocumentTreeNode::{ node_id, block, children: [], depth }
+    let node = DocumentTreeNode::{ node_id, block, children: [], depth, }
     node_id += 1
     // 弹出栈中深度 >= 当前深度的节点
     while stack.length() > 0 && stack[stack.length() - 1].depth >= depth {

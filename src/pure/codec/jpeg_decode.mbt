@@ -55,7 +55,7 @@ fn build_jpeg_huffman(
     k += counts[l - 1]
     code = code << 1
   }
-  JpegHuffmanTable::{ maxcode, mincode, valptr, huffval: values }
+  JpegHuffmanTable::{ maxcode, mincode, valptr, huffval: values, }
 }
 
 ///|

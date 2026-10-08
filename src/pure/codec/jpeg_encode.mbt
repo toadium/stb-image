@@ -36,7 +36,7 @@ fn build_huffman_encoder(
     }
     code = code << 1
   }
-  JpegHuffmanEncoder::{ codes, lengths }
+  JpegHuffmanEncoder::{ codes, lengths, }
 }
 
 ///|
@@ -442,7 +442,7 @@ pub fn encode_jpeg_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   out.push(b'\x3F')
   out.push(b'\x00')
   // 熵编码
-  let writer = JpegBitWriter::{ out, bit_buf: 0, bit_cnt: 0 }
+  let writer = JpegBitWriter::{ out, bit_buf: 0, bit_cnt: 0, }
   let prev_dc_y = Ref(0)
   let prev_dc_cb = Ref(0)
   let prev_dc_cr = Ref(0)

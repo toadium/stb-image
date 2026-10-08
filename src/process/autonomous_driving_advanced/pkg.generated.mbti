@@ -168,4 +168,3 @@ pub(all) struct TrafficLight {
 // Type aliases
 
 // Traits
-

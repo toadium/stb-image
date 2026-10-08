@@ -214,7 +214,7 @@ pub fn connected_components(
     })
   }
   (
-    ConnectedComponentLabelImage::{ width: w, height: h, labels: out_labels },
+    ConnectedComponentLabelImage::{ width: w, height: h, labels: out_labels, },
     components,
   )
 }

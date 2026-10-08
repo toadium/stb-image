@@ -8,7 +8,7 @@ test "canny_edge 基本功能" {
     b'\xFF', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\x00', b'\x00', b'\xFF',
     b'\xFF', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\xFF', b'\xFF',
   ])
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data, }
   let out = canny_edge(img, low_threshold=30, high_threshold=60)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
@@ -47,7 +47,7 @@ test "canny_edge 水平边缘" {
     b'\x00', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
     b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF', b'\xFF',
   ])
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data, }
   let out = canny_edge(img, low_threshold=30, high_threshold=60)
   // 应检测到边缘
   let mut has_edge = false

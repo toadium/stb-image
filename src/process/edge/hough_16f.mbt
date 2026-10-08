@@ -98,7 +98,7 @@ pub fn hough_lines_16(
       if votes >= threshold {
         let rho = (Float::from_int(r) - max_rho_f) * rho_resolution
         let theta = Float::from_int(t) * angle_scale
-        lines.push(HoughLine::{ rho, theta, votes })
+        lines.push(HoughLine::{ rho, theta, votes, })
       }
     }
   }
@@ -206,7 +206,7 @@ pub fn hough_lines_f(
       if votes >= threshold {
         let rho = (Float::from_int(r) - max_rho_f) * rho_resolution
         let theta = Float::from_int(t) * angle_scale
-        lines.push(HoughLine::{ rho, theta, votes })
+        lines.push(HoughLine::{ rho, theta, votes, })
       }
     }
   }

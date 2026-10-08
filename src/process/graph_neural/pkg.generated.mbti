@@ -139,4 +139,3 @@ pub(all) enum RelationType {
 // Type aliases
 
 // Traits
-

@@ -54,7 +54,7 @@ test "decode_jpeg_pure: single byte raises" {
 ///|
 test "decode_jpeg_pure: 1x1 gray roundtrip via encode" {
   // 构造 1x1 灰度图，encode 后 decode
-  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x80" }
+  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x80", }
   let jpeg_bytes = encode_jpeg_pure(img)
   let restored = decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 1)

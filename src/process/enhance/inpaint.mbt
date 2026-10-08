@@ -12,7 +12,7 @@ pub(all) struct InpaintConfig {
 ///|
 /// 创建默认图像修复配置
 pub fn inpaint_default_config() -> InpaintConfig {
-  InpaintConfig::{ radius: 5, method_type: "telea", max_iterations: 1000 }
+  InpaintConfig::{ radius: 5, method_type: "telea", max_iterations: 1000, }
 }
 
 ///|

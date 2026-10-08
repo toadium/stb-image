@@ -122,7 +122,7 @@ pub fn avif_info(data : Bytes) -> AvifInfo raise @types.LoadError {
     )
   }
   let num_channels = if has_alpha { 4 } else { 3 }
-  AvifInfo::{ width, height, bit_depth, num_channels, has_alpha }
+  AvifInfo::{ width, height, bit_depth, num_channels, has_alpha, }
 }
 
 ///|

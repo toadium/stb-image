@@ -162,7 +162,7 @@ test "process_tiled: identity" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let config = TileConfig::{ tile_width: 2, tile_height: 2, overlap: 0 }
+  let config = TileConfig::{ tile_width: 2, tile_height: 2, overlap: 0, }
   let result = process_tiled(img, config, fn(tile) { tile })
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)

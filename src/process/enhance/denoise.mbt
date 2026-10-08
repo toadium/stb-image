@@ -13,7 +13,7 @@ pub(all) struct NlmConfig {
 ///|
 /// 创建默认 NLM 配置
 pub fn nlm_default_config() -> NlmConfig {
-  NlmConfig::{ search_window: 21, patch_size: 7, h: 10.0, sigma: 10.0 }
+  NlmConfig::{ search_window: 21, patch_size: 7, h: 10.0, sigma: 10.0, }
 }
 
 ///|

@@ -45,7 +45,11 @@ fn apng_parse_chunks(data : Bytes) -> Array[PngChunk] raise @types.LoadError {
     if pos + chunk_len + 4 > len {
       raise @types.LoadError::DecodeFailed("PNG chunk 数据越界")
     }
-    chunks.push(PngChunk::{ chunk_type, data_offset: pos, data_size: chunk_len })
+    chunks.push(PngChunk::{
+      chunk_type,
+      data_offset: pos,
+      data_size: chunk_len,
+    })
     pos += chunk_len + 4 // 跳过数据 + CRC
   }
   chunks
@@ -147,7 +151,7 @@ pub fn decode_apng_pure(
   if !has_actl {
     // 普通 PNG，当作单帧动画
     let img = decode_png_pure(data)
-    return @types.PngAnimation::{ frames: [img], delays: [0] }
+    return @types.PngAnimation::{ frames: [img], delays: [0], }
   }
   // APNG: 收集所有帧
   let frames : Array[@types.Image] = []
@@ -227,7 +231,7 @@ pub fn decode_apng_pure(
   if frames.length() == 0 {
     raise @types.LoadError::DecodeFailed("APNG 无有效帧")
   }
-  @types.PngAnimation::{ frames, delays }
+  @types.PngAnimation::{ frames, delays, }
 }
 
 ///|

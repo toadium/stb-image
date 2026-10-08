@@ -106,4 +106,3 @@ pub(all) enum QuantizationTableType {
 // Type aliases
 
 // Traits
-

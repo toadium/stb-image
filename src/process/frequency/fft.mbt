@@ -79,11 +79,11 @@ fn fft_2d_channel(img : @types.Image, channel : Int, ch : Int) -> FFTResult {
     }
   }
   // 转换回 Array[Complex]
-  let data : Array[Complex] = Array::make(n, Complex::{ re: 0.0F, im: 0.0F })
+  let data : Array[Complex] = Array::make(n, Complex::{ re: 0.0F, im: 0.0F, })
   for i in 0..<n {
-    data[i] = Complex::{ re: re[i], im: im[i] }
+    data[i] = Complex::{ re: re[i], im: im[i], }
   }
-  FFTResult::{ width: pw, height: ph, data }
+  FFTResult::{ width: pw, height: ph, data, }
 }
 
 ///|
@@ -197,7 +197,10 @@ pub fn fft_magnitude(fft : FFTResult, log_scale : Bool) -> @types.Image {
 pub fn fft_shift(fft : FFTResult) -> FFTResult {
   let w = fft.width
   let h = fft.height
-  let data : Array[Complex] = Array::make(w * h, Complex::{ re: 0.0F, im: 0.0F })
+  let data : Array[Complex] = Array::make(w * h, Complex::{
+    re: 0.0F,
+    im: 0.0F,
+  })
   let cy = h / 2
   let cx = w / 2
   for y in 0..<h {
@@ -207,7 +210,7 @@ pub fn fft_shift(fft : FFTResult) -> FFTResult {
       data[y * w + x] = fft.data[sy * w + sx]
     }
   }
-  FFTResult::{ width: w, height: h, data }
+  FFTResult::{ width: w, height: h, data, }
 }
 
 ///|

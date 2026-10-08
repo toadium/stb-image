@@ -80,7 +80,7 @@ test "hough_circles: flat image returns no circles" {
 
 ///|
 test "Circle struct: fields accessible" {
-  let c = Circle::{ x: 5, y: 10, radius: 3, votes: 42 }
+  let c = Circle::{ x: 5, y: 10, radius: 3, votes: 42, }
   assert_eq(c.x, 5)
   assert_eq(c.y, 10)
   assert_eq(c.radius, 3)

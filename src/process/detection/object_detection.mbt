@@ -38,7 +38,7 @@ pub fn bbox_new(
     )
   }
 
-  BoundingBox::{ x, y, width, height, score, class_id }
+  BoundingBox::{ x, y, width, height, score, class_id, }
 }
 
 ///|

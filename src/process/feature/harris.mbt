@@ -141,7 +141,7 @@ pub fn harris_corners(
         }
       }
       if is_max {
-        candidates.push(CornerPoint::{ x, y, response: r })
+        candidates.push(CornerPoint::{ x, y, response: r, })
       }
     }
   }

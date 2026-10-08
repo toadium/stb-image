@@ -34,7 +34,7 @@ test "read_png_text_chunks: PNG without text chunks returns empty" {
 
 ///|
 test "PngTextChunk: construction" {
-  let chunk = PngTextChunk::{ keyword: "Author", text: "Test" }
+  let chunk = PngTextChunk::{ keyword: "Author", text: "Test", }
   assert_eq(chunk.keyword, "Author")
   assert_eq(chunk.text, "Test")
   let _ = chunk

@@ -361,7 +361,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     0x4D => false // 'M' = big-endian
     _ => raise @types.LoadError::DecodeFailed("TIFF 字节序标记无效")
   }
-  let ctx = TiffContext::{ data, little_endian }
+  let ctx = TiffContext::{ data, little_endian, }
   // 检查 magic 42
   let magic = tiff_read_u16(ctx, 2)
   if magic != 42 {

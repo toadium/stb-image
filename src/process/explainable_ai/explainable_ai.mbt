@@ -466,7 +466,7 @@ pub fn generate_roc_curve(
     auc += (fpr[i] - fpr[i - 1]) * (tpr[i] + tpr[i - 1]) / 2.0
   }
 
-  ROCCurveData::{ fpr, tpr, thresholds, auc, num_points: num_thresholds }
+  ROCCurveData::{ fpr, tpr, thresholds, auc, num_points: num_thresholds, }
 }
 
 ///|

@@ -35,7 +35,7 @@ pub fn ensemble_default_config() -> EnsembleConfig {
 ///|
 /// 创建空训练数据集
 pub fn dataset_create() -> TrainingDataset {
-  TrainingDataset::{ samples: [], labels: [], num_samples: 0, num_classes: 0 }
+  TrainingDataset::{ samples: [], labels: [], num_samples: 0, num_classes: 0, }
 }
 
 ///|
@@ -46,7 +46,7 @@ pub fn dataset_add_sample(
   label : String,
 ) -> TrainingDataset {
   let new_samples = dataset.samples
-  new_samples.push(TrainingSample::{ features, label })
+  new_samples.push(TrainingSample::{ features, label, })
   let new_labels = dataset.labels
   let mut found = false
   for l in new_labels {
@@ -253,7 +253,7 @@ pub fn ensemble_predict(
   // KNN 预测
   if cfg.use_knn {
     let knn_result = knn_predict(knn_classifier, features) catch {
-      _ => ClassificationResult::{ label: "?", confidence: 0.0, top_k: [] }
+      _ => ClassificationResult::{ label: "?", confidence: 0.0, top_k: [], }
     }
     predictions.push((knn_result.label, knn_result.confidence))
   }
@@ -335,7 +335,7 @@ pub fn ensemble_predict(
     1.0
   }
   let confidence = best_votes / total_votes
-  ClassificationResult::{ label: best_label, confidence, top_k: predictions }
+  ClassificationResult::{ label: best_label, confidence, top_k: predictions, }
 }
 
 ///|

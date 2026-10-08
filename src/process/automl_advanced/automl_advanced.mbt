@@ -207,7 +207,8 @@ fn sample_hyperparameters(
   let params : Array[Double] = []
   let mut current_state = state
   for _ in 0..<num_params {
-    current_state = ((current_state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    current_state = ((current_state * 11035 + 12345).reinterpret_as_uint() %
+    1000000).reinterpret_as_int()
     let rand_val = (current_state % 1000).to_double() / 1000.0
     params.push(rand_val)
   }

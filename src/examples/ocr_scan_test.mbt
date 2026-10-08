@@ -49,7 +49,7 @@ fn create_test_document_image() -> @types.Image {
       data[idx + 2] = b'\x00'
     }
   }
-  @types.Image::{ width, height, channels, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels, data: Bytes::from_array(data), }
 }
 
 ///|

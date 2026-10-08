@@ -138,7 +138,7 @@ pub fn haar_transform_2d(
     cur_w /= 2
     cur_h /= 2
   }
-  HaarWaveletResult::{ width: w, height: h, levels, coefficients: coeffs }
+  HaarWaveletResult::{ width: w, height: h, levels, coefficients: coeffs, }
 }
 
 ///|

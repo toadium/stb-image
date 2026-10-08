@@ -70,7 +70,7 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
           data_start + sep + 1,
           data_start + chunk_len,
         )
-        result.push(PngTextChunk::{ keyword, text })
+        result.push(PngTextChunk::{ keyword, text, })
       }
     }
     // iTXt: type = 0x69 0x54 0x58 0x74
@@ -113,7 +113,7 @@ pub fn read_png_text_chunks(data : Bytes) -> Array[PngTextChunk] {
             // 压缩文本不支持（需要 zlib 解压）
             "[compressed]"
           }
-          result.push(PngTextChunk::{ keyword, text })
+          result.push(PngTextChunk::{ keyword, text, })
         }
       }
     }

@@ -32,7 +32,7 @@ pub fn compute_stats(img : @types.Image) -> ImageStats {
   let mean = Float::from_int(sum) / Float::from_int(n)
   let variance = Float::from_int(sum_sq) / Float::from_int(n) - mean * mean
   let stddev = (if variance < 0.0F { 0.0F } else { variance }).sqrt()
-  ImageStats::{ mean, stddev, min_val: min_v, max_val: max_v }
+  ImageStats::{ mean, stddev, min_val: min_v, max_val: max_v, }
 }
 
 ///|

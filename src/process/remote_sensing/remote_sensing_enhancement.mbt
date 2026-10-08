@@ -227,7 +227,7 @@ pub fn calculate_all_vegetation_indices(
   let ndwi = if image.bands > 4 { calculate_ndwi(image, 1, 3) } else { [] }
   let ndbi = if image.bands > 5 { calculate_ndbi(image, 4, 3) } else { [] }
 
-  VegetationIndices::{ ndvi, ndwi, ndbi, evi: ndvi, savi: ndvi, msavi: ndvi }
+  VegetationIndices::{ ndvi, ndwi, ndbi, evi: ndvi, savi: ndvi, msavi: ndvi, }
 }
 
 ///|

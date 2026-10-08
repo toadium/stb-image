@@ -153,7 +153,7 @@ pub fn sift_detect(
       kp.angle,
       kp.sigma,
     )
-    descriptors.push(SiftDescriptor::{ kp, data: desc })
+    descriptors.push(SiftDescriptor::{ kp, data: desc, })
   }
   descriptors
 }

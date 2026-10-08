@@ -305,7 +305,7 @@ pub fn min_enclosing_circle(
 ) -> (ContourPoint, Float) {
   // 空数组返回默认值
   if points.length() == 0 {
-    return (ContourPoint::{ x: 0, y: 0 }, 0.0F)
+    return (ContourPoint::{ x: 0, y: 0, }, 0.0F)
   }
 
   let n = points.length()
@@ -345,5 +345,5 @@ pub fn min_enclosing_circle(
     center_x += (Float::from_int(far_x) - center_x) * step
     center_y += (Float::from_int(far_y) - center_y) * step
   }
-  (ContourPoint::{ x: center_x.to_int(), y: center_y.to_int() }, radius)
+  (ContourPoint::{ x: center_x.to_int(), y: center_y.to_int(), }, radius)
 }

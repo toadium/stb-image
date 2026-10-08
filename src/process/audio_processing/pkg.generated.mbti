@@ -187,4 +187,3 @@ pub(all) struct VADResult {
 // Type aliases
 
 // Traits
-

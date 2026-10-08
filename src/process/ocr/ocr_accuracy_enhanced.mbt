@@ -689,7 +689,7 @@ pub fn recognize_ocr_enhanced(
   } else {
     0.0
   }
-  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results, }
 }
 
 ///|

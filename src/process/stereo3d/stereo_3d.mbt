@@ -12,7 +12,7 @@ pub(all) struct PointCloud {
 ///|
 /// 创建空点云
 pub fn point_cloud_new() -> PointCloud {
-  PointCloud::{ points: [], colors: [], num_points: 0 }
+  PointCloud::{ points: [], colors: [], num_points: 0, }
 }
 
 ///|
@@ -115,7 +115,7 @@ pub fn depth_to_pointcloud(
       }
     }
   }
-  PointCloud::{ points, colors, num_points: points.length() }
+  PointCloud::{ points, colors, num_points: points.length(), }
 }
 
 ///|
@@ -151,7 +151,7 @@ pub fn pointcloud_voxel_downsample(
       }
     }
   }
-  PointCloud::{ points, colors, num_points: points.length() }
+  PointCloud::{ points, colors, num_points: points.length(), }
 }
 
 ///|

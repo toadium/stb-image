@@ -1,6 +1,6 @@
 ///|
 fn make_gray_2x2() -> @types.Image {
-  @types.Image::{ width: 2, height: 2, channels: 1, data: b"\x00\x55\xAA\xFF" }
+  @types.Image::{ width: 2, height: 2, channels: 1, data: b"\x00\x55\xAA\xFF", }
 }
 
 ///|
@@ -30,7 +30,7 @@ test "apply_colormap: JET produces 3-channel output" {
 
 ///|
 test "apply_colormap: HOT at black is black" {
-  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x00" }
+  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x00", }
   let result = apply_colormap(img, Colormap::HOT)
   assert_eq(result.data[0].to_int(), 0)
   assert_eq(result.data[1].to_int(), 0)
@@ -39,7 +39,7 @@ test "apply_colormap: HOT at black is black" {
 
 ///|
 test "apply_colormap: HOT at white is white" {
-  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\xFF" }
+  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\xFF", }
   let result = apply_colormap(img, Colormap::HOT)
   assert_eq(result.data[0].to_int(), 255)
   assert_eq(result.data[1].to_int(), 255)
@@ -48,7 +48,7 @@ test "apply_colormap: HOT at white is white" {
 
 ///|
 test "apply_colormap: COOL at black is blue" {
-  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x00" }
+  let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x00", }
   let result = apply_colormap(img, Colormap::COOL)
   // COOL: (0, t, 1-t) → at t=0: (0, 0, 255)
   assert_eq(result.data[0].to_int(), 0)

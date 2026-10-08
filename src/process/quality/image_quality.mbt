@@ -155,7 +155,7 @@ pub fn compute_quality_metrics(
   let mae = compute_mae(img1, img2)
   let psnr = compute_psnr(img1, img2)
   let ssim = compute_ssim(img1, img2)
-  QualityMetrics::{ mse, mae, psnr, ssim }
+  QualityMetrics::{ mse, mae, psnr, ssim, }
 }
 
 ///|

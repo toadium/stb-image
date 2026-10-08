@@ -253,7 +253,11 @@ pub(all) struct StructuringElement {
 ///|
 /// 创建矩形结构元素（全为 true）。
 pub fn se_rect(width : Int, height : Int) -> StructuringElement {
-  StructuringElement::{ width, height, data: Array::make(width * height, true) }
+  StructuringElement::{
+    width,
+    height,
+    data: Array::make(width * height, true),
+  }
 }
 
 ///|
@@ -265,7 +269,7 @@ pub fn se_cross(size : Int) -> StructuringElement {
     data[cx * size + i] = true
     data[i * size + cx] = true
   }
-  StructuringElement::{ width: size, height: size, data }
+  StructuringElement::{ width: size, height: size, data, }
 }
 
 ///|
@@ -286,7 +290,7 @@ pub fn se_ellipse(size : Int) -> StructuringElement {
       }
     }
   }
-  StructuringElement::{ width: size, height: size, data }
+  StructuringElement::{ width: size, height: size, data, }
 }
 
 ///|

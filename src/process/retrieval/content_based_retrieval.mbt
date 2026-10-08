@@ -140,7 +140,7 @@ pub fn create_default_lbp_config() -> LBPConfig {
 ///|
 /// 创建默认 HOG 配置
 pub fn create_default_hog_config() -> HOGConfig {
-  HOGConfig::{ cell_size: 8, block_size: 2, num_bins: 9, normalize: true }
+  HOGConfig::{ cell_size: 8, block_size: 2, num_bins: 9, normalize: true, }
 }
 
 ///|

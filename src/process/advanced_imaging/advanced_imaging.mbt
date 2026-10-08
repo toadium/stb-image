@@ -200,7 +200,7 @@ pub fn quantum_ghost_imaging(
     out.push(normalized.to_int().to_byte())
   }
 
-  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(out) }
+  @types.Image::{ width, height, channels: 1, data: Bytes::from_array(out), }
 }
 
 ///|

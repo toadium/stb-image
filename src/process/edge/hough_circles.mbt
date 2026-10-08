@@ -148,7 +148,7 @@ pub fn hough_circles(
       for x in 0..<acc_w {
         let votes = acc[(y * acc_w + x) * num_r + (r - r_min)]
         if votes >= param2 {
-          candidates.push(Circle::{ x, y, radius: r, votes })
+          candidates.push(Circle::{ x, y, radius: r, votes, })
         }
       }
     }

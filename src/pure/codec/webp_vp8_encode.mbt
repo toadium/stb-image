@@ -13,7 +13,7 @@ priv struct Vp8BoolEncoder {
 
 ///|
 fn Vp8BoolEncoder::new() -> Vp8BoolEncoder {
-  Vp8BoolEncoder::{ output: [], low: 0, count: 0, range: 255 }
+  Vp8BoolEncoder::{ output: [], low: 0, count: 0, range: 255, }
 }
 
 ///|
@@ -212,7 +212,7 @@ priv struct Vp8EncQuantParams {
 /// 根据 quality 计算量化参数
 fn vp8_calc_quant_params(quality : Int) -> Vp8EncQuantParams {
   let q = ((100 - quality).clamp(min=1, max=99) * 63 / 100).clamp(min=1, max=63)
-  Vp8EncQuantParams::{ y_ac: q, _y_dc: q, _uv_ac: q, _uv_dc: q }
+  Vp8EncQuantParams::{ y_ac: q, _y_dc: q, _uv_ac: q, _uv_dc: q, }
 }
 
 ///|

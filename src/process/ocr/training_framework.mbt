@@ -203,7 +203,7 @@ pub fn create_data_loader(
       "create_data_loader: 批大小必须大于0",
     )
   }
-  DataLoader::{ samples, batch_size, shuffle, current_index: 0, epoch: 0 }
+  DataLoader::{ samples, batch_size, shuffle, current_index: 0, epoch: 0, }
 }
 
 ///|

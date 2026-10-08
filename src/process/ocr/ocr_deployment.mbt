@@ -256,46 +256,49 @@ pub fn parse_cli_args(args : Array[String]) -> CliConfig raise @types.LoadError 
     )
   }
   let default = create_default_cli_config()
-  let mut config = CliConfig::{ ..default, input_path: args[0] }
+  let mut config = CliConfig::{ ..default, input_path: args[0], }
   let mut i = 1
   while i < args.length() {
     let arg = args[i]
     if arg == "-o" || arg == "--output" {
       if i + 1 < args.length() {
-        config = CliConfig::{ ..config, output_path: args[i + 1] }
+        config = CliConfig::{ ..config, output_path: args[i + 1], }
         i += 2
       } else {
         raise @types.LoadError::DecodeFailed("parse_cli_args: -o 需要参数")
       }
     } else if arg == "-f" || arg == "--format" {
       if i + 1 < args.length() {
-        config = CliConfig::{ ..config, output_format: args[i + 1] }
+        config = CliConfig::{ ..config, output_format: args[i + 1], }
         i += 2
       } else {
         raise @types.LoadError::DecodeFailed("parse_cli_args: -f 需要参数")
       }
     } else if arg == "-l" || arg == "--language" {
       if i + 1 < args.length() {
-        config = CliConfig::{ ..config, language: args[i + 1] }
+        config = CliConfig::{ ..config, language: args[i + 1], }
         i += 2
       } else {
         raise @types.LoadError::DecodeFailed("parse_cli_args: -l 需要参数")
       }
     } else if arg == "--handwriting" {
-      config = CliConfig::{ ..config, enable_handwriting: true }
+      config = CliConfig::{ ..config, enable_handwriting: true, }
       i += 1
     } else if arg == "--multilingual" {
-      config = CliConfig::{ ..config, enable_multilingual: true }
+      config = CliConfig::{ ..config, enable_multilingual: true, }
       i += 1
     } else if arg == "--document" {
-      config = CliConfig::{ ..config, enable_document_analysis: true }
+      config = CliConfig::{ ..config, enable_document_analysis: true, }
       i += 1
     } else if arg == "-v" || arg == "--verbose" {
-      config = CliConfig::{ ..config, verbose: true }
+      config = CliConfig::{ ..config, verbose: true, }
       i += 1
     } else if arg == "-b" || arg == "--batch" {
       if i + 1 < args.length() {
-        config = CliConfig::{ ..config, batch_size: parse_int_str(args[i + 1]) }
+        config = CliConfig::{
+          ..config,
+          batch_size: parse_int_str(args[i + 1]),
+        }
         i += 2
       } else {
         raise @types.LoadError::DecodeFailed("parse_cli_args: -b 需要参数")

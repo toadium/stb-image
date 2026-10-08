@@ -88,7 +88,7 @@ fn trace_boundary(
     let idx = cy * w + cx
     if !visited[idx] {
       visited[idx] = true
-      points.push(ContourPoint::{ x: cx, y: cy })
+      points.push(ContourPoint::{ x: cx, y: cy, })
     }
     count += 1
     // 寻找下一个前景像素（match 替代数组查找，消除堆分配）
@@ -124,7 +124,7 @@ fn trace_boundary(
       break
     }
   }
-  Contour::{ points, is_outer }
+  Contour::{ points, is_outer, }
 }
 
 ///|

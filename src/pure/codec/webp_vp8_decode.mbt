@@ -15,7 +15,7 @@ priv struct Vp8BitReader {
 
 ///|
 fn Vp8BitReader::new(data : Bytes, start : Int) -> Vp8BitReader {
-  Vp8BitReader::{ data, pos: start, bit_buf: 0, bit_count: 0 }
+  Vp8BitReader::{ data, pos: start, bit_buf: 0, bit_count: 0, }
 }
 
 ///|
@@ -515,7 +515,7 @@ fn parse_quantization(br : Vp8BitReader) -> Vp8QuantParams {
   }
   let uv_dc = y_dc + uv_dc_delta
 
-  Vp8QuantParams::{ y_ac, y_dc, uv_ac, uv_dc }
+  Vp8QuantParams::{ y_ac, y_dc, uv_ac, uv_dc, }
 }
 
 // ==================== VP8 Segment ====================
@@ -650,7 +650,7 @@ fn vp8_get_quant_for_segment(
     }
   } else {
     // absolute 模式
-    Vp8QuantParams::{ y_ac: delta, y_dc: delta, uv_ac: delta, uv_dc: delta }
+    Vp8QuantParams::{ y_ac: delta, y_dc: delta, uv_ac: delta, uv_dc: delta, }
   }
 }
 
@@ -1545,7 +1545,7 @@ priv struct Vp8MotionVector {
 
 ///|
 fn Vp8MotionVector::new() -> Vp8MotionVector {
-  Vp8MotionVector::{ mv_x: 0, mv_y: 0 }
+  Vp8MotionVector::{ mv_x: 0, mv_y: 0, }
 }
 
 ///|

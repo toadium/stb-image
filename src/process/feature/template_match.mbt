@@ -107,7 +107,7 @@ pub fn template_match(
             gray_img, w, gray_tpl, tw, th, x, y, tpl_mean, tpl_var_sum,
           )
       }
-      results.push(TemplateMatchResult::{ x, y, score })
+      results.push(TemplateMatchResult::{ x, y, score, })
     }
   }
   results

@@ -162,7 +162,7 @@ pub fn decompose_chinese_char(
   let radical = radicals[seed % radicals.length()]
   let strokes = 3 + seed % 20
   let components : Array[String] = [radical, char]
-  ChineseCharStructure::{ char, radical, strokes, structure_type, components }
+  ChineseCharStructure::{ char, radical, strokes, structure_type, components, }
 }
 
 ///|
@@ -240,7 +240,7 @@ pub fn recognize_chinese_advanced(
   } else {
     0.0
   }
-  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results, }
 }
 
 ///|

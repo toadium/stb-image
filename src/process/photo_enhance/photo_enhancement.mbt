@@ -12,7 +12,7 @@ pub(all) struct LowLightConfig {
 ///|
 /// 创建默认低光增强配置
 pub fn low_light_default_config() -> LowLightConfig {
-  LowLightConfig::{ method_type: "gamma", gamma: 0.5, strength: 1.0 }
+  LowLightConfig::{ method_type: "gamma", gamma: 0.5, strength: 1.0, }
 }
 
 ///|

@@ -61,4 +61,3 @@ pub fn zlib_inflate(Bytes) -> Bytes raise @types.LoadError
 // Type aliases
 
 // Traits
-

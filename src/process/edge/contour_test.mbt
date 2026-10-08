@@ -45,7 +45,7 @@ test "find_contours: 两个独立区域" {
 ///|
 test "find_contours: 空图像" {
   let data = Bytes::from_array(Array::make(16, b'\x00'))
-  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
   let contours = find_contours(img)
   assert_eq(contours.length(), 0)
 }
@@ -53,7 +53,7 @@ test "find_contours: 空图像" {
 ///|
 test "find_contours: 全前景" {
   let data = Bytes::from_array(Array::make(16, b'\xFF'))
-  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
   let contours = find_contours(img)
   assert_true(contours.length() >= 1)
 }
@@ -82,10 +82,10 @@ test "draw_contours: 绘制到图像" {
 test "contour_perimeter: 正方形周长" {
   let contour = Contour::{
     points: [
-      ContourPoint::{ x: 0, y: 0 },
-      ContourPoint::{ x: 3, y: 0 },
-      ContourPoint::{ x: 3, y: 3 },
-      ContourPoint::{ x: 0, y: 3 },
+      ContourPoint::{ x: 0, y: 0, },
+      ContourPoint::{ x: 3, y: 0, },
+      ContourPoint::{ x: 3, y: 3, },
+      ContourPoint::{ x: 0, y: 3, },
     ],
     is_outer: true,
   }
@@ -97,10 +97,10 @@ test "contour_perimeter: 正方形周长" {
 test "contour_area: 正方形面积" {
   let contour = Contour::{
     points: [
-      ContourPoint::{ x: 0, y: 0 },
-      ContourPoint::{ x: 4, y: 0 },
-      ContourPoint::{ x: 4, y: 4 },
-      ContourPoint::{ x: 0, y: 4 },
+      ContourPoint::{ x: 0, y: 0, },
+      ContourPoint::{ x: 4, y: 0, },
+      ContourPoint::{ x: 4, y: 4, },
+      ContourPoint::{ x: 0, y: 4, },
     ],
     is_outer: true,
   }
@@ -112,9 +112,9 @@ test "contour_area: 正方形面积" {
 test "contour_area: 三角形面积" {
   let contour = Contour::{
     points: [
-      ContourPoint::{ x: 0, y: 0 },
-      ContourPoint::{ x: 6, y: 0 },
-      ContourPoint::{ x: 0, y: 6 },
+      ContourPoint::{ x: 0, y: 0, },
+      ContourPoint::{ x: 6, y: 0, },
+      ContourPoint::{ x: 0, y: 6, },
     ],
     is_outer: true,
   }
@@ -125,7 +125,7 @@ test "contour_area: 三角形面积" {
 ///|
 test "find_contours: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
-  let img = @types.Image::{ width: 1, height: 1, channels: 2, data }
+  let img = @types.Image::{ width: 1, height: 1, channels: 2, data, }
   try {
     let _ = find_contours(img)
     assert_true(false)
@@ -139,7 +139,7 @@ test "find_contours: 通道验证" {
 test "find_contours: 孤立点" {
   // 1x3 图像，只有中间像素为前景
   let data = Bytes::from_array([b'\x00', b'\xFF', b'\x00'])
-  let img = @types.Image::{ width: 3, height: 1, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 1, channels: 1, data, }
   let contours = find_contours(img)
   // 孤立点应该产生至少一个轮廓
   assert_true(contours.length() >= 1)

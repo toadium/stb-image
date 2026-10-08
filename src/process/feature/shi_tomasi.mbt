@@ -150,7 +150,7 @@ pub fn good_features_to_track(
         }
       }
       if is_max {
-        candidates.push(CornerPoint::{ x, y, response: r })
+        candidates.push(CornerPoint::{ x, y, response: r, })
       }
     }
   }

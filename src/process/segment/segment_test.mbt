@@ -9,7 +9,7 @@ test "kmeans_segment 基本功能" {
      b'\x00', b'\x00', b'\xFF', // 蓝
      b'\xFF', b'\xFF', b'\x00', // 黄
   ])
-  let img = @types.Image::{ width: 2, height: 2, channels: 3, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 3, data, }
   let (seg, regions) = kmeans_segment(img, 4, max_iters=10)
   assert_eq(seg.width, 2)
   assert_eq(seg.height, 2)
@@ -26,7 +26,7 @@ test "kmeans_segment k=1" {
   let data = Bytes::from_array([
     b'\x80', b'\x80', b'\x80', b'\x80', b'\x80', b'\x80',
   ])
-  let img = @types.Image::{ width: 2, height: 1, channels: 3, data }
+  let img = @types.Image::{ width: 2, height: 1, channels: 3, data, }
   let (seg, regions) = kmeans_segment(img, 1)
   assert_eq(seg.num_regions, 1)
   assert_eq(regions.length(), 1)
@@ -55,7 +55,7 @@ test "region_growing_segment 基本功能" {
   let data = Bytes::from_array([
     b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF',
   ])
-  let img = @types.Image::{ width: 3, height: 1, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 1, channels: 3, data, }
   let (seg, regions) = region_growing_segment(
     img,
     [(0, 0), (2, 0)],
@@ -74,7 +74,7 @@ test "region_growing_segment 单种子" {
     b'\x40', b'\x40', b'\x40', b'\x40', b'\x40', b'\x40', b'\x40', b'\x40', b'\x40',
     b'\x40', b'\x40', b'\x40',
   ])
-  let img = @types.Image::{ width: 2, height: 2, channels: 3, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 3, data, }
   let (seg, regions) = region_growing_segment(img, [(0, 0)], threshold=0)
   assert_eq(seg.num_regions, 1)
   assert_eq(regions[0].area, 4)
@@ -99,7 +99,7 @@ test "flood_fill 基本功能" {
   let data = Bytes::from_array([
     b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\xFF',
   ])
-  let img = @types.Image::{ width: 3, height: 1, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 1, channels: 3, data, }
   let filled = flood_fill(img, 0, 0, [b'\x00', b'\xFF', b'\x00'], threshold=0)
   // 像素 0 和 1 应被填充为绿色
   assert_eq(filled.data[0], b'\x00')
@@ -120,7 +120,7 @@ test "flood_fill 带阈值" {
   let data = Bytes::from_array([
     b'\x80', b'\x80', b'\x80', b'\x82', b'\x82', b'\x82', b'\xFF', b'\xFF', b'\xFF',
   ])
-  let img = @types.Image::{ width: 3, height: 1, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 1, channels: 3, data, }
   let filled = flood_fill(img, 0, 0, [b'\x00', b'\x00', b'\x00'], threshold=5)
   // 像素 0 和 1 应被填充（差异 2 <= 5）
   assert_eq(filled.data[0], b'\x00')
@@ -148,7 +148,7 @@ test "flood_fill 种子越界" {
 ///|
 test "segment_to_color 基本功能" {
   let labels = [0, 1, 0, 1]
-  let seg = SegmentLabelImage::{ width: 2, height: 2, labels, num_regions: 2 }
+  let seg = SegmentLabelImage::{ width: 2, height: 2, labels, num_regions: 2, }
   let out = segment_to_color(seg)
   assert_eq(out.width, 2)
   assert_eq(out.height, 2)
@@ -202,7 +202,7 @@ test "kmeans_segment k 超范围" {
 
 ///|
 test "kmeans_segment 空图像" {
-  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"", }
   let (seg, regions) = kmeans_segment(img, 2)
   assert_eq(seg.width, 0)
   assert_eq(regions.length(), 0)

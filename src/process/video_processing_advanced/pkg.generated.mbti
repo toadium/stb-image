@@ -166,4 +166,3 @@ pub(all) struct VideoSuperResolutionResult {
 // Type aliases
 
 // Traits
-

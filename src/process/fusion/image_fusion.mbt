@@ -12,7 +12,7 @@ pub(all) struct FusionConfig {
 ///|
 /// 创建默认融合配置
 pub fn fusion_default_config() -> FusionConfig {
-  FusionConfig::{ method_type: "alpha", alpha: 0.5, pyramid_levels: 3 }
+  FusionConfig::{ method_type: "alpha", alpha: 0.5, pyramid_levels: 3, }
 }
 
 ///|

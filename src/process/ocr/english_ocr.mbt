@@ -467,7 +467,7 @@ pub fn recognize_english(
   } else {
     0.0
   }
-  OcrResult::{ text, confidence: avg_confidence, characters: char_results }
+  OcrResult::{ text, confidence: avg_confidence, characters: char_results, }
 }
 
 ///|

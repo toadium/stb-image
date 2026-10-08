@@ -13,7 +13,7 @@ fn ga_make_rgb(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -49,7 +49,7 @@ test "encode_gif_animation_pure: basic 2-frame roundtrip" {
 ///|
 test "encode_gif_animation_pure: single frame" {
   let frame = ga_make_rgb(1, 1, [(255, 255, 255)])
-  let anim = @types.GifAnimation::{ frames: [frame], delays: [0] }
+  let anim = @types.GifAnimation::{ frames: [frame], delays: [0], }
   let gif_bytes = encode_gif_animation_pure(anim)
   let restored = decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)
@@ -81,7 +81,7 @@ test "encode_gif_animation_pure: RGBA frames" {
     channels: 4,
     data: [b'\x80', b'\x90', b'\xA0', b'\xFF'] |> Bytes::from_array,
   }
-  let anim = @types.GifAnimation::{ frames: [f1], delays: [100] }
+  let anim = @types.GifAnimation::{ frames: [f1], delays: [100], }
   let gif_bytes = encode_gif_animation_pure(anim)
   let restored = decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)
@@ -90,7 +90,7 @@ test "encode_gif_animation_pure: RGBA frames" {
 
 ///|
 test "encode_gif_animation_pure: empty frames raises" {
-  let anim = @types.GifAnimation::{ frames: [], delays: [] }
+  let anim = @types.GifAnimation::{ frames: [], delays: [], }
   try {
     let _ = encode_gif_animation_pure(anim)
     assert_true(false)
@@ -103,7 +103,7 @@ test "encode_gif_animation_pure: empty frames raises" {
 ///|
 test "encode_gif_animation_pure: frames/delays length mismatch raises" {
   let f1 = ga_make_rgb(1, 1, [(0, 0, 0)])
-  let anim = @types.GifAnimation::{ frames: [f1], delays: [100, 200] }
+  let anim = @types.GifAnimation::{ frames: [f1], delays: [100, 200], }
   try {
     let _ = encode_gif_animation_pure(anim)
     assert_true(false)
@@ -121,7 +121,7 @@ test "encode_gif_animation_pure: invalid channels raises" {
     channels: 2,
     data: [b'\x00', b'\x00'] |> Bytes::from_array,
   }
-  let anim = @types.GifAnimation::{ frames: [f1], delays: [100] }
+  let anim = @types.GifAnimation::{ frames: [f1], delays: [100], }
   try {
     let _ = encode_gif_animation_pure(anim)
     assert_true(false)
@@ -165,7 +165,7 @@ test "encode_gif_animation_pure: larger image triggers LZW growth" {
     }
   }
   let frame = ga_make_rgb(16, 16, pixels)
-  let anim = @types.GifAnimation::{ frames: [frame], delays: [0] }
+  let anim = @types.GifAnimation::{ frames: [frame], delays: [0], }
   let gif_bytes = encode_gif_animation_pure(anim)
   let restored = decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)

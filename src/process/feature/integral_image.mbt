@@ -51,7 +51,7 @@ pub fn integral_image(
       data[(y + 1) * iw + x + 1] = data[y * iw + x + 1] + row_sum
     }
   }
-  IntegralImage::{ width: w, height: h, data }
+  IntegralImage::{ width: w, height: h, data, }
 }
 
 ///|
@@ -176,7 +176,7 @@ pub fn integral_image_sq(
       data[(y + 1) * iw + x + 1] = data[y * iw + x + 1] + row_sum
     }
   }
-  IntegralImageSq::{ width: w, height: h, data }
+  IntegralImageSq::{ width: w, height: h, data, }
 }
 
 ///|

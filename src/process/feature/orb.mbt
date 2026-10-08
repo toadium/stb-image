@@ -74,7 +74,7 @@ fn fast_detect(
       if is_corner {
         // 计算方向
         let angle = compute_orientation(gray, w, h, x, y)
-        corners.push(OrbKeyPoint::{ x, y, response: 1.0F, angle })
+        corners.push(OrbKeyPoint::{ x, y, response: 1.0F, angle, })
       }
     }
   }
@@ -321,7 +321,7 @@ pub fn orb_detect(
   let descriptors : Array[OrbDescriptor] = []
   for kp in kps {
     let desc = compute_brief(gray, w, h, kp, pattern)
-    descriptors.push(OrbDescriptor::{ kp, data: desc })
+    descriptors.push(OrbDescriptor::{ kp, data: desc, })
   }
   descriptors
 }

@@ -17,7 +17,7 @@ test "template_match SqDiff 基本功能" {
   }
   // 3x3 白色模板
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
-  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data }
+  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
   let results = template_match(img, tpl, match_method=SqDiff)
   // 应有 (10-3+1)^2 = 64 个位置
   assert_eq(results.length(), 64)
@@ -83,7 +83,7 @@ test "template_match CCorr 基本功能" {
     data: Bytes::from_array(data),
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\x80'))
-  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data }
+  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
   let results = template_match(img, tpl, match_method=CCorr)
   assert_eq(results.length(), 64)
   // (2,2) 位置应有最大互相关
@@ -221,7 +221,7 @@ test "template_match SqDiffNormed 范围" {
     data: Bytes::from_array(data),
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
-  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data }
+  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
   let results = template_match(img, tpl, match_method=SqDiffNormed)
   // 所有分数应非负
   for r in results {
@@ -244,7 +244,7 @@ test "template_match CCoeffNormed 范围" {
     data: Bytes::from_array(data),
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
-  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data }
+  let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
   let results = template_match(img, tpl, match_method=CCoeffNormed)
   // 所有分数应在 [-1, 1] 范围内
   for r in results {

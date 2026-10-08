@@ -334,7 +334,7 @@ pub fn extract_face_feature(
   }
   let norm = if norm_sq > 0.0 { norm_sq.sqrt() } else { 1.0 }
 
-  FaceFeature::{ vector, dimension, norm, is_normalized: false }
+  FaceFeature::{ vector, dimension, norm, is_normalized: false, }
 }
 
 ///|

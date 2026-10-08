@@ -125,7 +125,7 @@ fn trace_boundary_16f(
     let idx = cy * w + cx
     if !visited[idx] {
       visited[idx] = true
-      points.push(ContourPoint::{ x: cx, y: cy })
+      points.push(ContourPoint::{ x: cx, y: cy, })
     }
     count += 1
     let mut found = false
@@ -158,7 +158,7 @@ fn trace_boundary_16f(
       break
     }
   }
-  Contour::{ points, is_outer }
+  Contour::{ points, is_outer, }
 }
 
 ///|

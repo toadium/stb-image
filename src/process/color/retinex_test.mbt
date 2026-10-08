@@ -5,7 +5,7 @@ test "ssr 灰度图基本功能" {
   let data = Bytes::from_array([
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
   ])
-  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
   let out = ssr(img, sigma=2.0F, gain=1.0F, offset=0.0F)
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -20,7 +20,7 @@ test "ssr 灰度图基本功能" {
 ///|
 test "ssr 常量图" {
   let data = Bytes::from_array(Array::make(9, b'\x80'))
-  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
   let out = ssr(img, sigma=2.0F)
   // 常量图 SSR 结果应接近中心值
   for i in 0..<9 {
@@ -36,7 +36,7 @@ test "ssr RGB 图" {
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
   ])
-  let img = @types.Image::{ width: 3, height: 3, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 3, data, }
   let out = ssr(img, sigma=2.0F)
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -53,7 +53,7 @@ test "ssr RGBA alpha 不变" {
     b'\x40', b'\x80', b'\xC0', b'\xFF', b'\x60', b'\xA0', b'\xE0', b'\x80', b'\x20',
     b'\x50', b'\x90', b'\xFF', b'\x40', b'\x80', b'\xC0', b'\xC0',
   ])
-  let img = @types.Image::{ width: 2, height: 2, channels: 4, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 4, data, }
   let out = ssr(img, sigma=2.0F)
   assert_eq(out.data[3], b'\xFF')
   assert_eq(out.data[7], b'\x80')
@@ -88,7 +88,7 @@ test "msr 灰度图基本功能" {
   let data = Bytes::from_array([
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
   ])
-  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
   let out = msr(img, sigmas=[2.0F, 5.0F, 10.0F])
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -102,7 +102,7 @@ test "msr 灰度图基本功能" {
 ///|
 test "msr 单尺度" {
   let data = Bytes::from_array(Array::make(9, b'\x80'))
-  let img = @types.Image::{ width: 3, height: 3, channels: 1, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
   let out = msr(img, sigmas=[5.0F])
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -141,7 +141,7 @@ test "msrcr RGB 图基本功能" {
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
     b'\x40', b'\x80', b'\xC0', b'\x60', b'\xA0', b'\xE0', b'\x20', b'\x50', b'\x90',
   ])
-  let img = @types.Image::{ width: 3, height: 3, channels: 3, data }
+  let img = @types.Image::{ width: 3, height: 3, channels: 3, data, }
   let out = msrcr(img, sigmas=[2.0F, 5.0F, 10.0F])
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
@@ -158,7 +158,7 @@ test "msrcr RGBA alpha 不变" {
     b'\x40', b'\x80', b'\xC0', b'\xFF', b'\x60', b'\xA0', b'\xE0', b'\x80', b'\x20',
     b'\x50', b'\x90', b'\xFF', b'\x40', b'\x80', b'\xC0', b'\xC0',
   ])
-  let img = @types.Image::{ width: 2, height: 2, channels: 4, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 4, data, }
   let out = msrcr(img, sigmas=[2.0F, 5.0F])
   assert_eq(out.data[3], b'\xFF')
   assert_eq(out.data[7], b'\x80')
@@ -215,7 +215,7 @@ test "ssr: invalid channels raises" {
 
 ///|
 test "ssr: empty image returns self" {
-  let img = @types.Image::{ width: 0, height: 0, channels: 1, data: b"" }
+  let img = @types.Image::{ width: 0, height: 0, channels: 1, data: b"", }
   let out = ssr(img, sigma=2.0F)
   assert_eq(out.width, 0)
   assert_eq(out.height, 0)
@@ -240,7 +240,7 @@ test "msr: invalid channels raises" {
 
 ///|
 test "msr: empty image returns self" {
-  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"", }
   let out = msr(img)
   assert_eq(out.width, 0)
   assert_eq(out.height, 0)
@@ -252,7 +252,7 @@ test "msr: RGBA alpha preserved" {
     b'\x40', b'\x80', b'\xC0', b'\xAA', b'\x60', b'\xA0', b'\xE0', b'\xBB', b'\x20',
     b'\x50', b'\x90', b'\xCC', b'\x10', b'\x20', b'\x30', b'\xDD',
   ])
-  let img = @types.Image::{ width: 2, height: 2, channels: 4, data }
+  let img = @types.Image::{ width: 2, height: 2, channels: 4, data, }
   let out = msr(img, sigmas=[10.0F])
   assert_eq(out.data[3], b'\xAA')
   assert_eq(out.data[7], b'\xBB')
@@ -262,7 +262,7 @@ test "msr: RGBA alpha preserved" {
 
 ///|
 test "msrcr: empty image returns self" {
-  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"" }
+  let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"", }
   let out = msrcr(img)
   assert_eq(out.width, 0)
   assert_eq(out.height, 0)

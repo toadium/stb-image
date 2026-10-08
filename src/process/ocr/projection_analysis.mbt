@@ -127,7 +127,7 @@ fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
       valleys.push(i)
     }
   }
-  ProjectionResult::{ projection, peaks, valleys, mean, stddev }
+  ProjectionResult::{ projection, peaks, valleys, mean, stddev, }
 }
 
 ///|

@@ -160,4 +160,3 @@ pub(all) enum ReplayBufferType {
 // Type aliases
 
 // Traits
-

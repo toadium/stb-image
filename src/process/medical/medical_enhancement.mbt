@@ -121,17 +121,17 @@ pub fn create_default_medical_segmentation_config() -> MedicalSegmentationConfig
 /// 创建默认窗宽窗位配置
 pub fn create_default_window_level(preset : String) -> WindowLevelConfig {
   if preset == "brain" {
-    WindowLevelConfig::{ center: 40.0, width: 80.0, preset }
+    WindowLevelConfig::{ center: 40.0, width: 80.0, preset, }
   } else if preset == "lung" {
-    WindowLevelConfig::{ center: -600.0, width: 1500.0, preset }
+    WindowLevelConfig::{ center: -600.0, width: 1500.0, preset, }
   } else if preset == "abdomen" {
-    WindowLevelConfig::{ center: 40.0, width: 400.0, preset }
+    WindowLevelConfig::{ center: 40.0, width: 400.0, preset, }
   } else if preset == "bone" {
-    WindowLevelConfig::{ center: 300.0, width: 1500.0, preset }
+    WindowLevelConfig::{ center: 300.0, width: 1500.0, preset, }
   } else if preset == "soft_tissue" {
-    WindowLevelConfig::{ center: 50.0, width: 350.0, preset }
+    WindowLevelConfig::{ center: 50.0, width: 350.0, preset, }
   } else {
-    WindowLevelConfig::{ center: 128.0, width: 256.0, preset: "custom" }
+    WindowLevelConfig::{ center: 128.0, width: 256.0, preset: "custom", }
   }
 }
 

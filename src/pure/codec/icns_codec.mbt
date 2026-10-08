@@ -95,7 +95,7 @@ fn parse_icns(data : Bytes) -> Array[IcnsChunk] raise @types.LoadError {
     let data_offset = pos + 8
     let data_size = chunk_len - 8
     let (icon_size, is_png) = icns_icon_info(type_code)
-    chunks.push(IcnsChunk::{ data_offset, data_size, icon_size, is_png })
+    chunks.push(IcnsChunk::{ data_offset, data_size, icon_size, is_png, })
     pos += chunk_len
   }
   if chunks.length() == 0 {

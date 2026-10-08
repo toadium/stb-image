@@ -8,7 +8,7 @@ test "inpaint 基本功能" {
     b'\x00', b'\x00', b'\x80', b'\xFF', b'\x80', b'\x00', b'\x00', b'\x80', b'\x80',
     b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
   ])
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data, }
   // 掩码：仅中心像素待修复
   let mask_arr = Array::make(25, b'\x00')
   mask_arr[12] = b'\xFF'
@@ -28,7 +28,7 @@ test "inpaint 基本功能" {
 ///|
 test "inpaint 无掩码返回原图" {
   let data = Bytes::from_array(Array::make(25, b'\x80'))
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data, }
   let mask = @types.Image::{
     width: 5,
     height: 5,
@@ -153,7 +153,7 @@ test "inpaint_fast 基本功能" {
 ///|
 test "inpaint_fast 无掩码返回原图" {
   let data = Bytes::from_array(Array::make(25, b'\x80'))
-  let img = @types.Image::{ width: 5, height: 5, channels: 1, data }
+  let img = @types.Image::{ width: 5, height: 5, channels: 1, data, }
   let mask = @types.Image::{
     width: 5,
     height: 5,

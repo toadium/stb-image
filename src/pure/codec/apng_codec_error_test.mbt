@@ -72,7 +72,7 @@ test "decode_apng_pure: invalid signature raises" {
 
 ///|
 test "encode_apng_pure: empty frames raises" {
-  let anim = @types.PngAnimation::{ frames: [], delays: [] }
+  let anim = @types.PngAnimation::{ frames: [], delays: [], }
   try {
     let _ = encode_apng_pure(anim)
     assert_true(false)

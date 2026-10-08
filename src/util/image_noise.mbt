@@ -41,7 +41,7 @@ pub fn add_noise_gaussian(
   sigma : Float,
   seed : UInt,
 ) -> @types.Image {
-  let rng = LCG::{ state: seed }
+  let rng = LCG::{ state: seed, }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -72,7 +72,7 @@ pub fn add_noise_salt_pepper(
   prob : Float,
   seed : UInt,
 ) -> @types.Image {
-  let rng = LCG::{ state: seed }
+  let rng = LCG::{ state: seed, }
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }

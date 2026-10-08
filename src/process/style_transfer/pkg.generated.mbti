@@ -105,4 +105,3 @@ pub(all) struct StyleTransferTextureFeatures {
 // Type aliases
 
 // Traits
-

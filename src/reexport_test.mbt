@@ -13,7 +13,7 @@ fn re_make_rgb(
     data.push(p.1.to_byte())
     data.push(p.2.to_byte())
   }
-  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data) }
+  @types.Image::{ width, height, channels: 3, data: Bytes::from_array(data), }
 }
 
 ///|
@@ -488,7 +488,7 @@ test "reexport: freq_filter_gaussian" {
 ///|
 test "reexport: compute_glcm" {
   let data = Bytes::from_array(Array::make(16, b'\x80'))
-  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
   let _ = compute_glcm(img, 1, 0)
   assert_true(true)
 }
@@ -496,7 +496,7 @@ test "reexport: compute_glcm" {
 ///|
 test "reexport: glcm_features_multi_direction" {
   let data = Bytes::from_array(Array::make(16, b'\x80'))
-  let img = @types.Image::{ width: 4, height: 4, channels: 1, data }
+  let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
   let _ = glcm_features_multi_direction(img)
   assert_true(true)
 }
