@@ -209,7 +209,7 @@ pub fn cosine_similarity(vec1 : Array[Double], vec2 : Array[Double]) -> Double {
     norm2 += vec2[i] * vec2[i]
   }
 
-  let denom = norm1.sqrt() * norm2.sqrt()
+  let denom = norm1 * norm2
   if denom > 0.0 {
     dot_product / denom
   } else {
@@ -218,6 +218,20 @@ pub fn cosine_similarity(vec1 : Array[Double], vec2 : Array[Double]) -> Double {
 }
 
 ///|
+/// 近似平方根
+fn _sqrt_approx(x : Double) -> Double {
+  if x <= 0.0 {
+    0.0
+  } else {
+    let mut z = x
+    let mut y = (z + 1.0) / 2.0
+    for _ in 0..<20 {
+      z = y
+      y = (z + x / z) / 2.0
+    }
+    y
+  }
+}
 
 ///|
 /// 多模态融合（简化版）

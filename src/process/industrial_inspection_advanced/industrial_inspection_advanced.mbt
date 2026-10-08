@@ -242,8 +242,8 @@ pub fn measure_dimensions(
 ) -> Array[DimensionalMeasurementResult] {
   ignore(calibration_factor)
   ignore(height)
-  ignore(image)
   ignore(width)
+  ignore(image)
   let measurements : Array[DimensionalMeasurementResult] = []
 
   // 简化的尺寸测量

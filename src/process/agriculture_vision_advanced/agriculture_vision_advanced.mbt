@@ -341,8 +341,8 @@ pub fn detect_pests(
   config : AgricultureVisionConfig,
 ) -> Array[PestDetectionResult] {
   ignore(height)
-  ignore(image)
   ignore(width)
+  ignore(image)
   let pests : Array[PestDetectionResult] = []
 
   let pest_types = [

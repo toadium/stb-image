@@ -454,8 +454,8 @@ pub fn evaluate_policy(
   env : RLEnvironment,
   num_episodes : Int,
 ) -> PolicyEvaluationResult {
-  ignore(agent)
   ignore(env)
+  ignore(agent)
   let rewards : Array[Double] = []
   let mut total_reward = 0.0
   let mut success_count = 0

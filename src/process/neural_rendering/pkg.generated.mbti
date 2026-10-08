@@ -141,3 +141,4 @@ pub(all) struct Voxel {
 // Type aliases
 
 // Traits
+

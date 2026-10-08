@@ -104,7 +104,29 @@ pub fn create_default_denoise_config() -> DenoiseConfig {
 pub fn mean_filter_denoise(
   img : @types.Image,
   kernel_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "mean_filter_denoise: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "mean_filter_denoise: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "mean_filter_denoise: 数据大小不匹配",
+    )
+  }
+  if kernel_size < 1 {
+    raise @types.LoadError::DecodeFailed(
+      "mean_filter_denoise: kernel_size 必须 >= 1",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -154,7 +176,29 @@ pub fn mean_filter_denoise(
 pub fn median_filter_denoise(
   img : @types.Image,
   kernel_size : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "median_filter_denoise: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "median_filter_denoise: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "median_filter_denoise: 数据大小不匹配",
+    )
+  }
+  if kernel_size < 1 {
+    raise @types.LoadError::DecodeFailed(
+      "median_filter_denoise: kernel_size 必须 >= 1",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -202,7 +246,34 @@ pub fn gaussian_filter_denoise(
   img : @types.Image,
   kernel_size : Int,
   sigma : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_filter_denoise: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_filter_denoise: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_filter_denoise: 数据大小不匹配",
+    )
+  }
+  if kernel_size < 1 {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_filter_denoise: kernel_size 必须 >= 1",
+    )
+  }
+  if sigma <= 0.0 {
+    raise @types.LoadError::DecodeFailed(
+      "gaussian_filter_denoise: sigma 必须大于0",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -265,7 +336,34 @@ pub fn bilateral_filter_denoise(
   kernel_size : Int,
   sigma_color : Double,
   sigma_space : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_denoise: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_denoise: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_denoise: 数据大小不匹配",
+    )
+  }
+  if kernel_size < 1 {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_denoise: kernel_size 必须 >= 1",
+    )
+  }
+  if sigma_color <= 0.0 || sigma_space <= 0.0 {
+    raise @types.LoadError::DecodeFailed(
+      "bilateral_filter_denoise: sigma 参数必须大于0",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -318,7 +416,26 @@ pub fn bilateral_filter_denoise(
 
 ///|
 /// 计算噪声水平
-pub fn calculate_noise_level(img : @types.Image) -> Double {
+pub fn calculate_noise_level(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_noise_level: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_noise_level: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_noise_level: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -345,7 +462,26 @@ pub fn calculate_noise_level(img : @types.Image) -> Double {
 
 ///|
 /// 直方图均衡化
-pub fn histogram_equalization_enhance(img : @types.Image) -> @types.Image {
+pub fn histogram_equalization_enhance(
+  img : @types.Image,
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "histogram_equalization_enhance: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "histogram_equalization_enhance: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "histogram_equalization_enhance: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -403,7 +539,24 @@ pub fn histogram_equalization_enhance(img : @types.Image) -> @types.Image {
 pub fn gamma_correction_enhance(
   img : @types.Image,
   gamma : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "gamma_correction_enhance: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "gamma_correction_enhance: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "gamma_correction_enhance: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -448,7 +601,24 @@ pub fn unsharp_mask_enhance(
   img : @types.Image,
   amount : Double,
   radius : Int,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "unsharp_mask_enhance: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "unsharp_mask_enhance: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "unsharp_mask_enhance: 数据大小不匹配",
+    )
+  }
   // 先高斯模糊
   let blurred = gaussian_filter_denoise(img, radius * 2 + 1, radius.to_double())
   let w = img.width
@@ -480,7 +650,26 @@ pub fn unsharp_mask_enhance(
 
 ///|
 /// 计算图像亮度
-pub fn calculate_brightness(img : @types.Image) -> Double {
+pub fn calculate_brightness(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_brightness: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_brightness: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_brightness: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -493,7 +682,24 @@ pub fn calculate_brightness(img : @types.Image) -> Double {
 
 ///|
 /// 计算图像对比度
-pub fn calculate_contrast(img : @types.Image) -> Double {
+pub fn calculate_contrast(img : @types.Image) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_contrast: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_contrast: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_contrast: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -509,7 +715,24 @@ pub fn calculate_contrast(img : @types.Image) -> Double {
 
 ///|
 /// 计算图像锐度
-pub fn calculate_sharpness(img : @types.Image) -> Double {
+pub fn calculate_sharpness(img : @types.Image) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_sharpness: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_sharpness: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_sharpness: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -530,7 +753,22 @@ pub fn calculate_sharpness(img : @types.Image) -> Double {
 pub fn denoise_image(
   img : @types.Image,
   config : DenoiseConfig,
-) -> DenoiseResult {
+) -> DenoiseResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "denoise_image: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "denoise_image: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("denoise_image: 数据大小不匹配")
+  }
   let noise_before = calculate_noise_level(img)
 
   let result = if config.algorithm == DenoiseAlgorithm::MeanFilter {
@@ -586,7 +824,24 @@ pub fn denoise_image(
 pub fn enhance_image_advanced(
   img : @types.Image,
   algorithm : EnhancementAlgorithm,
-) -> EnhancementResult {
+) -> EnhancementResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "enhance_image_advanced: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "enhance_image_advanced: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "enhance_image_advanced: 数据大小不匹配",
+    )
+  }
   let brightness_before = calculate_brightness(img)
   let contrast_before = calculate_contrast(img)
   let sharpness_before = calculate_sharpness(img)

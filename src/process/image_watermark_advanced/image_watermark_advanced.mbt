@@ -226,6 +226,7 @@ fn lsb_embed(
   watermark : Array[Byte],
   _strength : Double,
 ) -> Array[Double] {
+  ignore(strength)
   let result : Array[Double] = []
   let mut wm_idx = 0
   let mut bit_idx = 0

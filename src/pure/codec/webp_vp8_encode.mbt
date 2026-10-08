@@ -203,13 +203,16 @@ fn vp8_fwht_4x4(block : Array[Int]) -> Array[Int] {
 /// VP8 量化参数
 priv struct Vp8EncQuantParams {
   y_ac : Int
+  _y_dc : Int
+  _uv_ac : Int
+  _uv_dc : Int
 }
 
 ///|
 /// 根据 quality 计算量化参数
 fn vp8_calc_quant_params(quality : Int) -> Vp8EncQuantParams {
   let q = ((100 - quality).clamp(min=1, max=99) * 63 / 100).clamp(min=1, max=63)
-  Vp8EncQuantParams::{ y_ac: q }
+  Vp8EncQuantParams::{ y_ac: q, _y_dc: q, _uv_ac: q, _uv_dc: q }
 }
 
 ///|
@@ -348,8 +351,9 @@ fn vp8_predict_i16x16_v(
   mb_x : Int,
   mb_y : Int,
   width : Int,
-  _height : Int,
+  height : Int,
 ) -> Array[Int] {
+  ignore(height)
   let pred = Array::make(256, 128)
   if mb_y > 0 {
     for x in 0..<16 {
@@ -525,7 +529,8 @@ priv struct Vp8EncSegmentParams {
   segmentation_enabled : Bool
   // 每个 segment 的量化器增量（4 个 segment）
   quantizer_delta : Array[Int]
-
+  // 每个 segment 的滤波级别增量（4 个 segment）
+  _filter_level_delta : Array[Int]
   // 每个宏块的 segment ID
   segment_id_map : Array[Int]
 }
@@ -536,8 +541,9 @@ fn vp8_enc_segment_params_new(
   y_plane : Array[Int],
   width : Int,
   height : Int,
-  _base_quant : Int,
+  base_quant : Int,
 ) -> Vp8EncSegmentParams {
+  ignore(base_quant)
   let mb_w = (width + 15) / 16
   let mb_h = (height + 15) / 16
   let total_mbs = mb_w * mb_h
@@ -581,9 +587,12 @@ fn vp8_enc_segment_params_new(
   }
   // 量化器增量（高复杂度 segment 使用更小的量化增量，即更高质量）
   let quantizer_delta = [0, -4, -8, -12]
+  // 滤波级别增量（高复杂度 segment 使用更强的滤波）
+  let filter_level_delta = [0, 2, 4, 6]
   Vp8EncSegmentParams::{
     segmentation_enabled: true,
     quantizer_delta,
+    _filter_level_delta: filter_level_delta,
     segment_id_map,
   }
 }
@@ -736,6 +745,18 @@ fn vp8_enc_adaptive_probs_update(probs : Vp8EncAdaptiveProbs) -> Unit {
     }
   }
   probs.blocks_since_update = 0
+}
+
+///|
+/// 记录 token 统计
+fn _vp8_enc_adaptive_probs_record_token(
+  probs : Vp8EncAdaptiveProbs,
+  pos : Int,
+  token_type : Int,
+) -> Unit {
+  if pos >= 0 && pos < 16 && token_type >= 0 && token_type < 4 {
+    probs.token_counts[pos * 4 + token_type] += 1
+  }
 }
 
 ///|

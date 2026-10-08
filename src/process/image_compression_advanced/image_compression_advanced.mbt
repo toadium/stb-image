@@ -257,8 +257,10 @@ pub fn compress_image(
   let compressed : Array[Byte] = []
   let block_size = config.block_size
 
-  let mut _total_coefficients = 0
-  let mut _nonzero_coefficients = 0
+  let mut total_coefficients = 0
+  ignore(total_coefficients)
+  let mut nonzero_coefficients = 0
+  ignore(nonzero_coefficients)
 
   let mut y = 0
   while y < height {
@@ -286,9 +288,9 @@ pub fn compress_image(
       let quantized = quantize(dct_block, config.quality)
 
       for q in quantized {
-        _total_coefficients += 1
+        total_coefficients += 1
         if q != 0 {
-          _nonzero_coefficients += 1
+          nonzero_coefficients += 1
         }
         let byte_val = if q > 127 { 127 } else if q < -128 { -128 } else { q }
         let b : Byte = byte_val.to_byte()
@@ -415,8 +417,8 @@ pub fn optimize_rate_distortion(
 ) -> RateDistortionOptimizationResult {
   ignore(config)
   ignore(height)
-  ignore(image)
   ignore(width)
+  ignore(image)
   let curve : Array[Array[Double]] = []
 
   let mut quality = 10

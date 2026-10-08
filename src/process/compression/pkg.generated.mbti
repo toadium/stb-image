@@ -8,17 +8,17 @@ import {
 // Values
 pub fn calculate_bits_per_pixel(Int, Int, Int) -> Double
 
-pub fn calculate_compression_quality(@types.Image, @types.Image, Int, Int) -> CompressionQualityMetrics
+pub fn calculate_compression_quality(@types.Image, @types.Image, Int, Int) -> CompressionQualityMetrics raise @types.LoadError
 
 pub fn calculate_compression_ratio(Int, Int) -> Double
 
-pub fn calculate_image_entropy(@types.Image) -> Double
+pub fn calculate_image_entropy(@types.Image) -> Double raise @types.LoadError
 
-pub fn compress_image(@types.Image, CompressionConfig) -> CompressionResult
+pub fn compress_image(@types.Image, CompressionConfig) -> CompressionResult raise @types.LoadError
 
-pub fn compress_jpeg_simple(@types.Image, Double) -> CompressionResult
+pub fn compress_jpeg_simple(@types.Image, Double) -> CompressionResult raise @types.LoadError
 
-pub fn compress_png_simple(@types.Image) -> CompressionResult
+pub fn compress_png_simple(@types.Image) -> CompressionResult raise @types.LoadError
 
 pub fn compression_algorithm_to_string(CompressionAlgorithm) -> String
 
@@ -26,9 +26,9 @@ pub fn compression_report_to_string(CompressionResult, CompressionQualityMetrics
 
 pub fn create_default_compression_config() -> CompressionConfig
 
-pub fn predictive_encode(@types.Image) -> Bytes
+pub fn predictive_encode(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn quantize_image(@types.Image, Int) -> @types.Image
+pub fn quantize_image(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn run_length_decode(Bytes) -> Bytes
 
@@ -106,3 +106,4 @@ pub(all) enum QuantizationTableType {
 // Type aliases
 
 // Traits
+

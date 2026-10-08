@@ -140,7 +140,26 @@ pub fn create_default_source_verification_config() -> SourceVerificationConfig {
 
 ///|
 /// 噪声模式分析
-pub fn analyze_noise_pattern(img : @types.Image) -> NoiseAnalysisResult {
+pub fn analyze_noise_pattern(
+  img : @types.Image,
+) -> NoiseAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_noise_pattern: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_noise_pattern: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_noise_pattern: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -199,7 +218,26 @@ pub fn analyze_noise_pattern(img : @types.Image) -> NoiseAnalysisResult {
 
 ///|
 /// 频域分析（简化版，使用梯度能量代替 FFT）
-pub fn analyze_frequency_domain(img : @types.Image) -> FrequencyAnalysisResult {
+pub fn analyze_frequency_domain(
+  img : @types.Image,
+) -> FrequencyAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_frequency_domain: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_frequency_domain: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_frequency_domain: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -254,7 +292,26 @@ pub fn analyze_frequency_domain(img : @types.Image) -> FrequencyAnalysisResult {
 
 ///|
 /// 颜色分布分析
-pub fn analyze_color_distribution(img : @types.Image) -> ColorAnalysisResult {
+pub fn analyze_color_distribution(
+  img : @types.Image,
+) -> ColorAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_color_distribution: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_color_distribution: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_color_distribution: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -314,7 +371,26 @@ pub fn analyze_color_distribution(img : @types.Image) -> ColorAnalysisResult {
 
 ///|
 /// 纹理分析
-pub fn analyze_texture(img : @types.Image) -> TextureAnalysisResult {
+pub fn analyze_texture(
+  img : @types.Image,
+) -> TextureAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_texture: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_texture: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_texture: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -373,7 +449,24 @@ pub fn analyze_texture(img : @types.Image) -> TextureAnalysisResult {
 
 ///|
 /// 边缘分析
-pub fn analyze_edges(img : @types.Image) -> EdgeAnalysisResult {
+pub fn analyze_edges(
+  img : @types.Image,
+) -> EdgeAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_edges: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_edges: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("analyze_edges: 数据大小不匹配")
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -459,7 +552,24 @@ pub fn analyze_edges(img : @types.Image) -> EdgeAnalysisResult {
 /// 压缩伪影分析
 pub fn analyze_compression_artifacts(
   img : @types.Image,
-) -> CompressionAnalysisResult {
+) -> CompressionAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_compression_artifacts: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_compression_artifacts: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_compression_artifacts: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -526,7 +636,26 @@ pub fn analyze_compression_artifacts(
 
 ///|
 /// 细节分析
-pub fn analyze_details(img : @types.Image) -> DetailAnalysisResult {
+pub fn analyze_details(
+  img : @types.Image,
+) -> DetailAnalysisResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_details: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_details: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "analyze_details: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -603,7 +732,24 @@ pub fn analyze_details(img : @types.Image) -> DetailAnalysisResult {
 pub fn verify_image_source(
   img : @types.Image,
   config : SourceVerificationConfig,
-) -> SourceVerificationResult {
+) -> SourceVerificationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "verify_image_source: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "verify_image_source: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "verify_image_source: 数据大小不匹配",
+    )
+  }
   let noise_score = if config.use_noise_analysis {
     analyze_noise_pattern(img).ai_noise_indicator
   } else {

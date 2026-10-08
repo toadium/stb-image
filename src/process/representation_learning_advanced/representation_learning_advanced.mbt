@@ -323,6 +323,21 @@ fn decode_simple(
 }
 
 ///|
+/// 近似正弦函数（表示学习模块）
+fn _sin_approx_rl(x : Double) -> Double {
+  // 简化的正弦近似
+  let mut result = x
+  let mut term = x
+  for i in 1..<10 {
+    term = term * x * x / (2.0 * i.to_double() * (2.0 * i.to_double() + 1.0))
+    if i % 2 == 1 {
+      result -= term
+    } else {
+      result += term
+    }
+  }
+  result
+}
 
 ///|
 /// 自编码器训练
@@ -513,7 +528,7 @@ pub fn train_gan(
   for _ in 0..<num_samples {
     let sample : Array[Double] = []
     for _ in 0..<output_dim {
-      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+      state = (state * 11035 + 12345) % 1000000
       let rand_val = (state % 1000).to_double() / 1000.0
       sample.push(rand_val * 255.0)
     }

@@ -390,8 +390,8 @@ pub fn extract_radiomics_features(
   config : MedicalImagingConfig,
 ) -> RadiomicsFeatures {
   ignore(config)
-  ignore(image)
   ignore(mask)
+  ignore(image)
   let first_order : Array[Double] = []
   let shape : Array[Double] = []
   let texture : Array[Double] = []
@@ -453,10 +453,10 @@ pub fn register_medical_images(
   config : MedicalImagingConfig,
 ) -> RegistrationResult {
   ignore(config)
-  ignore(fixed_image)
   ignore(height)
-  ignore(moving_image)
   ignore(width)
+  ignore(moving_image)
+  ignore(fixed_image)
   let transformation : Array[Array[Double]] = []
   for i in 0..<4 {
     let row : Array[Double] = []

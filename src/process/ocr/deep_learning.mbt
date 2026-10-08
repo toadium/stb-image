@@ -719,9 +719,9 @@ pub fn save_model(
   weights : Array[Double],
   path : String,
 ) -> Bool {
-  ignore(config)
   ignore(path)
   ignore(weights)
+  ignore(config)
   // 简化版：实际应序列化权重
   true
 }

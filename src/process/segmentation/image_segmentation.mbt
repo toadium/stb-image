@@ -129,7 +129,24 @@ pub fn create_default_grabcut_config() -> GrabCutConfig {
 pub fn threshold_segmentation(
   img : @types.Image,
   threshold : Double,
-) -> SemanticSegmentationResult {
+) -> SemanticSegmentationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "threshold_segmentation: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "threshold_segmentation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "threshold_segmentation: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let labels : Array[Int] = []
@@ -176,7 +193,26 @@ pub fn threshold_segmentation(
 
 ///|
 /// Otsu 自动阈值分割
-pub fn otsu_threshold_value(img : @types.Image) -> Double {
+pub fn otsu_threshold_value(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "otsu_threshold_value: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "otsu_threshold_value: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "otsu_threshold_value: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let histogram : Array[Int] = []
@@ -229,7 +265,24 @@ pub fn otsu_threshold_value(img : @types.Image) -> Double {
 pub fn kmeans_segmentation(
   img : @types.Image,
   config : KMeansConfig,
-) -> SemanticSegmentationResult {
+) -> SemanticSegmentationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_segmentation: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_segmentation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "kmeans_segmentation: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let k = config.num_clusters
@@ -329,7 +382,24 @@ pub fn kmeans_segmentation(
 pub fn superpixel_segmentation(
   img : @types.Image,
   num_superpixels : Int,
-) -> SuperpixelResult {
+) -> SuperpixelResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "superpixel_segmentation: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "superpixel_segmentation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "superpixel_segmentation: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -432,7 +502,24 @@ pub fn superpixel_segmentation(
 pub fn watershed_segmentation(
   img : @types.Image,
   config : WatershedConfig,
-) -> SemanticSegmentationResult {
+) -> SemanticSegmentationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "watershed_segmentation: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "watershed_segmentation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "watershed_segmentation: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -554,7 +641,24 @@ pub fn grabcut_segmentation(
   rect_w : Int,
   rect_h : Int,
   config : GrabCutConfig,
-) -> SemanticSegmentationResult {
+) -> SemanticSegmentationResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "grabcut_segmentation: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "grabcut_segmentation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "grabcut_segmentation: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h

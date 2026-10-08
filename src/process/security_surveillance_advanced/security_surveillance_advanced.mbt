@@ -203,15 +203,15 @@ pub fn detect_people(
   let num_people = 5
 
   for i in 0..<num_people {
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     let x = state % (width - 200)
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     let y = state % (height - 400)
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     let w = state % 100 + 80
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     let h = state % 200 + 150
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
     let bbox : Array[Int] = []
@@ -223,9 +223,9 @@ pub fn detect_people(
     let face_embedding : Array[Double] = []
     let body_embedding : Array[Double] = []
     for _ in 0..<128 {
-      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+      state = (state * 11035 + 12345) % 1000000
       face_embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
-      state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+      state = (state * 11035 + 12345) % 1000000
       body_embedding.push((state % 1000).to_double() / 1000.0 - 0.5)
     }
 
@@ -335,6 +335,20 @@ pub fn analyze_behavior(
 }
 
 ///|
+/// 近似平方根
+fn _sqrt_approx(x : Double) -> Double {
+  if x <= 0.0 {
+    0.0
+  } else {
+    let mut z = x
+    let mut y = (z + 1.0) / 2.0
+    for _ in 0..<20 {
+      z = y
+      y = (z + x / z) / 2.0
+    }
+    y
+  }
+}
 
 ///|
 /// 分析人群（简化版）
@@ -375,15 +389,15 @@ pub fn recognize_license_plate(
 ) -> LicensePlateResult {
   ignore(config)
   ignore(height)
-  ignore(image)
   ignore(width)
+  ignore(image)
   // 简化的车牌识别：生成虚拟车牌号
   let plate_chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
   let mut plate = ""
 
   let mut state = 42
   for i in 0..<7 {
-    state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
+    state = (state * 11035 + 12345) % 1000000
     if i < 3 {
       let char_idx = state % 8
       plate = plate + plate_chars[char_idx].to_string()

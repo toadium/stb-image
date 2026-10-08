@@ -8,7 +8,7 @@ import {
 // Values
 pub fn add_face_to_database(FaceDatabase, FaceFeature, String) -> FaceDatabase
 
-pub fn analyze_face_attributes(@types.Image, FaceDetectionResult, FaceDatabase, FaceRecognitionConfig) -> FaceAttributeAnalysis
+pub fn analyze_face_attributes(@types.Image, FaceDetectionResult, FaceDatabase, FaceRecognitionConfig) -> FaceAttributeAnalysis raise @types.LoadError
 
 pub fn calculate_cosine_similarity(FaceFeature, FaceFeature) -> Double
 
@@ -16,17 +16,17 @@ pub fn create_default_face_config() -> FaceRecognitionConfig
 
 pub fn create_face_database(FaceRecognitionAlgorithm, Double) -> FaceDatabase
 
-pub fn detect_faces(@types.Image, FaceRecognitionConfig) -> Array[FaceDetectionResult]
+pub fn detect_faces(@types.Image, FaceRecognitionConfig) -> Array[FaceDetectionResult] raise @types.LoadError
 
-pub fn estimate_age_gender(@types.Image, FaceDetectionResult) -> AgeGenderEstimationResult
+pub fn estimate_age_gender(@types.Image, FaceDetectionResult) -> AgeGenderEstimationResult raise @types.LoadError
 
-pub fn evaluate_face_quality(@types.Image, FaceDetectionResult) -> Double
+pub fn evaluate_face_quality(@types.Image, FaceDetectionResult) -> Double raise @types.LoadError
 
-pub fn extract_face_feature(@types.Image, FaceDetectionResult, FaceRecognitionConfig) -> FaceFeature
+pub fn extract_face_feature(@types.Image, FaceDetectionResult, FaceRecognitionConfig) -> FaceFeature raise @types.LoadError
 
 pub fn face_recognition_report_to_string(FaceAttributeAnalysis) -> String
 
-pub fn recognize_expression(@types.Image, FaceDetectionResult) -> ExpressionRecognitionResult
+pub fn recognize_expression(@types.Image, FaceDetectionResult) -> ExpressionRecognitionResult raise @types.LoadError
 
 pub fn recognize_face_in_database(FaceDatabase, FaceFeature, Array[Double]) -> FaceRecognitionResult
 
@@ -146,3 +146,4 @@ pub(all) struct FaceRecognitionResult {
 // Type aliases
 
 // Traits
+

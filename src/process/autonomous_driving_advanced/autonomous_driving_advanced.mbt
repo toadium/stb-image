@@ -344,6 +344,20 @@ pub fn plan_path(
 }
 
 ///|
+/// 近似平方根
+fn _sqrt_approx(x : Double) -> Double {
+  if x <= 0.0 {
+    0.0
+  } else {
+    let mut z = x
+    let mut y = (z + 1.0) / 2.0
+    for _ in 0..<20 {
+      z = y
+      y = (z + x / z) / 2.0
+    }
+    y
+  }
+}
 
 ///|
 /// 决策控制（简化版）

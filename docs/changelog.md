@@ -1331,6 +1331,7 @@
 - 包含完整的参数验证（范围检查、正奇数检查、非空检查）
 - reexport.mbt中所有函数类型别名均已同步添加raise类型
 - bench.mbt中所有调用均已添加catch处理
+
 ## v27.0.0 - 图像来源鉴定（AI生成检测）
 - 新增 forensics 模块测试：21已有函数+42测试，修复analyze_edges越界bug
   - image_source_verification.mbt：10函数（噪声/频域/颜色/纹理/边缘/压缩/细节分析+综合鉴定+报告）
@@ -1363,6 +1364,7 @@
   - 质量评估：噪声水平/亮度/对比度/锐度计算
   - 综合降噪与增强：denoise_image/enhance_image_advanced/报告生成
   - 2443×4全绿（native/wasm-gc/js/wasm）
+
 ## v30.0.0 - 高级图像配准算法
 - 新增 stitch 模块测试：8已有函数+13测试
   - 图像拼接配置、单位单应性矩阵、单应性变换应用与求逆
@@ -1490,3 +1492,12 @@
 - explainable_ai 7已有函数+7测试：可解释AI配置/特征重要性/显著性图/混淆矩阵/ROC曲线/特征图可视化/报告
 - image_dimensionality_reduction 7已有函数+7测试：降维配置/PCA/t-SNE/UMAP/降维/特征选择/报告+修复LCG溢出3处
 - 2970×4全绿（native/wasm-gc/js/wasm），+36测试
+
+## v185.0.0 - 生产级增强：P1+P2+P3 全部完成 + warning 清理 (merge from origin/main)
+- **生产级增强计划 P0+P1+P2+P3 全部 22 模块完成！**
+- P1 (7 模块 71 函数): compression/denoise/encryption/forensics/segmentation/registration/style_transfer
+- P2 (3 模块 18 函数): remote_sensing/face_recognition/pose_estimation
+- P3 (4 模块 3 函数): explainable_ai (federated_learning/continuous_learning/model_compression 无 Image 参数)
+- reexport.mbt 中 66+ 个包装函数同步添加 raise @types.LoadError
+- **209 个 unused warning 全部清理** (175 unused_value + 22 unused_func + 11 unused_field + 1 unused_type)
+- moon check: 0 Error + 0 Warning

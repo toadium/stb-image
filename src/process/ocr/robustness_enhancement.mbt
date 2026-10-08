@@ -215,8 +215,10 @@ pub fn detect_skew_angle_robust(
   // 线性回归计算倾斜角度
   let _ = total_x.to_double() / count.to_double()
   let _ = total_y.to_double() / count.to_double()
-  let mut _numerator = 0.0
-  let mut _denominator = 0.0
+  let numerator = 0.0
+  ignore(numerator)
+  let denominator = 0.0
+  ignore(denominator)
   // 简化：用首尾两行的重心差计算角度
   let mut first_y = h
   let mut first_x = 0

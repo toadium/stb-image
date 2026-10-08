@@ -560,3 +560,23 @@ fn crop_sub_image(
     data: Bytes::from_array(out),
   })
 }
+
+///|
+/// 辅助函数：最小值
+fn _min_seg(a : Int, b : Int) -> Int {
+  if a < b {
+    a
+  } else {
+    b
+  }
+}
+
+///|
+/// 辅助函数：最大值
+fn _max_seg(a : Int, b : Int) -> Int {
+  if a > b {
+    a
+  } else {
+    b
+  }
+}

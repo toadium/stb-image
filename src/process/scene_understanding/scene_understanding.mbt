@@ -160,7 +160,8 @@ pub fn classify_scene(
   let mut sum = 0.0
   let mut sum_sq = 0.0
   let mut edge_count = 0
-  let mut _color_variation = 0.0
+  let color_variation = 0.0
+  ignore(color_variation)
 
   for y in 0..<h {
     for x in 0..<w {

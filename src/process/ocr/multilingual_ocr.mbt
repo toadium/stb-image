@@ -413,6 +413,7 @@ fn segment_multilingual_chars(
   img : @types.Image,
   _cfg : MultilingualOcrConfig,
 ) -> Array[(Int, Int, Int, Int)] {
+  ignore(cfg)
   let w = img.width
   let h = img.height
   let data = img.data

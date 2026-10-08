@@ -12,7 +12,7 @@ pub fn create_default_action_config() -> ActionRecognitionConfig
 
 pub fn create_default_pose_config() -> PoseEstimationConfig
 
-pub fn detect_keypoints(@types.Image, PoseEstimationConfig) -> Array[HumanPose]
+pub fn detect_keypoints(@types.Image, PoseEstimationConfig) -> Array[HumanPose] raise @types.LoadError
 
 pub fn extract_skeleton(HumanPose) -> Array[SkeletonConnection]
 
@@ -26,7 +26,7 @@ pub fn recognize_action(Array[HumanPose], ActionRecognitionConfig) -> ActionReco
 
 pub fn recognize_gesture(HumanPose) -> GestureRecognitionResult
 
-pub fn visualize_pose(@types.Image, HumanPose) -> @types.Image
+pub fn visualize_pose(@types.Image, HumanPose) -> @types.Image raise @types.LoadError
 
 // Errors
 
@@ -135,3 +135,4 @@ pub(all) struct SkeletonConnection {
 // Type aliases
 
 // Traits
+

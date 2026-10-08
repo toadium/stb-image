@@ -159,3 +159,4 @@ pub struct Vp8ReferenceFrames {
 // Type aliases
 
 // Traits
+

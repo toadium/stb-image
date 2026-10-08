@@ -200,7 +200,8 @@ pub fn extract_handwriting_stroke_features(
   }
   // 计算主要笔画方向（基于梯度方向直方图）
   let directions : Array[Double] = []
-  let mut _total_grad = 0.0
+  let mut total_grad = 0.0
+  ignore(total_grad)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       if data[y * w + x].to_int() > 128 {
@@ -212,7 +213,7 @@ pub fn extract_handwriting_stroke_features(
         if grad > 10.0 {
           let angle = @math.atan2(gy, gx)
           directions.push(angle)
-          _total_grad += grad
+          total_grad += grad
         }
       }
     }
@@ -658,9 +659,10 @@ fn extract_handwriting_grid_features(
 fn match_handwriting_enhanced(
   features : Array[Double],
   templates : Array[(String, Array[Double])],
-  _stroke_features : HandwritingStrokeFeatures,
+  stroke_features : HandwritingStrokeFeatures,
   cfg : HandwritingOcrEnhancedConfig,
 ) -> (String, Double) {
+  ignore(stroke_features)
   // 收集所有变体的预测
   let label_votes : Array[(String, Double)] = []
   for _tup2 in templates {

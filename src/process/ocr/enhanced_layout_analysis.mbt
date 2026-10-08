@@ -292,7 +292,8 @@ pub fn detect_list_item(line : TextLineAttributes) -> ListItemInfo {
   }
   // 检测数字编号 (1. 2. 3. 或 1) 2) 3))
   let mut num_end = 0
-  let mut _has_number = true
+  let has_number = true
+  ignore(has_number)
   for i in 0..<text.length() {
     let c = text[i]
     if c >= '0' && c <= '9' {

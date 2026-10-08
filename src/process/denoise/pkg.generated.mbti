@@ -6,37 +6,37 @@ import {
 }
 
 // Values
-pub fn bilateral_filter_denoise(@types.Image, Int, Double, Double) -> @types.Image
+pub fn bilateral_filter_denoise(@types.Image, Int, Double, Double) -> @types.Image raise @types.LoadError
 
-pub fn calculate_brightness(@types.Image) -> Double
+pub fn calculate_brightness(@types.Image) -> Double raise @types.LoadError
 
-pub fn calculate_contrast(@types.Image) -> Double
+pub fn calculate_contrast(@types.Image) -> Double raise @types.LoadError
 
-pub fn calculate_noise_level(@types.Image) -> Double
+pub fn calculate_noise_level(@types.Image) -> Double raise @types.LoadError
 
-pub fn calculate_sharpness(@types.Image) -> Double
+pub fn calculate_sharpness(@types.Image) -> Double raise @types.LoadError
 
 pub fn create_default_denoise_config() -> DenoiseConfig
 
 pub fn denoise_algorithm_to_string(DenoiseAlgorithm) -> String
 
-pub fn denoise_image(@types.Image, DenoiseConfig) -> DenoiseResult
+pub fn denoise_image(@types.Image, DenoiseConfig) -> DenoiseResult raise @types.LoadError
 
 pub fn denoise_report_to_string(DenoiseResult) -> String
 
-pub fn enhance_image_advanced(@types.Image, EnhancementAlgorithm) -> EnhancementResult
+pub fn enhance_image_advanced(@types.Image, EnhancementAlgorithm) -> EnhancementResult raise @types.LoadError
 
-pub fn gamma_correction_enhance(@types.Image, Double) -> @types.Image
+pub fn gamma_correction_enhance(@types.Image, Double) -> @types.Image raise @types.LoadError
 
-pub fn gaussian_filter_denoise(@types.Image, Int, Double) -> @types.Image
+pub fn gaussian_filter_denoise(@types.Image, Int, Double) -> @types.Image raise @types.LoadError
 
-pub fn histogram_equalization_enhance(@types.Image) -> @types.Image
+pub fn histogram_equalization_enhance(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn mean_filter_denoise(@types.Image, Int) -> @types.Image
+pub fn mean_filter_denoise(@types.Image, Int) -> @types.Image raise @types.LoadError
 
-pub fn median_filter_denoise(@types.Image, Int) -> @types.Image
+pub fn median_filter_denoise(@types.Image, Int) -> @types.Image raise @types.LoadError
 
-pub fn unsharp_mask_enhance(@types.Image, Double, Int) -> @types.Image
+pub fn unsharp_mask_enhance(@types.Image, Double, Int) -> @types.Image raise @types.LoadError
 
 // Errors
 
@@ -115,3 +115,4 @@ pub(all) enum NoiseType {
 // Type aliases
 
 // Traits
+

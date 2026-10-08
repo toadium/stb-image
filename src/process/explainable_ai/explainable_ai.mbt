@@ -145,7 +145,24 @@ pub fn create_default_explainable_ai_config() -> ExplainableAIConfig {
 pub fn compute_feature_importance(
   image : @types.Image,
   config : ExplainableAIConfig,
-) -> FeatureImportanceResult {
+) -> FeatureImportanceResult raise @types.LoadError {
+  // 输入验证
+  if image.width <= 0 || image.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_feature_importance: 图像尺寸必须大于0",
+    )
+  }
+  if image.channels < 1 || image.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "compute_feature_importance: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = image.width * image.height * image.channels
+  if image.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "compute_feature_importance: 数据大小不匹配",
+    )
+  }
   let w = image.width
   let h = image.height
   let _ = w * h
@@ -225,7 +242,24 @@ pub fn compute_feature_importance(
 pub fn generate_saliency_map(
   image : @types.Image,
   config : ExplainableAIConfig,
-) -> SaliencyMapResult {
+) -> SaliencyMapResult raise @types.LoadError {
+  // 输入验证
+  if image.width <= 0 || image.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "generate_saliency_map: 图像尺寸必须大于0",
+    )
+  }
+  if image.channels < 1 || image.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "generate_saliency_map: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = image.width * image.height * image.channels
+  if image.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "generate_saliency_map: 数据大小不匹配",
+    )
+  }
   let w = image.width
   let h = image.height
   let _ = w * h
@@ -394,8 +428,10 @@ pub fn generate_roc_curve(
 
     let mut tp = 0
     let mut fp = 0
-    let mut _tn = 0
-    let mut _false_neg = 0
+    let mut tn = 0
+    ignore(tn)
+    let mut false_neg = 0
+    ignore(false_neg)
 
     for i in 0..<total {
       let predicted = if scores[i] >= threshold { 1 } else { 0 }
@@ -404,9 +440,9 @@ pub fn generate_roc_curve(
       } else if predicted == 1 && labels[i] == 0 {
         fp += 1
       } else if predicted == 0 && labels[i] == 0 {
-        _tn += 1
+        tn += 1
       } else {
-        _false_neg += 1
+        false_neg += 1
       }
     }
 
@@ -439,7 +475,24 @@ pub fn visualize_feature_maps(
   image : @types.Image,
   num_maps : Int,
   layer_name : String,
-) -> FeatureMapVisualization {
+) -> FeatureMapVisualization raise @types.LoadError {
+  // 输入验证
+  if image.width <= 0 || image.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_feature_maps: 图像尺寸必须大于0",
+    )
+  }
+  if image.channels < 1 || image.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_feature_maps: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = image.width * image.height * image.channels
+  if image.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "visualize_feature_maps: 数据大小不匹配",
+    )
+  }
   let w = image.width
   let h = image.height
   let feature_maps : Array[@types.Image] = []

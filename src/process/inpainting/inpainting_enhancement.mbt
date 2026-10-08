@@ -407,8 +407,8 @@ pub fn dehaze_clahe(
   clip_limit : Double,
   tile_size : Int,
 ) -> @types.Image {
-  ignore(clip_limit)
   ignore(tile_size)
+  ignore(clip_limit)
   let w = img.width
   let h = img.height
   let total = w * h

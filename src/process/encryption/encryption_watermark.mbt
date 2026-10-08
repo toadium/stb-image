@@ -118,7 +118,28 @@ pub fn create_default_arnold_params() -> ArnoldParams {
 
 ///|
 /// XOR 加密
-pub fn xor_encrypt(img : @types.Image, key : Array[Byte]) -> EncryptionResult {
+pub fn xor_encrypt(
+  img : @types.Image,
+  key : Array[Byte],
+) -> EncryptionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "xor_encrypt: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "xor_encrypt: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed("xor_encrypt: 数据大小不匹配")
+  }
+  if key.length() == 0 {
+    raise @types.LoadError::DecodeFailed("xor_encrypt: 密钥不能为空")
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -209,7 +230,24 @@ pub fn generate_chaotic_sequence_enc(
 pub fn chaotic_encrypt(
   img : @types.Image,
   params : ChaoticParams,
-) -> EncryptionResult {
+) -> EncryptionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "chaotic_encrypt: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "chaotic_encrypt: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "chaotic_encrypt: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -241,7 +279,24 @@ pub fn chaotic_encrypt(
 pub fn arnold_scramble(
   img : @types.Image,
   params : ArnoldParams,
-) -> EncryptionResult {
+) -> EncryptionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "arnold_scramble: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "arnold_scramble: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "arnold_scramble: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -289,7 +344,29 @@ pub fn embed_watermark_lsb(
   img : @types.Image,
   watermark : Array[Byte],
   strength : Int,
-) -> (@types.Image, WatermarkInfo) {
+) -> (@types.Image, WatermarkInfo) raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_watermark_lsb: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_watermark_lsb: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "embed_watermark_lsb: 数据大小不匹配",
+    )
+  }
+  if watermark.length() == 0 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_watermark_lsb: 水印数据不能为空",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -339,12 +416,34 @@ pub fn extract_watermark_lsb(
   img : @types.Image,
   watermark_length : Int,
   strength : Int,
-) -> WatermarkExtractionResult {
+) -> WatermarkExtractionResult raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "extract_watermark_lsb: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "extract_watermark_lsb: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "extract_watermark_lsb: 数据大小不匹配",
+    )
+  }
+  if watermark_length <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "extract_watermark_lsb: 水印长度必须大于0",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
   let watermark : Array[Byte] = []
-  let _bits_needed = watermark_length * 8
+  let _ = watermark_length * 8
 
   for byte_idx in 0..<watermark_length {
     let mut byte_value = 0
@@ -377,7 +476,29 @@ pub fn embed_visible_watermark(
   x : Int,
   y : Int,
   opacity : Double,
-) -> @types.Image {
+) -> @types.Image raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_visible_watermark: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_visible_watermark: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "embed_visible_watermark: 数据大小不匹配",
+    )
+  }
+  if watermark_text.length() == 0 {
+    raise @types.LoadError::DecodeFailed(
+      "embed_visible_watermark: 水印文本不能为空",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -407,7 +528,26 @@ pub fn embed_visible_watermark(
 
 ///|
 /// 计算图像熵
-pub fn calculate_image_entropy(img : @types.Image) -> Double {
+pub fn calculate_image_entropy(
+  img : @types.Image,
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_image_entropy: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let total = w * h
@@ -437,7 +577,40 @@ pub fn calculate_image_entropy(img : @types.Image) -> Double {
 pub fn calculate_correlation(
   img1 : @types.Image,
   img2 : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if img1.width <= 0 || img1.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 图像尺寸必须大于0",
+    )
+  }
+  if img1.channels < 1 || img1.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img1.width * img1.height * img1.channels
+  if img1.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 数据大小不匹配",
+    )
+  }
+  if img2.width <= 0 || img2.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 图像尺寸必须大于0",
+    )
+  }
+  if img2.channels < 1 || img2.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size2 = img2.width * img2.height * img2.channels
+  if img2.data.length() != expected_size2 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_correlation: 数据大小不匹配",
+    )
+  }
   let w = img1.width
   let h = img1.height
   let total = w * h
@@ -475,7 +648,40 @@ pub fn calculate_correlation(
 pub fn calculate_psnr(
   original : @types.Image,
   encrypted : @types.Image,
-) -> Double {
+) -> Double raise @types.LoadError {
+  // 输入验证
+  if original.width <= 0 || original.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 图像尺寸必须大于0",
+    )
+  }
+  if original.channels < 1 || original.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = original.width * original.height * original.channels
+  if original.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 数据大小不匹配",
+    )
+  }
+  if encrypted.width <= 0 || encrypted.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 图像尺寸必须大于0",
+    )
+  }
+  if encrypted.channels < 1 || encrypted.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size2 = encrypted.width * encrypted.height * encrypted.channels
+  if encrypted.data.length() != expected_size2 {
+    raise @types.LoadError::DecodeFailed(
+      "calculate_psnr: 数据大小不匹配",
+    )
+  }
   let w = original.width
   let h = original.height
   let total = w * h
@@ -501,7 +707,40 @@ pub fn calculate_psnr(
 pub fn evaluate_image_encryption_quality(
   original : @types.Image,
   encrypted : @types.Image,
-) -> ImageEncryptionQuality {
+) -> ImageEncryptionQuality raise @types.LoadError {
+  // 输入验证
+  if original.width <= 0 || original.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 图像尺寸必须大于0",
+    )
+  }
+  if original.channels < 1 || original.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = original.width * original.height * original.channels
+  if original.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 数据大小不匹配",
+    )
+  }
+  if encrypted.width <= 0 || encrypted.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 图像尺寸必须大于0",
+    )
+  }
+  if encrypted.channels < 1 || encrypted.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size2 = encrypted.width * encrypted.height * encrypted.channels
+  if encrypted.data.length() != expected_size2 {
+    raise @types.LoadError::DecodeFailed(
+      "evaluate_image_encryption_quality: 数据大小不匹配",
+    )
+  }
   let entropy = calculate_image_entropy(encrypted)
   let psnr = calculate_psnr(original, encrypted)
 

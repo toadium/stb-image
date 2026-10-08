@@ -188,3 +188,4 @@ pub(all) struct ReferenceColorizationResult {
 // Type aliases
 
 // Traits
+

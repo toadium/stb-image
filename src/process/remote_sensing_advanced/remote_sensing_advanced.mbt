@@ -382,8 +382,8 @@ pub fn detect_changes(
   height : Int,
   config : RemoteSensingConfig,
 ) -> ChangeDetectionResult {
-  ignore(image1)
   ignore(image2)
+  ignore(image1)
   let change_map : Array[Array[Bool]] = []
   let change_mask : Array[Array[Int]] = []
   let mut num_changes = 0

@@ -185,8 +185,8 @@ pub fn stereo_match(
   height : Int,
   config : Vision3DConfig,
 ) -> StereoMatchingResult {
-  ignore(left_image)
   ignore(right_image)
+  ignore(left_image)
   let disparity_map : Array[Double] = []
   let depth_map : Array[Double] = []
   let confidence_map : Array[Double] = []

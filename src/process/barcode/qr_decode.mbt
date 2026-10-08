@@ -57,13 +57,29 @@ let qr_ec_level_names : Array[String] = ["M", "L", "H", "Q"]
 
 ///|
 /// QR Code 版本 1-10 的容量表（字节模式，EC级别 L）
-let _qr_version_capacity_l : Array[Int] = [
-  17, 32, 53, 78, 106, 134, 154, 192, 230, 271,
-]
 
 ///|
 /// 解码 QR Code（完整版本）
-pub fn decode_qrcode_full(img : @types.Image) -> QrDecodeResult? {
+pub fn decode_qrcode_full(
+  img : @types.Image,
+) -> QrDecodeResult? raise @types.LoadError {
+  // 输入验证
+  if img.width <= 0 || img.height <= 0 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_qrcode_full: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels < 1 || img.channels > 4 {
+    raise @types.LoadError::DecodeFailed(
+      "decode_qrcode_full: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.length() != expected_size {
+    raise @types.LoadError::DecodeFailed(
+      "decode_qrcode_full: 数据大小不匹配",
+    )
+  }
   let w = img.width
   let h = img.height
   let data = img.data
@@ -113,7 +129,7 @@ pub fn decode_qrcode_full(img : @types.Image) -> QrDecodeResult? {
     return None
   }
   // 9. 解码数据
-  let (decoded, _bytes_used) = decode_qr_data(data_bits, version)
+  let (decoded, _) = decode_qr_data(data_bits, version)
   // 10. 返回结果
   Some(QrDecodeResult::{
     data: decoded,
@@ -127,7 +143,9 @@ pub fn decode_qrcode_full(img : @types.Image) -> QrDecodeResult? {
 
 ///|
 /// 检测 QR Code 定位图案（完整版，返回更多信息）
-fn detect_qr_finder_patterns_full(img : @types.Image) -> Array[QrFinderPattern] {
+fn detect_qr_finder_patterns_full(
+  img : @types.Image,
+) -> Array[QrFinderPattern] raise @types.LoadError {
   // 复用已有的检测函数
   detect_qr_finder_patterns(img)
 }
@@ -313,8 +331,9 @@ fn is_function_module(row : Int, col : Int, qr_size : Int) -> Bool {
 fn extract_qr_data_bits(
   modules : Array[Int],
   qr_size : Int,
-  _version : Int,
+  version : Int,
 ) -> Array[Int] {
+  ignore(version)
   let bits : Array[Int] = []
   let mut col = qr_size - 1
   let mut going_up = true
@@ -356,7 +375,8 @@ fn extract_qr_data_bits(
 
 ///|
 /// 解码 QR Code 数据
-fn decode_qr_data(bits : Array[Int], _version : Int) -> (String, Int) {
+fn decode_qr_data(bits : Array[Int], version : Int) -> (String, Int) {
+  ignore(version)
   if bits.length() < 4 {
     return ("", 0)
   }

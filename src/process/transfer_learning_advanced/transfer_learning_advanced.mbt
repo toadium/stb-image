@@ -589,8 +589,8 @@ pub fn transfer_learning(
   target_data : Array[Array[Double]],
   config : TransferLearningConfig,
 ) -> TransferLearningResult {
-  ignore(source_data)
   ignore(target_data)
+  ignore(source_data)
   let num_layers = 10
   let layer_size = 64
 
