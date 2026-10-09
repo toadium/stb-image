@@ -28,8 +28,7 @@ test "shadow_removal: 基本去阴影" {
       height: 4,
       channels: 1,
       data: Bytes::from_array([
-        50, 100, 150, 200, 60, 110, 160, 210, 70, 120, 170, 220, 80, 130, 180,
-        230,
+        50, 100, 150, 200, 60, 110, 160, 210, 70, 120, 170, 220, 80, 130, 180, 230,
       ]),
     }
     let result = @ocr.shadow_removal(img)
@@ -47,8 +46,8 @@ test "background_normalization: 基本归一化" {
       height: 4,
       channels: 1,
       data: Bytes::from_array([
-        200, 210, 220, 230, 200, 210, 220, 230, 200, 210, 220, 230, 200, 210,
-        220, 230,
+        200, 210, 220, 230, 200, 210, 220, 230, 200, 210, 220, 230, 200, 210, 220,
+        230,
       ]),
     }
     let result = @ocr.background_normalization(img)

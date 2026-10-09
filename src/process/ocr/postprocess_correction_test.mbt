@@ -68,7 +68,10 @@ test "full_postprocess_correction: 无效上下文抛异常" {
 ///|
 test "batch_correct_texts: 基本批量" {
   try {
-    let results = @ocr.batch_correct_texts(["OIl", "hello"], context_type="number")
+    let results = @ocr.batch_correct_texts(
+      ["OIl", "hello"],
+      context_type="number",
+    )
     assert_eq(results.length(), 2)
   } catch {
     _ => assert_true(false)

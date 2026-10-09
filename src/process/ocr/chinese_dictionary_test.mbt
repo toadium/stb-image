@@ -54,14 +54,20 @@ test "lookup_by_pinyin: 空拼音抛异常" {
 ///|
 test "lookup_by_structure: 独体字" {
   let dict = @ocr.create_default_chinese_dictionary()
-  let results = @ocr.lookup_by_structure(dict, @ocr.DictCharStructure::Independent)
+  let results = @ocr.lookup_by_structure(
+    dict,
+    @ocr.DictCharStructure::Independent,
+  )
   assert_true(results.length() >= 0)
 }
 
 ///|
 test "lookup_by_structure: 左右结构" {
   let dict = @ocr.create_default_chinese_dictionary()
-  let results = @ocr.lookup_by_structure(dict, @ocr.DictCharStructure::LeftRight)
+  let results = @ocr.lookup_by_structure(
+    dict,
+    @ocr.DictCharStructure::LeftRight,
+  )
   assert_true(results.length() >= 0)
 }
 

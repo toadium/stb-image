@@ -127,11 +127,46 @@ test "ocr_postprocess: 基本后处理" {
       text: "hel1o",
       confidence: 0.8,
       characters: [
-        @ocr.OcrCharResult::{ char: "h", confidence: 0.9, x: 0, y: 0, width: 10, height: 20 },
-        @ocr.OcrCharResult::{ char: "e", confidence: 0.9, x: 10, y: 0, width: 10, height: 20 },
-        @ocr.OcrCharResult::{ char: "l", confidence: 0.9, x: 20, y: 0, width: 10, height: 20 },
-        @ocr.OcrCharResult::{ char: "1", confidence: 0.2, x: 30, y: 0, width: 10, height: 20 },
-        @ocr.OcrCharResult::{ char: "o", confidence: 0.9, x: 40, y: 0, width: 10, height: 20 },
+        @ocr.OcrCharResult::{
+          char: "h",
+          confidence: 0.9,
+          x: 0,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
+        @ocr.OcrCharResult::{
+          char: "e",
+          confidence: 0.9,
+          x: 10,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
+        @ocr.OcrCharResult::{
+          char: "l",
+          confidence: 0.9,
+          x: 20,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
+        @ocr.OcrCharResult::{
+          char: "1",
+          confidence: 0.2,
+          x: 30,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
+        @ocr.OcrCharResult::{
+          char: "o",
+          confidence: 0.9,
+          x: 40,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
       ],
     }
     let processed = @ocr.ocr_postprocess(result, config~, dictionary~)
@@ -148,7 +183,14 @@ test "calibrate_confidence: 基本校准" {
       text: "test",
       confidence: 0.9,
       characters: [
-        @ocr.OcrCharResult::{ char: "t", confidence: 0.9, x: 0, y: 0, width: 10, height: 20 },
+        @ocr.OcrCharResult::{
+          char: "t",
+          confidence: 0.9,
+          x: 0,
+          y: 0,
+          width: 10,
+          height: 20,
+        },
       ],
     }
     let calibrated = @ocr.calibrate_confidence(result, factor=1.0)
@@ -161,7 +203,7 @@ test "calibrate_confidence: 基本校准" {
 ///|
 test "calibrate_confidence: 空字符抛异常" {
   try {
-    let result = @ocr.OcrResult::{ text: "", confidence: 0.5, characters: [] }
+    let result = @ocr.OcrResult::{ text: "", confidence: 0.5, characters: [], }
     let _ = @ocr.calibrate_confidence(result, factor=1.0)
     assert_true(false)
   } catch {

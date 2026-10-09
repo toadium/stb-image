@@ -25,7 +25,11 @@ test "detect_char_language: 基本检测" {
       data: Bytes::from_array(Array::make(128, 128)),
     }
     let lang = @ocr.detect_char_language(img)
-    assert_true(lang == @ocr.LanguageType::English || lang == @ocr.LanguageType::Chinese || lang == @ocr.LanguageType::Unknown)
+    assert_true(
+      lang == @ocr.LanguageType::English ||
+      lang == @ocr.LanguageType::Chinese ||
+      lang == @ocr.LanguageType::Unknown,
+    )
   } catch {
     _ => assert_true(false)
   }

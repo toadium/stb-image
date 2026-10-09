@@ -125,7 +125,9 @@ test "calculate_batch_progress: 基本进度" {
   let progress = @ocr.calculate_batch_progress(tasks, 150.0)
   assert_eq(progress.total_tasks, 2)
   assert_eq(progress.completed_tasks, 1)
-  assert_true(progress.overall_progress >= 0.0 && progress.overall_progress <= 1.0)
+  assert_true(
+    progress.overall_progress >= 0.0 && progress.overall_progress <= 1.0,
+  )
 }
 
 ///|

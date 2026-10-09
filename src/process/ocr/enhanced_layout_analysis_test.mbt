@@ -1,5 +1,6 @@
 // v187.0.0 enhanced_layout_analysis.mbt 测试：布局检测/页眉页脚/列边界/标题/列表/段落
 
+///|
 fn make_line(
   x : Int,
   y : Int,
@@ -83,21 +84,33 @@ test "detect_header_footer: 空行列表抛异常" {
 ///|
 test "detect_column_boundaries: 单栏" {
   let lines = [make_line(0, 0, 800, 20, "test")]
-  let boundaries = @ocr.detect_column_boundaries(lines, 800, @ocr.LayoutType::SingleColumn)
+  let boundaries = @ocr.detect_column_boundaries(
+    lines,
+    800,
+    @ocr.LayoutType::SingleColumn,
+  )
   assert_true(boundaries.length() >= 2)
 }
 
 ///|
 test "detect_column_boundaries: 双栏" {
   let lines = [make_line(0, 0, 380, 20, "left")]
-  let boundaries = @ocr.detect_column_boundaries(lines, 800, @ocr.LayoutType::DoubleColumn)
+  let boundaries = @ocr.detect_column_boundaries(
+    lines,
+    800,
+    @ocr.LayoutType::DoubleColumn,
+  )
   assert_true(boundaries.length() >= 3)
 }
 
 ///|
 test "detect_column_boundaries: 三栏" {
   let lines = [make_line(0, 0, 200, 20, "col")]
-  let boundaries = @ocr.detect_column_boundaries(lines, 900, @ocr.LayoutType::TripleColumn)
+  let boundaries = @ocr.detect_column_boundaries(
+    lines,
+    900,
+    @ocr.LayoutType::TripleColumn,
+  )
   assert_true(boundaries.length() >= 5)
 }
 
