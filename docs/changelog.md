@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v195.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v195.0.0。
+> 下表为**功能迭代版本**（v0.1 → v196.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v196.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1580,3 +1580,10 @@
 - retinex_16f: ssr/msr/msrcr 16f 非均匀
 - 错误路径: invert_16/invert_f 零宽度图像
 - 3791×4 全绿 (native/wasm-gc/js/wasm)
+## v196.0.0 - filter 16f 变体增强测试
+- 为 filter 模块 16-bit/float 变体补充增强测试 (+35 测试)
+- filter_16f: box_blur/gaussian_blur/median_blur/sharpen 16f 非均匀/均匀/多通道
+- convolve_bilateral_16f: convolve/bilateral_filter/bilateral_filter_fast 16f 非均匀/单通道
+- advanced_16f: inpaint/inpaint_fast/nlm_denoise/nlm_denoise_fast 16f 非均匀/自定义参数
+- 错误路径: 零宽度/kernel尺寸不匹配/sigma零值
+- 3826×4 全绿 (native/wasm-gc/js/wasm)
