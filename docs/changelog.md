@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v196.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v196.0.0。
+> 下表为**功能迭代版本**（v0.1 → v197.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v197.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1587,3 +1587,12 @@
 - advanced_16f: inpaint/inpaint_fast/nlm_denoise/nlm_denoise_fast 16f 非均匀/自定义参数
 - 错误路径: 零宽度/kernel尺寸不匹配/sigma零值
 - 3826×4 全绿 (native/wasm-gc/js/wasm)
+## v197.0.0 - edge 16f 变体增强测试
+- 为 edge 模块 16-bit/float 变体补充增强测试 (+32 测试)
+- canny_16f: canny_edge 16f 非均匀/自定义阈值/单通道
+- edge_detect_16f: sobel/laplacian/prewitt 16f 非均匀/单通道
+- contour_16f: find_contours/draw_contours 16f 非均匀/空轮廓
+- hough_16f: hough_lines 16f 非均匀/自定义分辨率
+- hough_circles_16f: hough_circles 16f 非均匀/自定义参数
+- 错误路径: 零宽度图像
+- 3858×4 全绿 (native/wasm-gc/js/wasm)

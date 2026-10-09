@@ -10,7 +10,7 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-参赛项目-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-3826-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-3858-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-1338%20functions%20%2B%20491%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-0.5.0-orange)]()
@@ -170,10 +170,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 3826 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 3826 | ✅ |
-| **js** | 纯 MoonBit | 3826 | ✅ |
-| **wasm** | 纯 MoonBit | 3826 | ✅ |
+| **native** | 纯 MoonBit | 3858 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 3858 | ✅ |
+| **js** | 纯 MoonBit | 3858 | ✅ |
+| **wasm** | 纯 MoonBit | 3858 | ✅ |
 
 ---
 
@@ -238,7 +238,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（3826 × 4 目标）
+# 运行测试（3858 × 4 目标）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js

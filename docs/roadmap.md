@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-09 | 当前版本：v196.0.0 | 测试：3826 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-09 | 当前版本：v197.0.0 | 测试：3858 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，3826 测试 × 4 目标
+- 1338 公开函数 + 491 类型，3858 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2484,6 +2484,7 @@ flowchart LR
 | v194.0.0 | feature 16f增强测试 | feature 16f变体 +57测试 (hash/quality/integral/histogram/glcm/gabor/template/harris/sift/orb 16f非均匀/多通道/错误路径) ✅ 2026-10-09 — 3742×4全绿 |
 | v195.0.0 | color 16f增强测试 | color 16f变体 +49测试 (brightness/contrast/gamma/invert/convert/color_space/quantize/retinex 16f非均匀/均匀/多通道/错误路径) ✅ 2026-10-09 — 3791×4全绿 |
 | v196.0.0 | filter 16f增强测试 | filter 16f变体 +35测试 (box_blur/gaussian_blur/median_blur/sharpen/convolve/bilateral/inpaint/nlm 16f非均匀/均匀/多通道/错误路径) ✅ 2026-10-09 — 3826×4全绿 |
+| v197.0.0 | edge 16f增强测试 | edge 16f变体 +32测试 (canny/sobel/laplacian/prewitt/contour/hough_lines/hough_circles 16f非均匀/均匀/多通道/错误路径) ✅ 2026-10-09 — 3858×4全绿 |
 
 ### 验收标准（每环）
 
