@@ -1501,3 +1501,19 @@
 - reexport.mbt 中 66+ 个包装函数同步添加 raise @types.LoadError
 - **209 个 unused warning 全部清理** (175 unused_value + 22 unused_func + 11 unused_field + 1 unused_type)
 - moon check: 0 Error + 0 Warning
+## v186.0.0 - warning 全部清零
+- 287 implicit_impl_as_method: 272 类型加 pub extend with Eq/Hash/Show
+- 4438 test_unqualified_package: 裸函数名加 @package 前缀
+- 70 unused_package: 删未用 @math 导入
+- 恢复 16f 测试 (+30)
+- 3057×4 全绿, 0 errors, 0 warnings
+
+## v187.0.0 - ocr 模块全覆盖测试
+- 6 批 34 个测试文件共 293 个测试，覆盖 ocr 模块全部公开函数
+- 批1: deep_learning(38) + classifier(28) — 3123×4
+- 批2: enhanced_layout(18) + batch(11) + postprocess(15) — 3169×4
+- 批3: accuracy(15) + dict(14) + reconstruction(13) + correction(11) — 3222×4
+- 批4: binarization(4) + deskew(3) + digit(3) + english(3) + chinese(3) + handwriting(5) + doc_enhance(3) + multilingual(5) + layout(5) + connected(5) — 3261×4
+- 批5: scan(9) + accuracy(8) + accuracy_enhanced(9) + feature(6) + projection(6) + char_seg(6) + table(6) + table_image(8) — 3319×4
+- 批6: hw_recognition(10) + doc_understanding(10) + doc_enhanced(9) + hw_enhanced(7) + multi_enhanced(7) + chinese_enhanced(6) + advanced_chinese(4) + robustness(6) — 3378×4
+- 3378×4 全绿 (native/wasm-gc/js/wasm)
