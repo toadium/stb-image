@@ -2477,6 +2477,7 @@ flowchart LR
 | v187.0.0 | ocr补测试 | ocr模块全覆盖测试：6批34个测试文件共293个测试（deep_learning/classifier/enhanced_layout/batch/postprocess/accuracy/dict/reconstruction/correction/binarization/deskew/digit/english/chinese/handwriting/document_enhance/multilingual/layout/connected/scan/feature/projection/char_seg/table/table_image/hw_recognition/doc_understanding/doc_enhanced/hw_ocr_enhanced/multi_enhanced/chinese_enhanced/advanced_chinese/robustness） ✅ 2026-10-09 — 3378×4全绿 |
 | v188.0.0 | 文档同步 | AGENTS.md API统计更新(1338 fn+491 type, 3378 tests, 18 formats, 90 process子包) + roadmap.md头部更新 ✅ 2026-10-09 |
 | v189.0.0 | 安全/医学加固 | encryption 28增强测试(往返/边值/错误路径/属性) + medical 32增强测试(多预设/多参数/边值/属性) ✅ 2026-10-09 — 3448×4全绿 |
+| v190.0.0 | 文档+性能 | API参考文档重新生成(1339 fn+382 type, 2150行) + resize_pure性能优化(预计算坐标权重+消除data_int拷贝) ✅ 2026-10-09 — 3448×4全绿 |
 
 ### 验收标准（每环）
 

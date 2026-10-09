@@ -1525,3 +1525,7 @@
 - encryption: 28 个增强测试 (往返/边值/错误路径/属性验证)
 - medical: 32 个增强测试 (多预设/多参数/边值/属性验证)
 - 3448×4 全绿 (native/wasm-gc/js/wasm)
+## v190.0.0 - API 文档生成 + 性能优化
+- API 参考文档重新生成: docs/api_reference.md (1339 fn + 382 type, 2150 行)
+- resize_pure 性能优化: 预计算坐标权重数组, 消除 data_int 转换, 直接在 Bytes 上操作
+- 3448×4 全绿 (native/wasm-gc/js/wasm)
