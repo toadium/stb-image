@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v193.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v193.0.0。
+> 下表为**功能迭代版本**（v0.1 → v194.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v194.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1562,3 +1562,12 @@
 - v193c: enhance +38 测试 (enhance_enhanced_test.mbt)
   - 配置字段验证、denoise 多方法/多参数、HDR 融合/处理、色调映射多参数、去雾全链路、结构体构造验证
 - 3685×4 全绿 (native/wasm-gc/js/wasm)
+## v194.0.0 - feature 16f 变体增强测试
+- 为 feature 模块 16-bit/float 变体补充增强测试 (+57 测试)
+- hash_quality_integral_16f: ahash/dhash/phash 16f 非均匀/多通道、mse/psnr/ssim 16f 不同图像/相同图像、integral_image 16f 不同区域
+- histogram_16f: histogram/equalize/normalize 16f 非均匀/多通道
+- optical_glcm_16f: compute_glcm/glcm_features_multi_direction 16f 非均匀
+- gabor_template_16f: gabor_filter/filter_bank 16f 非均匀/不同方向、template_match 16f 非均匀
+- feature_advanced_16f: harris_corners/sift_detect/orb_detect/good_features_to_track 16f 非均匀
+- 错误路径: ahash_f/dhash_f/phash_f/histogram_16/histogram_f 零宽度、mse_16/mse_f 尺寸不匹配
+- 3742×4 全绿 (native/wasm-gc/js/wasm)
