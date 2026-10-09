@@ -2473,6 +2473,7 @@ flowchart LR
 | v49.0.0 | 生态建设 | CLI 工具 + 插件系统 + 批处理流水线 ✅ 已交付：Pipeline+Batch+CLI解析，3027×4全绿 |
 | v50.0.0 | API 稳定化 | v1.0 发布候选：API 审计 + 文档固化 + 兼容性矩阵 ✅ 已交付：v1.0.0正式版，3027×4全绿 |
 | v185.0.0+merge | 远程合并 | 合并远程v185.0.0(22模块92+函数加raise+验证, 209 warning清理) + 修复123处LCG溢出+6处ignore ✅ 2026-10-08 — 3027×4全绿, 0 errors |
+| v186.0.0 | warning清零 | 287 implicit_impl_as_method(272类型加pub extend) + 4438 test_unqualified_package(裸函数名加@package前缀) + 70 unused_package(删未用@math) + 恢复16f测试(+30) ✅ 2026-10-09 — 3057×4全绿, 0 errors, 0 warnings |
 
 ### 验收标准（每环）
 
