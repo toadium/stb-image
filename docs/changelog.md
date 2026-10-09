@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v194.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v194.0.0。
+> 下表为**功能迭代版本**（v0.1 → v195.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v195.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1571,3 +1571,12 @@
 - feature_advanced_16f: harris_corners/sift_detect/orb_detect/good_features_to_track 16f 非均匀
 - 错误路径: ahash_f/dhash_f/phash_f/histogram_16/histogram_f 零宽度、mse_16/mse_f 尺寸不匹配
 - 3742×4 全绿 (native/wasm-gc/js/wasm)
+## v195.0.0 - color 16f 变体增强测试
+- 为 color 模块 16-bit/float 变体补充增强测试 (+49 测试)
+- color_16f: adjust_brightness/contrast/gamma/invert 16f 非均匀/均匀/多通道
+- color_convert_16f: to_rgb/to_rgba/premultiply/unpremultiply alpha 16f 非均匀
+- color_space_16f: rgb_to_hsl/hsl_to_rgb/rgb_to_hsv/hsv_to_rgb 16f 像素级转换
+- quantize_16f: kmeans_quantize/floyd_steinberg/median_cut 16f 非均匀
+- retinex_16f: ssr/msr/msrcr 16f 非均匀
+- 错误路径: invert_16/invert_f 零宽度图像
+- 3791×4 全绿 (native/wasm-gc/js/wasm)
