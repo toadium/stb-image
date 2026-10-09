@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v192.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v192.0.0。
+> 下表为**功能迭代版本**（v0.1 → v193.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v193.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1553,3 +1553,12 @@
 - v192c: forensics +49 测试 (forensics_enhanced_test.mbt)
   - 噪声分析、频率分析、颜色分析、边缘分析、压缩分析、细节分析、几何分析、文本检测、UI 检测、增强验证
 - 3581×4 全绿 (native/wasm-gc/js/wasm)
+## v193.0.0 - 薄弱模块增强测试(续)
+- 为下一批测试覆盖薄弱的 3 个 process 子包补充增强测试 (+104 测试)
+- v193a: photo_enhance +34 测试 (photo_enhance_enhanced_test.mbt)
+  - 配置字段验证、ExposureType/ToneMappingType 全枚举、HDR 多图融合、色调映射多算法、自定义参数
+- v193b: detection +32 测试 (detection_enhanced_test.mbt)
+  - IoU 对称性/包含/零面积、NMS 高低阈值/空列表、bbox 可选参数、refine 增量验证、ObjectClass 18 枚举、metrics 范围
+- v193c: enhance +38 测试 (enhance_enhanced_test.mbt)
+  - 配置字段验证、denoise 多方法/多参数、HDR 融合/处理、色调映射多参数、去雾全链路、结构体构造验证
+- 3685×4 全绿 (native/wasm-gc/js/wasm)
