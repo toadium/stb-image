@@ -15,6 +15,9 @@ pub(all) enum RobotVisionTaskType {
 } derive(Eq)
 
 ///|
+pub extend RobotVisionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 视觉伺服类型
 pub(all) enum VisualServoingType {
   PositionBased
@@ -23,6 +26,9 @@ pub(all) enum VisualServoingType {
   Advanced
   Unknown
 } derive(Eq)
+
+///|
+pub extend VisualServoingType with Eq::{not_equal, equal}
 
 ///|
 /// 抓取类型
@@ -36,6 +42,9 @@ pub(all) enum GraspType {
 } derive(Eq)
 
 ///|
+pub extend GraspType with Eq::{not_equal, equal}
+
+///|
 /// 机器人类型
 pub(all) enum RobotType {
   Manipulator
@@ -46,6 +55,9 @@ pub(all) enum RobotType {
   Legged
   Unknown
 } derive(Eq)
+
+///|
+pub extend RobotType with Eq::{not_equal, equal}
 
 ///|
 /// 物体位姿

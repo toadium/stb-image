@@ -15,6 +15,9 @@ pub(all) enum SecuritySurveillanceTaskType {
 } derive(Eq)
 
 ///|
+pub extend SecuritySurveillanceTaskType with Eq::{not_equal, equal}
+
+///|
 /// 入侵类型
 pub(all) enum IntrusionType {
   PerimeterBreach
@@ -25,6 +28,9 @@ pub(all) enum IntrusionType {
   ObjectRemoved
   Unknown
 } derive(Eq)
+
+///|
+pub extend IntrusionType with Eq::{not_equal, equal}
 
 ///|
 /// 行为类型
@@ -41,6 +47,9 @@ pub(all) enum BehaviorType {
 } derive(Eq)
 
 ///|
+pub extend BehaviorType with Eq::{not_equal, equal}
+
+///|
 /// 警报级别
 pub(all) enum AlertLevel {
   Info
@@ -49,6 +58,9 @@ pub(all) enum AlertLevel {
   Emergency
   Unknown
 } derive(Eq)
+
+///|
+pub extend AlertLevel with Eq::{not_equal, equal}
 
 ///|
 /// 检测到的人员

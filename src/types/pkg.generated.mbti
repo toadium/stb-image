@@ -27,6 +27,9 @@ pub(all) struct GifAnimation {
   frames : Array[Image]
   delays : Array[Int]
 } derive(Eq, @debug.Debug)
+pub fn GifAnimation::equal(Self, Self) -> Bool
+pub fn GifAnimation::not_equal(Self, Self) -> Bool
+pub fn GifAnimation::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Image {
   width : Int
@@ -34,6 +37,9 @@ pub(all) struct Image {
   channels : Int
   data : Bytes
 } derive(Eq, @debug.Debug)
+pub fn Image::equal(Self, Self) -> Bool
+pub fn Image::not_equal(Self, Self) -> Bool
+pub fn Image::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Image16 {
   width : Int
@@ -41,6 +47,9 @@ pub(all) struct Image16 {
   channels : Int
   data : Bytes
 } derive(Eq, @debug.Debug)
+pub fn Image16::equal(Self, Self) -> Bool
+pub fn Image16::not_equal(Self, Self) -> Bool
+pub fn Image16::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageF {
   width : Int
@@ -48,6 +57,9 @@ pub(all) struct ImageF {
   channels : Int
   data : Bytes
 } derive(Eq, @debug.Debug)
+pub fn ImageF::equal(Self, Self) -> Bool
+pub fn ImageF::not_equal(Self, Self) -> Bool
+pub fn ImageF::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ImageFormat {
   Png
@@ -70,17 +82,26 @@ pub(all) enum ImageFormat {
   JpegXl
   Unknown
 } derive(Eq, @debug.Debug)
+pub fn ImageFormat::equal(Self, Self) -> Bool
+pub fn ImageFormat::not_equal(Self, Self) -> Bool
+pub fn ImageFormat::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageInfo {
   width : Int
   height : Int
   channels : Int
 } derive(Eq, @debug.Debug)
+pub fn ImageInfo::equal(Self, Self) -> Bool
+pub fn ImageInfo::not_equal(Self, Self) -> Bool
+pub fn ImageInfo::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PngAnimation {
   frames : Array[Image]
   delays : Array[Int]
 } derive(Eq, @debug.Debug)
+pub fn PngAnimation::equal(Self, Self) -> Bool
+pub fn PngAnimation::not_equal(Self, Self) -> Bool
+pub fn PngAnimation::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ResizeEdge {
   Clamp
@@ -88,6 +109,9 @@ pub(all) enum ResizeEdge {
   Wrap
   Zero
 } derive(Eq, @debug.Debug)
+pub fn ResizeEdge::equal(Self, Self) -> Bool
+pub fn ResizeEdge::not_equal(Self, Self) -> Bool
+pub fn ResizeEdge::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ResizeFilter {
   Default
@@ -98,6 +122,9 @@ pub(all) enum ResizeFilter {
   Mitchell
   PointSample
 } derive(Eq, @debug.Debug)
+pub fn ResizeFilter::equal(Self, Self) -> Bool
+pub fn ResizeFilter::not_equal(Self, Self) -> Bool
+pub fn ResizeFilter::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

@@ -51,6 +51,8 @@ pub(all) enum GraspType {
   Magnetic
   Unknown
 } derive(Eq)
+pub fn GraspType::equal(Self, Self) -> Bool
+pub fn GraspType::not_equal(Self, Self) -> Bool
 
 pub(all) struct JointState {
   joint_names : Array[String]
@@ -110,6 +112,8 @@ pub(all) enum RobotType {
   Legged
   Unknown
 } derive(Eq)
+pub fn RobotType::equal(Self, Self) -> Bool
+pub fn RobotType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RobotVisionConfig {
   task_type : RobotVisionTaskType
@@ -140,6 +144,8 @@ pub(all) enum RobotVisionTaskType {
   HumanRobotInteraction
   Unknown
 } derive(Eq)
+pub fn RobotVisionTaskType::equal(Self, Self) -> Bool
+pub fn RobotVisionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrajectoryPoint {
   joint_positions : Array[Double]
@@ -156,6 +162,8 @@ pub(all) enum VisualServoingType {
   Advanced
   Unknown
 } derive(Eq)
+pub fn VisualServoingType::equal(Self, Self) -> Bool
+pub fn VisualServoingType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

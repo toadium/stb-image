@@ -16,6 +16,9 @@ pub(all) enum ModelCompressionMethod {
 } derive(Eq)
 
 ///|
+pub extend ModelCompressionMethod with Eq::{not_equal, equal}
+
+///|
 /// 量化类型
 pub(all) enum QuantizationType {
   INT8
@@ -30,6 +33,9 @@ pub(all) enum QuantizationType {
 } derive(Eq)
 
 ///|
+pub extend QuantizationType with Eq::{not_equal, equal}
+
+///|
 /// 剪枝类型
 pub(all) enum PruningType {
   MagnitudePruning
@@ -42,6 +48,9 @@ pub(all) enum PruningType {
   BlockPruning
   Unknown
 } derive(Eq)
+
+///|
+pub extend PruningType with Eq::{not_equal, equal}
 
 ///|
 /// 模型压缩结果
@@ -137,6 +146,9 @@ pub(all) enum DeploymentTarget {
   WebAssembly
   Unknown
 } derive(Eq)
+
+///|
+pub extend DeploymentTarget with Eq::{not_equal, equal}
 
 ///|
 /// 部署配置

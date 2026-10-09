@@ -40,6 +40,8 @@ pub(all) enum ASRModelType {
   Wav2Vec
   Unknown
 } derive(Eq)
+pub fn ASRModelType::equal(Self, Self) -> Bool
+pub fn ASRModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct AudioClassificationResult {
   audio : AudioData
@@ -89,6 +91,8 @@ pub(all) enum AudioFeatureType {
   SpectralBandwidth
   Unknown
 } derive(Eq)
+pub fn AudioFeatureType::equal(Self, Self) -> Bool
+pub fn AudioFeatureType::not_equal(Self, Self) -> Bool
 
 pub(all) struct AudioFeatures {
   feature_type : AudioFeatureType
@@ -111,6 +115,8 @@ pub(all) enum AudioTaskType {
   NoiseReduction
   Unknown
 } derive(Eq)
+pub fn AudioTaskType::equal(Self, Self) -> Bool
+pub fn AudioTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MusicIRResult {
   audio : AudioData
@@ -161,6 +167,8 @@ pub(all) enum SpeechEmotionType {
   Frustrated
   Unknown
 } derive(Eq)
+pub fn SpeechEmotionType::equal(Self, Self) -> Bool
+pub fn SpeechEmotionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SpeechRecognitionResult {
   audio : AudioData

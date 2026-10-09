@@ -38,6 +38,8 @@ pub(all) enum DimensionalityReductionAlgorithmType {
   Autoencoder
   Unknown
 } derive(Eq)
+pub fn DimensionalityReductionAlgorithmType::equal(Self, Self) -> Bool
+pub fn DimensionalityReductionAlgorithmType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DimensionalityReductionConfig {
   task_type : DimensionalityReductionTaskType
@@ -92,6 +94,8 @@ pub(all) enum DimensionalityReductionTaskType {
   FeatureSelection
   Unknown
 } derive(Eq)
+pub fn DimensionalityReductionTaskType::equal(Self, Self) -> Bool
+pub fn DimensionalityReductionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) enum DistanceMetricTypeDR {
   Euclidean
@@ -102,6 +106,8 @@ pub(all) enum DistanceMetricTypeDR {
   Correlation
   Unknown
 } derive(Eq)
+pub fn DistanceMetricTypeDR::equal(Self, Self) -> Bool
+pub fn DistanceMetricTypeDR::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureSelectionResult {
   selected_features : Array[Int]
@@ -134,6 +140,8 @@ pub(all) enum KernelType {
   Precomputed
   Unknown
 } derive(Eq)
+pub fn KernelType::equal(Self, Self) -> Bool
+pub fn KernelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LLEResult {
   reduced_data : Array[Array[Double]]

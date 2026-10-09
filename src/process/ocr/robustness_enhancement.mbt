@@ -12,6 +12,9 @@ pub(all) enum ScanQualityLevel {
 } derive(Eq)
 
 ///|
+pub extend ScanQualityLevel with Eq::{not_equal, equal}
+
+///|
 /// 自适应预处理配置
 pub(all) struct AdaptivePreprocessConfig {
   quality_level : ScanQualityLevel
@@ -39,6 +42,9 @@ pub(all) enum DistortionType {
 } derive(Eq)
 
 ///|
+pub extend DistortionType with Eq::{not_equal, equal}
+
+///|
 /// 畸变检测结果
 pub(all) struct DistortionDetectionResult {
   distortion_type : DistortionType
@@ -60,6 +66,9 @@ pub(all) enum ComplexLayoutType {
   ImageHeavy
   Unknown
 } derive(Eq)
+
+///|
+pub extend ComplexLayoutType with Eq::{not_equal, equal}
 
 ///|
 /// 复杂版面分析结果

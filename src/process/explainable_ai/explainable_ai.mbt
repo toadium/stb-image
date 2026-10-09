@@ -17,6 +17,9 @@ pub(all) enum ExplainabilityMethod {
 } derive(Eq)
 
 ///|
+pub extend ExplainabilityMethod with Eq::{not_equal, equal}
+
+///|
 /// 模型可视化类型
 pub(all) enum ModelVisualizationType {
   FeatureMap
@@ -30,6 +33,9 @@ pub(all) enum ModelVisualizationType {
   AccuracyCurve
   Unknown
 } derive(Eq)
+
+///|
+pub extend ModelVisualizationType with Eq::{not_equal, equal}
 
 ///|
 /// 特征重要性结果

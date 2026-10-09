@@ -48,6 +48,8 @@ pub(all) enum AgricultureVisionTaskType {
   GrowthMonitoring
   Unknown
 } derive(Eq)
+pub fn AgricultureVisionTaskType::equal(Self, Self) -> Bool
+pub fn AgricultureVisionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct CropDetectionResult {
   crop_id : Int
@@ -73,6 +75,8 @@ pub(all) enum CropType {
   Grape
   Unknown
 } derive(Eq)
+pub fn CropType::equal(Self, Self) -> Bool
+pub fn CropType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DiseaseDetectionResult {
   disease_id : Int
@@ -98,6 +102,8 @@ pub(all) enum DiseaseType {
   Healthy
   Unknown
 } derive(Eq)
+pub fn DiseaseType::equal(Self, Self) -> Bool
+pub fn DiseaseType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GrowthMonitoringResult {
   crop_type : CropType
@@ -136,6 +142,8 @@ pub(all) enum PestType {
   Healthy
   Unknown
 } derive(Eq)
+pub fn PestType::equal(Self, Self) -> Bool
+pub fn PestType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SoilAnalysisResult {
   soil_type : SoilType
@@ -159,6 +167,8 @@ pub(all) enum SoilType {
   Chalky
   Unknown
 } derive(Eq)
+pub fn SoilType::equal(Self, Self) -> Bool
+pub fn SoilType::not_equal(Self, Self) -> Bool
 
 pub(all) struct WeedDetectionResult {
   weed_id : Int

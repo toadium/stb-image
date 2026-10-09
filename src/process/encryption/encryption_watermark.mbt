@@ -14,6 +14,9 @@ pub(all) enum EncryptionAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend EncryptionAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 加密结果
 pub(all) struct EncryptionResult {
   encrypted_data : Array[Byte]
@@ -38,6 +41,9 @@ pub(all) enum WatermarkType {
   Fragile
   Unknown
 } derive(Eq)
+
+///|
+pub extend WatermarkType with Eq::{not_equal, equal}
 
 ///|
 /// 水印信息

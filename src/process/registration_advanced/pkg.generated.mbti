@@ -61,6 +61,8 @@ pub(all) enum RegistrationAlgorithm {
   Bspline
   Unknown
 } derive(Eq)
+pub fn RegistrationAlgorithm::equal(Self, Self) -> Bool
+pub fn RegistrationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct RegistrationConfigAdvanced {
   algorithm : RegistrationAlgorithm
@@ -109,6 +111,8 @@ pub(all) enum TransformType {
   Bspline
   Unknown
 } derive(Eq)
+pub fn TransformType::equal(Self, Self) -> Bool
+pub fn TransformType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

@@ -18,6 +18,9 @@ pub(all) enum FusionAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend FusionAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 融合结果
 pub(all) struct FusionResult {
   image : @types.Image
@@ -46,6 +49,9 @@ pub(all) enum RegistrationAlgorithm {
   OpticalFlow
   Unknown
 } derive(Eq)
+
+///|
+pub extend RegistrationAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 配准结果

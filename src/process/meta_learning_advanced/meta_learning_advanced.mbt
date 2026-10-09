@@ -16,6 +16,9 @@ pub(all) enum MetaLearningTaskType {
 } derive(Eq)
 
 ///|
+pub extend MetaLearningTaskType with Eq::{not_equal, equal}
+
+///|
 /// 元学习算法类型
 pub(all) enum MetaLearningAlgorithmType {
   MAML
@@ -37,6 +40,9 @@ pub(all) enum MetaLearningAlgorithmType {
 } derive(Eq)
 
 ///|
+pub extend MetaLearningAlgorithmType with Eq::{not_equal, equal}
+
+///|
 /// 元学习优化器类型
 pub(all) enum MetaOptimizerType {
   SGD
@@ -49,6 +55,9 @@ pub(all) enum MetaOptimizerType {
 } derive(Eq)
 
 ///|
+pub extend MetaOptimizerType with Eq::{not_equal, equal}
+
+///|
 /// 任务分布类型
 pub(all) enum TaskDistributionType {
   Uniform
@@ -58,6 +67,9 @@ pub(all) enum TaskDistributionType {
   Weighted
   Unknown
 } derive(Eq)
+
+///|
+pub extend TaskDistributionType with Eq::{not_equal, equal}
 
 ///|
 /// 元学习结果

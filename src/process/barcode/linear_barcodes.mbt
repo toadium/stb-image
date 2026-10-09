@@ -10,6 +10,9 @@ pub(all) enum Code128Charset {
 } derive(Eq)
 
 ///|
+pub extend Code128Charset with Eq::{not_equal, equal}
+
+///|
 /// Code128 编码表（107个码字）
 /// 每个码字对应 11 位的条空模式（3条3空，宽度1-4）
 let code128_patterns : Array[Array[Int]] = [

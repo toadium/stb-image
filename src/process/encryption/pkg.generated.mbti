@@ -84,6 +84,8 @@ pub(all) enum EncryptionAlgorithm {
   RSA_Simplified
   Unknown
 } derive(Eq)
+pub fn EncryptionAlgorithm::equal(Self, Self) -> Bool
+pub fn EncryptionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct EncryptionConfig {
   method_type : String
@@ -153,6 +155,8 @@ pub(all) enum WatermarkType {
   Fragile
   Unknown
 } derive(Eq)
+pub fn WatermarkType::equal(Self, Self) -> Bool
+pub fn WatermarkType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

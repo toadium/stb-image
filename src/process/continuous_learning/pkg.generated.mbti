@@ -65,6 +65,8 @@ pub(all) enum ContinualLearningStrategy {
   Hybrid
   Unknown
 } derive(Eq)
+pub fn ContinualLearningStrategy::equal(Self, Self) -> Bool
+pub fn ContinualLearningStrategy::not_equal(Self, Self) -> Bool
 
 pub(all) struct EWCConfig {
   lambda : Double
@@ -83,6 +85,8 @@ pub(all) enum IncrementalLearningScenario {
   DataIncremental
   Unknown
 } derive(Eq)
+pub fn IncrementalLearningScenario::equal(Self, Self) -> Bool
+pub fn IncrementalLearningScenario::not_equal(Self, Self) -> Bool
 
 pub(all) struct KnowledgeDistillationConfigCL {
   temperature : Double
@@ -123,6 +127,8 @@ pub(all) enum RegularizationMethod {
   HAT
   Unknown
 } derive(Eq)
+pub fn RegularizationMethod::equal(Self, Self) -> Bool
+pub fn RegularizationMethod::not_equal(Self, Self) -> Bool
 
 pub(all) enum ReplayMethod {
   ExperienceReplay
@@ -132,6 +138,8 @@ pub(all) enum ReplayMethod {
   MaximalInterferedRetrieval
   Unknown
 } derive(Eq)
+pub fn ReplayMethod::equal(Self, Self) -> Bool
+pub fn ReplayMethod::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

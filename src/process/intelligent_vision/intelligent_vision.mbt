@@ -16,6 +16,9 @@ pub(all) enum AutonomousDrivingTask {
 } derive(Eq)
 
 ///|
+pub extend AutonomousDrivingTask with Eq::{not_equal, equal}
+
+///|
 /// 机器人视觉任务类型
 pub(all) enum RobotVisionTask {
   ObjectRecognition
@@ -28,6 +31,9 @@ pub(all) enum RobotVisionTask {
   SceneUnderstanding
   Unknown
 } derive(Eq)
+
+///|
+pub extend RobotVisionTask with Eq::{not_equal, equal}
 
 ///|
 /// 工业检测任务类型
@@ -44,6 +50,9 @@ pub(all) enum IndustrialInspectionTask {
 } derive(Eq)
 
 ///|
+pub extend IndustrialInspectionTask with Eq::{not_equal, equal}
+
+///|
 /// 安防监控任务类型
 pub(all) enum SecurityMonitoringTask {
   IntrusionDetection
@@ -56,6 +65,9 @@ pub(all) enum SecurityMonitoringTask {
   FallDetection
   Unknown
 } derive(Eq)
+
+///|
+pub extend SecurityMonitoringTask with Eq::{not_equal, equal}
 
 ///|
 /// 农业视觉任务类型
@@ -72,6 +84,9 @@ pub(all) enum AgriculturalVisionTask {
 } derive(Eq)
 
 ///|
+pub extend AgriculturalVisionTask with Eq::{not_equal, equal}
+
+///|
 /// 天文图像处理任务类型
 pub(all) enum AstronomicalImageTask {
   StarDetection
@@ -84,6 +99,9 @@ pub(all) enum AstronomicalImageTask {
   ImageStacking
   Unknown
 } derive(Eq)
+
+///|
+pub extend AstronomicalImageTask with Eq::{not_equal, equal}
 
 ///|
 /// 检测结果

@@ -17,6 +17,9 @@ pub(all) enum SceneClassificationAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend SceneClassificationAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 图像描述算法类型
 pub(all) enum ImageCaptioningAlgorithm {
   ShowAndTell
@@ -31,6 +34,9 @@ pub(all) enum ImageCaptioningAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend ImageCaptioningAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 视觉问答算法类型
 pub(all) enum VisualQuestionAnsweringAlgorithm {
   VQA
@@ -43,6 +49,9 @@ pub(all) enum VisualQuestionAnsweringAlgorithm {
   GPT4V
   Unknown
 } derive(Eq)
+
+///|
+pub extend VisualQuestionAnsweringAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 场景分类结果

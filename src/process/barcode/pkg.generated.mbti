@@ -59,12 +59,16 @@ pub(all) enum BarcodeType {
   QrCode
   Unknown
 } derive(Eq)
+pub fn BarcodeType::equal(Self, Self) -> Bool
+pub fn BarcodeType::not_equal(Self, Self) -> Bool
 
 pub(all) enum Code128Charset {
   CodeA
   CodeB
   CodeC
 } derive(Eq)
+pub fn Code128Charset::equal(Self, Self) -> Bool
+pub fn Code128Charset::not_equal(Self, Self) -> Bool
 
 pub(all) struct QrDecodeResult {
   data : String

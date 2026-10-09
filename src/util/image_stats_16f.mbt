@@ -26,6 +26,12 @@ pub(all) struct ImageStatsF {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ImageStatsF with @debug.Debug::{to_repr}
+
+///|
+pub extend ImageStatsF with Eq::{not_equal, equal}
+
+///|
 /// 计算 16-bit 图像统计信息（均值、标准差、最小值、最大值）。
 /// 统计所有通道的像素值，像素值范围为 [0, 65535]。
 pub fn compute_stats_16(img : @types.Image16) -> ImageStats {

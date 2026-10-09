@@ -50,6 +50,8 @@ pub(all) enum CompressionAlgorithm {
   PNG
   Unknown
 } derive(Eq)
+pub fn CompressionAlgorithm::equal(Self, Self) -> Bool
+pub fn CompressionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct CompressionConfig {
   algorithm : CompressionAlgorithm
@@ -102,6 +104,8 @@ pub(all) enum QuantizationTableType {
   Custom
   Default
 } derive(Eq)
+pub fn QuantizationTableType::equal(Self, Self) -> Bool
+pub fn QuantizationTableType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

@@ -55,6 +55,8 @@ pub(all) enum DiffusionModelType {
   InstructPix2Pix
   Unknown
 } derive(Eq)
+pub fn DiffusionModelType::equal(Self, Self) -> Bool
+pub fn DiffusionModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GANConfig {
   gan_type : GANType
@@ -89,6 +91,8 @@ pub(all) enum GANType {
   Pix2Pix
   Unknown
 } derive(Eq)
+pub fn GANType::equal(Self, Self) -> Bool
+pub fn GANType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GenerationResult {
   generated_samples : Array[Array[Double]]
@@ -114,6 +118,8 @@ pub(all) enum GenerativeAITaskType {
   ImageToImage
   Unknown
 } derive(Eq)
+pub fn GenerativeAITaskType::equal(Self, Self) -> Bool
+pub fn GenerativeAITaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SamplingConfig {
   num_samples : Int
@@ -172,6 +178,8 @@ pub(all) enum VAEType {
   AdversarialAE
   Unknown
 } derive(Eq)
+pub fn VAEType::equal(Self, Self) -> Bool
+pub fn VAEType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

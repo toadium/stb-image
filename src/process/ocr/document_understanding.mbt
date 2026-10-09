@@ -20,6 +20,9 @@ pub(all) enum DocumentElementType {
 } derive(Eq)
 
 ///|
+pub extend DocumentElementType with Eq::{not_equal, equal}
+
+///|
 /// 文档元素结构体
 pub(all) struct DocumentElement {
   element_type : DocumentElementType

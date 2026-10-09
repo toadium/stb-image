@@ -73,6 +73,8 @@ pub(all) enum BeautyType {
   TeethWhitening
   Unknown
 } derive(Eq)
+pub fn BeautyType::equal(Self, Self) -> Bool
+pub fn BeautyType::not_equal(Self, Self) -> Bool
 
 pub(all) enum CutoutMethod {
   GrabCut
@@ -82,6 +84,8 @@ pub(all) enum CutoutMethod {
   BackgroundMatting
   Unknown
 } derive(Eq)
+pub fn CutoutMethod::equal(Self, Self) -> Bool
+pub fn CutoutMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct CutoutResult {
   foreground : Array[Double]
@@ -164,6 +168,8 @@ pub(all) enum ImageEditingTaskType {
   ExpressionEditing
   Unknown
 } derive(Eq)
+pub fn ImageEditingTaskType::equal(Self, Self) -> Bool
+pub fn ImageEditingTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MakeupResult {
   madeup_image : Array[Double]
@@ -193,6 +199,8 @@ pub(all) enum MakeupType {
   Highlight
   Unknown
 } derive(Eq)
+pub fn MakeupType::equal(Self, Self) -> Bool
+pub fn MakeupType::not_equal(Self, Self) -> Bool
 
 pub(all) enum ObjectRemovalMethod {
   Inpainting
@@ -202,6 +210,8 @@ pub(all) enum ObjectRemovalMethod {
   NavierStokes
   Unknown
 } derive(Eq)
+pub fn ObjectRemovalMethod::equal(Self, Self) -> Bool
+pub fn ObjectRemovalMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct ObjectRemovalResult {
   repaired_image : Array[Double]

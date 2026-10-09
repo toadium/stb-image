@@ -90,6 +90,8 @@ pub(all) enum SuperResolutionAlgorithm {
   DeepLearning
   Unknown
 } derive(Eq)
+pub fn SuperResolutionAlgorithm::equal(Self, Self) -> Bool
+pub fn SuperResolutionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct SuperResolutionConfig {
   scale : Double

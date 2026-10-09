@@ -15,6 +15,9 @@ pub(all) enum KGConstructionMethod {
 } derive(Eq)
 
 ///|
+pub extend KGConstructionMethod with Eq::{not_equal, equal}
+
+///|
 /// 实体链接方法
 pub(all) enum EntityLinkingMethod {
   StringMatching
@@ -25,6 +28,9 @@ pub(all) enum EntityLinkingMethod {
   Probabilistic
   Unknown
 } derive(Eq)
+
+///|
+pub extend EntityLinkingMethod with Eq::{not_equal, equal}
 
 ///|
 /// 关系抽取方法
@@ -40,6 +46,9 @@ pub(all) enum RelationExtractionMethod {
 } derive(Eq)
 
 ///|
+pub extend RelationExtractionMethod with Eq::{not_equal, equal}
+
+///|
 /// 知识推理方法
 pub(all) enum KnowledgeReasoningMethod {
   RuleBased
@@ -52,6 +61,9 @@ pub(all) enum KnowledgeReasoningMethod {
   Spatial
   Unknown
 } derive(Eq)
+
+///|
+pub extend KnowledgeReasoningMethod with Eq::{not_equal, equal}
 
 ///|
 /// 知识图谱实体

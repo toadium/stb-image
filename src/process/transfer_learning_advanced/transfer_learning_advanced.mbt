@@ -18,6 +18,9 @@ pub(all) enum TransferLearningTaskType {
 } derive(Eq)
 
 ///|
+pub extend TransferLearningTaskType with Eq::{not_equal, equal}
+
+///|
 /// 预训练模型类型
 pub(all) enum PretrainedModelType {
   ResNet
@@ -32,6 +35,9 @@ pub(all) enum PretrainedModelType {
   AlexNet
   Unknown
 } derive(Eq)
+
+///|
+pub extend PretrainedModelType with Eq::{not_equal, equal}
 
 ///|
 /// 微调策略类型
@@ -50,6 +56,9 @@ pub(all) enum FineTuningStrategyType {
 } derive(Eq)
 
 ///|
+pub extend FineTuningStrategyType with Eq::{not_equal, equal}
+
+///|
 /// 域适应方法类型
 pub(all) enum DomainAdaptationMethodType {
   DANN
@@ -66,6 +75,9 @@ pub(all) enum DomainAdaptationMethodType {
 } derive(Eq)
 
 ///|
+pub extend DomainAdaptationMethodType with Eq::{not_equal, equal}
+
+///|
 /// 多任务学习方法类型
 pub(all) enum MultiTaskLearningMethodType {
   HardParameterSharing
@@ -78,6 +90,9 @@ pub(all) enum MultiTaskLearningMethodType {
   MultiGateMixtureOfExperts
   Unknown
 } derive(Eq)
+
+///|
+pub extend MultiTaskLearningMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 少样本学习方法类型
@@ -94,6 +109,9 @@ pub(all) enum FewShotLearningMethodType {
   BaselinePlus
   Unknown
 } derive(Eq)
+
+///|
+pub extend FewShotLearningMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 迁移学习结果

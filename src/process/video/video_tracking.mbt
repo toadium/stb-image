@@ -70,6 +70,9 @@ pub(all) enum ActionType {
 } derive(Eq)
 
 ///|
+pub extend ActionType with Eq::{not_equal, equal}
+
+///|
 /// 动作识别结果
 pub(all) struct ActionRecognitionResult {
   action_type : ActionType
@@ -101,6 +104,9 @@ pub(all) enum KeyframeType {
   UniformSampling
   UserSelected
 } derive(Eq)
+
+///|
+pub extend KeyframeType with Eq::{not_equal, equal}
 
 ///|
 /// 关键帧

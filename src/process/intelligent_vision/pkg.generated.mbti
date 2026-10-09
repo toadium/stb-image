@@ -38,6 +38,8 @@ pub(all) enum AgriculturalVisionTask {
   HarvestReadiness
   Unknown
 } derive(Eq)
+pub fn AgriculturalVisionTask::equal(Self, Self) -> Bool
+pub fn AgriculturalVisionTask::not_equal(Self, Self) -> Bool
 
 pub(all) enum AstronomicalImageTask {
   StarDetection
@@ -50,6 +52,8 @@ pub(all) enum AstronomicalImageTask {
   ImageStacking
   Unknown
 } derive(Eq)
+pub fn AstronomicalImageTask::equal(Self, Self) -> Bool
+pub fn AstronomicalImageTask::not_equal(Self, Self) -> Bool
 
 pub(all) enum AutonomousDrivingTask {
   LaneDetection
@@ -62,6 +66,8 @@ pub(all) enum AutonomousDrivingTask {
   TrafficLightDetection
   Unknown
 } derive(Eq)
+pub fn AutonomousDrivingTask::equal(Self, Self) -> Bool
+pub fn AutonomousDrivingTask::not_equal(Self, Self) -> Bool
 
 pub(all) struct CropDetectionResult {
   crop_type : String
@@ -100,6 +106,8 @@ pub(all) enum IndustrialInspectionTask {
   TextileInspection
   Unknown
 } derive(Eq)
+pub fn IndustrialInspectionTask::equal(Self, Self) -> Bool
+pub fn IndustrialInspectionTask::not_equal(Self, Self) -> Bool
 
 pub(all) struct IntelligentVisionConfig {
   confidence_threshold : Double
@@ -138,6 +146,8 @@ pub(all) enum RobotVisionTask {
   SceneUnderstanding
   Unknown
 } derive(Eq)
+pub fn RobotVisionTask::equal(Self, Self) -> Bool
+pub fn RobotVisionTask::not_equal(Self, Self) -> Bool
 
 pub(all) enum SecurityMonitoringTask {
   IntrusionDetection
@@ -150,6 +160,8 @@ pub(all) enum SecurityMonitoringTask {
   FallDetection
   Unknown
 } derive(Eq)
+pub fn SecurityMonitoringTask::equal(Self, Self) -> Bool
+pub fn SecurityMonitoringTask::not_equal(Self, Self) -> Bool
 
 pub(all) struct StarDetectionResult {
   stars : Array[Array[Double]]

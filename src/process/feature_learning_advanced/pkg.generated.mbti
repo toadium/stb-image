@@ -48,6 +48,8 @@ pub(all) enum FeatureExtractionMethodType {
   LDA
   Unknown
 } derive(Eq)
+pub fn FeatureExtractionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureExtractionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureExtractionResult {
   features : Array[Array[Double]]
@@ -71,6 +73,8 @@ pub(all) enum FeatureFusionMethodType {
   CompactBilinearPooling
   Unknown
 } derive(Eq)
+pub fn FeatureFusionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureFusionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureFusionResult {
   fused_features : Array[Array[Double]]
@@ -134,6 +138,8 @@ pub(all) enum FeatureLearningTaskType {
   TransferLearning
   Unknown
 } derive(Eq)
+pub fn FeatureLearningTaskType::equal(Self, Self) -> Bool
+pub fn FeatureLearningTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) enum FeatureSelectionMethodType {
   Filter
@@ -148,6 +154,8 @@ pub(all) enum FeatureSelectionMethodType {
   MutualInformation
   Unknown
 } derive(Eq)
+pub fn FeatureSelectionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureSelectionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureSelectionResult {
   selected_features : Array[Int]
@@ -176,6 +184,8 @@ pub(all) enum FeatureTransformationMethodType {
   ICA
   Unknown
 } derive(Eq)
+pub fn FeatureTransformationMethodType::equal(Self, Self) -> Bool
+pub fn FeatureTransformationMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureTransformationResult {
   transformed_features : Array[Array[Double]]
@@ -204,6 +214,8 @@ pub(all) enum MetricLearningMethodType {
   CosFace
   Unknown
 } derive(Eq)
+pub fn MetricLearningMethodType::equal(Self, Self) -> Bool
+pub fn MetricLearningMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MetricLearningResult {
   learned_metric : Array[Array[Double]]

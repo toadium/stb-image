@@ -108,6 +108,9 @@ pub(all) struct ImageStats {
   min_val : Int
   max_val : Int
 } derive(Eq, @debug.Debug)
+pub fn ImageStats::equal(Self, Self) -> Bool
+pub fn ImageStats::not_equal(Self, Self) -> Bool
+pub fn ImageStats::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageStatsF {
   mean : Float
@@ -115,6 +118,9 @@ pub(all) struct ImageStatsF {
   min_val : Float
   max_val : Float
 } derive(Eq, @debug.Debug)
+pub fn ImageStatsF::equal(Self, Self) -> Bool
+pub fn ImageStatsF::not_equal(Self, Self) -> Bool
+pub fn ImageStatsF::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

@@ -16,6 +16,9 @@ pub(all) enum ColorizationTaskType {
 } derive(Eq)
 
 ///|
+pub extend ColorizationTaskType with Eq::{not_equal, equal}
+
+///|
 /// 上色模型类型
 pub(all) enum ColorizationModelType {
   Zhang2016
@@ -29,6 +32,9 @@ pub(all) enum ColorizationModelType {
 } derive(Eq)
 
 ///|
+pub extend ColorizationModelType with Eq::{not_equal, equal}
+
+///|
 /// 颜色空间类型
 pub(all) enum ColorSpaceType {
   RGB
@@ -40,6 +46,9 @@ pub(all) enum ColorSpaceType {
   XYZ
   Unknown
 } derive(Eq)
+
+///|
+pub extend ColorSpaceType with Eq::{not_equal, equal}
 
 ///|
 /// 上色结果

@@ -84,6 +84,8 @@ pub(all) enum NeuralRenderingAlgorithm {
   StableDiffusion3D
   Unknown
 } derive(Eq)
+pub fn NeuralRenderingAlgorithm::equal(Self, Self) -> Bool
+pub fn NeuralRenderingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct Point3D {
   position : Array[Double]
@@ -109,6 +111,8 @@ pub(all) enum ReconstructionAlgorithm {
   LidarFusion
   Unknown
 } derive(Eq)
+pub fn ReconstructionAlgorithm::equal(Self, Self) -> Bool
+pub fn ReconstructionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct ReconstructionResult {
   point_cloud : Array[Point3D]

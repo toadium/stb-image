@@ -46,6 +46,8 @@ pub(all) enum ExplorationStrategy {
   EntropyRegularization
   Unknown
 } derive(Eq)
+pub fn ExplorationStrategy::equal(Self, Self) -> Bool
+pub fn ExplorationStrategy::not_equal(Self, Self) -> Bool
 
 pub(all) struct PolicyEvaluationResult {
   average_reward : Double
@@ -85,6 +87,8 @@ pub(all) enum RLAlgorithm {
   TD3
   Unknown
 } derive(Eq)
+pub fn RLAlgorithm::equal(Self, Self) -> Bool
+pub fn RLAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct RLConfig {
   algorithm : RLAlgorithm
@@ -156,6 +160,8 @@ pub(all) enum ReplayBufferType {
   Reservoir
   Unknown
 } derive(Eq)
+pub fn ReplayBufferType::equal(Self, Self) -> Bool
+pub fn ReplayBufferType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

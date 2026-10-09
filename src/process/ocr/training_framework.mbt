@@ -12,6 +12,9 @@ pub(all) enum OptimizerType {
 } derive(Eq)
 
 ///|
+pub extend OptimizerType with Eq::{not_equal, equal}
+
+///|
 /// 优化器配置
 pub(all) struct OptimizerConfig {
   optimizer_type : OptimizerType
@@ -34,6 +37,9 @@ pub(all) enum LRSchedulerType {
   WarmupCosine
   ReduceOnPlateau
 } derive(Eq)
+
+///|
+pub extend LRSchedulerType with Eq::{not_equal, equal}
 
 ///|
 /// 学习率调度器配置
@@ -61,6 +67,9 @@ pub(all) enum AugmentationType {
   RandomContrast
   ElasticTransform
 } derive(Eq)
+
+///|
+pub extend AugmentationType with Eq::{not_equal, equal}
 
 ///|
 /// 数据增强配置

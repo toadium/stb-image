@@ -695,6 +695,8 @@ pub(all) enum AugmentationType {
   RandomContrast
   ElasticTransform
 } derive(Eq)
+pub fn AugmentationType::equal(Self, Self) -> Bool
+pub fn AugmentationType::not_equal(Self, Self) -> Bool
 
 pub(all) struct BatchOcrConfig {
   max_concurrent : Int
@@ -759,6 +761,8 @@ pub(all) enum BatchTaskStatus {
   Failed
   Skipped
 } derive(Eq)
+pub fn BatchTaskStatus::equal(Self, Self) -> Bool
+pub fn BatchTaskStatus::not_equal(Self, Self) -> Bool
 
 pub(all) struct CharRecognitionResult {
   expected : String
@@ -856,6 +860,8 @@ pub(all) enum ComplexLayoutType {
   ImageHeavy
   Unknown
 } derive(Eq)
+pub fn ComplexLayoutType::equal(Self, Self) -> Bool
+pub fn ComplexLayoutType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ConfusionEntry {
   expected : String
@@ -941,6 +947,8 @@ pub(all) enum DLLayerType {
   Sigmoid
   Tanh
 } derive(Eq)
+pub fn DLLayerType::equal(Self, Self) -> Bool
+pub fn DLLayerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DLNeuralLayer {
   layer_type : DLLayerType
@@ -983,6 +991,8 @@ pub(all) enum DeploymentEnvironment {
   Staging
   Production
 } derive(Eq)
+pub fn DeploymentEnvironment::equal(Self, Self) -> Bool
+pub fn DeploymentEnvironment::not_equal(Self, Self) -> Bool
 
 pub(all) struct DictCharEntry {
   char : String
@@ -1016,6 +1026,8 @@ pub(all) enum DictCharStructure {
   Independent
   Complex
 } derive(Eq)
+pub fn DictCharStructure::equal(Self, Self) -> Bool
+pub fn DictCharStructure::not_equal(Self, Self) -> Bool
 
 pub(all) struct DictChineseDict {
   chars : Array[DictCharEntry]
@@ -1069,6 +1081,8 @@ pub(all) enum DistanceMetric {
   Cosine
   Chebyshev
 } derive(Eq)
+pub fn DistanceMetric::equal(Self, Self) -> Bool
+pub fn DistanceMetric::not_equal(Self, Self) -> Bool
 
 pub(all) struct DistortionDetectionResult {
   distortion_type : DistortionType
@@ -1088,6 +1102,8 @@ pub(all) enum DistortionType {
   Noise
   Unknown
 } derive(Eq)
+pub fn DistortionType::equal(Self, Self) -> Bool
+pub fn DistortionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DockerConfig {
   base_image : String
@@ -1133,6 +1149,8 @@ pub(all) enum DocumentBlockType {
   PageNumber
   Unknown
 } derive(Eq)
+pub fn DocumentBlockType::equal(Self, Self) -> Bool
+pub fn DocumentBlockType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DocumentElement {
   element_type : DocumentElementType
@@ -1162,6 +1180,8 @@ pub(all) enum DocumentElementType {
   Image
   Unknown
 } derive(Eq)
+pub fn DocumentElementType::equal(Self, Self) -> Bool
+pub fn DocumentElementType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DocumentStructure {
   elements : Array[DocumentElement]
@@ -1390,6 +1410,8 @@ pub(all) enum HandwritingStyle {
   Block
   Unknown
 } derive(Eq)
+pub fn HandwritingStyle::equal(Self, Self) -> Bool
+pub fn HandwritingStyle::not_equal(Self, Self) -> Bool
 
 pub(all) struct HandwritingTemplate {
   char : String
@@ -1432,6 +1454,8 @@ pub(all) enum LRSchedulerType {
   WarmupCosine
   ReduceOnPlateau
 } derive(Eq)
+pub fn LRSchedulerType::equal(Self, Self) -> Bool
+pub fn LRSchedulerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LanguageDetectionResult {
   language : String
@@ -1455,6 +1479,8 @@ pub(all) enum LanguageType {
   Mixed
   Unknown
 } derive(Eq)
+pub fn LanguageType::equal(Self, Self) -> Bool
+pub fn LanguageType::not_equal(Self, Self) -> Bool
 
 pub(all) enum LayoutType {
   SingleColumn
@@ -1463,6 +1489,8 @@ pub(all) enum LayoutType {
   MixedLayout
   UnknownLayout
 } derive(Eq)
+pub fn LayoutType::equal(Self, Self) -> Bool
+pub fn LayoutType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LbpFeatures {
   features : Array[Double]
@@ -1486,6 +1514,8 @@ pub(all) enum ListItemType {
   Checkbox
   None
 } derive(Eq)
+pub fn ListItemType::equal(Self, Self) -> Bool
+pub fn ListItemType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MarkdownDocument {
   title : String
@@ -1521,6 +1551,8 @@ pub(all) enum MarkdownElementType {
   PageBreak
   Unknown
 } derive(Eq)
+pub fn MarkdownElementType::equal(Self, Self) -> Bool
+pub fn MarkdownElementType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MarkdownImage {
   x : Int
@@ -1653,6 +1685,8 @@ pub(all) enum OcrErrorType {
   Reorder
   Unknown
 } derive(Eq)
+pub fn OcrErrorType::equal(Self, Self) -> Bool
+pub fn OcrErrorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct OcrResult {
   text : String
@@ -1678,6 +1712,8 @@ pub(all) enum OptimizerType {
   RMSprop
   Adagrad
 } derive(Eq)
+pub fn OptimizerType::equal(Self, Self) -> Bool
+pub fn OptimizerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PageRegion {
   region_type : PageRegionType
@@ -1696,6 +1732,8 @@ pub(all) enum PageRegionType {
   Gutter
   PageNumber
 } derive(Eq)
+pub fn PageRegionType::equal(Self, Self) -> Bool
+pub fn PageRegionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PerformanceBenchmark {
   total_time_ms : Double
@@ -1778,6 +1816,8 @@ pub(all) enum ScanQualityLevel {
   Poor
   VeryPoor
 } derive(Eq)
+pub fn ScanQualityLevel::equal(Self, Self) -> Bool
+pub fn ScanQualityLevel::not_equal(Self, Self) -> Bool
 
 pub(all) struct SimilarCharMapping {
   char : String
@@ -1833,6 +1873,8 @@ pub(all) enum StrokeType {
   Rising
   Unknown
 } derive(Eq)
+pub fn StrokeType::equal(Self, Self) -> Bool
+pub fn StrokeType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TableCell {
   x : Int
@@ -1881,6 +1923,8 @@ pub(all) enum TableLineType {
   Horizontal
   Vertical
 } derive(Eq)
+pub fn TableLineType::equal(Self, Self) -> Bool
+pub fn TableLineType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TableStructure {
   rows : Int
@@ -1953,6 +1997,8 @@ pub(all) enum TextRegionType {
   Table
   Unknown
 } derive(Eq)
+pub fn TextRegionType::equal(Self, Self) -> Bool
+pub fn TextRegionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrainingConfig {
   epochs : Int

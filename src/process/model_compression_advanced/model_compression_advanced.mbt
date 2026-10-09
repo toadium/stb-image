@@ -17,6 +17,9 @@ pub(all) enum ModelCompressionTaskType {
 } derive(Eq)
 
 ///|
+pub extend ModelCompressionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 量化类型
 pub(all) enum QuantizationType {
   INT8
@@ -31,6 +34,9 @@ pub(all) enum QuantizationType {
   PerTensor
   Unknown
 } derive(Eq)
+
+///|
+pub extend QuantizationType with Eq::{not_equal, equal}
 
 ///|
 /// 剪枝类型
@@ -49,6 +55,9 @@ pub(all) enum PruningType {
 } derive(Eq)
 
 ///|
+pub extend PruningType with Eq::{not_equal, equal}
+
+///|
 /// 知识蒸馏类型
 pub(all) enum KnowledgeDistillationType {
   ResponseBased
@@ -65,6 +74,9 @@ pub(all) enum KnowledgeDistillationType {
 } derive(Eq)
 
 ///|
+pub extend KnowledgeDistillationType with Eq::{not_equal, equal}
+
+///|
 /// 低秩分解类型
 pub(all) enum LowRankFactorizationType {
   SVD
@@ -75,6 +87,9 @@ pub(all) enum LowRankFactorizationType {
   HierarchicalTucker
   Unknown
 } derive(Eq)
+
+///|
+pub extend LowRankFactorizationType with Eq::{not_equal, equal}
 
 ///|
 /// 模型压缩结果

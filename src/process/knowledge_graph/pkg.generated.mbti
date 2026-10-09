@@ -34,6 +34,8 @@ pub(all) enum EntityLinkingMethod {
   Probabilistic
   Unknown
 } derive(Eq)
+pub fn EntityLinkingMethod::equal(Self, Self) -> Bool
+pub fn EntityLinkingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct EntityLinkingResult {
   mention : String
@@ -67,6 +69,8 @@ pub(all) enum KGConstructionMethod {
   ActiveLearning
   Unknown
 } derive(Eq)
+pub fn KGConstructionMethod::equal(Self, Self) -> Bool
+pub fn KGConstructionMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct KGEmbedding {
   entity_embeddings : Array[Array[Double]]
@@ -121,6 +125,8 @@ pub(all) enum KnowledgeReasoningMethod {
   Spatial
   Unknown
 } derive(Eq)
+pub fn KnowledgeReasoningMethod::equal(Self, Self) -> Bool
+pub fn KnowledgeReasoningMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct KnowledgeReasoningResult {
   query : String
@@ -142,6 +148,8 @@ pub(all) enum RelationExtractionMethod {
   OpenIE
   Unknown
 } derive(Eq)
+pub fn RelationExtractionMethod::equal(Self, Self) -> Bool
+pub fn RelationExtractionMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct RelationExtractionResult {
   source_entity : String

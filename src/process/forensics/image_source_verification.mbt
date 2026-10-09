@@ -11,6 +11,9 @@ pub(all) enum ImageSourceType {
 } derive(Eq)
 
 ///|
+pub extend ImageSourceType with Eq::{not_equal, equal}
+
+///|
 /// 鉴定结果
 pub(all) struct SourceVerificationResult {
   source_type : ImageSourceType

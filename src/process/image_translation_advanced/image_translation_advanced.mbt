@@ -16,6 +16,9 @@ pub(all) enum ImageTranslationTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageTranslationTaskType with Eq::{not_equal, equal}
+
+///|
 /// 翻译模型类型
 pub(all) enum TranslationModelType {
   CycleGAN
@@ -30,6 +33,9 @@ pub(all) enum TranslationModelType {
 } derive(Eq)
 
 ///|
+pub extend TranslationModelType with Eq::{not_equal, equal}
+
+///|
 /// 季节类型
 pub(all) enum SeasonType {
   Spring
@@ -38,6 +44,9 @@ pub(all) enum SeasonType {
   Winter
   Unknown
 } derive(Eq)
+
+///|
+pub extend SeasonType with Eq::{not_equal, equal}
 
 ///|
 /// 天气类型
@@ -51,6 +60,9 @@ pub(all) enum WeatherType {
   Hazy
   Unknown
 } derive(Eq)
+
+///|
+pub extend WeatherType with Eq::{not_equal, equal}
 
 ///|
 /// 翻译结果

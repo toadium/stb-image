@@ -58,6 +58,8 @@ pub(all) enum ExposureType {
   Overexposed
   Unknown
 } derive(Eq)
+pub fn ExposureType::equal(Self, Self) -> Bool
+pub fn ExposureType::not_equal(Self, Self) -> Bool
 
 pub(all) struct HdrImage {
   width : Int
@@ -112,6 +114,8 @@ pub(all) enum ToneMappingType {
   Linear
   Gamma
 } derive(Eq)
+pub fn ToneMappingType::equal(Self, Self) -> Bool
+pub fn ToneMappingType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

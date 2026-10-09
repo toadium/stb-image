@@ -36,6 +36,8 @@ pub(all) enum ImageCaptioningAlgorithm {
   CLIPCaption
   Unknown
 } derive(Eq)
+pub fn ImageCaptioningAlgorithm::equal(Self, Self) -> Bool
+pub fn ImageCaptioningAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageCaptioningResult {
   caption : String
@@ -59,6 +61,8 @@ pub(all) enum SceneClassificationAlgorithm {
   MobileNet
   Unknown
 } derive(Eq)
+pub fn SceneClassificationAlgorithm::equal(Self, Self) -> Bool
+pub fn SceneClassificationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct SceneClassificationResult {
   scene_type : String
@@ -113,6 +117,8 @@ pub(all) enum VisualQuestionAnsweringAlgorithm {
   GPT4V
   Unknown
 } derive(Eq)
+pub fn VisualQuestionAnsweringAlgorithm::equal(Self, Self) -> Bool
+pub fn VisualQuestionAnsweringAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct VisualQuestionAnsweringResult {
   answer : String

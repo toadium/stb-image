@@ -17,6 +17,9 @@ pub(all) enum FeatureLearningTaskType {
 } derive(Eq)
 
 ///|
+pub extend FeatureLearningTaskType with Eq::{not_equal, equal}
+
+///|
 /// 特征提取方法类型
 pub(all) enum FeatureExtractionMethodType {
   Handcrafted
@@ -34,6 +37,9 @@ pub(all) enum FeatureExtractionMethodType {
 } derive(Eq)
 
 ///|
+pub extend FeatureExtractionMethodType with Eq::{not_equal, equal}
+
+///|
 /// 特征选择方法类型
 pub(all) enum FeatureSelectionMethodType {
   Filter
@@ -48,6 +54,9 @@ pub(all) enum FeatureSelectionMethodType {
   MutualInformation
   Unknown
 } derive(Eq)
+
+///|
+pub extend FeatureSelectionMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 特征变换方法类型
@@ -68,6 +77,9 @@ pub(all) enum FeatureTransformationMethodType {
 } derive(Eq)
 
 ///|
+pub extend FeatureTransformationMethodType with Eq::{not_equal, equal}
+
+///|
 /// 特征融合方法类型
 pub(all) enum FeatureFusionMethodType {
   Concatenation
@@ -80,6 +92,9 @@ pub(all) enum FeatureFusionMethodType {
   CompactBilinearPooling
   Unknown
 } derive(Eq)
+
+///|
+pub extend FeatureFusionMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 度量学习方法类型
@@ -96,6 +111,9 @@ pub(all) enum MetricLearningMethodType {
   CosFace
   Unknown
 } derive(Eq)
+
+///|
+pub extend MetricLearningMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 特征学习结果

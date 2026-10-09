@@ -84,6 +84,8 @@ pub(all) enum ComputationalPhotographyTaskType {
   ColorManagement
   Unknown
 } derive(Eq)
+pub fn ComputationalPhotographyTaskType::equal(Self, Self) -> Bool
+pub fn ComputationalPhotographyTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) enum DeblurringMethod {
   Wiener
@@ -92,6 +94,8 @@ pub(all) enum DeblurringMethod {
   DeepLearning
   Unknown
 } derive(Eq)
+pub fn DeblurringMethod::equal(Self, Self) -> Bool
+pub fn DeblurringMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
@@ -114,6 +118,8 @@ pub(all) enum DehazingMethod {
   AODNet
   Unknown
 } derive(Eq)
+pub fn DehazingMethod::equal(Self, Self) -> Bool
+pub fn DehazingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DehazingResult {
   dehazed_image : Array[Double]
@@ -161,6 +167,8 @@ pub(all) enum HDRToneMappingMethod {
   Linear
   Unknown
 } derive(Eq)
+pub fn HDRToneMappingMethod::equal(Self, Self) -> Bool
+pub fn HDRToneMappingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultiFrameDenoisingResult {
   denoised_image : Array[Double]
@@ -195,6 +203,8 @@ pub(all) enum PanoramaStitchingMethod {
   PhaseCorrelation
   Unknown
 } derive(Eq)
+pub fn PanoramaStitchingMethod::equal(Self, Self) -> Bool
+pub fn PanoramaStitchingMethod::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

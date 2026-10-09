@@ -18,6 +18,9 @@ pub(all) enum StyleTransferAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend StyleTransferAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 风格迁移结果
 pub(all) struct StyleTransferResult {
   image : @types.Image
@@ -87,6 +90,9 @@ pub(all) enum ArtStyle {
   Contemporary
   Unknown
 } derive(Eq)
+
+///|
+pub extend ArtStyle with Eq::{not_equal, equal}
 
 ///|
 /// 创建默认风格迁移配置

@@ -16,6 +16,9 @@ pub(all) enum ImageRetrievalTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageRetrievalTaskType with Eq::{not_equal, equal}
+
+///|
 /// 特征描述符类型
 pub(all) enum FeatureDescriptorType {
   SIFT
@@ -30,6 +33,9 @@ pub(all) enum FeatureDescriptorType {
   DeepFeature
   Unknown
 } derive(Eq)
+
+///|
+pub extend FeatureDescriptorType with Eq::{not_equal, equal}
 
 ///|
 /// 相似度度量类型
@@ -48,6 +54,9 @@ pub(all) enum SimilarityMetricType {
 } derive(Eq)
 
 ///|
+pub extend SimilarityMetricType with Eq::{not_equal, equal}
+
+///|
 /// 索引结构类型
 pub(all) enum IndexStructureType {
   KDTree
@@ -61,6 +70,9 @@ pub(all) enum IndexStructureType {
   InvertedIndex
   Unknown
 } derive(Eq)
+
+///|
+pub extend IndexStructureType with Eq::{not_equal, equal}
 
 ///|
 /// 检索结果

@@ -157,6 +157,8 @@ pub(all) enum ImageSourceType {
   Unknown
   Mixed
 } derive(Eq)
+pub fn ImageSourceType::equal(Self, Self) -> Bool
+pub fn ImageSourceType::not_equal(Self, Self) -> Bool
 
 pub(all) struct NoiseAnalysisResult {
   noise_level : Double

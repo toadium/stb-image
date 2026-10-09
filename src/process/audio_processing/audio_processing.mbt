@@ -29,6 +29,9 @@ pub(all) enum AudioTaskType {
 } derive(Eq)
 
 ///|
+pub extend AudioTaskType with Eq::{not_equal, equal}
+
+///|
 /// 语音识别模型类型
 pub(all) enum ASRModelType {
   GMMHMM
@@ -41,6 +44,9 @@ pub(all) enum ASRModelType {
   Wav2Vec
   Unknown
 } derive(Eq)
+
+///|
+pub extend ASRModelType with Eq::{not_equal, equal}
 
 ///|
 /// 音频特征类型
@@ -59,6 +65,9 @@ pub(all) enum AudioFeatureType {
 } derive(Eq)
 
 ///|
+pub extend AudioFeatureType with Eq::{not_equal, equal}
+
+///|
 /// 情感语音类型
 pub(all) enum SpeechEmotionType {
   Neutral
@@ -72,6 +81,9 @@ pub(all) enum SpeechEmotionType {
   Frustrated
   Unknown
 } derive(Eq)
+
+///|
+pub extend SpeechEmotionType with Eq::{not_equal, equal}
 
 ///|
 /// 音频数据

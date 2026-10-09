@@ -18,6 +18,9 @@ pub(all) enum DenoiseAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend DenoiseAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 降噪结果
 pub(all) struct DenoiseResult {
   image : @types.Image
@@ -60,6 +63,9 @@ pub(all) enum EnhancementAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend EnhancementAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 增强结果
 pub(all) struct EnhancementResult {
   image : @types.Image
@@ -83,6 +89,9 @@ pub(all) enum NoiseType {
   UniformNoise
   Unknown
 } derive(Eq)
+
+///|
+pub extend NoiseType with Eq::{not_equal, equal}
 
 ///|
 /// 创建默认降噪配置

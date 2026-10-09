@@ -43,6 +43,8 @@ pub(all) enum NEREntityType {
   Event
   Unknown
 } derive(Eq)
+pub fn NEREntityType::equal(Self, Self) -> Bool
+pub fn NEREntityType::not_equal(Self, Self) -> Bool
 
 pub(all) struct NERResult {
   text : String
@@ -79,6 +81,8 @@ pub(all) enum NLPTaskType {
   LanguageModeling
   Unknown
 } derive(Eq)
+pub fn NLPTaskType::equal(Self, Self) -> Bool
+pub fn NLPTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct QuestionAnsweringResult {
   question : String
@@ -109,6 +113,8 @@ pub(all) enum SentimentType {
   VeryNegative
   Unknown
 } derive(Eq)
+pub fn SentimentType::equal(Self, Self) -> Bool
+pub fn SentimentType::not_equal(Self, Self) -> Bool
 
 pub(all) enum TextClassificationModel {
   NaiveBayes
@@ -123,6 +129,8 @@ pub(all) enum TextClassificationModel {
   RoBERTa
   Unknown
 } derive(Eq)
+pub fn TextClassificationModel::equal(Self, Self) -> Bool
+pub fn TextClassificationModel::not_equal(Self, Self) -> Bool
 
 pub(all) struct TextClassificationResult {
   text : String

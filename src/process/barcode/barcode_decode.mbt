@@ -12,6 +12,9 @@ pub(all) enum BarcodeType {
 } derive(Eq)
 
 ///|
+pub extend BarcodeType with Eq::{not_equal, equal}
+
+///|
 /// 条形码识别结果
 pub(all) struct BarcodeResult {
   barcode_type : BarcodeType

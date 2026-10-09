@@ -24,11 +24,17 @@ pub(all) struct ExifInfo {
   orientation : Int
   date_time : String
 } derive(Eq, @debug.Debug)
+pub fn ExifInfo::equal(Self, Self) -> Bool
+pub fn ExifInfo::not_equal(Self, Self) -> Bool
+pub fn ExifInfo::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PngTextChunk {
   keyword : String
   text : String
 } derive(Eq, @debug.Debug)
+pub fn PngTextChunk::equal(Self, Self) -> Bool
+pub fn PngTextChunk::not_equal(Self, Self) -> Bool
+pub fn PngTextChunk::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

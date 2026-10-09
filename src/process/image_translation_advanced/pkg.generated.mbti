@@ -118,6 +118,8 @@ pub(all) enum ImageTranslationTaskType {
   MapToSatellite
   Unknown
 } derive(Eq)
+pub fn ImageTranslationTaskType::equal(Self, Self) -> Bool
+pub fn ImageTranslationTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MapToSatelliteResult {
   satellite_image : Array[Double]
@@ -157,6 +159,8 @@ pub(all) enum SeasonType {
   Winter
   Unknown
 } derive(Eq)
+pub fn SeasonType::equal(Self, Self) -> Bool
+pub fn SeasonType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SketchToPhotoResult {
   photo_image : Array[Double]
@@ -183,6 +187,8 @@ pub(all) enum TranslationModelType {
   FastStyleTransfer
   Unknown
 } derive(Eq)
+pub fn TranslationModelType::equal(Self, Self) -> Bool
+pub fn TranslationModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct WeatherTransferResult {
   translated_image : Array[Double]
@@ -210,6 +216,8 @@ pub(all) enum WeatherType {
   Hazy
   Unknown
 } derive(Eq)
+pub fn WeatherType::equal(Self, Self) -> Bool
+pub fn WeatherType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

@@ -17,6 +17,9 @@ pub(all) enum RegistrationAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend RegistrationAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 变换类型
 pub(all) enum TransformType {
   Translation
@@ -29,6 +32,9 @@ pub(all) enum TransformType {
   Bspline
   Unknown
 } derive(Eq)
+
+///|
+pub extend TransformType with Eq::{not_equal, equal}
 
 ///|
 /// 配准结果

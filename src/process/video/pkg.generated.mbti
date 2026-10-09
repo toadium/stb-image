@@ -77,6 +77,8 @@ pub(all) enum ActionType {
   Catching
   Unknown
 } derive(Eq)
+pub fn ActionType::equal(Self, Self) -> Bool
+pub fn ActionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct Keyframe {
   frame_index : Int
@@ -93,6 +95,8 @@ pub(all) enum KeyframeType {
   UniformSampling
   UserSelected
 } derive(Eq)
+pub fn KeyframeType::equal(Self, Self) -> Bool
+pub fn KeyframeType::not_equal(Self, Self) -> Bool
 
 pub(all) struct OpticalFlowField {
   width : Int

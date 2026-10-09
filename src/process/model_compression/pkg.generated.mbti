@@ -64,6 +64,8 @@ pub(all) enum DeploymentTarget {
   WebAssembly
   Unknown
 } derive(Eq)
+pub fn DeploymentTarget::equal(Self, Self) -> Bool
+pub fn DeploymentTarget::not_equal(Self, Self) -> Bool
 
 pub(all) struct KnowledgeDistillationConfig {
   temperature : Double
@@ -97,6 +99,8 @@ pub(all) enum ModelCompressionMethod {
   UnstructuredPruning
   Unknown
 } derive(Eq)
+pub fn ModelCompressionMethod::equal(Self, Self) -> Bool
+pub fn ModelCompressionMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct ModelCompressionResult {
   original_size_mb : Double
@@ -146,6 +150,8 @@ pub(all) enum PruningType {
   BlockPruning
   Unknown
 } derive(Eq)
+pub fn PruningType::equal(Self, Self) -> Bool
+pub fn PruningType::not_equal(Self, Self) -> Bool
 
 pub(all) struct QuantizationConfig {
   quantization_type : QuantizationType
@@ -169,6 +175,8 @@ pub(all) enum QuantizationType {
   StaticQuantization
   Unknown
 } derive(Eq)
+pub fn QuantizationType::equal(Self, Self) -> Bool
+pub fn QuantizationType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

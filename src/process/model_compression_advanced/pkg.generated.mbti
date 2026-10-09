@@ -50,6 +50,8 @@ pub(all) enum KnowledgeDistillationType {
   OnlineDistillation
   Unknown
 } derive(Eq)
+pub fn KnowledgeDistillationType::equal(Self, Self) -> Bool
+pub fn KnowledgeDistillationType::not_equal(Self, Self) -> Bool
 
 pub(all) enum LowRankFactorizationType {
   SVD
@@ -60,6 +62,8 @@ pub(all) enum LowRankFactorizationType {
   HierarchicalTucker
   Unknown
 } derive(Eq)
+pub fn LowRankFactorizationType::equal(Self, Self) -> Bool
+pub fn LowRankFactorizationType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LowRankResult {
   decomposed_weights : Array[Array[Array[Double]]]
@@ -128,6 +132,8 @@ pub(all) enum ModelCompressionTaskType {
   MixedPrecision
   Unknown
 } derive(Eq)
+pub fn ModelCompressionTaskType::equal(Self, Self) -> Bool
+pub fn ModelCompressionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PruningResult {
   pruned_weights : Array[Array[Double]]
@@ -159,6 +165,8 @@ pub(all) enum PruningType {
   GradualPruning
   Unknown
 } derive(Eq)
+pub fn PruningType::equal(Self, Self) -> Bool
+pub fn PruningType::not_equal(Self, Self) -> Bool
 
 pub(all) struct QuantizationResult {
   quantized_weights : Array[Array[Double]]
@@ -190,6 +198,8 @@ pub(all) enum QuantizationType {
   PerTensor
   Unknown
 } derive(Eq)
+pub fn QuantizationType::equal(Self, Self) -> Bool
+pub fn QuantizationType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

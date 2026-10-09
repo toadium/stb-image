@@ -16,6 +16,9 @@ pub(all) enum GenerativeAITaskType {
 } derive(Eq)
 
 ///|
+pub extend GenerativeAITaskType with Eq::{not_equal, equal}
+
+///|
 /// 扩散模型类型
 pub(all) enum DiffusionModelType {
   DDPM
@@ -27,6 +30,9 @@ pub(all) enum DiffusionModelType {
   InstructPix2Pix
   Unknown
 } derive(Eq)
+
+///|
+pub extend DiffusionModelType with Eq::{not_equal, equal}
 
 ///|
 /// GAN类型
@@ -44,6 +50,9 @@ pub(all) enum GANType {
 } derive(Eq)
 
 ///|
+pub extend GANType with Eq::{not_equal, equal}
+
+///|
 /// VAE类型
 pub(all) enum VAEType {
   VanillaVAE
@@ -55,6 +64,9 @@ pub(all) enum VAEType {
   AdversarialAE
   Unknown
 } derive(Eq)
+
+///|
+pub extend VAEType with Eq::{not_equal, equal}
 
 ///|
 /// 扩散模型配置

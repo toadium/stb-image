@@ -40,6 +40,8 @@ pub(all) enum ArtStyle {
   Contemporary
   Unknown
 } derive(Eq)
+pub fn ArtStyle::equal(Self, Self) -> Bool
+pub fn ArtStyle::not_equal(Self, Self) -> Bool
 
 pub(all) struct ColorStatistics {
   mean_r : Double
@@ -69,6 +71,8 @@ pub(all) enum StyleTransferAlgorithm {
   Sketch
   Unknown
 } derive(Eq)
+pub fn StyleTransferAlgorithm::equal(Self, Self) -> Bool
+pub fn StyleTransferAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct StyleTransferConfig {
   algorithm : StyleTransferAlgorithm

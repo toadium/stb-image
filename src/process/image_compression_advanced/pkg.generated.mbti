@@ -23,6 +23,8 @@ pub(all) enum CompressionMode {
   NearLossless
   Unknown
 } derive(Eq)
+pub fn CompressionMode::equal(Self, Self) -> Bool
+pub fn CompressionMode::not_equal(Self, Self) -> Bool
 
 pub(all) struct CompressionQualityResult {
   psnr : Double
@@ -61,6 +63,8 @@ pub(all) enum CompressionStandardType {
   FLIF
   Unknown
 } derive(Eq)
+pub fn CompressionStandardType::equal(Self, Self) -> Bool
+pub fn CompressionStandardType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DecompressionResult {
   decompressed_image : Array[Double]
@@ -107,6 +111,8 @@ pub(all) enum ImageCompressionTaskType {
   NeuralCompression
   Unknown
 } derive(Eq)
+pub fn ImageCompressionTaskType::equal(Self, Self) -> Bool
+pub fn ImageCompressionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RateDistortionOptimizationResult {
   optimal_quality : Int
@@ -128,6 +134,8 @@ pub(all) enum TransformType {
   PCA
   Unknown
 } derive(Eq)
+pub fn TransformType::equal(Self, Self) -> Bool
+pub fn TransformType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

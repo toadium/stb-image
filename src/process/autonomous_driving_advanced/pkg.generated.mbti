@@ -65,6 +65,8 @@ pub(all) enum ADObjectType {
   Road
   Unknown
 } derive(Eq)
+pub fn ADObjectType::equal(Self, Self) -> Bool
+pub fn ADObjectType::not_equal(Self, Self) -> Bool
 
 pub(all) enum AutonomousDrivingTaskType {
   EnvironmentPerception
@@ -76,6 +78,8 @@ pub(all) enum AutonomousDrivingTaskType {
   Localization
   Unknown
 } derive(Eq)
+pub fn AutonomousDrivingTaskType::equal(Self, Self) -> Bool
+pub fn AutonomousDrivingTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ControlCommand {
   steering_angle : Double
@@ -103,6 +107,8 @@ pub(all) enum DrivingBehaviorType {
   Yield
   Unknown
 } derive(Eq)
+pub fn DrivingBehaviorType::equal(Self, Self) -> Bool
+pub fn DrivingBehaviorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LaneLine {
   lane_id : Int
@@ -155,6 +161,8 @@ pub(all) enum SensorType {
   Odometry
   Unknown
 } derive(Eq)
+pub fn SensorType::equal(Self, Self) -> Bool
+pub fn SensorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrafficLight {
   light_id : Int

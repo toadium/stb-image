@@ -18,6 +18,9 @@ pub(all) enum DLLayerType {
 } derive(Eq)
 
 ///|
+pub extend DLLayerType with Eq::{not_equal, equal}
+
+///|
 /// 卷积层配置
 pub(all) struct DLConv2DConfig {
   in_channels : Int

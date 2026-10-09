@@ -11,6 +11,12 @@ pub(all) struct ExifInfo {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ExifInfo with Eq::{not_equal, equal}
+
+///|
+pub extend ExifInfo with @debug.Debug::{to_repr}
+
+///|
 fn read_u16_be(data : Bytes, offset : Int) -> Int {
   data[offset].to_int() * 256 + data[offset + 1].to_int()
 }

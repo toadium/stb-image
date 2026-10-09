@@ -15,6 +15,9 @@ pub(all) enum AgricultureVisionTaskType {
 } derive(Eq)
 
 ///|
+pub extend AgricultureVisionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 作物类型
 pub(all) enum CropType {
   Wheat
@@ -28,6 +31,9 @@ pub(all) enum CropType {
   Grape
   Unknown
 } derive(Eq)
+
+///|
+pub extend CropType with Eq::{not_equal, equal}
 
 ///|
 /// 病害类型
@@ -45,6 +51,9 @@ pub(all) enum DiseaseType {
 } derive(Eq)
 
 ///|
+pub extend DiseaseType with Eq::{not_equal, equal}
+
+///|
 /// 虫害类型
 pub(all) enum PestType {
   Aphid
@@ -59,6 +68,9 @@ pub(all) enum PestType {
 } derive(Eq)
 
 ///|
+pub extend PestType with Eq::{not_equal, equal}
+
+///|
 /// 土壤类型
 pub(all) enum SoilType {
   Sandy
@@ -69,6 +81,9 @@ pub(all) enum SoilType {
   Chalky
   Unknown
 } derive(Eq)
+
+///|
+pub extend SoilType with Eq::{not_equal, equal}
 
 ///|
 /// 作物检测结果

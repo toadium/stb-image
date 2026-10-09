@@ -16,6 +16,9 @@ pub(all) enum NASAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend NASAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 超参数优化算法类型
 pub(all) enum HyperparameterOptimizationAlgorithm {
   GridSearch
@@ -30,6 +33,9 @@ pub(all) enum HyperparameterOptimizationAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend HyperparameterOptimizationAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 搜索空间类型
 pub(all) enum SearchSpaceType {
   Macro
@@ -39,6 +45,9 @@ pub(all) enum SearchSpaceType {
   Joint
   Unknown
 } derive(Eq)
+
+///|
+pub extend SearchSpaceType with Eq::{not_equal, equal}
 
 ///|
 /// 神经网络层类型
@@ -54,6 +63,9 @@ pub(all) enum LayerType {
   Transformer
   Unknown
 } derive(Eq)
+
+///|
+pub extend LayerType with Eq::{not_equal, equal}
 
 ///|
 /// 网络架构

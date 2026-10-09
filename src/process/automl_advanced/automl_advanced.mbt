@@ -15,6 +15,9 @@ pub(all) enum AutoMLTaskType {
 } derive(Eq)
 
 ///|
+pub extend AutoMLTaskType with Eq::{not_equal, equal}
+
+///|
 /// 超参数优化算法类型
 pub(all) enum HPOAlgorithmType {
   GridSearch
@@ -30,6 +33,9 @@ pub(all) enum HPOAlgorithmType {
   GeneticAlgorithm
   Unknown
 } derive(Eq)
+
+///|
+pub extend HPOAlgorithmType with Eq::{not_equal, equal}
 
 ///|
 /// 神经架构搜索算法类型
@@ -48,6 +54,9 @@ pub(all) enum NASAlgorithmType {
 } derive(Eq)
 
 ///|
+pub extend NASAlgorithmType with Eq::{not_equal, equal}
+
+///|
 /// 特征工程方法类型
 pub(all) enum FeatureEngineeringMethodType {
   FeatureSelection
@@ -61,6 +70,9 @@ pub(all) enum FeatureEngineeringMethodType {
 } derive(Eq)
 
 ///|
+pub extend FeatureEngineeringMethodType with Eq::{not_equal, equal}
+
+///|
 /// 模型选择策略类型
 pub(all) enum ModelSelectionStrategyType {
   CrossValidation
@@ -71,6 +83,9 @@ pub(all) enum ModelSelectionStrategyType {
   Blending
   Unknown
 } derive(Eq)
+
+///|
+pub extend ModelSelectionStrategyType with Eq::{not_equal, equal}
 
 ///|
 /// AutoML结果

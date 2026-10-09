@@ -19,6 +19,9 @@ pub(all) enum RLAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend RLAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 探索策略类型
 pub(all) enum ExplorationStrategy {
   EpsilonGreedy
@@ -32,6 +35,9 @@ pub(all) enum ExplorationStrategy {
 } derive(Eq)
 
 ///|
+pub extend ExplorationStrategy with Eq::{not_equal, equal}
+
+///|
 /// 经验回放类型
 pub(all) enum ReplayBufferType {
   Uniform
@@ -41,6 +47,9 @@ pub(all) enum ReplayBufferType {
   Reservoir
   Unknown
 } derive(Eq)
+
+///|
+pub extend ReplayBufferType with Eq::{not_equal, equal}
 
 ///|
 /// 强化学习环境

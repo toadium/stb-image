@@ -34,6 +34,8 @@ pub(all) enum ClusteringAlgorithmType {
   OPTICS
   Unknown
 } derive(Eq)
+pub fn ClusteringAlgorithmType::equal(Self, Self) -> Bool
+pub fn ClusteringAlgorithmType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ClusteringEvaluationResult {
   silhouette_score : Double
@@ -88,6 +90,8 @@ pub(all) enum DistanceMetricType {
   Canberra
   Unknown
 } derive(Eq)
+pub fn DistanceMetricType::equal(Self, Self) -> Bool
+pub fn DistanceMetricType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FuzzyCMeansResult {
   labels : Array[Int]
@@ -162,6 +166,8 @@ pub(all) enum ImageClusteringTaskType {
   SubspaceClustering
   Unknown
 } derive(Eq)
+pub fn ImageClusteringTaskType::equal(Self, Self) -> Bool
+pub fn ImageClusteringTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct KMeansResult {
   labels : Array[Int]
@@ -185,6 +191,8 @@ pub(all) enum LinkageType {
   Median
   Unknown
 } derive(Eq)
+pub fn LinkageType::equal(Self, Self) -> Bool
+pub fn LinkageType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

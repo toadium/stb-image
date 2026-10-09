@@ -15,6 +15,9 @@ pub(all) enum RemoteSensingTaskType {
 } derive(Eq)
 
 ///|
+pub extend RemoteSensingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 遥感图像类型
 pub(all) enum RemoteSensingImageType {
   Optical
@@ -26,6 +29,9 @@ pub(all) enum RemoteSensingImageType {
   DEM
   Unknown
 } derive(Eq)
+
+///|
+pub extend RemoteSensingImageType with Eq::{not_equal, equal}
 
 ///|
 /// 地物类型
@@ -44,6 +50,9 @@ pub(all) enum LandCoverType {
 } derive(Eq)
 
 ///|
+pub extend LandCoverType with Eq::{not_equal, equal}
+
+///|
 /// 遥感目标类型
 pub(all) enum RemoteSensingObjectType {
   Building
@@ -60,6 +69,9 @@ pub(all) enum RemoteSensingObjectType {
 } derive(Eq)
 
 ///|
+pub extend RemoteSensingObjectType with Eq::{not_equal, equal}
+
+///|
 /// 变化类型
 pub(all) enum ChangeType {
   NewConstruction
@@ -72,6 +84,9 @@ pub(all) enum ChangeType {
   NoChange
   Unknown
 } derive(Eq)
+
+///|
+pub extend ChangeType with Eq::{not_equal, equal}
 
 ///|
 /// 地物分类结果

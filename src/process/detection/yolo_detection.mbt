@@ -68,6 +68,9 @@ pub(all) enum ObjectClass {
 } derive(Eq)
 
 ///|
+pub extend ObjectClass with Eq::{not_equal, equal}
+
+///|
 /// 跟踪目标
 pub(all) struct YoloTrackedObject {
   id : Int

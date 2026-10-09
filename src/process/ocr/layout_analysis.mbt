@@ -21,6 +21,9 @@ pub(all) enum TextRegionType {
 } derive(Eq)
 
 ///|
+pub extend TextRegionType with Eq::{not_equal, equal}
+
+///|
 /// 文本行结构体
 pub(all) struct TextLine {
   x : Int

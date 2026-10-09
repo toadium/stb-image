@@ -16,6 +16,9 @@ pub(all) enum ComputationalImagingAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend ComputationalImagingAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 光场表示类型
 pub(all) enum LightFieldRepresentation {
   TwoPlane
@@ -24,6 +27,9 @@ pub(all) enum LightFieldRepresentation {
   Convolutional
   Unknown
 } derive(Eq)
+
+///|
+pub extend LightFieldRepresentation with Eq::{not_equal, equal}
 
 ///|
 /// 全息图类型
@@ -35,6 +41,9 @@ pub(all) enum HologramType {
   ComputerGenerated
   Unknown
 } derive(Eq)
+
+///|
+pub extend HologramType with Eq::{not_equal, equal}
 
 ///|
 /// 光场相机参数

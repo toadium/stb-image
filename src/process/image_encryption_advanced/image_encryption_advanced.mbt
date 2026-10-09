@@ -16,6 +16,9 @@ pub(all) enum ImageEncryptionTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageEncryptionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 加密算法类型
 pub(all) enum EncryptionAlgorithmType {
   AES
@@ -30,6 +33,9 @@ pub(all) enum EncryptionAlgorithmType {
 } derive(Eq)
 
 ///|
+pub extend EncryptionAlgorithmType with Eq::{not_equal, equal}
+
+///|
 /// 混沌系统类型
 pub(all) enum ChaoticSystemType {
   Logistic
@@ -40,6 +46,9 @@ pub(all) enum ChaoticSystemType {
   Hyperchaotic
   Unknown
 } derive(Eq)
+
+///|
+pub extend ChaoticSystemType with Eq::{not_equal, equal}
 
 ///|
 /// DNA编码类型
@@ -53,6 +62,9 @@ pub(all) enum DNAEncodingType {
 } derive(Eq)
 
 ///|
+pub extend DNAEncodingType with Eq::{not_equal, equal}
+
+///|
 /// 隐写术类型
 pub(all) enum SteganographyType {
   LSB
@@ -63,6 +75,9 @@ pub(all) enum SteganographyType {
   SpreadSpectrum
   Unknown
 } derive(Eq)
+
+///|
+pub extend SteganographyType with Eq::{not_equal, equal}
 
 ///|
 /// 加密结果

@@ -15,6 +15,9 @@ pub(all) enum DLAdvancedTaskType {
 } derive(Eq)
 
 ///|
+pub extend DLAdvancedTaskType with Eq::{not_equal, equal}
+
+///|
 /// Transformer架构类型
 pub(all) enum TransformerArchitecture {
   EncoderOnly
@@ -25,6 +28,9 @@ pub(all) enum TransformerArchitecture {
   SwinTransformer
   Unknown
 } derive(Eq)
+
+///|
+pub extend TransformerArchitecture with Eq::{not_equal, equal}
 
 ///|
 /// 注意力机制类型
@@ -40,6 +46,9 @@ pub(all) enum AttentionType {
 } derive(Eq)
 
 ///|
+pub extend AttentionType with Eq::{not_equal, equal}
+
+///|
 /// 预训练任务类型
 pub(all) enum PretrainingTask {
   MaskedLanguageModeling
@@ -51,6 +60,9 @@ pub(all) enum PretrainingTask {
   Colorization
   Unknown
 } derive(Eq)
+
+///|
+pub extend PretrainingTask with Eq::{not_equal, equal}
 
 ///|
 /// Transformer配置

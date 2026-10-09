@@ -33,6 +33,9 @@ pub(all) enum FederatedLearningAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend FederatedLearningAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 隐私保护技术类型
 pub(all) enum PrivacyTechnology {
   DifferentialPrivacy
@@ -47,6 +50,9 @@ pub(all) enum PrivacyTechnology {
 } derive(Eq)
 
 ///|
+pub extend PrivacyTechnology with Eq::{not_equal, equal}
+
+///|
 /// 差分隐私机制类型
 pub(all) enum DPMechanism {
   Laplace
@@ -56,6 +62,9 @@ pub(all) enum DPMechanism {
   TruncatedLaplace
   Unknown
 } derive(Eq)
+
+///|
+pub extend DPMechanism with Eq::{not_equal, equal}
 
 ///|
 /// 同态加密类型
@@ -70,6 +79,9 @@ pub(all) enum HomomorphicEncryptionType {
   TFHE
   Unknown
 } derive(Eq)
+
+///|
+pub extend HomomorphicEncryptionType with Eq::{not_equal, equal}
 
 ///|
 /// 联邦学习客户端

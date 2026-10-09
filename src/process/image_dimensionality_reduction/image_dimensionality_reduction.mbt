@@ -17,6 +17,9 @@ pub(all) enum DimensionalityReductionTaskType {
 } derive(Eq)
 
 ///|
+pub extend DimensionalityReductionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 降维算法类型
 pub(all) enum DimensionalityReductionAlgorithmType {
   PCA
@@ -39,6 +42,9 @@ pub(all) enum DimensionalityReductionAlgorithmType {
 } derive(Eq)
 
 ///|
+pub extend DimensionalityReductionAlgorithmType with Eq::{not_equal, equal}
+
+///|
 /// 核函数类型
 pub(all) enum KernelType {
   Linear
@@ -51,6 +57,9 @@ pub(all) enum KernelType {
 } derive(Eq)
 
 ///|
+pub extend KernelType with Eq::{not_equal, equal}
+
+///|
 /// 距离度量类型
 pub(all) enum DistanceMetricTypeDR {
   Euclidean
@@ -61,6 +70,9 @@ pub(all) enum DistanceMetricTypeDR {
   Correlation
   Unknown
 } derive(Eq)
+
+///|
+pub extend DistanceMetricTypeDR with Eq::{not_equal, equal}
 
 ///|
 /// 降维结果

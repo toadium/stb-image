@@ -20,6 +20,9 @@ pub(all) enum DocumentBlockType {
 } derive(Eq)
 
 ///|
+pub extend DocumentBlockType with Eq::{not_equal, equal}
+
+///|
 /// 文档块结构体（增强版）
 pub(all) struct DocumentBlock {
   block_type : DocumentBlockType

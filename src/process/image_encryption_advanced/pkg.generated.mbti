@@ -44,6 +44,8 @@ pub(all) enum ChaoticSystemType {
   Hyperchaotic
   Unknown
 } derive(Eq)
+pub fn ChaoticSystemType::equal(Self, Self) -> Bool
+pub fn ChaoticSystemType::not_equal(Self, Self) -> Bool
 
 pub(all) enum DNAEncodingType {
   Binary
@@ -53,6 +55,8 @@ pub(all) enum DNAEncodingType {
   XOR
   Unknown
 } derive(Eq)
+pub fn DNAEncodingType::equal(Self, Self) -> Bool
+pub fn DNAEncodingType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DNAEncryptionResult {
   encrypted_data : Array[Byte]
@@ -106,6 +110,8 @@ pub(all) enum EncryptionAlgorithmType {
   Serpent
   Unknown
 } derive(Eq)
+pub fn EncryptionAlgorithmType::equal(Self, Self) -> Bool
+pub fn EncryptionAlgorithmType::not_equal(Self, Self) -> Bool
 
 pub(all) struct EncryptionResult {
   encrypted_data : Array[Byte]
@@ -153,6 +159,8 @@ pub(all) enum ImageEncryptionTaskType {
   HomomorphicEncryption
   Unknown
 } derive(Eq)
+pub fn ImageEncryptionTaskType::equal(Self, Self) -> Bool
+pub fn ImageEncryptionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SteganographyResult {
   stego_image : Array[Double]
@@ -178,6 +186,8 @@ pub(all) enum SteganographyType {
   SpreadSpectrum
   Unknown
 } derive(Eq)
+pub fn SteganographyType::equal(Self, Self) -> Bool
+pub fn SteganographyType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

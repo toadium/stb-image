@@ -16,6 +16,9 @@ pub(all) enum PoseEstimationAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend PoseEstimationAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 动作识别算法类型
 pub(all) enum ActionRecognitionAlgorithm {
   C3D
@@ -28,6 +31,9 @@ pub(all) enum ActionRecognitionAlgorithm {
   VideoMAE
   Unknown
 } derive(Eq)
+
+///|
+pub extend ActionRecognitionAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 人体关键点
@@ -86,6 +92,9 @@ pub(all) enum GestureType {
   Rock
   Unknown
 } derive(Eq)
+
+///|
+pub extend GestureType with Eq::{not_equal, equal}
 
 ///|
 /// 手势识别结果

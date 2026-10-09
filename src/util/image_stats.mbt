@@ -10,6 +10,12 @@ pub(all) struct ImageStats {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ImageStats with @debug.Debug::{to_repr}
+
+///|
+pub extend ImageStats with Eq::{not_equal, equal}
+
+///|
 /// 计算图像统计信息（均值、标准差、最小值、最大值）。
 /// 统计所有通道的像素值。
 pub fn compute_stats(img : @types.Image) -> ImageStats {

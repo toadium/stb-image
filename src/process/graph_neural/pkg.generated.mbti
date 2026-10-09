@@ -54,6 +54,8 @@ pub(all) enum GNNLayerType {
   AGNN
   Unknown
 } derive(Eq)
+pub fn GNNLayerType::equal(Self, Self) -> Bool
+pub fn GNNLayerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GraphData {
   nodes : Array[GraphNode]
@@ -93,6 +95,8 @@ pub(all) enum GraphTaskType {
   Recommendation
   Unknown
 } derive(Eq)
+pub fn GraphTaskType::equal(Self, Self) -> Bool
+pub fn GraphTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct NodeEmbeddingResult {
   embeddings : Array[Array[Double]]
@@ -135,6 +139,8 @@ pub(all) enum RelationType {
   Entails
   Unknown
 } derive(Eq)
+pub fn RelationType::equal(Self, Self) -> Bool
+pub fn RelationType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

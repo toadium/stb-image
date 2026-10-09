@@ -18,6 +18,9 @@ pub(all) enum ImageCompressionTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageCompressionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 压缩标准类型
 pub(all) enum CompressionStandardType {
   JPEG
@@ -32,6 +35,9 @@ pub(all) enum CompressionStandardType {
 } derive(Eq)
 
 ///|
+pub extend CompressionStandardType with Eq::{not_equal, equal}
+
+///|
 /// 压缩模式
 pub(all) enum CompressionMode {
   Lossless
@@ -39,6 +45,9 @@ pub(all) enum CompressionMode {
   NearLossless
   Unknown
 } derive(Eq)
+
+///|
+pub extend CompressionMode with Eq::{not_equal, equal}
 
 ///|
 /// 变换类型
@@ -51,6 +60,9 @@ pub(all) enum TransformType {
   PCA
   Unknown
 } derive(Eq)
+
+///|
+pub extend TransformType with Eq::{not_equal, equal}
 
 ///|
 /// 压缩结果

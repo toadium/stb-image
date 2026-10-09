@@ -16,6 +16,9 @@ pub(all) enum NeuralRenderingAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend NeuralRenderingAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 3D 重建算法类型
 pub(all) enum ReconstructionAlgorithm {
   MultiViewStereo
@@ -27,6 +30,9 @@ pub(all) enum ReconstructionAlgorithm {
   LidarFusion
   Unknown
 } derive(Eq)
+
+///|
+pub extend ReconstructionAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 射线

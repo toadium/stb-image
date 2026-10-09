@@ -16,6 +16,9 @@ pub(all) enum GNNLayerType {
 } derive(Eq)
 
 ///|
+pub extend GNNLayerType with Eq::{not_equal, equal}
+
+///|
 /// 图任务类型
 pub(all) enum GraphTaskType {
   NodeClassification
@@ -28,6 +31,9 @@ pub(all) enum GraphTaskType {
   Recommendation
   Unknown
 } derive(Eq)
+
+///|
+pub extend GraphTaskType with Eq::{not_equal, equal}
 
 ///|
 /// 关系类型
@@ -43,6 +49,9 @@ pub(all) enum RelationType {
   Entails
   Unknown
 } derive(Eq)
+
+///|
+pub extend RelationType with Eq::{not_equal, equal}
 
 ///|
 /// 图节点

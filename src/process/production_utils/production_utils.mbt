@@ -295,6 +295,9 @@ pub(all) enum ProductionErrorCode {
 } derive(Eq)
 
 ///|
+pub extend ProductionErrorCode with Eq::{not_equal, equal}
+
+///|
 /// 生产级错误
 pub(all) struct ProductionError {
   code : ProductionErrorCode

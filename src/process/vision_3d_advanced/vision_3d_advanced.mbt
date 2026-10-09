@@ -15,6 +15,9 @@ pub(all) enum Vision3DTaskType {
 } derive(Eq)
 
 ///|
+pub extend Vision3DTaskType with Eq::{not_equal, equal}
+
+///|
 /// 点云类型
 pub(all) enum PointCloudType {
   Structured
@@ -23,6 +26,9 @@ pub(all) enum PointCloudType {
   Unorganized
   Unknown
 } derive(Eq)
+
+///|
+pub extend PointCloudType with Eq::{not_equal, equal}
 
 ///|
 /// 三维点

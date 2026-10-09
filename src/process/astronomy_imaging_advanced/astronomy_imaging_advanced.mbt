@@ -48,6 +48,9 @@ pub(all) enum AstronomyImagingTaskType {
 } derive(Eq)
 
 ///|
+pub extend AstronomyImagingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 天体类型
 pub(all) enum CelestialObjectType {
   Star
@@ -62,6 +65,9 @@ pub(all) enum CelestialObjectType {
 } derive(Eq)
 
 ///|
+pub extend CelestialObjectType with Eq::{not_equal, equal}
+
+///|
 /// 星系形态类型
 pub(all) enum GalaxyMorphologyType {
   Elliptical
@@ -72,6 +78,9 @@ pub(all) enum GalaxyMorphologyType {
   Dwarf
   Unknown
 } derive(Eq)
+
+///|
+pub extend GalaxyMorphologyType with Eq::{not_equal, equal}
 
 ///|
 /// 光谱类型
@@ -85,6 +94,9 @@ pub(all) enum SpectralType {
   M
   Unknown
 } derive(Eq)
+
+///|
+pub extend SpectralType with Eq::{not_equal, equal}
 
 ///|
 /// 检测到的天体

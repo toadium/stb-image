@@ -30,6 +30,9 @@ pub(all) enum DeploymentEnvironment {
 } derive(Eq)
 
 ///|
+pub extend DeploymentEnvironment with Eq::{not_equal, equal}
+
+///|
 /// CLI 配置
 pub(all) struct CliConfig {
   input_path : String

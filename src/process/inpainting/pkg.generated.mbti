@@ -39,6 +39,8 @@ pub(all) enum DehazeAlgorithm {
   CLAHE
   Unknown
 } derive(Eq)
+pub fn DehazeAlgorithm::equal(Self, Self) -> Bool
+pub fn DehazeAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct DehazeResult {
   image : @types.Image
@@ -55,6 +57,8 @@ pub(all) enum DerainAlgorithm {
   Morphological
   Unknown
 } derive(Eq)
+pub fn DerainAlgorithm::equal(Self, Self) -> Bool
+pub fn DerainAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct DerainResult {
   image : @types.Image
@@ -71,6 +75,8 @@ pub(all) enum InpaintingAlgorithm {
   DeepLearning
   Unknown
 } derive(Eq)
+pub fn InpaintingAlgorithm::equal(Self, Self) -> Bool
+pub fn InpaintingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct InpaintingConfig {
   algorithm : InpaintingAlgorithm

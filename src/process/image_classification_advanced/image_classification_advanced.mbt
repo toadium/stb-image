@@ -16,6 +16,9 @@ pub(all) enum ImageClassificationTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageClassificationTaskType with Eq::{not_equal, equal}
+
+///|
 /// 分类器类型
 pub(all) enum ClassifierType {
   KNN
@@ -35,6 +38,9 @@ pub(all) enum ClassifierType {
 } derive(Eq)
 
 ///|
+pub extend ClassifierType with Eq::{not_equal, equal}
+
+///|
 /// 特征提取方法
 pub(all) enum FeatureExtractionMethod {
   ColorHistogram
@@ -51,6 +57,9 @@ pub(all) enum FeatureExtractionMethod {
 } derive(Eq)
 
 ///|
+pub extend FeatureExtractionMethod with Eq::{not_equal, equal}
+
+///|
 /// 集成方法类型
 pub(all) enum EnsembleMethodType {
   Bagging
@@ -63,6 +72,9 @@ pub(all) enum EnsembleMethodType {
   XGBoost
   Unknown
 } derive(Eq)
+
+///|
+pub extend EnsembleMethodType with Eq::{not_equal, equal}
 
 ///|
 /// 分类结果

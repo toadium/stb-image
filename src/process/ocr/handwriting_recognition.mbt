@@ -12,6 +12,9 @@ pub(all) enum HandwritingStyle {
 } derive(Eq)
 
 ///|
+pub extend HandwritingStyle with Eq::{not_equal, equal}
+
+///|
 /// 笔画类型
 pub(all) enum StrokeType {
   Horizontal // 横
@@ -24,6 +27,9 @@ pub(all) enum StrokeType {
   Rising // 提
   Unknown
 } derive(Eq)
+
+///|
+pub extend StrokeType with Eq::{not_equal, equal}
 
 ///|
 /// 笔画特征

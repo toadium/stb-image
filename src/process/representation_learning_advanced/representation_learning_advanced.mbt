@@ -17,6 +17,9 @@ pub(all) enum RepresentationLearningTaskType {
 } derive(Eq)
 
 ///|
+pub extend RepresentationLearningTaskType with Eq::{not_equal, equal}
+
+///|
 /// 自编码器类型
 pub(all) enum AutoencoderType {
   Undercomplete
@@ -30,6 +33,9 @@ pub(all) enum AutoencoderType {
   Adversarial
   Unknown
 } derive(Eq)
+
+///|
+pub extend AutoencoderType with Eq::{not_equal, equal}
 
 ///|
 /// GAN类型
@@ -48,6 +54,9 @@ pub(all) enum GANType {
 } derive(Eq)
 
 ///|
+pub extend GANType with Eq::{not_equal, equal}
+
+///|
 /// 对比学习方法类型
 pub(all) enum ContrastiveLearningMethodType {
   SimCLR
@@ -64,6 +73,9 @@ pub(all) enum ContrastiveLearningMethodType {
 } derive(Eq)
 
 ///|
+pub extend ContrastiveLearningMethodType with Eq::{not_equal, equal}
+
+///|
 /// 自监督学习任务类型
 pub(all) enum SelfSupervisedTaskType {
   RotationPrediction
@@ -78,6 +90,9 @@ pub(all) enum SelfSupervisedTaskType {
   SeLa
   Unknown
 } derive(Eq)
+
+///|
+pub extend SelfSupervisedTaskType with Eq::{not_equal, equal}
 
 ///|
 /// 表示学习结果

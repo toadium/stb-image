@@ -36,6 +36,8 @@ pub(all) enum DomainAdaptationMethodType {
   FixMatch
   Unknown
 } derive(Eq)
+pub fn DomainAdaptationMethodType::equal(Self, Self) -> Bool
+pub fn DomainAdaptationMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DomainAdaptationResult {
   adapted_weights : Array[Array[Double]]
@@ -67,6 +69,8 @@ pub(all) enum FewShotLearningMethodType {
   BaselinePlus
   Unknown
 } derive(Eq)
+pub fn FewShotLearningMethodType::equal(Self, Self) -> Bool
+pub fn FewShotLearningMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FewShotLearningResult {
   learned_representations : Array[Array[Double]]
@@ -118,6 +122,8 @@ pub(all) enum FineTuningStrategyType {
   PrefixTuning
   Unknown
 } derive(Eq)
+pub fn FineTuningStrategyType::equal(Self, Self) -> Bool
+pub fn FineTuningStrategyType::not_equal(Self, Self) -> Bool
 
 pub(all) struct KnowledgeDistillationResult {
   student_weights : Array[Array[Double]]
@@ -147,6 +153,8 @@ pub(all) enum MultiTaskLearningMethodType {
   MultiGateMixtureOfExperts
   Unknown
 } derive(Eq)
+pub fn MultiTaskLearningMethodType::equal(Self, Self) -> Bool
+pub fn MultiTaskLearningMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultiTaskLearningResult {
   shared_weights : Array[Array[Double]]
@@ -177,6 +185,8 @@ pub(all) enum PretrainedModelType {
   AlexNet
   Unknown
 } derive(Eq)
+pub fn PretrainedModelType::equal(Self, Self) -> Bool
+pub fn PretrainedModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PretrainingResult {
   pretrained_weights : Array[Array[Double]]
@@ -249,6 +259,8 @@ pub(all) enum TransferLearningTaskType {
   KnowledgeDistillation
   Unknown
 } derive(Eq)
+pub fn TransferLearningTaskType::equal(Self, Self) -> Bool
+pub fn TransferLearningTaskType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

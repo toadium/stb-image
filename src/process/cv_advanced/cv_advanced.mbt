@@ -15,6 +15,9 @@ pub(all) enum CVAdvancedTaskType {
 } derive(Eq)
 
 ///|
+pub extend CVAdvancedTaskType with Eq::{not_equal, equal}
+
+///|
 /// 目标跟踪算法类型
 pub(all) enum TrackingAlgorithm {
   KCF
@@ -29,6 +32,9 @@ pub(all) enum TrackingAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend TrackingAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 动作识别算法类型
 pub(all) enum ActionRecognitionAlgorithm {
   C3D
@@ -40,6 +46,9 @@ pub(all) enum ActionRecognitionAlgorithm {
   X3D
   Unknown
 } derive(Eq)
+
+///|
+pub extend ActionRecognitionAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 跟踪目标

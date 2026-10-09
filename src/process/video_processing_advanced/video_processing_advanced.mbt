@@ -15,6 +15,9 @@ pub(all) enum VideoProcessingTaskType {
 } derive(Eq)
 
 ///|
+pub extend VideoProcessingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 视频编码类型
 pub(all) enum VideoCodecType {
   H264
@@ -28,6 +31,9 @@ pub(all) enum VideoCodecType {
 } derive(Eq)
 
 ///|
+pub extend VideoCodecType with Eq::{not_equal, equal}
+
+///|
 /// 视频帧类型
 pub(all) enum VideoFrameType {
   IFrame
@@ -35,6 +41,9 @@ pub(all) enum VideoFrameType {
   BFrame
   Unknown
 } derive(Eq)
+
+///|
+pub extend VideoFrameType with Eq::{not_equal, equal}
 
 ///|
 /// 视频帧

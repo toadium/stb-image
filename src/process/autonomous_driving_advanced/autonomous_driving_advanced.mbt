@@ -15,6 +15,9 @@ pub(all) enum AutonomousDrivingTaskType {
 } derive(Eq)
 
 ///|
+pub extend AutonomousDrivingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 传感器类型
 pub(all) enum SensorType {
   Camera
@@ -26,6 +29,9 @@ pub(all) enum SensorType {
   Odometry
   Unknown
 } derive(Eq)
+
+///|
+pub extend SensorType with Eq::{not_equal, equal}
 
 ///|
 /// 目标类型
@@ -44,6 +50,9 @@ pub(all) enum ADObjectType {
 } derive(Eq)
 
 ///|
+pub extend ADObjectType with Eq::{not_equal, equal}
+
+///|
 /// 驾驶行为类型
 pub(all) enum DrivingBehaviorType {
   LaneKeep
@@ -58,6 +67,9 @@ pub(all) enum DrivingBehaviorType {
   Yield
   Unknown
 } derive(Eq)
+
+///|
+pub extend DrivingBehaviorType with Eq::{not_equal, equal}
 
 ///|
 /// 传感器数据

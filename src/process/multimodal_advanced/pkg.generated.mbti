@@ -49,6 +49,8 @@ pub(all) enum FusionStrategy {
   GatedFusion
   Unknown
 } derive(Eq)
+pub fn FusionStrategy::equal(Self, Self) -> Bool
+pub fn FusionStrategy::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageTextGenerationResult {
   image_id : String
@@ -70,6 +72,8 @@ pub(all) enum ModalityType {
   PointCloud
   Unknown
 } derive(Eq)
+pub fn ModalityType::equal(Self, Self) -> Bool
+pub fn ModalityType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultimodalConfig {
   task_type : MultimodalTaskType
@@ -117,6 +121,8 @@ pub(all) enum MultimodalTaskType {
   MultimodalTranslation
   Unknown
 } derive(Eq)
+pub fn MultimodalTaskType::equal(Self, Self) -> Bool
+pub fn MultimodalTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct VideoUnderstandingResult {
   video_id : String

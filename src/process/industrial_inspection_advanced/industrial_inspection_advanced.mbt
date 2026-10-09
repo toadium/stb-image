@@ -15,6 +15,9 @@ pub(all) enum IndustrialInspectionTaskType {
 } derive(Eq)
 
 ///|
+pub extend IndustrialInspectionTaskType with Eq::{not_equal, equal}
+
+///|
 /// 缺陷类型
 pub(all) enum DefectType {
   Scratch
@@ -31,6 +34,9 @@ pub(all) enum DefectType {
 } derive(Eq)
 
 ///|
+pub extend DefectType with Eq::{not_equal, equal}
+
+///|
 /// 表面质量等级
 pub(all) enum SurfaceQualityGrade {
   Excellent
@@ -40,6 +46,9 @@ pub(all) enum SurfaceQualityGrade {
   Reject
   Unknown
 } derive(Eq)
+
+///|
+pub extend SurfaceQualityGrade with Eq::{not_equal, equal}
 
 ///|
 /// 检测到的缺陷

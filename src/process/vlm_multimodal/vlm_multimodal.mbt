@@ -17,6 +17,9 @@ pub(all) enum VisionLanguageModelType {
 } derive(Eq)
 
 ///|
+pub extend VisionLanguageModelType with Eq::{not_equal, equal}
+
+///|
 /// 多模态融合策略
 pub(all) enum MultimodalFusionStrategy {
   EarlyFusion
@@ -27,6 +30,9 @@ pub(all) enum MultimodalFusionStrategy {
   GatedFusion
   Unknown
 } derive(Eq)
+
+///|
+pub extend MultimodalFusionStrategy with Eq::{not_equal, equal}
 
 ///|
 /// 扩散模型类型
@@ -43,6 +49,9 @@ pub(all) enum DiffusionModelType {
 } derive(Eq)
 
 ///|
+pub extend DiffusionModelType with Eq::{not_equal, equal}
+
+///|
 /// 生成式AI任务类型
 pub(all) enum GenerativeAITaskType {
   TextToImage
@@ -55,6 +64,9 @@ pub(all) enum GenerativeAITaskType {
   SuperResolution
   Unknown
 } derive(Eq)
+
+///|
+pub extend GenerativeAITaskType with Eq::{not_equal, equal}
 
 ///|
 /// 视觉语言模型配置

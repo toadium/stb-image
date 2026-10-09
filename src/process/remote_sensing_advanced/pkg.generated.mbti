@@ -43,6 +43,8 @@ pub(all) enum ChangeType {
   NoChange
   Unknown
 } derive(Eq)
+pub fn ChangeType::equal(Self, Self) -> Bool
+pub fn ChangeType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DetectedRemoteSensingObject {
   object_id : Int
@@ -80,6 +82,8 @@ pub(all) enum LandCoverType {
   Shadow
   Unknown
 } derive(Eq)
+pub fn LandCoverType::equal(Self, Self) -> Bool
+pub fn LandCoverType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RemoteSensingConfig {
   task_type : RemoteSensingTaskType
@@ -124,6 +128,8 @@ pub(all) enum RemoteSensingImageType {
   DEM
   Unknown
 } derive(Eq)
+pub fn RemoteSensingImageType::equal(Self, Self) -> Bool
+pub fn RemoteSensingImageType::not_equal(Self, Self) -> Bool
 
 pub(all) enum RemoteSensingObjectType {
   Building
@@ -138,6 +144,8 @@ pub(all) enum RemoteSensingObjectType {
   Stadium
   Unknown
 } derive(Eq)
+pub fn RemoteSensingObjectType::equal(Self, Self) -> Bool
+pub fn RemoteSensingObjectType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RemoteSensingSuperResolutionResult {
   sr_image : Array[Double]
@@ -162,6 +170,8 @@ pub(all) enum RemoteSensingTaskType {
   SceneClassification
   Unknown
 } derive(Eq)
+pub fn RemoteSensingTaskType::equal(Self, Self) -> Bool
+pub fn RemoteSensingTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TimeSeriesAnalysisResult {
   num_timestamps : Int

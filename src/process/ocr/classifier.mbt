@@ -41,6 +41,9 @@ pub(all) enum DistanceMetric {
 } derive(Eq)
 
 ///|
+pub extend DistanceMetric with Eq::{not_equal, equal}
+
+///|
 /// 计算欧氏距离
 pub fn euclidean_distance(
   a : Array[Double],

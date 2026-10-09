@@ -15,6 +15,9 @@ pub(all) enum MedicalImagingTaskType {
 } derive(Eq)
 
 ///|
+pub extend MedicalImagingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 医学图像类型
 pub(all) enum MedicalImageType {
   XRay
@@ -28,6 +31,9 @@ pub(all) enum MedicalImageType {
   Histopathology
   Unknown
 } derive(Eq)
+
+///|
+pub extend MedicalImageType with Eq::{not_equal, equal}
 
 ///|
 /// 器官类型
@@ -47,6 +53,9 @@ pub(all) enum OrganType {
 } derive(Eq)
 
 ///|
+pub extend OrganType with Eq::{not_equal, equal}
+
+///|
 /// 病灶类型
 pub(all) enum LesionType {
   Tumor
@@ -60,6 +69,9 @@ pub(all) enum LesionType {
   Aneurysm
   Unknown
 } derive(Eq)
+
+///|
+pub extend LesionType with Eq::{not_equal, equal}
 
 ///|
 /// 分割结果

@@ -12,6 +12,9 @@ pub(all) enum LayoutType {
 } derive(Eq)
 
 ///|
+pub extend LayoutType with Eq::{not_equal, equal}
+
+///|
 /// 页面区域类型
 pub(all) enum PageRegionType {
   Header
@@ -21,6 +24,9 @@ pub(all) enum PageRegionType {
   Gutter
   PageNumber
 } derive(Eq)
+
+///|
+pub extend PageRegionType with Eq::{not_equal, equal}
 
 ///|
 /// 页面区域
@@ -59,6 +65,9 @@ pub(all) enum ListItemType {
   Checkbox
   None
 } derive(Eq)
+
+///|
+pub extend ListItemType with Eq::{not_equal, equal}
 
 ///|
 /// 列表项

@@ -33,6 +33,8 @@ pub(all) enum ActionRecognitionAlgorithm {
   X3D
   Unknown
 } derive(Eq)
+pub fn ActionRecognitionAlgorithm::equal(Self, Self) -> Bool
+pub fn ActionRecognitionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct ActionRecognitionResult {
   video_id : String
@@ -70,6 +72,8 @@ pub(all) enum CVAdvancedTaskType {
   VideoUnderstanding
   Unknown
 } derive(Eq)
+pub fn CVAdvancedTaskType::equal(Self, Self) -> Bool
+pub fn CVAdvancedTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageCaptioningResult {
   image_id : String
@@ -116,6 +120,8 @@ pub(all) enum TrackingAlgorithm {
   SiamMask
   Unknown
 } derive(Eq)
+pub fn TrackingAlgorithm::equal(Self, Self) -> Bool
+pub fn TrackingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct VQAResult {
   image_id : String

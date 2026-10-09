@@ -17,6 +17,9 @@ pub(all) enum ImageRestorationTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageRestorationTaskType with Eq::{not_equal, equal}
+
+///|
 /// 去噪方法
 pub(all) enum DenoisingMethod {
   BM3D
@@ -28,6 +31,9 @@ pub(all) enum DenoisingMethod {
   RIDNet
   Unknown
 } derive(Eq)
+
+///|
+pub extend DenoisingMethod with Eq::{not_equal, equal}
 
 ///|
 /// 去模糊方法
@@ -42,6 +48,9 @@ pub(all) enum DeblurringMethod {
 } derive(Eq)
 
 ///|
+pub extend DeblurringMethod with Eq::{not_equal, equal}
+
+///|
 /// 噪声类型
 pub(all) enum NoiseType {
   Gaussian
@@ -53,6 +62,9 @@ pub(all) enum NoiseType {
 } derive(Eq)
 
 ///|
+pub extend NoiseType with Eq::{not_equal, equal}
+
+///|
 /// 模糊类型
 pub(all) enum BlurType {
   Gaussian
@@ -61,6 +73,9 @@ pub(all) enum BlurType {
   Box
   Unknown
 } derive(Eq)
+
+///|
+pub extend BlurType with Eq::{not_equal, equal}
 
 ///|
 /// 去噪结果

@@ -18,6 +18,9 @@ pub(all) enum ImageGenerationAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend ImageGenerationAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 图像编辑算法类型
 pub(all) enum ImageEditingAlgorithm {
   Inpainting
@@ -31,6 +34,9 @@ pub(all) enum ImageEditingAlgorithm {
   ImageComposition
   Unknown
 } derive(Eq)
+
+///|
+pub extend ImageEditingAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 生成结果

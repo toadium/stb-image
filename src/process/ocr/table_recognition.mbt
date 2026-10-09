@@ -20,6 +20,9 @@ pub(all) enum TableLineType {
 } derive(Eq)
 
 ///|
+pub extend TableLineType with Eq::{not_equal, equal}
+
+///|
 /// 单元格结构体
 pub(all) struct TableCell {
   x : Int

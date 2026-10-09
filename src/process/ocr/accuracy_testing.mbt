@@ -57,6 +57,9 @@ pub(all) enum OcrErrorType {
 } derive(Eq)
 
 ///|
+pub extend OcrErrorType with Eq::{not_equal, equal}
+
+///|
 /// 错误分析条目
 pub(all) struct ErrorAnalysisEntry {
   error_type : OcrErrorType

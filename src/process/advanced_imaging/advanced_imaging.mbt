@@ -19,6 +19,9 @@ pub(all) enum ImagingModality {
 } derive(Eq)
 
 ///|
+pub extend ImagingModality with Eq::{not_equal, equal}
+
+///|
 /// 量子成像算法类型
 pub(all) enum QuantumImagingAlgorithm {
   GhostImaging
@@ -30,6 +33,9 @@ pub(all) enum QuantumImagingAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend QuantumImagingAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 红外成像类型
 pub(all) enum InfraredImagingType {
   MWIR
@@ -39,6 +45,9 @@ pub(all) enum InfraredImagingType {
   ThermalIR
   Unknown
 } derive(Eq)
+
+///|
+pub extend InfraredImagingType with Eq::{not_equal, equal}
 
 ///|
 /// 高光谱数据

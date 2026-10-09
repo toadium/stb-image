@@ -74,6 +74,8 @@ pub(all) enum ColorSpaceType {
   XYZ
   Unknown
 } derive(Eq)
+pub fn ColorSpaceType::equal(Self, Self) -> Bool
+pub fn ColorSpaceType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ColorTransferResult {
   transferred_image : Array[Double]
@@ -100,6 +102,8 @@ pub(all) enum ColorizationModelType {
   ColorfulImageColorization
   Unknown
 } derive(Eq)
+pub fn ColorizationModelType::equal(Self, Self) -> Bool
+pub fn ColorizationModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ColorizationResult {
   colorized_image : Array[Double]
@@ -131,6 +135,8 @@ pub(all) enum ColorizationTaskType {
   ColorCorrection
   Unknown
 } derive(Eq)
+pub fn ColorizationTaskType::equal(Self, Self) -> Bool
+pub fn ColorizationTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageColorizationConfig {
   task_type : ColorizationTaskType

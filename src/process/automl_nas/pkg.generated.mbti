@@ -58,6 +58,8 @@ pub(all) enum HyperparameterOptimizationAlgorithm {
   PopulationBasedTraining
   Unknown
 } derive(Eq)
+pub fn HyperparameterOptimizationAlgorithm::equal(Self, Self) -> Bool
+pub fn HyperparameterOptimizationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) enum LayerType {
   Convolution
@@ -71,6 +73,8 @@ pub(all) enum LayerType {
   Transformer
   Unknown
 } derive(Eq)
+pub fn LayerType::equal(Self, Self) -> Bool
+pub fn LayerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ModelEvaluationMetrics {
   accuracy : Double
@@ -97,6 +101,8 @@ pub(all) enum NASAlgorithm {
   OneShot
   Unknown
 } derive(Eq)
+pub fn NASAlgorithm::equal(Self, Self) -> Bool
+pub fn NASAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct NASConfig {
   algorithm : NASAlgorithm
@@ -143,6 +149,8 @@ pub(all) enum SearchSpaceType {
   Joint
   Unknown
 } derive(Eq)
+pub fn SearchSpaceType::equal(Self, Self) -> Bool
+pub fn SearchSpaceType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

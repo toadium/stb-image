@@ -47,6 +47,8 @@ pub(all) enum ClassifierType {
   VisionTransformer
   Unknown
 } derive(Eq)
+pub fn ClassifierType::equal(Self, Self) -> Bool
+pub fn ClassifierType::not_equal(Self, Self) -> Bool
 
 pub(all) struct EnsembleClassificationResult {
   final_prediction : Int
@@ -71,6 +73,8 @@ pub(all) enum EnsembleMethodType {
   XGBoost
   Unknown
 } derive(Eq)
+pub fn EnsembleMethodType::equal(Self, Self) -> Bool
+pub fn EnsembleMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) enum FeatureExtractionMethod {
   ColorHistogram
@@ -85,6 +89,8 @@ pub(all) enum FeatureExtractionMethod {
   TransferLearning
   Unknown
 } derive(Eq)
+pub fn FeatureExtractionMethod::equal(Self, Self) -> Bool
+pub fn FeatureExtractionMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct FineGrainedClassificationResult {
   predicted_subclass : Int
@@ -132,6 +138,8 @@ pub(all) enum ImageClassificationTaskType {
   OpenSetClassification
   Unknown
 } derive(Eq)
+pub fn ImageClassificationTaskType::equal(Self, Self) -> Bool
+pub fn ImageClassificationTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultiLabelClassificationResult {
   predicted_labels : Array[Int]

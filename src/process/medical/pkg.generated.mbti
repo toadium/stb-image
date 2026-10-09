@@ -98,6 +98,8 @@ pub(all) enum MedicalImageType {
   Fluoroscopy
   Unknown
 } derive(Eq)
+pub fn MedicalImageType::equal(Self, Self) -> Bool
+pub fn MedicalImageType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MedicalRegistrationResult {
   transformation : Array[Double]

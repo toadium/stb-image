@@ -75,6 +75,8 @@ pub(all) enum MetaLearningAlgorithmType {
   R2D2
   Unknown
 } derive(Eq)
+pub fn MetaLearningAlgorithmType::equal(Self, Self) -> Bool
+pub fn MetaLearningAlgorithmType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MetaLearningConfig {
   task_type : MetaLearningTaskType
@@ -130,6 +132,8 @@ pub(all) enum MetaLearningTaskType {
   MetaFeatureSelection
   Unknown
 } derive(Eq)
+pub fn MetaLearningTaskType::equal(Self, Self) -> Bool
+pub fn MetaLearningTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) enum MetaOptimizerType {
   SGD
@@ -140,6 +144,8 @@ pub(all) enum MetaOptimizerType {
   LearnedOptimizer
   Unknown
 } derive(Eq)
+pub fn MetaOptimizerType::equal(Self, Self) -> Bool
+pub fn MetaOptimizerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ProtoNetResult {
   prototypes : Array[Array[Double]]
@@ -197,6 +203,8 @@ pub(all) enum TaskDistributionType {
   Weighted
   Unknown
 } derive(Eq)
+pub fn TaskDistributionType::equal(Self, Self) -> Bool
+pub fn TaskDistributionType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

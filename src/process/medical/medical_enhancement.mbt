@@ -16,6 +16,9 @@ pub(all) enum MedicalImageType {
 } derive(Eq)
 
 ///|
+pub extend MedicalImageType with Eq::{not_equal, equal}
+
+///|
 /// 医学图像
 pub(all) struct MedicalImage {
   width : Int

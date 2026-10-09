@@ -13,6 +13,9 @@ pub(all) enum InpaintingAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend InpaintingAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 修复结果
 pub(all) struct InpaintingResult {
   image : @types.Image
@@ -46,6 +49,9 @@ pub(all) enum DehazeAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend DehazeAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 去雾结果
 pub(all) struct DehazeResult {
   image : @types.Image
@@ -64,6 +70,9 @@ pub(all) enum DerainAlgorithm {
   Morphological
   Unknown
 } derive(Eq)
+
+///|
+pub extend DerainAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 去雨结果

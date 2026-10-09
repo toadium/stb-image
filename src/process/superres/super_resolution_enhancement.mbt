@@ -15,6 +15,9 @@ pub(all) enum SuperResolutionAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend SuperResolutionAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 超分辨率结果
 pub(all) struct SuperResolutionResult {
   image : @types.Image

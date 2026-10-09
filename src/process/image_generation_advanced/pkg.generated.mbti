@@ -44,6 +44,8 @@ pub(all) enum DiffusionModelType {
   ControlNet
   Unknown
 } derive(Eq)
+pub fn DiffusionModelType::equal(Self, Self) -> Bool
+pub fn DiffusionModelType::not_equal(Self, Self) -> Bool
 
 pub(all) enum GANType {
   VanillaGAN
@@ -56,6 +58,8 @@ pub(all) enum GANType {
   Pix2Pix
   Unknown
 } derive(Eq)
+pub fn GANType::equal(Self, Self) -> Bool
+pub fn GANType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GeneratedImage {
   image_data : Array[Double]
@@ -81,6 +85,8 @@ pub(all) enum GenerativeModelType {
   EnergyBased
   Unknown
 } derive(Eq)
+pub fn GenerativeModelType::equal(Self, Self) -> Bool
+pub fn GenerativeModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageGenerationConfig {
   task_type : ImageGenerationTaskType
@@ -117,6 +123,8 @@ pub(all) enum ImageGenerationTaskType {
   Colorization
   Unknown
 } derive(Eq)
+pub fn ImageGenerationTaskType::equal(Self, Self) -> Bool
+pub fn ImageGenerationTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageToImageResult {
   images : Array[GeneratedImage]
@@ -187,6 +195,8 @@ pub(all) enum VAEType {
   GumbelVAE
   Unknown
 } derive(Eq)
+pub fn VAEType::equal(Self, Self) -> Bool
+pub fn VAEType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

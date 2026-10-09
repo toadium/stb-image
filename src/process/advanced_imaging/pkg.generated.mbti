@@ -64,6 +64,8 @@ pub(all) enum ImagingModality {
   CT
   Unknown
 } derive(Eq)
+pub fn ImagingModality::equal(Self, Self) -> Bool
+pub fn ImagingModality::not_equal(Self, Self) -> Bool
 
 pub(all) enum InfraredImagingType {
   MWIR
@@ -73,6 +75,8 @@ pub(all) enum InfraredImagingType {
   ThermalIR
   Unknown
 } derive(Eq)
+pub fn InfraredImagingType::equal(Self, Self) -> Bool
+pub fn InfraredImagingType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MRIData {
   t1_weighted : @types.Image
@@ -109,6 +113,8 @@ pub(all) enum QuantumImagingAlgorithm {
   CompressiveSensing
   Unknown
 } derive(Eq)
+pub fn QuantumImagingAlgorithm::equal(Self, Self) -> Bool
+pub fn QuantumImagingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct ThermalData {
   temperature_map : @types.Image

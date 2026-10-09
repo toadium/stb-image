@@ -20,6 +20,9 @@ pub(all) enum FeatureType {
 } derive(Eq)
 
 ///|
+pub extend FeatureType with Eq::{not_equal, equal}
+
+///|
 /// 图像特征
 pub(all) struct CBIRImageFeature {
   feature_type : FeatureType
@@ -78,6 +81,9 @@ pub(all) enum SimilarityMetric {
   JensenShannon
   Unknown
 } derive(Eq)
+
+///|
+pub extend SimilarityMetric with Eq::{not_equal, equal}
 
 ///|
 /// 颜色直方图配置

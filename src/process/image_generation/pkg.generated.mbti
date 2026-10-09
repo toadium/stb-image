@@ -98,6 +98,8 @@ pub(all) enum ImageEditingAlgorithm {
   ImageComposition
   Unknown
 } derive(Eq)
+pub fn ImageEditingAlgorithm::equal(Self, Self) -> Bool
+pub fn ImageEditingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) enum ImageGenerationAlgorithm {
   GAN
@@ -112,6 +114,8 @@ pub(all) enum ImageGenerationAlgorithm {
   VAE
   Unknown
 } derive(Eq)
+pub fn ImageGenerationAlgorithm::equal(Self, Self) -> Bool
+pub fn ImageGenerationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct LatentVector {
   vector : Array[Double]

@@ -80,6 +80,8 @@ pub(all) enum SLAMAlgorithm {
   ElasticFusion
   Unknown
 } derive(Eq)
+pub fn SLAMAlgorithm::equal(Self, Self) -> Bool
+pub fn SLAMAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct SLAMConfig {
   algorithm : SLAMAlgorithm

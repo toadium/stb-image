@@ -15,6 +15,9 @@ pub(all) enum ImageGenerationTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageGenerationTaskType with Eq::{not_equal, equal}
+
+///|
 /// 生成模型类型
 pub(all) enum GenerativeModelType {
   Diffusion
@@ -27,6 +30,9 @@ pub(all) enum GenerativeModelType {
 } derive(Eq)
 
 ///|
+pub extend GenerativeModelType with Eq::{not_equal, equal}
+
+///|
 /// 扩散模型类型
 pub(all) enum DiffusionModelType {
   DDPM
@@ -37,6 +43,9 @@ pub(all) enum DiffusionModelType {
   ControlNet
   Unknown
 } derive(Eq)
+
+///|
+pub extend DiffusionModelType with Eq::{not_equal, equal}
 
 ///|
 /// GAN类型
@@ -53,6 +62,9 @@ pub(all) enum GANType {
 } derive(Eq)
 
 ///|
+pub extend GANType with Eq::{not_equal, equal}
+
+///|
 /// VAE类型
 pub(all) enum VAEType {
   VanillaVAE
@@ -63,6 +75,9 @@ pub(all) enum VAEType {
   GumbelVAE
   Unknown
 } derive(Eq)
+
+///|
+pub extend VAEType with Eq::{not_equal, equal}
 
 ///|
 /// 生成的图像

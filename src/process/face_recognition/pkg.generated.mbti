@@ -60,6 +60,8 @@ pub(all) enum ExpressionType {
   Contempt
   Unknown
 } derive(Eq)
+pub fn ExpressionType::equal(Self, Self) -> Bool
+pub fn ExpressionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FaceAttributeAnalysis {
   detection : FaceDetectionResult
@@ -90,6 +92,8 @@ pub(all) enum FaceDetectionAlgorithm {
   FaceBoxes
   Unknown
 } derive(Eq)
+pub fn FaceDetectionAlgorithm::equal(Self, Self) -> Bool
+pub fn FaceDetectionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct FaceDetectionResult {
   bounding_box : Array[Double]
@@ -120,6 +124,8 @@ pub(all) enum FaceRecognitionAlgorithm {
   InsightFace
   Unknown
 } derive(Eq)
+pub fn FaceRecognitionAlgorithm::equal(Self, Self) -> Bool
+pub fn FaceRecognitionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct FaceRecognitionConfig {
   detection_algorithm : FaceDetectionAlgorithm

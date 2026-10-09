@@ -15,6 +15,9 @@ pub(all) enum FaceDetectionAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend FaceDetectionAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 人脸识别算法类型
 pub(all) enum FaceRecognitionAlgorithm {
   FaceNet
@@ -26,6 +29,9 @@ pub(all) enum FaceRecognitionAlgorithm {
   InsightFace
   Unknown
 } derive(Eq)
+
+///|
+pub extend FaceRecognitionAlgorithm with Eq::{not_equal, equal}
 
 ///|
 /// 表情类型
@@ -40,6 +46,9 @@ pub(all) enum ExpressionType {
   Contempt
   Unknown
 } derive(Eq)
+
+///|
+pub extend ExpressionType with Eq::{not_equal, equal}
 
 ///|
 /// 人脸检测结果

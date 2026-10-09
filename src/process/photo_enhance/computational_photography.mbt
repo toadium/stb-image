@@ -11,6 +11,9 @@ pub(all) enum ExposureType {
 } derive(Eq)
 
 ///|
+pub extend ExposureType with Eq::{not_equal, equal}
+
+///|
 /// HDR 图像
 pub(all) struct HdrImage {
   width : Int
@@ -30,6 +33,9 @@ pub(all) enum ToneMappingType {
   Linear
   Gamma
 } derive(Eq)
+
+///|
+pub extend ToneMappingType with Eq::{not_equal, equal}
 
 ///|
 /// 色调映射配置

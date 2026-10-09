@@ -13,6 +13,9 @@ pub(all) enum ContinualLearningStrategy {
 } derive(Eq)
 
 ///|
+pub extend ContinualLearningStrategy with Eq::{not_equal, equal}
+
+///|
 /// 正则化方法类型
 pub(all) enum RegularizationMethod {
   EWC
@@ -27,6 +30,9 @@ pub(all) enum RegularizationMethod {
 } derive(Eq)
 
 ///|
+pub extend RegularizationMethod with Eq::{not_equal, equal}
+
+///|
 /// 回放方法类型
 pub(all) enum ReplayMethod {
   ExperienceReplay
@@ -38,6 +44,9 @@ pub(all) enum ReplayMethod {
 } derive(Eq)
 
 ///|
+pub extend ReplayMethod with Eq::{not_equal, equal}
+
+///|
 /// 增量学习场景类型
 pub(all) enum IncrementalLearningScenario {
   TaskIncremental
@@ -47,6 +56,9 @@ pub(all) enum IncrementalLearningScenario {
   DataIncremental
   Unknown
 } derive(Eq)
+
+///|
+pub extend IncrementalLearningScenario with Eq::{not_equal, equal}
 
 ///|
 /// 学习任务

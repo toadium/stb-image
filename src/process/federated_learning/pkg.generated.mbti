@@ -37,6 +37,8 @@ pub(all) enum DPMechanism {
   TruncatedLaplace
   Unknown
 } derive(Eq)
+pub fn DPMechanism::equal(Self, Self) -> Bool
+pub fn DPMechanism::not_equal(Self, Self) -> Bool
 
 pub(all) struct DifferentialPrivacyConfig {
   epsilon : Double
@@ -80,6 +82,8 @@ pub(all) enum FederatedLearningAlgorithm {
   QFedAvg
   Unknown
 } derive(Eq)
+pub fn FederatedLearningAlgorithm::equal(Self, Self) -> Bool
+pub fn FederatedLearningAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct FederatedLearningConfig {
   algorithm : FederatedLearningAlgorithm
@@ -132,6 +136,8 @@ pub(all) enum HomomorphicEncryptionType {
   TFHE
   Unknown
 } derive(Eq)
+pub fn HomomorphicEncryptionType::equal(Self, Self) -> Bool
+pub fn HomomorphicEncryptionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PrivacyProtectionResult {
   technology : PrivacyTechnology
@@ -155,6 +161,8 @@ pub(all) enum PrivacyTechnology {
   Anonymization
   Unknown
 } derive(Eq)
+pub fn PrivacyTechnology::equal(Self, Self) -> Bool
+pub fn PrivacyTechnology::not_equal(Self, Self) -> Bool
 
 pub(all) struct SecureMPCConfig {
   num_parties : Int

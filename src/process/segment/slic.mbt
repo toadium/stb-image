@@ -10,6 +10,12 @@ pub(all) struct SuperpixelResult {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend SuperpixelResult with @debug.Debug::{to_repr}
+
+///|
+pub extend SuperpixelResult with Eq::{not_equal, equal}
+
+///|
 fn sqrt_d(x : Double) -> Double {
   if x <= 0.0 {
     return 0.0

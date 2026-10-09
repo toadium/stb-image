@@ -34,6 +34,8 @@ pub(all) enum FeatureDescriptorType {
   DeepFeature
   Unknown
 } derive(Eq)
+pub fn FeatureDescriptorType::equal(Self, Self) -> Bool
+pub fn FeatureDescriptorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureExtractionResult {
   features : Array[Double]
@@ -77,6 +79,8 @@ pub(all) enum ImageRetrievalTaskType {
   ImageClassification
   Unknown
 } derive(Eq)
+pub fn ImageRetrievalTaskType::equal(Self, Self) -> Bool
+pub fn ImageRetrievalTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct IndexConstructionResult {
   index_type : IndexStructureType
@@ -103,6 +107,8 @@ pub(all) enum IndexStructureType {
   InvertedIndex
   Unknown
 } derive(Eq)
+pub fn IndexStructureType::equal(Self, Self) -> Bool
+pub fn IndexStructureType::not_equal(Self, Self) -> Bool
 
 pub(all) struct QueryExpansionResult {
   expanded_query : Array[Double]
@@ -156,6 +162,8 @@ pub(all) enum SimilarityMetricType {
   EarthMoverDistance
   Unknown
 } derive(Eq)
+pub fn SimilarityMetricType::equal(Self, Self) -> Bool
+pub fn SimilarityMetricType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SimilarityResult {
   similarity_scores : Array[Double]

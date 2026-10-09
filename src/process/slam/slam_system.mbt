@@ -16,6 +16,9 @@ pub(all) enum SLAMAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend SLAMAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 相机位姿
 pub(all) struct CameraPose {
   position : Array[Double]

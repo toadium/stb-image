@@ -16,6 +16,9 @@ pub(all) enum ImageClusteringTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageClusteringTaskType with Eq::{not_equal, equal}
+
+///|
 /// 聚类算法类型
 pub(all) enum ClusteringAlgorithmType {
   KMeans
@@ -34,6 +37,9 @@ pub(all) enum ClusteringAlgorithmType {
 } derive(Eq)
 
 ///|
+pub extend ClusteringAlgorithmType with Eq::{not_equal, equal}
+
+///|
 /// 距离度量类型
 pub(all) enum DistanceMetricType {
   Euclidean
@@ -50,6 +56,9 @@ pub(all) enum DistanceMetricType {
 } derive(Eq)
 
 ///|
+pub extend DistanceMetricType with Eq::{not_equal, equal}
+
+///|
 /// 层次聚类链接类型
 pub(all) enum LinkageType {
   Single
@@ -60,6 +69,9 @@ pub(all) enum LinkageType {
   Median
   Unknown
 } derive(Eq)
+
+///|
+pub extend LinkageType with Eq::{not_equal, equal}
 
 ///|
 /// 聚类结果

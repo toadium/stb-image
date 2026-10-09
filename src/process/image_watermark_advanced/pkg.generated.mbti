@@ -59,6 +59,8 @@ pub(all) enum ImageWatermarkTaskType {
   WatermarkDetection
   Unknown
 } derive(Eq)
+pub fn ImageWatermarkTaskType::equal(Self, Self) -> Bool
+pub fn ImageWatermarkTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct VisibleWatermarkConfig {
   watermark_text : String
@@ -108,6 +110,8 @@ pub(all) enum WatermarkAttackType {
   CollusionAttack
   Unknown
 } derive(Eq)
+pub fn WatermarkAttackType::equal(Self, Self) -> Bool
+pub fn WatermarkAttackType::not_equal(Self, Self) -> Bool
 
 pub(all) struct WatermarkDetectionResult {
   detected_watermark : Array[Byte]
@@ -132,6 +136,8 @@ pub(all) enum WatermarkDomain {
   ContourletDomain
   Unknown
 } derive(Eq)
+pub fn WatermarkDomain::equal(Self, Self) -> Bool
+pub fn WatermarkDomain::not_equal(Self, Self) -> Bool
 
 pub(all) struct WatermarkEmbeddingResult {
   watermarked_image : Array[Double]
@@ -176,6 +182,8 @@ pub(all) enum WatermarkType {
   EncryptedWatermark
   Unknown
 } derive(Eq)
+pub fn WatermarkType::equal(Self, Self) -> Bool
+pub fn WatermarkType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

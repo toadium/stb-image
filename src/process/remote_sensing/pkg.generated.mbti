@@ -85,6 +85,8 @@ pub(all) enum LandCoverClass {
   Shadow
   Unknown
 } derive(Eq)
+pub fn LandCoverClass::equal(Self, Self) -> Bool
+pub fn LandCoverClass::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultispectralImage {
   width : Int
@@ -114,6 +116,8 @@ pub(all) enum RemoteSensingImageType {
   LiDAR
   Unknown
 } derive(Eq)
+pub fn RemoteSensingImageType::equal(Self, Self) -> Bool
+pub fn RemoteSensingImageType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RemoteSensingQuality {
   snr : Double

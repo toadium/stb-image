@@ -14,6 +14,9 @@ pub(all) enum RemoteSensingImageType {
 } derive(Eq)
 
 ///|
+pub extend RemoteSensingImageType with Eq::{not_equal, equal}
+
+///|
 /// 遥感图像
 pub(all) struct RemoteSensingImage {
   width : Int
@@ -42,6 +45,9 @@ pub(all) enum LandCoverClass {
   Shadow
   Unknown
 } derive(Eq)
+
+///|
+pub extend LandCoverClass with Eq::{not_equal, equal}
 
 ///|
 /// 分类结果

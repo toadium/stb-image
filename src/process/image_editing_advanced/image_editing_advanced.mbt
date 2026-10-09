@@ -16,6 +16,9 @@ pub(all) enum ImageEditingTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageEditingTaskType with Eq::{not_equal, equal}
+
+///|
 /// 抠图方法
 pub(all) enum CutoutMethod {
   GrabCut
@@ -27,6 +30,9 @@ pub(all) enum CutoutMethod {
 } derive(Eq)
 
 ///|
+pub extend CutoutMethod with Eq::{not_equal, equal}
+
+///|
 /// 物体移除方法
 pub(all) enum ObjectRemovalMethod {
   Inpainting
@@ -36,6 +42,9 @@ pub(all) enum ObjectRemovalMethod {
   NavierStokes
   Unknown
 } derive(Eq)
+
+///|
+pub extend ObjectRemovalMethod with Eq::{not_equal, equal}
 
 ///|
 /// 美颜类型
@@ -51,6 +60,9 @@ pub(all) enum BeautyType {
 } derive(Eq)
 
 ///|
+pub extend BeautyType with Eq::{not_equal, equal}
+
+///|
 /// 妆容类型
 pub(all) enum MakeupType {
   Foundation
@@ -64,6 +76,9 @@ pub(all) enum MakeupType {
   Highlight
   Unknown
 } derive(Eq)
+
+///|
+pub extend MakeupType with Eq::{not_equal, equal}
 
 ///|
 /// 抠图结果

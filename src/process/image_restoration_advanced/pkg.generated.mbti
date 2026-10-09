@@ -26,6 +26,8 @@ pub(all) enum BlurType {
   Box
   Unknown
 } derive(Eq)
+pub fn BlurType::equal(Self, Self) -> Bool
+pub fn BlurType::not_equal(Self, Self) -> Bool
 
 pub(all) enum DeblurringMethod {
   Wiener
@@ -36,6 +38,8 @@ pub(all) enum DeblurringMethod {
   SRN
   Unknown
 } derive(Eq)
+pub fn DeblurringMethod::equal(Self, Self) -> Bool
+pub fn DeblurringMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
@@ -78,6 +82,8 @@ pub(all) enum DenoisingMethod {
   RIDNet
   Unknown
 } derive(Eq)
+pub fn DenoisingMethod::equal(Self, Self) -> Bool
+pub fn DenoisingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DenoisingResult {
   denoised_image : Array[Double]
@@ -164,6 +170,8 @@ pub(all) enum ImageRestorationTaskType {
   OldPhotoRestoration
   Unknown
 } derive(Eq)
+pub fn ImageRestorationTaskType::equal(Self, Self) -> Bool
+pub fn ImageRestorationTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) enum NoiseType {
   Gaussian
@@ -173,6 +181,8 @@ pub(all) enum NoiseType {
   Uniform
   Unknown
 } derive(Eq)
+pub fn NoiseType::equal(Self, Self) -> Bool
+pub fn NoiseType::not_equal(Self, Self) -> Bool
 
 pub(all) struct OldPhotoRestorationResult {
   restored_image : Array[Double]

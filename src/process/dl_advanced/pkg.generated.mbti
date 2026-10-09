@@ -29,6 +29,8 @@ pub(all) enum AttentionType {
   Performer
   Unknown
 } derive(Eq)
+pub fn AttentionType::equal(Self, Self) -> Bool
+pub fn AttentionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct AttentionWeights {
   weights : Array[Array[Double]]
@@ -48,6 +50,8 @@ pub(all) enum DLAdvancedTaskType {
   ContrastiveLearning
   Unknown
 } derive(Eq)
+pub fn DLAdvancedTaskType::equal(Self, Self) -> Bool
+pub fn DLAdvancedTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FineTuningConfig {
   model_name : String
@@ -96,6 +100,8 @@ pub(all) enum PretrainingTask {
   Colorization
   Unknown
 } derive(Eq)
+pub fn PretrainingTask::equal(Self, Self) -> Bool
+pub fn PretrainingTask::not_equal(Self, Self) -> Bool
 
 pub(all) struct SelfSupervisedConfig {
   task_type : PretrainingTask
@@ -131,6 +137,8 @@ pub(all) enum TransformerArchitecture {
   SwinTransformer
   Unknown
 } derive(Eq)
+pub fn TransformerArchitecture::equal(Self, Self) -> Bool
+pub fn TransformerArchitecture::not_equal(Self, Self) -> Bool
 
 pub(all) struct TransformerConfig {
   architecture : TransformerArchitecture

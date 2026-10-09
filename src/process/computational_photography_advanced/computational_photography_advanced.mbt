@@ -16,6 +16,9 @@ pub(all) enum ComputationalPhotographyTaskType {
 } derive(Eq)
 
 ///|
+pub extend ComputationalPhotographyTaskType with Eq::{not_equal, equal}
+
+///|
 /// HDR色调映射方法
 pub(all) enum HDRToneMappingMethod {
   Reinhard
@@ -26,6 +29,9 @@ pub(all) enum HDRToneMappingMethod {
   Linear
   Unknown
 } derive(Eq)
+
+///|
+pub extend HDRToneMappingMethod with Eq::{not_equal, equal}
 
 ///|
 /// 全景拼接方法
@@ -39,6 +45,9 @@ pub(all) enum PanoramaStitchingMethod {
 } derive(Eq)
 
 ///|
+pub extend PanoramaStitchingMethod with Eq::{not_equal, equal}
+
+///|
 /// 去模糊方法
 pub(all) enum DeblurringMethod {
   Wiener
@@ -49,6 +58,9 @@ pub(all) enum DeblurringMethod {
 } derive(Eq)
 
 ///|
+pub extend DeblurringMethod with Eq::{not_equal, equal}
+
+///|
 /// 去雾方法
 pub(all) enum DehazingMethod {
   DarkChannelPrior
@@ -57,6 +69,9 @@ pub(all) enum DehazingMethod {
   AODNet
   Unknown
 } derive(Eq)
+
+///|
+pub extend DehazingMethod with Eq::{not_equal, equal}
 
 ///|
 /// HDR图像

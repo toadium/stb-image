@@ -20,6 +20,9 @@ pub(all) enum MarkdownElementType {
 } derive(Eq)
 
 ///|
+pub extend MarkdownElementType with Eq::{not_equal, equal}
+
+///|
 /// Markdown 元素
 pub(all) struct MarkdownElement {
   element_type : MarkdownElementType

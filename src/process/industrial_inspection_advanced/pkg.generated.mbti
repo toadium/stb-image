@@ -41,6 +41,8 @@ pub(all) enum DefectType {
   Misalignment
   Unknown
 } derive(Eq)
+pub fn DefectType::equal(Self, Self) -> Bool
+pub fn DefectType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DetectedDefect {
   defect_id : Int
@@ -98,6 +100,8 @@ pub(all) enum IndustrialInspectionTaskType {
   AssemblyVerification
   Unknown
 } derive(Eq)
+pub fn IndustrialInspectionTaskType::equal(Self, Self) -> Bool
+pub fn IndustrialInspectionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ProductClassificationResult {
   product_id : String
@@ -118,6 +122,8 @@ pub(all) enum SurfaceQualityGrade {
   Reject
   Unknown
 } derive(Eq)
+pub fn SurfaceQualityGrade::equal(Self, Self) -> Bool
+pub fn SurfaceQualityGrade::not_equal(Self, Self) -> Bool
 
 pub(all) struct SurfaceQualityResult {
   overall_grade : SurfaceQualityGrade

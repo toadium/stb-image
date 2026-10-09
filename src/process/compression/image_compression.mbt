@@ -18,6 +18,9 @@ pub(all) enum CompressionAlgorithm {
 } derive(Eq)
 
 ///|
+pub extend CompressionAlgorithm with Eq::{not_equal, equal}
+
+///|
 /// 压缩结果
 pub(all) struct CompressionResult {
   compressed_data : Bytes
@@ -62,6 +65,9 @@ pub(all) enum QuantizationTableType {
   Custom
   Default
 } derive(Eq)
+
+///|
+pub extend QuantizationTableType with Eq::{not_equal, equal}
 
 ///|
 /// DCT 系数块

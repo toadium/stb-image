@@ -16,6 +16,9 @@ pub(all) enum NLPTaskType {
 } derive(Eq)
 
 ///|
+pub extend NLPTaskType with Eq::{not_equal, equal}
+
+///|
 /// 文本分类模型类型
 pub(all) enum TextClassificationModel {
   NaiveBayes
@@ -30,6 +33,9 @@ pub(all) enum TextClassificationModel {
   RoBERTa
   Unknown
 } derive(Eq)
+
+///|
+pub extend TextClassificationModel with Eq::{not_equal, equal}
 
 ///|
 /// NER实体类型
@@ -47,6 +53,9 @@ pub(all) enum NEREntityType {
 } derive(Eq)
 
 ///|
+pub extend NEREntityType with Eq::{not_equal, equal}
+
+///|
 /// 情感类型
 pub(all) enum SentimentType {
   VeryPositive
@@ -56,6 +65,9 @@ pub(all) enum SentimentType {
   VeryNegative
   Unknown
 } derive(Eq)
+
+///|
+pub extend SentimentType with Eq::{not_equal, equal}
 
 ///|
 /// 文本分类结果

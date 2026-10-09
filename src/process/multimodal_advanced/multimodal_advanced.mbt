@@ -15,6 +15,9 @@ pub(all) enum MultimodalTaskType {
 } derive(Eq)
 
 ///|
+pub extend MultimodalTaskType with Eq::{not_equal, equal}
+
+///|
 /// 融合策略类型
 pub(all) enum FusionStrategy {
   EarlyFusion
@@ -28,6 +31,9 @@ pub(all) enum FusionStrategy {
 } derive(Eq)
 
 ///|
+pub extend FusionStrategy with Eq::{not_equal, equal}
+
+///|
 /// 模态类型
 pub(all) enum ModalityType {
   Image
@@ -39,6 +45,9 @@ pub(all) enum ModalityType {
   PointCloud
   Unknown
 } derive(Eq)
+
+///|
+pub extend ModalityType with Eq::{not_equal, equal}
 
 ///|
 /// 多模态数据

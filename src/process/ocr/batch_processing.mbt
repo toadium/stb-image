@@ -26,6 +26,9 @@ pub(all) enum BatchTaskStatus {
 } derive(Eq)
 
 ///|
+pub extend BatchTaskStatus with Eq::{not_equal, equal}
+
+///|
 /// 单个批处理任务
 pub(all) struct BatchTask {
   task_id : String

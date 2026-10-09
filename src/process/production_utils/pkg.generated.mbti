@@ -92,6 +92,8 @@ pub(all) enum ProductionErrorCode {
   InternalError
   Unknown
 } derive(Eq)
+pub fn ProductionErrorCode::equal(Self, Self) -> Bool
+pub fn ProductionErrorCode::not_equal(Self, Self) -> Bool
 
 pub(all) struct RetryConfig {
   max_retries : Int

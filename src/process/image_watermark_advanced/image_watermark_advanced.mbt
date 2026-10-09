@@ -16,6 +16,9 @@ pub(all) enum ImageWatermarkTaskType {
 } derive(Eq)
 
 ///|
+pub extend ImageWatermarkTaskType with Eq::{not_equal, equal}
+
+///|
 /// 水印嵌入域
 pub(all) enum WatermarkDomain {
   SpatialDomain
@@ -29,6 +32,9 @@ pub(all) enum WatermarkDomain {
 } derive(Eq)
 
 ///|
+pub extend WatermarkDomain with Eq::{not_equal, equal}
+
+///|
 /// 水印类型
 pub(all) enum WatermarkType {
   TextWatermark
@@ -39,6 +45,9 @@ pub(all) enum WatermarkType {
   EncryptedWatermark
   Unknown
 } derive(Eq)
+
+///|
+pub extend WatermarkType with Eq::{not_equal, equal}
 
 ///|
 /// 水印攻击类型
@@ -56,6 +65,9 @@ pub(all) enum WatermarkAttackType {
   CollusionAttack
   Unknown
 } derive(Eq)
+
+///|
+pub extend WatermarkAttackType with Eq::{not_equal, equal}
 
 ///|
 /// 水印嵌入结果

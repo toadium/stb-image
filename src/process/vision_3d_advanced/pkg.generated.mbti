@@ -60,6 +60,8 @@ pub(all) enum PointCloudType {
   Unorganized
   Unknown
 } derive(Eq)
+pub fn PointCloudType::equal(Self, Self) -> Bool
+pub fn PointCloudType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PoseEstimationResult {
   rotation_matrix : Array[Array[Double]]
@@ -146,6 +148,8 @@ pub(all) enum Vision3DTaskType {
   ObjectTracking3D
   Unknown
 } derive(Eq)
+pub fn Vision3DTaskType::equal(Self, Self) -> Bool
+pub fn Vision3DTaskType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

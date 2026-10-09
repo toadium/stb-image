@@ -15,6 +15,9 @@ pub(all) enum DictCharStructure {
 } derive(Eq)
 
 ///|
+pub extend DictCharStructure with Eq::{not_equal, equal}
+
+///|
 /// 汉字部件
 pub(all) struct DictComponent {
   name : String

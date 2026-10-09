@@ -13,6 +13,9 @@ pub(all) enum LanguageType {
 } derive(Eq)
 
 ///|
+pub extend LanguageType with Eq::{not_equal, equal}
+
+///|
 /// 多语言识别配置
 pub(all) struct MultilingualOcrConfig {
   enable_chinese : Bool

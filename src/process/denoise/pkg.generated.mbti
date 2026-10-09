@@ -54,6 +54,8 @@ pub(all) enum DenoiseAlgorithm {
   DeepLearningDenoise
   Unknown
 } derive(Eq)
+pub fn DenoiseAlgorithm::equal(Self, Self) -> Bool
+pub fn DenoiseAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct DenoiseConfig {
   algorithm : DenoiseAlgorithm
@@ -90,6 +92,8 @@ pub(all) enum EnhancementAlgorithm {
   DeepLearningEnhance
   Unknown
 } derive(Eq)
+pub fn EnhancementAlgorithm::equal(Self, Self) -> Bool
+pub fn EnhancementAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct EnhancementResult {
   image : @types.Image
@@ -111,6 +115,8 @@ pub(all) enum NoiseType {
   UniformNoise
   Unknown
 } derive(Eq)
+pub fn NoiseType::equal(Self, Self) -> Bool
+pub fn NoiseType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

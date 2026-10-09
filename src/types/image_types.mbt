@@ -8,6 +8,12 @@ pub(all) struct Image {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend Image with @debug.Debug::{to_repr}
+
+///|
+pub extend Image with Eq::{not_equal, equal}
+
+///|
 /// 16-bit 解码结果值对象，像素数据为 16-bit 无符号整数（little-endian，每像素 2 字节）
 pub(all) struct Image16 {
   width : Int
@@ -15,6 +21,12 @@ pub(all) struct Image16 {
   channels : Int
   data : Bytes
 } derive(Eq, @debug.Debug)
+
+///|
+pub extend Image16 with @debug.Debug::{to_repr}
+
+///|
+pub extend Image16 with Eq::{not_equal, equal}
 
 ///|
 /// HDR float 解码结果值对象，像素数据为 32-bit IEEE float（little-endian，每像素 4 字节）
@@ -26,6 +38,12 @@ pub(all) struct ImageF {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ImageF with @debug.Debug::{to_repr}
+
+///|
+pub extend ImageF with Eq::{not_equal, equal}
+
+///|
 /// 图像信息查询结果，仅含几何元信息，不加载像素数据
 pub(all) struct ImageInfo {
   width : Int
@@ -34,11 +52,23 @@ pub(all) struct ImageInfo {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ImageInfo with @debug.Debug::{to_repr}
+
+///|
+pub extend ImageInfo with Eq::{not_equal, equal}
+
+///|
 /// 动画 GIF 解码结果，包含多帧图像和每帧延迟（毫秒）
 pub(all) struct GifAnimation {
   frames : Array[Image]
   delays : Array[Int]
 } derive(Eq, @debug.Debug)
+
+///|
+pub extend GifAnimation with @debug.Debug::{to_repr}
+
+///|
+pub extend GifAnimation with Eq::{not_equal, equal}
 
 ///|
 /// 加载失败领域错误
@@ -74,6 +104,12 @@ pub(all) enum ImageFormat {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ImageFormat with @debug.Debug::{to_repr}
+
+///|
+pub extend ImageFormat with Eq::{not_equal, equal}
+
+///|
 /// resize 滤波器类型
 pub(all) enum ResizeFilter {
   Default
@@ -86,6 +122,12 @@ pub(all) enum ResizeFilter {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ResizeFilter with @debug.Debug::{to_repr}
+
+///|
+pub extend ResizeFilter with Eq::{not_equal, equal}
+
+///|
 /// resize 边缘处理模式
 pub(all) enum ResizeEdge {
   Clamp
@@ -95,11 +137,23 @@ pub(all) enum ResizeEdge {
 } derive(Eq, @debug.Debug)
 
 ///|
+pub extend ResizeEdge with @debug.Debug::{to_repr}
+
+///|
+pub extend ResizeEdge with Eq::{not_equal, equal}
+
+///|
 /// APNG 动画解码结果
 pub(all) struct PngAnimation {
   frames : Array[Image]
   delays : Array[Int] // 毫秒
 } derive(Eq, @debug.Debug)
+
+///|
+pub extend PngAnimation with @debug.Debug::{to_repr}
+
+///|
+pub extend PngAnimation with Eq::{not_equal, equal}
 
 ///|
 /// 图像维度上限（单边最大像素数）。

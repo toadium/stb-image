@@ -54,6 +54,8 @@ pub(all) enum FusionAlgorithm {
   Minimum
   Unknown
 } derive(Eq)
+pub fn FusionAlgorithm::equal(Self, Self) -> Bool
+pub fn FusionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct FusionConfig {
   algorithm : FusionAlgorithm
@@ -78,6 +80,8 @@ pub(all) enum RegistrationAlgorithm {
   OpticalFlow
   Unknown
 } derive(Eq)
+pub fn RegistrationAlgorithm::equal(Self, Self) -> Bool
+pub fn RegistrationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct RegistrationConfig {
   algorithm : RegistrationAlgorithm
