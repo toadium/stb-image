@@ -11,10 +11,10 @@ You can browse and install extra skills here:
 
 | 属性 | 值 |
 |------|-----|
-| 版本 | 0.4.12 (mooncakes) / v34.0.0 (功能迭代) |
-| 测试 | 2517 × 4 目标 (native/wasm-gc/js/wasm) |
-| API | 334 公开函数 + 69 类型 |
-| 格式 | 15 种编解码 (PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP) |
+| 版本 | 0.4.12 (mooncakes) / v187.0.0 (功能迭代) |
+| 测试 | 3378 × 4 目标 (native/wasm-gc/js/wasm) |
+| API | 1338 公开函数 + 491 类型 |
+| 格式 | 18 种编解码 (PNG/JPEG/BMP/GIF/QOI/TGA/PSD/HDR/PNM/TIFF/ICO/CUR/ICNS/APNG/WebP/AVIF/HEIF/JPEG-XL) |
 | 覆盖率 | 90.4% |
 
 ## Project Structure
@@ -38,17 +38,21 @@ src/
 │   └── util/           #   工具
 ├── lib/                # 高层封装 (自动格式分派) + 流式解码
 ├── meta/               # 元数据 (EXIF, PNG meta)
-├── process/            # 高级图像处理算法 (7 子包)
+├── process/            # 高级图像处理算法 (90 子包)
 │   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值/Retinex/去雾
 │   ├── edge/           #   边缘检测/Canny/霍夫/轮廓
 │   ├── feature/        #   特征检测: Harris/ORB/SIFT/模板匹配/光流/GLCM/LBP
 │   ├── filter/         #   滤波/去噪/图像修复
 │   ├── frequency/      #   FFT/DCT/Haar 小波/频率滤波
 │   ├── segment/        #   分水岭/SLIC/grabCut/形态学/连通域
-│   └── transform/      #   几何变换/透视/Seam Carving/金字塔
+│   ├── transform/      #   几何变换/透视/Seam Carving/金字塔
+│   ├── ocr/            #   OCR全流程: 版面/二值化/倾斜/分割/识别/后处理
+│   ├── medical/        #   医学图像: DICOM/CT/MRI/超声/病理
+│   ├── encryption/     #   图像加密/解密/水印
+│   └── ...             #   其余 80 子包 (检测/融合/超分/3D/视频等)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
-└── reexport.mbt        # 顶层 API re-export (283 pub fn + 47 pub type)
+└── reexport.mbt        # 顶层 API re-export (1338 pub fn + 491 pub type)
 ```
 
 ## Core Constraints
@@ -136,7 +140,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（四目标各 1203）
+# 运行测试（四目标各 3378）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -158,7 +162,7 @@ moon run --target native
 |------|------|
 | [README.md](README.md) | 项目说明（中文） |
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（283 函数 + 47 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（1338 函数 + 491 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/performance_report.md](docs/performance_report.md) | 性能基准报告 |
