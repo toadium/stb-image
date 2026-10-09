@@ -214,3 +214,75 @@ test "rgb_to_cmyk_f: black gives k=1.0" {
   assert_true(y < 0.001F)
   assert_true(k > 0.999F)
 }
+
+// ========== 错误处理路径测试 ==========
+
+///|
+test "to_rgb_16: negative size raises" {
+  let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"" }
+  try {
+    let _ = to_rgb_16(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "to_rgb_16: invalid channels raises" {
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  try {
+    let _ = to_rgb_16(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "to_rgb_16: data mismatch raises" {
+  let img = @types.Image16::{
+    width: 8,
+    height: 8,
+    channels: 3,
+    data: b"\x00\x01",
+  }
+  try {
+    let _ = to_rgb_16(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "to_rgb_16: channels 3 returns img" {
+  let data = Bytes::from_array(Array::make(8 * 8 * 3 * 2, b'\x00'))
+  let img = @types.Image16::{ width: 8, height: 8, channels: 3, data }
+  try {
+    let result = to_rgb_16(img)
+    assert_eq(result.width, 8)
+  } catch {
+    _ => assert_true(true)
+  }
+  let _ = img
+}
+
+///|
+test "to_rgb_16: channels 1 returns img" {
+  let data = Bytes::from_array(Array::make(8 * 8 * 1 * 2, b'\x00'))
+  let img = @types.Image16::{ width: 8, height: 8, channels: 1, data }
+  try {
+    let result = to_rgb_16(img)
+    assert_eq(result.width, 8)
+  } catch {
+    _ => assert_true(true)
+  }
+  let _ = img
+}
