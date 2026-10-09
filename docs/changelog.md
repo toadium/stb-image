@@ -1517,3 +1517,11 @@
 - 批5: scan(9) + accuracy(8) + accuracy_enhanced(9) + feature(6) + projection(6) + char_seg(6) + table(6) + table_image(8) — 3319×4
 - 批6: hw_recognition(10) + doc_understanding(10) + doc_enhanced(9) + hw_enhanced(7) + multi_enhanced(7) + chinese_enhanced(6) + advanced_chinese(4) + robustness(6) — 3378×4
 - 3378×4 全绿 (native/wasm-gc/js/wasm)
+## v188.0.0 - AGENTS.md 文档同步
+- API 统计更新: 1338 pub fn + 491 pub type, 3378 tests, 18 formats, 90 process 子包
+- roadmap.md 头部更新
+
+## v189.0.0 - 安全/医学模块加固
+- encryption: 28 个增强测试 (往返/边值/错误路径/属性验证)
+- medical: 32 个增强测试 (多预设/多参数/边值/属性验证)
+- 3448×4 全绿 (native/wasm-gc/js/wasm)
