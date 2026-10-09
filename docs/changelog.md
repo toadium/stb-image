@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v191.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v191.0.0。
+> 下表为**功能迭代版本**（v0.1 → v192.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v192.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1540,3 +1540,16 @@
   - 包结构更新 (90 子包, 1338 pub fn + 491 pub type)
   - moon.mod 版本 0.5.0 (适配 mooncakes 0.x.y)
 - 3448×4 全绿 (native/wasm-gc/js/wasm)
+## v192.0.0 - 薄弱模块增强测试
+- 为测试覆盖最薄弱的 5 个 process 子包补充增强测试 (+133 测试)
+- v192a: barcode +31 测试 (barcode_enhanced_test.mbt)
+  - 配置变体、边值条件、条纹模式、QR-like 模式、Reed-Solomon、枚举验证
+- v192b: retrieval +39 测试 (retrieval_enhanced_test.mbt)
+  - 距离对称性/非负性、所有 SimilarityMetric 枚举、所有 FeatureType 枚举、多波段、数据库序列
+- v192c: remote_sensing +18 测试 (remote_sensing_enhanced_test.mbt)
+  - 多光谱图像、光谱签名、分类结果、质量评估
+- v192c: video +24 测试 (video_enhanced_test.mbt)
+  - 帧序列操作、帧插值、视频摘要、运动检测
+- v192c: forensics +49 测试 (forensics_enhanced_test.mbt)
+  - 噪声分析、频率分析、颜色分析、边缘分析、压缩分析、细节分析、几何分析、文本检测、UI 检测、增强验证
+- 3581×4 全绿 (native/wasm-gc/js/wasm)
