@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v9.4.0）演进历史。mooncakes **包版本**为 `1.0.0`（正式版），对应最新功能版本 v50.0.0。
+> 下表为**功能迭代版本**（v0.1 → v191.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v191.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1528,4 +1528,15 @@
 ## v190.0.0 - API 文档生成 + 性能优化
 - API 参考文档重新生成: docs/api_reference.md (1339 fn + 382 type, 2150 行)
 - resize_pure 性能优化: 预计算坐标权重数组, 消除 data_int 转换, 直接在 Bytes 上操作
+- 3448×4 全绿 (native/wasm-gc/js/wasm)
+## v191.0.0 - 子模块 README + 开源文档治理
+- v191a: 为 99 个子模块自动生成 README.md (scripts/gen_readmes.py 从 .mbti 提取 API)
+  - 90 个 process 子包 + 3 个 pure 子包 + types/meta/lib/util
+  - 每个 README 包含概览统计、依赖、类型、API 签名
+  - src/README.md 和 src/process/README.md 为手工编写索引版
+- v191b: 开源文档治理更新
+  - README.md/README.en.md 徽章同步 (tests 3378, API 1338+491, version 0.5.0, 18 formats)
+  - 格式表补充 AVIF/HEIF/JPEG-XL
+  - 包结构更新 (90 子包, 1338 pub fn + 491 pub type)
+  - moon.mod 版本 0.5.0 (适配 mooncakes 0.x.y)
 - 3448×4 全绿 (native/wasm-gc/js/wasm)

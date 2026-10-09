@@ -1,11 +1,11 @@
 # image
 
-MoonBit 纯图像处理库 — 15 种格式编解码 + 50+ 计算机视觉算法。零 C FFI 依赖，native/wasm-gc/js/wasm 四目标共用同一代码库。
+MoonBit 纯图像处理库 — 18 种格式编解码 + 90+ 子包计算机视觉算法。零 C FFI 依赖，native/wasm-gc/js/wasm 四目标共用同一代码库。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-1203%20%C3%97%204%20targets-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-3378%20%C3%97%204%20targets-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![API](https://img.shields.io/badge/API-283%20fn%20%2B%2047%20types-blueviolet)]()
+[![API](https://img.shields.io/badge/API-1338%20fn%20%2B%20491%20types-blueviolet)]()
 
 ## Quick Start
 
@@ -54,6 +54,9 @@ decode_stream(data, fn(row, y) {
 | ICNS | ✅ | ✅ | macOS icon |
 | APNG | ✅ | ✅ | animated PNG |
 | WebP | ✅ (lossless) | ✅ (lossy VP8) | lossless (VP8L) decode + lossy (VP8) encode; note: lossy encode output cannot be decoded by this library |
+| AVIF | ✅ | — | AV1 keyframe decode |
+| HEIF | ✅ | — | AV1/HEIC decode |
+| JPEG-XL | ✅ | — | basic decode |
 
 > `detect_format` recognizes PNG/JPEG/BMP/GIF/QOI/PNM/PSD/HDR/WebP via magic bytes. TIFF/ICO/CUR/ICNS/APNG/TGA require manual `decode_tiff`/`decode_ico`/`decode_cur`/`decode_icns`/`decode_apng` calls.
 
@@ -63,7 +66,7 @@ decode_stream(data, fn(row, y) {
 
 ## API Overview
 
-283 public functions across 8 categories. Full reference: [docs/api_reference.md](https://github.com/toadium/stb-image/blob/main/docs/api_reference.md).
+1338 public functions across 90+ sub-packages. Full reference: [docs/api_reference.md](https://github.com/toadium/stb-image/blob/main/docs/api_reference.md).
 
 | Category | Highlights |
 |----------|-----------|
@@ -91,11 +94,11 @@ try {
 
 ## Multi-Target
 
-native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional compilation. 1177 tests pass per target, 90.4% coverage.
+native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional compilation. 3378 tests pass per target, 90.4% coverage.
 
 ## Documentation
 
-- [API Reference (283 fn + 47 types)](https://github.com/toadium/stb-image/blob/main/docs/api_reference.md)
+- [API Reference (1338 fn + 491 types)](https://github.com/toadium/stb-image/blob/main/docs/api_reference.md)
 - [Architecture & Design](https://github.com/toadium/stb-image/blob/main/docs/architecture.md)
 - [Performance Report](https://github.com/toadium/stb-image/blob/main/docs/performance_report.md)
 - [Roadmap](https://github.com/toadium/stb-image/blob/main/docs/roadmap.md)
@@ -104,4 +107,4 @@ native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional comp
 
 ---
 
-License: MIT · [GitHub](https://github.com/toadium/stb-image) · Package version `0.4.10` (functional version v4.8.0)
+License: MIT · [GitHub](https://github.com/toadium/stb-image) · Package version `0.5.0` (functional version v191.0.0)

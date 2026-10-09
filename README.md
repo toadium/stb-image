@@ -10,10 +10,10 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-参赛项目-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1725-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/coverage-91.2%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-1100%2B%20functions%20%2B%20187%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-0.6.0-orange)]()
+[![Tests](https://img.shields.io/badge/tests-3378-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
+[![Functions](https://img.shields.io/badge/API-1338%20functions%20%2B%20491%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-0.5.0-orange)]()
 
 [亮点](#-亮点) · [格式支持](#-格式支持) · [快速上手](#-快速上手) · [功能一览](#-功能一览) · [多目标](#-多目标支持) · [包结构](#-包结构) · [文档](#-文档) · [构建](#-构建与测试) · [贡献](#-贡献)
 
@@ -23,7 +23,7 @@
 
 ## 📖 简介
 
-`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 15 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。安装：`moon add walkzzz/image`。
+`image` 是一个纯 MoonBit 实现的图像处理库，**无任何 C FFI 依赖**。覆盖 18 种格式的解码与编码，提供从基础像素操作到高级计算机视觉算法的完整能力。安装：`moon add walkzzz/image`。
 
 > 详细说明（版本映射、格式检测、多目标、核心约束）见 [docs/notes.md](docs/notes.md)。
 
@@ -39,13 +39,13 @@
 |---|---|---|
 | 🟢 | **零 C 依赖** | 全部纯 MoonBit 实现，无需 C 编译器，部署极简 |
 | 🟢 | **四目标支持** | native / wasm-gc / js / wasm 共用同一代码库，无条件编译 |
-| 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 含独家 PSD、HDR |
+| 🟢 | **格式覆盖广** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP / AVIF / HEIF / JPEG-XL — 含独家 PSD、HDR |
 | 🟢 | **像素深度全** | 8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF` |
-| 🟢 | **900+ 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编解码、OCR 全链路（数字/英文/中文/表格/手写体/多语言混合）等高级算法 |
+| 🟢 | **1338 个 API** | 从基础 I/O 到 FFT、Canny、分水岭、SLIC、ORB、SIFT、SIFT 匹配、RANSAC 单应性、grabCut、流式解码、光流、模板匹配、WebP lossy 编解码、OCR 全链路（数字/英文/中文/表格/手写体/多语言混合）等高级算法 |
 | 🟢 | **OCR 全链路** | 预处理→文本检测→字符分割→特征提取→分类器→数字/英文/中文OCR→表格识别→后处理→文档理解→手写体→多语言混合，36 个模块文件 |
 | 🟢 | **流式解码** | 逐行 / 分块 / 指定通道回调（当前为全量解码后逐行分发，v5.0 计划增量解码） |
 | 🟢 | **安全加固** | MAX_IMAGE_DIMENSION(65535) 维度守卫 + check_dims 全解码器入口校验 + safe_mul 溢出保护 |
-| 🟢 | **多子包架构** | 8 个子包职责清晰，编译并行化，可独立测试 |
+| 🟢 | **多子包架构** | 100+ 个子包职责清晰，编译并行化，可独立测试 |
 
 ---
 
@@ -68,6 +68,9 @@
 | ICNS | ✅ | ✅ | macOS 图标 |
 | APNG | ✅ | ✅ | 动画 PNG |
 | WebP | ✅ (lossless) | ✅ (lossy VP8) | lossless (VP8L) 解码 + lossy (VP8) 编码；注意：lossy 编码结果不可被本库解码 |
+| AVIF | ✅ | — | AV1 关键帧解码 |
+| HEIF | ✅ | — | AV1/HEIC 解码 |
+| JPEG-XL | ✅ | — | 基础解码 |
 
 ---
 
@@ -142,7 +145,7 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 功能一览
 
-900+ 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)。
+900+ 个公开 API 按分类概览，详见 [docs/features.md](docs/features.md)。完整签名见 [docs/api_reference.md](docs/api_reference.md)（1338 函数 + 491 类型）。
 
 ### OCR 功能（v7.0 - v9.4）
 
@@ -167,10 +170,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | 目标 | 后端 | 测试 | 状态 |
 |:----:|:----:|:----:|:----:|
-| **native** | 纯 MoonBit | 1700 | ✅ |
-| **wasm-gc** | 纯 MoonBit | 1700 | ✅ |
-| **js** | 纯 MoonBit | 1700 | ✅ |
-| **wasm** | 纯 MoonBit | 1700 | ✅ |
+| **native** | 纯 MoonBit | 3378 | ✅ |
+| **wasm-gc** | 纯 MoonBit | 3378 | ✅ |
+| **js** | 纯 MoonBit | 3378 | ✅ |
+| **wasm** | 纯 MoonBit | 3378 | ✅ |
 
 ---
 
@@ -180,12 +183,12 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 src/
 ├── types/              # 全目标类型 (Image, Image16, ImageF, LoadError 等)
 ├── pure/               # 纯 MoonBit 后端 (无 C FFI)
-│   ├── codec/          #   格式编解码 (15 种格式)
+│   ├── codec/          #   格式编解码 (18 种格式)
 │   ├── color/          #   颜色操作
 │   └── util/           #   工具
 ├── lib/                # 高层封装 (自动格式分派)
 ├── meta/               # 元数据 (EXIF, PNG meta)
-├── process/            # 高级图像处理算法 (8 子包)
+├── process/            # 高级图像处理算法 (90 子包)
 │   ├── color/          #   色彩转换/调整/CLAHE/自适应阈值/Retinex/去雾
 │   ├── edge/           #   边缘检测/Canny/霍夫/轮廓
 │   ├── feature/        #   特征检测: Harris/ORB/SIFT/模板匹配/光流/GLCM/LBP
@@ -203,7 +206,7 @@ src/
 ├── examples/           # 示例代码 (32 个示例，覆盖全部 API)
 ├── util/               # 工具函数 (基于 pure 的上层封装)
 ├── bench.mbt           # 性能基准测试
-└── reexport.mbt        # 顶层 API re-export (231 pub fn + 187 pub type)
+└── reexport.mbt        # 顶层 API re-export (1338 pub fn + 491 pub type)
 ```
 
 ---
@@ -213,13 +216,13 @@ src/
 | 文档 | 说明 |
 |------|------|
 | [docs/architecture.md](docs/architecture.md) | 架构图、包依赖关系、设计决策 |
-| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（900+ 函数 + 187 类型） |
+| [docs/api_reference.md](docs/api_reference.md) | 完整 API 参考（1338 函数 + 491 类型） |
 | [docs/roadmap.md](docs/roadmap.md) | 迭代路线图 |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io 图像库对比 |
 | [docs/performance_report.md](docs/performance_report.md) | 性能基准报告（46 项基准） |
 | [docs/notes.md](docs/notes.md) | 使用说明与核心约束 |
 | [docs/examples.md](docs/examples.md) | 完整示例集（32 个示例） |
-| [docs/features.md](docs/features.md) | 功能一览（900+ API 分类概览） |
+| [docs/features.md](docs/features.md) | 功能一览（1338 API 分类概览） |
 | [docs/contributing.md](docs/contributing.md) | 贡献指南（开发环境/流程/规范） |
 | [docs/skill.md](docs/skill.md) | AI 辅助开发技能描述 |
 | [docs/changelog.md](docs/changelog.md) | 版本变更历史 |
@@ -235,7 +238,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# 运行测试（1700）
+# 运行测试（3378 × 4 目标）
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -278,7 +281,7 @@ moon info
 
 本项目以 `stb_image.h` 为参考基础，将其核心图像编解码能力用纯 MoonBit 重新实现：
 
-- **格式编解码**：PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 15 种格式
+- **格式编解码**：PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP / AVIF / HEIF / JPEG-XL — 18 种格式
 - **像素深度**：8 位 `Image`、16 位 `Image16`、HDR 浮点 `ImageF`
 - **基础操作**：缩放 / 裁剪 / 旋转 / 翻转 / 色彩转换 / 通道操作 / 绘制 / 合成
 
@@ -304,9 +307,9 @@ moon info
 | 语言 | C | MoonBit |
 | 依赖 | C 编译器 | 零 C 依赖 |
 | 目标 | native | native / wasm-gc / js / wasm |
-| 格式数 | 7 | 15 |
-| API 数 | ~30 | 900+ |
-| 高级算法 | 无 | 50+ |
+| 格式数 | 7 | 18 |
+| API 数 | ~30 | 1338 |
+| 高级算法 | 无 | 90+ 子包 |
 | 内存安全 | 手动 | GC 管理 |
 
 ---

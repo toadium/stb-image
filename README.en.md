@@ -8,10 +8,10 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-Contest%20Project-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-1700-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-3378-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
-[![Functions](https://img.shields.io/badge/API-900%2B%20functions%20%2B%20187%20types-blueviolet)]()
-[![Version](https://img.shields.io/badge/version-0.6.0-orange)]()
+[![Functions](https://img.shields.io/badge/API-1338%20functions%20%2B%20491%20types-blueviolet)]()
+[![Version](https://img.shields.io/badge/version-0.5.0-orange)]()
 
 [Highlights](#-highlights) · [Format Support](#-format-support) · [Quick Start](#-quick-start) · [Features](#-features) · [Multi-Target](#-multi-target-support) · [Package Structure](#-package-structure) · [Docs](#-documentation) · [Build](#-build--test) · [Contributing](#-contributing)
 
@@ -21,7 +21,7 @@
 
 ## 📖 Introduction
 
-`image` is a pure MoonBit image processing library with **zero C FFI dependencies**. It covers decoding and encoding of 15 formats, providing complete capabilities from basic pixel operations to advanced computer vision algorithms. Install: `moon add walkzzz/image`.
+`image` is a pure MoonBit image processing library with **zero C FFI dependencies**. It covers decoding and encoding of 18 formats, providing complete capabilities from basic pixel operations to advanced computer vision algorithms. Install: `moon add walkzzz/image`.
 
 > For detailed notes (version mapping, format detection, multi-target, core constraints), see [docs/notes.md](docs/notes.md).
 
@@ -37,13 +37,13 @@ This project participates in the **2026 MoonBit Domestic Open Source Ecosystem C
 |---|---|---|
 | 🟢 | **Zero C deps** | Fully pure MoonBit, no C compiler needed, minimal deployment |
 | 🟢 | **Four targets** | native / wasm-gc / js / wasm share one codebase, no conditional compilation |
-| 🟢 | **Broad format coverage** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — includes exclusive PSD, HDR |
+| 🟢 | **Broad format coverage** | PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP / AVIF / HEIF / JPEG-XL — includes exclusive PSD, HDR |
 | 🟢 | **Full pixel depth** | 8-bit `Image`, 16-bit `Image16`, HDR float `ImageF` |
-| 🟢 | **900+ APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy codec, full OCR pipeline (digit/English/Chinese/table/handwriting/multilingual) |
+| 🟢 | **1338 APIs** | From basic I/O to FFT, Canny, watershed, SLIC, ORB, SIFT, SIFT matching, RANSAC homography, grabCut, streaming decode, optical flow, template matching, WebP lossy codec, full OCR pipeline (digit/English/Chinese/table/handwriting/multilingual) |
 | 🟢 | **Full OCR pipeline** | Preprocessing→text detection→char segmentation→feature extraction→classifier→digit/English/Chinese OCR→table recognition→postprocessing→document understanding→handwriting→multilingual, 19 module files |
 | 🟢 | **Streaming decode** | Row-by-row / chunked / channel-specified callbacks (currently full decode then row dispatch; incremental decode planned for v5.0) |
 | 🟢 | **Safety hardening** | MAX_IMAGE_DIMENSION(65535) guard + check_dims validation at all decoder entry points + safe_mul overflow protection |
-| 🟢 | **Multi-package architecture** | 8 sub-packages with clear responsibilities, parallel compilation, independent testing |
+| 🟢 | **Multi-package architecture** | 100+ sub-packages with clear responsibilities, parallel compilation, independent testing |
 
 ---
 
@@ -66,6 +66,9 @@ This project participates in the **2026 MoonBit Domestic Open Source Ecosystem C
 | ICNS | ✅ | ✅ | macOS icon |
 | APNG | ✅ | ✅ | animated PNG |
 | WebP | ✅ (lossless) | ✅ (lossy VP8) | lossless (VP8L) decode + lossy (VP8) encode; note: lossy encode output cannot be decoded by this library |
+| AVIF | ✅ | — | AV1 keyframe decode |
+| HEIF | ✅ | — | AV1/HEIC decode |
+| JPEG-XL | ✅ | — | basic decode |
 
 ---
 
@@ -140,7 +143,7 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 ## 🧰 Features
 
-900+ public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures.
+1338 public APIs by category. See [docs/features.md](docs/features.md) for overview and [docs/api_reference.md](docs/api_reference.md) for full signatures (1338 functions + 491 types).
 
 ### OCR Features (v7.0 - v9.4)
 
@@ -165,10 +168,10 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 
 | Target | Backend | Tests | Status |
 |:------:|:-------:|:-----:|:------:|
-| **native** | Pure MoonBit | 1700 | ✅ |
-| **wasm-gc** | Pure MoonBit | 1700 | ✅ |
-| **js** | Pure MoonBit | 1700 | ✅ |
-| **wasm** | Pure MoonBit | 1700 | ✅ |
+| **native** | Pure MoonBit | 3378 | ✅ |
+| **wasm-gc** | Pure MoonBit | 3378 | ✅ |
+| **js** | Pure MoonBit | 3378 | ✅ |
+| **wasm** | Pure MoonBit | 3378 | ✅ |
 
 ---
 
@@ -178,12 +181,12 @@ let homography = ransac_homography(matches, threshold=5.0, iterations=1000)
 src/
 ├── types/              # All-target types (Image, Image16, ImageF, LoadError, etc.)
 ├── pure/               # Pure MoonBit backend (no C FFI)
-│   ├── codec/          #   Format codecs (15 formats)
+│   ├── codec/          #   Format codecs (18 formats)
 │   ├── color/          #   Color operations
 │   └── util/           #   Utilities
 ├── lib/                # High-level wrapper (auto format dispatch)
 ├── meta/               # Metadata (EXIF, PNG meta)
-├── process/            # Advanced image processing (8 sub-packages)
+├── process/            # Advanced image processing (90 sub-packages)
 │   ├── color/          #   Color conversion/adjust/CLAHE/adaptive threshold/Retinex/dehaze
 │   ├── edge/           #   Edge detection/Canny/Hough/contours
 │   ├── feature/        #   Feature detection: Harris/ORB/SIFT/template matching/optical flow/GLCM/LBP
@@ -201,7 +204,7 @@ src/
 ├── examples/           # Example code (32 examples, all API coverage)
 ├── util/               # Utility functions (built on pure)
 ├── bench.mbt           # Performance benchmarks
-└── reexport.mbt        # Top-level API re-export (231 pub fn + 187 pub type)
+└── reexport.mbt        # Top-level API re-export (1338 pub fn + 491 pub type)
 ```
 
 ---
@@ -211,13 +214,13 @@ src/
 | Document | Description |
 |----------|-------------|
 | [docs/architecture.md](docs/architecture.md) | Architecture diagram, package dependencies, design decisions |
-| [docs/api_reference.md](docs/api_reference.md) | Full API reference (900+ functions + 187 types) |
+| [docs/api_reference.md](docs/api_reference.md) | Full API reference (1338 functions + 491 types) |
 | [docs/roadmap.md](docs/roadmap.md) | Iteration roadmap |
 | [docs/comparison.md](docs/comparison.md) | mooncakes.io image library comparison |
 | [docs/performance_report.md](docs/performance_report.md) | Performance benchmark report (46 benchmarks) |
 | [docs/notes.md](docs/notes.md) | Usage notes and core constraints |
 | [docs/examples.md](docs/examples.md) | Complete examples (32 examples) |
-| [docs/features.md](docs/features.md) | Feature overview (900+ APIs by category) |
+| [docs/features.md](docs/features.md) | Feature overview (1338 APIs by category) |
 | [docs/contributing.md](docs/contributing.md) | Contributing guide (dev setup/workflow/conventions) |
 | [docs/changelog.md](docs/changelog.md) | Version changelog |
 
@@ -232,7 +235,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# Run tests (1700)
+# Run tests (3378 × 4 targets)
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
@@ -278,7 +281,7 @@ Issues and Pull Requests are welcome! See [docs/contributing.md](docs/contributi
 
 This project uses `stb_image.h` as a reference base, re-implementing its core image codec capabilities in pure MoonBit:
 
-- **Format codecs**: PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP — 15 formats
+- **Format codecs**: PNG / JPEG / BMP / GIF / QOI / TGA / PSD / HDR / PNM / TIFF / ICO / CUR / ICNS / APNG / WebP / AVIF / HEIF / JPEG-XL — 18 formats
 - **Pixel depth**: 8-bit `Image`, 16-bit `Image16`, HDR float `ImageF`
 - **Basic operations**: resize / crop / rotate / flip / color conversion / channel ops / draw / composite
 
@@ -304,9 +307,9 @@ On top of the port, this project adds many advanced capabilities **not in `stb_i
 | Language | C | MoonBit |
 | Dependencies | C compiler | Zero C deps |
 | Targets | native | native / wasm-gc / js / wasm |
-| Formats | 7 | 15 |
-| APIs | ~30 | 900+ |
-| Advanced algorithms | None | 50+ |
+| Formats | 7 | 18 |
+| APIs | ~30 | 1338 |
+| Advanced algorithms | None | 90+ sub-packages |
 | Memory safety | Manual | GC managed |
 
 ---
