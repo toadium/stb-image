@@ -4,7 +4,7 @@
 ///|
 test "decode_webp_pure: too short raises" {
   try {
-    let _ = decode_webp_pure(b"RIFF\x00\x00\x00\x00WEBP")
+    let _ = @codec.decode_webp_pure(b"RIFF\x00\x00\x00\x00WEBP")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -15,7 +15,7 @@ test "decode_webp_pure: too short raises" {
 ///|
 test "decode_webp_pure: wrong RIFF magic raises" {
   try {
-    let _ = decode_webp_pure(b"XXXX\x10\x00\x00\x00WEBP")
+    let _ = @codec.decode_webp_pure(b"XXXX\x10\x00\x00\x00WEBP")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -32,7 +32,7 @@ test "decode_webp_pure: lossy VP8 raises" {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   ]
   try {
-    let _ = decode_webp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_webp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -49,7 +49,7 @@ test "decode_webp_pure: no VP8L chunk raises" {
     0x00, 0x00,
   ]
   try {
-    let _ = decode_webp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_webp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -66,7 +66,7 @@ test "decode_webp_pure: VP8L signature wrong raises" {
     0x00, // wrong sig 0x00 instead of 0x2f
   ]
   try {
-    let _ = decode_webp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_webp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

@@ -36,7 +36,7 @@ fn make_bmp(w : Int, h : Int, color : Byte) -> Bytes {
 test "decode_stream 逐行回调" {
   let bmp = make_bmp(2, 2, b'\x80')
   let rows : Array[Int] = []
-  let info = decode_stream(bmp, fn(y, _row) { rows.push(y) })
+  let info = @lib.decode_stream(bmp, fn(y, _row) { rows.push(y) })
   assert_eq(info.width, 2)
   assert_eq(info.height, 2)
   assert_eq(info.channels, 3)
@@ -49,7 +49,7 @@ test "decode_stream 逐行回调" {
 test "decode_stream 行数据长度" {
   let bmp = make_bmp(3, 1, b'\xFF')
   let row_lens : Array[Int] = []
-  let info = decode_stream(bmp, fn(_y, row) { row_lens.push(row.length()) })
+  let info = @lib.decode_stream(bmp, fn(_y, row) { row_lens.push(row.length()) })
   assert_eq(info.width, 3)
   assert_eq(info.height, 1)
   assert_eq(row_lens[0], 9) // 3 * 3
@@ -60,7 +60,7 @@ test "decode_stream_chunked 分块回调" {
   let bmp = make_bmp(2, 4, b'\x80')
   let chunks : Array[Int] = []
   let block_heights : Array[Int] = []
-  let info = decode_stream_chunked(bmp, 2, fn(start_y, block_img) {
+  let info = @lib.decode_stream_chunked(bmp, 2, fn(start_y, block_img) {
     chunks.push(start_y)
     block_heights.push(block_img.height)
   })
@@ -77,7 +77,7 @@ test "decode_stream_chunked 分块回调" {
 test "decode_stream_chunked 不整除" {
   let bmp = make_bmp(2, 5, b'\x80')
   let heights : Array[Int] = []
-  let info = decode_stream_chunked(bmp, 2, fn(_y, block_img) {
+  let info = @lib.decode_stream_chunked(bmp, 2, fn(_y, block_img) {
     heights.push(block_img.height)
   })
   assert_eq(info.height, 5)
@@ -91,7 +91,7 @@ test "decode_stream_chunked 不整除" {
 test "decode_stream_channels 指定通道" {
   let bmp = make_bmp(2, 2, b'\x80')
   let row_lens : Array[Int] = []
-  let info = decode_stream_channels(bmp, 1, fn(_y, row) {
+  let info = @lib.decode_stream_channels(bmp, 1, fn(_y, row) {
     row_lens.push(row.length())
   })
   assert_eq(info.channels, 1)
@@ -101,7 +101,7 @@ test "decode_stream_channels 指定通道" {
 ///|
 test "decode_stream StreamInfo 正确" {
   let bmp = make_bmp(3, 2, b'\x80')
-  let info = decode_stream(bmp, fn(_y, _row) {  })
+  let info = @lib.decode_stream(bmp, fn(_y, _row) {  })
   assert_eq(info.width, 3)
   assert_eq(info.height, 2)
   assert_eq(info.channels, 3)
@@ -112,7 +112,7 @@ test "decode_stream 1x1 最小图" {
   // 使用现有的 1x1 红色 BMP
   let bmp = b"\x42\x4D\x3A\x00\x00\x00\x00\x00\x00\x00\x36\x00\x00\x00\x28\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x18\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00"
   let row_count : Array[Int] = []
-  let info = decode_stream(bmp, fn(_y, _row) { row_count.push(1) })
+  let info = @lib.decode_stream(bmp, fn(_y, _row) { row_count.push(1) })
   assert_eq(info.width, 1)
   assert_eq(info.height, 1)
   assert_eq(row_count.length(), 1)

@@ -16,7 +16,7 @@ test "decode_pnm_16_pure: P5 16-bit grayscale 2x2" {
   out.push(b'\xFF')
   out.push(b'\xFF')
   out.push(b'\xFF')
-  let img = decode_pnm_16_pure(Bytes::from_array(out))
+  let img = @codec.decode_pnm_16_pure(Bytes::from_array(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 1)
@@ -46,7 +46,7 @@ test "decode_pnm_16_pure: P6 16-bit RGB 1x1" {
   out.push(b'\x78')
   out.push(b'\x9A')
   out.push(b'\xBC')
-  let img = decode_pnm_16_pure(Bytes::from_array(out))
+  let img = @codec.decode_pnm_16_pure(Bytes::from_array(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -66,7 +66,7 @@ test "decode_pnm_16_pure: P5 8-bit upsample to 16-bit" {
   push_str(out, "P5\n2 1\n255\n")
   out.push(b'\x00')
   out.push(b'\xFF')
-  let img = decode_pnm_16_pure(Bytes::from_array(out))
+  let img = @codec.decode_pnm_16_pure(Bytes::from_array(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 1)
@@ -85,7 +85,7 @@ test "decode_pnm_16_pure: P6 8-bit upsample to 16-bit" {
   out.push(b'\x80')
   out.push(b'\x40')
   out.push(b'\xC0')
-  let img = decode_pnm_16_pure(Bytes::from_array(out))
+  let img = @codec.decode_pnm_16_pure(Bytes::from_array(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -108,7 +108,7 @@ test "decode_pnm_16_pure: P5 with comments" {
   out.push(b'\x10')
   out.push(b'\x01')
   out.push(b'\x00')
-  let img = decode_pnm_16_pure(Bytes::from_array(out))
+  let img = @codec.decode_pnm_16_pure(Bytes::from_array(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 1)
@@ -120,7 +120,7 @@ test "decode_pnm_16_pure: P5 with comments" {
 ///|
 test "decode_pnm_16_pure: data too short" {
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array([b'\x50']))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array([b'\x50']))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -132,7 +132,7 @@ test "decode_pnm_16_pure: invalid magic" {
   let out : Array[Byte] = []
   push_str(out, "P7\n1 1\n255\n")
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array(out))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -144,7 +144,7 @@ test "decode_pnm_16_pure: invalid maxval" {
   let out : Array[Byte] = []
   push_str(out, "P5\n1 1\n0\n")
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array(out))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -156,7 +156,7 @@ test "decode_pnm_16_pure: invalid dimensions" {
   let out : Array[Byte] = []
   push_str(out, "P5\n0 1\n255\n")
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array(out))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -171,7 +171,7 @@ test "decode_pnm_16_pure: 16-bit pixel data insufficient" {
   out.push(b'\x00')
   out.push(b'\x01')
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array(out))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -187,7 +187,7 @@ test "decode_pnm_16_pure: 8-bit pixel data insufficient" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_pnm_16_pure(Bytes::from_array(out))
+    let _ = @codec.decode_pnm_16_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     _ => assert_true(true)

@@ -31,9 +31,9 @@ fn create_gradient_ig(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn create_small_gen_config() -> GenerationConfig {
-  GenerationConfig::{
-    algorithm: ImageGenerationAlgorithm::StyleGAN,
+fn create_small_gen_config() -> @image_generation.GenerationConfig {
+  @image_generation.GenerationConfig::{
+    algorithm: @image_generation.ImageGenerationAlgorithm::StyleGAN,
     width: 16,
     height: 16,
     channels: 1,
@@ -47,7 +47,7 @@ fn create_small_gen_config() -> GenerationConfig {
 
 ///|
 test "create_default_generation_config: 默认配置" {
-  let config = create_default_generation_config()
+  let config = @image_generation.create_default_generation_config()
   assert_true(config.width > 0)
   assert_true(config.height > 0)
   assert_true(config.channels > 0)
@@ -58,7 +58,7 @@ test "create_default_generation_config: 默认配置" {
 
 ///|
 test "create_default_editing_config: 默认配置" {
-  let config = create_default_editing_config()
+  let config = @image_generation.create_default_editing_config()
   assert_true(config.strength > 0.0 && config.strength <= 1.0)
   assert_true(config.num_steps > 0)
   assert_true(config.guidance_scale > 0.0)
@@ -68,7 +68,7 @@ test "create_default_editing_config: 默认配置" {
 
 ///|
 test "generate_random_latent: 生成潜向量" {
-  let latent = generate_random_latent(64, 42)
+  let latent = @image_generation.generate_random_latent(64, 42)
   assert_true(latent.dimension == 64)
   assert_true(latent.vector.length() == 64)
   assert_true(latent.norm > 0.0)
@@ -76,9 +76,9 @@ test "generate_random_latent: 生成潜向量" {
 
 ///|
 test "generate_from_latent: 从潜向量生成图像" {
-  let latent = generate_random_latent(64, 42)
+  let latent = @image_generation.generate_random_latent(64, 42)
   let config = create_small_gen_config()
-  let result = generate_from_latent(latent, config)
+  let result = @image_generation.generate_from_latent(latent, config)
   assert_true(result.image.width == 16)
   assert_true(result.image.height == 16)
   assert_true(result.seed == 42)
@@ -88,7 +88,7 @@ test "generate_from_latent: 从潜向量生成图像" {
 ///|
 test "generate_random_image: 生成随机图像" {
   let config = create_small_gen_config()
-  let result = generate_random_image(config)
+  let result = @image_generation.generate_random_image(config)
   assert_true(result.image.width == 16)
   assert_true(result.image.height == 16)
   assert_true(result.quality_score >= 0.0 && result.quality_score <= 1.0)
@@ -99,8 +99,8 @@ test "generate_random_image: 生成随机图像" {
 test "inpaint_image: 图像修复" {
   let img = create_gradient_ig(32, 32)
   let mask = create_solid_ig(32, 32, 0)
-  let config = create_default_editing_config()
-  let result = inpaint_image(img, mask, config)
+  let config = @image_generation.create_default_editing_config()
+  let result = @image_generation.inpaint_image(img, mask, config)
   assert_true(result.image.width == 32)
   assert_true(result.image.height == 32)
   assert_true(result.quality_score >= 0.0)
@@ -109,8 +109,8 @@ test "inpaint_image: 图像修复" {
 ///|
 test "outpaint_image: 图像外扩" {
   let img = create_gradient_ig(16, 16)
-  let config = create_default_editing_config()
-  let result = outpaint_image(img, 32, 32, config)
+  let config = @image_generation.create_default_editing_config()
+  let result = @image_generation.outpaint_image(img, 32, 32, config)
   assert_true(result.image.width == 32)
   assert_true(result.image.height == 32)
 }
@@ -118,8 +118,8 @@ test "outpaint_image: 图像外扩" {
 ///|
 test "colorize_image: 图像上色" {
   let img = create_gradient_ig(32, 32)
-  let config = create_default_editing_config()
-  let result = colorize_image(img, config)
+  let config = @image_generation.create_default_editing_config()
+  let result = @image_generation.colorize_image(img, config)
   assert_true(result.image.width == 32)
   assert_true(result.image.height == 32)
   assert_true(result.image.channels == 3)
@@ -130,7 +130,7 @@ test "compose_images: 图像合成" {
   let bg = create_solid_ig(32, 32, 100)
   let fg = create_solid_ig(32, 32, 200)
   let mask = create_solid_ig(32, 32, 128)
-  let config = CompositionConfig::{
+  let config = @image_generation.CompositionConfig::{
     blend_mode: "normal",
     opacity: 0.5,
     feather_radius: 0,
@@ -138,7 +138,7 @@ test "compose_images: 图像合成" {
     color_match: false,
     perspective_correct: false,
   }
-  let result = compose_images(bg, fg, mask, config)
+  let result = @image_generation.compose_images(bg, fg, mask, config)
   assert_true(result.width == 32)
   assert_true(result.height == 32)
 }
@@ -146,8 +146,8 @@ test "compose_images: 图像合成" {
 ///|
 test "remove_background: 背景移除" {
   let img = create_gradient_ig(32, 32)
-  let config = create_default_editing_config()
-  let result = remove_background(img, config)
+  let config = @image_generation.create_default_editing_config()
+  let result = @image_generation.remove_background(img, config)
   assert_true(result.image.width == 32)
   assert_true(result.image.height == 32)
   assert_true(result.mask.width == 32)
@@ -158,8 +158,8 @@ test "remove_background: 背景移除" {
 test "edit_image: 编辑主入口-修复" {
   let img = create_gradient_ig(32, 32)
   let mask = create_solid_ig(32, 32, 0)
-  let config = EditingConfig::{
-    algorithm: ImageEditingAlgorithm::Inpainting,
+  let config = @image_generation.EditingConfig::{
+    algorithm: @image_generation.ImageEditingAlgorithm::Inpainting,
     strength: 0.75,
     num_steps: 10,
     guidance_scale: 7.5,
@@ -167,7 +167,7 @@ test "edit_image: 编辑主入口-修复" {
     edge_aware: true,
     use_reference: false,
   }
-  let result = edit_image(img, mask, config)
+  let result = @image_generation.edit_image(img, mask, config)
   assert_true(result.image.width == 32)
   assert_true(result.image.height == 32)
 }
@@ -176,8 +176,8 @@ test "edit_image: 编辑主入口-修复" {
 test "edit_image: 编辑主入口-上色" {
   let img = create_gradient_ig(32, 32)
   let mask = create_solid_ig(32, 32, 0)
-  let config = EditingConfig::{
-    algorithm: ImageEditingAlgorithm::Colorization,
+  let config = @image_generation.EditingConfig::{
+    algorithm: @image_generation.ImageEditingAlgorithm::Colorization,
     strength: 0.75,
     num_steps: 10,
     guidance_scale: 7.5,
@@ -185,15 +185,15 @@ test "edit_image: 编辑主入口-上色" {
     edge_aware: true,
     use_reference: false,
   }
-  let result = edit_image(img, mask, config)
+  let result = @image_generation.edit_image(img, mask, config)
   assert_true(result.image.channels == 3)
 }
 
 ///|
 test "generation_report_to_string: 报告非空" {
   let config = create_small_gen_config()
-  let result = generate_random_image(config)
-  let report = generation_report_to_string(result)
+  let result = @image_generation.generate_random_image(config)
+  let report = @image_generation.generation_report_to_string(result)
   assert_true(report.length() > 0)
 }
 
@@ -201,8 +201,8 @@ test "generation_report_to_string: 报告非空" {
 test "editing_report_to_string: 报告非空" {
   let img = create_gradient_ig(32, 32)
   let mask = create_solid_ig(32, 32, 0)
-  let config = create_default_editing_config()
-  let result = inpaint_image(img, mask, config)
-  let report = editing_report_to_string(result)
+  let config = @image_generation.create_default_editing_config()
+  let result = @image_generation.inpaint_image(img, mask, config)
+  let report = @image_generation.editing_report_to_string(result)
   assert_true(report.length() > 0)
 }

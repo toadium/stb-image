@@ -6,7 +6,7 @@ test "erode: uniform image is unchanged" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = erode(img)
+  let result = @segment.erode(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 128)
   }
@@ -22,7 +22,7 @@ test "dilate: uniform image is unchanged" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = dilate(img)
+  let result = @segment.dilate(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 128)
   }
@@ -45,7 +45,7 @@ test "erode: shrinks bright region" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = erode(img)
+  let result = @segment.erode(img)
   // 腐蚀后只有中心 (2,2) 保持白色
   assert_eq(result.data[2 * 5 + 2].to_int(), 255)
   // 角落应该变黑
@@ -68,7 +68,7 @@ test "dilate: expands bright region" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = dilate(img)
+  let result = @segment.dilate(img)
   // 膨胀后 3x3 邻域都应为白
   for dy in -1..<=1 {
     for dx in -1..<=1 {
@@ -93,7 +93,7 @@ test "morph_open: removes isolated bright pixel" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = morph_open(img)
+  let result = @segment.morph_open(img)
   // 开运算去除孤立白点
   for i in 0..<25 {
     assert_eq(result.data[i].to_int(), 0)
@@ -113,7 +113,7 @@ test "morph_close: fills isolated dark pixel" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = morph_close(img)
+  let result = @segment.morph_close(img)
   // 闭运算填充孤立黑点
   for i in 0..<25 {
     assert_eq(result.data[i].to_int(), 255)
@@ -125,7 +125,7 @@ test "morph_close: fills isolated dark pixel" {
 ///|
 test "erode: preserves dimensions" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = erode(img)
+  let result = @segment.erode(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -136,7 +136,7 @@ test "erode: preserves dimensions" {
 ///|
 test "dilate: preserves dimensions" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = dilate(img)
+  let result = @segment.dilate(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -160,8 +160,8 @@ test "morph_open: idempotent" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let once = morph_open(img)
-  let twice = morph_open(once)
+  let once = @segment.morph_open(img)
+  let twice = @segment.morph_open(once)
   assert_eq(once.data, twice.data)
   let _ = img
   let _ = once
@@ -179,8 +179,8 @@ test "morph_close: idempotent" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let once = morph_close(img)
-  let twice = morph_close(once)
+  let once = @segment.morph_close(img)
+  let twice = @segment.morph_close(once)
   assert_eq(once.data, twice.data)
   let _ = img
   let _ = once
@@ -195,7 +195,7 @@ test "morph_gradient: uniform image is zero" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = morph_gradient(img)
+  let result = @segment.morph_gradient(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -218,7 +218,7 @@ test "morph_gradient: detects edges" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = morph_gradient(img)
+  let result = @segment.morph_gradient(img)
   // 边界处应有非零值
   let mut has_nonzero = false
   for i in 0..<25 {
@@ -239,7 +239,7 @@ test "morph_tophat: uniform image is zero" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = morph_tophat(img)
+  let result = @segment.morph_tophat(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -255,7 +255,7 @@ test "morph_blackhat: uniform image is zero" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = morph_blackhat(img)
+  let result = @segment.morph_blackhat(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -274,7 +274,7 @@ test "morph_tophat: isolates bright peak" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = morph_tophat(img)
+  let result = @segment.morph_tophat(img)
   // 中心白点应被保留（开运算去除了它）
   assert_eq(result.data[2 * 5 + 2].to_int(), 255)
   let _ = img
@@ -292,7 +292,7 @@ test "morph_blackhat: isolates dark hole" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = morph_blackhat(img)
+  let result = @segment.morph_blackhat(img)
   // 中心黑点应被检测到（闭运算填充了它）
   assert_eq(result.data[2 * 5 + 2].to_int(), 255)
   let _ = img

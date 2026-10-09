@@ -32,7 +32,7 @@ fn create_gradient_pe(w : Int, h : Int) -> @types.Image {
 
 ///|
 test "create_default_pose_config: 默认配置" {
-  let config = create_default_pose_config()
+  let config = @pose_estimation.create_default_pose_config()
   assert_true(config.num_keypoints == 17)
   assert_true(
     config.confidence_threshold > 0.0 && config.confidence_threshold < 1.0,
@@ -46,7 +46,7 @@ test "create_default_pose_config: 默认配置" {
 
 ///|
 test "create_default_action_config: 默认配置" {
-  let config = create_default_action_config()
+  let config = @pose_estimation.create_default_action_config()
   assert_true(config.num_classes > 0)
   assert_true(config.window_size > 0)
   assert_true(config.stride > 0)
@@ -57,7 +57,7 @@ test "create_default_action_config: 默认配置" {
 
 ///|
 test "get_coco_keypoint_names: 17个关键点" {
-  let names = get_coco_keypoint_names()
+  let names = @pose_estimation.get_coco_keypoint_names()
   assert_true(names.length() == 17)
   assert_true(names[0] == "nose")
   assert_true(names[16] == "right_ankle")
@@ -65,7 +65,7 @@ test "get_coco_keypoint_names: 17个关键点" {
 
 ///|
 test "get_coco_skeleton_connections: 骨架连接" {
-  let conns = get_coco_skeleton_connections()
+  let conns = @pose_estimation.get_coco_skeleton_connections()
   assert_true(conns.length() == 16)
   assert_true(conns[0].length() == 2)
   assert_true(conns[0][0] == 0)
@@ -75,8 +75,8 @@ test "get_coco_skeleton_connections: 骨架连接" {
 ///|
 test "detect_keypoints: 渐变图像检测人体" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
   assert_true(poses.length() >= 1)
   assert_true(poses[0].num_keypoints == 17)
   assert_true(poses[0].keypoints.length() == 17)
@@ -86,8 +86,8 @@ test "detect_keypoints: 渐变图像检测人体" {
 ///|
 test "detect_keypoints: 纯色图像检测" {
   let img = create_solid_pe(128, 128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
   assert_true(poses.length() >= 1)
   assert_true(poses[0].num_keypoints == 17)
 }
@@ -95,9 +95,9 @@ test "detect_keypoints: 纯色图像检测" {
 ///|
 test "extract_skeleton: 提取骨架连接" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
-  let skeleton = extract_skeleton(poses[0])
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
+  let skeleton = @pose_estimation.extract_skeleton(poses[0])
   assert_true(skeleton.length() == 16)
   assert_true(skeleton[0].joint1 == 0)
   assert_true(skeleton[0].joint2 == 1)
@@ -106,26 +106,26 @@ test "extract_skeleton: 提取骨架连接" {
 ///|
 test "calculate_joint_angle: 计算关节角度" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
-  let angle = calculate_joint_angle(poses[0], 5, 7, 9)
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
+  let angle = @pose_estimation.calculate_joint_angle(poses[0], 5, 7, 9)
   assert_true(angle >= 0.0 && angle <= 180.0)
 }
 
 ///|
 test "calculate_joint_angle: 越界索引返回0" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
-  let angle = calculate_joint_angle(poses[0], 100, 101, 102)
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
+  let angle = @pose_estimation.calculate_joint_angle(poses[0], 100, 101, 102)
   assert_true(angle == 0.0)
 }
 
 ///|
 test "recognize_action: 空姿态列表" {
-  let poses : Array[HumanPose] = []
-  let config = create_default_action_config()
-  let result = recognize_action(poses, config)
+  let poses : Array[@pose_estimation.HumanPose] = []
+  let config = @pose_estimation.create_default_action_config()
+  let result = @pose_estimation.recognize_action(poses, config)
   assert_true(result.action_name == "unknown")
   assert_true(result.confidence == 0.0)
   assert_true(result.action_id == -1)
@@ -134,10 +134,10 @@ test "recognize_action: 空姿态列表" {
 ///|
 test "recognize_action: 有姿态列表" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_action_config()
-  let pose_config = create_default_pose_config()
-  let poses = detect_keypoints(img, pose_config)
-  let result = recognize_action(poses, config)
+  let config = @pose_estimation.create_default_action_config()
+  let pose_config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, pose_config)
+  let result = @pose_estimation.recognize_action(poses, config)
   assert_true(result.action_name.length() > 0)
   assert_true(result.confidence >= 0.0 && result.confidence <= 1.0)
   assert_true(result.is_completed)
@@ -146,9 +146,9 @@ test "recognize_action: 有姿态列表" {
 ///|
 test "recognize_gesture: 手势识别" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
-  let result = recognize_gesture(poses[0])
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
+  let result = @pose_estimation.recognize_gesture(poses[0])
   assert_true(result.confidence >= 0.0 && result.confidence <= 1.0)
   assert_true(result.bounding_box.length() == 4)
 }
@@ -156,9 +156,9 @@ test "recognize_gesture: 手势识别" {
 ///|
 test "visualize_pose: 可视化姿态" {
   let img = create_gradient_pe(128, 128)
-  let config = create_default_pose_config()
-  let poses = detect_keypoints(img, config)
-  let visualized = visualize_pose(img, poses[0])
+  let config = @pose_estimation.create_default_pose_config()
+  let poses = @pose_estimation.detect_keypoints(img, config)
+  let visualized = @pose_estimation.visualize_pose(img, poses[0])
   assert_true(visualized.width == img.width)
   assert_true(visualized.height == img.height)
   assert_true(visualized.channels == img.channels)
@@ -167,10 +167,12 @@ test "visualize_pose: 可视化姿态" {
 ///|
 test "pose_estimation_report_to_string: 报告非空" {
   let img = create_gradient_pe(128, 128)
-  let pose_config = create_default_pose_config()
-  let action_config = create_default_action_config()
-  let poses = detect_keypoints(img, pose_config)
-  let action_result = recognize_action(poses, action_config)
-  let report = pose_estimation_report_to_string(poses, action_result)
+  let pose_config = @pose_estimation.create_default_pose_config()
+  let action_config = @pose_estimation.create_default_action_config()
+  let poses = @pose_estimation.detect_keypoints(img, pose_config)
+  let action_result = @pose_estimation.recognize_action(poses, action_config)
+  let report = @pose_estimation.pose_estimation_report_to_string(
+    poses, action_result,
+  )
   assert_true(report.length() > 0)
 }

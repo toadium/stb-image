@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_continual_config: 默认持续学习配置" {
-  let config = create_default_continual_config()
+  let config = @continuous_learning.create_default_continual_config()
   assert_true(config.num_tasks > 0)
   assert_true(config.ewc_lambda > 0.0)
   assert_true(config.memory_size > 0)
@@ -13,7 +13,7 @@ test "create_default_continual_config: 默认持续学习配置" {
 
 ///|
 test "create_default_ewc_config: 默认EWC配置" {
-  let config = create_default_ewc_config(100)
+  let config = @continuous_learning.create_default_ewc_config(100)
   assert_true(config.lambda > 0.0)
   assert_true(config.num_params > 0)
   assert_true(config.fisher_information.length() >= 0)
@@ -22,7 +22,7 @@ test "create_default_ewc_config: 默认EWC配置" {
 
 ///|
 test "create_memory_buffer: 创建记忆缓冲区" {
-  let buffer = create_memory_buffer(100, "reservoir")
+  let buffer = @continuous_learning.create_memory_buffer(100, "reservoir")
   assert_true(buffer.buffer_size > 0)
   assert_true(buffer.current_size == 0)
   assert_true(buffer.samples.length() >= 0)
@@ -32,19 +32,21 @@ test "create_memory_buffer: 创建记忆缓冲区" {
 
 ///|
 test "add_to_memory: 添加到记忆缓冲区" {
-  let buffer = create_memory_buffer(100, "uniform")
+  let buffer = @continuous_learning.create_memory_buffer(100, "uniform")
   let sample = [1.0, 2.0, 3.0]
-  let updated = add_to_memory(buffer, sample, 0, 5)
+  let updated = @continuous_learning.add_to_memory(buffer, sample, 0, 5)
   assert_true(updated.current_size > 0)
   assert_true(updated.samples.length() > 0)
 }
 
 ///|
 test "sample_from_memory: 从记忆缓冲区采样" {
-  let buffer = create_memory_buffer(100, "uniform")
-  let buffer1 = add_to_memory(buffer, [1.0, 2.0], 0, 5)
-  let buffer2 = add_to_memory(buffer1, [3.0, 4.0], 1, 5)
-  let (samples, labels, task_ids) = sample_from_memory(buffer2, 2)
+  let buffer = @continuous_learning.create_memory_buffer(100, "uniform")
+  let buffer1 = @continuous_learning.add_to_memory(buffer, [1.0, 2.0], 0, 5)
+  let buffer2 = @continuous_learning.add_to_memory(buffer1, [3.0, 4.0], 1, 5)
+  let (samples, labels, task_ids) = @continuous_learning.sample_from_memory(
+    buffer2, 2,
+  )
   assert_true(samples.length() >= 0)
   assert_true(labels.length() >= 0)
   assert_true(task_ids.length() >= 0)
@@ -52,7 +54,7 @@ test "sample_from_memory: 从记忆缓冲区采样" {
 
 ///|
 test "create_task_sequence: 创建任务序列" {
-  let tasks = create_task_sequence(5, 10, 100)
+  let tasks = @continuous_learning.create_task_sequence(5, 10, 100)
   assert_true(tasks.length() == 5)
   for t in tasks {
     assert_true(t.task_id >= 0)
@@ -64,26 +66,30 @@ test "create_task_sequence: 创建任务序列" {
 
 ///|
 test "compute_ewc_loss: EWC损失计算" {
-  let config = create_default_ewc_config(10)
+  let config = @continuous_learning.create_default_ewc_config(10)
   let params = [0.1, 0.2, 0.3, 0.4, 0.5]
-  let loss = compute_ewc_loss(params, config)
+  let loss = @continuous_learning.compute_ewc_loss(params, config)
   assert_true(loss >= 0.0)
 }
 
 ///|
 test "update_fisher_information: 更新Fisher信息" {
-  let config = create_default_ewc_config(10)
+  let config = @continuous_learning.create_default_ewc_config(10)
   let gradients = [0.1, 0.2, 0.3, 0.4, 0.5]
-  let updated = update_fisher_information(config, gradients)
+  let updated = @continuous_learning.update_fisher_information(
+    config, gradients,
+  )
   assert_true(updated.fisher_information.length() >= 0)
   assert_true(updated.num_params > 0)
 }
 
 ///|
 test "simulate_continual_learning: 持续学习模拟" {
-  let config = create_default_continual_config()
-  let tasks = create_task_sequence(3, 10, 100)
-  let metrics = simulate_continual_learning(tasks, config, 0.5)
+  let config = @continuous_learning.create_default_continual_config()
+  let tasks = @continuous_learning.create_task_sequence(3, 10, 100)
+  let metrics = @continuous_learning.simulate_continual_learning(
+    tasks, config, 0.5,
+  )
   assert_true(metrics.average_accuracy >= 0.0)
   assert_true(metrics.final_accuracy >= 0.0)
   assert_true(metrics.backward_transfer >= -1.0)
@@ -97,9 +103,13 @@ test "simulate_continual_learning: 持续学习模拟" {
 
 ///|
 test "continual_learning_report_to_string: 报告生成" {
-  let config = create_default_continual_config()
-  let tasks = create_task_sequence(3, 10, 100)
-  let metrics = simulate_continual_learning(tasks, config, 0.5)
-  let report = continual_learning_report_to_string(metrics, config)
+  let config = @continuous_learning.create_default_continual_config()
+  let tasks = @continuous_learning.create_task_sequence(3, 10, 100)
+  let metrics = @continuous_learning.simulate_continual_learning(
+    tasks, config, 0.5,
+  )
+  let report = @continuous_learning.continual_learning_report_to_string(
+    metrics, config,
+  )
   assert_true(report.length() > 0)
 }

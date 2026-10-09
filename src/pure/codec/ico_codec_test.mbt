@@ -77,8 +77,8 @@ fn make_ico_bmp(
 ///|
 test "encode_ico_pure / decode_ico_pure: 2x2 RGBA roundtrip" {
   let img = make_2x2_rgba_image()
-  let ico = encode_ico_pure(img)
-  let decoded = decode_ico_pure(ico)
+  let ico = @codec.encode_ico_pure(img)
+  let decoded = @codec.decode_ico_pure(ico)
   assert_eq(decoded.width, 2)
   assert_eq(decoded.height, 2)
   assert_eq(decoded.channels, 4)
@@ -93,8 +93,8 @@ test "encode_ico_pure / decode_ico_pure: 2x2 RGBA roundtrip" {
 ///|
 test "encode_ico_pure / decode_ico_pure: 3x3 RGB roundtrip" {
   let img = make_3x3_rgb_image()
-  let ico = encode_ico_pure(img)
-  let decoded = decode_ico_pure(ico)
+  let ico = @codec.encode_ico_pure(img)
+  let decoded = @codec.decode_ico_pure(ico)
   assert_eq(decoded.width, 3)
   assert_eq(decoded.height, 3)
   assert_eq(decoded.channels, 4)
@@ -109,7 +109,7 @@ test "encode_ico_pure / decode_ico_pure: 3x3 RGB roundtrip" {
 ///|
 test "encode_ico_pure: ICO 文件头正确" {
   let img = make_2x2_rgba_image()
-  let ico = encode_ico_pure(img)
+  let ico = @codec.encode_ico_pure(img)
   assert_eq(ico[0].to_int(), 0)
   assert_eq(ico[1].to_int(), 0)
   assert_eq(ico[2].to_int(), 1)
@@ -130,7 +130,7 @@ test "decode_ico_pure: 透明像素 AND 掩码" {
     0xFF, 0x00, 0x00, 0x00, 0x00,
   ]
   let ico = Bytes::from_array(data)
-  let decoded = decode_ico_pure(ico)
+  let decoded = @codec.decode_ico_pure(ico)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 4)
@@ -156,7 +156,7 @@ test "decode_ico_pure: BMP pixel data out of bounds raises" {
   ]
   let data = make_ico_bmp(dib, [0xFF, 0x00, 0x00]) // 仅 3 字节像素
   try {
-    let _ = decode_ico_pure(data)
+    let _ = @codec.decode_ico_pure(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -187,7 +187,7 @@ test "decode_ico_pure: width=0 height=0 in directory entry" {
      0x00, 0x00, 0x00, 0x00, // AND mask (1 bit, padded to 4 bytes)
   ]
   try {
-    let _ = decode_ico_pure(Bytes::from_array(data))
+    let _ = @codec.decode_ico_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     // 目录 width=0 → 256，但数据过小应失败
@@ -199,7 +199,7 @@ test "decode_ico_pure: width=0 height=0 in directory entry" {
 ///|
 test "decode_ico_pure: data too short raises" {
   try {
-    let _ = decode_ico_pure(b"\x00\x01")
+    let _ = @codec.decode_ico_pure(b"\x00\x01")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -216,7 +216,7 @@ test "decode_ico_pure: invalid type raises" {
      0x01, 0x00, // count=1
   ]
   try {
-    let _ = decode_ico_pure(Bytes::from_array(data))
+    let _ = @codec.decode_ico_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -229,7 +229,7 @@ test "decode_ico_pure: directory incomplete raises" {
   // type=1, count=1 but only 8 bytes (< 6 + 1*16 = 22)
   let data : Array[Byte] = [0x00, 0x00, 0x01, 0x00, 0x01, 0x00]
   try {
-    let _ = decode_ico_pure(Bytes::from_array(data))
+    let _ = @codec.decode_ico_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -267,7 +267,7 @@ test "decode_ico_pure: BMP offset beyond data raises" {
      0xFF, 0x00, 0x00, 0xFF,
   ]
   try {
-    let _ = decode_ico_pure(Bytes::from_array(data))
+    let _ = @codec.decode_ico_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -291,7 +291,7 @@ test "decode_ico_pure: DIB header too short raises" {
   ]
   let data = make_ico_bmp(dib, [0xFF, 0x00, 0x00, 0xFF])
   try {
-    let _ = decode_ico_pure(data)
+    let _ = @codec.decode_ico_pure(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -315,7 +315,7 @@ test "decode_ico_pure: compressed BMP raises" {
   ]
   let data = make_ico_bmp(dib, [0xFF, 0x00, 0x00, 0xFF])
   try {
-    let _ = decode_ico_pure(data)
+    let _ = @codec.decode_ico_pure(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -339,7 +339,7 @@ test "decode_ico_pure: zero width raises" {
   ]
   let data = make_ico_bmp(dib, [0xFF, 0x00, 0x00, 0xFF])
   try {
-    let _ = decode_ico_pure(data)
+    let _ = @codec.decode_ico_pure(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

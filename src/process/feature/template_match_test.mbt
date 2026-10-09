@@ -18,7 +18,7 @@ test "template_match SqDiff 基本功能" {
   // 3x3 白色模板
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
   let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
-  let results = template_match(img, tpl, match_method=SqDiff)
+  let results = @feature.template_match(img, tpl, match_method=SqDiff)
   // 应有 (10-3+1)^2 = 64 个位置
   assert_eq(results.length(), 64)
   // (0,0) 位置 SqDiff 应为 0（完美匹配）
@@ -56,7 +56,7 @@ test "template_match CCoeffNormed 完美匹配" {
     channels: 1,
     data: Bytes::from_array(tpl_data),
   }
-  let best = template_match_best(img, tpl, match_method=CCoeffNormed)
+  let best = @feature.template_match_best(img, tpl, match_method=CCoeffNormed)
   match best {
     Some(r) => {
       assert_eq(r.x, 3)
@@ -84,10 +84,10 @@ test "template_match CCorr 基本功能" {
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\x80'))
   let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
-  let results = template_match(img, tpl, match_method=CCorr)
+  let results = @feature.template_match(img, tpl, match_method=CCorr)
   assert_eq(results.length(), 64)
   // (2,2) 位置应有最大互相关
-  let best = template_match_best(img, tpl, match_method=CCorr)
+  let best = @feature.template_match_best(img, tpl, match_method=CCorr)
   match best {
     Some(r) => {
       assert_eq(r.x, 2)
@@ -112,7 +112,7 @@ test "template_match 通道数不一致报错" {
     data: Bytes::from_array(Array::make(27, b'\x00')),
   }
   try {
-    let _ = template_match(img, tpl)
+    let _ = @feature.template_match(img, tpl)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -134,7 +134,7 @@ test "template_match 模板大于图像报错" {
     data: Bytes::from_array(Array::make(49, b'\x00')),
   }
   try {
-    let _ = template_match(img, tpl)
+    let _ = @feature.template_match(img, tpl)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -170,7 +170,7 @@ test "template_match RGB 图" {
     channels: 3,
     data: Bytes::from_array(tpl_data),
   }
-  let best = template_match_best(img, tpl, match_method=SqDiff)
+  let best = @feature.template_match_best(img, tpl, match_method=SqDiff)
   match best {
     Some(r) => {
       assert_eq(r.x, 2)
@@ -199,7 +199,7 @@ test "template_match_best 空结果" {
       b'\xFF', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00', b'\x00',
     ]),
   }
-  let best = template_match_best(img, tpl, match_method=CCoeffNormed)
+  let best = @feature.template_match_best(img, tpl, match_method=CCoeffNormed)
   match best {
     Some(r) => assert_eq(r.x, 0)
     None => assert_true(false)
@@ -222,7 +222,7 @@ test "template_match SqDiffNormed 范围" {
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
   let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
-  let results = template_match(img, tpl, match_method=SqDiffNormed)
+  let results = @feature.template_match(img, tpl, match_method=SqDiffNormed)
   // 所有分数应非负
   for r in results {
     assert_true(r.score >= 0.0F)
@@ -245,7 +245,7 @@ test "template_match CCoeffNormed 范围" {
   }
   let tpl_data = Bytes::from_array(Array::make(9, b'\xFF'))
   let tpl = @types.Image::{ width: 3, height: 3, channels: 1, data: tpl_data, }
-  let results = template_match(img, tpl, match_method=CCoeffNormed)
+  let results = @feature.template_match(img, tpl, match_method=CCoeffNormed)
   // 所有分数应在 [-1, 1] 范围内
   for r in results {
     assert_true(r.score >= -1.0F - 0.001F)

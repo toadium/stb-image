@@ -6,7 +6,7 @@ test "edge_detect_laplacian: uniform image returns black" {
     channels: 1,
     data: Array::make(9, b'\x80') |> Bytes::from_array,
   }
-  let result = edge_detect_laplacian(img)
+  let result = @edge.edge_detect_laplacian(img)
   for i in 0..<9 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -23,7 +23,7 @@ test "edge_detect_prewitt: uniform image returns black" {
     channels: 1,
     data: Array::make(16, b'\x80') |> Bytes::from_array,
   }
-  let result = edge_detect_prewitt(img)
+  let result = @edge.edge_detect_prewitt(img)
   for i in 0..<16 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -47,7 +47,7 @@ test "edge_detect_laplacian: detects edge in half-black image" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = edge_detect_laplacian(img)
+  let result = @edge.edge_detect_laplacian(img)
   // 边界处应有响应（x=1 和 x=2 之间）
   let has_edge = result.data[1 * 4 + 1].to_int() > 0 ||
     result.data[1 * 4 + 2].to_int() > 0
@@ -71,7 +71,7 @@ test "edge_detect_prewitt: detects edge in half-black image" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = edge_detect_prewitt(img)
+  let result = @edge.edge_detect_prewitt(img)
   // 边界处应有响应
   let has_edge = result.data[1 * 4 + 0].to_int() > 0 ||
     result.data[2 * 4 + 0].to_int() > 0
@@ -83,7 +83,7 @@ test "edge_detect_prewitt: detects edge in half-black image" {
 ///|
 test "edge_detect_laplacian: preserves dimensions" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = edge_detect_laplacian(img)
+  let result = @edge.edge_detect_laplacian(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -94,7 +94,7 @@ test "edge_detect_laplacian: preserves dimensions" {
 ///|
 test "edge_detect_prewitt: preserves dimensions" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = edge_detect_prewitt(img)
+  let result = @edge.edge_detect_prewitt(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -106,7 +106,7 @@ test "edge_detect_prewitt: preserves dimensions" {
 test "edge_detect_laplacian: works with RGB image" {
   // 红色图像（均匀），边缘检测应返回全黑
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = edge_detect_laplacian(img)
+  let result = @edge.edge_detect_laplacian(img)
   // 均匀红色图无边缘
   for i in 0..<16 {
     assert_eq(result.data[i].to_int(), 0)
@@ -123,7 +123,7 @@ test "edge_detect_prewitt: works with grayscale image" {
     channels: 1,
     data: Array::make(16, b'\x40') |> Bytes::from_array,
   }
-  let result = edge_detect_prewitt(img)
+  let result = @edge.edge_detect_prewitt(img)
   for i in 0..<16 {
     assert_eq(result.data[i].to_int(), 0)
   }
@@ -139,7 +139,7 @@ test "edge_detect_sobel: uniform image has no edges" {
     channels: 3,
     data: Array::make(48, b'\x80') |> Bytes::from_array,
   }
-  let result = edge_detect_sobel(img)
+  let result = @edge.edge_detect_sobel(img)
   assert_eq(result.channels, 1)
   for i in 0..<16 {
     assert_eq(result.data[i].to_int(), 0)
@@ -165,7 +165,7 @@ test "edge_detect_sobel: detects edges in non-uniform image" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = edge_detect_sobel(img)
+  let result = @edge.edge_detect_sobel(img)
   assert_eq(result.channels, 1)
   // 中间列应该有边缘
   let mut has_edge = false
@@ -182,7 +182,7 @@ test "edge_detect_sobel: detects edges in non-uniform image" {
 ///|
 test "edge_detect_sobel: output dimensions match input" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = edge_detect_sobel(img)
+  let result = @edge.edge_detect_sobel(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)

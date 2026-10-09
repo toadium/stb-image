@@ -39,7 +39,7 @@ fn make_imgf_adv(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 test "inpaint_16: basic inpaint" {
   let img = make_img16_adv(8, 8, 3, 30000)
   let mask = make_img16_adv(8, 8, 1, 0)
-  let result = inpaint_16(img, mask, iterations=10)
+  let result = @filter.inpaint_16(img, mask, iterations=10)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -52,7 +52,7 @@ test "inpaint_16: basic inpaint" {
 test "inpaint_f: basic inpaint" {
   let img = make_imgf_adv(8, 8, 3, 0.5F)
   let mask = make_imgf_adv(8, 8, 1, 0.0F)
-  let result = inpaint_f(img, mask, iterations=10)
+  let result = @filter.inpaint_f(img, mask, iterations=10)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -65,7 +65,7 @@ test "inpaint_f: basic inpaint" {
 test "inpaint_fast_16: basic inpaint" {
   let img = make_img16_adv(8, 8, 3, 30000)
   let mask = make_img16_adv(8, 8, 1, 0)
-  let result = inpaint_fast_16(img, mask, radius=3)
+  let result = @filter.inpaint_fast_16(img, mask, radius=3)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -78,7 +78,7 @@ test "inpaint_fast_16: basic inpaint" {
 test "inpaint_fast_f: basic inpaint" {
   let img = make_imgf_adv(8, 8, 3, 0.5F)
   let mask = make_imgf_adv(8, 8, 1, 0.0F)
-  let result = inpaint_fast_f(img, mask, radius=3)
+  let result = @filter.inpaint_fast_f(img, mask, radius=3)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -92,7 +92,7 @@ test "inpaint_16: rejects size mismatch" {
   let img = make_img16_adv(8, 8, 3, 30000)
   let mask = make_img16_adv(4, 4, 1, 0)
   try {
-    let _ = inpaint_16(img, mask)
+    let _ = @filter.inpaint_16(img, mask)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -107,7 +107,7 @@ test "inpaint_16: rejects size mismatch" {
 ///|
 test "nlm_denoise_16: basic denoise" {
   let img = make_img16_adv(8, 8, 1, 30000)
-  let result = nlm_denoise_16(img, patch_size=3, search_size=5, h=10)
+  let result = @filter.nlm_denoise_16(img, patch_size=3, search_size=5, h=10)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -118,7 +118,7 @@ test "nlm_denoise_16: basic denoise" {
 ///|
 test "nlm_denoise_f: basic denoise" {
   let img = make_imgf_adv(8, 8, 1, 0.5F)
-  let result = nlm_denoise_f(img, patch_size=3, search_size=5, h=10)
+  let result = @filter.nlm_denoise_f(img, patch_size=3, search_size=5, h=10)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -129,7 +129,7 @@ test "nlm_denoise_f: basic denoise" {
 ///|
 test "nlm_denoise_fast_16: basic denoise" {
   let img = make_img16_adv(8, 8, 1, 30000)
-  let result = nlm_denoise_fast_16(
+  let result = @filter.nlm_denoise_fast_16(
     img,
     patch_size=3,
     search_size=5,
@@ -146,7 +146,7 @@ test "nlm_denoise_fast_16: basic denoise" {
 ///|
 test "nlm_denoise_fast_f: basic denoise" {
   let img = make_imgf_adv(8, 8, 1, 0.5F)
-  let result = nlm_denoise_fast_f(
+  let result = @filter.nlm_denoise_fast_f(
     img,
     patch_size=3,
     search_size=5,
@@ -163,7 +163,7 @@ test "nlm_denoise_fast_f: basic denoise" {
 ///|
 test "nlm_denoise_16: RGB input" {
   let img = make_img16_adv(8, 8, 3, 30000)
-  let result = nlm_denoise_16(img)
+  let result = @filter.nlm_denoise_16(img)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = result

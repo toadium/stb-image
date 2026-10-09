@@ -15,7 +15,11 @@ test "sift_detect 基本功能" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=100, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=100,
+    contrast_threshold=0.01F,
+  )
   // 应检测到一些特征
   assert_true(descs.length() >= 0)
   // 每个描述子应为 128 维
@@ -28,7 +32,7 @@ test "sift_detect 基本功能" {
 test "sift_detect 常量图无特征" {
   let data = Bytes::from_array(Array::make(1024, b'\x80'))
   let img = @types.Image::{ width: 32, height: 32, channels: 1, data, }
-  let descs = sift_detect(img, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(img, contrast_threshold=0.01F)
   assert_eq(descs.length(), 0)
 }
 
@@ -41,7 +45,7 @@ test "sift_detect 小图报错" {
     data: Bytes::from_array(Array::make(25, b'\x00')),
   }
   try {
-    let _ = sift_detect(img)
+    let _ = @feature.sift_detect(img)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -66,7 +70,11 @@ test "sift_detect RGB 图" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=50, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=50,
+    contrast_threshold=0.01F,
+  )
   assert_true(descs.length() >= 0)
 }
 
@@ -85,7 +93,11 @@ test "sift_detect 描述子归一化" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=10, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=10,
+    contrast_threshold=0.01F,
+  )
   for d in descs {
     // 归一化后 L2 范数应接近 1.0
     let mut norm = 0.0F
@@ -112,7 +124,11 @@ test "sift_detect max_features 限制" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=5, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=5,
+    contrast_threshold=0.01F,
+  )
   assert_true(descs.length() <= 5)
 }
 
@@ -130,7 +146,11 @@ test "sift_detect 描述子维度" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=20, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=20,
+    contrast_threshold=0.01F,
+  )
   for d in descs {
     assert_eq(d.data.length(), 128)
     // 描述子值应在归一化范围内
@@ -154,7 +174,11 @@ test "sift_detect 关键点属性" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let descs = sift_detect(img, max_features=20, contrast_threshold=0.01F)
+  let descs = @feature.sift_detect(
+    img,
+    max_features=20,
+    contrast_threshold=0.01F,
+  )
   for d in descs {
     let kp = d.kp
     // 坐标应在图像范围内

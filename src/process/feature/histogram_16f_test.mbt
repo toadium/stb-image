@@ -53,7 +53,7 @@ fn read_f32_at_h(data : Bytes, offset : Int) -> Float {
 ///|
 test "histogram_16: uniform image single bin" {
   let img = make_img16_hist(4, 4, 1, 30000)
-  let hist = histogram_16(img)
+  let hist = @feature.histogram_16(img)
   assert_eq(hist.length(), 65536)
   assert_eq(hist[30000], 16)
   let _ = img
@@ -63,7 +63,7 @@ test "histogram_16: uniform image single bin" {
 ///|
 test "histogram_f: uniform image single bin" {
   let img = make_imgf_hist(4, 4, 1, 0.5F)
-  let hist = histogram_f(img)
+  let hist = @feature.histogram_f(img)
   assert_eq(hist.length(), 256)
   // 0.5 * 255 = 127.5 -> 128
   assert_eq(hist[128], 16)
@@ -76,7 +76,7 @@ test "histogram_f: uniform image single bin" {
 ///|
 test "histogram_equalize_16: uniform image unchanged" {
   let img = make_img16_hist(4, 4, 1, 30000)
-  let result = histogram_equalize_16(img)
+  let result = @feature.histogram_equalize_16(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -91,7 +91,7 @@ test "histogram_equalize_16: uniform image unchanged" {
 ///|
 test "histogram_equalize_f: uniform image unchanged" {
   let img = make_imgf_hist(4, 4, 1, 0.5F)
-  let result = histogram_equalize_f(img)
+  let result = @feature.histogram_equalize_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -108,7 +108,7 @@ test "histogram_equalize_f: uniform image unchanged" {
 ///|
 test "histogram_normalize_16: uniform image unchanged" {
   let img = make_img16_hist(4, 4, 1, 30000)
-  let result = histogram_normalize_16(img)
+  let result = @feature.histogram_normalize_16(img)
   for i in 0..<16 {
     assert_eq(read_u16_at_h(result.data, i * 2), 30000)
   }
@@ -132,7 +132,7 @@ test "histogram_normalize_16: stretches range" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = histogram_normalize_16(img2)
+  let result = @feature.histogram_normalize_16(img2)
   // 归一化后最小值应为 0，最大值应为 65535
   let mut min_v = 65535
   let mut max_v = 0
@@ -155,7 +155,7 @@ test "histogram_normalize_16: stretches range" {
 ///|
 test "histogram_normalize_f: uniform image unchanged" {
   let img = make_imgf_hist(4, 4, 1, 0.5F)
-  let result = histogram_normalize_f(img)
+  let result = @feature.histogram_normalize_f(img)
   for i in 0..<16 {
     let v = read_f32_at_h(result.data, i * 4)
     assert_true(v > 0.499F && v < 0.501F)
@@ -169,7 +169,7 @@ test "histogram_normalize_f: uniform image unchanged" {
 ///|
 test "histogram_matching_16: same image unchanged" {
   let img = make_img16_hist(4, 4, 1, 30000)
-  let result = histogram_matching_16(img, img)
+  let result = @feature.histogram_matching_16(img, img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -180,7 +180,7 @@ test "histogram_matching_16: same image unchanged" {
 ///|
 test "histogram_matching_f: same image unchanged" {
   let img = make_imgf_hist(4, 4, 1, 0.5F)
-  let result = histogram_matching_f(img, img)
+  let result = @feature.histogram_matching_f(img, img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -192,7 +192,7 @@ test "histogram_matching_f: same image unchanged" {
 test "histogram_matching_16: RGBA preserves alpha" {
   let img = make_img16_hist(4, 4, 4, 30000)
   let ref_img = make_img16_hist(4, 4, 4, 20000)
-  let result = histogram_matching_16(img, ref_img)
+  let result = @feature.histogram_matching_16(img, ref_img)
   assert_eq(result.channels, 4)
   for i in 0..<16 {
     let alpha_off = i * 8 + 6
@@ -209,7 +209,7 @@ test "histogram_matching_16: RGBA preserves alpha" {
 ///|
 test "histogram_equalize_16: RGB dimensions" {
   let img = make_img16_hist(4, 4, 3, 30000)
-  let result = histogram_equalize_16(img)
+  let result = @feature.histogram_equalize_16(img)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -220,7 +220,7 @@ test "histogram_equalize_16: RGB dimensions" {
 ///|
 test "histogram_normalize_f: RGB dimensions" {
   let img = make_imgf_hist(4, 4, 3, 0.5F)
-  let result = histogram_normalize_f(img)
+  let result = @feature.histogram_normalize_f(img)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -231,7 +231,7 @@ test "histogram_normalize_f: RGB dimensions" {
 ///|
 test "histogram_16: RGB converts to grayscale" {
   let img = make_img16_hist(4, 4, 3, 30000)
-  let hist = histogram_16(img)
+  let hist = @feature.histogram_16(img)
   // BT.601: (30000*299 + 30000*587 + 30000*114)/1000 = 30000
   assert_eq(hist[30000], 16)
   let _ = img
@@ -244,7 +244,7 @@ test "histogram_16: RGB converts to grayscale" {
 test "histogram_16: zero width raises" {
   let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = histogram_16(img)
+    let _ = @feature.histogram_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -257,7 +257,7 @@ test "histogram_16: zero width raises" {
 test "histogram_16: invalid channels raises" {
   let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = histogram_16(img)
+    let _ = @feature.histogram_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -270,7 +270,7 @@ test "histogram_16: invalid channels raises" {
 test "histogram_f: zero width raises" {
   let img = @types.ImageF::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = histogram_f(img)
+    let _ = @feature.histogram_f(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -283,7 +283,7 @@ test "histogram_f: zero width raises" {
 test "histogram_f: invalid channels raises" {
   let img = @types.ImageF::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = histogram_f(img)
+    let _ = @feature.histogram_f(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

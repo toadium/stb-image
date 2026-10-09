@@ -12,7 +12,7 @@ fn make_hdr_img(w : Int, h : Int, val : Byte) -> @types.Image {
 
 ///|
 test "hdr_default_config: 返回有效配置" {
-  let config = hdr_default_config()
+  let config = @enhance.hdr_default_config()
   assert_true(config.gamma > 0.0)
   assert_true(config.reinhard_key > 0.0)
 }
@@ -22,7 +22,7 @@ test "hdr_fusion_average: 基本融合" {
   let img1 = make_hdr_img(16, 16, b'\x40')
   let img2 = make_hdr_img(16, 16, b'\x80')
   let img3 = make_hdr_img(16, 16, b'\xC0')
-  let result = hdr_fusion_average([img1, img2, img3])
+  let result = @enhance.hdr_fusion_average([img1, img2, img3])
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -30,7 +30,7 @@ test "hdr_fusion_average: 基本融合" {
 ///|
 test "hdr_fusion_average: 空列表抛异常" {
   try {
-    ignore(hdr_fusion_average([]))
+    ignore(@enhance.hdr_fusion_average([]))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -41,7 +41,7 @@ test "hdr_fusion_average: 空列表抛异常" {
 test "hdr_fusion_weighted: 加权融合" {
   let img1 = make_hdr_img(16, 16, b'\x40')
   let img2 = make_hdr_img(16, 16, b'\x80')
-  let result = hdr_fusion_weighted([img1, img2])
+  let result = @enhance.hdr_fusion_weighted([img1, img2])
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -49,7 +49,7 @@ test "hdr_fusion_weighted: 加权融合" {
 ///|
 test "hdr_fusion_weighted: 空列表抛异常" {
   try {
-    ignore(hdr_fusion_weighted([]))
+    ignore(@enhance.hdr_fusion_weighted([]))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -59,7 +59,7 @@ test "hdr_fusion_weighted: 空列表抛异常" {
 ///|
 test "tone_mapping_reinhard: 基本色调映射" {
   let img = make_hdr_img(16, 16, b'\x80')
-  let result = tone_mapping_reinhard(img)
+  let result = @enhance.tone_mapping_reinhard(img)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -67,7 +67,7 @@ test "tone_mapping_reinhard: 基本色调映射" {
 ///|
 test "tone_mapping_gamma: 基本Gamma映射" {
   let img = make_hdr_img(16, 16, b'\x80')
-  let result = tone_mapping_gamma(img)
+  let result = @enhance.tone_mapping_gamma(img)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -75,7 +75,7 @@ test "tone_mapping_gamma: 基本Gamma映射" {
 ///|
 test "tone_mapping_sigmoid: 基本Sigmoid映射" {
   let img = make_hdr_img(16, 16, b'\x80')
-  let result = tone_mapping_sigmoid(img)
+  let result = @enhance.tone_mapping_sigmoid(img)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -85,7 +85,7 @@ test "hdr_process: 完整HDR处理" {
   let img1 = make_hdr_img(16, 16, b'\x40')
   let img2 = make_hdr_img(16, 16, b'\x80')
   let img3 = make_hdr_img(16, 16, b'\xC0')
-  let result = hdr_process([img1, img2, img3])
+  let result = @enhance.hdr_process([img1, img2, img3])
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
 }
@@ -93,7 +93,7 @@ test "hdr_process: 完整HDR处理" {
 ///|
 test "hdr_process: 空列表抛异常" {
   try {
-    ignore(hdr_process([]))
+    ignore(@enhance.hdr_process([]))
     assert_true(false)
   } catch {
     _ => assert_true(true)

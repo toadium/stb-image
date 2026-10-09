@@ -48,7 +48,7 @@ fn make_imgf(w : Int, h : Int, ch : Int) -> @types.ImageF {
 ///|
 test "adjust_brightness_16: delta=0 is identity" {
   let img = make_img16(3, 3, 3)
-  let result = adjust_brightness_16(img, 0)
+  let result = @color.adjust_brightness_16(img, 0)
   assert_eq(result, img)
   let _ = img
   let _ = result
@@ -57,7 +57,7 @@ test "adjust_brightness_16: delta=0 is identity" {
 ///|
 test "adjust_brightness_16: positive delta brightens" {
   let img = make_img16(2, 2, 3)
-  let result = adjust_brightness_16(img, 1000)
+  let result = @color.adjust_brightness_16(img, 1000)
   assert_eq(result.width, 2)
   assert_eq(result.height, 2)
   let _ = img
@@ -77,7 +77,7 @@ test "adjust_brightness_16: clamps to 65535" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = adjust_brightness_16(img, 10000)
+  let result = @color.adjust_brightness_16(img, 10000)
   assert_eq(result, img)
   let _ = data
   let _ = img
@@ -87,7 +87,7 @@ test "adjust_brightness_16: clamps to 65535" {
 ///|
 test "adjust_brightness_f: delta=0 is identity" {
   let img = make_imgf(3, 3, 3)
-  let result = adjust_brightness_f(img, 0.0F)
+  let result = @color.adjust_brightness_f(img, 0.0F)
   assert_eq(result, img)
   let _ = img
   let _ = result
@@ -96,7 +96,7 @@ test "adjust_brightness_f: delta=0 is identity" {
 ///|
 test "adjust_brightness_f: preserves dimensions" {
   let img = make_imgf(4, 3, 3)
-  let result = adjust_brightness_f(img, 0.1F)
+  let result = @color.adjust_brightness_f(img, 0.1F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -107,7 +107,7 @@ test "adjust_brightness_f: preserves dimensions" {
 ///|
 test "adjust_contrast_16: factor=1.0 is identity" {
   let img = make_img16(3, 3, 3)
-  let result = adjust_contrast_16(img, 1.0F)
+  let result = @color.adjust_contrast_16(img, 1.0F)
   assert_eq(result, img)
   let _ = img
   let _ = result
@@ -116,7 +116,7 @@ test "adjust_contrast_16: factor=1.0 is identity" {
 ///|
 test "adjust_contrast_16: preserves dimensions" {
   let img = make_img16(4, 3, 2)
-  let result = adjust_contrast_16(img, 1.5F)
+  let result = @color.adjust_contrast_16(img, 1.5F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 2)
@@ -127,7 +127,7 @@ test "adjust_contrast_16: preserves dimensions" {
 ///|
 test "adjust_contrast_f: factor=1.0 is identity" {
   let img = make_imgf(3, 3, 3)
-  let result = adjust_contrast_f(img, 1.0F)
+  let result = @color.adjust_contrast_f(img, 1.0F)
   assert_eq(result.width, 3)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -138,7 +138,7 @@ test "adjust_contrast_f: factor=1.0 is identity" {
 ///|
 test "adjust_contrast_f: preserves dimensions" {
   let img = make_imgf(4, 3, 3)
-  let result = adjust_contrast_f(img, 2.0F)
+  let result = @color.adjust_contrast_f(img, 2.0F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   let _ = img
@@ -148,7 +148,7 @@ test "adjust_contrast_f: preserves dimensions" {
 ///|
 test "adjust_brightness_16: grayscale image" {
   let img = make_img16(3, 3, 1)
-  let result = adjust_brightness_16(img, 500)
+  let result = @color.adjust_brightness_16(img, 500)
   assert_eq(result.channels, 1)
   assert_eq(result.width, 3)
   let _ = img
@@ -158,7 +158,7 @@ test "adjust_brightness_16: grayscale image" {
 ///|
 test "adjust_brightness_f: negative delta darkens" {
   let img = make_imgf(2, 2, 3)
-  let result = adjust_brightness_f(img, -0.1F)
+  let result = @color.adjust_brightness_f(img, -0.1F)
   assert_eq(result.width, 2)
   assert_eq(result.height, 2)
   let _ = img
@@ -178,7 +178,7 @@ test "adjust_brightness_16: negative delta clamps to 0" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = adjust_brightness_16(img, -100)
+  let result = @color.adjust_brightness_16(img, -100)
   for i in 0..<12 {
     let val = result.data[i * 2].to_int() +
       result.data[i * 2 + 1].to_int() * 256
@@ -206,7 +206,7 @@ test "adjust_brightness_16: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = adjust_brightness_16(img, 100)
+  let result = @color.adjust_brightness_16(img, 100)
   assert_eq(result.data[6], b'\xFF')
   assert_eq(result.data[7], b'\xFF')
   let _ = data
@@ -228,7 +228,7 @@ test "adjust_brightness_f: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = adjust_brightness_f(img, 0.1F)
+  let result = @color.adjust_brightness_f(img, 0.1F)
   assert_eq(result.data[12], data[12])
   assert_eq(result.data[13], data[13])
   assert_eq(result.data[14], data[14])
@@ -253,7 +253,7 @@ test "adjust_contrast_16: high factor clamps to 65535" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = adjust_contrast_16(img, 10.0F)
+  let result = @color.adjust_contrast_16(img, 10.0F)
   let v0 = result.data[0].to_int() + result.data[1].to_int() * 256
   assert_eq(v0, 65535)
   let _ = data
@@ -272,7 +272,7 @@ test "adjust_contrast_16: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = adjust_contrast_16(img, 2.0F)
+  let result = @color.adjust_contrast_16(img, 2.0F)
   assert_eq(result.data[6], b'\xAA')
   assert_eq(result.data[7], b'\xBB')
   let _ = data
@@ -294,7 +294,7 @@ test "adjust_contrast_f: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = adjust_contrast_f(img, 2.0F)
+  let result = @color.adjust_contrast_f(img, 2.0F)
   assert_eq(result.data[12], data[12])
   assert_eq(result.data[13], data[13])
   assert_eq(result.data[14], data[14])
@@ -307,7 +307,7 @@ test "adjust_contrast_f: RGBA preserves alpha" {
 ///|
 test "adjust_gamma_16: gamma=1.0 is identity" {
   let img = make_img16(4, 3, 3)
-  let result = adjust_gamma_16(img, 1.0F)
+  let result = @color.adjust_gamma_16(img, 1.0F)
   assert_eq(result, img)
   let _ = img
   let _ = result
@@ -316,7 +316,7 @@ test "adjust_gamma_16: gamma=1.0 is identity" {
 ///|
 test "adjust_gamma_f: gamma=1.0 is identity" {
   let img = make_imgf(4, 3, 3)
-  let result = adjust_gamma_f(img, 1.0F)
+  let result = @color.adjust_gamma_f(img, 1.0F)
   // 浮点数精度：powf(x, 1.0) 近似等于 x
   for i in 0..<(4 * 3 * 3) {
     let offset = i * 4
@@ -343,8 +343,8 @@ test "adjust_gamma_f: gamma=1.0 is identity" {
 ///|
 test "invert_16: double invert is identity" {
   let img = make_img16(4, 3, 3)
-  let r1 = invert_16(img)
-  let r2 = invert_16(r1)
+  let r1 = @color.invert_16(img)
+  let r2 = @color.invert_16(r1)
   assert_eq(r2, img)
   let _ = img
   let _ = r1
@@ -354,8 +354,8 @@ test "invert_16: double invert is identity" {
 ///|
 test "invert_f: double invert is identity" {
   let img = make_imgf(4, 3, 3)
-  let r1 = invert_f(img)
-  let r2 = invert_f(r1)
+  let r1 = @color.invert_f(img)
+  let r2 = @color.invert_f(r1)
   // 浮点数精度：1.0 - (1.0 - x) 近似等于 x
   for i in 0..<(4 * 3 * 3) {
     let offset = i * 4
@@ -383,7 +383,7 @@ test "invert_f: double invert is identity" {
 ///|
 test "to_grayscale_16: output channels=1" {
   let img = make_img16(4, 3, 3)
-  let result = to_grayscale_16(img)
+  let result = @color.to_grayscale_16(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 1)
@@ -394,7 +394,7 @@ test "to_grayscale_16: output channels=1" {
 ///|
 test "to_grayscale_f: output channels=1" {
   let img = make_imgf(4, 3, 3)
-  let result = to_grayscale_f(img)
+  let result = @color.to_grayscale_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 1)

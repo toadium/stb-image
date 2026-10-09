@@ -23,7 +23,7 @@ test "to_grayscale_pure: RGB to gray" {
   // 像素 (10,20,30):   (10*299+20*587+30*114)/1000  = 18150/1000  = 18
   // 像素 (255,0,128):  (255*299+0*587+128*114)/1000 = 90837/1000  = 90
   // 像素 (0,255,0):    (0*299+255*587+0*114)/1000   = 149685/1000 = 149
-  let gray = to_grayscale_pure(img)
+  let gray = @color.to_grayscale_pure(img)
   assert_eq(gray.width, 2)
   assert_eq(gray.height, 2)
   assert_eq(gray.channels, 1)
@@ -39,7 +39,7 @@ test "to_grayscale_pure: RGB to gray" {
 test "to_grayscale_pure: already gray" {
   // channels=1 → 返回自身（同对象）
   let img = cc_make_image(2, 2, 1, [b'\x64', b'\xC8', b'\x32', b'\x0A'])
-  let gray = to_grayscale_pure(img)
+  let gray = @color.to_grayscale_pure(img)
   assert_eq(gray.width, 2)
   assert_eq(gray.height, 2)
   assert_eq(gray.channels, 1)
@@ -55,7 +55,7 @@ test "to_rgb_pure: RGBA to RGB" {
     b'\x64', b'\xC8', b'\x32', b'\xFF', b'\x0A', b'\x14', b'\x1E', b'\x80', b'\xFF',
     b'\x00', b'\x80', b'\x40', b'\x00', b'\xFF', b'\x00', b'\x20',
   ])
-  let rgb = to_rgb_pure(img)
+  let rgb = @color.to_rgb_pure(img)
   assert_eq(rgb.width, 2)
   assert_eq(rgb.height, 2)
   assert_eq(rgb.channels, 3)
@@ -76,7 +76,7 @@ test "to_rgb_pure: already RGB" {
     b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
     b'\x00', b'\xFF', b'\x00',
   ])
-  let rgb = to_rgb_pure(img)
+  let rgb = @color.to_rgb_pure(img)
   assert_eq(rgb.width, 2)
   assert_eq(rgb.height, 2)
   assert_eq(rgb.channels, 3)
@@ -92,7 +92,7 @@ test "to_rgba_pure: RGB to RGBA" {
     b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
     b'\x00', b'\xFF', b'\x00',
   ])
-  let rgba = to_rgba_pure(img)
+  let rgba = @color.to_rgba_pure(img)
   assert_eq(rgba.width, 2)
   assert_eq(rgba.height, 2)
   assert_eq(rgba.channels, 4)
@@ -113,7 +113,7 @@ test "to_rgba_pure: already RGBA" {
     b'\x64', b'\xC8', b'\x32', b'\xFF', b'\x0A', b'\x14', b'\x1E', b'\x80', b'\xFF',
     b'\x00', b'\x80', b'\x40', b'\x00', b'\xFF', b'\x00', b'\x20',
   ])
-  let rgba = to_rgba_pure(img)
+  let rgba = @color.to_rgba_pure(img)
   assert_eq(rgba.width, 2)
   assert_eq(rgba.height, 2)
   assert_eq(rgba.channels, 4)
@@ -133,7 +133,7 @@ test "premultiply_alpha_pure: basic" {
     b'\xC8', b'\x64', b'\x32', b'\x80', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x00',
     b'\xFF', b'\x00', b'\x00', b'\x0A', b'\x14', b'\x1E', b'\x40',
   ])
-  let out = premultiply_alpha_pure(img)
+  let out = @color.premultiply_alpha_pure(img)
   assert_eq(out.width, 2)
   assert_eq(out.height, 2)
   assert_eq(out.channels, 4)
@@ -165,7 +165,7 @@ test "premultiply_alpha_pure: channels!=4 raises" {
     b'\x00', b'\xFF', b'\x00',
   ])
   let raised = try {
-    let _ = premultiply_alpha_pure(img)
+    let _ = @color.premultiply_alpha_pure(img)
     false
   } catch {
     @types.LoadError::DecodeFailed(_) => true
@@ -186,7 +186,7 @@ test "unpremultiply_alpha_pure: basic" {
     b'\x64', b'\x32', b'\x19', b'\x80', b'\xFF', b'\x00', b'\x00', b'\xFF', b'\x0A',
     b'\x14', b'\x1E', b'\x00', b'\x02', b'\x05', b'\x07', b'\x40',
   ])
-  let out = unpremultiply_alpha_pure(img)
+  let out = @color.unpremultiply_alpha_pure(img)
   assert_eq(out.width, 2)
   assert_eq(out.height, 2)
   assert_eq(out.channels, 4)
@@ -218,7 +218,7 @@ test "unpremultiply_alpha_pure: channels!=4 raises" {
     b'\x00', b'\xFF', b'\x00',
   ])
   let raised = try {
-    let _ = unpremultiply_alpha_pure(img)
+    let _ = @color.unpremultiply_alpha_pure(img)
     false
   } catch {
     @types.LoadError::DecodeFailed(_) => true
@@ -234,7 +234,7 @@ test "convert_channels_pure: same channels returns self" {
     b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
     b'\x00', b'\xFF', b'\x00',
   ])
-  let out = convert_channels_pure(img, 3)
+  let out = @color.convert_channels_pure(img, 3)
   assert_eq(out.channels, 3)
   assert_eq(out.data, img.data)
 }
@@ -245,7 +245,7 @@ test "convert_channels_pure: RGB to gray (req=1)" {
     b'\x64', b'\xC8', b'\x32', b'\x0A', b'\x14', b'\x1E', b'\xFF', b'\x00', b'\x80',
     b'\x00', b'\xFF', b'\x00',
   ])
-  let out = convert_channels_pure(img, 1)
+  let out = @color.convert_channels_pure(img, 1)
   assert_eq(out.channels, 1)
   assert_eq(out.data[0].to_int(), 153)
 }
@@ -253,7 +253,7 @@ test "convert_channels_pure: RGB to gray (req=1)" {
 ///|
 test "convert_channels_pure: RGB to gray+alpha (req=2)" {
   let img = cc_make_image(1, 1, 3, [b'\x64', b'\xC8', b'\x32'])
-  let out = convert_channels_pure(img, 2)
+  let out = @color.convert_channels_pure(img, 2)
   assert_eq(out.channels, 2)
   // gray = (100*299+200*587+50*114)/1000 = 153
   assert_eq(out.data[0].to_int(), 153)
@@ -264,7 +264,7 @@ test "convert_channels_pure: RGB to gray+alpha (req=2)" {
 ///|
 test "convert_channels_pure: RGBA to gray+alpha (req=2)" {
   let img = cc_make_image(1, 1, 4, [b'\x64', b'\xC8', b'\x32', b'\x80'])
-  let out = convert_channels_pure(img, 2)
+  let out = @color.convert_channels_pure(img, 2)
   assert_eq(out.channels, 2)
   assert_eq(out.data[0].to_int(), 153)
   // alpha from source
@@ -274,7 +274,7 @@ test "convert_channels_pure: RGBA to gray+alpha (req=2)" {
 ///|
 test "convert_channels_pure: gray to gray+alpha (req=2)" {
   let img = cc_make_image(1, 1, 1, [b'\x80'])
-  let out = convert_channels_pure(img, 2)
+  let out = @color.convert_channels_pure(img, 2)
   assert_eq(out.channels, 2)
   assert_eq(out.data[0].to_int(), 128)
   assert_eq(out.data[1].to_int(), 255)
@@ -283,7 +283,7 @@ test "convert_channels_pure: gray to gray+alpha (req=2)" {
 ///|
 test "convert_channels_pure: gray+alpha to gray+alpha (req=2)" {
   let img = cc_make_image(1, 1, 2, [b'\x80', b'\x40'])
-  let out = convert_channels_pure(img, 2)
+  let out = @color.convert_channels_pure(img, 2)
   assert_eq(out.channels, 2)
   assert_eq(out.data[0].to_int(), 128)
   assert_eq(out.data[1].to_int(), 64)
@@ -292,7 +292,7 @@ test "convert_channels_pure: gray+alpha to gray+alpha (req=2)" {
 ///|
 test "convert_channels_pure: gray to RGB (req=3)" {
   let img = cc_make_image(2, 1, 1, [b'\x80', b'\x40'])
-  let out = convert_channels_pure(img, 3)
+  let out = @color.convert_channels_pure(img, 3)
   assert_eq(out.channels, 3)
   // gray -> R=G=B
   assert_eq(out.data[0].to_int(), 128)
@@ -306,7 +306,7 @@ test "convert_channels_pure: gray to RGB (req=3)" {
 ///|
 test "convert_channels_pure: RGBA to RGB (req=3)" {
   let img = cc_make_image(1, 1, 4, [b'\x64', b'\xC8', b'\x32', b'\xFF'])
-  let out = convert_channels_pure(img, 3)
+  let out = @color.convert_channels_pure(img, 3)
   assert_eq(out.channels, 3)
   assert_eq(out.data[0].to_int(), 100)
   assert_eq(out.data[1].to_int(), 200)
@@ -316,7 +316,7 @@ test "convert_channels_pure: RGBA to RGB (req=3)" {
 ///|
 test "convert_channels_pure: gray to RGBA (req=4)" {
   let img = cc_make_image(1, 1, 1, [b'\x80'])
-  let out = convert_channels_pure(img, 4)
+  let out = @color.convert_channels_pure(img, 4)
   assert_eq(out.channels, 4)
   assert_eq(out.data[0].to_int(), 128)
   assert_eq(out.data[1].to_int(), 0)
@@ -327,7 +327,7 @@ test "convert_channels_pure: gray to RGBA (req=4)" {
 ///|
 test "convert_channels_pure: RGB to RGBA (req=4)" {
   let img = cc_make_image(1, 1, 3, [b'\x64', b'\xC8', b'\x32'])
-  let out = convert_channels_pure(img, 4)
+  let out = @color.convert_channels_pure(img, 4)
   assert_eq(out.channels, 4)
   assert_eq(out.data[0].to_int(), 100)
   assert_eq(out.data[1].to_int(), 200)
@@ -339,7 +339,7 @@ test "convert_channels_pure: RGB to RGBA (req=4)" {
 test "convert_channels_pure: invalid req_channels" {
   let img = cc_make_image(1, 1, 1, [b'\x80'])
   try {
-    let _ = convert_channels_pure(img, 5)
+    let _ = @color.convert_channels_pure(img, 5)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -349,7 +349,7 @@ test "convert_channels_pure: invalid req_channels" {
 ///|
 test "to_rgb_pure: channels < 3 returns self" {
   let img = cc_make_image(1, 1, 1, [b'\x80'])
-  let out = to_rgb_pure(img)
+  let out = @color.to_rgb_pure(img)
   assert_eq(out.channels, 1)
   assert_eq(out.data, img.data)
 }
@@ -357,7 +357,7 @@ test "to_rgb_pure: channels < 3 returns self" {
 ///|
 test "to_rgba_pure: gray to RGBA" {
   let img = cc_make_image(1, 1, 1, [b'\x80'])
-  let out = to_rgba_pure(img)
+  let out = @color.to_rgba_pure(img)
   assert_eq(out.channels, 4)
   assert_eq(out.data[0].to_int(), 128)
   assert_eq(out.data[1].to_int(), 0)

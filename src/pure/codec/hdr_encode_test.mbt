@@ -30,7 +30,7 @@ fn he_make_imagef(
 ///|
 test "encode_hdr_pure: RADIANCE header" {
   let img = he_make_imagef(1, 1, [(1.0F, 0.0F, 0.0F)])
-  let out = encode_hdr_pure(img)
+  let out = @codec.encode_hdr_pure(img)
   // header 应包含 "#?RADIANCE\n"
   assert_eq(out[0].to_int(), 0x23) // #
   assert_eq(out[1].to_int(), 0x3F) // ?
@@ -49,7 +49,7 @@ test "encode_hdr_pure: invalid channels raises" {
     data: Bytes::from_array(Array::make(16, b'\x00')),
   }
   try {
-    let _ = encode_hdr_pure(img)
+    let _ = @codec.encode_hdr_pure(img)
     fail("expected error")
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -60,8 +60,8 @@ test "encode_hdr_pure: invalid channels raises" {
 ///|
 test "encode_hdr_pure: 1x1 roundtrip" {
   let img = he_make_imagef(1, 1, [(1.0F, 0.5F, 0.25F)])
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -75,8 +75,8 @@ test "encode_hdr_pure: 2x2 roundtrip" {
     (0.0F, 0.0F, 1.0F),
     (1.0F, 1.0F, 1.0F),
   ])
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 3)
@@ -90,8 +90,8 @@ test "encode_hdr_pure: 8x8 roundtrip with RLE" {
     pixels.push((Float::from_int(i % 8) * 0.1F, 0.5F, 0.3F))
   }
   let img = he_make_imagef(8, 8, pixels)
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 8)
   assert_eq(restored.height, 8)
   assert_eq(restored.channels, 3)
@@ -105,8 +105,8 @@ test "encode_hdr_pure: 4x4 small image (no RLE)" {
     pixels.push((0.5F, 0.5F, 0.5F))
   }
   let img = he_make_imagef(4, 4, pixels)
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
   assert_eq(restored.channels, 3)
@@ -120,8 +120,8 @@ test "encode_hdr_pure: all-black image" {
     (0.0F, 0.0F, 0.0F),
     (0.0F, 0.0F, 0.0F),
   ])
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   // 全黑解码后应全 0
@@ -135,8 +135,8 @@ test "encode_hdr_pure: 16x1 uniform scanline RLE" {
   // 16x1 均匀图像，测试 RLE 重复编码
   let pixels = Array::make(16, (0.5F, 0.5F, 0.5F))
   let img = he_make_imagef(16, 1, pixels)
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 16)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)

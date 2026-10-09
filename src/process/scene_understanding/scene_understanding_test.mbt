@@ -14,7 +14,7 @@ fn create_test_image_su(w : Int, h : Int, value : Byte) -> @types.Image {
 
 ///|
 test "create_default_scene_config: returns ViT+BLIP config" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   assert_eq(config.classification_threshold, 0.5)
   assert_eq(config.caption_temperature, 1.0)
   assert_eq(config.max_caption_length, 50)
@@ -22,17 +22,21 @@ test "create_default_scene_config: returns ViT+BLIP config" {
   assert_true(config.use_scene_graph)
   assert_true(
     config.classification_algorithm
-    is SceneClassificationAlgorithm::VisionTransformer,
+    is @scene_understanding.SceneClassificationAlgorithm::VisionTransformer,
   )
-  assert_true(config.captioning_algorithm is ImageCaptioningAlgorithm::BLIP)
   assert_true(
-    config.vqa_algorithm is VisualQuestionAnsweringAlgorithm::BLIP_VQA,
+    config.captioning_algorithm
+    is @scene_understanding.ImageCaptioningAlgorithm::BLIP,
+  )
+  assert_true(
+    config.vqa_algorithm
+    is @scene_understanding.VisualQuestionAnsweringAlgorithm::BLIP_VQA,
   )
 }
 
 ///|
 test "get_common_scene_types: returns scene type list" {
-  let types = get_common_scene_types()
+  let types = @scene_understanding.get_common_scene_types()
   assert_true(types.length() > 20)
   assert_true(types.contains("indoor"))
   assert_true(types.contains("outdoor"))
@@ -42,10 +46,10 @@ test "get_common_scene_types: returns scene type list" {
 
 ///|
 test "classify_scene: dark image classified as night" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let dark_val : Byte = 30
   let image = create_test_image_su(64, 64, dark_val)
-  let result = classify_scene(image, config)
+  let result = @scene_understanding.classify_scene(image, config)
   assert_eq(result.scene_type, "night")
   assert_eq(result.scene_category, "time_of_day")
   assert_eq(result.num_classes, 30)
@@ -55,19 +59,19 @@ test "classify_scene: dark image classified as night" {
 
 ///|
 test "classify_scene: bright image classified as daytime" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let bright_val : Byte = 220
   let image = create_test_image_su(64, 64, bright_val)
-  let result = classify_scene(image, config)
+  let result = @scene_understanding.classify_scene(image, config)
   assert_eq(result.scene_type, "daytime")
   assert_eq(result.scene_category, "time_of_day")
 }
 
 ///|
 test "generate_caption: generates caption for image" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let result = generate_caption(image, config)
+  let result = @scene_understanding.generate_caption(image, config)
   assert_true(result.caption.length() > 0)
   assert_eq(result.num_captions, 4)
   assert_eq(result.alternative_captions.length(), 3)
@@ -77,9 +81,11 @@ test "generate_caption: generates caption for image" {
 
 ///|
 test "answer_visual_question: scene question" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let result = answer_visual_question(image, "What scene is this?", config)
+  let result = @scene_understanding.answer_visual_question(
+    image, "What scene is this?", config,
+  )
   assert_true(result.answer.length() > 0)
   assert_eq(result.question_type, "scene_recognition")
   assert_eq(result.answer_type, "open")
@@ -89,19 +95,21 @@ test "answer_visual_question: scene question" {
 
 ///|
 test "answer_visual_question: brightness question" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let dark_val : Byte = 30
   let image = create_test_image_su(64, 64, dark_val)
-  let result = answer_visual_question(image, "Is it dark or bright?", config)
+  let result = @scene_understanding.answer_visual_question(
+    image, "Is it dark or bright?", config,
+  )
   assert_eq(result.answer, "dark")
   assert_eq(result.question_type, "attribute_recognition")
 }
 
 ///|
 test "answer_visual_question: unknown question" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let result = answer_visual_question(
+  let result = @scene_understanding.answer_visual_question(
     image, "How many people are there?", config,
   )
   assert_eq(result.question_type, "unknown")
@@ -110,9 +118,9 @@ test "answer_visual_question: unknown question" {
 
 ///|
 test "generate_scene_graph: generates 4 region objects" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let graph = generate_scene_graph(image, config)
+  let graph = @scene_understanding.generate_scene_graph(image, config)
   assert_eq(graph.num_objects, 4)
   assert_eq(graph.num_relations, 4)
   assert_eq(graph.nodes.length(), 4)
@@ -125,9 +133,11 @@ test "generate_scene_graph: generates 4 region objects" {
 
 ///|
 test "understand_scene: returns full scene understanding" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let (classification, caption, scene_graph) = understand_scene(image, config)
+  let (classification, caption, scene_graph) = @scene_understanding.understand_scene(
+    image, config,
+  )
   assert_true(classification.scene_type.length() > 0)
   assert_true(caption.caption.length() > 0)
   assert_eq(scene_graph.num_objects, 4)
@@ -136,13 +146,15 @@ test "understand_scene: returns full scene understanding" {
 
 ///|
 test "scene_understanding_report_to_string: contains all sections" {
-  let config = create_default_scene_config()
+  let config = @scene_understanding.create_default_scene_config()
   let image = create_test_image_su(64, 64, 128)
-  let classification = classify_scene(image, config)
-  let caption = generate_caption(image, config)
-  let vqa = answer_visual_question(image, "What scene is this?", config)
-  let scene_graph = generate_scene_graph(image, config)
-  let report = scene_understanding_report_to_string(
+  let classification = @scene_understanding.classify_scene(image, config)
+  let caption = @scene_understanding.generate_caption(image, config)
+  let vqa = @scene_understanding.answer_visual_question(
+    image, "What scene is this?", config,
+  )
+  let scene_graph = @scene_understanding.generate_scene_graph(image, config)
+  let report = @scene_understanding.scene_understanding_report_to_string(
     classification, caption, vqa, scene_graph,
   )
   assert_true(report.contains("场景理解与图像描述报告"))

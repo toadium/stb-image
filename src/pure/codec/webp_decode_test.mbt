@@ -65,7 +65,7 @@ test "decode_webp: RIFF magic 检测" {
 ///|
 test "decode_webp: 错误 - 数据过短" {
   let data = [b'R', b'I'] |> Bytes::from_array
-  try decode_webp_pure(data) catch {
+  try @codec.decode_webp_pure(data) catch {
     @types.LoadError::DecodeFailed(msg) => assert_true(msg.length() > 0)
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -76,7 +76,7 @@ test "decode_webp: 错误 - 数据过短" {
 ///|
 test "decode_webp: 错误 - RIFF magic 不匹配" {
   let data = Array::make(20, b'\x00') |> Bytes::from_array
-  try decode_webp_pure(data) catch {
+  try @codec.decode_webp_pure(data) catch {
     @types.LoadError::DecodeFailed(msg) => assert_true(msg.contains("RIFF"))
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -92,7 +92,7 @@ test "decode_webp: 错误 - WEBP magic 不匹配" {
   for _ in 0..<20 {
     data.push(b'\x00')
   }
-  try decode_webp_pure(data |> Bytes::from_array) catch {
+  try @codec.decode_webp_pure(data |> Bytes::from_array) catch {
     @types.LoadError::DecodeFailed(msg) => assert_true(msg.contains("WEBP"))
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -108,7 +108,7 @@ test "decode_webp: 错误 - 无 VP8L chunk" {
     b'P', b'8', b'X', 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00,
   ]
-  try decode_webp_pure(data |> Bytes::from_array) catch {
+  try @codec.decode_webp_pure(data |> Bytes::from_array) catch {
     @types.LoadError::DecodeFailed(msg) => assert_true(msg.contains("VP8L"))
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -119,7 +119,7 @@ test "decode_webp: 错误 - 无 VP8L chunk" {
 ///|
 test "decode_webp: 1x1 最小图像解码" {
   let data = make_minimal_webp_1x1()
-  try decode_webp_pure(data) catch {
+  try @codec.decode_webp_pure(data) catch {
     @types.LoadError::DecodeFailed(msg) => fail("解码失败: \{msg}")
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -139,7 +139,7 @@ test "decode_webp: VP8L 签名验证" {
     b'P', b'8', b'L', 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, // wrong sig 0x00 instead of 0x2f
   ]
-  try decode_webp_pure(data |> Bytes::from_array) catch {
+  try @codec.decode_webp_pure(data |> Bytes::from_array) catch {
     @types.LoadError::DecodeFailed(msg) => assert_true(msg.contains("VP8L"))
     _ => fail("应该是 DecodeFailed")
   } noraise {
@@ -150,7 +150,7 @@ test "decode_webp: VP8L 签名验证" {
 ///|
 test "decode_webp_pure: too short raises" {
   try {
-    let _ = decode_webp_pure(b"RIFF\x00\x00\x00\x00WEBP")
+    let _ = @codec.decode_webp_pure(b"RIFF\x00\x00\x00\x00WEBP")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -161,7 +161,7 @@ test "decode_webp_pure: too short raises" {
 ///|
 test "decode_webp_pure: wrong RIFF magic raises" {
   try {
-    let _ = decode_webp_pure(b"XXXX\x10\x00\x00\x00WEBP")
+    let _ = @codec.decode_webp_pure(b"XXXX\x10\x00\x00\x00WEBP")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -178,7 +178,7 @@ test "decode_webp_pure: lossy VP8 raises" {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   ]
   try {
-    let _ = decode_webp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_webp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -228,7 +228,7 @@ test "decode_webp_pure: VP8L with transform skips" {
     result.push(v.to_byte())
   }
   try {
-    let _ = decode_webp_pure(Bytes::from_array(result))
+    let _ = @codec.decode_webp_pure(Bytes::from_array(result))
     assert_true(true)
   } catch {
     // May fail due to incomplete VP8L data; just verify no panic

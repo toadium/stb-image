@@ -14,7 +14,7 @@ fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
 test "hstack: 2x2 + 2x2 = 4x2" {
   let a = mk(2, 2, 1, b'\x10')
   let b = mk(2, 2, 1, b'\x20')
-  let result = hstack(a, b)
+  let result = @util.hstack(a, b)
   assert_eq(result.width, 4)
   assert_eq(result.height, 2)
   assert_eq(result.data[0], b'\x10')
@@ -29,7 +29,7 @@ test "hstack: raises on height mismatch" {
   let a = mk(2, 2, 1, b'\x10')
   let b = mk(2, 3, 1, b'\x20')
   try {
-    let _ = hstack(a, b)
+    let _ = @util.hstack(a, b)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -43,7 +43,7 @@ test "hstack: raises on height mismatch" {
 test "vstack: 2x2 + 2x2 = 2x4" {
   let a = mk(2, 2, 1, b'\x10')
   let b = mk(2, 2, 1, b'\x20')
-  let result = vstack(a, b)
+  let result = @util.vstack(a, b)
   assert_eq(result.width, 2)
   assert_eq(result.height, 4)
   assert_eq(result.data[0], b'\x10')
@@ -58,7 +58,7 @@ test "vstack: raises on width mismatch" {
   let a = mk(2, 2, 1, b'\x10')
   let b = mk(3, 2, 1, b'\x20')
   try {
-    let _ = vstack(a, b)
+    let _ = @util.vstack(a, b)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -71,7 +71,7 @@ test "vstack: raises on width mismatch" {
 ///|
 test "tile: 2x2 x (2,3) = 4x6" {
   let img = mk(2, 2, 1, b'\x80')
-  let result = tile(img, 2, 3)
+  let result = @util.tile(img, 2, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 6)
   assert_eq(result.data[0], b'\x80')
@@ -82,7 +82,7 @@ test "tile: 2x2 x (2,3) = 4x6" {
 ///|
 test "tile: 1x1 x (1,1) is identity" {
   let img = mk(1, 1, 1, b'\xFF')
-  let result = tile(img, 1, 1)
+  let result = @util.tile(img, 1, 1)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -97,7 +97,7 @@ test "transpose: swaps dimensions" {
     data: [b'\x01', b'\x02', b'\x03', b'\x04', b'\x05', b'\x06']
     |> Bytes::from_array,
   }
-  let result = transpose(img)
+  let result = @util.transpose(img)
   assert_eq(result.width, 3)
   assert_eq(result.height, 2)
   // (0,0) -> (0,0)
@@ -112,7 +112,7 @@ test "transpose: swaps dimensions" {
 test "tile: raises on zero cols" {
   let img = mk(2, 2, 1, b'\x80')
   try {
-    let _ = tile(img, 0, 1)
+    let _ = @util.tile(img, 0, 1)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -125,7 +125,7 @@ test "tile: raises on zero cols" {
 test "tile: raises on zero rows" {
   let img = mk(2, 2, 1, b'\x80')
   try {
-    let _ = tile(img, 1, 0)
+    let _ = @util.tile(img, 1, 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

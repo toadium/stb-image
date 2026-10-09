@@ -1,7 +1,7 @@
 ///|
 test "read_exif_from_bytes: non-JPEG returns None" {
   let data = Bytes::from_array([b'\x00', b'\x00', b'\x00', b'\x00'])
-  let result = read_exif_from_bytes(data)
+  let result = @meta.read_exif_from_bytes(data)
   assert_eq(result, None)
   let _ = data
   let _ = result
@@ -10,7 +10,7 @@ test "read_exif_from_bytes: non-JPEG returns None" {
 ///|
 test "read_exif_from_bytes: empty bytes returns None" {
   let data = Bytes::from_array([])
-  let result = read_exif_from_bytes(data)
+  let result = @meta.read_exif_from_bytes(data)
   assert_eq(result, None)
   let _ = data
   let _ = result
@@ -20,7 +20,7 @@ test "read_exif_from_bytes: empty bytes returns None" {
 test "read_exif_from_bytes: JPEG without EXIF returns None" {
   // 创建一个最小 JPEG (SOI + EOI)
   let data = Bytes::from_array([b'\xFF', b'\xD8', b'\xFF', b'\xD9'])
-  let result = read_exif_from_bytes(data)
+  let result = @meta.read_exif_from_bytes(data)
   assert_eq(result, None)
   let _ = data
   let _ = result
@@ -28,7 +28,12 @@ test "read_exif_from_bytes: JPEG without EXIF returns None" {
 
 ///|
 test "ExifInfo: default values" {
-  let info = ExifInfo::{ make: "", model: "", orientation: 1, date_time: "", }
+  let info = @meta.ExifInfo::{
+    make: "",
+    model: "",
+    orientation: 1,
+    date_time: "",
+  }
   assert_eq(info.orientation, 1)
   assert_eq(info.make, "")
   let _ = info
@@ -283,7 +288,7 @@ fn build_exif_le_jpeg(
 ///|
 test "read_exif: big-endian EXIF with Make/Model/Orientation/DateTime" {
   let jpeg = build_exif_be_jpeg("Canon", "EOS 5D", 6, "2023:01:15 12:30:45")
-  let result = read_exif_from_bytes(jpeg)
+  let result = @meta.read_exif_from_bytes(jpeg)
   match result {
     Some(info) => {
       assert_eq(info.make, "Canon")
@@ -298,7 +303,7 @@ test "read_exif: big-endian EXIF with Make/Model/Orientation/DateTime" {
 ///|
 test "read_exif: little-endian EXIF with Make/Model/Orientation" {
   let jpeg = build_exif_le_jpeg("Nikon", "D850", 3)
-  let result = read_exif_from_bytes(jpeg)
+  let result = @meta.read_exif_from_bytes(jpeg)
   match result {
     Some(info) => {
       assert_eq(info.make, "Nikon")
@@ -359,7 +364,7 @@ test "read_exif: short string inline (<=4 bytes)" {
   result.push(b'\xFF')
   result.push(b'\xD9')
   let jpeg = Bytes::from_array(result)
-  let exif = read_exif_from_bytes(jpeg)
+  let exif = @meta.read_exif_from_bytes(jpeg)
   match exif {
     Some(info) => assert_eq(info.make, "ABC")
     None => assert_true(false)
@@ -373,7 +378,7 @@ test "read_exif: JPEG with SOS before EXIF returns None" {
     b'\xFF', b'\xD8', b'\xFF', b'\xDA', b'\x00', b'\x04', b'\x01', b'\x00', b'\xFF',
     b'\xD9',
   ])
-  let result = read_exif_from_bytes(data)
+  let result = @meta.read_exif_from_bytes(data)
   assert_eq(result, None)
 }
 
@@ -384,7 +389,7 @@ test "read_exif: APP1 without Exif signature returns None" {
     b'\xFF', b'\xD8', b'\xFF', b'\xE1', b'\x00', b'\x08', b'\x3C', b'\x3F', b'\x78',
     b'\x70', b'\xFF', b'\xD9',
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(data))
   assert_eq(result, None)
 }
 
@@ -396,7 +401,7 @@ test "read_exif: invalid TIFF byte order returns None" {
     b'\x66', b'\x00', b'\x00', b'\x58', b'\x58', b'\x00', b'\x2A', b'\x00', b'\x00',
     b'\x00', b'\x08', b'\xFF', b'\xD9',
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(data))
   assert_eq(result, None)
 }
 
@@ -417,7 +422,7 @@ test "read_exif: skip other APP markers to find EXIF" {
   for i in 2..<exif_jpeg.length() {
     combined.push(exif_jpeg[i])
   }
-  let result = read_exif_from_bytes(Bytes::from_array(combined))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(combined))
   match result {
     Some(info) => assert_eq(info.make, "Test")
     None => assert_true(false)
@@ -428,7 +433,7 @@ test "read_exif: skip other APP markers to find EXIF" {
 test "read_exif: orientation values 1-8" {
   for orient in [1, 2, 3, 4, 5, 6, 7, 8] {
     let jpeg = build_exif_be_jpeg("M", "X", orient, "2023:01:01 00:00:00")
-    let result = read_exif_from_bytes(jpeg)
+    let result = @meta.read_exif_from_bytes(jpeg)
     match result {
       Some(info) => assert_eq(info.orientation, orient)
       None => assert_true(false)
@@ -439,7 +444,7 @@ test "read_exif: orientation values 1-8" {
 ///|
 test "read_exif: empty Make/Model strings" {
   let jpeg = build_exif_be_jpeg("", "", 1, "")
-  let result = read_exif_from_bytes(jpeg)
+  let result = @meta.read_exif_from_bytes(jpeg)
   match result {
     Some(info) => assert_eq(info.orientation, 1)
     None => assert_true(false)
@@ -473,7 +478,7 @@ test "read_exif: non-APP1 marker after APP1 continues scanning" {
     // Minimal SOS data
      b'\xC0', b'\x58', b'\x00',
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(jpeg_data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(jpeg_data))
   match result {
     Some(info) => {
       assert_eq(info.make, "Name")
@@ -500,7 +505,7 @@ test "read_exif: IFD0 entry out of bounds returns partial" {
     // Entry 2: truncated (only 6 bytes left, need 12)
      0x01, 0x10, 0x00, 0x02, 0x00, 0x00,
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(jpeg_data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(jpeg_data))
   match result {
     Some(info) => {
       assert_eq(info.make, "Name")
@@ -522,7 +527,7 @@ test "read_exif: unknown tag falls through default case" {
      0x99, 0x99, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x4E, 0x00,
     0x00, 0x00, 0x00, // next IFD
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(jpeg_data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(jpeg_data))
   match result {
     Some(info) => {
       assert_eq(info.make, "")
@@ -547,7 +552,7 @@ test "read_exif: non-ASCII in string returns empty" {
      0x01, 0x0F, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x80, 0x00, 0x00, 0x4E, 0x00,
     0x00, 0x00, 0x00,
   ]
-  let result = read_exif_from_bytes(Bytes::from_array(jpeg_data))
+  let result = @meta.read_exif_from_bytes(Bytes::from_array(jpeg_data))
   match result {
     Some(info) =>
       // Non-ASCII byte should result in empty string (UTF-8 decode fails)

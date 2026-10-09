@@ -157,7 +157,7 @@ fn append_gif_image(
 test "decode_gif_pure: 1x1 single color" {
   let out = make_gif_header_gct(1, 1, [(0xFF, 0x00, 0x00), (0x00, 0x00, 0x00)])
   append_gif_image(out, 1, 1, [0], 2, 0, [])
-  let img = decode_gif_pure(to_bytes(out))
+  let img = @codec.decode_gif_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -175,7 +175,7 @@ test "decode_gif_pure: 2x2 multi color" {
     (0xFF, 0xFF, 0xFF),
   ])
   append_gif_image(out, 2, 2, [0, 1, 2, 3], 2, 0, [])
-  let img = decode_gif_pure(to_bytes(out))
+  let img = @codec.decode_gif_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -200,7 +200,7 @@ test "decode_gif_pure: with Graphic Control Extension" {
   out.push(b'\x00')
   out.push(b'\x00')
   append_gif_image(out, 1, 1, [0], 2, 0, [])
-  let img = decode_gif_pure(to_bytes(out))
+  let img = @codec.decode_gif_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -217,7 +217,7 @@ test "decode_gif_pure: with Local Color Table" {
     (0x00, 0xFF, 0xFF),
     (0xFF, 0x00, 0xFF),
   ])
-  let img = decode_gif_pure(to_bytes(out))
+  let img = @codec.decode_gif_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -250,7 +250,7 @@ test "decode_gif_pure: with Plain Text Extension" {
   out.push(b'\x41')
   out.push(b'\x00')
   append_gif_image(out, 1, 1, [0], 2, 0, [])
-  let img = decode_gif_pure(to_bytes(out))
+  let img = @codec.decode_gif_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -261,7 +261,7 @@ test "decode_gif_pure: with Plain Text Extension" {
 test "decode_gif_pure: too short raises" {
   let short = b"\x47\x49\x46\x38\x39\x61"
   try {
-    let _ = decode_gif_pure(short)
+    let _ = @codec.decode_gif_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -286,7 +286,7 @@ test "decode_gif_pure: bad signature raises" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -299,7 +299,7 @@ test "decode_gif_pure: no image separator raises" {
   let out = make_gif_header_gct(1, 1, [(0xFF, 0x00, 0x00), (0x00, 0x00, 0x00)])
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -324,7 +324,7 @@ test "decode_gif_pure: invalid lzw min code size raises" {
   out.push(b'\x00')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -352,7 +352,7 @@ test "decode_gif_pure: lzw code out of range raises" {
   out.push(b'\x00')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -378,7 +378,7 @@ test "decode_gif_pure: sub-block length out of range raises" {
   out.push(b'\x00')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -407,7 +407,7 @@ test "decode_gif_pure: color table index out of range raises" {
   out.push(b'\x00')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -430,7 +430,7 @@ test "decode_gif_pure: interlace not supported raises" {
   out.push(b'\x40')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -457,7 +457,7 @@ test "decode_gif_pure: truncated LZW data raises" {
   out.push(b'\x00')
   out.push(b'\x3B')
   try {
-    let _ = decode_gif_pure(to_bytes(out))
+    let _ = @codec.decode_gif_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

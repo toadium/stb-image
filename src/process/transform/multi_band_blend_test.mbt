@@ -12,7 +12,7 @@ test "multi_band_blend: same images produces same image" {
     channels: 1,
     data: b"\xFF\xFF\x00\x00\xFF\xFF\x00\x00\xFF\xFF\x00\x00\xFF\xFF\x00\x00",
   }
-  let result = multi_band_blend(img, img, mask, num_bands=2)
+  let result = @transform.multi_band_blend(img, img, mask, num_bands=2)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -42,7 +42,7 @@ test "multi_band_blend: all-white mask selects img_a" {
     channels: 1,
     data: Bytes::from_array(Array::make(16, b'\xFF')),
   }
-  let result = multi_band_blend(img_a, img_b, mask, num_bands=2)
+  let result = @transform.multi_band_blend(img_a, img_b, mask, num_bands=2)
   // Should be close to img_a (all white)
   for i in 0..<16 {
     assert_true(result.data[i].to_int() > 200)
@@ -69,7 +69,7 @@ test "multi_band_blend: all-black mask selects img_b" {
     channels: 1,
     data: Bytes::from_array(Array::make(16, b'\x00')),
   }
-  let result = multi_band_blend(img_a, img_b, mask, num_bands=2)
+  let result = @transform.multi_band_blend(img_a, img_b, mask, num_bands=2)
   // Should be close to img_b (all black)
   for i in 0..<16 {
     assert_true(result.data[i].to_int() < 50)
@@ -96,7 +96,7 @@ test "multi_band_blend: preserves dimensions" {
     channels: 1,
     data: Bytes::from_array(Array::make(6, b'\x80')),
   }
-  let result = multi_band_blend(img_a, img_b, mask, num_bands=2)
+  let result = @transform.multi_band_blend(img_a, img_b, mask, num_bands=2)
   assert_eq(result.width, 3)
   assert_eq(result.height, 2)
   assert_eq(result.channels, 3)
@@ -123,7 +123,7 @@ test "multi_band_blend: mismatched img dimensions raises error" {
     data: Bytes::from_array(Array::make(16, b'\x80')),
   }
   try {
-    let _ = multi_band_blend(img_a, img_b, mask, num_bands=2)
+    let _ = @transform.multi_band_blend(img_a, img_b, mask, num_bands=2)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -152,7 +152,7 @@ test "multi_band_blend: mismatched mask dimensions raises error" {
     data: Bytes::from_array(Array::make(12, b'\x80')),
   }
   try {
-    let _ = multi_band_blend(img_a, img_b, mask, num_bands=2)
+    let _ = @transform.multi_band_blend(img_a, img_b, mask, num_bands=2)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

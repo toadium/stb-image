@@ -58,7 +58,7 @@ test "decode_tiff_pure: missing ImageWidth raises" {
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -89,7 +89,7 @@ test "decode_tiff_pure: unsupported compression raises" {
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -120,7 +120,7 @@ test "decode_tiff_pure: 16-bit bits_per_sample raises" {
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -149,7 +149,7 @@ test "decode_tiff_pure: missing StripOffsets raises" {
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -180,7 +180,7 @@ test "decode_tiff_pure: invalid samples_per_pixel raises" {
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -244,7 +244,7 @@ test "decode_tiff_pure: big-endian RGB roundtrip" {
   out.push(b'\xFF')
   out.push(b'\x00')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 2)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 3)
@@ -255,7 +255,7 @@ test "decode_tiff_pure: truncated IFD raises" {
   // IFD offset beyond data length
   let bad = b"\x49\x49\x2A\x00\xFF\xFF\xFF\xFF"
   try {
-    let _ = decode_tiff_pure(bad)
+    let _ = @codec.decode_tiff_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -285,7 +285,7 @@ test "decode_tiff_pure: zero dimensions raises" {
   out.push(b'\x00')
   let tiff = Bytes::from_array(out)
   try {
-    let _ = decode_tiff_pure(tiff)
+    let _ = @codec.decode_tiff_pure(tiff)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

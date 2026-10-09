@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_meta_learning_config: 默认元学习配置" {
-  let config = create_default_meta_learning_config()
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
   assert_true(config.num_way > 0)
   assert_true(config.num_shot > 0)
   assert_true(config.num_query > 0)
@@ -15,8 +15,8 @@ test "create_default_meta_learning_config: 默认元学习配置" {
 
 ///|
 test "meta_learn: 元学习" {
-  let config = create_default_meta_learning_config()
-  let result = meta_learn(10, config)
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
+  let result = @meta_learning_advanced.meta_learn(10, config)
   assert_true(result.num_tasks > 0)
   assert_true(result.num_way > 0)
   assert_true(result.num_shot > 0)
@@ -31,8 +31,8 @@ test "meta_learn: 元学习" {
 
 ///|
 test "train_maml: MAML训练" {
-  let config = create_default_meta_learning_config()
-  let result = train_maml(20, config)
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
+  let result = @meta_learning_advanced.train_maml(20, config)
   assert_true(result.num_tasks > 0)
   assert_true(result.num_way > 0)
   assert_true(result.num_shot > 0)
@@ -49,8 +49,8 @@ test "train_maml: MAML训练" {
 
 ///|
 test "train_reptile: Reptile训练" {
-  let config = create_default_meta_learning_config()
-  let result = train_reptile(15, config)
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
+  let result = @meta_learning_advanced.train_reptile(15, config)
   assert_true(result.num_tasks > 0)
   assert_true(result.meta_loss >= 0.0)
   assert_true(result.meta_accuracy >= 0.0)
@@ -60,10 +60,12 @@ test "train_reptile: Reptile训练" {
 
 ///|
 test "train_matching_net: 匹配网络训练" {
-  let config = create_default_meta_learning_config()
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
   let support = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
   let query = [[1.5, 2.5], [3.5, 4.5]]
-  let result = train_matching_net(support, query, config)
+  let result = @meta_learning_advanced.train_matching_net(
+    support, query, config,
+  )
   assert_true(result.num_classes > 0)
   assert_true(result.num_support > 0)
   assert_true(result.num_query > 0)
@@ -77,10 +79,10 @@ test "train_matching_net: 匹配网络训练" {
 
 ///|
 test "train_protonet: 原型网络训练" {
-  let config = create_default_meta_learning_config()
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
   let support = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
   let query = [[1.5, 2.5], [3.5, 4.5]]
-  let result = train_protonet(support, query, config)
+  let result = @meta_learning_advanced.train_protonet(support, query, config)
   assert_true(result.num_classes > 0)
   assert_true(result.feature_dimension > 0)
   assert_true(result.training_loss >= 0.0)
@@ -95,10 +97,12 @@ test "train_protonet: 原型网络训练" {
 
 ///|
 test "train_relation_net: 关系网络训练" {
-  let config = create_default_meta_learning_config()
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
   let support = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
   let query = [1.5, 3.5, 5.5]
-  let result = train_relation_net(support, query, config)
+  let result = @meta_learning_advanced.train_relation_net(
+    support, query, config,
+  )
   assert_true(result.num_classes > 0)
   assert_true(result.num_support > 0)
   assert_true(result.num_query > 0)
@@ -113,9 +117,9 @@ test "train_relation_net: 关系网络训练" {
 
 ///|
 test "meta_learning_report_to_string: 报告生成" {
-  let config = create_default_meta_learning_config()
-  let report = meta_learning_report_to_string(
-    MetaLearningTaskType::FewShotClassification,
+  let config = @meta_learning_advanced.create_default_meta_learning_config()
+  let report = @meta_learning_advanced.meta_learning_report_to_string(
+    @meta_learning_advanced.MetaLearningTaskType::FewShotClassification,
     config,
     "元学习完成",
   )

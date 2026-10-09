@@ -28,14 +28,14 @@ fn make_gradient_8x8() -> @types.Image {
 ///|
 test "ahash: returns 64-element hash" {
   let img = make_gradient_8x8()
-  let hash = ahash(img)
+  let hash = @feature.ahash(img)
   assert_eq(hash.length(), 64)
 }
 
 ///|
 test "ahash: solid image has uniform hash" {
   let img = make_solid_gray_8x8(128)
-  let hash = ahash(img)
+  let hash = @feature.ahash(img)
   // All pixels equal mean, so all bits should be 0
   for i in 0..<64 {
     assert_eq(hash[i], 0)
@@ -45,14 +45,14 @@ test "ahash: solid image has uniform hash" {
 ///|
 test "dhash: returns 64-element hash" {
   let img = make_gradient_8x8()
-  let hash = dhash(img)
+  let hash = @feature.dhash(img)
   assert_eq(hash.length(), 64)
 }
 
 ///|
 test "dhash: horizontal gradient produces 0s (increasing)" {
   let img = make_gradient_8x8()
-  let hash = dhash(img)
+  let hash = @feature.dhash(img)
   // dhash: hash=1 if left > right. Increasing gradient → left < right → 0
   let mut zeros = 0
   for i in 0..<64 {
@@ -67,7 +67,7 @@ test "dhash: horizontal gradient produces 0s (increasing)" {
 ///|
 test "phash: returns 64-element hash" {
   let img = make_gradient_8x8()
-  let hash = phash(img)
+  let hash = @feature.phash(img)
   assert_eq(hash.length(), 64)
 }
 
@@ -75,14 +75,14 @@ test "phash: returns 64-element hash" {
 test "hamming_distance: identical hashes" {
   let h1 = [1, 0, 1, 0, 1, 1, 0, 0]
   let h2 = [1, 0, 1, 0, 1, 1, 0, 0]
-  assert_eq(hamming_distance(h1, h2), 0)
+  assert_eq(@feature.hamming_distance(h1, h2), 0)
 }
 
 ///|
 test "hamming_distance: completely different" {
   let h1 = [1, 1, 1, 1]
   let h2 = [0, 0, 0, 0]
-  assert_eq(hamming_distance(h1, h2), 4)
+  assert_eq(@feature.hamming_distance(h1, h2), 4)
 }
 
 ///|
@@ -90,13 +90,13 @@ test "hamming_distance: partial difference" {
   let h1 = [1, 0, 1, 0, 1, 1, 0, 0]
   let h2 = [1, 1, 1, 0, 0, 1, 0, 1]
   // Differ at positions 1, 4, 7 → distance 3
-  assert_eq(hamming_distance(h1, h2), 3)
+  assert_eq(@feature.hamming_distance(h1, h2), 3)
 }
 
 ///|
 test "ahash + hamming: same image has distance 0" {
   let img = make_gradient_8x8()
-  let h1 = ahash(img)
-  let h2 = ahash(img)
-  assert_eq(hamming_distance(h1, h2), 0)
+  let h1 = @feature.ahash(img)
+  let h2 = @feature.ahash(img)
+  assert_eq(@feature.hamming_distance(h1, h2), 0)
 }

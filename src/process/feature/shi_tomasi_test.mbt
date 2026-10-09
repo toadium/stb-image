@@ -13,7 +13,7 @@ test "good_features_to_track: finds corners in square" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let corners = good_features_to_track(img, 10, 0.01F, min_distance=2)
+  let corners = @feature.good_features_to_track(img, 10, 0.01F, min_distance=2)
   assert_true(corners.length() > 0)
   // All corners should be within image bounds
   for c in corners {
@@ -30,7 +30,7 @@ test "good_features_to_track: flat image has no corners" {
     channels: 1,
     data: Bytes::from_array(Array::make(25, b'\x80')),
   }
-  let corners = good_features_to_track(img, 10, 0.01F)
+  let corners = @feature.good_features_to_track(img, 10, 0.01F)
   assert_eq(corners.length(), 0)
 }
 
@@ -51,7 +51,7 @@ test "good_features_to_track: respects max_corners" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let corners = good_features_to_track(img, 3, 0.01F, min_distance=1)
+  let corners = @feature.good_features_to_track(img, 3, 0.01F, min_distance=1)
   assert_true(corners.length() <= 3)
 }
 
@@ -70,8 +70,8 @@ test "good_features_to_track: quality_level filters weak corners" {
     data: Bytes::from_array(data),
   }
   // Very high quality level → few or no corners
-  let strict = good_features_to_track(img, 10, 0.99F)
+  let strict = @feature.good_features_to_track(img, 10, 0.99F)
   // Very low quality level → more corners
-  let loose = good_features_to_track(img, 10, 0.001F)
+  let loose = @feature.good_features_to_track(img, 10, 0.001F)
   assert_true(loose.length() >= strict.length())
 }

@@ -1,6 +1,6 @@
 ///|
 test "create_default_astronomy_config: returns object detection config" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   assert_eq(config.detection_threshold, 3.0)
   assert_eq(config.photometry_aperture, 5.0)
   assert_eq(config.pixel_scale, 1.0)
@@ -13,17 +13,22 @@ test "create_default_astronomy_config: returns object detection config" {
   assert_true(config.use_flat_correction)
   assert_eq(config.stacking_method, "median")
   assert_eq(config.num_stack_images, 10)
-  assert_true(config.task_type is AstronomyImagingTaskType::ObjectDetection)
+  assert_true(
+    config.task_type
+    is @astronomy_imaging_advanced.AstronomyImagingTaskType::ObjectDetection,
+  )
 }
 
 ///|
 test "detect_celestial_objects: returns detected objects" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 1000).to_double())
   }
-  let objects = detect_celestial_objects(image, 100, 100, config)
+  let objects = @astronomy_imaging_advanced.detect_celestial_objects(
+    image, 100, 100, config,
+  )
   assert_eq(objects.length(), 20)
   for obj in objects {
     assert_true(obj.confidence >= 0.8 && obj.confidence <= 1.0)
@@ -34,12 +39,14 @@ test "detect_celestial_objects: returns detected objects" {
 
 ///|
 test "detect_celestial_objects: point source stars" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   let image : Array[Double] = []
   for i in 0..<400 {
     image.push((i % 100).to_double())
   }
-  let objects = detect_celestial_objects(image, 20, 20, config)
+  let objects = @astronomy_imaging_advanced.detect_celestial_objects(
+    image, 20, 20, config,
+  )
   assert_true(objects.length() > 0)
   let mut star_count = 0
   for obj in objects {
@@ -52,13 +59,15 @@ test "detect_celestial_objects: point source stars" {
 
 ///|
 test "classify_galaxies: classifies galaxy objects" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 1000).to_double())
   }
-  let objects = detect_celestial_objects(image, 100, 100, config)
-  let galaxies = classify_galaxies(objects, config)
+  let objects = @astronomy_imaging_advanced.detect_celestial_objects(
+    image, 100, 100, config,
+  )
+  let galaxies = @astronomy_imaging_advanced.classify_galaxies(objects, config)
   assert_true(galaxies.length() >= 0)
   for g in galaxies {
     assert_true(g.confidence >= 0.7 && g.confidence <= 1.0)
@@ -70,13 +79,17 @@ test "classify_galaxies: classifies galaxy objects" {
 
 ///|
 test "perform_photometry: measures object brightness" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 1000).to_double())
   }
-  let objects = detect_celestial_objects(image, 100, 100, config)
-  let photometry = perform_photometry(objects, config)
+  let objects = @astronomy_imaging_advanced.detect_celestial_objects(
+    image, 100, 100, config,
+  )
+  let photometry = @astronomy_imaging_advanced.perform_photometry(
+    objects, config,
+  )
   assert_eq(photometry.length(), objects.length())
   for p in photometry {
     assert_eq(p.filter_name, "V")
@@ -87,7 +100,7 @@ test "perform_photometry: measures object brightness" {
 
 ///|
 test "stack_images: stacks multiple images" {
-  let config = create_default_astronomy_config()
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
   let img1 : Array[Double] = []
   let img2 : Array[Double] = []
   let img3 : Array[Double] = []
@@ -96,7 +109,12 @@ test "stack_images: stacks multiple images" {
     img2.push((i % 100).to_double() + 10.0)
     img3.push((i % 100).to_double() + 20.0)
   }
-  let result = stack_images([img1, img2, img3], 10, 10, config)
+  let result = @astronomy_imaging_advanced.stack_images(
+    [img1, img2, img3],
+    10,
+    10,
+    config,
+  )
   assert_eq(result.num_images, 3)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
@@ -108,9 +126,9 @@ test "stack_images: stacks multiple images" {
 
 ///|
 test "astronomy_imaging_report_to_string: contains task info" {
-  let config = create_default_astronomy_config()
-  let report = astronomy_imaging_report_to_string(
-    AstronomyImagingTaskType::GalaxyClassification,
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
+  let report = @astronomy_imaging_advanced.astronomy_imaging_report_to_string(
+    @astronomy_imaging_advanced.AstronomyImagingTaskType::GalaxyClassification,
     config,
     "Found 15 galaxies",
   )
@@ -122,9 +140,9 @@ test "astronomy_imaging_report_to_string: contains task info" {
 
 ///|
 test "astronomy_imaging_report_to_string: photometry task" {
-  let config = create_default_astronomy_config()
-  let report = astronomy_imaging_report_to_string(
-    AstronomyImagingTaskType::Photometry,
+  let config = @astronomy_imaging_advanced.create_default_astronomy_config()
+  let report = @astronomy_imaging_advanced.astronomy_imaging_report_to_string(
+    @astronomy_imaging_advanced.AstronomyImagingTaskType::Photometry,
     config,
     "Measured 20 stars",
   )

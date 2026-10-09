@@ -6,7 +6,7 @@ test "zlib: zlib_inflate invalid block type raises" {
   // bfinal=1, btype=11 (invalid) → bits: 1,1,1 → 0x07
   let data = b"\x78\x01\x07"
   try {
-    let _ = zlib_inflate(data)
+    let _ = @util.zlib_inflate(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -18,7 +18,7 @@ test "zlib: zlib_inflate invalid block type raises" {
 test "zlib: zlib_inflate truncated after header raises" {
   let data = b"\x78\x01"
   try {
-    let _ = zlib_inflate(data)
+    let _ = @util.zlib_inflate(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -31,7 +31,7 @@ test "zlib: zlib_inflate truncated stored block raises" {
   // stored block header says LEN=10 but only 3 bytes follow
   let data = b"\x78\x01\x01\x0A\x00\xF5\xFF\x41\x42\x43"
   try {
-    let _ = zlib_inflate(data)
+    let _ = @util.zlib_inflate(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -44,7 +44,7 @@ test "zlib: zlib_inflate stored block LEN NLEN mismatch" {
   // Some decoders don't validate LEN/NLEN mismatch; just verify behavior
   let data = b"\x78\x01\x01\x03\x00\xFE\xFF\x41\x42\x43"
   try {
-    let result = zlib_inflate(data)
+    let result = @util.zlib_inflate(data)
     assert_eq(result.length(), 3)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -63,7 +63,7 @@ test "zlib: zlib_inflate fixed Huffman empty block" {
   // Byte 0: 1, 1, 0, 0, 0, 0, 0, 0 → 0b00000011 = 0x03
   // Byte 1: 0, 0 (+ padding) → 0x00
   let data = b"\x78\x01\x03\x00"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 0)
 }
 
@@ -87,7 +87,7 @@ test "zlib: zlib_inflate fixed Huffman single byte A" {
   // bit16=0, bit17=0
   // Byte 2 = 0x00
   let data = b"\x78\x01\x73\x04\x00"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 1)
   assert_eq(result[0].to_int(), 0x41)
 }
@@ -108,7 +108,7 @@ test "zlib: zlib_inflate fixed Huffman ABC" {
   // Byte 3 (bits 24-31): 0,1,1,0,0,0,0,0 → 0x06
   // Byte 4 (bits 32-33): 0,0 → 0x00
   let data = b"\x78\x01\x73\x74\x72\x06\x00"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 3)
   assert_eq(result[0].to_int(), 0x41)
   assert_eq(result[1].to_int(), 0x42)
@@ -120,7 +120,7 @@ test "zlib: zlib_inflate data exhaust raises" {
   // Truncated mid-block
   let data = b"\x78\x01\x03"
   try {
-    let _ = zlib_inflate(data)
+    let _ = @util.zlib_inflate(data)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -132,9 +132,9 @@ test "zlib: zlib_inflate data exhaust raises" {
 test "zlib: crc32 known vector" {
   // Verify CRC32 is deterministic and non-zero for known input
   let data = b"\x31\x32\x33\x34\x35\x36\x37\x38\x39"
-  let h = crc32(data)
+  let h = @util.crc32(data)
   assert_not_eq(h, 0)
-  assert_eq(h, crc32(data))
+  assert_eq(h, @util.crc32(data))
 }
 
 ///|
@@ -144,7 +144,7 @@ test "zlib: adler32 multi byte" {
   // b = (1+65) + (1+65+66) + (1+65+66+67) = 66 + 132 + 199 = 397
   // adler32 = (b << 16) | a = (397 << 16) | 199 = 0x018D00C7
   let data = b"\x41\x42\x43"
-  assert_eq(adler32(data), 0x018D00C7)
+  assert_eq(@util.adler32(data), 0x018D00C7)
 }
 
 ///|
@@ -231,7 +231,7 @@ test "zlib: length_base_extra boundary via inflate" {
   // Test that length_base_extra boundary handling works via valid inflate
   // code 0: length 3. Test via inflate with a small stored block
   let data = b"\x78\x01\x01\x03\x00\xFC\xFF\x41\x42\x43"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 3)
   assert_eq(result[0].to_int(), 0x41)
 }
@@ -241,7 +241,7 @@ test "zlib: distance_base_extra boundary via inflate" {
   // distance_base_extra is exercised by fixed Huffman inflate
   // "AA" (repeated A) triggers a length/distance pair
   let data = b"\x78\x01\x73\x74\x72\x06\x00"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 3)
   assert_eq(result[0].to_int(), 0x41)
   assert_eq(result[1].to_int(), 0x42)

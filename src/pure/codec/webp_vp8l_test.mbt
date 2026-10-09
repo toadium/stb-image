@@ -116,7 +116,7 @@ test "decode_webp: 2符号简单 Huffman 解码" {
   wv_write_bits(bits, 0, 1)
   wv_write_bits(bits, 1, 1)
   wv_write_bits(bits, 0, 1)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -135,7 +135,7 @@ test "decode_webp: alpha 通道 4 通道输出" {
   wv_write_bits(bits, 0, 1)
   wv_simple_tree_1sym(bits, 8, 200)
   wv_write_bits(bits, 0, 4) // g,r,b,a 全部 bit=0 → 200
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.channels, 4)
   assert_eq(img.data.length(), 4)
@@ -162,7 +162,7 @@ test "decode_webp: color cache 读写" {
   let slot = (hash >> 31) & 1
   wv_write_bits(bits, 1, 1) // sym=256
   wv_write_bits(bits, slot, 1) // cache index → 命中像素0
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 2)
   assert_eq(img.channels, 3)
   // 命中 cache → 像素1 与像素0 相同 (全黑)
@@ -186,7 +186,7 @@ test "decode_webp: LZ77 回参考距离越界安全" {
   wv_write_bits(bits, 0, 4) // copy_code=0
   // 像素1: literal (0,0,0)
   wv_write_bits(bits, 0, 3)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 2)
   assert_eq(img.data.length(), 6)
   for i in 0..<6 {
@@ -215,7 +215,7 @@ test "decode_webp: predictor+subtract-green 变换 2x2" {
   wv_simple_tree_1sym(bits, 8, 200) // 所有解码 → 200
   // 4 像素 × 3 通道 (alpha=0) = 12 次 bit=0 → 每像素 argb=0xFF00C8C8
   wv_write_bits(bits, 0, 12)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -254,7 +254,7 @@ test "decode_webp: cross-color+palette 变换与 meta huffman" {
   wv_simple_tree_1sym(bits, 8, 0)
   // 像素: (g,r,b)=(0,0,0)
   wv_write_bits(bits, 0, 3)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.channels, 3)
   assert_eq(img.data[0].to_int(), 0)
@@ -276,7 +276,7 @@ test "decode_webp: 空 code-length 树解码" {
   wv_write_bits(bits, 0, 12) // 4 × 3 bits 全 0 → cl_tree 为空
   // code_lens 循环: 256 次 sym=0 (空树 decode 不消耗位) + 像素 3 次解码
   wv_write_bits(bits, 0, 259)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.channels, 3)
   assert_eq(img.data[0].to_int(), 0)
@@ -312,7 +312,7 @@ test "decode_webp: code-length sym17 与无效符号分支" {
   wv_write_bits(bits, 1, 1)
   // 像素: 3 次 decode bit=0 → symbol 0 (code_lens 全 0 → add_code(0,1,0))
   wv_write_bits(bits, 0, 3)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.channels, 3)
   assert_eq(img.data[0].to_int(), 0)
@@ -374,7 +374,7 @@ test "decode_webp: code-length sym16 与 canonical 编码" {
   wv_write_code_msb(bits, 1, 5)
   wv_write_code_msb(bits, 2, 5)
   wv_write_code_msb(bits, 0, 5)
-  let img = decode_webp_pure(wv_wrap(wv_pack(bits)))
+  let img = @codec.decode_webp_pure(wv_wrap(wv_pack(bits)))
   assert_eq(img.width, 1)
   assert_eq(img.channels, 3)
   assert_eq(img.data[0].to_int(), 5) // r
@@ -433,7 +433,7 @@ test "decode_webp: RIFF 奇数 chunk padding 跳过" {
   for i in 0..<vp8l_len {
     result.push(vp8l[i])
   }
-  let img = decode_webp_pure(Bytes::from_array(result))
+  let img = @codec.decode_webp_pure(Bytes::from_array(result))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)

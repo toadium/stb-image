@@ -26,7 +26,7 @@ test "encode_ppm_pure: RGB encoding" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_ppm_pure(img)
+  let out = @codec.encode_ppm_pure(img)
   // 预期: "P6\n2 2\n255\n" (11 字节 header) + 12 字节 RGB 像素
   let expected : Array[Byte] = []
   // header "P6\n2 2\n255\n"
@@ -66,7 +66,7 @@ test "encode_pgm_pure: grayscale from RGB" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_pgm_pure(img)
+  let out = @codec.encode_pgm_pure(img)
   // BT.601 灰度转换:
   // (255,0,0) -> 255*299/1000 = 76
   // (0,255,0) -> 255*587/1000 = 149
@@ -103,8 +103,8 @@ test "encode_pnm_pure: auto select" {
     channels: 1,
     data: [b'\x00', b'\x40', b'\x80', b'\xFF'] |> Bytes::from_array,
   }
-  let pnm_gray = encode_pnm_pure(gray_img)
-  let pgm_gray = encode_pgm_pure(gray_img)
+  let pnm_gray = @codec.encode_pnm_pure(gray_img)
+  let pgm_gray = @codec.encode_pgm_pure(gray_img)
   assert_eq(pnm_gray, pgm_gray)
   // channels=3 RGB Image -> encode_ppm_pure
   let rgb_img = pe_make_rgb_image(2, 2, [
@@ -113,8 +113,8 @@ test "encode_pnm_pure: auto select" {
     (70, 80, 90),
     (100, 110, 120),
   ])
-  let pnm_rgb = encode_pnm_pure(rgb_img)
-  let ppm_rgb = encode_ppm_pure(rgb_img)
+  let pnm_rgb = @codec.encode_pnm_pure(rgb_img)
+  let ppm_rgb = @codec.encode_ppm_pure(rgb_img)
   assert_eq(pnm_rgb, ppm_rgb)
   let _ = gray_img
   let _ = rgb_img
@@ -133,7 +133,7 @@ test "encode_ppm_pure: RGBA drops alpha" {
     ]
     |> Bytes::from_array,
   }
-  let out = encode_ppm_pure(img)
+  let out = @codec.encode_ppm_pure(img)
   // header "P6\n2 2\n255\n" = 11 字节，像素 = 2*2*3 = 12 字节，总 23 字节
   assert_eq(out.length(), 23)
   // 验证 RGB 像素（alpha 被丢弃）
@@ -165,7 +165,7 @@ test "encode_ppm_pure: grayscale input to RGB" {
     channels: 1,
     data: [b'\x64', b'\x64', b'\x64', b'\x64'] |> Bytes::from_array,
   }
-  let out = encode_ppm_pure(img)
+  let out = @codec.encode_ppm_pure(img)
   // header "P6\n2 2\n255\n" = 11 字节，像素 = 2*2*3 = 12 字节，总 23 字节
   assert_eq(out.length(), 23)
   // 每个灰度像素 100 -> RGB (100, 100, 100)

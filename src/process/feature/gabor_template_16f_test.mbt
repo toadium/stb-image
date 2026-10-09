@@ -38,7 +38,7 @@ fn make_imgf_gt(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "gabor_filter_16: basic" {
   let img = make_img16_gt(32, 32, 1, 30000)
-  let result = gabor_filter_16(img, 15, 3.0, 0.0F)
+  let result = @feature.gabor_filter_16(img, 15, 3.0, 0.0F)
   assert_eq(result.width, 32)
   assert_eq(result.height, 32)
   assert_eq(result.channels, 1)
@@ -49,7 +49,7 @@ test "gabor_filter_16: basic" {
 ///|
 test "gabor_filter_f: basic" {
   let img = make_imgf_gt(32, 32, 1, 0.5F)
-  let result = gabor_filter_f(img, 15, 3.0, 0.0F)
+  let result = @feature.gabor_filter_f(img, 15, 3.0, 0.0F)
   assert_eq(result.width, 32)
   assert_eq(result.height, 32)
   assert_eq(result.channels, 1)
@@ -60,7 +60,7 @@ test "gabor_filter_f: basic" {
 ///|
 test "gabor_filter_bank_16: basic" {
   let img = make_img16_gt(32, 32, 1, 30000)
-  let result = gabor_filter_bank_16(img, 15, 3.0)
+  let result = @feature.gabor_filter_bank_16(img, 15, 3.0)
   assert_eq(result.width, 32)
   assert_eq(result.height, 32)
   let _ = img
@@ -70,7 +70,7 @@ test "gabor_filter_bank_16: basic" {
 ///|
 test "gabor_filter_bank_f: basic" {
   let img = make_imgf_gt(32, 32, 1, 0.5F)
-  let result = gabor_filter_bank_f(img, 15, 3.0)
+  let result = @feature.gabor_filter_bank_f(img, 15, 3.0)
   assert_eq(result.width, 32)
   assert_eq(result.height, 32)
   let _ = img
@@ -83,7 +83,7 @@ test "gabor_filter_bank_f: basic" {
 test "template_match_16: basic" {
   let img = make_img16_gt(32, 32, 1, 30000)
   let tpl = make_img16_gt(8, 8, 1, 30000)
-  let result = template_match_16(img, tpl)
+  let result = @feature.template_match_16(img, tpl)
   assert_eq(result.length() > 0, true)
   let _ = img
   let _ = tpl
@@ -94,7 +94,7 @@ test "template_match_16: basic" {
 test "template_match_f: basic" {
   let img = make_imgf_gt(32, 32, 1, 0.5F)
   let tpl = make_imgf_gt(8, 8, 1, 0.5F)
-  let result = template_match_f(img, tpl)
+  let result = @feature.template_match_f(img, tpl)
   assert_eq(result.length() > 0, true)
   let _ = img
   let _ = tpl
@@ -105,7 +105,7 @@ test "template_match_f: basic" {
 test "template_match_best_16: basic" {
   let img = make_img16_gt(32, 32, 1, 30000)
   let tpl = make_img16_gt(8, 8, 1, 30000)
-  let result = template_match_best_16(img, tpl)
+  let result = @feature.template_match_best_16(img, tpl)
   assert_eq(result is Some(_), true)
   let _ = img
   let _ = tpl
@@ -116,7 +116,7 @@ test "template_match_best_16: basic" {
 test "template_match_best_f: basic" {
   let img = make_imgf_gt(32, 32, 1, 0.5F)
   let tpl = make_imgf_gt(8, 8, 1, 0.5F)
-  let result = template_match_best_f(img, tpl)
+  let result = @feature.template_match_best_f(img, tpl)
   assert_eq(result is Some(_), true)
   let _ = img
   let _ = tpl
@@ -129,7 +129,7 @@ test "template_match_best_f: basic" {
 test "gabor_filter_16: zero width raises" {
   let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
+    let _ = @feature.gabor_filter_16(img, 5, 0.5F, 0.0F)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -142,7 +142,7 @@ test "gabor_filter_16: zero width raises" {
 test "gabor_filter_16: invalid channels raises" {
   let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
+    let _ = @feature.gabor_filter_16(img, 5, 0.5F, 0.0F)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

@@ -8,7 +8,7 @@ test "fft: 常数图像的 DC 分量" {
     b'\x64', b'\x64', b'\x64', b'\x64', b'\x64', b'\x64', b'\x64',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let ffts = fft_2d(img)
+  let ffts = @frequency.fft_2d(img)
   let fft = ffts[0]
   // DC 分量（左上角）= 100 * 16 = 1600
   inspect(fft.data[0].re, content="1600")
@@ -27,8 +27,8 @@ test "fft: FFT->IFFT 往返恢复原图" {
     b'\x10', b'\x30', b'\x50', b'\x70', b'\x90', b'\xB0', b'\xD0',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let ffts = fft_2d(img)
-  let restored = ifft_2d(ffts[0])
+  let ffts = @frequency.fft_2d(img)
+  let restored = @frequency.ifft_2d(ffts[0])
   // 检查尺寸
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
@@ -47,8 +47,8 @@ test "fft: 幅度谱非负且尺寸正确" {
     b'\xFF', b'\x00', b'\xFF', b'\xFF', b'\x00', b'\xFF', b'\x00',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let ffts = fft_2d(img)
-  let mag = fft_magnitude(ffts[0], false)
+  let ffts = @frequency.fft_2d(img)
+  let mag = @frequency.fft_magnitude(ffts[0], false)
   assert_eq(mag.width, 4)
   assert_eq(mag.height, 4)
   assert_eq(mag.channels, 1)
@@ -65,8 +65,8 @@ test "fft: 对数幅度谱" {
     b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let ffts = fft_2d(img)
-  let mag = fft_magnitude(ffts[0], true)
+  let ffts = @frequency.fft_2d(img)
+  let mag = @frequency.fft_magnitude(ffts[0], true)
   assert_eq(mag.width, 4)
   assert_eq(mag.height, 4)
   for i in 0..<16 {
@@ -82,8 +82,8 @@ test "fft: fft_shift 移分不变" {
     b'\x90', b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let ffts = fft_2d(img)
-  let shifted = fft_shift(ffts[0])
+  let ffts = @frequency.fft_2d(img)
+  let shifted = @frequency.fft_shift(ffts[0])
   assert_eq(shifted.width, 4)
   assert_eq(shifted.height, 4)
   // shift 前后所有复数的总和应不变
@@ -109,7 +109,7 @@ test "fft: RGB 图像每通道独立变换" {
     b'\xFF', b'\xFF', b'\x00',
   ])
   let img = @types.Image::{ width: 2, height: 2, channels: 3, data, }
-  let ffts = fft_2d(img)
+  let ffts = @frequency.fft_2d(img)
   assert_eq(ffts.length(), 3)
   for c in 0..<3 {
     assert_eq(ffts[c].width, 2)
@@ -124,7 +124,7 @@ test "fft: 非2幂尺寸自动补零" {
     b'\x10', b'\x20', b'\x30', b'\x40', b'\x50', b'\x60', b'\x70', b'\x80', b'\x90',
   ])
   let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
-  let ffts = fft_2d(img)
+  let ffts = @frequency.fft_2d(img)
   let fft = ffts[0]
   // 补零到 4x4
   assert_eq(fft.width, 4)
@@ -136,7 +136,7 @@ test "fft: 非2幂尺寸自动补零" {
 test "fft: 1x1 图像" {
   let data = Bytes::from_array([b'\x42'])
   let img = @types.Image::{ width: 1, height: 1, channels: 1, data, }
-  let ffts = fft_2d(img)
+  let ffts = @frequency.fft_2d(img)
   let fft = ffts[0]
   assert_eq(fft.width, 1)
   assert_eq(fft.height, 1)
@@ -151,7 +151,7 @@ test "fft: 通道验证" {
   let data = Bytes::from_array([b'\x00', b'\x00'])
   let img = @types.Image::{ width: 1, height: 1, channels: 2, data, }
   try {
-    let _ = fft_2d(img)
+    let _ = @frequency.fft_2d(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_compression_config: 默认压缩配置" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   assert_true(config.target_compression_ratio > 0.0)
   assert_true(config.target_accuracy_drop >= 0.0)
   assert_true(config.bit_width > 0)
@@ -16,9 +16,9 @@ test "create_default_compression_config: 默认压缩配置" {
 
 ///|
 test "quantize_model: 高级量化" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   let weights = [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]]
-  let result = quantize_model(weights, config)
+  let result = @model_compression_advanced.quantize_model(weights, config)
   assert_true(result.quantized_weights.length() > 0)
   assert_true(result.original_weights.length() > 0)
   assert_true(result.num_layers > 0)
@@ -35,9 +35,9 @@ test "quantize_model: 高级量化" {
 
 ///|
 test "prune_model: 高级剪枝" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   let weights = [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]]
-  let result = prune_model(weights, config)
+  let result = @model_compression_advanced.prune_model(weights, config)
   assert_true(result.pruned_weights.length() > 0)
   assert_true(result.pruning_mask.length() > 0)
   assert_true(result.original_weights.length() > 0)
@@ -53,9 +53,11 @@ test "prune_model: 高级剪枝" {
 
 ///|
 test "distill_model: 知识蒸馏" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   let teacher_weights = [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]]
-  let result = distill_model(teacher_weights, 2, 10, config)
+  let result = @model_compression_advanced.distill_model(
+    teacher_weights, 2, 10, config,
+  )
   assert_true(result.student_weights.length() > 0)
   assert_true(result.teacher_weights.length() > 0)
   assert_true(result.student_accuracy >= 0.0)
@@ -73,9 +75,11 @@ test "distill_model: 知识蒸馏" {
 
 ///|
 test "low_rank_decomposition: 低秩分解" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   let weights = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
-  let result = low_rank_decomposition(weights, config)
+  let result = @model_compression_advanced.low_rank_decomposition(
+    weights, config,
+  )
   assert_true(result.decomposed_weights.length() >= 0)
   assert_true(result.original_weights.length() > 0)
   assert_true(result.num_layers > 0)
@@ -92,9 +96,9 @@ test "low_rank_decomposition: 低秩分解" {
 
 ///|
 test "compress_model: 综合压缩" {
-  let config = create_default_compression_config()
+  let config = @model_compression_advanced.create_default_compression_config()
   let weights = [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]]
-  let result = compress_model(weights, config)
+  let result = @model_compression_advanced.compress_model(weights, config)
   assert_true(result.original_params > 0)
   assert_true(result.compressed_params >= 0)
   assert_true(result.original_flops > 0)
@@ -114,9 +118,9 @@ test "compress_model: 综合压缩" {
 
 ///|
 test "compression_report_to_string: 报告生成" {
-  let config = create_default_compression_config()
-  let report = compression_report_to_string(
-    ModelCompressionTaskType::Quantization,
+  let config = @model_compression_advanced.create_default_compression_config()
+  let report = @model_compression_advanced.compression_report_to_string(
+    @model_compression_advanced.ModelCompressionTaskType::Quantization,
     config,
     "压缩完成",
   )

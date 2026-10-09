@@ -30,7 +30,7 @@ fn create_gradient_image_iv(w : Int, h : Int) -> @types.Image {
 
 ///|
 test "create_default_intelligent_vision_config: returns yolov8 config" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   assert_eq(config.confidence_threshold, 0.5)
   assert_eq(config.nms_threshold, 0.45)
   assert_eq(config.max_detections, 100)
@@ -41,25 +41,25 @@ test "create_default_intelligent_vision_config: returns yolov8 config" {
 
 ///|
 test "detect_objects_iv: uniform image returns no detections" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_test_image_iv(128, 128, 128)
-  let results = detect_objects_iv(image, config)
+  let results = @intelligent_vision.detect_objects_iv(image, config)
   assert_eq(results.length(), 0)
 }
 
 ///|
 test "detect_objects_iv: gradient image may have detections" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_gradient_image_iv(128, 128)
-  let results = detect_objects_iv(image, config)
+  let results = @intelligent_vision.detect_objects_iv(image, config)
   assert_true(results.length() >= 0)
 }
 
 ///|
 test "detect_lanes: returns lane detection result" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_test_image_iv(128, 128, 128)
-  let result = detect_lanes(image, config)
+  let result = @intelligent_vision.detect_lanes(image, config)
   assert_eq(result.num_lanes, 2)
   assert_eq(result.lanes.length(), 2)
   assert_eq(result.lane_type, "solid")
@@ -69,51 +69,55 @@ test "detect_lanes: returns lane detection result" {
 
 ///|
 test "recognize_traffic_signs: returns sign results" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_gradient_image_iv(128, 128)
-  let results = recognize_traffic_signs(image, config)
+  let results = @intelligent_vision.recognize_traffic_signs(image, config)
   assert_true(results.length() >= 0)
 }
 
 ///|
 test "detect_defects: returns defect results" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_gradient_image_iv(128, 128)
-  let results = detect_defects(image, config)
+  let results = @intelligent_vision.detect_defects(image, config)
   assert_true(results.length() >= 0)
 }
 
 ///|
 test "detect_intrusion: no intrusion in uniform image" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_test_image_iv(128, 128, 128)
-  let result = detect_intrusion(image, [0.0, 0.0, 128.0, 128.0], config)
+  let result = @intelligent_vision.detect_intrusion(
+    image,
+    [0.0, 0.0, 128.0, 128.0],
+    config,
+  )
   assert_false(result.is_intrusion)
   assert_eq(result.num_intrusions, 0)
 }
 
 ///|
 test "detect_crops: returns crop results" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_gradient_image_iv(128, 128)
-  let results = detect_crops(image, config)
+  let results = @intelligent_vision.detect_crops(image, config)
   assert_true(results.length() >= 0)
 }
 
 ///|
 test "detect_stars: uniform dark image has no stars" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let image = create_test_image_iv(64, 64, 50)
-  let result = detect_stars(image, config)
+  let result = @intelligent_vision.detect_stars(image, config)
   assert_eq(result.num_stars, 0)
 }
 
 ///|
 test "detect_stars: bright image has stars" {
-  let config = create_default_intelligent_vision_config()
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
   let bright_val : Byte = 250
   let image = create_test_image_iv(64, 64, bright_val)
-  let result = detect_stars(image, config)
+  let result = @intelligent_vision.detect_stars(image, config)
   assert_true(result.num_stars > 0)
   assert_eq(result.stars.length(), result.num_stars)
   assert_eq(result.magnitudes.length(), result.num_stars)
@@ -121,8 +125,8 @@ test "detect_stars: bright image has stars" {
 
 ///|
 test "intelligent_vision_report_to_string: contains task info" {
-  let config = create_default_intelligent_vision_config()
-  let report = intelligent_vision_report_to_string(
+  let config = @intelligent_vision.create_default_intelligent_vision_config()
+  let report = @intelligent_vision.intelligent_vision_report_to_string(
     "lane_detection", 5, 0.85, config,
   )
   assert_true(report.contains("智能视觉报告"))

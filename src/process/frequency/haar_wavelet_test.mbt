@@ -3,7 +3,7 @@
 ///|
 test "haar_transform_1d 基本功能" {
   let data = [1.0F, 2.0F, 3.0F, 4.0F]
-  let result = haar_transform_1d(data)
+  let result = @frequency.haar_transform_1d(data)
   assert_eq(result.length(), 4)
   // 原始数据不应被修改
   assert_eq(data[0], 1.0F)
@@ -12,8 +12,8 @@ test "haar_transform_1d 基本功能" {
 ///|
 test "haar_transform_1d 逆变换" {
   let data = [1.0F, 2.0F, 3.0F, 4.0F]
-  let transformed = haar_transform_1d(data)
-  let inversed = ihaar_transform_1d(transformed)
+  let transformed = @frequency.haar_transform_1d(data)
+  let inversed = @frequency.ihaar_transform_1d(transformed)
   // 逆变换应恢复原始数据
   for i in 0..<4 {
     assert_true((inversed[i] - data[i]).abs() < 0.001F)
@@ -23,14 +23,14 @@ test "haar_transform_1d 逆变换" {
 ///|
 test "haar_transform_1d 单元素" {
   let data = [5.0F]
-  let result = haar_transform_1d(data)
+  let result = @frequency.haar_transform_1d(data)
   assert_eq(result[0], 5.0F)
 }
 
 ///|
 test "haar_transform_1d 常量信号" {
   let data = [3.0F, 3.0F, 3.0F, 3.0F]
-  let result = haar_transform_1d(data)
+  let result = @frequency.haar_transform_1d(data)
   // 常量信号的细节系数应为 0
   assert_true(result[2].abs() < 0.001F)
   assert_true(result[3].abs() < 0.001F)
@@ -43,7 +43,7 @@ test "haar_transform_2d 基本功能" {
     b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let result = haar_transform_2d(img, levels=1)
+  let result = @frequency.haar_transform_2d(img, levels=1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.levels, 1)
@@ -57,8 +57,8 @@ test "haar_transform_2d 逆变换" {
     b'\xA0', b'\xB0', b'\xC0', b'\xD0', b'\xE0', b'\xF0', b'\x00',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let result = haar_transform_2d(img, levels=1)
-  let reconstructed = haar_inverse_transform_2d(result)
+  let result = @frequency.haar_transform_2d(img, levels=1)
+  let reconstructed = @frequency.haar_inverse_transform_2d(result)
   assert_eq(reconstructed.width, 4)
   assert_eq(reconstructed.height, 4)
   assert_eq(reconstructed.channels, 1)
@@ -81,13 +81,13 @@ test "haar_transform_2d 错误参数" {
     data: Bytes::from_array(Array::make(16, b'\x00')),
   }
   try {
-    let _ = haar_transform_2d(img, levels=0)
+    let _ = @frequency.haar_transform_2d(img, levels=0)
     assert_true(false)
   } catch {
     _ => assert_true(true)
   }
   try {
-    let _ = haar_transform_2d(img, levels=20)
+    let _ = @frequency.haar_transform_2d(img, levels=20)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -101,7 +101,7 @@ test "haar_denoise 基本功能" {
     b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let out = haar_denoise(img, threshold=2.0F, soft=true, levels=1)
+  let out = @frequency.haar_denoise(img, threshold=2.0F, soft=true, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)
   assert_eq(out.channels, 1)
@@ -119,7 +119,7 @@ test "haar_denoise 硬阈值" {
     b'\x40', b'\x40', b'\x3F', b'\x3F', b'\x40', b'\x41', b'\x40',
   ])
   let img = @types.Image::{ width: 4, height: 4, channels: 1, data, }
-  let out = haar_denoise(img, threshold=5.0F, soft=false, levels=1)
+  let out = @frequency.haar_denoise(img, threshold=5.0F, soft=false, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)
 }
@@ -128,7 +128,7 @@ test "haar_denoise 硬阈值" {
 test "haar_denoise RGB 图" {
   let data = Bytes::from_array(Array::make(48, b'\x40'))
   let img = @types.Image::{ width: 4, height: 4, channels: 3, data, }
-  let out = haar_denoise(img, threshold=2.0F, levels=1)
+  let out = @frequency.haar_denoise(img, threshold=2.0F, levels=1)
   assert_eq(out.width, 4)
   assert_eq(out.height, 4)
   assert_eq(out.channels, 1)
@@ -137,13 +137,13 @@ test "haar_denoise RGB 图" {
 ///|
 test "ihaar_transform_1d 单元素" {
   let data = [5.0F]
-  let result = ihaar_transform_1d(data)
+  let result = @frequency.ihaar_transform_1d(data)
   assert_eq(result[0], 5.0F)
 }
 
 ///|
 test "ihaar_transform_1d 空数组" {
   let data : Array[Float] = []
-  let result = ihaar_transform_1d(data)
+  let result = @frequency.ihaar_transform_1d(data)
   assert_eq(result.length(), 0)
 }

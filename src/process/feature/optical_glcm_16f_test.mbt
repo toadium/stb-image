@@ -40,7 +40,7 @@ test "lucas_kanade_16: basic" {
   let prev = make_img16_og(32, 32, 1, 30000)
   let next = make_img16_og(32, 32, 1, 30000)
   let points : Array[(Int, Int)] = [(10, 10), (20, 20)]
-  let result = lucas_kanade_16(prev, next, points)
+  let result = @feature.lucas_kanade_16(prev, next, points)
   assert_eq(result.length(), 2)
   let _ = prev
   let _ = next
@@ -53,7 +53,7 @@ test "lucas_kanade_f: basic" {
   let prev = make_imgf_og(32, 32, 1, 0.5F)
   let next = make_imgf_og(32, 32, 1, 0.5F)
   let points : Array[(Int, Int)] = [(10, 10), (20, 20)]
-  let result = lucas_kanade_f(prev, next, points)
+  let result = @feature.lucas_kanade_f(prev, next, points)
   assert_eq(result.length(), 2)
   let _ = prev
   let _ = next
@@ -67,7 +67,7 @@ test "lucas_kanade_f: basic" {
 test "horn_schunck_16: basic" {
   let prev = make_img16_og(16, 16, 1, 30000)
   let next = make_img16_og(16, 16, 1, 30000)
-  let (u, v) = horn_schunck_16(prev, next, iterations=10)
+  let (u, v) = @feature.horn_schunck_16(prev, next, iterations=10)
   assert_eq(u.length(), 16 * 16)
   assert_eq(v.length(), 16 * 16)
   let _ = prev
@@ -80,7 +80,7 @@ test "horn_schunck_16: basic" {
 test "horn_schunck_f: basic" {
   let prev = make_imgf_og(16, 16, 1, 0.5F)
   let next = make_imgf_og(16, 16, 1, 0.5F)
-  let (u, v) = horn_schunck_f(prev, next, iterations=10)
+  let (u, v) = @feature.horn_schunck_f(prev, next, iterations=10)
   assert_eq(u.length(), 16 * 16)
   assert_eq(v.length(), 16 * 16)
   let _ = prev
@@ -94,7 +94,7 @@ test "horn_schunck_f: basic" {
 ///|
 test "compute_glcm_16: basic" {
   let img = make_img16_og(16, 16, 1, 30000)
-  let result = compute_glcm_16(img, 1, 0)
+  let result = @feature.compute_glcm_16(img, 1, 0)
   assert_eq(result.length(), 256)
   let _ = img
   let _ = result
@@ -103,7 +103,7 @@ test "compute_glcm_16: basic" {
 ///|
 test "compute_glcm_f: basic" {
   let img = make_imgf_og(16, 16, 1, 0.5F)
-  let result = compute_glcm_f(img, 1, 0)
+  let result = @feature.compute_glcm_f(img, 1, 0)
   assert_eq(result.length(), 256)
   let _ = img
   let _ = result
@@ -112,7 +112,7 @@ test "compute_glcm_f: basic" {
 ///|
 test "glcm_features_multi_direction_16: basic" {
   let img = make_img16_og(16, 16, 1, 30000)
-  let result = glcm_features_multi_direction_16(img)
+  let result = @feature.glcm_features_multi_direction_16(img)
   assert_eq(result.length(), 4)
   let _ = img
   let _ = result
@@ -121,7 +121,7 @@ test "glcm_features_multi_direction_16: basic" {
 ///|
 test "glcm_features_multi_direction_f: basic" {
   let img = make_imgf_og(16, 16, 1, 0.5F)
-  let result = glcm_features_multi_direction_f(img)
+  let result = @feature.glcm_features_multi_direction_f(img)
   assert_eq(result.length(), 4)
   let _ = img
   let _ = result
@@ -134,7 +134,7 @@ test "lucas_kanade_16: zero width raises" {
   let img1 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   let img2 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = lucas_kanade_16(img1, img2, [(2, 2)])
+    let _ = @feature.lucas_kanade_16(img1, img2, [(2, 2)])
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -149,7 +149,7 @@ test "lucas_kanade_16: invalid channels raises" {
   let img1 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   let img2 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = lucas_kanade_16(img1, img2, [(2, 2)])
+    let _ = @feature.lucas_kanade_16(img1, img2, [(2, 2)])
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

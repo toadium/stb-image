@@ -1,6 +1,6 @@
 ///|
 test "default_tile_config: 256x256 no overlap" {
-  let config = default_tile_config()
+  let config = @performance.default_tile_config()
   assert_eq(config.tile_width, 256)
   assert_eq(config.tile_height, 256)
   assert_eq(config.overlap, 0)
@@ -8,32 +8,32 @@ test "default_tile_config: 256x256 no overlap" {
 
 ///|
 test "num_tiles: exact division" {
-  let config = default_tile_config()
-  let (cols, rows) = num_tiles(512, 512, config)
+  let config = @performance.default_tile_config()
+  let (cols, rows) = @performance.num_tiles(512, 512, config)
   assert_eq(cols, 2)
   assert_eq(rows, 2)
 }
 
 ///|
 test "num_tiles: non-exact division" {
-  let config = default_tile_config()
-  let (cols, rows) = num_tiles(300, 300, config)
+  let config = @performance.default_tile_config()
+  let (cols, rows) = @performance.num_tiles(300, 300, config)
   assert_eq(cols, 2)
   assert_eq(rows, 2)
 }
 
 ///|
 test "num_tiles: smaller than tile" {
-  let config = default_tile_config()
-  let (cols, rows) = num_tiles(100, 100, config)
+  let config = @performance.default_tile_config()
+  let (cols, rows) = @performance.num_tiles(100, 100, config)
   assert_eq(cols, 1)
   assert_eq(rows, 1)
 }
 
 ///|
 test "tile_region: first tile" {
-  let config = default_tile_config()
-  let (x0, y0, x1, y1) = tile_region(0, 0, config)
+  let config = @performance.default_tile_config()
+  let (x0, y0, x1, y1) = @performance.tile_region(0, 0, config)
   assert_eq(x0, 0)
   assert_eq(y0, 0)
   assert_eq(x1, 256)
@@ -42,8 +42,8 @@ test "tile_region: first tile" {
 
 ///|
 test "tile_region: second tile" {
-  let config = default_tile_config()
-  let (x0, y0, x1, y1) = tile_region(1, 1, config)
+  let config = @performance.default_tile_config()
+  let (x0, y0, x1, y1) = @performance.tile_region(1, 1, config)
   assert_eq(x0, 256)
   assert_eq(y0, 256)
   assert_eq(x1, 512)
@@ -64,7 +64,7 @@ test "extract_tile: basic" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let tile = extract_tile(img, 1, 1, 2, 2)
+  let tile = @performance.extract_tile(img, 1, 1, 2, 2)
   assert_eq(tile.width, 2)
   assert_eq(tile.height, 2)
   assert_eq(tile.channels, 3)
@@ -79,7 +79,7 @@ test "extract_tile: out of bounds raises" {
     data: Bytes::from_array(Array::make(48, b'\x00')),
   }
   try {
-    ignore(extract_tile(img, 3, 3, 2, 2))
+    ignore(@performance.extract_tile(img, 3, 3, 2, 2))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -100,7 +100,7 @@ test "paste_tile: basic" {
     channels: 3,
     data: Bytes::from_array(Array::make(12, b'\xFF')),
   }
-  let result = paste_tile(img, tile, 1, 1)
+  let result = @performance.paste_tile(img, tile, 1, 1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }
@@ -109,7 +109,7 @@ test "paste_tile: basic" {
 test "bulk_copy_4x: basic" {
   let src = Bytes::from_array([1, 2, 3, 4, 5, 6, 7, 8])
   let dst : Array[Byte] = Array::make(8, b'\x00')
-  bulk_copy_4x(src, 0, dst, 0, 8)
+  @performance.bulk_copy_4x(src, 0, dst, 0, 8)
   assert_eq(dst[0].to_int(), 1)
   assert_eq(dst[7].to_int(), 8)
 }
@@ -118,7 +118,7 @@ test "bulk_copy_4x: basic" {
 test "bulk_copy_4x: non-multiple of 4" {
   let src = Bytes::from_array([1, 2, 3, 4, 5, 6, 7])
   let dst : Array[Byte] = Array::make(7, b'\x00')
-  bulk_copy_4x(src, 0, dst, 0, 7)
+  @performance.bulk_copy_4x(src, 0, dst, 0, 7)
   assert_eq(dst[0].to_int(), 1)
   assert_eq(dst[6].to_int(), 7)
 }
@@ -126,7 +126,7 @@ test "bulk_copy_4x: non-multiple of 4" {
 ///|
 test "bulk_fill_4x: basic" {
   let dst : Array[Byte] = Array::make(8, b'\x00')
-  bulk_fill_4x(dst, 0, 8, b'\xAA')
+  @performance.bulk_fill_4x(dst, 0, 8, b'\xAA')
   for i in 0..<8 {
     assert_eq(dst[i].to_int(), 0xAA)
   }
@@ -144,7 +144,7 @@ test "process_row_major: identity" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = process_row_major(img, fn(_y, row) { row })
+  let result = @performance.process_row_major(img, fn(_y, row) { row })
   assert_eq(result.width, 4)
   assert_eq(result.height, 2)
   assert_eq(result.data[0].to_int(), 0)
@@ -162,8 +162,12 @@ test "process_tiled: identity" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let config = TileConfig::{ tile_width: 2, tile_height: 2, overlap: 0, }
-  let result = process_tiled(img, config, fn(tile) { tile })
+  let config = @performance.TileConfig::{
+    tile_width: 2,
+    tile_height: 2,
+    overlap: 0,
+  }
+  let result = @performance.process_tiled(img, config, fn(tile) { tile })
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }

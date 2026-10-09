@@ -18,7 +18,7 @@ test "hough_circles: detects circle in synthetic image" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let circles = hough_circles(
+  let circles = @edge.hough_circles(
     img,
     dp=1,
     min_dist=5,
@@ -46,7 +46,7 @@ test "hough_circles: empty image returns no circles" {
     channels: 1,
     data: Bytes::from_array(Array::make(100, b'\x00')),
   }
-  let circles = hough_circles(
+  let circles = @edge.hough_circles(
     img,
     dp=1,
     min_dist=5,
@@ -66,7 +66,7 @@ test "hough_circles: flat image returns no circles" {
     channels: 1,
     data: Bytes::from_array(Array::make(100, b'\x80')),
   }
-  let circles = hough_circles(
+  let circles = @edge.hough_circles(
     img,
     dp=1,
     min_dist=5,
@@ -80,7 +80,7 @@ test "hough_circles: flat image returns no circles" {
 
 ///|
 test "Circle struct: fields accessible" {
-  let c = Circle::{ x: 5, y: 10, radius: 3, votes: 42, }
+  let c = @edge.Circle::{ x: 5, y: 10, radius: 3, votes: 42, }
   assert_eq(c.x, 5)
   assert_eq(c.y, 10)
   assert_eq(c.radius, 3)

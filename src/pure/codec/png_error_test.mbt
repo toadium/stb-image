@@ -5,7 +5,7 @@
 test "decode_png_pure: invalid signature raises" {
   let bad = b"\x00\x00\x00\x00\x00\x00\x00\x00"
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -18,7 +18,7 @@ test "decode_png_pure: truncated data raises" {
   // Only PNG signature, no IHDR
   let bad = b"\x89PNG\r\n\x1A\n"
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -35,7 +35,7 @@ test "decode_png_pure: truncated IHDR raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -46,7 +46,7 @@ test "decode_png_pure: truncated IHDR raises" {
 ///|
 test "decode_png_pure: empty data raises" {
   try {
-    let _ = decode_png_pure(b"")
+    let _ = @codec.decode_png_pure(b"")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -57,7 +57,7 @@ test "decode_png_pure: empty data raises" {
 ///|
 test "decode_png_pure: data too short for signature raises" {
   try {
-    let _ = decode_png_pure(b"\x89PNG")
+    let _ = @codec.decode_png_pure(b"\x89PNG")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -81,7 +81,7 @@ test "decode_png_pure: interlace flag raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -100,7 +100,7 @@ test "decode_png_pure: invalid color type raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -119,7 +119,7 @@ test "decode_png_pure: 16-bit bit depth raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -135,9 +135,9 @@ test "decode_png_pure: req_channels out of range defaults to 4" {
     channels: 3,
     data: [b'\x80', b'\x80', b'\x80'] |> Bytes::from_array,
   }
-  let png = encode_png_pure(img)
+  let png = @codec.encode_png_pure(img)
   // req_channels=5 falls to default case (treated as 4)
-  let decoded = decode_png_pure(png, req_channels=Some(5))
+  let decoded = @codec.decode_png_pure(png, req_channels=Some(5))
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
 }
@@ -151,7 +151,7 @@ test "decode_png_pure: chunk data beyond file raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -170,8 +170,8 @@ test "decode_png_pure: palette index out of bounds raises" {
     channels: 1,
     data: [b'\x00'] |> Bytes::from_array,
   }
-  let png = encode_png_pure(img)
-  let decoded = decode_png_pure(png)
+  let png = @codec.encode_png_pure(img)
+  let decoded = @codec.decode_png_pure(png)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.channels, 1)
   let _ = img
@@ -187,7 +187,7 @@ test "decode_png_pure: chunk header too short raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -204,7 +204,7 @@ test "decode_png_pure: invalid filter type raises" {
     channels: 3,
     data: b"\x01\x80\x80\x80", // filter=1 (sub) with RGB data
   }
-  let png = encode_png_pure(img)
+  let png = @codec.encode_png_pure(img)
   // Manually corrupt filter byte
   let out : Array[Byte] = []
   for i in 0..<png.length() {
@@ -216,7 +216,7 @@ test "decode_png_pure: invalid filter type raises" {
   }
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -238,7 +238,7 @@ test "decode_png_pure: palette missing for indexed color raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_pure(bad)
+    let _ = @codec.decode_png_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

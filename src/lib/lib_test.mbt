@@ -261,32 +261,32 @@ fn lb_make_1x1_rgb_gif() -> Bytes {
 ///|
 test "detect_format: BMP" {
   let data = lb_make_1x1_red_bmp()
-  assert_eq(detect_format(data), ImageFormat::Bmp)
+  assert_eq(@lib.detect_format(data), @lib.ImageFormat::Bmp)
 }
 
 ///|
 test "detect_format: QOI" {
   let data = lb_make_1x1_rgb_qoi()
-  assert_eq(detect_format(data), ImageFormat::Qoi)
+  assert_eq(@lib.detect_format(data), @lib.ImageFormat::Qoi)
 }
 
 ///|
 test "detect_format: PNM 边界" {
   // P5 → Pnm
   let p5 : Array[Byte] = [b'\x50', b'\x35', b'\x0A', b'\x31', b'\x20', b'\x31']
-  assert_eq(detect_format(lb_to_bytes(p5)), ImageFormat::Pnm)
+  assert_eq(@lib.detect_format(lb_to_bytes(p5)), @lib.ImageFormat::Pnm)
   // P6 → Pnm
   let p6 : Array[Byte] = [b'\x50', b'\x36', b'\x0A', b'\x31', b'\x20', b'\x31']
-  assert_eq(detect_format(lb_to_bytes(p6)), ImageFormat::Pnm)
+  assert_eq(@lib.detect_format(lb_to_bytes(p6)), @lib.ImageFormat::Pnm)
   // P4 → Unknown（P4 ASCII 格式 pure 包不支持）
   let p4 : Array[Byte] = [b'\x50', b'\x34', b'\x0A', b'\x31', b'\x20', b'\x31']
-  assert_eq(detect_format(lb_to_bytes(p4)), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(lb_to_bytes(p4)), @lib.ImageFormat::Unknown)
 }
 
 ///|
 test "detect_format: PSD" {
   let data = lb_make_1x1_rgb_psd()
-  assert_eq(detect_format(data), ImageFormat::Psd)
+  assert_eq(@lib.detect_format(data), @lib.ImageFormat::Psd)
 }
 
 ///|
@@ -295,29 +295,29 @@ test "detect_format: GIF 两种版本" {
   let gif89a : Array[Byte] = [
     b'\x47', b'\x49', b'\x46', b'\x38', b'\x39', b'\x61', b'\x00', b'\x00',
   ]
-  assert_eq(detect_format(lb_to_bytes(gif89a)), ImageFormat::Gif)
+  assert_eq(@lib.detect_format(lb_to_bytes(gif89a)), @lib.ImageFormat::Gif)
   // GIF87a
   let gif87a : Array[Byte] = [
     b'\x47', b'\x49', b'\x46', b'\x38', b'\x37', b'\x61', b'\x00', b'\x00',
   ]
-  assert_eq(detect_format(lb_to_bytes(gif87a)), ImageFormat::Gif)
+  assert_eq(@lib.detect_format(lb_to_bytes(gif87a)), @lib.ImageFormat::Gif)
 }
 
 ///|
 test "detect_format: Unknown" {
   // 未知 magic
   let unknown : Array[Byte] = [b'\x00', b'\x00', b'\x00', b'\x00']
-  assert_eq(detect_format(lb_to_bytes(unknown)), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(lb_to_bytes(unknown)), @lib.ImageFormat::Unknown)
   // 空字节流
   let empty : Array[Byte] = []
-  assert_eq(detect_format(lb_to_bytes(empty)), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(lb_to_bytes(empty)), @lib.ImageFormat::Unknown)
 }
 
 ///|
 test "detect_format: len 边界" {
   // 长度 1 字节流（len < 2 直接返回 Unknown）
   let single : Array[Byte] = [b'\x42']
-  assert_eq(detect_format(lb_to_bytes(single)), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(lb_to_bytes(single)), @lib.ImageFormat::Unknown)
 }
 
 ///|
@@ -327,7 +327,7 @@ test "detect_format: TIFF LE (II)" {
     b'\x49', b'\x49', // "II"
      b'\x2A', b'\x00', // magic 42 (LE)
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Tiff)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Tiff)
 }
 
 ///|
@@ -337,7 +337,7 @@ test "detect_format: TIFF BE (MM)" {
     b'\x4D', b'\x4D', // "MM"
      b'\x00', b'\x2A', // magic 42 (BE)
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Tiff)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Tiff)
 }
 
 ///|
@@ -353,7 +353,7 @@ test "detect_format: ICO" {
      b'\x0C', b'\x00', b'\x00', b'\x00', // image offset (12 = 6 + 16)
      b'\x00', b'\x00', // padding to reach 22 bytes
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Ico)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Ico)
 }
 
 ///|
@@ -369,20 +369,20 @@ test "detect_format: CUR" {
      b'\x0C', b'\x00', b'\x00', b'\x00', // image offset
      b'\x00', b'\x00', // padding to reach 22 bytes
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Cur)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Cur)
 }
 
 ///|
 test "detect_format: ICNS" {
   let data : Array[Byte] = [b'\x69', b'\x63', b'\x6E', b'\x73'] // "icns"
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Icns)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Icns)
 }
 
 // ==================== load_from_bytes_auto 分派测试（5 个） ====================
 
 ///|
 test "load_from_bytes_auto: BMP 分派" {
-  let img = load_from_bytes_auto(lb_make_1x1_red_bmp())
+  let img = @lib.load_from_bytes_auto(lb_make_1x1_red_bmp())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -390,7 +390,7 @@ test "load_from_bytes_auto: BMP 分派" {
 
 ///|
 test "load_from_bytes_auto: QOI 分派" {
-  let img = load_from_bytes_auto(lb_make_1x1_rgb_qoi())
+  let img = @lib.load_from_bytes_auto(lb_make_1x1_rgb_qoi())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -398,7 +398,7 @@ test "load_from_bytes_auto: QOI 分派" {
 
 ///|
 test "load_from_bytes_auto: PNM 分派" {
-  let img = load_from_bytes_auto(lb_make_1x1_rgb_pnm())
+  let img = @lib.load_from_bytes_auto(lb_make_1x1_rgb_pnm())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -406,7 +406,7 @@ test "load_from_bytes_auto: PNM 分派" {
 
 ///|
 test "load_from_bytes_auto: PSD 分派" {
-  let img = load_from_bytes_auto(lb_make_1x1_rgb_psd())
+  let img = @lib.load_from_bytes_auto(lb_make_1x1_rgb_psd())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -414,7 +414,7 @@ test "load_from_bytes_auto: PSD 分派" {
 
 ///|
 test "load_from_bytes_auto: GIF 分派" {
-  let img = load_from_bytes_auto(lb_make_1x1_rgb_gif())
+  let img = @lib.load_from_bytes_auto(lb_make_1x1_rgb_gif())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -425,7 +425,7 @@ test "load_from_bytes_auto: TIFF 分派 (roundtrip)" {
   let img = lb_make_1x1_red_bmp() |> @codec.decode_bmp_pure
   // 先编码再解码，验证 TIFF 自动分派
   let tiff_bytes = @codec.encode_tiff_pure(img)
-  let decoded = load_from_bytes_auto(tiff_bytes)
+  let decoded = @lib.load_from_bytes_auto(tiff_bytes)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 3)
@@ -435,7 +435,7 @@ test "load_from_bytes_auto: TIFF 分派 (roundtrip)" {
 test "load_from_bytes_auto: ICO 分派 (roundtrip)" {
   let img = lb_make_1x1_red_bmp() |> @codec.decode_bmp_pure
   let ico_bytes = @codec.encode_ico_pure(img)
-  let decoded = load_from_bytes_auto(ico_bytes)
+  let decoded = @lib.load_from_bytes_auto(ico_bytes)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 4) // ICO 编码为 32-bit BGRA
@@ -447,7 +447,7 @@ test "detect_format: ICO 检测 + decode_ico_pure roundtrip" {
   let img = lb_make_1x1_red_bmp() |> @codec.decode_bmp_pure
   let ico_bytes = @codec.encode_ico_pure(img)
   // 验证 ICO 可以被检测到
-  assert_eq(detect_format(ico_bytes), ImageFormat::Ico)
+  assert_eq(@lib.detect_format(ico_bytes), @lib.ImageFormat::Ico)
   // 解码 ICO roundtrip
   let decoded = @codec.decode_ico_pure(ico_bytes)
   assert_eq(decoded.width, 1)
@@ -469,7 +469,7 @@ test "load_from_bytes_auto: ICNS 分派 (roundtrip)" {
     data: Bytes::from_array(data),
   }
   let icns_bytes = @codec.encode_icns_pure(img)
-  let decoded = load_from_bytes_auto(icns_bytes)
+  let decoded = @lib.load_from_bytes_auto(icns_bytes)
   assert_eq(decoded.width, 16)
   assert_eq(decoded.height, 16)
 }
@@ -480,7 +480,7 @@ test "load_from_bytes_auto: ICNS 分派 (roundtrip)" {
 test "load_from_bytes_auto: Unknown raises" {
   let unknown : Array[Byte] = [b'\x00', b'\x00', b'\x00', b'\x00']
   try {
-    let _ = load_from_bytes_auto(lb_to_bytes(unknown))
+    let _ = @lib.load_from_bytes_auto(lb_to_bytes(unknown))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -520,7 +520,7 @@ test "load_from_bytes_auto: WebP 分派 (roundtrip)" {
   for b in vp8l_data {
     data.push(b.to_byte())
   }
-  let result = load_from_bytes_auto(lb_to_bytes(data))
+  let result = @lib.load_from_bytes_auto(lb_to_bytes(data))
   assert_eq(result.width, 1)
   assert_eq(result.height, 1)
 }
@@ -571,7 +571,7 @@ test "load_from_bytes_auto: APNG 分派 (单帧, raises as expected)" {
     0x00, 0x00, 0x00, 0x00, b'I', b'E', b'N', b'D', b'\xAE', b'\x42', b'\x60', b'\x82',
   ]
   try {
-    let _ = load_from_bytes_auto(lb_to_bytes(png))
+    let _ = @lib.load_from_bytes_auto(lb_to_bytes(png))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -584,7 +584,7 @@ test "load_from_bytes_auto: APNG 分派 (单帧, raises as expected)" {
 ///|
 test "encode_qoi 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_qoi(img)
+  let out = @lib.encode_qoi(img)
   // 前 4 字节为 "qoif"
   assert_eq(out[0].to_int(), 0x71)
   assert_eq(out[1].to_int(), 0x6F)
@@ -597,7 +597,7 @@ test "encode_qoi 委托验证" {
 ///|
 test "encode_ppm_auto 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_ppm_auto(img)
+  let out = @lib.encode_ppm_auto(img)
   // 前 2 字节为 "P6"
   assert_eq(out[0].to_int(), 0x50)
   assert_eq(out[1].to_int(), 0x36)
@@ -608,7 +608,7 @@ test "encode_ppm_auto 委托验证" {
 ///|
 test "encode_pgm_auto 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_pgm_auto(img)
+  let out = @lib.encode_pgm_auto(img)
   // 前 2 字节为 "P5"
   assert_eq(out[0].to_int(), 0x50)
   assert_eq(out[1].to_int(), 0x35)
@@ -619,7 +619,7 @@ test "encode_pgm_auto 委托验证" {
 ///|
 test "encode_gif 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
-  let out = encode_gif(img)
+  let out = @lib.encode_gif(img)
   // 前 6 字节为 "GIF89a"
   assert_eq(out[0].to_int(), 0x47)
   assert_eq(out[1].to_int(), 0x49)
@@ -637,7 +637,7 @@ test "detect_format: HDR RADIANCE" {
     b'\x23', b'\x3F', b'\x52', b'\x41', b'\x44', b'\x49', b'\x41', b'\x4E', b'\x43',
     b'\x45',
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Hdr)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Hdr)
 }
 
 ///|
@@ -650,7 +650,7 @@ test "load_from_bytes_auto: JPEG 分派" {
     (32, 32, 32),
   ])
   let jpeg_bytes = @codec.encode_jpeg_pure(img)
-  let restored = load_from_bytes_auto(jpeg_bytes)
+  let restored = @lib.load_from_bytes_auto(jpeg_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 3)
@@ -663,7 +663,7 @@ test "load_from_bytes_auto: HDR raises (needs decode_hdr_pure)" {
     b'\x45', b'\x0A',
   ]
   try {
-    let _ = load_from_bytes_auto(lb_to_bytes(data))
+    let _ = @lib.load_from_bytes_auto(lb_to_bytes(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -699,7 +699,7 @@ test "encode_png 委托验证" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_png(img)
+  let out = @lib.encode_png(img)
   // PNG signature: 89 50 4E 47 0D 0A 1A 0A
   assert_eq(out[0].to_int(), 0x89)
   assert_eq(out[1].to_int(), 0x50)
@@ -716,7 +716,7 @@ test "encode_jpeg 委托验证" {
     (192, 192, 192),
     (32, 32, 32),
   ])
-  let out = encode_jpeg(img)
+  let out = @lib.encode_jpeg(img)
   // JPEG SOI marker: FF D8
   assert_eq(out[0].to_int(), 0xFF)
   assert_eq(out[1].to_int(), 0xD8)
@@ -731,7 +731,7 @@ test "encode_bmp 委托验证" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_bmp(img)
+  let out = @lib.encode_bmp(img)
   // BMP signature: "BM"
   assert_eq(out[0].to_int(), 0x42)
   assert_eq(out[1].to_int(), 0x4D)
@@ -746,14 +746,14 @@ test "encode_tga 委托验证" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_tga(img)
+  let out = @lib.encode_tga(img)
   assert_eq(out, @codec.encode_tga_pure(img))
 }
 
 ///|
 test "encode_pnm_auto 委托验证" {
   let img = lb_make_rgb_image(1, 1, [(100, 150, 200)])
-  let out = encode_pnm_auto(img)
+  let out = @lib.encode_pnm_auto(img)
   // RGB image → PPM format "P6"
   assert_eq(out[0].to_int(), 0x50)
   assert_eq(out[1].to_int(), 0x36)
@@ -776,7 +776,7 @@ test "encode_hdr 委托验证" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let out = encode_hdr(img)
+  let out = @lib.encode_hdr(img)
   // HDR signature: "#?RADIANCE"
   assert_eq(out[0].to_int(), 0x23)
   assert_eq(out[1].to_int(), 0x3F)
@@ -794,7 +794,7 @@ test "detect_format: WebP RIFF" {
      b'\x00', b'\x00', b'\x00', b'\x00', // file size
      b'\x57', b'\x45', b'\x42', b'\x50', // "WEBP"
   ]
-  assert_eq(detect_format(lb_to_bytes(data)), ImageFormat::Webp)
+  assert_eq(@lib.detect_format(lb_to_bytes(data)), @lib.ImageFormat::Webp)
 }
 
 ///|
@@ -803,7 +803,7 @@ test "load_from_bytes_auto: TGA 分派 (Unknown → error)" {
   let img = lb_make_rgb_image(1, 1, [(255, 0, 0)])
   let tga_bytes = @codec.encode_tga_pure(img)
   try {
-    let _ = load_from_bytes_auto(tga_bytes)
+    let _ = @lib.load_from_bytes_auto(tga_bytes)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -820,7 +820,7 @@ test "load_16_from_bytes_auto: PNM 16-bit 分派" {
      b'\x31', b'\x30', b'\x32', b'\x33', b'\x0A', // "1023\n"
      b'\x03', b'\xFF', b'\x00', b'\x00', // pixel 0: 1023, pixel 1: 0
   ]
-  let img = load_16_from_bytes_auto(lb_to_bytes(data))
+  let img = @lib.load_16_from_bytes_auto(lb_to_bytes(data))
   assert_eq(img.width, 2)
   assert_eq(img.height, 1)
 }
@@ -830,7 +830,7 @@ test "load_16_from_bytes_auto: unsupported format → error" {
   // BMP is not supported for 16-bit decode
   let bmp = lb_make_1x1_red_bmp()
   try {
-    let _ = load_16_from_bytes_auto(bmp)
+    let _ = @lib.load_16_from_bytes_auto(bmp)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

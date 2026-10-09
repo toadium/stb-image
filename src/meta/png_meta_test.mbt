@@ -1,7 +1,7 @@
 ///|
 test "read_png_text_chunks: non-PNG returns empty" {
   let data = Bytes::from_array([b'\x00', b'\x00', b'\x00', b'\x00'])
-  let result = read_png_text_chunks(data)
+  let result = @meta.read_png_text_chunks(data)
   assert_eq(result.length(), 0)
   let _ = data
   let _ = result
@@ -10,7 +10,7 @@ test "read_png_text_chunks: non-PNG returns empty" {
 ///|
 test "read_png_text_chunks: empty bytes returns empty" {
   let data = Bytes::from_array([])
-  let result = read_png_text_chunks(data)
+  let result = @meta.read_png_text_chunks(data)
   assert_eq(result.length(), 0)
   let _ = data
   let _ = result
@@ -25,7 +25,7 @@ test "read_png_text_chunks: PNG without text chunks returns empty" {
     channels: 3,
     data: [b'\xFF', b'\x00', b'\x00'] |> Bytes::from_array,
   })
-  let result = read_png_text_chunks(png)
+  let result = @meta.read_png_text_chunks(png)
   // stb_image_write 生成的 PNG 可能没有 text chunks
   assert_true(result.length() >= 0)
   let _ = png
@@ -34,7 +34,7 @@ test "read_png_text_chunks: PNG without text chunks returns empty" {
 
 ///|
 test "PngTextChunk: construction" {
-  let chunk = PngTextChunk::{ keyword: "Author", text: "Test", }
+  let chunk = @meta.PngTextChunk::{ keyword: "Author", text: "Test", }
   assert_eq(chunk.keyword, "Author")
   assert_eq(chunk.text, "Test")
   let _ = chunk
@@ -106,7 +106,7 @@ test "read_png_text_chunks: tEXt chunk" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "Author")
   assert_eq(result[0].text, "TestAuthor")
@@ -140,7 +140,7 @@ test "read_png_text_chunks: iTXt chunk uncompressed" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "Comment")
   assert_eq(result[0].text, "Hello World")
@@ -173,7 +173,7 @@ test "read_png_text_chunks: iTXt chunk compressed" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "X")
   assert_eq(result[0].text, "[compressed]")
@@ -215,7 +215,7 @@ test "read_png_text_chunks: multiple tEXt chunks" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 2)
   assert_eq(result[0].keyword, "Author")
   assert_eq(result[0].text, "Alice")
@@ -243,7 +243,7 @@ test "read_png_text_chunks: tEXt with empty text" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "Empty")
   assert_eq(result[0].text, "")
@@ -285,7 +285,7 @@ test "read_png_text_chunks: iTXt with language tag" {
   for b in build_chunk([b'\x49', b'\x45', b'\x4E', b'\x44'], []) {
     png.push(b)
   }
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "Desc")
   assert_eq(result[0].text, "Test text")
@@ -305,7 +305,7 @@ test "read_png_text_chunks: chunk data extends beyond buffer" {
      b'A', b'B', b'C', b'D', b'E', // only 5 more bytes, need 10 more to fill 20
     // Total: 52 bytes, but tEXt needs 60 bytes (40 + 20)
   ]
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   // Should return empty since chunk data is incomplete (declared 20, only 15 available)
   assert_eq(result.length(), 0)
 }
@@ -326,7 +326,7 @@ test "read_png_text_chunks: UTF-8 invalid sequence returns empty" {
     b'\x00', b'\x00', b'\x00', b'I', b'E', b'N', b'D', b'\xAE', b'\x42', b'\x60',
     b'\x82',
   ]
-  let result = read_png_text_chunks(Bytes::from_array(png))
+  let result = @meta.read_png_text_chunks(Bytes::from_array(png))
   // Should return 1 chunk with empty text (UTF-8 decode fails)
   assert_eq(result.length(), 1)
   assert_eq(result[0].keyword, "Test")

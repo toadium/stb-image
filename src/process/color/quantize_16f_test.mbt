@@ -151,7 +151,7 @@ test "median_cut_f k=8" {
 test "kmeans_quantize_16: negative size raises" {
   let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
-    let _ = kmeans_quantize_16(img, 4, 10)
+    let _ = @color.kmeans_quantize_16(img, 4, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -169,7 +169,7 @@ test "kmeans_quantize_16: invalid k raises" {
     data: Bytes::from_array(Array::make(8 * 8 * 3 * 2, b'\x00')),
   }
   try {
-    let _ = kmeans_quantize_16(img, 0, 10)
+    let _ = @color.kmeans_quantize_16(img, 0, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -187,7 +187,7 @@ test "kmeans_quantize_16: invalid channels raises" {
     data: Bytes::from_array(Array::make(8 * 8 * 1 * 2, b'\x00')),
   }
   try {
-    let _ = kmeans_quantize_16(img, 4, 10)
+    let _ = @color.kmeans_quantize_16(img, 4, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -200,7 +200,7 @@ test "kmeans_quantize_16: invalid channels raises" {
 test "kmeans_quantize_16: zero pixels returns img" {
   let img = @types.Image16::{ width: 0, height: 8, channels: 3, data: b"", }
   try {
-    let result = kmeans_quantize_16(img, 4, 10)
+    let result = @color.kmeans_quantize_16(img, 4, 10)
     assert_eq(result.width, 0)
   } catch {
     _ => assert_true(true)
@@ -212,7 +212,7 @@ test "kmeans_quantize_16: zero pixels returns img" {
 test "kmeans_quantize_f: negative size raises" {
   let img = @types.ImageF::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
-    let _ = kmeans_quantize_f(img, 4, 10)
+    let _ = @color.kmeans_quantize_f(img, 4, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -230,7 +230,7 @@ test "kmeans_quantize_f: invalid k raises" {
     data: Bytes::from_array(Array::make(8 * 8 * 3 * 4, b'\x00')),
   }
   try {
-    let _ = kmeans_quantize_f(img, 0, 10)
+    let _ = @color.kmeans_quantize_f(img, 0, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

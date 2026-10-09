@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_translation_config: 默认翻译配置" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   assert_true(config.translation_strength >= 0.0)
   assert_true(config.content_weight >= 0.0)
   assert_true(config.style_weight >= 0.0)
@@ -12,9 +12,9 @@ test "create_default_translation_config: 默认翻译配置" {
 
 ///|
 test "translate_image: 图像翻译" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   let image = [0.3, 0.5, 0.7, 0.9, 0.2, 0.4]
-  let result = translate_image(image, 2, 3, config)
+  let result = @image_translation_advanced.translate_image(image, 2, 3, config)
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.translation_strength >= 0.0)
@@ -26,10 +26,12 @@ test "translate_image: 图像翻译" {
 
 ///|
 test "advanced_style_transfer: 高级风格迁移" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   let content = [0.2, 0.4, 0.6, 0.8]
   let style = [0.9, 0.7, 0.5, 0.3]
-  let result = advanced_style_transfer(content, style, 2, 2, config)
+  let result = @image_translation_advanced.advanced_style_transfer(
+    content, style, 2, 2, config,
+  )
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.num_iterations > 0)
@@ -39,9 +41,9 @@ test "advanced_style_transfer: 高级风格迁移" {
 
 ///|
 test "transfer_season: 季节迁移" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   let image = [0.3, 0.5, 0.7, 0.9, 0.2, 0.4]
-  let result = transfer_season(image, 2, 3, config)
+  let result = @image_translation_advanced.transfer_season(image, 2, 3, config)
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.translation_strength >= 0.0)
@@ -52,9 +54,9 @@ test "transfer_season: 季节迁移" {
 
 ///|
 test "transfer_weather: 天气迁移" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   let image = [0.3, 0.5, 0.7, 0.9, 0.2, 0.4]
-  let result = transfer_weather(image, 2, 3, config)
+  let result = @image_translation_advanced.transfer_weather(image, 2, 3, config)
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.translation_strength >= 0.0)
@@ -65,9 +67,11 @@ test "transfer_weather: 天气迁移" {
 
 ///|
 test "transfer_day_night: 昼夜迁移" {
-  let config = create_default_translation_config()
+  let config = @image_translation_advanced.create_default_translation_config()
   let image = [0.3, 0.5, 0.7, 0.9, 0.2, 0.4]
-  let result = transfer_day_night(image, 2, 3, config)
+  let result = @image_translation_advanced.transfer_day_night(
+    image, 2, 3, config,
+  )
   assert_true(result.width > 0)
   assert_true(result.height > 0)
   assert_true(result.translation_strength >= 0.0)
@@ -78,9 +82,9 @@ test "transfer_day_night: 昼夜迁移" {
 
 ///|
 test "image_translation_report_to_string: 报告生成" {
-  let config = create_default_translation_config()
-  let report = image_translation_report_to_string(
-    ImageTranslationTaskType::StyleTransfer,
+  let config = @image_translation_advanced.create_default_translation_config()
+  let report = @image_translation_advanced.image_translation_report_to_string(
+    @image_translation_advanced.ImageTranslationTaskType::StyleTransfer,
     config,
     "翻译完成",
   )

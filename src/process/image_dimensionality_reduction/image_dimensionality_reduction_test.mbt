@@ -2,15 +2,18 @@
 
 ///|
 test "create_default_dr_config: 基本测试" {
-  let config = create_default_dr_config()
-  assert_true(config.task_type is DimensionalityReductionTaskType::PCA)
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  assert_true(
+    config.task_type
+    is @image_dimensionality_reduction.DimensionalityReductionTaskType::PCA,
+  )
 }
 
 ///|
 test "pca_reduce: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_dr_config()
-  let result = pca_reduce(data, 2, config)
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  let result = @image_dimensionality_reduction.pca_reduce(data, 2, config)
   assert_eq(result.num_samples, 4)
   assert_eq(result.num_components, 2)
 }
@@ -18,8 +21,8 @@ test "pca_reduce: 基本测试" {
 ///|
 test "tsne_reduce: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_dr_config()
-  let result = tsne_reduce(data, 2, config)
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  let result = @image_dimensionality_reduction.tsne_reduce(data, 2, config)
   assert_eq(result.num_samples, 4)
   assert_eq(result.num_components, 2)
 }
@@ -27,8 +30,8 @@ test "tsne_reduce: 基本测试" {
 ///|
 test "umap_reduce: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_dr_config()
-  let result = umap_reduce(data, 2, config)
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  let result = @image_dimensionality_reduction.umap_reduce(data, 2, config)
   assert_eq(result.num_samples, 4)
   assert_eq(result.num_components, 2)
 }
@@ -36,8 +39,10 @@ test "umap_reduce: 基本测试" {
 ///|
 test "reduce_dimensionality: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_dr_config()
-  let result = reduce_dimensionality(data, config)
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  let result = @image_dimensionality_reduction.reduce_dimensionality(
+    data, config,
+  )
   assert_eq(result.num_samples, 4)
   assert_true(result.reduced_dimension > 0)
 }
@@ -45,16 +50,16 @@ test "reduce_dimensionality: 基本测试" {
 ///|
 test "select_features: 基本测试" {
   let data = make_test_data(4, 8)
-  let result = select_features(data, 0.5)
+  let result = @image_dimensionality_reduction.select_features(data, 0.5)
   assert_true(result.num_selected >= 0)
   assert_eq(result.original_num_features, 8)
 }
 
 ///|
 test "dimensionality_reduction_report_to_string: 基本测试" {
-  let config = create_default_dr_config()
-  let report = dimensionality_reduction_report_to_string(
-    DimensionalityReductionTaskType::PCA,
+  let config = @image_dimensionality_reduction.create_default_dr_config()
+  let report = @image_dimensionality_reduction.dimensionality_reduction_report_to_string(
+    @image_dimensionality_reduction.DimensionalityReductionTaskType::PCA,
     config,
     "测试结果",
   )

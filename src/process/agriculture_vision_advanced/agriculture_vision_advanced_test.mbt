@@ -1,6 +1,6 @@
 ///|
 test "create_default_agriculture_config: returns disease detection config" {
-  let config = create_default_agriculture_config()
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
   assert_eq(config.detection_threshold, 0.5)
   assert_eq(config.disease_severity_threshold, 0.3)
   assert_eq(config.pest_infestation_threshold, 0.2)
@@ -10,32 +10,39 @@ test "create_default_agriculture_config: returns disease detection config" {
   assert_true(config.use_ndvi)
   assert_false(config.use_thermal)
   assert_true(config.auto_recommendation)
-  assert_true(config.task_type is AgricultureVisionTaskType::DiseaseDetection)
-  assert_true(config.crop_type is CropType::Wheat)
+  assert_true(
+    config.task_type
+    is @agriculture_vision_advanced.AgricultureVisionTaskType::DiseaseDetection,
+  )
+  assert_true(config.crop_type is @agriculture_vision_advanced.CropType::Wheat)
 }
 
 ///|
 test "detect_crops: returns crop detections" {
-  let config = create_default_agriculture_config()
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 256).to_double())
   }
-  let crops = detect_crops(image, 500, 500, config)
+  let crops = @agriculture_vision_advanced.detect_crops(image, 500, 500, config)
   assert_eq(crops.length(), 10)
   assert_true(crops[0].confidence >= 0.7 && crops[0].confidence <= 1.0)
   assert_eq(crops[0].bounding_box.length(), 4)
-  assert_true(crops[0].crop_type is CropType::Wheat)
+  assert_true(
+    crops[0].crop_type is @agriculture_vision_advanced.CropType::Wheat,
+  )
 }
 
 ///|
 test "detect_diseases: returns disease detections" {
-  let config = create_default_agriculture_config()
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 256).to_double())
   }
-  let diseases = detect_diseases(image, 500, 500, config)
+  let diseases = @agriculture_vision_advanced.detect_diseases(
+    image, 500, 500, config,
+  )
   assert_eq(diseases.length(), 5)
   for d in diseases {
     assert_eq(d.bounding_box.length(), 4)
@@ -44,12 +51,12 @@ test "detect_diseases: returns disease detections" {
 
 ///|
 test "detect_pests: returns pest detections" {
-  let config = create_default_agriculture_config()
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
   let image : Array[Double] = []
   for i in 0..<10000 {
     image.push((i % 256).to_double())
   }
-  let pests = detect_pests(image, 500, 500, config)
+  let pests = @agriculture_vision_advanced.detect_pests(image, 500, 500, config)
   assert_eq(pests.length(), 5)
   for p in pests {
     assert_eq(p.bounding_box.length(), 4)
@@ -58,9 +65,15 @@ test "detect_pests: returns pest detections" {
 
 ///|
 test "predict_yield: wheat yield prediction" {
-  let config = create_default_agriculture_config()
-  let result = predict_yield(CropType::Wheat, 10.0, "flowering", 0.9, config)
-  assert_true(result.crop_type is CropType::Wheat)
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
+  let result = @agriculture_vision_advanced.predict_yield(
+    @agriculture_vision_advanced.CropType::Wheat,
+    10.0,
+    "flowering",
+    0.9,
+    config,
+  )
+  assert_true(result.crop_type is @agriculture_vision_advanced.CropType::Wheat)
   assert_eq(result.yield_unit, "tons")
   assert_true(result.predicted_yield > 0.0)
   assert_eq(result.num_factors, 4)
@@ -70,29 +83,35 @@ test "predict_yield: wheat yield prediction" {
 
 ///|
 test "predict_yield: corn yield prediction" {
-  let config = create_default_agriculture_config()
-  let result = predict_yield(CropType::Corn, 5.0, "vegetative", 1.0, config)
-  assert_true(result.crop_type is CropType::Corn)
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
+  let result = @agriculture_vision_advanced.predict_yield(
+    @agriculture_vision_advanced.CropType::Corn,
+    5.0,
+    "vegetative",
+    1.0,
+    config,
+  )
+  assert_true(result.crop_type is @agriculture_vision_advanced.CropType::Corn)
   assert_true(result.predicted_yield > 0.0)
 }
 
 ///|
 test "analyze_soil: returns soil analysis" {
-  let config = create_default_agriculture_config()
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
   let soil_image : Array[Double] = []
   for i in 0..<1000 {
     soil_image.push((i % 100).to_double())
   }
-  let result = analyze_soil(soil_image, config)
-  assert_true(result.soil_type is SoilType::Loam)
+  let result = @agriculture_vision_advanced.analyze_soil(soil_image, config)
+  assert_true(result.soil_type is @agriculture_vision_advanced.SoilType::Loam)
   assert_eq(result.recommendation.length() > 0, true)
 }
 
 ///|
 test "agriculture_vision_report_to_string: contains task info" {
-  let config = create_default_agriculture_config()
-  let report = agriculture_vision_report_to_string(
-    AgricultureVisionTaskType::YieldPrediction,
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
+  let report = @agriculture_vision_advanced.agriculture_vision_report_to_string(
+    @agriculture_vision_advanced.AgricultureVisionTaskType::YieldPrediction,
     config,
     "Predicted 50 tons",
   )
@@ -104,9 +123,9 @@ test "agriculture_vision_report_to_string: contains task info" {
 
 ///|
 test "agriculture_vision_report_to_string: pest detection task" {
-  let config = create_default_agriculture_config()
-  let report = agriculture_vision_report_to_string(
-    AgricultureVisionTaskType::PestDetection,
+  let config = @agriculture_vision_advanced.create_default_agriculture_config()
+  let report = @agriculture_vision_advanced.agriculture_vision_report_to_string(
+    @agriculture_vision_advanced.AgricultureVisionTaskType::PestDetection,
     config,
     "Found 3 pests",
   )

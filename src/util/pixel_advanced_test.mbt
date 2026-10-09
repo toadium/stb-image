@@ -8,7 +8,7 @@ test "pixelate: block_size=1 is identity" {
     channels: 1,
     data: [b'\x10', b'\x20', b'\x30', b'\x40'] |> Bytes::from_array,
   }
-  let result = pixelate(img, 1)
+  let result = @util.pixelate(img, 1)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -26,7 +26,7 @@ test "pixelate: block_size=2 averages blocks" {
     ]
     |> Bytes::from_array,
   }
-  let result = pixelate(img, 2)
+  let result = @util.pixelate(img, 2)
   // 左上 2x2 块都取左上角值 0xFF
   assert_eq(result.data[0], b'\xFF')
   // 右上 2x2 块取 (2,0) 处值 0x00
@@ -39,7 +39,7 @@ test "pixelate: block_size=2 averages blocks" {
 test "pixelate: raises on invalid block_size" {
   let img = make_img(2, 2, 1, b'\x80')
   try {
-    let _ = pixelate(img, 0)
+    let _ = @util.pixelate(img, 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -57,7 +57,7 @@ test "replace_color: exact match" {
     data: [b'\xFF', b'\x00', b'\x00', b'\x00', b'\xFF', b'\x00']
     |> Bytes::from_array,
   }
-  let result = replace_color(
+  let result = @util.replace_color(
     img,
     [b'\xFF', b'\x00', b'\x00'],
     [b'\x00', b'\x00', b'\xFF'],
@@ -79,7 +79,7 @@ test "replace_color: with tolerance" {
     channels: 1,
     data: [b'\x80'] |> Bytes::from_array,
   }
-  let result = replace_color(img, [b'\x7F'], [b'\x00'], 2)
+  let result = @util.replace_color(img, [b'\x7F'], [b'\x00'], 2)
   assert_eq(result.data[0], b'\x00')
   let _ = img
   let _ = result
@@ -93,7 +93,7 @@ test "swap_channels: swap R and B" {
     channels: 3,
     data: [b'\x10', b'\x20', b'\x30'] |> Bytes::from_array,
   }
-  let result = swap_channels(img, 0, 2)
+  let result = @util.swap_channels(img, 0, 2)
   assert_eq(result.data[0], b'\x30')
   assert_eq(result.data[1], b'\x20')
   assert_eq(result.data[2], b'\x10')
@@ -104,7 +104,7 @@ test "swap_channels: swap R and B" {
 ///|
 test "swap_channels: same channel is identity" {
   let img = make_img(2, 2, 3, b'\x80')
-  let result = swap_channels(img, 1, 1)
+  let result = @util.swap_channels(img, 1, 1)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -114,7 +114,7 @@ test "swap_channels: same channel is identity" {
 test "swap_channels: raises on out of bounds" {
   let img = make_img(1, 1, 3, b'\x80')
   try {
-    let _ = swap_channels(img, 0, 3)
+    let _ = @util.swap_channels(img, 0, 3)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -137,7 +137,7 @@ test "blend_darken: takes minimum" {
     channels: 1,
     data: [b'\x40', b'\x80'] |> Bytes::from_array,
   }
-  let result = blend_darken(base, blend)
+  let result = @util.blend_darken(base, blend)
   assert_eq(result.data[0], b'\x40')
   assert_eq(result.data[1], b'\x40')
   let _ = base
@@ -159,7 +159,7 @@ test "blend_lighten: takes maximum" {
     channels: 1,
     data: [b'\x40', b'\x80'] |> Bytes::from_array,
   }
-  let result = blend_lighten(base, blend)
+  let result = @util.blend_lighten(base, blend)
   assert_eq(result.data[0], b'\x80')
   assert_eq(result.data[1], b'\x80')
   let _ = base
@@ -181,7 +181,7 @@ test "blend_difference: absolute difference" {
     channels: 1,
     data: [b'\x40'] |> Bytes::from_array,
   }
-  let result = blend_difference(base, blend)
+  let result = @util.blend_difference(base, blend)
   assert_eq(result.data[0], b'\x40')
   let _ = base
   let _ = blend
@@ -192,7 +192,7 @@ test "blend_difference: absolute difference" {
 test "blend_exclusion: same values gives mid-gray" {
   let base = make_img(1, 1, 1, b'\x80')
   let blend = make_img(1, 1, 1, b'\x80')
-  let result = blend_exclusion(base, blend)
+  let result = @util.blend_exclusion(base, blend)
   let v = result.data[0].to_int()
   assert_true(v >= 126 && v <= 130)
   let _ = base
@@ -204,7 +204,7 @@ test "blend_exclusion: same values gives mid-gray" {
 test "replace_color: raises on short old_color" {
   let img = make_img(1, 1, 3, b'\xFF')
   try {
-    let _ = replace_color(img, [b'\xFF'], [b'\x00', b'\x00', b'\x00'], 0)
+    let _ = @util.replace_color(img, [b'\xFF'], [b'\x00', b'\x00', b'\x00'], 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -217,7 +217,7 @@ test "replace_color: raises on short old_color" {
 test "replace_color: raises on short new_color" {
   let img = make_img(1, 1, 3, b'\xFF')
   try {
-    let _ = replace_color(img, [b'\xFF', b'\x00', b'\x00'], [b'\x00'], 0)
+    let _ = @util.replace_color(img, [b'\xFF', b'\x00', b'\x00'], [b'\x00'], 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -235,7 +235,7 @@ test "replace_color: tolerance match" {
     data: [b'\x7F', b'\x80', b'\x81', b'\xFF', b'\x00', b'\x00']
     |> Bytes::from_array,
   }
-  let result = replace_color(
+  let result = @util.replace_color(
     img,
     [b'\x80', b'\x80', b'\x80'],
     [b'\x00', b'\xFF', b'\x00'],

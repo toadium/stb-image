@@ -16,7 +16,7 @@ test "lucas_kanade 零位移" {
     data: Bytes::from_array(data),
   }
   let points = [(5, 5)]
-  let results = lucas_kanade(img, img, points, window_size=5)
+  let results = @feature.lucas_kanade(img, img, points, window_size=5)
   assert_eq(results.length(), 1)
   // 位移应接近零
   assert_true(results[0].u.abs() < 1.0F)
@@ -53,7 +53,13 @@ test "lucas_kanade 水平位移" {
     data: Bytes::from_array(data2),
   }
   let points = [(5, 5)]
-  let results = lucas_kanade(prev, next, points, window_size=5, max_iter=30)
+  let results = @feature.lucas_kanade(
+    prev,
+    next,
+    points,
+    window_size=5,
+    max_iter=30,
+  )
   assert_eq(results.length(), 1)
   // 应检测到水平位移
   assert_true(results[0].found)
@@ -74,7 +80,7 @@ test "lucas_kanade 尺寸不一致报错" {
     data: Bytes::from_array(Array::make(64, b'\x00')),
   }
   try {
-    let _ = lucas_kanade(img1, img2, [(5, 5)])
+    let _ = @feature.lucas_kanade(img1, img2, [(5, 5)])
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -96,7 +102,7 @@ test "lucas_kanade 多点" {
     data: Bytes::from_array(data),
   }
   let points = [(3, 3), (5, 5), (7, 7)]
-  let results = lucas_kanade(img, img, points, window_size=3)
+  let results = @feature.lucas_kanade(img, img, points, window_size=3)
   assert_eq(results.length(), 3)
 }
 
@@ -116,7 +122,7 @@ test "lucas_kanade RGB 图" {
     data: Bytes::from_array(data),
   }
   let points = [(5, 5)]
-  let results = lucas_kanade(img, img, points, window_size=3)
+  let results = @feature.lucas_kanade(img, img, points, window_size=3)
   assert_eq(results.length(), 1)
   assert_true(results[0].u.abs() < 1.0F)
 }
@@ -135,7 +141,7 @@ test "horn_schunck 零位移" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let (u, v) = horn_schunck(img, img, alpha=1.0F, iterations=50)
+  let (u, v) = @feature.horn_schunck(img, img, alpha=1.0F, iterations=50)
   // 相同帧，光流应接近零
   let mut max_u = 0.0F
   let mut max_v = 0.0F
@@ -166,7 +172,7 @@ test "horn_schunck 尺寸不一致报错" {
     data: Bytes::from_array(Array::make(64, b'\x00')),
   }
   try {
-    let _ = horn_schunck(img1, img2)
+    let _ = @feature.horn_schunck(img1, img2)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -181,7 +187,7 @@ test "horn_schunck 返回正确大小" {
     channels: 1,
     data: Bytes::from_array(Array::make(100, b'\x00')),
   }
-  let (u, v) = horn_schunck(img, img, iterations=10)
+  let (u, v) = @feature.horn_schunck(img, img, iterations=10)
   assert_eq(u.length(), 100)
   assert_eq(v.length(), 100)
 }

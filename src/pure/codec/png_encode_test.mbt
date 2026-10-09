@@ -19,7 +19,7 @@ fn pe_make_image(
 ///|
 test "encode_png_pure: PNG signature" {
   let img = pe_make_image(1, 1, 3, [128, 128, 128])
-  let out = encode_png_pure(img)
+  let out = @codec.encode_png_pure(img)
   // PNG signature
   assert_eq(out[0].to_int(), 0x89)
   assert_eq(out[1].to_int(), 0x50) // P
@@ -34,7 +34,7 @@ test "encode_png_pure: PNG signature" {
 ///|
 test "encode_png_pure: IHDR chunk" {
   let img = pe_make_image(16, 32, 3, Array::make(16 * 32 * 3, 0))
-  let out = encode_png_pure(img)
+  let out = @codec.encode_png_pure(img)
   // IHDR length = 13 (BE u32) at offset 8
   assert_eq(out[8].to_int(), 0x00)
   assert_eq(out[9].to_int(), 0x00)
@@ -60,8 +60,8 @@ test "encode_png_pure: IHDR chunk" {
 ///|
 test "encode_png_pure: RGB roundtrip 1x1" {
   let img = pe_make_image(1, 1, 3, [255, 0, 0])
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -78,8 +78,8 @@ test "encode_png_pure: RGB roundtrip 4x4" {
     100, 150, 200, 50, 100, 250, 250, 250,
   ]
   let img = pe_make_image(4, 4, 3, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
   assert_eq(restored.channels, 3)
@@ -93,8 +93,8 @@ test "encode_png_pure: RGB roundtrip 4x4" {
 test "encode_png_pure: RGBA roundtrip (alpha retained by decode)" {
   let pixels = [255, 0, 0, 255, 0, 255, 0, 128, 0, 0, 255, 64, 255, 255, 255, 0]
   let img = pe_make_image(2, 2, 4, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 4)
@@ -108,8 +108,8 @@ test "encode_png_pure: RGBA roundtrip (alpha retained by decode)" {
 test "encode_png_pure: grayscale roundtrip (retained as gray)" {
   let pixels = [0, 64, 128, 192, 255, 32, 96, 160, 224]
   let img = pe_make_image(3, 3, 1, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 3)
   assert_eq(restored.height, 3)
   assert_eq(restored.channels, 1)
@@ -123,8 +123,8 @@ test "encode_png_pure: grayscale roundtrip (retained as gray)" {
 test "encode_png_pure: gray+alpha roundtrip (alpha retained)" {
   let pixels = [100, 255, 200, 128, 50, 0, 75, 200]
   let img = pe_make_image(2, 2, 2, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 2)
@@ -139,8 +139,8 @@ test "encode_png_pure: 3-channel from 5-channel input" {
   // channels=5 应被当作 RGB (out_ch=3)
   let pixels = [10, 20, 30, 40, 50]
   let img = pe_make_image(1, 1, 5, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -156,8 +156,8 @@ test "encode_png_pure: 8x8 RGB roundtrip" {
     pixels.push(i * 37 % 256)
   }
   let img = pe_make_image(8, 8, 3, pixels)
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_pure(png_bytes)
   assert_eq(restored.width, 8)
   assert_eq(restored.height, 8)
   assert_eq(restored.channels, 3)
@@ -170,9 +170,9 @@ test "encode_png_pure: 8x8 RGB roundtrip" {
 test "decode_png_16_pure: req_channels invalid raises" {
   // Construct a minimal 8-bit PNG and test req_channels validation
   let img = pe_make_image(1, 1, 3, [128, 64, 32])
-  let png_bytes = encode_png_pure(img)
+  let png_bytes = @codec.encode_png_pure(img)
   try {
-    let _ = decode_png_16_pure(png_bytes, req_channels=Some(5))
+    let _ = @codec.decode_png_16_pure(png_bytes, req_channels=Some(5))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -186,8 +186,8 @@ test "decode_png_16_pure: req_channels invalid raises" {
 test "decode_png_16_pure: 8-bit roundtrip" {
   // 8-bit RGB PNG decoded as 16-bit: verify structure and req_channels
   let img = pe_make_image(1, 1, 3, [100, 150, 200])
-  let png_bytes = encode_png_pure(img)
-  let restored = decode_png_16_pure(png_bytes)
+  let png_bytes = @codec.encode_png_pure(img)
+  let restored = @codec.decode_png_16_pure(png_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)

@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_cli_config: 返回有效配置" {
-  let config = create_default_cli_config()
+  let config = @ocr.create_default_cli_config()
   assert_eq(config.output_format, "text")
   assert_eq(config.language, "auto")
   assert_false(config.enable_handwriting)
@@ -12,7 +12,7 @@ test "create_default_cli_config: 返回有效配置" {
 
 ///|
 test "create_default_api_server_config: 返回有效配置" {
-  let config = create_default_api_server_config()
+  let config = @ocr.create_default_api_server_config()
   assert_eq(config.host, "0.0.0.0")
   assert_eq(config.port, 8080)
   assert_true(config.max_concurrent_requests > 0)
@@ -21,7 +21,7 @@ test "create_default_api_server_config: 返回有效配置" {
 
 ///|
 test "create_default_docker_config: 返回有效配置" {
-  let config = create_default_docker_config()
+  let config = @ocr.create_default_docker_config()
   assert_true(config.base_image.length() > 0)
   assert_true(config.app_port > 0)
   assert_true(config.memory_limit_mb > 0)
@@ -30,7 +30,7 @@ test "create_default_docker_config: 返回有效配置" {
 
 ///|
 test "create_default_model_package_config: 返回有效配置" {
-  let config = create_default_model_package_config()
+  let config = @ocr.create_default_model_package_config()
   assert_true(config.model_name.length() > 0)
   assert_true(config.version.length() > 0)
   assert_true(config.input_width > 0)
@@ -40,8 +40,8 @@ test "create_default_model_package_config: 返回有效配置" {
 
 ///|
 test "generate_dockerfile: 生成有效Dockerfile" {
-  let config = create_default_docker_config()
-  let dockerfile = generate_dockerfile(config)
+  let config = @ocr.create_default_docker_config()
+  let dockerfile = @ocr.generate_dockerfile(config)
   assert_true(dockerfile.length() > 0)
   assert_true(dockerfile.contains("FROM"))
   assert_true(dockerfile.contains("WORKDIR"))
@@ -50,8 +50,8 @@ test "generate_dockerfile: 生成有效Dockerfile" {
 
 ///|
 test "generate_docker_compose: 生成有效compose文件" {
-  let config = create_default_docker_config()
-  let compose = generate_docker_compose(config)
+  let config = @ocr.create_default_docker_config()
+  let compose = @ocr.generate_docker_compose(config)
   assert_true(compose.length() > 0)
   assert_true(compose.contains("version"))
   assert_true(compose.contains("services"))
@@ -59,8 +59,8 @@ test "generate_docker_compose: 生成有效compose文件" {
 
 ///|
 test "generate_api_config_json: 生成有效JSON" {
-  let config = create_default_api_server_config()
-  let json = generate_api_config_json(config)
+  let config = @ocr.create_default_api_server_config()
+  let json = @ocr.generate_api_config_json(config)
   assert_true(json.length() > 0)
   assert_true(json.contains("host"))
   assert_true(json.contains("port"))
@@ -68,7 +68,7 @@ test "generate_api_config_json: 生成有效JSON" {
 
 ///|
 test "generate_cli_help: 生成帮助文本" {
-  let help = generate_cli_help()
+  let help = @ocr.generate_cli_help()
   assert_true(help.length() > 0)
   assert_true(help.contains("ocr_cli"))
   assert_true(help.contains("--output"))
@@ -76,58 +76,58 @@ test "generate_cli_help: 生成帮助文本" {
 
 ///|
 test "parse_cli_args: 基本参数解析" {
-  let config = parse_cli_args(["input.png"])
+  let config = @ocr.parse_cli_args(["input.png"])
   assert_eq(config.input_path, "input.png")
   assert_eq(config.output_format, "text")
 }
 
 ///|
 test "parse_cli_args: 解析输出路径" {
-  let config = parse_cli_args(["input.png", "-o", "result.txt"])
+  let config = @ocr.parse_cli_args(["input.png", "-o", "result.txt"])
   assert_eq(config.input_path, "input.png")
   assert_eq(config.output_path, "result.txt")
 }
 
 ///|
 test "parse_cli_args: 解析格式" {
-  let config = parse_cli_args(["input.png", "-f", "json"])
+  let config = @ocr.parse_cli_args(["input.png", "-f", "json"])
   assert_eq(config.output_format, "json")
 }
 
 ///|
 test "parse_cli_args: 解析语言" {
-  let config = parse_cli_args(["input.png", "-l", "zh"])
+  let config = @ocr.parse_cli_args(["input.png", "-l", "zh"])
   assert_eq(config.language, "zh")
 }
 
 ///|
 test "parse_cli_args: 启用手写" {
-  let config = parse_cli_args(["input.png", "--handwriting"])
+  let config = @ocr.parse_cli_args(["input.png", "--handwriting"])
   assert_true(config.enable_handwriting)
 }
 
 ///|
 test "parse_cli_args: 启用文档分析" {
-  let config = parse_cli_args(["input.png", "--document"])
+  let config = @ocr.parse_cli_args(["input.png", "--document"])
   assert_true(config.enable_document_analysis)
 }
 
 ///|
 test "parse_cli_args: 启用详细模式" {
-  let config = parse_cli_args(["input.png", "-v"])
+  let config = @ocr.parse_cli_args(["input.png", "-v"])
   assert_true(config.verbose)
 }
 
 ///|
 test "parse_cli_args: 解析批大小" {
-  let config = parse_cli_args(["input.png", "-b", "16"])
+  let config = @ocr.parse_cli_args(["input.png", "-b", "16"])
   assert_eq(config.batch_size, 16)
 }
 
 ///|
 test "parse_cli_args: 空参数抛异常" {
   try {
-    ignore(parse_cli_args([]))
+    ignore(@ocr.parse_cli_args([]))
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -136,8 +136,8 @@ test "parse_cli_args: 空参数抛异常" {
 
 ///|
 test "generate_model_manifest: 生成模型清单" {
-  let config = create_default_model_package_config()
-  let manifest = generate_model_manifest(config)
+  let config = @ocr.create_default_model_package_config()
+  let manifest = @ocr.generate_model_manifest(config)
   assert_true(manifest.length() > 0)
   assert_true(manifest.contains("name"))
   assert_true(manifest.contains("version"))
@@ -145,32 +145,34 @@ test "generate_model_manifest: 生成模型清单" {
 
 ///|
 test "generate_env_config: 开发环境" {
-  let env = generate_env_config(DeploymentEnvironment::Development)
+  let env = @ocr.generate_env_config(@ocr.DeploymentEnvironment::Development)
   assert_true(env.contains("development"))
   assert_true(env.contains("debug"))
 }
 
 ///|
 test "generate_env_config: 生产环境" {
-  let env = generate_env_config(DeploymentEnvironment::Production)
+  let env = @ocr.generate_env_config(@ocr.DeploymentEnvironment::Production)
   assert_true(env.contains("production"))
   assert_true(env.contains("warn"))
 }
 
 ///|
 test "generate_health_check_config: 生成健康检查" {
-  let config = create_default_api_server_config()
-  let health = generate_health_check_config(config)
+  let config = @ocr.create_default_api_server_config()
+  let health = @ocr.generate_health_check_config(config)
   assert_true(health.length() > 0)
   assert_true(health.contains("health"))
 }
 
 ///|
 test "generate_deployment_package: 生成完整部署包" {
-  let docker_config = create_default_docker_config()
-  let api_config = create_default_api_server_config()
-  let model_config = create_default_model_package_config()
-  let pkg = generate_deployment_package(docker_config, api_config, model_config)
+  let docker_config = @ocr.create_default_docker_config()
+  let api_config = @ocr.create_default_api_server_config()
+  let model_config = @ocr.create_default_model_package_config()
+  let pkg = @ocr.generate_deployment_package(
+    docker_config, api_config, model_config,
+  )
   assert_true(pkg.length() > 0)
   assert_true(pkg.contains("Dockerfile"))
   assert_true(pkg.contains("docker-compose"))

@@ -34,7 +34,7 @@ fn make_1x2_top_down_bmp_24() -> Bytes {
 
 ///|
 test "decode_bmp_pure: 1x1 24-bit BMP" {
-  let img = decode_bmp_pure(make_1x1_red_bmp_24())
+  let img = @codec.decode_bmp_pure(make_1x1_red_bmp_24())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -46,7 +46,7 @@ test "decode_bmp_pure: 1x1 24-bit BMP" {
 
 ///|
 test "decode_bmp_pure: 2x2 24-bit BMP with row padding" {
-  let img = decode_bmp_pure(make_2x2_colors_bmp_24())
+  let img = @codec.decode_bmp_pure(make_2x2_colors_bmp_24())
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -59,7 +59,7 @@ test "decode_bmp_pure: 2x2 24-bit BMP with row padding" {
 
 ///|
 test "decode_bmp_pure: 1x1 32-bit BMP" {
-  let img = decode_bmp_pure(make_1x1_red_bmp_32())
+  let img = @codec.decode_bmp_pure(make_1x1_red_bmp_32())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 4)
@@ -72,7 +72,7 @@ test "decode_bmp_pure: 1x1 32-bit BMP" {
 
 ///|
 test "decode_bmp_pure: top-down row order (height < 0)" {
-  let img = decode_bmp_pure(make_1x2_top_down_bmp_24())
+  let img = @codec.decode_bmp_pure(make_1x2_top_down_bmp_24())
   assert_eq(img.width, 1)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -90,7 +90,7 @@ test "decode_bmp_pure: invalid magic raises" {
   // 58 字节，magic 错误 "XX"
   let bad = b"XX\x3A\x00\x00\x00\x00\x00\x00\x00\x36\x00\x00\x00\x28\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x18\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00"
   try {
-    let _ = decode_bmp_pure(bad)
+    let _ = @codec.decode_bmp_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -102,7 +102,7 @@ test "decode_bmp_pure: invalid magic raises" {
 test "decode_bmp_pure: too short raises" {
   let short = b"\x42\x4D"
   try {
-    let _ = decode_bmp_pure(short)
+    let _ = @codec.decode_bmp_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -113,7 +113,7 @@ test "decode_bmp_pure: too short raises" {
 ///|
 test "decode_bmp_pure: wrong magic raises" {
   try {
-    let _ = decode_bmp_pure(
+    let _ = @codec.decode_bmp_pure(
       b"XX\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
     )
     assert_true(false)
@@ -144,7 +144,7 @@ test "decode_bmp_pure: unsupported DIB header size raises" {
      0x00, 0x00, 0x00, 0x00, // important colors
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -173,7 +173,7 @@ test "decode_bmp_pure: unsupported bit depth raises" {
      0x00, 0x00, 0x00, 0x00, // important colors
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -202,7 +202,7 @@ test "decode_bmp_pure: unsupported compression raises" {
      0x00, 0x00, 0x00, 0x00, // important colors
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -231,7 +231,7 @@ test "decode_bmp_pure: zero dimensions raises" {
      0x00, 0x00, 0x00, 0x00, // important colors
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -262,7 +262,7 @@ test "decode_bmp_pure: pixel data out of bounds raises" {
      0xFF, 0x00, 0x00, 0xFF,
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -297,7 +297,7 @@ test "decode_bmp_pure: second row pixel data out of bounds raises" {
      0x00,
   ]
   try {
-    let _ = decode_bmp_pure(Bytes::from_array(data))
+    let _ = @codec.decode_bmp_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

@@ -8,8 +8,8 @@ test "decode_tiff_pure: 无压缩 1x1 灰度 roundtrip" {
     channels: 1,
     data: Bytes::from_array([b'\x80']),
   }
-  let tiff = encode_tiff_pure(img)
-  let decoded = decode_tiff_pure(tiff)
+  let tiff = @codec.encode_tiff_pure(img)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 1)
@@ -24,8 +24,8 @@ test "decode_tiff_pure: 无压缩 2x2 灰度 roundtrip" {
     channels: 1,
     data: Bytes::from_array([b'\x00', b'\x80', b'\xFF', b'\x40']),
   }
-  let tiff = encode_tiff_pure(img)
-  let decoded = decode_tiff_pure(tiff)
+  let tiff = @codec.encode_tiff_pure(img)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 2)
   assert_eq(decoded.height, 2)
   assert_eq(decoded.channels, 1)
@@ -43,8 +43,8 @@ test "decode_tiff_pure: 无压缩 1x1 RGB roundtrip" {
     channels: 3,
     data: Bytes::from_array([b'\xFF', b'\x80', b'\x00']),
   }
-  let tiff = encode_tiff_pure(img)
-  let decoded = decode_tiff_pure(tiff)
+  let tiff = @codec.encode_tiff_pure(img)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 3)
@@ -61,8 +61,8 @@ test "decode_tiff_pure: 无压缩 1x1 RGBA roundtrip" {
     channels: 4,
     data: Bytes::from_array([b'\xFF', b'\x80', b'\x00', b'\xC0']),
   }
-  let tiff = encode_tiff_pure(img)
-  let decoded = decode_tiff_pure(tiff)
+  let tiff = @codec.encode_tiff_pure(img)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 4)
@@ -83,8 +83,8 @@ test "decode_tiff_pure: 无压缩 2x2 RGB roundtrip" {
       b'\xFF', b'\xFF', b'\xFF',
     ]),
   }
-  let tiff = encode_tiff_pure(img)
-  let decoded = decode_tiff_pure(tiff)
+  let tiff = @codec.encode_tiff_pure(img)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 2)
   assert_eq(decoded.height, 2)
   assert_eq(decoded.channels, 3)
@@ -100,7 +100,7 @@ test "decode_tiff_pure: 无压缩 2x2 RGB roundtrip" {
 test "tiff_packbits_decode: 单字节" {
   let pb_data : Array[Byte] = [0x00, b'\x80']
   let bytes = Bytes::from_array(pb_data)
-  let result = tiff_packbits_decode(bytes)
+  let result = @codec.tiff_packbits_decode(bytes)
   assert_eq(result.length(), 1)
   assert_eq(result[0], b'\x80')
 }
@@ -109,7 +109,7 @@ test "tiff_packbits_decode: 单字节" {
 test "tiff_packbits_decode: 重复5字节" {
   let pb_data : Array[Byte] = [0xFC, b'\xFF']
   let bytes = Bytes::from_array(pb_data)
-  let result = tiff_packbits_decode(bytes)
+  let result = @codec.tiff_packbits_decode(bytes)
   assert_eq(result.length(), 5)
   for i in 0..<5 {
     assert_eq(result[i], b'\xFF')
@@ -120,7 +120,7 @@ test "tiff_packbits_decode: 重复5字节" {
 test "tiff_packbits_decode: 原始两字节" {
   let pb_data : Array[Byte] = [0x01, b'\xAA', b'\xBB']
   let bytes = Bytes::from_array(pb_data)
-  let result = tiff_packbits_decode(bytes)
+  let result = @codec.tiff_packbits_decode(bytes)
   assert_eq(result.length(), 2)
   assert_eq(result[0], b'\xAA')
   assert_eq(result[1], b'\xBB')
@@ -130,7 +130,7 @@ test "tiff_packbits_decode: 原始两字节" {
 test "tiff_deflate_decode: 单字节" {
   let raw : Array[Byte] = [0x01, 0x01, 0x00, 0xFE, 0xFF, 0x80]
   let bytes = Bytes::from_array(raw)
-  let result = tiff_deflate_decode(bytes)
+  let result = @codec.tiff_deflate_decode(bytes)
   assert_eq(result.length(), 1)
   assert_eq(result[0], b'\x80')
 }
@@ -139,7 +139,7 @@ test "tiff_deflate_decode: 单字节" {
 test "tiff_deflate_decode: 多字节" {
   let raw : Array[Byte] = [0x01, 0x04, 0x00, 0xFB, 0xFF, 0x01, 0x02, 0x03, 0x04]
   let bytes = Bytes::from_array(raw)
-  let result = tiff_deflate_decode(bytes)
+  let result = @codec.tiff_deflate_decode(bytes)
   assert_eq(result.length(), 4)
   assert_eq(result[0], b'\x01')
   assert_eq(result[1], b'\x02')
@@ -197,7 +197,7 @@ test "decode_tiff_pure: PackBits 1x1 灰度 roundtrip" {
   out.push(b'\x00')
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 1)
@@ -262,7 +262,7 @@ test "decode_tiff_pure: LZW 1x1 灰度 roundtrip" {
   out.push(b'\x05')
   out.push(b'\x04')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 1)
@@ -320,7 +320,7 @@ test "decode_tiff_pure: PackBits 2x1 灰度 roundtrip" {
   out.push(b'\x10')
   out.push(b'\x20')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 2)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 1)
@@ -380,7 +380,7 @@ test "decode_tiff_pure: PackBits RGB 1x1 roundtrip" {
   out.push(b'\x80')
   out.push(b'\x00')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 3)
@@ -398,7 +398,7 @@ test "tiff_packbits_decode: 扩展模式-复制10字节" {
     b'\x08', b'\x09', b'\x0A',
   ]
   let bytes = Bytes::from_array(pb_data)
-  let result = tiff_packbits_decode(bytes)
+  let result = @codec.tiff_packbits_decode(bytes)
   assert_eq(result.length(), 10)
   assert_eq(result[0], b'\x01')
   assert_eq(result[9], b'\x0A')
@@ -411,7 +411,7 @@ test "tiff_packbits_decode: 扩展模式-重复5字节" {
   // bytes: [0x80, 0x7F, 0xFC, 0xAA] → 5 bytes of 0xAA
   let pb_data : Array[Byte] = [0x80, 0x7F, 0xFC, b'\xAA']
   let bytes = Bytes::from_array(pb_data)
-  let result = tiff_packbits_decode(bytes)
+  let result = @codec.tiff_packbits_decode(bytes)
   assert_eq(result.length(), 5)
   for i in 0..<5 {
     assert_eq(result[i], b'\xAA')
@@ -423,7 +423,7 @@ test "tiff_packbits_decode: 扩展模式-重复5字节" {
 ///|
 test "decode_tiff_pure: 数据过短 raises" {
   try {
-    let _ = decode_tiff_pure(b"\x49\x49\x2A\x00\x08\x00")
+    let _ = @codec.decode_tiff_pure(b"\x49\x49\x2A\x00\x08\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -434,7 +434,7 @@ test "decode_tiff_pure: 数据过短 raises" {
 ///|
 test "decode_tiff_pure: 无效字节序标记 raises" {
   try {
-    let _ = decode_tiff_pure(b"\x00\x00\x2A\x00\x08\x00\x00\x00")
+    let _ = @codec.decode_tiff_pure(b"\x00\x00\x2A\x00\x08\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -445,7 +445,7 @@ test "decode_tiff_pure: 无效字节序标记 raises" {
 ///|
 test "decode_tiff_pure: 无效 magic raises" {
   try {
-    let _ = decode_tiff_pure(b"\x49\x49\x00\x00\x08\x00\x00\x00")
+    let _ = @codec.decode_tiff_pure(b"\x49\x49\x00\x00\x08\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -466,7 +466,7 @@ test "decode_tiff_pure: IFD 偏移越界 raises" {
   out.push(b'\xFF')
   out.push(b'\xFF')
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -488,7 +488,7 @@ test "decode_tiff_pure: IFD 条目数据不完整 raises" {
   out.push(b'\x00')
   // 只有 8 字节，没有 IFD 内容
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -528,7 +528,7 @@ test "decode_tiff_pure: 缺少 ImageWidth raises" {
   out.push(b'\x00') // Next IFD=0
   // 没有 ImageWidth, ImageLength, StripOffsets
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -580,7 +580,7 @@ test "decode_tiff_pure: 缺少 StripOffsets raises" {
   out.push(b'\x00')
   out.push(b'\x00') // Next IFD=0
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -631,7 +631,7 @@ test "decode_tiff_pure: 不支持的压缩类型 raises" {
   out.push(b'\x00')
   out.push(b'\x00') // Next IFD=0
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -683,7 +683,7 @@ test "decode_tiff_pure: 16-bit 样本 raises" {
   out.push(b'\x00') // Next IFD=0
   out.push(b'\x00') // 1 byte of pixel data
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -734,7 +734,7 @@ test "decode_tiff_pure: 尺寸为零 raises" {
   out.push(b'\x00')
   out.push(b'\x00') // Next IFD=0
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -787,7 +787,7 @@ test "decode_tiff_pure: 2 samples per pixel raises" {
   out.push(b'\x00') // Next IFD=0
   out.push(b'\x80') // 1 byte of pixel data
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -843,7 +843,7 @@ test "decode_tiff_pure: 不支持的 PhotometricInterpretation raises" {
   out.push(b'\x80')
   out.push(b'\x00') // 3 bytes of pixel data
   try {
-    let _ = decode_tiff_pure(Bytes::from_array(out))
+    let _ = @codec.decode_tiff_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -854,7 +854,7 @@ test "decode_tiff_pure: 不支持的 PhotometricInterpretation raises" {
 ///|
 test "tiff_lzw_decode: 数据过短 raises" {
   try {
-    let _ = tiff_lzw_decode(b"\x08")
+    let _ = @codec.tiff_lzw_decode(b"\x08")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -865,7 +865,7 @@ test "tiff_lzw_decode: 数据过短 raises" {
 ///|
 test "tiff_lzw_decode: 空数据 raises" {
   try {
-    let _ = tiff_lzw_decode(b"")
+    let _ = @codec.tiff_lzw_decode(b"")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -877,7 +877,7 @@ test "tiff_lzw_decode: 空数据 raises" {
 test "tiff_lzw_decode: 初始码长无效(0) raises" {
   // init_code_len=0 < 2
   try {
-    let _ = tiff_lzw_decode(b"\x00\x00")
+    let _ = @codec.tiff_lzw_decode(b"\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -889,7 +889,7 @@ test "tiff_lzw_decode: 初始码长无效(0) raises" {
 test "tiff_lzw_decode: 初始码长无效(12) raises" {
   // init_code_len=12 > 11
   try {
-    let _ = tiff_lzw_decode(b"\x0C\x00")
+    let _ = @codec.tiff_lzw_decode(b"\x0C\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -901,7 +901,7 @@ test "tiff_lzw_decode: 初始码长无效(12) raises" {
 test "tiff_lzw_decode: 首码不为 CLEAR raises" {
   // init_code_len=2 (CLEAR=4), data starts with non-CLEAR code
   try {
-    let _ = tiff_lzw_decode(b"\x02\x01\x00")
+    let _ = @codec.tiff_lzw_decode(b"\x02\x01\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -919,7 +919,7 @@ test "tiff_lzw_decode: 码越界 raises" {
   // Let's construct: init=2, then 3-bit code 0 (output 'A'), then 3-bit code 8 (CLEAR), then invalid code 10
   let data : Array[Byte] = [0x02, 0x00, 0x00, 0x80, 0x00]
   try {
-    let _ = tiff_lzw_decode(Bytes::from_array(data))
+    let _ = @codec.tiff_lzw_decode(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -931,7 +931,7 @@ test "tiff_lzw_decode: 码越界 raises" {
 test "tiff_packbits_decode: 扩展模式数据不足 raises" {
   // Extended mode (0x80) but no following 2 bytes
   try {
-    let _ = tiff_packbits_decode(b"\x80")
+    let _ = @codec.tiff_packbits_decode(b"\x80")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -943,7 +943,7 @@ test "tiff_packbits_decode: 扩展模式数据不足 raises" {
 test "tiff_packbits_decode: 重复模式数据不足 raises" {
   // Repeat mode (0x80) but no following byte to repeat
   try {
-    let _ = tiff_packbits_decode(b"\x80")
+    let _ = @codec.tiff_packbits_decode(b"\x80")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -955,7 +955,7 @@ test "tiff_packbits_decode: 重复模式数据不足 raises" {
 test "tiff_packbits_decode: 原始数据越界安全处理" {
   // Count says copy 10 bytes but only 2 available - should not panic
   let data : Array[Byte] = [0x09, b'\x01', b'\x02']
-  let result = tiff_packbits_decode(Bytes::from_array(data))
+  let result = @codec.tiff_packbits_decode(Bytes::from_array(data))
   assert_eq(result.length(), 2)
   assert_eq(result[0], b'\x01')
   assert_eq(result[1], b'\x02')
@@ -964,7 +964,7 @@ test "tiff_packbits_decode: 原始数据越界安全处理" {
 ///|
 test "tiff_deflate_decode: 数据过短 raises" {
   try {
-    let _ = tiff_deflate_decode(b"\x01")
+    let _ = @codec.tiff_deflate_decode(b"\x01")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -975,7 +975,7 @@ test "tiff_deflate_decode: 数据过短 raises" {
 ///|
 test "tiff_deflate_decode: 空数据 raises" {
   try {
-    let _ = tiff_deflate_decode(b"")
+    let _ = @codec.tiff_deflate_decode(b"")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -989,7 +989,7 @@ test "tiff_deflate_decode: Huffman 块 raises" {
   // bit pattern: first bit = 0 (not final), next 2 bits = 01 (static Huffman)
   // In LSB-first: bits 0,1,2 = 0,1,0 → byte = 0b010 = 0x02
   try {
-    let _ = tiff_deflate_decode(b"\x02\x00\x00\x00\x00")
+    let _ = @codec.tiff_deflate_decode(b"\x02\x00\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -1010,7 +1010,7 @@ test "tiff_deflate_decode: 长度校验失败 raises" {
   // Wrong NLEN: [0x00, 0xFF] (which is 0xFF00 != 0xFFFE)
   let raw : Array[Byte] = [0x00, 0x01, 0x00, 0x00, 0xFF, 0x80]
   try {
-    let _ = tiff_deflate_decode(Bytes::from_array(raw))
+    let _ = @codec.tiff_deflate_decode(Bytes::from_array(raw))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -1027,7 +1027,7 @@ test "encode_tiff_pure: 无效 channels raises" {
     data: Bytes::from_array([b'\x80', b'\x40']),
   }
   try {
-    let _ = encode_tiff_pure(img)
+    let _ = @codec.encode_tiff_pure(img)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -1170,7 +1170,7 @@ test "decode_tiff_pure: big-endian (MM) 1x1 gray roundtrip" {
   // Pixel data at offset 122 (0x7A)
   out.push(b'\x80')
   let tiff = Bytes::from_array(out)
-  let decoded = decode_tiff_pure(tiff)
+  let decoded = @codec.decode_tiff_pure(tiff)
   assert_eq(decoded.width, 1)
   assert_eq(decoded.height, 1)
   assert_eq(decoded.channels, 1)

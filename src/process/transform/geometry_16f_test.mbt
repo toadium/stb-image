@@ -39,7 +39,7 @@ fn make_imgf_geo(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 test "warp_affine_16: identity transform" {
   let img = make_img16_geo(8, 8, 1, 30000)
   let matrix = (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F)
-  let result = warp_affine_16(img, matrix, 8, 8)
+  let result = @transform.warp_affine_16(img, matrix, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -52,7 +52,7 @@ test "warp_affine_16: identity transform" {
 test "warp_affine_f: identity transform" {
   let img = make_imgf_geo(8, 8, 1, 0.5F)
   let matrix = (1.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F)
-  let result = warp_affine_f(img, matrix, 8, 8)
+  let result = @transform.warp_affine_f(img, matrix, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -65,7 +65,7 @@ test "warp_affine_f: identity transform" {
 test "warp_affine_16: scale transform" {
   let img = make_img16_geo(8, 8, 3, 30000)
   let matrix = (0.5F, 0.0F, 0.0F, 0.0F, 0.5F, 0.0F)
-  let result = warp_affine_16(img, matrix, 4, 4)
+  let result = @transform.warp_affine_16(img, matrix, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -79,7 +79,7 @@ test "warp_affine_16: scale transform" {
 ///|
 test "warp_perspective_16: identity transform" {
   let img = make_img16_geo(8, 8, 1, 30000)
-  let matrix = PerspectiveMatrix::{
+  let matrix = @transform.PerspectiveMatrix::{
     m00: 1.0F,
     m01: 0.0F,
     m02: 0.0F,
@@ -90,7 +90,7 @@ test "warp_perspective_16: identity transform" {
     m21: 0.0F,
     m22: 1.0F,
   }
-  let result = warp_perspective_16(img, matrix, 8, 8)
+  let result = @transform.warp_perspective_16(img, matrix, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -102,7 +102,7 @@ test "warp_perspective_16: identity transform" {
 ///|
 test "warp_perspective_f: identity transform" {
   let img = make_imgf_geo(8, 8, 1, 0.5F)
-  let matrix = PerspectiveMatrix::{
+  let matrix = @transform.PerspectiveMatrix::{
     m00: 1.0F,
     m01: 0.0F,
     m02: 0.0F,
@@ -113,7 +113,7 @@ test "warp_perspective_f: identity transform" {
     m21: 0.0F,
     m22: 1.0F,
   }
-  let result = warp_perspective_f(img, matrix, 8, 8)
+  let result = @transform.warp_perspective_f(img, matrix, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -127,7 +127,7 @@ test "warp_perspective_f: identity transform" {
 ///|
 test "resize_16: scale up" {
   let img = make_img16_geo(4, 4, 1, 30000)
-  let result = resize_16(img, 8, 8)
+  let result = @transform.resize_16(img, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -138,7 +138,7 @@ test "resize_16: scale up" {
 ///|
 test "resize_f: scale up" {
   let img = make_imgf_geo(4, 4, 1, 0.5F)
-  let result = resize_f(img, 8, 8)
+  let result = @transform.resize_f(img, 8, 8)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -149,7 +149,7 @@ test "resize_f: scale up" {
 ///|
 test "resize_16: scale down" {
   let img = make_img16_geo(8, 8, 3, 30000)
-  let result = resize_16(img, 4, 4)
+  let result = @transform.resize_16(img, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -160,7 +160,7 @@ test "resize_16: scale down" {
 ///|
 test "resize_f: RGB input" {
   let img = make_imgf_geo(8, 8, 3, 0.5F)
-  let result = resize_f(img, 4, 4)
+  let result = @transform.resize_f(img, 4, 4)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = result

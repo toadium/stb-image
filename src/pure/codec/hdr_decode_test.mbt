@@ -5,7 +5,7 @@
 ///|
 test "decode_hdr_pure: empty data raises" {
   try {
-    let _ = decode_hdr_pure(b"")
+    let _ = @codec.decode_hdr_pure(b"")
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -17,7 +17,7 @@ test "decode_hdr_pure: empty data raises" {
 test "decode_hdr_pure: wrong magic raises" {
   let data = b"\x00\x00\x0A"
   try {
-    let _ = decode_hdr_pure(data)
+    let _ = @codec.decode_hdr_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -30,7 +30,7 @@ test "decode_hdr_pure: incomplete header raises" {
   // 只有 magic "#?" 没有换行
   let data = b"\x23\x3F"
   try {
-    let _ = decode_hdr_pure(data)
+    let _ = @codec.decode_hdr_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -64,8 +64,8 @@ test "decode_hdr_pure: RGBE magic roundtrip" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let hdr_bytes = encode_hdr_pure(img)
-  let restored = decode_hdr_pure(hdr_bytes)
+  let hdr_bytes = @codec.encode_hdr_pure(img)
+  let restored = @codec.decode_hdr_pure(hdr_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -87,7 +87,7 @@ test "decode_hdr_pure: uncompressed 1x1" {
   out.push(b'\x20')
   out.push(b'\x80')
   let data = Bytes::from_array(out)
-  let restored = decode_hdr_pure(data)
+  let restored = @codec.decode_hdr_pure(data)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -110,7 +110,7 @@ test "decode_hdr_pure: uncompressed 2x2" {
     out.push(b'\x80')
   }
   let data = Bytes::from_array(out)
-  let restored = decode_hdr_pure(data)
+  let restored = @codec.decode_hdr_pure(data)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 3)
@@ -136,7 +136,7 @@ test "decode_hdr_pure: insufficient uncompressed data raises" {
   out.push(b'\x80')
   let data = Bytes::from_array(out)
   try {
-    let _ = decode_hdr_pure(data)
+    let _ = @codec.decode_hdr_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -154,7 +154,7 @@ test "decode_hdr_pure: truncated data after header raises" {
   push_str(out, "2 1\n")
   // Truncated data
   try {
-    let _ = decode_hdr_pure(to_bytes(out))
+    let _ = @codec.decode_hdr_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -176,7 +176,7 @@ test "decode_hdr_pure: invalid pixel format raises" {
   out.push(0x00)
   out.push(0x00)
   try {
-    let _ = decode_hdr_pure(to_bytes(out))
+    let _ = @codec.decode_hdr_pure(to_bytes(out))
     assert_true(true)
   } catch {
     _ => assert_true(true)

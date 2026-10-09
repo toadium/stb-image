@@ -53,7 +53,7 @@ fn read_f32_at_feat(data : Bytes, offset : Int) -> Float {
 ///|
 test "lbp_16: uniform image" {
   let img = make_img16_feat(5, 5, 1, 30000)
-  let result = lbp_16(img)
+  let result = @feature.lbp_16(img)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -68,7 +68,7 @@ test "lbp_16: uniform image" {
 ///|
 test "lbp_f: uniform image" {
   let img = make_imgf_feat(5, 5, 1, 0.5F)
-  let result = lbp_f(img)
+  let result = @feature.lbp_f(img)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -89,7 +89,7 @@ test "lbp_16: rejects invalid channels" {
     data: Array::make(8, b'\x00') |> Bytes::from_array,
   }
   try {
-    let _ = lbp_16(img)
+    let _ = @feature.lbp_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -101,7 +101,7 @@ test "lbp_16: rejects invalid channels" {
 ///|
 test "lbp_uniform_16: output range 0-9" {
   let img = make_img16_feat(5, 5, 1, 30000)
-  let result = lbp_uniform_16(img)
+  let result = @feature.lbp_uniform_16(img)
   assert_eq(result.channels, 1)
   for i in 0..<25 {
     let v = read_u16_at_feat(result.data, i * 2)
@@ -114,7 +114,7 @@ test "lbp_uniform_16: output range 0-9" {
 ///|
 test "lbp_uniform_f: output range 0-1" {
   let img = make_imgf_feat(5, 5, 1, 0.5F)
-  let result = lbp_uniform_f(img)
+  let result = @feature.lbp_uniform_f(img)
   assert_eq(result.channels, 1)
   for i in 0..<25 {
     let v = read_f32_at_feat(result.data, i * 4)
@@ -127,7 +127,7 @@ test "lbp_uniform_f: output range 0-1" {
 ///|
 test "lbp_16: RGBA preserves alpha" {
   let img = make_img16_feat(4, 4, 4, 30000)
-  let result = lbp_16(img)
+  let result = @feature.lbp_16(img)
   assert_eq(result.channels, 4)
   for i in 0..<16 {
     let alpha_off = i * 8 + 6

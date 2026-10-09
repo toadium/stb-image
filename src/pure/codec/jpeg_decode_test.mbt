@@ -5,7 +5,7 @@
 ///|
 test "decode_jpeg_pure: empty data raises" {
   try {
-    let _ = decode_jpeg_pure(b"")
+    let _ = @codec.decode_jpeg_pure(b"")
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -18,7 +18,7 @@ test "decode_jpeg_pure: wrong SOI marker raises" {
   // not FF D8
   let data = b"\x00\x00\xFF\xC0"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -31,7 +31,7 @@ test "decode_jpeg_pure: only SOI raises" {
   // FF D8 only, no other markers
   let data = b"\xFF\xD8"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -43,7 +43,7 @@ test "decode_jpeg_pure: only SOI raises" {
 test "decode_jpeg_pure: single byte raises" {
   let data = b"\xFF"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -55,8 +55,8 @@ test "decode_jpeg_pure: single byte raises" {
 test "decode_jpeg_pure: 1x1 gray roundtrip via encode" {
   // 构造 1x1 灰度图，encode 后 decode
   let img = @types.Image::{ width: 1, height: 1, channels: 1, data: b"\x80", }
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -72,8 +72,8 @@ test "decode_jpeg_pure: 4x4 uniform roundtrip" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
   assert_eq(restored.channels, 3)
@@ -99,8 +99,8 @@ test "decode_jpeg_pure: 3x5 non-square roundtrip" {
     channels: 3,
     data: Bytes::from_array(pixels),
   }
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 3)
   assert_eq(restored.height, 5)
   assert_eq(restored.channels, 3)
@@ -121,8 +121,8 @@ test "decode_jpeg_pure: 9x9 multi-block roundtrip" {
     channels: 3,
     data: Bytes::from_array(pixels),
   }
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 9)
   assert_eq(restored.height, 9)
   assert_eq(restored.channels, 3)
@@ -133,7 +133,7 @@ test "decode_jpeg_pure: truncated after SOI raises" {
   // Just SOI marker with nothing else
   let data : Array[Byte] = [0xFF, 0xD8]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

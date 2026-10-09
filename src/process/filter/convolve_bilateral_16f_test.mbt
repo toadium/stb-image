@@ -49,7 +49,7 @@ test "convolve_16: basic" {
     -1.0F,
     0.0F,
   ]
-  let result = convolve_16(img, kernel, 0.0F, 1.0F)
+  let result = @filter.convolve_16(img, kernel, 0.0F, 1.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   assert_eq(result.channels, 1)
@@ -72,7 +72,7 @@ test "convolve_f: basic" {
     -1.0F,
     0.0F,
   ]
-  let result = convolve_f(img, kernel, 0.0F, 1.0F)
+  let result = @filter.convolve_f(img, kernel, 0.0F, 1.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   assert_eq(result.channels, 1)
@@ -95,7 +95,7 @@ test "convolve_16: RGB input" {
     1.0F / 9.0F,
     1.0F / 9.0F,
   ]
-  let result = convolve_16(img, kernel, 0.0F, 1.0F)
+  let result = @filter.convolve_16(img, kernel, 0.0F, 1.0F)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = kernel
@@ -107,7 +107,7 @@ test "convolve_16: RGB input" {
 ///|
 test "bilateral_filter_16: basic" {
   let img = make_img16_cb(16, 16, 1, 30000)
-  let result = bilateral_filter_16(img, 3, 10.0F, 20.0F)
+  let result = @filter.bilateral_filter_16(img, 3, 10.0F, 20.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   assert_eq(result.channels, 1)
@@ -118,7 +118,7 @@ test "bilateral_filter_16: basic" {
 ///|
 test "bilateral_filter_f: basic" {
   let img = make_imgf_cb(16, 16, 1, 0.5F)
-  let result = bilateral_filter_f(img, 3, 10.0F, 20.0F)
+  let result = @filter.bilateral_filter_f(img, 3, 10.0F, 20.0F)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   assert_eq(result.channels, 1)
@@ -129,7 +129,7 @@ test "bilateral_filter_f: basic" {
 ///|
 test "bilateral_filter_fast_16: basic" {
   let img = make_img16_cb(16, 16, 1, 30000)
-  let result = bilateral_filter_fast_16(img, 3, 10.0F, 20.0F, 2)
+  let result = @filter.bilateral_filter_fast_16(img, 3, 10.0F, 20.0F, 2)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   let _ = img
@@ -139,7 +139,7 @@ test "bilateral_filter_fast_16: basic" {
 ///|
 test "bilateral_filter_fast_f: basic" {
   let img = make_imgf_cb(16, 16, 1, 0.5F)
-  let result = bilateral_filter_fast_f(img, 3, 10.0F, 20.0F, 2)
+  let result = @filter.bilateral_filter_fast_f(img, 3, 10.0F, 20.0F, 2)
   assert_eq(result.width, 16)
   assert_eq(result.height, 16)
   let _ = img
@@ -149,7 +149,7 @@ test "bilateral_filter_fast_f: basic" {
 ///|
 test "bilateral_filter_16: RGB input" {
   let img = make_img16_cb(16, 16, 3, 30000)
-  let result = bilateral_filter_16(img, 3, 10.0F, 20.0F)
+  let result = @filter.bilateral_filter_16(img, 3, 10.0F, 20.0F)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = result

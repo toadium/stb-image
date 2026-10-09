@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_nas_config: 默认NAS配置" {
-  let config = create_default_nas_config()
+  let config = @automl_nas.create_default_nas_config()
   assert_true(config.num_trials > 0)
   assert_true(config.max_layers > 0)
   assert_true(config.max_channels > 0)
@@ -15,7 +15,7 @@ test "create_default_nas_config: 默认NAS配置" {
 
 ///|
 test "create_default_hpo_config: 默认HPO配置" {
-  let config = create_default_hpo_config()
+  let config = @automl_nas.create_default_hpo_config()
   assert_true(config.num_trials > 0)
   assert_true(config.num_epochs_per_trial > 0)
   assert_true(config.search_space.length() >= 0)
@@ -25,7 +25,7 @@ test "create_default_hpo_config: 默认HPO配置" {
 
 ///|
 test "generate_random_architecture: 随机架构生成" {
-  let arch = generate_random_architecture(5, 32)
+  let arch = @automl_nas.generate_random_architecture(5, 32)
   assert_true(arch.num_layers > 0)
   assert_true(arch.layers.length() > 0)
   assert_true(arch.num_parameters >= 0)
@@ -37,7 +37,7 @@ test "generate_random_architecture: 随机架构生成" {
 
 ///|
 test "generate_random_hyperparameters: 随机超参数生成" {
-  let hp = generate_random_hyperparameters()
+  let hp = @automl_nas.generate_random_hyperparameters()
   assert_true(hp.learning_rate > 0.0)
   assert_true(hp.batch_size > 0)
   assert_true(hp.num_epochs > 0)
@@ -49,9 +49,9 @@ test "generate_random_hyperparameters: 随机超参数生成" {
 
 ///|
 test "evaluate_model: 模型评估" {
-  let arch = generate_random_architecture(3, 16)
-  let hp = generate_random_hyperparameters()
-  let metrics = evaluate_model(arch, hp)
+  let arch = @automl_nas.generate_random_architecture(3, 16)
+  let hp = @automl_nas.generate_random_hyperparameters()
+  let metrics = @automl_nas.evaluate_model(arch, hp)
   assert_true(metrics.accuracy >= 0.0 && metrics.accuracy <= 1.0)
   assert_true(metrics.loss >= 0.0)
   assert_true(metrics.precision >= 0.0)
@@ -64,8 +64,8 @@ test "evaluate_model: 模型评估" {
 
 ///|
 test "perform_nas: 神经架构搜索" {
-  let config = create_default_nas_config()
-  let result = perform_nas(config)
+  let config = @automl_nas.create_default_nas_config()
+  let result = @automl_nas.perform_nas(config)
   assert_true(result.best_accuracy >= 0.0 && result.best_accuracy <= 1.0)
   assert_true(result.best_loss >= 0.0)
   assert_true(result.num_trials_completed > 0)
@@ -77,9 +77,9 @@ test "perform_nas: 神经架构搜索" {
 
 ///|
 test "perform_hpo: 超参数优化" {
-  let config = create_default_hpo_config()
-  let arch = generate_random_architecture(3, 16)
-  let result = perform_hpo(config, arch)
+  let config = @automl_nas.create_default_hpo_config()
+  let arch = @automl_nas.generate_random_architecture(3, 16)
+  let result = @automl_nas.perform_hpo(config, arch)
   assert_true(result.best_accuracy >= 0.0 && result.best_accuracy <= 1.0)
   assert_true(result.best_loss >= 0.0)
   assert_true(result.num_trials_completed > 0)
@@ -90,11 +90,11 @@ test "perform_hpo: 超参数优化" {
 
 ///|
 test "automl_report_to_string: NAS报告" {
-  let config = create_default_nas_config()
-  let arch = generate_random_architecture(3, 16)
-  let hp = generate_random_hyperparameters()
-  let metrics = evaluate_model(arch, hp)
-  let result = perform_nas(config)
-  let report = automl_report_to_string(result, config, metrics)
+  let config = @automl_nas.create_default_nas_config()
+  let arch = @automl_nas.generate_random_architecture(3, 16)
+  let hp = @automl_nas.generate_random_hyperparameters()
+  let metrics = @automl_nas.evaluate_model(arch, hp)
+  let result = @automl_nas.perform_nas(config)
+  let report = @automl_nas.automl_report_to_string(result, config, metrics)
   assert_true(report.length() > 0)
 }

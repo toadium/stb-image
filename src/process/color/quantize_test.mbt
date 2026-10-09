@@ -3,7 +3,7 @@
 ///|
 test "floyd_steinberg: levels=2 produces binary image" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = floyd_steinberg(img, 2)
+  let result = @color.floyd_steinberg(img, 2)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   // levels=2 → 每通道只有 0 或 255
@@ -19,7 +19,7 @@ test "floyd_steinberg: levels=2 produces binary image" {
 test "floyd_steinberg: levels=1 raises error" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   try {
-    let _ = floyd_steinberg(img, 1)
+    let _ = @color.floyd_steinberg(img, 1)
     assert_true(false) // 应该抛出错误
   } catch {
     _ => assert_true(true) // 预期的错误
@@ -30,7 +30,7 @@ test "floyd_steinberg: levels=1 raises error" {
 ///|
 test "floyd_steinberg: preserves alpha" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(4))
-  let result = floyd_steinberg(img, 4)
+  let result = @color.floyd_steinberg(img, 4)
   assert_eq(result.data[3].to_int(), img.data[3].to_int())
   let _ = img
   let _ = result
@@ -44,7 +44,7 @@ test "floyd_steinberg: uniform image produces valid levels" {
     channels: 3,
     data: Array::make(48, b'\x80') |> Bytes::from_array,
   }
-  let result = floyd_steinberg(img, 4)
+  let result = @color.floyd_steinberg(img, 4)
   // levels=4, step=85 → 值应为 0/85/170/255 之一
   for i in 0..<48 {
     let v = result.data[i].to_int()
@@ -57,7 +57,7 @@ test "floyd_steinberg: uniform image produces valid levels" {
 ///|
 test "median_cut: produces RGB output" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = median_cut(img, 8)
+  let result = @color.median_cut(img, 8)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -68,7 +68,7 @@ test "median_cut: produces RGB output" {
 ///|
 test "median_cut: num_colors=2 reduces colors" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  let result = median_cut(img, 2)
+  let result = @color.median_cut(img, 2)
   // 最多 2 种不同颜色
   let colors : Array[(Int, Int, Int)] = []
   for i in 0..<(result.width * result.height) {
@@ -99,7 +99,7 @@ test "median_cut: handles grayscale input" {
     channels: 1,
     data: [b'\x00', b'\x40', b'\x80', b'\xFF'] |> Bytes::from_array,
   }
-  let result = median_cut(img, 4)
+  let result = @color.median_cut(img, 4)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
   let _ = img
@@ -118,7 +118,7 @@ test "kmeans_quantize: k=1 gives single color" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = kmeans_quantize(img, 1, 20)
+  let result = @color.kmeans_quantize(img, 1, 20)
   // k=1 时所有像素应该是同一个颜色（平均值）
   let r0 = result.data[0]
   let g0 = result.data[1]
@@ -140,7 +140,7 @@ test "kmeans_quantize: preserves channels" {
     channels: 3,
     data: Array::make(48, b'\x80') |> Bytes::from_array,
   }
-  let result = kmeans_quantize(img, 4, 10)
+  let result = @color.kmeans_quantize(img, 4, 10)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
@@ -160,7 +160,7 @@ test "kmeans_quantize: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = kmeans_quantize(img, 2, 10)
+  let result = @color.kmeans_quantize(img, 2, 10)
   for i in 0..<4 {
     assert_eq(result.data[i * 4 + 3], b'\xFF')
   }
@@ -177,7 +177,7 @@ test "kmeans_quantize: raises on invalid k" {
     data: Array::make(12, b'\x80') |> Bytes::from_array,
   }
   try {
-    let _ = kmeans_quantize(img, 0, 10)
+    let _ = @color.kmeans_quantize(img, 0, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -198,7 +198,7 @@ test "kmeans_quantize: two distinct colors with k=2" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let result = kmeans_quantize(img, 2, 20)
+  let result = @color.kmeans_quantize(img, 2, 20)
   // 前两个像素应该是同一个颜色，后两个也是同一个颜色
   assert_eq(result.data[0], result.data[3])
   assert_eq(result.data[6], result.data[9])
@@ -217,7 +217,7 @@ test "median_cut: num_colors < 2 returns to_rgb" {
       b'\xA0', b'\xB0', b'\xC0',
     ]),
   }
-  let result = median_cut(img, 1)
+  let result = @color.median_cut(img, 1)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 2)
   assert_eq(result.height, 2)
@@ -234,7 +234,7 @@ test "kmeans_quantize: raises on grayscale input" {
     data: Bytes::from_array([128, 128, 128, 128]),
   }
   try {
-    let _ = kmeans_quantize(img, 4, 10)
+    let _ = @color.kmeans_quantize(img, 4, 10)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -250,7 +250,7 @@ test "kmeans_quantize: empty image returns original" {
     channels: 3,
     data: Bytes::from_array([]),
   }
-  let result = kmeans_quantize(img, 4, 10)
+  let result = @color.kmeans_quantize(img, 4, 10)
   assert_eq(result.width, 0)
   assert_eq(result.height, 0)
   assert_eq(result.channels, 3)
@@ -271,7 +271,7 @@ test "median_cut: channel_value branch 1 (G channel split)" {
        b'\x00', b'\x40', b'\x00', // pixel 3
     ]),
   }
-  let result = median_cut(img, 2)
+  let result = @color.median_cut(img, 2)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
 }
@@ -291,7 +291,7 @@ test "median_cut: bucket_average empty bucket returns (0,0,0)" {
        b'\x00', b'\x00', b'\x00', // black
     ]),
   }
-  let result = median_cut(img, 4)
+  let result = @color.median_cut(img, 4)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 2)
 }
@@ -310,7 +310,7 @@ test "median_cut: bucket_max_range G channel selected" {
        b'\x00', b'\x40', b'\x20', // pixel 3
     ]),
   }
-  let result = median_cut(img, 2)
+  let result = @color.median_cut(img, 2)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 4)
 }

@@ -4,7 +4,7 @@
 ///|
 test "decode_jpeg_pure: empty data raises" {
   try {
-    let _ = decode_jpeg_pure(b"")
+    let _ = @codec.decode_jpeg_pure(b"")
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -17,7 +17,7 @@ test "decode_jpeg_pure: wrong SOI marker raises" {
   // not FF D8
   let data = b"\x00\x00\xFF\xC0"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -30,7 +30,7 @@ test "decode_jpeg_pure: only SOI raises" {
   // FF D8 only, no other markers
   let data = b"\xFF\xD8"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -42,7 +42,7 @@ test "decode_jpeg_pure: only SOI raises" {
 test "decode_jpeg_pure: single byte raises" {
   let data = b"\xFF"
   try {
-    let _ = decode_jpeg_pure(data)
+    let _ = @codec.decode_jpeg_pure(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -55,7 +55,7 @@ test "decode_jpeg_pure: truncated after SOI raises" {
   // Just SOI marker with nothing else
   let data : Array[Byte] = [0xFF, 0xD8]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -80,7 +80,7 @@ test "decode_jpeg_pure: SOF0 too short raises" {
     // truncated - missing sampling and quant_table
   ]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -104,7 +104,7 @@ test "decode_jpeg_pure: invalid dimensions raises" {
      0x00, // quant_table
   ]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -130,7 +130,7 @@ test "decode_jpeg_pure: truncated component data raises" {
     // truncated - missing quant_table
   ]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -188,7 +188,7 @@ test "decode_jpeg_pure: Huffman table index out of bounds raises" {
      0xFF, 0xFF, 0xFF, 0xFF,
   ]
   try {
-    let _ = decode_jpeg_pure(Bytes::from_array(data))
+    let _ = @codec.decode_jpeg_pure(Bytes::from_array(data))
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

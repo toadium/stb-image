@@ -408,13 +408,13 @@ test "fuzz APNG: valid PNG magic but not APNG" {
 
 ///|
 test "fuzz detect_format: all empty" {
-  assert_eq(detect_format(b""), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(b""), @lib.ImageFormat::Unknown)
 }
 
 ///|
 test "fuzz detect_format: single byte" {
-  assert_eq(detect_format(b"\x00"), ImageFormat::Unknown)
-  assert_eq(detect_format(b"\xFF"), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(b"\x00"), @lib.ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(b"\xFF"), @lib.ImageFormat::Unknown)
 }
 
 ///|
@@ -423,14 +423,14 @@ test "fuzz detect_format: random garbage" {
     b'\xDE', b'\xAD', b'\xBE', b'\xEF', b'\xCA', b'\xFE', b'\xBA', b'\xBE', b'\x13',
     b'\x37', b'\x42', b'\x42', b'\x66', b'\x6F', b'\x6F', b'\x00',
   ])
-  assert_eq(detect_format(garbage), ImageFormat::Unknown)
+  assert_eq(@lib.detect_format(garbage), @lib.ImageFormat::Unknown)
 }
 
 ///|
 test "fuzz load_from_bytes_auto: all formats with garbage" {
   let garbage = Bytes::from_array(Array::make(64, b'\xAA'))
   try {
-    let _ = load_from_bytes_auto(garbage)
+    let _ = @lib.load_from_bytes_auto(garbage)
     assert_true(true)
   } catch {
     _ => assert_true(true)
@@ -441,21 +441,21 @@ test "fuzz load_from_bytes_auto: all formats with garbage" {
 test "fuzz load_from_bytes_auto: truncated valid formats" {
   // Truncated PNG
   try {
-    let _ = load_from_bytes_auto(b"\x89PNG\r\n\x1A\n")
+    let _ = @lib.load_from_bytes_auto(b"\x89PNG\r\n\x1A\n")
     assert_true(true)
   } catch {
     _ => assert_true(true)
   }
   // Truncated BMP
   try {
-    let _ = load_from_bytes_auto(b"\x42\x4D\x00\x00")
+    let _ = @lib.load_from_bytes_auto(b"\x42\x4D\x00\x00")
     assert_true(true)
   } catch {
     _ => assert_true(true)
   }
   // Truncated GIF
   try {
-    let _ = load_from_bytes_auto(b"GIF89a")
+    let _ = @lib.load_from_bytes_auto(b"GIF89a")
     assert_true(true)
   } catch {
     _ => assert_true(true)
@@ -466,7 +466,7 @@ test "fuzz load_from_bytes_auto: truncated valid formats" {
 test "fuzz: all zeros input" {
   let zeros = Bytes::from_array(Array::make(128, b'\x00'))
   try {
-    let _ = load_from_bytes_auto(zeros)
+    let _ = @lib.load_from_bytes_auto(zeros)
     assert_true(true)
   } catch {
     _ => assert_true(true)
@@ -477,7 +477,7 @@ test "fuzz: all zeros input" {
 test "fuzz: all 0xFF input" {
   let ones = Bytes::from_array(Array::make(128, b'\xFF'))
   try {
-    let _ = load_from_bytes_auto(ones)
+    let _ = @lib.load_from_bytes_auto(ones)
     assert_true(true)
   } catch {
     _ => assert_true(true)

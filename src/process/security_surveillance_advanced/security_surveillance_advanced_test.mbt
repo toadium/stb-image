@@ -1,6 +1,6 @@
 ///|
 test "create_default_security_config: returns intrusion detection config" {
-  let config = create_default_security_config()
+  let config = @security_surveillance_advanced.create_default_security_config()
   assert_eq(config.detection_threshold, 0.5)
   assert_eq(config.recognition_threshold, 0.7)
   assert_eq(config.alert_threshold, 0.8)
@@ -11,18 +11,21 @@ test "create_default_security_config: returns intrusion detection config" {
   assert_false(config.use_license_plate)
   assert_true(config.auto_alert)
   assert_true(
-    config.task_type is SecuritySurveillanceTaskType::IntrusionDetection,
+    config.task_type
+    is @security_surveillance_advanced.SecuritySurveillanceTaskType::IntrusionDetection,
   )
 }
 
 ///|
 test "detect_people: returns person detections" {
-  let config = create_default_security_config()
+  let config = @security_surveillance_advanced.create_default_security_config()
   let image : Array[Double] = []
   for _ in 0..<100000 {
     image.push(128.0)
   }
-  let people = detect_people(image, 500, 500, config)
+  let people = @security_surveillance_advanced.detect_people(
+    image, 500, 500, config,
+  )
   assert_eq(people.length(), 5)
   for p in people {
     assert_eq(p.bounding_box.length(), 4)
@@ -34,8 +37,8 @@ test "detect_people: returns person detections" {
 
 ///|
 test "detect_intrusion: detects people in zone" {
-  let config = create_default_security_config()
-  let person = DetectedPerson::{
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let person = @security_surveillance_advanced.DetectedPerson::{
     person_id: 0,
     bounding_box: [100, 100, 200, 300],
     confidence: 0.9,
@@ -48,16 +51,26 @@ test "detect_intrusion: detects people in zone" {
     is_known: false,
     identity: "unknown",
   }
-  let events = detect_intrusion([person], [0, 0, 500, 500], config)
+  let events = @security_surveillance_advanced.detect_intrusion(
+    [person],
+    [0, 0, 500, 500],
+    config,
+  )
   assert_eq(events.length(), 1)
-  assert_true(events[0].alert_level is AlertLevel::Critical)
-  assert_true(events[0].intrusion_type is IntrusionType::AreaEntry)
+  assert_true(
+    events[0].alert_level
+    is @security_surveillance_advanced.AlertLevel::Critical,
+  )
+  assert_true(
+    events[0].intrusion_type
+    is @security_surveillance_advanced.IntrusionType::AreaEntry,
+  )
 }
 
 ///|
 test "detect_intrusion: no people in zone" {
-  let config = create_default_security_config()
-  let person = DetectedPerson::{
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let person = @security_surveillance_advanced.DetectedPerson::{
     person_id: 0,
     bounding_box: [600, 600, 700, 800],
     confidence: 0.9,
@@ -70,14 +83,18 @@ test "detect_intrusion: no people in zone" {
     is_known: false,
     identity: "unknown",
   }
-  let events = detect_intrusion([person], [0, 0, 500, 500], config)
+  let events = @security_surveillance_advanced.detect_intrusion(
+    [person],
+    [0, 0, 500, 500],
+    config,
+  )
   assert_eq(events.length(), 0)
 }
 
 ///|
 test "analyze_behavior: suspicious behavior for static person" {
-  let config = create_default_security_config()
-  let person = DetectedPerson::{
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let person = @security_surveillance_advanced.DetectedPerson::{
     person_id: 0,
     bounding_box: [100, 100, 200, 300],
     confidence: 0.9,
@@ -90,17 +107,20 @@ test "analyze_behavior: suspicious behavior for static person" {
     is_known: false,
     identity: "unknown",
   }
-  let result = analyze_behavior(person, config)
+  let result = @security_surveillance_advanced.analyze_behavior(person, config)
   assert_eq(result.person_id, 0)
   assert_true(result.is_suspicious)
   assert_true(result.risk_score > 0.5)
-  assert_true(result.behavior_type is BehaviorType::Suspicious)
+  assert_true(
+    result.behavior_type
+    is @security_surveillance_advanced.BehaviorType::Suspicious,
+  )
 }
 
 ///|
 test "analyze_behavior: walking behavior" {
-  let config = create_default_security_config()
-  let person = DetectedPerson::{
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let person = @security_surveillance_advanced.DetectedPerson::{
     person_id: 1,
     bounding_box: [100, 100, 200, 300],
     confidence: 0.9,
@@ -113,17 +133,20 @@ test "analyze_behavior: walking behavior" {
     is_known: false,
     identity: "unknown",
   }
-  let result = analyze_behavior(person, config)
+  let result = @security_surveillance_advanced.analyze_behavior(person, config)
   assert_false(result.is_suspicious)
-  assert_true(result.behavior_type is BehaviorType::Walking)
+  assert_true(
+    result.behavior_type
+    is @security_surveillance_advanced.BehaviorType::Walking,
+  )
 }
 
 ///|
 test "analyze_crowd: analyzes crowd density" {
-  let config = create_default_security_config()
-  let people : Array[DetectedPerson] = []
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let people : Array[@security_surveillance_advanced.DetectedPerson] = []
   for i in 0..<10 {
-    let p = DetectedPerson::{
+    let p = @security_surveillance_advanced.DetectedPerson::{
       person_id: i,
       bounding_box: [i * 50, 0, i * 50 + 50, 200],
       confidence: 0.8,
@@ -138,7 +161,9 @@ test "analyze_crowd: analyzes crowd density" {
     }
     people.push(p)
   }
-  let result = analyze_crowd(people, 500, 500, config)
+  let result = @security_surveillance_advanced.analyze_crowd(
+    people, 500, 500, config,
+  )
   assert_eq(result.num_people, 10)
   assert_true(result.density > 0.0)
   assert_eq(result.crowd_direction.length(), 2)
@@ -146,12 +171,14 @@ test "analyze_crowd: analyzes crowd density" {
 
 ///|
 test "recognize_license_plate: returns plate result" {
-  let config = create_default_security_config()
+  let config = @security_surveillance_advanced.create_default_security_config()
   let image : Array[Double] = []
   for _ in 0..<10000 {
     image.push(128.0)
   }
-  let result = recognize_license_plate(image, 100, 100, config)
+  let result = @security_surveillance_advanced.recognize_license_plate(
+    image, 100, 100, config,
+  )
   assert_eq(result.plate_number.length(), 7)
   assert_true(result.is_valid)
   assert_eq(result.bounding_box.length(), 4)
@@ -161,9 +188,9 @@ test "recognize_license_plate: returns plate result" {
 
 ///|
 test "security_surveillance_report_to_string: contains task info" {
-  let config = create_default_security_config()
-  let report = security_surveillance_report_to_string(
-    SecuritySurveillanceTaskType::BehaviorAnalysis,
+  let config = @security_surveillance_advanced.create_default_security_config()
+  let report = @security_surveillance_advanced.security_surveillance_report_to_string(
+    @security_surveillance_advanced.SecuritySurveillanceTaskType::BehaviorAnalysis,
     config,
     "Detected running",
   )

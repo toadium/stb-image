@@ -27,13 +27,13 @@ fn make_varied_fe_img(w : Int, h : Int) -> @types.Image {
 
 ///|
 test "create_default_fusion_config: 默认配置" {
-  let config = create_default_fusion_config()
+  let config = @fusion_enhanced.create_default_fusion_config()
   assert_true(config.pyramid_levels > 0)
 }
 
 ///|
 test "create_default_registration_config: 默认配置" {
-  let config = create_default_registration_config()
+  let config = @fusion_enhanced.create_default_registration_config()
   assert_true(config.max_iterations > 0)
   assert_true(config.tolerance > 0.0)
 }
@@ -42,7 +42,7 @@ test "create_default_registration_config: 默认配置" {
 test "fuse_weighted_average: 基本加权平均" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let result = fuse_weighted_average([img1, img2], [0.5, 0.5])
+  let result = @fusion_enhanced.fuse_weighted_average([img1, img2], [0.5, 0.5])
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }
@@ -51,7 +51,7 @@ test "fuse_weighted_average: 基本加权平均" {
 test "fuse_maximum: 基本最大值融合" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let result = fuse_maximum([img1, img2])
+  let result = @fusion_enhanced.fuse_maximum([img1, img2])
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }
@@ -60,7 +60,7 @@ test "fuse_maximum: 基本最大值融合" {
 test "fuse_minimum: 基本最小值融合" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let result = fuse_minimum([img1, img2])
+  let result = @fusion_enhanced.fuse_minimum([img1, img2])
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }
@@ -69,7 +69,7 @@ test "fuse_minimum: 基本最小值融合" {
 test "fuse_simple_mean: 基本均值融合" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let result = fuse_simple_mean([img1, img2])
+  let result = @fusion_enhanced.fuse_simple_mean([img1, img2])
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
 }
@@ -77,7 +77,7 @@ test "fuse_simple_mean: 基本均值融合" {
 ///|
 test "gaussian_blur_fe: 基本高斯模糊" {
   let img = make_varied_fe_img(8, 8)
-  let result = gaussian_blur_fe(img, 3)
+  let result = @fusion_enhanced.gaussian_blur_fe(img, 3)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
 }
@@ -85,7 +85,7 @@ test "gaussian_blur_fe: 基本高斯模糊" {
 ///|
 test "downsample_fe: 基本下采样" {
   let img = make_varied_fe_img(8, 8)
-  let result = downsample_fe(img)
+  let result = @fusion_enhanced.downsample_fe(img)
   assert_true(result.width <= 8)
   assert_true(result.height <= 8)
 }
@@ -93,7 +93,7 @@ test "downsample_fe: 基本下采样" {
 ///|
 test "upsample_fe: 基本上采样" {
   let img = make_varied_fe_img(4, 4)
-  let result = upsample_fe(img)
+  let result = @fusion_enhanced.upsample_fe(img)
   assert_true(result.width >= 4)
   assert_true(result.height >= 4)
 }
@@ -102,7 +102,7 @@ test "upsample_fe: 基本上采样" {
 test "fuse_laplacian_pyramid: 基本拉普拉斯金字塔融合" {
   let img1 = make_varied_fe_img(8, 8)
   let img2 = make_fe_img(8, 8, b'\x80')
-  let result = fuse_laplacian_pyramid([img1, img2], 3)
+  let result = @fusion_enhanced.fuse_laplacian_pyramid([img1, img2], 3)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
 }
@@ -111,8 +111,8 @@ test "fuse_laplacian_pyramid: 基本拉普拉斯金字塔融合" {
 test "fuse_images: 基本融合" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let config = create_default_fusion_config()
-  let result = fuse_images([img1, img2], config)
+  let config = @fusion_enhanced.create_default_fusion_config()
+  let result = @fusion_enhanced.fuse_images([img1, img2], config)
   assert_eq(result.image.width, 4)
   assert_eq(result.image.height, 4)
 }
@@ -121,7 +121,7 @@ test "fuse_images: 基本融合" {
 test "register_phase_correlation: 基本相位相关配准" {
   let img1 = make_varied_fe_img(8, 8)
   let img2 = make_varied_fe_img(8, 8)
-  let result = register_phase_correlation(img1, img2)
+  let result = @fusion_enhanced.register_phase_correlation(img1, img2)
   assert_true(result.similarity >= 0.0)
 }
 
@@ -129,15 +129,15 @@ test "register_phase_correlation: 基本相位相关配准" {
 test "register_images: 基本配准" {
   let img1 = make_varied_fe_img(8, 8)
   let img2 = make_varied_fe_img(8, 8)
-  let config = create_default_registration_config()
-  let result = register_images(img1, img2, config)
+  let config = @fusion_enhanced.create_default_registration_config()
+  let result = @fusion_enhanced.register_images(img1, img2, config)
   assert_true(result.similarity >= 0.0)
 }
 
 ///|
 test "apply_translation: 基本平移" {
   let img = make_varied_fe_img(8, 8)
-  let result = apply_translation(img, 2, 2)
+  let result = @fusion_enhanced.apply_translation(img, 2, 2)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
 }
@@ -145,7 +145,7 @@ test "apply_translation: 基本平移" {
 ///|
 test "calculate_fusion_quality: 基本质量评估" {
   let img = make_varied_fe_img(8, 8)
-  let quality = calculate_fusion_quality(img)
+  let quality = @fusion_enhanced.calculate_fusion_quality(img)
   assert_true(quality >= 0.0)
 }
 
@@ -153,8 +153,8 @@ test "calculate_fusion_quality: 基本质量评估" {
 test "fusion_report_to_string: 生成报告" {
   let img1 = make_varied_fe_img(4, 4)
   let img2 = make_fe_img(4, 4, b'\x80')
-  let config = create_default_fusion_config()
-  let result = fuse_images([img1, img2], config)
-  let report = fusion_report_to_string(result, 0.0)
+  let config = @fusion_enhanced.create_default_fusion_config()
+  let result = @fusion_enhanced.fuse_images([img1, img2], config)
+  let report = @fusion_enhanced.fusion_report_to_string(result, 0.0)
   assert_true(report.length() > 0)
 }

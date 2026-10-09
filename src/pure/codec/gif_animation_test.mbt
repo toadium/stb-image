@@ -34,8 +34,8 @@ test "encode_gif_animation_pure: basic 2-frame roundtrip" {
     frames: [frame1, frame2],
     delays: [100, 200],
   }
-  let gif_bytes = encode_gif_animation_pure(anim)
-  let restored = decode_gif_animation_pure(gif_bytes)
+  let gif_bytes = @codec.encode_gif_animation_pure(anim)
+  let restored = @codec.decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 2)
   assert_eq(restored.delays.length(), 2)
   assert_eq(restored.delays[0], 100)
@@ -50,8 +50,8 @@ test "encode_gif_animation_pure: basic 2-frame roundtrip" {
 test "encode_gif_animation_pure: single frame" {
   let frame = ga_make_rgb(1, 1, [(255, 255, 255)])
   let anim = @types.GifAnimation::{ frames: [frame], delays: [0], }
-  let gif_bytes = encode_gif_animation_pure(anim)
-  let restored = decode_gif_animation_pure(gif_bytes)
+  let gif_bytes = @codec.encode_gif_animation_pure(anim)
+  let restored = @codec.decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)
   assert_eq(restored.delays.length(), 1)
 }
@@ -65,8 +65,8 @@ test "encode_gif_animation_pure: 3-frame with varying delays" {
     frames: [f1, f2, f3],
     delays: [50, 150, 300],
   }
-  let gif_bytes = encode_gif_animation_pure(anim)
-  let restored = decode_gif_animation_pure(gif_bytes)
+  let gif_bytes = @codec.encode_gif_animation_pure(anim)
+  let restored = @codec.decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 3)
   assert_eq(restored.delays[0], 50)
   assert_eq(restored.delays[1], 150)
@@ -82,8 +82,8 @@ test "encode_gif_animation_pure: RGBA frames" {
     data: [b'\x80', b'\x90', b'\xA0', b'\xFF'] |> Bytes::from_array,
   }
   let anim = @types.GifAnimation::{ frames: [f1], delays: [100], }
-  let gif_bytes = encode_gif_animation_pure(anim)
-  let restored = decode_gif_animation_pure(gif_bytes)
+  let gif_bytes = @codec.encode_gif_animation_pure(anim)
+  let restored = @codec.decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)
   assert_eq(restored.frames[0].channels, 3)
 }
@@ -92,7 +92,7 @@ test "encode_gif_animation_pure: RGBA frames" {
 test "encode_gif_animation_pure: empty frames raises" {
   let anim = @types.GifAnimation::{ frames: [], delays: [], }
   try {
-    let _ = encode_gif_animation_pure(anim)
+    let _ = @codec.encode_gif_animation_pure(anim)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -105,7 +105,7 @@ test "encode_gif_animation_pure: frames/delays length mismatch raises" {
   let f1 = ga_make_rgb(1, 1, [(0, 0, 0)])
   let anim = @types.GifAnimation::{ frames: [f1], delays: [100, 200], }
   try {
-    let _ = encode_gif_animation_pure(anim)
+    let _ = @codec.encode_gif_animation_pure(anim)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -123,7 +123,7 @@ test "encode_gif_animation_pure: invalid channels raises" {
   }
   let anim = @types.GifAnimation::{ frames: [f1], delays: [100], }
   try {
-    let _ = encode_gif_animation_pure(anim)
+    let _ = @codec.encode_gif_animation_pure(anim)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -134,7 +134,7 @@ test "encode_gif_animation_pure: invalid channels raises" {
 ///|
 test "decode_gif_animation_pure: invalid data raises" {
   try {
-    let _ = decode_gif_animation_pure(b"not a gif")
+    let _ = @codec.decode_gif_animation_pure(b"not a gif")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -146,7 +146,7 @@ test "decode_gif_animation_pure: invalid data raises" {
 ///|
 test "decode_gif_animation_pure: empty data raises" {
   try {
-    let _ = decode_gif_animation_pure(b"")
+    let _ = @codec.decode_gif_animation_pure(b"")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -166,8 +166,8 @@ test "encode_gif_animation_pure: larger image triggers LZW growth" {
   }
   let frame = ga_make_rgb(16, 16, pixels)
   let anim = @types.GifAnimation::{ frames: [frame], delays: [0], }
-  let gif_bytes = encode_gif_animation_pure(anim)
-  let restored = decode_gif_animation_pure(gif_bytes)
+  let gif_bytes = @codec.encode_gif_animation_pure(anim)
+  let restored = @codec.decode_gif_animation_pure(gif_bytes)
   assert_eq(restored.frames.length(), 1)
   assert_eq(restored.frames[0].width, 16)
   assert_eq(restored.frames[0].height, 16)
@@ -176,7 +176,7 @@ test "encode_gif_animation_pure: larger image triggers LZW growth" {
 ///|
 test "decode_gif_animation_pure: too short raises" {
   try {
-    let _ = decode_gif_animation_pure(b"GIF89a\x00\x00\x00")
+    let _ = @codec.decode_gif_animation_pure(b"GIF89a\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -187,7 +187,9 @@ test "decode_gif_animation_pure: too short raises" {
 ///|
 test "decode_gif_animation_pure: bad signature raises" {
   try {
-    let _ = decode_gif_animation_pure(b"NOTGIF\x00\x00\x00\x00\x00\x00\x00")
+    let _ = @codec.decode_gif_animation_pure(
+      b"NOTGIF\x00\x00\x00\x00\x00\x00\x00",
+    )
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -203,7 +205,7 @@ test "decode_gif_animation_pure: no image separator raises" {
      0x3B, // trailer
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -224,7 +226,7 @@ test "decode_gif_animation_pure: interlace not supported raises" {
      0x03, 0x43, 0x00, 0x3B, // LZW data + trailer
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -246,7 +248,7 @@ test "decode_gif_animation_pure: truncated sub-block raises" {
      0x01, // sub-block data (only 1 byte, need 3)
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

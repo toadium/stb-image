@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_classification_config: 默认分类配置" {
-  let config = create_default_classification_config()
+  let config = @image_classification_advanced.create_default_classification_config()
   assert_true(config.num_classes > 0)
   assert_true(config.num_epochs > 0)
   assert_true(config.batch_size > 0)
@@ -11,17 +11,22 @@ test "create_default_classification_config: 默认分类配置" {
   assert_true(config.use_transfer_learning)
   assert_true(config.use_data_augmentation)
   assert_true(!config.use_ensemble)
-  assert_true(config.classifier_type == ClassifierType::CNN)
   assert_true(
-    config.feature_extraction_method == FeatureExtractionMethod::DeepFeature,
+    config.classifier_type == @image_classification_advanced.ClassifierType::CNN,
+  )
+  assert_true(
+    config.feature_extraction_method ==
+    @image_classification_advanced.FeatureExtractionMethod::DeepFeature,
   )
 }
 
 ///|
 test "classify_image: 基本分类" {
-  let config = create_default_classification_config()
+  let config = @image_classification_advanced.create_default_classification_config()
   let image = [100.0, 150.0, 200.0, 50.0, 80.0, 120.0, 180.0, 30.0]
-  let result = classify_image(image, 4, 2, config)
+  let result = @image_classification_advanced.classify_image(
+    image, 4, 2, config,
+  )
   assert_true(result.num_classes == config.num_classes)
   assert_true(result.predicted_class >= 0)
   assert_true(result.predicted_class < config.num_classes)
@@ -34,17 +39,19 @@ test "classify_image: 基本分类" {
 
 ///|
 test "classify_image: 空图像" {
-  let config = create_default_classification_config()
-  let result = classify_image([], 0, 0, config)
+  let config = @image_classification_advanced.create_default_classification_config()
+  let result = @image_classification_advanced.classify_image([], 0, 0, config)
   assert_true(result.num_classes == config.num_classes)
   assert_true(result.predicted_class >= 0)
 }
 
 ///|
 test "classify_multi_label: 多标签分类" {
-  let config = create_default_classification_config()
+  let config = @image_classification_advanced.create_default_classification_config()
   let image = [100.0, 150.0, 200.0, 50.0, 80.0]
-  let result = classify_multi_label(image, 5, 1, 3, 0.1, config)
+  let result = @image_classification_advanced.classify_multi_label(
+    image, 5, 1, 3, 0.1, config,
+  )
   assert_true(result.num_labels == 3)
   assert_true(result.label_probabilities.length() == 3)
   assert_true(result.threshold == 0.1)
@@ -55,9 +62,11 @@ test "classify_multi_label: 多标签分类" {
 
 ///|
 test "classify_ensemble: 集成分类" {
-  let config = create_default_classification_config()
+  let config = @image_classification_advanced.create_default_classification_config()
   let image = [100.0, 150.0, 200.0, 50.0, 80.0, 120.0]
-  let result = classify_ensemble(image, 3, 2, config)
+  let result = @image_classification_advanced.classify_ensemble(
+    image, 3, 2, config,
+  )
   assert_true(result.num_classifiers == config.num_classifiers)
   assert_true(result.individual_predictions.length() == config.num_classifiers)
   assert_true(result.individual_confidences.length() == config.num_classifiers)
@@ -69,7 +78,7 @@ test "classify_ensemble: 集成分类" {
 
 ///|
 test "train_classifier: 训练分类器" {
-  let config = create_default_classification_config()
+  let config = @image_classification_advanced.create_default_classification_config()
   let images = [
     [100.0, 150.0, 200.0],
     [50.0, 80.0, 120.0],
@@ -77,7 +86,9 @@ test "train_classifier: 训练分类器" {
     [200.0, 100.0, 50.0],
   ]
   let labels = [0, 1, 2, 0]
-  let result = train_classifier(images, labels, config)
+  let result = @image_classification_advanced.train_classifier(
+    images, labels, config,
+  )
   assert_true(result.num_epochs == config.num_epochs)
   assert_true(result.final_accuracy >= 0.0 && result.final_accuracy <= 1.0)
   assert_true(result.training_accuracy >= 0.0)
@@ -95,17 +106,17 @@ test "train_classifier: 训练分类器" {
 
 ///|
 test "train_classifier: 空训练集" {
-  let config = create_default_classification_config()
-  let result = train_classifier([], [], config)
+  let config = @image_classification_advanced.create_default_classification_config()
+  let result = @image_classification_advanced.train_classifier([], [], config)
   assert_true(result.final_accuracy == 0.0)
   assert_true(result.training_accuracy == 0.0)
 }
 
 ///|
 test "image_classification_report_to_string: 报告生成" {
-  let config = create_default_classification_config()
-  let report = image_classification_report_to_string(
-    ImageClassificationTaskType::MultiClassClassification,
+  let config = @image_classification_advanced.create_default_classification_config()
+  let report = @image_classification_advanced.image_classification_report_to_string(
+    @image_classification_advanced.ImageClassificationTaskType::MultiClassClassification,
     config,
     "分类完成",
   )
@@ -117,9 +128,9 @@ test "image_classification_report_to_string: 报告生成" {
 
 ///|
 test "image_classification_report_to_string: 二分类报告" {
-  let config = create_default_classification_config()
-  let report = image_classification_report_to_string(
-    ImageClassificationTaskType::BinaryClassification,
+  let config = @image_classification_advanced.create_default_classification_config()
+  let report = @image_classification_advanced.image_classification_report_to_string(
+    @image_classification_advanced.ImageClassificationTaskType::BinaryClassification,
     config,
     "二分类结果",
   )

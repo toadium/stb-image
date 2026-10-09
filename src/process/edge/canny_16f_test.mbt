@@ -51,7 +51,7 @@ fn read_f32_at_canny(data : Bytes, offset : Int) -> Float {
 ///|
 test "canny_edge_16: uniform image no edges" {
   let img = make_img16_canny(8, 8, 1, 30000)
-  let result = canny_edge_16(img)
+  let result = @edge.canny_edge_16(img)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -69,7 +69,7 @@ test "canny_edge_16: uniform image no edges" {
 ///|
 test "canny_edge_f: uniform image no edges" {
   let img = make_imgf_canny(8, 8, 1, 0.5F)
-  let result = canny_edge_f(img)
+  let result = @edge.canny_edge_f(img)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 1)
@@ -93,7 +93,7 @@ test "canny_edge_16: rejects invalid channels" {
     data: Array::make(32, b'\x00') |> Bytes::from_array,
   }
   try {
-    let _ = canny_edge_16(img)
+    let _ = @edge.canny_edge_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -106,7 +106,7 @@ test "canny_edge_16: rejects invalid channels" {
 test "canny_edge_16: rejects invalid threshold" {
   let img = make_img16_canny(4, 4, 1, 30000)
   try {
-    let _ = canny_edge_16(img, low_threshold=70000)
+    let _ = @edge.canny_edge_16(img, low_threshold=70000)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -119,7 +119,7 @@ test "canny_edge_16: rejects invalid threshold" {
 test "canny_edge_f: rejects invalid threshold" {
   let img = make_imgf_canny(4, 4, 1, 0.5F)
   try {
-    let _ = canny_edge_f(img, low_threshold=1.5F)
+    let _ = @edge.canny_edge_f(img, low_threshold=1.5F)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -131,7 +131,7 @@ test "canny_edge_f: rejects invalid threshold" {
 ///|
 test "canny_edge_16: RGB converts to grayscale" {
   let img = make_img16_canny(8, 8, 3, 30000)
-  let result = canny_edge_16(img)
+  let result = @edge.canny_edge_16(img)
   assert_eq(result.channels, 1)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
@@ -142,7 +142,7 @@ test "canny_edge_16: RGB converts to grayscale" {
 ///|
 test "canny_edge_f: RGBA converts to grayscale" {
   let img = make_imgf_canny(8, 8, 4, 0.5F)
-  let result = canny_edge_f(img)
+  let result = @edge.canny_edge_f(img)
   assert_eq(result.channels, 1)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)

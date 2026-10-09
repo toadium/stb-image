@@ -32,7 +32,7 @@ fn create_gradient_st(w : Int, h : Int) -> @types.Image {
 
 ///|
 test "stitch_default_config: 默认配置" {
-  let config = stitch_default_config()
+  let config = @stitch.stitch_default_config()
   assert_true(config.max_features > 0)
   assert_true(config.ratio_threshold > 0.0 && config.ratio_threshold < 1.0)
   assert_true(config.ransac_iterations > 0)
@@ -41,7 +41,7 @@ test "stitch_default_config: 默认配置" {
 
 ///|
 test "identity_homography: 单位变换" {
-  let h = identity_homography()
+  let h = @stitch.identity_homography()
   assert_true(h.h00 == 1.0)
   assert_true(h.h11 == 1.0)
   assert_true(h.h22 == 1.0)
@@ -55,15 +55,15 @@ test "identity_homography: 单位变换" {
 
 ///|
 test "apply_homography: 单位变换不改变坐标" {
-  let h = identity_homography()
-  let (x, y) = apply_homography(h, 100.0, 200.0)
+  let h = @stitch.identity_homography()
+  let (x, y) = @stitch.apply_homography(h, 100.0, 200.0)
   assert_true((x - 100.0).abs() < 1.0)
   assert_true((y - 200.0).abs() < 1.0)
 }
 
 ///|
 test "apply_homography: 平移变换" {
-  let h = Homography::{
+  let h = @stitch.Homography::{
     h00: 1.0,
     h01: 0.0,
     h02: 10.0,
@@ -74,21 +74,21 @@ test "apply_homography: 平移变换" {
     h21: 0.0,
     h22: 1.0,
   }
-  let (x, y) = apply_homography(h, 50.0, 60.0)
+  let (x, y) = @stitch.apply_homography(h, 50.0, 60.0)
   assert_true((x - 60.0).abs() < 1.0)
   assert_true((y - 80.0).abs() < 1.0)
 }
 
 ///|
 test "invert_homography: 单位变换的逆" {
-  let h = identity_homography()
-  let inv = invert_homography(h)
+  let h = @stitch.identity_homography()
+  let inv = @stitch.invert_homography(h)
   assert_true(inv is Some(_))
 }
 
 ///|
 test "invert_homography: 平移变换的逆" {
-  let h = Homography::{
+  let h = @stitch.Homography::{
     h00: 1.0,
     h01: 0.0,
     h02: 10.0,
@@ -99,35 +99,35 @@ test "invert_homography: 平移变换的逆" {
     h21: 0.0,
     h22: 1.0,
   }
-  let inv = invert_homography(h)
+  let inv = @stitch.invert_homography(h)
   assert_true(inv is Some(_))
 }
 
 ///|
 test "detect_features_simple: 纯色图像特征少" {
   let img = create_solid_st(16, 16, 128)
-  let features = detect_features_simple(img)
+  let features = @stitch.detect_features_simple(img)
   assert_true(features.length() >= 0)
 }
 
 ///|
 test "detect_features_simple: 渐变图像" {
   let img = create_gradient_st(32, 32)
-  let features = detect_features_simple(img, max_features=50)
+  let features = @stitch.detect_features_simple(img, max_features=50)
   assert_true(features.length() >= 0)
 }
 
 ///|
 test "match_features: 空特征列表" {
-  let query : Array[FeaturePoint] = []
-  let train : Array[FeaturePoint] = []
-  let matches = match_features(query, train)
+  let query : Array[@stitch.FeaturePoint] = []
+  let train : Array[@stitch.FeaturePoint] = []
+  let matches = @stitch.match_features(query, train)
   assert_true(matches.length() == 0)
 }
 
 ///|
 test "match_features: 相同特征匹配" {
-  let fp = FeaturePoint::{
+  let fp = @stitch.FeaturePoint::{
     x: 10.0,
     y: 20.0,
     response: 100.0,
@@ -136,16 +136,16 @@ test "match_features: 相同特征匹配" {
   }
   let query = [fp]
   let train = [fp]
-  let matches = match_features(query, train)
+  let matches = @stitch.match_features(query, train)
   assert_true(matches.length() >= 0)
 }
 
 ///|
 test "estimate_homography_ransac: 空匹配" {
-  let matches : Array[MatchPair] = []
-  let query : Array[FeaturePoint] = []
-  let train : Array[FeaturePoint] = []
-  let (h, inliers) = estimate_homography_ransac(matches, query, train)
+  let matches : Array[@stitch.MatchPair] = []
+  let query : Array[@stitch.FeaturePoint] = []
+  let train : Array[@stitch.FeaturePoint] = []
+  let (h, inliers) = @stitch.estimate_homography_ransac(matches, query, train)
   assert_true(inliers.length() == 0)
   ignore(h)
 }
@@ -153,6 +153,6 @@ test "estimate_homography_ransac: 空匹配" {
 ///|
 test "stitch_images: 相同图像拼接" {
   let img = create_gradient_st(32, 32)
-  let result = stitch_images(img, img)
+  let result = @stitch.stitch_images(img, img)
   ignore(result)
 }

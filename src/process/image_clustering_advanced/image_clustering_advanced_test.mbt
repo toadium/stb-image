@@ -2,7 +2,7 @@
 
 ///|
 test "create_default_clustering_config: 默认聚类配置" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   assert_true(config.num_clusters > 0)
   assert_true(config.max_iterations > 0)
   assert_true(config.tolerance > 0.0)
@@ -12,13 +12,19 @@ test "create_default_clustering_config: 默认聚类配置" {
   assert_true(config.use_feature_extraction)
   assert_true(config.use_normalization)
   assert_true(!config.use_gpu)
-  assert_true(config.algorithm_type == ClusteringAlgorithmType::KMeans)
-  assert_true(config.distance_metric == DistanceMetricType::Euclidean)
+  assert_true(
+    config.algorithm_type ==
+    @image_clustering_advanced.ClusteringAlgorithmType::KMeans,
+  )
+  assert_true(
+    config.distance_metric ==
+    @image_clustering_advanced.DistanceMetricType::Euclidean,
+  )
 }
 
 ///|
 test "kmeans_clustering: 基本聚类" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let data = [
     [0.0, 0.0],
     [0.1, 0.1],
@@ -27,7 +33,7 @@ test "kmeans_clustering: 基本聚类" {
     [20.0, 20.0],
     [20.1, 20.1],
   ]
-  let result = kmeans_clustering(data, 3, config)
+  let result = @image_clustering_advanced.kmeans_clustering(data, 3, config)
   assert_true(result.num_clusters == 3)
   assert_true(result.num_samples == 6)
   assert_true(result.labels.length() == 6)
@@ -43,9 +49,9 @@ test "kmeans_clustering: 基本聚类" {
 
 ///|
 test "kmeans_clustering: 单簇" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let data = [[1.0, 1.0], [1.1, 1.1], [0.9, 0.9]]
-  let result = kmeans_clustering(data, 1, config)
+  let result = @image_clustering_advanced.kmeans_clustering(data, 1, config)
   assert_true(result.num_clusters == 1)
   assert_true(result.num_samples == 3)
   for l in result.labels {
@@ -55,7 +61,7 @@ test "kmeans_clustering: 单簇" {
 
 ///|
 test "dbscan_clustering: 基本DBSCAN" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let data = [
     [0.0, 0.0],
     [0.1, 0.0],
@@ -64,7 +70,9 @@ test "dbscan_clustering: 基本DBSCAN" {
     [10.1, 10.0],
     [10.0, 10.1],
   ]
-  let result = dbscan_clustering(data, 0.5, 2, config)
+  let result = @image_clustering_advanced.dbscan_clustering(
+    data, 0.5, 2, config,
+  )
 
   assert_true(result.labels.length() == 6)
   assert_true(result.eps == 0.5)
@@ -77,9 +85,11 @@ test "dbscan_clustering: 基本DBSCAN" {
 
 ///|
 test "dbscan_clustering: 全噪声点" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let data = [[0.0, 0.0], [100.0, 100.0], [200.0, 200.0]]
-  let result = dbscan_clustering(data, 0.1, 2, config)
+  let result = @image_clustering_advanced.dbscan_clustering(
+    data, 0.1, 2, config,
+  )
   assert_true(result.labels.length() == 3)
   // 分散的点应为噪声
   assert_true(result.num_noise_points >= 0)
@@ -87,7 +97,7 @@ test "dbscan_clustering: 全噪声点" {
 
 ///|
 test "hierarchical_clustering: 基本层次聚类" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let data = [
     [0.0, 0.0],
     [0.1, 0.1],
@@ -96,7 +106,9 @@ test "hierarchical_clustering: 基本层次聚类" {
     [20.0, 20.0],
     [20.1, 20.1],
   ]
-  let result = hierarchical_clustering(data, 3, config)
+  let result = @image_clustering_advanced.hierarchical_clustering(
+    data, 3, config,
+  )
   assert_true(result.num_clusters == 3)
   assert_true(result.num_samples == 6)
   assert_true(result.labels.length() == 6)
@@ -115,14 +127,16 @@ test "hierarchical_clustering: 基本层次聚类" {
 test "calculate_silhouette_score: 轮廓系数" {
   let data = [[0.0, 0.0], [0.1, 0.1], [10.0, 10.0], [10.1, 10.1]]
   let labels = [0, 0, 1, 1]
-  let score = calculate_silhouette_score(data, labels)
+  let score = @image_clustering_advanced.calculate_silhouette_score(
+    data, labels,
+  )
   // 轮廓系数范围 [-1, 1]
   assert_true(score >= -1.0 && score <= 1.0)
 }
 
 ///|
 test "calculate_silhouette_score: 空数据" {
-  let score = calculate_silhouette_score([], [])
+  let score = @image_clustering_advanced.calculate_silhouette_score([], [])
   assert_true(score == 0.0)
 }
 
@@ -130,14 +144,16 @@ test "calculate_silhouette_score: 空数据" {
 test "calculate_silhouette_score: 单簇" {
   let data = [[0.0, 0.0], [1.0, 1.0]]
   let labels = [0, 0]
-  let score = calculate_silhouette_score(data, labels)
+  let score = @image_clustering_advanced.calculate_silhouette_score(
+    data, labels,
+  )
   // 单簇时轮廓系数为0（无其他簇比较）
   assert_true(score >= -1.0 && score <= 1.0)
 }
 
 ///|
 test "cluster_images: 图像聚类" {
-  let config = create_default_clustering_config()
+  let config = @image_clustering_advanced.create_default_clustering_config()
   let images = [
     [100.0, 150.0, 200.0],
     [110.0, 140.0, 190.0],
@@ -146,7 +162,7 @@ test "cluster_images: 图像聚类" {
     [200.0, 210.0, 220.0],
     [190.0, 200.0, 210.0],
   ]
-  let result = cluster_images(images, config)
+  let result = @image_clustering_advanced.cluster_images(images, config)
   assert_true(result.num_clusters == config.num_clusters)
   assert_true(result.num_samples == 6)
   assert_true(result.labels.length() == 6)
@@ -159,17 +175,17 @@ test "cluster_images: 图像聚类" {
 
 ///|
 test "cluster_images: 空图像集" {
-  let config = create_default_clustering_config()
-  let result = cluster_images([], config)
+  let config = @image_clustering_advanced.create_default_clustering_config()
+  let result = @image_clustering_advanced.cluster_images([], config)
   assert_true(result.num_samples == 0)
   assert_true(result.labels.length() == 0)
 }
 
 ///|
 test "image_clustering_report_to_string: 报告生成" {
-  let config = create_default_clustering_config()
-  let report = image_clustering_report_to_string(
-    ImageClusteringTaskType::KMeansClustering,
+  let config = @image_clustering_advanced.create_default_clustering_config()
+  let report = @image_clustering_advanced.image_clustering_report_to_string(
+    @image_clustering_advanced.ImageClusteringTaskType::KMeansClustering,
     config,
     "聚类完成",
   )
@@ -180,9 +196,9 @@ test "image_clustering_report_to_string: 报告生成" {
 
 ///|
 test "image_clustering_report_to_string: DBSCAN报告" {
-  let config = create_default_clustering_config()
-  let report = image_clustering_report_to_string(
-    ImageClusteringTaskType::DBSCANClustering,
+  let config = @image_clustering_advanced.create_default_clustering_config()
+  let report = @image_clustering_advanced.image_clustering_report_to_string(
+    @image_clustering_advanced.ImageClusteringTaskType::DBSCANClustering,
     config,
     "DBSCAN结果",
   )

@@ -52,7 +52,7 @@ fn push_bgra(arr : Array[Byte], r : Int, g : Int, b : Int, a : Int) -> Unit {
 test "decode_tga_pure: 1x1 24-bit type 2 (uncompressed RGB)" {
   let out = make_tga_header(1, 1, 24, 2, 0)
   push_bgr(out, 255, 0, 0) // 红色 BGR
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -66,7 +66,7 @@ test "decode_tga_pure: 1x1 24-bit type 2 (uncompressed RGB)" {
 test "decode_tga_pure: 1x1 32-bit type 2 (uncompressed RGBA)" {
   let out = make_tga_header(1, 1, 32, 2, 0)
   push_bgra(out, 255, 0, 0, 255) // 红色 BGRA
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 4)
@@ -87,7 +87,7 @@ test "decode_tga_pure: 2x2 24-bit type 10 (RLE RGB)" {
   out.push(b'\x01')
   push_bgr(out, 0, 255, 0)
   push_bgr(out, 0, 255, 0)
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -108,7 +108,7 @@ test "decode_tga_pure: 2x2 32-bit type 10 (RLE RGBA)" {
   out.push(b'\x01')
   push_bgra(out, 0, 255, 0, 255)
   push_bgra(out, 0, 255, 0, 255)
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 4)
@@ -129,7 +129,7 @@ test "decode_tga_pure: bottom-up row order" {
   push_bgr(out, 0, 0, 0)
   push_bgr(out, 255, 0, 0)
   push_bgr(out, 255, 0, 0)
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -148,7 +148,7 @@ test "decode_tga_pure: top-down row order" {
   push_bgr(out, 255, 0, 0)
   push_bgr(out, 0, 0, 0)
   push_bgr(out, 0, 0, 0)
-  let img = decode_tga_pure(to_bytes(out))
+  let img = @codec.decode_tga_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -163,7 +163,7 @@ test "decode_tga_pure: top-down row order" {
 test "decode_tga_pure: too short raises" {
   let short = b"\x00\x00\x02"
   try {
-    let _ = decode_tga_pure(short)
+    let _ = @codec.decode_tga_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -176,7 +176,7 @@ test "decode_tga_pure: unsupported image type raises" {
   // type 1（颜色映射）
   let out = make_tga_header(1, 1, 24, 1, 0)
   try {
-    let _ = decode_tga_pure(to_bytes(out))
+    let _ = @codec.decode_tga_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -189,7 +189,7 @@ test "decode_tga_pure: unsupported bpp raises" {
   // bpp=16
   let out = make_tga_header(1, 1, 16, 2, 0)
   try {
-    let _ = decode_tga_pure(to_bytes(out))
+    let _ = @codec.decode_tga_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -201,7 +201,7 @@ test "decode_tga_pure: unsupported bpp raises" {
 test "decode_tga_pure: zero dimensions raises" {
   let out = make_tga_header(0, 0, 24, 0, 0)
   try {
-    let _ = decode_tga_pure(to_bytes(out))
+    let _ = @codec.decode_tga_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -216,7 +216,7 @@ test "decode_tga_pure: truncated pixel data raises" {
   out.push(b'\xFF')
   out.push(b'\x00')
   try {
-    let _ = decode_tga_pure(to_bytes(out))
+    let _ = @codec.decode_tga_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

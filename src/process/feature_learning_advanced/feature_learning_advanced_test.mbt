@@ -2,8 +2,11 @@
 
 ///|
 test "create_default_feature_learning_config: 基本测试" {
-  let config = create_default_feature_learning_config()
-  assert_true(config.task_type is FeatureLearningTaskType::FeatureExtraction)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  assert_true(
+    config.task_type
+    is @feature_learning_advanced.FeatureLearningTaskType::FeatureExtraction,
+  )
 }
 
 ///|
@@ -11,8 +14,10 @@ test "extract_features_fl: 基本测试" {
   let images = make_test_data(4, 16)
   let widths = [4, 4, 4, 4]
   let heights = [4, 4, 4, 4]
-  let config = create_default_feature_learning_config()
-  let result = extract_features_fl(images, widths, heights, config)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let result = @feature_learning_advanced.extract_features_fl(
+    images, widths, heights, config,
+  )
   assert_eq(result.num_samples, 4)
   assert_true(result.feature_dimension > 0)
 }
@@ -20,8 +25,8 @@ test "extract_features_fl: 基本测试" {
 ///|
 test "select_features_fl: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_feature_learning_config()
-  let result = select_features_fl(data, 3, config)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let result = @feature_learning_advanced.select_features_fl(data, 3, config)
   assert_eq(result.num_selected, 3)
   assert_true(result.selected_features.length() > 0)
 }
@@ -29,8 +34,8 @@ test "select_features_fl: 基本测试" {
 ///|
 test "transform_features_fl: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_feature_learning_config()
-  let result = transform_features_fl(data, config)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let result = @feature_learning_advanced.transform_features_fl(data, config)
   assert_eq(result.num_samples, 4)
   assert_true(result.transformed_dimension > 0)
 }
@@ -39,8 +44,11 @@ test "transform_features_fl: 基本测试" {
 test "fuse_features_fl: 基本测试" {
   let features1 = make_test_data(4, 8)
   let features2 = make_test_data(4, 6)
-  let config = create_default_feature_learning_config()
-  let result = fuse_features_fl([features1, features2], config)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let result = @feature_learning_advanced.fuse_features_fl(
+    [features1, features2],
+    config,
+  )
   assert_eq(result.num_samples, 4)
   assert_true(result.fused_dimension > 0)
 }
@@ -48,17 +56,17 @@ test "fuse_features_fl: 基本测试" {
 ///|
 test "learn_features: 基本测试" {
   let data = make_test_data(4, 8)
-  let config = create_default_feature_learning_config()
-  let result = learn_features(data, config)
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let result = @feature_learning_advanced.learn_features(data, config)
   assert_eq(result.num_samples, 4)
   assert_true(result.learned_dimension > 0)
 }
 
 ///|
 test "feature_learning_report_to_string: 基本测试" {
-  let config = create_default_feature_learning_config()
-  let report = feature_learning_report_to_string(
-    FeatureLearningTaskType::FeatureExtraction,
+  let config = @feature_learning_advanced.create_default_feature_learning_config()
+  let report = @feature_learning_advanced.feature_learning_report_to_string(
+    @feature_learning_advanced.FeatureLearningTaskType::FeatureExtraction,
     config,
     "测试结果",
   )

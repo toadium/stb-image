@@ -163,7 +163,7 @@ fn make_2x2_index_qoi() -> Bytes {
 
 ///|
 test "decode_qoi_pure: 1x1 RGB (QOI_OP_RGB)" {
-  let img = decode_qoi_pure(make_1x1_rgb_qoi())
+  let img = @codec.decode_qoi_pure(make_1x1_rgb_qoi())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -175,7 +175,7 @@ test "decode_qoi_pure: 1x1 RGB (QOI_OP_RGB)" {
 
 ///|
 test "decode_qoi_pure: 1x1 RGBA (QOI_OP_RGBA)" {
-  let img = decode_qoi_pure(make_1x1_rgba_qoi())
+  let img = @codec.decode_qoi_pure(make_1x1_rgba_qoi())
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 4)
@@ -188,7 +188,7 @@ test "decode_qoi_pure: 1x1 RGBA (QOI_OP_RGBA)" {
 
 ///|
 test "decode_qoi_pure: 2x2 RGB (QOI_OP_DIFF)" {
-  let img = decode_qoi_pure(make_2x2_diff_qoi())
+  let img = @codec.decode_qoi_pure(make_2x2_diff_qoi())
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -201,7 +201,7 @@ test "decode_qoi_pure: 2x2 RGB (QOI_OP_DIFF)" {
 
 ///|
 test "decode_qoi_pure: 2x2 RGB (QOI_OP_LUMA)" {
-  let img = decode_qoi_pure(make_2x2_luma_qoi())
+  let img = @codec.decode_qoi_pure(make_2x2_luma_qoi())
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -214,7 +214,7 @@ test "decode_qoi_pure: 2x2 RGB (QOI_OP_LUMA)" {
 
 ///|
 test "decode_qoi_pure: 2x2 RGB (QOI_OP_RUN)" {
-  let img = decode_qoi_pure(make_2x2_run_qoi())
+  let img = @codec.decode_qoi_pure(make_2x2_run_qoi())
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -227,7 +227,7 @@ test "decode_qoi_pure: 2x2 RGB (QOI_OP_RUN)" {
 
 ///|
 test "decode_qoi_pure: 2x2 RGBA (QOI_OP_INDEX)" {
-  let img = decode_qoi_pure(make_2x2_index_qoi())
+  let img = @codec.decode_qoi_pure(make_2x2_index_qoi())
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 4)
@@ -245,7 +245,7 @@ test "decode_qoi_pure: invalid magic raises" {
   // 14 字节，magic 错误 "xxxx"
   let bad = b"\x78\x78\x78\x78\x00\x00\x00\x01\x00\x00\x00\x01\x03\x00"
   try {
-    let _ = decode_qoi_pure(bad)
+    let _ = @codec.decode_qoi_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -258,7 +258,7 @@ test "decode_qoi_pure: too short raises" {
   // 4 字节，仅 magic，不足 14 字节
   let short = b"\x71\x6F\x69\x66"
   try {
-    let _ = decode_qoi_pure(short)
+    let _ = @codec.decode_qoi_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -276,7 +276,7 @@ test "decode_qoi_pure: invalid dimensions raises" {
      0x00, // colorspace=0 (sRGB)
   ]
   try {
-    let _ = decode_qoi_pure(Bytes::from_array(data))
+    let _ = @codec.decode_qoi_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -296,7 +296,7 @@ test "decode_qoi_pure: truncated pixel data raises" {
      0x01, 0xFF,
   ]
   try {
-    let _ = decode_qoi_pure(Bytes::from_array(data))
+    let _ = @codec.decode_qoi_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

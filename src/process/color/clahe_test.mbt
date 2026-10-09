@@ -8,7 +8,7 @@ test "clahe: grayscale uniform image produces uniform output" {
     channels: 1,
     data: Array::make(64, b'\x80') |> Bytes::from_array,
   }
-  let result = clahe(img, 4, 2.0)
+  let result = @color.clahe(img, 4, 2.0)
   // 均匀图像 CLAHE 后所有像素应相同
   let v0 = result.data[0]
   for i in 0..<64 {
@@ -26,7 +26,7 @@ test "clahe: RGB image preserves channels" {
     channels: 3,
     data: Array::make(64 * 3, b'\x80') |> Bytes::from_array,
   }
-  let result = clahe(img, 4, 2.0)
+  let result = @color.clahe(img, 4, 2.0)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
@@ -46,7 +46,7 @@ test "clahe: RGBA preserves alpha" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let result = clahe(img, 4, 2.0)
+  let result = @color.clahe(img, 4, 2.0)
   for i in 0..<64 {
     assert_eq(result.data[i * 4 + 3], b'\xFF')
   }
@@ -63,7 +63,7 @@ test "clahe: raises on invalid tile_size" {
     data: Array::make(16, b'\x80') |> Bytes::from_array,
   }
   try {
-    let _ = clahe(img, 1, 2.0)
+    let _ = @color.clahe(img, 1, 2.0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -86,7 +86,7 @@ test "clahe: enhances contrast on gradient" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = clahe(img, 4, 3.0)
+  let result = @color.clahe(img, 4, 3.0)
   // CLAHE 后像素值应在 0-255 范围内
   for i in 0..<64 {
     let v = result.data[i].to_int()
@@ -105,7 +105,7 @@ test "clahe: raises on invalid channels" {
     data: Array::make(16, b'\x80') |> Bytes::from_array,
   }
   try {
-    let _ = clahe(img, 4, 2.0)
+    let _ = @color.clahe(img, 4, 2.0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -124,7 +124,7 @@ test "clahe: 1x1 with large tile_size (tile_pixels=0)" {
     channels: 1,
     data: Bytes::from_array([b'\x80']),
   }
-  let result = clahe(img, 8, 2.0)
+  let result = @color.clahe(img, 8, 2.0)
   assert_eq(result.width, 1)
   assert_eq(result.height, 1)
   assert_eq(result.channels, 1)
@@ -146,7 +146,7 @@ test "clahe: clamp_i bounds (below lo and above hi)" {
     ]),
   }
   // Use a large clip_limit to ensure CDF values can exceed bounds
-  let result = clahe(img, 2, 10.0)
+  let result = @color.clahe(img, 2, 10.0)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)

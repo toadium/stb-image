@@ -39,7 +39,7 @@ fn make_imgf_draw(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 test "draw_line_16: basic line" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
-  let result = draw_line_16(img, 0, 0, 9, 9, color)
+  let result = @transform.draw_line_16(img, 0, 0, 9, 9, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
   assert_eq(result.channels, 1)
@@ -52,7 +52,7 @@ test "draw_line_16: basic line" {
 test "draw_rectangle_16: basic rectangle" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
-  let result = draw_rectangle_16(img, 2, 2, 5, 5, color)
+  let result = @transform.draw_rectangle_16(img, 2, 2, 5, 5, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
   let _ = img
@@ -64,7 +64,7 @@ test "draw_rectangle_16: basic rectangle" {
 test "draw_rectangle_16: filled rectangle" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
-  let result = draw_rectangle_16(img, 2, 2, 5, 5, color, fill=true)
+  let result = @transform.draw_rectangle_16(img, 2, 2, 5, 5, color, fill=true)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -75,7 +75,7 @@ test "draw_rectangle_16: filled rectangle" {
 test "draw_circle_16: basic circle" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
-  let result = draw_circle_16(img, 5, 5, 3, color)
+  let result = @transform.draw_circle_16(img, 5, 5, 3, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
   let _ = img
@@ -87,7 +87,7 @@ test "draw_circle_16: basic circle" {
 test "draw_circle_16: filled circle" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
-  let result = draw_circle_16(img, 5, 5, 3, color, fill=true)
+  let result = @transform.draw_circle_16(img, 5, 5, 3, color, fill=true)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -99,7 +99,7 @@ test "draw_polygon_16: basic polygon" {
   let img = make_img16_draw(10, 10, 1, 0)
   let color : Array[Int] = [65535]
   let points : Array[(Int, Int)] = [(2, 2), (7, 2), (5, 7)]
-  let result = draw_polygon_16(img, points, color)
+  let result = @transform.draw_polygon_16(img, points, color)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -111,7 +111,7 @@ test "draw_polygon_16: basic polygon" {
 test "draw_line_16: RGB color" {
   let img = make_img16_draw(10, 10, 3, 0)
   let color : Array[Int] = [65535, 0, 0]
-  let result = draw_line_16(img, 0, 0, 9, 9, color)
+  let result = @transform.draw_line_16(img, 0, 0, 9, 9, color)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = color
@@ -124,7 +124,7 @@ test "draw_line_16: RGB color" {
 test "draw_line_f: basic line" {
   let img = make_imgf_draw(10, 10, 1, 0.0F)
   let color : Array[Float] = [1.0F]
-  let result = draw_line_f(img, 0, 0, 9, 9, color)
+  let result = @transform.draw_line_f(img, 0, 0, 9, 9, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
   assert_eq(result.channels, 1)
@@ -137,7 +137,7 @@ test "draw_line_f: basic line" {
 test "draw_rectangle_f: basic rectangle" {
   let img = make_imgf_draw(10, 10, 1, 0.0F)
   let color : Array[Float] = [1.0F]
-  let result = draw_rectangle_f(img, 2, 2, 5, 5, color)
+  let result = @transform.draw_rectangle_f(img, 2, 2, 5, 5, color)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -148,7 +148,7 @@ test "draw_rectangle_f: basic rectangle" {
 test "draw_circle_f: basic circle" {
   let img = make_imgf_draw(10, 10, 1, 0.0F)
   let color : Array[Float] = [1.0F]
-  let result = draw_circle_f(img, 5, 5, 3, color)
+  let result = @transform.draw_circle_f(img, 5, 5, 3, color)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -160,7 +160,7 @@ test "draw_polygon_f: basic polygon" {
   let img = make_imgf_draw(10, 10, 1, 0.0F)
   let color : Array[Float] = [1.0F]
   let points : Array[(Int, Int)] = [(2, 2), (7, 2), (5, 7)]
-  let result = draw_polygon_f(img, points, color)
+  let result = @transform.draw_polygon_f(img, points, color)
   assert_eq(result.width, 10)
   let _ = img
   let _ = color
@@ -172,7 +172,7 @@ test "draw_polygon_f: basic polygon" {
 test "draw_line_f: RGB color" {
   let img = make_imgf_draw(10, 10, 3, 0.0F)
   let color : Array[Float] = [1.0F, 0.0F, 0.0F]
-  let result = draw_line_f(img, 0, 0, 9, 9, color)
+  let result = @transform.draw_line_f(img, 0, 0, 9, 9, color)
   assert_eq(result.channels, 3)
   let _ = img
   let _ = color

@@ -48,7 +48,7 @@ fn make_imgf_cc(w : Int, h : Int, ch : Int) -> @types.ImageF {
 ///|
 test "to_rgb_16: RGBA -> RGB channels=3" {
   let img = make_img16_cc(4, 3, 4)
-  let result = to_rgb_16(img)
+  let result = @color.to_rgb_16(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -59,7 +59,7 @@ test "to_rgb_16: RGBA -> RGB channels=3" {
 ///|
 test "to_rgb_f: RGBA -> RGB channels=3" {
   let img = make_imgf_cc(4, 3, 4)
-  let result = to_rgb_f(img)
+  let result = @color.to_rgb_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 3)
@@ -70,7 +70,7 @@ test "to_rgb_f: RGBA -> RGB channels=3" {
 ///|
 test "to_rgba_16: RGB -> RGBA channels=4, alpha=65535" {
   let img = make_img16_cc(4, 3, 3)
-  let result = to_rgba_16(img)
+  let result = @color.to_rgba_16(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 4)
@@ -84,7 +84,7 @@ test "to_rgba_16: RGB -> RGBA channels=4, alpha=65535" {
 ///|
 test "to_rgba_f: RGB -> RGBA channels=4, alpha=1.0" {
   let img = make_imgf_cc(4, 3, 3)
-  let result = to_rgba_f(img)
+  let result = @color.to_rgba_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 4)
@@ -101,7 +101,7 @@ test "to_rgba_f: RGB -> RGBA channels=4, alpha=1.0" {
 test "premultiply_alpha_16: requires channels=4" {
   let img = make_img16_cc(4, 3, 3)
   try {
-    let _ = premultiply_alpha_16(img)
+    let _ = @color.premultiply_alpha_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -114,7 +114,7 @@ test "premultiply_alpha_16: requires channels=4" {
 test "premultiply_alpha_f: requires channels=4" {
   let img = make_imgf_cc(4, 3, 3)
   try {
-    let _ = premultiply_alpha_f(img)
+    let _ = @color.premultiply_alpha_f(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -127,7 +127,7 @@ test "premultiply_alpha_f: requires channels=4" {
 test "unpremultiply_alpha_16: requires channels=4" {
   let img = make_img16_cc(4, 3, 3)
   try {
-    let _ = unpremultiply_alpha_16(img)
+    let _ = @color.unpremultiply_alpha_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -140,7 +140,7 @@ test "unpremultiply_alpha_16: requires channels=4" {
 test "unpremultiply_alpha_f: requires channels=4" {
   let img = make_imgf_cc(4, 3, 3)
   try {
-    let _ = unpremultiply_alpha_f(img)
+    let _ = @color.unpremultiply_alpha_f(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -152,8 +152,8 @@ test "unpremultiply_alpha_f: requires channels=4" {
 ///|
 test "rgb_to_ycbcr_16: roundtrip preserves values" {
   let (r, g, b) = (30000, 20000, 10000)
-  let (y, cb, cr) = rgb_to_ycbcr_16(r, g, b)
-  let (r2, g2, b2) = ycbcr_to_rgb_16(y, cb, cr)
+  let (y, cb, cr) = @color.rgb_to_ycbcr_16(r, g, b)
+  let (r2, g2, b2) = @color.ycbcr_to_rgb_16(y, cb, cr)
   assert_true((r - r2).abs() < 100)
   assert_true((g - g2).abs() < 100)
   assert_true((b - b2).abs() < 100)
@@ -162,8 +162,8 @@ test "rgb_to_ycbcr_16: roundtrip preserves values" {
 ///|
 test "rgb_to_ycbcr_f: roundtrip preserves values" {
   let (r, g, b) = (0.5F, 0.3F, 0.1F)
-  let (y, cb, cr) = rgb_to_ycbcr_f(r, g, b)
-  let (r2, g2, b2) = ycbcr_to_rgb_f(y, cb, cr)
+  let (y, cb, cr) = @color.rgb_to_ycbcr_f(r, g, b)
+  let (r2, g2, b2) = @color.ycbcr_to_rgb_f(y, cb, cr)
   assert_true((r - r2).abs() < 0.01F)
   assert_true((g - g2).abs() < 0.01F)
   assert_true((b - b2).abs() < 0.01F)
@@ -172,8 +172,8 @@ test "rgb_to_ycbcr_f: roundtrip preserves values" {
 ///|
 test "rgb_to_cmyk_16: roundtrip preserves values" {
   let (r, g, b) = (30000, 20000, 10000)
-  let (c, m, y, k) = rgb_to_cmyk_16(r, g, b)
-  let (r2, g2, b2) = cmyk_to_rgb_16(c, m, y, k)
+  let (c, m, y, k) = @color.rgb_to_cmyk_16(r, g, b)
+  let (r2, g2, b2) = @color.cmyk_to_rgb_16(c, m, y, k)
   assert_true((r - r2).abs() < 100)
   assert_true((g - g2).abs() < 100)
   assert_true((b - b2).abs() < 100)
@@ -182,8 +182,8 @@ test "rgb_to_cmyk_16: roundtrip preserves values" {
 ///|
 test "rgb_to_cmyk_f: roundtrip preserves values" {
   let (r, g, b) = (0.5F, 0.3F, 0.1F)
-  let (c, m, y, k) = rgb_to_cmyk_f(r, g, b)
-  let (r2, g2, b2) = cmyk_to_rgb_f(c, m, y, k)
+  let (c, m, y, k) = @color.rgb_to_cmyk_f(r, g, b)
+  let (r2, g2, b2) = @color.cmyk_to_rgb_f(c, m, y, k)
   assert_true((r - r2).abs() < 0.01F)
   assert_true((g - g2).abs() < 0.01F)
   assert_true((b - b2).abs() < 0.01F)
@@ -191,7 +191,7 @@ test "rgb_to_cmyk_f: roundtrip preserves values" {
 
 ///|
 test "rgb_to_ycbcr_16: output in valid range" {
-  let (y, cb, cr) = rgb_to_ycbcr_16(65535, 0, 0)
+  let (y, cb, cr) = @color.rgb_to_ycbcr_16(65535, 0, 0)
   assert_true(y >= 0 && y <= 65535)
   assert_true(cb >= 0 && cb <= 65535)
   assert_true(cr >= 0 && cr <= 65535)
@@ -199,7 +199,7 @@ test "rgb_to_ycbcr_16: output in valid range" {
 
 ///|
 test "rgb_to_cmyk_16: black gives k=65535" {
-  let (c, m, y, k) = rgb_to_cmyk_16(0, 0, 0)
+  let (c, m, y, k) = @color.rgb_to_cmyk_16(0, 0, 0)
   assert_eq(c, 0)
   assert_eq(m, 0)
   assert_eq(y, 0)
@@ -208,7 +208,7 @@ test "rgb_to_cmyk_16: black gives k=65535" {
 
 ///|
 test "rgb_to_cmyk_f: black gives k=1.0" {
-  let (c, m, y, k) = rgb_to_cmyk_f(0.0F, 0.0F, 0.0F)
+  let (c, m, y, k) = @color.rgb_to_cmyk_f(0.0F, 0.0F, 0.0F)
   assert_true(c < 0.001F)
   assert_true(m < 0.001F)
   assert_true(y < 0.001F)
@@ -221,7 +221,7 @@ test "rgb_to_cmyk_f: black gives k=1.0" {
 test "to_rgb_16: negative size raises" {
   let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
-    let _ = to_rgb_16(img)
+    let _ = @color.to_rgb_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -234,7 +234,7 @@ test "to_rgb_16: negative size raises" {
 test "to_rgb_16: invalid channels raises" {
   let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = to_rgb_16(img)
+    let _ = @color.to_rgb_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -252,7 +252,7 @@ test "to_rgb_16: data mismatch raises" {
     data: b"\x00\x01",
   }
   try {
-    let _ = to_rgb_16(img)
+    let _ = @color.to_rgb_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -266,7 +266,7 @@ test "to_rgb_16: channels 3 returns img" {
   let data = Bytes::from_array(Array::make(8 * 8 * 3 * 2, b'\x00'))
   let img = @types.Image16::{ width: 8, height: 8, channels: 3, data, }
   try {
-    let result = to_rgb_16(img)
+    let result = @color.to_rgb_16(img)
     assert_eq(result.width, 8)
   } catch {
     _ => assert_true(true)
@@ -279,7 +279,7 @@ test "to_rgb_16: channels 1 returns img" {
   let data = Bytes::from_array(Array::make(8 * 8 * 1 * 2, b'\x00'))
   let img = @types.Image16::{ width: 8, height: 8, channels: 1, data, }
   try {
-    let result = to_rgb_16(img)
+    let result = @color.to_rgb_16(img)
     assert_eq(result.width, 8)
   } catch {
     _ => assert_true(true)

@@ -6,7 +6,7 @@ test "mse: identical images return 0" {
     channels: 1,
     data: Array::make(4, b'\x80') |> Bytes::from_array,
   }
-  assert_eq(mse(img, img), 0.0)
+  assert_eq(@feature.mse(img, img), 0.0)
   let _ = img
 }
 
@@ -26,7 +26,7 @@ test "mse: known value" {
     channels: 1,
     data: Array::make(4, (10).to_byte()) |> Bytes::from_array,
   }
-  assert_eq(mse(img1, img2), 100.0)
+  assert_eq(@feature.mse(img1, img2), 100.0)
   let _ = img1
   let _ = img2
 }
@@ -39,7 +39,7 @@ test "psnr: identical images return infinity" {
     channels: 1,
     data: Array::make(4, b'\x80') |> Bytes::from_array,
   }
-  let result = psnr(img, img)
+  let result = @feature.psnr(img, img)
   assert_true(result > 1000.0)
   let _ = img
   let _ = result
@@ -60,7 +60,7 @@ test "psnr: known value" {
     channels: 1,
     data: Array::make(4, (10).to_byte()) |> Bytes::from_array,
   }
-  let result = psnr(img1, img2)
+  let result = @feature.psnr(img1, img2)
   // 验证 PSNR 在合理范围内（约 28 dB）
   assert_true(result > 27.0 && result < 29.0)
   let _ = img1
@@ -76,7 +76,7 @@ test "ssim: identical images return ~1" {
     channels: 1,
     data: Array::make(16, b'\x80') |> Bytes::from_array,
   }
-  let result = ssim(img, img)
+  let result = @feature.ssim(img, img)
   assert_true(result > 0.99)
   let _ = img
   let _ = result
@@ -96,7 +96,7 @@ test "ssim: range [-1, 1]" {
     channels: 1,
     data: Array::make(16, b'\xFF') |> Bytes::from_array,
   }
-  let result = ssim(img1, img2)
+  let result = @feature.ssim(img1, img2)
   assert_true(result >= -1.0 && result <= 1.0)
   let _ = img1
   let _ = img2
@@ -107,7 +107,7 @@ test "ssim: range [-1, 1]" {
 test "mse: works with RGB images" {
   let img1 = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let img2 = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
-  assert_eq(mse(img1, img2), 0.0)
+  assert_eq(@feature.mse(img1, img2), 0.0)
   let _ = img1
   let _ = img2
 }
@@ -132,8 +132,8 @@ test "psnr: higher for similar images" {
     channels: 1,
     data: Array::make(4, b'\x00') |> Bytes::from_array,
   }
-  let psnr_close = psnr(img1, img_close)
-  let psnr_far = psnr(img1, img_far)
+  let psnr_close = @feature.psnr(img1, img_close)
+  let psnr_far = @feature.psnr(img1, img_far)
   assert_true(psnr_close > psnr_far)
   let _ = img1
   let _ = img_close

@@ -106,7 +106,7 @@ fn read_f32_le_ft(data : Bytes, offset : Int) -> Float {
 ///|
 test "box_blur_16: radius=0 is identity" {
   let img = make_image16_f(4, 4, 3)
-  let result = box_blur_16(img, 0)
+  let result = @filter.box_blur_16(img, 0)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -115,7 +115,7 @@ test "box_blur_16: radius=0 is identity" {
 ///|
 test "box_blur_16: preserves dimensions" {
   let img = make_image16_f(4, 4, 3)
-  let result = box_blur_16(img, 1)
+  let result = @filter.box_blur_16(img, 1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -126,7 +126,7 @@ test "box_blur_16: preserves dimensions" {
 ///|
 test "box_blur_16: uniform image is unchanged" {
   let img = make_uniform_image16(3, 3, 1, 1000)
-  let result = box_blur_16(img, 1)
+  let result = @filter.box_blur_16(img, 1)
   for i in 0..<9 {
     assert_eq(read_u16_le_ft(result.data, i * 2), 1000)
   }
@@ -137,7 +137,7 @@ test "box_blur_16: uniform image is unchanged" {
 ///|
 test "box_blur_f: radius=0 is identity" {
   let img = make_imagef_f(4, 4, 3)
-  let result = box_blur_f(img, 0)
+  let result = @filter.box_blur_f(img, 0)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -146,7 +146,7 @@ test "box_blur_f: radius=0 is identity" {
 ///|
 test "box_blur_f: preserves dimensions" {
   let img = make_imagef_f(4, 4, 3)
-  let result = box_blur_f(img, 1)
+  let result = @filter.box_blur_f(img, 1)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -157,7 +157,7 @@ test "box_blur_f: preserves dimensions" {
 ///|
 test "box_blur_f: uniform image is unchanged" {
   let img = make_uniform_imagef(3, 3, 1, 0.5F)
-  let result = box_blur_f(img, 1)
+  let result = @filter.box_blur_f(img, 1)
   for i in 0..<9 {
     let v = read_f32_le_ft(result.data, i * 4)
     assert_true(v > 0.49F && v < 0.51F)
@@ -169,7 +169,7 @@ test "box_blur_f: uniform image is unchanged" {
 ///|
 test "gaussian_blur_16: radius=0 is identity" {
   let img = make_image16_f(4, 4, 3)
-  let result = gaussian_blur_16(img, 0, 1.0F)
+  let result = @filter.gaussian_blur_16(img, 0, 1.0F)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -178,7 +178,7 @@ test "gaussian_blur_16: radius=0 is identity" {
 ///|
 test "gaussian_blur_16: preserves dimensions" {
   let img = make_image16_f(4, 4, 3)
-  let result = gaussian_blur_16(img, 2, 1.5F)
+  let result = @filter.gaussian_blur_16(img, 2, 1.5F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -189,7 +189,7 @@ test "gaussian_blur_16: preserves dimensions" {
 ///|
 test "gaussian_blur_16: uniform image is unchanged" {
   let img = make_uniform_image16(3, 3, 1, 500)
-  let result = gaussian_blur_16(img, 1, 1.0F)
+  let result = @filter.gaussian_blur_16(img, 1, 1.0F)
   for i in 0..<9 {
     assert_eq(read_u16_le_ft(result.data, i * 2), 500)
   }
@@ -200,7 +200,7 @@ test "gaussian_blur_16: uniform image is unchanged" {
 ///|
 test "gaussian_blur_f: radius=0 is identity" {
   let img = make_imagef_f(4, 4, 3)
-  let result = gaussian_blur_f(img, 0, 1.0F)
+  let result = @filter.gaussian_blur_f(img, 0, 1.0F)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -209,7 +209,7 @@ test "gaussian_blur_f: radius=0 is identity" {
 ///|
 test "gaussian_blur_f: preserves dimensions" {
   let img = make_imagef_f(4, 4, 3)
-  let result = gaussian_blur_f(img, 2, 1.5F)
+  let result = @filter.gaussian_blur_f(img, 2, 1.5F)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -220,7 +220,7 @@ test "gaussian_blur_f: preserves dimensions" {
 ///|
 test "gaussian_blur_f: uniform image is unchanged" {
   let img = make_uniform_imagef(3, 3, 1, 0.7F)
-  let result = gaussian_blur_f(img, 1, 1.0F)
+  let result = @filter.gaussian_blur_f(img, 1, 1.0F)
   for i in 0..<9 {
     let v = read_f32_le_ft(result.data, i * 4)
     assert_true(v > 0.69F && v < 0.71F)
@@ -232,7 +232,7 @@ test "gaussian_blur_f: uniform image is unchanged" {
 ///|
 test "median_blur_16: ksize<=1 is identity" {
   let img = make_image16_f(4, 4, 3)
-  let result = median_blur_16(img, 1)
+  let result = @filter.median_blur_16(img, 1)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -241,7 +241,7 @@ test "median_blur_16: ksize<=1 is identity" {
 ///|
 test "median_blur_16: preserves dimensions" {
   let img = make_image16_f(4, 4, 3)
-  let result = median_blur_16(img, 3)
+  let result = @filter.median_blur_16(img, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -252,7 +252,7 @@ test "median_blur_16: preserves dimensions" {
 ///|
 test "median_blur_16: uniform image is unchanged" {
   let img = make_uniform_image16(3, 3, 1, 2000)
-  let result = median_blur_16(img, 3)
+  let result = @filter.median_blur_16(img, 3)
   for i in 0..<9 {
     assert_eq(read_u16_le_ft(result.data, i * 2), 2000)
   }
@@ -263,7 +263,7 @@ test "median_blur_16: uniform image is unchanged" {
 ///|
 test "median_blur_f: ksize<=1 is identity" {
   let img = make_imagef_f(4, 4, 3)
-  let result = median_blur_f(img, 1)
+  let result = @filter.median_blur_f(img, 1)
   assert_eq(result.data, img.data)
   let _ = img
   let _ = result
@@ -272,7 +272,7 @@ test "median_blur_f: ksize<=1 is identity" {
 ///|
 test "median_blur_f: preserves dimensions" {
   let img = make_imagef_f(4, 4, 3)
-  let result = median_blur_f(img, 3)
+  let result = @filter.median_blur_f(img, 3)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -283,7 +283,7 @@ test "median_blur_f: preserves dimensions" {
 ///|
 test "median_blur_f: uniform image is unchanged" {
   let img = make_uniform_imagef(3, 3, 1, 0.3F)
-  let result = median_blur_f(img, 3)
+  let result = @filter.median_blur_f(img, 3)
   for i in 0..<9 {
     let v = read_f32_le_ft(result.data, i * 4)
     assert_true(v > 0.29F && v < 0.31F)
@@ -295,7 +295,7 @@ test "median_blur_f: uniform image is unchanged" {
 ///|
 test "sharpen_16: amount=0.0 is identity" {
   let img = make_image16_f(5, 5, 3)
-  let result = sharpen_16(img, 0.0F)
+  let result = @filter.sharpen_16(img, 0.0F)
   assert_eq(result, img)
   let _ = img
   let _ = result
@@ -304,7 +304,7 @@ test "sharpen_16: amount=0.0 is identity" {
 ///|
 test "sharpen_16: output preserves dimensions" {
   let img = make_image16_f(5, 5, 3)
-  let result = sharpen_16(img, 1.0F)
+  let result = @filter.sharpen_16(img, 1.0F)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 3)
@@ -315,7 +315,7 @@ test "sharpen_16: output preserves dimensions" {
 ///|
 test "sharpen_f: amount=0.0 is identity" {
   let img = make_imagef_f(5, 5, 3)
-  let result = sharpen_f(img, 0.0F)
+  let result = @filter.sharpen_f(img, 0.0F)
   // 浮点数精度：amount=0 时 center=1.0，近似恒等
   for i in 0..<(5 * 5 * 3) {
     let offset = i * 4
@@ -342,7 +342,7 @@ test "sharpen_f: amount=0.0 is identity" {
 ///|
 test "sharpen_f: output preserves dimensions" {
   let img = make_imagef_f(5, 5, 3)
-  let result = sharpen_f(img, 1.0F)
+  let result = @filter.sharpen_f(img, 1.0F)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 3)
@@ -356,7 +356,7 @@ test "sharpen_f: output preserves dimensions" {
 test "box_blur_16: zero width raises" {
   let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = box_blur_16(img, 3)
+    let _ = @filter.box_blur_16(img, 3)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -369,7 +369,7 @@ test "box_blur_16: zero width raises" {
 test "box_blur_16: invalid channels raises" {
   let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = box_blur_16(img, 3)
+    let _ = @filter.box_blur_16(img, 3)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -382,7 +382,7 @@ test "box_blur_16: invalid channels raises" {
 test "box_blur_f: zero width raises" {
   let img = @types.ImageF::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
-    let _ = box_blur_f(img, 3)
+    let _ = @filter.box_blur_f(img, 3)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -395,7 +395,7 @@ test "box_blur_f: zero width raises" {
 test "box_blur_f: invalid channels raises" {
   let img = @types.ImageF::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
-    let _ = box_blur_f(img, 3)
+    let _ = @filter.box_blur_f(img, 3)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

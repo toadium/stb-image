@@ -4,7 +4,7 @@
 ///|
 test "decode_apng_pure: too short raises" {
   try {
-    let _ = decode_apng_pure(b"\x89PNG\r\n\x1A\n\x00\x00\x00\x00")
+    let _ = @codec.decode_apng_pure(b"\x89PNG\r\n\x1A\n\x00\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -34,7 +34,7 @@ test "decode_apng_pure: no IHDR raises" {
     data.push(b)
   }
   try {
-    let _ = decode_apng_pure(Bytes::from_array(data))
+    let _ = @codec.decode_apng_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -51,7 +51,7 @@ test "decode_apng_pure: chunk data beyond file raises" {
      b'I', b'H', b'D', b'R',
   ]
   try {
-    let _ = decode_apng_pure(Bytes::from_array(out))
+    let _ = @codec.decode_apng_pure(Bytes::from_array(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -62,7 +62,7 @@ test "decode_apng_pure: chunk data beyond file raises" {
 ///|
 test "decode_apng_pure: invalid signature raises" {
   try {
-    let _ = decode_apng_pure(b"\x00\x00\x00\x00\x00\x00\x00\x00")
+    let _ = @codec.decode_apng_pure(b"\x00\x00\x00\x00\x00\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -74,7 +74,7 @@ test "decode_apng_pure: invalid signature raises" {
 test "encode_apng_pure: empty frames raises" {
   let anim = @types.PngAnimation::{ frames: [], delays: [], }
   try {
-    let _ = encode_apng_pure(anim)
+    let _ = @codec.encode_apng_pure(anim)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -115,7 +115,7 @@ test "decode_apng_pure: no IDAT chunk raises" {
     data.push(b)
   }
   try {
-    let _ = decode_apng_pure(Bytes::from_array(data))
+    let _ = @codec.decode_apng_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

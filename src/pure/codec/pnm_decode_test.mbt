@@ -28,7 +28,7 @@ test "decode_pnm_pure: P6 2x2 RGB basic" {
   out.push(b'\xFF')
   out.push(b'\xFF')
   out.push(b'\xFF')
-  let img = decode_pnm_pure(to_bytes(out))
+  let img = @codec.decode_pnm_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -47,7 +47,7 @@ test "decode_pnm_pure: P5 2x2 grayscale basic" {
   out.push(b'\x40')
   out.push(b'\x80')
   out.push(b'\xFF')
-  let img = decode_pnm_pure(to_bytes(out))
+  let img = @codec.decode_pnm_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 1)
@@ -75,7 +75,7 @@ test "decode_pnm_pure: comment line in header" {
   out.push(b'\xFF')
   out.push(b'\xFF')
   out.push(b'\xFF')
-  let img = decode_pnm_pure(to_bytes(out))
+  let img = @codec.decode_pnm_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -103,7 +103,7 @@ test "decode_pnm_pure: mixed whitespace separators" {
   out.push(b'\xA0')
   out.push(b'\xB0')
   out.push(b'\xC0')
-  let img = decode_pnm_pure(to_bytes(out))
+  let img = @codec.decode_pnm_pure(to_bytes(out))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -122,7 +122,7 @@ test "decode_pnm_pure: 1x1 minimal image" {
   out.push(b'\x42')
   out.push(b'\x84')
   out.push(b'\xC6')
-  let img = decode_pnm_pure(to_bytes(out))
+  let img = @codec.decode_pnm_pure(to_bytes(out))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -135,7 +135,7 @@ test "decode_pnm_pure: 1x1 minimal image" {
 test "decode_pnm_pure: too short raises" {
   let short = b"\x50\x36"
   try {
-    let _ = decode_pnm_pure(short)
+    let _ = @codec.decode_pnm_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -148,7 +148,7 @@ test "decode_pnm_pure: unsupported magic raises" {
   let out : Array[Byte] = []
   push_str(out, "P3\n2 2\n255\n")
   try {
-    let _ = decode_pnm_pure(to_bytes(out))
+    let _ = @codec.decode_pnm_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -161,7 +161,7 @@ test "decode_pnm_pure: unsupported maxval raises" {
   let out : Array[Byte] = []
   push_str(out, "P6\n2 2\n65535\n")
   try {
-    let _ = decode_pnm_pure(to_bytes(out))
+    let _ = @codec.decode_pnm_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -174,7 +174,7 @@ test "decode_pnm_pure: invalid dimensions raises" {
   let out : Array[Byte] = []
   push_str(out, "P6\n0 0\n255\n")
   try {
-    let _ = decode_pnm_pure(to_bytes(out))
+    let _ = @codec.decode_pnm_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -190,7 +190,7 @@ test "decode_pnm_pure: truncated pixel data raises" {
   out.push(b'\xFF')
   out.push(b'\x00')
   try {
-    let _ = decode_pnm_pure(to_bytes(out))
+    let _ = @codec.decode_pnm_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

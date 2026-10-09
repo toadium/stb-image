@@ -38,7 +38,7 @@ fn make_imgf_freq(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "fft_2d_16: basic transform" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let results = fft_2d_16(img)
+  let results = @frequency.fft_2d_16(img)
   assert_eq(results.length(), 1)
   assert_true(results[0].width >= 4)
   assert_true(results[0].height >= 4)
@@ -49,7 +49,7 @@ test "fft_2d_16: basic transform" {
 ///|
 test "fft_2d_f: basic transform" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let results = fft_2d_f(img)
+  let results = @frequency.fft_2d_f(img)
   assert_eq(results.length(), 1)
   assert_true(results[0].width >= 4)
   assert_true(results[0].height >= 4)
@@ -66,7 +66,7 @@ test "fft_2d_16: rejects invalid channels" {
     data: Array::make(8, b'\x00') |> Bytes::from_array,
   }
   try {
-    let _ = fft_2d_16(img)
+    let _ = @frequency.fft_2d_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -78,8 +78,8 @@ test "fft_2d_16: rejects invalid channels" {
 ///|
 test "ifft_2d_16: roundtrip" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let results = fft_2d_16(img)
-  let reconstructed = ifft_2d_16(results[0])
+  let results = @frequency.fft_2d_16(img)
+  let reconstructed = @frequency.ifft_2d_16(results[0])
   assert_eq(reconstructed.width, results[0].width)
   assert_eq(reconstructed.height, results[0].height)
   assert_eq(reconstructed.channels, 1)
@@ -91,8 +91,8 @@ test "ifft_2d_16: roundtrip" {
 ///|
 test "ifft_2d_f: roundtrip" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let results = fft_2d_f(img)
-  let reconstructed = ifft_2d_f(results[0])
+  let results = @frequency.fft_2d_f(img)
+  let reconstructed = @frequency.ifft_2d_f(results[0])
   assert_eq(reconstructed.width, results[0].width)
   assert_eq(reconstructed.height, results[0].height)
   assert_eq(reconstructed.channels, 1)
@@ -104,8 +104,8 @@ test "ifft_2d_f: roundtrip" {
 ///|
 test "fft_magnitude_16: output range" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let results = fft_2d_16(img)
-  let mag = fft_magnitude_16(results[0], true)
+  let results = @frequency.fft_2d_16(img)
+  let mag = @frequency.fft_magnitude_16(results[0], true)
   assert_eq(mag.channels, 1)
   assert_true(mag.width >= 4)
   let _ = img
@@ -116,8 +116,8 @@ test "fft_magnitude_16: output range" {
 ///|
 test "fft_magnitude_f: output range" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let results = fft_2d_f(img)
-  let mag = fft_magnitude_f(results[0], true)
+  let results = @frequency.fft_2d_f(img)
+  let mag = @frequency.fft_magnitude_f(results[0], true)
   assert_eq(mag.channels, 1)
   assert_true(mag.width >= 4)
   let _ = img
@@ -130,7 +130,7 @@ test "fft_magnitude_f: output range" {
 ///|
 test "dct_2d_16: basic transform" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let coeffs = dct_2d_16(img)
+  let coeffs = @frequency.dct_2d_16(img)
   assert_eq(coeffs.length(), 4)
   assert_eq(coeffs[0].length(), 4)
   let _ = img
@@ -140,7 +140,7 @@ test "dct_2d_16: basic transform" {
 ///|
 test "dct_2d_f: basic transform" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let coeffs = dct_2d_f(img)
+  let coeffs = @frequency.dct_2d_f(img)
   assert_eq(coeffs.length(), 4)
   assert_eq(coeffs[0].length(), 4)
   let _ = img
@@ -150,8 +150,8 @@ test "dct_2d_f: basic transform" {
 ///|
 test "idct_2d_16: roundtrip" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let coeffs = dct_2d_16(img)
-  let reconstructed = idct_2d_16(coeffs)
+  let coeffs = @frequency.dct_2d_16(img)
+  let reconstructed = @frequency.idct_2d_16(coeffs)
   assert_eq(reconstructed.width, 4)
   assert_eq(reconstructed.height, 4)
   assert_eq(reconstructed.channels, 1)
@@ -163,8 +163,8 @@ test "idct_2d_16: roundtrip" {
 ///|
 test "idct_2d_f: roundtrip" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let coeffs = dct_2d_f(img)
-  let reconstructed = idct_2d_f(coeffs)
+  let coeffs = @frequency.dct_2d_f(img)
+  let reconstructed = @frequency.idct_2d_f(coeffs)
   assert_eq(reconstructed.width, 4)
   assert_eq(reconstructed.height, 4)
   assert_eq(reconstructed.channels, 1)
@@ -178,7 +178,7 @@ test "idct_2d_f: roundtrip" {
 ///|
 test "haar_transform_2d_16: basic transform" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let result = haar_transform_2d_16(img)
+  let result = @frequency.haar_transform_2d_16(img)
   assert_true(result.width >= 4)
   assert_true(result.height >= 4)
   let _ = img
@@ -188,7 +188,7 @@ test "haar_transform_2d_16: basic transform" {
 ///|
 test "haar_transform_2d_f: basic transform" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let result = haar_transform_2d_f(img)
+  let result = @frequency.haar_transform_2d_f(img)
   assert_true(result.width >= 4)
   assert_true(result.height >= 4)
   let _ = img
@@ -198,8 +198,8 @@ test "haar_transform_2d_f: basic transform" {
 ///|
 test "haar_inverse_transform_2d_16: roundtrip" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let result = haar_transform_2d_16(img)
-  let reconstructed = haar_inverse_transform_2d_16(result)
+  let result = @frequency.haar_transform_2d_16(img)
+  let reconstructed = @frequency.haar_inverse_transform_2d_16(result)
   assert_eq(reconstructed.channels, 1)
   let _ = img
   let _ = result
@@ -209,8 +209,8 @@ test "haar_inverse_transform_2d_16: roundtrip" {
 ///|
 test "haar_inverse_transform_2d_f: roundtrip" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let result = haar_transform_2d_f(img)
-  let reconstructed = haar_inverse_transform_2d_f(result)
+  let result = @frequency.haar_transform_2d_f(img)
+  let reconstructed = @frequency.haar_inverse_transform_2d_f(result)
   assert_eq(reconstructed.channels, 1)
   let _ = img
   let _ = result
@@ -220,7 +220,7 @@ test "haar_inverse_transform_2d_f: roundtrip" {
 ///|
 test "haar_denoise_16: basic denoise" {
   let img = make_img16_freq(4, 4, 1, 30000)
-  let result = haar_denoise_16(img)
+  let result = @frequency.haar_denoise_16(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)
@@ -231,7 +231,7 @@ test "haar_denoise_16: basic denoise" {
 ///|
 test "haar_denoise_f: basic denoise" {
   let img = make_imgf_freq(4, 4, 1, 0.5F)
-  let result = haar_denoise_f(img)
+  let result = @frequency.haar_denoise_f(img)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 1)

@@ -38,7 +38,7 @@ fn make_imgf_feat_adv(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF 
 ///|
 test "harris_corners_16: basic" {
   let img = make_img16_feat_adv(32, 32, 1, 30000)
-  let result = harris_corners_16(img)
+  let result = @feature.harris_corners_16(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -47,7 +47,7 @@ test "harris_corners_16: basic" {
 ///|
 test "harris_corners_f: basic" {
   let img = make_imgf_feat_adv(32, 32, 1, 0.5F)
-  let result = harris_corners_f(img)
+  let result = @feature.harris_corners_f(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -56,7 +56,7 @@ test "harris_corners_f: basic" {
 ///|
 test "harris_corners_16: RGB input" {
   let img = make_img16_feat_adv(32, 32, 3, 30000)
-  let result = harris_corners_16(img)
+  let result = @feature.harris_corners_16(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -67,7 +67,7 @@ test "harris_corners_16: RGB input" {
 ///|
 test "sift_detect_16: basic" {
   let img = make_img16_feat_adv(32, 32, 1, 30000)
-  let result = sift_detect_16(img)
+  let result = @feature.sift_detect_16(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -76,7 +76,7 @@ test "sift_detect_16: basic" {
 ///|
 test "sift_detect_f: basic" {
   let img = make_imgf_feat_adv(32, 32, 1, 0.5F)
-  let result = sift_detect_f(img)
+  let result = @feature.sift_detect_f(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -87,7 +87,7 @@ test "sift_detect_f: basic" {
 ///|
 test "orb_detect_16: basic" {
   let img = make_img16_feat_adv(32, 32, 1, 30000)
-  let result = orb_detect_16(img)
+  let result = @feature.orb_detect_16(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -96,7 +96,7 @@ test "orb_detect_16: basic" {
 ///|
 test "orb_detect_f: basic" {
   let img = make_imgf_feat_adv(32, 32, 1, 0.5F)
-  let result = orb_detect_f(img)
+  let result = @feature.orb_detect_f(img)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -107,7 +107,7 @@ test "orb_detect_f: basic" {
 ///|
 test "good_features_to_track_16: basic" {
   let img = make_img16_feat_adv(32, 32, 1, 30000)
-  let result = good_features_to_track_16(img, 50, 0.01F)
+  let result = @feature.good_features_to_track_16(img, 50, 0.01F)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -116,7 +116,7 @@ test "good_features_to_track_16: basic" {
 ///|
 test "good_features_to_track_f: basic" {
   let img = make_imgf_feat_adv(32, 32, 1, 0.5F)
-  let result = good_features_to_track_f(img, 50, 0.01F)
+  let result = @feature.good_features_to_track_f(img, 50, 0.01F)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result
@@ -125,7 +125,7 @@ test "good_features_to_track_f: basic" {
 ///|
 test "good_features_to_track_16: RGB input" {
   let img = make_img16_feat_adv(32, 32, 3, 30000)
-  let result = good_features_to_track_16(img, 50, 0.01F)
+  let result = @feature.good_features_to_track_16(img, 50, 0.01F)
   assert_eq(result.length() >= 0, true)
   let _ = img
   let _ = result

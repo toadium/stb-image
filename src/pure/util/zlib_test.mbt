@@ -3,7 +3,7 @@
 
 ///|
 test "zlib: crc32 empty" {
-  assert_eq(crc32(b""), 0)
+  assert_eq(@util.crc32(b""), 0)
 }
 
 ///|
@@ -11,9 +11,9 @@ test "zlib: crc32 consistency" {
   // CRC32 相同输入产生相同输出，不同输入产生不同输出
   let data1 = b"\x31\x32\x33\x34\x35\x36\x37\x38\x39"
   let data2 = b"\x61\x62\x63"
-  let h1 = crc32(data1)
-  let h2 = crc32(data2)
-  let h1_again = crc32(data1)
+  let h1 = @util.crc32(data1)
+  let h2 = @util.crc32(data2)
+  let h1_again = @util.crc32(data1)
   assert_eq(h1, h1_again)
   assert_not_eq(h1, h2)
   assert_not_eq(h1, 0)
@@ -24,28 +24,28 @@ test "zlib: crc32 consistency" {
 test "zlib: crc32 single byte" {
   let data = b"\x61"
   // 验证非零且确定性
-  let h = crc32(data)
+  let h = @util.crc32(data)
   assert_not_eq(h, 0)
-  assert_eq(h, crc32(data))
+  assert_eq(h, @util.crc32(data))
 }
 
 ///|
 test "zlib: adler32 empty" {
-  assert_eq(adler32(b""), 1)
+  assert_eq(@util.adler32(b""), 1)
 }
 
 ///|
 test "zlib: adler32 single byte" {
   // Adler32("a"): a=98, b=98, (b<<16)|a = 0x00620062
   let data = b"\x61"
-  assert_eq(adler32(data), 0x00620062)
+  assert_eq(@util.adler32(data), 0x00620062)
 }
 
 ///|
 test "zlib: adler32 known vector" {
   // Adler32("Wikipedia") = 0x11E60398
   let data = b"\x57\x69\x6B\x69\x70\x65\x64\x69\x61"
-  assert_eq(adler32(data), 0x11E60398)
+  assert_eq(@util.adler32(data), 0x11E60398)
 }
 
 ///|
@@ -58,7 +58,7 @@ test "zlib: zlib_inflate stored block empty" {
   // stored block: bfinal=1, btype=00 → byte = 0x01 (bit0=1, bit1-2=0)
   // LEN = 0, NLEN = 0xFFFF
   let data = b"\x78\x01\x01\x00\x00\xFF\xFF"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 0)
 }
 
@@ -69,7 +69,7 @@ test "zlib: zlib_inflate stored block with data" {
   // LEN=3, NLEN=0xFFFC
   // data: 0x41 0x42 0x43 ("ABC")
   let data = b"\x78\x01\x01\x03\x00\xFC\xFF\x41\x42\x43"
-  let result = zlib_inflate(data)
+  let result = @util.zlib_inflate(data)
   assert_eq(result.length(), 3)
   assert_eq(result[0].to_int(), 0x41)
   assert_eq(result[1].to_int(), 0x42)
@@ -80,7 +80,7 @@ test "zlib: zlib_inflate stored block with data" {
 test "zlib: zlib_inflate too short raises" {
   let data = b"\x00"
   try {
-    let _ = zlib_inflate(data)
+    let _ = @util.zlib_inflate(data)
     fail("expected error")
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -117,7 +117,7 @@ test "zlib: zlib_inflate stored block out of bounds raises" {
   // bfinal=1, btype=0, LEN=0xFF, NLEN=0x00
   let bad = b"\x78\x01\x01\xFF\x00\x00\x00"
   try {
-    let _ = zlib_inflate(bad)
+    let _ = @util.zlib_inflate(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -131,7 +131,7 @@ test "zlib: zlib_inflate stored block data too short raises" {
   // 检查 pos + 4 > len → 3 + 4 = 7 > 6 → 触发 "DEFLATE stored block 数据过短"
   let bad = b"\x78\x01\x01\x00\x00\x00"
   try {
-    let _ = zlib_inflate(bad)
+    let _ = @util.zlib_inflate(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

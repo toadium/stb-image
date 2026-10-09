@@ -5,7 +5,7 @@
 test "decode_png_16_pure: invalid signature raises" {
   let bad = b"\x00\x00\x00\x00\x00\x00\x00\x00"
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -17,7 +17,7 @@ test "decode_png_16_pure: invalid signature raises" {
 test "decode_png_16_pure: too short raises" {
   let bad = b"\x89PNG\r\n\x1A\n"
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -32,7 +32,7 @@ test "decode_png_16_pure: truncated chunk header raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -53,7 +53,7 @@ test "decode_png_16_pure: req_channels out of range raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad, req_channels=Some(5))
+    let _ = @codec.decode_png_16_pure(bad, req_channels=Some(5))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -70,7 +70,7 @@ test "decode_png_16_pure: no IHDR raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -87,7 +87,7 @@ test "decode_png_16_pure: chunk data beyond file raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -108,7 +108,7 @@ test "decode_png_16_pure: interlace not supported raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -129,7 +129,7 @@ test "decode_png_16_pure: invalid color type raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -151,7 +151,7 @@ test "decode_png_16_pure: IHDR too short raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -172,7 +172,7 @@ test "decode_png_16_pure: width zero raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -194,7 +194,7 @@ test "decode_png_16_pure: invalid bit depth raises" {
   ]
   let bad = Bytes::from_array(out)
   try {
-    let _ = decode_png_16_pure(bad)
+    let _ = @codec.decode_png_16_pure(bad)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

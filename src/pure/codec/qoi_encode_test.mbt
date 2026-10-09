@@ -69,7 +69,7 @@ test "encode_qoi_pure: RGB header and padding" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // header magic "qoif"
   assert_eq(out[0].to_int(), 0x71)
   assert_eq(out[1].to_int(), 0x6F)
@@ -111,7 +111,7 @@ test "encode_qoi_pure: RGBA with QOI_OP_RGBA tag" {
     (70, 80, 90, 100),
     (110, 120, 130, 50),
   ])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // header channels = 4
   assert_eq(out[12].to_int(), 4)
   // 验证含 QOI_OP_RGBA 标签 0xFF
@@ -124,7 +124,7 @@ test "encode_qoi_pure: run-length encoding" {
   // 4x1 RGB，4 像素均为 (0,0,0)，与 prev 初始值 (0,0,0,255) 相同
   // 4 像素全触发 RUN，输出 1 个 RUN 标签 0xC3 (0xC0|(4-1))
   let img = qe_make_rgb_image(4, 1, [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // 验证含 RUN 标签 0xC3
   assert_true(qe_has_byte(out, 0xC3))
   let _ = img
@@ -140,7 +140,7 @@ test "encode_qoi_pure: index encoding" {
     (10, 20, 30),
     (10, 20, 30),
   ])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // 验证含 INDEX 标签（0x00-0x3F 范围，像素编码区域）
   assert_true(qe_has_byte_in_range(out, 0x00, 0x3F))
   let _ = img
@@ -156,7 +156,7 @@ test "encode_qoi_pure: DIFF tag encoding" {
     (12, 22, 32),
     (13, 23, 33),
   ])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // 验证含 DIFF 标签（0x40-0x7F 范围）
   assert_true(qe_has_byte_in_range(out, 0x40, 0x7F))
   let _ = img
@@ -172,7 +172,7 @@ test "encode_qoi_pure: LUMA tag encoding" {
     (100, 100, 100),
     (105, 110, 105),
   ])
-  let out = encode_qoi_pure(img)
+  let out = @codec.encode_qoi_pure(img)
   // 验证含 LUMA 标签（0x80-0xBF 范围）
   assert_true(qe_has_byte_in_range(out, 0x80, 0xBF))
   let _ = img
@@ -187,7 +187,7 @@ test "encode_qoi_pure: invalid channels raises" {
     data: [b'\x00', b'\x00'] |> Bytes::from_array,
   }
   try {
-    let _ = encode_qoi_pure(img)
+    let _ = @codec.encode_qoi_pure(img)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)

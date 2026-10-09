@@ -33,7 +33,7 @@ fn je_make_gray_image(
 ///|
 test "encode_jpeg_pure: SOI and EOI markers" {
   let img = je_make_rgb_image(1, 1, [(128, 128, 128)])
-  let out = encode_jpeg_pure(img)
+  let out = @codec.encode_jpeg_pure(img)
   // SOI
   assert_eq(out[0].to_int(), 0xFF)
   assert_eq(out[1].to_int(), 0xD8)
@@ -46,7 +46,7 @@ test "encode_jpeg_pure: SOI and EOI markers" {
 ///|
 test "encode_jpeg_pure: DQT marker" {
   let img = je_make_rgb_image(1, 1, [(0, 0, 0)])
-  let out = encode_jpeg_pure(img)
+  let out = @codec.encode_jpeg_pure(img)
   // SOI(2) then DQT: FF DB
   assert_eq(out[2].to_int(), 0xFF)
   assert_eq(out[3].to_int(), 0xDB)
@@ -58,7 +58,7 @@ test "encode_jpeg_pure: DQT marker" {
 ///|
 test "encode_jpeg_pure: SOF0 marker" {
   let img = je_make_rgb_image(16, 16, Array::make(256, (128, 128, 128)))
-  let out = encode_jpeg_pure(img)
+  let out = @codec.encode_jpeg_pure(img)
   // 找到 SOF0 marker (FF C0)
   let mut found = false
   for i in 0..<(out.length() - 1) {
@@ -83,7 +83,7 @@ test "encode_jpeg_pure: SOF0 marker" {
 ///|
 test "encode_jpeg_pure: DHT marker" {
   let img = je_make_rgb_image(1, 1, [(255, 255, 255)])
-  let out = encode_jpeg_pure(img)
+  let out = @codec.encode_jpeg_pure(img)
   // 找到 DHT marker (FF C4)
   let mut found = false
   for i in 0..<(out.length() - 1) {
@@ -98,7 +98,7 @@ test "encode_jpeg_pure: DHT marker" {
 ///|
 test "encode_jpeg_pure: SOS marker" {
   let img = je_make_rgb_image(2, 2, Array::make(4, (100, 100, 100)))
-  let out = encode_jpeg_pure(img)
+  let out = @codec.encode_jpeg_pure(img)
   // 找到 SOS marker (FF DA)
   let mut found = false
   for i in 0..<(out.length() - 1) {
@@ -119,7 +119,7 @@ test "encode_jpeg_pure: invalid dimensions raises" {
     data: Bytes::from_array([]),
   }
   try {
-    let _ = encode_jpeg_pure(img)
+    let _ = @codec.encode_jpeg_pure(img)
     fail("expected error")
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -136,7 +136,7 @@ test "encode_jpeg_pure: invalid dimensions raises (negative)" {
     data: Bytes::from_array([]),
   }
   try {
-    let _ = encode_jpeg_pure(img)
+    let _ = @codec.encode_jpeg_pure(img)
     fail("expected error")
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -147,8 +147,8 @@ test "encode_jpeg_pure: invalid dimensions raises (negative)" {
 ///|
 test "encode_jpeg_pure: 1x1 RGB roundtrip" {
   let img = je_make_rgb_image(1, 1, [(128, 128, 128)])
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 1)
   assert_eq(restored.height, 1)
   assert_eq(restored.channels, 3)
@@ -159,8 +159,8 @@ test "encode_jpeg_pure: 8x8 RGB roundtrip" {
   // 8x8 灰色图像
   let pixels = Array::make(64, (128, 128, 128))
   let img = je_make_rgb_image(8, 8, pixels)
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 8)
   assert_eq(restored.height, 8)
   assert_eq(restored.channels, 3)
@@ -181,8 +181,8 @@ test "encode_jpeg_pure: 16x16 RGB roundtrip" {
     }
   }
   let img = je_make_rgb_image(16, 16, pixels)
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 16)
   assert_eq(restored.height, 16)
   assert_eq(restored.channels, 3)
@@ -193,8 +193,8 @@ test "encode_jpeg_pure: grayscale input roundtrip" {
   // channels=1 灰度输入，encode 时按 r=g=b 处理
   let pixels = [64, 128, 192, 255]
   let img = je_make_gray_image(2, 2, pixels)
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 3)
@@ -208,8 +208,8 @@ test "encode_jpeg_pure: 2x2 RGB roundtrip" {
     (0, 0, 255),
     (255, 255, 255),
   ])
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 2)
   assert_eq(restored.height, 2)
   assert_eq(restored.channels, 3)
@@ -219,8 +219,8 @@ test "encode_jpeg_pure: 2x2 RGB roundtrip" {
 test "encode_jpeg_pure: all-black image" {
   let pixels = Array::make(16, (0, 0, 0))
   let img = je_make_rgb_image(4, 4, pixels)
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
   // 全黑图像解码后应接近 0
@@ -233,8 +233,8 @@ test "encode_jpeg_pure: all-black image" {
 test "encode_jpeg_pure: all-white image" {
   let pixels = Array::make(16, (255, 255, 255))
   let img = je_make_rgb_image(4, 4, pixels)
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 4)
   assert_eq(restored.height, 4)
   // 全白图像解码后应接近 255
@@ -247,8 +247,8 @@ test "encode_jpeg_pure: all-white image" {
 test "encode_jpeg_pure: non-multiple-of-8 dimensions" {
   // 5x5 图像（非 8 的倍数，测试边界填充）
   let img = je_make_rgb_image(5, 5, Array::make(25, (100, 150, 200)))
-  let jpeg_bytes = encode_jpeg_pure(img)
-  let restored = decode_jpeg_pure(jpeg_bytes)
+  let jpeg_bytes = @codec.encode_jpeg_pure(img)
+  let restored = @codec.decode_jpeg_pure(jpeg_bytes)
   assert_eq(restored.width, 5)
   assert_eq(restored.height, 5)
   assert_eq(restored.channels, 3)

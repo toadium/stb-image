@@ -24,8 +24,8 @@ fn make_2x2_green_image() -> @types.Image {
 test "encode_apng_pure / decode_apng_pure: 单帧 APNG" {
   let img = make_2x2_red_image()
   let anim = @types.PngAnimation::{ frames: [img], delays: [100], }
-  let apng = encode_apng_pure(anim)
-  let decoded = decode_apng_pure(apng)
+  let apng = @codec.encode_apng_pure(anim)
+  let decoded = @codec.decode_apng_pure(apng)
   assert_eq(decoded.frames.length(), 1)
   assert_eq(decoded.delays.length(), 1)
   assert_eq(decoded.delays[0], 100)
@@ -43,8 +43,8 @@ test "encode_apng_pure / decode_apng_pure: 双帧 APNG" {
   let img1 = make_2x2_red_image()
   let img2 = make_2x2_green_image()
   let anim = @types.PngAnimation::{ frames: [img1, img2], delays: [100, 200], }
-  let apng = encode_apng_pure(anim)
-  let decoded = decode_apng_pure(apng)
+  let apng = @codec.encode_apng_pure(anim)
+  let decoded = @codec.decode_apng_pure(apng)
   assert_eq(decoded.frames.length(), 2)
   assert_eq(decoded.delays.length(), 2)
   assert_eq(decoded.delays[0], 100)
@@ -64,8 +64,8 @@ test "encode_apng_pure / decode_apng_pure: 双帧 APNG" {
 ///|
 test "decode_apng_pure: 普通 PNG 当作单帧 APNG" {
   let img = make_2x2_red_image()
-  let png = encode_png_pure(img)
-  let decoded = decode_apng_pure(png)
+  let png = @codec.encode_png_pure(img)
+  let decoded = @codec.decode_apng_pure(png)
   assert_eq(decoded.frames.length(), 1)
   assert_eq(decoded.delays.length(), 1)
   assert_eq(decoded.delays[0], 0)
@@ -77,7 +77,7 @@ test "decode_apng_pure: 普通 PNG 当作单帧 APNG" {
 test "encode_apng_pure: 空帧报错" {
   let anim = @types.PngAnimation::{ frames: [], delays: [], }
   try {
-    let _ = encode_apng_pure(anim)
+    let _ = @codec.encode_apng_pure(anim)
     assert_true(false)
   } catch {
     @types.LoadError::EncodeFailed(_) => assert_true(true)
@@ -106,8 +106,8 @@ test "encode_apng_pure / decode_apng_pure: 三帧不同颜色" {
     data: b"\x00\x00\xFF",
   }
   let anim = @types.PngAnimation::{ frames: [r, g, b], delays: [50, 50, 50], }
-  let apng = encode_apng_pure(anim)
-  let decoded = decode_apng_pure(apng)
+  let apng = @codec.encode_apng_pure(anim)
+  let decoded = @codec.decode_apng_pure(apng)
   assert_eq(decoded.frames.length(), 3)
   assert_eq(decoded.frames[0].data[0].to_int(), 255)
   assert_eq(decoded.frames[1].data[1].to_int(), 255)
@@ -117,7 +117,7 @@ test "encode_apng_pure / decode_apng_pure: 三帧不同颜色" {
 ///|
 test "decode_apng_pure: too short raises" {
   try {
-    let _ = decode_apng_pure(b"\x89PNG\r\n\x1A\n\x00\x00\x00\x00")
+    let _ = @codec.decode_apng_pure(b"\x89PNG\r\n\x1A\n\x00\x00\x00\x00")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -147,7 +147,7 @@ test "decode_apng_pure: no IHDR raises" {
     data.push(b)
   }
   try {
-    let _ = decode_apng_pure(Bytes::from_array(data))
+    let _ = @codec.decode_apng_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

@@ -38,7 +38,7 @@ fn make_imgf_dh(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "dehaze_16: basic dehaze" {
   let img = make_img16_dh(8, 8, 3, 30000)
-  let result = dehaze_16(img)
+  let result = @color.dehaze_16(img)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -49,7 +49,7 @@ test "dehaze_16: basic dehaze" {
 ///|
 test "dehaze_f: basic dehaze" {
   let img = make_imgf_dh(8, 8, 3, 0.5F)
-  let result = dehaze_f(img)
+  let result = @color.dehaze_f(img)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
   assert_eq(result.channels, 3)
@@ -60,7 +60,7 @@ test "dehaze_f: basic dehaze" {
 ///|
 test "dehaze_16: RGBA input" {
   let img = make_img16_dh(8, 8, 4, 30000)
-  let result = dehaze_16(img)
+  let result = @color.dehaze_16(img)
   assert_eq(result.channels, 4)
   let _ = img
   let _ = result
@@ -70,7 +70,7 @@ test "dehaze_16: RGBA input" {
 test "dehaze_16: rejects grayscale" {
   let img = make_img16_dh(8, 8, 1, 30000)
   try {
-    let _ = dehaze_16(img)
+    let _ = @color.dehaze_16(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -85,7 +85,7 @@ test "dehaze_16: rejects grayscale" {
 test "guided_filter_16: basic filter" {
   let img = make_img16_dh(8, 8, 1, 30000)
   let input : Array[Float] = Array::make(64, 0.5F)
-  let result = guided_filter_16(img, input)
+  let result = @color.guided_filter_16(img, input)
   assert_eq(result.length(), 64)
   let _ = img
   let _ = input
@@ -96,7 +96,7 @@ test "guided_filter_16: basic filter" {
 test "guided_filter_f: basic filter" {
   let img = make_imgf_dh(8, 8, 1, 0.5F)
   let input : Array[Float] = Array::make(64, 0.5F)
-  let result = guided_filter_f(img, input)
+  let result = @color.guided_filter_f(img, input)
   assert_eq(result.length(), 64)
   let _ = img
   let _ = input
@@ -107,7 +107,7 @@ test "guided_filter_f: basic filter" {
 test "guided_filter_16: RGB input" {
   let img = make_img16_dh(8, 8, 3, 30000)
   let input : Array[Float] = Array::make(64, 0.5F)
-  let result = guided_filter_16(img, input)
+  let result = @color.guided_filter_16(img, input)
   assert_eq(result.length(), 64)
   let _ = img
   let _ = input

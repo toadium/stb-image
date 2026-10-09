@@ -4,7 +4,7 @@
 ///|
 test "decode_gif_animation_pure: truncated header raises" {
   try {
-    let _ = decode_gif_animation_pure(b"GIF89")
+    let _ = @codec.decode_gif_animation_pure(b"GIF89")
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -19,7 +19,7 @@ test "decode_gif_animation_pure: truncated logical screen raises" {
     b'G', b'I', b'F', b'8', b'9', b'a', 0x10, 0x00, 0x10, 0x00, 0x00, // truncated (need 7 bytes)
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -36,7 +36,7 @@ test "decode_gif_animation_pure: truncated color table raises" {
      0x3B, // trailer
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -55,7 +55,7 @@ test "decode_gif_animation_pure: truncated image descriptor raises" {
      0x00, // truncated
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -75,7 +75,7 @@ test "decode_gif_animation_pure: invalid LZW min code size raises" {
      0x03, 0x43, 0x00, 0x3B, // LZW data + trailer
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -94,7 +94,7 @@ test "decode_gif_animation_pure: no color table raises" {
      0x03, 0x43, 0x00, 0x3B, // LZW data + trailer
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -115,7 +115,7 @@ test "decode_gif_animation_pure: truncated sub-block raises" {
      0x05, 0x01, 0x02, 0x03, 0x04, // sub-block with length 5 but only 4 bytes
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -138,7 +138,7 @@ test "decode_gif_animation_pure: unknown block type raises" {
      0x00, // empty sub-block
   ]
   try {
-    let _ = decode_gif_animation_pure(Bytes::from_array(data))
+    let _ = @codec.decode_gif_animation_pure(Bytes::from_array(data))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

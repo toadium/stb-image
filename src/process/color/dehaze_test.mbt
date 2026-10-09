@@ -15,7 +15,7 @@ test "dehaze 基本功能" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let out = dehaze(img, patch_size=1, omega=0.95F, t0=0.1F)
+  let out = @color.dehaze(img, patch_size=1, omega=0.95F, t0=0.1F)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
   assert_eq(out.channels, 3)
@@ -36,7 +36,7 @@ test "dehaze RGBA alpha 不变" {
     channels: 4,
     data: Bytes::from_array(data),
   }
-  let out = dehaze(img, patch_size=1)
+  let out = @color.dehaze(img, patch_size=1)
   for i in 0..<25 {
     assert_eq(out.data[i * 4 + 3], b'\xFF')
   }
@@ -51,7 +51,7 @@ test "dehaze 错误参数" {
     data: Bytes::from_array([b'\x00']),
   }
   try {
-    let _ = dehaze(img)
+    let _ = @color.dehaze(img)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -63,19 +63,19 @@ test "dehaze 错误参数" {
     data: Bytes::from_array([b'\x00', b'\x00', b'\x00']),
   }
   try {
-    let _ = dehaze(img2, patch_size=0)
+    let _ = @color.dehaze(img2, patch_size=0)
     assert_true(false)
   } catch {
     _ => assert_true(true)
   }
   try {
-    let _ = dehaze(img2, omega=0.0F)
+    let _ = @color.dehaze(img2, omega=0.0F)
     assert_true(false)
   } catch {
     _ => assert_true(true)
   }
   try {
-    let _ = dehaze(img2, t0=0.0F)
+    let _ = @color.dehaze(img2, t0=0.0F)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -91,7 +91,7 @@ test "dehaze 彩色图" {
     b'\x60', b'\x80', b'\xA0', b'\x70', b'\x90', b'\xB0', b'\x80', b'\xA0', b'\xC0',
   ])
   let img = @types.Image::{ width: 3, height: 3, channels: 3, data, }
-  let out = dehaze(img, patch_size=1)
+  let out = @color.dehaze(img, patch_size=1)
   assert_eq(out.width, 3)
   assert_eq(out.height, 3)
   // 所有像素应在 [0, 255] 范围
@@ -106,7 +106,7 @@ test "guided_filter 基本功能" {
   let data = Bytes::from_array(Array::make(9, b'\x80'))
   let img = @types.Image::{ width: 3, height: 3, channels: 1, data, }
   let input = Array::make(9, 0.5F)
-  let out = guided_filter(img, input, radius=1, eps=0.001F)
+  let out = @color.guided_filter(img, input, radius=1, eps=0.001F)
   assert_eq(out.length(), 9)
   for i in 0..<9 {
     assert_true(out[i] >= 0.0F && out[i] <= 1.0F)
@@ -122,7 +122,7 @@ test "guided_filter 错误参数" {
     data: Bytes::from_array([b'\x00']),
   }
   try {
-    let _ = guided_filter(img, [], radius=1)
+    let _ = @color.guided_filter(img, [], radius=1)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -134,7 +134,7 @@ test "guided_filter 错误参数" {
 ///|
 test "dehaze: empty image returns self" {
   let img = @types.Image::{ width: 0, height: 0, channels: 3, data: b"", }
-  let out = dehaze(img)
+  let out = @color.dehaze(img)
   assert_eq(out.width, 0)
   assert_eq(out.height, 0)
 }
@@ -148,7 +148,7 @@ test "dehaze: invalid channels raises" {
     data: Bytes::from_array([b'\x80', b'\x80']),
   }
   try {
-    let _ = dehaze(img)
+    let _ = @color.dehaze(img)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -166,7 +166,7 @@ test "dehaze: transmission clamped to t0" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let out = dehaze(img, patch_size=1, omega=0.95F, t0=0.5F)
+  let out = @color.dehaze(img, patch_size=1, omega=0.95F, t0=0.5F)
   assert_eq(out.width, 5)
   assert_eq(out.height, 5)
   for i in 0..<75 {
@@ -184,7 +184,7 @@ test "guided_filter: invalid channels raises" {
     data: Bytes::from_array([b'\x80', b'\x80']),
   }
   try {
-    let _ = guided_filter(img, [0.5F], radius=1)
+    let _ = @color.guided_filter(img, [0.5F], radius=1)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -199,7 +199,7 @@ test "guided_filter: RGB guide computation" {
   ])
   let img = @types.Image::{ width: 3, height: 1, channels: 3, data, }
   let input = Array::make(3, 0.5F)
-  let out = guided_filter(img, input, radius=1, eps=0.001F)
+  let out = @color.guided_filter(img, input, radius=1, eps=0.001F)
   assert_eq(out.length(), 3)
   let _ = data
   let _ = img

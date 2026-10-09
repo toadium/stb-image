@@ -40,7 +40,7 @@ fn make_gradient_image(w : Int, h : Int) -> @types.Image {
 ///|
 test "compute_energy: returns correct size" {
   let img = make_test_image(4, 4, 3)
-  let energy = compute_energy(img)
+  let energy = @transform.compute_energy(img)
   assert_eq(energy.length(), 16)
   let _ = img
   let _ = energy
@@ -55,7 +55,7 @@ test "compute_energy: uniform image has zero energy" {
     channels: 3,
     data: Bytes::from_array(data),
   }
-  let energy = compute_energy(img)
+  let energy = @transform.compute_energy(img)
   for i in 0..<9 {
     assert_eq(energy[i], 0.0)
   }
@@ -66,7 +66,7 @@ test "compute_energy: uniform image has zero energy" {
 ///|
 test "compute_energy: non-negative" {
   let img = make_gradient_image(5, 5)
-  let energy = compute_energy(img)
+  let energy = @transform.compute_energy(img)
   for i in 0..<25 {
     assert_true(energy[i] >= 0.0)
   }
@@ -77,8 +77,8 @@ test "compute_energy: non-negative" {
 ///|
 test "find_vertical_seam: returns h entries" {
   let img = make_gradient_image(5, 4)
-  let energy = compute_energy(img)
-  let seam = find_vertical_seam(energy, 5, 4)
+  let energy = @transform.compute_energy(img)
+  let seam = @transform.find_vertical_seam(energy, 5, 4)
   assert_eq(seam.length(), 4)
   for i in 0..<4 {
     assert_true(seam[i] >= 0 && seam[i] < 5)
@@ -91,8 +91,8 @@ test "find_vertical_seam: returns h entries" {
 ///|
 test "find_vertical_seam: consecutive entries differ by at most 1" {
   let img = make_gradient_image(6, 5)
-  let energy = compute_energy(img)
-  let seam = find_vertical_seam(energy, 6, 5)
+  let energy = @transform.compute_energy(img)
+  let seam = @transform.find_vertical_seam(energy, 6, 5)
   for i in 1..<5 {
     let diff = seam[i] - seam[i - 1]
     assert_true(diff >= -1 && diff <= 1)
@@ -105,9 +105,9 @@ test "find_vertical_seam: consecutive entries differ by at most 1" {
 ///|
 test "remove_vertical_seam: width decreases by 1" {
   let img = make_test_image(5, 4, 3)
-  let energy = compute_energy(img)
-  let seam = find_vertical_seam(energy, 5, 4)
-  let result = remove_vertical_seam(img, seam)
+  let energy = @transform.compute_energy(img)
+  let seam = @transform.find_vertical_seam(energy, 5, 4)
+  let result = @transform.remove_vertical_seam(img, seam)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -120,8 +120,8 @@ test "remove_vertical_seam: width decreases by 1" {
 ///|
 test "find_horizontal_seam: returns w entries" {
   let img = make_gradient_image(4, 5)
-  let energy = compute_energy(img)
-  let seam = find_horizontal_seam(energy, 4, 5)
+  let energy = @transform.compute_energy(img)
+  let seam = @transform.find_horizontal_seam(energy, 4, 5)
   assert_eq(seam.length(), 4)
   for i in 0..<4 {
     assert_true(seam[i] >= 0 && seam[i] < 5)
@@ -134,9 +134,9 @@ test "find_horizontal_seam: returns w entries" {
 ///|
 test "remove_horizontal_seam: height decreases by 1" {
   let img = make_test_image(4, 5, 3)
-  let energy = compute_energy(img)
-  let seam = find_horizontal_seam(energy, 4, 5)
-  let result = remove_horizontal_seam(img, seam)
+  let energy = @transform.compute_energy(img)
+  let seam = @transform.find_horizontal_seam(energy, 4, 5)
+  let result = @transform.remove_horizontal_seam(img, seam)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   assert_eq(result.channels, 3)
@@ -149,7 +149,7 @@ test "remove_horizontal_seam: height decreases by 1" {
 ///|
 test "seam_carve_resize: shrink width" {
   let img = make_gradient_image(6, 4)
-  let result = seam_carve_resize(img, 4, 4)
+  let result = @transform.seam_carve_resize(img, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   let _ = img
@@ -159,7 +159,7 @@ test "seam_carve_resize: shrink width" {
 ///|
 test "seam_carve_resize: shrink height" {
   let img = make_gradient_image(4, 6)
-  let result = seam_carve_resize(img, 4, 4)
+  let result = @transform.seam_carve_resize(img, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   let _ = img
@@ -169,7 +169,7 @@ test "seam_carve_resize: shrink height" {
 ///|
 test "seam_carve_resize: shrink both" {
   let img = make_gradient_image(6, 6)
-  let result = seam_carve_resize(img, 4, 4)
+  let result = @transform.seam_carve_resize(img, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   let _ = img
@@ -179,7 +179,7 @@ test "seam_carve_resize: shrink both" {
 ///|
 test "seam_carve_resize: enlarge width" {
   let img = make_gradient_image(4, 4)
-  let result = seam_carve_resize(img, 6, 4)
+  let result = @transform.seam_carve_resize(img, 6, 4)
   assert_eq(result.width, 6)
   assert_eq(result.height, 4)
   let _ = img
@@ -189,7 +189,7 @@ test "seam_carve_resize: enlarge width" {
 ///|
 test "seam_carve_resize: enlarge height" {
   let img = make_gradient_image(4, 4)
-  let result = seam_carve_resize(img, 4, 6)
+  let result = @transform.seam_carve_resize(img, 4, 6)
   assert_eq(result.width, 4)
   assert_eq(result.height, 6)
   let _ = img
@@ -199,7 +199,7 @@ test "seam_carve_resize: enlarge height" {
 ///|
 test "seam_carve_resize: same size returns same dimensions" {
   let img = make_gradient_image(4, 4)
-  let result = seam_carve_resize(img, 4, 4)
+  let result = @transform.seam_carve_resize(img, 4, 4)
   assert_eq(result.width, 4)
   assert_eq(result.height, 4)
   let _ = img
@@ -210,7 +210,7 @@ test "seam_carve_resize: same size returns same dimensions" {
 test "seam_carve_resize: invalid size raises error" {
   let img = make_gradient_image(4, 4)
   try {
-    let _ = seam_carve_resize(img, 0, 4)
+    let _ = @transform.seam_carve_resize(img, 0, 4)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -222,7 +222,7 @@ test "seam_carve_resize: invalid size raises error" {
 test "seam_carve_resize: enlarge over 2x raises error" {
   let img = make_gradient_image(4, 4)
   try {
-    let _ = seam_carve_resize(img, 9, 4)
+    let _ = @transform.seam_carve_resize(img, 9, 4)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -242,7 +242,7 @@ test "seam_carve_resize: single column image" {
     channels: 1,
     data: Bytes::from_array(data),
   }
-  let result = seam_carve_resize(img, 1, 2)
+  let result = @transform.seam_carve_resize(img, 1, 2)
   assert_eq(result.width, 1)
   assert_eq(result.height, 2)
   let _ = data
@@ -253,7 +253,7 @@ test "seam_carve_resize: single column image" {
 ///|
 test "seam_carve_resize: grayscale image" {
   let img = make_test_image(5, 5, 1)
-  let result = seam_carve_resize(img, 3, 3)
+  let result = @transform.seam_carve_resize(img, 3, 3)
   assert_eq(result.width, 3)
   assert_eq(result.height, 3)
   assert_eq(result.channels, 1)

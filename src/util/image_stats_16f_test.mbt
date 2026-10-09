@@ -83,7 +83,7 @@ fn make_imagef_varied() -> @types.ImageF {
 ///|
 test "compute_stats_16: uniform image" {
   let img = make_uniform_image16_s(2, 2, 1, 1000)
-  let stats = compute_stats_16(img)
+  let stats = @util.compute_stats_16(img)
   assert_true(stats.mean > 999.0F && stats.mean < 1001.0F)
   assert_true(stats.stddev < 1.0F)
   assert_eq(stats.min_val, 1000)
@@ -95,7 +95,7 @@ test "compute_stats_16: uniform image" {
 ///|
 test "compute_stats_16: varied image" {
   let img = make_image16_varied()
-  let stats = compute_stats_16(img)
+  let stats = @util.compute_stats_16(img)
   assert_eq(stats.min_val, 0)
   assert_eq(stats.max_val, 5000)
   assert_true(stats.mean > 1000.0F && stats.mean < 2000.0F)
@@ -106,7 +106,7 @@ test "compute_stats_16: varied image" {
 ///|
 test "compute_stats_f: uniform image" {
   let img = make_uniform_imagef_s(2, 2, 1, 0.5F)
-  let stats = compute_stats_f(img)
+  let stats = @util.compute_stats_f(img)
   assert_true(stats.mean > 0.49F && stats.mean < 0.51F)
   assert_true(stats.stddev < 0.01F)
   assert_true(stats.min_val > 0.49F && stats.min_val < 0.51F)
@@ -118,7 +118,7 @@ test "compute_stats_f: uniform image" {
 ///|
 test "compute_stats_f: varied image" {
   let img = make_imagef_varied()
-  let stats = compute_stats_f(img)
+  let stats = @util.compute_stats_f(img)
   assert_true(stats.min_val < 0.01F)
   assert_true(stats.max_val > 0.99F)
   assert_true(stats.mean > 0.3F && stats.mean < 0.6F)
@@ -129,7 +129,7 @@ test "compute_stats_f: varied image" {
 ///|
 test "mean_value_16: uniform" {
   let img = make_uniform_image16_s(2, 2, 1, 3000)
-  let m = mean_value_16(img)
+  let m = @util.mean_value_16(img)
   assert_true(m > 2999.0F && m < 3001.0F)
   let _ = img
   let _ = m
@@ -138,7 +138,7 @@ test "mean_value_16: uniform" {
 ///|
 test "mean_value_f: uniform" {
   let img = make_uniform_imagef_s(2, 2, 1, 0.7F)
-  let m = mean_value_f(img)
+  let m = @util.mean_value_f(img)
   assert_true(m > 0.69F && m < 0.71F)
   let _ = img
   let _ = m
@@ -147,7 +147,7 @@ test "mean_value_f: uniform" {
 ///|
 test "compute_stats_f: uniform imagef" {
   let img = make_uniform_imagef_s(2, 2, 1, 0.5F)
-  let stats = compute_stats_f(img)
+  let stats = @util.compute_stats_f(img)
   assert_true(stats.mean > 0.49F && stats.mean < 0.51F)
   assert_true(stats.stddev < 0.01F)
   assert_true(stats.min_val > 0.49F && stats.min_val < 0.51F)

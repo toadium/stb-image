@@ -18,7 +18,7 @@ test "inpaint 基本功能" {
     channels: 1,
     data: Bytes::from_array(mask_arr),
   }
-  let result = inpaint(img, mask, iterations=50)
+  let result = @filter.inpaint(img, mask, iterations=50)
   // 中心像素应被修复为邻域平均值（4个128 + 4个0 = 64）
   let center_val = result.data[12].to_int()
   assert_true(center_val > 40)
@@ -35,7 +35,7 @@ test "inpaint 无掩码返回原图" {
     channels: 1,
     data: Bytes::from_array(Array::make(25, b'\x00')),
   }
-  let result = inpaint(img, mask)
+  let result = @filter.inpaint(img, mask)
   // 无待修复像素，应返回原图
   for i in 0..<25 {
     assert_eq(result.data[i], b'\x80')
@@ -73,7 +73,7 @@ test "inpaint RGB 图" {
     channels: 1,
     data: Bytes::from_array(mask_arr),
   }
-  let result = inpaint(img, mask, iterations=50)
+  let result = @filter.inpaint(img, mask, iterations=50)
   // 中心像素应被修复
   assert_true(result.data[center].to_int() > 50)
 }
@@ -93,7 +93,7 @@ test "inpaint 尺寸不一致报错" {
     data: Bytes::from_array(Array::make(9, b'\x00')),
   }
   try {
-    let _ = inpaint(img, mask)
+    let _ = @filter.inpaint(img, mask)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -115,7 +115,7 @@ test "inpaint 掩码通道错误" {
     data: Bytes::from_array(Array::make(75, b'\x00')),
   }
   try {
-    let _ = inpaint(img, mask)
+    let _ = @filter.inpaint(img, mask)
     assert_true(false)
   } catch {
     _ => assert_true(true)
@@ -144,7 +144,7 @@ test "inpaint_fast 基本功能" {
     channels: 1,
     data: Bytes::from_array(mask_arr),
   }
-  let result = inpaint_fast(img, mask, radius=3)
+  let result = @filter.inpaint_fast(img, mask, radius=3)
   // 修复区域应从周围白色像素填充
   let center_val = result.data[3 * 7 + 3].to_int()
   assert_true(center_val > 200)
@@ -160,7 +160,7 @@ test "inpaint_fast 无掩码返回原图" {
     channels: 1,
     data: Bytes::from_array(Array::make(25, b'\x00')),
   }
-  let result = inpaint_fast(img, mask)
+  let result = @filter.inpaint_fast(img, mask)
   for i in 0..<25 {
     assert_eq(result.data[i], b'\x80')
   }
@@ -186,7 +186,7 @@ test "inpaint 线性渐变修复" {
     channels: 1,
     data: Bytes::from_array(mask_arr),
   }
-  let result = inpaint(img, mask, iterations=100)
+  let result = @filter.inpaint(img, mask, iterations=100)
   // 修复值应介于 80 和 160 之间
   let val = result.data[3].to_int()
   assert_true(val >= 60)

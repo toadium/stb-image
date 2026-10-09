@@ -48,7 +48,7 @@ fn make_imgf_at(w : Int, h : Int, ch : Int) -> @types.ImageF {
 ///|
 test "adaptive_threshold_mean_16: output is binary" {
   let img = make_img16_at(5, 5, 1)
-  let result = adaptive_threshold_mean_16(img, 3, 0)
+  let result = @color.adaptive_threshold_mean_16(img, 3, 0)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -65,7 +65,7 @@ test "adaptive_threshold_mean_16: output is binary" {
 test "adaptive_threshold_mean_16: rejects even block_size" {
   let img = make_img16_at(5, 5, 1)
   try {
-    let _ = adaptive_threshold_mean_16(img, 4, 0)
+    let _ = @color.adaptive_threshold_mean_16(img, 4, 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -77,7 +77,7 @@ test "adaptive_threshold_mean_16: rejects even block_size" {
 ///|
 test "adaptive_threshold_mean_f: output is binary" {
   let img = make_imgf_at(5, 5, 1)
-  let result = adaptive_threshold_mean_f(img, 3, 0.0F)
+  let result = @color.adaptive_threshold_mean_f(img, 3, 0.0F)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -92,7 +92,7 @@ test "adaptive_threshold_mean_f: output is binary" {
 ///|
 test "adaptive_threshold_gaussian_16: output is binary" {
   let img = make_img16_at(5, 5, 1)
-  let result = adaptive_threshold_gaussian_16(img, 3, 0)
+  let result = @color.adaptive_threshold_gaussian_16(img, 3, 0)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -107,7 +107,7 @@ test "adaptive_threshold_gaussian_16: output is binary" {
 ///|
 test "adaptive_threshold_gaussian_f: output is binary" {
   let img = make_imgf_at(5, 5, 1)
-  let result = adaptive_threshold_gaussian_f(img, 3, 0.0F)
+  let result = @color.adaptive_threshold_gaussian_f(img, 3, 0.0F)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -122,7 +122,7 @@ test "adaptive_threshold_gaussian_f: output is binary" {
 ///|
 test "threshold_otsu_16: output is binary" {
   let img = make_img16_at(5, 5, 1)
-  let result = threshold_otsu_16(img)
+  let result = @color.threshold_otsu_16(img)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -137,7 +137,7 @@ test "threshold_otsu_16: output is binary" {
 ///|
 test "threshold_otsu_16: RGBA preserves alpha" {
   let img = make_img16_at(4, 4, 4)
-  let result = threshold_otsu_16(img)
+  let result = @color.threshold_otsu_16(img)
   assert_eq(result.channels, 4)
   // 检查 alpha 通道保持不变
   for i in 0..<16 {
@@ -152,7 +152,7 @@ test "threshold_otsu_16: RGBA preserves alpha" {
 ///|
 test "threshold_otsu_f: output is binary" {
   let img = make_imgf_at(5, 5, 1)
-  let result = threshold_otsu_f(img)
+  let result = @color.threshold_otsu_f(img)
   assert_eq(result.width, 5)
   assert_eq(result.height, 5)
   assert_eq(result.channels, 1)
@@ -167,7 +167,7 @@ test "threshold_otsu_f: output is binary" {
 ///|
 test "threshold_otsu_f: RGBA preserves alpha" {
   let img = make_imgf_at(4, 4, 4)
-  let result = threshold_otsu_f(img)
+  let result = @color.threshold_otsu_f(img)
   assert_eq(result.channels, 4)
   for i in 0..<16 {
     let alpha_off = i * 16 + 12
@@ -188,7 +188,7 @@ test "adaptive_threshold_mean_16: rejects invalid channels" {
     data: Array::make(8, b'\x00') |> Bytes::from_array,
   }
   try {
-    let _ = adaptive_threshold_mean_16(img, 3, 0)
+    let _ = @color.adaptive_threshold_mean_16(img, 3, 0)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)

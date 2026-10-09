@@ -25,7 +25,7 @@ fn tm_make_imagef(
 ///|
 test "reinhard_tonemap: produces 8-bit image" {
   let imgf = tm_make_imagef(2, 1, [(0.0F, 0.5F, 1.0F), (2.0F, 4.0F, 8.0F)])
-  let result = reinhard_tonemap(imgf)
+  let result = @color.reinhard_tonemap(imgf)
   assert_eq(result.channels, 3)
   assert_eq(result.width, 2)
   assert_eq(result.height, 1)
@@ -39,7 +39,7 @@ test "reinhard_tonemap: produces 8-bit image" {
 ///|
 test "reinhard_tonemap: zero input produces zero output" {
   let imgf = tm_make_imagef(1, 1, [(0.0F, 0.0F, 0.0F)])
-  let result = reinhard_tonemap(imgf)
+  let result = @color.reinhard_tonemap(imgf)
   assert_eq(result.data[0].to_int(), 0)
   assert_eq(result.data[1].to_int(), 0)
   assert_eq(result.data[2].to_int(), 0)
@@ -48,7 +48,7 @@ test "reinhard_tonemap: zero input produces zero output" {
 ///|
 test "gamma_tonemap: gamma=1 is linear normalization" {
   let imgf = tm_make_imagef(1, 1, [(0.0F, 0.5F, 1.0F)])
-  let result = gamma_tonemap(imgf, 1.0F)
+  let result = @color.gamma_tonemap(imgf, 1.0F)
   // With gamma=1: 0→0, 0.5→128, 1.0→255
   assert_eq(result.data[0].to_int(), 0)
   assert_true((result.data[1].to_int() - 128).abs() <= 1)
@@ -58,7 +58,7 @@ test "gamma_tonemap: gamma=1 is linear normalization" {
 ///|
 test "gamma_tonemap: gamma=2 brightens dark areas" {
   let imgf = tm_make_imagef(1, 1, [(0.0F, 0.25F, 1.0F)])
-  let result = gamma_tonemap(imgf, 2.0F)
+  let result = @color.gamma_tonemap(imgf, 2.0F)
   // With gamma=2: 0.25^0.5 = 0.5 → ~128
   assert_eq(result.data[0].to_int(), 0)
   assert_true(result.data[1].to_int() > 60)
@@ -68,7 +68,7 @@ test "gamma_tonemap: gamma=2 brightens dark areas" {
 ///|
 test "gamma_tonemap: all-zero input" {
   let imgf = tm_make_imagef(1, 1, [(0.0F, 0.0F, 0.0F)])
-  let result = gamma_tonemap(imgf, 2.2F)
+  let result = @color.gamma_tonemap(imgf, 2.2F)
   assert_eq(result.data[0].to_int(), 0)
   assert_eq(result.data[1].to_int(), 0)
   assert_eq(result.data[2].to_int(), 0)
@@ -105,7 +105,7 @@ fn tm_make_imagef_rgba(
 ///|
 test "reinhard_tonemap: RGBA alpha set to 255" {
   let imgf = tm_make_imagef_rgba(1, 1, [(0.5F, 0.5F, 0.5F, 0.3F)])
-  let result = reinhard_tonemap(imgf)
+  let result = @color.reinhard_tonemap(imgf)
   assert_eq(result.channels, 4)
   assert_eq(result.data[3].to_int(), 255)
 }
@@ -113,7 +113,7 @@ test "reinhard_tonemap: RGBA alpha set to 255" {
 ///|
 test "gamma_tonemap: RGBA alpha set to 255" {
   let imgf = tm_make_imagef_rgba(1, 1, [(0.5F, 0.5F, 0.5F, 0.3F)])
-  let result = gamma_tonemap(imgf, 2.2F)
+  let result = @color.gamma_tonemap(imgf, 2.2F)
   assert_eq(result.channels, 4)
   assert_eq(result.data[3].to_int(), 255)
 }

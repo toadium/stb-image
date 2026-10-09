@@ -17,7 +17,7 @@ fn make_varied_reg_img(w : Int, h : Int) -> @types.Image {
 
 ///|
 test "affine_identity: 恒等变换" {
-  let t = affine_identity()
+  let t = @registration.affine_identity()
   assert_eq(t.a, 1.0)
   assert_eq(t.e, 1.0)
   assert_eq(t.b, 0.0)
@@ -26,36 +26,36 @@ test "affine_identity: 恒等变换" {
 
 ///|
 test "affine_translation: 平移变换" {
-  let t = affine_translation(10.0, 20.0)
+  let t = @registration.affine_translation(10.0, 20.0)
   assert_eq(t.c, 10.0)
   assert_eq(t.f, 20.0)
 }
 
 ///|
 test "affine_rotation: 旋转变换" {
-  let t = affine_rotation(0.5)
+  let t = @registration.affine_rotation(0.5)
   assert_true(t.a > 0.0)
 }
 
 ///|
 test "affine_scale: 缩放变换" {
-  let t = affine_scale(2.0, 3.0)
+  let t = @registration.affine_scale(2.0, 3.0)
   assert_eq(t.a, 2.0)
   assert_eq(t.e, 3.0)
 }
 
 ///|
 test "affine_compose: 变换复合" {
-  let t1 = affine_translation(10.0, 20.0)
-  let t2 = affine_translation(5.0, 5.0)
-  let t = affine_compose(t1, t2)
+  let t1 = @registration.affine_translation(10.0, 20.0)
+  let t2 = @registration.affine_translation(5.0, 5.0)
+  let t = @registration.affine_compose(t1, t2)
   assert_true(t.c > 0.0)
 }
 
 ///|
 test "affine_apply: 应用变换" {
-  let t = affine_translation(10.0, 20.0)
-  let (x, y) = affine_apply(t, 5.0, 5.0)
+  let t = @registration.affine_translation(10.0, 20.0)
+  let (x, y) = @registration.affine_apply(t, 5.0, 5.0)
   assert_true(x > 0.0)
   assert_true(y > 0.0)
 }
@@ -64,15 +64,15 @@ test "affine_apply: 应用变换" {
 test "estimate_translation: 基本平移估计" {
   let img1 = make_varied_reg_img(8, 8)
   let img2 = make_varied_reg_img(8, 8)
-  let result = estimate_translation(img1, img2)
+  let result = @registration.estimate_translation(img1, img2)
   assert_true(result.confidence >= 0.0)
 }
 
 ///|
 test "warp_affine_transform: 基本变换" {
   let img = make_varied_reg_img(8, 8)
-  let t = affine_identity()
-  let result = warp_affine_transform(img, t)
+  let t = @registration.affine_identity()
+  let result = @registration.warp_affine_transform(img, t)
   assert_eq(result.width, 8)
   assert_eq(result.height, 8)
 }
@@ -81,7 +81,7 @@ test "warp_affine_transform: 基本变换" {
 test "align_images: 基本对齐" {
   let img1 = make_varied_reg_img(8, 8)
   let img2 = make_varied_reg_img(8, 8)
-  let (aligned, result) = align_images(img1, img2)
+  let (aligned, result) = @registration.align_images(img1, img2)
   assert_eq(aligned.width, 8)
   assert_eq(aligned.height, 8)
   assert_true(result.confidence >= 0.0)

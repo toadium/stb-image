@@ -85,7 +85,7 @@ test "decode_psd_pure: 2x2 RGB basic" {
   let g : Array[Byte] = [b'\x32', b'\x3C', b'\x46', b'\x50']
   let b : Array[Byte] = [b'\x5A', b'\x64', b'\x6E', b'\x78']
   append_psd_image_data(header, [r, g, b])
-  let img = decode_psd_pure(to_bytes(header))
+  let img = @codec.decode_psd_pure(to_bytes(header))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 3)
@@ -105,7 +105,7 @@ test "decode_psd_pure: 2x2 RGBA basic" {
   let b : Array[Byte] = [b'\x00', b'\x00', b'\xFF', b'\xFF']
   let a : Array[Byte] = [b'\x80', b'\x80', b'\x80', b'\xFF']
   append_psd_image_data(header, [r, g, b, a])
-  let img = decode_psd_pure(to_bytes(header))
+  let img = @codec.decode_psd_pure(to_bytes(header))
   assert_eq(img.width, 2)
   assert_eq(img.height, 2)
   assert_eq(img.channels, 4)
@@ -128,7 +128,7 @@ test "decode_psd_pure: channel interleave verify" {
   let g : Array[Byte] = [b'\x1E', b'\x28']
   let b : Array[Byte] = [b'\x32', b'\x3C']
   append_psd_image_data(header, [r, g, b])
-  let img = decode_psd_pure(to_bytes(header))
+  let img = @codec.decode_psd_pure(to_bytes(header))
   assert_eq(img.width, 2)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -145,7 +145,7 @@ test "decode_psd_pure: 1x1 minimal image" {
   let g : Array[Byte] = [b'\x84']
   let b : Array[Byte] = [b'\xC6']
   append_psd_image_data(header, [r, g, b])
-  let img = decode_psd_pure(to_bytes(header))
+  let img = @codec.decode_psd_pure(to_bytes(header))
   assert_eq(img.width, 1)
   assert_eq(img.height, 1)
   assert_eq(img.channels, 3)
@@ -188,7 +188,7 @@ test "decode_psd_pure: bad signature raises" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -201,7 +201,7 @@ test "decode_psd_pure: too short raises" {
   // 仅 4 字节 "8BPS"
   let short = b"\x38\x42\x50\x53"
   try {
-    let _ = decode_psd_pure(short)
+    let _ = @codec.decode_psd_pure(short)
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -237,7 +237,7 @@ test "decode_psd_pure: bad version raises" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -271,7 +271,7 @@ test "decode_psd_pure: unsupported channelCount raises" {
   push_be16(out, 0)
   out.push(b'\x00')
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -307,7 +307,7 @@ test "decode_psd_pure: unsupported bitdepth raises" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -343,7 +343,7 @@ test "decode_psd_pure: unsupported colorMode raises" {
   out.push(b'\x00')
   out.push(b'\x00')
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -377,7 +377,7 @@ test "decode_psd_pure: unsupported compression raises" {
   // compression=1
   push_be16(out, 1)
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -411,7 +411,7 @@ test "decode_psd_pure: invalid dimensions raises" {
   push_be32(out, 0)
   push_be16(out, 0)
   try {
-    let _ = decode_psd_pure(to_bytes(out))
+    let _ = @codec.decode_psd_pure(to_bytes(out))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
@@ -430,7 +430,7 @@ test "decode_psd_pure: pixel data insufficient raises" {
   header.push(b'\x14')
   header.push(b'\x1E')
   try {
-    let _ = decode_psd_pure(to_bytes(header))
+    let _ = @codec.decode_psd_pure(to_bytes(header))
     assert_true(false)
   } catch {
     @types.LoadError::DecodeFailed(_) => assert_true(true)
