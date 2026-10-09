@@ -219,7 +219,7 @@ test "rgb_to_cmyk_f: black gives k=1.0" {
 
 ///|
 test "to_rgb_16: negative size raises" {
-  let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"" }
+  let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
     let _ = to_rgb_16(img)
     assert_true(false)
@@ -232,7 +232,7 @@ test "to_rgb_16: negative size raises" {
 
 ///|
 test "to_rgb_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = to_rgb_16(img)
     assert_true(false)
@@ -264,7 +264,7 @@ test "to_rgb_16: data mismatch raises" {
 ///|
 test "to_rgb_16: channels 3 returns img" {
   let data = Bytes::from_array(Array::make(8 * 8 * 3 * 2, b'\x00'))
-  let img = @types.Image16::{ width: 8, height: 8, channels: 3, data }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 3, data, }
   try {
     let result = to_rgb_16(img)
     assert_eq(result.width, 8)
@@ -277,7 +277,7 @@ test "to_rgb_16: channels 3 returns img" {
 ///|
 test "to_rgb_16: channels 1 returns img" {
   let data = Bytes::from_array(Array::make(8 * 8 * 1 * 2, b'\x00'))
-  let img = @types.Image16::{ width: 8, height: 8, channels: 1, data }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 1, data, }
   try {
     let result = to_rgb_16(img)
     assert_eq(result.width, 8)

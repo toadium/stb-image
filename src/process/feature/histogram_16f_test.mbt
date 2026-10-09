@@ -242,7 +242,7 @@ test "histogram_16: RGB converts to grayscale" {
 
 ///|
 test "histogram_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = histogram_16(img)
     assert_true(false)
@@ -255,7 +255,7 @@ test "histogram_16: zero width raises" {
 
 ///|
 test "histogram_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = histogram_16(img)
     assert_true(false)
@@ -268,7 +268,7 @@ test "histogram_16: invalid channels raises" {
 
 ///|
 test "histogram_f: zero width raises" {
-  let img = @types.ImageF::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.ImageF::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = histogram_f(img)
     assert_true(false)
@@ -281,7 +281,7 @@ test "histogram_f: zero width raises" {
 
 ///|
 test "histogram_f: invalid channels raises" {
-  let img = @types.ImageF::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.ImageF::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = histogram_f(img)
     assert_true(false)

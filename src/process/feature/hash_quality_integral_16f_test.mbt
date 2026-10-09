@@ -167,7 +167,7 @@ test "integral_image_sq_f: basic" {
 
 ///|
 test "ahash_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = ahash_16(img)
     assert_true(false)
@@ -180,7 +180,7 @@ test "ahash_16: zero width raises" {
 
 ///|
 test "ahash_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = ahash_16(img)
     assert_true(false)
@@ -211,7 +211,7 @@ test "ahash_16: data size mismatch raises" {
 
 ///|
 test "dhash_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = dhash_16(img)
     assert_true(false)
@@ -224,7 +224,7 @@ test "dhash_16: zero width raises" {
 
 ///|
 test "dhash_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = dhash_16(img)
     assert_true(false)
@@ -237,7 +237,7 @@ test "dhash_16: invalid channels raises" {
 
 ///|
 test "phash_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = phash_16(img)
     assert_true(false)
@@ -250,7 +250,7 @@ test "phash_16: zero width raises" {
 
 ///|
 test "phash_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = phash_16(img)
     assert_true(false)

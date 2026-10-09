@@ -127,7 +127,7 @@ test "template_match_best_f: basic" {
 
 ///|
 test "gabor_filter_16: zero width raises" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
     assert_true(false)
@@ -140,7 +140,7 @@ test "gabor_filter_16: zero width raises" {
 
 ///|
 test "gabor_filter_16: invalid channels raises" {
-  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = gabor_filter_16(img, 5, 0.5F, 0.0F)
     assert_true(false)

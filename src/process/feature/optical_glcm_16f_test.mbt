@@ -131,8 +131,8 @@ test "glcm_features_multi_direction_f: basic" {
 
 ///|
 test "lucas_kanade_16: zero width raises" {
-  let img1 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
-  let img2 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"" }
+  let img1 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
+  let img2 = @types.Image16::{ width: 0, height: 8, channels: 1, data: b"", }
   try {
     let _ = lucas_kanade_16(img1, img2, [(2, 2)])
     assert_true(false)
@@ -146,8 +146,8 @@ test "lucas_kanade_16: zero width raises" {
 
 ///|
 test "lucas_kanade_16: invalid channels raises" {
-  let img1 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
-  let img2 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"" }
+  let img1 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
+  let img2 = @types.Image16::{ width: 8, height: 8, channels: 5, data: b"", }
   try {
     let _ = lucas_kanade_16(img1, img2, [(2, 2)])
     assert_true(false)

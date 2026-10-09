@@ -149,7 +149,7 @@ test "median_cut_f k=8" {
 
 ///|
 test "kmeans_quantize_16: negative size raises" {
-  let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"" }
+  let img = @types.Image16::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
     let _ = kmeans_quantize_16(img, 4, 10)
     assert_true(false)
@@ -198,7 +198,7 @@ test "kmeans_quantize_16: invalid channels raises" {
 
 ///|
 test "kmeans_quantize_16: zero pixels returns img" {
-  let img = @types.Image16::{ width: 0, height: 8, channels: 3, data: b"" }
+  let img = @types.Image16::{ width: 0, height: 8, channels: 3, data: b"", }
   try {
     let result = kmeans_quantize_16(img, 4, 10)
     assert_eq(result.width, 0)
@@ -210,7 +210,7 @@ test "kmeans_quantize_16: zero pixels returns img" {
 
 ///|
 test "kmeans_quantize_f: negative size raises" {
-  let img = @types.ImageF::{ width: -1, height: 8, channels: 3, data: b"" }
+  let img = @types.ImageF::{ width: -1, height: 8, channels: 3, data: b"", }
   try {
     let _ = kmeans_quantize_f(img, 4, 10)
     assert_true(false)
