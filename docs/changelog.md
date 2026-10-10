@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v199.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v199.0.0。
+> 下表为**功能迭代版本**（v0.1 → v200.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v200.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1610,3 +1610,11 @@
 - seam_carving_16f: compute_energy/seam_carve_resize 16f
 - draw_16f: draw_line/rectangle/circle 16f 非均匀/填充
 - 3926×4 全绿 (native/wasm-gc/js/wasm)
+## v200.0.0 - enhance 边界/错误路径增强测试
+- 为 enhance 模块补充边界/错误路径测试 (+34 测试)
+- dehaze: 零宽度/尺寸不匹配/空数组错误路径 + guided_filter
+- denoise: 零宽度/偶数核/未知方法错误 + 自定义参数
+- hdr: 空数组/零宽度错误 + 单张图像/自定义强度
+- inpaint: 零宽度/负坐标/max_size零错误 + 自定义半径
+- RGBA 通道测试: dehaze/denoise/tone_mapping
+- 3960×4 全绿 (native/wasm-gc/js/wasm)
