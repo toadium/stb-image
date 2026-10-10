@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v201.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v201.0.0。
+> 下表为**功能迭代版本**（v0.1 → v202.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v202.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1625,3 +1625,11 @@
 - reed_solomon_decode: 多元素/大数据/零元素
 - 自定义配置: 仅EAN13/仅QR/自定义参数
 - 3992×4 全绿 (native/wasm-gc/js/wasm)
+## v202.0.0 - remote_sensing 错误路径/边界增强测试
+- 为 remote_sensing 模块补充错误路径/边界测试 (+24 测试)
+- 错误路径: 零宽度/单像素图像测试
+- 均匀图像: NDVI/NDWI/NDBI/EVI 计算
+- 多通道: false_color/true_color composite
+- 自定义参数: vegetation_coverage 自定义土壤/植被 NDVI 阈值
+- land_cover_classification + classification_colormap
+- 4016×4 全绿 (native/wasm-gc/js/wasm)
