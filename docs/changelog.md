@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v198.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v198.0.0。
+> 下表为**功能迭代版本**（v0.1 → v199.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v199.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1602,3 +1602,11 @@
 - morphology_16f: 自定义结构元素 (rect/cross/ellipse) 16f
 - segmentation_16f: watershed/watershed_auto/kmeans_segment/slic 16f
 - 3888×4 全绿 (native/wasm-gc/js/wasm)
+## v199.0.0 - transform 16f 变体增强测试
+- 为 transform 模块 16-bit/float 变体补充增强测试 (+38 测试)
+- transform_16f: rotate_90/180/270/flip_h/v/transpose 16f 非均匀/均匀
+- geometry_16f: warp_affine/warp_perspective/resize 16f
+- pyramid_16f: pyr_down/up/build_gaussian/laplacian_pyramid 16f
+- seam_carving_16f: compute_energy/seam_carve_resize 16f
+- draw_16f: draw_line/rectangle/circle 16f 非均匀/填充
+- 3926×4 全绿 (native/wasm-gc/js/wasm)

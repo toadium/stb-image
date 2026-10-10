@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-09 | 当前版本：v198.0.0 | 测试：3888 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-09 | 当前版本：v199.0.0 | 测试：3926 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，3888 测试 × 4 目标
+- 1338 公开函数 + 491 类型，3926 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2486,6 +2486,7 @@ flowchart LR
 | v196.0.0 | filter 16f增强测试 | filter 16f变体 +35测试 (box_blur/gaussian_blur/median_blur/sharpen/convolve/bilateral/inpaint/nlm 16f非均匀/均匀/多通道/错误路径) ✅ 2026-10-09 — 3826×4全绿 |
 | v197.0.0 | edge 16f增强测试 | edge 16f变体 +32测试 (canny/sobel/laplacian/prewitt/contour/hough_lines/hough_circles 16f非均匀/均匀/多通道/错误路径) ✅ 2026-10-09 — 3858×4全绿 |
 | v198.0.0 | segment 16f增强测试 | segment 16f变体 +30测试 (morphology基本/自定义SE/多通道 + watershed/kmeans/slic 16f) ✅ 2026-10-10 — 3888×4全绿 |
+| v199.0.0 | transform 16f增强测试 | transform 16f变体 +38测试 (rotate/flip/transpose/warp_affine/warp_perspective/resize/pyramid/seam_carving/draw 16f) ✅ 2026-10-10 — 3926×4全绿 |
 
 ### 验收标准（每环）
 
