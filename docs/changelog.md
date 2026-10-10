@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v204.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v204.0.0。
+> 下表为**功能迭代版本**（v0.1 → v205.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v205.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1647,3 +1647,9 @@
 - 参数验证: harris k<=0/threshold<0, glcm dx=dy=0/levels越界, lucas_kanade 空点集
 - 边界条件: 单像素/全黑/全白/棋盘格/RGB
 - 4210×4 全绿 (native/wasm-gc/js/wasm)
+## v205.0.0 - color 错误路径/边界增强测试
+- 为 color 模块补充错误路径/边界测试 (+81 测试)
+- 错误路径: adjust_brightness/contrast/gamma/invert/saturation/hue + to_grayscale/rgb/rgba + ssr/msr/msrcr + adaptive_threshold/clahe/quantize/dehaze/colormap/tonemap 零宽度/数据不匹配
+- 参数验证: gamma<=0, sigma<=0, 空sigmas, 偶数block_size, tile_size<2, clip_limit<=0, levels<2, k越界, patch_size越界, omega/t0<=0, key<=0, radius<1, eps<=0
+- 边界条件: 单像素/全黑/全白/RGB/RGBA
+- 4291×4 全绿 (native/wasm-gc/js/wasm)
