@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-10 | 当前版本：v202.0.0 | 测试：4016 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-10 | 当前版本：v203.0.0 | 测试：4130 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，4016 测试 × 4 目标
+- 1338 公开函数 + 491 类型，4130 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2490,6 +2490,7 @@ flowchart LR
 | v200.0.0 | enhance边界测试 | enhance +34测试 (dehaze/denoise/hdr/inpaint 错误路径+RGBA通道+自定义参数) ✅ 2026-10-10 — 3960×4全绿 |
 | v201.0.0 | barcode边界测试 | barcode +32测试 (错误路径+纯黑/白+条纹+多通道+reed_solomon边界+自定义配置) ✅ 2026-10-10 — 3992×4全绿 |
 | v202.0.0 | remote_sensing边界测试 | remote_sensing +24测试 (错误路径+均匀图像+多通道+小尺寸+自定义参数) ✅ 2026-10-10 — 4016×4全绿 |
+| v203.0.0 | ocr边界测试 | ocr +114测试 (deskew/binarization/cca/layout/projection/document_enhance/hog/distance/accuracy错误路径+单像素+均匀+棋盘格) ✅ 2026-10-10 — 4130×4全绿 |
 
 ### 验收标准（每环）
 

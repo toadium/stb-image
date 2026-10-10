@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v202.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v202.0.0。
+> 下表为**功能迭代版本**（v0.1 → v203.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v203.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1633,3 +1633,11 @@
 - 自定义参数: vegetation_coverage 自定义土壤/植被 NDVI 阈值
 - land_cover_classification + classification_colormap
 - 4016×4 全绿 (native/wasm-gc/js/wasm)
+## v203.0.0 - ocr 错误路径/边界增强测试
+- 为 ocr 模块补充错误路径/边界测试 (+114 测试)
+- 错误路径: detect_skew_angle/deskew/niblack/sauvola/adaptive_threshold/otsu/cca/detect_text_regions/projection/document_enhance/hog 零宽度/多通道/数据不匹配
+- 参数验证: niblack/sauvola 偶数窗口/零窗口/r为零, cca 无效连通性, hog cell_size为零
+- 距离函数: euclidean/manhattan/cosine/chebyshev 空向量
+- 字符串准确率: calculate_char/word_accuracy/edit_distance 双空/部分匹配/完全不同
+- 边界条件: 单像素/全黑/全白/棋盘格/2x2/RGB/RGBA
+- 4130×4 全绿 (native/wasm-gc/js/wasm)
