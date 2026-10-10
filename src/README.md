@@ -19,7 +19,7 @@
 
 - 公开函数：1338
 - 公开类型：491
-- 测试：3858 × 4 目标（native/wasm-gc/js/wasm）
+- 测试：3888 × 4 目标（native/wasm-gc/js/wasm）
 - 覆盖率：90.4%
 
 ## 纯 MoonBit 实现

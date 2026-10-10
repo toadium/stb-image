@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v197.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v197.0.0。
+> 下表为**功能迭代版本**（v0.1 → v198.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v198.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1596,3 +1596,9 @@
 - hough_circles_16f: hough_circles 16f 非均匀/自定义参数
 - 错误路径: 零宽度图像
 - 3858×4 全绿 (native/wasm-gc/js/wasm)
+## v198.0.0 - segment 16f 变体增强测试
+- 为 segment 模块 16-bit/float 变体补充增强测试 (+30 测试)
+- morphology_16f: erode/dilate/morph_open/close/gradient/tophat/blackhat 16f 非均匀/多通道/均匀
+- morphology_16f: 自定义结构元素 (rect/cross/ellipse) 16f
+- segmentation_16f: watershed/watershed_auto/kmeans_segment/slic 16f
+- 3888×4 全绿 (native/wasm-gc/js/wasm)
