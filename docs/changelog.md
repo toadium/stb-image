@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v203.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v203.0.0。
+> 下表为**功能迭代版本**（v0.1 → v204.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v204.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1641,3 +1641,9 @@
 - 字符串准确率: calculate_char/word_accuracy/edit_distance 双空/部分匹配/完全不同
 - 边界条件: 单像素/全黑/全白/棋盘格/2x2/RGB/RGBA
 - 4130×4 全绿 (native/wasm-gc/js/wasm)
+## v204.0.0 - feature 错误路径/边界增强测试
+- 为 feature 模块补充错误路径/边界测试 (+80 测试)
+- 错误路径: histogram/mse/psnr/ssim/integral_image/lbp/ahash/dhash/phash/harris/gabor/glcm/lucas_kanade/horn_schunck/template_match 零宽度/数据不匹配
+- 参数验证: harris k<=0/threshold<0, glcm dx=dy=0/levels越界, lucas_kanade 空点集
+- 边界条件: 单像素/全黑/全白/棋盘格/RGB
+- 4210×4 全绿 (native/wasm-gc/js/wasm)
