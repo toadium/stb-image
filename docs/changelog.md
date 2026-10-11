@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v219.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v219.0.0。
+> 下表为**功能迭代版本**（v0.1 → v220.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v220.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1833,3 +1833,13 @@
 - detect_text_regions/detect_ui_elements: 零宽度
 - verify_image_source/verify_image_source_enhanced: 零宽度
 - 4841×4 全绿 (native/wasm-gc/js/wasm)
+## v220.0.0 - denoise 错误路径测试
+- 为 denoise 模块补充错误路径 (+46 测试)
+- mean_filter_denoise: 零宽度, 无效通道, 数据不匹配, kernel_size < 1
+- median_filter_denoise: 零宽度, 无效通道, 数据不匹配, kernel_size < 1
+- gaussian_filter_denoise: 零宽度, 无效通道, 数据不匹配, kernel_size < 1, sigma <= 0
+- bilateral_filter_denoise: 零宽度, 无效通道, 数据不匹配, kernel_size < 1, sigma_color <= 0, sigma_space <= 0
+- calculate_noise_level/histogram_equalization_enhance/gamma_correction_enhance: 零宽度, 无效通道, 数据不匹配
+- unsharp_mask_enhance/calculate_brightness/calculate_contrast/calculate_sharpness: 零宽度, 无效通道, 数据不匹配
+- denoise_image/enhance_image_advanced: 零宽度, 无效通道, 数据不匹配
+- 4887×4 全绿 (native/wasm-gc/js/wasm)
