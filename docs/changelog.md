@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v230.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v230.0.0。
+> 下表为**功能迭代版本**（v0.1 → v231.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v231.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1915,3 +1915,9 @@
 ## v230.0.0 - yolo_detection 错误路径+功能补充
 - yolo_detection: +19 tests (refine_bounding_box错误+detect_objects_simple 8种错误+non_max_suppression排序/限制/抑制/不同类别+calculate_iou重叠)
 - 5379×4 全绿 (native/wasm-gc/js/wasm)
+## v231.0.0 - OCR 模块功能+错误路径测试
+- projection_analysis: +45 tests (水平/垂直投影错误路径+功能路径, 文本行检测, 字符分割, 图像提取)
+- table_image_extraction: +40 tests (表格线检测错误路径+功能路径, 交叉点, 表格增强检测, Markdown转换, 图片提取, 报告生成)
+- ocr_accuracy_enhanced: +38 tests (Zernike/Gabor/方向特征, 加权KNN多距离度量, 置信度校准, 组合特征, 多尺度识别, 增强OCR识别)
+- 修复3个warning: 删除未使用函数, not()→!操作符
+- 5502×4 全绿 (native/wasm-gc/js/wasm)
