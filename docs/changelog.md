@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v225.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v225.0.0。
+> 下表为**功能迭代版本**（v0.1 → v226.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v226.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1886,3 +1886,12 @@
 - quantize_16f: floyd_steinberg错误路径 (零宽/无效通道/数据不匹配/levels<2) (16/f)
 - quantize_16f: median_cut错误路径 (零宽/无效通道/数据不匹配/num_colors<2) (16/f)
 - 5053×4 全绿 (native/wasm-gc/js/wasm)
+
+## v226.0.0 - 16f变体错误路径补充测试
+- 为 hash_quality_integral_16f/color_16f/filter_16f 补充错误路径测试 (+79 测试)
+- hash_quality_integral_16f: dhash_16/phash_16数据不匹配 + ahash_f/dhash_f/phash_f完整错误路径+功能
+- hash_quality_integral_16f: mse/psnr/ssim (16/f) img1/img2零宽度+数据不匹配+尺寸不一致
+- hash_quality_integral_16f: integral_image/sq (16/f) 零宽度+数据不匹配
+- color_16f: adjust_brightness/contrast/gamma/invert/to_grayscale (16/f) 零宽度+数据不匹配
+- filter_16f: box_blur/gaussian_blur/median_blur/sharpen (16/f) 零宽度+数据不匹配
+- 5132×4 全绿 (native/wasm-gc/js/wasm)

@@ -2513,6 +2513,7 @@ flowchart LR
 | v223.0.0 | frequency补充测试 | frequency +15测试 (fft_2d+fft_2d_16+fft_2d_f+freq_filter+freq_filter_gaussian+haar_transform_2d+haar_denoise+haar_transform_2d_16+haar_denoise_16+haar_transform_2d_f+haar_denoise_f无效通道+levels<1+levels>10) ✅ 2026-10-11 — 4940×4全绿 |
 | v224.0.0 | 8模块补充测试 | pose_estimation+segmentation+face_recognition+style_transfer+explainable_ai+forensics_enhanced+production_utils+performance +87测试 (标准三重验证+自定义错误条件+几何越界+通道不匹配) ✅ 2026-10-11 — 5027×4全绿 |
 | v225.0.0 | 16f变体功能测试 | histogram_16f+quantize_16f +26测试 (数据不匹配+多通道灰度+负值钳位+kmeans迭代+质心更新+floyd_steinberg错误路径+median_cut错误路径) ✅ 2026-10-11 — 5053×4全绿 |
+| v226.0.0 | 16f错误路径补充 | hash_quality_integral_16f+color_16f+filter_16f +79测试 (hash/quality/integral_image错误路径+color调整错误路径+filter模糊错误路径) ✅ 2026-10-11 — 5132×4全绿 |
 
 ### 验收标准（每环）
 
