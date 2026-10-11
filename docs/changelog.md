@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v213.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v213.0.0。
+> 下表为**功能迭代版本**（v0.1 → v214.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v214.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1745,3 +1745,22 @@
 - floyd_steinberg_16: 零宽
 - median_cut_16: 零宽
 - 4620×4 全绿 (native/wasm-gc/js/wasm)
+## v214.0.0 - feature 补充 16f/f 错误路径测试
+- 为 feature 模块补充 16 位/浮点错误路径 (+68 测试)
+- histogram_16/f: 零宽度, 无效通道, 数据不匹配
+- histogram_equalize_16/f, histogram_normalize_16/f, histogram_matching_16/f: 零宽度
+- ahash_16/f, dhash_16/f, phash_16/f: 零宽度
+- harris_corners_16/f, good_features_to_track_16/f: 零宽度
+- gabor_filter_16/f, gabor_filter_bank_16/f: 零宽度
+- compute_glcm_16/f: 零宽度, dx_dy都为零
+- glcm_features_multi_direction_16/f: 零宽度
+- lbp_16/f, lbp_uniform_16/f: 零宽度
+- integral_image_16/f, integral_image_sq_16/f: 零宽度
+- mse_16/f, psnr_16/f, ssim_16/f: 零宽度, 尺寸不同
+- lucas_kanade_16/f: 零宽度, 空点集
+- horn_schunck_16/f: 零宽度
+- template_match_16/f, template_match_best_16/f: 零宽度
+- orb_detect_16/f, sift_detect_16/f: 零宽度
+- sift_match/orb_match/ransac_homography: 空数组
+- sift_detect: 图像太小, good_features_to_track: 零宽度, compare_hist: 空数组
+- 4688×4 全绿 (native/wasm-gc/js/wasm)
