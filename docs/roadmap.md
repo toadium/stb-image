@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v213.0.0 | 测试：4688 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v213.0.0 | 测试：4730 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2502,6 +2502,7 @@ flowchart LR
 | v212.0.0 | remote_sensing补充测试 | remote_sensing +16测试 (compute_ndvi/ndwi/ndbi/evi无效通道+数据不匹配+false/true_color_composite无效通道+vegetation_coverage/land_cover/classification_colormap/texture_features无效通道+数据不匹配) ✅ 2026-10-11 — 4600×4全绿 |
 | v213.0.0 | color补充测试 | color +20测试 (ssr_16/msr_16/msrcr_16/ssr_f/msr_f/msrcr_f无效通道2+空sigmas+灰度图+gamma_tonemap_f/16零宽+gamma=0+reinhard_tonemap_f/16+key=0+dehaze_16/f零宽+数据不匹配+floyd_steinberg_16+median_cut_16零宽) ✅ 2026-10-11 — 4620×4全绿 |
 | v214.0.0 | feature补充测试 | feature +68测试 (histogram_16/f+equalize/normalize/matching_16/f+ahash/dhash/phash_16/f+harris/good_features_16/f+gabor/filter_bank_16/f+glcm_16/f+multi_direction_16/f+lbp/uniform_16/f+integral_16/f+mse/psnr/ssim_16/f+lucas_kanade/horn_schunck_16/f+template_match_16/f+orb/sift_16/f零宽度+空数组+图像太小) ✅ 2026-10-11 — 4688×4全绿 |
+| v215.0.0 | filter补充测试 | filter +42测试 (box_blur_16/f+gaussian_blur_16/f+sharpen_16/f+median_blur_16/f+convolve_16/f+bilateral_filter_16/f+bilateral_fast_16/f+inpaint_16/f+inpaint_fast_16/f+nlm_denoise_16/f+nlm_fast_16/f零宽度+负半径+sigma零+ksize零/偶数+scale零+radius零+数据不匹配+8bit无效通道+尺寸不匹配) ✅ 2026-10-11 — 4730×4全绿 |
 
 ### 验收标准（每环）
 

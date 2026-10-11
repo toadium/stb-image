@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v214.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v214.0.0。
+> 下表为**功能迭代版本**（v0.1 → v215.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v215.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1764,3 +1764,16 @@
 - sift_match/orb_match/ransac_homography: 空数组
 - sift_detect: 图像太小, good_features_to_track: 零宽度, compare_hist: 空数组
 - 4688×4 全绿 (native/wasm-gc/js/wasm)
+## v215.0.0 - filter 补充 16f/f 错误路径测试
+- 为 filter 模块补充 16 位/浮点错误路径 (+42 测试)
+- box_blur_16/f: 零宽度, 数据不匹配, 负半径
+- gaussian_blur_16/f: 零宽度, 负半径, sigma为零
+- sharpen_16/f: 零宽度
+- median_blur_16/f: 零宽度, ksize为零, ksize偶数
+- convolve_16/f: 零宽度, scale为零
+- bilateral_filter_16/f: 零宽度, radius为零
+- bilateral_filter_fast_16/f: 零宽度
+- inpaint_16/f, inpaint_fast_16/f: 零宽度
+- nlm_denoise_16/f, nlm_denoise_fast_16/f: 零宽度
+- 8bit补充: box_blur/gaussian_blur/median_blur/bilateral_filter/nlm_denoise/sharpen/convolve无效通道, inpaint/inpaint_fast尺寸不匹配
+- 4730×4 全绿 (native/wasm-gc/js/wasm)
