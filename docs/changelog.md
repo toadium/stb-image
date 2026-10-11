@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v208.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v208.0.0。
+> 下表为**功能迭代版本**（v0.1 → v209.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v209.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1674,3 +1674,15 @@
 - 零高度: 全部9个函数
 - reed_solomon_decode: 单元素/ec_bytes=0 边界
 - 4483×4 全绿 (native/wasm-gc/js/wasm)
+## v209.0.0 - segment 补充错误路径测试
+- 为 segment 模块补充未覆盖的错误路径 (+33 测试)
+- watershed/watershed_auto: 无效通道2, markers长度不匹配
+- skeletonize: 无效通道0/2
+- distance_transform: 无效通道0/2, 无效distance_type=5
+- flood_fill: 灰度图channels=1, 无效通道2, 种子点x/y越界, 负坐标
+- region_growing_segment: 灰度图channels=1, 无效通道2, 空种子
+- connected_components: connectivity=0/3/6
+- kmeans_segment: k=0/257, 无效通道2
+- slic: 零宽度/零高度, k=0, max_iters=0
+- grab_cut: 1x1/1xN, 灰度图, 无效通道2
+- 4516×4 全绿 (native/wasm-gc/js/wasm)
