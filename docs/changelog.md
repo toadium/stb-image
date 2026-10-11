@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v222.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v222.0.0。
+> 下表为**功能迭代版本**（v0.1 → v223.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v223.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1857,3 +1857,11 @@
 - warp_affine_transform: 零宽度, 无效通道, 数据不匹配
 - align_images: img1/img2 零宽度, 无效通道, 数据不匹配
 - 4925×4 全绿 (native/wasm-gc/js/wasm)
+## v223.0.0 - frequency 错误路径测试
+- 为 frequency 模块补充错误路径 (+15 测试)
+- fft_2d/fft_2d_16/fft_2d_f: 无效通道
+- freq_filter/freq_filter_gaussian: 无效通道
+- haar_transform_2d: 无效通道, levels < 1, levels > 10
+- haar_denoise: 无效通道, levels < 1, levels > 10
+- haar_transform_2d_16/haar_denoise_16/haar_transform_2d_f/haar_denoise_f: 无效通道
+- 4940×4 全绿 (native/wasm-gc/js/wasm)
