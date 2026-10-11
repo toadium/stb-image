@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v226.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v226.0.0。
+> 下表为**功能迭代版本**（v0.1 → v227.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v227.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1895,3 +1895,10 @@
 - color_16f: adjust_brightness/contrast/gamma/invert/to_grayscale (16/f) 零宽度+数据不匹配
 - filter_16f: box_blur/gaussian_blur/median_blur/sharpen (16/f) 零宽度+数据不匹配
 - 5132×4 全绿 (native/wasm-gc/js/wasm)
+
+## v227.0.0 - 16f变体错误路径补充 (4模块)
+- optical_glcm_16f: +19 tests (lucas_kanade/horn_schunck/compute_glcm/glcm_features 16/f 错误路径)
+- gabor_template_16f: +15 tests (gabor_filter/filter_bank/template_match/best 16/f 错误路径)
+- color_convert_16f: +14 tests (to_rgb_f/to_rgba/premultiply/unpremultiply 16/f 错误路径)
+- advanced_16f: +12 tests (inpaint/nlm_denoise 16/f 错误路径)
+- 5192×4 全绿 (native/wasm-gc/js/wasm)
