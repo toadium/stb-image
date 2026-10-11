@@ -291,3 +291,103 @@ test "histogram_f: invalid channels raises" {
   }
   let _ = img
 }
+// ========== 数据大小不匹配测试 ==========
+
+///|
+test "histogram_16: data mismatch raises" {
+  let img = @types.Image16::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = @feature.histogram_16(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+///|
+test "histogram_f: data mismatch raises" {
+  let img = @types.ImageF::{
+    width: 4,
+    height: 4,
+    channels: 1,
+    data: Bytes::from_array(Array::make(8, b'\x00')),
+  }
+  try {
+    let _ = @feature.histogram_f(img)
+    assert_true(false)
+  } catch {
+    @types.LoadError::DecodeFailed(_) => assert_true(true)
+    _ => assert_true(false)
+  }
+  let _ = img
+}
+
+// ========== histogram_f 多通道与边界值测试 ==========
+
+///|
+test "histogram_f: RGB multi-channel" {
+  let img = make_imgf_hist(4, 4, 3, 0.5F)
+  let hist = @feature.histogram_f(img)
+  assert_eq(hist.length(), 256)
+  // 0.5 * 0.299 + 0.5 * 0.587 + 0.5 * 0.114 = 0.5
+  // bin = (0.5 * 255 + 0.5).to_int() = 128
+  assert_eq(hist[128], 16)
+  let _ = img
+  let _ = hist
+}
+
+///|
+test "histogram_f: negative value clamped to bin 0" {
+  let img = make_imgf_hist(4, 4, 1, -0.5F)
+  let hist = @feature.histogram_f(img)
+  assert_eq(hist.length(), 256)
+  assert_eq(hist[0], 16)
+  let _ = img
+  let _ = hist
+}
+
+///|
+test "histogram_f: value >= 1.0 clamped to bin 255" {
+  let img = make_imgf_hist(4, 4, 1, 1.5F)
+  let hist = @feature.histogram_f(img)
+  assert_eq(hist.length(), 256)
+  assert_eq(hist[255], 16)
+  let _ = img
+  let _ = hist
+}
+
+///|
+test "histogram_f: mixed values distribute to bins" {
+  // 创建 4 像素图像，值分别为 0.0, 0.25, 0.75, 1.0+
+  let vals = [0.0F, 0.25F, 0.75F, 1.5F]
+  let data : Array[Byte] = Array::make(16, b'\x00')
+  for i in 0..<4 {
+    let bits = vals[i].reinterpret_as_int()
+    data[i * 4] = (bits & 0xFF).to_byte()
+    data[i * 4 + 1] = ((bits >> 8) & 0xFF).to_byte()
+    data[i * 4 + 2] = ((bits >> 16) & 0xFF).to_byte()
+    data[i * 4 + 3] = ((bits >> 24) & 0xFF).to_byte()
+  }
+  let img = @types.ImageF::{
+    width: 4,
+    height: 1,
+    channels: 1,
+    data: Bytes::from_array(data),
+  }
+  let hist = @feature.histogram_f(img)
+  assert_eq(hist.length(), 256)
+  // 0.0 -> bin 0, 0.25 -> bin 64, 0.75 -> bin 191, 1.5 -> bin 255
+  assert_eq(hist[0], 1)
+  assert_eq(hist[64], 1)
+  assert_eq(hist[191], 1)
+  assert_eq(hist[255], 1)
+  let _ = img
+  let _ = hist
+}
