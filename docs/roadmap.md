@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-10 | 当前版本：v206.0.0 | 测试：4332 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v207.0.0 | 测试：4452 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，4332 测试 × 4 目标
+- 1338 公开函数 + 491 类型，4452 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2494,6 +2494,7 @@ flowchart LR
 | v204.0.0 | feature边界测试 | feature +80测试 (histogram/mse/psnr/ssim/integral/lbp/hash/harris/gabor/glcm/optical_flow/template_match错误路径+单像素+均匀+棋盘格) ✅ 2026-10-10 — 4210×4全绿 |
 | v205.0.0 | color边界测试 | color +81测试 (adjust/convert/retinex/adaptive_threshold/clahe/quantize/dehaze/colormap/tonemap错误路径+单像素+均匀+RGB+RGBA) ✅ 2026-10-10 — 4291×4全绿 |
 | v206.0.0 | filter边界测试 | filter +41测试 (box_blur/gaussian_blur/sharpen/median_blur/convolve/bilateral/inpaint/nlm_denoise错误路径+单像素+均匀+棋盘格+RGB) ✅ 2026-10-10 — 4332×4全绿 |
+| v207.0.0 | edge边界测试 | edge +120测试 (canny/sobel/laplacian/prewitt/contours/hough_lines/hough_circles/approx_poly_dp/hu_moments错误路径+8bit+16bit+float+边界) ✅ 2026-10-11 — 4452×4全绿 |
 
 ### 验收标准（每环）
 

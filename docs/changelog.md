@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v206.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v206.0.0。
+> 下表为**功能迭代版本**（v0.1 → v207.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v207.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1659,3 +1659,11 @@
 - 参数验证: 负radius, sigma<=0, 负amount, ksize<=0/偶数, scale=0, radius<1
 - 边界条件: 单像素/全黑/全白/棋盘格/RGB
 - 4332×4 全绿 (native/wasm-gc/js/wasm)
+## v207.0.0 - edge 错误路径/边界增强测试
+- 为 edge 模块补充错误路径/边界测试 (+120 测试)
+- 错误路径: canny/sobel/laplacian/prewitt/find_contours/draw_contours/hough_lines/hough_circles 零宽度/无效通道/数据不匹配
+- 参数验证: threshold<=0, theta/rho_res<=0, dp<1, min_dist<1, param1/2<=0, min/max_radius<0, low>high, epsilon<0, m00=0, 空color数组
+- 16-bit 变体: canny_edge_16/edge_detect_*_16/find_contours_16/draw_contours_16/hough_lines_16/hough_circles_16
+- float 变体: canny_edge_f/edge_detect_*_f/find_contours_f/draw_contours_f/hough_lines_f/hough_circles_f
+- 边界条件: convex_hull/image_moments/min_enclosing_circle 空数组/单点, approx_poly_dp closed=false
+- 4452×4 全绿 (native/wasm-gc/js/wasm)
