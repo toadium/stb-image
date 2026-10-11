@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v221.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v221.0.0。
+> 下表为**功能迭代版本**（v0.1 → v222.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v222.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1851,3 +1851,9 @@
 - calculate_compression_quality: 零宽度, 无效通道, 数据不匹配, 尺寸不一致
 - compress_jpeg_simple/compress_png_simple/compress_image: 零宽度, 无效通道, 数据不匹配
 - 4910×4 全绿 (native/wasm-gc/js/wasm)
+## v222.0.0 - registration 错误路径测试
+- 为 registration 模块补充错误路径 (+15 测试)
+- estimate_translation: img1/img2 零宽度, 无效通道, 数据不匹配
+- warp_affine_transform: 零宽度, 无效通道, 数据不匹配
+- align_images: img1/img2 零宽度, 无效通道, 数据不匹配
+- 4925×4 全绿 (native/wasm-gc/js/wasm)
