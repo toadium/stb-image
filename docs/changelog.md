@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v211.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v211.0.0。
+> 下表为**功能迭代版本**（v0.1 → v212.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v212.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1720,3 +1720,16 @@
 - seam_carve_resize_16/f: 无效尺寸, 放大超过2倍
 - multi_band_blend_16/f: 图像尺寸不匹配, mask尺寸不匹配
 - 4584×4 全绿 (native/wasm-gc/js/wasm)
+## v212.0.0 - remote_sensing 补充错误路径测试
+- 为 remote_sensing 模块补充未覆盖的错误路径 (+16 测试)
+- compute_ndvi: nir/red无效通道, nir数据不匹配
+- compute_ndwi: green无效通道, 数据不匹配
+- compute_ndbi: 无效通道
+- compute_evi: blue无效通道, 数据不匹配
+- false_color_composite: nir无效通道
+- true_color_composite: 无效通道
+- vegetation_coverage: 无效通道, 数据不匹配
+- land_cover_classification: 无效通道
+- classification_colormap: 无效通道
+- calculate_texture_features: 无效通道, 数据不匹配
+- 4600×4 全绿 (native/wasm-gc/js/wasm)

@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v211.0.0 | 测试：4584 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v212.0.0 | 测试：4600 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，4584 测试 × 4 目标
+- 1338 公开函数 + 491 类型，4600 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2499,6 +2499,7 @@ flowchart LR
 | v209.0.0 | segment补充测试 | segment +33测试 (watershed/skeletonize/distance_transform/flood_fill/region_growing/kmeans/slic/grab_cut无效通道+参数越界+markers不匹配+connectivity非4/8) ✅ 2026-10-11 — 4516×4全绿 |
 | v210.0.0 | enhance补充测试 | enhance +47测试 (dehaze/denoise/hdr/inpaint无效通道+数据不匹配+参数越界+尺寸不一致+config参数错误) ✅ 2026-10-11 — 4563×4全绿 |
 | v211.0.0 | transform补充测试 | transform +21测试 (crop_f越界+resize_cover目标尺寸零+pyr_down/up无效通道2/图像太小+seam_carve_resize_16/f无效尺寸/放大超2倍+multi_band_blend_16/f尺寸不匹配) ✅ 2026-10-11 — 4584×4全绿 |
+| v212.0.0 | remote_sensing补充测试 | remote_sensing +16测试 (compute_ndvi/ndwi/ndbi/evi无效通道+数据不匹配+false/true_color_composite无效通道+vegetation_coverage/land_cover/classification_colormap/texture_features无效通道+数据不匹配) ✅ 2026-10-11 — 4600×4全绿 |
 
 ### 验收标准（每环）
 
