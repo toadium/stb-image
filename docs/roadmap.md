@@ -2515,6 +2515,7 @@ flowchart LR
 | v225.0.0 | 16f变体功能测试 | histogram_16f+quantize_16f +26测试 (数据不匹配+多通道灰度+负值钳位+kmeans迭代+质心更新+floyd_steinberg错误路径+median_cut错误路径) ✅ 2026-10-11 — 5053×4全绿 |
 | v226.0.0 | 16f错误路径补充 | hash_quality_integral_16f+color_16f+filter_16f +79测试 (hash/quality/integral_image错误路径+color调整错误路径+filter模糊错误路径) ✅ 2026-10-11 — 5132×4全绿 |
 | v227.0.0 | 16f错误路径补充(4模块) | optical_glcm_16f+gabor_template_16f+color_convert_16f+advanced_16f +60测试 (光流/GLCM/Gabor/模板匹配/色彩转换/修复去噪错误路径) ✅ 2026-10-11 — 5192×4全绿 |
+| v228.0.0 | segmentation+stitch功能测试 | segmentation.mbt+image_stitch.mbt +50测试 (watershed_segment/region_growing/threshold_otsu/segmentation_to_color功能路径+invert_homography奇异矩阵+detect_features_simple角点检测+match_features多描述子+estimate_homography_ransac) ✅ 2026-10-11 — 5242×4全绿 |
 
 ### 验收标准（每环）
 
