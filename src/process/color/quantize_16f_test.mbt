@@ -339,10 +339,10 @@ test "kmeans_quantize_16: diverse pixels trigger iteration" {
       (out.data[(i * 3 + 1) * 2 + 1].to_int() << 8)
     let b = out.data[(i * 3 + 2) * 2].to_int() |
       (out.data[(i * 3 + 2) * 2 + 1].to_int() << 8)
-    if not(has_color0) {
+    if !has_color0 {
       color0 = (r, g, b)
       has_color0 = true
-    } else if (r, g, b) != color0 && not(has_color1) {
+    } else if (r, g, b) != color0 && !has_color1 {
       color1 = (r, g, b)
       has_color1 = true
     }

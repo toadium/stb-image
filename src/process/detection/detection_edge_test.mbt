@@ -13,16 +13,6 @@ fn det_zero_w() -> @types.Image {
 }
 
 ///|
-fn det_uniform(w : Int, h : Int) -> @types.Image {
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(Array::make(w * h, 128)),
-  }
-}
-
-///|
 fn det_make_yolo_box(
   x : Double,
   y : Double,
