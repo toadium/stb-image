@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v212.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v212.0.0。
+> 下表为**功能迭代版本**（v0.1 → v213.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v213.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1733,3 +1733,15 @@
 - classification_colormap: 无效通道
 - calculate_texture_features: 无效通道, 数据不匹配
 - 4600×4 全绿 (native/wasm-gc/js/wasm)
+## v213.0.0 - color 补充 16f 错误路径测试
+- 为 color 模块补充 16 位/浮点错误路径 (+20 测试)
+- ssr_16/msr_16/msrcr_16: 无效通道2, 空sigmas, 灰度图
+- ssr_f/msr_f/msrcr_f: 无效通道2, 空sigmas, 灰度图
+- gamma_tonemap_f: 零宽, gamma=0
+- reinhard_tonemap_f: key=0
+- gamma_tonemap_16: 零宽, gamma=0 (ImageF输入)
+- reinhard_tonemap_16: key=0 (ImageF输入)
+- dehaze_16/dehaze_f: 零宽, 数据不匹配
+- floyd_steinberg_16: 零宽
+- median_cut_16: 零宽
+- 4620×4 全绿 (native/wasm-gc/js/wasm)
