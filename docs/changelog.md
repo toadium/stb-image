@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v224.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v224.0.0。
+> 下表为**功能迭代版本**（v0.1 → v225.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v225.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1876,3 +1876,13 @@
 - production_utils: validate_image/channels/range/int_range
 - performance: extract_tile无效/越界+paste_tile无效/越界/通道不匹配
 - 5027×4 全绿 (native/wasm-gc/js/wasm)
+
+## v225.0.0 - 16f变体功能测试
+- 为 histogram_16f/quantize_16f 补充功能测试和错误路径测试 (+26 测试)
+- histogram_16f: 数据大小不匹配错误路径 (histogram_16/histogram_f)
+- histogram_16f: histogram_f RGB多通道灰度转换+负值钳位bin0+值>=1.0钳位bin255+混合值分布
+- quantize_16f: kmeans数据不匹配/无效通道/零像素错误路径 (16/f)
+- quantize_16f: kmeans多样化像素触发迭代和质心更新功能测试 (16/f)
+- quantize_16f: floyd_steinberg错误路径 (零宽/无效通道/数据不匹配/levels<2) (16/f)
+- quantize_16f: median_cut错误路径 (零宽/无效通道/数据不匹配/num_colors<2) (16/f)
+- 5053×4 全绿 (native/wasm-gc/js/wasm)

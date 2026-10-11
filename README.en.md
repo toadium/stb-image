@@ -8,7 +8,7 @@
 [![MoonBit](https://img.shields.io/badge/MoonBit-0.1.20260819-blue)](https://www.moonbitlang.com/)
 [![OSC2026](https://img.shields.io/badge/OSC2026-Contest%20Project-orange)](https://www.gitlink.org.cn/competitions/track1_2026MoonBit)
 [![Targets](https://img.shields.io/badge/targets-native%20%7C%20wasm--gc%20%7C%20js%20%7C%20wasm-success)]()
-[![Tests](https://img.shields.io/badge/tests-5027-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-5053-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-90.4%25-brightgreen)]()
 [![Functions](https://img.shields.io/badge/API-1338%20functions%20%2B%20491%20types-blueviolet)]()
 [![Version](https://img.shields.io/badge/version-0.5.0-orange)]()
@@ -235,7 +235,7 @@ moon check --target wasm-gc
 moon check --target js
 moon check --target wasm
 
-# Run tests (5027 × 4 targets)
+# Run tests (5053 × 4 targets)
 moon test --target native
 moon test --target wasm-gc
 moon test --target js
