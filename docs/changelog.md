@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v223.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v223.0.0。
+> 下表为**功能迭代版本**（v0.1 → v224.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v224.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1865,3 +1865,14 @@
 - haar_denoise: 无效通道, levels < 1, levels > 10
 - haar_transform_2d_16/haar_denoise_16/haar_transform_2d_f/haar_denoise_f: 无效通道
 - 4940×4 全绿 (native/wasm-gc/js/wasm)
+## v224.0.0 - 8模块错误路径测试
+- 为 pose_estimation/segmentation/face_recognition/style_transfer/explainable_ai/forensics_enhanced/production_utils/performance 8个模块补充错误路径 (+87 测试)
+- pose_estimation: detect_keypoints/visualize_pose 零宽度+无效通道+数据不匹配
+- segmentation: threshold/otsu/kmeans/superpixel/watershed/grabcut 零宽度+无效通道+数据不匹配
+- face_recognition: detect_faces/extract_feature/recognize_expression/estimate_age_gender/evaluate_quality/analyze_attributes 零宽度+无效通道+数据不匹配
+- style_transfer: color_statistics/texture_features/cartoonize/color_transfer/oil_painting/sketch/style_transfer 零宽度+无效通道+数据不匹配
+- explainable_ai: feature_importance/saliency_map/feature_maps 零宽度+无效通道+数据不匹配
+- forensics_enhanced: analyze_ela quality过高+detect_clone_regions block_size过小/过大+detect_tamper_comprehensive
+- production_utils: validate_image/channels/range/int_range
+- performance: extract_tile无效/越界+paste_tile无效/越界/通道不匹配
+- 5027×4 全绿 (native/wasm-gc/js/wasm)

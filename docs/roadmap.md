@@ -2511,6 +2511,7 @@ flowchart LR
 | v221.0.0 | compression补充测试 | compression +23测试 (calculate_image_entropy+quantize_image+predictive_encode+calculate_compression_quality+compress_jpeg_simple+compress_png_simple+compress_image零宽度+无效通道+数据不匹配+levels<2+尺寸不一致) ✅ 2026-10-11 — 4910×4全绿 |
 | v222.0.0 | registration补充测试 | registration +15测试 (estimate_translation+warp_affine_transform+align_images img1/img2零宽度+无效通道+数据不匹配) ✅ 2026-10-11 — 4925×4全绿 |
 | v223.0.0 | frequency补充测试 | frequency +15测试 (fft_2d+fft_2d_16+fft_2d_f+freq_filter+freq_filter_gaussian+haar_transform_2d+haar_denoise+haar_transform_2d_16+haar_denoise_16+haar_transform_2d_f+haar_denoise_f无效通道+levels<1+levels>10) ✅ 2026-10-11 — 4940×4全绿 |
+| v224.0.0 | 8模块补充测试 | pose_estimation+segmentation+face_recognition+style_transfer+explainable_ai+forensics_enhanced+production_utils+performance +87测试 (标准三重验证+自定义错误条件+几何越界+通道不匹配) ✅ 2026-10-11 — 5027×4全绿 |
 
 ### 验收标准（每环）
 
