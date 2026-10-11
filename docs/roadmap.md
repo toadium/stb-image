@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v209.0.0 | 测试：4516 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v210.0.0 | 测试：4563 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -63,7 +63,7 @@ flowchart LR
 - **image v4.10.0 的独特优势**：
 - PSD/HDR/PNM 独家格式（其他库均不支持）
 - 16-bit/float 像素深度（仅 bikallem 有 16-bit）
-- 1338 公开函数 + 491 类型，4516 测试 × 4 目标
+- 1338 公开函数 + 491 类型，4563 测试 × 4 目标
 - 全格式 roundtrip 验证
 - EXIF/PNG 元数据读取（独家）
 - 形态学操作 + 图像质量评估（MSE/PSNR/SSIM）（独家）
@@ -2497,6 +2497,7 @@ flowchart LR
 | v207.0.0 | edge边界测试 | edge +120测试 (canny/sobel/laplacian/prewitt/contours/hough_lines/hough_circles/approx_poly_dp/hu_moments错误路径+8bit+16bit+float+边界) ✅ 2026-10-11 — 4452×4全绿 |
 | v208.0.0 | barcode补充测试 | barcode +31测试 (无效通道0/5+数据不匹配+零高度 for decode_ean13/upca/code128/code39/linear/qrcode/qrcode_full/barcode/detect_qr_finder_patterns + reed_solomon_decode边界) ✅ 2026-10-11 — 4483×4全绿 |
 | v209.0.0 | segment补充测试 | segment +33测试 (watershed/skeletonize/distance_transform/flood_fill/region_growing/kmeans/slic/grab_cut无效通道+参数越界+markers不匹配+connectivity非4/8) ✅ 2026-10-11 — 4516×4全绿 |
+| v210.0.0 | enhance补充测试 | enhance +47测试 (dehaze/denoise/hdr/inpaint无效通道+数据不匹配+参数越界+尺寸不一致+config参数错误) ✅ 2026-10-11 — 4563×4全绿 |
 
 ### 验收标准（每环）
 

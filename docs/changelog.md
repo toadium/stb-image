@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v209.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v209.0.0。
+> 下表为**功能迭代版本**（v0.1 → v210.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v210.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1686,3 +1686,25 @@
 - slic: 零宽度/零高度, k=0, max_iters=0
 - grab_cut: 1x1/1xN, 灰度图, 无效通道2
 - 4516×4 全绿 (native/wasm-gc/js/wasm)
+## v210.0.0 - enhance 补充错误路径测试
+- 为 enhance 模块补充未覆盖的错误路径 (+47 测试)
+- dark_channel: 无效通道0/5, 数据不匹配, patch_size零/偶数
+- estimate_atmospheric_light: 无效通道, dark通道非1
+- estimate_transmission: omega越界
+- guided_filter_image: 尺寸不一致, radius零
+- dehaze_recover: transmission通道非1, atmospheric空
+- dehaze_advanced: 数据不匹配, config patch_size偶数
+- denoise_nlm: 无效通道, 数据不匹配, config h零
+- denoise_bilateral: 无效通道, 数据不匹配, diameter零, sigma_color零
+- denoise_median: 无效通道, kernel_size零
+- denoise: 无效通道
+- hdr_fusion_average/weighted: 无效通道, 图像尺寸不一致
+- tone_mapping_reinhard: key零, 数据不匹配
+- tone_mapping_gamma: gamma零
+- tone_mapping_sigmoid: strength零, 无效通道
+- hdr_process: config gamma/reinhard_key/sigmoid_strength零
+- inpaint_advanced: 无效通道, 数据不匹配, mask尺寸不匹配, radius零
+- create_rect_mask: rect_w零, 超出边界
+- remove_small_objects: 无效通道, 数据不匹配
+- remove_watermark: 无效通道, width零, 超出边界
+- 4563×4 全绿 (native/wasm-gc/js/wasm)
