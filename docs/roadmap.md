@@ -2506,6 +2506,7 @@ flowchart LR
 | v216.0.0 | ocr补充测试 | ocr +52测试 (detect_h/v_lines+table_lines+evaluate_scan_quality+detect_table_enhanced+char_segmentation+touching_chars+text_lines_projection+analyze_document_layout+layout_scan+columns+language+skew_robust+correct_slant+background_norm+extract_text_lines+fast_cc+downsample+distortions+stroke_features+zernike+combined_features+cache_friendly+handwriting_slant+drop_fall+image_regions零宽度+多通道+数据不匹配+min_length=0+max_gap<0+空数组) ✅ 2026-10-11 — 4782×4全绿 |
 | v217.0.0 | detection补充测试 | detection +19测试 (bbox_new width/height=0+score<0/>1+class_id<0+bbox_iou零尺寸+calculate_iou零尺寸+non_max_suppression空列表+iou_threshold<0/>1+max_detections=0+nms空列表+detect_objects_simple零宽度+draw_detections零宽度+calculate_detection_metrics空数组+initialize/update_tracking空) ✅ 2026-10-11 — 4801×4全绿 |
 | v218.0.0 | encryption补充测试 | encryption +23测试 (xor_encrypt零宽度+无效通道+数据不匹配+空密钥+encrypt/decrypt_logistic+xor零宽度+embed_watermark+extract_watermark+correlation+psnr+entropy+histogram+evaluate_quality+key_sensitivity+adjacent_correlation零宽度+batch_encrypt空数组+arnold/chaotic_encrypt零宽度) ✅ 2026-10-11 — 4824×4全绿 |
+| v219.0.0 | forensics补充测试 | forensics +17测试 (analyze_color_distribution零宽度+数据不匹配+analyze_color_quantization+compression_artifacts+details+edge_directions+edges+frequency_domain+geometry+noise_pattern+texture+pixel_distribution+solid_areas零宽度+detect_text_regions+detect_ui_elements+verify_image_source+verify_image_source_enhanced零宽度) ✅ 2026-10-11 — 4841×4全绿 |
 
 ### 验收标准（每环）
 

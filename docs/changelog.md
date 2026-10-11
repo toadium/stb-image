@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v218.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v218.0.0。
+> 下表为**功能迭代版本**（v0.1 → v219.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v219.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1824,3 +1824,12 @@
 - batch_encrypt: 空数组
 - arnold_scramble/chaotic_encrypt: 零宽度
 - 4824×4 全绿 (native/wasm-gc/js/wasm)
+## v219.0.0 - forensics 错误路径测试
+- 为 forensics 模块补充错误路径 (+17 测试)
+- analyze_color_distribution: 零宽度, 数据不匹配
+- analyze_color_quantization/analyze_compression_artifacts/analyze_details: 零宽度
+- analyze_edge_directions/analyze_edges/analyze_frequency_domain/analyze_geometry: 零宽度
+- analyze_noise_pattern/analyze_texture/analyze_pixel_distribution/analyze_solid_areas: 零宽度
+- detect_text_regions/detect_ui_elements: 零宽度
+- verify_image_source/verify_image_source_enhanced: 零宽度
+- 4841×4 全绿 (native/wasm-gc/js/wasm)
