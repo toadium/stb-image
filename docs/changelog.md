@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v220.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v220.0.0。
+> 下表为**功能迭代版本**（v0.1 → v221.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v221.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1843,3 +1843,11 @@
 - unsharp_mask_enhance/calculate_brightness/calculate_contrast/calculate_sharpness: 零宽度, 无效通道, 数据不匹配
 - denoise_image/enhance_image_advanced: 零宽度, 无效通道, 数据不匹配
 - 4887×4 全绿 (native/wasm-gc/js/wasm)
+## v221.0.0 - compression 错误路径测试
+- 为 compression 模块补充错误路径 (+23 测试)
+- calculate_image_entropy: 零宽度, 无效通道, 数据不匹配
+- quantize_image: 零宽度, 无效通道, 数据不匹配, levels < 2
+- predictive_encode: 零宽度, 无效通道, 数据不匹配
+- calculate_compression_quality: 零宽度, 无效通道, 数据不匹配, 尺寸不一致
+- compress_jpeg_simple/compress_png_simple/compress_image: 零宽度, 无效通道, 数据不匹配
+- 4910×4 全绿 (native/wasm-gc/js/wasm)

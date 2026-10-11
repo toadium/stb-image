@@ -2508,6 +2508,7 @@ flowchart LR
 | v218.0.0 | encryption补充测试 | encryption +23测试 (xor_encrypt零宽度+无效通道+数据不匹配+空密钥+encrypt/decrypt_logistic+xor零宽度+embed_watermark+extract_watermark+correlation+psnr+entropy+histogram+evaluate_quality+key_sensitivity+adjacent_correlation零宽度+batch_encrypt空数组+arnold/chaotic_encrypt零宽度) ✅ 2026-10-11 — 4824×4全绿 |
 | v219.0.0 | forensics补充测试 | forensics +17测试 (analyze_color_distribution零宽度+数据不匹配+analyze_color_quantization+compression_artifacts+details+edge_directions+edges+frequency_domain+geometry+noise_pattern+texture+pixel_distribution+solid_areas零宽度+detect_text_regions+detect_ui_elements+verify_image_source+verify_image_source_enhanced零宽度) ✅ 2026-10-11 — 4841×4全绿 |
 | v220.0.0 | denoise补充测试 | denoise +46测试 (mean/median/gaussian/bilateral_filter_denoise零宽度+无效通道+数据不匹配+kernel_size<1+sigma<=0+sigma_color<=0+sigma_space<=0+calculate_noise_level+histogram_equalization+gamma_correction+unsharp_mask+brightness+contrast+sharpness+denoise_image+enhance_image_advanced零宽度+无效通道+数据不匹配) ✅ 2026-10-11 — 4887×4全绿 |
+| v221.0.0 | compression补充测试 | compression +23测试 (calculate_image_entropy+quantize_image+predictive_encode+calculate_compression_quality+compress_jpeg_simple+compress_png_simple+compress_image零宽度+无效通道+数据不匹配+levels<2+尺寸不一致) ✅ 2026-10-11 — 4910×4全绿 |
 
 ### 验收标准（每环）
 
