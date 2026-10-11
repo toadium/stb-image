@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v217.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v217.0.0。
+> 下表为**功能迭代版本**（v0.1 → v218.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v218.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1811,3 +1811,16 @@
 - initialize_object_tracking: 空检测结果
 - update_object_tracking: 空跟踪列表
 - 4801×4 全绿 (native/wasm-gc/js/wasm)
+## v218.0.0 - encryption 错误路径测试
+- 为 encryption 模块补充错误路径 (+23 测试)
+- xor_encrypt: 零宽度, 无效通道, 数据不匹配, 空密钥
+- encrypt/decrypt_image_logistic: 零宽度, 数据不匹配
+- encrypt/decrypt_image_xor: 零宽度
+- embed_visible_watermark/embed_watermark_lsb/extract_watermark_lsb: 零宽度
+- calculate_correlation/calculate_psnr: 零宽度
+- calculate_image_entropy/histogram_entropy: 零宽度
+- evaluate_encryption_quality/evaluate_image_encryption_quality: 零宽度
+- key_sensitivity_test/adjacent_correlation: 零宽度
+- batch_encrypt: 空数组
+- arnold_scramble/chaotic_encrypt: 零宽度
+- 4824×4 全绿 (native/wasm-gc/js/wasm)
