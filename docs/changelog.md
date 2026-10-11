@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v210.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v210.0.0。
+> 下表为**功能迭代版本**（v0.1 → v211.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v211.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1708,3 +1708,15 @@
 - remove_small_objects: 无效通道, 数据不匹配
 - remove_watermark: 无效通道, width零, 超出边界
 - 4563×4 全绿 (native/wasm-gc/js/wasm)
+## v211.0.0 - transform 补充错误路径测试
+- 为 transform 模块补充未覆盖的错误路径 (+21 测试)
+- crop_f: 区域越界
+- resize_to_cover: 目标宽度零
+- resize_to_contain: 目标高度零, 空填充色
+- pyr_down: 无效通道2, 图像太小
+- pyr_up: 无效通道2
+- pyr_down_16/f: 无效通道2, 图像太小
+- pyr_up_16/f: 无效通道2
+- seam_carve_resize_16/f: 无效尺寸, 放大超过2倍
+- multi_band_blend_16/f: 图像尺寸不匹配, mask尺寸不匹配
+- 4584×4 全绿 (native/wasm-gc/js/wasm)
