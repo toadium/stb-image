@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v215.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v215.0.0。
+> 下表为**功能迭代版本**（v0.1 → v216.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v216.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1777,3 +1777,24 @@
 - nlm_denoise_16/f, nlm_denoise_fast_16/f: 零宽度
 - 8bit补充: box_blur/gaussian_blur/median_blur/bilateral_filter/nlm_denoise/sharpen/convolve无效通道, inpaint/inpaint_fast尺寸不匹配
 - 4730×4 全绿 (native/wasm-gc/js/wasm)
+## v216.0.0 - ocr 错误路径增强测试
+- 为 ocr 模块补充未覆盖函数的错误路径 (+52 测试)
+- detect_horizontal/vertical_lines: 零宽度, 多通道, 数据不匹配, min_length=0, max_gap<0
+- detect_horizontal/vertical_table_lines: 零宽度, 多通道
+- evaluate_scan_quality: 零宽度, 无效通道, 数据不匹配
+- detect_table_enhanced: 零宽度, 多通道
+- complete_char_segmentation/detect_touching_chars: 零宽度, 多通道
+- detect_text_lines_projection: 零宽度, 多通道
+- analyze_document_layout/analyze_layout_scan: 零宽度
+- detect_columns/detect_document_columns: 零宽度
+- detect_document_language/detect_char_language/detect_language_enhanced: 零宽度
+- detect_skew_angle_robust/correct_slant: 零宽度, 多通道
+- background_normalization/extract_text_lines: 零宽度, 多通道
+- fast_connected_components/fast_downsample_2x: 零宽度
+- detect_distortions/extract_stroke_features/extract_zernike_moments: 零宽度
+- extract_combined_ocr_features/combined_features: 零宽度
+- cache_friendly_horizontal/vertical_projection: 零宽度
+- detect_handwriting_slant/drop_fall_segmentation: 零宽度, 多通道
+- detect_image_regions_markdown: 零宽度
+- batch_scan_ocr/analyze_table_structure: 空数组
+- 4782×4 全绿 (native/wasm-gc/js/wasm)
