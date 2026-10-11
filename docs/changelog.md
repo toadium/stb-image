@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v229.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v229.0.0。
+> 下表为**功能迭代版本**（v0.1 → v230.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v230.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1910,4 +1910,8 @@
 - feature_advanced_16f: +45 tests (harris/sift/orb/good_features 16/f 错误路径)
 - color_space_16f: +38 tests (rgb_to_hsl/hsv/xyz/lab 16/f 错误路径+功能分支)
 - remote_sensing: +35 tests (ndvi/ndwi/ndbi/evi/false_color/true_color 第二三参数错误+尺寸不匹配)
-- 5360×4 全绿 (native/wasm-gc/js/wasm)
+- 5360×4 全绿 (native/wasm-gc/js/w?asm)
+
+## v230.0.0 - yolo_detection 错误路径+功能补充
+- yolo_detection: +19 tests (refine_bounding_box错误+detect_objects_simple 8种错误+non_max_suppression排序/限制/抑制/不同类别+calculate_iou重叠)
+- 5379×4 全绿 (native/wasm-gc/js/wasm)
