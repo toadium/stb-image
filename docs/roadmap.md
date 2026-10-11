@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v213.0.0 | 测试：4782 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v213.0.0 | 测试：4801 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2504,6 +2504,7 @@ flowchart LR
 | v214.0.0 | feature补充测试 | feature +68测试 (histogram_16/f+equalize/normalize/matching_16/f+ahash/dhash/phash_16/f+harris/good_features_16/f+gabor/filter_bank_16/f+glcm_16/f+multi_direction_16/f+lbp/uniform_16/f+integral_16/f+mse/psnr/ssim_16/f+lucas_kanade/horn_schunck_16/f+template_match_16/f+orb/sift_16/f零宽度+空数组+图像太小) ✅ 2026-10-11 — 4688×4全绿 |
 | v215.0.0 | filter补充测试 | filter +42测试 (box_blur_16/f+gaussian_blur_16/f+sharpen_16/f+median_blur_16/f+convolve_16/f+bilateral_filter_16/f+bilateral_fast_16/f+inpaint_16/f+inpaint_fast_16/f+nlm_denoise_16/f+nlm_fast_16/f零宽度+负半径+sigma零+ksize零/偶数+scale零+radius零+数据不匹配+8bit无效通道+尺寸不匹配) ✅ 2026-10-11 — 4730×4全绿 |
 | v216.0.0 | ocr补充测试 | ocr +52测试 (detect_h/v_lines+table_lines+evaluate_scan_quality+detect_table_enhanced+char_segmentation+touching_chars+text_lines_projection+analyze_document_layout+layout_scan+columns+language+skew_robust+correct_slant+background_norm+extract_text_lines+fast_cc+downsample+distortions+stroke_features+zernike+combined_features+cache_friendly+handwriting_slant+drop_fall+image_regions零宽度+多通道+数据不匹配+min_length=0+max_gap<0+空数组) ✅ 2026-10-11 — 4782×4全绿 |
+| v217.0.0 | detection补充测试 | detection +19测试 (bbox_new width/height=0+score<0/>1+class_id<0+bbox_iou零尺寸+calculate_iou零尺寸+non_max_suppression空列表+iou_threshold<0/>1+max_detections=0+nms空列表+detect_objects_simple零宽度+draw_detections零宽度+calculate_detection_metrics空数组+initialize/update_tracking空) ✅ 2026-10-11 — 4801×4全绿 |
 
 ### 验收标准（每环）
 

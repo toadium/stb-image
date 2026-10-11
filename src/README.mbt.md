@@ -94,7 +94,7 @@ try {
 
 ## Multi-Target
 
-native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional compilation. 4782 tests pass per target, 90.4% coverage.
+native / wasm-gc / js / wasm — same pure MoonBit codebase, no conditional compilation. 4801 tests pass per target, 90.4% coverage.
 
 ## Documentation
 

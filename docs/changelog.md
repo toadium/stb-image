@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v216.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v216.0.0。
+> 下表为**功能迭代版本**（v0.1 → v217.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v217.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1798,3 +1798,16 @@
 - detect_image_regions_markdown: 零宽度
 - batch_scan_ocr/analyze_table_structure: 空数组
 - 4782×4 全绿 (native/wasm-gc/js/wasm)
+## v217.0.0 - detection 错误路径测试
+- 为 detection 模块补充错误路径 (+19 测试)
+- bbox_new: width=0, height=0, score<0, score>1, class_id<0
+- bbox_iou: 零宽度框1, 零高度框2
+- calculate_iou: 框1零尺寸, 框2零尺寸
+- non_max_suppression: 空列表, iou_threshold<0, iou_threshold>1, max_detections=0
+- nms: 空列表
+- detect_objects_simple: 零宽度
+- draw_detections: 零宽度
+- calculate_detection_metrics: 空数组
+- initialize_object_tracking: 空检测结果
+- update_object_tracking: 空跟踪列表
+- 4801×4 全绿 (native/wasm-gc/js/wasm)
