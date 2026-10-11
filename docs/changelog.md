@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v228.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v228.0.0。
+> 下表为**功能迭代版本**（v0.1 → v229.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v229.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1906,3 +1906,8 @@
 - segmentation.mbt: +26 tests (watershed_default_config/watershed_segment/region_growing/threshold_otsu/segmentation_to_color 功能路径)
 - image_stitch.mbt: +24 tests (invert_homography奇异矩阵/detect_features_simple角点检测/match_features多描述子/estimate_homography_ransac/stitch_images/apply_homography)
 - 5242×4 全绿 (native/wasm-gc/js/wasm)
+## v229.0.0 - 3模块错误路径补充
+- feature_advanced_16f: +45 tests (harris/sift/orb/good_features 16/f 错误路径)
+- color_space_16f: +38 tests (rgb_to_hsl/hsv/xyz/lab 16/f 错误路径+功能分支)
+- remote_sensing: +35 tests (ndvi/ndwi/ndbi/evi/false_color/true_color 第二三参数错误+尺寸不匹配)
+- 5360×4 全绿 (native/wasm-gc/js/wasm)
