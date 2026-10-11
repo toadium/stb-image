@@ -2519,6 +2519,7 @@ flowchart LR
 | v229.0.0 | 3模块错误路径补充 | feature_advanced_16f+color_space_16f+remote_sensing +118测试 (harris/sift/orb/good_features 16/f错误路径+rgb_to_hsl/hsv/xyz/lab 16/f错误路径+ndvi/ndwi/ndbi/evi/false_color/true_color第二三参数错误+尺寸不匹配) ✅ 2026-10-11 — 5360×4全绿 |
 | v230.0.0 | yolo_detection错误路径+功能补充 | yolo_detection +19测试 (refine_bounding_box错误+detect_objects_simple 8种错误+non_max_suppression排序/限制/抑制/不同类别+calculate_iou重叠) ✅ 2026-10-11 — 5379×4全绿 |
 | v231.0.0 | OCR模块功能+错误路径测试 | projection_analysis+table_image_extraction+ocr_accuracy_enhanced +123测试 (投影错误路径+文本行检测+字符分割+表格线检测+交叉点+Markdown转换+Zernike/Gabor/方向特征+加权KNN多距离度量+置信度校准+多尺度识别+增强OCR识别) ✅ 2026-10-11 — 5502×4全绿 |
+| v232.0.0 | chinese_ocr_enhanced+multilingual_ocr_enhanced+qr_decode功能测试 | chinese_ocr_enhanced+multilingual_ocr_enhanced+qr_decode +74测试 (结构过滤多路径+笔画特征+增强中文识别+语言检测+智能分割+智能间距+标点规范化+语言模型+多语言识别+QR解码+Reed-Solomon) ✅ 2026-10-11 — 5576×4全绿 |
 
 ### 验收标准（每环）
 

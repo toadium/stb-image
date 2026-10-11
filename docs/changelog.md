@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v231.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v231.0.0。
+> 下表为**功能迭代版本**（v0.1 → v232.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v232.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1921,3 +1921,8 @@
 - ocr_accuracy_enhanced: +38 tests (Zernike/Gabor/方向特征, 加权KNN多距离度量, 置信度校准, 组合特征, 多尺度识别, 增强OCR识别)
 - 修复3个warning: 删除未使用函数, not()→!操作符
 - 5502×4 全绿 (native/wasm-gc/js/wasm)
+## v232.0.0 - chinese_ocr_enhanced + multilingual_ocr_enhanced + qr_decode 功能测试
+- chinese_ocr_enhanced: +28 tests (结构过滤多路径, 笔画特征, 增强中文识别多配置)
+- multilingual_ocr_enhanced: +33 tests (语言检测, 智能分割, 智能间距, 标点规范化, 语言模型, 多语言识别)
+- qr_decode: +13 tests (QR解码功能路径, Reed-Solomon纠错)
+- 5576×4 全绿 (native/wasm-gc/js/wasm)
