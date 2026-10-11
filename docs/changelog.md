@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v232.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v232.0.0。
+> 下表为**功能迭代版本**（v0.1 → v233.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v233.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1926,3 +1926,8 @@
 - multilingual_ocr_enhanced: +33 tests (语言检测, 智能分割, 智能间距, 标点规范化, 语言模型, 多语言识别)
 - qr_decode: +13 tests (QR解码功能路径, Reed-Solomon纠错)
 - 5576×4 全绿 (native/wasm-gc/js/wasm)
+## v233.0.0 - robustness_enhancement + multilingual_ocr + char_segmentation 功能测试
+- robustness_enhancement: +33 tests (自适应配置多质量等级, 倾斜检测, 畸变检测, 复杂版面, 鲁棒性报告)
+- multilingual_ocr: +28 tests (语言检测, 文档语言检测, 多语言识别)
+- char_segmentation: +29 tests (滴水分割, 粘连检测, 连通域分割, 合并/过滤/完整分割)
+- 5666×4 全绿 (native/wasm-gc/js/wasm)
