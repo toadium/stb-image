@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v207.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v207.0.0。
+> 下表为**功能迭代版本**（v0.1 → v208.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v208.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1667,3 +1667,10 @@
 - float 变体: canny_edge_f/edge_detect_*_f/find_contours_f/draw_contours_f/hough_lines_f/hough_circles_f
 - 边界条件: convex_hull/image_moments/min_enclosing_circle 空数组/单点, approx_poly_dp closed=false
 - 4452×4 全绿 (native/wasm-gc/js/wasm)
+## v208.0.0 - barcode 补充错误路径测试
+- 为 barcode 模块补充未覆盖的错误路径 (+31 测试)
+- 无效通道: channels=0/5 for decode_ean13/upca/code128/code39/linear_barcode/qrcode/qrcode_full/barcode/detect_qr_finder_patterns
+- 数据大小不匹配: 全部9个函数
+- 零高度: 全部9个函数
+- reed_solomon_decode: 单元素/ec_bytes=0 边界
+- 4483×4 全绿 (native/wasm-gc/js/wasm)
