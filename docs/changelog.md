@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v233.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v233.0.0。
+> 下表为**功能迭代版本**（v0.1 → v234.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v234.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1926,6 +1926,11 @@
 - multilingual_ocr_enhanced: +33 tests (语言检测, 智能分割, 智能间距, 标点规范化, 语言模型, 多语言识别)
 - qr_decode: +13 tests (QR解码功能路径, Reed-Solomon纠错)
 - 5576×4 全绿 (native/wasm-gc/js/wasm)
+## v234.0.0 - scan_document_ocr + handwriting_ocr_enhanced + document_understanding_enhanced 功能测试
+- scan_document_ocr: +38 tests (扫描质量评估错误路径+功能路径, 文档预处理多配置, 版面分析, OCR识别, 批量OCR, 结果导出text/hOCR/JSON)
+- handwriting_ocr_enhanced: +33 tests (手写体模板生成, 笔画特征提取错误路径+功能路径, 弹性匹配, 连笔分割, 后处理, 增强识别多配置)
+- document_understanding_enhanced: +43 tests (增强版面分析错误路径+功能路径, 阅读顺序优化, 段落检测, 标题检测, 文档结构树, 文本提取, 文档统计, 完整文档理解)
+- 5780×4 全绿 (native/wasm-gc/js/wasm)
 ## v233.0.0 - robustness_enhancement + multilingual_ocr + char_segmentation 功能测试
 - robustness_enhancement: +33 tests (自适应配置多质量等级, 倾斜检测, 畸变检测, 复杂版面, 鲁棒性报告)
 - multilingual_ocr: +28 tests (语言检测, 文档语言检测, 多语言识别)

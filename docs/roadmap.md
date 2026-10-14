@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-11 | 当前版本：v213.0.0 | 测试：4824 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-14 | 当前版本：v234.0.0 | 测试：5780 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2520,7 +2520,8 @@ flowchart LR
 | v230.0.0 | yolo_detection错误路径+功能补充 | yolo_detection +19测试 (refine_bounding_box错误+detect_objects_simple 8种错误+non_max_suppression排序/限制/抑制/不同类别+calculate_iou重叠) ✅ 2026-10-11 — 5379×4全绿 |
 | v231.0.0 | OCR模块功能+错误路径测试 | projection_analysis+table_image_extraction+ocr_accuracy_enhanced +123测试 (投影错误路径+文本行检测+字符分割+表格线检测+交叉点+Markdown转换+Zernike/Gabor/方向特征+加权KNN多距离度量+置信度校准+多尺度识别+增强OCR识别) ✅ 2026-10-11 — 5502×4全绿 |
 | v232.0.0 | chinese_ocr_enhanced+multilingual_ocr_enhanced+qr_decode功能测试 | chinese_ocr_enhanced+multilingual_ocr_enhanced+qr_decode +74测试 (结构过滤多路径+笔画特征+增强中文识别+语言检测+智能分割+智能间距+标点规范化+语言模型+多语言识别+QR解码+Reed-Solomon) ✅ 2026-10-11 — 5576×4全绿 |
-| v233.0.0 | robustness_enhancement+multilingual_ocr+char_segmentation功能测试 | robustness_enhancement+multilingual_ocr+char_segmentation +90测试 (自适应配置多质量等级+倾斜检测+畸变检测+复杂版面+鲁棒性报告+语言检测+多语言识别+滴水分割+粘连检测+连通域分割+合并/过滤/完整分割) ✅ 2026-10-11 — 5666×4全绿 |
+| v233.0.0 | robustness_enhancement+multilingual_ocr+char_segmentation功能测试 | robustness_enhancement+multilingual_ocr+char_segmentation +90测试 (自适应配置多质量等级+倾斜检测+畸变检测+复杂版面+鲁棒性报告+语言检测+多语言识别+滴水分割+粘连检测+连通域分割+合并/过滤/完整分割) ✅ 2026-10-14 — 5666×4全绿 |
+| v234.0.0 | scan_document_ocr+handwriting_ocr_enhanced+document_understanding_enhanced功能测试 | scan_document_ocr+handwriting_ocr_enhanced+document_understanding_enhanced +114测试 (扫描质量评估+文档预处理+版面分析+OCR识别+批量OCR+结果导出+手写体模板+笔画特征+弹性匹配+连笔分割+后处理+增强识别+增强版面分析+阅读顺序+段落检测+标题检测+文档结构树+文本提取+文档统计+完整文档理解) ✅ 2026-10-14 — 5780×4全绿 |
 
 ### 验收标准（每环）
 
