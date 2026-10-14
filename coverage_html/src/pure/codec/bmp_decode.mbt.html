@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>bmp_decode.mbt &mdash; </title>
+    <meta name="description" content="97.30% coverage in src\pure\codec\bmp_decode.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\pure\codec\</span>bmp_decode.mbt
+        </a>
+      </h1>
+      <h2>97.30%</h2>
+    </div>
+    <div id="navbar">
+      <span class="some-visited" style="bottom:48.89%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span class="visited"> </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span class="visited"> </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span class="visited"> </span>
+<a id="L16"></a><span class="visited"> </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span class="visited"> </span>
+<a id="L19"></a><span class="visited"> </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span class="visited"> </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span > </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span class="visited"> </span>
+<a id="L27"></a><span class="visited"> </span>
+<a id="L28"></a><span class="visited"> </span>
+<a id="L29"></a><span class="visited"> </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span class="visited"> </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span class="visited"> </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span class="visited"> </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span class="some-visited"> </span>
+<a id="L47"></a><span class="visited"> </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span > </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span class="visited"> </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span > </span>
+<a id="L59"></a><span class="visited"> </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span > </span>
+<a id="L63"></a><span class="visited"> </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span class="visited"> </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span class="visited"> </span>
+<a id="L69"></a><span > </span>
+<a id="L70"></a><span > </span>
+<a id="L71"></a><span class="visited"> </span>
+<a id="L72"></a><span class="visited"> </span>
+<a id="L73"></a><span class="visited"> </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span class="visited"> </span>
+<a id="L76"></a><span class="visited"> </span>
+<a id="L77"></a><span class="visited"> </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span class="visited"> </span>
+<a id="L80"></a><span class="visited"> </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span class="visited"> </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1"> 1</a>
+<a href="#L2"> 2</a>
+<a href="#L3"> 3</a>
+<a href="#L4"> 4</a>
+<a href="#L5"> 5</a>
+<a href="#L6"> 6</a>
+<a href="#L7"> 7</a>
+<a href="#L8"> 8</a>
+<a href="#L9"> 9</a>
+<a href="#L10">10</a>
+<a href="#L11">11</a>
+<a href="#L12">12</a>
+<a href="#L13">13</a>
+<a href="#L14">14</a>
+<a href="#L15">15</a>
+<a href="#L16">16</a>
+<a href="#L17">17</a>
+<a href="#L18">18</a>
+<a href="#L19">19</a>
+<a href="#L20">20</a>
+<a href="#L21">21</a>
+<a href="#L22">22</a>
+<a href="#L23">23</a>
+<a href="#L24">24</a>
+<a href="#L25">25</a>
+<a href="#L26">26</a>
+<a href="#L27">27</a>
+<a href="#L28">28</a>
+<a href="#L29">29</a>
+<a href="#L30">30</a>
+<a href="#L31">31</a>
+<a href="#L32">32</a>
+<a href="#L33">33</a>
+<a href="#L34">34</a>
+<a href="#L35">35</a>
+<a href="#L36">36</a>
+<a href="#L37">37</a>
+<a href="#L38">38</a>
+<a href="#L39">39</a>
+<a href="#L40">40</a>
+<a href="#L41">41</a>
+<a href="#L42">42</a>
+<a href="#L43">43</a>
+<a href="#L44">44</a>
+<a href="#L45">45</a>
+<a href="#L46">46</a>
+<a href="#L47">47</a>
+<a href="#L48">48</a>
+<a href="#L49">49</a>
+<a href="#L50">50</a>
+<a href="#L51">51</a>
+<a href="#L52">52</a>
+<a href="#L53">53</a>
+<a href="#L54">54</a>
+<a href="#L55">55</a>
+<a href="#L56">56</a>
+<a href="#L57">57</a>
+<a href="#L58">58</a>
+<a href="#L59">59</a>
+<a href="#L60">60</a>
+<a href="#L61">61</a>
+<a href="#L62">62</a>
+<a href="#L63">63</a>
+<a href="#L64">64</a>
+<a href="#L65">65</a>
+<a href="#L66">66</a>
+<a href="#L67">67</a>
+<a href="#L68">68</a>
+<a href="#L69">69</a>
+<a href="#L70">70</a>
+<a href="#L71">71</a>
+<a href="#L72">72</a>
+<a href="#L73">73</a>
+<a href="#L74">74</a>
+<a href="#L75">75</a>
+<a href="#L76">76</a>
+<a href="#L77">77</a>
+<a href="#L78">78</a>
+<a href="#L79">79</a>
+<a href="#L80">80</a>
+<a href="#L81">81</a>
+<a href="#L82">82</a>
+<a href="#L83">83</a>
+<a href="#L84">84</a>
+<a href="#L85">85</a>
+<a href="#L86">86</a>
+<a href="#L87">87</a>
+<a href="#L88">88</a>
+<a href="#L89">89</a>
+<a href="#L90">90</a>
+</pre>
+<pre><code class="ocaml">// 纯 MoonBit BMP 解码器
+// 支持 24-bit / 32-bit 无压缩 BMP（BI_RGB，compression=0）
+// 规范: https://en.wikipedia.org/wiki/BMP_file_format
+
+///|
+/// 解码 BMP 字节流为 Image（24-bit -&gt; channels=3, 32-bit -&gt; channels=4）
+/// 仅支持 BITMAPINFOHEADER（DIB 头 40 字节）+ BI_RGB（无压缩）
+pub fn decode_bmp_pure(data : Bytes) -&gt; @types.Image raise @types.LoadError {
+  <span data-count="42">l</span>et len = data.<span data-count="42">l</span>ength()
+  // BMP 文件头 14 字节 + DIB 头 40 字节 = 54 字节最小
+  if len &lt; 54 {
+    <span data-count="6">r</span>aise @types.LoadError::DecodeFailed("BMP 数据过短")
+  }
+  // 检查 magic "BM"
+  if data[0].<span data-count="36">t</span>o_int() != 0x42 || data[1].<span data-count="35">t</span>o_int() != 0x4D {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("BMP magic 不匹配")
+  }
+  let data_offset = <span data-count="35">r</span>ead_u32_le(data, 10)
+  let dib_size = <span data-count="35">r</span>ead_u32_le(data, 14)
+  // 仅支持 BITMAPINFOHEADER（40 字节）
+  if dib_size != 40 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "不支持的 BMP DIB 头大小，仅支持 BITMAPINFOHEADER（40 字节）",
+    )
+  }
+  let width = <span data-count="34">r</span>ead_u32_le(data, 18)
+  let height = <span data-count="34">r</span>ead_u32_le(data, 22)
+  let bpp = <span data-count="34">r</span>ead_u16_le(data, 28)
+  let compression = <span data-count="34">r</span>ead_u32_le(data, 30)
+  // 仅支持 24-bit 和 32-bit
+  if bpp != 24 &amp;&amp; bpp != 32 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "不支持的 BMP 位深，仅支持 24-bit 和 32-bit",
+    )
+  }
+  // 仅支持 BI_RGB（compression=0）
+  if compression != 0 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "不支持的 BMP 压缩方式，仅支持 BI_RGB（无压缩）",
+    )
+  }
+  // 尺寸校验
+  if width == 0 || height == 0 {
+    <span data-count="2">r</span>aise @types.LoadError::DecodeFailed("BMP 尺寸无效")
+  }
+  let abs_width = if width &lt; 0 { <span data-count="0">-</span>width } else { <span data-count="30">w</span>idth }
+  let abs_height = if height &lt; 0 { <span data-count="1">-</span>height } else { <span data-count="29">h</span>eight }
+  // 行序：height &gt; 0 自下而上，height &lt; 0 自上而下
+  let bottom_up = height &gt; 0
+  // 每像素字节数
+  let bytes_per_pixel = bpp / 8
+  // 行数据字节数（4 字节对齐）
+  let row_size = (abs_width * bytes_per_pixel + 3) / 4 * 4
+  // 输出 channels
+  let out_channels = bytes_per_pixel
+  <span data-count="30">@</span>types.check_dims(abs_width, abs_height, out_channels)
+  // 输出像素数据
+  let pixel_count = abs_width * abs_height
+  let pixels : Array[Byte] = <span data-count="29">A</span>rray::make(pixel_count * out_channels, b'\x00')
+  // 逐行读取
+  for file_row in 0..&lt;abs_height {
+    // 计算输出行号
+    <span data-count="47">l</span>et out_row = if bottom_up { <span data-count="45">a</span>bs_height - 1 - file_row } else { <span data-count="2">f</span>ile_row }
+    let row_start = data_offset + file_row * row_size
+    for x in 0..&lt;abs_width {
+      <span data-count="86">l</span>et pixel_offset = row_start + x * bytes_per_pixel
+      if pixel_offset + bytes_per_pixel &gt; len {
+        <span data-count="2">r</span>aise @types.LoadError::DecodeFailed("BMP 像素数据越界")
+      }
+      // BGR(A) -&gt; RGB(A)
+      let b = data[pixel_offset].<span data-count="84">t</span>o_int()
+      let g = data[pixel_offset + 1].<span data-count="84">t</span>o_int()
+      let r = data[pixel_offset + 2].<span data-count="84">t</span>o_int()
+      let out_idx = (out_row * abs_width + x) * out_channels
+      pixels[out_idx] = r.<span data-count="84">t</span>o_byte()
+      pixels[out_idx + 1] = g.<span data-count="84">t</span>o_byte()
+      pixels[out_idx + 2] = b.<span data-count="84">t</span>o_byte()
+      if out_channels == 4 {
+        <span data-count="1">l</span>et a = data[pixel_offset + 3].<span data-count="1">t</span>o_int()
+        pixels[out_idx + 3] = a.<span data-count="1">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: abs_width,
+    height: abs_height,
+    channels: out_channels,
+    data: <span data-count="27">B</span>ytes::from_array(pixels),
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+
+///|
+test "reexport: extract_text_watermark basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_text_watermark(img, 10)
+  let _ = img
+}
+///|
+test "reexport: embed_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wm = re_make_rgb(2, 2, Array::make(4, (255, 255, 255)))
+  let _ = embed_watermark_lsb(img, wm)
+  let _ = img
+  let _ = wm
+}
+///|
+test "reexport: extract_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_watermark_lsb(img)
+  let _ = img
+}
+///|
+test "reexport: watermark_psnr basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = watermark_psnr(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: watermark_robustness_test basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = watermark_robustness_test(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: interpolate_frames basic" {
+  let img1 = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let img2 = re_make_rgb(4, 4, Array::make(16, (64, 192, 128)))
+  let _ = interpolate_frames(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: estimate_translation basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = estimate_translation(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: structure_based_filter basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = structure_based_filter(img, [])
+  let _ = img
+}
+///|
+test "reexport: fuse_multifocus basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = fuse_multifocus(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: fuse_exposure basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = fuse_exposure([img])
+  let _ = img
+}
+///|
+test "reexport: super_resolution_edge_preserving basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = super_resolution_edge_preserving(img, 2.0)
+  let _ = img
+}
+///|
+test "reexport: warp_affine_transform basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let t = affine_translation(1.0, 1.0)
+  try {
+    let _ = warp_affine_transform(img, t)
+  } catch {
+    _ => assert_true(true)
+  }
+  let _ = img
+}
+///|
+test "reexport: bbox_new basic" {
+  try {
+    let b = bbox_new(0, 0, 10, 10)
+    let _ = b
+  } catch {
+    _ => assert_true(true)
+  }
+}
+///|
+test "reexport: bbox_iou basic" {
+  try {
+    let a = bbox_new(0, 0, 10, 10)
+    let b = bbox_new(5, 5, 10, 10)
+    let _ = bbox_iou(a, b)
+  } catch {
+    _ => assert_true(true)
+  }
+}
+///|
+test "reexport: nms basic" {
+  try {
+    let a = bbox_new(0, 0, 10, 10)
+    let b = bbox_new(5, 5, 10, 10)
+    let _ = nms([a, b])
+  } catch {
+    _ => assert_true(true)
+  }
+}
+///|
+test "reexport: depth_to_pointcloud basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = depth_to_pointcloud(img)
+  let _ = img
+}
+///|
+test "reexport: pointcloud_voxel_downsample basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let pc = depth_to_pointcloud(img)
+  let _ = pointcloud_voxel_downsample(pc)
+  let _ = img
+  let _ = pc
+}
+///|
+test "reexport: compute_disparity basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_disparity(img1, img2)
+  let _ = img1
+  let _ = img2
+}

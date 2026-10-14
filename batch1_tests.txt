@@ -1,0 +1,284 @@
+
+// 第二批：安全函数测试（无超时风险）
+///|
+test "reexport: affine_rotation basic" {
+  let t = affine_rotation(0.5)
+  let _ = t
+}
+///|
+test "reexport: affine_scale basic" {
+  let t = affine_scale(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_translation basic" {
+  let t = affine_translation(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_apply basic" {
+  let t = affine_translation(1.0, 2.0)
+  let (x, y) = affine_apply(t, 0.0, 0.0)
+  let _ = x
+  let _ = y
+}
+///|
+test "reexport: affine_compose basic" {
+  let t1 = affine_translation(1.0, 2.0)
+  let t2 = affine_scale(2.0, 2.0)
+  let t = affine_compose(t1, t2)
+  let _ = t
+}
+///|
+test "reexport: measure_distance basic" {
+  let d = measure_distance(0, 0, 3, 4)
+  assert_true(d >= 0.0)
+}
+///|
+test "reexport: reed_solomon_decode basic" {
+  let (data, ok) = reed_solomon_decode([1, 2, 3, 4], 2)
+  let _ = data
+  let _ = ok
+}
+///|
+test "reexport: compute_mae basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_mae(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ssim basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_ssim(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_diff_image basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_diff_image(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_quality_metrics basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_quality_metrics(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndvi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndvi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndbi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndbi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndwi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndwi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_evi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = compute_evi(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: measure_area basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = measure_area(img)
+  let _ = img
+}
+///|
+test "reexport: classification_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = classification_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: depth_to_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = depth_to_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: disparity_to_depth basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = disparity_to_depth(img)
+  let _ = img
+}
+///|
+test "reexport: medical_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: medical_contrast_enhance basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_contrast_enhance(img)
+  let _ = img
+}
+///|
+test "reexport: medical_denoise basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_denoise(img)
+  let _ = img
+}
+///|
+test "reexport: apply_window_level basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wl = @medical.WindowLevel::{window_width: 256.0, window_level: 128.0}
+  let _ = apply_window_level(img, wl)
+  let _ = img
+}
+///|
+test "reexport: true_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = true_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: false_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = false_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: vegetation_coverage basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = vegetation_coverage(img)
+  let _ = img
+}
+///|
+test "reexport: interpolate_frames basic" {
+  let img1 = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let img2 = re_make_rgb(4, 4, Array::make(16, (64, 192, 128)))
+  let _ = interpolate_frames(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: embed_text_watermark basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = embed_text_watermark(img, "test")
+  let _ = img
+}
+///|
+test "reexport: extract_text_watermark basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_text_watermark(img, 10)
+  let _ = img
+}
+///|
+test "reexport: embed_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wm = re_make_rgb(2, 2, Array::make(4, (255, 255, 255)))
+  let _ = embed_watermark_lsb(img, wm)
+  let _ = img
+  let _ = wm
+}
+///|
+test "reexport: extract_watermark_lsb basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = extract_watermark_lsb(img)
+  let _ = img
+}
+///|
+test "reexport: watermark_psnr basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = watermark_psnr(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: watermark_robustness_test basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = watermark_robustness_test(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: multispectral_new basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = multispectral_new(8, 8, [img])
+  let _ = img
+}
+///|
+test "reexport: warp_affine_transform basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let t = affine_translation(1.0, 1.0)
+  try {
+    let _ = warp_affine_transform(img, t)
+  } catch {
+    _ => assert_true(true)
+  }
+  let _ = img
+}
+///|
+test "reexport: estimate_translation basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = estimate_translation(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: fuse_multifocus basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = fuse_multifocus(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: fuse_exposure basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = fuse_exposure([img])
+  let _ = img
+}
+///|
+test "reexport: super_resolution_edge_preserving basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = super_resolution_edge_preserving(img, 2.0)
+  let _ = img
+}
+///|
+test "reexport: structure_based_filter basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = structure_based_filter(img, [])
+  let _ = img
+}

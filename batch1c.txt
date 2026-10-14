@@ -1,0 +1,77 @@
+
+// Batch 1c: colormap and medical
+///|
+test "reexport: classification_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = classification_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: depth_to_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = depth_to_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: disparity_to_depth basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = disparity_to_depth(img)
+  let _ = img
+}
+///|
+test "reexport: medical_colormap basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_colormap(img)
+  let _ = img
+}
+///|
+test "reexport: medical_contrast_enhance basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_contrast_enhance(img)
+  let _ = img
+}
+///|
+test "reexport: medical_denoise basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = medical_denoise(img)
+  let _ = img
+}
+///|
+test "reexport: apply_window_level basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let wl = @medical.WindowLevel::{window_width: 256.0, window_level: 128.0}
+  let _ = apply_window_level(img, wl)
+  let _ = img
+}
+///|
+test "reexport: true_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = true_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: false_color_composite basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = false_color_composite(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: vegetation_coverage basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = vegetation_coverage(img)
+  let _ = img
+}
+///|
+test "reexport: multispectral_new basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = multispectral_new(8, 8, [img])
+  let _ = img
+}

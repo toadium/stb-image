@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>tonemap.mbt &mdash; </title>
+    <meta name="description" content="76.12% coverage in src\process\color\tonemap.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\color\</span>tonemap.mbt
+        </a>
+      </h1>
+      <h2>76.12%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="top:17.37%"></span>
+      <span class="unvisited" style="top:20.36%"></span>
+      <span class="unvisited" style="top:23.95%"></span>
+      <span class="unvisited" style="top:25.15%"></span>
+      <span class="unvisited" style="top:26.35%"></span>
+      <span class="unvisited" style="top:28.74%"></span>
+      <span class="some-visited" style="top:32.34%"></span>
+      <span class="unvisited" style="bottom:40.72%"></span>
+      <span class="unvisited" style="bottom:37.72%"></span>
+      <span class="unvisited" style="bottom:34.13%"></span>
+      <span class="unvisited" style="bottom:32.93%"></span>
+      <span class="unvisited" style="bottom:31.74%"></span>
+      <span class="unvisited" style="bottom:29.34%"></span>
+      <span class="some-visited" style="bottom:25.75%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span class="visited"> </span>
+<a id="L7"></a><span class="visited"> </span>
+<a id="L8"></a><span class="visited"> </span>
+<a id="L9"></a><span class="visited"> </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span class="visited"> </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span > </span>
+<a id="L16"></a><span class="visited"> </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span > </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span class="visited"> </span>
+<a id="L29"></a><span class="unvisited"> </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span class="unvisited"> </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span class="visited"> </span>
+<a id="L40"></a><span class="unvisited"> </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span class="unvisited"> </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span class="unvisited"> </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span class="unvisited"> </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span class="some-visited"> </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span > </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span class="visited"> </span>
+<a id="L59"></a><span class="visited"> </span>
+<a id="L60"></a><span class="visited"> </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span class="visited"> </span>
+<a id="L63"></a><span class="visited"> </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span class="visited"> </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span class="visited"> </span>
+<a id="L69"></a><span > </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span class="visited"> </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span class="visited"> </span>
+<a id="L75"></a><span class="visited"> </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span > </span>
+<a id="L78"></a><span class="visited"> </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span class="visited"> </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span > </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span > </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span > </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+<a id="L98"></a><span class="visited"> </span>
+<a id="L99"></a><span class="unvisited"> </span>
+<a id="L100"></a><span > </span>
+<a id="L101"></a><span > </span>
+<a id="L102"></a><span > </span>
+<a id="L103"></a><span > </span>
+<a id="L104"></a><span class="unvisited"> </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span > </span>
+<a id="L107"></a><span > </span>
+<a id="L108"></a><span > </span>
+<a id="L109"></a><span class="visited"> </span>
+<a id="L110"></a><span class="unvisited"> </span>
+<a id="L111"></a><span > </span>
+<a id="L112"></a><span class="unvisited"> </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span class="unvisited"> </span>
+<a id="L115"></a><span > </span>
+<a id="L116"></a><span > </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span class="unvisited"> </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span class="some-visited"> </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span > </span>
+<a id="L128"></a><span class="visited"> </span>
+<a id="L129"></a><span class="visited"> </span>
+<a id="L130"></a><span > </span>
+<a id="L131"></a><span class="visited"> </span>
+<a id="L132"></a><span > </span>
+<a id="L133"></a><span > </span>
+<a id="L134"></a><span > </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span class="visited"> </span>
+<a id="L137"></a><span > </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span > </span>
+<a id="L140"></a><span class="visited"> </span>
+<a id="L141"></a><span > </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span class="visited"> </span>
+<a id="L145"></a><span > </span>
+<a id="L146"></a><span class="visited"> </span>
+<a id="L147"></a><span class="visited"> </span>
+<a id="L148"></a><span > </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span class="visited"> </span>
+<a id="L151"></a><span > </span>
+<a id="L152"></a><span class="visited"> </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span class="visited"> </span>
+<a id="L155"></a><span class="visited"> </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span class="visited"> </span>
+<a id="L159"></a><span > </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span > </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span class="visited"> </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+</pre>
+<pre><code class="ocaml">// 色调映射（纯 MoonBit）：Reinhard + Gamma
+// 将 HDR float 图像 (ImageF) 映射到 LDR 8-bit 图像 (Image)
+
+///|
+fn read_float_le(data : Bytes, offset : Int) -&gt; Float {
+  <span data-count="468">l</span>et b0 = data[offset].<span data-count="468">t</span>o_int()
+  let b1 = data[offset + 1].<span data-count="468">t</span>o_int()
+  let b2 = data[offset + 2].<span data-count="468">t</span>o_int()
+  let b3 = data[offset + 3].<span data-count="468">t</span>o_int()
+  let bits = b0 | (b1 &lt;&lt; 8) | (b2 &lt;&lt; 16) | (b3 &lt;&lt; 24)
+  <span data-count="468">F</span>loat::reinterpret_from_int(bits)
+}
+
+///|
+fn log_f(x : Float) -&gt; Float {
+  <span data-count="6">F</span>loat::from_double(<span data-count="6">@</span>math.log2(x.<span data-count="6">t</span>o_double()) * 0.6931471805599453)
+}
+
+///|
+/// Reinhard 全局色调映射。
+/// key 控制整体亮度（默认 0.18），值越大越亮。
+/// 公式：L_out = L_scaled / (1 + L_scaled)，其中 L_scaled = key * L / L_avg。
+pub fn reinhard_tonemap(
+  imgf : @types.ImageF,
+  key? : Float = 0.18F,
+) -&gt; @types.Image raise @types.LoadError {
+  // 输入验证
+  <span data-count="4">i</span>f imgf.width &lt;= 0 || imgf.height &lt;= 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap: 图像尺寸必须大于0",
+    )
+  }
+  if imgf.channels &lt; 1 || imgf.channels &gt; 4 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = imgf.width * imgf.height * imgf.channels * 4
+  if imgf.data.<span data-count="4">l</span>ength() != expected_size {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "reinhard_tonemap: 数据大小不匹配，期望 " +
+      expected_size.<span data-count="0">t</span>o_string() +
+      "，实际 " +
+      imgf.data.<span data-count="0">l</span>ength().<span data-count="0">t</span>o_string(),
+    )
+  }
+  if key &lt;= 0.0F {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed("reinhard_tonemap: key必须大于0")
+  }
+  let w = imgf.width
+  let h = imgf.height
+  let ch = imgf.channels
+  let n = w * h
+  let color_ch = if ch &gt;= 3 { <span data-count="4">3</span> } else { <span data-count="0">c</span>h }
+  // 计算对数平均亮度
+  let mut log_sum = 0.0F
+  for i in 0..&lt;n {
+    <span data-count="6">l</span>et r = <span data-count="6">r</span>ead_float_le(imgf.data, i * ch * 4)
+    let g = <span data-count="6">r</span>ead_float_le(imgf.data, i * ch * 4 + 4)
+    let b = <span data-count="6">r</span>ead_float_le(imgf.data, i * ch * 4 + 8)
+    let lum = 0.2126F * r + 0.7152F * g + 0.0722F * b
+    let lum_safe = if lum &gt; 0.0F { <span data-count="5">l</span>um } else { <span data-count="1">0</span>.0001F }
+    log_sum += <span data-count="6">l</span>og_f(lum_safe)
+  }
+  let log_avg = <span data-count="4">@</span>math.expf(log_sum / <span data-count="4">F</span>loat::from_int(n))
+  let scale = key / log_avg
+  // 应用 Reinhard 映射
+  let out : Array[Byte] = <span data-count="4">A</span>rray::make(n * ch, b'\x00')
+  for i in 0..&lt;n {
+    <span data-count="6">f</span>or c in 0..&lt;color_ch {
+      <span data-count="18">l</span>et v = <span data-count="18">r</span>ead_float_le(imgf.data, (i * ch + c) * 4)
+      let scaled = v * scale
+      let mapped = scaled / (1.0F + scaled)
+      let val = (mapped * 255.0F + 0.5F).<span data-count="18">t</span>o_int().<span data-count="18">c</span>lamp(min=0, max=255)
+      out[i * ch + c] = val.<span data-count="18">t</span>o_byte()
+    }
+    if ch == 4 {
+      <span data-count="1">o</span>ut[i * ch + 3] = b'\xFF'
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: <span data-count="4">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// Gamma 色调映射。
+/// 先归一化到 [0,1]，再应用 gamma 校正：L_out = L^(1/gamma)。
+/// gamma &gt; 1 提亮暗部，gamma &lt; 1 压暗。
+pub fn gamma_tonemap(
+  imgf : @types.ImageF,
+  gamma : Float,
+) -&gt; @types.Image raise @types.LoadError {
+  // 输入验证
+  <span data-count="4">i</span>f imgf.width &lt;= 0 || imgf.height &lt;= 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "gamma_tonemap: 图像尺寸必须大于0",
+    )
+  }
+  if imgf.channels &lt; 1 || imgf.channels &gt; 4 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "gamma_tonemap: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = imgf.width * imgf.height * imgf.channels * 4
+  if imgf.data.<span data-count="4">l</span>ength() != expected_size {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "gamma_tonemap: 数据大小不匹配，期望 " +
+      expected_size.<span data-count="0">t</span>o_string() +
+      "，实际 " +
+      imgf.data.<span data-count="0">l</span>ength().<span data-count="0">t</span>o_string(),
+    )
+  }
+  if gamma &lt;= 0.0F {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed("gamma_tonemap: gamma必须大于0")
+  }
+  let w = imgf.width
+  let h = imgf.height
+  let ch = imgf.channels
+  let n = w * h
+  let color_ch = if ch &gt;= 3 { <span data-count="4">3</span> } else { <span data-count="0">c</span>h }
+  // 找最大值用于归一化
+  let mut max_val = 0.0F
+  for i in 0..&lt;n {
+    <span data-count="4">f</span>or c in 0..&lt;color_ch {
+      <span data-count="12">l</span>et v = <span data-count="12">r</span>ead_float_le(imgf.data, (i * ch + c) * 4)
+      if v &gt; max_val {
+        <span data-count="5">m</span>ax_val = v
+      }
+    }
+  }
+  if max_val &lt;= 0.0F {
+    <span data-count="1">r</span>eturn @types.Image::{
+      width: w,
+      height: h,
+      channels: ch,
+      data: <span data-count="1">B</span>ytes::from_array(<span data-count="1">A</span>rray::make(n * ch, b'\x00')),
+    }
+  }
+  let inv_gamma = 1.0F / gamma
+  let out : Array[Byte] = <span data-count="3">A</span>rray::make(n * ch, b'\x00')
+  for i in 0..&lt;n {
+    <span data-count="3">f</span>or c in 0..&lt;color_ch {
+      <span data-count="9">l</span>et v = <span data-count="9">r</span>ead_float_le(imgf.data, (i * ch + c) * 4)
+      let normalized = v / max_val
+      let mapped = if normalized &gt; 0.0F {
+        <span data-count="7">@</span>math.powf(normalized, inv_gamma)
+      } else {
+        <span data-count="2">0</span>.0F
+      }
+      let val = (mapped * 255.0F + 0.5F).<span data-count="9">t</span>o_int().<span data-count="9">c</span>lamp(min=0, max=255)
+      out[i * ch + c] = val.<span data-count="9">t</span>o_byte()
+    }
+    if ch == 4 {
+      <span data-count="1">o</span>ut[i * ch + 3] = b'\xFF'
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: <span data-count="3">B</span>ytes::from_array(out),
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

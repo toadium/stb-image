@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>pyramid.mbt &mdash; </title>
+    <meta name="description" content="94.19% coverage in src\process\transform\pyramid.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\transform\</span>pyramid.mbt
+        </a>
+      </h1>
+      <h2>94.19%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="top:26.77%"></span>
+      <span class="unvisited" style="bottom:45.45%"></span>
+      <span class="unvisited" style="bottom:44.44%"></span>
+      <span class="some-visited" style="bottom:5.56%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span class="visited"> </span>
+<a id="L7"></a><span class="visited"> </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span class="visited"> </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span class="visited"> </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span class="visited"> </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span class="visited"> </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span class="visited"> </span>
+<a id="L24"></a><span class="visited"> </span>
+<a id="L25"></a><span class="visited"> </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span class="visited"> </span>
+<a id="L29"></a><span class="visited"> </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span class="visited"> </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span class="visited"> </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span class="visited"> </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span class="visited"> </span>
+<a id="L53"></a><span class="unvisited"> </span>
+<a id="L54"></a><span > </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span > </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span > </span>
+<a id="L59"></a><span > </span>
+<a id="L60"></a><span class="visited"> </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span class="visited"> </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span class="visited"> </span>
+<a id="L66"></a><span class="visited"> </span>
+<a id="L67"></a><span class="visited"> </span>
+<a id="L68"></a><span > </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span class="visited"> </span>
+<a id="L73"></a><span class="visited"> </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span class="visited"> </span>
+<a id="L77"></a><span class="visited"> </span>
+<a id="L78"></a><span class="visited"> </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span class="visited"> </span>
+<a id="L81"></a><span class="visited"> </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span class="visited"> </span>
+<a id="L84"></a><span class="visited"> </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span class="visited"> </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span class="visited"> </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span > </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span class="visited"> </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+<a id="L98"></a><span > </span>
+<a id="L99"></a><span > </span>
+<a id="L100"></a><span class="visited"> </span>
+<a id="L101"></a><span class="visited"> </span>
+<a id="L102"></a><span class="visited"> </span>
+<a id="L103"></a><span class="visited"> </span>
+<a id="L104"></a><span > </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span > </span>
+<a id="L107"></a><span > </span>
+<a id="L108"></a><span class="unvisited"> </span>
+<a id="L109"></a><span class="visited"> </span>
+<a id="L110"></a><span class="unvisited"> </span>
+<a id="L111"></a><span > </span>
+<a id="L112"></a><span class="visited"> </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span class="visited"> </span>
+<a id="L115"></a><span > </span>
+<a id="L116"></a><span > </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span > </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span class="visited"> </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span > </span>
+<a id="L128"></a><span > </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span > </span>
+<a id="L131"></a><span > </span>
+<a id="L132"></a><span class="visited"> </span>
+<a id="L133"></a><span > </span>
+<a id="L134"></a><span class="visited"> </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span class="visited"> </span>
+<a id="L137"></a><span class="visited"> </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span class="visited"> </span>
+<a id="L140"></a><span class="visited"> </span>
+<a id="L141"></a><span > </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span > </span>
+<a id="L145"></a><span > </span>
+<a id="L146"></a><span > </span>
+<a id="L147"></a><span > </span>
+<a id="L148"></a><span > </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span > </span>
+<a id="L151"></a><span > </span>
+<a id="L152"></a><span class="visited"> </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span class="visited"> </span>
+<a id="L155"></a><span class="visited"> </span>
+<a id="L156"></a><span class="visited"> </span>
+<a id="L157"></a><span class="visited"> </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span class="visited"> </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span > </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span class="visited"> </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+<a id="L168"></a><span class="visited"> </span>
+<a id="L169"></a><span > </span>
+<a id="L170"></a><span class="visited"> </span>
+<a id="L171"></a><span > </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span class="visited"> </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span class="visited"> </span>
+<a id="L177"></a><span > </span>
+<a id="L178"></a><span class="visited"> </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span class="visited"> </span>
+<a id="L181"></a><span > </span>
+<a id="L182"></a><span class="visited"> </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span class="visited"> </span>
+<a id="L185"></a><span > </span>
+<a id="L186"></a><span > </span>
+<a id="L187"></a><span class="some-visited"> </span>
+<a id="L188"></a><span class="visited"> </span>
+<a id="L189"></a><span > </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span > </span>
+<a id="L192"></a><span > </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span > </span>
+<a id="L196"></a><span class="visited"> </span>
+<a id="L197"></a><span > </span>
+<a id="L198"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+</pre>
+<pre><code class="ocaml">// 图像金字塔（纯 MoonBit）
+
+///|
+/// 高斯金字塔下采样。将图像尺寸减半（宽高各 /2），使用 2x2 均值滤波。
+pub fn pyr_down(img : @types.Image) -&gt; @types.Image raise @types.LoadError {
+  <span data-count="24">i</span>f img.channels != 1 &amp;&amp; img.channels != 3 &amp;&amp; img.channels != 4 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("pyr_down 仅支持 channels=1/3/4")
+  }
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let new_w = w / 2
+  let new_h = h / 2
+  if new_w == 0 || new_h == 0 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("图像太小，无法下采样")
+  }
+  let data_int : Array[Int] = <span data-count="22">A</span>rray::make(w * h * ch, 0)
+  for i in 0..&lt;(w * h * ch) {
+    <span data-count="3208">d</span>ata_int[i] = img.data[i].<span data-count="3208">t</span>o_int()
+  }
+  let out : Array[Byte] = <span data-count="22">A</span>rray::make(new_w * new_h * ch, b'\x00')
+  for y in 0..&lt;new_h {
+    <span data-count="110">f</span>or x in 0..&lt;new_w {
+      <span data-count="802">f</span>or c in 0..&lt;ch {
+        <span data-count="802">l</span>et mut sum = 0
+        let mut count = 0
+        for dy in 0..&lt;2 {
+          <span data-count="1604">f</span>or dx in 0..&lt;2 {
+            <span data-count="3208">l</span>et sx = x * 2 + dx
+            let sy = y * 2 + dy
+            if sx &lt; w &amp;&amp; sy &lt; h {
+              <span data-count="3208">s</span>um += data_int[(sy * w + sx) * ch + c]
+              count += 1
+            }
+          }
+        }
+        out[(y * new_w + x) * ch + c] = (sum / count).<span data-count="802">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: <span data-count="22">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// 拉普拉斯金字塔上采样。将图像尺寸加倍（宽高各 *2），使用双线性插值。
+pub fn pyr_up(img : @types.Image) -&gt; @types.Image raise @types.LoadError {
+  <span data-count="16">i</span>f img.channels != 1 &amp;&amp; img.channels != 3 &amp;&amp; img.channels != 4 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed("pyr_up 仅支持 channels=1/3/4")
+  }
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let new_w = w * 2
+  let new_h = h * 2
+  let data_int : Array[Int] = <span data-count="16">A</span>rray::make(w * h * ch, 0)
+  for i in 0..&lt;(w * h * ch) {
+    <span data-count="637">d</span>ata_int[i] = img.data[i].<span data-count="637">t</span>o_int()
+  }
+  // 预计算 x 方向插值参数
+  let x0_arr : Array[Int] = <span data-count="16">A</span>rray::make(new_w, 0)
+  let x1_arr : Array[Int] = <span data-count="16">A</span>rray::make(new_w, 0)
+  let wx_arr : Array[Float] = <span data-count="16">A</span>rray::make(new_w, 0.0F)
+  for x in 0..&lt;new_w {
+    <span data-count="166">l</span>et fx = (<span data-count="166">F</span>loat::from_int(x) - 0.5F) / 2.0F
+    let x0 = fx.<span data-count="166">t</span>o_int().<span data-count="166">c</span>lamp(min=0, max=w - 1)
+    x0_arr[x] = x0
+    x1_arr[x] = (x0 + 1).<span data-count="166">c</span>lamp(min=0, max=w - 1)
+    wx_arr[x] = fx - <span data-count="166">F</span>loat::from_int(x0)
+  }
+  // 预计算 y 方向插值参数
+  let y0_arr : Array[Int] = <span data-count="16">A</span>rray::make(new_h, 0)
+  let y1_arr : Array[Int] = <span data-count="16">A</span>rray::make(new_h, 0)
+  let wy_arr : Array[Float] = <span data-count="16">A</span>rray::make(new_h, 0.0F)
+  for y in 0..&lt;new_h {
+    <span data-count="166">l</span>et fy = (<span data-count="166">F</span>loat::from_int(y) - 0.5F) / 2.0F
+    let y0 = fy.<span data-count="166">t</span>o_int().<span data-count="166">c</span>lamp(min=0, max=h - 1)
+    y0_arr[y] = y0
+    y1_arr[y] = (y0 + 1).<span data-count="166">c</span>lamp(min=0, max=h - 1)
+    wy_arr[y] = fy - <span data-count="166">F</span>loat::from_int(y0)
+  }
+  let out : Array[Byte] = <span data-count="16">A</span>rray::make(new_w * new_h * ch, b'\x00')
+  for y in 0..&lt;new_h {
+    <span data-count="166">l</span>et y0 = y0_arr[y]
+    let y1 = y1_arr[y]
+    let wy = wy_arr[y]
+    let wy_inv = 1.0F - wy
+    let row0 = y0 * w
+    let row1 = y1 * w
+    for x in 0..&lt;new_w {
+      <span data-count="2548">l</span>et x0 = x0_arr[x]
+      let x1 = x1_arr[x]
+      let wx = wx_arr[x]
+      let wx_inv = 1.0F - wx
+      for c in 0..&lt;ch {
+        <span data-count="2548">l</span>et v00 = <span data-count="2548">F</span>loat::from_int(data_int[(row0 + x0) * ch + c])
+        let v01 = <span data-count="2548">F</span>loat::from_int(data_int[(row0 + x1) * ch + c])
+        let v10 = <span data-count="2548">F</span>loat::from_int(data_int[(row1 + x0) * ch + c])
+        let v11 = <span data-count="2548">F</span>loat::from_int(data_int[(row1 + x1) * ch + c])
+        let top = v00 * wx_inv + v01 * wx
+        let bot = v10 * wx_inv + v11 * wx
+        let v = top * wy_inv + bot * wy
+        let clamped = if v &lt; 0.0F {
+          <span data-count="0">0</span>
+        } else <span data-count="2548">i</span>f v &gt; 255.0F {
+          <span data-count="0">2</span>55
+        } else {
+          <span data-count="2548">v</span>.<span data-count="2548">t</span>o_int()
+        }
+        out[(y * new_w + x) * ch + c] = clamped.<span data-count="2548">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: <span data-count="16">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// 构建高斯金字塔。返回各级图像（从原图到最小级），levels 为最大层数（0=自动到 1x1）。
+pub fn build_gaussian_pyramid(
+  img : @types.Image,
+  levels : Int,
+) -&gt; Array[@types.Image] raise @types.LoadError {
+  <span data-count="3">l</span>et result : Array[@types.Image] = [img]
+  let mut current = img
+  let max_levels = if levels == 0 { <span data-count="2">1</span>00 } else { <span data-count="1">l</span>evels }
+  for _ in 1..&lt;max_levels {
+    <span data-count="11">i</span>f current.width &lt; 2 || current.height &lt; 2 {
+      <span data-count="2">b</span>reak
+    }
+    current = <span data-count="9">p</span>yr_down(current)
+    result.<span data-count="9">p</span>ush(current)
+  }
+  result
+}
+
+///|
+/// 构建拉普拉斯金字塔。返回各级拉普拉斯图像（高斯金字塔相邻层之差）。
+/// 最后一层为高斯金字塔的最小级（不加差）。
+pub fn build_laplacian_pyramid(
+  img : @types.Image,
+  levels : Int,
+) -&gt; Array[@types.Image] raise @types.LoadError {
+  <span data-count="1">l</span>et gaussian = <span data-count="1">b</span>uild_gaussian_pyramid(img, levels)
+  let result : Array[@types.Image] = []
+  for i in 0..&lt;(gaussian.<span data-count="1">l</span>ength() - 1) {
+    <span data-count="3">l</span>et upsampled = <span data-count="3">p</span>yr_up(gaussian[i + 1])
+    let lap = <span data-count="3">l</span>aplacian_diff(gaussian[i], upsampled)
+    result.<span data-count="3">p</span>ush(lap)
+  }
+  result.<span data-count="1">p</span>ush(gaussian[gaussian.<span data-count="1">l</span>ength() - 1])
+  result
+}
+
+///|
+fn laplacian_diff(a : @types.Image, b : @types.Image) -&gt; @types.Image {
+  <span data-count="3">l</span>et ch = a.channels
+  let w = a.width
+  let h = a.height
+  let a_int : Array[Int] = <span data-count="3">A</span>rray::make(w * h * ch, 0)
+  for i in 0..&lt;(w * h * ch) {
+    <span data-count="84">a</span>_int[i] = a.data[i].<span data-count="84">t</span>o_int()
+  }
+  let bw = b.width
+  let bh = b.height
+  let b_int : Array[Int] = <span data-count="3">A</span>rray::make(bw * bh * ch, 0)
+  for i in 0..&lt;(bw * bh * ch) {
+    <span data-count="84">b</span>_int[i] = b.data[i].<span data-count="84">t</span>o_int()
+  }
+  let out : Array[Byte] = <span data-count="3">A</span>rray::make(w * h * ch, b'\x00')
+  for y in 0..&lt;h {
+    <span data-count="14">l</span>et by = y * bh / h
+    for x in 0..&lt;w {
+      <span data-count="84">l</span>et bx = x * bw / w
+      for c in 0..&lt;ch {
+        <span data-count="84">l</span>et va = a_int[(y * w + x) * ch + c]
+        let vb = b_int[(by * bw + bx) * ch + c]
+        let diff = va - vb + 128
+        let clamped = if diff &lt; 0 { <span data-count="0">0</span> } else <span data-count="84">i</span>f diff &gt; 255 { <span data-count="0">2</span>55 } else { <span data-count="84">d</span>iff }
+        out[(y * w + x) * ch + c] = clamped.<span data-count="84">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: <span data-count="3">B</span>ytes::from_array(out),
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

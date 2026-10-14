@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>stereo_3d.mbt &mdash; </title>
+    <meta name="description" content="89.66% coverage in src\process\stereo3d\stereo_3d.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\stereo3d\</span>stereo_3d.mbt
+        </a>
+      </h1>
+      <h2>89.66%</h2>
+    </div>
+    <div id="navbar">
+      <span class="some-visited" style="top:17.74%"></span>
+      <span class="unvisited" style="top:22.58%"></span>
+      <span class="unvisited" style="top:22.98%"></span>
+      <span class="unvisited" style="top:23.39%"></span>
+      <span class="unvisited" style="top:23.79%"></span>
+      <span class="unvisited" style="top:24.60%"></span>
+      <span class="unvisited" style="bottom:39.52%"></span>
+      <span class="unvisited" style="bottom:32.26%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span class="visited"> </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span class="visited"> </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span class="visited"> </span>
+<a id="L29"></a><span > </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span class="visited"> </span>
+<a id="L34"></a><span class="visited"> </span>
+<a id="L35"></a><span class="visited"> </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span class="visited"> </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span class="visited"> </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span class="some-visited"> </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span class="visited"> </span>
+<a id="L48"></a><span class="visited"> </span>
+<a id="L49"></a><span class="visited"> </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span class="visited"> </span>
+<a id="L55"></a><span class="visited"> </span>
+<a id="L56"></a><span class="unvisited"> </span>
+<a id="L57"></a><span class="unvisited"> </span>
+<a id="L58"></a><span class="unvisited"> </span>
+<a id="L59"></a><span class="unvisited"> </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span class="unvisited"> </span>
+<a id="L62"></a><span > </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span class="visited"> </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span class="visited"> </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span class="visited"> </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span > </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span class="visited"> </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span > </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+<a id="L98"></a><span > </span>
+<a id="L99"></a><span > </span>
+<a id="L100"></a><span > </span>
+<a id="L101"></a><span > </span>
+<a id="L102"></a><span class="visited"> </span>
+<a id="L103"></a><span class="visited"> </span>
+<a id="L104"></a><span class="visited"> </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span class="visited"> </span>
+<a id="L107"></a><span class="visited"> </span>
+<a id="L108"></a><span class="visited"> </span>
+<a id="L109"></a><span > </span>
+<a id="L110"></a><span class="visited"> </span>
+<a id="L111"></a><span class="visited"> </span>
+<a id="L112"></a><span class="visited"> </span>
+<a id="L113"></a><span class="visited"> </span>
+<a id="L114"></a><span class="visited"> </span>
+<a id="L115"></a><span > </span>
+<a id="L116"></a><span > </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span class="visited"> </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span class="visited"> </span>
+<a id="L128"></a><span > </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span > </span>
+<a id="L131"></a><span > </span>
+<a id="L132"></a><span class="visited"> </span>
+<a id="L133"></a><span class="visited"> </span>
+<a id="L134"></a><span class="visited"> </span>
+<a id="L135"></a><span class="visited"> </span>
+<a id="L136"></a><span class="visited"> </span>
+<a id="L137"></a><span class="visited"> </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span > </span>
+<a id="L140"></a><span class="visited"> </span>
+<a id="L141"></a><span class="visited"> </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span > </span>
+<a id="L145"></a><span class="visited"> </span>
+<a id="L146"></a><span class="visited"> </span>
+<a id="L147"></a><span class="visited"> </span>
+<a id="L148"></a><span class="visited"> </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span class="unvisited"> </span>
+<a id="L151"></a><span > </span>
+<a id="L152"></a><span > </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span class="visited"> </span>
+<a id="L155"></a><span > </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span > </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span > </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span class="visited"> </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+<a id="L168"></a><span class="unvisited"> </span>
+<a id="L169"></a><span > </span>
+<a id="L170"></a><span > </span>
+<a id="L171"></a><span > </span>
+<a id="L172"></a><span class="visited"> </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span class="visited"> </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span class="visited"> </span>
+<a id="L177"></a><span class="visited"> </span>
+<a id="L178"></a><span > </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span class="visited"> </span>
+<a id="L181"></a><span class="visited"> </span>
+<a id="L182"></a><span > </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span > </span>
+<a id="L185"></a><span > </span>
+<a id="L186"></a><span class="visited"> </span>
+<a id="L187"></a><span class="visited"> </span>
+<a id="L188"></a><span > </span>
+<a id="L189"></a><span > </span>
+<a id="L190"></a><span class="visited"> </span>
+<a id="L191"></a><span class="visited"> </span>
+<a id="L192"></a><span > </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span > </span>
+<a id="L196"></a><span > </span>
+<a id="L197"></a><span class="visited"> </span>
+<a id="L198"></a><span > </span>
+<a id="L199"></a><span > </span>
+<a id="L200"></a><span > </span>
+<a id="L201"></a><span > </span>
+<a id="L202"></a><span > </span>
+<a id="L203"></a><span > </span>
+<a id="L204"></a><span > </span>
+<a id="L205"></a><span class="visited"> </span>
+<a id="L206"></a><span > </span>
+<a id="L207"></a><span class="visited"> </span>
+<a id="L208"></a><span class="visited"> </span>
+<a id="L209"></a><span > </span>
+<a id="L210"></a><span > </span>
+<a id="L211"></a><span > </span>
+<a id="L212"></a><span > </span>
+<a id="L213"></a><span > </span>
+<a id="L214"></a><span class="visited"> </span>
+<a id="L215"></a><span > </span>
+<a id="L216"></a><span > </span>
+<a id="L217"></a><span > </span>
+<a id="L218"></a><span > </span>
+<a id="L219"></a><span > </span>
+<a id="L220"></a><span > </span>
+<a id="L221"></a><span > </span>
+<a id="L222"></a><span > </span>
+<a id="L223"></a><span > </span>
+<a id="L224"></a><span > </span>
+<a id="L225"></a><span class="visited"> </span>
+<a id="L226"></a><span > </span>
+<a id="L227"></a><span > </span>
+<a id="L228"></a><span > </span>
+<a id="L229"></a><span class="visited"> </span>
+<a id="L230"></a><span > </span>
+<a id="L231"></a><span class="visited"> </span>
+<a id="L232"></a><span class="visited"> </span>
+<a id="L233"></a><span class="visited"> </span>
+<a id="L234"></a><span > </span>
+<a id="L235"></a><span class="visited"> </span>
+<a id="L236"></a><span class="visited"> </span>
+<a id="L237"></a><span > </span>
+<a id="L238"></a><span class="visited"> </span>
+<a id="L239"></a><span > </span>
+<a id="L240"></a><span > </span>
+<a id="L241"></a><span > </span>
+<a id="L242"></a><span > </span>
+<a id="L243"></a><span > </span>
+<a id="L244"></a><span > </span>
+<a id="L245"></a><span > </span>
+<a id="L246"></a><span class="visited"> </span>
+<a id="L247"></a><span > </span>
+<a id="L248"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+<a href="#L199">199</a>
+<a href="#L200">200</a>
+<a href="#L201">201</a>
+<a href="#L202">202</a>
+<a href="#L203">203</a>
+<a href="#L204">204</a>
+<a href="#L205">205</a>
+<a href="#L206">206</a>
+<a href="#L207">207</a>
+<a href="#L208">208</a>
+<a href="#L209">209</a>
+<a href="#L210">210</a>
+<a href="#L211">211</a>
+<a href="#L212">212</a>
+<a href="#L213">213</a>
+<a href="#L214">214</a>
+<a href="#L215">215</a>
+<a href="#L216">216</a>
+<a href="#L217">217</a>
+<a href="#L218">218</a>
+<a href="#L219">219</a>
+<a href="#L220">220</a>
+<a href="#L221">221</a>
+<a href="#L222">222</a>
+<a href="#L223">223</a>
+<a href="#L224">224</a>
+<a href="#L225">225</a>
+<a href="#L226">226</a>
+<a href="#L227">227</a>
+<a href="#L228">228</a>
+<a href="#L229">229</a>
+<a href="#L230">230</a>
+<a href="#L231">231</a>
+<a href="#L232">232</a>
+<a href="#L233">233</a>
+<a href="#L234">234</a>
+<a href="#L235">235</a>
+<a href="#L236">236</a>
+<a href="#L237">237</a>
+<a href="#L238">238</a>
+<a href="#L239">239</a>
+<a href="#L240">240</a>
+<a href="#L241">241</a>
+<a href="#L242">242</a>
+<a href="#L243">243</a>
+<a href="#L244">244</a>
+<a href="#L245">245</a>
+<a href="#L246">246</a>
+<a href="#L247">247</a>
+<a href="#L248">248</a>
+</pre>
+<pre><code class="ocaml">// 3D 视觉基础（v12.9.0）
+// 深度图处理、点云可视化、立体视觉基础
+
+///|
+/// 点云数据
+pub(all) struct PointCloud {
+  points : Array[(Double, Double, Double)] // (x, y, z)
+  colors : Array[(Int, Int, Int)] // (r, g, b)
+  num_points : Int
+}
+
+///|
+/// 创建空点云
+pub fn point_cloud_new() -&gt; PointCloud {
+  <span data-count="2">P</span>ointCloud::{ points: [], colors: [], num_points: 0 }
+}
+
+///|
+/// 深度图可视化（伪彩色映射）
+pub fn depth_to_colormap(
+  depth : @types.Image,
+  colormap? : String = "jet",
+) -&gt; @types.Image {
+  <span data-count="2">l</span>et cmap = colormap
+  let w = depth.width
+  let h = depth.height
+  let channels = depth.channels
+  let out_data : Array[Byte] = <span data-count="2">A</span>rray::make(w * h * 3, b'\x00')
+  // 找到深度范围
+  let mut min_depth = 10000000000.0
+  let mut max_depth = -10000000000.0
+  for y in 0..&lt;h {
+    <span data-count="8">f</span>or x in 0..&lt;w {
+      <span data-count="32">l</span>et idx = (y * w + x) * channels
+      let v = depth.data[idx].<span data-count="32">t</span>o_double()
+      if v &lt; min_depth {
+        <span data-count="2">m</span>in_depth = v
+      }
+      if v &gt; max_depth {
+        <span data-count="2">m</span>ax_depth = v
+      }
+    }
+  }
+  let range = if max_depth &gt; min_depth { <span data-count="0">m</span>ax_depth - min_depth } else { <span data-count="2">1</span>.0 }
+  // 伪彩色映射
+  for y in 0..&lt;h {
+    <span data-count="8">f</span>or x in 0..&lt;w {
+      <span data-count="32">l</span>et idx = (y * w + x) * channels
+      let v = depth.data[idx].<span data-count="32">t</span>o_double()
+      let normalized = (v - min_depth) / range
+      let out_idx = (y * w + x) * 3
+      // Jet 颜色映射（蓝 -&gt; 青 -&gt; 绿 -&gt; 黄 -&gt; 红）
+      let (r, g, b) = if cmap == "jet" {
+        <span data-count="16">i</span>f normalized &lt; 0.25 {
+          <span data-count="16">(</span>0, (normalized * 4.0 * 255.0).<span data-count="16">t</span>o_int(), 255)
+        } else <span data-count="0">i</span>f normalized &lt; 0.5 {
+          <span data-count="0">(</span>0, 255, ((0.5 - normalized) * 4.0 * 255.0).<span data-count="0">t</span>o_int())
+        } else <span data-count="0">i</span>f normalized &lt; 0.75 {
+          <span data-count="0">(</span>((normalized - 0.5) * 4.0 * 255.0).<span data-count="0">t</span>o_int(), 255, 0)
+        } else {
+          <span data-count="0">(</span>255, ((1.0 - normalized) * 4.0 * 255.0).<span data-count="0">t</span>o_int(), 0)
+        }
+      } else {
+        // 灰度映射
+        <span data-count="16">l</span>et gray = (normalized * 255.0).<span data-count="16">t</span>o_int()
+        (gray, gray, gray)
+      }
+      out_data[out_idx] = r.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0).<span data-count="32">t</span>o_byte()
+      out_data[out_idx + 1] = g.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0).<span data-count="32">t</span>o_byte()
+      out_data[out_idx + 2] = b.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0).<span data-count="32">t</span>o_byte()
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 3,
+    data: <span data-count="2">B</span>ytes::from_array(out_data),
+  }
+}
+
+///|
+/// 深度图转点云
+pub fn depth_to_pointcloud(
+  depth : @types.Image,
+  fx? : Double = 500.0,
+  fy? : Double = 500.0,
+  cx? : Double = 0.0,
+  cy? : Double = 0.0,
+  scale? : Double = 1.0,
+) -&gt; PointCloud {
+  <span data-count="3">l</span>et focal_x = fx
+  let focal_y = fy
+  let center_x = cx
+  let center_y = cy
+  let depth_scale = scale
+  let w = depth.width
+  let h = depth.height
+  let channels = depth.channels
+  let points : Array[(Double, Double, Double)] = []
+  let colors : Array[(Int, Int, Int)] = []
+  for y in 0..&lt;h {
+    <span data-count="12">f</span>or x in 0..&lt;w {
+      <span data-count="48">l</span>et idx = (y * w + x) * channels
+      let z = depth.data[idx].<span data-count="48">t</span>o_double() * depth_scale
+      if z &gt; 0.0 {
+        <span data-count="32">l</span>et px = (x.<span data-count="32">t</span>o_double() - center_x) * z / focal_x
+        let py = (y.<span data-count="32">t</span>o_double() - center_y) * z / focal_y
+        points.<span data-count="32">p</span>ush((px, py, z))
+        // 颜色基于深度
+        let normalized = z.<span data-count="32">m</span>in(255.0) / 255.0
+        let r = (normalized * 255.0).<span data-count="32">t</span>o_int()
+        let g = ((1.0 - normalized.<span data-count="32">a</span>bs() - 0.5) * 255.0).<span data-count="32">t</span>o_int()
+        let b = ((1.0 - normalized) * 255.0).<span data-count="32">t</span>o_int()
+        colors.<span data-count="32">p</span>ush((r.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0), g.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0), b.<span data-count="32">m</span>in(255).<span data-count="32">m</span>ax(0)))
+      }
+    }
+  }
+  PointCloud::{ points, colors, num_points: points.<span data-count="3">l</span>ength() }
+}
+
+///|
+/// 点云体素下采样（简化版）
+pub fn pointcloud_voxel_downsample(
+  cloud : PointCloud,
+  voxel_size? : Double = 1.0,
+) -&gt; PointCloud {
+  <span data-count="1">l</span>et vs = voxel_size
+  // 简单的体素下采样：每个体素保留第一个点
+  let seen : Array[String] = []
+  let points : Array[(Double, Double, Double)] = []
+  let colors : Array[(Int, Int, Int)] = []
+  for i in 0..&lt;cloud.points.<span data-count="1">l</span>ength() {
+    <span data-count="16">l</span>et (x, y, z) = cloud.points[i]
+    let vx = (x / vs).<span data-count="16">f</span>loor().<span data-count="16">t</span>o_int()
+    let vy = (y / vs).<span data-count="16">f</span>loor().<span data-count="16">t</span>o_int()
+    let vz = (z / vs).<span data-count="16">f</span>loor().<span data-count="16">t</span>o_int()
+    let key = vx.<span data-count="16">t</span>o_string() + "_" + vy.<span data-count="16">t</span>o_string() + "_" + vz.<span data-count="16">t</span>o_string()
+    let mut found = false
+    for k in seen {
+      <span data-count="15">i</span>f k == key {
+        <span data-count="15">f</span>ound = true
+      }
+    }
+    if !found {
+      <span data-count="1">s</span>een.<span data-count="1">p</span>ush(key)
+      points.<span data-count="1">p</span>ush((x, y, z))
+      if i &lt; cloud.colors.<span data-count="1">l</span>ength() {
+        <span data-count="1">c</span>olors.<span data-count="1">p</span>ush(cloud.colors[i])
+      } else {
+        <span data-count="0">c</span>olors.<span data-count="0">p</span>ush((255, 255, 255))
+      }
+    }
+  }
+  PointCloud::{ points, colors, num_points: points.<span data-count="1">l</span>ength() }
+}
+
+///|
+/// 立体视觉：计算视差图（简化版，基于块匹配）
+pub fn compute_disparity(
+  left : @types.Image,
+  right : @types.Image,
+  max_disparity? : Int = 64,
+  block_size? : Int = 7,
+) -&gt; @types.Image {
+  <span data-count="2">l</span>et max_disp = max_disparity
+  let bs = block_size
+  if left.width != right.width || left.height != right.height {
+    <span data-count="0">r</span>eturn left
+  }
+  let w = left.width
+  let h = left.height
+  let channels = left.channels.<span data-count="2">m</span>in(right.channels)
+  let half = bs / 2
+  let disparity : Array[Int] = <span data-count="2">A</span>rray::make(w * h, 0)
+  for y in half..&lt;(h - half) {
+    <span data-count="4">f</span>or x in half..&lt;(w - half) {
+      <span data-count="8">l</span>et mut best_disp = 0
+      let mut best_cost = 10000000000.0
+      for d in 0..&lt;max_disp {
+        <span data-count="512">i</span>f x - d &lt; half {
+          <span data-count="500">c</span>ontinue
+        }
+        // 计算 SAD（绝对差之和）
+        let mut cost = 0.0
+        for dy in -half..&lt;(half + 1) {
+          <span data-count="84">f</span>or dx in -half..&lt;(half + 1) {
+            <span data-count="588">l</span>et l_idx = ((y + dy) * w + (x + dx)) * channels
+            let r_idx = ((y + dy) * w + (x + dx - d)) * channels
+            for c in 0..&lt;channels {
+              <span data-count="588">l</span>et diff = (left.data[l_idx + c].<span data-count="588">t</span>o_double() -
+              right.data[r_idx + c].<span data-count="588">t</span>o_double()).<span data-count="588">a</span>bs()
+              cost += diff
+            }
+          }
+        }
+        if cost &lt; best_cost {
+          <span data-count="8">b</span>est_cost = cost
+          best_disp = d
+        }
+      }
+      disparity[y * w + x] = best_disp
+    }
+  }
+  // 转换为 8 位深度图
+  let out_data : Array[Byte] = <span data-count="2">A</span>rray::make(w * h, b'\x00')
+  for i in 0..&lt;(w * h) {
+    <span data-count="128">l</span>et value = (disparity[i].<span data-count="128">t</span>o_double() / max_disp.<span data-count="128">t</span>o_double() * 255.0).<span data-count="128">t</span>o_int()
+    out_data[i] = value.<span data-count="128">m</span>in(255).<span data-count="128">m</span>ax(0).<span data-count="128">t</span>o_byte()
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: <span data-count="2">B</span>ytes::from_array(out_data),
+  }
+}
+
+///|
+/// 视差图转深度图
+pub fn disparity_to_depth(
+  disparity : @types.Image,
+  baseline? : Double = 1.0,
+  focal_length? : Double = 500.0,
+) -&gt; @types.Image {
+  <span data-count="2">l</span>et b = baseline
+  let f = focal_length
+  let w = disparity.width
+  let h = disparity.height
+  let out_data : Array[Byte] = <span data-count="2">A</span>rray::make(w * h, b'\x00')
+  for y in 0..&lt;h {
+    <span data-count="8">f</span>or x in 0..&lt;w {
+      <span data-count="32">l</span>et idx = y * w + x
+      let d = disparity.data[idx].<span data-count="32">t</span>o_double()
+      if d &gt; 0.0 {
+        <span data-count="16">l</span>et depth = (b * f / d).<span data-count="16">m</span>in(255.0).<span data-count="16">m</span>ax(0.0)
+        out_data[idx] = depth.<span data-count="16">t</span>o_int().<span data-count="16">t</span>o_byte()
+      } else {
+        <span data-count="16">o</span>ut_data[idx] = b'\x00'
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: <span data-count="2">B</span>ytes::from_array(out_data),
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

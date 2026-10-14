@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>orb.mbt &mdash; </title>
+    <meta name="description" content="90.60% coverage in src\process\feature\orb.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\feature\</span>orb.mbt
+        </a>
+      </h1>
+      <h2>90.60%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="top:26.61%"></span>
+      <span class="unvisited" style="bottom:28.42%"></span>
+      <span class="unvisited" style="bottom:25.84%"></span>
+      <span class="unvisited" style="bottom:24.29%"></span>
+      <span class="unvisited" style="bottom:23.77%"></span>
+      <span class="unvisited" style="bottom:23.26%"></span>
+      <span class="unvisited" style="bottom:22.22%"></span>
+      <span class="unvisited" style="bottom:20.93%"></span>
+      <span class="unvisited" style="bottom:6.72%"></span>
+      <span class="unvisited" style="bottom:5.94%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span > </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span > </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span > </span>
+<a id="L29"></a><span > </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span > </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span > </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span > </span>
+<a id="L59"></a><span > </span>
+<a id="L60"></a><span class="visited"> </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span class="visited"> </span>
+<a id="L63"></a><span class="visited"> </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span class="visited"> </span>
+<a id="L68"></a><span > </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span > </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span class="visited"> </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span class="visited"> </span>
+<a id="L77"></a><span class="visited"> </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span class="visited"> </span>
+<a id="L89"></a><span class="visited"> </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span class="visited"> </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span > </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+<a id="L98"></a><span > </span>
+<a id="L99"></a><span > </span>
+<a id="L100"></a><span class="visited"> </span>
+<a id="L101"></a><span class="visited"> </span>
+<a id="L102"></a><span > </span>
+<a id="L103"></a><span class="unvisited"> </span>
+<a id="L104"></a><span > </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span class="visited"> </span>
+<a id="L107"></a><span > </span>
+<a id="L108"></a><span > </span>
+<a id="L109"></a><span class="visited"> </span>
+<a id="L110"></a><span > </span>
+<a id="L111"></a><span class="visited"> </span>
+<a id="L112"></a><span > </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span class="visited"> </span>
+<a id="L115"></a><span > </span>
+<a id="L116"></a><span > </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span > </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span > </span>
+<a id="L128"></a><span > </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span class="visited"> </span>
+<a id="L131"></a><span > </span>
+<a id="L132"></a><span > </span>
+<a id="L133"></a><span > </span>
+<a id="L134"></a><span class="visited"> </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span class="visited"> </span>
+<a id="L137"></a><span > </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span class="visited"> </span>
+<a id="L140"></a><span > </span>
+<a id="L141"></a><span class="visited"> </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span class="visited"> </span>
+<a id="L144"></a><span class="visited"> </span>
+<a id="L145"></a><span class="visited"> </span>
+<a id="L146"></a><span > </span>
+<a id="L147"></a><span > </span>
+<a id="L148"></a><span class="visited"> </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span > </span>
+<a id="L151"></a><span > </span>
+<a id="L152"></a><span > </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span > </span>
+<a id="L155"></a><span > </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span class="visited"> </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span class="visited"> </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span > </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span class="visited"> </span>
+<a id="L168"></a><span class="visited"> </span>
+<a id="L169"></a><span class="visited"> </span>
+<a id="L170"></a><span class="visited"> </span>
+<a id="L171"></a><span class="visited"> </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span > </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span > </span>
+<a id="L177"></a><span > </span>
+<a id="L178"></a><span > </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span > </span>
+<a id="L181"></a><span > </span>
+<a id="L182"></a><span > </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span > </span>
+<a id="L185"></a><span class="visited"> </span>
+<a id="L186"></a><span class="visited"> </span>
+<a id="L187"></a><span class="visited"> </span>
+<a id="L188"></a><span > </span>
+<a id="L189"></a><span class="visited"> </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span > </span>
+<a id="L192"></a><span > </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span > </span>
+<a id="L196"></a><span class="visited"> </span>
+<a id="L197"></a><span class="visited"> </span>
+<a id="L198"></a><span > </span>
+<a id="L199"></a><span > </span>
+<a id="L200"></a><span class="visited"> </span>
+<a id="L201"></a><span > </span>
+<a id="L202"></a><span > </span>
+<a id="L203"></a><span > </span>
+<a id="L204"></a><span > </span>
+<a id="L205"></a><span > </span>
+<a id="L206"></a><span > </span>
+<a id="L207"></a><span > </span>
+<a id="L208"></a><span > </span>
+<a id="L209"></a><span > </span>
+<a id="L210"></a><span > </span>
+<a id="L211"></a><span > </span>
+<a id="L212"></a><span > </span>
+<a id="L213"></a><span > </span>
+<a id="L214"></a><span > </span>
+<a id="L215"></a><span > </span>
+<a id="L216"></a><span > </span>
+<a id="L217"></a><span > </span>
+<a id="L218"></a><span > </span>
+<a id="L219"></a><span class="visited"> </span>
+<a id="L220"></a><span class="visited"> </span>
+<a id="L221"></a><span class="visited"> </span>
+<a id="L222"></a><span class="visited"> </span>
+<a id="L223"></a><span > </span>
+<a id="L224"></a><span > </span>
+<a id="L225"></a><span class="visited"> </span>
+<a id="L226"></a><span class="visited"> </span>
+<a id="L227"></a><span class="visited"> </span>
+<a id="L228"></a><span class="visited"> </span>
+<a id="L229"></a><span > </span>
+<a id="L230"></a><span > </span>
+<a id="L231"></a><span > </span>
+<a id="L232"></a><span > </span>
+<a id="L233"></a><span class="visited"> </span>
+<a id="L234"></a><span class="visited"> </span>
+<a id="L235"></a><span class="visited"> </span>
+<a id="L236"></a><span class="visited"> </span>
+<a id="L237"></a><span class="visited"> </span>
+<a id="L238"></a><span class="visited"> </span>
+<a id="L239"></a><span class="visited"> </span>
+<a id="L240"></a><span > </span>
+<a id="L241"></a><span > </span>
+<a id="L242"></a><span > </span>
+<a id="L243"></a><span > </span>
+<a id="L244"></a><span > </span>
+<a id="L245"></a><span > </span>
+<a id="L246"></a><span class="visited"> </span>
+<a id="L247"></a><span > </span>
+<a id="L248"></a><span > </span>
+<a id="L249"></a><span > </span>
+<a id="L250"></a><span class="visited"> </span>
+<a id="L251"></a><span > </span>
+<a id="L252"></a><span class="visited"> </span>
+<a id="L253"></a><span class="visited"> </span>
+<a id="L254"></a><span class="visited"> </span>
+<a id="L255"></a><span class="visited"> </span>
+<a id="L256"></a><span > </span>
+<a id="L257"></a><span > </span>
+<a id="L258"></a><span class="visited"> </span>
+<a id="L259"></a><span > </span>
+<a id="L260"></a><span > </span>
+<a id="L261"></a><span > </span>
+<a id="L262"></a><span > </span>
+<a id="L263"></a><span > </span>
+<a id="L264"></a><span > </span>
+<a id="L265"></a><span > </span>
+<a id="L266"></a><span > </span>
+<a id="L267"></a><span > </span>
+<a id="L268"></a><span > </span>
+<a id="L269"></a><span > </span>
+<a id="L270"></a><span > </span>
+<a id="L271"></a><span > </span>
+<a id="L272"></a><span > </span>
+<a id="L273"></a><span > </span>
+<a id="L274"></a><span > </span>
+<a id="L275"></a><span > </span>
+<a id="L276"></a><span class="visited"> </span>
+<a id="L277"></a><span class="unvisited"> </span>
+<a id="L278"></a><span > </span>
+<a id="L279"></a><span > </span>
+<a id="L280"></a><span > </span>
+<a id="L281"></a><span > </span>
+<a id="L282"></a><span class="visited"> </span>
+<a id="L283"></a><span > </span>
+<a id="L284"></a><span > </span>
+<a id="L285"></a><span > </span>
+<a id="L286"></a><span > </span>
+<a id="L287"></a><span class="unvisited"> </span>
+<a id="L288"></a><span > </span>
+<a id="L289"></a><span > </span>
+<a id="L290"></a><span > </span>
+<a id="L291"></a><span > </span>
+<a id="L292"></a><span class="visited"> </span>
+<a id="L293"></a><span class="unvisited"> </span>
+<a id="L294"></a><span > </span>
+<a id="L295"></a><span class="unvisited"> </span>
+<a id="L296"></a><span > </span>
+<a id="L297"></a><span class="unvisited"> </span>
+<a id="L298"></a><span > </span>
+<a id="L299"></a><span > </span>
+<a id="L300"></a><span > </span>
+<a id="L301"></a><span class="unvisited"> </span>
+<a id="L302"></a><span > </span>
+<a id="L303"></a><span > </span>
+<a id="L304"></a><span > </span>
+<a id="L305"></a><span > </span>
+<a id="L306"></a><span class="unvisited"> </span>
+<a id="L307"></a><span > </span>
+<a id="L308"></a><span > </span>
+<a id="L309"></a><span > </span>
+<a id="L310"></a><span class="visited"> </span>
+<a id="L311"></a><span > </span>
+<a id="L312"></a><span class="visited"> </span>
+<a id="L313"></a><span > </span>
+<a id="L314"></a><span class="visited"> </span>
+<a id="L315"></a><span class="visited"> </span>
+<a id="L316"></a><span > </span>
+<a id="L317"></a><span class="visited"> </span>
+<a id="L318"></a><span > </span>
+<a id="L319"></a><span > </span>
+<a id="L320"></a><span class="visited"> </span>
+<a id="L321"></a><span > </span>
+<a id="L322"></a><span > </span>
+<a id="L323"></a><span class="visited"> </span>
+<a id="L324"></a><span class="visited"> </span>
+<a id="L325"></a><span > </span>
+<a id="L326"></a><span > </span>
+<a id="L327"></a><span > </span>
+<a id="L328"></a><span > </span>
+<a id="L329"></a><span > </span>
+<a id="L330"></a><span > </span>
+<a id="L331"></a><span > </span>
+<a id="L332"></a><span class="visited"> </span>
+<a id="L333"></a><span > </span>
+<a id="L334"></a><span class="visited"> </span>
+<a id="L335"></a><span > </span>
+<a id="L336"></a><span > </span>
+<a id="L337"></a><span > </span>
+<a id="L338"></a><span > </span>
+<a id="L339"></a><span > </span>
+<a id="L340"></a><span > </span>
+<a id="L341"></a><span > </span>
+<a id="L342"></a><span > </span>
+<a id="L343"></a><span > </span>
+<a id="L344"></a><span > </span>
+<a id="L345"></a><span > </span>
+<a id="L346"></a><span > </span>
+<a id="L347"></a><span > </span>
+<a id="L348"></a><span > </span>
+<a id="L349"></a><span > </span>
+<a id="L350"></a><span > </span>
+<a id="L351"></a><span > </span>
+<a id="L352"></a><span > </span>
+<a id="L353"></a><span > </span>
+<a id="L354"></a><span > </span>
+<a id="L355"></a><span > </span>
+<a id="L356"></a><span > </span>
+<a id="L357"></a><span class="visited"> </span>
+<a id="L358"></a><span class="visited"> </span>
+<a id="L359"></a><span > </span>
+<a id="L360"></a><span class="visited"> </span>
+<a id="L361"></a><span class="unvisited"> </span>
+<a id="L362"></a><span > </span>
+<a id="L363"></a><span > </span>
+<a id="L364"></a><span class="unvisited"> </span>
+<a id="L365"></a><span > </span>
+<a id="L366"></a><span > </span>
+<a id="L367"></a><span > </span>
+<a id="L368"></a><span class="visited"> </span>
+<a id="L369"></a><span class="visited"> </span>
+<a id="L370"></a><span > </span>
+<a id="L371"></a><span class="visited"> </span>
+<a id="L372"></a><span class="visited"> </span>
+<a id="L373"></a><span > </span>
+<a id="L374"></a><span class="visited"> </span>
+<a id="L375"></a><span > </span>
+<a id="L376"></a><span > </span>
+<a id="L377"></a><span > </span>
+<a id="L378"></a><span > </span>
+<a id="L379"></a><span class="visited"> </span>
+<a id="L380"></a><span > </span>
+<a id="L381"></a><span > </span>
+<a id="L382"></a><span > </span>
+<a id="L383"></a><span > </span>
+<a id="L384"></a><span > </span>
+<a id="L385"></a><span > </span>
+<a id="L386"></a><span > </span>
+<a id="L387"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+<a href="#L199">199</a>
+<a href="#L200">200</a>
+<a href="#L201">201</a>
+<a href="#L202">202</a>
+<a href="#L203">203</a>
+<a href="#L204">204</a>
+<a href="#L205">205</a>
+<a href="#L206">206</a>
+<a href="#L207">207</a>
+<a href="#L208">208</a>
+<a href="#L209">209</a>
+<a href="#L210">210</a>
+<a href="#L211">211</a>
+<a href="#L212">212</a>
+<a href="#L213">213</a>
+<a href="#L214">214</a>
+<a href="#L215">215</a>
+<a href="#L216">216</a>
+<a href="#L217">217</a>
+<a href="#L218">218</a>
+<a href="#L219">219</a>
+<a href="#L220">220</a>
+<a href="#L221">221</a>
+<a href="#L222">222</a>
+<a href="#L223">223</a>
+<a href="#L224">224</a>
+<a href="#L225">225</a>
+<a href="#L226">226</a>
+<a href="#L227">227</a>
+<a href="#L228">228</a>
+<a href="#L229">229</a>
+<a href="#L230">230</a>
+<a href="#L231">231</a>
+<a href="#L232">232</a>
+<a href="#L233">233</a>
+<a href="#L234">234</a>
+<a href="#L235">235</a>
+<a href="#L236">236</a>
+<a href="#L237">237</a>
+<a href="#L238">238</a>
+<a href="#L239">239</a>
+<a href="#L240">240</a>
+<a href="#L241">241</a>
+<a href="#L242">242</a>
+<a href="#L243">243</a>
+<a href="#L244">244</a>
+<a href="#L245">245</a>
+<a href="#L246">246</a>
+<a href="#L247">247</a>
+<a href="#L248">248</a>
+<a href="#L249">249</a>
+<a href="#L250">250</a>
+<a href="#L251">251</a>
+<a href="#L252">252</a>
+<a href="#L253">253</a>
+<a href="#L254">254</a>
+<a href="#L255">255</a>
+<a href="#L256">256</a>
+<a href="#L257">257</a>
+<a href="#L258">258</a>
+<a href="#L259">259</a>
+<a href="#L260">260</a>
+<a href="#L261">261</a>
+<a href="#L262">262</a>
+<a href="#L263">263</a>
+<a href="#L264">264</a>
+<a href="#L265">265</a>
+<a href="#L266">266</a>
+<a href="#L267">267</a>
+<a href="#L268">268</a>
+<a href="#L269">269</a>
+<a href="#L270">270</a>
+<a href="#L271">271</a>
+<a href="#L272">272</a>
+<a href="#L273">273</a>
+<a href="#L274">274</a>
+<a href="#L275">275</a>
+<a href="#L276">276</a>
+<a href="#L277">277</a>
+<a href="#L278">278</a>
+<a href="#L279">279</a>
+<a href="#L280">280</a>
+<a href="#L281">281</a>
+<a href="#L282">282</a>
+<a href="#L283">283</a>
+<a href="#L284">284</a>
+<a href="#L285">285</a>
+<a href="#L286">286</a>
+<a href="#L287">287</a>
+<a href="#L288">288</a>
+<a href="#L289">289</a>
+<a href="#L290">290</a>
+<a href="#L291">291</a>
+<a href="#L292">292</a>
+<a href="#L293">293</a>
+<a href="#L294">294</a>
+<a href="#L295">295</a>
+<a href="#L296">296</a>
+<a href="#L297">297</a>
+<a href="#L298">298</a>
+<a href="#L299">299</a>
+<a href="#L300">300</a>
+<a href="#L301">301</a>
+<a href="#L302">302</a>
+<a href="#L303">303</a>
+<a href="#L304">304</a>
+<a href="#L305">305</a>
+<a href="#L306">306</a>
+<a href="#L307">307</a>
+<a href="#L308">308</a>
+<a href="#L309">309</a>
+<a href="#L310">310</a>
+<a href="#L311">311</a>
+<a href="#L312">312</a>
+<a href="#L313">313</a>
+<a href="#L314">314</a>
+<a href="#L315">315</a>
+<a href="#L316">316</a>
+<a href="#L317">317</a>
+<a href="#L318">318</a>
+<a href="#L319">319</a>
+<a href="#L320">320</a>
+<a href="#L321">321</a>
+<a href="#L322">322</a>
+<a href="#L323">323</a>
+<a href="#L324">324</a>
+<a href="#L325">325</a>
+<a href="#L326">326</a>
+<a href="#L327">327</a>
+<a href="#L328">328</a>
+<a href="#L329">329</a>
+<a href="#L330">330</a>
+<a href="#L331">331</a>
+<a href="#L332">332</a>
+<a href="#L333">333</a>
+<a href="#L334">334</a>
+<a href="#L335">335</a>
+<a href="#L336">336</a>
+<a href="#L337">337</a>
+<a href="#L338">338</a>
+<a href="#L339">339</a>
+<a href="#L340">340</a>
+<a href="#L341">341</a>
+<a href="#L342">342</a>
+<a href="#L343">343</a>
+<a href="#L344">344</a>
+<a href="#L345">345</a>
+<a href="#L346">346</a>
+<a href="#L347">347</a>
+<a href="#L348">348</a>
+<a href="#L349">349</a>
+<a href="#L350">350</a>
+<a href="#L351">351</a>
+<a href="#L352">352</a>
+<a href="#L353">353</a>
+<a href="#L354">354</a>
+<a href="#L355">355</a>
+<a href="#L356">356</a>
+<a href="#L357">357</a>
+<a href="#L358">358</a>
+<a href="#L359">359</a>
+<a href="#L360">360</a>
+<a href="#L361">361</a>
+<a href="#L362">362</a>
+<a href="#L363">363</a>
+<a href="#L364">364</a>
+<a href="#L365">365</a>
+<a href="#L366">366</a>
+<a href="#L367">367</a>
+<a href="#L368">368</a>
+<a href="#L369">369</a>
+<a href="#L370">370</a>
+<a href="#L371">371</a>
+<a href="#L372">372</a>
+<a href="#L373">373</a>
+<a href="#L374">374</a>
+<a href="#L375">375</a>
+<a href="#L376">376</a>
+<a href="#L377">377</a>
+<a href="#L378">378</a>
+<a href="#L379">379</a>
+<a href="#L380">380</a>
+<a href="#L381">381</a>
+<a href="#L382">382</a>
+<a href="#L383">383</a>
+<a href="#L384">384</a>
+<a href="#L385">385</a>
+<a href="#L386">386</a>
+<a href="#L387">387</a>
+</pre>
+<pre><code class="ocaml">// ORB 特征检测与描述（纯 MoonBit）
+// Oriented FAST and Rotated BRIEF
+// 参考: https://docs.opencv.org/4.x/d5/d3c/classcv_1_1Feature2D.html
+
+///|
+/// ORB 关键点：位置 + 响应 + 方向
+pub(all) struct OrbKeyPoint {
+  x : Int
+  y : Int
+  response : Float
+  angle : Float // 方向角（弧度）
+}
+
+///|
+/// ORB 描述子：256 位二进制描述（32 个 Int）
+pub(all) struct OrbDescriptor {
+  kp : OrbKeyPoint
+  data : Array[Int] // 32 个 Int，每个 32 位，共 256 位
+}
+
+///|
+/// 特征匹配结果
+pub(all) struct DescriptorMatch {
+  query_idx : Int
+  train_idx : Int
+  distance : Int // 汉明距离
+}
+
+// ==================== FAST 角点检测 ====================
+
+///|
+/// FAST-9 圆周偏移（半径 3，16 个点）
+let fast_offsets : Array[(Int, Int)] = [
+  (0, -3),
+  (1, -3),
+  (2, -2),
+  (3, -1),
+  (3, 0),
+  (3, 1),
+  (2, 2),
+  (1, 3),
+  (0, 3),
+  (-1, 3),
+  (-2, 2),
+  (-3, 1),
+  (-3, 0),
+  (-3, -1),
+  (-2, -2),
+  (-1, -3),
+]
+
+///|
+/// FAST-9 角点检测
+fn fast_detect(
+  gray : Array[Int],
+  w : Int,
+  h : Int,
+  threshold : Int,
+) -&gt; Array[OrbKeyPoint] {
+  <span data-count="13">l</span>et corners : Array[OrbKeyPoint] = []
+  for y in 3..&lt;(h - 3) {
+    <span data-count="192">f</span>or x in 3..&lt;(w - 3) {
+      <span data-count="4080">l</span>et p = gray[y * w + x]
+      let high_thresh = p + threshold
+      let low_thresh = p - threshold
+      // 读取圆周 16 个像素
+      let vals : Array[Int] = <span data-count="4080">A</span>rray::make(16, 0)
+      for i in 0..&lt;16 {
+        <span data-count="65280">l</span>et (dx, dy) = fast_offsets[i]
+        vals[i] = gray[(y + dy) * w + (x + dx)]
+      }
+      // 检查是否有 9 个连续 brighter 或 darker
+      let is_corner = <span data-count="4080">c</span>heck_fast9(vals, high_thresh, low_thresh)
+      if is_corner {
+        // 计算方向
+        <span data-count="96">l</span>et angle = <span data-count="96">c</span>ompute_orientation(gray, w, h, x, y)
+        corners.<span data-count="96">p</span>ush(OrbKeyPoint::{ x, y, response: 1.0F, angle })
+      }
+    }
+  }
+  corners
+}
+
+///|
+/// 检查 FAST-9 条件：圆周上是否有 9 个连续像素都 &gt; high 或都 &lt; low
+fn check_fast9(vals : Array[Int], high : Int, low : Int) -&gt; Bool {
+  // 将 16 个点复制两遍以处理环绕
+  <span data-count="4080">l</span>et brighter : Array[Bool] = <span data-count="4080">A</span>rray::make(32, false)
+  let darker : Array[Bool] = <span data-count="4080">A</span>rray::make(32, false)
+  for i in 0..&lt;16 {
+    <span data-count="65280">b</span>righter[i] = vals[i] &gt; high
+    darker[i] = vals[i] &lt; low
+    brighter[i + 16] = brighter[i]
+    darker[i + 16] = darker[i]
+  }
+  // 检查 9 连续
+  let mut b_run = 0
+  let mut d_run = 0
+  for i in 0..&lt;32 {
+    <span data-count="129088">i</span>f brighter[i] {
+      <span data-count="4480">b</span>_run += 1
+      if b_run &gt;= 9 {
+        <span data-count="0">r</span>eturn true
+      }
+    } else {
+      <span data-count="124608">b</span>_run = 0
+    }
+    if darker[i] {
+      <span data-count="4944">d</span>_run += 1
+      if d_run &gt;= 9 {
+        <span data-count="96">r</span>eturn true
+      }
+    } else {
+      <span data-count="124144">d</span>_run = 0
+    }
+  }
+  false
+}
+
+///|
+/// 计算关键点方向（图像矩质心法）
+/// θ = atan2(m01, m10), m_pq = Σ x^p * y^q * I(x,y)
+fn compute_orientation(
+  gray : Array[Int],
+  w : Int,
+  h : Int,
+  cx : Int,
+  cy : Int,
+) -&gt; Float {
+  <span data-count="96">l</span>et r = 15 // 取 31x31 patch
+  let mut m01 = 0.0F
+  let mut m10 = 0.0F
+  for dy in -r..&lt;=r {
+    <span data-count="2976">l</span>et y = cy + dy
+    if y &lt; 0 || y &gt;= h {
+      <span data-count="1016">c</span>ontinue
+    }
+    for dx in -r..&lt;=r {
+      <span data-count="60760">l</span>et x = cx + dx
+      if x &lt; 0 || x &gt;= w {
+        <span data-count="20700">c</span>ontinue
+      }
+      let v = <span data-count="40060">F</span>loat::from_int(gray[y * w + x])
+      m01 += <span data-count="40060">F</span>loat::from_int(dy) * v
+      m10 += <span data-count="40060">F</span>loat::from_int(dx) * v
+    }
+  }
+  <span data-count="96">F</span>loat::from_double(<span data-count="96">@</span>math.atan2(m01.<span data-count="96">t</span>o_double(), m10.<span data-count="96">t</span>o_double()))
+}
+
+// ==================== BRIEF 描述子 ====================
+
+///|
+/// 生成 BRIEF 采样点对（256 对）
+/// 使用固定伪随机模式（基于质心高斯分布）
+fn brief_pattern() -&gt; Array[(Float, Float, Float, Float)] {
+  // 256 个点对 (x1, y1, x2, y2)，相对于关键点中心
+  // 使用固定模式确保可重复性
+  <span data-count="13">l</span>et pairs : Array[(Float, Float, Float, Float)] = []
+  // 使用简单的 LCG 伪随机生成器
+  let mut seed = 12345
+  fn next_rand() -&gt; Int {
+    <span data-count="13312">s</span>eed = (seed * 1103515245 + 12345) &amp; 0x7FFFFFFF
+    seed
+  }
+  for _ in 0..&lt;256 {
+    <span data-count="3328">l</span>et x1 = (<span data-count="3328">F</span>loat::from_int(<span data-count="3328">n</span>ext_rand() % 48) - 24.0F) / 24.0F * 15.0F
+    let y1 = (<span data-count="3328">F</span>loat::from_int(<span data-count="3328">n</span>ext_rand() % 48) - 24.0F) / 24.0F * 15.0F
+    let x2 = (<span data-count="3328">F</span>loat::from_int(<span data-count="3328">n</span>ext_rand() % 48) - 24.0F) / 24.0F * 15.0F
+    let y2 = (<span data-count="3328">F</span>loat::from_int(<span data-count="3328">n</span>ext_rand() % 48) - 24.0F) / 24.0F * 15.0F
+    pairs.<span data-count="3328">p</span>ush((x1, y1, x2, y2))
+  }
+  pairs
+}
+
+///|
+/// 计算 rBRIEF 描述子（旋转后的 BRIEF）
+fn compute_brief(
+  gray : Array[Int],
+  w : Int,
+  h : Int,
+  kp : OrbKeyPoint,
+  pattern : Array[(Float, Float, Float, Float)],
+) -&gt; Array[Int] {
+  <span data-count="63">l</span>et desc : Array[Int] = <span data-count="63">A</span>rray::make(32, 0)
+  let cos_a = <span data-count="63">F</span>loat::from_double(<span data-count="63">@</span>math.cos(kp.angle.<span data-count="63">t</span>o_double()))
+  let sin_a = <span data-count="63">F</span>loat::from_double(<span data-count="63">@</span>math.sin(kp.angle.<span data-count="63">t</span>o_double()))
+  for i in 0..&lt;256 {
+    <span data-count="16128">l</span>et (x1, y1, x2, y2) = pattern[i]
+    // 旋转采样点
+    let rx1 = x1 * cos_a - y1 * sin_a
+    let ry1 = x1 * sin_a + y1 * cos_a
+    let rx2 = x2 * cos_a - y2 * sin_a
+    let ry2 = x2 * sin_a + y2 * cos_a
+    // 采样像素值（双线性插值）
+    let v1 = <span data-count="16128">s</span>ample_bilinear(gray, w, h, kp.x, kp.y, rx1, ry1)
+    let v2 = <span data-count="16128">s</span>ample_bilinear(gray, w, h, kp.x, kp.y, rx2, ry2)
+    // 二进制测试
+    if v1 &lt; v2 {
+      <span data-count="1124">l</span>et word = i / 32
+      let bit = i % 32
+      desc[word] = desc[word] | (1 &lt;&lt; bit)
+    }
+  }
+  desc
+}
+
+///|
+/// 双线性插值采样
+fn sample_bilinear(
+  gray : Array[Int],
+  w : Int,
+  h : Int,
+  cx : Int,
+  cy : Int,
+  dx : Float,
+  dy : Float,
+) -&gt; Int {
+  <span data-count="32256">l</span>et fx = <span data-count="32256">F</span>loat::from_int(cx) + dx
+  let fy = <span data-count="32256">F</span>loat::from_int(cy) + dy
+  let x0 = fx.<span data-count="32256">t</span>o_int()
+  let y0 = fy.<span data-count="32256">t</span>o_int()
+  let x1 = x0 + 1
+  let y1 = y0 + 1
+  let x0c = x0.<span data-count="32256">c</span>lamp(min=0, max=w - 1)
+  let x1c = x1.<span data-count="32256">c</span>lamp(min=0, max=w - 1)
+  let y0c = y0.<span data-count="32256">c</span>lamp(min=0, max=h - 1)
+  let y1c = y1.<span data-count="32256">c</span>lamp(min=0, max=h - 1)
+  let p00 = gray[y0c * w + x0c]
+  let p01 = gray[y0c * w + x1c]
+  let p10 = gray[y1c * w + x0c]
+  let p11 = gray[y1c * w + x1c]
+  let wx = fx - <span data-count="32256">F</span>loat::from_int(x0)
+  let wy = fy - <span data-count="32256">F</span>loat::from_int(y0)
+  let v = <span data-count="32256">F</span>loat::from_int(p00) * (1.0F - wx) * (1.0F - wy) +
+    <span data-count="32256">F</span>loat::from_int(p01) * wx * (1.0F - wy) +
+    <span data-count="32256">F</span>loat::from_int(p10) * (1.0F - wx) * wy +
+    <span data-count="32256">F</span>loat::from_int(p11) * wx * wy
+  v.<span data-count="32256">t</span>o_int()
+}
+
+// ==================== 灰度转换 ====================
+
+///|
+fn to_gray_orb(img : @types.Image) -&gt; (Array[Int], Int, Int) {
+  <span data-count="13">l</span>et w = img.width
+  let h = img.height
+  let ch = img.channels
+  let n = w * h
+  let gray : Array[Int] = <span data-count="13">A</span>rray::make(n, 0)
+  for i in 0..&lt;n {
+    <span data-count="6852">i</span>f ch &gt;= 3 {
+      <span data-count="400">l</span>et r = img.data[i * ch].<span data-count="400">t</span>o_int()
+      let g = img.data[i * ch + 1].<span data-count="400">t</span>o_int()
+      let b = img.data[i * ch + 2].<span data-count="400">t</span>o_int()
+      gray[i] = (r * 299 + g * 587 + b * 114) / 1000
+    } else {
+      <span data-count="6452">g</span>ray[i] = img.data[i * ch].<span data-count="6452">t</span>o_int()
+    }
+  }
+  (gray, w, h)
+}
+
+// ==================== 公开 API ====================
+
+///|
+/// ORB 特征检测。
+/// 检测 FAST 关键点并计算 rBRIEF 描述子。
+/// max_features 控制最大特征数，threshold 为 FAST 阈值。
+pub fn orb_detect(
+  img : @types.Image,
+  max_features? : Int = 500,
+  threshold? : Int = 20,
+) -&gt; Array[OrbDescriptor] raise @types.LoadError {
+  // 输入验证
+  <span data-count="14">i</span>f img.width &lt;= 0 || img.height &lt;= 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: 图像尺寸必须大于0",
+    )
+  }
+  if img.width &lt; 7 || img.height &lt; 7 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: ORB 需要至少 7x7 图像",
+    )
+  }
+  if img.channels &lt; 1 || img.channels &gt; 4 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: 通道数必须在1-4之间",
+    )
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.<span data-count="13">l</span>ength() != expected_size {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: 数据大小不匹配，期望 " +
+      expected_size.<span data-count="0">t</span>o_string() +
+      "，实际 " +
+      img.data.<span data-count="0">l</span>ength().<span data-count="0">t</span>o_string(),
+    )
+  }
+  if max_features &lt;= 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: max_features必须大于0",
+    )
+  }
+  if threshold &lt;= 0 || threshold &gt; 255 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "orb_detect: threshold必须在1-255范围内",
+    )
+  }
+  let (gray, w, h) = <span data-count="13">t</span>o_gray_orb(img)
+  // FAST 检测
+  let keypoints = <span data-count="13">f</span>ast_detect(gray, w, h, threshold)
+  // 限制特征数：取前 max_features 个
+  let kps = if keypoints.<span data-count="13">l</span>ength() &gt; max_features {
+    <span data-count="2">k</span>eypoints[0:max_features]
+  } else {
+    <span data-count="11">k</span>eypoints
+  }
+  // 计算 BRIEF 描述子
+  let pattern = <span data-count="13">b</span>rief_pattern()
+  let descriptors : Array[OrbDescriptor] = []
+  for kp in kps {
+    <span data-count="63">l</span>et desc = <span data-count="63">c</span>ompute_brief(gray, w, h, kp, pattern)
+    descriptors.<span data-count="63">p</span>ush(OrbDescriptor::{ kp, data: desc })
+  }
+  descriptors
+}
+
+///|
+/// ORB 描述子汉明距离
+pub fn orb_hamming(d1 : OrbDescriptor, d2 : OrbDescriptor) -&gt; Int {
+  <span data-count="9">l</span>et mut dist = 0
+  for i in 0..&lt;32 {
+    <span data-count="288">l</span>et xor = d1.data[i] ^ d2.data[i]
+    // 计算位计数
+    let mut bits = xor
+    bits = (bits &amp; 0x55555555) + ((bits &gt;&gt; 1) &amp; 0x55555555)
+    bits = (bits &amp; 0x33333333) + ((bits &gt;&gt; 2) &amp; 0x33333333)
+    bits = (bits &amp; 0x0F0F0F0F) + ((bits &gt;&gt; 4) &amp; 0x0F0F0F0F)
+    bits = (bits &amp; 0x00FF00FF) + ((bits &gt;&gt; 8) &amp; 0x00FF00FF)
+    bits = (bits &amp; 0x0000FFFF) + ((bits &gt;&gt; 16) &amp; 0x0000FFFF)
+    dist += bits
+  }
+  dist
+}
+
+///|
+/// ORB 特征匹配。
+/// 对 query 中每个描述子，找 train 中汉明距离最小的匹配。
+/// max_distance 为最大允许距离（默认 64）。
+pub fn orb_match(
+  query : Array[OrbDescriptor],
+  train : Array[OrbDescriptor],
+  max_distance? : Int = 64,
+) -&gt; Array[DescriptorMatch] raise @types.LoadError {
+  // 参数验证
+  <span data-count="4">i</span>f query.<span data-count="4">l</span>ength() == 0 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("orb_match: query数组不能为空")
+  }
+  if train.<span data-count="3">l</span>ength() == 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed("orb_match: train数组不能为空")
+  }
+  if max_distance &lt; 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed("orb_match: max_distance必须 &gt;= 0")
+  }
+
+  let matches : Array[DescriptorMatch] = []
+  for i in 0..&lt;query.<span data-count="3">l</span>ength() {
+    <span data-count="4">l</span>et mut best_j = -1
+    let mut best_dist = max_distance + 1
+    for j in 0..&lt;train.<span data-count="4">l</span>ength() {
+      <span data-count="6">l</span>et dist = <span data-count="6">o</span>rb_hamming(query[i], train[j])
+      if dist &lt; best_dist {
+        <span data-count="3">b</span>est_dist = dist
+        best_j = j
+      }
+    }
+    if best_j &gt;= 0 &amp;&amp; best_dist &lt;= max_distance {
+      <span data-count="3">m</span>atches.<span data-count="3">p</span>ush(DescriptorMatch::{
+        query_idx: i,
+        train_idx: best_j,
+        distance: best_dist,
+      })
+    }
+  }
+  matches
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

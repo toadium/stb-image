@@ -1,0 +1,7 @@
+
+///|
+test "reexport: embed_text_watermark basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = embed_text_watermark(img, "test")
+  let _ = img
+}

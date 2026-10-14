@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+    content = f.read()
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xaa in position 2788: illegal multibyte sequence

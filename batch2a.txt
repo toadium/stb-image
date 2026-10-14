@@ -1,0 +1,81 @@
+
+///|
+test "reexport: video_frames_new basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = v
+  let _ = img
+}
+///|
+test "reexport: create_animation basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = create_animation([img])
+  let _ = v
+  let _ = img
+}
+///|
+test "reexport: video_frame_count basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_frame_count(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_get_frame basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_get_frame(v, 0)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_frame_average basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_frame_average(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_reverse basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_reverse(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_sample basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_sample(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_fade_in basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_fade_in(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_fade_out basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v = video_frames_new([img])
+  let _ = video_fade_out(v)
+  let _ = img
+  let _ = v
+}
+///|
+test "reexport: video_concat basic" {
+  let img = re_make_rgb(4, 4, Array::make(16, (128, 64, 192)))
+  let v1 = video_frames_new([img])
+  let v2 = video_frames_new([img])
+  let _ = video_concat(v1, v2)
+  let _ = img
+  let _ = v1
+  let _ = v2
+}

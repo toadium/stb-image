@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v236.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v236.0.0。
+> 下表为**功能迭代版本**（v0.1 → v237.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v237.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1926,6 +1926,11 @@
 - multilingual_ocr_enhanced: +33 tests (语言检测, 智能分割, 智能间距, 标点规范化, 语言模型, 多语言识别)
 - qr_decode: +13 tests (QR解码功能路径, Reed-Solomon纠错)
 - 5576×4 全绿 (native/wasm-gc/js/wasm)
+## v237.0.0 - histogram_16f + yolo_detection + barcode_decode 功能测试
+- histogram_16f: +30 tests (RGBA通道保留alpha, 越界值clamp, 归一化/匹配错误路径, 不同参考图像CDF匹配)
+- yolo_detection: +22 tests (NMS抑制, 目标检测高方差, 跟踪初始化/更新/不可见, 检测评估指标全FP/完美匹配/多预测排序, 检测报告, 边界框回归, IoU边界)
+- barcode_decode: +27 tests (EAN-13/QR/通用条码错误路径+功能路径, 禁用配置返回None, QR定位图案检测, 多通道图像)
+- 5995×4 全绿 (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

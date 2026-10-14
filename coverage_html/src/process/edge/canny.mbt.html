@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>canny.mbt &mdash; </title>
+    <meta name="description" content="90.36% coverage in src\process\edge\canny.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\edge\</span>canny.mbt
+        </a>
+      </h1>
+      <h2>90.36%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="top:6.82%"></span>
+      <span class="unvisited" style="top:10.91%"></span>
+      <span class="unvisited" style="top:11.82%"></span>
+      <span class="unvisited" style="top:12.73%"></span>
+      <span class="unvisited" style="top:21.82%"></span>
+      <span class="unvisited" style="bottom:27.73%"></span>
+      <span class="unvisited" style="bottom:26.82%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span class="visited"> </span>
+<a id="L15"></a><span class="unvisited"> </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span class="visited"> </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span class="visited"> </span>
+<a id="L24"></a><span class="unvisited"> </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span class="unvisited"> </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span class="unvisited"> </span>
+<a id="L29"></a><span > </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span class="visited"> </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span class="visited"> </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span class="visited"> </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span class="unvisited"> </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span class="visited"> </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span class="visited"> </span>
+<a id="L55"></a><span class="visited"> </span>
+<a id="L56"></a><span > </span>
+<a id="L57"></a><span class="visited"> </span>
+<a id="L58"></a><span class="visited"> </span>
+<a id="L59"></a><span class="visited"> </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span > </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span class="visited"> </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span class="visited"> </span>
+<a id="L67"></a><span class="visited"> </span>
+<a id="L68"></a><span > </span>
+<a id="L69"></a><span class="visited"> </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span > </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span class="visited"> </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span > </span>
+<a id="L89"></a><span class="visited"> </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span > </span>
+<a id="L92"></a><span class="visited"> </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span class="visited"> </span>
+<a id="L95"></a><span class="visited"> </span>
+<a id="L96"></a><span class="visited"> </span>
+<a id="L97"></a><span class="visited"> </span>
+<a id="L98"></a><span class="visited"> </span>
+<a id="L99"></a><span > </span>
+<a id="L100"></a><span class="visited"> </span>
+<a id="L101"></a><span > </span>
+<a id="L102"></a><span > </span>
+<a id="L103"></a><span > </span>
+<a id="L104"></a><span > </span>
+<a id="L105"></a><span class="visited"> </span>
+<a id="L106"></a><span > </span>
+<a id="L107"></a><span class="visited"> </span>
+<a id="L108"></a><span class="visited"> </span>
+<a id="L109"></a><span > </span>
+<a id="L110"></a><span > </span>
+<a id="L111"></a><span class="visited"> </span>
+<a id="L112"></a><span > </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span class="visited"> </span>
+<a id="L115"></a><span class="visited"> </span>
+<a id="L116"></a><span class="visited"> </span>
+<a id="L117"></a><span class="visited"> </span>
+<a id="L118"></a><span class="visited"> </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span class="visited"> </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span class="visited"> </span>
+<a id="L127"></a><span class="visited"> </span>
+<a id="L128"></a><span class="visited"> </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span class="visited"> </span>
+<a id="L131"></a><span class="visited"> </span>
+<a id="L132"></a><span class="visited"> </span>
+<a id="L133"></a><span class="visited"> </span>
+<a id="L134"></a><span > </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span > </span>
+<a id="L137"></a><span > </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span class="visited"> </span>
+<a id="L140"></a><span class="visited"> </span>
+<a id="L141"></a><span class="visited"> </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span class="visited"> </span>
+<a id="L145"></a><span class="visited"> </span>
+<a id="L146"></a><span > </span>
+<a id="L147"></a><span > </span>
+<a id="L148"></a><span > </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span class="visited"> </span>
+<a id="L151"></a><span class="visited"> </span>
+<a id="L152"></a><span class="visited"> </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span > </span>
+<a id="L155"></a><span > </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span class="visited"> </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span class="unvisited"> </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span class="unvisited"> </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span > </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span > </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+<a id="L168"></a><span > </span>
+<a id="L169"></a><span > </span>
+<a id="L170"></a><span > </span>
+<a id="L171"></a><span class="visited"> </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span > </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span > </span>
+<a id="L177"></a><span > </span>
+<a id="L178"></a><span class="visited"> </span>
+<a id="L179"></a><span class="visited"> </span>
+<a id="L180"></a><span > </span>
+<a id="L181"></a><span > </span>
+<a id="L182"></a><span > </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span > </span>
+<a id="L185"></a><span > </span>
+<a id="L186"></a><span > </span>
+<a id="L187"></a><span > </span>
+<a id="L188"></a><span class="visited"> </span>
+<a id="L189"></a><span class="visited"> </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span > </span>
+<a id="L192"></a><span class="visited"> </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span class="visited"> </span>
+<a id="L196"></a><span > </span>
+<a id="L197"></a><span > </span>
+<a id="L198"></a><span > </span>
+<a id="L199"></a><span > </span>
+<a id="L200"></a><span > </span>
+<a id="L201"></a><span > </span>
+<a id="L202"></a><span > </span>
+<a id="L203"></a><span class="visited"> </span>
+<a id="L204"></a><span > </span>
+<a id="L205"></a><span class="visited"> </span>
+<a id="L206"></a><span class="visited"> </span>
+<a id="L207"></a><span > </span>
+<a id="L208"></a><span > </span>
+<a id="L209"></a><span > </span>
+<a id="L210"></a><span class="visited"> </span>
+<a id="L211"></a><span class="visited"> </span>
+<a id="L212"></a><span class="visited"> </span>
+<a id="L213"></a><span > </span>
+<a id="L214"></a><span > </span>
+<a id="L215"></a><span > </span>
+<a id="L216"></a><span > </span>
+<a id="L217"></a><span > </span>
+<a id="L218"></a><span > </span>
+<a id="L219"></a><span > </span>
+<a id="L220"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+<a href="#L199">199</a>
+<a href="#L200">200</a>
+<a href="#L201">201</a>
+<a href="#L202">202</a>
+<a href="#L203">203</a>
+<a href="#L204">204</a>
+<a href="#L205">205</a>
+<a href="#L206">206</a>
+<a href="#L207">207</a>
+<a href="#L208">208</a>
+<a href="#L209">209</a>
+<a href="#L210">210</a>
+<a href="#L211">211</a>
+<a href="#L212">212</a>
+<a href="#L213">213</a>
+<a href="#L214">214</a>
+<a href="#L215">215</a>
+<a href="#L216">216</a>
+<a href="#L217">217</a>
+<a href="#L218">218</a>
+<a href="#L219">219</a>
+<a href="#L220">220</a>
+</pre>
+<pre><code class="ocaml">// Canny 边缘检测（纯 MoonBit）
+
+///|
+/// Canny 边缘检测。
+/// 步骤：高斯模糊 → Sobel 梯度 → 非极大值抑制 → 双阈值 + 滞后连接。
+/// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4，自动转灰度）。
+/// low_threshold 和 high_threshold 为双阈值（low 应 &lt; high）。
+pub fn canny_edge(
+  img : @types.Image,
+  low_threshold? : Int = 50,
+  high_threshold? : Int = 100,
+) -&gt; @types.Image raise @types.LoadError {
+  // 输入验证
+  <span data-count="10">i</span>f img.width &lt;= 0 || img.height &lt;= 0 {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "canny_edge: 图像尺寸必须大于0",
+    )
+  }
+  if img.channels != 1 &amp;&amp; img.channels != 3 &amp;&amp; img.channels != 4 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("canny_edge: 仅支持 channels=1/3/4")
+  }
+  let expected_size = img.width * img.height * img.channels
+  if img.data.<span data-count="9">l</span>ength() != expected_size {
+    <span data-count="0">r</span>aise @types.LoadError::DecodeFailed(
+      "canny_edge: 数据大小不匹配，期望 " +
+      expected_size.<span data-count="0">t</span>o_string() +
+      "，实际 " +
+      img.data.<span data-count="0">l</span>ength().<span data-count="0">t</span>o_string(),
+    )
+  }
+  if low_threshold &lt; 0 || low_threshold &gt; 255 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "low_threshold 必须在 0..255 之间",
+    )
+  }
+  if high_threshold &lt; 0 || high_threshold &gt; 255 {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed(
+      "high_threshold 必须在 0..255 之间",
+    )
+  }
+  if low_threshold &gt; high_threshold {
+    <span data-count="1">r</span>aise @types.LoadError::DecodeFailed("low_threshold 应 &lt;= high_threshold")
+  }
+  let w = img.width
+  let h = img.height
+  let n = w * h
+  if n == 0 {
+    <span data-count="0">r</span>eturn img
+  }
+  // 转灰度
+  let gray : Array[Int] = <span data-count="6">A</span>rray::make(n, 0)
+  let ch = img.channels
+  for i in 0..&lt;n {
+    <span data-count="147">i</span>f ch == 1 {
+      <span data-count="115">g</span>ray[i] = img.data[i].<span data-count="115">t</span>o_int()
+    } else {
+      <span data-count="32">l</span>et r = img.data[i * ch].<span data-count="32">t</span>o_int()
+      let g = img.data[i * ch + 1].<span data-count="32">t</span>o_int()
+      let b = img.data[i * ch + 2].<span data-count="32">t</span>o_int()
+      gray[i] = (r * 299 + g * 587 + b * 114) / 1000
+    }
+  }
+  // 1. 高斯模糊 (sigma=1.0, 5x5 核)
+  let blurred = <span data-count="6">c</span>anny_gaussian_blur(gray, w, h)
+  // 2. Sobel 梯度
+  let gradient : Array[Int] = <span data-count="6">A</span>rray::make(n, 0)
+  let direction : Array[Int] = <span data-count="6">A</span>rray::make(n, 0) // 0=0°, 1=45°, 2=90°, 3=135°
+  for y in 1..&lt;(h - 1) {
+    <span data-count="16">f</span>or x in 1..&lt;(w - 1) {
+      <span data-count="62">l</span>et idx = y * w + x
+      // Sobel X
+      let gx = -blurred[(y - 1) * w + (x - 1)] -
+        2 * blurred[y * w + (x - 1)] -
+        blurred[(y + 1) * w + (x - 1)] +
+        blurred[(y - 1) * w + (x + 1)] +
+        2 * blurred[y * w + (x + 1)] +
+        blurred[(y + 1) * w + (x + 1)]
+      // Sobel Y
+      let gy = -blurred[(y - 1) * w + (x - 1)] -
+        2 * blurred[(y - 1) * w + x] -
+        blurred[(y - 1) * w + (x + 1)] +
+        blurred[(y + 1) * w + (x - 1)] +
+        2 * blurred[(y + 1) * w + x] +
+        blurred[(y + 1) * w + (x + 1)]
+      // 梯度幅值（sqrt 比 powf(x, 0.5) 更快）
+      let mag = <span data-count="62">F</span>loat::from_int(gx * gx + gy * gy).<span data-count="62">s</span>qrt().<span data-count="62">t</span>o_int()
+      gradient[idx] = mag
+      // 梯度方向量化到 4 个方向
+      let angle = <span data-count="62">@</span>math.atan2f(<span data-count="62">F</span>loat::from_int(gy), <span data-count="62">F</span>loat::from_int(gx)) *
+        180.0F /
+        3.14159265F
+      let norm_angle = if angle &lt; 0.0F { <span data-count="2">a</span>ngle + 180.0F } else { <span data-count="60">a</span>ngle }
+      direction[idx] = if norm_angle &lt; 22.5F || norm_angle &gt;= 157.5F {
+        <span data-count="49">0</span> // 水平
+      } else <span data-count="13">i</span>f norm_angle &lt; 67.5F {
+        <span data-count="2">1</span> // 45°
+      } else <span data-count="11">i</span>f norm_angle &lt; 112.5F {
+        <span data-count="9">2</span> // 垂直
+      } else {
+        <span data-count="2">3</span> // 135°
+      }
+    }
+  }
+  // 3. 非极大值抑制
+  let nms : Array[Int] = <span data-count="6">A</span>rray::make(n, 0)
+  for y in 1..&lt;(h - 1) {
+    <span data-count="16">f</span>or x in 1..&lt;(w - 1) {
+      <span data-count="62">l</span>et idx = y * w + x
+      let mag = gradient[idx]
+      if mag == 0 {
+        <span data-count="4">c</span>ontinue
+      }
+      let dir = direction[idx]
+      let (n1, n2) = match <span data-count="58">d</span>ir {
+        0 =&gt; <span data-count="45">(</span>gradient[idx - 1], gradient[idx + 1]) // 水平：比较左右
+        1 =&gt; <span data-count="2">(</span>gradient[(y - 1) * w + (x + 1)], gradient[(y + 1) * w + (x - 1)]) // 45°
+        2 =&gt; <span data-count="9">(</span>gradient[(y - 1) * w + x], gradient[(y + 1) * w + x]) // 垂直：比较上下
+        _ =&gt; <span data-count="2">(</span>gradient[(y - 1) * w + (x - 1)], gradient[(y + 1) * w + (x + 1)]) // 135°
+      }
+      if mag &gt;= n1 &amp;&amp; mag &gt;= n2 {
+        <span data-count="28">n</span>ms[idx] = mag
+      }
+    }
+  }
+  // 4. 双阈值 + 滞后连接
+  let out : Array[Byte] = <span data-count="6">A</span>rray::make(n, b'\x00')
+  let strong : Array[Bool] = <span data-count="6">A</span>rray::make(n, false)
+  let weak : Array[Bool] = <span data-count="6">A</span>rray::make(n, false)
+  for i in 0..&lt;n {
+    <span data-count="147">i</span>f nms[i] &gt;= high_threshold {
+      <span data-count="24">s</span>trong[i] = true
+    } else <span data-count="123">i</span>f nms[i] &gt;= low_threshold {
+      <span data-count="4">w</span>eak[i] = true
+    }
+  }
+  // 滞后连接：弱边缘如果与强边缘连通则保留
+  let stack : Array[Int] = []
+  for i in 0..&lt;n {
+    <span data-count="147">i</span>f strong[i] {
+      <span data-count="24">o</span>ut[i] = b'\xFF'
+      stack.<span data-count="24">p</span>ush(i)
+    }
+  }
+  while stack.<span data-count="30">l</span>ength() &gt; 0 {
+    <span data-count="24">l</span>et idx = stack.<span data-count="24">r</span>emove(stack.<span data-count="24">l</span>ength() - 1)
+    let x = idx % w
+    let y = idx / w
+    // 8 邻域
+    for dy in -1..&lt;=1 {
+      <span data-count="72">f</span>or dx in -1..&lt;=1 {
+        <span data-count="216">i</span>f dx == 0 &amp;&amp; dy == 0 {
+          <span data-count="24">c</span>ontinue
+        }
+        let nx = x + dx
+        let ny = y + dy
+        if nx &gt;= 0 &amp;&amp; nx &lt; w &amp;&amp; ny &gt;= 0 &amp;&amp; ny &lt; h {
+          <span data-count="192">l</span>et nidx = ny * w + nx
+          if weak[nidx] &amp;&amp; !strong[nidx] {
+            <span data-count="0">s</span>trong[nidx] = true
+            out[nidx] = b'\xFF'
+            stack.<span data-count="0">p</span>ush(nidx)
+          }
+        }
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: 1,
+    data: <span data-count="6">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// 5x5 高斯模糊（sigma=1.0），分离内部/边界区域以消除热点 clamp 调用
+fn canny_gaussian_blur(gray : Array[Int], w : Int, h : Int) -&gt; Array[Int] {
+  <span data-count="6">l</span>et n = w * h
+  let out : Array[Int] = <span data-count="6">A</span>rray::make(n, 0)
+  // 5x5 高斯核 (sigma=1.0)
+  let kernel : Array[Int] = [
+    2, 4, 5, 4, 2, 4, 9, 12, 9, 4, 5, 12, 15, 12, 5, 4, 9, 12, 9, 4, 2, 4, 5, 4,
+    2,
+  ]
+  let kernel_sum = 159
+  // 内部区域：x in [2, w-2), y in [2, h-2)，5x5 核完全在图像内，无需 clamp
+  for y in 2..&lt;(h - 2) {
+    <span data-count="6">f</span>or x in 2..&lt;(w - 2) {
+      <span data-count="18">l</span>et mut sum = 0
+      let base = (y - 2) * w + (x - 2)
+      for ky in 0..&lt;5 {
+        <span data-count="90">l</span>et row = base + ky * w
+        let krow = ky * 5
+        for kx in 0..&lt;5 {
+          <span data-count="450">s</span>um += gray[row + kx] * kernel[krow + kx]
+        }
+      }
+      out[y * w + x] = sum / kernel_sum
+    }
+  }
+  // 边界区域：5x5 核可能超出图像，需要 clamp
+  for y in 0..&lt;h {
+    <span data-count="27">l</span>et y_inner = y &gt;= 2 &amp;&amp; y &lt; h - 2
+    for x in 0..&lt;w {
+      <span data-count="147">i</span>f y_inner &amp;&amp; x &gt;= 2 &amp;&amp; x &lt; w - 2 {
+        <span data-count="18">c</span>ontinue
+      }
+      let mut sum = 0
+      for ky in 0..&lt;5 {
+        <span data-count="645">f</span>or kx in 0..&lt;5 {
+          <span data-count="3225">l</span>et px = (x + kx - 2).<span data-count="3225">c</span>lamp(min=0, max=w - 1)
+          let py = (y + ky - 2).<span data-count="3225">c</span>lamp(min=0, max=h - 1)
+          sum += gray[py * w + px] * kernel[ky * 5 + kx]
+        }
+      }
+      out[y * w + x] = sum / kernel_sum
+    }
+  }
+  out
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+
+// Batch 1a: affine and simple math
+///|
+test "reexport: affine_rotation basic" {
+  let t = affine_rotation(0.5)
+  let _ = t
+}
+///|
+test "reexport: affine_scale basic" {
+  let t = affine_scale(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_translation basic" {
+  let t = affine_translation(1.0, 1.0)
+  let _ = t
+}
+///|
+test "reexport: affine_apply basic" {
+  let t = affine_translation(1.0, 2.0)
+  let (x, y) = affine_apply(t, 0.0, 0.0)
+  let _ = x
+  let _ = y
+}
+///|
+test "reexport: affine_compose basic" {
+  let t1 = affine_translation(1.0, 2.0)
+  let t2 = affine_scale(2.0, 2.0)
+  let t = affine_compose(t1, t2)
+  let _ = t
+}
+///|
+test "reexport: measure_distance basic" {
+  let d = measure_distance(0, 0, 3, 4)
+  assert_true(d >= 0.0)
+}
+///|
+test "reexport: reed_solomon_decode basic" {
+  let (data, ok) = reed_solomon_decode([1, 2, 3, 4], 2)
+  let _ = data
+  let _ = ok
+}

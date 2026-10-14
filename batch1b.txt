@@ -1,0 +1,74 @@
+
+// Batch 1b: image computation
+///|
+test "reexport: compute_mae basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_mae(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ssim basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_ssim(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_diff_image basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_diff_image(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_quality_metrics basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = compute_quality_metrics(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndvi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndvi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndbi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndbi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_ndwi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let _ = compute_ndwi(img1, img2)
+  let _ = img1
+  let _ = img2
+}
+///|
+test "reexport: compute_evi basic" {
+  let img1 = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let img2 = re_make_rgb(8, 8, Array::make(64, (64, 192, 128)))
+  let img3 = re_make_rgb(8, 8, Array::make(64, (192, 128, 64)))
+  let _ = compute_evi(img1, img2, img3)
+  let _ = img1
+  let _ = img2
+  let _ = img3
+}
+///|
+test "reexport: measure_area basic" {
+  let img = re_make_rgb(8, 8, Array::make(64, (128, 64, 192)))
+  let _ = measure_area(img)
+  let _ = img
+}

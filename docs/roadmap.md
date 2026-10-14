@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-14 | 当前版本：v236.0.0 | 测试：5916 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-14 | 当前版本：v237.0.0 | 测试：5995 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2524,6 +2524,7 @@ flowchart LR
 | v234.0.0 | scan_document_ocr+handwriting_ocr_enhanced+document_understanding_enhanced功能测试 | scan_document_ocr+handwriting_ocr_enhanced+document_understanding_enhanced +114测试 (扫描质量评估+文档预处理+版面分析+OCR识别+批量OCR+结果导出+手写体模板+笔画特征+弹性匹配+连笔分割+后处理+增强识别+增强版面分析+阅读顺序+段落检测+标题检测+文档结构树+文本提取+文档统计+完整文档理解) ✅ 2026-10-14 — 5780×4全绿 |
 | v235.0.0 | table_recognition+handwriting_recognition+feature_extraction功能测试 | table_recognition+handwriting_recognition+feature_extraction +100测试 (水平/垂直线检测+表格结构分析+表格识别+单元格提取+倾斜检测+尺寸归一化+笔画特征+连笔分割+手写特征+特征相似度+模板创建+字符识别+报告生成+HOG/LBP/投影/网格/统计/组合特征) ✅ 2026-10-14 — 5880×4全绿 |
 | v236.0.0 | chinese_ocr+advanced_chinese_ocr+english_ocr功能测试 | chinese_ocr+advanced_chinese_ocr+english_ocr +36测试 (中文OCR默认配置+模板生成+识别错误路径+功能路径+3500模板+部件分解+增强识别+英文OCR默认配置+大小写模板+英文识别) ✅ 2026-10-14 — 5916×4全绿 |
+| v237.0.0 | histogram_16f+yolo_detection+barcode_decode功能测试 | histogram_16f+yolo_detection+barcode_decode +79测试 (RGBA通道保留alpha+越界值clamp+归一化/匹配错误路径+NMS抑制+目标检测+跟踪初始化/更新+检测评估指标+检测报告+EAN-13解码+QR定位图案检测+二维码解码+通用条码解码+多通道图像) ✅ 2026-10-14 — 5995×4全绿 |
 
 ### 验收标准（每环）
 

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>geometry.mbt &mdash; </title>
+    <meta name="description" content="97.06% coverage in src\process\transform\geometry.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\transform\</span>geometry.mbt
+        </a>
+      </h1>
+      <h2>97.06%</h2>
+    </div>
+    <div id="navbar">
+      <span class="unvisited" style="bottom:24.10%"></span>
+      <span class="unvisited" style="bottom:16.41%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span class="visited"> </span>
+<a id="L16"></a><span class="visited"> </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span class="visited"> </span>
+<a id="L20"></a><span class="visited"> </span>
+<a id="L21"></a><span class="visited"> </span>
+<a id="L22"></a><span class="visited"> </span>
+<a id="L23"></a><span class="visited"> </span>
+<a id="L24"></a><span class="visited"> </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span > </span>
+<a id="L29"></a><span class="visited"> </span>
+<a id="L30"></a><span class="visited"> </span>
+<a id="L31"></a><span class="visited"> </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span class="visited"> </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span class="visited"> </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span class="visited"> </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span class="visited"> </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span class="visited"> </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span class="visited"> </span>
+<a id="L59"></a><span class="visited"> </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span class="visited"> </span>
+<a id="L62"></a><span class="visited"> </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span > </span>
+<a id="L69"></a><span > </span>
+<a id="L70"></a><span class="visited"> </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span > </span>
+<a id="L78"></a><span class="visited"> </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span class="visited"> </span>
+<a id="L83"></a><span class="visited"> </span>
+<a id="L84"></a><span class="visited"> </span>
+<a id="L85"></a><span class="visited"> </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span > </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span > </span>
+<a id="L92"></a><span class="visited"> </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span class="visited"> </span>
+<a id="L95"></a><span > </span>
+<a id="L96"></a><span class="visited"> </span>
+<a id="L97"></a><span class="visited"> </span>
+<a id="L98"></a><span class="visited"> </span>
+<a id="L99"></a><span class="visited"> </span>
+<a id="L100"></a><span class="visited"> </span>
+<a id="L101"></a><span > </span>
+<a id="L102"></a><span class="visited"> </span>
+<a id="L103"></a><span > </span>
+<a id="L104"></a><span class="visited"> </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span > </span>
+<a id="L107"></a><span > </span>
+<a id="L108"></a><span > </span>
+<a id="L109"></a><span > </span>
+<a id="L110"></a><span class="visited"> </span>
+<a id="L111"></a><span > </span>
+<a id="L112"></a><span class="visited"> </span>
+<a id="L113"></a><span class="visited"> </span>
+<a id="L114"></a><span > </span>
+<a id="L115"></a><span class="visited"> </span>
+<a id="L116"></a><span class="visited"> </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span > </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span class="visited"> </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span > </span>
+<a id="L128"></a><span > </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span > </span>
+<a id="L131"></a><span > </span>
+<a id="L132"></a><span > </span>
+<a id="L133"></a><span > </span>
+<a id="L134"></a><span > </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span > </span>
+<a id="L137"></a><span > </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span > </span>
+<a id="L140"></a><span > </span>
+<a id="L141"></a><span > </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span > </span>
+<a id="L145"></a><span > </span>
+<a id="L146"></a><span > </span>
+<a id="L147"></a><span class="visited"> </span>
+<a id="L148"></a><span class="unvisited"> </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span > </span>
+<a id="L151"></a><span class="visited"> </span>
+<a id="L152"></a><span class="visited"> </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span class="visited"> </span>
+<a id="L155"></a><span > </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span > </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span class="visited"> </span>
+<a id="L162"></a><span class="visited"> </span>
+<a id="L163"></a><span class="unvisited"> </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span class="visited"> </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+<a id="L168"></a><span > </span>
+<a id="L169"></a><span > </span>
+<a id="L170"></a><span > </span>
+<a id="L171"></a><span > </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span > </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span > </span>
+<a id="L177"></a><span > </span>
+<a id="L178"></a><span > </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span > </span>
+<a id="L181"></a><span > </span>
+<a id="L182"></a><span > </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span class="visited"> </span>
+<a id="L185"></a><span class="visited"> </span>
+<a id="L186"></a><span class="visited"> </span>
+<a id="L187"></a><span > </span>
+<a id="L188"></a><span > </span>
+<a id="L189"></a><span > </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span > </span>
+<a id="L192"></a><span > </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+</pre>
+<pre><code class="ocaml">// 几何变换（纯 MoonBit）：仿射变换 + 任意角度旋转
+// 使用双线性插值，边界 clamp 到边缘像素
+
+///|
+/// 双线性插值采样。在 (x, y) 处采样通道 c 的值。
+fn sample_bilinear(
+  data : Array[Int],
+  w : Int,
+  h : Int,
+  ch : Int,
+  c : Int,
+  x : Float,
+  y : Float,
+) -&gt; Int {
+  <span data-count="512">l</span>et x0 = x.<span data-count="512">t</span>o_int()
+  let y0 = y.<span data-count="512">t</span>o_int()
+  let w_minus_1 = w - 1
+  let h_minus_1 = h - 1
+  let x0c = x0.<span data-count="512">c</span>lamp(min=0, max=w_minus_1)
+  let y0c = y0.<span data-count="512">c</span>lamp(min=0, max=h_minus_1)
+  let x1 = (x0 + 1).<span data-count="512">c</span>lamp(min=0, max=w_minus_1)
+  let y1 = (y0 + 1).<span data-count="512">c</span>lamp(min=0, max=h_minus_1)
+  let fx = x - <span data-count="512">F</span>loat::from_int(x0)
+  let fy = y - <span data-count="512">F</span>loat::from_int(y0)
+  let p00 = data[(y0c * w + x0c) * ch + c]
+  let p10 = data[(y0c * w + x1) * ch + c]
+  let p01 = data[(y1 * w + x0c) * ch + c]
+  let p11 = data[(y1 * w + x1) * ch + c]
+  let top = <span data-count="512">F</span>loat::from_int(p00) * (1.0F - fx) + <span data-count="512">F</span>loat::from_int(p10) * fx
+  let bot = <span data-count="512">F</span>loat::from_int(p01) * (1.0F - fx) + <span data-count="512">F</span>loat::from_int(p11) * fx
+  (top * (1.0F - fy) + bot * fy + 0.5F).<span data-count="512">t</span>o_int()
+}
+
+///|
+/// 仿射变换。matrix = (a, b, c, d, e, f) 映射 dst→src：
+///   src_x = a * dst_x + b * dst_y + c
+///   src_y = d * dst_x + e * dst_y + f
+/// 使用双线性插值，超出边界的像素 clamp 到边缘。
+/// 输出尺寸为 new_w × new_h，通道数与输入相同。
+pub fn warp_affine(
+  img : @types.Image,
+  matrix : (Float, Float, Float, Float, Float, Float),
+  new_w : Int,
+  new_h : Int,
+) -&gt; @types.Image {
+  <span data-count="5">l</span>et (a, b, c, d, e, f) = matrix
+  let ch = img.channels
+  let w = img.width
+  let h = img.height
+  let data_int : Array[Int] = <span data-count="5">A</span>rray::make(w * h * ch, 0)
+  for i in 0..&lt;(w * h * ch) {
+    <span data-count="256">d</span>ata_int[i] = img.data[i].<span data-count="256">t</span>o_int()
+  }
+  let out : Array[Byte] = <span data-count="5">A</span>rray::make(new_w * new_h * ch, b'\x00')
+  for dy in 0..&lt;new_h {
+    <span data-count="18">l</span>et fdy = <span data-count="18">F</span>loat::from_int(dy)
+    for dx in 0..&lt;new_w {
+      <span data-count="68">l</span>et sx = a * <span data-count="68">F</span>loat::from_int(dx) + b * fdy + c
+      let sy = d * <span data-count="68">F</span>loat::from_int(dx) + e * fdy + f
+      for ci in 0..&lt;ch {
+        <span data-count="220">l</span>et val = <span data-count="220">s</span>ample_bilinear(data_int, w, h, ch, ci, sx, sy)
+        out[(dy * new_w + dx) * ch + ci] = val.<span data-count="220">c</span>lamp(min=0, max=255).<span data-count="220">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: new_w,
+    height: new_h,
+    channels: ch,
+    data: <span data-count="5">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// 任意角度旋转（绕中心，保留原尺寸，角落填充黑色）。
+/// angle 单位为度，正值逆时针旋转。使用双线性插值。
+pub fn rotate(img : @types.Image, angle_degrees : Float) -&gt; @types.Image {
+  <span data-count="6">l</span>et w = img.width
+  let h = img.height
+  let ch = img.channels
+  let rad = angle_degrees * 3.14159265F / 180.0F
+  let cos_a = <span data-count="6">@</span>math.cosf(rad)
+  let sin_a = <span data-count="6">@</span>math.sinf(rad)
+  let cx = <span data-count="6">F</span>loat::from_int(w - 1) / 2.0F
+  let cy = <span data-count="6">F</span>loat::from_int(h - 1) / 2.0F
+  // 逆变换：dst → src（旋转 -angle）
+  // src_x = cos*(dx-cx) + sin*(dy-cy) + cx
+  // src_y = -sin*(dx-cx) + cos*(dy-cy) + cy
+  // 即 matrix = (cos, sin, cx-cos*cx-sin*cy, -sin, cos, cy+sin*cx-cos*cy)
+  let tx = cx - cos_a * cx - sin_a * cy
+  let ty = cy + sin_a * cx - cos_a * cy
+  let data_int : Array[Int] = <span data-count="6">A</span>rray::make(w * h * ch, 0)
+  for i in 0..&lt;(w * h * ch) {
+    <span data-count="320">d</span>ata_int[i] = img.data[i].<span data-count="320">t</span>o_int()
+  }
+  let w_max = <span data-count="6">F</span>loat::from_int(w) - 0.5F
+  let h_max = <span data-count="6">F</span>loat::from_int(h) - 0.5F
+  let w_minus_1_f = <span data-count="6">F</span>loat::from_int(w - 1)
+  let h_minus_1_f = <span data-count="6">F</span>loat::from_int(h - 1)
+  let out : Array[Byte] = <span data-count="6">A</span>rray::make(w * h * ch, b'\x00')
+  for dy in 0..&lt;h {
+    <span data-count="28">l</span>et fdy = <span data-count="28">F</span>loat::from_int(dy)
+    for dx in 0..&lt;w {
+      <span data-count="144">l</span>et fdx = <span data-count="144">F</span>loat::from_int(dx)
+      let sx = cos_a * fdx + sin_a * fdy + tx
+      let sy = -sin_a * fdx + cos_a * fdy + ty
+      // 超出边界的像素填黑（用 0.5 容差避免浮点误差）
+      if sx &lt; -0.5F || sx &gt; w_max || sy &lt; -0.5F || sy &gt; h_max {
+        // 已经是 0
+        <span data-count="16">c</span>ontinue
+      }
+      let sx_c = sx.<span data-count="128">c</span>lamp(min=0.0F, max=w_minus_1_f)
+      let sy_c = sy.<span data-count="128">c</span>lamp(min=0.0F, max=h_minus_1_f)
+      for ci in 0..&lt;ch {
+        <span data-count="292">l</span>et val = <span data-count="292">s</span>ample_bilinear(data_int, w, h, ch, ci, sx_c, sy_c)
+        out[(dy * w + dx) * ch + ci] = val.<span data-count="292">c</span>lamp(min=0, max=255).<span data-count="292">t</span>o_byte()
+      }
+    }
+  }
+  @types.Image::{
+    width: w,
+    height: h,
+    channels: ch,
+    data: <span data-count="6">B</span>ytes::from_array(out),
+  }
+}
+
+///|
+/// 2×3 仿射变换矩阵 (a, b, c, d, e, f)
+/// x' = a*x + b*y + c
+/// y' = d*x + e*y + f
+pub(all) struct AffineMatrix {
+  a : Float
+  b : Float
+  c : Float
+  d : Float
+  e : Float
+  f : Float
+}
+
+///|
+/// 从 3 对源点→目标点计算 2×3 仿射变换矩阵。
+pub fn get_affine_transform(
+  src : Array[(Float, Float)],
+  dst : Array[(Float, Float)],
+) -&gt; AffineMatrix? {
+  <span data-count="2">i</span>f src.<span data-count="2">l</span>ength() != 3 || dst.<span data-count="2">l</span>ength() != 3 {
+    <span data-count="0">r</span>eturn None
+  }
+  // 6×6 线性方程组
+  let a : Array[Array[Float]] = <span data-count="2">A</span>rray::make(6, [])
+  let b : Array[Float] = <span data-count="2">A</span>rray::make(6, 0.0F)
+  for i in 0..&lt;3 {
+    <span data-count="6">l</span>et (sx, sy) = src[i]
+    let (dx, dy) = dst[i]
+    a[i * 2] = [sx, sy, 1.0F, 0.0F, 0.0F, 0.0F]
+    b[i * 2] = dx
+    a[i * 2 + 1] = [0.0F, 0.0F, 0.0F, sx, sy, 1.0F]
+    b[i * 2 + 1] = dy
+  }
+  let sol = <span data-count="2">s</span>olve_linear_system(a, b, 6)
+  match <span data-count="2">s</span>ol {
+    None =&gt; <span data-count="0">N</span>one
+    Some(v) =&gt;
+      <span data-count="2">S</span>ome(AffineMatrix::{
+        a: v[0],
+        b: v[1],
+        c: v[2],
+        d: v[3],
+        e: v[4],
+        f: v[5],
+      })
+  }
+}
+
+///|
+/// 从中心点、角度和缩放计算 2×3 旋转矩阵。
+/// angle 为弧度，scale 为缩放因子。
+pub fn get_rotation_matrix_2d(
+  center : (Float, Float),
+  angle : Float,
+  scale : Float,
+) -&gt; AffineMatrix {
+  <span data-count="3">l</span>et (cx, cy) = center
+  let alpha = scale * <span data-count="3">@</span>math.cosf(angle)
+  let beta = scale * <span data-count="3">@</span>math.sinf(angle)
+  AffineMatrix::{
+    a: alpha,
+    b: beta,
+    c: (1.0F - alpha) * cx - beta * cy,
+    d: -beta,
+    e: alpha,
+    f: beta * cx + (1.0F - alpha) * cy,
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>

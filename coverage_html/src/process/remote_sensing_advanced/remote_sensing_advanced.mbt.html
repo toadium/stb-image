@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>remote_sensing_advanced.mbt &mdash; </title>
+    <meta name="description" content="80.77% coverage in src\process\remote_sensing_advanced\remote_sensing_advanced.mbt">
+    <link rel="stylesheet" href="..\..\..\coverage.css"/>
+    <script src="..\..\..\highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        <a href="..\..\..\index.html">
+          <span class="dirname">src\process\remote_sensing_advanced\</span>remote_sensing_advanced.mbt
+        </a>
+      </h1>
+      <h2>80.77%</h2>
+    </div>
+    <div id="navbar">
+      <span class="some-visited" style="top:43.78%"></span>
+      <span class="some-visited" style="top:43.98%"></span>
+      <span class="some-visited" style="top:47.79%"></span>
+      <span class="some-visited" style="top:47.99%"></span>
+      <span class="unvisited" style="bottom:11.04%"></span>
+      <span class="unvisited" style="bottom:10.84%"></span>
+      <span class="unvisited" style="bottom:10.64%"></span>
+      <span class="unvisited" style="bottom:10.44%"></span>
+      <span class="unvisited" style="bottom:10.24%"></span>
+      <span class="unvisited" style="bottom:10.04%"></span>
+      <span class="unvisited" style="bottom:9.84%"></span>
+      <span class="unvisited" style="bottom:8.63%"></span>
+      <span class="unvisited" style="bottom:8.43%"></span>
+      <span class="unvisited" style="bottom:8.03%"></span>
+      <span class="unvisited" style="bottom:7.83%"></span>
+      <span class="unvisited" style="bottom:7.63%"></span>
+      <span class="unvisited" style="bottom:7.43%"></span>
+      <span class="unvisited" style="bottom:7.23%"></span>
+      <span class="some-visited" style="bottom:2.21%"></span>
+      <span class="some-visited" style="bottom:1.41%"></span>
+    </div>
+    <div id="report">
+      <div id="lines-layer">
+        <pre>
+<a id="L1"></a><span > </span>
+<a id="L2"></a><span > </span>
+<a id="L3"></a><span > </span>
+<a id="L4"></a><span > </span>
+<a id="L5"></a><span > </span>
+<a id="L6"></a><span > </span>
+<a id="L7"></a><span > </span>
+<a id="L8"></a><span > </span>
+<a id="L9"></a><span > </span>
+<a id="L10"></a><span > </span>
+<a id="L11"></a><span > </span>
+<a id="L12"></a><span > </span>
+<a id="L13"></a><span > </span>
+<a id="L14"></a><span > </span>
+<a id="L15"></a><span > </span>
+<a id="L16"></a><span > </span>
+<a id="L17"></a><span > </span>
+<a id="L18"></a><span > </span>
+<a id="L19"></a><span > </span>
+<a id="L20"></a><span > </span>
+<a id="L21"></a><span > </span>
+<a id="L22"></a><span > </span>
+<a id="L23"></a><span > </span>
+<a id="L24"></a><span > </span>
+<a id="L25"></a><span > </span>
+<a id="L26"></a><span > </span>
+<a id="L27"></a><span > </span>
+<a id="L28"></a><span > </span>
+<a id="L29"></a><span > </span>
+<a id="L30"></a><span > </span>
+<a id="L31"></a><span > </span>
+<a id="L32"></a><span > </span>
+<a id="L33"></a><span > </span>
+<a id="L34"></a><span > </span>
+<a id="L35"></a><span > </span>
+<a id="L36"></a><span > </span>
+<a id="L37"></a><span > </span>
+<a id="L38"></a><span > </span>
+<a id="L39"></a><span > </span>
+<a id="L40"></a><span > </span>
+<a id="L41"></a><span > </span>
+<a id="L42"></a><span > </span>
+<a id="L43"></a><span > </span>
+<a id="L44"></a><span > </span>
+<a id="L45"></a><span > </span>
+<a id="L46"></a><span > </span>
+<a id="L47"></a><span > </span>
+<a id="L48"></a><span > </span>
+<a id="L49"></a><span > </span>
+<a id="L50"></a><span > </span>
+<a id="L51"></a><span > </span>
+<a id="L52"></a><span > </span>
+<a id="L53"></a><span > </span>
+<a id="L54"></a><span > </span>
+<a id="L55"></a><span > </span>
+<a id="L56"></a><span > </span>
+<a id="L57"></a><span > </span>
+<a id="L58"></a><span > </span>
+<a id="L59"></a><span > </span>
+<a id="L60"></a><span > </span>
+<a id="L61"></a><span > </span>
+<a id="L62"></a><span > </span>
+<a id="L63"></a><span > </span>
+<a id="L64"></a><span > </span>
+<a id="L65"></a><span > </span>
+<a id="L66"></a><span > </span>
+<a id="L67"></a><span > </span>
+<a id="L68"></a><span > </span>
+<a id="L69"></a><span > </span>
+<a id="L70"></a><span > </span>
+<a id="L71"></a><span > </span>
+<a id="L72"></a><span > </span>
+<a id="L73"></a><span > </span>
+<a id="L74"></a><span > </span>
+<a id="L75"></a><span > </span>
+<a id="L76"></a><span > </span>
+<a id="L77"></a><span > </span>
+<a id="L78"></a><span > </span>
+<a id="L79"></a><span > </span>
+<a id="L80"></a><span > </span>
+<a id="L81"></a><span > </span>
+<a id="L82"></a><span > </span>
+<a id="L83"></a><span > </span>
+<a id="L84"></a><span > </span>
+<a id="L85"></a><span > </span>
+<a id="L86"></a><span > </span>
+<a id="L87"></a><span > </span>
+<a id="L88"></a><span > </span>
+<a id="L89"></a><span > </span>
+<a id="L90"></a><span > </span>
+<a id="L91"></a><span > </span>
+<a id="L92"></a><span > </span>
+<a id="L93"></a><span > </span>
+<a id="L94"></a><span > </span>
+<a id="L95"></a><span > </span>
+<a id="L96"></a><span > </span>
+<a id="L97"></a><span > </span>
+<a id="L98"></a><span > </span>
+<a id="L99"></a><span > </span>
+<a id="L100"></a><span > </span>
+<a id="L101"></a><span > </span>
+<a id="L102"></a><span > </span>
+<a id="L103"></a><span > </span>
+<a id="L104"></a><span > </span>
+<a id="L105"></a><span > </span>
+<a id="L106"></a><span > </span>
+<a id="L107"></a><span > </span>
+<a id="L108"></a><span > </span>
+<a id="L109"></a><span > </span>
+<a id="L110"></a><span > </span>
+<a id="L111"></a><span > </span>
+<a id="L112"></a><span > </span>
+<a id="L113"></a><span > </span>
+<a id="L114"></a><span > </span>
+<a id="L115"></a><span > </span>
+<a id="L116"></a><span > </span>
+<a id="L117"></a><span > </span>
+<a id="L118"></a><span > </span>
+<a id="L119"></a><span > </span>
+<a id="L120"></a><span > </span>
+<a id="L121"></a><span > </span>
+<a id="L122"></a><span > </span>
+<a id="L123"></a><span > </span>
+<a id="L124"></a><span > </span>
+<a id="L125"></a><span > </span>
+<a id="L126"></a><span > </span>
+<a id="L127"></a><span > </span>
+<a id="L128"></a><span > </span>
+<a id="L129"></a><span > </span>
+<a id="L130"></a><span > </span>
+<a id="L131"></a><span > </span>
+<a id="L132"></a><span > </span>
+<a id="L133"></a><span > </span>
+<a id="L134"></a><span > </span>
+<a id="L135"></a><span > </span>
+<a id="L136"></a><span > </span>
+<a id="L137"></a><span > </span>
+<a id="L138"></a><span > </span>
+<a id="L139"></a><span > </span>
+<a id="L140"></a><span > </span>
+<a id="L141"></a><span > </span>
+<a id="L142"></a><span > </span>
+<a id="L143"></a><span > </span>
+<a id="L144"></a><span > </span>
+<a id="L145"></a><span > </span>
+<a id="L146"></a><span > </span>
+<a id="L147"></a><span > </span>
+<a id="L148"></a><span > </span>
+<a id="L149"></a><span > </span>
+<a id="L150"></a><span > </span>
+<a id="L151"></a><span > </span>
+<a id="L152"></a><span > </span>
+<a id="L153"></a><span > </span>
+<a id="L154"></a><span > </span>
+<a id="L155"></a><span > </span>
+<a id="L156"></a><span > </span>
+<a id="L157"></a><span > </span>
+<a id="L158"></a><span > </span>
+<a id="L159"></a><span > </span>
+<a id="L160"></a><span > </span>
+<a id="L161"></a><span > </span>
+<a id="L162"></a><span > </span>
+<a id="L163"></a><span > </span>
+<a id="L164"></a><span > </span>
+<a id="L165"></a><span > </span>
+<a id="L166"></a><span > </span>
+<a id="L167"></a><span > </span>
+<a id="L168"></a><span > </span>
+<a id="L169"></a><span > </span>
+<a id="L170"></a><span > </span>
+<a id="L171"></a><span > </span>
+<a id="L172"></a><span > </span>
+<a id="L173"></a><span > </span>
+<a id="L174"></a><span > </span>
+<a id="L175"></a><span > </span>
+<a id="L176"></a><span > </span>
+<a id="L177"></a><span > </span>
+<a id="L178"></a><span > </span>
+<a id="L179"></a><span > </span>
+<a id="L180"></a><span > </span>
+<a id="L181"></a><span > </span>
+<a id="L182"></a><span > </span>
+<a id="L183"></a><span > </span>
+<a id="L184"></a><span > </span>
+<a id="L185"></a><span > </span>
+<a id="L186"></a><span > </span>
+<a id="L187"></a><span class="visited"> </span>
+<a id="L188"></a><span > </span>
+<a id="L189"></a><span > </span>
+<a id="L190"></a><span > </span>
+<a id="L191"></a><span > </span>
+<a id="L192"></a><span > </span>
+<a id="L193"></a><span > </span>
+<a id="L194"></a><span > </span>
+<a id="L195"></a><span > </span>
+<a id="L196"></a><span > </span>
+<a id="L197"></a><span > </span>
+<a id="L198"></a><span > </span>
+<a id="L199"></a><span > </span>
+<a id="L200"></a><span > </span>
+<a id="L201"></a><span > </span>
+<a id="L202"></a><span > </span>
+<a id="L203"></a><span > </span>
+<a id="L204"></a><span > </span>
+<a id="L205"></a><span > </span>
+<a id="L206"></a><span > </span>
+<a id="L207"></a><span > </span>
+<a id="L208"></a><span > </span>
+<a id="L209"></a><span > </span>
+<a id="L210"></a><span > </span>
+<a id="L211"></a><span > </span>
+<a id="L212"></a><span > </span>
+<a id="L213"></a><span > </span>
+<a id="L214"></a><span > </span>
+<a id="L215"></a><span class="visited"> </span>
+<a id="L216"></a><span > </span>
+<a id="L217"></a><span > </span>
+<a id="L218"></a><span class="some-visited"> </span>
+<a id="L219"></a><span class="some-visited"> </span>
+<a id="L220"></a><span > </span>
+<a id="L221"></a><span class="visited"> </span>
+<a id="L222"></a><span class="visited"> </span>
+<a id="L223"></a><span > </span>
+<a id="L224"></a><span > </span>
+<a id="L225"></a><span > </span>
+<a id="L226"></a><span > </span>
+<a id="L227"></a><span > </span>
+<a id="L228"></a><span > </span>
+<a id="L229"></a><span > </span>
+<a id="L230"></a><span > </span>
+<a id="L231"></a><span > </span>
+<a id="L232"></a><span > </span>
+<a id="L233"></a><span > </span>
+<a id="L234"></a><span > </span>
+<a id="L235"></a><span class="visited"> </span>
+<a id="L236"></a><span > </span>
+<a id="L237"></a><span > </span>
+<a id="L238"></a><span class="some-visited"> </span>
+<a id="L239"></a><span class="some-visited"> </span>
+<a id="L240"></a><span > </span>
+<a id="L241"></a><span class="visited"> </span>
+<a id="L242"></a><span class="visited"> </span>
+<a id="L243"></a><span > </span>
+<a id="L244"></a><span > </span>
+<a id="L245"></a><span > </span>
+<a id="L246"></a><span > </span>
+<a id="L247"></a><span > </span>
+<a id="L248"></a><span > </span>
+<a id="L249"></a><span > </span>
+<a id="L250"></a><span > </span>
+<a id="L251"></a><span > </span>
+<a id="L252"></a><span > </span>
+<a id="L253"></a><span > </span>
+<a id="L254"></a><span > </span>
+<a id="L255"></a><span > </span>
+<a id="L256"></a><span class="visited"> </span>
+<a id="L257"></a><span class="visited"> </span>
+<a id="L258"></a><span > </span>
+<a id="L259"></a><span > </span>
+<a id="L260"></a><span > </span>
+<a id="L261"></a><span > </span>
+<a id="L262"></a><span > </span>
+<a id="L263"></a><span > </span>
+<a id="L264"></a><span > </span>
+<a id="L265"></a><span > </span>
+<a id="L266"></a><span class="visited"> </span>
+<a id="L267"></a><span > </span>
+<a id="L268"></a><span > </span>
+<a id="L269"></a><span > </span>
+<a id="L270"></a><span > </span>
+<a id="L271"></a><span class="visited"> </span>
+<a id="L272"></a><span > </span>
+<a id="L273"></a><span > </span>
+<a id="L274"></a><span class="visited"> </span>
+<a id="L275"></a><span class="visited"> </span>
+<a id="L276"></a><span class="visited"> </span>
+<a id="L277"></a><span > </span>
+<a id="L278"></a><span class="visited"> </span>
+<a id="L279"></a><span class="visited"> </span>
+<a id="L280"></a><span class="visited"> </span>
+<a id="L281"></a><span > </span>
+<a id="L282"></a><span class="visited"> </span>
+<a id="L283"></a><span class="visited"> </span>
+<a id="L284"></a><span > </span>
+<a id="L285"></a><span > </span>
+<a id="L286"></a><span class="visited"> </span>
+<a id="L287"></a><span class="visited"> </span>
+<a id="L288"></a><span class="visited"> </span>
+<a id="L289"></a><span > </span>
+<a id="L290"></a><span > </span>
+<a id="L291"></a><span > </span>
+<a id="L292"></a><span > </span>
+<a id="L293"></a><span class="visited"> </span>
+<a id="L294"></a><span > </span>
+<a id="L295"></a><span class="visited"> </span>
+<a id="L296"></a><span > </span>
+<a id="L297"></a><span class="visited"> </span>
+<a id="L298"></a><span > </span>
+<a id="L299"></a><span > </span>
+<a id="L300"></a><span > </span>
+<a id="L301"></a><span > </span>
+<a id="L302"></a><span class="visited"> </span>
+<a id="L303"></a><span > </span>
+<a id="L304"></a><span > </span>
+<a id="L305"></a><span > </span>
+<a id="L306"></a><span > </span>
+<a id="L307"></a><span > </span>
+<a id="L308"></a><span > </span>
+<a id="L309"></a><span > </span>
+<a id="L310"></a><span > </span>
+<a id="L311"></a><span > </span>
+<a id="L312"></a><span > </span>
+<a id="L313"></a><span > </span>
+<a id="L314"></a><span > </span>
+<a id="L315"></a><span > </span>
+<a id="L316"></a><span > </span>
+<a id="L317"></a><span > </span>
+<a id="L318"></a><span > </span>
+<a id="L319"></a><span > </span>
+<a id="L320"></a><span class="visited"> </span>
+<a id="L321"></a><span > </span>
+<a id="L322"></a><span > </span>
+<a id="L323"></a><span > </span>
+<a id="L324"></a><span > </span>
+<a id="L325"></a><span > </span>
+<a id="L326"></a><span > </span>
+<a id="L327"></a><span > </span>
+<a id="L328"></a><span > </span>
+<a id="L329"></a><span > </span>
+<a id="L330"></a><span > </span>
+<a id="L331"></a><span > </span>
+<a id="L332"></a><span > </span>
+<a id="L333"></a><span > </span>
+<a id="L334"></a><span > </span>
+<a id="L335"></a><span class="visited"> </span>
+<a id="L336"></a><span class="visited"> </span>
+<a id="L337"></a><span class="visited"> </span>
+<a id="L338"></a><span class="visited"> </span>
+<a id="L339"></a><span class="visited"> </span>
+<a id="L340"></a><span class="visited"> </span>
+<a id="L341"></a><span class="visited"> </span>
+<a id="L342"></a><span class="visited"> </span>
+<a id="L343"></a><span class="visited"> </span>
+<a id="L344"></a><span class="visited"> </span>
+<a id="L345"></a><span > </span>
+<a id="L346"></a><span > </span>
+<a id="L347"></a><span class="visited"> </span>
+<a id="L348"></a><span class="visited"> </span>
+<a id="L349"></a><span class="visited"> </span>
+<a id="L350"></a><span class="visited"> </span>
+<a id="L351"></a><span > </span>
+<a id="L352"></a><span class="visited"> </span>
+<a id="L353"></a><span > </span>
+<a id="L354"></a><span > </span>
+<a id="L355"></a><span > </span>
+<a id="L356"></a><span > </span>
+<a id="L357"></a><span > </span>
+<a id="L358"></a><span > </span>
+<a id="L359"></a><span > </span>
+<a id="L360"></a><span > </span>
+<a id="L361"></a><span > </span>
+<a id="L362"></a><span > </span>
+<a id="L363"></a><span > </span>
+<a id="L364"></a><span > </span>
+<a id="L365"></a><span > </span>
+<a id="L366"></a><span > </span>
+<a id="L367"></a><span > </span>
+<a id="L368"></a><span > </span>
+<a id="L369"></a><span > </span>
+<a id="L370"></a><span class="visited"> </span>
+<a id="L371"></a><span > </span>
+<a id="L372"></a><span > </span>
+<a id="L373"></a><span > </span>
+<a id="L374"></a><span > </span>
+<a id="L375"></a><span > </span>
+<a id="L376"></a><span > </span>
+<a id="L377"></a><span > </span>
+<a id="L378"></a><span > </span>
+<a id="L379"></a><span > </span>
+<a id="L380"></a><span > </span>
+<a id="L381"></a><span > </span>
+<a id="L382"></a><span > </span>
+<a id="L383"></a><span > </span>
+<a id="L384"></a><span > </span>
+<a id="L385"></a><span class="visited"> </span>
+<a id="L386"></a><span class="visited"> </span>
+<a id="L387"></a><span > </span>
+<a id="L388"></a><span > </span>
+<a id="L389"></a><span > </span>
+<a id="L390"></a><span > </span>
+<a id="L391"></a><span > </span>
+<a id="L392"></a><span > </span>
+<a id="L393"></a><span > </span>
+<a id="L394"></a><span class="visited"> </span>
+<a id="L395"></a><span > </span>
+<a id="L396"></a><span > </span>
+<a id="L397"></a><span class="visited"> </span>
+<a id="L398"></a><span class="visited"> </span>
+<a id="L399"></a><span > </span>
+<a id="L400"></a><span class="visited"> </span>
+<a id="L401"></a><span > </span>
+<a id="L402"></a><span class="visited"> </span>
+<a id="L403"></a><span > </span>
+<a id="L404"></a><span > </span>
+<a id="L405"></a><span > </span>
+<a id="L406"></a><span > </span>
+<a id="L407"></a><span class="visited"> </span>
+<a id="L408"></a><span > </span>
+<a id="L409"></a><span > </span>
+<a id="L410"></a><span class="visited"> </span>
+<a id="L411"></a><span class="visited"> </span>
+<a id="L412"></a><span > </span>
+<a id="L413"></a><span > </span>
+<a id="L414"></a><span > </span>
+<a id="L415"></a><span > </span>
+<a id="L416"></a><span > </span>
+<a id="L417"></a><span > </span>
+<a id="L418"></a><span > </span>
+<a id="L419"></a><span > </span>
+<a id="L420"></a><span > </span>
+<a id="L421"></a><span > </span>
+<a id="L422"></a><span > </span>
+<a id="L423"></a><span > </span>
+<a id="L424"></a><span > </span>
+<a id="L425"></a><span > </span>
+<a id="L426"></a><span > </span>
+<a id="L427"></a><span > </span>
+<a id="L428"></a><span > </span>
+<a id="L429"></a><span > </span>
+<a id="L430"></a><span > </span>
+<a id="L431"></a><span > </span>
+<a id="L432"></a><span > </span>
+<a id="L433"></a><span > </span>
+<a id="L434"></a><span > </span>
+<a id="L435"></a><span class="visited"> </span>
+<a id="L436"></a><span > </span>
+<a id="L437"></a><span > </span>
+<a id="L438"></a><span > </span>
+<a id="L439"></a><span > </span>
+<a id="L440"></a><span > </span>
+<a id="L441"></a><span class="visited"> </span>
+<a id="L442"></a><span class="visited"> </span>
+<a id="L443"></a><span class="unvisited"> </span>
+<a id="L444"></a><span class="unvisited"> </span>
+<a id="L445"></a><span class="unvisited"> </span>
+<a id="L446"></a><span class="unvisited"> </span>
+<a id="L447"></a><span class="unvisited"> </span>
+<a id="L448"></a><span class="unvisited"> </span>
+<a id="L449"></a><span class="unvisited"> </span>
+<a id="L450"></a><span > </span>
+<a id="L451"></a><span > </span>
+<a id="L452"></a><span > </span>
+<a id="L453"></a><span > </span>
+<a id="L454"></a><span class="visited"> </span>
+<a id="L455"></a><span class="unvisited"> </span>
+<a id="L456"></a><span class="unvisited"> </span>
+<a id="L457"></a><span class="visited"> </span>
+<a id="L458"></a><span class="unvisited"> </span>
+<a id="L459"></a><span class="unvisited"> </span>
+<a id="L460"></a><span class="unvisited"> </span>
+<a id="L461"></a><span class="unvisited"> </span>
+<a id="L462"></a><span class="unvisited"> </span>
+<a id="L463"></a><span > </span>
+<a id="L464"></a><span > </span>
+<a id="L465"></a><span class="visited"> </span>
+<a id="L466"></a><span > </span>
+<a id="L467"></a><span > </span>
+<a id="L468"></a><span class="visited"> </span>
+<a id="L469"></a><span > </span>
+<a id="L470"></a><span > </span>
+<a id="L471"></a><span > </span>
+<a id="L472"></a><span class="visited"> </span>
+<a id="L473"></a><span > </span>
+<a id="L474"></a><span > </span>
+<a id="L475"></a><span > </span>
+<a id="L476"></a><span > </span>
+<a id="L477"></a><span > </span>
+<a id="L478"></a><span > </span>
+<a id="L479"></a><span class="visited"> </span>
+<a id="L480"></a><span > </span>
+<a id="L481"></a><span > </span>
+<a id="L482"></a><span > </span>
+<a id="L483"></a><span class="visited"> </span>
+<a id="L484"></a><span > </span>
+<a id="L485"></a><span > </span>
+<a id="L486"></a><span > </span>
+<a id="L487"></a><span class="some-visited"> </span>
+<a id="L488"></a><span > </span>
+<a id="L489"></a><span > </span>
+<a id="L490"></a><span > </span>
+<a id="L491"></a><span class="some-visited"> </span>
+<a id="L492"></a><span > </span>
+<a id="L493"></a><span > </span>
+<a id="L494"></a><span > </span>
+<a id="L495"></a><span > </span>
+<a id="L496"></a><span > </span>
+<a id="L497"></a><span > </span>
+<a id="L498"></a><span > </span>
+</pre>
+      </div>
+      <div id="text-layer">
+        <pre id="line-numbers">
+<a href="#L1">  1</a>
+<a href="#L2">  2</a>
+<a href="#L3">  3</a>
+<a href="#L4">  4</a>
+<a href="#L5">  5</a>
+<a href="#L6">  6</a>
+<a href="#L7">  7</a>
+<a href="#L8">  8</a>
+<a href="#L9">  9</a>
+<a href="#L10"> 10</a>
+<a href="#L11"> 11</a>
+<a href="#L12"> 12</a>
+<a href="#L13"> 13</a>
+<a href="#L14"> 14</a>
+<a href="#L15"> 15</a>
+<a href="#L16"> 16</a>
+<a href="#L17"> 17</a>
+<a href="#L18"> 18</a>
+<a href="#L19"> 19</a>
+<a href="#L20"> 20</a>
+<a href="#L21"> 21</a>
+<a href="#L22"> 22</a>
+<a href="#L23"> 23</a>
+<a href="#L24"> 24</a>
+<a href="#L25"> 25</a>
+<a href="#L26"> 26</a>
+<a href="#L27"> 27</a>
+<a href="#L28"> 28</a>
+<a href="#L29"> 29</a>
+<a href="#L30"> 30</a>
+<a href="#L31"> 31</a>
+<a href="#L32"> 32</a>
+<a href="#L33"> 33</a>
+<a href="#L34"> 34</a>
+<a href="#L35"> 35</a>
+<a href="#L36"> 36</a>
+<a href="#L37"> 37</a>
+<a href="#L38"> 38</a>
+<a href="#L39"> 39</a>
+<a href="#L40"> 40</a>
+<a href="#L41"> 41</a>
+<a href="#L42"> 42</a>
+<a href="#L43"> 43</a>
+<a href="#L44"> 44</a>
+<a href="#L45"> 45</a>
+<a href="#L46"> 46</a>
+<a href="#L47"> 47</a>
+<a href="#L48"> 48</a>
+<a href="#L49"> 49</a>
+<a href="#L50"> 50</a>
+<a href="#L51"> 51</a>
+<a href="#L52"> 52</a>
+<a href="#L53"> 53</a>
+<a href="#L54"> 54</a>
+<a href="#L55"> 55</a>
+<a href="#L56"> 56</a>
+<a href="#L57"> 57</a>
+<a href="#L58"> 58</a>
+<a href="#L59"> 59</a>
+<a href="#L60"> 60</a>
+<a href="#L61"> 61</a>
+<a href="#L62"> 62</a>
+<a href="#L63"> 63</a>
+<a href="#L64"> 64</a>
+<a href="#L65"> 65</a>
+<a href="#L66"> 66</a>
+<a href="#L67"> 67</a>
+<a href="#L68"> 68</a>
+<a href="#L69"> 69</a>
+<a href="#L70"> 70</a>
+<a href="#L71"> 71</a>
+<a href="#L72"> 72</a>
+<a href="#L73"> 73</a>
+<a href="#L74"> 74</a>
+<a href="#L75"> 75</a>
+<a href="#L76"> 76</a>
+<a href="#L77"> 77</a>
+<a href="#L78"> 78</a>
+<a href="#L79"> 79</a>
+<a href="#L80"> 80</a>
+<a href="#L81"> 81</a>
+<a href="#L82"> 82</a>
+<a href="#L83"> 83</a>
+<a href="#L84"> 84</a>
+<a href="#L85"> 85</a>
+<a href="#L86"> 86</a>
+<a href="#L87"> 87</a>
+<a href="#L88"> 88</a>
+<a href="#L89"> 89</a>
+<a href="#L90"> 90</a>
+<a href="#L91"> 91</a>
+<a href="#L92"> 92</a>
+<a href="#L93"> 93</a>
+<a href="#L94"> 94</a>
+<a href="#L95"> 95</a>
+<a href="#L96"> 96</a>
+<a href="#L97"> 97</a>
+<a href="#L98"> 98</a>
+<a href="#L99"> 99</a>
+<a href="#L100">100</a>
+<a href="#L101">101</a>
+<a href="#L102">102</a>
+<a href="#L103">103</a>
+<a href="#L104">104</a>
+<a href="#L105">105</a>
+<a href="#L106">106</a>
+<a href="#L107">107</a>
+<a href="#L108">108</a>
+<a href="#L109">109</a>
+<a href="#L110">110</a>
+<a href="#L111">111</a>
+<a href="#L112">112</a>
+<a href="#L113">113</a>
+<a href="#L114">114</a>
+<a href="#L115">115</a>
+<a href="#L116">116</a>
+<a href="#L117">117</a>
+<a href="#L118">118</a>
+<a href="#L119">119</a>
+<a href="#L120">120</a>
+<a href="#L121">121</a>
+<a href="#L122">122</a>
+<a href="#L123">123</a>
+<a href="#L124">124</a>
+<a href="#L125">125</a>
+<a href="#L126">126</a>
+<a href="#L127">127</a>
+<a href="#L128">128</a>
+<a href="#L129">129</a>
+<a href="#L130">130</a>
+<a href="#L131">131</a>
+<a href="#L132">132</a>
+<a href="#L133">133</a>
+<a href="#L134">134</a>
+<a href="#L135">135</a>
+<a href="#L136">136</a>
+<a href="#L137">137</a>
+<a href="#L138">138</a>
+<a href="#L139">139</a>
+<a href="#L140">140</a>
+<a href="#L141">141</a>
+<a href="#L142">142</a>
+<a href="#L143">143</a>
+<a href="#L144">144</a>
+<a href="#L145">145</a>
+<a href="#L146">146</a>
+<a href="#L147">147</a>
+<a href="#L148">148</a>
+<a href="#L149">149</a>
+<a href="#L150">150</a>
+<a href="#L151">151</a>
+<a href="#L152">152</a>
+<a href="#L153">153</a>
+<a href="#L154">154</a>
+<a href="#L155">155</a>
+<a href="#L156">156</a>
+<a href="#L157">157</a>
+<a href="#L158">158</a>
+<a href="#L159">159</a>
+<a href="#L160">160</a>
+<a href="#L161">161</a>
+<a href="#L162">162</a>
+<a href="#L163">163</a>
+<a href="#L164">164</a>
+<a href="#L165">165</a>
+<a href="#L166">166</a>
+<a href="#L167">167</a>
+<a href="#L168">168</a>
+<a href="#L169">169</a>
+<a href="#L170">170</a>
+<a href="#L171">171</a>
+<a href="#L172">172</a>
+<a href="#L173">173</a>
+<a href="#L174">174</a>
+<a href="#L175">175</a>
+<a href="#L176">176</a>
+<a href="#L177">177</a>
+<a href="#L178">178</a>
+<a href="#L179">179</a>
+<a href="#L180">180</a>
+<a href="#L181">181</a>
+<a href="#L182">182</a>
+<a href="#L183">183</a>
+<a href="#L184">184</a>
+<a href="#L185">185</a>
+<a href="#L186">186</a>
+<a href="#L187">187</a>
+<a href="#L188">188</a>
+<a href="#L189">189</a>
+<a href="#L190">190</a>
+<a href="#L191">191</a>
+<a href="#L192">192</a>
+<a href="#L193">193</a>
+<a href="#L194">194</a>
+<a href="#L195">195</a>
+<a href="#L196">196</a>
+<a href="#L197">197</a>
+<a href="#L198">198</a>
+<a href="#L199">199</a>
+<a href="#L200">200</a>
+<a href="#L201">201</a>
+<a href="#L202">202</a>
+<a href="#L203">203</a>
+<a href="#L204">204</a>
+<a href="#L205">205</a>
+<a href="#L206">206</a>
+<a href="#L207">207</a>
+<a href="#L208">208</a>
+<a href="#L209">209</a>
+<a href="#L210">210</a>
+<a href="#L211">211</a>
+<a href="#L212">212</a>
+<a href="#L213">213</a>
+<a href="#L214">214</a>
+<a href="#L215">215</a>
+<a href="#L216">216</a>
+<a href="#L217">217</a>
+<a href="#L218">218</a>
+<a href="#L219">219</a>
+<a href="#L220">220</a>
+<a href="#L221">221</a>
+<a href="#L222">222</a>
+<a href="#L223">223</a>
+<a href="#L224">224</a>
+<a href="#L225">225</a>
+<a href="#L226">226</a>
+<a href="#L227">227</a>
+<a href="#L228">228</a>
+<a href="#L229">229</a>
+<a href="#L230">230</a>
+<a href="#L231">231</a>
+<a href="#L232">232</a>
+<a href="#L233">233</a>
+<a href="#L234">234</a>
+<a href="#L235">235</a>
+<a href="#L236">236</a>
+<a href="#L237">237</a>
+<a href="#L238">238</a>
+<a href="#L239">239</a>
+<a href="#L240">240</a>
+<a href="#L241">241</a>
+<a href="#L242">242</a>
+<a href="#L243">243</a>
+<a href="#L244">244</a>
+<a href="#L245">245</a>
+<a href="#L246">246</a>
+<a href="#L247">247</a>
+<a href="#L248">248</a>
+<a href="#L249">249</a>
+<a href="#L250">250</a>
+<a href="#L251">251</a>
+<a href="#L252">252</a>
+<a href="#L253">253</a>
+<a href="#L254">254</a>
+<a href="#L255">255</a>
+<a href="#L256">256</a>
+<a href="#L257">257</a>
+<a href="#L258">258</a>
+<a href="#L259">259</a>
+<a href="#L260">260</a>
+<a href="#L261">261</a>
+<a href="#L262">262</a>
+<a href="#L263">263</a>
+<a href="#L264">264</a>
+<a href="#L265">265</a>
+<a href="#L266">266</a>
+<a href="#L267">267</a>
+<a href="#L268">268</a>
+<a href="#L269">269</a>
+<a href="#L270">270</a>
+<a href="#L271">271</a>
+<a href="#L272">272</a>
+<a href="#L273">273</a>
+<a href="#L274">274</a>
+<a href="#L275">275</a>
+<a href="#L276">276</a>
+<a href="#L277">277</a>
+<a href="#L278">278</a>
+<a href="#L279">279</a>
+<a href="#L280">280</a>
+<a href="#L281">281</a>
+<a href="#L282">282</a>
+<a href="#L283">283</a>
+<a href="#L284">284</a>
+<a href="#L285">285</a>
+<a href="#L286">286</a>
+<a href="#L287">287</a>
+<a href="#L288">288</a>
+<a href="#L289">289</a>
+<a href="#L290">290</a>
+<a href="#L291">291</a>
+<a href="#L292">292</a>
+<a href="#L293">293</a>
+<a href="#L294">294</a>
+<a href="#L295">295</a>
+<a href="#L296">296</a>
+<a href="#L297">297</a>
+<a href="#L298">298</a>
+<a href="#L299">299</a>
+<a href="#L300">300</a>
+<a href="#L301">301</a>
+<a href="#L302">302</a>
+<a href="#L303">303</a>
+<a href="#L304">304</a>
+<a href="#L305">305</a>
+<a href="#L306">306</a>
+<a href="#L307">307</a>
+<a href="#L308">308</a>
+<a href="#L309">309</a>
+<a href="#L310">310</a>
+<a href="#L311">311</a>
+<a href="#L312">312</a>
+<a href="#L313">313</a>
+<a href="#L314">314</a>
+<a href="#L315">315</a>
+<a href="#L316">316</a>
+<a href="#L317">317</a>
+<a href="#L318">318</a>
+<a href="#L319">319</a>
+<a href="#L320">320</a>
+<a href="#L321">321</a>
+<a href="#L322">322</a>
+<a href="#L323">323</a>
+<a href="#L324">324</a>
+<a href="#L325">325</a>
+<a href="#L326">326</a>
+<a href="#L327">327</a>
+<a href="#L328">328</a>
+<a href="#L329">329</a>
+<a href="#L330">330</a>
+<a href="#L331">331</a>
+<a href="#L332">332</a>
+<a href="#L333">333</a>
+<a href="#L334">334</a>
+<a href="#L335">335</a>
+<a href="#L336">336</a>
+<a href="#L337">337</a>
+<a href="#L338">338</a>
+<a href="#L339">339</a>
+<a href="#L340">340</a>
+<a href="#L341">341</a>
+<a href="#L342">342</a>
+<a href="#L343">343</a>
+<a href="#L344">344</a>
+<a href="#L345">345</a>
+<a href="#L346">346</a>
+<a href="#L347">347</a>
+<a href="#L348">348</a>
+<a href="#L349">349</a>
+<a href="#L350">350</a>
+<a href="#L351">351</a>
+<a href="#L352">352</a>
+<a href="#L353">353</a>
+<a href="#L354">354</a>
+<a href="#L355">355</a>
+<a href="#L356">356</a>
+<a href="#L357">357</a>
+<a href="#L358">358</a>
+<a href="#L359">359</a>
+<a href="#L360">360</a>
+<a href="#L361">361</a>
+<a href="#L362">362</a>
+<a href="#L363">363</a>
+<a href="#L364">364</a>
+<a href="#L365">365</a>
+<a href="#L366">366</a>
+<a href="#L367">367</a>
+<a href="#L368">368</a>
+<a href="#L369">369</a>
+<a href="#L370">370</a>
+<a href="#L371">371</a>
+<a href="#L372">372</a>
+<a href="#L373">373</a>
+<a href="#L374">374</a>
+<a href="#L375">375</a>
+<a href="#L376">376</a>
+<a href="#L377">377</a>
+<a href="#L378">378</a>
+<a href="#L379">379</a>
+<a href="#L380">380</a>
+<a href="#L381">381</a>
+<a href="#L382">382</a>
+<a href="#L383">383</a>
+<a href="#L384">384</a>
+<a href="#L385">385</a>
+<a href="#L386">386</a>
+<a href="#L387">387</a>
+<a href="#L388">388</a>
+<a href="#L389">389</a>
+<a href="#L390">390</a>
+<a href="#L391">391</a>
+<a href="#L392">392</a>
+<a href="#L393">393</a>
+<a href="#L394">394</a>
+<a href="#L395">395</a>
+<a href="#L396">396</a>
+<a href="#L397">397</a>
+<a href="#L398">398</a>
+<a href="#L399">399</a>
+<a href="#L400">400</a>
+<a href="#L401">401</a>
+<a href="#L402">402</a>
+<a href="#L403">403</a>
+<a href="#L404">404</a>
+<a href="#L405">405</a>
+<a href="#L406">406</a>
+<a href="#L407">407</a>
+<a href="#L408">408</a>
+<a href="#L409">409</a>
+<a href="#L410">410</a>
+<a href="#L411">411</a>
+<a href="#L412">412</a>
+<a href="#L413">413</a>
+<a href="#L414">414</a>
+<a href="#L415">415</a>
+<a href="#L416">416</a>
+<a href="#L417">417</a>
+<a href="#L418">418</a>
+<a href="#L419">419</a>
+<a href="#L420">420</a>
+<a href="#L421">421</a>
+<a href="#L422">422</a>
+<a href="#L423">423</a>
+<a href="#L424">424</a>
+<a href="#L425">425</a>
+<a href="#L426">426</a>
+<a href="#L427">427</a>
+<a href="#L428">428</a>
+<a href="#L429">429</a>
+<a href="#L430">430</a>
+<a href="#L431">431</a>
+<a href="#L432">432</a>
+<a href="#L433">433</a>
+<a href="#L434">434</a>
+<a href="#L435">435</a>
+<a href="#L436">436</a>
+<a href="#L437">437</a>
+<a href="#L438">438</a>
+<a href="#L439">439</a>
+<a href="#L440">440</a>
+<a href="#L441">441</a>
+<a href="#L442">442</a>
+<a href="#L443">443</a>
+<a href="#L444">444</a>
+<a href="#L445">445</a>
+<a href="#L446">446</a>
+<a href="#L447">447</a>
+<a href="#L448">448</a>
+<a href="#L449">449</a>
+<a href="#L450">450</a>
+<a href="#L451">451</a>
+<a href="#L452">452</a>
+<a href="#L453">453</a>
+<a href="#L454">454</a>
+<a href="#L455">455</a>
+<a href="#L456">456</a>
+<a href="#L457">457</a>
+<a href="#L458">458</a>
+<a href="#L459">459</a>
+<a href="#L460">460</a>
+<a href="#L461">461</a>
+<a href="#L462">462</a>
+<a href="#L463">463</a>
+<a href="#L464">464</a>
+<a href="#L465">465</a>
+<a href="#L466">466</a>
+<a href="#L467">467</a>
+<a href="#L468">468</a>
+<a href="#L469">469</a>
+<a href="#L470">470</a>
+<a href="#L471">471</a>
+<a href="#L472">472</a>
+<a href="#L473">473</a>
+<a href="#L474">474</a>
+<a href="#L475">475</a>
+<a href="#L476">476</a>
+<a href="#L477">477</a>
+<a href="#L478">478</a>
+<a href="#L479">479</a>
+<a href="#L480">480</a>
+<a href="#L481">481</a>
+<a href="#L482">482</a>
+<a href="#L483">483</a>
+<a href="#L484">484</a>
+<a href="#L485">485</a>
+<a href="#L486">486</a>
+<a href="#L487">487</a>
+<a href="#L488">488</a>
+<a href="#L489">489</a>
+<a href="#L490">490</a>
+<a href="#L491">491</a>
+<a href="#L492">492</a>
+<a href="#L493">493</a>
+<a href="#L494">494</a>
+<a href="#L495">495</a>
+<a href="#L496">496</a>
+<a href="#L497">497</a>
+<a href="#L498">498</a>
+</pre>
+<pre><code class="ocaml">// 遥感图像高级（v62.0.0）
+// 地物分类、目标检测、变化检测、图像融合、超分辨率、时间序列分析
+
+///|
+/// 遥感图像任务类型
+pub(all) enum RemoteSensingTaskType {
+  LandCoverClassification
+  ObjectDetection
+  ChangeDetection
+  ImageFusion
+  SuperResolution
+  TimeSeriesAnalysis
+  SceneClassification
+  Unknown
+} derive(Eq)
+
+///|
+/// 遥感图像类型
+pub(all) enum RemoteSensingImageType {
+  Optical
+  SAR
+  Multispectral
+  Hyperspectral
+  Thermal
+  LiDAR
+  DEM
+  Unknown
+} derive(Eq)
+
+///|
+/// 地物类型
+pub(all) enum LandCoverType {
+  Water
+  Forest
+  Grassland
+  Cropland
+  Urban
+  Barren
+  Wetland
+  Snow
+  Cloud
+  Shadow
+  Unknown
+} derive(Eq)
+
+///|
+/// 遥感目标类型
+pub(all) enum RemoteSensingObjectType {
+  Building
+  Road
+  Bridge
+  Vehicle
+  Ship
+  Aircraft
+  Tank
+  Airport
+  Harbor
+  Stadium
+  Unknown
+} derive(Eq)
+
+///|
+/// 变化类型
+pub(all) enum ChangeType {
+  NewConstruction
+  Demolition
+  Expansion
+  Reduction
+  LandUseChange
+  VegetationChange
+  WaterChange
+  NoChange
+  Unknown
+} derive(Eq)
+
+///|
+/// 地物分类结果
+pub(all) struct LandCoverClassificationResult {
+  classification_map : Array[Array[Int]]
+  num_classes : Int
+  class_names : Array[String]
+  class_distribution : Array[Double]
+  overall_accuracy : Double
+  kappa_coefficient : Double
+  confusion_matrix : Array[Array[Int]]
+  confidence_map : Array[Array[Double]]
+}
+
+///|
+/// 检测到的遥感目标
+pub(all) struct DetectedRemoteSensingObject {
+  object_id : Int
+  object_type : RemoteSensingObjectType
+  bounding_box : Array[Double]
+  polygon : Array[Array[Double]]
+  confidence : Double
+  area : Double
+  perimeter : Double
+  orientation : Double
+  geolocation : Array[Double]
+}
+
+///|
+/// 变化检测结果
+pub(all) struct ChangeDetectionResult {
+  change_map : Array[Array[Bool]]
+  change_mask : Array[Array[Int]]
+  num_change_regions : Int
+  total_change_area : Double
+  change_types : Array[ChangeType]
+  change_areas : Array[Double]
+  confidence : Double
+  kappa_coefficient : Double
+  false_alarm_rate : Double
+  missed_detection_rate : Double
+}
+
+///|
+/// 图像融合结果
+pub(all) struct RemoteSensingFusionResult {
+  fused_image : Array[Double]
+  width : Int
+  height : Int
+  num_bands : Int
+  fusion_method : String
+  spectral_angle_mapper : Double
+  erreur_relative_globale : Double
+  correlation_coefficient : Double
+  structural_similarity : Double
+  peak_signal_to_noise_ratio : Double
+}
+
+///|
+/// 超分辨率结果
+pub(all) struct RemoteSensingSuperResolutionResult {
+  sr_image : Array[Double]
+  original_width : Int
+  original_height : Int
+  sr_width : Int
+  sr_height : Int
+  scale_factor : Double
+  sr_method : String
+  psnr : Double
+  ssim : Double
+  sam : Double
+}
+
+///|
+/// 时间序列分析结果
+pub(all) struct TimeSeriesAnalysisResult {
+  num_timestamps : Int
+  time_interval_days : Int
+  trend_map : Array[Array[Double]]
+  seasonal_map : Array[Array[Double]]
+  anomaly_map : Array[Array[Bool]]
+  breakpoints : Array[Array[Int]]
+  ndvi_trend : Double
+  vegetation_change_rate : Double
+  phenology_metrics : Array[Double]
+}
+
+///|
+/// 遥感图像配置
+pub(all) struct RemoteSensingConfig {
+  task_type : RemoteSensingTaskType
+  image_type : RemoteSensingImageType
+  num_bands : Int
+  spatial_resolution : Double
+  spectral_resolution : Double
+  temporal_resolution_days : Int
+  projection : String
+  datum : String
+  classification_method : String
+  detection_threshold : Double
+  change_threshold : Double
+  use_ndvi : Bool
+  use_ndwi : Bool
+  use_ndbi : Bool
+  use_texture : Bool
+  use_elevation : Bool
+  cloud_cover_threshold : Double
+}
+
+///|
+/// 创建默认遥感图像配置
+pub fn create_default_remote_sensing_config() -&gt; RemoteSensingConfig {
+  <span data-count="5">R</span>emoteSensingConfig::{
+    task_type: RemoteSensingTaskType::LandCoverClassification,
+    image_type: RemoteSensingImageType::Multispectral,
+    num_bands: 4,
+    spatial_resolution: 10.0,
+    spectral_resolution: 0.0,
+    temporal_resolution_days: 5,
+    projection: "UTM",
+    datum: "WGS84",
+    classification_method: "random_forest",
+    detection_threshold: 0.5,
+    change_threshold: 0.3,
+    use_ndvi: true,
+    use_ndwi: true,
+    use_ndbi: false,
+    use_texture: true,
+    use_elevation: false,
+    cloud_cover_threshold: 10.0,
+  }
+}
+
+///|
+/// 计算NDVI
+pub fn calculate_ndvi(
+  nir_band : Array[Double],
+  red_band : Array[Double],
+  num_pixels : Int,
+) -&gt; Array[Double] {
+  <span data-count="2">l</span>et ndvi : Array[Double] = []
+
+  for i in 0..&lt;num_pixels {
+    <span data-count="20">l</span>et nir = if i &lt; nir_band.<span data-count="20">l</span>ength() { <span data-count="20">n</span>ir_band[i] } else { <span data-count="0">0</span>.0 }
+    let red = if i &lt; red_band.<span data-count="20">l</span>ength() { <span data-count="20">r</span>ed_band[i] } else { <span data-count="0">0</span>.0 }
+    let denom = nir + red
+    let value = if denom &gt; 0.0 { <span data-count="15">(</span>nir - red) / denom } else { <span data-count="5">0</span>.0 }
+    ndvi.<span data-count="20">p</span>ush(value)
+  }
+
+  ndvi
+}
+
+///|
+/// 计算NDWI
+pub fn calculate_ndwi(
+  green_band : Array[Double],
+  nir_band : Array[Double],
+  num_pixels : Int,
+) -&gt; Array[Double] {
+  <span data-count="1">l</span>et ndwi : Array[Double] = []
+
+  for i in 0..&lt;num_pixels {
+    <span data-count="16">l</span>et green = if i &lt; green_band.<span data-count="16">l</span>ength() { <span data-count="16">g</span>reen_band[i] } else { <span data-count="0">0</span>.0 }
+    let nir = if i &lt; nir_band.<span data-count="16">l</span>ength() { <span data-count="16">n</span>ir_band[i] } else { <span data-count="0">0</span>.0 }
+    let denom = green + nir
+    let value = if denom &gt; 0.0 { <span data-count="15">(</span>green - nir) / denom } else { <span data-count="1">0</span>.0 }
+    ndwi.<span data-count="16">p</span>ush(value)
+  }
+
+  ndwi
+}
+
+///|
+/// 地物分类（简化版）
+pub fn classify_land_cover(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  config : RemoteSensingConfig,
+) -&gt; LandCoverClassificationResult {
+  <span data-count="1">i</span>gnore(config)
+  <span data-count="1">i</span>gnore(image)
+  let classification_map : Array[Array[Int]] = []
+  let confidence_map : Array[Array[Double]] = []
+  let class_names = [
+    "water", "forest", "grassland", "cropland", "urban", "barren", "wetland", "snow",
+    "cloud", "shadow",
+  ]
+  let class_distribution : Array[Double] = []
+  for _ in class_names {
+    <span data-count="10">c</span>lass_distribution.<span data-count="10">p</span>ush(0.0)
+  }
+
+  let mut state = 42
+  for _ in 0..&lt;height {
+    <span data-count="8">l</span>et row : Array[Int] = []
+    let conf_row : Array[Double] = []
+    for _ in 0..&lt;width {
+      <span data-count="64">s</span>tate = (state * 11035 + 12345).<span data-count="64">a</span>bs() % 1000000
+      let class_idx = state % class_names.<span data-count="64">l</span>ength()
+      row.<span data-count="64">p</span>ush(class_idx)
+      class_distribution[class_idx] += 1.0
+      state = (state * 11035 + 12345).<span data-count="64">a</span>bs() % 1000000
+      let conf = (state % 1000).<span data-count="64">t</span>o_double() / 1000.0 * 0.3 + 0.7
+      conf_row.<span data-count="64">p</span>ush(conf)
+    }
+    classification_map.<span data-count="8">p</span>ush(row)
+    confidence_map.<span data-count="8">p</span>ush(conf_row)
+  }
+
+  let total_pixels = (width * height).<span data-count="1">t</span>o_double()
+  for i in 0..&lt;class_distribution.<span data-count="1">l</span>ength() {
+    <span data-count="10">c</span>lass_distribution[i] /= total_pixels
+  }
+
+  let confusion_matrix : Array[Array[Int]] = []
+  for _ in class_names {
+    <span data-count="10">l</span>et row : Array[Int] = []
+    for _ in class_names {
+      <span data-count="100">r</span>ow.<span data-count="100">p</span>ush(0)
+    }
+    confusion_matrix.<span data-count="10">p</span>ush(row)
+  }
+
+  LandCoverClassificationResult::{
+    classification_map,
+    num_classes: class_names.<span data-count="1">l</span>ength(),
+    class_names,
+    class_distribution,
+    overall_accuracy: 0.85,
+    kappa_coefficient: 0.8,
+    confusion_matrix,
+    confidence_map,
+  }
+}
+
+///|
+/// 检测遥感目标（简化版）
+pub fn detect_remote_sensing_objects(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  config : RemoteSensingConfig,
+) -&gt; Array[DetectedRemoteSensingObject] {
+  <span data-count="1">i</span>gnore(image)
+  let objects : Array[DetectedRemoteSensingObject] = []
+
+  let object_types = [
+    RemoteSensingObjectType::Building,
+    RemoteSensingObjectType::Road,
+    RemoteSensingObjectType::Vehicle,
+    RemoteSensingObjectType::Ship,
+    RemoteSensingObjectType::Aircraft,
+  ]
+
+  let mut state = 42
+  let num_objects = 10
+
+  for i in 0..&lt;num_objects {
+    <span data-count="10">s</span>tate = (state * 11035 + 12345).<span data-count="10">a</span>bs() % 1000000
+    let x = (state % width).<span data-count="10">t</span>o_double()
+    state = (state * 11035 + 12345).<span data-count="10">a</span>bs() % 1000000
+    let y = (state % height).<span data-count="10">t</span>o_double()
+    state = (state * 11035 + 12345).<span data-count="10">a</span>bs() % 1000000
+    let w = (state % 100 + 20).<span data-count="10">t</span>o_double()
+    state = (state * 11035 + 12345).<span data-count="10">a</span>bs() % 1000000
+    let h = (state % 100 + 20).<span data-count="10">t</span>o_double()
+    state = (state * 11035 + 12345).<span data-count="10">a</span>bs() % 1000000
+    let confidence = (state % 1000).<span data-count="10">t</span>o_double() / 1000.0 * 0.3 + 0.7
+
+    let bbox : Array[Double] = []
+    bbox.<span data-count="10">p</span>ush(x)
+    bbox.<span data-count="10">p</span>ush(y)
+    bbox.<span data-count="10">p</span>ush(x + w)
+    bbox.<span data-count="10">p</span>ush(y + h)
+
+    let object_type = object_types[i % object_types.<span data-count="10">l</span>ength()]
+    let area = w * h
+    let perimeter = 2.0 * (w + h)
+
+    let obj = DetectedRemoteSensingObject::{
+      object_id: i,
+      object_type,
+      bounding_box: bbox,
+      polygon: [],
+      confidence,
+      area,
+      perimeter,
+      orientation: 0.0,
+      geolocation: [
+        x * config.spatial_resolution,
+        y * config.spatial_resolution,
+      ],
+    }
+    objects.<span data-count="10">p</span>ush(obj)
+  }
+
+  objects
+}
+
+///|
+/// 变化检测（简化版）
+pub fn detect_changes(
+  image1 : Array[Double],
+  image2 : Array[Double],
+  width : Int,
+  height : Int,
+  config : RemoteSensingConfig,
+) -&gt; ChangeDetectionResult {
+  <span data-count="1">i</span>gnore(image1)
+  <span data-count="1">i</span>gnore(image2)
+  let change_map : Array[Array[Bool]] = []
+  let change_mask : Array[Array[Int]] = []
+  let mut num_changes = 0
+  let mut total_change_area = 0.0
+
+  let mut state = 42
+  for _ in 0..&lt;height {
+    <span data-count="8">l</span>et row : Array[Bool] = []
+    let mask_row : Array[Int] = []
+    for _ in 0..&lt;width {
+      <span data-count="64">s</span>tate = (state * 11035 + 12345).<span data-count="64">a</span>bs() % 1000000
+      let is_change = (state % 100).<span data-count="64">t</span>o_double() / 100.0 &lt;
+        config.change_threshold
+      row.<span data-count="64">p</span>ush(is_change)
+      if is_change {
+        <span data-count="19">m</span>ask_row.<span data-count="19">p</span>ush(1)
+        num_changes += 1
+        total_change_area += config.spatial_resolution *
+          config.spatial_resolution
+      } else {
+        <span data-count="45">m</span>ask_row.<span data-count="45">p</span>ush(0)
+      }
+    }
+    change_map.<span data-count="8">p</span>ush(row)
+    change_mask.<span data-count="8">p</span>ush(mask_row)
+  }
+
+  ChangeDetectionResult::{
+    change_map,
+    change_mask,
+    num_change_regions: num_changes / 10,
+    total_change_area,
+    change_types: [ChangeType::NewConstruction, ChangeType::Expansion],
+    change_areas: [total_change_area * 0.6, total_change_area * 0.4],
+    confidence: 0.8,
+    kappa_coefficient: 0.75,
+    false_alarm_rate: 0.1,
+    missed_detection_rate: 0.15,
+  }
+}
+
+///|
+/// 生成遥感图像报告
+pub fn remote_sensing_report_to_string(
+  task_type : RemoteSensingTaskType,
+  config : RemoteSensingConfig,
+  result_description : String,
+) -&gt; String {
+  <span data-count="1">l</span>et mut report = "## 遥感图像高级报告\n\n"
+
+  report = report + "### 任务信息\n\n"
+  report = report + "| 指标 | 值 |\n|------|------|\n"
+  report = report +
+    "| 任务类型 | " +
+    (match <span data-count="1">t</span>ask_type {
+      RemoteSensingTaskType::LandCoverClassification =&gt; <span data-count="1">"</span>地物分类"
+      RemoteSensingTaskType::ObjectDetection =&gt; <span data-count="0">"</span>目标检测"
+      RemoteSensingTaskType::ChangeDetection =&gt; <span data-count="0">"</span>变化检测"
+      RemoteSensingTaskType::ImageFusion =&gt; <span data-count="0">"</span>图像融合"
+      RemoteSensingTaskType::SuperResolution =&gt; <span data-count="0">"</span>超分辨率"
+      RemoteSensingTaskType::TimeSeriesAnalysis =&gt; <span data-count="0">"</span>时间序列分析"
+      RemoteSensingTaskType::SceneClassification =&gt; <span data-count="0">"</span>场景分类"
+      _ =&gt; <span data-count="0">"</span>未知"
+    }) +
+    " |\n"
+  report = report +
+    "| 图像类型 | " +
+    (match <span data-count="1">c</span>onfig.image_type {
+      RemoteSensingImageType::Optical =&gt; <span data-count="0">"</span>光学"
+      RemoteSensingImageType::SAR =&gt; <span data-count="0">"</span>SAR"
+      RemoteSensingImageType::Multispectral =&gt; <span data-count="1">"</span>多光谱"
+      RemoteSensingImageType::Hyperspectral =&gt; <span data-count="0">"</span>高光谱"
+      RemoteSensingImageType::Thermal =&gt; <span data-count="0">"</span>热红外"
+      RemoteSensingImageType::LiDAR =&gt; <span data-count="0">"</span>激光雷达"
+      RemoteSensingImageType::DEM =&gt; <span data-count="0">"</span>数字高程模型"
+      _ =&gt; <span data-count="0">"</span>未知"
+    }) +
+    " |\n"
+  report = report + "| 波段数 | " + config.num_<span data-count="1">b</span>ands.to_string() + " |\n"
+  report = report +
+    "| 空间分辨率 | " +
+    config.spatial_resolution.<span data-count="1">t</span>o_string() +
+    " m |\n"
+  report = report +
+    "| 时间分辨率 | " +
+    config.temporal_resolution_days.<span data-count="1">t</span>o_string() +
+    " 天 |\n"
+  report = report + "| 投影 | " + config.projection + " |\n"
+  report = report + "| 基准面 | " + config.datum + " |\n"
+  report = report + "| 分类方法 | " + config.classification_method + " |\n"
+  report = report +
+    "| 检测阈值 | " +
+    config.detection_threshold.<span data-count="1">t</span>o_string() +
+    " |\n"
+  report = report +
+    "| 变化阈值 | " +
+    config.change_threshold.<span data-count="1">t</span>o_string() +
+    " |\n"
+  report = report +
+    "| NDVI | " +
+    (if config.use_ndvi { <span data-count="1">"</span>开启" } els<span data-count="0">e</span> { "关闭" }) +
+    " |\n"
+  report = report +
+    "| NDWI | " +
+    (if config.use_ndwi { <span data-count="1">"</span>开启" } els<span data-count="0">e</span> { "关闭" }) +
+    " |\n"
+
+  report = report + "\n### 结果\n\n"
+  report = report + result_description + "\n"
+
+  report
+}
+</code></pre>
+      </div>
+    </div>
+    <script src="..\..\..\coverage.js"></script>
+  </body>
+</html>
