@@ -1,6 +1,6 @@
 # 变更日志
 
-> 下表为**功能迭代版本**（v0.1 → v234.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v234.0.0。
+> 下表为**功能迭代版本**（v0.1 → v235.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v235.0.0。
 
 ## v1.0.0（正式版）
 
@@ -1926,6 +1926,11 @@
 - multilingual_ocr_enhanced: +33 tests (语言检测, 智能分割, 智能间距, 标点规范化, 语言模型, 多语言识别)
 - qr_decode: +13 tests (QR解码功能路径, Reed-Solomon纠错)
 - 5576×4 全绿 (native/wasm-gc/js/wasm)
+## v235.0.0 - table_recognition + handwriting_recognition + feature_extraction 功能测试
+- table_recognition: +32 tests (水平/垂直线检测错误路径+功能路径, 表格结构分析错误路径+功能路径, 表格识别, 单元格提取, 批量单元格提取)
+- handwriting_recognition: +36 tests (默认配置, 倾斜检测错误路径+功能路径, 尺寸归一化, 笔画特征提取, 连笔分割, 手写特征提取, 特征相似度, 模板创建, 字符识别, 报告生成)
+- feature_extraction: +32 tests (HOG/LBP/投影/网格/统计/组合特征错误路径+功能路径, 多参数配置)
+- 5880×4 全绿 (native/wasm-gc/js/wasm)
 ## v234.0.0 - scan_document_ocr + handwriting_ocr_enhanced + document_understanding_enhanced 功能测试
 - scan_document_ocr: +38 tests (扫描质量评估错误路径+功能路径, 文档预处理多配置, 版面分析, OCR识别, 批量OCR, 结果导出text/hOCR/JSON)
 - handwriting_ocr_enhanced: +33 tests (手写体模板生成, 笔画特征提取错误路径+功能路径, 弹性匹配, 连笔分割, 后处理, 增强识别多配置)
