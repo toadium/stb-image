@@ -1774,9 +1774,15 @@ pub fn is_jpegxl_container(Bytes) -> Bool
 
 pub fn is_jpegxl_format(Bytes) -> Bool
 
+pub fn is_psd_format(Bytes) -> Bool
+
 pub fn is_quote_line(@ocr.TextLineAttributes, Int) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
+
+pub fn is_tiff_format(Bytes) -> Bool
+
+pub fn is_webp_format(Bytes) -> Bool
 
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
@@ -2137,6 +2143,8 @@ pub fn process_frame_slam_sl(@slam.SLAMState, @types.Image, @slam.SLAMConfig) ->
 pub fn progress_bar_to_string(Double, width? : Int) -> String
 
 pub fn projection_features(@types.Image) -> @ocr.ProjectionFeatures raise @types.LoadError
+
+pub fn psd_info_extended(Bytes) -> @codec.PsdInfoExtended raise @types.LoadError
 
 pub fn psnr(@types.Image, @types.Image) -> Double raise @types.LoadError
 
@@ -2546,6 +2554,8 @@ pub fn threshold_otsu_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
 pub fn threshold_segmentation(@types.Image, Double) -> @segmentation.SemanticSegmentationResult raise @types.LoadError
 
+pub fn tiff_info_extended(Bytes) -> @codec.TiffInfoExtended raise @types.LoadError
+
 pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn tile_region(Int, Int, @performance.TileConfig) -> (Int, Int, Int, Int)
@@ -2699,6 +2709,8 @@ pub fn watershed_f(@types.ImageF, Array[Int]) -> Array[Int] raise @types.LoadErr
 pub fn watershed_segment(@types.Image, config? : @segment.WatershedConfig) -> @segment.SegmentationResult
 
 pub fn watershed_segmentation(@types.Image, @segmentation.WatershedConfig) -> @segmentation.SemanticSegmentationResult raise @types.LoadError
+
+pub fn webp_info_extended(Bytes) -> @codec.WebpInfoExtended raise @types.LoadError
 
 pub fn weighted_knn_classify(Array[Double], Array[(String, Array[Double])], k? : Int, distance_metric? : String) -> (String, Double, Array[(String, Double)])
 
@@ -3449,6 +3461,8 @@ pub using @ocr {type ProjectionFeatures}
 
 pub using @ocr {type ProjectionResult}
 
+pub using @codec {type PsdInfoExtended}
+
 pub using @ocr {type PunctuationTemplate}
 
 pub using @barcode {type QrDecodeResult}
@@ -3653,6 +3667,8 @@ pub using @remote_sensing {type TextureFeatures}
 
 pub using @advanced_imaging {type ThermalData as ThermalDataAI}
 
+pub using @codec {type TiffInfoExtended}
+
 pub using @performance {type TileConfig}
 
 pub using @photo_enhance {type ToneMappingConfig}
@@ -3716,6 +3732,8 @@ pub using @encryption {type WatermarkInfo}
 pub using @encryption {type WatermarkType}
 
 pub using @segment {type WatershedConfig}
+
+pub using @codec {type WebpInfoExtended}
 
 pub using @medical {type WindowLevel}
 

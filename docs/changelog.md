@@ -1947,6 +1947,14 @@
 - 新增 3 个公开类型 + 3 个公开函数，已在 reexport.mbt 注册
 - +15 tests (AVIF 5 + HEIF 4 + JPEG-XL 6): 完整元数据解析/不支持格式/缺少尺寸/旋转/alpha+镜像/宽高比
 - 6062×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v241.0.0 - WebP/TIFF/PSD 扩展信息解析
+- 新增 WebpInfoExtended/TiffInfoExtended/PsdInfoExtended 结构体 + webp_info_extended/tiff_info_extended/psd_info_extended 函数
+- WebP: RIFF chunk 遍历，提取 VP8X/VP8/VP8L 格式类型、尺寸、alpha、动画、ICC/EXIF/XMP 标志
+- TIFF: IFD 标签遍历，提取尺寸、位深、压缩方式、光度解释、方向、分辨率单位、字节序
+- PSD: 头部解析，提取通道数、位深、颜色模式、压缩方式、版本
+- 新增 3 个公开类型 + 3 个公开函数 + 3 个格式检测函数，已在 reexport.mbt 注册
+- +15 tests (WebP 5 + TIFF 5 + PSD 5): VP8X/VP8L 解析/IFD 标签/PSD 头部/不支持格式
+- 6077×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

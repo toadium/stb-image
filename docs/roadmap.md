@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v240.0.0 | 测试：6062 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v241.0.0 | 测试：6077 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2528,6 +2528,7 @@ flowchart LR
 | v238.0.0 | warning清零 | 修复303 warnings：165 test_unqualified_package(裸函数名加@package前缀)+133 deprecated_syntax(fn(){}改箭头函数()=>{})+5 unused_value(删未使用辅助函数) ✅ 2026-10-15 — 5995×4全绿, 0 warning, 0 error |
 | v239.0.0 | stereo3d+superres边界测试 | superres +22测试(calculate_image_quality_metrics/enhance_image/super_resolution_report_to_string缺失函数+零宽度/单像素/多通道错误路径) + stereo3d +30测试(compute_disparity/disparity_to_depth/depth_to_colormap/stereo_match/estimate_normals/voxel_downsample/icp_registration零尺寸/空点云/单点边界条件) ✅ 2026-10-15 — 6047×4全绿, 0 warning, 0 error |
 | v240.0.0 | AVIF/HEIF/JPEG-XL容器解析增强 | 新增AvifInfoExtended/HeifInfoExtended/JpegXlInfoExtended+avif_info_extended/heif_info_extended/jpegxl_info_extended 递归ISOBMFF box遍历(ispe/pixi/colr/irot/imir/auxC/av1C/hvcC)+JPEG-XL BitReader SizeHeader解析 +15测试(AVIF 5+HEIF 4+JPEG-XL 6) ✅ 2026-10-15 — 6062×4全绿, 0 warning, 0 error |
+| v241.0.0 | WebP/TIFF/PSD扩展信息解析 | 新增WebpInfoExtended/TiffInfoExtended/PsdInfoExtended+webp_info_extended/tiff_info_extended/psd_info_extended WebP RIFF chunk遍历(VP8X/VP8/VP8L)+TIFF IFD标签遍历+PSD头部解析 +15测试(WebP 5+TIFF 5+PSD 5) ✅ 2026-10-15 — 6077×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 

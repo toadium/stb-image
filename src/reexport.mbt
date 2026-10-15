@@ -2585,6 +2585,46 @@ pub fn jpegxl_info_extended(
   @codec.jpegxl_info_extended(data)
 }
 
+///|
+// WebP/TIFF/PSD 扩展信息
+pub type WebpInfoExtended = @codec.WebpInfoExtended
+
+///|
+pub let is_webp_format : (Bytes) -> Bool = @codec.is_webp_format
+
+///|
+pub fn webp_info_extended(
+  data : Bytes,
+) -> @codec.WebpInfoExtended raise @types.LoadError {
+  @codec.webp_info_extended(data)
+}
+
+///|
+pub type TiffInfoExtended = @codec.TiffInfoExtended
+
+///|
+pub let is_tiff_format : (Bytes) -> Bool = @codec.is_tiff_format
+
+///|
+pub fn tiff_info_extended(
+  data : Bytes,
+) -> @codec.TiffInfoExtended raise @types.LoadError {
+  @codec.tiff_info_extended(data)
+}
+
+///|
+pub type PsdInfoExtended = @codec.PsdInfoExtended
+
+///|
+pub let is_psd_format : (Bytes) -> Bool = @codec.is_psd_format
+
+///|
+pub fn psd_info_extended(
+  data : Bytes,
+) -> @codec.PsdInfoExtended raise @types.LoadError {
+  @codec.psd_info_extended(data)
+}
+
 // From meta/
 
 ///|

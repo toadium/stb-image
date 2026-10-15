@@ -108,17 +108,29 @@ pub fn is_jpegxl_container(Bytes) -> Bool
 
 pub fn is_jpegxl_format(Bytes) -> Bool
 
+pub fn is_psd_format(Bytes) -> Bool
+
+pub fn is_tiff_format(Bytes) -> Bool
+
+pub fn is_webp_format(Bytes) -> Bool
+
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn jpegxl_info(Bytes) -> JpegXlInfo raise @types.LoadError
 
 pub fn jpegxl_info_extended(Bytes) -> JpegXlInfoExtended raise @types.LoadError
 
+pub fn psd_info_extended(Bytes) -> PsdInfoExtended raise @types.LoadError
+
 pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
+
+pub fn tiff_info_extended(Bytes) -> TiffInfoExtended raise @types.LoadError
 
 pub fn tiff_lzw_decode(Bytes) -> Array[Byte] raise @types.LoadError
 
 pub fn tiff_packbits_decode(Bytes) -> Array[Byte] raise @types.LoadError
+
+pub fn webp_info_extended(Bytes) -> WebpInfoExtended raise @types.LoadError
 
 // Errors
 
@@ -199,6 +211,36 @@ pub struct JpegXlInfoExtended {
   orientation : Int
 }
 
+pub struct PsdInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  channel_count : Int
+  num_channels : Int
+  has_alpha : Bool
+  color_mode : Int
+  color_mode_name : String
+  compression : Int
+  compression_name : String
+  version : Int
+}
+
+pub struct TiffInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  samples_per_pixel : Int
+  num_channels : Int
+  has_alpha : Bool
+  compression : Int
+  compression_name : String
+  photometric : Int
+  photometric_name : String
+  orientation : Int
+  resolution_unit : Int
+  is_little_endian : Bool
+}
+
 pub struct Vp8ReferenceFrames {
   last_y : Array[Int]
   last_u : Array[Int]
@@ -211,6 +253,18 @@ pub struct Vp8ReferenceFrames {
   altref_v : Array[Int]
   width : Int
   height : Int
+}
+
+pub struct WebpInfoExtended {
+  width : Int
+  height : Int
+  format : String
+  has_alpha : Bool
+  has_animation : Bool
+  has_icc_profile : Bool
+  has_exif : Bool
+  has_xmp : Bool
+  num_channels : Int
 }
 
 // Type aliases
