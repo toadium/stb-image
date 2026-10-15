@@ -12,6 +12,8 @@ pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
 
 pub fn avif_info_extended(Bytes) -> AvifInfoExtended raise @types.LoadError
 
+pub fn bmp_info_extended(Bytes) -> BmpInfoExtended raise @types.LoadError
+
 pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
 
 pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
@@ -92,6 +94,8 @@ pub fn encode_webp_lossy_full(@types.Image, quality? : Int) -> Bytes raise @type
 
 pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
+pub fn gif_info_extended(Bytes) -> GifInfoExtended raise @types.LoadError
+
 pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn heif_info(Bytes) -> HeifInfo raise @types.LoadError
@@ -100,7 +104,13 @@ pub fn heif_info_extended(Bytes) -> HeifInfoExtended raise @types.LoadError
 
 pub fn is_avif_format(Bytes) -> Bool
 
+pub fn is_bmp_format(Bytes) -> Bool
+
+pub fn is_gif_format(Bytes) -> Bool
+
 pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_jpeg_format(Bytes) -> Bool
 
 pub fn is_jpegxl_codestream(Bytes) -> Bool
 
@@ -108,17 +118,23 @@ pub fn is_jpegxl_container(Bytes) -> Bool
 
 pub fn is_jpegxl_format(Bytes) -> Bool
 
+pub fn is_png_format(Bytes) -> Bool
+
 pub fn is_psd_format(Bytes) -> Bool
 
 pub fn is_tiff_format(Bytes) -> Bool
 
 pub fn is_webp_format(Bytes) -> Bool
 
+pub fn jpeg_info_extended(Bytes) -> JpegInfoExtended raise @types.LoadError
+
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn jpegxl_info(Bytes) -> JpegXlInfo raise @types.LoadError
 
 pub fn jpegxl_info_extended(Bytes) -> JpegXlInfoExtended raise @types.LoadError
+
+pub fn png_info_extended(Bytes) -> PngInfoExtended raise @types.LoadError
 
 pub fn psd_info_extended(Bytes) -> PsdInfoExtended raise @types.LoadError
 
@@ -162,6 +178,34 @@ pub struct AvifInfoExtended {
   av1_monochrome : Bool
 }
 
+pub struct BmpInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  compression : Int
+  compression_name : String
+  is_bottom_up : Bool
+  dib_size : Int
+  num_colors : Int
+  data_offset : Int
+}
+
+pub struct GifInfoExtended {
+  width : Int
+  height : Int
+  version : String
+  has_global_color_table : Bool
+  global_color_table_size : Int
+  color_resolution : Int
+  is_sorted : Bool
+  background_color_index : Int
+  pixel_aspect_ratio : Int
+  num_channels : Int
+  has_alpha : Bool
+}
+
 pub struct HeifInfo {
   width : Int
   height : Int
@@ -191,6 +235,19 @@ pub struct HeifInfoExtended {
   hevc_bit_depth_chroma : Int
 }
 
+pub struct JpegInfoExtended {
+  width : Int
+  height : Int
+  precision : Int
+  num_components : Int
+  is_grayscale : Bool
+  is_progressive : Bool
+  sof_marker : Int
+  sof_name : String
+  num_channels : Int
+  has_alpha : Bool
+}
+
 pub struct JpegXlInfo {
   width : Int
   height : Int
@@ -209,6 +266,20 @@ pub struct JpegXlInfoExtended {
   is_lossless : Bool
   is_codestream : Bool
   orientation : Int
+}
+
+pub struct PngInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  color_type : Int
+  color_type_name : String
+  num_channels : Int
+  has_alpha : Bool
+  is_palette : Bool
+  compression_method : Int
+  filter_method : Int
+  interlace_method : Int
 }
 
 pub struct PsdInfoExtended {

@@ -298,6 +298,8 @@ pub fn blend_screen(@types.Image, @types.Image) -> @types.Image raise @types.Loa
 
 pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn bmp_info_extended(Bytes) -> @codec.BmpInfoExtended raise @types.LoadError
+
 pub fn box_blur(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn box_blur_16(@types.Image16, Int) -> @types.Image16 raise @types.LoadError
@@ -1498,6 +1500,8 @@ pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -
 
 pub fn get_rotation_matrix_2d((Float, Float), Float, Float) -> @transform.AffineMatrix
 
+pub fn gif_info_extended(Bytes) -> @codec.GifInfoExtended raise @types.LoadError
+
 pub fn glcm_features(Array[Array[Int]]) -> @feature.GlcmFeatures
 
 pub fn glcm_features_multi_direction(@types.Image, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
@@ -1760,7 +1764,11 @@ pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
 pub fn is_avif_format(Bytes) -> Bool
 
+pub fn is_bmp_format(Bytes) -> Bool
+
 pub fn is_code_block_line(@ocr.TextLineAttributes, Int) -> Bool
+
+pub fn is_gif_format(Bytes) -> Bool
 
 pub fn is_hdr_from_bytes(Bytes) -> Bool
 
@@ -1768,11 +1776,15 @@ pub fn is_heading_line(@ocr.TextLineAttributes, Double) -> (Bool, Int)
 
 pub fn is_heif_format(Bytes) -> Bool
 
+pub fn is_jpeg_format(Bytes) -> Bool
+
 pub fn is_jpegxl_codestream(Bytes) -> Bool
 
 pub fn is_jpegxl_container(Bytes) -> Bool
 
 pub fn is_jpegxl_format(Bytes) -> Bool
+
+pub fn is_png_format(Bytes) -> Bool
 
 pub fn is_psd_format(Bytes) -> Bool
 
@@ -1783,6 +1795,8 @@ pub fn is_supported_format(Bytes) -> Bool
 pub fn is_tiff_format(Bytes) -> Bool
 
 pub fn is_webp_format(Bytes) -> Bool
+
+pub fn jpeg_info_extended(Bytes) -> @codec.JpegInfoExtended raise @types.LoadError
 
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
@@ -2119,6 +2133,8 @@ pub fn pipeline_len(@pipeline.Pipeline) -> Int
 pub fn pipeline_new() -> @pipeline.Pipeline
 
 pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn png_info_extended(Bytes) -> @codec.PngInfoExtended raise @types.LoadError
 
 pub fn point_cloud_new() -> @stereo3d.PointCloud
 
@@ -2819,6 +2835,8 @@ pub using @ocr {type BatchTask}
 
 pub using @ocr {type BatchTaskStatus}
 
+pub using @codec {type BmpInfoExtended}
+
 pub using @detection {type BoundingBox}
 
 pub using @stereo3d {type BoundingBox3d}
@@ -3151,6 +3169,8 @@ pub using @pose_estimation {type GestureType as GestureTypePE}
 
 pub using @types {type GifAnimation}
 
+pub using @codec {type GifInfoExtended}
+
 pub using @feature {type GlcmFeatures}
 
 pub using @segmentation {type GrabCutConfig}
@@ -3272,6 +3292,8 @@ pub using @superres {type InterpolationConfig}
 pub using @intelligent_vision {type IntrusionDetectionResult as IntrusionDetectionResultIV}
 
 pub using @forensics_enhanced {type JpegGhostResult}
+
+pub using @codec {type JpegInfoExtended}
 
 pub using @codec {type JpegXlInfoExtended}
 
@@ -3438,6 +3460,8 @@ pub using @pipeline {type Pipeline}
 pub using @pipeline {type BatchTask as PipelineBatchTask}
 
 pub using @types {type PngAnimation}
+
+pub using @codec {type PngInfoExtended}
 
 pub using @meta {type PngTextChunk}
 

@@ -1955,6 +1955,15 @@
 - 新增 3 个公开类型 + 3 个公开函数 + 3 个格式检测函数，已在 reexport.mbt 注册
 - +15 tests (WebP 5 + TIFF 5 + PSD 5): VP8X/VP8L 解析/IFD 标签/PSD 头部/不支持格式
 - 6077×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v242.0.0 - BMP/GIF/PNG/JPEG 扩展信息解析
+- 新增 BmpInfoExtended/GifInfoExtended/PngInfoExtended/JpegInfoExtended 结构体 + bmp_info_extended/gif_info_extended/png_info_extended/jpeg_info_extended 函数
+- BMP: 解析 DIB 头部，提取尺寸、位深、通道数、压缩方式(BI_RGB/RLE4/RLE8)、压缩名称、bottom-up 标志、DIB 大小
+- GIF: 解析 LSD 头部，提取版本(87a/89a)、全局颜色表标志/大小、色彩分辨率、排序标志、背景色索引、像素宽高比
+- PNG: 解析 IHDR chunk，提取尺寸、位深、颜色类型(Grayscale/RGB/Palette/Grayscale+Alpha/RGBA)、通道数、alpha/palette 标志、压缩/滤波/隔行方式
+- JPEG: 遍历 markers 查找 SOF，提取精度、分量数、渐进标志(C2)、灰度标志、SOF marker 类型/名称，跳过 APP0/RST/padding
+- 新增 4 个公开类型 + 4 个解析函数 + 4 个格式检测函数，已在 reexport.mbt 注册
+- +23 tests (BMP 4 + GIF 6 + PNG 6 + JPEG 7): 头部解析/多格式/不支持格式/渐进/灰度/隔行/APP0 跳过
+- 6100×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

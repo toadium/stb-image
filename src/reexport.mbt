@@ -2625,6 +2625,59 @@ pub fn psd_info_extended(
   @codec.psd_info_extended(data)
 }
 
+///|
+// BMP/GIF/PNG/JPEG 扩展信息
+pub type BmpInfoExtended = @codec.BmpInfoExtended
+
+///|
+pub let is_bmp_format : (Bytes) -> Bool = @codec.is_bmp_format
+
+///|
+pub fn bmp_info_extended(
+  data : Bytes,
+) -> @codec.BmpInfoExtended raise @types.LoadError {
+  @codec.bmp_info_extended(data)
+}
+
+///|
+pub type GifInfoExtended = @codec.GifInfoExtended
+
+///|
+pub let is_gif_format : (Bytes) -> Bool = @codec.is_gif_format
+
+///|
+pub fn gif_info_extended(
+  data : Bytes,
+) -> @codec.GifInfoExtended raise @types.LoadError {
+  @codec.gif_info_extended(data)
+}
+
+///|
+pub type PngInfoExtended = @codec.PngInfoExtended
+
+///|
+pub let is_png_format : (Bytes) -> Bool = @codec.is_png_format
+
+///|
+pub fn png_info_extended(
+  data : Bytes,
+) -> @codec.PngInfoExtended raise @types.LoadError {
+  @codec.png_info_extended(data)
+}
+
+///|
+pub type JpegInfoExtended = @codec.JpegInfoExtended
+
+///|
+pub let is_jpeg_format : (Bytes) -> Bool = @codec.is_jpeg_format
+
+///|
+pub fn jpeg_info_extended(
+  data : Bytes,
+) -> @codec.JpegInfoExtended raise @types.LoadError {
+  @codec.jpeg_info_extended(data)
+}
+
 // From meta/
 
 ///|
