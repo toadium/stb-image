@@ -1940,6 +1940,13 @@
 - superres: +22 tests (calculate_image_quality_metrics/enhance_image/super_resolution_report_to_string 缺失函数 + 零宽度/零高度/单像素/多通道错误路径)
 - stereo3d: +30 tests (compute_disparity/disparity_to_depth/depth_to_colormap/depth_to_pointcloud/stereo_match/estimate_normals/voxel_downsample/icp_registration 等零尺寸/空点云/单点/自定义参数边界条件)
 - 6047×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v240.0.0 - AVIF/HEIF/JPEG-XL 容器解析增强 + 元数据提取
+- 新增 AvifInfoExtended/HeifInfoExtended/JpegXlInfoExtended 结构体 + avif_info_extended/heif_info_extended/jpegxl_info_extended 函数
+- AVIF/HEIF: 递归 ISOBMFF box 遍历（meta→iprp→ipco），提取 ispe(尺寸)/pixi(位深)/colr(色彩空间 nclx/rICC/prof)/irot(旋转)/imir(镜像)/auxC(alpha)/av1C(AV1配置)/hvcC(HEVC配置)
+- JPEG-XL: BitReader + SizeHeader VarInt 解析，支持裸码流和 ISOBMFF 容器两种格式
+- 新增 3 个公开类型 + 3 个公开函数，已在 reexport.mbt 注册
+- +15 tests (AVIF 5 + HEIF 4 + JPEG-XL 6): 完整元数据解析/不支持格式/缺少尺寸/旋转/alpha+镜像/宽高比
+- 6062×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

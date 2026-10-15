@@ -10,6 +10,8 @@ pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
 
+pub fn avif_info_extended(Bytes) -> AvifInfoExtended raise @types.LoadError
+
 pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
 
 pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
@@ -94,6 +96,8 @@ pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn heif_info(Bytes) -> HeifInfo raise @types.LoadError
 
+pub fn heif_info_extended(Bytes) -> HeifInfoExtended raise @types.LoadError
+
 pub fn is_avif_format(Bytes) -> Bool
 
 pub fn is_heif_format(Bytes) -> Bool
@@ -107,6 +111,8 @@ pub fn is_jpegxl_format(Bytes) -> Bool
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn jpegxl_info(Bytes) -> JpegXlInfo raise @types.LoadError
+
+pub fn jpegxl_info_extended(Bytes) -> JpegXlInfoExtended raise @types.LoadError
 
 pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
 
@@ -125,12 +131,52 @@ pub struct AvifInfo {
   has_alpha : Bool
 }
 
+pub struct AvifInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  rotation : Int
+  mirror : Int
+  color_type : String
+  color_primaries : Int
+  transfer_characteristics : Int
+  matrix_coefficients : Int
+  full_range : Bool
+  av1_profile : Int
+  av1_level : Int
+  av1_tier : Int
+  av1_monochrome : Bool
+}
+
 pub struct HeifInfo {
   width : Int
   height : Int
   bit_depth : Int
   num_channels : Int
   has_alpha : Bool
+}
+
+pub struct HeifInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  rotation : Int
+  mirror : Int
+  color_type : String
+  color_primaries : Int
+  transfer_characteristics : Int
+  matrix_coefficients : Int
+  full_range : Bool
+  hevc_profile : Int
+  hevc_level : Int
+  hevc_tier : Int
+  hevc_chroma_format : Int
+  hevc_bit_depth_luma : Int
+  hevc_bit_depth_chroma : Int
 }
 
 pub struct JpegXlInfo {
@@ -140,6 +186,17 @@ pub struct JpegXlInfo {
   num_channels : Int
   has_alpha : Bool
   is_lossless : Bool
+}
+
+pub struct JpegXlInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  is_lossless : Bool
+  is_codestream : Bool
+  orientation : Int
 }
 
 pub struct Vp8ReferenceFrames {

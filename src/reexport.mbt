@@ -2554,6 +2554,37 @@ pub fn jpegxl_info(data : Bytes) -> @codec.JpegXlInfo raise @types.LoadError {
 ///|
 pub let jpegxl_decode : (Bytes) -> @types.Image raise @types.LoadError = @codec.jpegxl_decode
 
+///|
+// AVIF/HEIF/JPEG-XL 扩展信息
+pub type AvifInfoExtended = @codec.AvifInfoExtended
+
+///|
+pub fn avif_info_extended(
+  data : Bytes,
+) -> @codec.AvifInfoExtended raise @types.LoadError {
+  @codec.avif_info_extended(data)
+}
+
+///|
+pub type HeifInfoExtended = @codec.HeifInfoExtended
+
+///|
+pub fn heif_info_extended(
+  data : Bytes,
+) -> @codec.HeifInfoExtended raise @types.LoadError {
+  @codec.heif_info_extended(data)
+}
+
+///|
+pub type JpegXlInfoExtended = @codec.JpegXlInfoExtended
+
+///|
+pub fn jpegxl_info_extended(
+  data : Bytes,
+) -> @codec.JpegXlInfoExtended raise @types.LoadError {
+  @codec.jpegxl_info_extended(data)
+}
+
 // From meta/
 
 ///|

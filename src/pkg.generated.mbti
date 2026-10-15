@@ -222,6 +222,8 @@ pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn avif_info(Bytes) -> @codec.AvifInfo raise @types.LoadError
 
+pub fn avif_info_extended(Bytes) -> @codec.AvifInfoExtended raise @types.LoadError
+
 pub fn background_normalization(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
 
 pub fn barcode_default_config() -> @barcode.BarcodeConfig
@@ -1582,6 +1584,8 @@ pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn heif_info(Bytes) -> @codec.HeifInfo raise @types.LoadError
 
+pub fn heif_info_extended(Bytes) -> @codec.HeifInfoExtended raise @types.LoadError
+
 pub fn histogram(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn histogram_16(@types.Image16) -> Array[Int] raise @types.LoadError
@@ -1777,6 +1781,8 @@ pub fn is_supported_format(Bytes) -> Bool
 pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn jpegxl_info(Bytes) -> @codec.JpegXlInfo raise @types.LoadError
+
+pub fn jpegxl_info_extended(Bytes) -> @codec.JpegXlInfoExtended raise @types.LoadError
 
 pub fn key_sensitivity_test(@types.Image, Double, delta? : Double) -> Double raise @types.LoadError
 
@@ -2779,6 +2785,8 @@ pub using @ocr {type AugmentationType}
 
 pub using @intelligent_vision {type AutonomousDrivingTask as AutonomousDrivingTaskIV}
 
+pub using @codec {type AvifInfoExtended}
+
 pub using @barcode {type BarcodeConfig}
 
 pub using @barcode {type BarcodeResult}
@@ -3161,6 +3169,8 @@ pub using @enhance {type HdrConfig}
 
 pub using @photo_enhance {type HdrImage}
 
+pub using @codec {type HeifInfoExtended}
+
 pub using @feature {type HistCompareMethod}
 
 pub using @ocr {type HogFeatures}
@@ -3250,6 +3260,8 @@ pub using @superres {type InterpolationConfig}
 pub using @intelligent_vision {type IntrusionDetectionResult as IntrusionDetectionResultIV}
 
 pub using @forensics_enhanced {type JpegGhostResult}
+
+pub using @codec {type JpegXlInfoExtended}
 
 pub using @segmentation {type KMeansConfig}
 
