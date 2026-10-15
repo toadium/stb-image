@@ -1977,6 +1977,13 @@
 - 新增 8 个公开类型 + 8 个解析函数 + 8 个格式检测函数，已在 reexport.mbt 注册
 - +47 tests (QOI 5 + TGA 5 + HDR 5 + PNM 8 + ICO 6 + CUR 5 + ICNS 6 + APNG 7)
 - 6147×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v244.0.0 - 统一 extended info API
+- 新增 ImageInfoExtended 联合类型（18 个变体：Avif/Heif/JpegXl/Webp/Tiff/Psd/Bmp/Gif/Png/Jpeg/Qoi/Tga/Hdr/Pnm/Ico/Cur/Icns/Apng）
+- 新增 get_image_info_extended 分派函数：自动检测格式并返回对应类型的扩展信息，按 magic number 顺序检测，TGA 最后（无明确 magic）
+- 新增 detect_image_format 格式名称检测函数：返回格式名称字符串（"PNG"/"JPEG"/"BMP" 等），未知格式返回 "unknown"
+- 新增 1 个公开类型 + 2 个公开函数，已在 reexport.mbt 注册
+- +12 tests (detect 6 + dispatch 5 + unknown 1)
+- 6159×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

@@ -58,6 +58,8 @@ pub fn decode_vp8_inter_frame(Bytes, Int, Vp8ReferenceFrames) -> (@types.Image, 
 
 pub fn decode_webp_pure(Bytes) -> @types.Image raise @types.LoadError
 
+pub fn detect_image_format(Bytes) -> String
+
 pub fn encode_apng_pure(@types.PngAnimation) -> Bytes raise @types.LoadError
 
 pub fn encode_bmp_pure(@types.Image) -> Bytes
@@ -97,6 +99,8 @@ pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
 pub fn encode_webp_lossy_full(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
 
 pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+
+pub fn get_image_info_extended(Bytes) -> ImageInfoExtended raise @types.LoadError
 
 pub fn gif_info_extended(Bytes) -> GifInfoExtended raise @types.LoadError
 
@@ -324,6 +328,27 @@ pub struct IcoInfoExtended {
   height : Int
   num_channels : Int
   has_alpha : Bool
+}
+
+pub enum ImageInfoExtended {
+  Avif(AvifInfoExtended)
+  Heif(HeifInfoExtended)
+  JpegXl(JpegXlInfoExtended)
+  Webp(WebpInfoExtended)
+  Tiff(TiffInfoExtended)
+  Psd(PsdInfoExtended)
+  Bmp(BmpInfoExtended)
+  Gif(GifInfoExtended)
+  Png(PngInfoExtended)
+  Jpeg(JpegInfoExtended)
+  Qoi(QoiInfoExtended)
+  Tga(TgaInfoExtended)
+  Hdr(HdrInfoExtended)
+  Pnm(PnmInfoExtended)
+  Ico(IcoInfoExtended)
+  Cur(CurInfoExtended)
+  Icns(IcnsInfoExtended)
+  Apng(ApngInfoExtended)
 }
 
 pub struct JpegInfoExtended {

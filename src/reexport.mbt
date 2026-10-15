@@ -2784,6 +2784,19 @@ pub fn apng_info_extended(
   @codec.apng_info_extended(data)
 }
 
+///|
+pub type ImageInfoExtended = @codec.ImageInfoExtended
+
+///|
+pub fn get_image_info_extended(
+  data : Bytes,
+) -> @codec.ImageInfoExtended raise @types.LoadError {
+  @codec.get_image_info_extended(data)
+}
+
+///|
+pub let detect_image_format : (Bytes) -> String = @codec.detect_image_format
+
 // From meta/
 
 ///|

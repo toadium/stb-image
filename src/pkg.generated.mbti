@@ -930,6 +930,8 @@ pub fn detect_horizontal_lines(@types.Image, min_length? : Int, max_gap? : Int) 
 
 pub fn detect_horizontal_table_lines(@types.Image, min_length? : Int, max_gap? : Int) -> Array[(Int, Int, Int)] raise @types.LoadError
 
+pub fn detect_image_format(Bytes) -> String
+
 pub fn detect_image_regions_markdown(@types.Image, min_area? : Int) -> Array[@ocr.MarkdownImage] raise @types.LoadError
 
 pub fn detect_intrusion_iv(@types.Image, Array[Double], @intelligent_vision.IntelligentVisionConfig) -> @intelligent_vision.IntrusionDetectionResult
@@ -1499,6 +1501,8 @@ pub fn get_coco_skeleton_connections_pe() -> Array[Array[Int]]
 pub fn get_common_scene_types_su() -> Array[String]
 
 pub fn get_elements_in_reading_order(@ocr.DocumentStructure) -> Array[@ocr.DocumentElement]
+
+pub fn get_image_info_extended(Bytes) -> @codec.ImageInfoExtended raise @types.LoadError
 
 pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.PerspectiveMatrix?
 
@@ -3288,6 +3292,8 @@ pub using @types {type ImageFormat}
 pub using @image_generation {type ImageGenerationAlgorithm as ImageGenerationAlgorithmIG}
 
 pub using @types {type ImageInfo}
+
+pub using @codec {type ImageInfoExtended}
 
 pub using @superres {type ImageQualityMetrics}
 
