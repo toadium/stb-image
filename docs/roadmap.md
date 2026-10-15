@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v242.0.0 | 测试：6100 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v243.0.0 | 测试：6147 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2530,6 +2530,7 @@ flowchart LR
 | v240.0.0 | AVIF/HEIF/JPEG-XL容器解析增强 | 新增AvifInfoExtended/HeifInfoExtended/JpegXlInfoExtended+avif_info_extended/heif_info_extended/jpegxl_info_extended 递归ISOBMFF box遍历(ispe/pixi/colr/irot/imir/auxC/av1C/hvcC)+JPEG-XL BitReader SizeHeader解析 +15测试(AVIF 5+HEIF 4+JPEG-XL 6) ✅ 2026-10-15 — 6062×4全绿, 0 warning, 0 error |
 | v241.0.0 | WebP/TIFF/PSD扩展信息解析 | 新增WebpInfoExtended/TiffInfoExtended/PsdInfoExtended+webp_info_extended/tiff_info_extended/psd_info_extended WebP RIFF chunk遍历(VP8X/VP8/VP8L)+TIFF IFD标签遍历+PSD头部解析 +15测试(WebP 5+TIFF 5+PSD 5) ✅ 2026-10-15 — 6077×4全绿, 0 warning, 0 error |
 | v242.0.0 | BMP/GIF/PNG/JPEG扩展信息解析 | 新增BmpInfoExtended/GifInfoExtended/PngInfoExtended/JpegInfoExtended+bmp_info_extended/gif_info_extended/png_info_extended/jpeg_info_extended BMP DIB头部(压缩方式/bottom-up)+GIF LSD(版本/全局颜色表)+PNG IHDR(颜色类型/隔行)+JPEG SOF遍历(渐进/灰度) +23测试(BMP 4+GIF 6+PNG 6+JPEG 7) ✅ 2026-10-15 — 6100×4全绿, 0 warning, 0 error |
+| v243.0.0 | QOI/TGA/HDR/PNM/ICO/CUR/ICNS/APNG扩展信息解析 | 新增8类型+8解析函数+8格式检测函数 QOI(通道/色彩空间)+TGA(图像类型/行序)+HDR(RGBE FORMAT/尺寸行)+PNM(P1-P6全格式/maxval)+ICO(目录条目/位深)+CUR(热点坐标)+ICNS(chunk遍历/图标类型)+APNG(IHDR+acTL帧数) +47测试(QOI 5+TGA 5+HDR 5+PNM 8+ICO 6+CUR 5+ICNS 6+APNG 7) ✅ 2026-10-15 — 6147×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 

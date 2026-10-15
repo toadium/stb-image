@@ -2678,6 +2678,112 @@ pub fn jpeg_info_extended(
   @codec.jpeg_info_extended(data)
 }
 
+// QOI/TGA/HDR/PNM/ICO/CUR/ICNS/APNG 扩展信息
+
+///|
+pub type QoiInfoExtended = @codec.QoiInfoExtended
+
+///|
+pub let is_qoi_format : (Bytes) -> Bool = @codec.is_qoi_format
+
+///|
+pub fn qoi_info_extended(
+  data : Bytes,
+) -> @codec.QoiInfoExtended raise @types.LoadError {
+  @codec.qoi_info_extended(data)
+}
+
+///|
+pub type TgaInfoExtended = @codec.TgaInfoExtended
+
+///|
+pub let is_tga_format : (Bytes) -> Bool = @codec.is_tga_format
+
+///|
+pub fn tga_info_extended(
+  data : Bytes,
+) -> @codec.TgaInfoExtended raise @types.LoadError {
+  @codec.tga_info_extended(data)
+}
+
+///|
+pub type HdrInfoExtended = @codec.HdrInfoExtended
+
+///|
+pub let is_hdr_format : (Bytes) -> Bool = @codec.is_hdr_format
+
+///|
+pub fn hdr_info_extended(
+  data : Bytes,
+) -> @codec.HdrInfoExtended raise @types.LoadError {
+  @codec.hdr_info_extended(data)
+}
+
+///|
+pub type PnmInfoExtended = @codec.PnmInfoExtended
+
+///|
+pub let is_pnm_format : (Bytes) -> Bool = @codec.is_pnm_format
+
+///|
+pub fn pnm_info_extended(
+  data : Bytes,
+) -> @codec.PnmInfoExtended raise @types.LoadError {
+  @codec.pnm_info_extended(data)
+}
+
+///|
+pub type IcoInfoExtended = @codec.IcoInfoExtended
+
+///|
+pub let is_ico_format : (Bytes) -> Bool = @codec.is_ico_format
+
+///|
+pub fn ico_info_extended(
+  data : Bytes,
+) -> @codec.IcoInfoExtended raise @types.LoadError {
+  @codec.ico_info_extended(data)
+}
+
+///|
+pub type CurInfoExtended = @codec.CurInfoExtended
+
+///|
+pub let is_cur_format : (Bytes) -> Bool = @codec.is_cur_format
+
+///|
+pub fn cur_info_extended(
+  data : Bytes,
+) -> @codec.CurInfoExtended raise @types.LoadError {
+  @codec.cur_info_extended(data)
+}
+
+///|
+pub type IcnsInfoExtended = @codec.IcnsInfoExtended
+
+///|
+pub let is_icns_format : (Bytes) -> Bool = @codec.is_icns_format
+
+///|
+pub fn icns_info_extended(
+  data : Bytes,
+) -> @codec.IcnsInfoExtended raise @types.LoadError {
+  @codec.icns_info_extended(data)
+}
+
+///|
+pub type ApngInfoExtended = @codec.ApngInfoExtended
+
+///|
+pub let is_apng_format : (Bytes) -> Bool = @codec.is_apng_format
+
+///|
+pub fn apng_info_extended(
+  data : Bytes,
+) -> @codec.ApngInfoExtended raise @types.LoadError {
+  @codec.apng_info_extended(data)
+}
+
 // From meta/
 
 ///|

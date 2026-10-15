@@ -1964,6 +1964,19 @@
 - 新增 4 个公开类型 + 4 个解析函数 + 4 个格式检测函数，已在 reexport.mbt 注册
 - +23 tests (BMP 4 + GIF 6 + PNG 6 + JPEG 7): 头部解析/多格式/不支持格式/渐进/灰度/隔行/APP0 跳过
 - 6100×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v243.0.0 - QOI/TGA/HDR/PNM/ICO/CUR/ICNS/APNG 扩展信息解析
+- 新增 QoiInfoExtended/TgaInfoExtended/HdrInfoExtended/PnmInfoExtended/IcoInfoExtended/CurInfoExtended/IcnsInfoExtended/ApngInfoExtended 结构体 + 对应解析函数
+- QOI: 解析 magic/尺寸/通道数/色彩空间(sRGB/linear)
+- TGA: 解析图像类型(uncompressed/RLE true-color)/位深/行序(bottom-up/top-down)/x/y_origin
+- HDR: 解析 RGBE 头部，提取 FORMAT 行和尺寸行(-Y H +X W)
+- PNM: 支持 P1-P6 全格式，提取 magic/maxval/位深/通道数/二进制标志
+- ICO: 解析目录条目，提取各子图像尺寸/位深，选择最佳图像
+- CUR: 解析目录条目，提取各子图像尺寸/热点坐标(hotspot_x/hotspot_y)
+- ICNS: 遍历 chunks，提取图标类型(ic07-ic14/ic04-icp9)/尺寸/PNG/ARGB 标志
+- APNG: 遍历 PNG chunks，提取 IHDR(尺寸/位深/颜色类型) + acTL(帧数/播放次数/动画标志)
+- 新增 8 个公开类型 + 8 个解析函数 + 8 个格式检测函数，已在 reexport.mbt 注册
+- +47 tests (QOI 5 + TGA 5 + HDR 5 + PNM 8 + ICO 6 + CUR 5 + ICNS 6 + APNG 7)
+- 6147×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

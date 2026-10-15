@@ -184,6 +184,8 @@ pub fn analyze_texture_fs(@types.Image) -> @forensics.TextureAnalysisResult rais
 
 pub fn answer_visual_question_su(@types.Image, String, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.VisualQuestionAnsweringResult
 
+pub fn apng_info_extended(Bytes) -> @codec.ApngInfoExtended raise @types.LoadError
+
 pub fn apply_affine_transform_ra(@types.Image, @registration_advanced.TransformMatrix) -> @types.Image
 
 pub fn apply_augmentation(@ocr.DLTrainingSample, @ocr.AugmentationConfig) -> @ocr.DLTrainingSample
@@ -763,6 +765,8 @@ pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.L
 pub fn cross_entropy_loss(Array[Double], Int) -> Double
 
 pub fn ct_reconstruct_fbp_ci(@computational_imaging.CTProjectionData, Int) -> @computational_imaging.ImagingReconstructionResult
+
+pub fn cur_info_extended(Bytes) -> @codec.CurInfoExtended raise @types.LoadError
 
 pub fn dark_channel(@types.Image, patch_size? : Int) -> @types.Image raise @types.LoadError
 
@@ -1576,6 +1580,8 @@ pub fn hdr_fusion_average(Array[@types.Image]) -> @types.Image raise @types.Load
 
 pub fn hdr_fusion_weighted(Array[@types.Image]) -> @types.Image raise @types.LoadError
 
+pub fn hdr_info_extended(Bytes) -> @codec.HdrInfoExtended raise @types.LoadError
+
 pub fn hdr_merge(Array[@types.Image], Array[Double]) -> @photo_enhance.HdrImage
 
 pub fn hdr_process(Array[@types.Image], config? : @enhance.HdrConfig) -> @types.Image raise @types.LoadError
@@ -1661,6 +1667,10 @@ pub fn hsv_to_rgb_f(Float, Float, Float) -> (Float, Float, Float) raise @types.L
 pub fn hu_moments(@edge.Moments) -> Array[Double] raise @types.LoadError
 
 pub fn hu_moments_features(@types.Image) -> Array[Double] raise @types.LoadError
+
+pub fn icns_info_extended(Bytes) -> @codec.IcnsInfoExtended raise @types.LoadError
+
+pub fn ico_info_extended(Bytes) -> @codec.IcoInfoExtended raise @types.LoadError
 
 pub fn icp_registration_3d(@stereo3d.PointCloud3D, @stereo3d.PointCloud3D, Int, Double) -> @stereo3d.RegistrationResult3d
 
@@ -1762,19 +1772,29 @@ pub fn invert_homography(@stitch.Homography) -> @stitch.Homography?
 
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
+pub fn is_apng_format(Bytes) -> Bool
+
 pub fn is_avif_format(Bytes) -> Bool
 
 pub fn is_bmp_format(Bytes) -> Bool
 
 pub fn is_code_block_line(@ocr.TextLineAttributes, Int) -> Bool
 
+pub fn is_cur_format(Bytes) -> Bool
+
 pub fn is_gif_format(Bytes) -> Bool
+
+pub fn is_hdr_format(Bytes) -> Bool
 
 pub fn is_hdr_from_bytes(Bytes) -> Bool
 
 pub fn is_heading_line(@ocr.TextLineAttributes, Double) -> (Bool, Int)
 
 pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_icns_format(Bytes) -> Bool
+
+pub fn is_ico_format(Bytes) -> Bool
 
 pub fn is_jpeg_format(Bytes) -> Bool
 
@@ -1786,11 +1806,17 @@ pub fn is_jpegxl_format(Bytes) -> Bool
 
 pub fn is_png_format(Bytes) -> Bool
 
+pub fn is_pnm_format(Bytes) -> Bool
+
 pub fn is_psd_format(Bytes) -> Bool
+
+pub fn is_qoi_format(Bytes) -> Bool
 
 pub fn is_quote_line(@ocr.TextLineAttributes, Int) -> Bool
 
 pub fn is_supported_format(Bytes) -> Bool
+
+pub fn is_tga_format(Bytes) -> Bool
 
 pub fn is_tiff_format(Bytes) -> Bool
 
@@ -2136,6 +2162,8 @@ pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn png_info_extended(Bytes) -> @codec.PngInfoExtended raise @types.LoadError
 
+pub fn pnm_info_extended(Bytes) -> @codec.PnmInfoExtended raise @types.LoadError
+
 pub fn point_cloud_new() -> @stereo3d.PointCloud
 
 pub fn pointcloud_voxel_downsample(@stereo3d.PointCloud, voxel_size? : Double) -> @stereo3d.PointCloud
@@ -2179,6 +2207,8 @@ pub fn pyr_up(@types.Image) -> @types.Image raise @types.LoadError
 pub fn pyr_up_16(@types.Image16) -> @types.Image16 raise @types.LoadError
 
 pub fn pyr_up_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
+
+pub fn qoi_info_extended(Bytes) -> @codec.QoiInfoExtended raise @types.LoadError
 
 pub fn quantize_image_cp(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -2558,6 +2588,8 @@ pub fn template_matcher_predict(@ocr.TemplateMatcher, Array[Double]) -> @ocr.Cla
 
 pub fn text_to_image_vlm(String, @vlm_multimodal.GenerativeAIConfig, Int) -> @vlm_multimodal.GenerativeAIResult
 
+pub fn tga_info_extended(Bytes) -> @codec.TgaInfoExtended raise @types.LoadError
+
 pub fn thermal_to_temperature_ai(@types.Image, Double, Double, Double) -> @advanced_imaging.ThermalData
 
 pub fn threshold(@types.Image, Int) -> @types.Image
@@ -2801,6 +2833,8 @@ pub using @face_recognition {type AgeGenderEstimationResult as AgeGenderEstimati
 
 pub using @intelligent_vision {type AgriculturalVisionTask as AgriculturalVisionTaskIV}
 
+pub using @codec {type ApngInfoExtended}
+
 pub using @encryption {type ArnoldParams}
 
 pub using @style_transfer {type ArtStyle}
@@ -2940,6 +2974,8 @@ pub using @ocr {type CorrectionEntry}
 pub using @ocr {type CorrectionResult}
 
 pub using @intelligent_vision {type CropDetectionResult as CropDetectionResultIV}
+
+pub using @codec {type CurInfoExtended}
 
 pub using @compression {type DCTBlock}
 
@@ -3201,6 +3237,8 @@ pub using @enhance {type HdrConfig}
 
 pub using @photo_enhance {type HdrImage}
 
+pub using @codec {type HdrInfoExtended}
+
 pub using @codec {type HeifInfoExtended}
 
 pub using @feature {type HistCompareMethod}
@@ -3220,6 +3258,10 @@ pub using @compression {type HuffmanTable}
 pub using @pose_estimation {type HumanPose as HumanPosePE}
 
 pub using @advanced_imaging {type HyperspectralData as HyperspectralDataAI}
+
+pub using @codec {type IcnsInfoExtended}
+
+pub using @codec {type IcoInfoExtended}
 
 pub using @forensics_enhanced {type IlluminationConsistencyResult}
 
@@ -3465,6 +3507,8 @@ pub using @codec {type PngInfoExtended}
 
 pub using @meta {type PngTextChunk}
 
+pub using @codec {type PnmInfoExtended}
+
 pub using @neural_rendering {type Point3D as Point3DNR}
 
 pub using @stereo3d {type Point3d}
@@ -3488,6 +3532,8 @@ pub using @ocr {type ProjectionResult}
 pub using @codec {type PsdInfoExtended}
 
 pub using @ocr {type PunctuationTemplate}
+
+pub using @codec {type QoiInfoExtended}
 
 pub using @barcode {type QrDecodeResult}
 
@@ -3688,6 +3734,8 @@ pub using @ocr {type TextRegionType}
 pub using @forensics {type TextureAnalysisResult}
 
 pub using @remote_sensing {type TextureFeatures}
+
+pub using @codec {type TgaInfoExtended}
 
 pub using @advanced_imaging {type ThermalData as ThermalDataAI}
 

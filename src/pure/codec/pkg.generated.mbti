@@ -6,6 +6,8 @@ import {
 }
 
 // Values
+pub fn apng_info_extended(Bytes) -> ApngInfoExtended raise @types.LoadError
+
 pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
@@ -13,6 +15,8 @@ pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
 pub fn avif_info_extended(Bytes) -> AvifInfoExtended raise @types.LoadError
 
 pub fn bmp_info_extended(Bytes) -> BmpInfoExtended raise @types.LoadError
+
+pub fn cur_info_extended(Bytes) -> CurInfoExtended raise @types.LoadError
 
 pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
 
@@ -96,19 +100,35 @@ pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @type
 
 pub fn gif_info_extended(Bytes) -> GifInfoExtended raise @types.LoadError
 
+pub fn hdr_info_extended(Bytes) -> HdrInfoExtended raise @types.LoadError
+
 pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn heif_info(Bytes) -> HeifInfo raise @types.LoadError
 
 pub fn heif_info_extended(Bytes) -> HeifInfoExtended raise @types.LoadError
 
+pub fn icns_info_extended(Bytes) -> IcnsInfoExtended raise @types.LoadError
+
+pub fn ico_info_extended(Bytes) -> IcoInfoExtended raise @types.LoadError
+
+pub fn is_apng_format(Bytes) -> Bool
+
 pub fn is_avif_format(Bytes) -> Bool
 
 pub fn is_bmp_format(Bytes) -> Bool
 
+pub fn is_cur_format(Bytes) -> Bool
+
 pub fn is_gif_format(Bytes) -> Bool
 
+pub fn is_hdr_format(Bytes) -> Bool
+
 pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_icns_format(Bytes) -> Bool
+
+pub fn is_ico_format(Bytes) -> Bool
 
 pub fn is_jpeg_format(Bytes) -> Bool
 
@@ -120,7 +140,13 @@ pub fn is_jpegxl_format(Bytes) -> Bool
 
 pub fn is_png_format(Bytes) -> Bool
 
+pub fn is_pnm_format(Bytes) -> Bool
+
 pub fn is_psd_format(Bytes) -> Bool
+
+pub fn is_qoi_format(Bytes) -> Bool
+
+pub fn is_tga_format(Bytes) -> Bool
 
 pub fn is_tiff_format(Bytes) -> Bool
 
@@ -136,7 +162,13 @@ pub fn jpegxl_info_extended(Bytes) -> JpegXlInfoExtended raise @types.LoadError
 
 pub fn png_info_extended(Bytes) -> PngInfoExtended raise @types.LoadError
 
+pub fn pnm_info_extended(Bytes) -> PnmInfoExtended raise @types.LoadError
+
 pub fn psd_info_extended(Bytes) -> PsdInfoExtended raise @types.LoadError
+
+pub fn qoi_info_extended(Bytes) -> QoiInfoExtended raise @types.LoadError
+
+pub fn tga_info_extended(Bytes) -> TgaInfoExtended raise @types.LoadError
 
 pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
 
@@ -151,6 +183,19 @@ pub fn webp_info_extended(Bytes) -> WebpInfoExtended raise @types.LoadError
 // Errors
 
 // Types and methods
+pub struct ApngInfoExtended {
+  width : Int
+  height : Int
+  bit_depth : Int
+  color_type : Int
+  color_type_name : String
+  num_channels : Int
+  has_alpha : Bool
+  num_frames : Int
+  num_plays : Int
+  is_animated : Bool
+}
+
 pub struct AvifInfo {
   width : Int
   height : Int
@@ -192,6 +237,19 @@ pub struct BmpInfoExtended {
   data_offset : Int
 }
 
+pub struct CurInfoExtended {
+  icon_type : Int
+  num_images : Int
+  widths : Array[Int]
+  heights : Array[Int]
+  hotspot_xs : Array[Int]
+  hotspot_ys : Array[Int]
+  width : Int
+  height : Int
+  num_channels : Int
+  has_alpha : Bool
+}
+
 pub struct GifInfoExtended {
   width : Int
   height : Int
@@ -204,6 +262,14 @@ pub struct GifInfoExtended {
   pixel_aspect_ratio : Int
   num_channels : Int
   has_alpha : Bool
+}
+
+pub struct HdrInfoExtended {
+  width : Int
+  height : Int
+  num_channels : Int
+  has_alpha : Bool
+  format : String
 }
 
 pub struct HeifInfo {
@@ -233,6 +299,31 @@ pub struct HeifInfoExtended {
   hevc_chroma_format : Int
   hevc_bit_depth_luma : Int
   hevc_bit_depth_chroma : Int
+}
+
+pub struct IcnsInfoExtended {
+  file_size : Int
+  num_icons : Int
+  icon_types : Array[String]
+  icon_sizes : Array[Int]
+  is_png_list : Array[Bool]
+  width : Int
+  height : Int
+  num_channels : Int
+  has_alpha : Bool
+}
+
+pub struct IcoInfoExtended {
+  icon_type : Int
+  icon_type_name : String
+  num_images : Int
+  widths : Array[Int]
+  heights : Array[Int]
+  bit_depths : Array[Int]
+  width : Int
+  height : Int
+  num_channels : Int
+  has_alpha : Bool
 }
 
 pub struct JpegInfoExtended {
@@ -282,6 +373,17 @@ pub struct PngInfoExtended {
   interlace_method : Int
 }
 
+pub struct PnmInfoExtended {
+  width : Int
+  height : Int
+  format_type : String
+  maxval : Int
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  is_binary : Bool
+}
+
 pub struct PsdInfoExtended {
   width : Int
   height : Int
@@ -294,6 +396,31 @@ pub struct PsdInfoExtended {
   compression : Int
   compression_name : String
   version : Int
+}
+
+pub struct QoiInfoExtended {
+  width : Int
+  height : Int
+  channels : Int
+  colorspace : Int
+  colorspace_name : String
+  num_channels : Int
+  has_alpha : Bool
+}
+
+pub struct TgaInfoExtended {
+  width : Int
+  height : Int
+  image_type : Int
+  image_type_name : String
+  bit_depth : Int
+  num_channels : Int
+  has_alpha : Bool
+  is_bottom_up : Bool
+  id_length : Int
+  color_map_type : Int
+  x_origin : Int
+  y_origin : Int
 }
 
 pub struct TiffInfoExtended {
