@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v238.0.0 | 测试：5995 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v239.0.0 | 测试：6047 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2526,6 +2526,7 @@ flowchart LR
 | v236.0.0 | chinese_ocr+advanced_chinese_ocr+english_ocr功能测试 | chinese_ocr+advanced_chinese_ocr+english_ocr +36测试 (中文OCR默认配置+模板生成+识别错误路径+功能路径+3500模板+部件分解+增强识别+英文OCR默认配置+大小写模板+英文识别) ✅ 2026-10-14 — 5916×4全绿 |
 | v237.0.0 | histogram_16f+yolo_detection+barcode_decode功能测试 | histogram_16f+yolo_detection+barcode_decode +79测试 (RGBA通道保留alpha+越界值clamp+归一化/匹配错误路径+NMS抑制+目标检测+跟踪初始化/更新+检测评估指标+检测报告+EAN-13解码+QR定位图案检测+二维码解码+通用条码解码+多通道图像) ✅ 2026-10-14 — 5995×4全绿 |
 | v238.0.0 | warning清零 | 修复303 warnings：165 test_unqualified_package(裸函数名加@package前缀)+133 deprecated_syntax(fn(){}改箭头函数()=>{})+5 unused_value(删未使用辅助函数) ✅ 2026-10-15 — 5995×4全绿, 0 warning, 0 error |
+| v239.0.0 | stereo3d+superres边界测试 | superres +22测试(calculate_image_quality_metrics/enhance_image/super_resolution_report_to_string缺失函数+零宽度/单像素/多通道错误路径) + stereo3d +30测试(compute_disparity/disparity_to_depth/depth_to_colormap/stereo_match/estimate_normals/voxel_downsample/icp_registration零尺寸/空点云/单点边界条件) ✅ 2026-10-15 — 6047×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 

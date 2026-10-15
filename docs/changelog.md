@@ -1936,6 +1936,10 @@
 - 修复 133 个 deprecated_syntax：fn() {} 闭包改用箭头函数 () => {} 自动推断 raise
 - 修复 5 个 unused_value：删除未使用辅助函数（fe_uniform/pe_uniform/se_uniform/make_i16_f/make_if_f）
 - 5995×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v239.0.0 - stereo3d + superres 边界测试补齐
+- superres: +22 tests (calculate_image_quality_metrics/enhance_image/super_resolution_report_to_string 缺失函数 + 零宽度/零高度/单像素/多通道错误路径)
+- stereo3d: +30 tests (compute_disparity/disparity_to_depth/depth_to_colormap/depth_to_pointcloud/stereo_match/estimate_normals/voxel_downsample/icp_registration 等零尺寸/空点云/单点/自定义参数边界条件)
+- 6047×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)
