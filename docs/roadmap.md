@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-14 | 当前版本：v237.0.0 | 测试：5995 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v238.0.0 | 测试：5995 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2525,6 +2525,7 @@ flowchart LR
 | v235.0.0 | table_recognition+handwriting_recognition+feature_extraction功能测试 | table_recognition+handwriting_recognition+feature_extraction +100测试 (水平/垂直线检测+表格结构分析+表格识别+单元格提取+倾斜检测+尺寸归一化+笔画特征+连笔分割+手写特征+特征相似度+模板创建+字符识别+报告生成+HOG/LBP/投影/网格/统计/组合特征) ✅ 2026-10-14 — 5880×4全绿 |
 | v236.0.0 | chinese_ocr+advanced_chinese_ocr+english_ocr功能测试 | chinese_ocr+advanced_chinese_ocr+english_ocr +36测试 (中文OCR默认配置+模板生成+识别错误路径+功能路径+3500模板+部件分解+增强识别+英文OCR默认配置+大小写模板+英文识别) ✅ 2026-10-14 — 5916×4全绿 |
 | v237.0.0 | histogram_16f+yolo_detection+barcode_decode功能测试 | histogram_16f+yolo_detection+barcode_decode +79测试 (RGBA通道保留alpha+越界值clamp+归一化/匹配错误路径+NMS抑制+目标检测+跟踪初始化/更新+检测评估指标+检测报告+EAN-13解码+QR定位图案检测+二维码解码+通用条码解码+多通道图像) ✅ 2026-10-14 — 5995×4全绿 |
+| v238.0.0 | warning清零 | 修复303 warnings：165 test_unqualified_package(裸函数名加@package前缀)+133 deprecated_syntax(fn(){}改箭头函数()=>{})+5 unused_value(删未使用辅助函数) ✅ 2026-10-15 — 5995×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 

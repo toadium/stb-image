@@ -31,20 +31,6 @@ fn pe_bad_channels() -> @types.Image {
 }
 
 ///|
-fn pe_uniform(w : Int, h : Int, v : Int) -> @types.Image {
-  let data : Array[Byte] = []
-  for _ in 0..<(w * h) {
-    data.push(v.to_byte())
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(data),
-  }
-}
-
-///|
 fn pe_default_config() -> @pose_estimation.PoseEstimationConfig {
   @pose_estimation.PoseEstimationConfig::{
     algorithm: @pose_estimation.PoseEstimationAlgorithm::OpenPose,

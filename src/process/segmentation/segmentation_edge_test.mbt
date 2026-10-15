@@ -31,20 +31,6 @@ fn se_bad_channels() -> @types.Image {
 }
 
 ///|
-fn se_uniform(w : Int, h : Int, v : Int) -> @types.Image {
-  let data : Array[Byte] = []
-  for _ in 0..<(w * h) {
-    data.push(v.to_byte())
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(data),
-  }
-}
-
-///|
 test "se_edge: threshold_segmentation 零宽度" {
   try {
     let _ = @segmentation.threshold_segmentation(se_zero_w(), 128.0)

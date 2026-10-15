@@ -31,20 +31,6 @@ fn fe_bad_channels() -> @types.Image {
 }
 
 ///|
-fn fe_uniform(w : Int, h : Int, v : Int) -> @types.Image {
-  let data : Array[Byte] = []
-  for _ in 0..<(w * h) {
-    data.push(v.to_byte())
-  }
-  @types.Image::{
-    width: w,
-    height: h,
-    channels: 1,
-    data: Bytes::from_array(data),
-  }
-}
-
-///|
 fn fe_default_config() -> @face_recognition.FaceRecognitionConfig {
   @face_recognition.FaceRecognitionConfig::{
     detection_algorithm: @face_recognition.FaceDetectionAlgorithm::HaarCascade,

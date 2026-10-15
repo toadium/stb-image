@@ -1931,6 +1931,11 @@
 - yolo_detection: +22 tests (NMS抑制, 目标检测高方差, 跟踪初始化/更新/不可见, 检测评估指标全FP/完美匹配/多预测排序, 检测报告, 边界框回归, IoU边界)
 - barcode_decode: +27 tests (EAN-13/QR/通用条码错误路径+功能路径, 禁用配置返回None, QR定位图案检测, 多通道图像)
 - 5995×4 全绿 (native/wasm-gc/js/wasm)
+## v238.0.0 - warning 清零（303→0）
+- 修复 165 个 test_unqualified_package：测试裸函数名加 @package 前缀（edge 40 函数 + barcode 10 函数 + ContourPoint/Moments 类型）
+- 修复 133 个 deprecated_syntax：fn() {} 闭包改用箭头函数 () => {} 自动推断 raise
+- 修复 5 个 unused_value：删除未使用辅助函数（fe_uniform/pe_uniform/se_uniform/make_i16_f/make_if_f）
+- 5995×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)
