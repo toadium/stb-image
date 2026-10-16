@@ -2078,6 +2078,20 @@
   - 极端 brightness/contrast 值不崩溃
 - +15 tests
 - 6342×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v263.0.0 - 错误恢复模糊测试
+- 新增 `src/fuzz_v263_test.mbt`：17 个错误恢复模糊测试
+  - 随机无效数据通过 load_from_bytes_auto（30 组种子）
+  - 空数据/单字节数据 raise LoadError 而非 crash
+  - detect_format 对随机数据/空数据/有效头不崩溃
+  - 截断有效图像 raise 不 crash
+  - save_image_auto 多格式 round-trip
+  - 损坏 PNG 头优雅失败
+  - 格式特定解码错误类型验证（PNG/BMP）
+  - 零尺寸/超大尺寸头被拒绝
+  - 有效 magic + 随机 payload 不 crash
+  - 多格式 fallback 不 crash
+- +17 tests
+- 6359×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v259.0.0 - 多格式性能基准套件
 - 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
   - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸
