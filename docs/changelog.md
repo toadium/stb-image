@@ -2007,6 +2007,13 @@
 - 新增 4 个公开函数，已在 reexport.mbt 注册
 - +9 tests (supports_16bit 4 + supports_float 2 + load_any_f 1 + save_any_f 2)
 - 6188×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v248.0.0 - EXIF 扩展（GPS/曝光/白平衡等）
+- 新增 `ExifInfoExtended` 结构体：16 个字段（原有 4 + 曝光时间/F值/ISO/焦距/曝光模式/白平衡/闪光灯/GPS经纬度海拔/像素尺寸）
+- 新增 `read_exif_extended_from_bytes(data)` 扩展 EXIF 读取：解析 ExifIFD（曝光参数）+ GPSIFD（GPS坐标）+ 像素尺寸
+- 保持原有 `ExifInfo` 和 `read_exif_from_bytes` 不变，向后兼容
+- 新增 1 个公开类型 + 1 个公开函数，已在 reexport.mbt 注册
+- +6 tests (no EXIF 3 + minimal EXIF 1 + Make tag 1 + Orientation tag 1)
+- 6194×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

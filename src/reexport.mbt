@@ -2862,6 +2862,12 @@ pub let write_exif_to_bytes : (@meta.ExifInfo, Bytes) -> Bytes raise @types.Load
 ///|
 pub let read_png_text_chunks : (Bytes) -> Array[@meta.PngTextChunk] = @meta.read_png_text_chunks
 
+///|
+pub type ExifInfoExtended = @meta.ExifInfoExtended
+
+///|
+pub let read_exif_extended_from_bytes : (Bytes) -> @meta.ExifInfoExtended? = @meta.read_exif_extended_from_bytes
+
 // From util/
 
 ///|

@@ -2230,6 +2230,8 @@ pub fn quantum_ghost_imaging_ai(Int, Int, Int, @advanced_imaging.QuantumImagingA
 
 pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]? raise @types.LoadError
 
+pub fn read_exif_extended_from_bytes(Bytes) -> @meta.ExifInfoExtended?
+
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
@@ -3142,6 +3144,8 @@ pub using @ocr {type ErrorAnalysisEntry}
 pub using @ocr {type ErrorAnalysisReport}
 
 pub using @meta {type ExifInfo}
+
+pub using @meta {type ExifInfoExtended}
 
 pub using @photo_enhance {type ExposureType}
 

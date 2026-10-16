@@ -9,6 +9,8 @@ import {
 // Values
 pub fn create_exif_segment(ExifInfo) -> Bytes
 
+pub fn read_exif_extended_from_bytes(Bytes) -> ExifInfoExtended?
+
 pub fn read_exif_from_bytes(Bytes) -> ExifInfo?
 
 pub fn read_png_text_chunks(Bytes) -> Array[PngTextChunk]
@@ -27,6 +29,28 @@ pub(all) struct ExifInfo {
 pub fn ExifInfo::equal(Self, Self) -> Bool
 pub fn ExifInfo::not_equal(Self, Self) -> Bool
 pub fn ExifInfo::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExifInfoExtended {
+  make : String
+  model : String
+  orientation : Int
+  date_time : String
+  exposure_time : String
+  f_number : Double
+  iso : Int
+  focal_length : Double
+  exposure_mode : Int
+  white_balance : Int
+  flash : Int
+  gps_latitude : Double
+  gps_longitude : Double
+  gps_altitude : Double
+  pixel_x_dim : Int
+  pixel_y_dim : Int
+} derive(Eq, @debug.Debug)
+pub fn ExifInfoExtended::equal(Self, Self) -> Bool
+pub fn ExifInfoExtended::not_equal(Self, Self) -> Bool
+pub fn ExifInfoExtended::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PngTextChunk {
   keyword : String
