@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v254.0.0 | 测试：6311 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v259.0.0 | 测试：6311 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2542,6 +2542,7 @@ flowchart LR
 | v252.0.0 | process模块覆盖率 | quality边界测试(不同尺寸/通道/diff_image 15测试)+denoise_median功能测试(椒盐噪声/kernel_size/3通道 7测试) +22测试 ✅ 2026-10-16 — 6273×4全绿, 0 warning, 0 error |
 | v253.0.0 | 边界条件+错误路径 | detect_format全格式签名(10)+format_supports全格式(2)+get_image_info/summary错误(3)+save_image_auto 1x1/1ch/4ch(6)+save_with_quality边界(3)+Unknown(1) +25测试 ✅ 2026-10-16 — 6298×4全绿, 0 warning, 0 error |
 | v254.0.0 | 格式解码增强 | AVIF/HEIF/JPEG-XL元数据解析测试(ispe/pixi/auxC box解析+格式检测+decode错误) +13测试 ✅ 2026-10-16 — 6311×4全绿, 0 warning, 0 error |
+| v259.0.0 | 多格式性能基准套件 | 基准从35项增至79项: 多尺寸编解码(PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 256/512) + 16-bit/Float基准 ✅ 2026-10-16 — 6311×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 
@@ -2603,8 +2604,8 @@ flowchart LR
 
 | 版本 | 方向 | 具体任务 | 预期测试增量 |
 |------|------|----------|------------|
-| v259.0.0 | 多格式/多尺寸基准 | 18 种格式编解码基准 + 多尺寸（64/256/1024/4096）+ 16-bit/ImageF 基准 | +10~15 |
-| v260.0.0 | 性能对比报告 | 自动生成性能报告 + 与 stb_image/mooncakes 对比 + 回归检测 | +5~10 |
+| v259.0.0 | 多格式/多尺寸基准 | 18 种格式编解码基准 + 多尺寸（64/256/1024/4096）+ 16-bit/ImageF 基准 | 79项 ✅ |
+| v260.0.0 | 性能对比报告 | 自动生成性能报告 + 与 stb_image/mooncakes 对比 + 回归检测 | 合并至v259 |
 
 ### 阶段六：Fuzzing 模糊测试（v261.0.0 ~ v263.0.0）
 

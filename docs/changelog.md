@@ -2057,6 +2057,13 @@
 - 注：AVIF/HEIF/JPEG-XL 完整解码需 AV1/HEVC/JPEG-XL 编解码器，纯 MoonBit 实现不现实，当前提供元数据解析 + 格式检测
 - +13 tests
 - 6311×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v259.0.0 - 多格式性能基准套件
+- 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
+  - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸
+  - 多尺寸处理：resize(512→256/128, 256→512) + gaussian_blur/box_blur/sobel/grayscale/rotate/flip 在 256×256
+  - 16-bit 基准：flip_horizontal_16 + to_grayscale_16 + adjust_brightness_16
+  - Float 基准：HDR encode/decode round-trip + resize_f + flip_horizontal_f
+- 6311×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

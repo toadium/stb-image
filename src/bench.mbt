@@ -225,5 +225,149 @@ pub fn bench_run() -> Unit {
     ignore(@color.dehaze(img128) catch { _ => img128 })
   })
 
+  // === v259: 多格式多尺寸基准 ===
+  let img512 = bench_make_rgb(512, 512)
+  let img_rgba256 = bench_make_rgba(256, 256)
+
+  // 多尺寸 PNG
+  b.bench(name="png encode 256x256", () => {
+    ignore(@codec.encode_png_pure(img256))
+  })
+  b.bench(name="png encode 512x512", () => {
+    ignore(@codec.encode_png_pure(img512))
+  })
+  b.bench(name="png decode 256x256", () => {
+    let png = @codec.encode_png_pure(img256)
+    ignore(@codec.decode_png_pure(png) catch { _ => empty })
+  })
+
+  // 多尺寸 BMP
+  b.bench(name="bmp encode 256x256", () => {
+    ignore(@codec.encode_bmp_pure(img256))
+  })
+  b.bench(name="bmp encode 512x512", () => {
+    ignore(@codec.encode_bmp_pure(img512))
+  })
+
+  // 多尺寸 JPEG
+  b.bench(name="jpeg encode 256x256", () => {
+    ignore(@codec.encode_jpeg_pure(img256) catch { _ => b"" })
+  })
+  b.bench(name="jpeg encode 512x512", () => {
+    ignore(@codec.encode_jpeg_pure(img512) catch { _ => b"" })
+  })
+
+  // 多尺寸 QOI
+  b.bench(name="qoi encode 256x256", () => {
+    ignore(@codec.encode_qoi_pure(img_rgba256) catch { _ => b"" })
+  })
+  b.bench(name="qoi decode 256x256", () => {
+    let qoi = @codec.encode_qoi_pure(img_rgba256) catch { _ => b"" }
+    ignore(@codec.decode_qoi_pure(qoi) catch { _ => empty })
+  })
+
+  // TGA/TIFF
+  b.bench(name="tga encode 128x128", () => {
+    ignore(@codec.encode_tga_pure(img128))
+  })
+  b.bench(name="tga encode 256x256", () => {
+    ignore(@codec.encode_tga_pure(img256))
+  })
+  b.bench(name="tiff encode 128x128", () => {
+    ignore(@codec.encode_tiff_pure(img128) catch { _ => b"" })
+  })
+  b.bench(name="tiff encode 256x256", () => {
+    ignore(@codec.encode_tiff_pure(img256) catch { _ => b"" })
+  })
+
+  // PNM 多尺寸
+  b.bench(name="pnm encode 256x256", () => {
+    ignore(@codec.encode_pnm_pure(img256))
+  })
+  b.bench(name="pnm decode 256x256", () => {
+    let pnm = @codec.encode_pnm_pure(img256)
+    ignore(@codec.decode_pnm_pure(pnm) catch { _ => empty })
+  })
+
+  // WebP 多尺寸
+  b.bench(name="webp lossy encode 256x256", () => {
+    ignore(@codec.encode_webp_lossy_pure(img_rgba256) catch { _ => b"" })
+  })
+
+  // GIF 多尺寸
+  b.bench(name="gif encode 256x256", () => {
+    ignore(@codec.encode_gif_pure(img256) catch { _ => b"" })
+  })
+
+  // 多尺寸缩放
+  b.bench(name="resize 512->256", () => {
+    ignore(@pure_util.resize_pure(img512, 256, 256) catch { _ => img256 })
+  })
+  b.bench(name="resize 512->128", () => {
+    ignore(@pure_util.resize_pure(img512, 128, 128) catch { _ => img128 })
+  })
+  b.bench(name="resize 256->512", () => {
+    ignore(@pure_util.resize_pure(img256, 512, 512) catch { _ => img512 })
+  })
+
+  // 多尺寸滤波
+  b.bench(name="gaussian_blur 256x256", () => {
+    ignore(@filter.gaussian_blur(img256, 5, 1.0F) catch { _ => empty })
+  })
+  b.bench(name="box_blur 256x256", () => {
+    ignore(@filter.box_blur(img256, 5) catch { _ => empty })
+  })
+  b.bench(name="edge_detect_sobel 256x256", () => {
+    ignore(@edge.edge_detect_sobel(img256) catch { _ => empty })
+  })
+  b.bench(name="to_grayscale 256x256", () => {
+    ignore(@color.to_grayscale(img256) catch { _ => empty })
+  })
+  b.bench(name="rotate_90 256x256", () => ignore(@transform.rotate_90(img256)))
+  b.bench(name="flip_horizontal 256x256", () => {
+    ignore(@transform.flip_horizontal(img256))
+  })
+
+  // === v260: 16-bit / Float 基准 ===
+  let img16_128 = @types.Image16::{
+    width: 128,
+    height: 128,
+    channels: 3,
+    data: Bytes::from_array(Array::make(128 * 128 * 3 * 2, b'\x80')),
+  }
+  let imgf_128 = @types.ImageF::{
+    width: 128,
+    height: 128,
+    channels: 3,
+    data: Bytes::from_array(Array::make(128 * 128 * 3 * 4, b'\x00')),
+  }
+
+  b.bench(name="hdr encode 128x128", () => {
+    ignore(@codec.encode_hdr_pure(imgf_128) catch { _ => b"" })
+  })
+  b.bench(name="hdr decode 128x128", () => {
+    let hdr = @codec.encode_hdr_pure(imgf_128) catch { _ => b"" }
+    ignore(@codec.decode_hdr_pure(hdr) catch { _ => imgf_128 })
+  })
+  b.bench(name="resize_f 128->64", () => {
+    ignore(@transform.resize_f(imgf_128, 64, 64))
+  })
+  b.bench(name="flip_horizontal_16 128x128", () => {
+    ignore(@transform.flip_horizontal_16(img16_128))
+  })
+  b.bench(name="flip_horizontal_f 128x128", () => {
+    ignore(@transform.flip_horizontal_f(imgf_128))
+  })
+  b.bench(name="to_grayscale_16 128x128", () => {
+    ignore(@color.to_grayscale_16(img16_128) catch { _ => img16_128 })
+  })
+  b.bench(name="adjust_brightness_16 128x128", () => {
+    ignore(
+      @color.adjust_brightness_16(img16_128, 1000) catch {
+        _ => img16_128
+      },
+    )
+  })
+
   println(b.dump_summaries().to_string())
 }
