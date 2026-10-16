@@ -2066,6 +2066,18 @@
 - 修复 QOI 解码器边界检查 bug：OP_RGB/OP_RGBA/OP_LUMA 多字节 opcodes 缺少越界检查，截断数据导致 panic 而非 raise LoadError
 - +16 tests
 - 6327×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v262.0.0 - API 模糊测试
+- 新增 `src/fuzz_v262_test.mbt`：15 个 API 模糊测试
+  - 随机图像通过 resize（多种目标尺寸）
+  - 随机图像通过 gaussian_blur / box_blur / sharpen（多种参数）
+  - 随机图像通过 adjust_brightness / adjust_contrast（多种参数 + 极端值）
+  - 随机图像通过 to_grayscale / rotate_90 / flip_horizontal / flip_vertical / crop
+  - 随机图像 encode/decode round-trip（PNG）
+  - 随机 4 通道图像通过处理管道
+  - 多尺寸图像通过完整处理管道（grayscale→blur→resize→rotate）
+  - 极端 brightness/contrast 值不崩溃
+- +15 tests
+- 6342×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v259.0.0 - 多格式性能基准套件
 - 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
   - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸
