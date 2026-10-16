@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v246.0.0 | 测试：6179 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v247.0.0 | 测试：6188 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2534,6 +2534,7 @@ flowchart LR
 | v244.0.0 | 统一extended info API | 新增ImageInfoExtended联合类型(18变体)+get_image_info_extended自动格式检测分派+detect_image_format格式名称检测 +12测试(detect 6+dispatch 5+unknown 1) ✅ 2026-10-15 — 6159×4全绿, 0 warning, 0 error |
 | v245.0.0 | 统一保存API+APNG自动分派 | 新增save_image_auto(12格式分派编码)+save_image_with_quality(WebP quality)+detect_format检测APNG+load_from_bytes_auto APNG第一帧 +11测试 ✅ 2026-10-16 — 6170×4全绿, 0 warning, 0 error |
 | v246.0.0 | 统一info API整合 | 新增UnifiedImageInfo结构体(跨格式通用信息)+get_image_info统一信息探测(整合18种格式扩展信息)+get_image_summary人类可读摘要 +9测试 ✅ 2026-10-16 — 6179×4全绿, 0 warning, 0 error |
+| v247.0.0 | 16-bit/Float统一API+格式能力查询 | 新增load_any_f(HDR Float加载)+save_any_f(HDR Float保存)+format_supports_16bit(PNG/PNM)+format_supports_float(HDR) +9测试 ✅ 2026-10-16 — 6188×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 

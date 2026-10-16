@@ -287,6 +287,25 @@ pub fn get_image_summary(data : Bytes) -> String raise @types.LoadError {
   @lib.get_image_summary(data)
 }
 
+///|
+pub fn load_any_f(data : Bytes) -> @types.ImageF raise @types.LoadError {
+  @lib.load_any_f(data)
+}
+
+///|
+pub fn save_any_f(
+  img : @types.ImageF,
+  format : @types.ImageFormat,
+) -> Bytes raise @types.LoadError {
+  @lib.save_any_f(img, format)
+}
+
+///|
+pub let format_supports_16bit : (@types.ImageFormat) -> Bool = @lib.format_supports_16bit
+
+///|
+pub let format_supports_float : (@types.ImageFormat) -> Bool = @lib.format_supports_float
+
 // From process/
 
 ///|

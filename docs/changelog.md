@@ -1999,6 +1999,14 @@
 - 新增 1 个公开类型 + 2 个公开函数，已在 reexport.mbt 注册
 - +9 tests (get_image_info 5 + get_image_summary 4)
 - 6179×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v247.0.0 - 16-bit/Float 统一 API + 格式能力查询
+- 新增 `load_any_f(data)` Float 自动分派加载（HDR）
+- 新增 `save_any_f(img, format)` Float 自动分派保存（HDR）
+- 新增 `format_supports_16bit(format)` 查询格式是否支持 16-bit（PNG/PNM）
+- 新增 `format_supports_float(format)` 查询格式是否支持 Float（HDR）
+- 新增 4 个公开函数，已在 reexport.mbt 注册
+- +9 tests (supports_16bit 4 + supports_float 2 + load_any_f 1 + save_any_f 2)
+- 6188×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

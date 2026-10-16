@@ -35,13 +35,21 @@ pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tga(@types.Image) -> Bytes
 
+pub fn format_supports_16bit(@types.ImageFormat) -> Bool
+
+pub fn format_supports_float(@types.ImageFormat) -> Bool
+
 pub fn get_image_info(Bytes) -> UnifiedImageInfo raise @types.LoadError
 
 pub fn get_image_summary(Bytes) -> String raise @types.LoadError
 
 pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
 
+pub fn load_any_f(Bytes) -> @types.ImageF raise @types.LoadError
+
 pub fn load_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
+
+pub fn save_any_f(@types.ImageF, @types.ImageFormat) -> Bytes raise @types.LoadError
 
 pub fn save_image_auto(@types.Image, @types.ImageFormat) -> Bytes raise @types.LoadError
 

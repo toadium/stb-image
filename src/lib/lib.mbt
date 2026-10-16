@@ -352,3 +352,57 @@ pub fn save_image_with_quality(
     _ => raise @types.LoadError::EncodeFailed("不支持此格式的编码")
   }
 }
+
+///|
+/// Float 自动格式分派加载
+/// - HDR → decode_hdr_pure 返回 ImageF
+/// - 其他格式不支持 Float 加载，raise
+pub fn load_any_f(data : Bytes) -> @types.ImageF raise @types.LoadError {
+  match detect_format(data) {
+    @types.ImageFormat::Hdr => @codec.decode_hdr_pure(data)
+    _ =>
+      raise @types.LoadError::DecodeFailed(
+        "Float 加载不支持此格式，仅支持 HDR",
+      )
+  }
+}
+
+///|
+/// Float 自动格式分派保存
+/// - HDR → encode_hdr_pure
+/// - 其他格式不支持 Float 保存，raise
+pub fn save_any_f(
+  img : @types.ImageF,
+  format : @types.ImageFormat,
+) -> Bytes raise @types.LoadError {
+  match format {
+    @types.ImageFormat::Hdr => @codec.encode_hdr_pure(img)
+    _ =>
+      raise @types.LoadError::EncodeFailed(
+        "Float 保存不支持此格式，仅支持 HDR",
+      )
+  }
+}
+
+///|
+/// 查询格式是否支持 16-bit 加载
+/// - PNG/PNM → true
+/// - 其他 → false
+pub fn format_supports_16bit(format : @types.ImageFormat) -> Bool {
+  match format {
+    @types.ImageFormat::Png => true
+    @types.ImageFormat::Pnm => true
+    _ => false
+  }
+}
+
+///|
+/// 查询格式是否支持 Float 加载/保存
+/// - HDR → true
+/// - 其他 → false
+pub fn format_supports_float(format : @types.ImageFormat) -> Bool {
+  match format {
+    @types.ImageFormat::Hdr => true
+    _ => false
+  }
+}
