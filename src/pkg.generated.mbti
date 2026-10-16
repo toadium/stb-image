@@ -2412,6 +2412,10 @@ pub fn safe_mul3(Int, Int, Int) -> Int?
 
 pub fn sauvola_threshold(@types.Image, window_size? : Int, k? : Double, r? : Double) -> @types.Image raise @types.LoadError
 
+pub fn save_image_auto(@types.Image, @types.ImageFormat) -> Bytes raise @types.LoadError
+
+pub fn save_image_with_quality(@types.Image, @types.ImageFormat, Int) -> Bytes raise @types.LoadError
+
 pub fn save_model(@ocr.DLCnnModelConfig, Array[Double], String) -> Bool
 
 pub fn scan_document_preprocess(@types.Image, @ocr.ScanOCRConfig) -> @types.Image raise @types.LoadError

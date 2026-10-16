@@ -255,6 +255,23 @@ pub fn write_tga_to_bytes(img : @types.Image) -> Bytes {
   @codec.encode_tga_pure(img)
 }
 
+///|
+pub fn save_image_auto(
+  img : @types.Image,
+  format : @types.ImageFormat,
+) -> Bytes raise @types.LoadError {
+  @lib.save_image_auto(img, format)
+}
+
+///|
+pub fn save_image_with_quality(
+  img : @types.Image,
+  format : @types.ImageFormat,
+  quality : Int,
+) -> Bytes raise @types.LoadError {
+  @lib.save_image_with_quality(img, format, quality)
+}
+
 // From process/
 
 ///|

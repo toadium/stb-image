@@ -1984,6 +1984,14 @@
 - 新增 1 个公开类型 + 2 个公开函数，已在 reexport.mbt 注册
 - +12 tests (detect 6 + dispatch 5 + unknown 1)
 - 6159×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v245.0.0 - 统一保存 API + APNG 自动分派
+- 新增 `save_image_auto(img, format)` 统一保存 API：按指定格式自动分派编码，支持 12 种格式（PNG/JPEG/BMP/QOI/PNM/GIF/TGA/TIFF/ICO/CUR/ICNS/WebP）
+- 新增 `save_image_with_quality(img, format, quality)` 带质量参数保存：WebP 支持 quality 1-100，其他格式忽略 quality
+- 修改 `detect_format`：在 PNG 签名后检查 acTL chunk，自动区分 PNG/APNG
+- 修改 `load_from_bytes_auto`：APNG 分派取第一帧（之前 raise 需显式调用）
+- 新增 2 个公开函数，已在 reexport.mbt 注册
+- +11 tests (save_auto 5 + quality 2 + detect 2 + load 2)
+- 6170×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

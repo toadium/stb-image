@@ -38,6 +38,10 @@ pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image16 ra
 
 pub fn load_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
+pub fn save_image_auto(@types.Image, @types.ImageFormat) -> Bytes raise @types.LoadError
+
+pub fn save_image_with_quality(@types.Image, @types.ImageFormat, Int) -> Bytes raise @types.LoadError
+
 // Errors
 
 // Types and methods

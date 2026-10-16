@@ -30,6 +30,10 @@ pub fn detect_format(data : Bytes) -> @types.ImageFormat {
     data[5].to_int() == 0x0A &&
     data[6].to_int() == 0x1A &&
     data[7].to_int() == 0x0A {
+    // 检查是否 APNG（含 acTL chunk）
+    if @codec.is_apng_format(data) {
+      return @types.ImageFormat::Apng
+    }
     return @types.ImageFormat::Png
   }
   // JPEG: SOI marker
@@ -192,10 +196,13 @@ pub fn load_from_bytes_auto(
     @types.ImageFormat::Ico => @codec.decode_ico_pure(data)
     @types.ImageFormat::Cur => @codec.decode_cur_pure(data)
     @types.ImageFormat::Icns => @codec.decode_icns_pure(data)
-    @types.ImageFormat::Apng =>
-      raise @types.LoadError::DecodeFailed(
-        "APNG 格式需要显式调用 decode_apng_pure",
-      )
+    @types.ImageFormat::Apng => {
+      let anim = @codec.decode_apng_pure(data)
+      if anim.frames.length() == 0 {
+        raise @types.LoadError::DecodeFailed("APNG 无帧")
+      }
+      anim.frames[0]
+    }
     @types.ImageFormat::Avif => @codec.avif_decode(data)
     @types.ImageFormat::Heif => @codec.heif_decode(data)
     @types.ImageFormat::JpegXl => @codec.jpegxl_decode(data)
@@ -289,4 +296,59 @@ pub fn encode_bmp(img : @types.Image) -> Bytes {
 /// TGA 编码委托
 pub fn encode_tga(img : @types.Image) -> Bytes {
   @codec.encode_tga_pure(img)
+}
+
+///|
+/// 统一保存 API：按指定格式自动分派编码
+/// - 支持：PNG/JPEG/BMP/QOI/PNM/GIF/TGA/TIFF/ICO/CUR/ICNS/WebP
+/// - 不支持：HDR（需 ImageF，用 encode_hdr）、APNG（需 PngAnimation）、AVIF/HEIF/JPEG-XL/PSD（无编码器）
+pub fn save_image_auto(
+  img : @types.Image,
+  format : @types.ImageFormat,
+) -> Bytes raise @types.LoadError {
+  match format {
+    @types.ImageFormat::Png => @codec.encode_png_pure(img)
+    @types.ImageFormat::Jpeg => @codec.encode_jpeg_pure(img)
+    @types.ImageFormat::Bmp => @codec.encode_bmp_pure(img)
+    @types.ImageFormat::Qoi => @codec.encode_qoi_pure(img)
+    @types.ImageFormat::Pnm => @codec.encode_pnm_pure(img)
+    @types.ImageFormat::Gif => @codec.encode_gif_pure(img)
+    @types.ImageFormat::Tga => @codec.encode_tga_pure(img)
+    @types.ImageFormat::Tiff => @codec.encode_tiff_pure(img)
+    @types.ImageFormat::Ico => @codec.encode_ico_pure(img)
+    @types.ImageFormat::Cur => @codec.encode_cur_pure(img)
+    @types.ImageFormat::Icns => @codec.encode_icns_pure(img)
+    @types.ImageFormat::Webp => @codec.encode_webp_lossy_pure(img)
+    _ =>
+      raise @types.LoadError::EncodeFailed(
+        "不支持此格式的编码（HDR 需 ImageF，APNG 需 PngAnimation，AVIF/HEIF/JPEG-XL/PSD 无编码器）",
+      )
+  }
+}
+
+///|
+/// 带质量参数的统一保存 API
+/// - WebP: quality 1-100 控制压缩质量
+/// - 其他格式: quality 参数被忽略，使用默认质量
+/// - 不支持的格式 raise
+pub fn save_image_with_quality(
+  img : @types.Image,
+  format : @types.ImageFormat,
+  quality : Int,
+) -> Bytes raise @types.LoadError {
+  match format {
+    @types.ImageFormat::Webp => @codec.encode_webp_lossy_pure(img, quality~)
+    @types.ImageFormat::Png => @codec.encode_png_pure(img)
+    @types.ImageFormat::Jpeg => @codec.encode_jpeg_pure(img)
+    @types.ImageFormat::Bmp => @codec.encode_bmp_pure(img)
+    @types.ImageFormat::Qoi => @codec.encode_qoi_pure(img)
+    @types.ImageFormat::Pnm => @codec.encode_pnm_pure(img)
+    @types.ImageFormat::Gif => @codec.encode_gif_pure(img)
+    @types.ImageFormat::Tga => @codec.encode_tga_pure(img)
+    @types.ImageFormat::Tiff => @codec.encode_tiff_pure(img)
+    @types.ImageFormat::Ico => @codec.encode_ico_pure(img)
+    @types.ImageFormat::Cur => @codec.encode_cur_pure(img)
+    @types.ImageFormat::Icns => @codec.encode_icns_pure(img)
+    _ => raise @types.LoadError::EncodeFailed("不支持此格式的编码")
+  }
 }

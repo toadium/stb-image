@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-15 | 当前版本：v244.0.0 | 测试：6159 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v245.0.0 | 测试：6170 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2532,6 +2532,7 @@ flowchart LR
 | v242.0.0 | BMP/GIF/PNG/JPEG扩展信息解析 | 新增BmpInfoExtended/GifInfoExtended/PngInfoExtended/JpegInfoExtended+bmp_info_extended/gif_info_extended/png_info_extended/jpeg_info_extended BMP DIB头部(压缩方式/bottom-up)+GIF LSD(版本/全局颜色表)+PNG IHDR(颜色类型/隔行)+JPEG SOF遍历(渐进/灰度) +23测试(BMP 4+GIF 6+PNG 6+JPEG 7) ✅ 2026-10-15 — 6100×4全绿, 0 warning, 0 error |
 | v243.0.0 | QOI/TGA/HDR/PNM/ICO/CUR/ICNS/APNG扩展信息解析 | 新增8类型+8解析函数+8格式检测函数 QOI(通道/色彩空间)+TGA(图像类型/行序)+HDR(RGBE FORMAT/尺寸行)+PNM(P1-P6全格式/maxval)+ICO(目录条目/位深)+CUR(热点坐标)+ICNS(chunk遍历/图标类型)+APNG(IHDR+acTL帧数) +47测试(QOI 5+TGA 5+HDR 5+PNM 8+ICO 6+CUR 5+ICNS 6+APNG 7) ✅ 2026-10-15 — 6147×4全绿, 0 warning, 0 error |
 | v244.0.0 | 统一extended info API | 新增ImageInfoExtended联合类型(18变体)+get_image_info_extended自动格式检测分派+detect_image_format格式名称检测 +12测试(detect 6+dispatch 5+unknown 1) ✅ 2026-10-15 — 6159×4全绿, 0 warning, 0 error |
+| v245.0.0 | 统一保存API+APNG自动分派 | 新增save_image_auto(12格式分派编码)+save_image_with_quality(WebP quality)+detect_format检测APNG+load_from_bytes_auto APNG第一帧 +11测试 ✅ 2026-10-16 — 6170×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 
@@ -2540,3 +2541,79 @@ flowchart LR
 - 新增 pub fn 须在 src/reexport.mbt 注册
 - roadmap.md + changelog.md 同步更新
 - 测试覆盖路径：为已有函数补测试；新功能路径：实现 + 测试 + re-export
+## 远期迭代计划（v245.0.0 ~ v263.0.0+）— 草案 v1 待确认
+
+> 制定日期：2026-10-16 | 基线：v244.0.0 / 6159×4 全绿 / 90.4% 覆盖率 | 负责人：用户（路线图驱动）
+>
+> **依据**：v244 统一 extended info API 完成，用户确认 6 个方向全部推进。
+> **约束**：纯 MoonBit、四目标、不破坏 API、新 pub fn 须 re-export、每环四目标全绿、warning 清零。
+> **状态**：草案，分阶段方向与优先级待用户确认后再执行。
+>
+> **已有基础**：
+> - `load_from_bytes_auto` / `decode_any` / `load_from_bytes` 已存在（自动格式检测加载，15 种格式）
+> - `detect_format` 返回 `ImageFormat` enum（15 种，TGA 返回 Unknown）
+> - v244 `detect_image_format` 返回 String（18 种含 TGA/APNG）
+> - EXIF 仅 4 字段（Make/Model/Orientation/DateTime），仅 JPEG
+> - 性能基准 35 项但全固定 128×128 小图
+
+### 阶段一：统一加载/保存 API 完善（v245.0.0 ~ v247.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v245.0.0 | 统一保存 API | `save_image_auto(img, format)` 自动格式分派编码 + 扩展 `load_from_bytes_auto` 支持 TGA/APNG + `save_image_with_quality` 带质量参数 | +15~20 |
+| v246.0.0 | 统一 info API 整合 | `get_image_info` 统一信息探测（整合 ImageInfo? + ImageInfoExtended）+ `get_image_summary` 人类可读摘要 | +10~15 |
+| v247.0.0 | 16-bit/Float 统一 API | `load_any_16` / `save_any_16` 16-bit 自动分派 + `load_any_f` / `save_any_f` Float 自动分派 + 格式能力查询 `format_supports_16bit` | +12~18 |
+
+### 阶段二：元数据增强（v248.0.0 ~ v250.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v248.0.0 | EXIF 扩展 | 扩展 ExifInfo 增加 GPS/曝光参数/白平衡/焦距/ISO/光圈等标签 + TIFF/WebP 容器 EXIF 支持 | +20~30 |
+| v249.0.0 | XMP 支持 | XMP 解析（XML based）+ XMP 写入 + JPEG/TIFF XMP 插入 | +15~20 |
+| v250.0.0 | PNG/IPTC 元数据 | PNG text chunk 写入 + PNG eXIf chunk 支持 + IPTC IIM 解析/写入 | +15~25 |
+
+### 阶段三：覆盖率提升 95%+（v251.0.0 ~ v253.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v251.0.0 | 核心模块覆盖率 | codec/util/lib 未覆盖路径补充（6611 行未覆盖中核心模块部分） | +30~50 |
+| v252.0.0 | process 模块覆盖率 | process 下 90 子包未覆盖路径补充 + 边界条件测试 | +40~60 |
+| v253.0.0 | 覆盖率收尾 | 剩余未覆盖路径 + 死代码清理 + 覆盖率达 95%+ | +20~40 |
+
+### 阶段四：完整格式解码（v254.0.0 ~ v258.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v254.0.0 | AVIF 完整解码 | AV1 关键帧解码 + OBU 解析 + 帧重建 + 色彩转换 | +20~30 |
+| v255.0.0 | HEIF 完整解码 | HEVC 解码 + NAL 单元解析 + 帧重建 + 色彩转换 | +20~30 |
+| v256.0.0 | JPEG-XL 完整解码 | BitReader + Frame header + Group 解码 + 系数重建 | +20~30 |
+| v257.0.0 | WebP lossless 完整解码 | VP8L 解码 + 变换（预测/颜色/减色）+ Huffman + Argb 重建 | +15~25 |
+| v258.0.0 | 格式解码集成测试 | 18 种格式 round-trip 测试 + 跨格式转换测试 + 错误恢复测试 | +30~50 |
+
+### 阶段五：性能基准套件（v259.0.0 ~ v260.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v259.0.0 | 多格式/多尺寸基准 | 18 种格式编解码基准 + 多尺寸（64/256/1024/4096）+ 16-bit/ImageF 基准 | +10~15 |
+| v260.0.0 | 性能对比报告 | 自动生成性能报告 + 与 stb_image/mooncakes 对比 + 回归检测 | +5~10 |
+
+### 阶段六：Fuzzing 模糊测试（v261.0.0 ~ v263.0.0）
+
+| 版本 | 方向 | 具体任务 | 预期测试增量 |
+|------|------|----------|------------|
+| v261.0.0 | Fuzzing 框架 | 纯 MoonBit fuzzing 框架 + 随机字节生成 + 畸形输入生成器 | +10~15 |
+| v262.0.0 | 18 种格式 Fuzzing | 每种格式 100+ fuzzing 用例 + 崩溃收集 + 不 panic 保证 | +180~200 |
+| v263.0.0 | 边界/畸形 Fuzzing | 截断/翻转/零填充/超大尺寸 fuzzing + 内存安全验证 | +50~80 |
+
+### 总览
+
+| 阶段 | 版本范围 | 方向 | 预期测试增量 | 预期总测试 |
+|------|----------|------|------------|----------|
+| 一 | v245-v247 | 统一加载/保存 API | +37~53 | ~6210 |
+| 二 | v248-v250 | 元数据增强 | +50~75 | ~6285 |
+| 三 | v251-v253 | 覆盖率 95%+ | +90~150 | ~6435 |
+| 四 | v254-v258 | 完整格式解码 | +105~165 | ~6600 |
+| 五 | v259-v260 | 性能基准套件 | +15~25 | ~6625 |
+| 六 | v261-v263 | Fuzzing 模糊测试 | +240~295 | ~6920 |
+
+> **预期终态**：~6920×4 测试全绿，覆盖率 95%+，18 种格式完整解码，统一 API + 元数据 + 性能基准 + Fuzzing 全覆盖。
