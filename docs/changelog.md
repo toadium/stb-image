@@ -2014,6 +2014,15 @@
 - 新增 1 个公开类型 + 1 个公开函数，已在 reexport.mbt 注册
 - +6 tests (no EXIF 3 + minimal EXIF 1 + Make tag 1 + Orientation tag 1)
 - 6194×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v249.0.0 - XMP 元数据支持
+- 新增 `XmpInfo` 结构体：11 个字段（creator/title/description/subject/keywords/rights/create_date/modify_date/software/rating/raw_xml）
+- 新增 `read_xmp_from_bytes(data)` XMP 读取：从 JPEG APP1 段提取 XMP XML 并解析常用字段
+- 新增 `create_xmp_segment(info)` 构造 XMP APP1 段数据（含 XML 包装）
+- 新增 `write_xmp_to_bytes(info, jpeg_data)` 将 XMP 写入 JPEG（已有则替换）
+- 纯 MoonBit XML 简单解析器，无外部依赖
+- 新增 1 个公开类型 + 3 个公开函数，已在 reexport.mbt 注册
+- +12 tests (non-JPEG 1 + empty 1 + no XMP 1 + empty XMP 1 + title/creator 1 + rating 1 + software 1 + create segment 2 + write 3)
+- 6206×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

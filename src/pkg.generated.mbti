@@ -756,6 +756,8 @@ pub fn create_training_sample(@types.Image, Int, String) -> @ocr.DLTrainingSampl
 
 pub fn create_training_state() -> @ocr.TrainingState
 
+pub fn create_xmp_segment(@meta.XmpInfo) -> Bytes
+
 pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
@@ -2236,6 +2238,8 @@ pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
 
+pub fn read_xmp_from_bytes(Bytes) -> @meta.XmpInfo?
+
 pub fn recognize_action(Array[@types.Image], Int, Int) -> @video.ActionRecognitionResult
 
 pub fn recognize_action_pe(Array[@pose_estimation.HumanPose], @pose_estimation.ActionRecognitionConfig) -> @pose_estimation.ActionRecognitionResult
@@ -2805,6 +2809,8 @@ pub fn write_jpeg_to_bytes(@types.Image) -> Bytes raise @types.LoadError
 pub fn write_png_to_bytes(@types.Image) -> Bytes
 
 pub fn write_tga_to_bytes(@types.Image) -> Bytes
+
+pub fn write_xmp_to_bytes(@meta.XmpInfo, Bytes) -> Bytes raise @types.LoadError
 
 pub fn xor_decrypt_enc(@encryption.EncryptionResult, Array[Byte]) -> @types.Image
 
@@ -3840,6 +3846,8 @@ pub using @medical {type WindowLevel}
 pub using @medical {type WindowLevelConfig}
 
 pub using @advanced_imaging {type XRayData as XRayDataAI}
+
+pub using @meta {type XmpInfo}
 
 pub using @detection {type YoloBoundingBox}
 

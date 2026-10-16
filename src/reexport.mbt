@@ -2868,6 +2868,23 @@ pub type ExifInfoExtended = @meta.ExifInfoExtended
 ///|
 pub let read_exif_extended_from_bytes : (Bytes) -> @meta.ExifInfoExtended? = @meta.read_exif_extended_from_bytes
 
+///|
+pub type XmpInfo = @meta.XmpInfo
+
+///|
+pub let read_xmp_from_bytes : (Bytes) -> @meta.XmpInfo? = @meta.read_xmp_from_bytes
+
+///|
+pub let create_xmp_segment : (@meta.XmpInfo) -> Bytes = @meta.create_xmp_segment
+
+///|
+pub fn write_xmp_to_bytes(
+  info : @meta.XmpInfo,
+  jpeg_data : Bytes,
+) -> Bytes raise @types.LoadError {
+  @meta.write_xmp_to_bytes(info, jpeg_data)
+}
+
 // From util/
 
 ///|
