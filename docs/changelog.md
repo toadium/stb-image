@@ -2035,6 +2035,11 @@
 - 新增 1 个公开类型 + 6 个公开函数，已在 reexport.mbt 注册
 - +13 tests (PNG text write 3 + PNG eXIf 4 + IPTC 6)
 - 6219×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v251.0.0 - 核心模块覆盖率提升
+- 新增 `src/util/image_combine_test.mbt`：覆盖 alpha_blend(7 tests) + mask_blend(6 tests) + flip_horizontal(3 tests) + flip_vertical(3 tests) + double flip(1 test)
+- 新增 `src/pure/util/resize_test.mbt`：覆盖 resize_pure(11 tests) — 最近邻/双线性/放大/缩小/3通道/错误路径
+- +32 tests (image_combine 20 + resize 11 + extra 1)
+- 6251×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)
