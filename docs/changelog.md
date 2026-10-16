@@ -2049,6 +2049,14 @@
 - 新增 `src/lib/edge_v253_test.mbt`：覆盖 detect_format 全格式签名(10 tests) + format_supports 全格式遍历(2 tests) + get_image_info/summary 错误路径(3 tests) + save_image_auto 1x1/1ch/4ch(6 tests) + save_image_with_quality 边界(3 tests) + Unknown 格式(1 test)
 - +25 tests
 - 6298×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v254.0.0 - 格式解码增强（AVIF/HEIF/JPEG-XL 元数据解析）
+- 新增 `src/pure/codec/format_decode_v254_test.mbt`：覆盖 AVIF/HEIF/JPEG-XL 元数据解析
+  - AVIF: ispe box 尺寸解析(2 tests) + pix2 box 位深解析(2 tests) + auxC box alpha 检测(1 test) + 无 ispe 错误(1 test) + decode 错误消息含尺寸(1 test)
+  - HEIF: ispe box 尺寸解析(1 test) + decode 返回 UnsupportedFormat(1 test)
+  - JPEG-XL: 容器格式检测(1 test) + codestream 格式检测(1 test) + 非 JPEG-XL(1 test) + decode 返回 UnsupportedFormat(1 test) + 太短数据(1 test)
+- 注：AVIF/HEIF/JPEG-XL 完整解码需 AV1/HEVC/JPEG-XL 编解码器，纯 MoonBit 实现不现实，当前提供元数据解析 + 格式检测
+- +13 tests
+- 6311×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

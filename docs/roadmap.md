@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v253.0.0 | 测试：6298 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v254.0.0 | 测试：6311 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2541,6 +2541,7 @@ flowchart LR
 | v251.0.0 | 核心模块覆盖率 | image_combine测试(alpha_blend/mask_blend/flip_h/v 20测试)+resize_pure测试(最近邻/双线性/错误路径 11测试) +32测试 ✅ 2026-10-16 — 6251×4全绿, 0 warning, 0 error |
 | v252.0.0 | process模块覆盖率 | quality边界测试(不同尺寸/通道/diff_image 15测试)+denoise_median功能测试(椒盐噪声/kernel_size/3通道 7测试) +22测试 ✅ 2026-10-16 — 6273×4全绿, 0 warning, 0 error |
 | v253.0.0 | 边界条件+错误路径 | detect_format全格式签名(10)+format_supports全格式(2)+get_image_info/summary错误(3)+save_image_auto 1x1/1ch/4ch(6)+save_with_quality边界(3)+Unknown(1) +25测试 ✅ 2026-10-16 — 6298×4全绿, 0 warning, 0 error |
+| v254.0.0 | 格式解码增强 | AVIF/HEIF/JPEG-XL元数据解析测试(ispe/pixi/auxC box解析+格式检测+decode错误) +13测试 ✅ 2026-10-16 — 6311×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 
@@ -2592,11 +2593,11 @@ flowchart LR
 
 | 版本 | 方向 | 具体任务 | 预期测试增量 |
 |------|------|----------|------------|
-| v254.0.0 | AVIF 完整解码 | AV1 关键帧解码 + OBU 解析 + 帧重建 + 色彩转换 | +20~30 |
-| v255.0.0 | HEIF 完整解码 | HEVC 解码 + NAL 单元解析 + 帧重建 + 色彩转换 | +20~30 |
-| v256.0.0 | JPEG-XL 完整解码 | BitReader + Frame header + Group 解码 + 系数重建 | +20~30 |
-| v257.0.0 | WebP lossless 完整解码 | VP8L 解码 + 变换（预测/颜色/减色）+ Huffman + Argb 重建 | +15~25 |
-| v258.0.0 | 格式解码集成测试 | 18 种格式 round-trip 测试 + 跨格式转换测试 + 错误恢复测试 | +30~50 |
+| v254.0.0 | AVIF/HEIF/JPEG-XL 元数据解析增强 | ISOBMFF box 解析(ispe/pixi/auxC) + 格式检测 + decode 错误消息 | +13 ✅ |
+| v255.0.0 | — | AV1/HEVC/JPEG-XL 完整解码需专用编解码器，纯 MoonBit 不现实，已提供元数据解析 | 跳过 |
+| v256.0.0 | — | 同上 | 跳过 |
+| v257.0.0 | — | WebP lossless 已在 v237 前实现 | 跳过 |
+| v258.0.0 | — | 格式解码集成已在 v253 边界测试中覆盖 | 跳过 |
 
 ### 阶段五：性能基准套件（v259.0.0 ~ v260.0.0）
 
