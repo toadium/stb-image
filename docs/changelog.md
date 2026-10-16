@@ -2057,6 +2057,15 @@
 - 注：AVIF/HEIF/JPEG-XL 完整解码需 AV1/HEVC/JPEG-XL 编解码器，纯 MoonBit 实现不现实，当前提供元数据解析 + 格式检测
 - +13 tests
 - 6311×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v261.0.0 - Codec 模糊测试
+- 新增 `src/pure/codec/fuzz_v261_test.mbt`：16 个模糊测试
+  - 随机数据馈入 9 种解码器（PNG/JPEG/BMP/GIF/QOI/TGA/PNM/HDR/WebP），各 20 组种子
+  - 截断数据测试：PNG/BMP/QOI 在多种截断长度下解码
+  - 损坏数据测试：PNG/BMP 翻转关键字节后解码
+  - 边界数据测试：空数据 + 单字节数据馈入 5 种解码器
+- 修复 QOI 解码器边界检查 bug：OP_RGB/OP_RGBA/OP_LUMA 多字节 opcodes 缺少越界检查，截断数据导致 panic 而非 raise LoadError
+- +16 tests
+- 6327×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v259.0.0 - 多格式性能基准套件
 - 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
   - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸

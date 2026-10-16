@@ -54,11 +54,17 @@ pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     let tag = data[pos.val].to_int()
     pos.val += 1
     if tag == 0xFE {
+      if pos.val + 2 >= len {
+        raise @types.LoadError::DecodeFailed("QOI 数据截断: OP_RGB")
+      }
       px_r.val = data[pos.val].to_int()
       px_g.val = data[pos.val + 1].to_int()
       px_b.val = data[pos.val + 2].to_int()
       pos.val += 3
     } else if tag == 0xFF {
+      if pos.val + 3 >= len {
+        raise @types.LoadError::DecodeFailed("QOI 数据截断: OP_RGBA")
+      }
       px_r.val = data[pos.val].to_int()
       px_g.val = data[pos.val + 1].to_int()
       px_b.val = data[pos.val + 2].to_int()
@@ -75,6 +81,9 @@ pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError {
       px_g.val = (px_g.val + ((tag >> 2) & 0x03) - 2) & 0xFF
       px_b.val = (px_b.val + (tag & 0x03) - 2) & 0xFF
     } else if (tag & 0xC0) == 0x80 {
+      if pos.val >= len {
+        raise @types.LoadError::DecodeFailed("QOI 数据截断: OP_LUMA")
+      }
       let dg = (tag & 0x3F) - 32
       px_g.val = (px_g.val + dg) & 0xFF
       let b2 = data[pos.val].to_int()
