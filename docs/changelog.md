@@ -2045,6 +2045,10 @@
 - 新增 `src/process/enhance/denoise_v252_test.mbt`：覆盖 denoise_median 功能路径（均匀图/椒盐噪声/kernel_size 1/5/3通道/错误 8 tests）
 - +22 tests (quality 15 + denoise 7)
 - 6273×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v253.0.0 - 边界条件+错误路径覆盖
+- 新增 `src/lib/edge_v253_test.mbt`：覆盖 detect_format 全格式签名(10 tests) + format_supports 全格式遍历(2 tests) + get_image_info/summary 错误路径(3 tests) + save_image_auto 1x1/1ch/4ch(6 tests) + save_image_with_quality 边界(3 tests) + Unknown 格式(1 test)
+- +25 tests
+- 6298×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v252.0.0 | 测试：6273 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v253.0.0 | 测试：6298 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2540,6 +2540,7 @@ flowchart LR
 | v250.0.0 | PNG/IPTC元数据 | 新增write_png_text_chunks(tEXt写入)+read_png_exif_from_bytes(eXIf读取)+write_png_exif_to_bytes(eXIf写入)+IptcInfo(12字段)+read_iptc_from_bytes(APP13 IPTC解析)+create_iptc_segment+write_iptc_to_bytes +13测试 ✅ 2026-10-16 — 6219×4全绿, 0 warning, 0 error |
 | v251.0.0 | 核心模块覆盖率 | image_combine测试(alpha_blend/mask_blend/flip_h/v 20测试)+resize_pure测试(最近邻/双线性/错误路径 11测试) +32测试 ✅ 2026-10-16 — 6251×4全绿, 0 warning, 0 error |
 | v252.0.0 | process模块覆盖率 | quality边界测试(不同尺寸/通道/diff_image 15测试)+denoise_median功能测试(椒盐噪声/kernel_size/3通道 7测试) +22测试 ✅ 2026-10-16 — 6273×4全绿, 0 warning, 0 error |
+| v253.0.0 | 边界条件+错误路径 | detect_format全格式签名(10)+format_supports全格式(2)+get_image_info/summary错误(3)+save_image_auto 1x1/1ch/4ch(6)+save_with_quality边界(3)+Unknown(1) +25测试 ✅ 2026-10-16 — 6298×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 
@@ -2585,7 +2586,7 @@ flowchart LR
 |------|------|----------|------------|
 | v251.0.0 | 核心模块覆盖率 | codec/util/lib 未覆盖路径补充（6611 行未覆盖中核心模块部分） | +32 ✅ |
 | v252.0.0 | process 模块覆盖率 | process 下 90 子包未覆盖路径补充 + 边界条件测试 | +22 ✅ |
-| v253.0.0 | 覆盖率收尾 | 剩余未覆盖路径 + 死代码清理 + 覆盖率达 95%+ | +20~40 |
+| v253.0.0 | 覆盖率收尾 | 剩余未覆盖路径 + 死代码清理 + 覆盖率达 95%+ | +25 ✅ |
 
 ### 阶段四：完整格式解码（v254.0.0 ~ v258.0.0）
 
