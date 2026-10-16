@@ -2092,6 +2092,15 @@
   - 多格式 fallback 不 crash
 - +17 tests
 - 6359×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v264.0.0 - 形式化验证 + FAKE + MOCK + E2E 多策略测试
+- 新增 `src/formal_v264_test.mbt`：35 个多策略测试
+  - **形式化证明**（属性测试）：round-trip identity（PNG/BMP/PNM/TGA/QOI）+ 代数不变量（flip²=id, rotate⁴=id, 维度交换）+ 维度/通道保持
+  - **FAKE**：结构化假图像生成器（纯色/渐变/棋盘/条纹/随机）+ 生成器属性验证
+  - **MOCK**：格式检测分派模拟 + 错误传播变体验证 + save/load 自动分派
+  - **E2E**：全流水线（生成→编码→解码→处理→编码→解码→验证）+ 多格式 round-trip + 错误恢复管道
+- 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
+- +35 tests
+- 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v259.0.0 - 多格式性能基准套件
 - 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
   - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸

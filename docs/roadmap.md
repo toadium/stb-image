@@ -2614,6 +2614,7 @@ flowchart LR
 | v261.0.0 | Fuzzing 框架 | 纯 MoonBit fuzzing 框架 + 随机字节生成 + 畸形输入生成器 | ✅ +16 (6327×4) |
 | v262.0.0 | 18 种格式 Fuzzing | 每种格式 100+ fuzzing 用例 + 崩溃收集 + 不 panic 保证 | ✅ +15 (6342×4) |
 | v263.0.0 | 边界/畸形 Fuzzing | 截断/翻转/零填充/超大尺寸 fuzzing + 内存安全验证 | ✅ +17 (6359×4) |
+| v264.0.0 | 形式化验证+多策略 | 属性测试+FAKE+MOCK+E2E + TGA descriptor bug 修复 | ✅ +35 (6394×4) |
 
 ### 总览
 

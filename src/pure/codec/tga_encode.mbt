@@ -27,7 +27,7 @@ pub fn encode_tga_pure(img : @types.Image) -> Bytes {
   out.push((height & 0xFF).to_byte())
   out.push(((height >> 8) & 0xFF).to_byte())
   out.push(b'\x18')
-  out.push(b'\x20')
+  out.push(b'\x30')
   // Pixel data (top-down, BGR)
   for y in 0..<height {
     let row_start = y * width * channels
