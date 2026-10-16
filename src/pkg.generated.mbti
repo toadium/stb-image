@@ -744,6 +744,8 @@ pub fn create_handwriting_template(String, @ocr.HandwritingStyle, Array[@types.I
 
 pub fn create_image_index_cbir() -> @retrieval.CBIRImageIndex
 
+pub fn create_iptc_segment(@meta.IptcInfo) -> Bytes
+
 pub fn create_neural_layer(@ocr.DLLayerType, String, Array[Int]) -> @ocr.DLNeuralLayer
 
 pub fn create_rect_mask(Int, Int, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
@@ -2236,6 +2238,10 @@ pub fn read_exif_extended_from_bytes(Bytes) -> @meta.ExifInfoExtended?
 
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
 
+pub fn read_iptc_from_bytes(Bytes) -> @meta.IptcInfo?
+
+pub fn read_png_exif_from_bytes(Bytes) -> Bytes?
+
 pub fn read_png_text_chunks(Bytes) -> Array[@meta.PngTextChunk]
 
 pub fn read_xmp_from_bytes(Bytes) -> @meta.XmpInfo?
@@ -2804,7 +2810,13 @@ pub fn write_exif_to_bytes(@meta.ExifInfo, Bytes) -> Bytes raise @types.LoadErro
 
 pub fn write_hdr_to_bytes(@types.ImageF) -> Bytes raise @types.LoadError
 
+pub fn write_iptc_to_bytes(@meta.IptcInfo, Bytes) -> Bytes raise @types.LoadError
+
 pub fn write_jpeg_to_bytes(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn write_png_exif_to_bytes(Bytes, Bytes) -> Bytes raise @types.LoadError
+
+pub fn write_png_text_chunks(Array[@meta.PngTextChunk], Bytes) -> Bytes raise @types.LoadError
 
 pub fn write_png_to_bytes(@types.Image) -> Bytes
 
@@ -3364,6 +3376,8 @@ pub using @intelligent_vision {type IntelligentVisionConfig as IntelligentVision
 pub using @superres {type InterpolationConfig}
 
 pub using @intelligent_vision {type IntrusionDetectionResult as IntrusionDetectionResultIV}
+
+pub using @meta {type IptcInfo}
 
 pub using @forensics_enhanced {type JpegGhostResult}
 

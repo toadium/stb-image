@@ -2885,6 +2885,42 @@ pub fn write_xmp_to_bytes(
   @meta.write_xmp_to_bytes(info, jpeg_data)
 }
 
+///|
+pub fn write_png_text_chunks(
+  chunks : Array[@meta.PngTextChunk],
+  png_data : Bytes,
+) -> Bytes raise @types.LoadError {
+  @meta.write_png_text_chunks(chunks, png_data)
+}
+
+///|
+pub let read_png_exif_from_bytes : (Bytes) -> Bytes? = @meta.read_png_exif_from_bytes
+
+///|
+pub fn write_png_exif_to_bytes(
+  exif_data : Bytes,
+  png_data : Bytes,
+) -> Bytes raise @types.LoadError {
+  @meta.write_png_exif_to_bytes(exif_data, png_data)
+}
+
+///|
+pub type IptcInfo = @meta.IptcInfo
+
+///|
+pub let read_iptc_from_bytes : (Bytes) -> @meta.IptcInfo? = @meta.read_iptc_from_bytes
+
+///|
+pub let create_iptc_segment : (@meta.IptcInfo) -> Bytes = @meta.create_iptc_segment
+
+///|
+pub fn write_iptc_to_bytes(
+  info : @meta.IptcInfo,
+  jpeg_data : Bytes,
+) -> Bytes raise @types.LoadError {
+  @meta.write_iptc_to_bytes(info, jpeg_data)
+}
+
 // From util/
 
 ///|

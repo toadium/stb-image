@@ -1,7 +1,7 @@
 # image 迭代路线图
 
 > 基于 mooncakes.io image 库对比（见 [comparison.md](comparison.md)）制定的后续迭代计划。
-> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v249.0.0 | 测试：6206 | 覆盖率：90.4%
+> 制定日期：2026-08-06 | 最后更新：2026-10-16 | 当前版本：v250.0.0 | 测试：6219 | 覆盖率：90.4%
 
 ## 现状定位
 
@@ -2537,6 +2537,7 @@ flowchart LR
 | v247.0.0 | 16-bit/Float统一API+格式能力查询 | 新增load_any_f(HDR Float加载)+save_any_f(HDR Float保存)+format_supports_16bit(PNG/PNM)+format_supports_float(HDR) +9测试 ✅ 2026-10-16 — 6188×4全绿, 0 warning, 0 error |
 | v248.0.0 | EXIF扩展(GPS/曝光/白平衡) | 新增ExifInfoExtended(16字段)+read_exif_extended_from_bytes(ExifIFD+GPSIFD解析) 保持原有ExifInfo不变 +6测试 ✅ 2026-10-16 — 6194×4全绿, 0 warning, 0 error |
 | v249.0.0 | XMP元数据支持 | 新增XmpInfo(11字段)+read_xmp_from_bytes(JPEG APP1 XMP解析)+create_xmp_segment(XML包装)+write_xmp_to_bytes(写入/替换) +12测试 ✅ 2026-10-16 — 6206×4全绿, 0 warning, 0 error |
+| v250.0.0 | PNG/IPTC元数据 | 新增write_png_text_chunks(tEXt写入)+read_png_exif_from_bytes(eXIf读取)+write_png_exif_to_bytes(eXIf写入)+IptcInfo(12字段)+read_iptc_from_bytes(APP13 IPTC解析)+create_iptc_segment+write_iptc_to_bytes +13测试 ✅ 2026-10-16 — 6219×4全绿, 0 warning, 0 error |
 
 ### 验收标准（每环）
 
@@ -2574,7 +2575,7 @@ flowchart LR
 |------|------|----------|------------|
 | v248.0.0 | EXIF 扩展 | 扩展 ExifInfo 增加 GPS/曝光参数/白平衡/焦距/ISO/光圈等标签 + TIFF/WebP 容器 EXIF 支持 | +20~30 ✅ |
 | v249.0.0 | XMP 支持 | XMP 解析（XML based）+ XMP 写入 + JPEG XMP 插入 | +12 ✅ |
-| v250.0.0 | PNG/IPTC 元数据 | PNG text chunk 写入 + PNG eXIf chunk 支持 + IPTC IIM 解析/写入 | +15~25 |
+| v250.0.0 | PNG/IPTC 元数据 | PNG text chunk 写入 + PNG eXIf chunk 支持 + IPTC IIM 解析/写入 | +13 ✅ |
 
 ### 阶段三：覆盖率提升 95%+（v251.0.0 ~ v253.0.0）
 

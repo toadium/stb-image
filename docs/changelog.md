@@ -2023,6 +2023,18 @@
 - 新增 1 个公开类型 + 3 个公开函数，已在 reexport.mbt 注册
 - +12 tests (non-JPEG 1 + empty 1 + no XMP 1 + empty XMP 1 + title/creator 1 + rating 1 + software 1 + create segment 2 + write 3)
 - 6206×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v250.0.0 - PNG/IPTC 元数据
+- 新增 `write_png_text_chunks(chunks, png_data)` PNG tEXt chunk 写入（在 IDAT 前插入）
+- 新增 `read_png_exif_from_bytes(data)` 从 PNG eXIf chunk 读取 EXIF 数据
+- 新增 `write_png_exif_to_bytes(exif_data, png_data)` 将 EXIF 写入 PNG eXIf chunk
+- 新增 `IptcInfo` 结构体：12 字段（title/keywords/creator/creator_title/city/country/caption/caption_writer/date_created/category/urgency/raw_records）
+- 新增 `read_iptc_from_bytes(data)` IPTC IIM 解析：从 JPEG APP13 段提取 Photoshop 3.0 + 8BIM 0x0404 记录
+- 新增 `create_iptc_segment(info)` 构造 IPTC APP13 段数据
+- 新增 `write_iptc_to_bytes(info, jpeg_data)` 将 IPTC 写入 JPEG（已有则替换）
+- PNG CRC32 计算 + chunk 构造器，纯 MoonBit 实现
+- 新增 1 个公开类型 + 6 个公开函数，已在 reexport.mbt 注册
+- +13 tests (PNG text write 3 + PNG eXIf 4 + IPTC 6)
+- 6219×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)
