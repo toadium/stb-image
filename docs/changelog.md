@@ -1992,6 +1992,13 @@
 - 新增 2 个公开函数，已在 reexport.mbt 注册
 - +11 tests (save_auto 5 + quality 2 + detect 2 + load 2)
 - 6170×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v246.0.0 - 统一 info API 整合
+- 新增 `UnifiedImageInfo` 结构体：跨格式通用信息（format/format_name/width/height/channels/bit_depth/has_alpha）
+- 新增 `get_image_info(data)` 统一信息探测：自动检测格式并返回通用信息，整合 v240-v244 的 18 种格式扩展信息
+- 新增 `get_image_summary(data)` 人类可读摘要：返回如 "PNG 4x4 4ch 8bit" 的字符串
+- 新增 1 个公开类型 + 2 个公开函数，已在 reexport.mbt 注册
+- +9 tests (get_image_info 5 + get_image_summary 4)
+- 6179×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)

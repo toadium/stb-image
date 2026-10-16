@@ -1502,7 +1502,11 @@ pub fn get_common_scene_types_su() -> Array[String]
 
 pub fn get_elements_in_reading_order(@ocr.DocumentStructure) -> Array[@ocr.DocumentElement]
 
+pub fn get_image_info(Bytes) -> @lib.UnifiedImageInfo raise @types.LoadError
+
 pub fn get_image_info_extended(Bytes) -> @codec.ImageInfoExtended raise @types.LoadError
+
+pub fn get_image_summary(Bytes) -> String raise @types.LoadError
 
 pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.PerspectiveMatrix?
 
@@ -3782,6 +3786,8 @@ pub using @registration_advanced {type TransformType as TransformTypeRA}
 pub using @forensics {type UIDetectionResult}
 
 pub using @advanced_imaging {type UltrasoundData as UltrasoundDataAI}
+
+pub using @lib {type UnifiedImageInfo}
 
 pub using @vlm_multimodal {type VLMConfig as VLMConfigVLM}
 

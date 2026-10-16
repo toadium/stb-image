@@ -1,4 +1,5 @@
 import {
+  "moonbitlang/core/debug",
   "walkzzz/image/src/types",
   "walkzzz/image/src/pure/codec",
   "walkzzz/image/src/pure/color",

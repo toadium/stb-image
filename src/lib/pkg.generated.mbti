@@ -2,6 +2,7 @@
 package "walkzzz/image/src/lib"
 
 import {
+  "moonbitlang/core/debug",
   "walkzzz/image/src/types",
 }
 
@@ -34,6 +35,10 @@ pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tga(@types.Image) -> Bytes
 
+pub fn get_image_info(Bytes) -> UnifiedImageInfo raise @types.LoadError
+
+pub fn get_image_summary(Bytes) -> String raise @types.LoadError
+
 pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
 
 pub fn load_from_bytes_auto(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
@@ -50,6 +55,19 @@ pub(all) struct StreamInfo {
   height : Int
   channels : Int
 }
+
+pub(all) struct UnifiedImageInfo {
+  format : @types.ImageFormat
+  format_name : String
+  width : Int
+  height : Int
+  channels : Int
+  bit_depth : Int
+  has_alpha : Bool
+} derive(Eq, @debug.Debug)
+pub fn UnifiedImageInfo::equal(Self, Self) -> Bool
+pub fn UnifiedImageInfo::not_equal(Self, Self) -> Bool
+pub fn UnifiedImageInfo::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 pub using @types {type ImageFormat}

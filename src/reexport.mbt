@@ -272,6 +272,21 @@ pub fn save_image_with_quality(
   @lib.save_image_with_quality(img, format, quality)
 }
 
+///|
+pub type UnifiedImageInfo = @lib.UnifiedImageInfo
+
+///|
+pub fn get_image_info(
+  data : Bytes,
+) -> @lib.UnifiedImageInfo raise @types.LoadError {
+  @lib.get_image_info(data)
+}
+
+///|
+pub fn get_image_summary(data : Bytes) -> String raise @types.LoadError {
+  @lib.get_image_summary(data)
+}
+
 // From process/
 
 ///|
