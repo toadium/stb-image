@@ -2040,6 +2040,11 @@
 - 新增 `src/pure/util/resize_test.mbt`：覆盖 resize_pure(11 tests) — 最近邻/双线性/放大/缩小/3通道/错误路径
 - +32 tests (image_combine 20 + resize 11 + extra 1)
 - 6251×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v252.0.0 - process 模块覆盖率提升
+- 新增 `src/process/quality/quality_v252_test.mbt`：覆盖 quality 边界条件（不同尺寸/通道/已知差异/diff_image 15 tests）
+- 新增 `src/process/enhance/denoise_v252_test.mbt`：覆盖 denoise_median 功能路径（均匀图/椒盐噪声/kernel_size 1/5/3通道/错误 8 tests）
+- +22 tests (quality 15 + denoise 7)
+- 6273×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v236.0.0 - chinese_ocr + advanced_chinese_ocr + english_ocr 功能测试
 - chinese_ocr: +10 tests (默认配置, 模板生成, 识别错误路径+功能路径)
 - advanced_chinese_ocr: +14 tests (默认配置, 3500模板生成, 部件分解错误路径+功能路径, 增强识别错误路径+功能路径)
