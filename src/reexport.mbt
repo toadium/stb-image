@@ -11779,3 +11779,272 @@ pub fn ir_deserialize_op(
 ) -> (IROp, Int) raise LoadError {
   @imgir.ir_deserialize_op(bytes, offset)
 }
+// =============================================================================
+// aoci — 符号语义索引（GeoVerse Phase 3）
+// SymbolCoord / SymbolIndex / ContextBudget / VerifyResult + Builder + Router + Verifier
+// =============================================================================
+
+///|
+pub type SymbolKind = @aoci.SymbolKind
+
+///|
+pub type SymbolCoord = @aoci.SymbolCoord
+
+///|
+pub type SymbolIndex = @aoci.SymbolIndex
+
+///|
+pub type ContextBudget = @aoci.ContextBudget
+
+///|
+pub type VerifyResult = @aoci.VerifyResult
+
+// --- SymbolKind 方法重导出 ---
+
+///|
+pub fn symbol_kind_to_string(kind : SymbolKind) -> String {
+  @aoci.SymbolKind::to_string(kind)
+}
+
+// --- SymbolCoord 方法重导出 ---
+
+///|
+pub fn symbol_coord_make(
+  pkg~ : String,
+  name~ : String,
+  kind~ : SymbolKind,
+  signature? : String = "",
+  doc? : String = "",
+  keywords? : Array[String] = [],
+) -> SymbolCoord {
+  @aoci.SymbolCoord::make(pkg~, name~, kind~, signature~, doc~, keywords~)
+}
+
+///|
+pub fn symbol_coord_full_name(sym : SymbolCoord) -> String {
+  @aoci.SymbolCoord::full_name(sym)
+}
+
+///|
+pub fn symbol_coord_has_keyword(sym : SymbolCoord, keyword : String) -> Bool {
+  @aoci.SymbolCoord::has_keyword(sym, keyword)
+}
+
+///|
+pub fn symbol_coord_estimated_tokens(sym : SymbolCoord) -> Int {
+  @aoci.SymbolCoord::estimated_tokens(sym)
+}
+
+// --- SymbolIndex 方法重导出 ---
+
+///|
+pub fn symbol_index_make(symbols : Array[SymbolCoord]) -> SymbolIndex {
+  @aoci.SymbolIndex::make(symbols)
+}
+
+///|
+pub fn symbol_index_size(index : SymbolIndex) -> Int {
+  @aoci.SymbolIndex::size(index)
+}
+
+///|
+pub fn symbol_index_get(
+  index : SymbolIndex,
+  i : Int,
+) -> SymbolCoord raise Failure {
+  @aoci.SymbolIndex::get(index, i)
+}
+
+///|
+pub fn symbol_index_find_by_name(
+  index : SymbolIndex,
+  name : String,
+) -> Array[SymbolCoord] {
+  @aoci.SymbolIndex::find_by_name(index, name)
+}
+
+///|
+pub fn symbol_index_find_by_package(
+  index : SymbolIndex,
+  pkg : String,
+) -> Array[SymbolCoord] {
+  @aoci.SymbolIndex::find_by_package(index, pkg)
+}
+
+///|
+pub fn symbol_index_find_by_keyword(
+  index : SymbolIndex,
+  keyword : String,
+) -> Array[SymbolCoord] {
+  @aoci.SymbolIndex::find_by_keyword(index, keyword)
+}
+
+///|
+pub fn symbol_index_find_by_kind(
+  index : SymbolIndex,
+  kind : SymbolKind,
+) -> Array[SymbolCoord] {
+  @aoci.SymbolIndex::find_by_kind(index, kind)
+}
+
+///|
+pub fn symbol_index_total_tokens(index : SymbolIndex) -> Int {
+  @aoci.SymbolIndex::total_tokens(index)
+}
+
+// --- Builder 重导出 ---
+
+///|
+pub fn aoci_build_index(symbols : Array[SymbolCoord]) -> SymbolIndex {
+  @aoci.build_index(symbols)
+}
+
+///|
+pub fn aoci_build_symbol(
+  pkg~ : String,
+  name~ : String,
+  kind~ : SymbolKind,
+  signature? : String = "",
+  doc? : String = "",
+  keywords? : Array[String] = [],
+) -> SymbolCoord {
+  @aoci.build_symbol(pkg~, name~, kind~, signature~, doc~, keywords~)
+}
+
+///|
+pub fn aoci_build_from_mbti(
+  package_name : String,
+  mbti_content : String,
+) -> SymbolIndex {
+  @aoci.build_from_mbti(package_name, mbti_content)
+}
+
+///|
+pub fn aoci_build_dependency_graph(
+  index : SymbolIndex,
+) -> Array[(String, Array[String])] {
+  @aoci.build_dependency_graph(index)
+}
+
+// --- Router 重导出 ---
+
+///|
+pub fn aoci_route(index : SymbolIndex, query : String) -> Array[SymbolCoord] {
+  @aoci.route(index, query)
+}
+
+///|
+pub fn aoci_route_top_k(
+  index : SymbolIndex,
+  query : String,
+  k : Int,
+) -> Array[SymbolCoord] {
+  @aoci.route_top_k(index, query, k)
+}
+
+///|
+pub fn aoci_route_by_package(
+  index : SymbolIndex,
+  pkg : String,
+) -> Array[SymbolCoord] {
+  @aoci.route_by_package(index, pkg)
+}
+
+///|
+pub fn aoci_route_by_kind(
+  index : SymbolIndex,
+  kind : SymbolKind,
+) -> Array[SymbolCoord] {
+  @aoci.route_by_kind(index, kind)
+}
+
+// --- ContextBudget 方法重导出 ---
+
+///|
+pub fn context_budget_make(quota : Int) -> ContextBudget {
+  @aoci.ContextBudget::make(quota)
+}
+
+///|
+pub fn context_budget_remaining(budget : ContextBudget) -> Int {
+  @aoci.ContextBudget::remaining(budget)
+}
+
+///|
+pub fn context_budget_is_exhausted(budget : ContextBudget) -> Bool {
+  @aoci.ContextBudget::is_exhausted(budget)
+}
+
+///|
+pub fn context_budget_add_partition(
+  budget : ContextBudget,
+  name : String,
+  quota : Int,
+) -> ContextBudget {
+  @aoci.ContextBudget::add_partition(budget, name, quota)
+}
+
+///|
+pub fn context_budget_allocate(
+  budget : ContextBudget,
+  symbols : Array[SymbolCoord],
+) -> Array[SymbolCoord] {
+  @aoci.ContextBudget::allocate(budget, symbols)
+}
+
+///|
+pub fn context_budget_allocate_with_priority(
+  budget : ContextBudget,
+  symbols : Array[(SymbolCoord, Int)],
+) -> Array[SymbolCoord] {
+  @aoci.ContextBudget::allocate_with_priority(budget, symbols)
+}
+
+///|
+pub fn context_budget_usage_report(budget : ContextBudget) -> String {
+  @aoci.ContextBudget::usage_report(budget)
+}
+
+// --- Verifier 重导出 ---
+
+///|
+pub fn verify_result_make(
+  is_valid~ : Bool,
+  issues? : Array[String] = [],
+) -> VerifyResult {
+  @aoci.VerifyResult::make(is_valid~, issues~)
+}
+
+///|
+pub fn aoci_verify_consistency(index : SymbolIndex) -> VerifyResult {
+  @aoci.verify_consistency(index)
+}
+
+///|
+pub fn aoci_verify_keyword_coverage(index : SymbolIndex) -> VerifyResult {
+  @aoci.verify_keyword_coverage(index)
+}
+
+///|
+pub fn aoci_verify_dependencies(
+  index : SymbolIndex,
+  graph : Array[(String, Array[String])],
+) -> VerifyResult {
+  @aoci.verify_dependencies(index, graph)
+}
+
+///|
+pub fn aoci_verify_budget(
+  index : SymbolIndex,
+  budget : ContextBudget,
+) -> VerifyResult {
+  @aoci.verify_budget(index, budget)
+}
+
+///|
+pub fn aoci_verify_all(
+  index : SymbolIndex,
+  budget? : ContextBudget = @aoci.ContextBudget::make(1000000),
+) -> VerifyResult {
+  @aoci.verify_all(index, budget~)
+}

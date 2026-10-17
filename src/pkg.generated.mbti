@@ -3,6 +3,7 @@ package "walkzzz/image/src"
 
 import {
   "walkzzz/image/src/advanced_imaging",
+  "walkzzz/image/src/aoci",
   "walkzzz/image/src/barcode",
   "walkzzz/image/src/color",
   "walkzzz/image/src/compression",
@@ -186,6 +187,32 @@ pub fn analyze_table_structure(Array[@ocr.TableLine], Array[@ocr.TableLine]) -> 
 pub fn analyze_texture_fs(@types.Image) -> @forensics.TextureAnalysisResult raise @types.LoadError
 
 pub fn answer_visual_question_su(@types.Image, String, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.VisualQuestionAnsweringResult
+
+pub fn aoci_build_dependency_graph(@aoci.SymbolIndex) -> Array[(String, Array[String])]
+
+pub fn aoci_build_from_mbti(String, String) -> @aoci.SymbolIndex
+
+pub fn aoci_build_index(Array[@aoci.SymbolCoord]) -> @aoci.SymbolIndex
+
+pub fn aoci_build_symbol(pkg~ : String, name~ : String, kind~ : @aoci.SymbolKind, signature? : String, doc? : String, keywords? : Array[String]) -> @aoci.SymbolCoord
+
+pub fn aoci_route(@aoci.SymbolIndex, String) -> Array[@aoci.SymbolCoord]
+
+pub fn aoci_route_by_kind(@aoci.SymbolIndex, @aoci.SymbolKind) -> Array[@aoci.SymbolCoord]
+
+pub fn aoci_route_by_package(@aoci.SymbolIndex, String) -> Array[@aoci.SymbolCoord]
+
+pub fn aoci_route_top_k(@aoci.SymbolIndex, String, Int) -> Array[@aoci.SymbolCoord]
+
+pub fn aoci_verify_all(@aoci.SymbolIndex, budget? : @aoci.ContextBudget) -> @aoci.VerifyResult
+
+pub fn aoci_verify_budget(@aoci.SymbolIndex, @aoci.ContextBudget) -> @aoci.VerifyResult
+
+pub fn aoci_verify_consistency(@aoci.SymbolIndex) -> @aoci.VerifyResult
+
+pub fn aoci_verify_dependencies(@aoci.SymbolIndex, Array[(String, Array[String])]) -> @aoci.VerifyResult
+
+pub fn aoci_verify_keyword_coverage(@aoci.SymbolIndex) -> @aoci.VerifyResult
 
 pub fn apng_info_extended(Bytes) -> @codec.ApngInfoExtended raise @types.LoadError
 
@@ -580,6 +607,20 @@ pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
 pub fn connected_components(@types.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
 pub fn connected_components_analysis(@types.Image, connectivity? : Int) -> @ocr.OcrConnectedComponentsResult raise @types.LoadError
+
+pub fn context_budget_add_partition(@aoci.ContextBudget, String, Int) -> @aoci.ContextBudget
+
+pub fn context_budget_allocate(@aoci.ContextBudget, Array[@aoci.SymbolCoord]) -> Array[@aoci.SymbolCoord]
+
+pub fn context_budget_allocate_with_priority(@aoci.ContextBudget, Array[(@aoci.SymbolCoord, Int)]) -> Array[@aoci.SymbolCoord]
+
+pub fn context_budget_is_exhausted(@aoci.ContextBudget) -> Bool
+
+pub fn context_budget_make(Int) -> @aoci.ContextBudget
+
+pub fn context_budget_remaining(@aoci.ContextBudget) -> Int
+
+pub fn context_budget_usage_report(@aoci.ContextBudget) -> String
 
 pub fn contour_area(@edge.Contour) -> Float
 
@@ -2777,6 +2818,32 @@ pub fn superpixel_segmentation(@types.Image, Int) -> @segmentation.SuperpixelRes
 
 pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
+pub fn symbol_coord_estimated_tokens(@aoci.SymbolCoord) -> Int
+
+pub fn symbol_coord_full_name(@aoci.SymbolCoord) -> String
+
+pub fn symbol_coord_has_keyword(@aoci.SymbolCoord, String) -> Bool
+
+pub fn symbol_coord_make(pkg~ : String, name~ : String, kind~ : @aoci.SymbolKind, signature? : String, doc? : String, keywords? : Array[String]) -> @aoci.SymbolCoord
+
+pub fn symbol_index_find_by_keyword(@aoci.SymbolIndex, String) -> Array[@aoci.SymbolCoord]
+
+pub fn symbol_index_find_by_kind(@aoci.SymbolIndex, @aoci.SymbolKind) -> Array[@aoci.SymbolCoord]
+
+pub fn symbol_index_find_by_name(@aoci.SymbolIndex, String) -> Array[@aoci.SymbolCoord]
+
+pub fn symbol_index_find_by_package(@aoci.SymbolIndex, String) -> Array[@aoci.SymbolCoord]
+
+pub fn symbol_index_get(@aoci.SymbolIndex, Int) -> @aoci.SymbolCoord raise Failure
+
+pub fn symbol_index_make(Array[@aoci.SymbolCoord]) -> @aoci.SymbolIndex
+
+pub fn symbol_index_size(@aoci.SymbolIndex) -> Int
+
+pub fn symbol_index_total_tokens(@aoci.SymbolIndex) -> Int
+
+pub fn symbol_kind_to_string(@aoci.SymbolKind) -> String
+
 pub fn synthesize_view_ci(@computational_imaging.LightFieldData, Double, Double) -> @computational_imaging.ViewSynthesisResult
 
 pub fn tcontext_make(Float) -> @spatiotemporal.TContext raise @types.LoadError
@@ -2948,6 +3015,8 @@ pub fn vegetation_coverage(@types.Image, ndvi_soil? : Double, ndvi_veg? : Double
 pub fn verify_image_source_enhanced_fs(@types.Image, @forensics.EnhancedVerificationConfig) -> @forensics.EnhancedVerificationResult raise @types.LoadError
 
 pub fn verify_image_source_fs(@types.Image, @forensics.SourceVerificationConfig) -> @forensics.SourceVerificationResult raise @types.LoadError
+
+pub fn verify_result_make(is_valid~ : Bool, issues? : Array[String]) -> @aoci.VerifyResult
 
 pub fn vertical_projection(@types.Image) -> @ocr.ProjectionResult raise @types.LoadError
 
@@ -3235,6 +3304,8 @@ pub using @ocr {type ConfusionMatrix}
 pub using @segment {type ConnectedComponent}
 
 pub using @segment {type ConnectedComponentLabelImage}
+
+pub using @aoci {type ContextBudget}
 
 pub using @edge {type Contour}
 
@@ -3984,6 +4055,12 @@ pub using @segmentation {type Superpixel}
 
 pub using @segment {type SuperpixelResult}
 
+pub using @aoci {type SymbolCoord}
+
+pub using @aoci {type SymbolIndex}
+
+pub using @aoci {type SymbolKind}
+
 pub using @spatiotemporal {type TContext}
 
 pub using @spatiotemporal {type TFrame}
@@ -4079,6 +4156,8 @@ pub using @vlm_multimodal {type VLMConfig as VLMConfigVLM}
 pub using @fieldimg {type VectorField}
 
 pub using @remote_sensing {type VegetationIndices}
+
+pub using @aoci {type VerifyResult}
 
 pub using @video {type VideoFrames}
 

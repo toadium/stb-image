@@ -2113,6 +2113,18 @@
 - 新增 3 类型 + 40+ 公共函数，reexport.mbt 注册顶层 API
 - +40 tests（IRValue 类型测试 + IROp 标签 + Builder + Executor + TypeCheck + Describe + Serializer 往返 + E2E 管道）
 - 6624×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v271.0.0 - GeoVerse Phase 3: AOCI 符号语义索引
+- 新增 `src/aoci/`：符号语义索引模块（GeoVerse 第五层横切基础设施）
+  - **SymbolCoord**：符号坐标（pkg/name/kind/signature/doc/keywords）+ full_name/has_keyword/estimated_tokens
+  - **SymbolKind**：符号类型枚举（Function/Method/Type/TypeAlias/Enum/Struct）
+  - **SymbolIndex**：全量符号索引 + 关键词倒排表 + find_by_name/package/keyword/kind
+  - **AOCI-Builder**：build_index/build_symbol/build_from_mbti/build_dependency_graph
+  - **AOCI-Router**：route/route_top_k/route_by_package/route_by_kind（关键词匹配 + 评分排序）
+  - **AOCI-ContextBudget**：Token 配额管理 + allocate/allocate_with_priority + 降级压缩
+  - **AOCI-Verifier**：verify_consistency/keyword_coverage/dependencies/budget/all
+- 新增 5 类型 + 30+ 公共函数，reexport.mbt 注册顶层 API
+- +36 tests（Symbol/Index/Builder/Router/Budget/Verifier + E2E）
+- 6660×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v268.0.0 - GeoVerse Phase 1/2 多策略综合测试
 - 新增 `src/fieldimg/formal_v266_test.mbt`：fieldimg FAKE+MOCK+E2E+形式化证明（+37 tests）
   - **FAKE**：常量场/线性场/二次场/随机场(LCG)生成器 + 灰度图/RGB图生成器
