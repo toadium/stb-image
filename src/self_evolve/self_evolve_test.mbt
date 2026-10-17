@@ -963,3 +963,92 @@ test "AI: gen_test_file_content 头部含版本标记" {
   assert_true(content[0] == '/')
   assert_true(content[1] == '/')
 }
+// ===========================================================================
+// v282.0.0 退化自动修复测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: repair_op Resize(0,0) 修复后无退化" {
+  let repaired = @self_evolve.repair_op(@imgir.Resize(0, 0))
+  let degs = @self_evolve.detect_degradation(repaired)
+  assert_eq(degs.length(), 0)
+}
+
+///|
+test "形式化: repair_op 安全算子保持无退化" {
+  let repaired = @self_evolve.repair_op(@imgir.FlipH)
+  let degs = @self_evolve.detect_degradation(repaired)
+  assert_eq(degs.length(), 0)
+}
+
+///|
+test "形式化: repair_op STSnapshot(2.0) 修复后无退化" {
+  let repaired = @self_evolve.repair_op(@imgir.STSnapshot(2.0F))
+  let degs = @self_evolve.detect_degradation(repaired)
+  assert_eq(degs.length(), 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: repair_pipeline 退化管道修复后无退化" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let repaired_pipe = @self_evolve.repair_pipeline(pipe)
+  let degs = @self_evolve.scan_degradations(repaired_pipe.ops)
+  assert_eq(degs.length(), 0)
+}
+
+///|
+test "FAKE: repair_report 安全管道无修复动作" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let report = @self_evolve.repair_report(pipe)
+  assert_eq(report.repair_count(), 0)
+  assert_true(report.is_fully_repaired())
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: repair_report Resize(0,0) 有修复动作" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let report = @self_evolve.repair_report(pipe)
+  assert_true(report.repair_count() >= 1)
+}
+
+///|
+test "MOCK: repair_report 退化管道修复后 fully repaired" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.STSnapshot(2.0F))
+  let report = @self_evolve.repair_report(pipe)
+  assert_true(report.is_fully_repaired())
+}
+
+// --- E2E ---
+
+///|
+test "E2E: repair_all 19 个报告" {
+  let reports = @self_evolve.repair_all()
+  assert_eq(reports.length(), 19)
+  for r in reports {
+    assert_true(r.original_op_count == 1)
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: repair_report summary 含修复信息" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let report = @self_evolve.repair_report(pipe)
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "AI: repair_op GaussianBlur(0,0) sigma 修复" {
+  let repaired = @self_evolve.repair_op(@imgir.GaussianBlur(3, 0.0F))
+  let degs = @self_evolve.detect_degradation(repaired)
+  assert_eq(degs.length(), 0)
+}

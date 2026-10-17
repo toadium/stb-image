@@ -30,6 +30,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `grill.mbt` | GrillRule / GrillResult / GrillReport / grill_rules / grill_rule_desc / run_grill_check / run_grill_all / all_passed / failed_count / passed_count |
 | `phase4_report.mbt` | Phase4Capability / Phase4Report / phase4_capabilities / phase4_total_types / phase4_total_functions / phase4_total_tests / phase4_report / phase4_is_complete |
 | `exec_test_gen.mbt` | ExecutableTest / ExecutableTestFile / gen_executable_test / gen_executable_suite / gen_test_file_content / gen_test_file_for_op / gen_test_file_for_all / test_count / is_non_empty |
+| `auto_repair.mbt` | RepairAction / RepairReport / repair_op / repair_pipeline / repair_report / repair_all / is_fully_repaired / repair_count |
 
 ## 公共 API
 
@@ -73,7 +74,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-93 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+103 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -137,3 +138,20 @@ Phase 5 起步：将 TestCase 描述转化为可执行 moon test 代码字符串
 - `gen_test_file_for_op(op)` → ExecutableTestFile — 单算子测试文件
 - `gen_test_file_for_all()` → 19 个测试文件
 - `ExecutableTestFile::test_count()` / `is_non_empty()` — 文件统计
+## 退化自动修复（v282.0.0）
+
+将退化检测从"发现"推向"修复" — 自动修正退化参数。
+
+| 退化 | 修复 |
+|------|------|
+| Resize(0, h) | Resize(1, h) |
+| GaussianBlur(r, 0.0) | GaussianBlur(r, 1.0) |
+| GaussianBlur(r, σ<0) | GaussianBlur(r, -σ) |
+| Sharpen(极端) | Sharpen(clamp[-100,100]) |
+| FieldClamp(lo>hi) | FieldClamp(hi, lo) |
+| STSnapshot(t∉[0,1]) | STSnapshot(clamp[0,1]) |
+
+- `repair_op(op)` → IROp — 修复单算子
+- `repair_pipeline(pipeline)` → IRPipeline — 修复管道
+- `repair_report(pipeline)` → RepairReport — 修复报告
+- `RepairReport::is_fully_repaired()` / `repair_count()` — 结果统计

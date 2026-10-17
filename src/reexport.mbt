@@ -12519,3 +12519,40 @@ pub fn exec_test_count(file : ExecutableTestFile) -> Int {
 pub fn exec_test_is_non_empty(file : ExecutableTestFile) -> Bool {
   @self_evolve.ExecutableTestFile::is_non_empty(file)
 }
+// self_evolve — 退化自动修复（v282.0.0）
+
+///|
+pub type RepairAction = @self_evolve.RepairAction
+
+///|
+pub type RepairReport = @self_evolve.RepairReport
+
+///|
+pub fn repair_op(op : IROp) -> IROp {
+  @self_evolve.repair_op(op)
+}
+
+///|
+pub fn repair_pipeline(pipeline : IRPipeline) -> IRPipeline {
+  @self_evolve.repair_pipeline(pipeline)
+}
+
+///|
+pub fn repair_report(pipeline : IRPipeline) -> RepairReport {
+  @self_evolve.repair_report(pipeline)
+}
+
+///|
+pub fn repair_all() -> Array[RepairReport] {
+  @self_evolve.repair_all()
+}
+
+///|
+pub fn repair_is_fully_repaired(report : RepairReport) -> Bool {
+  @self_evolve.RepairReport::is_fully_repaired(report)
+}
+
+///|
+pub fn repair_count(report : RepairReport) -> Int {
+  @self_evolve.RepairReport::repair_count(report)
+}
