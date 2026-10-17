@@ -12366,3 +12366,32 @@ pub fn perf_optimize_check(pipeline : IRPipeline) -> PerfRegression {
 pub fn perf_compare(pipe1 : IRPipeline, pipe2 : IRPipeline) -> PerfRegression {
   @self_evolve.compare_pipelines(pipe1, pipe2)
 }
+// self_evolve — 自演化闭环（v278.0.0）
+
+///|
+pub type EvolveCycleReport = @self_evolve.EvolveCycleReport
+
+///|
+pub fn evolve_full_cycle(pipeline : IRPipeline) -> EvolveCycleReport {
+  @self_evolve.evolve_full_cycle(pipeline)
+}
+
+///|
+pub fn evolve_cycle_all() -> Array[EvolveCycleReport] {
+  @self_evolve.evolve_cycle_all()
+}
+
+///|
+pub fn evolve_cycle_is_improved(report : EvolveCycleReport) -> Bool {
+  @self_evolve.EvolveCycleReport::is_improved(report)
+}
+
+///|
+pub fn evolve_cycle_has_degradation_risk(report : EvolveCycleReport) -> Bool {
+  @self_evolve.EvolveCycleReport::has_degradation_risk(report)
+}
+
+///|
+pub fn evolve_cycle_safety_score(report : EvolveCycleReport) -> Int {
+  @self_evolve.EvolveCycleReport::safety_score(report)
+}

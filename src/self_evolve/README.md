@@ -26,6 +26,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `optimize.mbt` | optimize_pipeline / suggest_optimizations / optimize_all / optimized_op_count |
 | `perf_types.mbt` | OpCost / PerfBaseline / PerfRegression |
 | `perf_cost.mbt` | estimate_op_cost / estimate_pipeline_cost / check_regression / perf_optimize_check / compare_pipelines |
+| `evolve_loop.mbt` | EvolveCycleReport / evolve_full_cycle / evolve_cycle_all / is_improved / has_degradation_risk / safety_score |
 
 ## 公共 API
 
@@ -69,7 +70,17 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-54 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+64 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+
+## 自演化闭环（v278.0.0）
+
+完整闭环串联四项能力：退化发现 → 测试生成 → 管道优化 → 性能回归 → 综合报告。
+
+- `evolve_full_cycle(pipeline)` → EvolveCycleReport — 单管道完整闭环
+- `evolve_cycle_all()` → Array[EvolveCycleReport] — 19 种算子全闭环
+- `EvolveCycleReport::is_improved()` → Bool — 算子减少且成本降低
+- `EvolveCycleReport::has_degradation_risk()` → Bool — 存在退化场景
+- `EvolveCycleReport::safety_score()` → Int — 安全度 0-100（退化扣 10，严重扣 20）
 
 ## 管道优化
 

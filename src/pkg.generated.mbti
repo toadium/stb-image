@@ -1268,6 +1268,14 @@ pub fn evolve_count_category(Array[@self_evolve.TestCase]) -> Array[(@self_evolv
 
 pub fn evolve_count_kind(Array[@self_evolve.DegradationCase]) -> Array[(@self_evolve.DegradationKind, Int)]
 
+pub fn evolve_cycle_all() -> Array[@self_evolve.EvolveCycleReport]
+
+pub fn evolve_cycle_has_degradation_risk(@self_evolve.EvolveCycleReport) -> Bool
+
+pub fn evolve_cycle_is_improved(@self_evolve.EvolveCycleReport) -> Bool
+
+pub fn evolve_cycle_safety_score(@self_evolve.EvolveCycleReport) -> Int
+
 pub fn evolve_degradation_scan(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
 
 pub fn evolve_detect_degradation(@imgir.IROp) -> Array[@self_evolve.DegradationCase]
@@ -1275,6 +1283,8 @@ pub fn evolve_detect_degradation(@imgir.IROp) -> Array[@self_evolve.DegradationC
 pub fn evolve_edge_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
 
 pub fn evolve_filter_severity(Array[@self_evolve.DegradationCase], @self_evolve.Severity) -> Array[@self_evolve.DegradationCase]
+
+pub fn evolve_full_cycle(@imgir.IRPipeline) -> @self_evolve.EvolveCycleReport
 
 pub fn evolve_gen_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
 
@@ -3566,6 +3576,8 @@ pub using @ocr {type EnsembleConfig}
 pub using @ocr {type ErrorAnalysisEntry}
 
 pub using @ocr {type ErrorAnalysisReport}
+
+pub using @self_evolve {type EvolveCycleReport}
 
 pub using @self_evolve {type EvolveReport}
 

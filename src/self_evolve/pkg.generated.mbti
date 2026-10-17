@@ -31,7 +31,11 @@ pub fn evolve(Array[@imgir.IROp]) -> EvolveReport
 
 pub fn evolve_all() -> EvolveReport
 
+pub fn evolve_cycle_all() -> Array[EvolveCycleReport]
+
 pub fn evolve_degradation_scan(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn evolve_full_cycle(@imgir.IRPipeline) -> EvolveCycleReport
 
 pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[TestCase]
 
@@ -89,6 +93,23 @@ pub(all) enum DegradationKind {
 pub fn DegradationKind::equal(Self, Self) -> Bool
 pub fn DegradationKind::not_equal(Self, Self) -> Bool
 pub fn DegradationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolveCycleReport {
+  pipeline_desc : String
+  original_op_count : Int
+  optimized_op_count : Int
+  generated_tests : Array[TestCase]
+  found_degradations : Array[DegradationCase]
+  optimization_report : OptimizationReport
+  perf_regression : PerfRegression
+  cycle_summary : String
+} derive(Eq, @debug.Debug)
+pub fn EvolveCycleReport::equal(Self, Self) -> Bool
+pub fn EvolveCycleReport::has_degradation_risk(Self) -> Bool
+pub fn EvolveCycleReport::is_improved(Self) -> Bool
+pub fn EvolveCycleReport::not_equal(Self, Self) -> Bool
+pub fn EvolveCycleReport::safety_score(Self) -> Int
+pub fn EvolveCycleReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolveReport {
   generated_tests : Array[TestCase]

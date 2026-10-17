@@ -539,3 +539,107 @@ test "AI: 优化消除冗余后成本降低" {
   // 两个 GaussianBlur(3, 1.0) 合并为一个 GaussianBlur(3, 2.0)，成本从 100 降到 50
   assert_true(regression.is_improvement())
 }
+// === 自演化闭环测试 ===
+
+// --- 形式化证明 ---
+
+///|
+test "evolve_full_cycle: 非空管道返回有效报告" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.ToGray)
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_eq(report.original_op_count, 2)
+  assert_true(report.generated_tests.length() >= 2)
+  assert_true(report.found_degradations.length() >= 0)
+}
+
+///|
+test "evolve_full_cycle: 优化后算子数 <= 原始" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.ToGray)
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_true(report.optimized_op_count <= report.original_op_count)
+}
+
+///|
+test "safety_score: 0-100 范围" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  let score = report.safety_score()
+  assert_true(score >= 0)
+  assert_true(score <= 100)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: 含退化+优化的管道闭环" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_true(report.has_degradation_risk())
+  assert_true(report.optimized_op_count < report.original_op_count)
+}
+
+///|
+test "FAKE: 无退化无优化的管道闭环" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.ToGray)
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_true(!report.has_degradation_risk())
+  assert_eq(report.safety_score(), 100)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 空管道闭环" {
+  let pipe = @imgir.IRPipeline::new()
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_eq(report.original_op_count, 0)
+  assert_eq(report.optimized_op_count, 0)
+  assert_eq(report.safety_score(), 100)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: evolve_cycle_all 全部 19 种算子" {
+  let reports = @self_evolve.evolve_cycle_all()
+  assert_eq(reports.length(), 19)
+  for r in reports {
+    assert_true(r.original_op_count == 1)
+    assert_true(r.generated_tests.length() >= 1)
+  }
+}
+
+///|
+test "E2E: is_improved 优化+成本双降" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(3, 1.0F))
+    .add(@imgir.GaussianBlur(3, 1.0F))
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  // 两个 GaussianBlur 合并为一个，算子减少且成本降低
+  assert_true(report.is_improved())
+}
+
+// --- AI ---
+
+///|
+test "AI: 闭环摘要包含关键信息" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH)
+  let report = @self_evolve.evolve_full_cycle(pipe)
+  assert_true(report.cycle_summary.length() > 0)
+  assert_true(report.pipeline_desc.length() > 0)
+}
+
+///|
+test "AI: 退化管道安全度低于安全管道" {
+  let deg_pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let safe_pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let deg_report = @self_evolve.evolve_full_cycle(deg_pipe)
+  let safe_report = @self_evolve.evolve_full_cycle(safe_pipe)
+  assert_true(deg_report.safety_score() < safe_report.safety_score())
+}
