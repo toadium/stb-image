@@ -6,6 +6,7 @@ import {
   "walkzzz/image/src/imgir",
   "walkzzz/image/src/aoci",
   "walkzzz/image/src/agent_kit",
+  "walkzzz/image/src/self_evolve",
   "walkzzz/image/src/pure/codec",
   "walkzzz/image/src/pure/util" @pure_util,
   "walkzzz/image/src/lib",

@@ -45,6 +45,7 @@ import {
   "walkzzz/image/src/scene_understanding",
   "walkzzz/image/src/segment",
   "walkzzz/image/src/segmentation",
+  "walkzzz/image/src/self_evolve",
   "walkzzz/image/src/slam",
   "walkzzz/image/src/spatiotemporal",
   "walkzzz/image/src/stereo3d",
@@ -1256,6 +1257,42 @@ pub fn evaluate_face_quality_fr(@types.Image, @face_recognition.FaceDetectionRes
 pub fn evaluate_image_encryption_quality_enc(@types.Image, @types.Image) -> @encryption.ImageEncryptionQuality raise @types.LoadError
 
 pub fn evaluate_scan_quality(@types.Image) -> @ocr.ScanQuality raise @types.LoadError
+
+pub fn evolve_all() -> @self_evolve.EvolveReport
+
+pub fn evolve_all_ops() -> Array[@imgir.IROp]
+
+pub fn evolve_boundary_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
+
+pub fn evolve_count_category(Array[@self_evolve.TestCase]) -> Array[(@self_evolve.TestCategory, Int)]
+
+pub fn evolve_count_kind(Array[@self_evolve.DegradationCase]) -> Array[(@self_evolve.DegradationKind, Int)]
+
+pub fn evolve_degradation_scan(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
+
+pub fn evolve_detect_degradation(@imgir.IROp) -> Array[@self_evolve.DegradationCase]
+
+pub fn evolve_edge_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
+
+pub fn evolve_filter_severity(Array[@self_evolve.DegradationCase], @self_evolve.Severity) -> Array[@self_evolve.DegradationCase]
+
+pub fn evolve_gen_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
+
+pub fn evolve_normal_tests(@imgir.IROp) -> Array[@self_evolve.TestCase]
+
+pub fn evolve_report_degradation_count(@self_evolve.EvolveReport) -> Int
+
+pub fn evolve_report_severe_count(@self_evolve.EvolveReport) -> Int
+
+pub fn evolve_report_test_count(@self_evolve.EvolveReport) -> Int
+
+pub fn evolve_run(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
+
+pub fn evolve_scan_degradations(Array[@imgir.IROp]) -> Array[@self_evolve.DegradationCase]
+
+pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[@self_evolve.TestCase]
+
+pub fn evolve_tests_only(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
 
 pub fn expand_query_advanced(Array[Double], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.QueryExpansionResult
 
@@ -3372,6 +3409,10 @@ pub using @forensics_enhanced {type DctCoefficientResult}
 
 pub using @intelligent_vision {type DefectDetectionResult as DefectDetectionResultIV}
 
+pub using @self_evolve {type DegradationCase}
+
+pub using @self_evolve {type DegradationKind}
+
 pub using @inpainting {type DehazeAlgorithm}
 
 pub using @enhance {type DehazeConfig}
@@ -3489,6 +3530,8 @@ pub using @ocr {type EnsembleConfig}
 pub using @ocr {type ErrorAnalysisEntry}
 
 pub using @ocr {type ErrorAnalysisReport}
+
+pub using @self_evolve {type EvolveReport}
 
 pub using @meta {type ExifInfo}
 
@@ -4018,6 +4061,8 @@ pub using @segment {type SegmentationResult}
 
 pub using @segmentation {type SemanticSegmentationResult}
 
+pub using @self_evolve {type Severity}
+
 pub using @feature {type SiftDescriptor}
 
 pub using @feature {type SiftKeyPoint}
@@ -4119,6 +4164,10 @@ pub using @feature {type TemplateMatchResult}
 pub using @ocr {type TemplateMatcher}
 
 pub using @fieldimg {type TensorField}
+
+pub using @self_evolve {type TestCase}
+
+pub using @self_evolve {type TestCategory}
 
 pub using @ocr {type TextBlock}
 

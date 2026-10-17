@@ -12126,3 +12126,130 @@ pub fn nl_intents(query : String) -> Array[Intent] {
 pub fn nl_pipeline(query : String) -> IRPipeline {
   @agent_kit.nl_pipeline(query)
 }
+// =============================================================================
+// self_evolve — 自演化层（GeoVerse Phase 4）
+// 自动测试用例生成 + 退化场景发现
+// =============================================================================
+
+///|
+pub type TestCategory = @self_evolve.TestCategory
+
+///|
+pub type DegradationKind = @self_evolve.DegradationKind
+
+///|
+pub type Severity = @self_evolve.Severity
+
+///|
+pub type TestCase = @self_evolve.TestCase
+
+///|
+pub type DegradationCase = @self_evolve.DegradationCase
+
+///|
+pub type EvolveReport = @self_evolve.EvolveReport
+
+// --- EvolveReport 方法 ---
+
+///|
+pub fn evolve_report_test_count(report : EvolveReport) -> Int {
+  @self_evolve.EvolveReport::test_count(report)
+}
+
+///|
+pub fn evolve_report_degradation_count(report : EvolveReport) -> Int {
+  @self_evolve.EvolveReport::degradation_count(report)
+}
+
+///|
+pub fn evolve_report_severe_count(report : EvolveReport) -> Int {
+  @self_evolve.EvolveReport::severe_count(report)
+}
+
+// --- 测试用例生成 ---
+
+///|
+pub fn evolve_gen_tests(op : IROp) -> Array[TestCase] {
+  @self_evolve.gen_test_for_op(op)
+}
+
+///|
+pub fn evolve_boundary_tests(op : IROp) -> Array[TestCase] {
+  @self_evolve.gen_boundary_tests(op)
+}
+
+///|
+pub fn evolve_normal_tests(op : IROp) -> Array[TestCase] {
+  @self_evolve.gen_normal_tests(op)
+}
+
+///|
+pub fn evolve_edge_tests(op : IROp) -> Array[TestCase] {
+  @self_evolve.gen_edge_tests(op)
+}
+
+///|
+pub fn evolve_test_suite(ops : Array[IROp]) -> Array[TestCase] {
+  @self_evolve.evolve_test_suite(ops)
+}
+
+// --- 退化检测 ---
+
+///|
+pub fn evolve_detect_degradation(op : IROp) -> Array[DegradationCase] {
+  @self_evolve.detect_degradation(op)
+}
+
+///|
+pub fn evolve_scan_degradations(ops : Array[IROp]) -> Array[DegradationCase] {
+  @self_evolve.scan_degradations(ops)
+}
+
+///|
+pub fn evolve_filter_severity(
+  cases : Array[DegradationCase],
+  min_severity : Severity,
+) -> Array[DegradationCase] {
+  @self_evolve.filter_by_severity(cases, min_severity)
+}
+
+///|
+pub fn evolve_count_kind(
+  cases : Array[DegradationCase],
+) -> Array[(DegradationKind, Int)] {
+  @self_evolve.count_by_kind(cases)
+}
+
+// --- 高层 API ---
+
+///|
+pub fn evolve_all_ops() -> Array[IROp] {
+  @self_evolve.all_ops()
+}
+
+///|
+pub fn evolve_run(ops : Array[IROp]) -> EvolveReport {
+  @self_evolve.evolve(ops)
+}
+
+///|
+pub fn evolve_all() -> EvolveReport {
+  @self_evolve.evolve_all()
+}
+
+///|
+pub fn evolve_tests_only(ops : Array[IROp]) -> EvolveReport {
+  @self_evolve.evolve_tests_only(ops)
+}
+
+///|
+pub fn evolve_degradation_scan(ops : Array[IROp]) -> EvolveReport {
+  @self_evolve.evolve_degradation_scan(ops)
+}
+
+///|
+pub fn evolve_count_category(
+  tests : Array[TestCase],
+) -> Array[(TestCategory, Int)] {
+  @self_evolve.count_by_category(tests)
+}

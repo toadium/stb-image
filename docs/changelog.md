@@ -2101,6 +2101,16 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v275.0.0 - GeoVerse Phase 4: self_evolve 自演化预研
+- 新增 `src/self_evolve/`：自演化层模块（GeoVerse 第七层）
+  - **evolve_types**：TestCategory / DegradationKind / Severity / TestCase / DegradationCase / EvolveReport
+  - **test_gen**：gen_test_for_op / gen_boundary_tests / gen_normal_tests / gen_edge_tests / evolve_test_suite — 基于 19 种 IROp 算子签名 + 边界条件自动生成测试用例
+  - **degrade_detect**：detect_degradation / scan_degradations / filter_by_severity / count_by_kind — 5 条领域规则扫描退化（除零/奇异/场间断/溢出/NaN/Inf）
+  - **evolve**：all_ops / evolve / evolve_all / evolve_tests_only / evolve_degradation_scan / count_by_category — 高层 API
+- 新增 6 类型 + 18 公共函数，reexport.mbt 注册顶层 API
+- +25 tests（AI + FAKE + MOCK + E2E + 形式化证明多手段测试）
+- 6729×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- 新增 R17 自演化验证规则到 rules.md
 ## v274.0.0 - GeoVerse Phase 4 启动: mattpocock/skills 工程范式嵌入
 - 更新 `ARCHITECTURE.md` 4.7 节：Agent-Kit / 自演化层扩展为 5 个子节
   - **4.7.1 Agent-Kit 自然语言 API**：Intent / nl_parse / compile / nl_process 组件表 + 示例

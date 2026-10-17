@@ -1,0 +1,110 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/self_evolve"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image/src/imgir",
+}
+
+// Values
+pub fn all_ops() -> Array[@imgir.IROp]
+
+pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
+
+pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
+
+pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
+
+pub fn evolve(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn evolve_all() -> EvolveReport
+
+pub fn evolve_degradation_scan(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[TestCase]
+
+pub fn evolve_tests_only(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
+
+pub fn gen_boundary_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_edge_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_normal_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_test_for_op(@imgir.IROp) -> Array[TestCase]
+
+pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
+
+// Errors
+
+// Types and methods
+pub(all) struct DegradationCase {
+  kind : DegradationKind
+  op_tag : String
+  description : String
+  severity : Severity
+} derive(Eq, @debug.Debug)
+pub fn DegradationCase::equal(Self, Self) -> Bool
+pub fn DegradationCase::not_equal(Self, Self) -> Bool
+pub fn DegradationCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DegradationKind {
+  DivisionByZero
+  SingularMatrix
+  FieldDiscontinuity
+  Overflow
+  NaNValue
+  InfValue
+} derive(Eq, @debug.Debug)
+pub fn DegradationKind::equal(Self, Self) -> Bool
+pub fn DegradationKind::not_equal(Self, Self) -> Bool
+pub fn DegradationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolveReport {
+  generated_tests : Array[TestCase]
+  found_degradations : Array[DegradationCase]
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn EvolveReport::degradation_count(Self) -> Int
+pub fn EvolveReport::equal(Self, Self) -> Bool
+pub fn EvolveReport::not_equal(Self, Self) -> Bool
+pub fn EvolveReport::severe_count(Self) -> Int
+pub fn EvolveReport::test_count(Self) -> Int
+pub fn EvolveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Warning
+  Critical
+  Fatal
+} derive(Eq, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TestCase {
+  name : String
+  op_tag : String
+  category : TestCategory
+  description : String
+  input_spec : String
+  expected_behavior : String
+} derive(Eq, @debug.Debug)
+pub fn TestCase::equal(Self, Self) -> Bool
+pub fn TestCase::not_equal(Self, Self) -> Bool
+pub fn TestCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TestCategory {
+  Boundary
+  Normal
+  EdgeCase
+  Degradation
+} derive(Eq, @debug.Debug)
+pub fn TestCategory::equal(Self, Self) -> Bool
+pub fn TestCategory::not_equal(Self, Self) -> Bool
+pub fn TestCategory::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

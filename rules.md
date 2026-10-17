@@ -65,6 +65,13 @@ README 中英文，美化，默认中文；每个子包也要 README.md。
 - 清理 git 未跟踪的无关文件（`git clean -nd` 检查，确认后 `git clean -fd` 删除）
 - **注意**：清理前先用 `git status` 确认不会删除有价值的未提交工作
 
+### R17 — 自演化验证 ⭐ 新增
+新增 ImgIR 算子或修改算子参数后，须运行 `@self_evolve.evolve_all()` 验证：
+1. **测试覆盖**：新算子有边界/正常/边缘测试（`gen_test_for_op(op).length() >= 1`）
+2. **退化识别**：`detect_degradation(op)` 覆盖除零/奇异/场间断/溢出/NaN/Inf
+3. **名称唯一**：测试用例名称唯一（避免 deprecated 警告）
+4. **四目标全绿**：`moon test` 四目标（native/wasm-gc/js/wasm）全部通过
+
 ---
 
 ## 二、MoonBit 技术要点 / Technical Notes
