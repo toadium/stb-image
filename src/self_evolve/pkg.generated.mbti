@@ -9,6 +9,12 @@ import {
 // Values
 pub fn all_ops() -> Array[@imgir.IROp]
 
+pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> RootCauseReport
+
+pub fn analyze_root_cause(@imgir.IROp) -> Array[RootCause]
+
+pub fn analyze_root_cause_all() -> RootCauseReport
+
 pub fn best_repair(@imgir.IROp) -> StrategyRepairResult
 
 pub fn best_repair_all() -> Array[StrategyRepairResult]
@@ -58,6 +64,8 @@ pub fn evolve_tests_only(Array[@imgir.IROp]) -> EvolveReport
 pub fn exec_optimize(@imgir.IRPipeline) -> OptimizeExecResult
 
 pub fn exec_optimize_all() -> Array[OptimizeExecResult]
+
+pub fn filter_by_kind(Array[RootCause], DegradationKind) -> Array[RootCause]
 
 pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
 
@@ -450,6 +458,27 @@ pub(all) enum RepairStrategy {
 pub fn RepairStrategy::equal(Self, Self) -> Bool
 pub fn RepairStrategy::not_equal(Self, Self) -> Bool
 pub fn RepairStrategy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RootCause {
+  op_tag : String
+  degradation_kind : DegradationKind
+  root_param : String
+  cause_desc : String
+  fix_suggestion : String
+} derive(Eq, @debug.Debug)
+pub fn RootCause::equal(Self, Self) -> Bool
+pub fn RootCause::not_equal(Self, Self) -> Bool
+pub fn RootCause::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RootCauseReport {
+  causes : Array[RootCause]
+  total : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RootCauseReport::equal(Self, Self) -> Bool
+pub fn RootCauseReport::is_clean(Self) -> Bool
+pub fn RootCauseReport::not_equal(Self, Self) -> Bool
+pub fn RootCauseReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RunSummary {
   total : Int

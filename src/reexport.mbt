@@ -12757,3 +12757,40 @@ pub fn combo_coverage_report() -> ComboCoverageReport {
 pub fn unique_combo_count() -> Int {
   @self_evolve.unique_combo_count()
 }
+// self_evolve — 退化根因分析（v289.0.0）
+
+///|
+pub type RootCause = @self_evolve.RootCause
+
+///|
+pub type RootCauseReport = @self_evolve.RootCauseReport
+
+///|
+pub fn analyze_root_cause(op : @imgir.IROp) -> Array[RootCause] {
+  @self_evolve.analyze_root_cause(op)
+}
+
+///|
+pub fn analyze_root_cause_all() -> RootCauseReport {
+  @self_evolve.analyze_root_cause_all()
+}
+
+///|
+pub fn analyze_pipeline_root_cause(
+  pipeline : @imgir.IRPipeline,
+) -> RootCauseReport {
+  @self_evolve.analyze_pipeline_root_cause(pipeline)
+}
+
+///|
+pub fn filter_by_kind(
+  causes : Array[RootCause],
+  kind : @self_evolve.DegradationKind,
+) -> Array[RootCause] {
+  @self_evolve.filter_by_kind(causes, kind)
+}
+
+///|
+pub fn root_cause_report_is_clean(report : RootCauseReport) -> Bool {
+  @self_evolve.RootCauseReport::is_clean(report)
+}

@@ -182,7 +182,13 @@ pub fn analyze_noise_pattern_fs(@types.Image) -> @forensics.NoiseAnalysisResult 
 
 pub fn analyze_noise_residual_fe(@types.Image) -> @forensics_enhanced.NoiseResidualResult
 
+pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> @self_evolve.RootCauseReport
+
 pub fn analyze_polarization_ai(@types.Image, @types.Image, @types.Image, @types.Image) -> @advanced_imaging.PolarizationData
+
+pub fn analyze_root_cause(@imgir.IROp) -> Array[@self_evolve.RootCause]
+
+pub fn analyze_root_cause_all() -> @self_evolve.RootCauseReport
 
 pub fn analyze_table_results(Array[@ocr.EnhancedTableResult]) -> Array[(String, Int)]
 
@@ -1461,6 +1467,8 @@ pub fn field_mul_scalar(@fieldimg.ScalarField, Float) -> @fieldimg.ScalarField r
 pub fn field_sub(@fieldimg.ScalarField, @fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
 
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
+
+pub fn filter_by_kind(Array[@self_evolve.RootCause], @self_evolve.DegradationKind) -> Array[@self_evolve.RootCause]
 
 pub fn filter_components_by_area(@ocr.OcrConnectedComponentsResult, Int, Int) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
 
@@ -2775,6 +2783,8 @@ pub fn rgb_to_ycbcr_16(Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError
 pub fn rgb_to_ycbcr_f(Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError
 
 pub fn robustness_report_to_string(@ocr.RobustnessReport) -> String
+
+pub fn root_cause_report_is_clean(@self_evolve.RootCauseReport) -> Bool
 
 pub fn rotate(@types.Image, Float) -> @types.Image
 
@@ -4228,6 +4238,10 @@ pub using @image_retrieval_advanced {type RetrievalResult}
 pub using @intelligent_vision {type RobotVisionTask as RobotVisionTaskIV}
 
 pub using @ocr {type RobustnessReport}
+
+pub using @self_evolve {type RootCause}
+
+pub using @self_evolve {type RootCauseReport}
 
 pub using @self_evolve {type RunSummary}
 

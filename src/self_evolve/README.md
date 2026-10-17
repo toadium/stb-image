@@ -37,6 +37,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `exec_test_run.mbt` | TestRunResult / RunSummary / run_test_case / run_test_suite / run_tests_for_op / run_tests_for_all / run_summary / all_passed |
 | `smart_repair.mbt` | RepairStrategy / StrategyRepairResult / repair_op_strategy / repair_with_strategies / best_repair / best_repair_all / is_complete / is_improvement |
 | `combo_coverage.mbt` | OpCombo / ComboCoverageReport / gen_all_combos / gen_combo_tests / combo_coverage_report / unique_combo_count |
+| `root_cause.mbt` | RootCause / RootCauseReport / analyze_root_cause / analyze_root_cause_all / analyze_pipeline_root_cause / filter_by_kind / is_clean |
 
 ## 公共 API
 
@@ -80,7 +81,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-153 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+162 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -218,4 +219,12 @@ Phase 6 起步：从占位 assert_true 走向真实断言执行 — 构造算子
 - `gen_all_combos()` → 361 个二元组合
 - `gen_combo_tests()` → 361 个组合测试用例
 - `combo_coverage_report()` → ComboCoverageReport — 覆盖报告
-- `unique_combo_count()` → 独特组合数
+- `unique_combo_count()` → 独特组合数## 退化根因分析（v289.0.0）
+
+将退化检测从"发现"推向"根因定位" — 指出根因参数 + 修复建议。
+
+- `analyze_root_cause(op)` → Array[RootCause] — 单算子根因定位
+- `analyze_root_cause_all()` → RootCauseReport — 全算子根因报告
+- `analyze_pipeline_root_cause(pipeline)` → RootCauseReport — 管道根因分析
+- `filter_by_kind(causes, kind)` → 按退化类型过滤
+- `RootCauseReport::is_clean()` → 无退化

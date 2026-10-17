@@ -1531,3 +1531,88 @@ test "AI: gen_all_combos 每个 combo_desc 非空" {
     assert_true(c.combo_desc.length() > 0)
   }
 }
+// ============================================================
+// v289.0.0 — 退化根因分析测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: analyze_root_cause 安全算子无根因" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.Resize(8, 8))
+  assert_true(causes.length() == 0)
+}
+
+///|
+test "形式化: analyze_root_cause 退化算子 Resize(0,0) 有根因" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.Resize(0, 0))
+  assert_true(causes.length() > 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: analyze_root_cause_all 全安全算子 is_clean" {
+  let report = @self_evolve.analyze_root_cause_all()
+  assert_true(@self_evolve.RootCauseReport::is_clean(report))
+}
+
+///|
+test "FAKE: 退化算子根因含修复建议" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.GaussianBlur(3, 0.0F))
+  for c in causes {
+    assert_true(c.fix_suggestion.length() > 0)
+  }
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: Resize(0,0) 根因参数为 w=0" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.Resize(0, 0))
+  let mut has_w0 = false
+  for c in causes {
+    if c.root_param == "w=0" {
+      has_w0 = true
+    }
+  }
+  assert_true(has_w0)
+}
+
+///|
+test "MOCK: analyze_pipeline_root_cause 退化管道有根因" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let report = @self_evolve.analyze_pipeline_root_cause(pipe)
+  assert_true(report.total > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: filter_by_kind 按类型过滤正确" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.Resize(0, 0))
+  let filtered = @self_evolve.filter_by_kind(
+    causes,
+    @self_evolve.DivisionByZero,
+  )
+  for c in filtered {
+    assert_true(c.degradation_kind is @self_evolve.DivisionByZero)
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: 退化根因 cause_desc 非空" {
+  let causes = @self_evolve.analyze_root_cause(@imgir.Crop(0, 0, 0, 0))
+  for c in causes {
+    assert_true(c.cause_desc.length() > 0)
+  }
+}
+
+///|
+test "AI: analyze_pipeline_root_cause summary 含信息" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.STSnapshot(2.0F))
+  let report = @self_evolve.analyze_pipeline_root_cause(pipe)
+  assert_true(report.summary.length() > 0)
+}
