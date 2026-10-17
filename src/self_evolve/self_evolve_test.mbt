@@ -1671,3 +1671,95 @@ test "AI: phase6 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ============================================================
+// v291.0.0 — 跨算子退化传播测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: analyze_propagation 安全管道无传播" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.analyze_propagation(pipe)
+  assert_true(@self_evolve.PropagationReport::is_safe(report))
+}
+
+///|
+test "形式化: analyze_propagation 退化管道有传播" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.analyze_propagation(pipe)
+  assert_true(report.total_propagations > 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: analyze_propagation_all 返回报告" {
+  let report = @self_evolve.analyze_propagation_all()
+  assert_true(report.chain_length > 0)
+}
+
+///|
+test "FAKE: 退化管道 PropagationStep 含传播描述" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0)).add(@imgir.FlipH)
+  let steps = @self_evolve.propagation_chain(pipe)
+  for s in steps {
+    assert_true(s.propagation_desc.length() > 0)
+  }
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 退化管道 has_propagation_risk 为 true" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(3, 0.0F))
+    .add(@imgir.ToGray)
+  assert_true(@self_evolve.has_propagation_risk(pipe))
+}
+
+///|
+test "MOCK: 安全管道 has_propagation_risk 为 false" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8)).add(@imgir.FlipH)
+  assert_true(!@self_evolve.has_propagation_risk(pipe))
+}
+
+// --- E2E ---
+
+///|
+test "E2E: propagation_chain 返回步骤数组" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.Crop(0, 0, 4, 4))
+  let chain = @self_evolve.propagation_chain(pipe)
+  for s in chain {
+    assert_true(s.from_op_tag == "Resize")
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: 传播报告 summary 含信息" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.STSnapshot(2.0F))
+    .add(@imgir.FlipV)
+  let report = @self_evolve.analyze_propagation(pipe)
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "AI: 传播步骤 from/to 标签非空" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  let steps = @self_evolve.propagation_chain(pipe)
+  for s in steps {
+    assert_true(s.from_op_tag.length() > 0)
+    assert_true(s.to_op_tag.length() > 0)
+  }
+}

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v291.0.0 - GeoVerse Phase 7: 跨算子退化传播
+- 扩展 `src/self_evolve/`：跨算子退化传播 — 分析 pipeline 中退化如何在算子间传播
+  - **propagation**：PropagationStep / PropagationReport + analyze_propagation（管道传播链）/ analyze_propagation_all（全算子传播）/ has_propagation_risk / propagation_chain / is_safe
+  - 将根因分析从"单算子"推向"跨算子传播链"
+- 新增 2 类型 + 4 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6881×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v290.0.0 - GeoVerse Phase 6 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 6 综合报告 — 汇总 v286-v289 全部能力
   - **phase6_report**：Phase6Capability / Phase6Report + phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete

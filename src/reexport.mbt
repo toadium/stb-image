@@ -12831,3 +12831,37 @@ pub fn phase6_report() -> Phase6Report {
 pub fn phase6_is_complete() -> Bool {
   @self_evolve.phase6_is_complete()
 }
+// self_evolve — 跨算子退化传播（v291.0.0）
+
+///|
+pub type PropagationStep = @self_evolve.PropagationStep
+
+///|
+pub type PropagationReport = @self_evolve.PropagationReport
+
+///|
+pub fn analyze_propagation(pipeline : @imgir.IRPipeline) -> PropagationReport {
+  @self_evolve.analyze_propagation(pipeline)
+}
+
+///|
+pub fn analyze_propagation_all() -> PropagationReport {
+  @self_evolve.analyze_propagation_all()
+}
+
+///|
+pub fn has_propagation_risk(pipeline : @imgir.IRPipeline) -> Bool {
+  @self_evolve.has_propagation_risk(pipeline)
+}
+
+///|
+pub fn propagation_chain(
+  pipeline : @imgir.IRPipeline,
+) -> Array[PropagationStep] {
+  @self_evolve.propagation_chain(pipeline)
+}
+
+///|
+pub fn propagation_report_is_safe(report : PropagationReport) -> Bool {
+  @self_evolve.PropagationReport::is_safe(report)
+}

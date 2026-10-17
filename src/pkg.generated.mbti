@@ -186,6 +186,10 @@ pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> @self_evolve.RootCauseR
 
 pub fn analyze_polarization_ai(@types.Image, @types.Image, @types.Image, @types.Image) -> @advanced_imaging.PolarizationData
 
+pub fn analyze_propagation(@imgir.IRPipeline) -> @self_evolve.PropagationReport
+
+pub fn analyze_propagation_all() -> @self_evolve.PropagationReport
+
 pub fn analyze_root_cause(@imgir.IROp) -> Array[@self_evolve.RootCause]
 
 pub fn analyze_root_cause_all() -> @self_evolve.RootCauseReport
@@ -1772,6 +1776,8 @@ pub fn harris_corners_16(@types.Image16, k? : Float, threshold? : Float, min_dis
 
 pub fn harris_corners_f(@types.ImageF, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
+pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
+
 pub fn hdr_default_config() -> @enhance.HdrConfig
 
 pub fn hdr_fusion_average(Array[@types.Image]) -> @types.Image raise @types.LoadError
@@ -2583,6 +2589,10 @@ pub fn process_frame_slam_sl(@slam.SLAMState, @types.Image, @slam.SLAMConfig) ->
 pub fn progress_bar_to_string(Double, width? : Int) -> String
 
 pub fn projection_features(@types.Image) -> @ocr.ProjectionFeatures raise @types.LoadError
+
+pub fn propagation_chain(@imgir.IRPipeline) -> Array[@self_evolve.PropagationStep]
+
+pub fn propagation_report_is_safe(@self_evolve.PropagationReport) -> Bool
 
 pub fn psd_info_extended(Bytes) -> @codec.PsdInfoExtended raise @types.LoadError
 
@@ -4184,6 +4194,10 @@ pub using @ocr {type PostProcessConfig}
 pub using @ocr {type ProjectionFeatures}
 
 pub using @ocr {type ProjectionResult}
+
+pub using @self_evolve {type PropagationReport}
+
+pub using @self_evolve {type PropagationStep}
 
 pub using @codec {type PsdInfoExtended}
 

@@ -39,6 +39,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `combo_coverage.mbt` | OpCombo / ComboCoverageReport / gen_all_combos / gen_combo_tests / combo_coverage_report / unique_combo_count |
 | `root_cause.mbt` | RootCause / RootCauseReport / analyze_root_cause / analyze_root_cause_all / analyze_pipeline_root_cause / filter_by_kind / is_clean |
 | `phase6_report.mbt` | Phase6Capability / Phase6Report / phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete |
+| `propagation.mbt` | PropagationStep / PropagationReport / analyze_propagation / analyze_propagation_all / has_propagation_risk / propagation_chain / is_safe |
 
 ## 公共 API
 
@@ -82,7 +83,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-168 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+177 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -234,4 +235,12 @@ Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因
 
 - `phase6_capabilities()` → 4 个版本能力清单（v286-v289）
 - `phase6_report()` → Phase6Report — 综合报告
-- `phase6_is_complete()` → Bool — Phase 6 是否完成
+- `phase6_is_complete()` → Bool — Phase 6 是否完成## 跨算子退化传播（v291.0.0）
+
+将根因分析从"单算子"推向"跨算子传播链" — 退化如何在管道中传播。
+
+- `analyze_propagation(pipeline)` → PropagationReport — 管道传播链分析
+- `analyze_propagation_all()` → PropagationReport — 全算子传播分析
+- `has_propagation_risk(pipeline)` → Bool — 是否有传播风险
+- `propagation_chain(pipeline)` → Array[PropagationStep] — 传播链
+- `PropagationReport::is_safe()` → 无传播风险

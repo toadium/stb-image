@@ -11,6 +11,10 @@ pub fn all_ops() -> Array[@imgir.IROp]
 
 pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> RootCauseReport
 
+pub fn analyze_propagation(@imgir.IRPipeline) -> PropagationReport
+
+pub fn analyze_propagation_all() -> PropagationReport
+
 pub fn analyze_root_cause(@imgir.IROp) -> Array[RootCause]
 
 pub fn analyze_root_cause_all() -> RootCauseReport
@@ -95,6 +99,8 @@ pub fn grill_rule_desc(GrillRule) -> String
 
 pub fn grill_rules() -> Array[GrillRule]
 
+pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
+
 pub fn is_identity_op(@imgir.IROp) -> Bool
 
 pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
@@ -144,6 +150,8 @@ pub fn phase6_total_functions() -> Int
 pub fn phase6_total_tests() -> Int
 
 pub fn phase6_total_types() -> Int
+
+pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
 
 pub fn repair_all() -> Array[RepairReport]
 
@@ -462,6 +470,27 @@ pub(all) struct Phase6Report {
 pub fn Phase6Report::equal(Self, Self) -> Bool
 pub fn Phase6Report::not_equal(Self, Self) -> Bool
 pub fn Phase6Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PropagationReport {
+  steps : Array[PropagationStep]
+  total_propagations : Int
+  chain_length : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn PropagationReport::equal(Self, Self) -> Bool
+pub fn PropagationReport::is_safe(Self) -> Bool
+pub fn PropagationReport::not_equal(Self, Self) -> Bool
+pub fn PropagationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PropagationStep {
+  from_op_tag : String
+  to_op_tag : String
+  degradation_kind : DegradationKind
+  propagation_desc : String
+} derive(Eq, @debug.Debug)
+pub fn PropagationStep::equal(Self, Self) -> Bool
+pub fn PropagationStep::not_equal(Self, Self) -> Bool
+pub fn PropagationStep::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RepairAction {
   op_tag : String
