@@ -12318,3 +12318,51 @@ pub fn optimize_all(pipeline : IRPipeline) -> OptimizationReport {
 pub fn optimize_count(pipeline : IRPipeline) -> Int {
   @self_evolve.optimized_op_count(pipeline)
 }
+// --- 性能回归检测 ---
+
+///|
+pub type OpCost = @self_evolve.OpCost
+
+///|
+pub type PerfBaseline = @self_evolve.PerfBaseline
+
+///|
+pub type PerfRegression = @self_evolve.PerfRegression
+
+///|
+pub fn perf_is_improvement(regression : PerfRegression) -> Bool {
+  @self_evolve.PerfRegression::is_improvement(regression)
+}
+
+///|
+pub fn perf_improvement_pct(regression : PerfRegression) -> Int {
+  @self_evolve.PerfRegression::improvement_pct(regression)
+}
+
+///|
+pub fn perf_estimate_op(op : IROp) -> OpCost {
+  @self_evolve.estimate_op_cost(op)
+}
+
+///|
+pub fn perf_estimate_pipeline(pipeline : IRPipeline) -> PerfBaseline {
+  @self_evolve.estimate_pipeline_cost(pipeline)
+}
+
+///|
+pub fn perf_check_regression(
+  original : PerfBaseline,
+  optimized : PerfBaseline,
+) -> PerfRegression {
+  @self_evolve.check_regression(original, optimized)
+}
+
+///|
+pub fn perf_optimize_check(pipeline : IRPipeline) -> PerfRegression {
+  @self_evolve.perf_optimize_check(pipeline)
+}
+
+///|
+pub fn perf_compare(pipe1 : IRPipeline, pipe2 : IRPipeline) -> PerfRegression {
+  @self_evolve.compare_pipelines(pipe1, pipe2)
+}

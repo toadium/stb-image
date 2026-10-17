@@ -2412,6 +2412,20 @@ pub fn parse_cli_args(Array[String]) -> @ocr.CliConfig raise @types.LoadError
 
 pub fn paste_tile(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
+pub fn perf_check_regression(@self_evolve.PerfBaseline, @self_evolve.PerfBaseline) -> @self_evolve.PerfRegression
+
+pub fn perf_compare(@imgir.IRPipeline, @imgir.IRPipeline) -> @self_evolve.PerfRegression
+
+pub fn perf_estimate_op(@imgir.IROp) -> @self_evolve.OpCost
+
+pub fn perf_estimate_pipeline(@imgir.IRPipeline) -> @self_evolve.PerfBaseline
+
+pub fn perf_improvement_pct(@self_evolve.PerfRegression) -> Int
+
+pub fn perf_is_improvement(@self_evolve.PerfRegression) -> Bool
+
+pub fn perf_optimize_check(@imgir.IRPipeline) -> @self_evolve.PerfRegression
+
 pub fn pet_synthesize_ai(Int, Int, String) -> @advanced_imaging.PETData
 
 pub fn phase_correlation_registration_ra(@types.Image, @types.Image) -> @registration_advanced.RegistrationResultAdvanced
@@ -3915,6 +3929,8 @@ pub using @ocr {type OcrErrorType}
 
 pub using @ocr {type OcrResult}
 
+pub using @self_evolve {type OpCost}
+
 pub using @pipeline {type Operation}
 
 pub using @video {type OpticalFlowField}
@@ -3944,6 +3960,10 @@ pub using @ocr {type PageRegionType}
 pub using @photo_enhance {type PanoramaConfig}
 
 pub using @photo_enhance {type PanoramaResult}
+
+pub using @self_evolve {type PerfBaseline}
+
+pub using @self_evolve {type PerfRegression}
 
 pub using @ocr {type PerformanceBenchmark}
 

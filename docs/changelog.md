@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v277.0.0 - GeoVerse Phase 4: 性能回归检测
+- 扩展 `src/self_evolve/`：静态成本模型 + 管道成本估算 + 回归检测
+  - **perf_types**：OpCost / PerfBaseline / PerfRegression + is_improvement / improvement_pct
+  - **perf_cost**：estimate_op_cost（19 种算子静态成本 1-100）/ estimate_pipeline_cost / check_regression / perf_optimize_check / compare_pipelines
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +12 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6758×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v276.0.0 - GeoVerse Phase 4: 算法优化
 - 扩展 `src/self_evolve/`：算子等价性检查 + 管道优化
   - **optimize_types**：OptimizationKind / OptimizationSuggestion / OptimizationReport

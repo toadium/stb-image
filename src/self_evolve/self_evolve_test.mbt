@@ -419,3 +419,123 @@ test "AI: 复合优化（恒等+互逆+合并）" {
   // 结果: [Brightness(30), ToGray] = 2
   assert_eq(optimized.length(), 2)
 }
+// === 性能回归检测测试 ===
+
+// --- 形式化证明 ---
+
+///|
+test "estimate_op_cost: 每种算子返回正成本" {
+  for op in @self_evolve.all_ops() {
+    let cost = @self_evolve.estimate_op_cost(op)
+    assert_true(cost.estimated_cost > 0)
+    assert_true(cost.estimated_cost <= 100)
+  }
+}
+
+///|
+test "estimate_pipeline_cost: 总成本 = 各算子成本之和" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.ToGray)
+  let baseline = @self_evolve.estimate_pipeline_cost(pipe)
+  let flip_cost = @self_evolve.estimate_op_cost(@imgir.FlipH).estimated_cost
+  let gray_cost = @self_evolve.estimate_op_cost(@imgir.ToGray).estimated_cost
+  assert_eq(baseline.total_cost, flip_cost + gray_cost)
+  assert_eq(baseline.op_count, 2)
+}
+
+///|
+test "perf_optimize_check: 优化后成本 <= 优化前" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.Brightness(0))
+  let regression = @self_evolve.perf_optimize_check(pipe)
+  assert_true(!regression.is_regression)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: 高成本管道（含 GaussianBlur）" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(5, 1.0F))
+    .add(@imgir.ToGray)
+  let baseline = @self_evolve.estimate_pipeline_cost(pipe)
+  assert_true(baseline.total_cost >= 60) // GaussianBlur 50 + ToGray 15 = 65
+}
+
+///|
+test "FAKE: 低成本管道（仅 FlipH）" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let baseline = @self_evolve.estimate_pipeline_cost(pipe)
+  assert_eq(baseline.total_cost, 10)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 空管道成本为 0" {
+  let pipe = @imgir.IRPipeline::new()
+  let baseline = @self_evolve.estimate_pipeline_cost(pipe)
+  assert_eq(baseline.total_cost, 0)
+  assert_eq(baseline.op_count, 0)
+}
+
+///|
+test "MOCK: check_regression 零成本不崩溃" {
+  let baseline = @self_evolve.estimate_pipeline_cost(@imgir.IRPipeline::new())
+  let regression = @self_evolve.check_regression(baseline, baseline)
+  assert_eq(regression.delta, 0)
+  assert_true(!regression.is_regression)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: perf_optimize_check 完整流程" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Brightness(0))
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.GaussianBlur(3, 1.0F))
+  let regression = @self_evolve.perf_optimize_check(pipe)
+  assert_true(regression.delta <= 0) // 优化减少成本
+  assert_true(regression.is_improvement() || regression.delta == 0)
+}
+
+///|
+test "E2E: compare_pipelines 比较" {
+  let pipe1 = @imgir.IRPipeline::new().add(@imgir.GaussianBlur(5, 1.0F))
+  let pipe2 = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let regression = @self_evolve.compare_pipelines(pipe1, pipe2)
+  // pipe1 成本 50, pipe2 成本 10, delta = 10 - 50 = -40, is_regression = false
+  assert_true(!regression.is_regression)
+  assert_eq(regression.delta, -40)
+}
+
+///|
+test "E2E: PerfRegression improvement_pct" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH)
+  let regression = @self_evolve.perf_optimize_check(pipe)
+  // 原成本 20, 优化后 0, delta = -20
+  assert_true(regression.is_improvement())
+  assert_true(regression.improvement_pct() < 0) // delta 负数
+}
+
+// --- AI ---
+
+///|
+test "AI: GaussianBlur 成本高于 FlipH" {
+  let blur_cost = @self_evolve.estimate_op_cost(@imgir.GaussianBlur(3, 1.0F)).estimated_cost
+  let flip_cost = @self_evolve.estimate_op_cost(@imgir.FlipH).estimated_cost
+  assert_true(blur_cost > flip_cost)
+}
+
+///|
+test "AI: 优化消除冗余后成本降低" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(3, 1.0F))
+    .add(@imgir.GaussianBlur(3, 1.0F))
+  let regression = @self_evolve.perf_optimize_check(pipe)
+  // 两个 GaussianBlur(3, 1.0) 合并为一个 GaussianBlur(3, 2.0)，成本从 100 降到 50
+  assert_true(regression.is_improvement())
+}

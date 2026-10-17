@@ -24,6 +24,8 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `optimize_types.mbt` | OptimizationKind / OptimizationSuggestion / OptimizationReport |
 | `equiv_check.mbt` | is_identity_op / check_inverse_pair / can_merge / merge_ops / rotate90_power_is_identity |
 | `optimize.mbt` | optimize_pipeline / suggest_optimizations / optimize_all / optimized_op_count |
+| `perf_types.mbt` | OpCost / PerfBaseline / PerfRegression |
+| `perf_cost.mbt` | estimate_op_cost / estimate_pipeline_cost / check_regression / perf_optimize_check / compare_pipelines |
 
 ## 公共 API
 
@@ -67,7 +69,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-42 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+54 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 管道优化
 
