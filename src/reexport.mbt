@@ -12585,3 +12585,37 @@ pub fn optimize_exec_is_significant(result : OptimizeExecResult) -> Bool {
 pub fn optimize_exec_efficiency_pct(result : OptimizeExecResult) -> Int {
   @self_evolve.OptimizeExecResult::efficiency_pct(result)
 }
+// self_evolve — 自演化 CI 集成（v284.0.0）
+
+///|
+pub type CIGateResult = @self_evolve.CIGateResult
+
+///|
+pub fn ci_gate_check(pipeline : IRPipeline) -> CIGateResult {
+  @self_evolve.ci_gate_check(pipeline)
+}
+
+///|
+pub fn ci_gate_all() -> Array[CIGateResult] {
+  @self_evolve.ci_gate_all()
+}
+
+///|
+pub fn ci_regression_gate(pipeline : IRPipeline) -> Bool {
+  @self_evolve.ci_regression_gate(pipeline)
+}
+
+///|
+pub fn ci_regression_all_pass() -> Bool {
+  @self_evolve.ci_regression_all_pass()
+}
+
+///|
+pub fn ci_gate_pass_rate(result : CIGateResult) -> Int {
+  @self_evolve.CIGateResult::pass_rate(result)
+}
+
+///|
+pub fn ci_gate_is_green(result : CIGateResult) -> Bool {
+  @self_evolve.CIGateResult::is_green(result)
+}

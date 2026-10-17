@@ -32,6 +32,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `exec_test_gen.mbt` | ExecutableTest / ExecutableTestFile / gen_executable_test / gen_executable_suite / gen_test_file_content / gen_test_file_for_op / gen_test_file_for_all / test_count / is_non_empty |
 | `auto_repair.mbt` | RepairAction / RepairReport / repair_op / repair_pipeline / repair_report / repair_all / is_fully_repaired / repair_count |
 | `optimize_exec.mbt` | OptimizeExecResult / exec_optimize / exec_optimize_all / optimize_verified / is_significant / efficiency_pct |
+| `ci_hook.mbt` | CIGateResult / ci_gate_check / ci_gate_all / ci_regression_gate / ci_regression_all_pass / pass_rate / is_green |
 
 ## 公共 API
 
@@ -75,7 +76,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-112 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+120 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -164,3 +165,12 @@ Phase 5 起步：将 TestCase 描述转化为可执行 moon test 代码字符串
 - `exec_optimize_all()` → 19 个优化结果
 - `optimize_verified(pipeline)` → Bool — 验证优化不劣化（算子数和成本不增加）
 - `OptimizeExecResult::is_significant()` / `efficiency_pct()` — 优化显著性 + 效率
+## 自演化 CI 集成（v284.0.0）
+
+将自演化集成到 CI — 门禁检查 + 回归检测。
+
+- `ci_gate_check(pipeline)` → CIGateResult — 三项门禁（grill + repair + optimize）
+- `ci_gate_all()` → 19 个门禁结果
+- `ci_regression_gate(pipeline)` → Bool — 回归门禁（优化不劣化 + 修复后无退化）
+- `ci_regression_all_pass()` → Bool — 全部 19 算子回归门禁
+- `CIGateResult::pass_rate()` / `is_green()` — 通过率 + 全通过判定

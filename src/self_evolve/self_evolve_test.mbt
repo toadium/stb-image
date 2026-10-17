@@ -1145,3 +1145,82 @@ test "AI: exec_optimize 不变量 ops_reduced + optimized == original" {
     assert_eq(r.ops_reduced + r.optimized_length, r.original_length)
   }
 }
+// ===========================================================================
+// v284.0.0 自演化 CI 集成测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: ci_gate_check 返回 3 项检查" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let result = @self_evolve.ci_gate_check(pipe)
+  assert_eq(result.total_checks, 3)
+}
+
+///|
+test "形式化: ci_gate_check 安全管道全通过" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let result = @self_evolve.ci_gate_check(pipe)
+  assert_true(result.is_green())
+  assert_eq(result.failed_checks, 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: ci_gate_check 空管道通过" {
+  let pipe = @imgir.IRPipeline::new()
+  let result = @self_evolve.ci_gate_check(pipe)
+  assert_true(result.is_green())
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: ci_gate_check 退化管道门禁报警" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let result = @self_evolve.ci_gate_check(pipe)
+  // grill 检测到退化，门禁不通过
+  assert_true(!result.is_green())
+  assert_true(result.failed_checks >= 1)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: ci_gate_all 19 个结果" {
+  let results = @self_evolve.ci_gate_all()
+  assert_eq(results.length(), 19)
+  for r in results {
+    assert_eq(r.total_checks, 3)
+  }
+}
+
+///|
+test "E2E: ci_regression_all_pass 全部 19 算子" {
+  assert_true(@self_evolve.ci_regression_all_pass())
+}
+
+// --- AI ---
+
+///|
+test "AI: ci_gate_check summary 含信息" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let result = @self_evolve.ci_gate_check(pipe)
+  assert_true(result.gate_summary.length() > 0)
+}
+
+///|
+test "AI: CIGateResult pass_rate 在 0-100" {
+  let pipes = [
+    @imgir.IRPipeline::new(),
+    @imgir.IRPipeline::new().add(@imgir.FlipH),
+    @imgir.IRPipeline::new().add(@imgir.Resize(0, 0)),
+  ]
+  for pipe in pipes {
+    let r = @self_evolve.ci_gate_check(pipe)
+    assert_true(r.pass_rate() >= 0)
+    assert_true(r.pass_rate() <= 100)
+  }
+}

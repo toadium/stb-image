@@ -490,6 +490,18 @@ pub fn check_early_stopping(@ocr.TrainingState, @ocr.TrainingConfig, Double) -> 
 
 pub fn chinese_ocr_default_config() -> @ocr.ChineseOcrConfig
 
+pub fn ci_gate_all() -> Array[@self_evolve.CIGateResult]
+
+pub fn ci_gate_check(@imgir.IRPipeline) -> @self_evolve.CIGateResult
+
+pub fn ci_gate_is_green(@self_evolve.CIGateResult) -> Bool
+
+pub fn ci_gate_pass_rate(@self_evolve.CIGateResult) -> Int
+
+pub fn ci_regression_all_pass() -> Bool
+
+pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
+
 pub fn clahe(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
 pub fn clahe_enhance(@types.Image, clip_limit? : Double, tile_size? : Int) -> @types.Image
@@ -3394,6 +3406,8 @@ pub using @retrieval {type CBIRImageIndex}
 pub using @retrieval {type CBIRRetrievalResult}
 
 pub using @retrieval {type CBIRRetrievalResultList}
+
+pub using @self_evolve {type CIGateResult}
 
 pub using @computational_imaging {type CTProjectionData as CTProjectionDataCI}
 

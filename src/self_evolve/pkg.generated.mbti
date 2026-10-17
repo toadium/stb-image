@@ -15,6 +15,14 @@ pub fn check_inverse_pair(@imgir.IROp, @imgir.IROp) -> Bool
 
 pub fn check_regression(PerfBaseline, PerfBaseline) -> PerfRegression
 
+pub fn ci_gate_all() -> Array[CIGateResult]
+
+pub fn ci_gate_check(@imgir.IRPipeline) -> CIGateResult
+
+pub fn ci_regression_all_pass() -> Bool
+
+pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
+
 pub fn compare_pipelines(@imgir.IRPipeline, @imgir.IRPipeline) -> PerfRegression
 
 pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
@@ -116,6 +124,18 @@ pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 // Errors
 
 // Types and methods
+pub(all) struct CIGateResult {
+  passed : Bool
+  total_checks : Int
+  failed_checks : Int
+  gate_summary : String
+} derive(Eq, @debug.Debug)
+pub fn CIGateResult::equal(Self, Self) -> Bool
+pub fn CIGateResult::is_green(Self) -> Bool
+pub fn CIGateResult::not_equal(Self, Self) -> Bool
+pub fn CIGateResult::pass_rate(Self) -> Int
+pub fn CIGateResult::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DegradationCase {
   kind : DegradationKind
   op_tag : String

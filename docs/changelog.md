@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v284.0.0 - GeoVerse Phase 5: 自演化 CI 集成
+- 扩展 `src/self_evolve/`：自演化 CI 集成 — moon test 自动演化钩子 + 回归门禁
+  - **ci_hook**：CIGateResult + ci_gate_check（grill+repair+optimize 三项门禁）/ ci_gate_all / ci_regression_gate / ci_regression_all_pass + pass_rate / is_green
+  - 将自演化集成到 CI — 门禁检查 + 回归检测
+- 新增 1 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +8 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6824×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v283.0.0 - GeoVerse Phase 5: 管道优化执行
 - 扩展 `src/self_evolve/`：管道优化执行 — 应用 OptimizationSuggestion 到实际 IRPipeline
   - **optimize_exec**：OptimizeExecResult + exec_optimize（执行优化+计算前后成本）/ exec_optimize_all / optimize_verified（验证不劣化）+ is_significant / efficiency_pct
