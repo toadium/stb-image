@@ -21,6 +21,9 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `test_gen.mbt` | gen_test_for_op / gen_boundary_tests / gen_normal_tests / gen_edge_tests / evolve_test_suite |
 | `degrade_detect.mbt` | detect_degradation / scan_degradations / filter_by_severity / count_by_kind |
 | `evolve.mbt` | 高层 API：all_ops / evolve / evolve_all / evolve_tests_only / evolve_degradation_scan / count_by_category |
+| `optimize_types.mbt` | OptimizationKind / OptimizationSuggestion / OptimizationReport |
+| `equiv_check.mbt` | is_identity_op / check_inverse_pair / can_merge / merge_ops / rotate90_power_is_identity |
+| `optimize.mbt` | optimize_pipeline / suggest_optimizations / optimize_all / optimized_op_count |
 
 ## 公共 API
 
@@ -64,4 +67,19 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-25 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+42 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+
+## 管道优化
+
+等价性规则：
+- `FlipH ∘ FlipH = Identity`（两次水平翻转 = 恒等）
+- `FlipV ∘ FlipV = Identity`
+- `Brightness(0) = Identity`（零亮度调整 = 恒等）
+- `GaussianBlur(0, _) = Identity` / `BoxBlur(0) = Identity` / `Sharpen(0.0) = Identity`
+- `Brightness(a) ∘ Brightness(b) = Brightness(a+b)`（合并相邻）
+- `Rotate90^4 = Identity`（四次旋转 = 恒等）
+
+优化策略：
+1. **消除恒等**：移除 Brightness(0) 等无效果算子
+2. **消除互逆对**：移除 FlipH∘FlipH 等冗余对
+3. **合并相邻**：Brightness(a)∘Brightness(b) → Brightness(a+b)

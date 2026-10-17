@@ -12253,3 +12253,68 @@ pub fn evolve_count_category(
 ) -> Array[(TestCategory, Int)] {
   @self_evolve.count_by_category(tests)
 }
+// --- 算法优化 ---
+
+///|
+pub type OptimizationKind = @self_evolve.OptimizationKind
+
+///|
+pub type OptimizationSuggestion = @self_evolve.OptimizationSuggestion
+
+///|
+pub type OptimizationReport = @self_evolve.OptimizationReport
+
+///|
+pub fn optimize_report_is_reduced(report : OptimizationReport) -> Bool {
+  @self_evolve.OptimizationReport::is_reduced(report)
+}
+
+///|
+pub fn optimize_report_reduction(report : OptimizationReport) -> Int {
+  @self_evolve.OptimizationReport::reduction(report)
+}
+
+///|
+pub fn optimize_is_identity(op : IROp) -> Bool {
+  @self_evolve.is_identity_op(op)
+}
+
+///|
+pub fn optimize_check_inverse(op1 : IROp, op2 : IROp) -> Bool {
+  @self_evolve.check_inverse_pair(op1, op2)
+}
+
+///|
+pub fn optimize_can_merge(op1 : IROp, op2 : IROp) -> Bool {
+  @self_evolve.can_merge(op1, op2)
+}
+
+///|
+pub fn optimize_merge_ops(op1 : IROp, op2 : IROp) -> IROp {
+  @self_evolve.merge_ops(op1, op2)
+}
+
+///|
+pub fn optimize_rotate90_identity(n : Int) -> Bool {
+  @self_evolve.rotate90_power_is_identity(n)
+}
+
+///|
+pub fn optimize_pipeline(pipeline : IRPipeline) -> IRPipeline {
+  @self_evolve.optimize_pipeline(pipeline)
+}
+
+///|
+pub fn optimize_suggest(pipeline : IRPipeline) -> Array[OptimizationSuggestion] {
+  @self_evolve.suggest_optimizations(pipeline)
+}
+
+///|
+pub fn optimize_all(pipeline : IRPipeline) -> OptimizationReport {
+  @self_evolve.optimize_all(pipeline)
+}
+
+///|
+pub fn optimize_count(pipeline : IRPipeline) -> Int {
+  @self_evolve.optimized_op_count(pipeline)
+}

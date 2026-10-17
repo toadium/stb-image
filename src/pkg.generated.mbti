@@ -2366,7 +2366,29 @@ pub fn oil_paint(@types.Image, radius? : Int, intensity? : Int) -> @types.Image
 
 pub fn oil_painting_st(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
+pub fn optimize_all(@imgir.IRPipeline) -> @self_evolve.OptimizationReport
+
+pub fn optimize_can_merge(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn optimize_check_inverse(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn optimize_count(@imgir.IRPipeline) -> Int
+
+pub fn optimize_is_identity(@imgir.IROp) -> Bool
+
+pub fn optimize_merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
+
+pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
+
 pub fn optimize_reading_order(Array[@ocr.DocumentBlock], Int) -> Array[Int]
+
+pub fn optimize_report_is_reduced(@self_evolve.OptimizationReport) -> Bool
+
+pub fn optimize_report_reduction(@self_evolve.OptimizationReport) -> Int
+
+pub fn optimize_rotate90_identity(Int) -> Bool
+
+pub fn optimize_suggest(@imgir.IRPipeline) -> Array[@self_evolve.OptimizationSuggestion]
 
 pub fn orb_detect(@types.Image, max_features? : Int, threshold? : Int) -> Array[@feature.OrbDescriptor] raise @types.LoadError
 
@@ -3898,6 +3920,12 @@ pub using @pipeline {type Operation}
 pub using @video {type OpticalFlowField}
 
 pub using @video {type OpticalFlowVector}
+
+pub using @self_evolve {type OptimizationKind}
+
+pub using @self_evolve {type OptimizationReport}
+
+pub using @self_evolve {type OptimizationSuggestion}
 
 pub using @ocr {type OptimizerConfig}
 

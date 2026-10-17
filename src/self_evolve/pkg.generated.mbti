@@ -9,6 +9,10 @@ import {
 // Values
 pub fn all_ops() -> Array[@imgir.IROp]
 
+pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn check_inverse_pair(@imgir.IROp, @imgir.IROp) -> Bool
+
 pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
 
 pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
@@ -35,7 +39,21 @@ pub fn gen_normal_tests(@imgir.IROp) -> Array[TestCase]
 
 pub fn gen_test_for_op(@imgir.IROp) -> Array[TestCase]
 
+pub fn is_identity_op(@imgir.IROp) -> Bool
+
+pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
+
+pub fn optimize_all(@imgir.IRPipeline) -> OptimizationReport
+
+pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn optimized_op_count(@imgir.IRPipeline) -> Int
+
+pub fn rotate90_power_is_identity(Int) -> Bool
+
 pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
+
+pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 
 // Errors
 
@@ -73,6 +91,38 @@ pub fn EvolveReport::not_equal(Self, Self) -> Bool
 pub fn EvolveReport::severe_count(Self) -> Int
 pub fn EvolveReport::test_count(Self) -> Int
 pub fn EvolveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OptimizationKind {
+  RemoveRedundant
+  RemoveIdentity
+  MergeAdjacent
+} derive(Eq, @debug.Debug)
+pub fn OptimizationKind::equal(Self, Self) -> Bool
+pub fn OptimizationKind::not_equal(Self, Self) -> Bool
+pub fn OptimizationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizationReport {
+  original_length : Int
+  optimized_length : Int
+  suggestions : Array[OptimizationSuggestion]
+  optimized_pipeline : @imgir.IRPipeline
+} derive(Eq, @debug.Debug)
+pub fn OptimizationReport::equal(Self, Self) -> Bool
+pub fn OptimizationReport::is_reduced(Self) -> Bool
+pub fn OptimizationReport::not_equal(Self, Self) -> Bool
+pub fn OptimizationReport::reduction(Self) -> Int
+pub fn OptimizationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizationSuggestion {
+  kind : OptimizationKind
+  op_indices : Array[Int]
+  description : String
+  before_count : Int
+  after_count : Int
+} derive(Eq, @debug.Debug)
+pub fn OptimizationSuggestion::equal(Self, Self) -> Bool
+pub fn OptimizationSuggestion::not_equal(Self, Self) -> Bool
+pub fn OptimizationSuggestion::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Severity {
   Warning

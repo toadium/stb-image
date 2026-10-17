@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v276.0.0 - GeoVerse Phase 4: 算法优化
+- 扩展 `src/self_evolve/`：算子等价性检查 + 管道优化
+  - **optimize_types**：OptimizationKind / OptimizationSuggestion / OptimizationReport
+  - **equiv_check**：is_identity_op / check_inverse_pair / can_merge / merge_ops / rotate90_power_is_identity — 等价性规则（FlipH∘FlipH=Id, Brightness(0)=Id, Brightness(a)∘Brightness(b)=Brightness(a+b)）
+  - **optimize**：optimize_pipeline / suggest_optimizations / optimize_all / optimized_op_count — 管道优化（消除恒等+互逆对+合并相邻）
+- 新增 3 类型 + 11 公共函数，reexport.mbt 注册顶层 API
+- +17 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6746×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v275.0.0 - GeoVerse Phase 4: self_evolve 自演化预研
 - 新增 `src/self_evolve/`：自演化层模块（GeoVerse 第七层）
   - **evolve_types**：TestCategory / DegradationKind / Severity / TestCase / DegradationCase / EvolveReport

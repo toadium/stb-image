@@ -247,3 +247,175 @@ test "AI: op_tag 与算子标签一致" {
     }
   }
 }
+// === 算法优化测试 ===
+
+// --- 形式化证明 ---
+
+///|
+test "is_identity_op: 恒等算子识别" {
+  assert_true(@self_evolve.is_identity_op(@imgir.Brightness(0)))
+  assert_true(@self_evolve.is_identity_op(@imgir.GaussianBlur(0, 1.0F)))
+  assert_true(@self_evolve.is_identity_op(@imgir.BoxBlur(0)))
+  assert_true(@self_evolve.is_identity_op(@imgir.Sharpen(0.0F)))
+  assert_true(!@self_evolve.is_identity_op(@imgir.Brightness(50)))
+  assert_true(!@self_evolve.is_identity_op(@imgir.FlipH))
+}
+
+///|
+test "check_inverse_pair: 互逆对识别" {
+  assert_true(@self_evolve.check_inverse_pair(@imgir.FlipH, @imgir.FlipH))
+  assert_true(@self_evolve.check_inverse_pair(@imgir.FlipV, @imgir.FlipV))
+  assert_true(!@self_evolve.check_inverse_pair(@imgir.FlipH, @imgir.FlipV))
+  assert_true(
+    !@self_evolve.check_inverse_pair(@imgir.Rotate90, @imgir.Rotate90),
+  )
+}
+
+///|
+test "optimize_pipeline: 不增加算子数" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.ToGray)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_true(optimized.length() <= pipe.length())
+}
+
+///|
+test "rotate90_power_is_identity: 四次旋转恒等" {
+  assert_true(@self_evolve.rotate90_power_is_identity(4))
+  assert_true(@self_evolve.rotate90_power_is_identity(8))
+  assert_true(!@self_evolve.rotate90_power_is_identity(2))
+  assert_true(!@self_evolve.rotate90_power_is_identity(1))
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: 消除恒等算子" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Brightness(0))
+    .add(@imgir.FlipH)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 1)
+}
+
+///|
+test "FAKE: 消除互逆算子对" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.ToGray)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 1)
+}
+
+///|
+test "FAKE: 合并相邻亮度算子" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Brightness(10))
+    .add(@imgir.Brightness(20))
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 1)
+}
+
+///|
+test "FAKE: merge_ops 亮度合并正确性" {
+  let merged = @self_evolve.merge_ops(
+    @imgir.Brightness(10),
+    @imgir.Brightness(20),
+  )
+  assert_eq(merged, @imgir.Brightness(30))
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 空管道优化返回空" {
+  let pipe = @imgir.IRPipeline::new()
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 0)
+}
+
+///|
+test "MOCK: 单算子管道不变" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 1)
+}
+
+///|
+test "MOCK: 不可优化管道不变" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.ToGray)
+    .add(@imgir.Rotate90)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  assert_eq(optimized.length(), 3)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: optimize_all 完整流程" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.Brightness(0))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.optimize_all(pipe)
+  assert_eq(report.original_length, 4)
+  assert_true(report.optimized_length <= 4)
+  assert_true(report.suggestions.length() >= 1)
+}
+
+///|
+test "E2E: suggest_optimizations 生成建议" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Brightness(0))
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+  let suggestions = @self_evolve.suggest_optimizations(pipe)
+  assert_true(suggestions.length() >= 2)
+}
+
+///|
+test "E2E: optimized_op_count 计数" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH)
+  assert_eq(@self_evolve.optimized_op_count(pipe), 0)
+}
+
+///|
+test "E2E: OptimizationReport is_reduced" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH)
+  let report = @self_evolve.optimize_all(pipe)
+  assert_true(report.is_reduced())
+  assert_eq(report.reduction(), 2)
+}
+
+// --- AI ---
+
+///|
+test "AI: can_merge 同类算子可合并" {
+  assert_true(
+    @self_evolve.can_merge(@imgir.Brightness(10), @imgir.Brightness(20)),
+  )
+  assert_true(@self_evolve.can_merge(@imgir.BoxBlur(3), @imgir.BoxBlur(5)))
+  assert_true(!@self_evolve.can_merge(@imgir.FlipH, @imgir.FlipH))
+  assert_true(!@self_evolve.can_merge(@imgir.Brightness(10), @imgir.FlipH))
+}
+
+///|
+test "AI: 复合优化（恒等+互逆+合并）" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Brightness(0))
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.Brightness(10))
+    .add(@imgir.Brightness(20))
+    .add(@imgir.ToGray)
+  let optimized = @self_evolve.optimize_pipeline(pipe)
+  // Brightness(0) 移除, FlipH∘FlipH 移除, Brightness(10)+Brightness(20) 合并, ToGray 保留
+  // 结果: [Brightness(30), ToGray] = 2
+  assert_eq(optimized.length(), 2)
+}
