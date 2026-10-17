@@ -1458,3 +1458,76 @@ test "AI: repair_desc 非空" {
     assert_true(r.repair_desc.length() > 0)
   }
 }
+// ===========================================================================
+// v288.0.0 组合测试覆盖测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: gen_all_combos 返回 361 组合" {
+  let combos = @self_evolve.gen_all_combos()
+  assert_eq(combos.length(), 19 * 19)
+  assert_eq(combos.length(), 361)
+}
+
+///|
+test "形式化: gen_combo_tests 数量等于组合数" {
+  let combos = @self_evolve.gen_all_combos()
+  let tests = @self_evolve.gen_combo_tests()
+  assert_eq(tests.length(), combos.length())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: combo_coverage_report 100% 覆盖" {
+  let report = @self_evolve.combo_coverage_report()
+  assert_eq(report.coverage_pct, 100)
+  assert_eq(report.total_combos, 361)
+}
+
+///|
+test "FAKE: unique_combo_count 等于 361" {
+  assert_eq(@self_evolve.unique_combo_count(), 361)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: gen_all_combos 含 FlipH 自组合" {
+  let combos = @self_evolve.gen_all_combos()
+  let mut has_self_combo = false
+  for c in combos {
+    if c.first_tag == "FlipH" && c.second_tag == "FlipH" {
+      has_self_combo = true
+    }
+  }
+  assert_true(has_self_combo)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: gen_combo_tests 全部 Normal 类别" {
+  let tests = @self_evolve.gen_combo_tests()
+  for tc in tests {
+    assert_true(tc.category is @self_evolve.Normal)
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: combo_coverage_report summary 含信息" {
+  let report = @self_evolve.combo_coverage_report()
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "AI: gen_all_combos 每个 combo_desc 非空" {
+  let combos = @self_evolve.gen_all_combos()
+  for c in combos {
+    assert_true(c.combo_desc.length() > 0)
+  }
+}

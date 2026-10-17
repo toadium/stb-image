@@ -12730,3 +12730,30 @@ pub fn strategy_repair_is_complete(result : StrategyRepairResult) -> Bool {
 pub fn strategy_repair_is_improvement(result : StrategyRepairResult) -> Bool {
   @self_evolve.StrategyRepairResult::is_improvement(result)
 }
+// self_evolve — 组合测试覆盖（v288.0.0）
+
+///|
+pub type OpCombo = @self_evolve.OpCombo
+
+///|
+pub type ComboCoverageReport = @self_evolve.ComboCoverageReport
+
+///|
+pub fn gen_all_combos() -> Array[OpCombo] {
+  @self_evolve.gen_all_combos()
+}
+
+///|
+pub fn gen_combo_tests() -> Array[TestCase] {
+  @self_evolve.gen_combo_tests()
+}
+
+///|
+pub fn combo_coverage_report() -> ComboCoverageReport {
+  @self_evolve.combo_coverage_report()
+}
+
+///|
+pub fn unique_combo_count() -> Int {
+  @self_evolve.unique_combo_count()
+}

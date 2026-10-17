@@ -36,6 +36,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase5_report.mbt` | Phase5Capability / Phase5Report / phase5_capabilities / phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete |
 | `exec_test_run.mbt` | TestRunResult / RunSummary / run_test_case / run_test_suite / run_tests_for_op / run_tests_for_all / run_summary / all_passed |
 | `smart_repair.mbt` | RepairStrategy / StrategyRepairResult / repair_op_strategy / repair_with_strategies / best_repair / best_repair_all / is_complete / is_improvement |
+| `combo_coverage.mbt` | OpCombo / ComboCoverageReport / gen_all_combos / gen_combo_tests / combo_coverage_report / unique_combo_count |
 
 ## 公共 API
 
@@ -79,7 +80,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-145 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+153 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -210,3 +211,11 @@ Phase 6 起步：从占位 assert_true 走向真实断言执行 — 构造算子
 - `repair_with_strategies(op)` → 3 策略对比结果
 - `best_repair(op)` → StrategyRepairResult — 最优选择
 - `StrategyRepairResult::is_complete()` / `is_improvement()` — 结果判定
+## 组合测试覆盖（v288.0.0）
+
+将测试覆盖从"单算子"推向"二元组合" — 19×19 = 361 组合。
+
+- `gen_all_combos()` → 361 个二元组合
+- `gen_combo_tests()` → 361 个组合测试用例
+- `combo_coverage_report()` → ComboCoverageReport — 覆盖报告
+- `unique_combo_count()` → 独特组合数

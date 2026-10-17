@@ -27,6 +27,8 @@ pub fn ci_regression_all_pass() -> Bool
 
 pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
 
+pub fn combo_coverage_report() -> ComboCoverageReport
+
 pub fn compare_pipelines(@imgir.IRPipeline, @imgir.IRPipeline) -> PerfRegression
 
 pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
@@ -59,7 +61,11 @@ pub fn exec_optimize_all() -> Array[OptimizeExecResult]
 
 pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
 
+pub fn gen_all_combos() -> Array[OpCombo]
+
 pub fn gen_boundary_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_combo_tests() -> Array[TestCase]
 
 pub fn gen_edge_tests(@imgir.IROp) -> Array[TestCase]
 
@@ -151,6 +157,8 @@ pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
 
 pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 
+pub fn unique_combo_count() -> Int
+
 // Errors
 
 // Types and methods
@@ -165,6 +173,16 @@ pub fn CIGateResult::is_green(Self) -> Bool
 pub fn CIGateResult::not_equal(Self, Self) -> Bool
 pub fn CIGateResult::pass_rate(Self) -> Int
 pub fn CIGateResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ComboCoverageReport {
+  total_combos : Int
+  generated_tests : Int
+  coverage_pct : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ComboCoverageReport::equal(Self, Self) -> Bool
+pub fn ComboCoverageReport::not_equal(Self, Self) -> Bool
+pub fn ComboCoverageReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DegradationCase {
   kind : DegradationKind
@@ -267,6 +285,15 @@ pub(all) enum GrillRule {
 pub fn GrillRule::equal(Self, Self) -> Bool
 pub fn GrillRule::not_equal(Self, Self) -> Bool
 pub fn GrillRule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OpCombo {
+  first_tag : String
+  second_tag : String
+  combo_desc : String
+} derive(Eq, @debug.Debug)
+pub fn OpCombo::equal(Self, Self) -> Bool
+pub fn OpCombo::not_equal(Self, Self) -> Bool
+pub fn OpCombo::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OpCost {
   op_tag : String

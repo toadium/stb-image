@@ -552,6 +552,8 @@ pub fn colorize_image_ig(@types.Image, @image_generation.EditingConfig) -> @imag
 
 pub fn combined_features(@types.Image) -> Array[Double] raise @types.LoadError
 
+pub fn combo_coverage_report() -> @self_evolve.ComboCoverageReport
+
 pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float raise @types.LoadError
 
 pub fn complete_char_segmentation(@types.Image, min_char_width? : Int, max_char_width? : Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
@@ -1569,6 +1571,10 @@ pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16 raise @typ
 pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError
 
 pub fn gaussian_filter_denoise_dn(@types.Image, Int, Double) -> @types.Image raise @types.LoadError
+
+pub fn gen_all_combos() -> Array[@self_evolve.OpCombo]
+
+pub fn gen_combo_tests() -> Array[@self_evolve.TestCase]
 
 pub fn gen_executable_suite(Array[@self_evolve.TestCase]) -> Array[@self_evolve.ExecutableTest]
 
@@ -3190,6 +3196,8 @@ pub fn understand_document_enhanced(@types.Image, config? : @ocr.DocumentUnderst
 
 pub fn understand_scene_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> (@scene_understanding.SceneClassificationResult, @scene_understanding.ImageCaptioningResult, @scene_understanding.SceneGraph)
 
+pub fn unique_combo_count() -> Int
+
 pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn unpremultiply_alpha_16(@types.Image16) -> @types.Image16 raise @types.LoadError
@@ -3494,6 +3502,8 @@ pub using @forensics {type ColorQuantizationResult}
 pub using @style_transfer {type ColorStatistics}
 
 pub using @color {type Colormap}
+
+pub using @self_evolve {type ComboCoverageReport}
 
 pub using @ocr {type CommonErrorPattern}
 
@@ -4062,6 +4072,8 @@ pub using @ocr {type OcrConnectedComponentsResult}
 pub using @ocr {type OcrErrorType}
 
 pub using @ocr {type OcrResult}
+
+pub using @self_evolve {type OpCombo}
 
 pub using @self_evolve {type OpCost}
 

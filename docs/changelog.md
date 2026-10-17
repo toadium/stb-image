@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v288.0.0 - GeoVerse Phase 6: 组合测试覆盖
+- 扩展 `src/self_evolve/`：组合测试覆盖 — 自动发现未覆盖算子组合，生成组合测试
+  - **combo_coverage**：OpCombo / ComboCoverageReport + gen_all_combos（19×19=361 二元组合）/ gen_combo_tests / combo_coverage_report / unique_combo_count
+  - 将测试覆盖从"单算子"推向"二元组合"
+- 新增 2 类型 + 4 公共函数，reexport.mbt 注册顶层 API
+- +8 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6857×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v287.0.0 - GeoVerse Phase 6: 智能修复策略
 - 扩展 `src/self_evolve/`：智能修复策略 — 多策略修复（保守/激进/最优）+ 质量评分
   - **smart_repair**：RepairStrategy（Conservative/Aggressive/Optimal）/ StrategyRepairResult + repair_op_strategy / repair_with_strategies（三策略对比）/ best_repair（最优选择）/ best_repair_all + is_complete / is_improvement
