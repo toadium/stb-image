@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v285.0.0 - GeoVerse Phase 5 完成: 全体系总结
+- 扩展 `src/self_evolve/`：Phase 5 综合报告
+  - **phase5_report**：Phase5Capability / Phase5Report + phase5_capabilities（v281-v284 四版本清单）/ phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete
+  - 汇总：6 类型 + 24 函数 + 36 测试 — 描述→执行→修复→优化→CI 自演化实用体系建成
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +6 tests（形式化证明 + FAKE + E2E + AI 多手段测试）
+- 6830×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- Phase 5 智能演化实用期完成。GeoVerse 七层架构 Phase 0-5 全部交付。
 ## v284.0.0 - GeoVerse Phase 5: 自演化 CI 集成
 - 扩展 `src/self_evolve/`：自演化 CI 集成 — moon test 自动演化钩子 + 回归门禁
   - **ci_hook**：CIGateResult + ci_gate_check（grill+repair+optimize 三项门禁）/ ci_gate_all / ci_regression_gate / ci_regression_all_pass + pass_rate / is_green

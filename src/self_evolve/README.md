@@ -33,6 +33,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `auto_repair.mbt` | RepairAction / RepairReport / repair_op / repair_pipeline / repair_report / repair_all / is_fully_repaired / repair_count |
 | `optimize_exec.mbt` | OptimizeExecResult / exec_optimize / exec_optimize_all / optimize_verified / is_significant / efficiency_pct |
 | `ci_hook.mbt` | CIGateResult / ci_gate_check / ci_gate_all / ci_regression_gate / ci_regression_all_pass / pass_rate / is_green |
+| `phase5_report.mbt` | Phase5Capability / Phase5Report / phase5_capabilities / phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete |
 
 ## 公共 API
 
@@ -76,7 +77,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-120 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+126 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -174,3 +175,13 @@ Phase 5 起步：将 TestCase 描述转化为可执行 moon test 代码字符串
 - `ci_regression_gate(pipeline)` → Bool — 回归门禁（优化不劣化 + 修复后无退化）
 - `ci_regression_all_pass()` → Bool — 全部 19 算子回归门禁
 - `CIGateResult::pass_rate()` / `is_green()` — 通过率 + 全通过判定
+## Phase 5 综合报告（v285.0.0）
+
+汇总 v281-v284 全部能力，标记 Phase 5 完成。
+
+- `phase5_capabilities()` → 4 项能力清单（v281-v284）
+- `phase5_total_types()` / `phase5_total_functions()` / `phase5_total_tests()` — 汇总（6 类型 / 24 函数 / 36 测试）
+- `phase5_report()` → Phase5Report — 综合报告
+- `phase5_is_complete()` → Bool — Phase 5 完成判定
+
+自演化实用体系：描述 → 执行 → 修复 → 优化 → CI。Phase 0-5 全部交付。

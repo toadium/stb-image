@@ -12619,3 +12619,40 @@ pub fn ci_gate_pass_rate(result : CIGateResult) -> Int {
 pub fn ci_gate_is_green(result : CIGateResult) -> Bool {
   @self_evolve.CIGateResult::is_green(result)
 }
+// self_evolve — Phase 5 综合报告（v285.0.0）
+
+///|
+pub type Phase5Capability = @self_evolve.Phase5Capability
+
+///|
+pub type Phase5Report = @self_evolve.Phase5Report
+
+///|
+pub fn phase5_capabilities() -> Array[Phase5Capability] {
+  @self_evolve.phase5_capabilities()
+}
+
+///|
+pub fn phase5_total_types() -> Int {
+  @self_evolve.phase5_total_types()
+}
+
+///|
+pub fn phase5_total_functions() -> Int {
+  @self_evolve.phase5_total_functions()
+}
+
+///|
+pub fn phase5_total_tests() -> Int {
+  @self_evolve.phase5_total_tests()
+}
+
+///|
+pub fn phase5_report() -> Phase5Report {
+  @self_evolve.phase5_report()
+}
+
+///|
+pub fn phase5_is_complete() -> Bool {
+  @self_evolve.phase5_is_complete()
+}

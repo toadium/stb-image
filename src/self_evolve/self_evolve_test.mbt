@@ -1224,3 +1224,58 @@ test "AI: CIGateResult pass_rate 在 0-100" {
     assert_true(r.pass_rate() <= 100)
   }
 }
+// ===========================================================================
+// v285.0.0 Phase 5 综合报告测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: phase5_capabilities 返回 4 个版本" {
+  let caps = @self_evolve.phase5_capabilities()
+  assert_eq(caps.length(), 4)
+  assert_eq(caps[0].version, "v281.0.0")
+  assert_eq(caps[3].version, "v284.0.0")
+}
+
+///|
+test "形式化: phase5 总计 6 类型 24 函数 36 测试" {
+  assert_eq(@self_evolve.phase5_total_types(), 6)
+  assert_eq(@self_evolve.phase5_total_functions(), 24)
+  assert_eq(@self_evolve.phase5_total_tests(), 36)
+}
+
+///|
+test "形式化: phase5_is_complete 为 true" {
+  assert_true(@self_evolve.phase5_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase5_report 结构完整" {
+  let report = @self_evolve.phase5_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 6)
+  assert_eq(report.total_functions, 24)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase5_report summary 含关键信息" {
+  let report = @self_evolve.phase5_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase5 每个能力描述非空" {
+  for c in @self_evolve.phase5_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}
