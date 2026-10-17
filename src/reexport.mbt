@@ -12048,3 +12048,81 @@ pub fn aoci_verify_all(
 ) -> VerifyResult {
   @aoci.verify_all(index, budget~)
 }
+// =============================================================================
+// agent_kit — 自然语言 API（GeoVerse Phase 3）
+// Intent + Parser + Compiler + 高层 NL API
+// =============================================================================
+
+///|
+pub type Intent = @agent_kit.Intent
+
+// --- Intent 方法重导出 ---
+
+///|
+pub fn intent_to_string(intent : Intent) -> String {
+  @agent_kit.Intent::to_string(intent)
+}
+
+///|
+pub fn intent_matches(intent : Intent, word : String) -> Bool {
+  @agent_kit.Intent::matches(intent, word)
+}
+
+// --- Parser 重导出 ---
+
+///|
+pub fn nl_parse(query : String) -> Array[Intent] {
+  @agent_kit.nl_parse(query)
+}
+
+///|
+pub fn nl_describe(intents : Array[Intent]) -> String {
+  @agent_kit.nl_describe(intents)
+}
+
+// --- Compiler 重导出 ---
+
+///|
+pub fn agent_compile(intents : Array[Intent]) -> IRPipeline {
+  @agent_kit.compile(intents)
+}
+
+///|
+pub fn nl_to_pipeline(query : String) -> IRPipeline {
+  @agent_kit.nl_to_pipeline(query)
+}
+
+///|
+pub fn nl_to_description(query : String) -> String {
+  @agent_kit.nl_to_description(query)
+}
+
+// --- 高层 NL API 重导出 ---
+
+///|
+pub fn nl_process(image : Image, query : String) -> Image raise LoadError {
+  @agent_kit.nl_process(image, query)
+}
+
+///|
+pub fn nl_process_value(
+  value : IRValue,
+  query : String,
+) -> IRValue raise LoadError {
+  @agent_kit.nl_process_value(value, query)
+}
+
+///|
+pub fn nl_preview(query : String) -> String {
+  @agent_kit.nl_preview(query)
+}
+
+///|
+pub fn nl_intents(query : String) -> Array[Intent] {
+  @agent_kit.nl_intents(query)
+}
+
+///|
+pub fn nl_pipeline(query : String) -> IRPipeline {
+  @agent_kit.nl_pipeline(query)
+}

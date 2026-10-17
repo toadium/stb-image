@@ -1,0 +1,57 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/agent_kit"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image/src/imgir",
+  "walkzzz/image/src/types",
+}
+
+// Values
+pub fn compile(Array[Intent]) -> @imgir.IRPipeline
+
+pub fn nl_describe(Array[Intent]) -> String
+
+pub fn nl_intents(String) -> Array[Intent]
+
+pub fn nl_parse(String) -> Array[Intent]
+
+pub fn nl_pipeline(String) -> @imgir.IRPipeline
+
+pub fn nl_preview(String) -> String
+
+pub fn nl_process(@types.Image, String) -> @types.Image raise @types.LoadError
+
+pub fn nl_process_value(@imgir.IRValue, String) -> @imgir.IRValue raise @types.LoadError
+
+pub fn nl_to_description(String) -> String
+
+pub fn nl_to_pipeline(String) -> @imgir.IRPipeline
+
+// Errors
+
+// Types and methods
+pub(all) enum Intent {
+  Denoise
+  EdgeDetect
+  Blur
+  Sharpen
+  Grayscale
+  Resize(Int, Int)
+  Rotate
+  FlipH
+  FlipV
+  Threshold(Float, Float)
+  Mask(Float)
+  Identity
+} derive(Eq, @debug.Debug)
+pub fn Intent::equal(Self, Self) -> Bool
+pub fn Intent::keyword(Self) -> Array[String]
+pub fn Intent::matches(Self, String) -> Bool
+pub fn Intent::not_equal(Self, Self) -> Bool
+pub fn Intent::to_repr(Self) -> @debug.Repr
+pub fn Intent::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

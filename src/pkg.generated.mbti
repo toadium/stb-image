@@ -3,6 +3,7 @@ package "walkzzz/image/src"
 
 import {
   "walkzzz/image/src/advanced_imaging",
+  "walkzzz/image/src/agent_kit",
   "walkzzz/image/src/aoci",
   "walkzzz/image/src/barcode",
   "walkzzz/image/src/color",
@@ -125,6 +126,8 @@ pub fn affine_rotation(Double) -> @registration.AffineTransform
 pub fn affine_scale(Double, Double) -> @registration.AffineTransform
 
 pub fn affine_translation(Double, Double) -> @registration.AffineTransform
+
+pub fn agent_compile(Array[@agent_kit.Intent]) -> @imgir.IRPipeline
 
 pub fn ahash(@types.Image) -> Array[Int] raise @types.LoadError
 
@@ -1858,6 +1861,10 @@ pub fn integral_variance(@feature.IntegralImage, @feature.IntegralImageSq, Int, 
 
 pub fn intelligent_vision_report_to_string_iv(String, Int, Double, @intelligent_vision.IntelligentVisionConfig) -> String
 
+pub fn intent_matches(@agent_kit.Intent, String) -> Bool
+
+pub fn intent_to_string(@agent_kit.Intent) -> String
+
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int) -> Array[@types.Image]
 
 pub fn invert(@types.Image) -> @types.Image raise @types.LoadError
@@ -2255,6 +2262,24 @@ pub fn ngram_create(Array[String], n? : Int) -> @ocr.NgramModel raise @types.Loa
 pub fn ngram_score(String, @ocr.NgramModel) -> Double raise @types.LoadError
 
 pub fn niblack_threshold(@types.Image, window_size? : Int, k? : Double) -> @types.Image raise @types.LoadError
+
+pub fn nl_describe(Array[@agent_kit.Intent]) -> String
+
+pub fn nl_intents(String) -> Array[@agent_kit.Intent]
+
+pub fn nl_parse(String) -> Array[@agent_kit.Intent]
+
+pub fn nl_pipeline(String) -> @imgir.IRPipeline
+
+pub fn nl_preview(String) -> String
+
+pub fn nl_process(@types.Image, String) -> @types.Image raise @types.LoadError
+
+pub fn nl_process_value(@imgir.IRValue, String) -> @imgir.IRValue raise @types.LoadError
+
+pub fn nl_to_description(String) -> String
+
+pub fn nl_to_pipeline(String) -> @imgir.IRPipeline
 
 pub fn nlm_default_config() -> @enhance.NlmConfig
 
@@ -3682,6 +3707,8 @@ pub using @feature {type IntegralImage}
 pub using @feature {type IntegralImageSq}
 
 pub using @intelligent_vision {type IntelligentVisionConfig as IntelligentVisionConfigIV}
+
+pub using @agent_kit {type Intent}
 
 pub using @superres {type InterpolationConfig}
 

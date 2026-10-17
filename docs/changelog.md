@@ -2125,6 +2125,16 @@
 - 新增 5 类型 + 30+ 公共函数，reexport.mbt 注册顶层 API
 - +36 tests（Symbol/Index/Builder/Router/Budget/Verifier + E2E）
 - 6660×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v272.0.0 - GeoVerse Phase 3: Agent-Kit 自然语言 API
+- 新增 `src/agent_kit/`：自然语言图像处理 API（GeoVerse 第六层）
+  - **Intent**：操作意图枚举（Denoise/EdgeDetect/Blur/Sharpen/Grayscale/Resize/Rotate/FlipH/FlipV/Threshold/Mask/Identity）+ 关键词匹配
+  - **NL Parser**：nl_parse — 自然语言 → 意图序列（关键词匹配 + 去重）
+  - **Compiler**：compile — 意图序列 → ImgIR IRPipeline（每个意图映射到 IR 操作链）
+  - **高层 API**：nl_process(image, query) → Image / nl_process_value(value, query) → IRValue
+  - **预览**：nl_preview(query) → 描述字符串 / nl_intents(query) → 意图列表
+- 新增 1 类型 + 12 公共函数，reexport.mbt 注册顶层 API
+- +28 tests（Intent/Parser/Compiler/高层API/E2E）
+- 6688×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v268.0.0 - GeoVerse Phase 1/2 多策略综合测试
 - 新增 `src/fieldimg/formal_v266_test.mbt`：fieldimg FAKE+MOCK+E2E+形式化证明（+37 tests）
   - **FAKE**：常量场/线性场/二次场/随机场(LCG)生成器 + 灰度图/RGB图生成器

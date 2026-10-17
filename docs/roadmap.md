@@ -2661,7 +2661,7 @@ flowchart LR
 |------|------|----------|------|
 | v270.0.0 | ImgIR 核心 | 统一图像中间表示（图像IR + 场IR + 时空IR） | ✅ 6624×4 |
 | v271.0.0 | AOCI 符号索引 | Builder + Router + ContextBudget + Verifier | ✅ 6660×4 |
-| v272.0.0 | Agent-Kit | 自然语言 API → ImgIR 查询 | ⏳ |
+| v272.0.0 | Agent-Kit | 自然语言 API → ImgIR 查询 | ✅ 6688×4 |
 | v273.0.0 | 集成验证 | 端到端流水线 + 四目标全绿 | ⏳ |
 
 ### Phase 4｜自演化预研期（v274.0.0 ~ v280.0.0）
