@@ -1668,6 +1668,16 @@ pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Imag
 
 pub fn grid_features(@types.Image, grid_rows? : Int, grid_cols? : Int) -> @ocr.GridFeatures raise @types.LoadError
 
+pub fn grill_all_passed(@self_evolve.GrillReport) -> Bool
+
+pub fn grill_failed_count(@self_evolve.GrillReport) -> Int
+
+pub fn grill_passed_count(@self_evolve.GrillReport) -> Int
+
+pub fn grill_rule_desc(@self_evolve.GrillRule) -> String
+
+pub fn grill_rules() -> Array[@self_evolve.GrillRule]
+
 pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
 
 pub fn guided_filter_16(@types.Image16, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
@@ -2702,6 +2712,10 @@ pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_document(@types.Image, Double) -> @types.Image raise @types.LoadError
 
+pub fn run_grill_all() -> @self_evolve.GrillReport
+
+pub fn run_grill_check(@imgir.IRPipeline) -> @self_evolve.GrillReport
+
 pub fn run_length_decode_cp(Bytes) -> Bytes
 
 pub fn run_length_encode_cp(Bytes) -> Bytes
@@ -3674,6 +3688,12 @@ pub using @feature {type GlcmFeatures}
 pub using @segmentation {type GrabCutConfig}
 
 pub using @ocr {type GridFeatures}
+
+pub using @self_evolve {type GrillReport}
+
+pub using @self_evolve {type GrillResult}
+
+pub using @self_evolve {type GrillRule}
 
 pub using @retrieval {type HOGConfig}
 

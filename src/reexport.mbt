@@ -12395,3 +12395,48 @@ pub fn evolve_cycle_has_degradation_risk(report : EvolveCycleReport) -> Bool {
 pub fn evolve_cycle_safety_score(report : EvolveCycleReport) -> Int {
   @self_evolve.EvolveCycleReport::safety_score(report)
 }
+// self_evolve — grill-me 拷问引擎（v279.0.0）
+
+///|
+pub type GrillRule = @self_evolve.GrillRule
+
+///|
+pub type GrillResult = @self_evolve.GrillResult
+
+///|
+pub type GrillReport = @self_evolve.GrillReport
+
+///|
+pub fn grill_rules() -> Array[GrillRule] {
+  @self_evolve.grill_rules()
+}
+
+///|
+pub fn grill_rule_desc(rule : GrillRule) -> String {
+  @self_evolve.grill_rule_desc(rule)
+}
+
+///|
+pub fn run_grill_check(pipeline : IRPipeline) -> GrillReport {
+  @self_evolve.run_grill_check(pipeline)
+}
+
+///|
+pub fn run_grill_all() -> GrillReport {
+  @self_evolve.run_grill_all()
+}
+
+///|
+pub fn grill_all_passed(report : GrillReport) -> Bool {
+  @self_evolve.GrillReport::all_passed(report)
+}
+
+///|
+pub fn grill_failed_count(report : GrillReport) -> Int {
+  @self_evolve.GrillReport::failed_count(report)
+}
+
+///|
+pub fn grill_passed_count(report : GrillReport) -> Int {
+  @self_evolve.GrillReport::passed_count(report)
+}

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v279.0.0 - GeoVerse Phase 4: grill-me 拷问规则集落地
+- 扩展 `src/self_evolve/`：grill-me 拷问引擎 — 4.7.4 五条领域规则可执行化
+  - **grill**：GrillRule（5 条规则）/ GrillResult / GrillReport + grill_rules / grill_rule_desc / run_grill_check / run_grill_all + all_passed / failed_count / passed_count
+  - 规则 1 数值鲁棒性（除零/奇异/NaN/Inf/溢出）/ 规则 2 退化几何（除零/零面积）/ 规则 3 场间断（FieldClamp/FieldMask）/ 规则 4 时空拓扑（ST t 越界 [0,1]）/ 规则 5 四目标兼容（静态保证）
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +12 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6780×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v278.0.0 - GeoVerse Phase 4: 自演化闭环串联
 - 扩展 `src/self_evolve/`：自演化闭环 — 串联 test_gen + degrade + optimize + perf
   - **evolve_loop**：EvolveCycleReport + evolve_full_cycle（退化→测试→优化→性能→报告完整闭环）/ evolve_cycle_all（19 种算子全闭环）/ is_improved / has_degradation_risk / safety_score

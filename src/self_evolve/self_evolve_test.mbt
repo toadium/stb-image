@@ -643,3 +643,141 @@ test "AI: 退化管道安全度低于安全管道" {
   let safe_report = @self_evolve.evolve_full_cycle(safe_pipe)
   assert_true(deg_report.safety_score() < safe_report.safety_score())
 }
+// ===========================================================================
+// v279.0.0 grill-me 拷问引擎测试（4.7.4 领域规则可执行化）
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: grill_rules 返回 5 条规则" {
+  let rules = @self_evolve.grill_rules()
+  assert_eq(rules.length(), 5)
+  assert_true(rules[0] is @self_evolve.NumericRobustness)
+  assert_true(rules[1] is @self_evolve.DegenerateGeometry)
+  assert_true(rules[2] is @self_evolve.FieldDiscontinuityRule)
+  assert_true(rules[3] is @self_evolve.SpatiotemporalTopology)
+  assert_true(rules[4] is @self_evolve.MultiTargetCompat)
+}
+
+///|
+test "形式化: grill_rule_desc 每条非空" {
+  for rule in @self_evolve.grill_rules() {
+    let desc = @self_evolve.grill_rule_desc(rule)
+    assert_true(desc.length() > 0)
+  }
+}
+
+///|
+test "形式化: run_grill_check 结果数恒为 5" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_eq(report.results.length(), 5)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: 空管道拷问全通过" {
+  let pipe = @imgir.IRPipeline::new()
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_true(report.all_passed())
+  assert_eq(report.failed_count(), 0)
+}
+
+///|
+test "FAKE: 安全算子 FlipH 拷问全通过" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_true(report.all_passed())
+  assert_eq(report.passed_count(), 5)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: Resize(0,0) 数值鲁棒性与退化几何失败" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_true(!report.all_passed())
+  // 数值鲁棒性 + 退化几何都应失败（至少 2 条）
+  assert_true(report.failed_count() >= 2)
+}
+
+///|
+test "MOCK: STSnapshot(2.0) 时空拓扑失败" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.STSnapshot(2.0F))
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_true(!report.all_passed())
+  assert_true(report.failed_count() >= 1)
+}
+
+///|
+test "MOCK: FieldClamp(1,0) 场间断失败" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FieldClamp(1.0F, 0.0F))
+  let report = @self_evolve.run_grill_check(pipe)
+  assert_true(!report.all_passed())
+  assert_true(report.failed_count() >= 1)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: run_grill_all 19 种算子 95 条结果" {
+  let report = @self_evolve.run_grill_all()
+  assert_eq(report.results.length(), 19 * 5)
+  // 四目标兼容规则总是通过，至少 19 条通过
+  assert_true(report.passed_count() >= 19)
+}
+
+///|
+test "E2E: MultiTargetCompat 规则总是通过" {
+  let pipes = [
+    @imgir.IRPipeline::new(),
+    @imgir.IRPipeline::new().add(@imgir.Resize(0, 0)),
+    @imgir.IRPipeline::new().add(@imgir.FlipH),
+  ]
+  for pipe in pipes {
+    let report = @self_evolve.run_grill_check(pipe)
+    let mut compat_passed = false
+    for r in report.results {
+      if r.rule is @self_evolve.MultiTargetCompat {
+        compat_passed = r.passed
+      }
+    }
+    assert_true(compat_passed)
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: grill_rule_desc 含中文描述" {
+  let descs = [
+    @self_evolve.grill_rule_desc(@self_evolve.NumericRobustness),
+    @self_evolve.grill_rule_desc(@self_evolve.DegenerateGeometry),
+    @self_evolve.grill_rule_desc(@self_evolve.FieldDiscontinuityRule),
+    @self_evolve.grill_rule_desc(@self_evolve.SpatiotemporalTopology),
+    @self_evolve.grill_rule_desc(@self_evolve.MultiTargetCompat),
+  ]
+  for d in descs {
+    assert_true(d.length() > 5)
+  }
+}
+
+///|
+test "AI: passed_count + failed_count == results.length 不变量" {
+  let pipes = [
+    @imgir.IRPipeline::new(),
+    @imgir.IRPipeline::new().add(@imgir.Resize(0, 0)),
+    @imgir.IRPipeline::new().add(@imgir.STInterpolate(1.5F)),
+    @imgir.IRPipeline::new().add(@imgir.FlipV),
+  ]
+  for pipe in pipes {
+    let report = @self_evolve.run_grill_check(pipe)
+    assert_eq(
+      report.passed_count() + report.failed_count(),
+      report.results.length(),
+    )
+  }
+}

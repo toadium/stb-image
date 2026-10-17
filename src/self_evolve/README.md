@@ -27,6 +27,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `perf_types.mbt` | OpCost / PerfBaseline / PerfRegression |
 | `perf_cost.mbt` | estimate_op_cost / estimate_pipeline_cost / check_regression / perf_optimize_check / compare_pipelines |
 | `evolve_loop.mbt` | EvolveCycleReport / evolve_full_cycle / evolve_cycle_all / is_improved / has_degradation_risk / safety_score |
+| `grill.mbt` | GrillRule / GrillResult / GrillReport / grill_rules / grill_rule_desc / run_grill_check / run_grill_all / all_passed / failed_count / passed_count |
 
 ## 公共 API
 
@@ -70,7 +71,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-64 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+76 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -96,3 +97,21 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 1. **消除恒等**：移除 Brightness(0) 等无效果算子
 2. **消除互逆对**：移除 FlipH∘FlipH 等冗余对
 3. **合并相邻**：Brightness(a)∘Brightness(b) → Brightness(a+b)
+## grill-me 拷问引擎（v279.0.0）
+
+4.7.4 五条领域规则可执行化，对管道/算子执行拷问检查。
+
+| 规则 | 检测内容 |
+|------|----------|
+| NumericRobustness | 除零 / 奇异矩阵 / NaN / Inf / 溢出 |
+| DegenerateGeometry | 除零 / 零面积 |
+| FieldDiscontinuityRule | FieldClamp lo>hi / FieldMask 极端阈值 |
+| SpatiotemporalTopology | STSnapshot/STInterpolate t 越界 [0,1] |
+| MultiTargetCompat | 纯 MoonBit 无 C FFI（静态保证） |
+
+API：
+- `grill_rules()` → 5 条规则
+- `grill_rule_desc(rule)` → 规则描述
+- `run_grill_check(pipeline)` → GrillReport — 单管道 5 条规则检查
+- `run_grill_all()` → GrillReport — 19 种算子全拷问
+- `GrillReport::all_passed()` / `failed_count()` / `passed_count()` — 结果统计
