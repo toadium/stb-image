@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v292.0.0 - GeoVerse Phase 7: 自适应测试策略
+- 扩展 `src/self_evolve/`：自适应测试策略 — 根据覆盖率自动调整测试优先级
+  - **adaptive**：TestPriority / AdaptiveStrategy / AdaptiveReport + suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered
+  - 将测试生成从"均匀"推向"自适应" — 低覆盖算子优先
+- 新增 3 类型 + 5 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6890×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v291.0.0 - GeoVerse Phase 7: 跨算子退化传播
 - 扩展 `src/self_evolve/`：跨算子退化传播 — 分析 pipeline 中退化如何在算子间传播
   - **propagation**：PropagationStep / PropagationReport + analyze_propagation（管道传播链）/ analyze_propagation_all（全算子传播）/ has_propagation_risk / propagation_chain / is_safe

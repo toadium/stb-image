@@ -7,6 +7,10 @@ import {
 }
 
 // Values
+pub fn adaptive_strategy(@imgir.IROp) -> AdaptiveStrategy
+
+pub fn adaptive_strategy_all() -> AdaptiveReport
+
 pub fn all_ops() -> Array[@imgir.IROp]
 
 pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> RootCauseReport
@@ -101,6 +105,8 @@ pub fn grill_rules() -> Array[GrillRule]
 
 pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
 
+pub fn high_priority_ops() -> Array[String]
+
 pub fn is_identity_op(@imgir.IROp) -> Bool
 
 pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
@@ -151,6 +157,8 @@ pub fn phase6_total_tests() -> Int
 
 pub fn phase6_total_types() -> Int
 
+pub fn priority_from_coverage(Int) -> TestPriority
+
 pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
 
 pub fn repair_all() -> Array[RepairReport]
@@ -185,11 +193,34 @@ pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
 
 pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 
+pub fn suggest_test_count(Int) -> Int
+
 pub fn unique_combo_count() -> Int
 
 // Errors
 
 // Types and methods
+pub(all) struct AdaptiveReport {
+  strategies : Array[AdaptiveStrategy]
+  total_prioritized : Int
+  high_priority_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn AdaptiveReport::equal(Self, Self) -> Bool
+pub fn AdaptiveReport::is_well_covered(Self) -> Bool
+pub fn AdaptiveReport::not_equal(Self, Self) -> Bool
+pub fn AdaptiveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AdaptiveStrategy {
+  op_tag : String
+  current_coverage : Int
+  priority : TestPriority
+  suggested_tests : Int
+} derive(Eq, @debug.Debug)
+pub fn AdaptiveStrategy::equal(Self, Self) -> Bool
+pub fn AdaptiveStrategy::not_equal(Self, Self) -> Bool
+pub fn AdaptiveStrategy::to_repr(Self) -> @debug.Repr
+
 pub(all) struct CIGateResult {
   passed : Bool
   total_checks : Int
@@ -600,6 +631,15 @@ pub(all) enum TestCategory {
 pub fn TestCategory::equal(Self, Self) -> Bool
 pub fn TestCategory::not_equal(Self, Self) -> Bool
 pub fn TestCategory::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TestPriority {
+  HighPriority
+  MediumPriority
+  LowPriority
+} derive(Eq, @debug.Debug)
+pub fn TestPriority::equal(Self, Self) -> Bool
+pub fn TestPriority::not_equal(Self, Self) -> Bool
+pub fn TestPriority::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TestRunResult {
   test_name : String

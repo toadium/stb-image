@@ -1763,3 +1763,82 @@ test "AI: 传播步骤 from/to 标签非空" {
     assert_true(s.to_op_tag.length() > 0)
   }
 }
+// ============================================================
+// v292.0.0 — 自适应测试策略测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: suggest_test_count 高覆盖少测试" {
+  assert_eq(@self_evolve.suggest_test_count(100), 2)
+  assert_eq(@self_evolve.suggest_test_count(80), 2)
+}
+
+///|
+test "形式化: suggest_test_count 低覆盖多测试" {
+  assert_eq(@self_evolve.suggest_test_count(0), 12)
+  assert_eq(@self_evolve.suggest_test_count(25), 8)
+}
+
+///|
+test "形式化: priority_from_coverage 分级正确" {
+  assert_true(
+    @self_evolve.priority_from_coverage(100) is @self_evolve.LowPriority,
+  )
+  assert_true(
+    @self_evolve.priority_from_coverage(30) is @self_evolve.MediumPriority,
+  )
+  assert_true(
+    @self_evolve.priority_from_coverage(10) is @self_evolve.HighPriority,
+  )
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: adaptive_strategy_all 返回 19 个策略" {
+  let report = @self_evolve.adaptive_strategy_all()
+  assert_eq(report.total_prioritized, 19)
+}
+
+///|
+test "FAKE: adaptive_strategy 安全算子高覆盖" {
+  let s = @self_evolve.adaptive_strategy(@imgir.Resize(8, 8))
+  assert_true(s.current_coverage == 100)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: adaptive_strategy 退化算子低覆盖" {
+  let s = @self_evolve.adaptive_strategy(@imgir.Resize(0, 0))
+  assert_true(s.current_coverage < 100)
+}
+
+///|
+test "MOCK: high_priority_ops 返回数组" {
+  let ops = @self_evolve.high_priority_ops()
+  for tag in ops {
+    assert_true(tag.length() > 0)
+  }
+}
+
+// --- E2E ---
+
+///|
+test "E2E: adaptive_strategy_all summary 含信息" {
+  let report = @self_evolve.adaptive_strategy_all()
+  assert_true(report.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: adaptive 每个策略 op_tag 非空" {
+  let report = @self_evolve.adaptive_strategy_all()
+  for s in report.strategies {
+    assert_true(s.op_tag.length() > 0)
+    assert_true(s.suggested_tests > 0)
+  }
+}

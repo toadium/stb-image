@@ -64,6 +64,12 @@ import {
 // Values
 pub const MAX_IMAGE_DIMENSION : Int = 65535
 
+pub fn adaptive_report_is_well_covered(@self_evolve.AdaptiveReport) -> Bool
+
+pub fn adaptive_strategy(@imgir.IROp) -> @self_evolve.AdaptiveStrategy
+
+pub fn adaptive_strategy_all() -> @self_evolve.AdaptiveReport
+
 pub fn adaptive_threshold_gaussian(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn adaptive_threshold_gaussian_16(@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError
@@ -1800,6 +1806,8 @@ pub fn heif_info(Bytes) -> @codec.HeifInfo raise @types.LoadError
 
 pub fn heif_info_extended(Bytes) -> @codec.HeifInfoExtended raise @types.LoadError
 
+pub fn high_priority_ops() -> Array[String]
+
 pub fn histogram(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn histogram_16(@types.Image16) -> Array[Int] raise @types.LoadError
@@ -2584,6 +2592,8 @@ pub fn premultiply_alpha_16(@types.Image16) -> @types.Image16 raise @types.LoadE
 
 pub fn premultiply_alpha_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
+pub fn priority_from_coverage(Int) -> @self_evolve.TestPriority
+
 pub fn process_frame_slam_sl(@slam.SLAMState, @types.Image, @slam.SLAMConfig) -> @slam.SLAMState
 
 pub fn progress_bar_to_string(Double, width? : Int) -> String
@@ -3058,6 +3068,8 @@ pub fn stylize(@types.Image, String, config? : @stylize.StylizeConfig) -> @types
 
 pub fn stylize_default_config() -> @stylize.StylizeConfig
 
+pub fn suggest_test_count(Int) -> Int
+
 pub fn super_resolution(@types.Image, config? : @superres.SuperResolutionConfig) -> @types.Image
 
 pub fn super_resolution_bicubic(@types.Image, Double) -> @types.Image
@@ -3420,6 +3432,10 @@ pub using @pose_estimation {type ActionRecognitionResult as ActionRecognitionRes
 pub using @video {type ActionType}
 
 pub using @ocr {type AdaptivePreprocessConfig}
+
+pub using @self_evolve {type AdaptiveReport}
+
+pub using @self_evolve {type AdaptiveStrategy}
 
 pub using @ocr {type AdvancedChineseOcrConfig}
 
@@ -4426,6 +4442,8 @@ pub using @fieldimg {type TensorField}
 pub using @self_evolve {type TestCase}
 
 pub using @self_evolve {type TestCategory}
+
+pub using @self_evolve {type TestPriority}
 
 pub using @self_evolve {type TestRunResult}
 

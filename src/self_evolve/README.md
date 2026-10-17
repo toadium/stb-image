@@ -40,6 +40,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `root_cause.mbt` | RootCause / RootCauseReport / analyze_root_cause / analyze_root_cause_all / analyze_pipeline_root_cause / filter_by_kind / is_clean |
 | `phase6_report.mbt` | Phase6Capability / Phase6Report / phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete |
 | `propagation.mbt` | PropagationStep / PropagationReport / analyze_propagation / analyze_propagation_all / has_propagation_risk / propagation_chain / is_safe |
+| `adaptive.mbt` | TestPriority / AdaptiveStrategy / AdaptiveReport / suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered |
 
 ## 公共 API
 
@@ -83,7 +84,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-177 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+186 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -243,4 +244,13 @@ Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因
 - `analyze_propagation_all()` → PropagationReport — 全算子传播分析
 - `has_propagation_risk(pipeline)` → Bool — 是否有传播风险
 - `propagation_chain(pipeline)` → Array[PropagationStep] — 传播链
-- `PropagationReport::is_safe()` → 无传播风险
+- `PropagationReport::is_safe()` → 无传播风险## 自适应测试策略（v292.0.0）
+
+将测试生成从"均匀"推向"自适应" — 低覆盖算子优先。
+
+- `suggest_test_count(coverage)` → Int — 根据覆盖度建议测试数
+- `priority_from_coverage(coverage)` → TestPriority — 优先级判定
+- `adaptive_strategy(op)` → AdaptiveStrategy — 单算子策略
+- `adaptive_strategy_all()` → AdaptiveReport — 全算子策略
+- `high_priority_ops()` → 高优先级算子标签
+- `AdaptiveReport::is_well_covered()` → 全高覆盖

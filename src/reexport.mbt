@@ -12865,3 +12865,43 @@ pub fn propagation_chain(
 pub fn propagation_report_is_safe(report : PropagationReport) -> Bool {
   @self_evolve.PropagationReport::is_safe(report)
 }
+// self_evolve — 自适应测试策略（v292.0.0）
+
+///|
+pub type TestPriority = @self_evolve.TestPriority
+
+///|
+pub type AdaptiveStrategy = @self_evolve.AdaptiveStrategy
+
+///|
+pub type AdaptiveReport = @self_evolve.AdaptiveReport
+
+///|
+pub fn suggest_test_count(coverage : Int) -> Int {
+  @self_evolve.suggest_test_count(coverage)
+}
+
+///|
+pub fn priority_from_coverage(coverage : Int) -> TestPriority {
+  @self_evolve.priority_from_coverage(coverage)
+}
+
+///|
+pub fn adaptive_strategy(op : @imgir.IROp) -> AdaptiveStrategy {
+  @self_evolve.adaptive_strategy(op)
+}
+
+///|
+pub fn adaptive_strategy_all() -> AdaptiveReport {
+  @self_evolve.adaptive_strategy_all()
+}
+
+///|
+pub fn high_priority_ops() -> Array[String] {
+  @self_evolve.high_priority_ops()
+}
+
+///|
+pub fn adaptive_report_is_well_covered(report : AdaptiveReport) -> Bool {
+  @self_evolve.AdaptiveReport::is_well_covered(report)
+}
