@@ -1357,3 +1357,104 @@ test "AI: run_summary summary 含信息" {
   let summary = @self_evolve.run_summary(results)
   assert_true(summary.summary.length() > 0)
 }
+// ===========================================================================
+// v287.0.0 智能修复策略测试
+// ===========================================================================
+
+// --- 形式式证明 ---
+
+///|
+test "形式化: repair_with_strategies 返回 3 策略" {
+  let results = @self_evolve.repair_with_strategies(@imgir.Resize(0, 0))
+  assert_eq(results.length(), 3)
+  assert_true(results[0].strategy is @self_evolve.Conservative)
+  assert_true(results[1].strategy is @self_evolve.Aggressive)
+  assert_true(results[2].strategy is @self_evolve.Optimal)
+}
+
+///|
+test "形式化: best_repair 质量分最高" {
+  let op = @imgir.Resize(0, 0)
+  let all = @self_evolve.repair_with_strategies(op)
+  let best = @self_evolve.best_repair(op)
+  for r in all {
+    assert_true(best.quality_score >= r.quality_score)
+  }
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: best_repair 安全算子质量 100" {
+  let best = @self_evolve.best_repair(@imgir.FlipH)
+  assert_eq(best.quality_score, 100)
+  assert_true(best.is_complete())
+}
+
+///|
+test "FAKE: Aggressive 修复后无退化" {
+  let repaired = @self_evolve.repair_op_strategy(
+    @imgir.Resize(0, 0),
+    @self_evolve.Aggressive,
+  )
+  assert_eq(@self_evolve.detect_degradation(repaired).length(), 0)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: Conservative 不改 Sharpen 极端值" {
+  // Sharpen(200) 保守策略不改（非 Fatal），仍有退化
+  let repaired = @self_evolve.repair_op_strategy(
+    @imgir.Sharpen(200.0F),
+    @self_evolve.Conservative,
+  )
+  let degs = @self_evolve.detect_degradation(repaired)
+  assert_true(degs.length() > 0)
+}
+
+///|
+test "MOCK: best_repair Resize(0,0) is_complete" {
+  let best = @self_evolve.best_repair(@imgir.Resize(0, 0))
+  assert_true(best.is_complete())
+  assert_eq(best.degs_after, 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: best_repair_all 19 个结果" {
+  let results = @self_evolve.best_repair_all()
+  assert_eq(results.length(), 19)
+  for r in results {
+    assert_true(r.is_complete())
+  }
+}
+
+///|
+test "E2E: Aggressive 修复全部 19 算子无退化" {
+  for op in @self_evolve.all_ops() {
+    let repaired = @self_evolve.repair_op_strategy(op, @self_evolve.Aggressive)
+    assert_eq(@self_evolve.detect_degradation(repaired).length(), 0)
+  }
+}
+
+// --- AI ---
+
+///|
+test "AI: best_repair quality_score 在 0-100" {
+  let ops = [@imgir.FlipH, @imgir.Resize(0, 0), @imgir.STSnapshot(2.0F)]
+  for op in ops {
+    let best = @self_evolve.best_repair(op)
+    assert_true(best.quality_score >= 0)
+    assert_true(best.quality_score <= 100)
+  }
+}
+
+///|
+test "AI: repair_desc 非空" {
+  let results = @self_evolve.repair_with_strategies(@imgir.Resize(0, 0))
+  for r in results {
+    assert_true(r.repair_desc.length() > 0)
+  }
+}

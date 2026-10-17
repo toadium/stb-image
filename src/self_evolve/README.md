@@ -35,6 +35,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `ci_hook.mbt` | CIGateResult / ci_gate_check / ci_gate_all / ci_regression_gate / ci_regression_all_pass / pass_rate / is_green |
 | `phase5_report.mbt` | Phase5Capability / Phase5Report / phase5_capabilities / phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete |
 | `exec_test_run.mbt` | TestRunResult / RunSummary / run_test_case / run_test_suite / run_tests_for_op / run_tests_for_all / run_summary / all_passed |
+| `smart_repair.mbt` | RepairStrategy / StrategyRepairResult / repair_op_strategy / repair_with_strategies / best_repair / best_repair_all / is_complete / is_improvement |
 
 ## 公共 API
 
@@ -78,7 +79,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-135 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+145 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -195,3 +196,17 @@ Phase 6 起步：从占位 assert_true 走向真实断言执行 — 构造算子
 - `run_tests_for_op(op)` / `run_tests_for_all()` — 单算子/全算子执行
 - `run_summary(results)` → RunSummary — 运行汇总（total/passed/failed/pass_rate）
 - `RunSummary::all_passed()` — 全通过判定
+## 智能修复策略（v287.0.0）
+
+多策略修复 + 质量评分 — 将退化修复从"单一策略"推向"多策略对比 + 最优选择"。
+
+| 策略 | 行为 |
+|------|------|
+| Conservative | 仅修复 Fatal 级退化（Resize/Crop 零尺寸、GaussianBlur sigma=0） |
+| Aggressive | 修复全部退化 |
+| Optimal | 选择质量最高（退化最少） |
+
+- `repair_op_strategy(op, strategy)` → IROp — 按策略修复
+- `repair_with_strategies(op)` → 3 策略对比结果
+- `best_repair(op)` → StrategyRepairResult — 最优选择
+- `StrategyRepairResult::is_complete()` / `is_improvement()` — 结果判定

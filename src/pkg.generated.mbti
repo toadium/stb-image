@@ -290,6 +290,10 @@ pub fn bbox_new(Int, Int, Int, Int, score? : Double, class_id? : Int) -> @detect
 
 pub fn bench_run() -> Unit
 
+pub fn best_repair(@imgir.IROp) -> @self_evolve.StrategyRepairResult
+
+pub fn best_repair_all() -> Array[@self_evolve.StrategyRepairResult]
+
 pub fn bicubic_interpolate_sr(@types.Image, Double) -> @types.Image
 
 pub fn bilateral_filter(@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError
@@ -2700,9 +2704,13 @@ pub fn repair_is_fully_repaired(@self_evolve.RepairReport) -> Bool
 
 pub fn repair_op(@imgir.IROp) -> @imgir.IROp
 
+pub fn repair_op_strategy(@imgir.IROp, @self_evolve.RepairStrategy) -> @imgir.IROp
+
 pub fn repair_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
 
 pub fn repair_report(@imgir.IRPipeline) -> @self_evolve.RepairReport
+
+pub fn repair_with_strategies(@imgir.IROp) -> Array[@self_evolve.StrategyRepairResult]
 
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
@@ -2997,6 +3005,10 @@ pub fn stitch_default_config() -> @stitch.StitchConfig
 pub fn stitch_images(@types.Image, @types.Image, config? : @stitch.StitchConfig) -> @types.Image?
 
 pub fn stitch_panorama(Array[@types.Image], @photo_enhance.PanoramaConfig) -> @photo_enhance.PanoramaResult
+
+pub fn strategy_repair_is_complete(@self_evolve.StrategyRepairResult) -> Bool
+
+pub fn strategy_repair_is_improvement(@self_evolve.StrategyRepairResult) -> Bool
 
 pub fn structure_based_filter(@types.Image, Array[@ocr.ChineseCharInfo], max_candidates? : Int) -> Array[@ocr.ChineseCharInfo]
 
@@ -4193,6 +4205,8 @@ pub using @self_evolve {type RepairAction}
 
 pub using @self_evolve {type RepairReport}
 
+pub using @self_evolve {type RepairStrategy}
+
 pub using @types {type ResizeEdge}
 
 pub using @types {type ResizeFilter}
@@ -4282,6 +4296,8 @@ pub using @ocr {type StatisticalFeatures}
 pub using @stereo3d {type StereoConfig3d}
 
 pub using @stitch {type StitchConfig}
+
+pub using @self_evolve {type StrategyRepairResult}
 
 pub using @lib {type StreamInfo}
 

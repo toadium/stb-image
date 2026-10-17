@@ -9,6 +9,10 @@ import {
 // Values
 pub fn all_ops() -> Array[@imgir.IROp]
 
+pub fn best_repair(@imgir.IROp) -> StrategyRepairResult
+
+pub fn best_repair_all() -> Array[StrategyRepairResult]
+
 pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
 
 pub fn check_inverse_pair(@imgir.IROp, @imgir.IROp) -> Bool
@@ -119,9 +123,13 @@ pub fn repair_all() -> Array[RepairReport]
 
 pub fn repair_op(@imgir.IROp) -> @imgir.IROp
 
+pub fn repair_op_strategy(@imgir.IROp, RepairStrategy) -> @imgir.IROp
+
 pub fn repair_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
 
 pub fn repair_report(@imgir.IRPipeline) -> RepairReport
+
+pub fn repair_with_strategies(@imgir.IROp) -> Array[StrategyRepairResult]
 
 pub fn rotate90_power_is_identity(Int) -> Bool
 
@@ -407,6 +415,15 @@ pub fn RepairReport::not_equal(Self, Self) -> Bool
 pub fn RepairReport::repair_count(Self) -> Int
 pub fn RepairReport::to_repr(Self) -> @debug.Repr
 
+pub(all) enum RepairStrategy {
+  Conservative
+  Aggressive
+  Optimal
+} derive(Eq, @debug.Debug)
+pub fn RepairStrategy::equal(Self, Self) -> Bool
+pub fn RepairStrategy::not_equal(Self, Self) -> Bool
+pub fn RepairStrategy::to_repr(Self) -> @debug.Repr
+
 pub(all) struct RunSummary {
   total : Int
   passed : Int
@@ -427,6 +444,20 @@ pub(all) enum Severity {
 pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::not_equal(Self, Self) -> Bool
 pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct StrategyRepairResult {
+  strategy : RepairStrategy
+  op_tag : String
+  degs_before : Int
+  degs_after : Int
+  quality_score : Int
+  repair_desc : String
+} derive(Eq, @debug.Debug)
+pub fn StrategyRepairResult::equal(Self, Self) -> Bool
+pub fn StrategyRepairResult::is_complete(Self) -> Bool
+pub fn StrategyRepairResult::is_improvement(Self) -> Bool
+pub fn StrategyRepairResult::not_equal(Self, Self) -> Bool
+pub fn StrategyRepairResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TestCase {
   name : String

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v287.0.0 - GeoVerse Phase 6: 智能修复策略
+- 扩展 `src/self_evolve/`：智能修复策略 — 多策略修复（保守/激进/最优）+ 质量评分
+  - **smart_repair**：RepairStrategy（Conservative/Aggressive/Optimal）/ StrategyRepairResult + repair_op_strategy / repair_with_strategies（三策略对比）/ best_repair（最优选择）/ best_repair_all + is_complete / is_improvement
+  - 保守策略仅修复 Fatal 级退化，激进修复全部，最优选质量最高
+- 新增 2 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +10 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6849×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v286.0.0 - GeoVerse Phase 6: 实际执行测试
 - 扩展 `src/self_evolve/`：实际执行测试 — 从占位 assert_true 走向真实断言执行
   - **exec_test_run**：TestRunResult / RunSummary + run_test_case（按类别真实判定：Boundary/Normal 期望无退化，Degradation 期望修复后无退化）/ run_test_suite / run_tests_for_op / run_tests_for_all / run_summary + all_passed

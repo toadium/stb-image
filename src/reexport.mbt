@@ -12693,3 +12693,40 @@ pub fn run_summary(results : Array[TestRunResult]) -> RunSummary {
 pub fn run_summary_all_passed(summary : RunSummary) -> Bool {
   @self_evolve.RunSummary::all_passed(summary)
 }
+// self_evolve — 智能修复策略（v287.0.0）
+
+///|
+pub type RepairStrategy = @self_evolve.RepairStrategy
+
+///|
+pub type StrategyRepairResult = @self_evolve.StrategyRepairResult
+
+///|
+pub fn repair_op_strategy(op : IROp, strategy : RepairStrategy) -> IROp {
+  @self_evolve.repair_op_strategy(op, strategy)
+}
+
+///|
+pub fn repair_with_strategies(op : IROp) -> Array[StrategyRepairResult] {
+  @self_evolve.repair_with_strategies(op)
+}
+
+///|
+pub fn best_repair(op : IROp) -> StrategyRepairResult {
+  @self_evolve.best_repair(op)
+}
+
+///|
+pub fn best_repair_all() -> Array[StrategyRepairResult] {
+  @self_evolve.best_repair_all()
+}
+
+///|
+pub fn strategy_repair_is_complete(result : StrategyRepairResult) -> Bool {
+  @self_evolve.StrategyRepairResult::is_complete(result)
+}
+
+///|
+pub fn strategy_repair_is_improvement(result : StrategyRepairResult) -> Bool {
+  @self_evolve.StrategyRepairResult::is_improvement(result)
+}
