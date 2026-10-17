@@ -10965,3 +10965,348 @@ pub fn cli_parse(args : Array[String]) -> @pipeline.CliCommand {
 
 ///|
 pub let cli_help : () -> String = @pipeline.cli_help
+// =============================================================================
+// fieldimg — 图像场几何（GeoVerse Phase 1）
+// ScalarField / VectorField / TensorField + 场算子 + Image 双向转换
+// =============================================================================
+
+///|
+pub type ScalarField = @fieldimg.ScalarField
+
+///|
+pub type VectorField = @fieldimg.VectorField
+
+///|
+pub type TensorField = @fieldimg.TensorField
+
+// --- ScalarField 方法重导出 ---
+
+///|
+pub fn scalar_field_make(
+  width : Int,
+  height : Int,
+  data : Array[Float],
+) -> ScalarField raise LoadError {
+  @fieldimg.ScalarField::make(width, height, data)
+}
+
+///|
+pub fn scalar_field_zeros(
+  width : Int,
+  height : Int,
+) -> ScalarField raise LoadError {
+  @fieldimg.ScalarField::zeros(width, height)
+}
+
+///|
+pub fn scalar_field_constant(
+  width : Int,
+  height : Int,
+  value : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.ScalarField::constant(width, height, value)
+}
+
+///|
+pub fn scalar_field_evaluate(field : ScalarField, x : Int, y : Int) -> Float {
+  @fieldimg.ScalarField::evaluate(field, x, y)
+}
+
+///|
+pub fn scalar_field_evaluate_clamped(
+  field : ScalarField,
+  x : Int,
+  y : Int,
+) -> Float {
+  @fieldimg.ScalarField::evaluate_clamped(field, x, y)
+}
+
+///|
+pub fn scalar_field_set(
+  field : ScalarField,
+  x : Int,
+  y : Int,
+  value : Float,
+) -> Unit {
+  @fieldimg.ScalarField::set(field, x, y, value)
+}
+
+///|
+pub fn scalar_field_size(field : ScalarField) -> Int {
+  @fieldimg.ScalarField::size(field)
+}
+
+///|
+pub fn scalar_field_min_value(field : ScalarField) -> Float {
+  @fieldimg.ScalarField::min_value(field)
+}
+
+///|
+pub fn scalar_field_max_value(field : ScalarField) -> Float {
+  @fieldimg.ScalarField::max_value(field)
+}
+
+// --- VectorField 方法重导出 ---
+
+///|
+pub fn vector_field_make(
+  width : Int,
+  height : Int,
+  dim : Int,
+  data : Array[Float],
+) -> VectorField raise LoadError {
+  @fieldimg.VectorField::make(width, height, dim, data)
+}
+
+///|
+pub fn vector_field_zeros(
+  width : Int,
+  height : Int,
+  dim : Int,
+) -> VectorField raise LoadError {
+  @fieldimg.VectorField::zeros(width, height, dim)
+}
+
+///|
+pub fn vector_field_evaluate(
+  field : VectorField,
+  x : Int,
+  y : Int,
+) -> Array[Float] {
+  @fieldimg.VectorField::evaluate(field, x, y)
+}
+
+///|
+pub fn vector_field_evaluate_component(
+  field : VectorField,
+  x : Int,
+  y : Int,
+  k : Int,
+) -> Float {
+  @fieldimg.VectorField::evaluate_component(field, x, y, k)
+}
+
+///|
+pub fn vector_field_set_component(
+  field : VectorField,
+  x : Int,
+  y : Int,
+  k : Int,
+  value : Float,
+) -> Unit {
+  @fieldimg.VectorField::set_component(field, x, y, k, value)
+}
+
+///|
+pub fn vector_field_magnitude(
+  field : VectorField,
+) -> ScalarField raise LoadError {
+  @fieldimg.VectorField::magnitude(field)
+}
+
+// --- TensorField 方法重导出 ---
+
+///|
+pub fn tensor_field_make(
+  width : Int,
+  height : Int,
+  rows : Int,
+  cols : Int,
+  data : Array[Float],
+) -> TensorField raise LoadError {
+  @fieldimg.TensorField::make(width, height, rows, cols, data)
+}
+
+///|
+pub fn tensor_field_zeros(
+  width : Int,
+  height : Int,
+  rows : Int,
+  cols : Int,
+) -> TensorField raise LoadError {
+  @fieldimg.TensorField::zeros(width, height, rows, cols)
+}
+
+///|
+pub fn tensor_field_evaluate(
+  field : TensorField,
+  x : Int,
+  y : Int,
+  r : Int,
+  c : Int,
+) -> Float {
+  @fieldimg.TensorField::evaluate(field, x, y, r, c)
+}
+
+///|
+pub fn tensor_field_set(
+  field : TensorField,
+  x : Int,
+  y : Int,
+  r : Int,
+  c : Int,
+  value : Float,
+) -> Unit {
+  @fieldimg.TensorField::set(field, x, y, r, c, value)
+}
+
+///|
+pub fn tensor_field_structure_tensor(
+  gradient : VectorField,
+) -> TensorField raise LoadError {
+  @fieldimg.TensorField::structure_tensor(gradient)
+}
+
+///|
+pub fn tensor_field_eigenvalues_2x2(
+  field : TensorField,
+) -> VectorField raise LoadError {
+  @fieldimg.TensorField::eigenvalues_2x2(field)
+}
+
+// --- 场算子重导出 ---
+
+///|
+pub fn field_gradient(field : ScalarField) -> VectorField raise LoadError {
+  @fieldimg.field_gradient(field)
+}
+
+///|
+pub fn field_divergence(field : VectorField) -> ScalarField raise LoadError {
+  @fieldimg.field_divergence(field)
+}
+
+///|
+pub fn field_curl(field : VectorField) -> ScalarField raise LoadError {
+  @fieldimg.field_curl(field)
+}
+
+///|
+pub fn field_laplacian(field : ScalarField) -> ScalarField raise LoadError {
+  @fieldimg.field_laplacian(field)
+}
+
+///|
+pub fn field_integrate(field : ScalarField) -> Float {
+  @fieldimg.field_integrate(field)
+}
+
+///|
+pub fn field_integrate_region(
+  field : ScalarField,
+  x0 : Int,
+  y0 : Int,
+  x1 : Int,
+  y1 : Int,
+) -> Float {
+  @fieldimg.field_integrate_region(field, x0, y0, x1, y1)
+}
+
+///|
+pub fn field_clamp(
+  field : ScalarField,
+  lo : Float,
+  hi : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_clamp(field, lo, hi)
+}
+
+///|
+pub fn field_mask(
+  field : ScalarField,
+  threshold : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_mask(field, threshold)
+}
+
+///|
+pub fn field_add(
+  a : ScalarField,
+  b : ScalarField,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_add(a, b)
+}
+
+///|
+pub fn field_sub(
+  a : ScalarField,
+  b : ScalarField,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_sub(a, b)
+}
+
+///|
+pub fn field_mul_scalar(
+  field : ScalarField,
+  scalar : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_mul_scalar(field, scalar)
+}
+
+///|
+pub fn field_mul(
+  a : ScalarField,
+  b : ScalarField,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_mul(a, b)
+}
+
+///|
+pub fn field_blend(
+  a : ScalarField,
+  b : ScalarField,
+  alpha : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_blend(a, b, alpha)
+}
+
+///|
+pub fn field_isosurface(
+  field : ScalarField,
+  level : Float,
+  epsilon : Float,
+) -> ScalarField raise LoadError {
+  @fieldimg.field_isosurface(field, level, epsilon)
+}
+
+///|
+pub fn field_histogram(
+  field : ScalarField,
+  min_val : Float,
+  max_val : Float,
+  bins : Int,
+) -> Array[Int] raise LoadError {
+  @fieldimg.field_histogram(field, min_val, max_val, bins)
+}
+
+// --- 场与 Image 双向转换重导出 ---
+
+///|
+pub fn image_to_scalar_field(img : Image) -> ScalarField raise LoadError {
+  @fieldimg.image_to_scalar_field(img)
+}
+
+///|
+pub fn scalar_field_to_image(field : ScalarField) -> Image {
+  @fieldimg.scalar_field_to_image(field)
+}
+
+///|
+pub fn image_to_vector_field(img : Image) -> VectorField raise LoadError {
+  @fieldimg.image_to_vector_field(img)
+}
+
+///|
+pub fn vector_field_to_image(field : VectorField) -> Image {
+  @fieldimg.vector_field_to_image(field)
+}
+
+///|
+pub fn image16_to_scalar_field(img : Image16) -> ScalarField raise LoadError {
+  @fieldimg.image16_to_scalar_field(img)
+}
+
+///|
+pub fn imagef_to_scalar_field(img : ImageF) -> ScalarField raise LoadError {
+  @fieldimg.imagef_to_scalar_field(img)
+}

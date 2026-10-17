@@ -14,6 +14,7 @@ import {
   "walkzzz/image/src/enhance",
   "walkzzz/image/src/face_recognition",
   "walkzzz/image/src/feature",
+  "walkzzz/image/src/fieldimg",
   "walkzzz/image/src/forensics",
   "walkzzz/image/src/forensics_enhanced",
   "walkzzz/image/src/frequency",
@@ -1310,6 +1311,36 @@ pub fn fft_magnitude_f(@frequency.FFTResult, Bool) -> @types.ImageF
 
 pub fn fft_shift(@frequency.FFTResult) -> @frequency.FFTResult
 
+pub fn field_add(@fieldimg.ScalarField, @fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_blend(@fieldimg.ScalarField, @fieldimg.ScalarField, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_clamp(@fieldimg.ScalarField, Float, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_curl(@fieldimg.VectorField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_divergence(@fieldimg.VectorField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_gradient(@fieldimg.ScalarField) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn field_histogram(@fieldimg.ScalarField, Float, Float, Int) -> Array[Int] raise @types.LoadError
+
+pub fn field_integrate(@fieldimg.ScalarField) -> Float
+
+pub fn field_integrate_region(@fieldimg.ScalarField, Int, Int, Int, Int) -> Float
+
+pub fn field_isosurface(@fieldimg.ScalarField, Float, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_laplacian(@fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_mask(@fieldimg.ScalarField, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_mul(@fieldimg.ScalarField, @fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_mul_scalar(@fieldimg.ScalarField, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn field_sub(@fieldimg.ScalarField, @fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
+
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
 
 pub fn filter_components_by_area(@ocr.OcrConnectedComponentsResult, Int, Int) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
@@ -1706,6 +1737,8 @@ pub fn ifft_2d_f(@frequency.FFTResult) -> @types.ImageF
 
 pub fn ihaar_transform_1d(Array[Float]) -> Array[Float]
 
+pub fn image16_to_scalar_field(@types.Image16) -> @fieldimg.ScalarField raise @types.LoadError
+
 pub fn image_database_new() -> @retrieval.ImageDatabase
 
 pub fn image_moments(Array[@edge.ContourPoint]) -> @edge.Moments
@@ -1714,7 +1747,13 @@ pub fn image_retrieval_report_to_string_advanced(@image_retrieval_advanced.Image
 
 pub fn image_similarity(@types.Image, @types.Image, method_type? : String) -> Double
 
+pub fn image_to_scalar_field(@types.Image) -> @fieldimg.ScalarField raise @types.LoadError
+
 pub fn image_to_text_vlm(@types.Image, @vlm_multimodal.GenerativeAIConfig) -> @vlm_multimodal.GenerativeAIResult
+
+pub fn image_to_vector_field(@types.Image) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn imagef_to_scalar_field(@types.ImageF) -> @fieldimg.ScalarField raise @types.LoadError
 
 pub fn images_equal(@types.Image, @types.Image) -> Bool
 
@@ -2442,6 +2481,26 @@ pub fn save_image_with_quality(@types.Image, @types.ImageFormat, Int) -> Bytes r
 
 pub fn save_model(@ocr.DLCnnModelConfig, Array[Double], String) -> Bool
 
+pub fn scalar_field_constant(Int, Int, Float) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn scalar_field_evaluate(@fieldimg.ScalarField, Int, Int) -> Float
+
+pub fn scalar_field_evaluate_clamped(@fieldimg.ScalarField, Int, Int) -> Float
+
+pub fn scalar_field_make(Int, Int, Array[Float]) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn scalar_field_max_value(@fieldimg.ScalarField) -> Float
+
+pub fn scalar_field_min_value(@fieldimg.ScalarField) -> Float
+
+pub fn scalar_field_set(@fieldimg.ScalarField, Int, Int, Float) -> Unit
+
+pub fn scalar_field_size(@fieldimg.ScalarField) -> Int
+
+pub fn scalar_field_to_image(@fieldimg.ScalarField) -> @types.Image
+
+pub fn scalar_field_zeros(Int, Int) -> @fieldimg.ScalarField raise @types.LoadError
+
 pub fn scan_document_preprocess(@types.Image, @ocr.ScanOCRConfig) -> @types.Image raise @types.LoadError
 
 pub fn scan_ocr_default_config() -> @ocr.ScanOCRConfig
@@ -2618,6 +2677,18 @@ pub fn template_matcher_create(distance_metric? : String) -> @ocr.TemplateMatche
 
 pub fn template_matcher_predict(@ocr.TemplateMatcher, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
 
+pub fn tensor_field_eigenvalues_2x2(@fieldimg.TensorField) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn tensor_field_evaluate(@fieldimg.TensorField, Int, Int, Int, Int) -> Float
+
+pub fn tensor_field_make(Int, Int, Int, Int, Array[Float]) -> @fieldimg.TensorField raise @types.LoadError
+
+pub fn tensor_field_set(@fieldimg.TensorField, Int, Int, Int, Int, Float) -> Unit
+
+pub fn tensor_field_structure_tensor(@fieldimg.VectorField) -> @fieldimg.TensorField raise @types.LoadError
+
+pub fn tensor_field_zeros(Int, Int, Int, Int) -> @fieldimg.TensorField raise @types.LoadError
+
 pub fn text_to_image_vlm(String, @vlm_multimodal.GenerativeAIConfig, Int) -> @vlm_multimodal.GenerativeAIResult
 
 pub fn tga_info_extended(Bytes) -> @codec.TgaInfoExtended raise @types.LoadError
@@ -2709,6 +2780,20 @@ pub fn upscale_2x(@types.Image) -> @types.Image
 pub fn upscale_4x(@types.Image) -> @types.Image
 
 pub fn variance_value(@types.Image) -> Float
+
+pub fn vector_field_evaluate(@fieldimg.VectorField, Int, Int) -> Array[Float]
+
+pub fn vector_field_evaluate_component(@fieldimg.VectorField, Int, Int, Int) -> Float
+
+pub fn vector_field_magnitude(@fieldimg.VectorField) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn vector_field_make(Int, Int, Int, Array[Float]) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn vector_field_set_component(@fieldimg.VectorField, Int, Int, Int, Float) -> Unit
+
+pub fn vector_field_to_image(@fieldimg.VectorField) -> @types.Image
+
+pub fn vector_field_zeros(Int, Int, Int) -> @fieldimg.VectorField raise @types.LoadError
 
 pub fn vegetation_coverage(@types.Image, ndvi_soil? : Double, ndvi_veg? : Double) -> @types.Image raise @types.LoadError
 
@@ -3645,6 +3730,8 @@ pub using @slam {type SLAMConfig as SLAMConfigSL}
 
 pub using @slam {type SLAMState as SLAMStateSL}
 
+pub using @fieldimg {type ScalarField}
+
 pub using @ocr {type ScanOCRConfig}
 
 pub using @ocr {type ScanQuality}
@@ -3763,6 +3850,8 @@ pub using @feature {type TemplateMatchResult}
 
 pub using @ocr {type TemplateMatcher}
 
+pub using @fieldimg {type TensorField}
+
 pub using @ocr {type TextBlock}
 
 pub using @forensics {type TextDetectionResult}
@@ -3822,6 +3911,8 @@ pub using @advanced_imaging {type UltrasoundData as UltrasoundDataAI}
 pub using @lib {type UnifiedImageInfo}
 
 pub using @vlm_multimodal {type VLMConfig as VLMConfigVLM}
+
+pub using @fieldimg {type VectorField}
 
 pub using @remote_sensing {type VegetationIndices}
 

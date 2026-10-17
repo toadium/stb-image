@@ -2628,3 +2628,44 @@ flowchart LR
 | 六 | v261-v263 | Fuzzing 模糊测试 | +240~295 | ~6920 |
 
 > **预期终态**：~6920×4 测试全绿，覆盖率 95%+，18 种格式完整解码，统一 API + 元数据 + 性能基准 + Fuzzing 全覆盖。
+---
+
+## GeoVerse 七层架构重构（v265.0.0 ~ v280.0.0）
+
+> **目标**：融合 GeoVerse 七层架构思想，将图像提升为场实体，支持时空图像原生处理。
+
+### Phase 0｜架构定型期（v265.0.0）✅
+
+| 版本 | 方向 | 具体任务 | 状态 |
+|------|------|----------|------|
+| v265.0.0 | 架构迁移 | process/ 90 子包迁移至 src/ 顶层 + ARCHITECTURE.md + R1-R16 规则 | ✅ 6394×4 |
+
+### Phase 1｜场几何落地期（v266.0.0）✅
+
+| 版本 | 方向 | 具体任务 | 状态 |
+|------|------|----------|------|
+| v266.0.0 | fieldimg 图像场几何 | ScalarField/VectorField/TensorField + 场算子(gradient/laplacian/integrate/isosurface) + Image双向转换 + 属性测试 | ✅ 6458×4 |
+
+### Phase 2｜时空图像落地期（v267.0.0 ~ v269.0.0）
+
+| 版本 | 方向 | 具体任务 | 状态 |
+|------|------|----------|------|
+| v267.0.0 | spatiotemporal 时空原语 | TImage/TFrame/TVideo/TInterval + TContext 时态控制器 | ⏳ |
+| v268.0.0 | 时空拓扑谓词 | st_contains/within/intersects/overlaps + st_during/before/after/meets | ⏳ |
+| v269.0.0 | 时空应用 | APNG/GIF→TImage + 帧间插值 + 时序快照 + 运动检测 | ⏳ |
+
+### Phase 3｜ImgIR + AOCI 落地期（v270.0.0 ~ v273.0.0）
+
+| 版本 | 方向 | 具体任务 | 状态 |
+|------|------|----------|------|
+| v270.0.0 | ImgIR 核心 | 统一图像中间表示（图像IR + 场IR + 时空IR） | ⏳ |
+| v271.0.0 | AOCI 符号索引 | Builder + Router + ContextBudget + Verifier | ⏳ |
+| v272.0.0 | Agent-Kit | 自然语言 API → ImgIR 查询 | ⏳ |
+| v273.0.0 | 集成验证 | 端到端流水线 + 四目标全绿 | ⏳ |
+
+### Phase 4｜自演化预研期（v274.0.0 ~ v280.0.0）
+
+| 版本 | 方向 | 具体任务 | 状态 |
+|------|------|----------|------|
+| v274.0.0 | self_evolve | 自动测试用例生成 + 退化场景发现 | ⏳ |
+| v275.0.0+ | 算法优化 | 自动算法优化 + 性能回归检测 | ⏳ |

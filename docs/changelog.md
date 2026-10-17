@@ -2101,6 +2101,24 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v266.0.0 - GeoVerse Phase 1: fieldimg 图像场几何模块
+- 新增 `src/fieldimg/`：图像场几何模块（GeoVerse 核心创新）
+  - **ScalarField**：2D 标量场（灰度图=标量场），求值/设值/最值
+  - **VectorField**：2D 矢量场（RGB=矢量场），求值/幅值
+  - **TensorField**：张量场（结构张量 + 特征值分解）
+  - **场算子**：gradient（边缘检测）/ divergence / curl / laplacian（模糊）/ integrate（直方图）/ clamp（阈值）/ mask / add / sub / mul / blend / isosurface（等值线）/ histogram
+  - **Image 双向转换**：image_to_scalar_field / scalar_field_to_image / image_to_vector_field / vector_field_to_image / image16_to_scalar_field / imagef_to_scalar_field
+  - **属性测试**：curl(gradient)=0 无旋场 + 加法逆元 + 常量场梯度/拉普拉斯为零
+- 新增 3 类型 + 40+ 公共函数，reexport.mbt 注册顶层 API
+- +64 tests
+- 6458×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v265.0.0 - GeoVerse 七层架构重构 Phase 0
+- 新增 `ARCHITECTURE.md`：七层架构设计文档（GeoVerse 思想映射）
+- 批量迁移 `src/process/` 下 90 子包至 `src/` 顶层
+- 更新 `src/moon.pkg` 47 处 process 路径引用
+- `AGENTS.md` 添加 R1-R16 开发规则全集 + 迭代流程
+- `rules.md` 同步添加 R16 迭代清理规则
+- 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v259.0.0 - 多格式性能基准套件
 - 扩展 `src/bench.mbt`：从 35 项基准增至 79 项
   - 多尺寸编解码：PNG/BMP/JPEG/QOI/PNM/WebP/GIF/TGA/TIFF 在 256×256 和 512×512 尺寸
