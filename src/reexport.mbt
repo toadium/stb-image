@@ -12440,3 +12440,40 @@ pub fn grill_failed_count(report : GrillReport) -> Int {
 pub fn grill_passed_count(report : GrillReport) -> Int {
   @self_evolve.GrillReport::passed_count(report)
 }
+// self_evolve — Phase 4 综合报告（v280.0.0）
+
+///|
+pub type Phase4Capability = @self_evolve.Phase4Capability
+
+///|
+pub type Phase4Report = @self_evolve.Phase4Report
+
+///|
+pub fn phase4_capabilities() -> Array[Phase4Capability] {
+  @self_evolve.phase4_capabilities()
+}
+
+///|
+pub fn phase4_total_types() -> Int {
+  @self_evolve.phase4_total_types()
+}
+
+///|
+pub fn phase4_total_functions() -> Int {
+  @self_evolve.phase4_total_functions()
+}
+
+///|
+pub fn phase4_total_tests() -> Int {
+  @self_evolve.phase4_total_tests()
+}
+
+///|
+pub fn phase4_report() -> Phase4Report {
+  @self_evolve.phase4_report()
+}
+
+///|
+pub fn phase4_is_complete() -> Bool {
+  @self_evolve.phase4_is_complete()
+}

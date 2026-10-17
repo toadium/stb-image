@@ -28,6 +28,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `perf_cost.mbt` | estimate_op_cost / estimate_pipeline_cost / check_regression / perf_optimize_check / compare_pipelines |
 | `evolve_loop.mbt` | EvolveCycleReport / evolve_full_cycle / evolve_cycle_all / is_improved / has_degradation_risk / safety_score |
 | `grill.mbt` | GrillRule / GrillResult / GrillReport / grill_rules / grill_rule_desc / run_grill_check / run_grill_all / all_passed / failed_count / passed_count |
+| `phase4_report.mbt` | Phase4Capability / Phase4Report / phase4_capabilities / phase4_total_types / phase4_total_functions / phase4_total_tests / phase4_report / phase4_is_complete |
 
 ## 公共 API
 
@@ -71,7 +72,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-76 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+84 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -115,3 +116,13 @@ API：
 - `run_grill_check(pipeline)` → GrillReport — 单管道 5 条规则检查
 - `run_grill_all()` → GrillReport — 19 种算子全拷问
 - `GrillReport::all_passed()` / `failed_count()` / `passed_count()` — 结果统计
+## Phase 4 综合报告（v280.0.0）
+
+汇总 v274-v279 全部能力，标记 Phase 4 完成。
+
+- `phase4_capabilities()` → 6 项能力清单（v274-v279）
+- `phase4_total_types()` / `phase4_total_functions()` / `phase4_total_tests()` — 汇总（16 类型 / 48 函数 / 76 测试）
+- `phase4_report()` → Phase4Report — 综合报告
+- `phase4_is_complete()` → Bool — Phase 4 完成判定
+
+自演化体系：拷问 → 发现 → 生成测试 → 优化 → 性能 → 闭环。

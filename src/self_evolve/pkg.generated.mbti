@@ -67,6 +67,18 @@ pub fn optimized_op_count(@imgir.IRPipeline) -> Int
 
 pub fn perf_optimize_check(@imgir.IRPipeline) -> PerfRegression
 
+pub fn phase4_capabilities() -> Array[Phase4Capability]
+
+pub fn phase4_is_complete() -> Bool
+
+pub fn phase4_report() -> Phase4Report
+
+pub fn phase4_total_functions() -> Int
+
+pub fn phase4_total_tests() -> Int
+
+pub fn phase4_total_types() -> Int
+
 pub fn rotate90_power_is_identity(Int) -> Bool
 
 pub fn run_grill_all() -> GrillReport
@@ -225,6 +237,29 @@ pub fn PerfRegression::improvement_pct(Self) -> Int
 pub fn PerfRegression::is_improvement(Self) -> Bool
 pub fn PerfRegression::not_equal(Self, Self) -> Bool
 pub fn PerfRegression::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase4Capability {
+  version : String
+  name : String
+  types : Int
+  functions : Int
+  tests : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase4Capability::equal(Self, Self) -> Bool
+pub fn Phase4Capability::not_equal(Self, Self) -> Bool
+pub fn Phase4Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase4Report {
+  capabilities : Array[Phase4Capability]
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase4Report::equal(Self, Self) -> Bool
+pub fn Phase4Report::not_equal(Self, Self) -> Bool
+pub fn Phase4Report::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Severity {
   Warning

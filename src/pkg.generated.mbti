@@ -2448,6 +2448,18 @@ pub fn perf_optimize_check(@imgir.IRPipeline) -> @self_evolve.PerfRegression
 
 pub fn pet_synthesize_ai(Int, Int, String) -> @advanced_imaging.PETData
 
+pub fn phase4_capabilities() -> Array[@self_evolve.Phase4Capability]
+
+pub fn phase4_is_complete() -> Bool
+
+pub fn phase4_report() -> @self_evolve.Phase4Report
+
+pub fn phase4_total_functions() -> Int
+
+pub fn phase4_total_tests() -> Int
+
+pub fn phase4_total_types() -> Int
+
 pub fn phase_correlation_registration_ra(@types.Image, @types.Image) -> @registration_advanced.RegistrationResultAdvanced
 
 pub fn phase_retrieval_ci(@types.Image, @computational_imaging.PhaseRetrievalConfig) -> @computational_imaging.ImagingReconstructionResult
@@ -4000,6 +4012,10 @@ pub using @self_evolve {type PerfRegression}
 pub using @ocr {type PerformanceBenchmark}
 
 pub using @transform {type PerspectiveMatrix}
+
+pub using @self_evolve {type Phase4Capability}
+
+pub using @self_evolve {type Phase4Report}
 
 pub using @computational_imaging {type PhaseRetrievalConfig as PhaseRetrievalConfigCI}
 

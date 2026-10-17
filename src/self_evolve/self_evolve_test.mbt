@@ -781,3 +781,84 @@ test "AI: passed_count + failed_count == results.length 不变量" {
     )
   }
 }
+// ===========================================================================
+// v280.0.0 Phase 4 综合报告测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: phase4_capabilities 返回 6 个版本" {
+  let caps = @self_evolve.phase4_capabilities()
+  assert_eq(caps.length(), 6)
+  assert_eq(caps[0].version, "v274.0.0")
+  assert_eq(caps[5].version, "v279.0.0")
+}
+
+///|
+test "形式化: phase4 总计 16 类型 48 函数 76 测试" {
+  assert_eq(@self_evolve.phase4_total_types(), 16)
+  assert_eq(@self_evolve.phase4_total_functions(), 48)
+  assert_eq(@self_evolve.phase4_total_tests(), 76)
+}
+
+///|
+test "形式化: phase4_is_complete 为 true" {
+  assert_true(@self_evolve.phase4_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase4_report 结构完整" {
+  let report = @self_evolve.phase4_report()
+  assert_eq(report.capabilities.length(), 6)
+  assert_eq(report.total_types, 16)
+  assert_eq(report.total_functions, 48)
+  assert_eq(report.total_tests, 76)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: phase4 每个能力版本号以 v27 开头" {
+  for c in @self_evolve.phase4_capabilities() {
+    assert_true(c.version.length() >= 8)
+    assert_true(c.version[0] == 'v')
+  }
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase4_report summary 含关键信息" {
+  let report = @self_evolve.phase4_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase4 每个能力描述非空" {
+  for c in @self_evolve.phase4_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}
+
+///|
+test "AI: phase4_report total 与 capabilities 求和一致" {
+  let report = @self_evolve.phase4_report()
+  let mut type_sum = 0
+  let mut fn_sum = 0
+  let mut test_sum = 0
+  for c in report.capabilities {
+    type_sum = type_sum + c.types
+    fn_sum = fn_sum + c.functions
+    test_sum = test_sum + c.tests
+  }
+  assert_eq(type_sum, report.total_types)
+  assert_eq(fn_sum, report.total_functions)
+  assert_eq(test_sum, report.total_tests)
+}
