@@ -2650,9 +2650,9 @@ flowchart LR
 
 | 版本 | 方向 | 具体任务 | 状态 |
 |------|------|----------|------|
-| v267.0.0 | spatiotemporal 时空原语 | TImage/TFrame/TVideo/TInterval + TContext 时态控制器 | ⏳ |
-| v268.0.0 | 时空拓扑谓词 | st_contains/within/intersects/overlaps + st_during/before/after/meets | ⏳ |
-| v269.0.0 | 时空应用 | APNG/GIF→TImage + 帧间插值 + 时序快照 + 运动检测 | ⏳ |
+| v267.0.0 | spatiotemporal 时空图像系统 | TInterval/TFrame/TImage/TVideo/TContext + 时空谓词(Allen Algebra) + 帧间插值 + 时序快照 + GIF转换 | ✅ 6508×4 |
+| v268.0.0 | 时空拓扑谓词 | st_contains/within/intersects/overlaps + st_during/before/after/meets | 合并至v267 |
+| v269.0.0 | 时空应用 | APNG/GIF→TImage + 帧间插值 + 时序快照 + 运动检测 | 合并至v267 |
 
 ### Phase 3｜ImgIR + AOCI 落地期（v270.0.0 ~ v273.0.0）
 

@@ -2112,6 +2112,17 @@
 - 新增 3 类型 + 40+ 公共函数，reexport.mbt 注册顶层 API
 - +64 tests
 - 6458×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v267.0.0 - GeoVerse Phase 2: spatiotemporal 时空图像系统
+- 新增 `src/spatiotemporal/`：时空图像系统（GeoVerse 核心创新）
+  - **时空原语**：TInterval / TFrame / TImage / TVideo（时间作为原生第 3 维）
+  - **TContext**：时态控制器（播放/暂停/循环/速度/跳转）
+  - **时空拓扑谓词**：st_contains/within/intersects/overlaps/during/before/after/meets/equals（Allen's Interval Algebra 子集）
+  - **帧间插值**：st_interpolate_linear + st_interpolate_at
+  - **时序快照**：st_snapshot / st_subclip / st_extract_frame / st_from_gif_animation
+  - **属性测试**：st_before/st_after 对称性 + st_within/st_contains 翻转性
+- 新增 5 类型 + 29 公共函数，reexport.mbt 注册顶层 API
+- +50 tests
+- 6508×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v265.0.0 - GeoVerse 七层架构重构 Phase 0
 - 新增 `ARCHITECTURE.md`：七层架构设计文档（GeoVerse 思想映射）
 - 批量迁移 `src/process/` 下 90 子包至 `src/` 顶层

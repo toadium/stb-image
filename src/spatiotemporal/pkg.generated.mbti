@@ -1,0 +1,107 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/spatiotemporal"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image/src/types",
+}
+
+// Values
+pub fn st_after(TInterval, TInterval) -> Bool
+
+pub fn st_before(TInterval, TInterval) -> Bool
+
+pub fn st_contains(TInterval, TInterval) -> Bool
+
+pub fn st_during(TInterval, TInterval) -> Bool
+
+pub fn st_equals(TInterval, TInterval) -> Bool
+
+pub fn st_extract_frame(TImage, Int) -> @types.Image raise @types.LoadError
+
+pub fn st_from_gif_animation(@types.GifAnimation) -> TImage raise @types.LoadError
+
+pub fn st_interpolate_at(TImage, Float) -> @types.Image raise @types.LoadError
+
+pub fn st_interpolate_linear(@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError
+
+pub fn st_intersects(TInterval, TInterval) -> Bool
+
+pub fn st_meets(TInterval, TInterval) -> Bool
+
+pub fn st_overlaps(TInterval, TInterval) -> Bool
+
+pub fn st_snapshot(TImage, Float) -> @types.Image
+
+pub fn st_subclip(TImage, Float, Float) -> TImage raise @types.LoadError
+
+pub fn st_within(TInterval, TInterval) -> Bool
+
+// Errors
+
+// Types and methods
+pub(all) struct TContext {
+  current_time : Float
+  fps : Float
+  is_loop : Bool
+  paused : Bool
+  speed : Float
+} derive(Eq, @debug.Debug)
+pub fn TContext::equal(Self, Self) -> Bool
+pub fn TContext::make(Float) -> Self raise @types.LoadError
+pub fn TContext::not_equal(Self, Self) -> Bool
+pub fn TContext::seek(Self, Float) -> Self
+pub fn TContext::set_loop(Self, Bool) -> Self
+pub fn TContext::set_paused(Self, Bool) -> Self
+pub fn TContext::set_speed(Self, Float) -> Self
+pub fn TContext::step(Self, Float) -> Self
+pub fn TContext::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TFrame {
+  image : @types.Image
+  timestamp : Float
+  duration : Float
+} derive(Eq, @debug.Debug)
+pub fn TFrame::equal(Self, Self) -> Bool
+pub fn TFrame::make(@types.Image, Float, Float) -> Self raise @types.LoadError
+pub fn TFrame::not_equal(Self, Self) -> Bool
+pub fn TFrame::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TImage {
+  frames : Array[TFrame]
+  width : Int
+  height : Int
+  channels : Int
+  fps : Float
+} derive(Eq, @debug.Debug)
+pub fn TImage::equal(Self, Self) -> Bool
+pub fn TImage::frame_count(Self) -> Int
+pub fn TImage::from_static(@types.Image) -> Self raise @types.LoadError
+pub fn TImage::make(Array[TFrame], Float) -> Self raise @types.LoadError
+pub fn TImage::not_equal(Self, Self) -> Bool
+pub fn TImage::to_repr(Self) -> @debug.Repr
+pub fn TImage::total_duration(Self) -> Float
+
+pub(all) struct TInterval {
+  start : Float
+  end : Float
+} derive(Eq, @debug.Debug)
+pub fn TInterval::duration(Self) -> Float
+pub fn TInterval::equal(Self, Self) -> Bool
+pub fn TInterval::make(Float, Float) -> Self raise @types.LoadError
+pub fn TInterval::not_equal(Self, Self) -> Bool
+pub fn TInterval::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TVideo {
+  timage : TImage
+  codec_name : String
+  total_duration : Float
+} derive(Eq, @debug.Debug)
+pub fn TVideo::equal(Self, Self) -> Bool
+pub fn TVideo::from_timage(TImage, String) -> Self
+pub fn TVideo::not_equal(Self, Self) -> Bool
+pub fn TVideo::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

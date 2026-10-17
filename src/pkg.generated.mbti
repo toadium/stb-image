@@ -43,6 +43,7 @@ import {
   "walkzzz/image/src/segment",
   "walkzzz/image/src/segmentation",
   "walkzzz/image/src/slam",
+  "walkzzz/image/src/spatiotemporal",
   "walkzzz/image/src/stereo3d",
   "walkzzz/image/src/stitch",
   "walkzzz/image/src/style_transfer",
@@ -2615,6 +2616,36 @@ pub fn ssr_16(@types.Image16, sigma? : Float, gain? : Float, offset? : Float) ->
 
 pub fn ssr_f(@types.ImageF, sigma? : Float, gain? : Float, offset? : Float) -> @types.ImageF raise @types.LoadError
 
+pub fn st_after(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_before(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_contains(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_during(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_equals(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_extract_frame(@spatiotemporal.TImage, Int) -> @types.Image raise @types.LoadError
+
+pub fn st_from_gif_animation(@types.GifAnimation) -> @spatiotemporal.TImage raise @types.LoadError
+
+pub fn st_interpolate_at(@spatiotemporal.TImage, Float) -> @types.Image raise @types.LoadError
+
+pub fn st_interpolate_linear(@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError
+
+pub fn st_intersects(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_meets(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_overlaps(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
+pub fn st_snapshot(@spatiotemporal.TImage, Float) -> @types.Image
+
+pub fn st_subclip(@spatiotemporal.TImage, Float, Float) -> @spatiotemporal.TImage raise @types.LoadError
+
+pub fn st_within(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
+
 pub fn stabilize_video(Array[@types.Image], @video.VideoStabilizationConfig) -> Array[@types.Image]
 
 pub fn standardize_features(Array[Double]) -> Array[Double] raise @types.LoadError
@@ -2659,6 +2690,18 @@ pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadEr
 
 pub fn synthesize_view_ci(@computational_imaging.LightFieldData, Double, Double) -> @computational_imaging.ViewSynthesisResult
 
+pub fn tcontext_make(Float) -> @spatiotemporal.TContext raise @types.LoadError
+
+pub fn tcontext_seek(@spatiotemporal.TContext, Float) -> @spatiotemporal.TContext
+
+pub fn tcontext_set_loop(@spatiotemporal.TContext, Bool) -> @spatiotemporal.TContext
+
+pub fn tcontext_set_paused(@spatiotemporal.TContext, Bool) -> @spatiotemporal.TContext
+
+pub fn tcontext_set_speed(@spatiotemporal.TContext, Float) -> @spatiotemporal.TContext
+
+pub fn tcontext_step(@spatiotemporal.TContext, Float) -> @spatiotemporal.TContext
+
 pub fn template_match(@types.Image, @types.Image, match_method? : @feature.TemplateMatchMethod) -> Array[@feature.TemplateMatchResult] raise @types.LoadError
 
 pub fn template_match_16(@types.Image16, @types.Image16, match_method? : @feature.TemplateMatchMethod) -> Array[@feature.TemplateMatchResult] raise @types.LoadError
@@ -2691,6 +2734,8 @@ pub fn tensor_field_zeros(Int, Int, Int, Int) -> @fieldimg.TensorField raise @ty
 
 pub fn text_to_image_vlm(String, @vlm_multimodal.GenerativeAIConfig, Int) -> @vlm_multimodal.GenerativeAIResult
 
+pub fn tframe_make(@types.Image, Float, Float) -> @spatiotemporal.TFrame raise @types.LoadError
+
 pub fn tga_info_extended(Bytes) -> @codec.TgaInfoExtended raise @types.LoadError
 
 pub fn thermal_to_temperature_ai(@types.Image, Double, Double, Double) -> @advanced_imaging.ThermalData
@@ -2710,6 +2755,18 @@ pub fn tiff_info_extended(Bytes) -> @codec.TiffInfoExtended raise @types.LoadErr
 pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn tile_region(Int, Int, @performance.TileConfig) -> (Int, Int, Int, Int)
+
+pub fn timage_frame_count(@spatiotemporal.TImage) -> Int
+
+pub fn timage_from_static(@types.Image) -> @spatiotemporal.TImage raise @types.LoadError
+
+pub fn timage_make(Array[@spatiotemporal.TFrame], Float) -> @spatiotemporal.TImage raise @types.LoadError
+
+pub fn timage_total_duration(@spatiotemporal.TImage) -> Float
+
+pub fn tinterval_duration(@spatiotemporal.TInterval) -> Float
+
+pub fn tinterval_make(Float, Float) -> @spatiotemporal.TInterval raise @types.LoadError
 
 pub fn to_grayscale(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -2748,6 +2805,8 @@ pub fn transpose_f(@types.ImageF) -> @types.ImageF
 pub fn triangulate_points_sl(Array[Array[Double]], @slam.CameraPose, @slam.CameraPose, @slam.SLAMConfig) -> Array[@slam.MapPoint]
 
 pub fn true_color_composite(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
+
+pub fn tvideo_from_timage(@spatiotemporal.TImage, String) -> @spatiotemporal.TVideo
 
 pub fn ultrasound_synthesize_ai(Int, Int, Double, Double) -> @advanced_imaging.UltrasoundData
 
@@ -3829,6 +3888,16 @@ pub using @superres {type SuperResolutionResult}
 pub using @segmentation {type Superpixel}
 
 pub using @segment {type SuperpixelResult}
+
+pub using @spatiotemporal {type TContext}
+
+pub using @spatiotemporal {type TFrame}
+
+pub using @spatiotemporal {type TImage}
+
+pub using @spatiotemporal {type TInterval}
+
+pub using @spatiotemporal {type TVideo}
 
 pub using @ocr {type TableCell}
 

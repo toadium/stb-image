@@ -11310,3 +11310,195 @@ pub fn image16_to_scalar_field(img : Image16) -> ScalarField raise LoadError {
 pub fn imagef_to_scalar_field(img : ImageF) -> ScalarField raise LoadError {
   @fieldimg.imagef_to_scalar_field(img)
 }
+// =============================================================================
+// spatiotemporal — 时空图像系统（GeoVerse Phase 2）
+// TInterval / TFrame / TImage / TVideo / TContext + 时空谓词 + 插值 + 快照
+// =============================================================================
+
+///|
+pub type TInterval = @spatiotemporal.TInterval
+
+///|
+pub type TFrame = @spatiotemporal.TFrame
+
+///|
+pub type TImage = @spatiotemporal.TImage
+
+///|
+pub type TVideo = @spatiotemporal.TVideo
+
+///|
+pub type TContext = @spatiotemporal.TContext
+
+// --- 时空原语重导出 ---
+
+///|
+pub fn tinterval_make(start : Float, end : Float) -> TInterval raise LoadError {
+  @spatiotemporal.TInterval::make(start, end)
+}
+
+///|
+pub fn tinterval_duration(iv : TInterval) -> Float {
+  @spatiotemporal.TInterval::duration(iv)
+}
+
+///|
+pub fn tframe_make(
+  image : Image,
+  timestamp : Float,
+  duration : Float,
+) -> TFrame raise LoadError {
+  @spatiotemporal.TFrame::make(image, timestamp, duration)
+}
+
+///|
+pub fn timage_make(
+  frames : Array[TFrame],
+  fps : Float,
+) -> TImage raise LoadError {
+  @spatiotemporal.TImage::make(frames, fps)
+}
+
+///|
+pub fn timage_frame_count(ti : TImage) -> Int {
+  @spatiotemporal.TImage::frame_count(ti)
+}
+
+///|
+pub fn timage_total_duration(ti : TImage) -> Float {
+  @spatiotemporal.TImage::total_duration(ti)
+}
+
+///|
+pub fn timage_from_static(image : Image) -> TImage raise LoadError {
+  @spatiotemporal.TImage::from_static(image)
+}
+
+///|
+pub fn tvideo_from_timage(timage : TImage, codec_name : String) -> TVideo {
+  @spatiotemporal.TVideo::from_timage(timage, codec_name)
+}
+
+// --- 时态控制器重导出 ---
+
+///|
+pub fn tcontext_make(fps : Float) -> TContext raise LoadError {
+  @spatiotemporal.TContext::make(fps)
+}
+
+///|
+pub fn tcontext_step(ctx : TContext, total_duration : Float) -> TContext {
+  @spatiotemporal.TContext::step(ctx, total_duration)
+}
+
+///|
+pub fn tcontext_seek(ctx : TContext, time : Float) -> TContext {
+  @spatiotemporal.TContext::seek(ctx, time)
+}
+
+///|
+pub fn tcontext_set_paused(ctx : TContext, paused : Bool) -> TContext {
+  @spatiotemporal.TContext::set_paused(ctx, paused)
+}
+
+///|
+pub fn tcontext_set_speed(ctx : TContext, speed : Float) -> TContext {
+  @spatiotemporal.TContext::set_speed(ctx, speed)
+}
+
+///|
+pub fn tcontext_set_loop(ctx : TContext, is_loop : Bool) -> TContext {
+  @spatiotemporal.TContext::set_loop(ctx, is_loop)
+}
+
+// --- 时空拓扑谓词重导出 ---
+
+///|
+pub fn st_contains(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_contains(a, b)
+}
+
+///|
+pub fn st_within(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_within(a, b)
+}
+
+///|
+pub fn st_intersects(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_intersects(a, b)
+}
+
+///|
+pub fn st_overlaps(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_overlaps(a, b)
+}
+
+///|
+pub fn st_during(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_during(a, b)
+}
+
+///|
+pub fn st_before(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_before(a, b)
+}
+
+///|
+pub fn st_after(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_after(a, b)
+}
+
+///|
+pub fn st_meets(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_meets(a, b)
+}
+
+///|
+pub fn st_equals(a : TInterval, b : TInterval) -> Bool {
+  @spatiotemporal.st_equals(a, b)
+}
+
+// --- 帧间插值重导出 ---
+
+///|
+pub fn st_interpolate_linear(
+  frame1 : Image,
+  frame2 : Image,
+  alpha : Float,
+) -> Image raise LoadError {
+  @spatiotemporal.st_interpolate_linear(frame1, frame2, alpha)
+}
+
+///|
+pub fn st_interpolate_at(
+  timage : TImage,
+  time : Float,
+) -> Image raise LoadError {
+  @spatiotemporal.st_interpolate_at(timage, time)
+}
+
+// --- 时序快照重导出 ---
+
+///|
+pub fn st_snapshot(timage : TImage, time : Float) -> Image {
+  @spatiotemporal.st_snapshot(timage, time)
+}
+
+///|
+pub fn st_subclip(
+  timage : TImage,
+  start : Float,
+  end : Float,
+) -> TImage raise LoadError {
+  @spatiotemporal.st_subclip(timage, start, end)
+}
+
+///|
+pub fn st_extract_frame(timage : TImage, index : Int) -> Image raise LoadError {
+  @spatiotemporal.st_extract_frame(timage, index)
+}
+
+///|
+pub fn st_from_gif_animation(gif : GifAnimation) -> TImage raise LoadError {
+  @spatiotemporal.st_from_gif_animation(gif)
+}
