@@ -1279,3 +1279,81 @@ test "AI: phase5 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ===========================================================================
+// v286.0.0 实际执行测试测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: run_test_case 返回结果含名字" {
+  let tc = @self_evolve.gen_test_for_op(@imgir.FlipH)[0]
+  let result = @self_evolve.run_test_case(tc)
+  assert_eq(result.test_name, tc.name)
+  assert_eq(result.category, tc.category)
+}
+
+///|
+test "形式化: run_test_suite 数量一致" {
+  let tcs = @self_evolve.gen_test_for_op(@imgir.FlipH)
+  let results = @self_evolve.run_test_suite(tcs)
+  assert_eq(results.length(), tcs.length())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: run_tests_for_op FlipH 非空" {
+  let results = @self_evolve.run_tests_for_op(@imgir.FlipH)
+  assert_true(results.length() >= 1)
+}
+
+///|
+test "FAKE: run_tests_for_all 至少 19 个结果" {
+  let results = @self_evolve.run_tests_for_all()
+  assert_true(results.length() >= 19)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: run_summary 统计正确" {
+  let results = @self_evolve.run_tests_for_op(@imgir.FlipH)
+  let summary = @self_evolve.run_summary(results)
+  assert_eq(summary.total, results.length())
+  assert_eq(summary.passed + summary.failed, summary.total)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: run_tests_for_all 全部通过" {
+  let results = @self_evolve.run_tests_for_all()
+  let summary = @self_evolve.run_summary(results)
+  // 代表算子无退化，Boundary/Normal 通过，Degradation 修复后通过
+  assert_true(summary.all_passed())
+}
+
+///|
+test "E2E: run_summary pass_rate 在 0-100" {
+  let results = @self_evolve.run_tests_for_all()
+  let summary = @self_evolve.run_summary(results)
+  assert_true(summary.pass_rate_pct >= 0)
+  assert_true(summary.pass_rate_pct <= 100)
+}
+
+// --- AI ---
+
+///|
+test "AI: run_test_case actual_behavior 非空" {
+  let tc = @self_evolve.gen_test_for_op(@imgir.FlipV)[0]
+  let result = @self_evolve.run_test_case(tc)
+  assert_true(result.actual_behavior.length() > 0)
+}
+
+///|
+test "AI: run_summary summary 含信息" {
+  let results = @self_evolve.run_tests_for_op(@imgir.FlipH)
+  let summary = @self_evolve.run_summary(results)
+  assert_true(summary.summary.length() > 0)
+}

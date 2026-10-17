@@ -12656,3 +12656,40 @@ pub fn phase5_report() -> Phase5Report {
 pub fn phase5_is_complete() -> Bool {
   @self_evolve.phase5_is_complete()
 }
+// self_evolve — 实际执行测试（v286.0.0）
+
+///|
+pub type TestRunResult = @self_evolve.TestRunResult
+
+///|
+pub type RunSummary = @self_evolve.RunSummary
+
+///|
+pub fn run_test_case(tc : TestCase) -> TestRunResult {
+  @self_evolve.run_test_case(tc)
+}
+
+///|
+pub fn run_test_suite(tests : Array[TestCase]) -> Array[TestRunResult] {
+  @self_evolve.run_test_suite(tests)
+}
+
+///|
+pub fn run_tests_for_op(op : IROp) -> Array[TestRunResult] {
+  @self_evolve.run_tests_for_op(op)
+}
+
+///|
+pub fn run_tests_for_all() -> Array[TestRunResult] {
+  @self_evolve.run_tests_for_all()
+}
+
+///|
+pub fn run_summary(results : Array[TestRunResult]) -> RunSummary {
+  @self_evolve.run_summary(results)
+}
+
+///|
+pub fn run_summary_all_passed(summary : RunSummary) -> Bool {
+  @self_evolve.RunSummary::all_passed(summary)
+}

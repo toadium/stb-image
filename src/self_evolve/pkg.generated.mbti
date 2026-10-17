@@ -129,6 +129,16 @@ pub fn run_grill_all() -> GrillReport
 
 pub fn run_grill_check(@imgir.IRPipeline) -> GrillReport
 
+pub fn run_summary(Array[TestRunResult]) -> RunSummary
+
+pub fn run_test_case(TestCase) -> TestRunResult
+
+pub fn run_test_suite(Array[TestCase]) -> Array[TestRunResult]
+
+pub fn run_tests_for_all() -> Array[TestRunResult]
+
+pub fn run_tests_for_op(@imgir.IROp) -> Array[TestRunResult]
+
 pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
 
 pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
@@ -397,6 +407,18 @@ pub fn RepairReport::not_equal(Self, Self) -> Bool
 pub fn RepairReport::repair_count(Self) -> Int
 pub fn RepairReport::to_repr(Self) -> @debug.Repr
 
+pub(all) struct RunSummary {
+  total : Int
+  passed : Int
+  failed : Int
+  pass_rate_pct : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RunSummary::all_passed(Self) -> Bool
+pub fn RunSummary::equal(Self, Self) -> Bool
+pub fn RunSummary::not_equal(Self, Self) -> Bool
+pub fn RunSummary::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Severity {
   Warning
   Critical
@@ -427,6 +449,17 @@ pub(all) enum TestCategory {
 pub fn TestCategory::equal(Self, Self) -> Bool
 pub fn TestCategory::not_equal(Self, Self) -> Bool
 pub fn TestCategory::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TestRunResult {
+  test_name : String
+  passed : Bool
+  actual_behavior : String
+  expected_behavior : String
+  category : TestCategory
+} derive(Eq, @debug.Debug)
+pub fn TestRunResult::equal(Self, Self) -> Bool
+pub fn TestRunResult::not_equal(Self, Self) -> Bool
+pub fn TestRunResult::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

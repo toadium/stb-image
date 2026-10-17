@@ -34,6 +34,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `optimize_exec.mbt` | OptimizeExecResult / exec_optimize / exec_optimize_all / optimize_verified / is_significant / efficiency_pct |
 | `ci_hook.mbt` | CIGateResult / ci_gate_check / ci_gate_all / ci_regression_gate / ci_regression_all_pass / pass_rate / is_green |
 | `phase5_report.mbt` | Phase5Capability / Phase5Report / phase5_capabilities / phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete |
+| `exec_test_run.mbt` | TestRunResult / RunSummary / run_test_case / run_test_suite / run_tests_for_op / run_tests_for_all / run_summary / all_passed |
 
 ## 公共 API
 
@@ -77,7 +78,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-126 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+135 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -185,3 +186,12 @@ Phase 5 起步：将 TestCase 描述转化为可执行 moon test 代码字符串
 - `phase5_is_complete()` → Bool — Phase 5 完成判定
 
 自演化实用体系：描述 → 执行 → 修复 → 优化 → CI。Phase 0-5 全部交付。
+## 实际执行测试（v286.0.0）
+
+Phase 6 起步：从占位 assert_true 走向真实断言执行 — 构造算子、检测退化、按类别判定通过。
+
+- `run_test_case(tc)` → TestRunResult — 真实执行（Boundary/Normal 期望无退化，Degradation 期望修复后无退化）
+- `run_test_suite(tests)` → 批量执行
+- `run_tests_for_op(op)` / `run_tests_for_all()` — 单算子/全算子执行
+- `run_summary(results)` → RunSummary — 运行汇总（total/passed/failed/pass_rate）
+- `RunSummary::all_passed()` — 全通过判定

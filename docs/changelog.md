@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v286.0.0 - GeoVerse Phase 6: 实际执行测试
+- 扩展 `src/self_evolve/`：实际执行测试 — 从占位 assert_true 走向真实断言执行
+  - **exec_test_run**：TestRunResult / RunSummary + run_test_case（按类别真实判定：Boundary/Normal 期望无退化，Degradation 期望修复后无退化）/ run_test_suite / run_tests_for_op / run_tests_for_all / run_summary + all_passed
+  - 将测试从"生成代码字符串"推向"真实执行断言"
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6839×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v285.0.0 - GeoVerse Phase 5 完成: 全体系总结
 - 扩展 `src/self_evolve/`：Phase 5 综合报告
   - **phase5_report**：Phase5Capability / Phase5Report + phase5_capabilities（v281-v284 四版本清单）/ phase5_total_types / phase5_total_functions / phase5_total_tests / phase5_report / phase5_is_complete

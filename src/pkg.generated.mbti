@@ -2792,6 +2792,18 @@ pub fn run_length_decode_cp(Bytes) -> Bytes
 
 pub fn run_length_encode_cp(Bytes) -> Bytes
 
+pub fn run_summary(Array[@self_evolve.TestRunResult]) -> @self_evolve.RunSummary
+
+pub fn run_summary_all_passed(@self_evolve.RunSummary) -> Bool
+
+pub fn run_test_case(@self_evolve.TestCase) -> @self_evolve.TestRunResult
+
+pub fn run_test_suite(Array[@self_evolve.TestCase]) -> Array[@self_evolve.TestRunResult]
+
+pub fn run_tests_for_all() -> Array[@self_evolve.TestRunResult]
+
+pub fn run_tests_for_op(@imgir.IROp) -> Array[@self_evolve.TestRunResult]
+
 pub fn safe_mul(Int, Int) -> Int?
 
 pub fn safe_mul3(Int, Int, Int) -> Int?
@@ -4191,6 +4203,8 @@ pub using @intelligent_vision {type RobotVisionTask as RobotVisionTaskIV}
 
 pub using @ocr {type RobustnessReport}
 
+pub using @self_evolve {type RunSummary}
+
 pub using @slam {type SLAMAlgorithm as SLAMAlgorithmSL}
 
 pub using @slam {type SLAMConfig as SLAMConfigSL}
@@ -4340,6 +4354,8 @@ pub using @fieldimg {type TensorField}
 pub using @self_evolve {type TestCase}
 
 pub using @self_evolve {type TestCategory}
+
+pub using @self_evolve {type TestRunResult}
 
 pub using @ocr {type TextBlock}
 
