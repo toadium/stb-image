@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v274.0.0 - GeoVerse Phase 4 启动: mattpocock/skills 工程范式嵌入
+- 更新 `ARCHITECTURE.md` 4.7 节：Agent-Kit / 自演化层扩展为 5 个子节
+  - **4.7.1 Agent-Kit 自然语言 API**：Intent / nl_parse / compile / nl_process 组件表 + 示例
+  - **4.7.2 工程工作流嵌入**：mattpocock/skills 5 套工作流 → GeoVerse 领域适配表（grill-me / wayfinder / to-spec / docs / changeset）
+  - **4.7.3 自演化层**：测试自动生成 + 退化场景发现 + 算法优化
+  - **4.7.4 风险与领域规则注入**：5 条领域拷问规则（数值鲁棒性 / 退化几何 / 场间断 / 时空拓扑 / 四目标兼容）
+  - **4.7.5 收益**：工程闭环 + Token 降耗 + 自闭环
+- 文档更新，测试数量不变：6704×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v270.0.0 - GeoVerse Phase 3: ImgIR 统一中间表示
 - 新增 `src/imgir/`：统一中间表示模块（GeoVerse 第五层核心）
   - **IRValue**：统一值类型（VImage/VScalarField/VVectorField/VTImage/VFloat/VInt/VUnit）+ type_tag + is_*/as_* 方法
