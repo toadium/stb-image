@@ -61,9 +61,83 @@ src/
 > 以下约束不可违反：
 
 - **禁止引入 C FFI 依赖** — 所有代码必须纯 MoonBit 实现，确保四目标可用
-- **禁止破坏已有 API** — 新增功能只添加不修改已有签名，保持向后兼容
 - **禁止目标条件编译** — 不使用 `target == "native"` 等条件分支，四目标共用代码
 - **新增 `pub` 函数须在 `reexport.mbt` 注册** — 保持顶层 API 完整性
+
+## Development Rules（开发规则全集）
+
+> **来源**：`rules.md`，适配 stb-image 项目。优先级：防跑偏规则 > 项目规则 > 个人偏好。
+
+### R1 — 源码目录
+全部源代码放在 `src/` 目录下。
+
+### R2 — 多手段测试
+MoonBit 形式化证明 + AI/FAKE/MOCK/E2E 多手段测试，确保无 bug。每个 Sprint 交付前 `moon check` 0 error、`moon test` 全通过。
+
+### R3 — 代码文档注释
+代码三级文档注释中英文（包级、类型级、方法级）。
+
+### R4 — README 规范
+README 中英文，美化，默认中文；每个子包也要 README.md。
+
+### R5 — 迭代路线
+先制定 `docs/roadmap.md` 迭代路线，按 Sprint 推进。
+
+### R6 — 提交查证
+提交历史有迹可循——每个 Sprint 完成回写 `roadmap.md` 状态 + commit hash。
+
+### R7 — 自动迭代触发
+没有任务迭代时，自动触发新的路线迭代计划。
+
+### R8 — 文档治理
+每次迭代后进行开源项目文档治理：更新根 README、roadmap、CHANGELOG、子包 README。
+
+### R9 — 经验沉淀
+开发经验教训沉淀复用：更新 memory（`C:\Users\Administrator\.codeartsdoer\memory\...`）。
+
+### R10 — 一级子包重导出
+一级子包（如 `src/kernel`、`src/fieldimg`）也要 README.md 并重导出子包 API。
+
+### R11 — 防跑偏规则（记/锁/回）
+每一步做三件事：
+1. **记**：把已确认的"规则/负责人/截止时间"写进固定区块；
+2. **锁**：遇到与前序约定冲突的新要求，先停下，标注冲突来源，问"谁有权改"；
+3. **回**：每完成一环，回写一句"已交付 x，下环依赖 Y"。
+禁止在没确认的情况下，把群聊里的某句话当成最终决定。
+
+### R12 — 根包重导出
+项目根包（`walkzzz/image`，根目录 `moon.pkg` + `reexport.mbt`）重导出所有一级子包公共 API，对外提供统一入口 `@image`。
+
+### R13 — Warning 治理
+每次迭代完成后都要进行 **warning 治理**：运行 `moon check` / `moon test`，对所有 warning 逐一处理（修复根因，禁止注释/ignore 压制），目标 0 warning。
+
+### R14 — 占位 todo 检查
+所有的占位 todo 项，每次迭代后都要检查是否具备条件完成。若依赖已满足且资源就绪，立即推进；否则标注阻塞原因。
+
+### R15 — 规则输出复用
+所有规则输出到 `rules.md`，供 agent 与人类协作者复用。每次新增规则回写。
+
+### R16 — 迭代清理 ⭐ 新增
+每次迭代完成后，清理项目中无关文件和临时文件：
+- 删除 `_build/` 下的临时构建产物（`moon clean` 可重建）
+- 删除根目录及子包中的 `.tmp`、`.bak`、`*.log`、`uncovered.log` 等临时文件
+- 删除调试用的临时测试文件（如 `/tmp/proof_check.mbt` 等）
+- 清理 git 未跟踪的无关文件（`git clean -nd` 检查，确认后 `git clean -fd` 删除）
+- **注意**：清理前先用 `git status` 确认不会删除有价值的未提交工作
+
+### 迭代流程（每 Sprint 执行步骤）
+
+1. **查架构**：读 `ARCHITECTURE.md` 对应章节，明确范围。
+2. **实现**：写源码 + 白盒测试（`_wbtest.mbt`）。
+3. **验证**：`moon check` 0 error + `moon test` 全通过。
+4. **Warning 治理**（R13）：逐一处理 warning，目标 0 warning。
+5. **重导出**（R10/R12）：一级子包聚合 + 根包重导出。
+6. **文档治理**（R8）：更新 README / roadmap / CHANGELOG / 子包 README。
+7. **经验沉淀**（R9）：更新 memory。
+8. **占位检查**（R14）：检查占位 todo 是否可推进。
+9. **迭代清理**（R16）：清理无关文件和临时文件。
+10. **提交**（R6）：git commit + 回写 roadmap commit hash。
+11. **回写**（R11 回）：回写"已交付 x，下环依赖 Y"。
 
 ## Coding Convention
 
