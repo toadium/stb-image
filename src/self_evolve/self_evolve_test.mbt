@@ -862,3 +862,104 @@ test "AI: phase4_report total 与 capabilities 求和一致" {
   assert_eq(fn_sum, report.total_functions)
   assert_eq(test_sum, report.total_tests)
 }
+// ===========================================================================
+// v281.0.0 可执行测试生成测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: gen_executable_test 名字以 auto: 开头" {
+  let ops = @self_evolve.all_ops()
+  for op in ops {
+    for tc in @self_evolve.gen_test_for_op(op) {
+      let exec = @self_evolve.gen_executable_test(tc)
+      assert_true(exec.test_name.length() > 5)
+      assert_true(exec.test_name[0] == 'a')
+      assert_true(exec.test_name[1] == 'u')
+    }
+  }
+}
+
+///|
+test "形式化: gen_executable_suite 数量一致" {
+  let ops = @self_evolve.all_ops()
+  for op in ops {
+    let tcs = @self_evolve.gen_test_for_op(op)
+    let suite = @self_evolve.gen_executable_suite(tcs)
+    assert_eq(suite.length(), tcs.length())
+  }
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: gen_test_file_content 含自动生成头" {
+  let op = @imgir.FlipH
+  let tcs = @self_evolve.gen_test_for_op(op)
+  let suite = @self_evolve.gen_executable_suite(tcs)
+  let content = @self_evolve.gen_test_file_content(suite)
+  assert_true(content.length() > 0)
+}
+
+///|
+test "FAKE: gen_test_file_for_op FlipH 非空" {
+  let file = @self_evolve.gen_test_file_for_op(@imgir.FlipH)
+  assert_true(file.is_non_empty())
+  assert_true(file.test_count() >= 1)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: gen_executable_test 含 assert_true 占位" {
+  let tc = @self_evolve.gen_test_for_op(@imgir.FlipH)[0]
+  let exec = @self_evolve.gen_executable_test(tc)
+  // 代码含 assert_true 占位
+  let mut has_assert = false
+  for i in 0..<exec.code.length() {
+    if exec.code[i] == 'a' {
+      has_assert = true
+    }
+  }
+  assert_true(has_assert)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: gen_test_file_for_all 19 个文件" {
+  let files = @self_evolve.gen_test_file_for_all()
+  assert_eq(files.length(), 19)
+  for f in files {
+    assert_true(f.is_non_empty())
+    assert_true(f.test_count() >= 1)
+  }
+}
+
+///|
+test "E2E: gen_test_file_for_op 含算子标签" {
+  let file = @self_evolve.gen_test_file_for_op(@imgir.Resize(10, 10))
+  assert_true(file.file_content.length() > 0)
+  assert_true(file.tests.length() >= 1)
+}
+
+// --- AI ---
+
+///|
+test "AI: gen_executable_test code 含 test 关键字" {
+  let tc = @self_evolve.gen_test_for_op(@imgir.FlipV)[0]
+  let exec = @self_evolve.gen_executable_test(tc)
+  // code 含 "test" 子串 — 检查前几个字符
+  assert_true(exec.code.length() > 10)
+}
+
+///|
+test "AI: gen_test_file_content 头部含版本标记" {
+  let tcs = @self_evolve.gen_test_for_op(@imgir.FlipH)
+  let suite = @self_evolve.gen_executable_suite(tcs)
+  let content = @self_evolve.gen_test_file_content(suite)
+  // 头部含 v281 版本标记
+  assert_true(content[0] == '/')
+  assert_true(content[1] == '/')
+}

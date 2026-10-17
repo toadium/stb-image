@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v281.0.0 - GeoVerse Phase 5: 可执行测试生成
+- 扩展 `src/self_evolve/`：可执行测试生成 — 从 TestCase 描述生成可运行 moon test 代码
+  - **exec_test_gen**：ExecutableTest / ExecutableTestFile + gen_executable_test / gen_executable_suite / gen_test_file_content / gen_test_file_for_op / gen_test_file_for_all + test_count / is_non_empty
+  - 将自演化从"描述"推向"执行"：TestCase → 可执行 moon test 代码字符串
+- 新增 2 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6797×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v280.0.0 - GeoVerse Phase 4 完成: 综合报告 + Phase 5 规划
 - 扩展 `src/self_evolve/`：Phase 4 综合报告
   - **phase4_report**：Phase4Capability / Phase4Report + phase4_capabilities（v274-v279 六版本清单）/ phase4_total_types / phase4_total_functions / phase4_total_tests / phase4_report / phase4_is_complete

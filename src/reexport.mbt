@@ -12477,3 +12477,45 @@ pub fn phase4_report() -> Phase4Report {
 pub fn phase4_is_complete() -> Bool {
   @self_evolve.phase4_is_complete()
 }
+// self_evolve — 可执行测试生成（v281.0.0）
+
+///|
+pub type ExecutableTest = @self_evolve.ExecutableTest
+
+///|
+pub type ExecutableTestFile = @self_evolve.ExecutableTestFile
+
+///|
+pub fn gen_executable_test(tc : TestCase) -> ExecutableTest {
+  @self_evolve.gen_executable_test(tc)
+}
+
+///|
+pub fn gen_executable_suite(tests : Array[TestCase]) -> Array[ExecutableTest] {
+  @self_evolve.gen_executable_suite(tests)
+}
+
+///|
+pub fn gen_test_file_content(tests : Array[ExecutableTest]) -> String {
+  @self_evolve.gen_test_file_content(tests)
+}
+
+///|
+pub fn gen_test_file_for_op(op : IROp) -> ExecutableTestFile {
+  @self_evolve.gen_test_file_for_op(op)
+}
+
+///|
+pub fn gen_test_file_for_all() -> Array[ExecutableTestFile] {
+  @self_evolve.gen_test_file_for_all()
+}
+
+///|
+pub fn exec_test_count(file : ExecutableTestFile) -> Int {
+  @self_evolve.ExecutableTestFile::test_count(file)
+}
+
+///|
+pub fn exec_test_is_non_empty(file : ExecutableTestFile) -> Bool {
+  @self_evolve.ExecutableTestFile::is_non_empty(file)
+}

@@ -47,7 +47,17 @@ pub fn gen_boundary_tests(@imgir.IROp) -> Array[TestCase]
 
 pub fn gen_edge_tests(@imgir.IROp) -> Array[TestCase]
 
+pub fn gen_executable_suite(Array[TestCase]) -> Array[ExecutableTest]
+
+pub fn gen_executable_test(TestCase) -> ExecutableTest
+
 pub fn gen_normal_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_test_file_content(Array[ExecutableTest]) -> String
+
+pub fn gen_test_file_for_all() -> Array[ExecutableTestFile]
+
+pub fn gen_test_file_for_op(@imgir.IROp) -> ExecutableTestFile
 
 pub fn gen_test_for_op(@imgir.IROp) -> Array[TestCase]
 
@@ -142,6 +152,25 @@ pub fn EvolveReport::not_equal(Self, Self) -> Bool
 pub fn EvolveReport::severe_count(Self) -> Int
 pub fn EvolveReport::test_count(Self) -> Int
 pub fn EvolveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExecutableTest {
+  test_name : String
+  code : String
+} derive(Eq, @debug.Debug)
+pub fn ExecutableTest::equal(Self, Self) -> Bool
+pub fn ExecutableTest::not_equal(Self, Self) -> Bool
+pub fn ExecutableTest::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExecutableTestFile {
+  file_header : String
+  tests : Array[ExecutableTest]
+  file_content : String
+} derive(Eq, @debug.Debug)
+pub fn ExecutableTestFile::equal(Self, Self) -> Bool
+pub fn ExecutableTestFile::is_non_empty(Self) -> Bool
+pub fn ExecutableTestFile::not_equal(Self, Self) -> Bool
+pub fn ExecutableTestFile::test_count(Self) -> Int
+pub fn ExecutableTestFile::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GrillReport {
   results : Array[GrillResult]

@@ -1304,6 +1304,10 @@ pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[@self_evolve.TestCase]
 
 pub fn evolve_tests_only(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
 
+pub fn exec_test_count(@self_evolve.ExecutableTestFile) -> Int
+
+pub fn exec_test_is_non_empty(@self_evolve.ExecutableTestFile) -> Bool
+
 pub fn expand_query_advanced(Array[Double], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.QueryExpansionResult
 
 pub fn extract_all_cells(@types.Image, @ocr.TableStructure, padding? : Int) -> Array[@types.Image] raise @types.LoadError
@@ -1545,6 +1549,16 @@ pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16 raise @typ
 pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError
 
 pub fn gaussian_filter_denoise_dn(@types.Image, Int, Double) -> @types.Image raise @types.LoadError
+
+pub fn gen_executable_suite(Array[@self_evolve.TestCase]) -> Array[@self_evolve.ExecutableTest]
+
+pub fn gen_executable_test(@self_evolve.TestCase) -> @self_evolve.ExecutableTest
+
+pub fn gen_test_file_content(Array[@self_evolve.ExecutableTest]) -> String
+
+pub fn gen_test_file_for_all() -> Array[@self_evolve.ExecutableTestFile]
+
+pub fn gen_test_file_for_op(@imgir.IROp) -> @self_evolve.ExecutableTestFile
 
 pub fn generate_3500_chinese_templates(char_set? : String) -> Array[(String, Array[Double])]
 
@@ -3606,6 +3620,10 @@ pub using @ocr {type ErrorAnalysisReport}
 pub using @self_evolve {type EvolveCycleReport}
 
 pub using @self_evolve {type EvolveReport}
+
+pub using @self_evolve {type ExecutableTest}
+
+pub using @self_evolve {type ExecutableTestFile}
 
 pub using @meta {type ExifInfo}
 
