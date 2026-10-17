@@ -1616,3 +1616,58 @@ test "AI: analyze_pipeline_root_cause summary 含信息" {
   let report = @self_evolve.analyze_pipeline_root_cause(pipe)
   assert_true(report.summary.length() > 0)
 }
+// ============================================================
+// v290.0.0 — Phase 6 综合报告测试（6 tests）
+// ============================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: phase6_capabilities 返回 4 个版本" {
+  let caps = @self_evolve.phase6_capabilities()
+  assert_eq(caps.length(), 4)
+  assert_eq(caps[0].version, "v286.0.0")
+  assert_eq(caps[3].version, "v289.0.0")
+}
+
+///|
+test "形式化: phase6 总计 8 类型 21 函数 36 测试" {
+  assert_eq(@self_evolve.phase6_total_types(), 8)
+  assert_eq(@self_evolve.phase6_total_functions(), 21)
+  assert_eq(@self_evolve.phase6_total_tests(), 36)
+}
+
+///|
+test "形式化: phase6_is_complete 为 true" {
+  assert_true(@self_evolve.phase6_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase6_report 结构完整" {
+  let report = @self_evolve.phase6_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 8)
+  assert_eq(report.total_functions, 21)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase6_report summary 含关键信息" {
+  let report = @self_evolve.phase6_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase6 每个能力描述非空" {
+  for c in @self_evolve.phase6_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}

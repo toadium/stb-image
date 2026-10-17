@@ -133,6 +133,18 @@ pub fn phase5_total_tests() -> Int
 
 pub fn phase5_total_types() -> Int
 
+pub fn phase6_capabilities() -> Array[Phase6Capability]
+
+pub fn phase6_is_complete() -> Bool
+
+pub fn phase6_report() -> Phase6Report
+
+pub fn phase6_total_functions() -> Int
+
+pub fn phase6_total_tests() -> Int
+
+pub fn phase6_total_types() -> Int
+
 pub fn repair_all() -> Array[RepairReport]
 
 pub fn repair_op(@imgir.IROp) -> @imgir.IROp
@@ -427,6 +439,29 @@ pub(all) struct Phase5Report {
 pub fn Phase5Report::equal(Self, Self) -> Bool
 pub fn Phase5Report::not_equal(Self, Self) -> Bool
 pub fn Phase5Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase6Capability {
+  version : String
+  name : String
+  types : Int
+  functions : Int
+  tests : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase6Capability::equal(Self, Self) -> Bool
+pub fn Phase6Capability::not_equal(Self, Self) -> Bool
+pub fn Phase6Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase6Report {
+  capabilities : Array[Phase6Capability]
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase6Report::equal(Self, Self) -> Bool
+pub fn Phase6Report::not_equal(Self, Self) -> Bool
+pub fn Phase6Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RepairAction {
   op_tag : String

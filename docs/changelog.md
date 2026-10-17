@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v290.0.0 - GeoVerse Phase 6 完成: 综合报告
+- 扩展 `src/self_evolve/`：Phase 6 综合报告 — 汇总 v286-v289 全部能力
+  - **phase6_report**：Phase6Capability / Phase6Report + phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete
+  - Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因定位
+- 新增 2 类型 + 5 公共函数，reexport.mbt 注册顶层 API
+- +6 tests（形式化证明 + FAKE + E2E + AI 多手段测试）
+- 6872×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- **Phase 6 完成** ✅
 ## v289.0.0 - GeoVerse Phase 6: 退化根因分析
 - 扩展 `src/self_evolve/`：退化根因分析 — 分析退化根因（参数来源/传播路径）+ 修复建议
   - **root_cause**：RootCause / RootCauseReport + analyze_root_cause（单算子根因定位）/ analyze_root_cause_all（全算子根因报告）/ analyze_pipeline_root_cause（管道根因分析）/ filter_by_kind（按退化类型过滤）/ is_clean

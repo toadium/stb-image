@@ -38,6 +38,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `smart_repair.mbt` | RepairStrategy / StrategyRepairResult / repair_op_strategy / repair_with_strategies / best_repair / best_repair_all / is_complete / is_improvement |
 | `combo_coverage.mbt` | OpCombo / ComboCoverageReport / gen_all_combos / gen_combo_tests / combo_coverage_report / unique_combo_count |
 | `root_cause.mbt` | RootCause / RootCauseReport / analyze_root_cause / analyze_root_cause_all / analyze_pipeline_root_cause / filter_by_kind / is_clean |
+| `phase6_report.mbt` | Phase6Capability / Phase6Report / phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete |
 
 ## 公共 API
 
@@ -81,7 +82,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-162 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+168 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -227,4 +228,10 @@ Phase 6 起步：从占位 assert_true 走向真实断言执行 — 构造算子
 - `analyze_root_cause_all()` → RootCauseReport — 全算子根因报告
 - `analyze_pipeline_root_cause(pipeline)` → RootCauseReport — 管道根因分析
 - `filter_by_kind(causes, kind)` → 按退化类型过滤
-- `RootCauseReport::is_clean()` → 无退化
+- `RootCauseReport::is_clean()` → 无退化## Phase 6 综合报告（v290.0.0）
+
+Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因定位。
+
+- `phase6_capabilities()` → 4 个版本能力清单（v286-v289）
+- `phase6_report()` → Phase6Report — 综合报告
+- `phase6_is_complete()` → Bool — Phase 6 是否完成

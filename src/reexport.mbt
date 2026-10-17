@@ -12794,3 +12794,40 @@ pub fn filter_by_kind(
 pub fn root_cause_report_is_clean(report : RootCauseReport) -> Bool {
   @self_evolve.RootCauseReport::is_clean(report)
 }
+// self_evolve — Phase 6 综合报告（v290.0.0）
+
+///|
+pub type Phase6Capability = @self_evolve.Phase6Capability
+
+///|
+pub type Phase6Report = @self_evolve.Phase6Report
+
+///|
+pub fn phase6_capabilities() -> Array[Phase6Capability] {
+  @self_evolve.phase6_capabilities()
+}
+
+///|
+pub fn phase6_total_types() -> Int {
+  @self_evolve.phase6_total_types()
+}
+
+///|
+pub fn phase6_total_functions() -> Int {
+  @self_evolve.phase6_total_functions()
+}
+
+///|
+pub fn phase6_total_tests() -> Int {
+  @self_evolve.phase6_total_tests()
+}
+
+///|
+pub fn phase6_report() -> Phase6Report {
+  @self_evolve.phase6_report()
+}
+
+///|
+pub fn phase6_is_complete() -> Bool {
+  @self_evolve.phase6_is_complete()
+}
