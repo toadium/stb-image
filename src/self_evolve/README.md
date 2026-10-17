@@ -31,6 +31,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase4_report.mbt` | Phase4Capability / Phase4Report / phase4_capabilities / phase4_total_types / phase4_total_functions / phase4_total_tests / phase4_report / phase4_is_complete |
 | `exec_test_gen.mbt` | ExecutableTest / ExecutableTestFile / gen_executable_test / gen_executable_suite / gen_test_file_content / gen_test_file_for_op / gen_test_file_for_all / test_count / is_non_empty |
 | `auto_repair.mbt` | RepairAction / RepairReport / repair_op / repair_pipeline / repair_report / repair_all / is_fully_repaired / repair_count |
+| `optimize_exec.mbt` | OptimizeExecResult / exec_optimize / exec_optimize_all / optimize_verified / is_significant / efficiency_pct |
 
 ## 公共 API
 
@@ -74,7 +75,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-103 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+112 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -155,3 +156,11 @@ Phase 5 起步：将 TestCase 描述转化为可执行 moon test 代码字符串
 - `repair_pipeline(pipeline)` → IRPipeline — 修复管道
 - `repair_report(pipeline)` → RepairReport — 修复报告
 - `RepairReport::is_fully_repaired()` / `repair_count()` — 结果统计
+## 管道优化执行（v283.0.0）
+
+将管道优化从"建议"推向"执行" — 实际应用优化 + 成本验证。
+
+- `exec_optimize(pipeline)` → OptimizeExecResult — 执行优化 + 计算前后成本
+- `exec_optimize_all()` → 19 个优化结果
+- `optimize_verified(pipeline)` → Bool — 验证优化不劣化（算子数和成本不增加）
+- `OptimizeExecResult::is_significant()` / `efficiency_pct()` — 优化显著性 + 效率

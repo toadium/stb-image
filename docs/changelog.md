@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v283.0.0 - GeoVerse Phase 5: 管道优化执行
+- 扩展 `src/self_evolve/`：管道优化执行 — 应用 OptimizationSuggestion 到实际 IRPipeline
+  - **optimize_exec**：OptimizeExecResult + exec_optimize（执行优化+计算前后成本）/ exec_optimize_all / optimize_verified（验证不劣化）+ is_significant / efficiency_pct
+  - 将管道优化从"建议"推向"执行" — 实际应用优化 + 成本验证
+- 新增 1 类型 + 5 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6816×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v282.0.0 - GeoVerse Phase 5: 退化自动修复
 - 扩展 `src/self_evolve/`：退化自动修复 — 检测退化后自动修正参数
   - **auto_repair**：RepairAction / RepairReport + repair_op（Resize(0,0)→Resize(1,1) / GaussianBlur sigma≤0→1.0 / Sharpen clamp / FieldClamp 交换 / ST t 越界→[0,1]）/ repair_pipeline / repair_report / repair_all + is_fully_repaired / repair_count

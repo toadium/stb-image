@@ -41,6 +41,10 @@ pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[TestCase]
 
 pub fn evolve_tests_only(Array[@imgir.IROp]) -> EvolveReport
 
+pub fn exec_optimize(@imgir.IRPipeline) -> OptimizeExecResult
+
+pub fn exec_optimize_all() -> Array[OptimizeExecResult]
+
 pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
 
 pub fn gen_boundary_tests(@imgir.IROp) -> Array[TestCase]
@@ -72,6 +76,8 @@ pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
 pub fn optimize_all(@imgir.IRPipeline) -> OptimizationReport
 
 pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn optimize_verified(@imgir.IRPipeline) -> Bool
 
 pub fn optimized_op_count(@imgir.IRPipeline) -> Int
 
@@ -252,6 +258,22 @@ pub(all) struct OptimizationSuggestion {
 pub fn OptimizationSuggestion::equal(Self, Self) -> Bool
 pub fn OptimizationSuggestion::not_equal(Self, Self) -> Bool
 pub fn OptimizationSuggestion::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizeExecResult {
+  original_length : Int
+  optimized_length : Int
+  ops_reduced : Int
+  original_cost : Int
+  optimized_cost : Int
+  cost_reduced : Int
+  is_improved : Bool
+  optimized_pipeline_desc : String
+} derive(Eq, @debug.Debug)
+pub fn OptimizeExecResult::efficiency_pct(Self) -> Int
+pub fn OptimizeExecResult::equal(Self, Self) -> Bool
+pub fn OptimizeExecResult::is_significant(Self) -> Bool
+pub fn OptimizeExecResult::not_equal(Self, Self) -> Bool
+pub fn OptimizeExecResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PerfBaseline {
   pipeline_desc : String

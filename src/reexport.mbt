@@ -12556,3 +12556,32 @@ pub fn repair_is_fully_repaired(report : RepairReport) -> Bool {
 pub fn repair_count(report : RepairReport) -> Int {
   @self_evolve.RepairReport::repair_count(report)
 }
+// self_evolve — 管道优化执行（v283.0.0）
+
+///|
+pub type OptimizeExecResult = @self_evolve.OptimizeExecResult
+
+///|
+pub fn exec_optimize(pipeline : IRPipeline) -> OptimizeExecResult {
+  @self_evolve.exec_optimize(pipeline)
+}
+
+///|
+pub fn exec_optimize_all() -> Array[OptimizeExecResult] {
+  @self_evolve.exec_optimize_all()
+}
+
+///|
+pub fn optimize_verified(pipeline : IRPipeline) -> Bool {
+  @self_evolve.optimize_verified(pipeline)
+}
+
+///|
+pub fn optimize_exec_is_significant(result : OptimizeExecResult) -> Bool {
+  @self_evolve.OptimizeExecResult::is_significant(result)
+}
+
+///|
+pub fn optimize_exec_efficiency_pct(result : OptimizeExecResult) -> Int {
+  @self_evolve.OptimizeExecResult::efficiency_pct(result)
+}

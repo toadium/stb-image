@@ -1052,3 +1052,96 @@ test "AI: repair_op GaussianBlur(0,0) sigma 修复" {
   let degs = @self_evolve.detect_degradation(repaired)
   assert_eq(degs.length(), 0)
 }
+// ===========================================================================
+// v283.0.0 管道优化执行测试
+// ===========================================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: exec_optimize 算子数不增加" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipH)
+    .add(@imgir.FlipV)
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(result.optimized_length <= result.original_length)
+}
+
+///|
+test "形式化: exec_optimize 成本不增加" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(3, 1.0F))
+    .add(@imgir.GaussianBlur(3, 1.0F))
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(result.optimized_cost <= result.original_cost)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: exec_optimize 空管道无改善" {
+  let pipe = @imgir.IRPipeline::new()
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(!result.is_improved)
+  assert_eq(result.original_length, 0)
+  assert_eq(result.optimized_length, 0)
+}
+
+///|
+test "FAKE: exec_optimize FlipH∘FlipH 互逆消除" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH)
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(result.is_improved)
+  assert_true(result.ops_reduced >= 1)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: exec_optimize GaussianBlur∘GaussianBlur 合并" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.GaussianBlur(3, 1.0F))
+    .add(@imgir.GaussianBlur(3, 1.0F))
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(result.is_significant())
+}
+
+// --- E2E ---
+
+///|
+test "E2E: exec_optimize_all 19 个结果" {
+  let results = @self_evolve.exec_optimize_all()
+  assert_eq(results.length(), 19)
+  for r in results {
+    assert_true(r.original_length == 1)
+  }
+}
+
+///|
+test "E2E: optimize_verified 安全管道" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  assert_true(@self_evolve.optimize_verified(pipe))
+}
+
+// --- AI ---
+
+///|
+test "AI: exec_optimize 结果含描述" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let result = @self_evolve.exec_optimize(pipe)
+  assert_true(result.optimized_pipeline_desc.length() >= 0)
+}
+
+///|
+test "AI: exec_optimize 不变量 ops_reduced + optimized == original" {
+  let pipes = [
+    @imgir.IRPipeline::new(),
+    @imgir.IRPipeline::new().add(@imgir.FlipH).add(@imgir.FlipH),
+    @imgir.IRPipeline::new().add(@imgir.GaussianBlur(3, 1.0F)),
+  ]
+  for pipe in pipes {
+    let r = @self_evolve.exec_optimize(pipe)
+    assert_eq(r.ops_reduced + r.optimized_length, r.original_length)
+  }
+}

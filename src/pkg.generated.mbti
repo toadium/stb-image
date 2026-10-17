@@ -1304,6 +1304,10 @@ pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[@self_evolve.TestCase]
 
 pub fn evolve_tests_only(Array[@imgir.IROp]) -> @self_evolve.EvolveReport
 
+pub fn exec_optimize(@imgir.IRPipeline) -> @self_evolve.OptimizeExecResult
+
+pub fn exec_optimize_all() -> Array[@self_evolve.OptimizeExecResult]
+
 pub fn exec_test_count(@self_evolve.ExecutableTestFile) -> Int
 
 pub fn exec_test_is_non_empty(@self_evolve.ExecutableTestFile) -> Bool
@@ -2408,6 +2412,10 @@ pub fn optimize_check_inverse(@imgir.IROp, @imgir.IROp) -> Bool
 
 pub fn optimize_count(@imgir.IRPipeline) -> Int
 
+pub fn optimize_exec_efficiency_pct(@self_evolve.OptimizeExecResult) -> Int
+
+pub fn optimize_exec_is_significant(@self_evolve.OptimizeExecResult) -> Bool
+
 pub fn optimize_is_identity(@imgir.IROp) -> Bool
 
 pub fn optimize_merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
@@ -2423,6 +2431,8 @@ pub fn optimize_report_reduction(@self_evolve.OptimizationReport) -> Int
 pub fn optimize_rotate90_identity(Int) -> Bool
 
 pub fn optimize_suggest(@imgir.IRPipeline) -> Array[@self_evolve.OptimizationSuggestion]
+
+pub fn optimize_verified(@imgir.IRPipeline) -> Bool
 
 pub fn orb_detect(@types.Image, max_features? : Int, threshold? : Int) -> Array[@feature.OrbDescriptor] raise @types.LoadError
 
@@ -4016,6 +4026,8 @@ pub using @self_evolve {type OptimizationKind}
 pub using @self_evolve {type OptimizationReport}
 
 pub using @self_evolve {type OptimizationSuggestion}
+
+pub using @self_evolve {type OptimizeExecResult}
 
 pub using @ocr {type OptimizerConfig}
 
