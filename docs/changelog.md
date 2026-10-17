@@ -2135,6 +2135,16 @@
 - 新增 1 类型 + 12 公共函数，reexport.mbt 注册顶层 API
 - +28 tests（Intent/Parser/Compiler/高层API/E2E）
 - 6688×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v273.0.0 - GeoVerse Phase 3: 集成验证
+- 新增 `src/geoverse_integration_test.mbt`：16 个端到端全栈集成测试
+  - **fieldimg ↔ imgir 互操作**：场操作管道 + 往返转换 + 序列化语义保持
+  - **spatiotemporal ↔ imgir 互操作**：时序快照管道
+  - **agent_kit → imgir → fieldimg 全栈**：NL → IR → 场操作 → Image/VectorField
+  - **aoci → agent_kit 路由**：符号索引构建 + 查询路由 + 预算管理 + 一致性验证
+  - **ImgIR 类型检查 + 描述**：Image → VectorField 类型链 + 管道描述
+  - **E2E 完整流水线**：NL → ImgIR → serialize → deserialize → execute 等价性
+- +16 tests
+- 6704×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v268.0.0 - GeoVerse Phase 1/2 多策略综合测试
 - 新增 `src/fieldimg/formal_v266_test.mbt`：fieldimg FAKE+MOCK+E2E+形式化证明（+37 tests）
   - **FAKE**：常量场/线性场/二次场/随机场(LCG)生成器 + 灰度图/RGB图生成器
