@@ -11502,3 +11502,280 @@ pub fn st_extract_frame(timage : TImage, index : Int) -> Image raise LoadError {
 pub fn st_from_gif_animation(gif : GifAnimation) -> TImage raise LoadError {
   @spatiotemporal.st_from_gif_animation(gif)
 }
+// =============================================================================
+// imgir — 统一中间表示（GeoVerse Phase 3）
+// IRValue / IROp / IRPipeline + Builder + Executor + Serializer
+// =============================================================================
+
+///|
+pub type IRValue = @imgir.IRValue
+
+///|
+pub type IROp = @imgir.IROp
+
+///|
+pub type IRPipeline = @imgir.IRPipeline
+
+// --- IRValue 方法重导出 ---
+
+///|
+pub fn ir_value_type_tag(value : IRValue) -> String {
+  @imgir.IRValue::type_tag(value)
+}
+
+///|
+pub fn ir_value_is_image(value : IRValue) -> Bool {
+  @imgir.IRValue::is_image(value)
+}
+
+///|
+pub fn ir_value_is_scalar_field(value : IRValue) -> Bool {
+  @imgir.IRValue::is_scalar_field(value)
+}
+
+///|
+pub fn ir_value_is_vector_field(value : IRValue) -> Bool {
+  @imgir.IRValue::is_vector_field(value)
+}
+
+///|
+pub fn ir_value_is_timage(value : IRValue) -> Bool {
+  @imgir.IRValue::is_timage(value)
+}
+
+///|
+pub fn ir_value_as_image(value : IRValue) -> Image raise LoadError {
+  @imgir.IRValue::as_image(value)
+}
+
+///|
+pub fn ir_value_as_scalar_field(value : IRValue) -> ScalarField raise LoadError {
+  @imgir.IRValue::as_scalar_field(value)
+}
+
+///|
+pub fn ir_value_as_vector_field(value : IRValue) -> VectorField raise LoadError {
+  @imgir.IRValue::as_vector_field(value)
+}
+
+///|
+pub fn ir_value_as_timage(value : IRValue) -> TImage raise LoadError {
+  @imgir.IRValue::as_timage(value)
+}
+
+///|
+pub fn ir_value_as_float(value : IRValue) -> Float raise LoadError {
+  @imgir.IRValue::as_float(value)
+}
+
+// --- IROp 方法重导出 ---
+
+///|
+pub fn ir_op_tag(op : IROp) -> String {
+  @imgir.IROp::tag(op)
+}
+
+///|
+pub fn ir_op_input_tag(op : IROp) -> String {
+  @imgir.IROp::input_tag(op)
+}
+
+///|
+pub fn ir_op_output_tag(op : IROp) -> String {
+  @imgir.IROp::output_tag(op)
+}
+
+// --- IRPipeline 方法重导出 ---
+
+///|
+pub fn ir_pipeline_new() -> IRPipeline {
+  @imgir.IRPipeline::new()
+}
+
+///|
+pub fn ir_pipeline_from_ops(ops : Array[IROp]) -> IRPipeline {
+  @imgir.IRPipeline::from_ops(ops)
+}
+
+///|
+pub fn ir_pipeline_add(pipeline : IRPipeline, op : IROp) -> IRPipeline {
+  @imgir.IRPipeline::add(pipeline, op)
+}
+
+///|
+pub fn ir_pipeline_length(pipeline : IRPipeline) -> Int {
+  @imgir.IRPipeline::length(pipeline)
+}
+
+///|
+pub fn ir_pipeline_resize(
+  pipeline : IRPipeline,
+  width : Int,
+  height : Int,
+) -> IRPipeline {
+  @imgir.IRPipeline::resize(pipeline, width, height)
+}
+
+///|
+pub fn ir_pipeline_rotate_90(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::rotate_90(pipeline)
+}
+
+///|
+pub fn ir_pipeline_flip_h(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::flip_h(pipeline)
+}
+
+///|
+pub fn ir_pipeline_flip_v(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::flip_v(pipeline)
+}
+
+///|
+pub fn ir_pipeline_crop(
+  pipeline : IRPipeline,
+  x : Int,
+  y : Int,
+  width : Int,
+  height : Int,
+) -> IRPipeline {
+  @imgir.IRPipeline::crop(pipeline, x, y, width, height)
+}
+
+///|
+pub fn ir_pipeline_to_gray(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::to_gray(pipeline)
+}
+
+///|
+pub fn ir_pipeline_brightness(pipeline : IRPipeline, delta : Int) -> IRPipeline {
+  @imgir.IRPipeline::brightness(pipeline, delta)
+}
+
+///|
+pub fn ir_pipeline_gaussian_blur(
+  pipeline : IRPipeline,
+  radius : Int,
+  sigma : Float,
+) -> IRPipeline {
+  @imgir.IRPipeline::gaussian_blur(pipeline, radius, sigma)
+}
+
+///|
+pub fn ir_pipeline_box_blur(pipeline : IRPipeline, radius : Int) -> IRPipeline {
+  @imgir.IRPipeline::box_blur(pipeline, radius)
+}
+
+///|
+pub fn ir_pipeline_sharpen(pipeline : IRPipeline, amount : Float) -> IRPipeline {
+  @imgir.IRPipeline::sharpen(pipeline, amount)
+}
+
+///|
+pub fn ir_pipeline_to_scalar_field(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::to_scalar_field(pipeline)
+}
+
+///|
+pub fn ir_pipeline_field_gradient(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::field_gradient(pipeline)
+}
+
+///|
+pub fn ir_pipeline_field_laplacian(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::field_laplacian(pipeline)
+}
+
+///|
+pub fn ir_pipeline_field_integrate(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::field_integrate(pipeline)
+}
+
+///|
+pub fn ir_pipeline_field_clamp(
+  pipeline : IRPipeline,
+  lo : Float,
+  hi : Float,
+) -> IRPipeline {
+  @imgir.IRPipeline::field_clamp(pipeline, lo, hi)
+}
+
+///|
+pub fn ir_pipeline_field_mask(
+  pipeline : IRPipeline,
+  threshold : Float,
+) -> IRPipeline {
+  @imgir.IRPipeline::field_mask(pipeline, threshold)
+}
+
+///|
+pub fn ir_pipeline_scalar_field_to_image(pipeline : IRPipeline) -> IRPipeline {
+  @imgir.IRPipeline::scalar_field_to_image(pipeline)
+}
+
+///|
+pub fn ir_pipeline_st_snapshot(
+  pipeline : IRPipeline,
+  time : Float,
+) -> IRPipeline {
+  @imgir.IRPipeline::st_snapshot(pipeline, time)
+}
+
+///|
+pub fn ir_pipeline_st_interpolate(
+  pipeline : IRPipeline,
+  time : Float,
+) -> IRPipeline {
+  @imgir.IRPipeline::st_interpolate(pipeline, time)
+}
+
+// --- IR 顶层函数重导出 ---
+
+///|
+pub fn ir_execute(
+  pipeline : IRPipeline,
+  value : IRValue,
+) -> IRValue raise LoadError {
+  @imgir.ir_execute(pipeline, value)
+}
+
+///|
+pub fn ir_execute_op(op : IROp, value : IRValue) -> IRValue raise LoadError {
+  @imgir.ir_execute_op(op, value)
+}
+
+///|
+pub fn ir_type_check(
+  pipeline : IRPipeline,
+  input_tag : String,
+) -> String raise LoadError {
+  @imgir.ir_type_check(pipeline, input_tag)
+}
+
+///|
+pub fn ir_describe(pipeline : IRPipeline) -> String {
+  @imgir.ir_describe(pipeline)
+}
+
+///|
+pub fn ir_serialize(pipeline : IRPipeline) -> Bytes {
+  @imgir.ir_serialize(pipeline)
+}
+
+///|
+pub fn ir_deserialize(bytes : Bytes) -> IRPipeline raise LoadError {
+  @imgir.ir_deserialize(bytes)
+}
+
+///|
+pub fn ir_serialize_op(op : IROp, buf : Array[Byte]) -> Unit {
+  @imgir.ir_serialize_op(op, buf)
+}
+
+///|
+pub fn ir_deserialize_op(
+  bytes : Bytes,
+  offset : Int,
+) -> (IROp, Int) raise LoadError {
+  @imgir.ir_deserialize_op(bytes, offset)
+}

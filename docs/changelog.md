@@ -2101,6 +2101,18 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v270.0.0 - GeoVerse Phase 3: ImgIR 统一中间表示
+- 新增 `src/imgir/`：统一中间表示模块（GeoVerse 第五层核心）
+  - **IRValue**：统一值类型（VImage/VScalarField/VVectorField/VTImage/VFloat/VInt/VUnit）+ type_tag + is_*/as_* 方法
+  - **IROp**：19 种操作枚举（Resize/Rotate90/FlipH/FlipV/Crop/ToGray/Brightness/GaussianBlur/BoxBlur/Sharpen/ToScalarField/FieldGradient/FieldLaplacian/FieldIntegrate/FieldClamp/FieldMask/ScalarFieldToImage/STSnapshot/STInterpolate）+ tag/input_tag/output_tag
+  - **IRPipeline**：线性管道 struct + 链式 Builder API（19 个 builder 方法）
+  - **ir_execute**：管道执行器（操作分派 + 类型检查）
+  - **ir_type_check**：静态类型链检查（Image → ScalarField → VectorField → ...）
+  - **ir_describe**：管道可读描述（"ToGray → GaussianBlur"）
+  - **ir_serialize/ir_deserialize**：二进制序列化（Float 缩放法 ×1e6 → Int，精度 1e-6）
+- 新增 3 类型 + 40+ 公共函数，reexport.mbt 注册顶层 API
+- +40 tests（IRValue 类型测试 + IROp 标签 + Builder + Executor + TypeCheck + Describe + Serializer 往返 + E2E 管道）
+- 6624×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v268.0.0 - GeoVerse Phase 1/2 多策略综合测试
 - 新增 `src/fieldimg/formal_v266_test.mbt`：fieldimg FAKE+MOCK+E2E+形式化证明（+37 tests）
   - **FAKE**：常量场/线性场/二次场/随机场(LCG)生成器 + 灰度图/RGB图生成器

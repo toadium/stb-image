@@ -3,6 +3,7 @@ import {
   "walkzzz/image/src/types",
   "walkzzz/image/src/fieldimg",
   "walkzzz/image/src/spatiotemporal",
+  "walkzzz/image/src/imgir",
   "walkzzz/image/src/pure/codec",
   "walkzzz/image/src/pure/util" @pure_util,
   "walkzzz/image/src/lib",

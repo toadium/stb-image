@@ -1,0 +1,10 @@
+import {
+  "walkzzz/image/src/types",
+  "walkzzz/image/src/fieldimg",
+  "walkzzz/image/src/spatiotemporal",
+  "walkzzz/image/src/transform",
+  "walkzzz/image/src/color",
+  "walkzzz/image/src/filter",
+  "walkzzz/image/src/pure/util" @pure_util,
+  "moonbitlang/core/debug",
+}

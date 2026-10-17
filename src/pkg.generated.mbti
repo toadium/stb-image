@@ -22,6 +22,7 @@ import {
   "walkzzz/image/src/fusion_enhanced",
   "walkzzz/image/src/image_generation",
   "walkzzz/image/src/image_retrieval_advanced",
+  "walkzzz/image/src/imgir",
   "walkzzz/image/src/inpainting",
   "walkzzz/image/src/intelligent_vision",
   "walkzzz/image/src/lib",
@@ -1826,6 +1827,94 @@ pub fn invert_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
 pub fn invert_homography(@stitch.Homography) -> @stitch.Homography?
 
+pub fn ir_describe(@imgir.IRPipeline) -> String
+
+pub fn ir_deserialize(Bytes) -> @imgir.IRPipeline raise @types.LoadError
+
+pub fn ir_deserialize_op(Bytes, Int) -> (@imgir.IROp, Int) raise @types.LoadError
+
+pub fn ir_execute(@imgir.IRPipeline, @imgir.IRValue) -> @imgir.IRValue raise @types.LoadError
+
+pub fn ir_execute_op(@imgir.IROp, @imgir.IRValue) -> @imgir.IRValue raise @types.LoadError
+
+pub fn ir_op_input_tag(@imgir.IROp) -> String
+
+pub fn ir_op_output_tag(@imgir.IROp) -> String
+
+pub fn ir_op_tag(@imgir.IROp) -> String
+
+pub fn ir_pipeline_add(@imgir.IRPipeline, @imgir.IROp) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_box_blur(@imgir.IRPipeline, Int) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_brightness(@imgir.IRPipeline, Int) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_crop(@imgir.IRPipeline, Int, Int, Int, Int) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_field_clamp(@imgir.IRPipeline, Float, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_field_gradient(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_field_integrate(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_field_laplacian(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_field_mask(@imgir.IRPipeline, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_flip_h(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_flip_v(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_from_ops(Array[@imgir.IROp]) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_gaussian_blur(@imgir.IRPipeline, Int, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_length(@imgir.IRPipeline) -> Int
+
+pub fn ir_pipeline_new() -> @imgir.IRPipeline
+
+pub fn ir_pipeline_resize(@imgir.IRPipeline, Int, Int) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_rotate_90(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_scalar_field_to_image(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_sharpen(@imgir.IRPipeline, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_st_interpolate(@imgir.IRPipeline, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_st_snapshot(@imgir.IRPipeline, Float) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_to_gray(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_pipeline_to_scalar_field(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn ir_serialize(@imgir.IRPipeline) -> Bytes
+
+pub fn ir_serialize_op(@imgir.IROp, Array[Byte]) -> Unit
+
+pub fn ir_type_check(@imgir.IRPipeline, String) -> String raise @types.LoadError
+
+pub fn ir_value_as_float(@imgir.IRValue) -> Float raise @types.LoadError
+
+pub fn ir_value_as_image(@imgir.IRValue) -> @types.Image raise @types.LoadError
+
+pub fn ir_value_as_scalar_field(@imgir.IRValue) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn ir_value_as_timage(@imgir.IRValue) -> @spatiotemporal.TImage raise @types.LoadError
+
+pub fn ir_value_as_vector_field(@imgir.IRValue) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn ir_value_is_image(@imgir.IRValue) -> Bool
+
+pub fn ir_value_is_scalar_field(@imgir.IRValue) -> Bool
+
+pub fn ir_value_is_timage(@imgir.IRValue) -> Bool
+
+pub fn ir_value_is_vector_field(@imgir.IRValue) -> Bool
+
+pub fn ir_value_type_tag(@imgir.IRValue) -> String
+
 pub fn is_16_bit_from_bytes(Bytes) -> Bool
 
 pub fn is_apng_format(Bytes) -> Bool
@@ -3444,6 +3533,12 @@ pub using @compression {type HuffmanTable}
 pub using @pose_estimation {type HumanPose as HumanPosePE}
 
 pub using @advanced_imaging {type HyperspectralData as HyperspectralDataAI}
+
+pub using @imgir {type IROp}
+
+pub using @imgir {type IRPipeline}
+
+pub using @imgir {type IRValue}
 
 pub using @codec {type IcnsInfoExtended}
 

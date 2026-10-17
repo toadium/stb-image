@@ -1,0 +1,114 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/imgir"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image/src/fieldimg",
+  "walkzzz/image/src/spatiotemporal",
+  "walkzzz/image/src/types",
+}
+
+// Values
+pub fn ir_describe(IRPipeline) -> String
+
+pub fn ir_deserialize(Bytes) -> IRPipeline raise @types.LoadError
+
+pub fn ir_deserialize_op(Bytes, Int) -> (IROp, Int) raise @types.LoadError
+
+pub fn ir_execute(IRPipeline, IRValue) -> IRValue raise @types.LoadError
+
+pub fn ir_execute_op(IROp, IRValue) -> IRValue raise @types.LoadError
+
+pub fn ir_serialize(IRPipeline) -> Bytes
+
+pub fn ir_serialize_op(IROp, Array[Byte]) -> Unit
+
+pub fn ir_type_check(IRPipeline, String) -> String raise @types.LoadError
+
+// Errors
+
+// Types and methods
+pub(all) enum IROp {
+  Resize(Int, Int)
+  Rotate90
+  FlipH
+  FlipV
+  Crop(Int, Int, Int, Int)
+  ToGray
+  Brightness(Int)
+  GaussianBlur(Int, Float)
+  BoxBlur(Int)
+  Sharpen(Float)
+  ToScalarField
+  FieldGradient
+  FieldLaplacian
+  FieldIntegrate
+  FieldClamp(Float, Float)
+  FieldMask(Float)
+  ScalarFieldToImage
+  STSnapshot(Float)
+  STInterpolate(Float)
+} derive(Eq, @debug.Debug)
+pub fn IROp::equal(Self, Self) -> Bool
+pub fn IROp::input_tag(Self) -> String
+pub fn IROp::not_equal(Self, Self) -> Bool
+pub fn IROp::output_tag(Self) -> String
+pub fn IROp::tag(Self) -> String
+pub fn IROp::to_repr(Self) -> @debug.Repr
+
+pub(all) struct IRPipeline {
+  ops : Array[IROp]
+} derive(Eq, @debug.Debug)
+pub fn IRPipeline::add(Self, IROp) -> Self
+pub fn IRPipeline::box_blur(Self, Int) -> Self
+pub fn IRPipeline::brightness(Self, Int) -> Self
+pub fn IRPipeline::crop(Self, Int, Int, Int, Int) -> Self
+pub fn IRPipeline::equal(Self, Self) -> Bool
+pub fn IRPipeline::field_clamp(Self, Float, Float) -> Self
+pub fn IRPipeline::field_gradient(Self) -> Self
+pub fn IRPipeline::field_integrate(Self) -> Self
+pub fn IRPipeline::field_laplacian(Self) -> Self
+pub fn IRPipeline::field_mask(Self, Float) -> Self
+pub fn IRPipeline::flip_h(Self) -> Self
+pub fn IRPipeline::flip_v(Self) -> Self
+pub fn IRPipeline::from_ops(Array[IROp]) -> Self
+pub fn IRPipeline::gaussian_blur(Self, Int, Float) -> Self
+pub fn IRPipeline::length(Self) -> Int
+pub fn IRPipeline::new() -> Self
+pub fn IRPipeline::not_equal(Self, Self) -> Bool
+pub fn IRPipeline::resize(Self, Int, Int) -> Self
+pub fn IRPipeline::rotate_90(Self) -> Self
+pub fn IRPipeline::scalar_field_to_image(Self) -> Self
+pub fn IRPipeline::sharpen(Self, Float) -> Self
+pub fn IRPipeline::st_interpolate(Self, Float) -> Self
+pub fn IRPipeline::st_snapshot(Self, Float) -> Self
+pub fn IRPipeline::to_gray(Self) -> Self
+pub fn IRPipeline::to_repr(Self) -> @debug.Repr
+pub fn IRPipeline::to_scalar_field(Self) -> Self
+
+pub(all) enum IRValue {
+  VImage(@types.Image)
+  VScalarField(@fieldimg.ScalarField)
+  VVectorField(@fieldimg.VectorField)
+  VTImage(@spatiotemporal.TImage)
+  VFloat(Float)
+  VInt(Int)
+  VUnit
+} derive(Eq, @debug.Debug)
+pub fn IRValue::as_float(Self) -> Float raise @types.LoadError
+pub fn IRValue::as_image(Self) -> @types.Image raise @types.LoadError
+pub fn IRValue::as_scalar_field(Self) -> @fieldimg.ScalarField raise @types.LoadError
+pub fn IRValue::as_timage(Self) -> @spatiotemporal.TImage raise @types.LoadError
+pub fn IRValue::as_vector_field(Self) -> @fieldimg.VectorField raise @types.LoadError
+pub fn IRValue::equal(Self, Self) -> Bool
+pub fn IRValue::is_image(Self) -> Bool
+pub fn IRValue::is_scalar_field(Self) -> Bool
+pub fn IRValue::is_timage(Self) -> Bool
+pub fn IRValue::is_vector_field(Self) -> Bool
+pub fn IRValue::not_equal(Self, Self) -> Bool
+pub fn IRValue::to_repr(Self) -> @debug.Repr
+pub fn IRValue::type_tag(Self) -> String
+
+// Type aliases
+
+// Traits
