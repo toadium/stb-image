@@ -2645,13 +2645,14 @@ flowchart LR
 | 版本 | 方向 | 具体任务 | 状态 |
 |------|------|----------|------|
 | v266.0.0 | fieldimg 图像场几何 | ScalarField/VectorField/TensorField + 场算子(gradient/laplacian/integrate/isosurface) + Image双向转换 + 属性测试 | ✅ 6458×4 |
+| v268.0.0 | fieldimg 多策略测试 | FAKE+MOCK+E2E+形式化证明(curl(grad)=0/div(grad)=lap/代数恒等式/维度保持/结构张量对称性) | ✅ 6584×4 |
 
-### Phase 2｜时空图像落地期（v267.0.0 ~ v269.0.0）
+### Phase 2｜时空图像落地期（v267.0.0 ~ v269.0.0）✅
 
 | 版本 | 方向 | 具体任务 | 状态 |
 |------|------|----------|------|
 | v267.0.0 | spatiotemporal 时空图像系统 | TInterval/TFrame/TImage/TVideo/TContext + 时空谓词(Allen Algebra) + 帧间插值 + 时序快照 + GIF转换 | ✅ 6508×4 |
-| v268.0.0 | 时空拓扑谓词 | st_contains/within/intersects/overlaps + st_during/before/after/meets | 合并至v267 |
+| v268.0.0 | spatiotemporal 多策略测试 | FAKE+MOCK+E2E+形式化证明(Allen对称性/自反性/插值边界/TContext属性) | ✅ 6584×4 |
 | v269.0.0 | 时空应用 | APNG/GIF→TImage + 帧间插值 + 时序快照 + 运动检测 | 合并至v267 |
 
 ### Phase 3｜ImgIR + AOCI 落地期（v270.0.0 ~ v273.0.0）

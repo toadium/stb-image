@@ -2101,6 +2101,19 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v268.0.0 - GeoVerse Phase 1/2 多策略综合测试
+- 新增 `src/fieldimg/formal_v266_test.mbt`：fieldimg FAKE+MOCK+E2E+形式化证明（+37 tests）
+  - **FAKE**：常量场/线性场/二次场/随机场(LCG)生成器 + 灰度图/RGB图生成器
+  - **形式化证明**：curl(grad)=0 无旋场(10 seed) + div(grad)=laplacian(二次场) + 加法逆元/交换律/乘法交换律(10 seed) + blend 边界 + clamp 幂等 + mask 二值性 + structure_tensor 对称性 + eigenvalues λ1≥λ2 + 维度保持
+  - **MOCK**：ScalarField/VectorField make 异常分派 + field_divergence dim≠2 + image_to_scalar_field 零尺寸 + structure_tensor 非2D
+  - **E2E**：Image→ScalarField→gradient→magnitude→Image 边缘检测全流水线 + laplacian→clamp→mask 锐化阈值 + structure_tensor→eigenvalues 角点检测 + 灰度/RGB round-trip + histogram 总数验证
+- 新增 `src/spatiotemporal/formal_v267_test.mbt`：spatiotemporal FAKE+MOCK+E2E+形式化证明（+39 tests）
+  - **FAKE**：TFrame/TImage/随机TImage/时空帧生成器
+  - **形式化证明**：Allen 代数 before/after 对称(20 seed) + within/contains 翻转(20 seed) + intersects/overlaps 对称(20 seed) + equals/contains 自反性 + meets→before 蕴含 + duration=end-start + 插值边界/常量/维度保持 + TContext 暂停/seek/speed/step/loop 属性 + TImage total_duration/frame_count + TVideo 保持
+  - **MOCK**：TInterval/TFrame/TImage/TContext 异常分派 + st_subclip/st_extract_frame/st_interpolate_linear 边界
+  - **E2E**：Image→TFrame→TImage→st_snapshot 全流水线 + 多帧插值 + subclip→snapshot + TVideo 创建 + TContext step×N + pause→step→resume + GIF→TImage + 多帧抽取
+- +76 tests (37 fieldimg + 39 spatiotemporal)
+- 6584×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v266.0.0 - GeoVerse Phase 1: fieldimg 图像场几何模块
 - 新增 `src/fieldimg/`：图像场几何模块（GeoVerse 核心创新）
   - **ScalarField**：2D 标量场（灰度图=标量场），求值/设值/最值
