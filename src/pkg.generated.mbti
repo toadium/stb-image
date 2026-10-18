@@ -1060,6 +1060,8 @@ pub fn detect_paragraphs(Array[@ocr.DocumentBlock], max_line_spacing_ratio? : Do
 
 pub fn detect_qr_finder_patterns(@types.Image) -> Array[@barcode.QrFinderPattern] raise @types.LoadError
 
+pub fn detect_regressions() -> @self_evolve.RegressionReport
+
 pub fn detect_scene_change(@types.Image, @types.Image, threshold? : Double) -> (Bool, Double)
 
 pub fn detect_skew_angle(@types.Image) -> Double raise @types.LoadError
@@ -1811,6 +1813,8 @@ pub fn harris_corners_16(@types.Image16, k? : Float, threshold? : Float, min_dis
 pub fn harris_corners_f(@types.ImageF, k? : Float, threshold? : Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
 pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
+
+pub fn has_regression(String) -> Bool
 
 pub fn hdr_default_config() -> @enhance.HdrConfig
 
@@ -2775,6 +2779,8 @@ pub fn register_images_fe(@types.Image, @types.Image, @fusion_enhanced.Registrat
 pub fn register_phase_correlation_fe(@types.Image, @types.Image) -> @fusion_enhanced.RegistrationResult
 
 pub fn registration_report_to_string_advanced_ra(@registration_advanced.RegistrationResultAdvanced) -> String
+
+pub fn regression_report_is_clean(@self_evolve.RegressionReport) -> Bool
 
 pub fn reinhard_tonemap(@types.ImageF, key? : Float) -> @types.Image raise @types.LoadError
 
@@ -4382,6 +4388,12 @@ pub using @registration {type RegistrationResult}
 pub using @stereo3d {type RegistrationResult3d}
 
 pub using @registration_advanced {type RegistrationResultAdvanced}
+
+pub using @self_evolve {type RegressionCase}
+
+pub using @self_evolve {type RegressionKind}
+
+pub using @self_evolve {type RegressionReport}
 
 pub using @image_retrieval_advanced {type RelevanceFeedbackResult}
 

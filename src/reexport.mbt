@@ -13214,3 +13214,28 @@ pub fn run_full_evolution() -> ScheduleResult {
 pub fn schedule_result_is_successful(result : ScheduleResult) -> Bool {
   @self_evolve.ScheduleResult::is_successful(result)
 }
+// self_evolve — 跨版本回归检测（v302.0.0）
+
+///|
+pub type RegressionKind = @self_evolve.RegressionKind
+
+///|
+pub type RegressionCase = @self_evolve.RegressionCase
+
+///|
+pub type RegressionReport = @self_evolve.RegressionReport
+
+///|
+pub fn detect_regressions() -> RegressionReport {
+  @self_evolve.detect_regressions()
+}
+
+///|
+pub fn has_regression(version : String) -> Bool {
+  @self_evolve.has_regression(version)
+}
+
+///|
+pub fn regression_report_is_clean(report : RegressionReport) -> Bool {
+  @self_evolve.RegressionReport::is_clean(report)
+}

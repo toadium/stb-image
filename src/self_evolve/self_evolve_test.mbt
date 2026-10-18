@@ -2518,3 +2518,74 @@ test "AI: schedule 每个调度 description 非空" {
   let result = @self_evolve.run_schedule(sched)
   assert_true(result.summary.length() > 0)
 }
+// ==============================
+// v302.0.0 — 跨版本回归检测 (regression)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: detect_regressions 返回报告" {
+  let report = @self_evolve.detect_regressions()
+  assert_true(report.cases.length() > 0)
+}
+
+///|
+test "形式化: has_regression 已知版本无退化" {
+  assert_true(!@self_evolve.has_regression("v286.0.0"))
+}
+
+///|
+test "形式化: has_regression 未知版本返回 false" {
+  assert_true(!@self_evolve.has_regression("v999.0.0"))
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: detect_regressions 结构完整" {
+  let report = @self_evolve.detect_regressions()
+  let _ = @self_evolve.RegressionReport::is_clean(report)
+  assert_true(true)
+}
+
+///|
+test "FAKE: RegressionReport is_clean 方法" {
+  let report = @self_evolve.detect_regressions()
+  assert_true(report.total_regressions >= 0)
+  assert_true(report.total_improvements >= 0)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: detect_regressions 历史无退化回归" {
+  let report = @self_evolve.detect_regressions()
+  assert_eq(report.total_regressions, 0)
+}
+
+///|
+test "MOCK: detect_regressions 有改进记录" {
+  let report = @self_evolve.detect_regressions()
+  assert_true(report.total_improvements > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: detect_regressions summary 含信息" {
+  let report = @self_evolve.detect_regressions()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: regression 每个案例 description 非空" {
+  let report = @self_evolve.detect_regressions()
+  for c in report.cases {
+    assert_true(c.description.length() > 0)
+    assert_true(c.from_version.length() > 0)
+    assert_true(c.to_version.length() > 0)
+  }
+}

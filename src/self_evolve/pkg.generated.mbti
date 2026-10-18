@@ -65,6 +65,8 @@ pub fn create_schedule(Array[@imgir.IROp]) -> EvolutionSchedule
 
 pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
 
+pub fn detect_regressions() -> RegressionReport
+
 pub fn equivalence_class(@imgir.IROp) -> Array[String]
 
 pub fn estimate_benefit(@imgir.IRPipeline) -> Int
@@ -128,6 +130,8 @@ pub fn grill_rule_desc(GrillRule) -> String
 pub fn grill_rules() -> Array[GrillRule]
 
 pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
+
+pub fn has_regression(String) -> Bool
 
 pub fn high_priority_ops() -> Array[String]
 
@@ -788,6 +792,38 @@ pub fn RecommendationReport::equal(Self, Self) -> Bool
 pub fn RecommendationReport::has_urgent(Self) -> Bool
 pub fn RecommendationReport::not_equal(Self, Self) -> Bool
 pub fn RecommendationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegressionCase {
+  from_version : String
+  to_version : String
+  kind : RegressionKind
+  delta : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn RegressionCase::equal(Self, Self) -> Bool
+pub fn RegressionCase::not_equal(Self, Self) -> Bool
+pub fn RegressionCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RegressionKind {
+  DegradationIncrease
+  TestDecrease
+  OpCountChange
+  NoRegression
+} derive(Eq, @debug.Debug)
+pub fn RegressionKind::equal(Self, Self) -> Bool
+pub fn RegressionKind::not_equal(Self, Self) -> Bool
+pub fn RegressionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegressionReport {
+  cases : Array[RegressionCase]
+  total_regressions : Int
+  total_improvements : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RegressionReport::equal(Self, Self) -> Bool
+pub fn RegressionReport::is_clean(Self) -> Bool
+pub fn RegressionReport::not_equal(Self, Self) -> Bool
+pub fn RegressionReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RepairAction {
   op_tag : String
