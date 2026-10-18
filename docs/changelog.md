@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v303.0.0 - GeoVerse Phase 9: 智能测试优先级
+- 扩展 `src/self_evolve/`：智能测试优先级 — 基于历史数据智能评分
+  - **smart_priority**：ScoreFactor / SmartScore / SmartPriorityReport + score_op / score_all_ops / top_priority
+  - 将演化从"回归检测"推向"智能评分" — 多因子加权评分
+- 新增 3 类型 + 2 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6983×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v302.0.0 - GeoVerse Phase 9: 跨版本回归检测
 - 扩展 `src/self_evolve/`：跨版本回归检测 — 检测版本间退化回归
   - **regression**：RegressionKind / RegressionCase / RegressionReport + detect_regressions / has_regression / is_clean

@@ -51,6 +51,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase8_report.mbt` | Phase8Capability / Phase8Report / phase8_capabilities / phase8_total_types / phase8_total_functions / phase8_total_tests / phase8_report / phase8_is_complete |
 | `schedule.mbt` | ScheduleStatus / EvolutionSchedule / ScheduleResult / create_schedule / run_schedule / run_full_evolution / is_successful |
 | `regression.mbt` | RegressionKind / RegressionCase / RegressionReport / detect_regressions / has_regression / is_clean |
+| `smart_priority.mbt` | ScoreFactor / SmartScore / SmartPriorityReport / score_op / score_all_ops / top_priority |
 
 ## 公共 API
 
@@ -94,7 +95,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-270 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+279 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -337,4 +338,10 @@ Phase 8 自演化生产期完成：可视化→盲区→推荐→优化。
 
 - `detect_regressions()` → RegressionReport — 回归检测报告
 - `has_regression(version)` → Bool — 指定版本是否有退化
-- `RegressionReport::is_clean()` → 是否无回归
+- `RegressionReport::is_clean()` → 是否无回归## 智能测试优先级（v303.0.0）
+
+将演化从"回归检测"推向"智能评分" — 多因子加权评分。
+
+- `score_op(op)` → SmartScore — 单算子评分 (0-100)
+- `score_all_ops()` → SmartPriorityReport — 全算子评分
+- `SmartPriorityReport::top_priority(n)` → 前 N 高优先级

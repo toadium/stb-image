@@ -259,6 +259,10 @@ pub fn run_tests_for_op(@imgir.IROp) -> Array[TestRunResult]
 
 pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
 
+pub fn score_all_ops() -> SmartPriorityReport
+
+pub fn score_op(@imgir.IROp) -> SmartScore
+
 pub fn suggest_optimization(@imgir.IRPipeline) -> PipelineOptReport
 
 pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
@@ -911,6 +915,16 @@ pub fn ScheduleStatus::equal(Self, Self) -> Bool
 pub fn ScheduleStatus::not_equal(Self, Self) -> Bool
 pub fn ScheduleStatus::to_repr(Self) -> @debug.Repr
 
+pub(all) enum ScoreFactor {
+  DegradationRisk
+  CoverageGap
+  HistoryWeight
+  PropagationRisk
+} derive(Eq, @debug.Debug)
+pub fn ScoreFactor::equal(Self, Self) -> Bool
+pub fn ScoreFactor::not_equal(Self, Self) -> Bool
+pub fn ScoreFactor::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Severity {
   Warning
   Critical
@@ -919,6 +933,27 @@ pub(all) enum Severity {
 pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::not_equal(Self, Self) -> Bool
 pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SmartPriorityReport {
+  scores : Array[SmartScore]
+  total_ops : Int
+  high_priority_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn SmartPriorityReport::equal(Self, Self) -> Bool
+pub fn SmartPriorityReport::not_equal(Self, Self) -> Bool
+pub fn SmartPriorityReport::to_repr(Self) -> @debug.Repr
+pub fn SmartPriorityReport::top_priority(Self, Int) -> Array[SmartScore]
+
+pub(all) struct SmartScore {
+  op_tag : String
+  score : Int
+  factors : Array[ScoreFactor]
+  recommendation : String
+} derive(Eq, @debug.Debug)
+pub fn SmartScore::equal(Self, Self) -> Bool
+pub fn SmartScore::not_equal(Self, Self) -> Bool
+pub fn SmartScore::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StrategyRepairResult {
   strategy : RepairStrategy

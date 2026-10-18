@@ -13239,3 +13239,31 @@ pub fn has_regression(version : String) -> Bool {
 pub fn regression_report_is_clean(report : RegressionReport) -> Bool {
   @self_evolve.RegressionReport::is_clean(report)
 }
+// self_evolve — 智能测试优先级（v303.0.0）
+
+///|
+pub type ScoreFactor = @self_evolve.ScoreFactor
+
+///|
+pub type SmartScore = @self_evolve.SmartScore
+
+///|
+pub type SmartPriorityReport = @self_evolve.SmartPriorityReport
+
+///|
+pub fn score_op(op : @imgir.IROp) -> SmartScore {
+  @self_evolve.score_op(op)
+}
+
+///|
+pub fn score_all_ops() -> SmartPriorityReport {
+  @self_evolve.score_all_ops()
+}
+
+///|
+pub fn smart_priority_report_top_priority(
+  report : SmartPriorityReport,
+  n : Int,
+) -> Array[SmartScore] {
+  @self_evolve.SmartPriorityReport::top_priority(report, n)
+}

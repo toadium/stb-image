@@ -2589,3 +2589,79 @@ test "AI: regression 每个案例 description 非空" {
     assert_true(c.to_version.length() > 0)
   }
 }
+// ==============================
+// v303.0.0 — 智能测试优先级 (smart_priority)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: score_op 安全算子低分" {
+  let s = @self_evolve.score_op(@imgir.Resize(8, 8))
+  assert_true(s.score >= 0)
+  assert_true(s.score <= 100)
+}
+
+///|
+test "形式化: score_op 退化算子高分" {
+  let s = @self_evolve.score_op(@imgir.Resize(0, 0))
+  assert_true(s.score >= 25)
+}
+
+///|
+test "形式化: score_all_ops 返回 19 个评分" {
+  let report = @self_evolve.score_all_ops()
+  assert_eq(report.total_ops, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: score_all_ops 结构完整" {
+  let report = @self_evolve.score_all_ops()
+  assert_true(report.scores.length() > 0)
+  assert_true(report.high_priority_count >= 0)
+}
+
+///|
+test "FAKE: SmartPriorityReport top_priority 方法" {
+  let report = @self_evolve.score_all_ops()
+  let top3 = @self_evolve.SmartPriorityReport::top_priority(report, 3)
+  assert_eq(top3.length(), 3)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: score_op 退化算子有 DegradationRisk 因子" {
+  let s = @self_evolve.score_op(@imgir.GaussianBlur(3, 0.0F))
+  assert_true(s.factors.length() > 0)
+}
+
+///|
+test "MOCK: top_priority 返回按分数降序" {
+  let report = @self_evolve.score_all_ops()
+  let top5 = @self_evolve.SmartPriorityReport::top_priority(report, 5)
+  for i in 1..<5 {
+    assert_true(top5[i - 1].score >= top5[i].score)
+  }
+}
+
+// --- E2E ---
+
+///|
+test "E2E: score_all_ops summary 含信息" {
+  let report = @self_evolve.score_all_ops()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: smart_priority 每个评分 recommendation 非空" {
+  let report = @self_evolve.score_all_ops()
+  for s in report.scores {
+    assert_true(s.recommendation.length() > 0)
+    assert_true(s.op_tag.length() > 0)
+  }
+}
