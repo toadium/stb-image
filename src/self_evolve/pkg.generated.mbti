@@ -49,6 +49,10 @@ pub fn ci_regression_all_pass() -> Bool
 
 pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
 
+pub fn combine_all_strategies() -> ComboReport
+
+pub fn combine_strategies(@imgir.IROp) -> StrategyCombo
+
 pub fn combo_coverage_report() -> ComboCoverageReport
 
 pub fn compare_pipelines(@imgir.IRPipeline, @imgir.IRPipeline) -> PerfRegression
@@ -354,6 +358,17 @@ pub(all) struct ComboCoverageReport {
 pub fn ComboCoverageReport::equal(Self, Self) -> Bool
 pub fn ComboCoverageReport::not_equal(Self, Self) -> Bool
 pub fn ComboCoverageReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ComboReport {
+  combos : Array[StrategyCombo]
+  total : Int
+  parallel_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ComboReport::equal(Self, Self) -> Bool
+pub fn ComboReport::has_parallel(Self) -> Bool
+pub fn ComboReport::not_equal(Self, Self) -> Bool
+pub fn ComboReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CoverageGap {
   op_tag : String
@@ -1061,6 +1076,27 @@ pub(all) struct SmartScore {
 pub fn SmartScore::equal(Self, Self) -> Bool
 pub fn SmartScore::not_equal(Self, Self) -> Bool
 pub fn SmartScore::to_repr(Self) -> @debug.Repr
+
+pub(all) struct StrategyCombo {
+  strategies : Array[StrategyKind]
+  op_tag : String
+  estimated_time : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn StrategyCombo::equal(Self, Self) -> Bool
+pub fn StrategyCombo::not_equal(Self, Self) -> Bool
+pub fn StrategyCombo::to_repr(Self) -> @debug.Repr
+
+pub(all) enum StrategyKind {
+  FixFirst
+  TestFirst
+  OptimizeFirst
+  ParallelFix
+  SequentialFix
+} derive(Eq, @debug.Debug)
+pub fn StrategyKind::equal(Self, Self) -> Bool
+pub fn StrategyKind::not_equal(Self, Self) -> Bool
+pub fn StrategyKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StrategyRepairResult {
   strategy : RepairStrategy

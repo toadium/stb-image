@@ -55,6 +55,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `predict.mbt` | PredictionKind / EvolutionPrediction / PredictionReport / predict_op / predict_all / has_high_risk |
 | `phase9_report.mbt` | Phase9Capability / Phase9Report / phase9_capabilities / phase9_total_types / phase9_total_functions / phase9_total_tests / phase9_report / phase9_is_complete |
 | `auto_decide.mbt` | DecisionAction / AutoDecision / DecisionReport / decide_op / decide_all / can_auto_run |
+| `strategy_combo.mbt` | StrategyKind / StrategyCombo / ComboReport / combine_strategies / combine_all_strategies / has_parallel |
 
 ## 公共 API
 
@@ -98,7 +99,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-303 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+312 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -368,4 +369,10 @@ Phase 9 自演化智能期完成：调度→回归→评分→预测。
 
 - `decide_op(op)` → AutoDecision — 单算子决策
 - `decide_all()` → DecisionReport — 全算子决策
-- `DecisionReport::can_auto_run()` → 是否可全自主执行
+- `DecisionReport::can_auto_run()` → 是否可全自主执行## 演化策略组合（v307.0.0）
+
+将演化从"自主决策"推向"策略组合" — 多策略协同演化。
+
+- `combine_strategies(op)` → StrategyCombo — 单算子策略组合
+- `combine_all_strategies()` → ComboReport — 全算子策略组合
+- `ComboReport::has_parallel()` → 是否有可并行策略

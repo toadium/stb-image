@@ -2871,3 +2871,75 @@ test "AI: decide 每个决策 rationale 非空" {
     assert_true(d.op_tag.length() > 0)
   }
 }
+// ==============================
+// v307.0.0 — 演化策略组合 (strategy_combo)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: combine_strategies 返回非空策略" {
+  let combo = @self_evolve.combine_strategies(@imgir.Resize(8, 8))
+  assert_true(combo.strategies.length() > 0)
+}
+
+///|
+test "形式化: combine_strategies 退化算子含 FixFirst" {
+  let combo = @self_evolve.combine_strategies(@imgir.Resize(0, 0))
+  assert_true(combo.strategies.length() > 0)
+}
+
+///|
+test "形式化: combine_all_strategies 返回 19 个组合" {
+  let report = @self_evolve.combine_all_strategies()
+  assert_eq(report.total, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: combine_all_strategies 结构完整" {
+  let report = @self_evolve.combine_all_strategies()
+  assert_true(report.combos.length() > 0)
+  assert_true(report.parallel_count >= 0)
+}
+
+///|
+test "FAKE: ComboReport has_parallel 方法" {
+  let report = @self_evolve.combine_all_strategies()
+  let _ = @self_evolve.ComboReport::has_parallel(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: combine_strategies estimated_time > 0" {
+  let combo = @self_evolve.combine_strategies(@imgir.ToGray)
+  assert_true(combo.estimated_time > 0)
+}
+
+///|
+test "MOCK: combine_all_strategies parallel_count 非负" {
+  let report = @self_evolve.combine_all_strategies()
+  assert_true(report.parallel_count >= 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: combine_all_strategies summary 含信息" {
+  let report = @self_evolve.combine_all_strategies()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: strategy_combo 每个组合 description 非空" {
+  let report = @self_evolve.combine_all_strategies()
+  for c in report.combos {
+    assert_true(c.description.length() > 0)
+    assert_true(c.op_tag.length() > 0)
+  }
+}

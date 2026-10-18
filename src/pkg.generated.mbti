@@ -574,9 +574,15 @@ pub fn color_transfer_st(@types.Image, @types.Image, Double) -> @types.Image rai
 
 pub fn colorize_image_ig(@types.Image, @image_generation.EditingConfig) -> @image_generation.EditingResult
 
+pub fn combine_all_strategies() -> @self_evolve.ComboReport
+
+pub fn combine_strategies(@imgir.IROp) -> @self_evolve.StrategyCombo
+
 pub fn combined_features(@types.Image) -> Array[Double] raise @types.LoadError
 
 pub fn combo_coverage_report() -> @self_evolve.ComboCoverageReport
+
+pub fn combo_report_has_parallel(@self_evolve.ComboReport) -> Bool
 
 pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float raise @types.LoadError
 
@@ -3679,6 +3685,8 @@ pub using @color {type Colormap}
 
 pub using @self_evolve {type ComboCoverageReport}
 
+pub using @self_evolve {type ComboReport}
+
 pub using @ocr {type CommonErrorPattern}
 
 pub using @frequency {type Complex}
@@ -4560,6 +4568,10 @@ pub using @ocr {type StatisticalFeatures}
 pub using @stereo3d {type StereoConfig3d}
 
 pub using @stitch {type StitchConfig}
+
+pub using @self_evolve {type StrategyCombo}
+
+pub using @self_evolve {type StrategyKind}
 
 pub using @self_evolve {type StrategyRepairResult}
 

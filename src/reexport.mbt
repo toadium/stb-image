@@ -13354,3 +13354,28 @@ pub fn decide_all() -> DecisionReport {
 pub fn decision_report_can_auto_run(report : DecisionReport) -> Bool {
   @self_evolve.DecisionReport::can_auto_run(report)
 }
+// self_evolve — 演化策略组合（v307.0.0）
+
+///|
+pub type StrategyKind = @self_evolve.StrategyKind
+
+///|
+pub type StrategyCombo = @self_evolve.StrategyCombo
+
+///|
+pub type ComboReport = @self_evolve.ComboReport
+
+///|
+pub fn combine_strategies(op : @imgir.IROp) -> StrategyCombo {
+  @self_evolve.combine_strategies(op)
+}
+
+///|
+pub fn combine_all_strategies() -> ComboReport {
+  @self_evolve.combine_all_strategies()
+}
+
+///|
+pub fn combo_report_has_parallel(report : ComboReport) -> Bool {
+  @self_evolve.ComboReport::has_parallel(report)
+}
