@@ -13184,3 +13184,33 @@ pub fn phase8_report() -> Phase8Report {
 pub fn phase8_is_complete() -> Bool {
   @self_evolve.phase8_is_complete()
 }
+// self_evolve — 演化调度引擎（v301.0.0）
+
+///|
+pub type ScheduleStatus = @self_evolve.ScheduleStatus
+
+///|
+pub type EvolutionSchedule = @self_evolve.EvolutionSchedule
+
+///|
+pub type ScheduleResult = @self_evolve.ScheduleResult
+
+///|
+pub fn create_schedule(ops : Array[@imgir.IROp]) -> EvolutionSchedule {
+  @self_evolve.create_schedule(ops)
+}
+
+///|
+pub fn run_schedule(schedule : EvolutionSchedule) -> ScheduleResult {
+  @self_evolve.run_schedule(schedule)
+}
+
+///|
+pub fn run_full_evolution() -> ScheduleResult {
+  @self_evolve.run_full_evolution()
+}
+
+///|
+pub fn schedule_result_is_successful(result : ScheduleResult) -> Bool {
+  @self_evolve.ScheduleResult::is_successful(result)
+}

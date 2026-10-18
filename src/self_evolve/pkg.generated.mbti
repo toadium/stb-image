@@ -61,6 +61,8 @@ pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
 
 pub fn coverage_percentage(@imgir.IROp) -> Int
 
+pub fn create_schedule(Array[@imgir.IROp]) -> EvolutionSchedule
+
 pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
 
 pub fn equivalence_class(@imgir.IROp) -> Array[String]
@@ -233,9 +235,13 @@ pub fn rollback_to(String) -> HistoryEntry?
 
 pub fn rotate90_power_is_identity(Int) -> Bool
 
+pub fn run_full_evolution() -> ScheduleResult
+
 pub fn run_grill_all() -> GrillReport
 
 pub fn run_grill_check(@imgir.IRPipeline) -> GrillReport
+
+pub fn run_schedule(EvolutionSchedule) -> ScheduleResult
 
 pub fn run_summary(Array[TestRunResult]) -> RunSummary
 
@@ -373,6 +379,16 @@ pub fn EquivalenceReport::all_equivalent(Self) -> Bool
 pub fn EquivalenceReport::equal(Self, Self) -> Bool
 pub fn EquivalenceReport::not_equal(Self, Self) -> Bool
 pub fn EquivalenceReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolutionSchedule {
+  schedule_id : String
+  ops_count : Int
+  status : ScheduleStatus
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn EvolutionSchedule::equal(Self, Self) -> Bool
+pub fn EvolutionSchedule::not_equal(Self, Self) -> Bool
+pub fn EvolutionSchedule::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolveCycleReport {
   pipeline_desc : String
@@ -836,6 +852,28 @@ pub fn RunSummary::all_passed(Self) -> Bool
 pub fn RunSummary::equal(Self, Self) -> Bool
 pub fn RunSummary::not_equal(Self, Self) -> Bool
 pub fn RunSummary::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ScheduleResult {
+  schedule : EvolutionSchedule
+  evolved_count : Int
+  fixed_count : Int
+  remaining_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ScheduleResult::equal(Self, Self) -> Bool
+pub fn ScheduleResult::is_successful(Self) -> Bool
+pub fn ScheduleResult::not_equal(Self, Self) -> Bool
+pub fn ScheduleResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ScheduleStatus {
+  Pending
+  Running
+  Completed
+  Failed
+} derive(Eq, @debug.Debug)
+pub fn ScheduleStatus::equal(Self, Self) -> Bool
+pub fn ScheduleStatus::not_equal(Self, Self) -> Bool
+pub fn ScheduleStatus::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Severity {
   Warning

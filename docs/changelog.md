@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v301.0.0 - GeoVerse Phase 9: 演化调度引擎
+- 扩展 `src/self_evolve/`：演化调度引擎 — 调度并执行自动演化周期
+  - **schedule**：ScheduleStatus / EvolutionSchedule / ScheduleResult + create_schedule / run_schedule / run_full_evolution / is_successful
+  - 将演化从"手动"推向"自动调度" — 创建调度→执行→报告
+- 新增 3 类型 + 3 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6965×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v300.0.0 - GeoVerse Phase 8 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 8 综合报告 — 汇总 v296-v299 全部能力
   - **phase8_report**：Phase8Capability / Phase8Report + phase8_capabilities / phase8_total_types / phase8_total_functions / phase8_total_tests / phase8_report / phase8_is_complete

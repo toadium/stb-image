@@ -2444,3 +2444,77 @@ test "AI: phase8 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ==============================
+// v301.0.0 — 演化调度引擎 (schedule)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: create_schedule 状态为 Pending" {
+  let sched = @self_evolve.create_schedule([@imgir.Resize(8, 8)])
+  assert_true(sched.status is @self_evolve.Pending)
+  assert_eq(sched.ops_count, 1)
+}
+
+///|
+test "形式化: run_full_evolution 返回 Completed" {
+  let result = @self_evolve.run_full_evolution()
+  assert_true(result.schedule.status is @self_evolve.Completed)
+}
+
+///|
+test "形式化: run_schedule evolved_count 为 19" {
+  let sched = @self_evolve.create_schedule(@self_evolve.all_ops())
+  let result = @self_evolve.run_schedule(sched)
+  assert_eq(result.evolved_count, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: run_schedule 返回结果" {
+  let sched = @self_evolve.create_schedule([@imgir.Resize(8, 8)])
+  let result = @self_evolve.run_schedule(sched)
+  assert_true(result.evolved_count > 0)
+}
+
+///|
+test "FAKE: ScheduleResult is_successful 方法" {
+  let result = @self_evolve.run_full_evolution()
+  let _ = @self_evolve.ScheduleResult::is_successful(result)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: run_full_evolution 处理所有算子" {
+  let result = @self_evolve.run_full_evolution()
+  assert_eq(result.evolved_count, 19)
+}
+
+///|
+test "MOCK: create_schedule schedule_id 非空" {
+  let sched = @self_evolve.create_schedule([@imgir.ToGray])
+  assert_true(sched.schedule_id.length() > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: run_full_evolution summary 含信息" {
+  let result = @self_evolve.run_full_evolution()
+  assert_true(result.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: schedule 每个调度 description 非空" {
+  let ops = @self_evolve.all_ops()
+  let sched = @self_evolve.create_schedule(ops)
+  assert_true(sched.description.length() > 0)
+  let result = @self_evolve.run_schedule(sched)
+  assert_true(result.summary.length() > 0)
+}

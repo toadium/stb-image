@@ -848,6 +848,8 @@ pub fn create_rect_mask(Int, Int, Int, Int, Int, Int) -> @types.Image raise @typ
 
 pub fn create_rect_mask_ip(Int, Int, Int, Int, Int, Int) -> @types.Image
 
+pub fn create_schedule(Array[@imgir.IROp]) -> @self_evolve.EvolutionSchedule
+
 pub fn create_training_history(Int, Double, Double, Double, Double, Double, Double) -> @ocr.DLTrainingHistory
 
 pub fn create_training_sample(@types.Image, Int, String) -> @ocr.DLTrainingSample raise @types.LoadError
@@ -2910,6 +2912,8 @@ pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_document(@types.Image, Double) -> @types.Image raise @types.LoadError
 
+pub fn run_full_evolution() -> @self_evolve.ScheduleResult
+
 pub fn run_grill_all() -> @self_evolve.GrillReport
 
 pub fn run_grill_check(@imgir.IRPipeline) -> @self_evolve.GrillReport
@@ -2917,6 +2921,8 @@ pub fn run_grill_check(@imgir.IRPipeline) -> @self_evolve.GrillReport
 pub fn run_length_decode_cp(Bytes) -> Bytes
 
 pub fn run_length_encode_cp(Bytes) -> Bytes
+
+pub fn run_schedule(@self_evolve.EvolutionSchedule) -> @self_evolve.ScheduleResult
 
 pub fn run_summary(Array[@self_evolve.TestRunResult]) -> @self_evolve.RunSummary
 
@@ -2971,6 +2977,8 @@ pub fn scan_ocr_default_config() -> @ocr.ScanOCRConfig
 pub fn scan_ocr_recognize(@types.Image, @ocr.ScanOCRConfig) -> @ocr.OCRPageResult raise @types.LoadError
 
 pub fn scene_understanding_report_to_string_su(@scene_understanding.SceneClassificationResult, @scene_understanding.ImageCaptioningResult, @scene_understanding.VisualQuestionAnsweringResult, @scene_understanding.SceneGraph) -> String
+
+pub fn schedule_result_is_successful(@self_evolve.ScheduleResult) -> Bool
 
 pub fn se_cross(Int) -> @segment.StructuringElement
 
@@ -3835,6 +3843,8 @@ pub using @ocr {type ErrorAnalysisEntry}
 
 pub using @ocr {type ErrorAnalysisReport}
 
+pub using @self_evolve {type EvolutionSchedule}
+
 pub using @self_evolve {type EvolveCycleReport}
 
 pub using @self_evolve {type EvolveReport}
@@ -4430,6 +4440,10 @@ pub using @scene_understanding {type SceneGraphRelation as SceneGraphRelationSU}
 pub using @scene_understanding {type SceneGraph as SceneGraphSU}
 
 pub using @scene_understanding {type SceneUnderstandingConfig as SceneUnderstandingConfigSU}
+
+pub using @self_evolve {type ScheduleResult}
+
+pub using @self_evolve {type ScheduleStatus}
 
 pub using @retrieval {type SearchResult}
 
