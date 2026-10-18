@@ -42,6 +42,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `propagation.mbt` | PropagationStep / PropagationReport / analyze_propagation / analyze_propagation_all / has_propagation_risk / propagation_chain / is_safe |
 | `adaptive.mbt` | TestPriority / AdaptiveStrategy / AdaptiveReport / suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered |
 | `history.mbt` | HistoryEntry / HistoryLog / record_snapshot / history_log / rollback_to / compare_snapshots / is_empty |
+| `equivalence.mbt` | EquivalenceCheck / EquivalenceReport / check_equivalence / are_equivalent / check_equivalence_all / equivalence_class / all_equivalent |
 
 ## 公共 API
 
@@ -85,7 +86,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-195 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+204 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -262,4 +263,12 @@ Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因
 - `history_log()` → HistoryLog — 演化历史日志（v286-v292 快照序列）
 - `rollback_to(version)` → Option[HistoryEntry] — 回滚到指定版本
 - `compare_snapshots(e1, e2)` → String — 比较两个快照
-- `HistoryLog::is_empty()` → 是否为空
+- `HistoryLog::is_empty()` → 是否为空## 算子等价性验证（v294.0.0）
+
+将演化从"独立"推向"等价验证" — 证明两个管道产生相同结果。
+
+- `check_equivalence(pipe_a, pipe_b)` → EquivalenceCheck — 等价性检查
+- `are_equivalent(pipe_a, pipe_b)` → Bool — 简化等价判断
+- `check_equivalence_all()` → EquivalenceReport — 全算子自等价性
+- `equivalence_class(op)` → Array[String] — 等价类
+- `EquivalenceReport::all_equivalent()` → 全部等价

@@ -23,11 +23,17 @@ pub fn analyze_root_cause(@imgir.IROp) -> Array[RootCause]
 
 pub fn analyze_root_cause_all() -> RootCauseReport
 
+pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
+
 pub fn best_repair(@imgir.IROp) -> StrategyRepairResult
 
 pub fn best_repair_all() -> Array[StrategyRepairResult]
 
 pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> EquivalenceCheck
+
+pub fn check_equivalence_all() -> EquivalenceReport
 
 pub fn check_inverse_pair(@imgir.IROp, @imgir.IROp) -> Bool
 
@@ -52,6 +58,8 @@ pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
 pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
 
 pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
+
+pub fn equivalence_class(@imgir.IROp) -> Array[String]
 
 pub fn estimate_op_cost(@imgir.IROp) -> OpCost
 
@@ -272,6 +280,27 @@ pub(all) enum DegradationKind {
 pub fn DegradationKind::equal(Self, Self) -> Bool
 pub fn DegradationKind::not_equal(Self, Self) -> Bool
 pub fn DegradationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EquivalenceCheck {
+  pipeline_a_desc : String
+  pipeline_b_desc : String
+  is_equivalent : Bool
+  reason : String
+} derive(Eq, @debug.Debug)
+pub fn EquivalenceCheck::equal(Self, Self) -> Bool
+pub fn EquivalenceCheck::not_equal(Self, Self) -> Bool
+pub fn EquivalenceCheck::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EquivalenceReport {
+  checks : Array[EquivalenceCheck]
+  total_equivalent : Int
+  total_not_equivalent : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn EquivalenceReport::all_equivalent(Self) -> Bool
+pub fn EquivalenceReport::equal(Self, Self) -> Bool
+pub fn EquivalenceReport::not_equal(Self, Self) -> Bool
+pub fn EquivalenceReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolveCycleReport {
   pipeline_desc : String

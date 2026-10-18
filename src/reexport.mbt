@@ -12940,3 +12940,41 @@ pub fn compare_snapshots(e1 : HistoryEntry, e2 : HistoryEntry) -> String {
 pub fn history_log_is_empty(log : HistoryLog) -> Bool {
   @self_evolve.HistoryLog::is_empty(log)
 }
+// self_evolve — 算子等价性验证（v294.0.0）
+
+///|
+pub type EquivalenceCheck = @self_evolve.EquivalenceCheck
+
+///|
+pub type EquivalenceReport = @self_evolve.EquivalenceReport
+
+///|
+pub fn check_equivalence(
+  pipe_a : @imgir.IRPipeline,
+  pipe_b : @imgir.IRPipeline,
+) -> EquivalenceCheck {
+  @self_evolve.check_equivalence(pipe_a, pipe_b)
+}
+
+///|
+pub fn are_equivalent(
+  pipe_a : @imgir.IRPipeline,
+  pipe_b : @imgir.IRPipeline,
+) -> Bool {
+  @self_evolve.are_equivalent(pipe_a, pipe_b)
+}
+
+///|
+pub fn check_equivalence_all() -> EquivalenceReport {
+  @self_evolve.check_equivalence_all()
+}
+
+///|
+pub fn equivalence_class(op : @imgir.IROp) -> Array[String] {
+  @self_evolve.equivalence_class(op)
+}
+
+///|
+pub fn equivalence_report_all_equivalent(report : EquivalenceReport) -> Bool {
+  @self_evolve.EquivalenceReport::all_equivalent(report)
+}

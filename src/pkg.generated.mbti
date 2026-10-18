@@ -258,6 +258,8 @@ pub fn apply_window_level_medical(@medical.MedicalImage, @medical.WindowLevelCon
 
 pub fn approx_poly_dp(Array[@edge.ContourPoint], Float, closed? : Bool) -> Array[@edge.ContourPoint] raise @types.LoadError
 
+pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
+
 pub fn arnold_scramble_enc(@types.Image, @encryption.ArnoldParams) -> @encryption.EncryptionResult raise @types.LoadError
 
 pub fn augment_features(Array[Double], noise_level? : Double) -> Array[Double]
@@ -507,6 +509,10 @@ pub fn check_accuracy_threshold(@ocr.AccuracyStats, min_char_accuracy? : Double,
 pub fn check_dims(Int, Int, Int) -> Unit raise @types.LoadError
 
 pub fn check_early_stopping(@ocr.TrainingState, @ocr.TrainingConfig, Double) -> (Bool, @ocr.TrainingState)
+
+pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> @self_evolve.EquivalenceCheck
+
+pub fn check_equivalence_all() -> @self_evolve.EquivalenceReport
 
 pub fn chinese_ocr_default_config() -> @ocr.ChineseOcrConfig
 
@@ -1249,6 +1255,10 @@ pub fn ensemble_default_config() -> @ocr.EnsembleConfig
 pub fn ensemble_predict(Array[Double], @ocr.KnnClassifier, Array[(String, Array[Double])], config? : @ocr.EnsembleConfig) -> @ocr.ClassificationResult raise @types.LoadError
 
 pub fn entropy_value(@types.Image) -> Float
+
+pub fn equivalence_class(@imgir.IROp) -> Array[String]
+
+pub fn equivalence_report_all_equivalent(@self_evolve.EquivalenceReport) -> Bool
 
 pub fn erode(@types.Image) -> @types.Image
 
@@ -3752,6 +3762,10 @@ pub using @superres {type EnhancementConfig}
 pub using @denoise {type EnhancementResult}
 
 pub using @ocr {type EnsembleConfig}
+
+pub using @self_evolve {type EquivalenceCheck}
+
+pub using @self_evolve {type EquivalenceReport}
 
 pub using @ocr {type ErrorAnalysisEntry}
 

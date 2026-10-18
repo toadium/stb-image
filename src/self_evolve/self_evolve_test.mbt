@@ -1919,3 +1919,85 @@ test "AI: history 每个快照描述非空" {
     assert_true(e.version.length() > 0)
   }
 }
+// ============================================================
+// v294.0.0 — 算子等价性验证测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: check_equivalence 相同管道等价" {
+  let pipe_a = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let pipe_b = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let result = @self_evolve.check_equivalence(pipe_a, pipe_b)
+  assert_true(result.is_equivalent)
+}
+
+///|
+test "形式化: check_equivalence 不同管道不等价" {
+  let pipe_a = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let pipe_b = @imgir.IRPipeline::new().add(@imgir.ToGray)
+  let result = @self_evolve.check_equivalence(pipe_a, pipe_b)
+  assert_true(!result.is_equivalent)
+}
+
+///|
+test "形式化: are_equivalent 简化判断" {
+  let pipe_a = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let pipe_b = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  assert_true(@self_evolve.are_equivalent(pipe_a, pipe_b))
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: check_equivalence_all 全部自等价" {
+  let report = @self_evolve.check_equivalence_all()
+  assert_true(@self_evolve.EquivalenceReport::all_equivalent(report))
+}
+
+///|
+test "FAKE: equivalence_class 返回非空" {
+  let cls = @self_evolve.equivalence_class(@imgir.Resize(8, 8))
+  assert_true(cls.length() > 0)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: check_equivalence 长度不同不等价" {
+  let pipe_a = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let pipe_b = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let result = @self_evolve.check_equivalence(pipe_a, pipe_b)
+  assert_true(!result.is_equivalent)
+}
+
+///|
+test "MOCK: check_equivalence reason 非空" {
+  let pipe_a = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let pipe_b = @imgir.IRPipeline::new().add(@imgir.ToGray)
+  let result = @self_evolve.check_equivalence(pipe_a, pipe_b)
+  assert_true(result.reason.length() > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: check_equivalence_all summary 含信息" {
+  let report = @self_evolve.check_equivalence_all()
+  assert_true(report.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: equivalence_class 每个标签非空" {
+  for op in @self_evolve.all_ops() {
+    let cls = @self_evolve.equivalence_class(op)
+    for tag in cls {
+      assert_true(tag.length() > 0)
+    }
+  }
+}

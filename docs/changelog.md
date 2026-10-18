@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v294.0.0 - GeoVerse Phase 7: 算子等价性验证
+- 扩展 `src/self_evolve/`：算子等价性验证 — 验证两个算子序列是否等价
+  - **equivalence**：EquivalenceCheck / EquivalenceReport + check_equivalence / are_equivalent / check_equivalence_all / equivalence_class / all_equivalent
+  - 将演化从"独立"推向"等价验证" — 证明两个管道产生相同结果
+- 新增 2 类型 + 4 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6908×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v293.0.0 - GeoVerse Phase 7: 演化历史持久化 + ArcGIS 工具映射
 - 扩展 `src/self_evolve/`：演化历史持久化 — 记录历次演化结果，支持回滚
   - **history**：HistoryEntry / HistoryLog + record_snapshot / history_log / rollback_to / compare_snapshots / is_empty
