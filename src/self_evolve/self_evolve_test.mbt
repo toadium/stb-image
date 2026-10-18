@@ -3083,3 +3083,56 @@ test "AI: evolve_loop 每个步骤 result_desc 非空" {
     assert_true(s.result_desc.length() > 0)
   }
 }
+// ==============================
+// v310.0.0 — Phase 10 综合总结 (phase10_report)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: phase10_capabilities 返回 4 条" {
+  let caps = @self_evolve.phase10_capabilities()
+  assert_eq(caps.length(), 4)
+}
+
+///|
+test "形式化: phase10 总计正确" {
+  assert_eq(@self_evolve.phase10_total_types(), 12)
+  assert_eq(@self_evolve.phase10_total_functions(), 8)
+  assert_eq(@self_evolve.phase10_total_tests(), 36)
+}
+
+///|
+test "形式化: phase10_is_complete 为 true" {
+  assert_true(@self_evolve.phase10_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase10_report 结构完整" {
+  let report = @self_evolve.phase10_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 12)
+  assert_eq(report.total_functions, 8)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase10_report summary 含关键信息" {
+  let report = @self_evolve.phase10_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase10 每个能力描述非空" {
+  for c in @self_evolve.phase10_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}

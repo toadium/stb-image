@@ -58,6 +58,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `strategy_combo.mbt` | StrategyKind / StrategyCombo / ComboReport / combine_strategies / combine_all_strategies / has_parallel |
 | `param_tune.mbt` | ParamKind / TunedParam / TuneReport / tune_params / tune_all_params / has_adjustments |
 | `evolve_loop_full.mbt` | LoopPhase / LoopStep / LoopResult / run_evolve_loop / run_evolve_loop_all / is_complete |
+| `phase10_report.mbt` | Phase10Capability / Phase10Report / phase10_capabilities / phase10_total_types / phase10_total_functions / phase10_total_tests / phase10_report / phase10_is_complete |
 
 ## 公共 API
 
@@ -101,7 +102,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-330 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+336 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -389,4 +390,13 @@ Phase 9 自演化智能期完成：调度→回归→评分→预测。
 
 - `run_evolve_loop(op)` → LoopResult — 单算子演化闭环
 - `run_evolve_loop_all()` → LoopResult — 全算子演化闭环
-- `LoopResult::is_complete()` → 闭环是否完整
+- `LoopResult::is_complete()` → 闭环是否完整## Phase 10 综合报告（v310.0.0）
+
+Phase 10 自演化自主期完成：决策→策略→调优→闭环。
+
+- `phase10_capabilities()` → Array[Phase10Capability] — 能力清单
+- `phase10_total_types()` → Int — 总类型数 (12)
+- `phase10_total_functions()` → Int — 总函数数 (8)
+- `phase10_total_tests()` → Int — 总测试数 (36)
+- `phase10_report()` → Phase10Report — 综合报告
+- `phase10_is_complete()` → Bool — Phase 10 是否完成

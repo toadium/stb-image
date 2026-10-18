@@ -2566,6 +2566,18 @@ pub fn perf_optimize_check(@imgir.IRPipeline) -> @self_evolve.PerfRegression
 
 pub fn pet_synthesize_ai(Int, Int, String) -> @advanced_imaging.PETData
 
+pub fn phase10_capabilities() -> Array[@self_evolve.Phase10Capability]
+
+pub fn phase10_is_complete() -> Bool
+
+pub fn phase10_report() -> @self_evolve.Phase10Report
+
+pub fn phase10_total_functions() -> Int
+
+pub fn phase10_total_tests() -> Int
+
+pub fn phase10_total_types() -> Int
+
 pub fn phase4_capabilities() -> Array[@self_evolve.Phase4Capability]
 
 pub fn phase4_is_complete() -> Bool
@@ -4340,6 +4352,10 @@ pub using @self_evolve {type PerfRegression}
 pub using @ocr {type PerformanceBenchmark}
 
 pub using @transform {type PerspectiveMatrix}
+
+pub using @self_evolve {type Phase10Capability}
+
+pub using @self_evolve {type Phase10Report}
 
 pub using @self_evolve {type Phase4Capability}
 

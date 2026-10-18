@@ -13429,3 +13429,40 @@ pub fn run_evolve_loop_all() -> LoopResult {
 pub fn loop_result_is_complete(result : LoopResult) -> Bool {
   @self_evolve.LoopResult::is_complete(result)
 }
+// self_evolve — Phase 10 综合报告（v310.0.0）
+
+///|
+pub type Phase10Capability = @self_evolve.Phase10Capability
+
+///|
+pub type Phase10Report = @self_evolve.Phase10Report
+
+///|
+pub fn phase10_capabilities() -> Array[Phase10Capability] {
+  @self_evolve.phase10_capabilities()
+}
+
+///|
+pub fn phase10_total_types() -> Int {
+  @self_evolve.phase10_total_types()
+}
+
+///|
+pub fn phase10_total_functions() -> Int {
+  @self_evolve.phase10_total_functions()
+}
+
+///|
+pub fn phase10_total_tests() -> Int {
+  @self_evolve.phase10_total_tests()
+}
+
+///|
+pub fn phase10_report() -> Phase10Report {
+  @self_evolve.phase10_report()
+}
+
+///|
+pub fn phase10_is_complete() -> Bool {
+  @self_evolve.phase10_is_complete()
+}
