@@ -13085,3 +13085,35 @@ pub fn analyze_coverage_gaps() -> CoverageGapReport {
 pub fn coverage_gap_report_has_gaps(report : CoverageGapReport) -> Bool {
   @self_evolve.CoverageGapReport::has_gaps(report)
 }
+// self_evolve — 演化推荐引擎（v298.0.0）
+
+///|
+pub type RecommendAction = @self_evolve.RecommendAction
+
+///|
+pub type Recommendation = @self_evolve.Recommendation
+
+///|
+pub type RecommendationReport = @self_evolve.RecommendationReport
+
+///|
+pub fn recommend_next(op : @imgir.IROp) -> Recommendation {
+  @self_evolve.recommend_next(op)
+}
+
+///|
+pub fn recommend_all() -> RecommendationReport {
+  @self_evolve.recommend_all()
+}
+
+///|
+pub fn recommend_for_pipeline(
+  pipeline : @imgir.IRPipeline,
+) -> RecommendationReport {
+  @self_evolve.recommend_for_pipeline(pipeline)
+}
+
+///|
+pub fn recommendation_report_has_urgent(report : RecommendationReport) -> Bool {
+  @self_evolve.RecommendationReport::has_urgent(report)
+}

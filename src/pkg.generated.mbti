@@ -2724,6 +2724,14 @@ pub fn recognize_table(@types.Image, min_line_length? : Int) -> @ocr.TableStruct
 
 pub fn recognize_traffic_signs_iv(@types.Image, @intelligent_vision.IntelligentVisionConfig) -> Array[@intelligent_vision.TrafficSignResult]
 
+pub fn recommend_all() -> @self_evolve.RecommendationReport
+
+pub fn recommend_for_pipeline(@imgir.IRPipeline) -> @self_evolve.RecommendationReport
+
+pub fn recommend_next(@imgir.IROp) -> @self_evolve.Recommendation
+
+pub fn recommendation_report_has_urgent(@self_evolve.RecommendationReport) -> Bool
+
 pub fn reconstruct_hologram_ci(@computational_imaging.Hologram) -> @computational_imaging.ImagingReconstructionResult
 
 pub fn reconstruction_report_to_string_nr(@neural_rendering.ReconstructionResult, @neural_rendering.ReconstructionAlgorithm) -> String
@@ -4306,6 +4314,12 @@ pub using @advanced_imaging {type QuantumImagingAlgorithm as QuantumImagingAlgor
 pub using @image_retrieval_advanced {type QueryExpansionResult}
 
 pub using @neural_rendering {type Ray as RayNR}
+
+pub using @self_evolve {type RecommendAction}
+
+pub using @self_evolve {type Recommendation}
+
+pub using @self_evolve {type RecommendationReport}
 
 pub using @neural_rendering {type ReconstructionAlgorithm as ReconstructionAlgorithmNR}
 

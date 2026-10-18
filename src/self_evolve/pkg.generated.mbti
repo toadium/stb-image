@@ -193,6 +193,12 @@ pub fn priority_from_coverage(Int) -> TestPriority
 
 pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
 
+pub fn recommend_all() -> RecommendationReport
+
+pub fn recommend_for_pipeline(@imgir.IRPipeline) -> RecommendationReport
+
+pub fn recommend_next(@imgir.IROp) -> Recommendation
+
 pub fn record_snapshot(@imgir.IRPipeline, String) -> HistoryEntry
 
 pub fn repair_all() -> Array[RepairReport]
@@ -672,6 +678,38 @@ pub fn PropagationViz::equal(Self, Self) -> Bool
 pub fn PropagationViz::is_valid(Self) -> Bool
 pub fn PropagationViz::not_equal(Self, Self) -> Bool
 pub fn PropagationViz::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RecommendAction {
+  AddTests
+  FixDegradation
+  AddPropagationTest
+  OptimizePipeline
+  NoActionNeeded
+} derive(Eq, @debug.Debug)
+pub fn RecommendAction::equal(Self, Self) -> Bool
+pub fn RecommendAction::not_equal(Self, Self) -> Bool
+pub fn RecommendAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Recommendation {
+  action : RecommendAction
+  target_op : String
+  priority : TestPriority
+  reason : String
+} derive(Eq, @debug.Debug)
+pub fn Recommendation::equal(Self, Self) -> Bool
+pub fn Recommendation::not_equal(Self, Self) -> Bool
+pub fn Recommendation::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RecommendationReport {
+  recommendations : Array[Recommendation]
+  total : Int
+  high_priority_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RecommendationReport::equal(Self, Self) -> Bool
+pub fn RecommendationReport::has_urgent(Self) -> Bool
+pub fn RecommendationReport::not_equal(Self, Self) -> Bool
+pub fn RecommendationReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RepairAction {
   op_tag : String

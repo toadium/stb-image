@@ -46,6 +46,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase7_report.mbt` | Phase7Capability / Phase7Report / phase7_capabilities / phase7_total_types / phase7_total_functions / phase7_total_tests / phase7_report / phase7_is_complete |
 | `propagation_viz.mbt` | VizFormat / PropagationViz / visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid |
 | `coverage_gap.mbt` | GapKind / CoverageGap / CoverageGapReport / coverage_percentage / find_untested_ops / find_under_tested_ops / analyze_coverage_gaps / has_gaps |
+| `recommend.mbt` | RecommendAction / Recommendation / RecommendationReport / recommend_next / recommend_all / recommend_for_pipeline / has_urgent |
 
 ## 公共 API
 
@@ -89,7 +90,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-228 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+237 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -296,4 +297,11 @@ Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
 - `find_untested_ops()` → 完全未测试的算子
 - `find_under_tested_ops()` → 测试不足的算子
 - `analyze_coverage_gaps()` → CoverageGapReport — 盲区报告
-- `CoverageGapReport::has_gaps()` → 是否有盲区
+- `CoverageGapReport::has_gaps()` → 是否有盲区## 演化推荐引擎（v298.0.0）
+
+将演化从"被动"推向"主动推荐" — 根据覆盖/退化/传播推荐下一步。
+
+- `recommend_next(op)` → Recommendation — 单算子推荐
+- `recommend_all()` → RecommendationReport — 全算子推荐
+- `recommend_for_pipeline(pipeline)` → RecommendationReport — 管道推荐
+- `RecommendationReport::has_urgent()` → 是否有紧急推荐

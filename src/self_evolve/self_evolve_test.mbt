@@ -2223,3 +2223,78 @@ test "AI: coverage_gap 每个盲区描述非空" {
     assert_true(g.op_tag.length() > 0)
   }
 }
+// ============================================================
+// v298.0.0 — 演化推荐引擎测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: recommend_next 安全算子无需操作" {
+  let rec = @self_evolve.recommend_next(@imgir.Resize(8, 8))
+  assert_true(rec.action is @self_evolve.NoActionNeeded)
+}
+
+///|
+test "形式化: recommend_next 退化算子需修复" {
+  let rec = @self_evolve.recommend_next(@imgir.Resize(0, 0))
+  assert_true(rec.action is @self_evolve.FixDegradation)
+}
+
+///|
+test "形式化: recommend_all 返回 19 条推荐" {
+  let report = @self_evolve.recommend_all()
+  assert_eq(report.total, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: recommend_for_pipeline 返回报告" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let report = @self_evolve.recommend_for_pipeline(pipe)
+  assert_true(report.total > 0)
+}
+
+///|
+test "FAKE: RecommendationReport has_urgent 方法" {
+  let report = @self_evolve.recommend_all()
+  let _ = @self_evolve.RecommendationReport::has_urgent(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: recommend_next 退化算子高优先级" {
+  let rec = @self_evolve.recommend_next(@imgir.GaussianBlur(3, 0.0F))
+  assert_true(rec.priority is @self_evolve.HighPriority)
+}
+
+///|
+test "MOCK: recommend_for_pipeline 退化管道有紧急推荐" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.recommend_for_pipeline(pipe)
+  assert_true(@self_evolve.RecommendationReport::has_urgent(report))
+}
+
+// --- E2E ---
+
+///|
+test "E2E: recommend_all summary 含信息" {
+  let report = @self_evolve.recommend_all()
+  assert_true(report.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: recommend 每条推荐 reason 非空" {
+  let report = @self_evolve.recommend_all()
+  for r in report.recommendations {
+    assert_true(r.reason.length() > 0)
+    assert_true(r.target_op.length() > 0)
+  }
+}
