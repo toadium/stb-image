@@ -2594,6 +2594,18 @@ pub fn phase7_total_tests() -> Int
 
 pub fn phase7_total_types() -> Int
 
+pub fn phase8_capabilities() -> Array[@self_evolve.Phase8Capability]
+
+pub fn phase8_is_complete() -> Bool
+
+pub fn phase8_report() -> @self_evolve.Phase8Report
+
+pub fn phase8_total_functions() -> Int
+
+pub fn phase8_total_tests() -> Int
+
+pub fn phase8_total_types() -> Int
+
 pub fn phase_correlation_registration_ra(@types.Image, @types.Image) -> @registration_advanced.RegistrationResultAdvanced
 
 pub fn phase_retrieval_ci(@types.Image, @computational_imaging.PhaseRetrievalConfig) -> @computational_imaging.ImagingReconstructionResult
@@ -4262,6 +4274,10 @@ pub using @self_evolve {type Phase6Report}
 pub using @self_evolve {type Phase7Capability}
 
 pub using @self_evolve {type Phase7Report}
+
+pub using @self_evolve {type Phase8Capability}
+
+pub using @self_evolve {type Phase8Report}
 
 pub using @computational_imaging {type PhaseRetrievalConfig as PhaseRetrievalConfigCI}
 

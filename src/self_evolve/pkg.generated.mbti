@@ -193,6 +193,18 @@ pub fn phase7_total_tests() -> Int
 
 pub fn phase7_total_types() -> Int
 
+pub fn phase8_capabilities() -> Array[Phase8Capability]
+
+pub fn phase8_is_complete() -> Bool
+
+pub fn phase8_report() -> Phase8Report
+
+pub fn phase8_total_functions() -> Int
+
+pub fn phase8_total_tests() -> Int
+
+pub fn phase8_total_types() -> Int
+
 pub fn priority_from_coverage(Int) -> TestPriority
 
 pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
@@ -652,6 +664,29 @@ pub(all) struct Phase7Report {
 pub fn Phase7Report::equal(Self, Self) -> Bool
 pub fn Phase7Report::not_equal(Self, Self) -> Bool
 pub fn Phase7Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase8Capability {
+  version : String
+  name : String
+  types : Int
+  functions : Int
+  tests : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase8Capability::equal(Self, Self) -> Bool
+pub fn Phase8Capability::not_equal(Self, Self) -> Bool
+pub fn Phase8Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase8Report {
+  capabilities : Array[Phase8Capability]
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase8Report::equal(Self, Self) -> Bool
+pub fn Phase8Report::not_equal(Self, Self) -> Bool
+pub fn Phase8Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PipelineOptReport {
   suggestions : Array[PipelineOptSuggestion]

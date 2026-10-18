@@ -48,6 +48,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `coverage_gap.mbt` | GapKind / CoverageGap / CoverageGapReport / coverage_percentage / find_untested_ops / find_under_tested_ops / analyze_coverage_gaps / has_gaps |
 | `recommend.mbt` | RecommendAction / Recommendation / RecommendationReport / recommend_next / recommend_all / recommend_for_pipeline / has_urgent |
 | `pipeline_optimize.mbt` | SuggestionKind / PipelineOptSuggestion / PipelineOptReport / find_redundant_ops / estimate_benefit / suggest_optimization / has_suggestions |
+| `phase8_report.mbt` | Phase8Capability / Phase8Report / phase8_capabilities / phase8_total_types / phase8_total_functions / phase8_total_tests / phase8_report / phase8_is_complete |
 
 ## 公共 API
 
@@ -91,7 +92,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-246 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+252 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -312,4 +313,13 @@ Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
 - `find_redundant_ops(pipeline)` → Array[String] — 冗余算子标签
 - `estimate_benefit(pipeline)` → Int — 优化收益估算 (0-100)
 - `suggest_optimization(pipeline)` → PipelineOptReport — 优化建议报告
-- `PipelineOptReport::has_suggestions()` → 是否有优化建议
+- `PipelineOptReport::has_suggestions()` → 是否有优化建议## Phase 8 综合报告（v300.0.0）
+
+Phase 8 自演化生产期完成：可视化→盲区→推荐→优化。
+
+- `phase8_capabilities()` → Array[Phase8Capability] — 能力清单
+- `phase8_total_types()` → Int — 总类型数 (11)
+- `phase8_total_functions()` → Int — 总函数数 (14)
+- `phase8_total_tests()` → Int — 总测试数 (36)
+- `phase8_report()` → Phase8Report — 综合报告
+- `phase8_is_complete()` → Bool — Phase 8 是否完成

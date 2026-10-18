@@ -2391,3 +2391,56 @@ test "AI: suggest_optimization 每条建议 description 非空" {
     assert_true(s.pipeline_desc.length() > 0)
   }
 }
+// ==============================
+// v300.0.0 — Phase 8 综合总结 (phase8_report)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: phase8_capabilities 返回 4 条" {
+  let caps = @self_evolve.phase8_capabilities()
+  assert_eq(caps.length(), 4)
+}
+
+///|
+test "形式化: phase8 总计正确" {
+  assert_eq(@self_evolve.phase8_total_types(), 11)
+  assert_eq(@self_evolve.phase8_total_functions(), 14)
+  assert_eq(@self_evolve.phase8_total_tests(), 36)
+}
+
+///|
+test "形式化: phase8_is_complete 为 true" {
+  assert_true(@self_evolve.phase8_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase8_report 结构完整" {
+  let report = @self_evolve.phase8_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 11)
+  assert_eq(report.total_functions, 14)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase8_report summary 含关键信息" {
+  let report = @self_evolve.phase8_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase8 每个能力描述非空" {
+  for c in @self_evolve.phase8_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}

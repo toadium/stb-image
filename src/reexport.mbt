@@ -13147,3 +13147,40 @@ pub fn suggest_optimization(pipeline : @imgir.IRPipeline) -> PipelineOptReport {
 pub fn pipeline_opt_report_has_suggestions(report : PipelineOptReport) -> Bool {
   @self_evolve.PipelineOptReport::has_suggestions(report)
 }
+// self_evolve — Phase 8 综合报告（v300.0.0）
+
+///|
+pub type Phase8Capability = @self_evolve.Phase8Capability
+
+///|
+pub type Phase8Report = @self_evolve.Phase8Report
+
+///|
+pub fn phase8_capabilities() -> Array[Phase8Capability] {
+  @self_evolve.phase8_capabilities()
+}
+
+///|
+pub fn phase8_total_types() -> Int {
+  @self_evolve.phase8_total_types()
+}
+
+///|
+pub fn phase8_total_functions() -> Int {
+  @self_evolve.phase8_total_functions()
+}
+
+///|
+pub fn phase8_total_tests() -> Int {
+  @self_evolve.phase8_total_tests()
+}
+
+///|
+pub fn phase8_report() -> Phase8Report {
+  @self_evolve.phase8_report()
+}
+
+///|
+pub fn phase8_is_complete() -> Bool {
+  @self_evolve.phase8_is_complete()
+}
