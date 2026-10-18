@@ -41,6 +41,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase6_report.mbt` | Phase6Capability / Phase6Report / phase6_capabilities / phase6_total_types / phase6_total_functions / phase6_total_tests / phase6_report / phase6_is_complete |
 | `propagation.mbt` | PropagationStep / PropagationReport / analyze_propagation / analyze_propagation_all / has_propagation_risk / propagation_chain / is_safe |
 | `adaptive.mbt` | TestPriority / AdaptiveStrategy / AdaptiveReport / suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered |
+| `history.mbt` | HistoryEntry / HistoryLog / record_snapshot / history_log / rollback_to / compare_snapshots / is_empty |
 
 ## 公共 API
 
@@ -84,7 +85,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-186 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+195 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -253,4 +254,12 @@ Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因
 - `adaptive_strategy(op)` → AdaptiveStrategy — 单算子策略
 - `adaptive_strategy_all()` → AdaptiveReport — 全算子策略
 - `high_priority_ops()` → 高优先级算子标签
-- `AdaptiveReport::is_well_covered()` → 全高覆盖
+- `AdaptiveReport::is_well_covered()` → 全高覆盖## 演化历史持久化（v293.0.0）
+
+将演化从"无状态"推向"有历史" — 快照记录 + 版本回滚。
+
+- `record_snapshot(pipeline, version)` → HistoryEntry — 记录管道状态快照
+- `history_log()` → HistoryLog — 演化历史日志（v286-v292 快照序列）
+- `rollback_to(version)` → Option[HistoryEntry] — 回滚到指定版本
+- `compare_snapshots(e1, e2)` → String — 比较两个快照
+- `HistoryLog::is_empty()` → 是否为空

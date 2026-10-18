@@ -12905,3 +12905,38 @@ pub fn high_priority_ops() -> Array[String] {
 pub fn adaptive_report_is_well_covered(report : AdaptiveReport) -> Bool {
   @self_evolve.AdaptiveReport::is_well_covered(report)
 }
+// self_evolve — 演化历史持久化（v293.0.0）
+
+///|
+pub type HistoryEntry = @self_evolve.HistoryEntry
+
+///|
+pub type HistoryLog = @self_evolve.HistoryLog
+
+///|
+pub fn record_snapshot(
+  pipeline : @imgir.IRPipeline,
+  version : String,
+) -> HistoryEntry {
+  @self_evolve.record_snapshot(pipeline, version)
+}
+
+///|
+pub fn history_log() -> HistoryLog {
+  @self_evolve.history_log()
+}
+
+///|
+pub fn rollback_to(version : String) -> HistoryEntry? {
+  @self_evolve.rollback_to(version)
+}
+
+///|
+pub fn compare_snapshots(e1 : HistoryEntry, e2 : HistoryEntry) -> String {
+  @self_evolve.compare_snapshots(e1, e2)
+}
+
+///|
+pub fn history_log_is_empty(log : HistoryLog) -> Bool {
+  @self_evolve.HistoryLog::is_empty(log)
+}

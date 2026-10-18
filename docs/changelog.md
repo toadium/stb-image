@@ -2101,6 +2101,16 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v293.0.0 - GeoVerse Phase 7: 演化历史持久化 + ArcGIS 工具映射
+- 扩展 `src/self_evolve/`：演化历史持久化 — 记录历次演化结果，支持回滚
+  - **history**：HistoryEntry / HistoryLog + record_snapshot / history_log / rollback_to / compare_snapshots / is_empty
+  - 将演化从"无状态"推向"有历史" — 快照记录 + 版本回滚
+- 新增 2 类型 + 4 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 新增 `docs/arcs_pro_raster_imagery_tools.md` — ArcGIS Pro 栅格与影像分析工具完整清单
+- 新增 `docs/arcs_pro_vector_imagery_extract.md` — 矢量分析工具清单影像相关内容提取
+- 更新 `docs/architecture.md` — 新增 "ArcGIS Pro 工具映射" 章节（29 工具集映射 + 覆盖统计）
+- 6899×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v292.0.0 - GeoVerse Phase 7: 自适应测试策略
 - 扩展 `src/self_evolve/`：自适应测试策略 — 根据覆盖率自动调整测试优先级
   - **adaptive**：TestPriority / AdaptiveStrategy / AdaptiveReport + suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered

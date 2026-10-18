@@ -665,3 +665,76 @@ image/
 | hough_lines | O(n × θ) | θ = 角度分辨率 |
 | watershed | O(n log n) | 优先队列 |
 | dehaze | O(n × p²) | p = 暗通道块大小 |
+
+## ArcGIS Pro 工具映射（v293.0.0）
+
+> 参考文档：
+> - `docs/arcs_pro_raster_imagery_tools.md` — ArcGIS Pro 栅格与影像分析工具完整清单（24+15 工具集，200+ 工具）
+> - `docs/arcs_pro_vector_imagery_extract.md` — 矢量分析工具清单中的影像相关内容提取（17 工具）
+
+### 映射总览
+
+stb-image 作为纯 MoonBit 图像处理库，与 ArcGIS Pro 的栅格/影像分析工具存在部分功能重叠。以下按 ArcGIS Pro 工具集分类映射。
+
+### Spatial Analyst 工具集映射
+
+| ArcGIS 工具集 | stb-image 对应模块 | 覆盖状态 |
+|--------------|-------------------|----------|
+| 条件分析（Con/Pick/Set Null） | `process/color/threshold` + `FieldMask` | ⚠️ 部分（阈值化/掩膜） |
+| 提取分析（Extract by Mask/Attr） | `Crop` + 区域提取 | ✅ 已覆盖（裁剪/区域提取） |
+| 概化（Generalization） | `process/filter`（平滑/滤波） | ⚠️ 部分（平滑滤波） |
+| 局部分析（Local） | 像素级运算 | ✅ 已覆盖（像素级操作） |
+| 数学分析（Math） | `process/color/band_arithmetic` | ✅ 已覆盖（波段运算） |
+| 邻域分析（Neighborhood） | `process/filter`（box/gaussian/median） | ✅ 已覆盖（邻域滤波） |
+| 叠加分析（Overlay） | `process/fusion`（图像融合） | ⚠️ 部分（融合非加权叠加） |
+| 重分类（Reclass） | `process/color/quantize` + 阈值化 | ⚠️ 部分（量化/阈值化） |
+| 影像分割和分类 | `process/segment`（SLIC/K-means/分水岭） | ⚠️ 部分（分割非 OBIA） |
+| 表面分析（Surface） | `process/edge`（Sobel/坡度/坡向） | ⚠️ 部分（边缘检测非完整表面分析） |
+| 区域分析（Zonal） | `process/segment/connected_components` | ⚠️ 部分（连通域统计） |
+| 水文分析（Hydrology） | 无 | ❌ 未覆盖（GIS 专用） |
+| 距离分析（Distance） | `process/segment/distance_transform` | ⚠️ 部分（距离变换非成本距离） |
+| 太阳辐射（Solar Radiation） | 无 | ❌ 未覆盖 |
+| 地下水分析（Groundwater） | 无 | ❌ 未覆盖 |
+
+### Image Analyst 工具集映射
+
+| ArcGIS 工具集 | stb-image 对应模块 | 覆盖状态 |
+|--------------|-------------------|----------|
+| 变化检测（Change Detection） | `process/detection/change_detection` | ✅ 已覆盖（图像差分） |
+| 分类和模式识别 | `process/segment/kmeans` + `process/classification` | ⚠️ 部分（K-means 非深度学习分类） |
+| 深度学习（Deep Learning） | `process/detection/yolo` + `process/detection/cnn_char` | ⚠️ 部分（YOLO/CNN 字符识别） |
+| 光谱分析（Spectral） | `process/remote_sensing`（NDVI/植被指数） | ✅ 已覆盖（多光谱/植被指数） |
+| SAR | 无 | ❌ 未覆盖（SAR 专用） |
+| 统计分析（Statistical） | `process/quality`（直方图/统计） | ✅ 已覆盖（统计/直方图） |
+| 表面分析（Surface） | `process/edge` | ⚠️ 部分（边缘检测） |
+| 动态视频影像（FMV） | `process/video`（视频目标跟踪） | ⚠️ 部分（跟踪非 FMV） |
+| 多维分析（Multidimensional） | `process/remote_sensing`（多波段） | ⚠️ 部分（多波段非多维时间序列） |
+
+### 栅格函数映射
+
+| ArcGIS 函数类别 | stb-image 对应 | 覆盖状态 |
+|----------------|---------------|----------|
+| 局部函数（Local ~150 项） | 像素级运算 + 波段运算 | ⚠️ 部分（基础运算） |
+| 全局函数（Global ~30 项） | `process/frequency`（FFT/DCT） | ⚠️ 部分（频域分析） |
+| 影像分析函数 | `process/feature` + `process/segment` | ⚠️ 部分（特征/分割） |
+
+### 矢量分析中的影像工具映射
+
+| ArcGIS 工具 | stb-image 对应 | 覆盖状态 |
+|------------|---------------|----------|
+| Detect Objects Using Deep Learning | `process/detection/yolo` | ⚠️ 部分 |
+| Classify Objects Using Deep Learning | `process/segment/kmeans` | ⚠️ 部分 |
+| Contour / Contour List | `process/edge/contour` | ✅ 已覆盖 |
+| Segment Mean Shift | `process/segment/slic` | ⚠️ 部分（SLIC 非 Mean Shift） |
+| Extract Values To Points | `process/feature/sampling` | ⚠️ 部分 |
+| LAS Building Multipatch | 无 | ❌ 未覆盖（LiDAR 专用） |
+
+### 覆盖统计
+
+| 状态 | 数量 | 说明 |
+|------|------|------|
+| ✅ 已覆盖 | 8 | 核心图像处理功能完整对应 |
+| ⚠️ 部分覆盖 | 16 | 算法存在但非 GIS 完整实现 |
+| ❌ 未覆盖 | 5 | GIS 专用功能（水文/SAR/太阳辐射/地下水/LiDAR） |
+
+**结论**：stb-image 覆盖了 ArcGIS Pro 影像分析中**分割**、**检测**、**滤波**、**频域**、**光谱**等核心算法，但不覆盖水文建模、成本距离、SAR 处理、LiDAR 点云等 GIS 专用功能——这符合 stb-image 作为通用图像处理库（非 GIS 软件）的定位。

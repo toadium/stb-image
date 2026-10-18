@@ -572,6 +572,8 @@ pub fn combo_coverage_report() -> @self_evolve.ComboCoverageReport
 
 pub fn compare_hist(Array[Int], Array[Int], @feature.HistCompareMethod) -> Float raise @types.LoadError
 
+pub fn compare_snapshots(@self_evolve.HistoryEntry, @self_evolve.HistoryEntry) -> String
+
 pub fn complete_char_segmentation(@types.Image, min_char_width? : Int, max_char_width? : Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
 
 pub fn compose_images_ig(@types.Image, @types.Image, @types.Image, @image_generation.CompositionConfig) -> @types.Image
@@ -1838,6 +1840,10 @@ pub fn histogram_normalize_16(@types.Image16) -> @types.Image16 raise @types.Loa
 
 pub fn histogram_normalize_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
+pub fn history_log() -> @self_evolve.HistoryLog
+
+pub fn history_log_is_empty(@self_evolve.HistoryLog) -> Bool
+
 pub fn hog_features(@types.Image, cell_size? : Int, num_bins? : Int) -> @ocr.HogFeatures raise @types.LoadError
 
 pub fn horizontal_projection(@types.Image) -> @ocr.ProjectionResult raise @types.LoadError
@@ -2688,6 +2694,8 @@ pub fn reconstruct_hologram_ci(@computational_imaging.Hologram) -> @computationa
 
 pub fn reconstruction_report_to_string_nr(@neural_rendering.ReconstructionResult, @neural_rendering.ReconstructionAlgorithm) -> String
 
+pub fn record_snapshot(@imgir.IRPipeline, String) -> @self_evolve.HistoryEntry
+
 pub fn record_training_metrics(@ocr.TrainingState, @ocr.TrainingMetrics) -> @ocr.TrainingState
 
 pub fn reed_solomon_decode(Array[Int], Int) -> (Array[Int], Int)
@@ -2815,6 +2823,8 @@ pub fn rgb_to_ycbcr_16(Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError
 pub fn rgb_to_ycbcr_f(Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError
 
 pub fn robustness_report_to_string(@ocr.RobustnessReport) -> String
+
+pub fn rollback_to(String) -> @self_evolve.HistoryEntry?
 
 pub fn root_cause_report_is_clean(@self_evolve.RootCauseReport) -> Bool
 
@@ -3884,6 +3894,10 @@ pub using @codec {type HdrInfoExtended}
 pub using @codec {type HeifInfoExtended}
 
 pub using @feature {type HistCompareMethod}
+
+pub using @self_evolve {type HistoryEntry}
+
+pub using @self_evolve {type HistoryLog}
 
 pub using @ocr {type HogFeatures}
 

@@ -1842,3 +1842,80 @@ test "AI: adaptive 每个策略 op_tag 非空" {
     assert_true(s.suggested_tests > 0)
   }
 }
+// ============================================================
+// v293.0.0 — 演化历史持久化测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: record_snapshot 记录管道状态" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let entry = @self_evolve.record_snapshot(pipe, "test-v1")
+  assert_eq(entry.op_count, 2)
+  assert_eq(entry.degradation_count, 0)
+}
+
+///|
+test "形式化: record_snapshot 退化管道有退化计数" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(0, 0))
+  let entry = @self_evolve.record_snapshot(pipe, "test-v2")
+  assert_true(entry.degradation_count > 0)
+}
+
+///|
+test "形式化: history_log 返回 7 个快照" {
+  let log = @self_evolve.history_log()
+  assert_eq(log.total_snapshots, 7)
+  assert_eq(log.latest_version, "v292.0.0")
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: history_log is_empty 为 false" {
+  let log = @self_evolve.history_log()
+  assert_true(!@self_evolve.HistoryLog::is_empty(log))
+}
+
+///|
+test "FAKE: rollback_to 找到存在版本" {
+  let result = @self_evolve.rollback_to("v290.0.0")
+  assert_true(result is Some(_))
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: rollback_to 未找到版本返回 None" {
+  let result = @self_evolve.rollback_to("v999.0.0")
+  assert_true(result is None)
+}
+
+///|
+test "MOCK: compare_snapshots 比较两个快照" {
+  let log = @self_evolve.history_log()
+  let cmp = @self_evolve.compare_snapshots(log.entries[0], log.entries[1])
+  assert_true(cmp.length() > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: history_log summary 含信息" {
+  let log = @self_evolve.history_log()
+  assert_true(log.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: history 每个快照描述非空" {
+  let log = @self_evolve.history_log()
+  for e in log.entries {
+    assert_true(e.description.length() > 0)
+    assert_true(e.version.length() > 0)
+  }
+}
