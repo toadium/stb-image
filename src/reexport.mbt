@@ -13050,3 +13050,38 @@ pub fn visualize_propagation(
 pub fn propagation_viz_is_valid(viz : PropagationViz) -> Bool {
   @self_evolve.PropagationViz::is_valid(viz)
 }
+// self_evolve — 测试覆盖盲区分析（v297.0.0）
+
+///|
+pub type GapKind = @self_evolve.GapKind
+
+///|
+pub type CoverageGap = @self_evolve.CoverageGap
+
+///|
+pub type CoverageGapReport = @self_evolve.CoverageGapReport
+
+///|
+pub fn coverage_percentage(op : @imgir.IROp) -> Int {
+  @self_evolve.coverage_percentage(op)
+}
+
+///|
+pub fn find_untested_ops() -> Array[String] {
+  @self_evolve.find_untested_ops()
+}
+
+///|
+pub fn find_under_tested_ops() -> Array[String] {
+  @self_evolve.find_under_tested_ops()
+}
+
+///|
+pub fn analyze_coverage_gaps() -> CoverageGapReport {
+  @self_evolve.analyze_coverage_gaps()
+}
+
+///|
+pub fn coverage_gap_report_has_gaps(report : CoverageGapReport) -> Bool {
+  @self_evolve.CoverageGapReport::has_gaps(report)
+}

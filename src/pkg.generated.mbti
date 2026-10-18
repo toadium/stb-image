@@ -156,6 +156,8 @@ pub fn analyze_complex_layout(Array[@ocr.TextBlock], Int, Int) -> @ocr.ComplexLa
 
 pub fn analyze_compression_artifacts_fs(@types.Image) -> @forensics.CompressionAnalysisResult raise @types.LoadError
 
+pub fn analyze_coverage_gaps() -> @self_evolve.CoverageGapReport
+
 pub fn analyze_dct_coefficients_fe(@types.Image) -> @forensics_enhanced.DctCoefficientResult
 
 pub fn analyze_details_fs(@types.Image) -> @forensics.DetailAnalysisResult raise @types.LoadError
@@ -697,6 +699,10 @@ pub fn cosine_distance(Array[Double], Array[Double]) -> Double raise @types.Load
 pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn cosine_similarity_cbir_api(Array[Double], Array[Double]) -> Double
+
+pub fn coverage_gap_report_has_gaps(@self_evolve.CoverageGapReport) -> Bool
+
+pub fn coverage_percentage(@imgir.IROp) -> Int
 
 pub fn create_animation(Array[@types.Image], fps? : Double) -> @video.VideoFrames
 
@@ -1509,6 +1515,10 @@ pub fn find_horizontal_seam(Array[Double], Int, Int) -> Array[Int]
 pub fn find_line_intersections(Array[(Int, Int, Int)], Array[(Int, Int, Int)]) -> Array[(Int, Int)]
 
 pub fn find_similar_chinese_chars(@ocr.DictChineseDict, String, top_n? : Int) -> Array[@ocr.DictCharMatch] raise @types.LoadError
+
+pub fn find_under_tested_ops() -> Array[String]
+
+pub fn find_untested_ops() -> Array[String]
 
 pub fn find_vertical_seam(Array[Double], Int, Int) -> Array[Int]
 
@@ -3637,6 +3647,10 @@ pub using @ocr {type CorrectionEntry}
 
 pub using @ocr {type CorrectionResult}
 
+pub using @self_evolve {type CoverageGap}
+
+pub using @self_evolve {type CoverageGapReport}
+
 pub using @intelligent_vision {type CropDetectionResult as CropDetectionResultIV}
 
 pub using @codec {type CurInfoExtended}
@@ -3864,6 +3878,8 @@ pub using @fusion_enhanced {type FusionResult}
 pub using @vlm_multimodal {type FusionResult as FusionResultVLM}
 
 pub using @retrieval {type GaborConfig}
+
+pub using @self_evolve {type GapKind}
 
 pub using @neural_rendering {type Gaussian3D as Gaussian3DNR}
 

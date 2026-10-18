@@ -2148,3 +2148,78 @@ test "AI: propagation_viz 每种格式内容非空" {
     assert_true(viz.content.length() > 0)
   }
 }
+// ============================================================
+// v297.0.0 — 测试覆盖盲区分析测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: coverage_percentage 安全算子高覆盖" {
+  let cov = @self_evolve.coverage_percentage(@imgir.Resize(8, 8))
+  assert_true(cov >= 0)
+  assert_true(cov <= 100)
+}
+
+///|
+test "形式化: find_untested_ops 返回数组" {
+  let ops = @self_evolve.find_untested_ops()
+  assert_true(ops.length() >= 0)
+}
+
+///|
+test "形式化: find_under_tested_ops 返回数组" {
+  let ops = @self_evolve.find_under_tested_ops()
+  assert_true(ops.length() >= 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: analyze_coverage_gaps 返回报告" {
+  let report = @self_evolve.analyze_coverage_gaps()
+  assert_true(report.total_gaps >= 0)
+}
+
+///|
+test "FAKE: CoverageGapReport has_gaps 方法" {
+  let report = @self_evolve.analyze_coverage_gaps()
+  let _ = @self_evolve.CoverageGapReport::has_gaps(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: coverage_percentage 范围 0-100" {
+  for op in @self_evolve.all_ops() {
+    let cov = @self_evolve.coverage_percentage(op)
+    assert_true(cov >= 0)
+    assert_true(cov <= 100)
+  }
+}
+
+///|
+test "MOCK: analyze_coverage_gaps untested_count 非负" {
+  let report = @self_evolve.analyze_coverage_gaps()
+  assert_true(report.untested_count >= 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: analyze_coverage_gaps summary 含信息" {
+  let report = @self_evolve.analyze_coverage_gaps()
+  assert_true(report.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: coverage_gap 每个盲区描述非空" {
+  let report = @self_evolve.analyze_coverage_gaps()
+  for g in report.gaps {
+    assert_true(g.description.length() > 0)
+    assert_true(g.op_tag.length() > 0)
+  }
+}

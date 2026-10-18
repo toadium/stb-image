@@ -13,6 +13,8 @@ pub fn adaptive_strategy_all() -> AdaptiveReport
 
 pub fn all_ops() -> Array[@imgir.IROp]
 
+pub fn analyze_coverage_gaps() -> CoverageGapReport
+
 pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> RootCauseReport
 
 pub fn analyze_propagation(@imgir.IRPipeline) -> PropagationReport
@@ -57,6 +59,8 @@ pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
 
 pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
 
+pub fn coverage_percentage(@imgir.IROp) -> Int
+
 pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
 
 pub fn equivalence_class(@imgir.IROp) -> Array[String]
@@ -86,6 +90,10 @@ pub fn exec_optimize_all() -> Array[OptimizeExecResult]
 pub fn filter_by_kind(Array[RootCause], DegradationKind) -> Array[RootCause]
 
 pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
+
+pub fn find_under_tested_ops() -> Array[String]
+
+pub fn find_untested_ops() -> Array[String]
 
 pub fn gen_all_combos() -> Array[OpCombo]
 
@@ -279,6 +287,26 @@ pub fn ComboCoverageReport::equal(Self, Self) -> Bool
 pub fn ComboCoverageReport::not_equal(Self, Self) -> Bool
 pub fn ComboCoverageReport::to_repr(Self) -> @debug.Repr
 
+pub(all) struct CoverageGap {
+  op_tag : String
+  gap_kind : GapKind
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn CoverageGap::equal(Self, Self) -> Bool
+pub fn CoverageGap::not_equal(Self, Self) -> Bool
+pub fn CoverageGap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoverageGapReport {
+  gaps : Array[CoverageGap]
+  total_gaps : Int
+  untested_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn CoverageGapReport::equal(Self, Self) -> Bool
+pub fn CoverageGapReport::has_gaps(Self) -> Bool
+pub fn CoverageGapReport::not_equal(Self, Self) -> Bool
+pub fn CoverageGapReport::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DegradationCase {
   kind : DegradationKind
   op_tag : String
@@ -369,6 +397,15 @@ pub fn ExecutableTestFile::is_non_empty(Self) -> Bool
 pub fn ExecutableTestFile::not_equal(Self, Self) -> Bool
 pub fn ExecutableTestFile::test_count(Self) -> Int
 pub fn ExecutableTestFile::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GapKind {
+  UntestedOp
+  UnderTestedOp
+  NoDegradationTest
+} derive(Eq, @debug.Debug)
+pub fn GapKind::equal(Self, Self) -> Bool
+pub fn GapKind::not_equal(Self, Self) -> Bool
+pub fn GapKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GrillReport {
   results : Array[GrillResult]

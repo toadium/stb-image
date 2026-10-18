@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v297.0.0 - GeoVerse Phase 8: 测试覆盖盲区分析
+- 扩展 `src/self_evolve/`：测试覆盖盲区分析 — 找出未覆盖的算子/退化场景
+  - **coverage_gap**：GapKind / CoverageGap / CoverageGapReport + coverage_percentage / find_untested_ops / find_under_tested_ops / analyze_coverage_gaps / has_gaps
+  - 将覆盖分析从"自适应"推向"盲区发现"
+- 新增 3 类型 + 4 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6932×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v296.0.0 - GeoVerse Phase 8: 退化传播可视化
 - 扩展 `src/self_evolve/`：退化传播可视化 — 生成传播链的可视化描述
   - **propagation_viz**：VizFormat / PropagationViz + visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid

@@ -45,6 +45,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `equivalence.mbt` | EquivalenceCheck / EquivalenceReport / check_equivalence / are_equivalent / check_equivalence_all / equivalence_class / all_equivalent |
 | `phase7_report.mbt` | Phase7Capability / Phase7Report / phase7_capabilities / phase7_total_types / phase7_total_functions / phase7_total_tests / phase7_report / phase7_is_complete |
 | `propagation_viz.mbt` | VizFormat / PropagationViz / visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid |
+| `coverage_gap.mbt` | GapKind / CoverageGap / CoverageGapReport / coverage_percentage / find_untested_ops / find_under_tested_ops / analyze_coverage_gaps / has_gaps |
 
 ## 公共 API
 
@@ -88,7 +89,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-219 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+228 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -287,4 +288,12 @@ Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
 - `visualize_propagation_mermaid(pipeline)` → String — Mermaid 格式
 - `visualize_propagation_text(pipeline)` → String — 文本格式
 - `visualize_propagation(pipeline, format)` → PropagationViz — 按格式生成
-- `PropagationViz::is_valid()` → 内容非空
+- `PropagationViz::is_valid()` → 内容非空## 测试覆盖盲区分析（v297.0.0）
+
+将覆盖分析从"自适应"推向"盲区发现" — 找出测试覆盖空白。
+
+- `coverage_percentage(op)` → Int — 单算子覆盖百分比
+- `find_untested_ops()` → 完全未测试的算子
+- `find_under_tested_ops()` → 测试不足的算子
+- `analyze_coverage_gaps()` → CoverageGapReport — 盲区报告
+- `CoverageGapReport::has_gaps()` → 是否有盲区
