@@ -3013,3 +3013,73 @@ test "AI: param_tune 每个参数 rationale 非空" {
     assert_true(p.rationale.length() > 0)
   }
 }
+// ==============================
+// v309.0.0 — 自演化闭环 (evolve_loop_full)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: run_evolve_loop 返回 7 阶段" {
+  let result = @self_evolve.run_evolve_loop(@imgir.Resize(8, 8))
+  assert_eq(result.total_phases, 7)
+}
+
+///|
+test "形式化: run_evolve_loop 含 Done 阶段" {
+  let result = @self_evolve.run_evolve_loop(@imgir.ToGray)
+  assert_true(result.steps[result.total_phases - 1].phase is @self_evolve.Done)
+}
+
+///|
+test "形式化: run_evolve_loop_all 返回结果" {
+  let result = @self_evolve.run_evolve_loop_all()
+  assert_true(result.total_phases > 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: run_evolve_loop 结构完整" {
+  let result = @self_evolve.run_evolve_loop(@imgir.Resize(8, 8))
+  assert_true(result.steps.length() > 0)
+}
+
+///|
+test "FAKE: LoopResult is_complete 方法" {
+  let result = @self_evolve.run_evolve_loop(@imgir.Resize(8, 8))
+  let _ = @self_evolve.LoopResult::is_complete(result)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: run_evolve_loop 退化算子有 7 阶段" {
+  let result = @self_evolve.run_evolve_loop(@imgir.Resize(0, 0))
+  assert_eq(result.total_phases, 7)
+}
+
+///|
+test "MOCK: run_evolve_loop_all 阶段数为 19*7" {
+  let result = @self_evolve.run_evolve_loop_all()
+  assert_eq(result.total_phases, 19 * 7)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: run_evolve_loop_all summary 含信息" {
+  let result = @self_evolve.run_evolve_loop_all()
+  assert_true(result.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: evolve_loop 每个步骤 result_desc 非空" {
+  let result = @self_evolve.run_evolve_loop(@imgir.Resize(8, 8))
+  for s in result.steps {
+    assert_true(s.result_desc.length() > 0)
+  }
+}

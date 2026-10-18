@@ -263,6 +263,10 @@ pub fn rollback_to(String) -> HistoryEntry?
 
 pub fn rotate90_power_is_identity(Int) -> Bool
 
+pub fn run_evolve_loop(@imgir.IROp) -> LoopResult
+
+pub fn run_evolve_loop_all() -> LoopResult
+
 pub fn run_full_evolution() -> ScheduleResult
 
 pub fn run_grill_all() -> GrillReport
@@ -590,6 +594,38 @@ pub fn HistoryLog::equal(Self, Self) -> Bool
 pub fn HistoryLog::is_empty(Self) -> Bool
 pub fn HistoryLog::not_equal(Self, Self) -> Bool
 pub fn HistoryLog::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LoopPhase {
+  Predict
+  Decide
+  Strategize
+  Tune
+  Execute
+  Verify
+  Done
+} derive(Eq, @debug.Debug)
+pub fn LoopPhase::equal(Self, Self) -> Bool
+pub fn LoopPhase::not_equal(Self, Self) -> Bool
+pub fn LoopPhase::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LoopResult {
+  steps : Array[LoopStep]
+  total_phases : Int
+  success : Bool
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn LoopResult::equal(Self, Self) -> Bool
+pub fn LoopResult::is_complete(Self) -> Bool
+pub fn LoopResult::not_equal(Self, Self) -> Bool
+pub fn LoopResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LoopStep {
+  phase : LoopPhase
+  result_desc : String
+} derive(Eq, @debug.Debug)
+pub fn LoopStep::equal(Self, Self) -> Bool
+pub fn LoopStep::not_equal(Self, Self) -> Bool
+pub fn LoopStep::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OpCombo {
   first_tag : String

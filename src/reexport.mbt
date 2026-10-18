@@ -13404,3 +13404,28 @@ pub fn tune_all_params() -> TuneReport {
 pub fn tune_report_has_adjustments(report : TuneReport) -> Bool {
   @self_evolve.TuneReport::has_adjustments(report)
 }
+// self_evolve — 自演化闭环（v309.0.0）
+
+///|
+pub type LoopPhase = @self_evolve.LoopPhase
+
+///|
+pub type LoopStep = @self_evolve.LoopStep
+
+///|
+pub type LoopResult = @self_evolve.LoopResult
+
+///|
+pub fn run_evolve_loop(op : @imgir.IROp) -> LoopResult {
+  @self_evolve.run_evolve_loop(op)
+}
+
+///|
+pub fn run_evolve_loop_all() -> LoopResult {
+  @self_evolve.run_evolve_loop_all()
+}
+
+///|
+pub fn loop_result_is_complete(result : LoopResult) -> Bool {
+  @self_evolve.LoopResult::is_complete(result)
+}

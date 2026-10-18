@@ -2262,6 +2262,8 @@ pub fn lookup_by_structure(@ocr.DictChineseDict, @ocr.DictCharStructure) -> Arra
 
 pub fn lookup_char(@ocr.DictChineseDict, String) -> @ocr.DictCharEntry? raise @types.LoadError
 
+pub fn loop_result_is_complete(@self_evolve.LoopResult) -> Bool
+
 pub fn low_light_default_config() -> @photo_enhance.LowLightConfig
 
 pub fn low_light_enhance(@types.Image, config? : @photo_enhance.LowLightConfig) -> @types.Image
@@ -2947,6 +2949,10 @@ pub fn rotate_90_16(@types.Image16) -> @types.Image16
 pub fn rotate_90_f(@types.ImageF) -> @types.ImageF
 
 pub fn rotate_document(@types.Image, Double) -> @types.Image raise @types.LoadError
+
+pub fn run_evolve_loop(@imgir.IROp) -> @self_evolve.LoopResult
+
+pub fn run_evolve_loop_all() -> @self_evolve.LoopResult
 
 pub fn run_full_evolution() -> @self_evolve.ScheduleResult
 
@@ -4204,6 +4210,12 @@ pub using @ocr {type ListItemType}
 pub using @types {type LoadError}
 
 pub using @slam {type LoopClosureResult as LoopClosureResultSL}
+
+pub using @self_evolve {type LoopPhase}
+
+pub using @self_evolve {type LoopResult}
+
+pub using @self_evolve {type LoopStep}
 
 pub using @photo_enhance {type LowLightConfig}
 
