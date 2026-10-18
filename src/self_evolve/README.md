@@ -47,6 +47,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `propagation_viz.mbt` | VizFormat / PropagationViz / visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid |
 | `coverage_gap.mbt` | GapKind / CoverageGap / CoverageGapReport / coverage_percentage / find_untested_ops / find_under_tested_ops / analyze_coverage_gaps / has_gaps |
 | `recommend.mbt` | RecommendAction / Recommendation / RecommendationReport / recommend_next / recommend_all / recommend_for_pipeline / has_urgent |
+| `pipeline_optimize.mbt` | SuggestionKind / PipelineOptSuggestion / PipelineOptReport / find_redundant_ops / estimate_benefit / suggest_optimization / has_suggestions |
 
 ## 公共 API
 
@@ -90,7 +91,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-237 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+246 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -304,4 +305,11 @@ Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
 - `recommend_next(op)` → Recommendation — 单算子推荐
 - `recommend_all()` → RecommendationReport — 全算子推荐
 - `recommend_for_pipeline(pipeline)` → RecommendationReport — 管道推荐
-- `RecommendationReport::has_urgent()` → 是否有紧急推荐
+- `RecommendationReport::has_urgent()` → 是否有紧急推荐## 管道优化建议（v299.0.0）
+
+将演化从"推荐"推向"管道优化" — 主动建议如何优化管道结构。
+
+- `find_redundant_ops(pipeline)` → Array[String] — 冗余算子标签
+- `estimate_benefit(pipeline)` → Int — 优化收益估算 (0-100)
+- `suggest_optimization(pipeline)` → PipelineOptReport — 优化建议报告
+- `PipelineOptReport::has_suggestions()` → 是否有优化建议

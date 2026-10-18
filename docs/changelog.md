@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v299.0.0 - GeoVerse Phase 8: 管道优化建议
+- 扩展 `src/self_evolve/`：管道优化建议 — 基于等价性与退化分析推荐管道优化
+  - **pipeline_optimize**：SuggestionKind / PipelineOptSuggestion / PipelineOptReport + find_redundant_ops / estimate_benefit / suggest_optimization / has_suggestions
+  - 将演化从"推荐"推向"管道优化" — 主动建议如何优化管道结构
+- 新增 3 类型 + 3 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6950×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v298.0.0 - GeoVerse Phase 8: 演化推荐引擎
 - 扩展 `src/self_evolve/`：演化推荐引擎 — 根据当前状态推荐下一步演化
   - **recommend**：RecommendAction / Recommendation / RecommendationReport + recommend_next / recommend_all / recommend_for_pipeline / has_urgent

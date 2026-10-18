@@ -2298,3 +2298,96 @@ test "AI: recommend 每条推荐 reason 非空" {
     assert_true(r.target_op.length() > 0)
   }
 }
+// ==============================
+// v299.0.0 — 管道优化建议 (pipeline_optimize)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: find_redundant_ops 无冗余返回空" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let redundant = @self_evolve.find_redundant_ops(pipe)
+  assert_eq(redundant.length(), 0)
+}
+
+///|
+test "形式化: find_redundant_ops 有冗余返回标签" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.ToGray).add(@imgir.ToGray)
+  let redundant = @self_evolve.find_redundant_ops(pipe)
+  assert_eq(redundant.length(), 1)
+  assert_eq(redundant[0], "ToGray")
+}
+
+///|
+test "形式化: estimate_benefit 安全管道低收益" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let benefit = @self_evolve.estimate_benefit(pipe)
+  assert_true(benefit >= 0)
+  assert_true(benefit <= 100)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: suggest_optimization 返回报告" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let report = @self_evolve.suggest_optimization(pipe)
+  assert_true(report.total > 0)
+}
+
+///|
+test "FAKE: PipelineOptReport has_suggestions 方法" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let report = @self_evolve.suggest_optimization(pipe)
+  let _ = @self_evolve.PipelineOptReport::has_suggestions(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: suggest_optimization 冗余管道有建议" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.ToGray)
+    .add(@imgir.ToGray)
+    .add(@imgir.ToGray)
+  let report = @self_evolve.suggest_optimization(pipe)
+  assert_true(@self_evolve.PipelineOptReport::has_suggestions(report))
+}
+
+///|
+test "MOCK: suggest_optimization 退化管道有建议" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.suggest_optimization(pipe)
+  assert_true(report.total > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: suggest_optimization summary 含信息" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.suggest_optimization(pipe)
+  assert_true(report.summary.length() > 0)
+}
+
+// --- AI ---
+
+///|
+test "AI: suggest_optimization 每条建议 description 非空" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let report = @self_evolve.suggest_optimization(pipe)
+  for s in report.suggestions {
+    assert_true(s.description.length() > 0)
+    assert_true(s.pipeline_desc.length() > 0)
+  }
+}

@@ -13117,3 +13117,33 @@ pub fn recommend_for_pipeline(
 pub fn recommendation_report_has_urgent(report : RecommendationReport) -> Bool {
   @self_evolve.RecommendationReport::has_urgent(report)
 }
+// self_evolve — 管道优化建议（v299.0.0）
+
+///|
+pub type SuggestionKind = @self_evolve.SuggestionKind
+
+///|
+pub type PipelineOptSuggestion = @self_evolve.PipelineOptSuggestion
+
+///|
+pub type PipelineOptReport = @self_evolve.PipelineOptReport
+
+///|
+pub fn find_redundant_ops(pipeline : @imgir.IRPipeline) -> Array[String] {
+  @self_evolve.find_redundant_ops(pipeline)
+}
+
+///|
+pub fn estimate_benefit(pipeline : @imgir.IRPipeline) -> Int {
+  @self_evolve.estimate_benefit(pipeline)
+}
+
+///|
+pub fn suggest_optimization(pipeline : @imgir.IRPipeline) -> PipelineOptReport {
+  @self_evolve.suggest_optimization(pipeline)
+}
+
+///|
+pub fn pipeline_opt_report_has_suggestions(report : PipelineOptReport) -> Bool {
+  @self_evolve.PipelineOptReport::has_suggestions(report)
+}

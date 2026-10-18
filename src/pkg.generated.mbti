@@ -1284,6 +1284,8 @@ pub fn estimate_age_gender_fr(@types.Image, @face_recognition.FaceDetectionResul
 
 pub fn estimate_atmospheric_light(@types.Image, @types.Image, top_percent? : Int) -> Array[Int] raise @types.LoadError
 
+pub fn estimate_benefit(@imgir.IRPipeline) -> Int
+
 pub fn estimate_camera_pose_sl(@slam.FeatureTrackingResult, @slam.SLAMConfig, @slam.CameraPose) -> @slam.CameraPose
 
 pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], iterations? : Int, threshold? : Double) -> (@stitch.Homography?, Array[@stitch.MatchPair])
@@ -1513,6 +1515,8 @@ pub fn find_contours_f(@types.ImageF) -> Array[@edge.Contour] raise @types.LoadE
 pub fn find_horizontal_seam(Array[Double], Int, Int) -> Array[Int]
 
 pub fn find_line_intersections(Array[(Int, Int, Int)], Array[(Int, Int, Int)]) -> Array[(Int, Int)]
+
+pub fn find_redundant_ops(@imgir.IRPipeline) -> Array[String]
 
 pub fn find_similar_chinese_chars(@ocr.DictChineseDict, String, top_n? : Int) -> Array[@ocr.DictCharMatch] raise @types.LoadError
 
@@ -2606,6 +2610,8 @@ pub fn pipeline_len(@pipeline.Pipeline) -> Int
 
 pub fn pipeline_new() -> @pipeline.Pipeline
 
+pub fn pipeline_opt_report_has_suggestions(@self_evolve.PipelineOptReport) -> Bool
+
 pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn png_info_extended(Bytes) -> @codec.PngInfoExtended raise @types.LoadError
@@ -3119,6 +3125,8 @@ pub fn style_transfer_st(@types.Image, @types.Image, @style_transfer.StyleTransf
 pub fn stylize(@types.Image, String, config? : @stylize.StylizeConfig) -> @types.Image
 
 pub fn stylize_default_config() -> @stylize.StylizeConfig
+
+pub fn suggest_optimization(@imgir.IRPipeline) -> @self_evolve.PipelineOptReport
 
 pub fn suggest_test_count(Int) -> Int
 
@@ -4261,6 +4269,10 @@ pub using @pipeline {type Pipeline}
 
 pub using @pipeline {type BatchTask as PipelineBatchTask}
 
+pub using @self_evolve {type PipelineOptReport}
+
+pub using @self_evolve {type PipelineOptSuggestion}
+
 pub using @types {type PngAnimation}
 
 pub using @codec {type PngInfoExtended}
@@ -4476,6 +4488,8 @@ pub using @style_transfer {type StyleTransferResult}
 pub using @style_transfer {type StyleTransferTextureFeatures}
 
 pub using @stylize {type StylizeConfig}
+
+pub using @self_evolve {type SuggestionKind}
 
 pub using @superres {type SuperResolutionAlgorithm}
 
