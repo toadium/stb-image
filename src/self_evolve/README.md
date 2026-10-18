@@ -43,6 +43,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `adaptive.mbt` | TestPriority / AdaptiveStrategy / AdaptiveReport / suggest_test_count / priority_from_coverage / adaptive_strategy / adaptive_strategy_all / high_priority_ops / is_well_covered |
 | `history.mbt` | HistoryEntry / HistoryLog / record_snapshot / history_log / rollback_to / compare_snapshots / is_empty |
 | `equivalence.mbt` | EquivalenceCheck / EquivalenceReport / check_equivalence / are_equivalent / check_equivalence_all / equivalence_class / all_equivalent |
+| `phase7_report.mbt` | Phase7Capability / Phase7Report / phase7_capabilities / phase7_total_types / phase7_total_functions / phase7_total_tests / phase7_report / phase7_is_complete |
 
 ## 公共 API
 
@@ -86,7 +87,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-204 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+210 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -271,4 +272,10 @@ Phase 6 自演化深化期完成：执行→智能修复→组合覆盖→根因
 - `are_equivalent(pipe_a, pipe_b)` → Bool — 简化等价判断
 - `check_equivalence_all()` → EquivalenceReport — 全算子自等价性
 - `equivalence_class(op)` → Array[String] — 等价类
-- `EquivalenceReport::all_equivalent()` → 全部等价
+- `EquivalenceReport::all_equivalent()` → 全部等价## Phase 7 综合报告（v295.0.0）
+
+Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
+
+- `phase7_capabilities()` → 4 个版本能力清单（v291-v294）
+- `phase7_report()` → Phase7Report — 综合报告
+- `phase7_is_complete()` → Bool — Phase 7 是否完成

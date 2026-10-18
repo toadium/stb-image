@@ -12978,3 +12978,40 @@ pub fn equivalence_class(op : @imgir.IROp) -> Array[String] {
 pub fn equivalence_report_all_equivalent(report : EquivalenceReport) -> Bool {
   @self_evolve.EquivalenceReport::all_equivalent(report)
 }
+// self_evolve — Phase 7 综合报告（v295.0.0）
+
+///|
+pub type Phase7Capability = @self_evolve.Phase7Capability
+
+///|
+pub type Phase7Report = @self_evolve.Phase7Report
+
+///|
+pub fn phase7_capabilities() -> Array[Phase7Capability] {
+  @self_evolve.phase7_capabilities()
+}
+
+///|
+pub fn phase7_total_types() -> Int {
+  @self_evolve.phase7_total_types()
+}
+
+///|
+pub fn phase7_total_functions() -> Int {
+  @self_evolve.phase7_total_functions()
+}
+
+///|
+pub fn phase7_total_tests() -> Int {
+  @self_evolve.phase7_total_tests()
+}
+
+///|
+pub fn phase7_report() -> Phase7Report {
+  @self_evolve.phase7_report()
+}
+
+///|
+pub fn phase7_is_complete() -> Bool {
+  @self_evolve.phase7_is_complete()
+}

@@ -2001,3 +2001,58 @@ test "AI: equivalence_class 每个标签非空" {
     }
   }
 }
+// ============================================================
+// v295.0.0 — Phase 7 综合报告测试（6 tests）
+// ============================================================
+
+// --- 形式化证明 ---
+
+///|
+test "形式化: phase7_capabilities 返回 4 个版本" {
+  let caps = @self_evolve.phase7_capabilities()
+  assert_eq(caps.length(), 4)
+  assert_eq(caps[0].version, "v291.0.0")
+  assert_eq(caps[3].version, "v294.0.0")
+}
+
+///|
+test "形式化: phase7 总计 9 类型 17 函数 36 测试" {
+  assert_eq(@self_evolve.phase7_total_types(), 9)
+  assert_eq(@self_evolve.phase7_total_functions(), 17)
+  assert_eq(@self_evolve.phase7_total_tests(), 36)
+}
+
+///|
+test "形式化: phase7_is_complete 为 true" {
+  assert_true(@self_evolve.phase7_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase7_report 结构完整" {
+  let report = @self_evolve.phase7_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 9)
+  assert_eq(report.total_functions, 17)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase7_report summary 含关键信息" {
+  let report = @self_evolve.phase7_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase7 每个能力描述非空" {
+  for c in @self_evolve.phase7_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}
