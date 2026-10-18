@@ -13379,3 +13379,28 @@ pub fn combine_all_strategies() -> ComboReport {
 pub fn combo_report_has_parallel(report : ComboReport) -> Bool {
   @self_evolve.ComboReport::has_parallel(report)
 }
+// self_evolve — 自适应参数调优（v308.0.0）
+
+///|
+pub type ParamKind = @self_evolve.ParamKind
+
+///|
+pub type TunedParam = @self_evolve.TunedParam
+
+///|
+pub type TuneReport = @self_evolve.TuneReport
+
+///|
+pub fn tune_params(op : @imgir.IROp) -> Array[TunedParam] {
+  @self_evolve.tune_params(op)
+}
+
+///|
+pub fn tune_all_params() -> TuneReport {
+  @self_evolve.tune_all_params()
+}
+
+///|
+pub fn tune_report_has_adjustments(report : TuneReport) -> Bool {
+  @self_evolve.TuneReport::has_adjustments(report)
+}

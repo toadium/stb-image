@@ -3352,6 +3352,12 @@ pub fn triangulate_points_sl(Array[Array[Double]], @slam.CameraPose, @slam.Camer
 
 pub fn true_color_composite(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn tune_all_params() -> @self_evolve.TuneReport
+
+pub fn tune_params(@imgir.IROp) -> Array[@self_evolve.TunedParam]
+
+pub fn tune_report_has_adjustments(@self_evolve.TuneReport) -> Bool
+
 pub fn tvideo_from_timage(@spatiotemporal.TImage, String) -> @spatiotemporal.TVideo
 
 pub fn ultrasound_synthesize_ai(Int, Int, Double, Double) -> @advanced_imaging.UltrasoundData
@@ -4313,6 +4319,8 @@ pub using @photo_enhance {type PanoramaConfig}
 
 pub using @photo_enhance {type PanoramaResult}
 
+pub using @self_evolve {type ParamKind}
+
 pub using @self_evolve {type PerfBaseline}
 
 pub using @self_evolve {type PerfRegression}
@@ -4704,6 +4712,10 @@ pub using @fusion_enhanced {type TransformMatrix}
 pub using @registration_advanced {type TransformMatrix as TransformMatrixRA}
 
 pub using @registration_advanced {type TransformType as TransformTypeRA}
+
+pub using @self_evolve {type TuneReport}
+
+pub using @self_evolve {type TunedParam}
 
 pub using @forensics {type UIDetectionResult}
 

@@ -56,6 +56,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `phase9_report.mbt` | Phase9Capability / Phase9Report / phase9_capabilities / phase9_total_types / phase9_total_functions / phase9_total_tests / phase9_report / phase9_is_complete |
 | `auto_decide.mbt` | DecisionAction / AutoDecision / DecisionReport / decide_op / decide_all / can_auto_run |
 | `strategy_combo.mbt` | StrategyKind / StrategyCombo / ComboReport / combine_strategies / combine_all_strategies / has_parallel |
+| `param_tune.mbt` | ParamKind / TunedParam / TuneReport / tune_params / tune_all_params / has_adjustments |
 
 ## 公共 API
 
@@ -99,7 +100,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-312 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+321 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -375,4 +376,10 @@ Phase 9 自演化智能期完成：调度→回归→评分→预测。
 
 - `combine_strategies(op)` → StrategyCombo — 单算子策略组合
 - `combine_all_strategies()` → ComboReport — 全算子策略组合
-- `ComboReport::has_parallel()` → 是否有可并行策略
+- `ComboReport::has_parallel()` → 是否有可并行策略## 自适应参数调优（v308.0.0）
+
+将演化从"策略组合"推向"参数调优" — 根据历史数据自动调整参数。
+
+- `tune_params(op)` → Array[TunedParam] — 单算子参数调优
+- `tune_all_params()` → TuneReport — 全算子参数调优
+- `TuneReport::has_adjustments()` → 是否有参数调整

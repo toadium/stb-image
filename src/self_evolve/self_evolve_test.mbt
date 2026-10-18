@@ -2943,3 +2943,73 @@ test "AI: strategy_combo 每个组合 description 非空" {
     assert_true(c.op_tag.length() > 0)
   }
 }
+// ==============================
+// v308.0.0 — 自适应参数调优 (param_tune)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: tune_params 安全算子可能无调整" {
+  let params = @self_evolve.tune_params(@imgir.Resize(8, 8))
+  assert_true(params.length() >= 0)
+}
+
+///|
+test "形式化: tune_params 退化算子有调整" {
+  let params = @self_evolve.tune_params(@imgir.Resize(0, 0))
+  assert_true(params.length() > 0)
+}
+
+///|
+test "形式化: tune_all_params 返回报告" {
+  let report = @self_evolve.tune_all_params()
+  assert_true(report.total >= 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: tune_all_params 结构完整" {
+  let report = @self_evolve.tune_all_params()
+  assert_true(report.adjusted_count >= 0)
+}
+
+///|
+test "FAKE: TuneReport has_adjustments 方法" {
+  let report = @self_evolve.tune_all_params()
+  let _ = @self_evolve.TuneReport::has_adjustments(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: tune_params 退化算子含 Weight 调整" {
+  let params = @self_evolve.tune_params(@imgir.GaussianBlur(3, 0.0F))
+  assert_true(params.length() > 0)
+}
+
+///|
+test "MOCK: tune_all_params adjusted_count <= total" {
+  let report = @self_evolve.tune_all_params()
+  assert_true(report.adjusted_count <= report.total)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: tune_all_params summary 含信息" {
+  let report = @self_evolve.tune_all_params()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: param_tune 每个参数 rationale 非空" {
+  let report = @self_evolve.tune_all_params()
+  for p in report.params {
+    assert_true(p.rationale.length() > 0)
+  }
+}

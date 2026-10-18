@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v308.0.0 - GeoVerse Phase 10: 自适应参数调优
+- 扩展 `src/self_evolve/`：自适应参数调优 — 根据历史自动调优参数
+  - **param_tune**：ParamKind / TunedParam / TuneReport + tune_params / tune_all_params / has_adjustments
+  - 将演化从"策略组合"推向"参数调优" — 根据历史数据自动调整参数
+- 新增 3 类型 + 2 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7025×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v307.0.0 - GeoVerse Phase 10: 演化策略组合
 - 扩展 `src/self_evolve/`：演化策略组合 — 组合多种演化策略
   - **strategy_combo**：StrategyKind / StrategyCombo / ComboReport + combine_strategies / combine_all_strategies / has_parallel

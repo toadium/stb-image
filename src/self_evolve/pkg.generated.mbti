@@ -293,6 +293,10 @@ pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 
 pub fn suggest_test_count(Int) -> Int
 
+pub fn tune_all_params() -> TuneReport
+
+pub fn tune_params(@imgir.IROp) -> Array[TunedParam]
+
 pub fn unique_combo_count() -> Int
 
 pub fn visualize_propagation(@imgir.IRPipeline, VizFormat) -> PropagationViz
@@ -652,6 +656,16 @@ pub fn OptimizeExecResult::equal(Self, Self) -> Bool
 pub fn OptimizeExecResult::is_significant(Self) -> Bool
 pub fn OptimizeExecResult::not_equal(Self, Self) -> Bool
 pub fn OptimizeExecResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ParamKind {
+  Threshold
+  Weight
+  StepSize
+  MaxIter
+} derive(Eq, @debug.Debug)
+pub fn ParamKind::equal(Self, Self) -> Bool
+pub fn ParamKind::not_equal(Self, Self) -> Bool
+pub fn ParamKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PerfBaseline {
   pipeline_desc : String
@@ -1164,6 +1178,28 @@ pub(all) struct TestRunResult {
 pub fn TestRunResult::equal(Self, Self) -> Bool
 pub fn TestRunResult::not_equal(Self, Self) -> Bool
 pub fn TestRunResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TuneReport {
+  params : Array[TunedParam]
+  total : Int
+  adjusted_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn TuneReport::equal(Self, Self) -> Bool
+pub fn TuneReport::has_adjustments(Self) -> Bool
+pub fn TuneReport::not_equal(Self, Self) -> Bool
+pub fn TuneReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TunedParam {
+  param_kind : ParamKind
+  old_value : Int
+  new_value : Int
+  adjustment : Int
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn TunedParam::equal(Self, Self) -> Bool
+pub fn TunedParam::not_equal(Self, Self) -> Bool
+pub fn TunedParam::to_repr(Self) -> @debug.Repr
 
 pub(all) enum VizFormat {
   AsciiViz
