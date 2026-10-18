@@ -2740,3 +2740,56 @@ test "AI: predict 每个预测 description 非空" {
     assert_true(p.op_tag.length() > 0)
   }
 }
+// ==============================
+// v305.0.0 — Phase 9 综合总结 (phase9_report)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: phase9_capabilities 返回 4 条" {
+  let caps = @self_evolve.phase9_capabilities()
+  assert_eq(caps.length(), 4)
+}
+
+///|
+test "形式化: phase9 总计正确" {
+  assert_eq(@self_evolve.phase9_total_types(), 12)
+  assert_eq(@self_evolve.phase9_total_functions(), 9)
+  assert_eq(@self_evolve.phase9_total_tests(), 36)
+}
+
+///|
+test "形式化: phase9_is_complete 为 true" {
+  assert_true(@self_evolve.phase9_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase9_report 结构完整" {
+  let report = @self_evolve.phase9_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 12)
+  assert_eq(report.total_functions, 9)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase9_report summary 含关键信息" {
+  let report = @self_evolve.phase9_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase9 每个能力描述非空" {
+  for c in @self_evolve.phase9_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}

@@ -13292,3 +13292,40 @@ pub fn predict_all() -> PredictionReport {
 pub fn prediction_report_has_high_risk(report : PredictionReport) -> Bool {
   @self_evolve.PredictionReport::has_high_risk(report)
 }
+// self_evolve — Phase 9 综合报告（v305.0.0）
+
+///|
+pub type Phase9Capability = @self_evolve.Phase9Capability
+
+///|
+pub type Phase9Report = @self_evolve.Phase9Report
+
+///|
+pub fn phase9_capabilities() -> Array[Phase9Capability] {
+  @self_evolve.phase9_capabilities()
+}
+
+///|
+pub fn phase9_total_types() -> Int {
+  @self_evolve.phase9_total_types()
+}
+
+///|
+pub fn phase9_total_functions() -> Int {
+  @self_evolve.phase9_total_functions()
+}
+
+///|
+pub fn phase9_total_tests() -> Int {
+  @self_evolve.phase9_total_tests()
+}
+
+///|
+pub fn phase9_report() -> Phase9Report {
+  @self_evolve.phase9_report()
+}
+
+///|
+pub fn phase9_is_complete() -> Bool {
+  @self_evolve.phase9_is_complete()
+}
