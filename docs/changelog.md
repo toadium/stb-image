@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v296.0.0 - GeoVerse Phase 8: 退化传播可视化
+- 扩展 `src/self_evolve/`：退化传播可视化 — 生成传播链的可视化描述
+  - **propagation_viz**：VizFormat / PropagationViz + visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid
+  - 将传播分析从"数据"推向"可视化" — ASCII/Mermaid/Text 三格式
+- 新增 2 类型 + 4 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 6923×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v295.0.0 - GeoVerse Phase 7 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 7 综合报告 — 汇总 v291-v294 全部能力
   - **phase7_report**：Phase7Capability / Phase7Report + phase7_capabilities / phase7_total_types / phase7_total_functions / phase7_total_tests / phase7_report / phase7_is_complete

@@ -2056,3 +2056,95 @@ test "AI: phase7 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ============================================================
+// v296.0.0 — 退化传播可视化测试（9 tests）
+// ============================================================
+
+// --- 形式化 ---
+
+///|
+test "形式化: visualize_propagation_ascii 非空" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+  let result = @self_evolve.visualize_propagation_ascii(pipe)
+  assert_true(result.length() > 0)
+}
+
+///|
+test "形式化: visualize_propagation_mermaid 含 graph" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let result = @self_evolve.visualize_propagation_mermaid(pipe)
+  assert_true(result.length() > 0)
+}
+
+///|
+test "形式化: visualize_propagation_text 含报告" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.FlipH)
+  let result = @self_evolve.visualize_propagation_text(pipe)
+  assert_true(result.length() > 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: visualize_propagation Ascii 格式" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let viz = @self_evolve.visualize_propagation(pipe, @self_evolve.AsciiViz)
+  assert_true(@self_evolve.PropagationViz::is_valid(viz))
+}
+
+///|
+test "FAKE: visualize_propagation Mermaid 格式" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8))
+  let viz = @self_evolve.visualize_propagation(pipe, @self_evolve.MermaidViz)
+  assert_true(@self_evolve.PropagationViz::is_valid(viz))
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: visualize_propagation 退化管道有边" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  let viz = @self_evolve.visualize_propagation(pipe, @self_evolve.TextViz)
+  assert_true(viz.edge_count > 0)
+}
+
+///|
+test "MOCK: visualize_propagation 安全管道无边" {
+  let pipe = @imgir.IRPipeline::new().add(@imgir.Resize(8, 8)).add(@imgir.FlipH)
+  let viz = @self_evolve.visualize_propagation(pipe, @self_evolve.TextViz)
+  assert_true(viz.edge_count == 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: visualize_propagation 节点数正确" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(8, 8))
+    .add(@imgir.ToGray)
+    .add(@imgir.FlipH)
+  let viz = @self_evolve.visualize_propagation(pipe, @self_evolve.AsciiViz)
+  assert_eq(viz.node_count, 3)
+}
+
+// --- AI ---
+
+///|
+test "AI: propagation_viz 每种格式内容非空" {
+  let pipe = @imgir.IRPipeline::new()
+    .add(@imgir.Resize(0, 0))
+    .add(@imgir.ToGray)
+  for
+    fmt in [
+      @self_evolve.AsciiViz,
+      @self_evolve.MermaidViz,
+      @self_evolve.TextViz,
+    ] {
+    let viz = @self_evolve.visualize_propagation(pipe, fmt)
+    assert_true(viz.content.length() > 0)
+  }
+}

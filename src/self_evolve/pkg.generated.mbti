@@ -225,6 +225,14 @@ pub fn suggest_test_count(Int) -> Int
 
 pub fn unique_combo_count() -> Int
 
+pub fn visualize_propagation(@imgir.IRPipeline, VizFormat) -> PropagationViz
+
+pub fn visualize_propagation_ascii(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_mermaid(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
+
 // Errors
 
 // Types and methods
@@ -617,6 +625,17 @@ pub fn PropagationStep::equal(Self, Self) -> Bool
 pub fn PropagationStep::not_equal(Self, Self) -> Bool
 pub fn PropagationStep::to_repr(Self) -> @debug.Repr
 
+pub(all) struct PropagationViz {
+  format : VizFormat
+  content : String
+  node_count : Int
+  edge_count : Int
+} derive(Eq, @debug.Debug)
+pub fn PropagationViz::equal(Self, Self) -> Bool
+pub fn PropagationViz::is_valid(Self) -> Bool
+pub fn PropagationViz::not_equal(Self, Self) -> Bool
+pub fn PropagationViz::to_repr(Self) -> @debug.Repr
+
 pub(all) struct RepairAction {
   op_tag : String
   repaired_op_tag : String
@@ -745,6 +764,15 @@ pub(all) struct TestRunResult {
 pub fn TestRunResult::equal(Self, Self) -> Bool
 pub fn TestRunResult::not_equal(Self, Self) -> Bool
 pub fn TestRunResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VizFormat {
+  AsciiViz
+  MermaidViz
+  TextViz
+} derive(Eq, @debug.Debug)
+pub fn VizFormat::equal(Self, Self) -> Bool
+pub fn VizFormat::not_equal(Self, Self) -> Bool
+pub fn VizFormat::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

@@ -13015,3 +13015,38 @@ pub fn phase7_report() -> Phase7Report {
 pub fn phase7_is_complete() -> Bool {
   @self_evolve.phase7_is_complete()
 }
+// self_evolve — 退化传播可视化（v296.0.0）
+
+///|
+pub type VizFormat = @self_evolve.VizFormat
+
+///|
+pub type PropagationViz = @self_evolve.PropagationViz
+
+///|
+pub fn visualize_propagation_ascii(pipeline : @imgir.IRPipeline) -> String {
+  @self_evolve.visualize_propagation_ascii(pipeline)
+}
+
+///|
+pub fn visualize_propagation_mermaid(pipeline : @imgir.IRPipeline) -> String {
+  @self_evolve.visualize_propagation_mermaid(pipeline)
+}
+
+///|
+pub fn visualize_propagation_text(pipeline : @imgir.IRPipeline) -> String {
+  @self_evolve.visualize_propagation_text(pipeline)
+}
+
+///|
+pub fn visualize_propagation(
+  pipeline : @imgir.IRPipeline,
+  format : VizFormat,
+) -> PropagationViz {
+  @self_evolve.visualize_propagation(pipeline, format)
+}
+
+///|
+pub fn propagation_viz_is_valid(viz : PropagationViz) -> Bool {
+  @self_evolve.PropagationViz::is_valid(viz)
+}

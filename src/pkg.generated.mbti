@@ -2632,6 +2632,8 @@ pub fn propagation_chain(@imgir.IRPipeline) -> Array[@self_evolve.PropagationSte
 
 pub fn propagation_report_is_safe(@self_evolve.PropagationReport) -> Bool
 
+pub fn propagation_viz_is_valid(@self_evolve.PropagationViz) -> Bool
+
 pub fn psd_info_extended(Bytes) -> @codec.PsdInfoExtended raise @types.LoadError
 
 pub fn psnr(@types.Image, @types.Image) -> Double raise @types.LoadError
@@ -3347,6 +3349,14 @@ pub fn visualize_distance_transform(Array[Float], Int, Int) -> @types.Image
 pub fn visualize_point_cloud_nr(Array[@neural_rendering.Point3D], Int, Int) -> @types.Image
 
 pub fn visualize_pose_pe(@types.Image, @pose_estimation.HumanPose) -> @types.Image raise @types.LoadError
+
+pub fn visualize_propagation(@imgir.IRPipeline, @self_evolve.VizFormat) -> @self_evolve.PropagationViz
+
+pub fn visualize_propagation_ascii(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_mermaid(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
 
 pub fn vlm_report_to_string_vlm(@vlm_multimodal.VisionTextEmbedding, @vlm_multimodal.VisionLanguageModelType) -> String
 
@@ -4259,6 +4269,8 @@ pub using @self_evolve {type PropagationReport}
 
 pub using @self_evolve {type PropagationStep}
 
+pub using @self_evolve {type PropagationViz}
+
 pub using @codec {type PsdInfoExtended}
 
 pub using @ocr {type PunctuationTemplate}
@@ -4572,6 +4584,8 @@ pub using @vlm_multimodal {type VisionTextEmbedding as VisionTextEmbeddingVLM}
 pub using @scene_understanding {type VisualQuestionAnsweringAlgorithm as VisualQuestionAnsweringAlgorithmSU}
 
 pub using @scene_understanding {type VisualQuestionAnsweringResult as VisualQuestionAnsweringResultSU}
+
+pub using @self_evolve {type VizFormat}
 
 pub using @neural_rendering {type Voxel as VoxelNR}
 

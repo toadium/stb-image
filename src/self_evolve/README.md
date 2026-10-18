@@ -44,6 +44,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `history.mbt` | HistoryEntry / HistoryLog / record_snapshot / history_log / rollback_to / compare_snapshots / is_empty |
 | `equivalence.mbt` | EquivalenceCheck / EquivalenceReport / check_equivalence / are_equivalent / check_equivalence_all / equivalence_class / all_equivalent |
 | `phase7_report.mbt` | Phase7Capability / Phase7Report / phase7_capabilities / phase7_total_types / phase7_total_functions / phase7_total_tests / phase7_report / phase7_is_complete |
+| `propagation_viz.mbt` | VizFormat / PropagationViz / visualize_propagation_ascii / visualize_propagation_mermaid / visualize_propagation_text / visualize_propagation / is_valid |
 
 ## 公共 API
 
@@ -87,7 +88,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-210 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+219 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -278,4 +279,12 @@ Phase 7 自演化成熟期完成：传播→自适应→历史→等价。
 
 - `phase7_capabilities()` → 4 个版本能力清单（v291-v294）
 - `phase7_report()` → Phase7Report — 综合报告
-- `phase7_is_complete()` → Bool — Phase 7 是否完成
+- `phase7_is_complete()` → Bool — Phase 7 是否完成## 退化传播可视化（v296.0.0）
+
+将传播分析从"数据"推向"可视化" — ASCII/Mermaid/Text 三格式。
+
+- `visualize_propagation_ascii(pipeline)` → String — ASCII 格式
+- `visualize_propagation_mermaid(pipeline)` → String — Mermaid 格式
+- `visualize_propagation_text(pipeline)` → String — 文本格式
+- `visualize_propagation(pipeline, format)` → PropagationViz — 按格式生成
+- `PropagationViz::is_valid()` → 内容非空
