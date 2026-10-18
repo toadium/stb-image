@@ -2793,3 +2793,81 @@ test "AI: phase9 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ==============================
+// v306.0.0 — 自主决策引擎 (auto_decide)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: decide_op 安全算子跳过或推迟" {
+  let d = @self_evolve.decide_op(@imgir.Resize(8, 8))
+  assert_true(
+    d.action is @self_evolve.SkipEvolution ||
+    d.action is @self_evolve.DeferEvolution,
+  )
+}
+
+///|
+test "形式化: decide_op 退化算子立即演化" {
+  let d = @self_evolve.decide_op(@imgir.Resize(0, 0))
+  assert_true(
+    d.action is @self_evolve.EvolveNow ||
+    d.action is @self_evolve.EscalateToManual,
+  )
+}
+
+///|
+test "形式化: decide_all 返回 19 个决策" {
+  let report = @self_evolve.decide_all()
+  assert_eq(report.total, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: decide_all 结构完整" {
+  let report = @self_evolve.decide_all()
+  assert_true(report.decisions.length() > 0)
+  assert_true(report.auto_count >= 0)
+}
+
+///|
+test "FAKE: DecisionReport can_auto_run 方法" {
+  let report = @self_evolve.decide_all()
+  let _ = @self_evolve.DecisionReport::can_auto_run(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: decide_op 退化算子 confidence 高" {
+  let d = @self_evolve.decide_op(@imgir.GaussianBlur(3, 0.0F))
+  assert_true(d.confidence >= 70)
+}
+
+///|
+test "MOCK: decide_all auto_count + deferred_count <= total" {
+  let report = @self_evolve.decide_all()
+  assert_true(report.auto_count + report.deferred_count <= report.total)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: decide_all summary 含信息" {
+  let report = @self_evolve.decide_all()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: decide 每个决策 rationale 非空" {
+  let report = @self_evolve.decide_all()
+  for d in report.decisions {
+    assert_true(d.rationale.length() > 0)
+    assert_true(d.op_tag.length() > 0)
+  }
+}

@@ -54,6 +54,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 | `smart_priority.mbt` | ScoreFactor / SmartScore / SmartPriorityReport / score_op / score_all_ops / top_priority |
 | `predict.mbt` | PredictionKind / EvolutionPrediction / PredictionReport / predict_op / predict_all / has_high_risk |
 | `phase9_report.mbt` | Phase9Capability / Phase9Report / phase9_capabilities / phase9_total_types / phase9_total_functions / phase9_total_tests / phase9_report / phase9_is_complete |
+| `auto_decide.mbt` | DecisionAction / AutoDecision / DecisionReport / decide_op / decide_all / can_auto_run |
 
 ## 公共 API
 
@@ -97,7 +98,7 @@ evolve_all() → EvolveReport{ generated_tests, found_degradations }
 
 ## 测试
 
-294 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
+303 个多手段测试（AI + FAKE + MOCK + E2E + 形式化证明），四目标全绿。
 
 ## 自演化闭环（v278.0.0）
 
@@ -361,4 +362,10 @@ Phase 9 自演化智能期完成：调度→回归→评分→预测。
 - `phase9_total_functions()` → Int — 总函数数 (9)
 - `phase9_total_tests()` → Int — 总测试数 (36)
 - `phase9_report()` → Phase9Report — 综合报告
-- `phase9_is_complete()` → Bool — Phase 9 是否完成
+- `phase9_is_complete()` → Bool — Phase 9 是否完成## 自主决策引擎（v306.0.0）
+
+将演化从"预测"推向"自主决策" — 根据预测结果自动决定演化动作。
+
+- `decide_op(op)` → AutoDecision — 单算子决策
+- `decide_all()` → DecisionReport — 全算子决策
+- `DecisionReport::can_auto_run()` → 是否可全自主执行

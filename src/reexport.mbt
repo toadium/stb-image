@@ -13329,3 +13329,28 @@ pub fn phase9_report() -> Phase9Report {
 pub fn phase9_is_complete() -> Bool {
   @self_evolve.phase9_is_complete()
 }
+// self_evolve — 自主决策引擎（v306.0.0）
+
+///|
+pub type DecisionAction = @self_evolve.DecisionAction
+
+///|
+pub type AutoDecision = @self_evolve.AutoDecision
+
+///|
+pub type DecisionReport = @self_evolve.DecisionReport
+
+///|
+pub fn decide_op(op : @imgir.IROp) -> AutoDecision {
+  @self_evolve.decide_op(op)
+}
+
+///|
+pub fn decide_all() -> DecisionReport {
+  @self_evolve.decide_all()
+}
+
+///|
+pub fn decision_report_can_auto_run(report : DecisionReport) -> Bool {
+  @self_evolve.DecisionReport::can_auto_run(report)
+}

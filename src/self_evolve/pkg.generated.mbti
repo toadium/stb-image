@@ -63,6 +63,10 @@ pub fn coverage_percentage(@imgir.IROp) -> Int
 
 pub fn create_schedule(Array[@imgir.IROp]) -> EvolutionSchedule
 
+pub fn decide_all() -> DecisionReport
+
+pub fn decide_op(@imgir.IROp) -> AutoDecision
+
 pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
 
 pub fn detect_regressions() -> RegressionReport
@@ -319,6 +323,16 @@ pub fn AdaptiveStrategy::equal(Self, Self) -> Bool
 pub fn AdaptiveStrategy::not_equal(Self, Self) -> Bool
 pub fn AdaptiveStrategy::to_repr(Self) -> @debug.Repr
 
+pub(all) struct AutoDecision {
+  op_tag : String
+  action : DecisionAction
+  confidence : Int
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn AutoDecision::equal(Self, Self) -> Bool
+pub fn AutoDecision::not_equal(Self, Self) -> Bool
+pub fn AutoDecision::to_repr(Self) -> @debug.Repr
+
 pub(all) struct CIGateResult {
   passed : Bool
   total_checks : Int
@@ -360,6 +374,28 @@ pub fn CoverageGapReport::equal(Self, Self) -> Bool
 pub fn CoverageGapReport::has_gaps(Self) -> Bool
 pub fn CoverageGapReport::not_equal(Self, Self) -> Bool
 pub fn CoverageGapReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DecisionAction {
+  EvolveNow
+  DeferEvolution
+  SkipEvolution
+  EscalateToManual
+} derive(Eq, @debug.Debug)
+pub fn DecisionAction::equal(Self, Self) -> Bool
+pub fn DecisionAction::not_equal(Self, Self) -> Bool
+pub fn DecisionAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DecisionReport {
+  decisions : Array[AutoDecision]
+  total : Int
+  auto_count : Int
+  deferred_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn DecisionReport::can_auto_run(Self) -> Bool
+pub fn DecisionReport::equal(Self, Self) -> Bool
+pub fn DecisionReport::not_equal(Self, Self) -> Bool
+pub fn DecisionReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DegradationCase {
   kind : DegradationKind

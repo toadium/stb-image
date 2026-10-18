@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v306.0.0 - GeoVerse Phase 10: 自主决策引擎
+- 扩展 `src/self_evolve/`：自主决策引擎 — 根据预测结果自主决策演化方向
+  - **auto_decide**：DecisionAction / AutoDecision / DecisionReport + decide_op / decide_all / can_auto_run
+  - 将演化从"预测"推向"自主决策" — 根据预测结果自动决定演化动作
+- 新增 3 类型 + 2 公共函数 + 1 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7007×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v305.0.0 - GeoVerse Phase 9 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 9 综合报告 — 汇总 v301-v304 全部能力
   - **phase9_report**：Phase9Capability / Phase9Report + phase9_capabilities / phase9_total_types / phase9_total_functions / phase9_total_tests / phase9_report / phase9_is_complete

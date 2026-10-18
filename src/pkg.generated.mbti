@@ -892,6 +892,12 @@ pub fn dct_2d_f(@types.ImageF) -> Array[Array[Double]]
 
 pub fn deblur_motion(@types.Image, kernel_size? : Int, angle? : Double) -> @types.Image
 
+pub fn decide_all() -> @self_evolve.DecisionReport
+
+pub fn decide_op(@imgir.IROp) -> @self_evolve.AutoDecision
+
+pub fn decision_report_can_auto_run(@self_evolve.DecisionReport) -> Bool
+
 pub fn decode_any(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
 
 pub fn decode_apng(Bytes) -> @types.PngAnimation raise @types.LoadError
@@ -3579,6 +3585,8 @@ pub using @ocr {type AugmentationConfig}
 
 pub using @ocr {type AugmentationType}
 
+pub using @self_evolve {type AutoDecision}
+
 pub using @intelligent_vision {type AutonomousDrivingTask as AutonomousDrivingTaskIV}
 
 pub using @codec {type AvifInfoExtended}
@@ -3744,6 +3752,10 @@ pub using @ocr {type DLTrainingSample}
 pub using @ocr {type DataLoader}
 
 pub using @forensics_enhanced {type DctCoefficientResult}
+
+pub using @self_evolve {type DecisionAction}
+
+pub using @self_evolve {type DecisionReport}
 
 pub using @intelligent_vision {type DefectDetectionResult as DefectDetectionResultIV}
 
