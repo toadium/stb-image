@@ -13267,3 +13267,28 @@ pub fn smart_priority_report_top_priority(
 ) -> Array[SmartScore] {
   @self_evolve.SmartPriorityReport::top_priority(report, n)
 }
+// self_evolve — 演化预测模型（v304.0.0）
+
+///|
+pub type PredictionKind = @self_evolve.PredictionKind
+
+///|
+pub type EvolutionPrediction = @self_evolve.EvolutionPrediction
+
+///|
+pub type PredictionReport = @self_evolve.PredictionReport
+
+///|
+pub fn predict_op(op : @imgir.IROp) -> EvolutionPrediction {
+  @self_evolve.predict_op(op)
+}
+
+///|
+pub fn predict_all() -> PredictionReport {
+  @self_evolve.predict_all()
+}
+
+///|
+pub fn prediction_report_has_high_risk(report : PredictionReport) -> Bool {
+  @self_evolve.PredictionReport::has_high_risk(report)
+}

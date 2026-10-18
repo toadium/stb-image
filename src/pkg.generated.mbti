@@ -2646,6 +2646,12 @@ pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn postprocess_default_config() -> @ocr.PostProcessConfig
 
+pub fn predict_all() -> @self_evolve.PredictionReport
+
+pub fn predict_op(@imgir.IROp) -> @self_evolve.EvolutionPrediction
+
+pub fn prediction_report_has_high_risk(@self_evolve.PredictionReport) -> Bool
+
 pub fn predictive_encode_cp(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn premultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
@@ -3855,6 +3861,8 @@ pub using @ocr {type ErrorAnalysisEntry}
 
 pub using @ocr {type ErrorAnalysisReport}
 
+pub using @self_evolve {type EvolutionPrediction}
+
 pub using @self_evolve {type EvolutionSchedule}
 
 pub using @self_evolve {type EvolveCycleReport}
@@ -4334,6 +4342,10 @@ pub using @pose_estimation {type PoseEstimationAlgorithm as PoseEstimationAlgori
 pub using @pose_estimation {type PoseEstimationConfig as PoseEstimationConfigPE}
 
 pub using @ocr {type PostProcessConfig}
+
+pub using @self_evolve {type PredictionKind}
+
+pub using @self_evolve {type PredictionReport}
 
 pub using @ocr {type ProjectionFeatures}
 

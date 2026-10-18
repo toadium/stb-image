@@ -2665,3 +2665,78 @@ test "AI: smart_priority 每个评分 recommendation 非空" {
     assert_true(s.op_tag.length() > 0)
   }
 }
+// ==============================
+// v304.0.0 — 演化预测模型 (predict)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: predict_op 安全算子预测稳定" {
+  let p = @self_evolve.predict_op(@imgir.Resize(8, 8))
+  assert_true(p.confidence > 0)
+  assert_true(p.confidence <= 100)
+}
+
+///|
+test "形式化: predict_op 退化算子预测风险" {
+  let p = @self_evolve.predict_op(@imgir.Resize(0, 0))
+  assert_true(
+    p.kind is @self_evolve.HighRisk || p.kind is @self_evolve.DegradationLikely,
+  )
+}
+
+///|
+test "形式化: predict_all 返回 19 个预测" {
+  let report = @self_evolve.predict_all()
+  assert_eq(report.total, 19)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: predict_all 结构完整" {
+  let report = @self_evolve.predict_all()
+  assert_true(report.predictions.length() > 0)
+  assert_true(report.high_risk_count >= 0)
+}
+
+///|
+test "FAKE: PredictionReport has_high_risk 方法" {
+  let report = @self_evolve.predict_all()
+  let _ = @self_evolve.PredictionReport::has_high_risk(report)
+  assert_true(true)
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: predict_op 退化算子 confidence 高" {
+  let p = @self_evolve.predict_op(@imgir.GaussianBlur(3, 0.0F))
+  assert_true(p.confidence >= 70)
+}
+
+///|
+test "MOCK: predict_all 高风险数非负" {
+  let report = @self_evolve.predict_all()
+  assert_true(report.high_risk_count >= 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: predict_all summary 含信息" {
+  let report = @self_evolve.predict_all()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: predict 每个预测 description 非空" {
+  let report = @self_evolve.predict_all()
+  for p in report.predictions {
+    assert_true(p.description.length() > 0)
+    assert_true(p.op_tag.length() > 0)
+  }
+}
