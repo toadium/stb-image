@@ -14406,3 +14406,77 @@ pub fn relocalize(
 ) -> SlamFrontend {
   @cv_advanced.relocalize(frontend, reference_kf)
 }
+// cv_advanced — SLAM 后端（v327.0.0）
+
+///|
+pub type SlamMapPoint = @cv_advanced.SlamMapPoint
+
+///|
+pub type SlamBackend = @cv_advanced.SlamBackend
+
+///|
+pub type LoopClosingResult = @cv_advanced.LoopClosingResult
+
+///|
+pub type SlamBackendParams = @cv_advanced.SlamBackendParams
+
+///|
+pub fn init_slam_backend() -> SlamBackend {
+  @cv_advanced.init_slam_backend()
+}
+
+///|
+pub fn add_map_point(
+  backend : SlamBackend,
+  position : Point3D,
+  observations : Int,
+  quality : Double,
+) -> SlamBackend {
+  @cv_advanced.add_map_point(backend, position, observations, quality)
+}
+
+///|
+pub fn remove_redundant_points(
+  backend : SlamBackend,
+  params : SlamBackendParams,
+) -> SlamBackend {
+  @cv_advanced.remove_redundant_points(backend, params)
+}
+
+///|
+pub fn global_bundle_adjustment(
+  backend : SlamBackend,
+  params : SlamBackendParams,
+) -> SlamBackend {
+  @cv_advanced.global_bundle_adjustment(backend, params)
+}
+
+///|
+pub fn slam_loop_closing(
+  backend : SlamBackend,
+  current_kf : SlamKeyFrame,
+  params : SlamBackendParams,
+) -> LoopClosingResult {
+  @cv_advanced.loop_closing(backend, current_kf, params)
+}
+
+///|
+pub fn merge_map_points(
+  backend : SlamBackend,
+  distance_threshold : Double,
+) -> SlamBackend {
+  @cv_advanced.merge_map_points(backend, distance_threshold)
+}
+
+///|
+pub fn optimize_map(
+  backend : SlamBackend,
+  params : SlamBackendParams,
+) -> SlamBackend {
+  @cv_advanced.optimize_map(backend, params)
+}
+
+///|
+pub fn map_statistics(backend : SlamBackend) -> (Int, Int, Double) {
+  @cv_advanced.map_statistics(backend)
+}

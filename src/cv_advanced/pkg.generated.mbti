@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub fn add_map_point(SlamBackend, Point3D, Int, Double) -> SlamBackend
+
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
 
 pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Array[DMatch]
@@ -101,6 +103,8 @@ pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
+pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
+
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
@@ -110,6 +114,8 @@ pub fn identity_affine() -> AffineMatrix
 pub fn identity_pose() -> SlamPose
 
 pub fn init_background_model(@types.Image, BackgroundParams) -> BackgroundModel
+
+pub fn init_slam_backend() -> SlamBackend
 
 pub fn init_slam_frontend() -> SlamFrontend
 
@@ -131,11 +137,19 @@ pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
 
 pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
+pub fn loop_closing(SlamBackend, SlamKeyFrame, SlamBackendParams) -> LoopClosingResult
+
+pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
+
+pub fn merge_map_points(SlamBackend, Double) -> SlamBackend
+
 pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
 
 pub fn motion_morphology(MotionMask, Int) -> MotionMask
 
 pub fn motion_optical_flow(FlowField, Double) -> MotionMask
+
+pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
@@ -148,6 +162,8 @@ pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResul
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
 pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
+
+pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
@@ -462,6 +478,16 @@ pub fn KeyPoint::equal(Self, Self) -> Bool
 pub fn KeyPoint::not_equal(Self, Self) -> Bool
 pub fn KeyPoint::to_repr(Self) -> @debug.Repr
 
+pub(all) struct LoopClosingResult {
+  loop_found : Bool
+  loop_kf1 : Int
+  loop_kf2 : Int
+  correction : SlamPose
+} derive(Eq, @debug.Debug)
+pub fn LoopClosingResult::equal(Self, Self) -> Bool
+pub fn LoopClosingResult::not_equal(Self, Self) -> Bool
+pub fn LoopClosingResult::to_repr(Self) -> @debug.Repr
+
 pub(all) enum MatcherKind {
   BruteForce
   FlannBased
@@ -562,6 +588,26 @@ pub(all) struct SceneParsingResult {
   num_objects : Int
 }
 
+pub(all) struct SlamBackend {
+  map_points : Array[SlamMapPoint]
+  keyframes : Array[SlamKeyFrame]
+  optimized : Bool
+  loop_closed : Bool
+} derive(Eq, @debug.Debug)
+pub fn SlamBackend::equal(Self, Self) -> Bool
+pub fn SlamBackend::not_equal(Self, Self) -> Bool
+pub fn SlamBackend::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlamBackendParams {
+  min_observations : Int
+  max_reproj_error : Double
+  loop_threshold : Double
+  ba_iterations : Int
+} derive(Eq, @debug.Debug)
+pub fn SlamBackendParams::equal(Self, Self) -> Bool
+pub fn SlamBackendParams::not_equal(Self, Self) -> Bool
+pub fn SlamBackendParams::to_repr(Self) -> @debug.Repr
+
 pub(all) struct SlamFrontend {
   keyframes : Array[SlamKeyFrame]
   current_pose : SlamPose
@@ -593,6 +639,16 @@ pub(all) struct SlamKeyFrame {
 pub fn SlamKeyFrame::equal(Self, Self) -> Bool
 pub fn SlamKeyFrame::not_equal(Self, Self) -> Bool
 pub fn SlamKeyFrame::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlamMapPoint {
+  id : Int
+  position : Point3D
+  observations : Int
+  quality : Double
+} derive(Eq, @debug.Debug)
+pub fn SlamMapPoint::equal(Self, Self) -> Bool
+pub fn SlamMapPoint::not_equal(Self, Self) -> Bool
+pub fn SlamMapPoint::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamPose {
   tx : Double

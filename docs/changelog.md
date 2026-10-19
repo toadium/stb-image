@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v327.0.0 - GeoVerse Phase 12: SLAM 后端
+- 扩展 `src/cv_advanced/`：SLAM 后端 — 地图点/光束平差/回环检测
+  - **slam_backend**：SlamMapPoint / SlamBackend / LoopClosingResult / SlamBackendParams + init_slam_backend / add_map_point / remove_redundant_points / global_bundle_adjustment / loop_closing / merge_map_points / optimize_map / map_statistics
+  - Phase 12 CV算法大扩展 — SLAM 后端
+- 新增 4 类型 + 8 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7190×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v326.0.0 - GeoVerse Phase 12: SLAM 前端
 - 扩展 `src/cv_advanced/`：SLAM 前端 — 关键帧/特征跟踪/位姿估计
   - **slam_frontend**：SlamPose / SlamKeyFrame / SlamFrontend / SlamFrontendParams + identity_pose / init_slam_frontend / process_keyframe / track_keyframe / estimate_pose / keyframe_selection / local_bundle_adjustment / is_tracking_lost / relocalize

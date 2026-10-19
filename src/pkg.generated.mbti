@@ -89,6 +89,8 @@ pub fn add_border(@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image
 
 pub fn add_face_to_database_fr(@face_recognition.FaceDatabase, @face_recognition.FaceFeature, String) -> @face_recognition.FaceDatabase
 
+pub fn add_map_point(@cv_advanced.SlamBackend, @cv_advanced.Point3D, Int, Double) -> @cv_advanced.SlamBackend
+
 pub fn add_noise_gaussian(@types.Image, Float, UInt) -> @types.Image
 
 pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
@@ -1859,6 +1861,8 @@ pub fn glcm_features_multi_direction_16(@types.Image16, levels? : Int) -> Array[
 
 pub fn glcm_features_multi_direction_f(@types.ImageF, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
 
+pub fn global_bundle_adjustment(@cv_advanced.SlamBackend, @cv_advanced.SlamBackendParams) -> @cv_advanced.SlamBackend
+
 pub fn gmm_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
 
 pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
@@ -2086,6 +2090,8 @@ pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 pub fn infrared_pseudocolor_ai(@types.Image, @advanced_imaging.InfraredImagingType) -> @types.Image
 
 pub fn init_background_model(@types.Image, @cv_advanced.BackgroundParams) -> @cv_advanced.BackgroundModel
+
+pub fn init_slam_backend() -> @cv_advanced.SlamBackend
 
 pub fn init_slam_frontend() -> @cv_advanced.SlamFrontend
 
@@ -2423,6 +2429,8 @@ pub fn manhattan_distance(Array[Double], Array[Double]) -> Double raise @types.L
 
 pub fn manhattan_distance_cbir_api(Array[Double], Array[Double]) -> Double
 
+pub fn map_statistics(@cv_advanced.SlamBackend) -> (Int, Int, Double)
+
 pub fn mark_task_completed(@ocr.BatchTask, Int, Double, Double) -> @ocr.BatchTask
 
 pub fn mark_task_failed(@ocr.BatchTask, String, Double) -> @ocr.BatchTask
@@ -2482,6 +2490,8 @@ pub fn medical_image_report_to_string_medical(@medical.MedicalImage, Array[@medi
 pub fn medical_threshold_segmentation_medical(@medical.MedicalImage, Double, Double) -> Array[Bool]
 
 pub fn merge_adjacent_components(Array[@ocr.OcrConnectedComponent], Int) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
+
+pub fn merge_map_points(@cv_advanced.SlamBackend, Double) -> @cv_advanced.SlamBackend
 
 pub fn merge_small_segments(Array[(Int, Int, Int, Int)], Int, Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
 
@@ -2670,6 +2680,8 @@ pub fn optimize_exec_efficiency_pct(@self_evolve.OptimizeExecResult) -> Int
 pub fn optimize_exec_is_significant(@self_evolve.OptimizeExecResult) -> Bool
 
 pub fn optimize_is_identity(@imgir.IROp) -> Bool
+
+pub fn optimize_map(@cv_advanced.SlamBackend, @cv_advanced.SlamBackendParams) -> @cv_advanced.SlamBackend
 
 pub fn optimize_merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
 
@@ -3031,6 +3043,8 @@ pub fn remove_horizontal_seam_16(@types.Image16, Array[Int]) -> @types.Image16
 
 pub fn remove_horizontal_seam_f(@types.ImageF, Array[Int]) -> @types.ImageF
 
+pub fn remove_redundant_points(@cv_advanced.SlamBackend, @cv_advanced.SlamBackendParams) -> @cv_advanced.SlamBackend
+
 pub fn remove_small_objects(@types.Image, max_size? : Int) -> @types.Image raise @types.LoadError
 
 pub fn remove_vertical_seam(@types.Image, Array[Int]) -> @types.Image
@@ -3292,6 +3306,8 @@ pub fn sketch(@types.Image, blend? : Double) -> @types.Image
 pub fn sketch_effect_st(@types.Image, Double) -> @types.Image raise @types.LoadError
 
 pub fn slam_estimate_pose(Array[@cv_advanced.Point3D], Array[(Double, Double)], @cv_advanced.CameraIntrinsics) -> @cv_advanced.SlamPose
+
+pub fn slam_loop_closing(@cv_advanced.SlamBackend, @cv_advanced.SlamKeyFrame, @cv_advanced.SlamBackendParams) -> @cv_advanced.LoopClosingResult
 
 pub fn slam_report_to_string_sl(@slam.SLAMState) -> String
 
@@ -4490,6 +4506,8 @@ pub using @ocr {type ListItemType}
 
 pub using @types {type LoadError}
 
+pub using @cv_advanced {type LoopClosingResult}
+
 pub using @slam {type LoopClosureResult as LoopClosureResultSL}
 
 pub using @self_evolve {type LoopPhase}
@@ -4890,11 +4908,17 @@ pub using @image_retrieval_advanced {type SimilarityResult}
 
 pub using @pose_estimation {type SkeletonConnection as SkeletonConnectionPE}
 
+pub using @cv_advanced {type SlamBackend}
+
+pub using @cv_advanced {type SlamBackendParams}
+
 pub using @cv_advanced {type SlamFrontend}
 
 pub using @cv_advanced {type SlamFrontendParams}
 
 pub using @cv_advanced {type SlamKeyFrame}
+
+pub using @cv_advanced {type SlamMapPoint}
 
 pub using @cv_advanced {type SlamPose}
 
