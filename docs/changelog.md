@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v349.0.0 - GeoVerse Phase 14: 超声处理
+- 扩展 `src/cv_advanced/`：超声处理 — 斑点降噪/弹性成像/包络检测
+  - **ultrasound_processing**：UltrasoundMode / UltrasoundConfig / ElastographyResult + ultrasound_speckle_reduction / ultrasound_envelope_detection / ultrasound_log_compression / ultrasound_scan_conversion / ultrasound_elastography / ultrasound_doppler_shift / ultrasound_time_gain_compensation
+  - Phase 14 医学影像大扩展 — 超声成像与弹性分析
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +12 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7391×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v348.0.0 - GeoVerse Phase 14: MRI 处理
 - 扩展 `src/cv_advanced/`：MRI 处理 — K空间/伪影校正/分割
   - **mri_processing**：MRIPulseType / KSpaceData / MRIConfig + mri_kspace_to_image / mri_image_to_kspace / mri_correct_bias_field / mri_correct_ghosting / mri_compute_t1_map / mri_compute_t2_map

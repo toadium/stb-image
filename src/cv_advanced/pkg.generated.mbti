@@ -415,6 +415,20 @@ pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, I
 
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
+pub fn ultrasound_doppler_shift(Double, Double, Double) -> Double
+
+pub fn ultrasound_elastography(Array[Double], Array[Double], Int, Int, Int) -> ElastographyResult
+
+pub fn ultrasound_envelope_detection(Array[Double]) -> Array[Double]
+
+pub fn ultrasound_log_compression(Array[Double], Double, Double) -> Array[Double]
+
+pub fn ultrasound_scan_conversion(Array[Double], Int, Int, Double, Int, Int) -> Array[Double]
+
+pub fn ultrasound_speckle_reduction(Array[Double], Int, Int, Int) -> Array[Double]
+
+pub fn ultrasound_time_gain_compensation(Array[Double], Int, Int, Double) -> Array[Double]
+
 pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
 
 pub fn undistort_point(CameraIntrinsics, Double, Double) -> (Double, Double)
@@ -848,6 +862,16 @@ pub(all) enum DistillationType {
 pub fn DistillationType::equal(Self, Self) -> Bool
 pub fn DistillationType::not_equal(Self, Self) -> Bool
 pub fn DistillationType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ElastographyResult {
+  strain : Array[Double]
+  elasticity : Array[Double]
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn ElastographyResult::equal(Self, Self) -> Bool
+pub fn ElastographyResult::not_equal(Self, Self) -> Bool
+pub fn ElastographyResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EpipolarLine {
   a : Double
@@ -1636,6 +1660,26 @@ pub(all) struct TrialResult {
 pub fn TrialResult::equal(Self, Self) -> Bool
 pub fn TrialResult::not_equal(Self, Self) -> Bool
 pub fn TrialResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct UltrasoundConfig {
+  frequency : Double
+  speed_of_sound : Double
+  mode : UltrasoundMode
+} derive(Eq, @debug.Debug)
+pub fn UltrasoundConfig::equal(Self, Self) -> Bool
+pub fn UltrasoundConfig::not_equal(Self, Self) -> Bool
+pub fn UltrasoundConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum UltrasoundMode {
+  BMode
+  MMode
+  DopplerMode
+  ColorMode
+  PowerMode
+} derive(Eq, @debug.Debug)
+pub fn UltrasoundMode::equal(Self, Self) -> Bool
+pub fn UltrasoundMode::not_equal(Self, Self) -> Bool
+pub fn UltrasoundMode::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VAEConfig {
   latent_dim : Int

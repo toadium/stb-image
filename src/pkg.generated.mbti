@@ -3825,7 +3825,21 @@ pub fn tune_report_has_adjustments(@self_evolve.TuneReport) -> Bool
 
 pub fn tvideo_from_timage(@spatiotemporal.TImage, String) -> @spatiotemporal.TVideo
 
+pub fn ultrasound_doppler_shift(Double, Double, Double) -> Double
+
+pub fn ultrasound_elastography(Array[Double], Array[Double], Int, Int, Int) -> @cv_advanced.ElastographyResult
+
+pub fn ultrasound_envelope_detection(Array[Double]) -> Array[Double]
+
+pub fn ultrasound_log_compression(Array[Double], Double, Double) -> Array[Double]
+
+pub fn ultrasound_scan_conversion(Array[Double], Int, Int, Double, Int, Int) -> Array[Double]
+
+pub fn ultrasound_speckle_reduction(Array[Double], Int, Int, Int) -> Array[Double]
+
 pub fn ultrasound_synthesize_ai(Int, Int, Double, Double) -> @advanced_imaging.UltrasoundData
+
+pub fn ultrasound_time_gain_compensation(Array[Double], Int, Int, Double) -> Array[Double]
 
 pub fn understand_document(@types.Image) -> @ocr.DocumentStructure raise @types.LoadError
 
@@ -4427,6 +4441,8 @@ pub using @image_generation {type EditingConfig as EditingConfigIG}
 pub using @image_generation {type EditingResult as EditingResultIG}
 
 pub using @forensics_enhanced {type ElaAnalysisResult}
+
+pub using @cv_advanced {type ElastographyResult}
 
 pub using @encryption {type EncryptionAlgorithm}
 
@@ -5470,7 +5486,11 @@ pub using @self_evolve {type TunedParam}
 
 pub using @forensics {type UIDetectionResult}
 
+pub using @cv_advanced {type UltrasoundConfig}
+
 pub using @advanced_imaging {type UltrasoundData as UltrasoundDataAI}
+
+pub using @cv_advanced {type UltrasoundMode}
 
 pub using @lib {type UnifiedImageInfo}
 

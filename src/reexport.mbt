@@ -15783,3 +15783,88 @@ pub fn mri_compute_t2_map(
 ) -> Array[Double] {
   @cv_advanced.mri_compute_t2_map(images, echo_times)
 }
+
+///|
+pub type UltrasoundMode = @cv_advanced.UltrasoundMode
+
+///|
+pub type UltrasoundConfig = @cv_advanced.UltrasoundConfig
+
+///|
+pub type ElastographyResult = @cv_advanced.ElastographyResult
+
+///|
+pub fn ultrasound_speckle_reduction(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  window_size : Int,
+) -> Array[Double] {
+  @cv_advanced.ultrasound_speckle_reduction(image, width, height, window_size)
+}
+
+///|
+pub fn ultrasound_envelope_detection(
+  rf_signal : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.ultrasound_envelope_detection(rf_signal)
+}
+
+///|
+pub fn ultrasound_log_compression(
+  image : Array[Double],
+  dynamic_range : Double,
+  gain : Double,
+) -> Array[Double] {
+  @cv_advanced.ultrasound_log_compression(image, dynamic_range, gain)
+}
+
+///|
+pub fn ultrasound_scan_conversion(
+  polar_data : Array[Double],
+  num_lines : Int,
+  num_samples : Int,
+  max_depth : Double,
+  output_width : Int,
+  output_height : Int,
+) -> Array[Double] {
+  @cv_advanced.ultrasound_scan_conversion(
+    polar_data, num_lines, num_samples, max_depth, output_width, output_height,
+  )
+}
+
+///|
+pub fn ultrasound_elastography(
+  pre_image : Array[Double],
+  post_image : Array[Double],
+  width : Int,
+  height : Int,
+  window_size : Int,
+) -> ElastographyResult {
+  @cv_advanced.ultrasound_elastography(
+    pre_image, post_image, width, height, window_size,
+  )
+}
+
+///|
+pub fn ultrasound_doppler_shift(
+  transmitted_freq : Double,
+  reflected_freq : Double,
+  speed_of_sound : Double,
+) -> Double {
+  @cv_advanced.ultrasound_doppler_shift(
+    transmitted_freq, reflected_freq, speed_of_sound,
+  )
+}
+
+///|
+pub fn ultrasound_time_gain_compensation(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  attenuation : Double,
+) -> Array[Double] {
+  @cv_advanced.ultrasound_time_gain_compensation(
+    image, width, height, attenuation,
+  )
+}
