@@ -69,6 +69,8 @@ pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
 
 pub fn create_tracked_object(Int, Array[Int], String, Double) -> TrackedObject
 
+pub fn cross_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
+
 pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
@@ -169,6 +171,8 @@ pub fn motion_morphology(MotionMask, Int) -> MotionMask
 
 pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
+pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
+
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
@@ -186,6 +190,8 @@ pub fn phase12_total_functions() -> Int
 pub fn phase12_total_tests() -> Int
 
 pub fn phase12_total_types() -> Int
+
+pub fn positional_encoding(Int, Int) -> Array[Double]
 
 pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
 
@@ -211,7 +217,13 @@ pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
 
 pub fn save_orb_trajectory(OrbSlamSystem) -> String
 
+pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
+
+pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
+
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
+
+pub fn softmax(Array[Double]) -> Array[Double]
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
@@ -287,6 +299,26 @@ pub(all) struct AffineMatrix {
 pub fn AffineMatrix::equal(Self, Self) -> Bool
 pub fn AffineMatrix::not_equal(Self, Self) -> Bool
 pub fn AffineMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AttentionParams {
+  d_model : Int
+  num_heads : Int
+  d_k : Int
+  d_v : Int
+  scale : Double
+} derive(Eq, @debug.Debug)
+pub fn AttentionParams::equal(Self, Self) -> Bool
+pub fn AttentionParams::not_equal(Self, Self) -> Bool
+pub fn AttentionParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum AttentionType {
+  SelfAttention
+  CrossAttention
+  MultiHead
+} derive(Eq, @debug.Debug)
+pub fn AttentionType::equal(Self, Self) -> Bool
+pub fn AttentionType::not_equal(Self, Self) -> Bool
+pub fn AttentionType::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BackgroundMethod {
   GMM

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v332.0.0 - GeoVerse Phase 13: 注意力机制
+- 扩展 `src/cv_advanced/`：注意力机制 — SelfAttention/CrossAttention/MultiHead
+  - **attention**：AttentionType / AttentionParams + softmax / scaled_dot_product_attention / self_attention / cross_attention / multi_head_attention / positional_encoding
+  - Phase 13 深度学习大扩展 — Transformer 核心注意力机制
+- 新增 2 类型 + 7 公共函数，reexport.mbt 注册顶层 API（softmax 重名→attention_softmax）
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7235×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v331.0.0 - GeoVerse Phase 13: 卷积层扩展
 - 扩展 `src/cv_advanced/`：卷积层扩展 — Conv1D/Conv3D/Depthwise/Grouped/Dilated/Transpose
   - **conv_layers**：Conv1DParams / Conv3DParams / DepthwiseConvParams + conv1d / conv3d / depthwise_conv2d / grouped_conv2d / dilated_conv2d / transpose_conv2d

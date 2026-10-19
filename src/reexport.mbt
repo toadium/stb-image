@@ -14733,3 +14733,69 @@ pub fn transpose_conv2d(
     input_h,
   )
 }
+
+///|
+pub type AttentionType = @cv_advanced.AttentionType
+
+///|
+pub type AttentionParams = @cv_advanced.AttentionParams
+
+///|
+pub fn attention_softmax(input : Array[Double]) -> Array[Double] {
+  @cv_advanced.softmax(input)
+}
+
+///|
+pub fn scaled_dot_product_attention(
+  query : Array[Double],
+  key : Array[Double],
+  value : Array[Double],
+  scale : Double,
+) -> Array[Double] {
+  @cv_advanced.scaled_dot_product_attention(query, key, value, scale)
+}
+
+///|
+pub fn self_attention(
+  input : Array[Double],
+  weight_q : Array[Double],
+  weight_k : Array[Double],
+  weight_v : Array[Double],
+  params : AttentionParams,
+) -> Array[Double] {
+  @cv_advanced.self_attention(input, weight_q, weight_k, weight_v, params)
+}
+
+///|
+pub fn cross_attention(
+  query_input : Array[Double],
+  key_input : Array[Double],
+  value_input : Array[Double],
+  weight_q : Array[Double],
+  weight_k : Array[Double],
+  weight_v : Array[Double],
+  params : AttentionParams,
+) -> Array[Double] {
+  @cv_advanced.cross_attention(
+    query_input, key_input, value_input, weight_q, weight_k, weight_v, params,
+  )
+}
+
+///|
+pub fn multi_head_attention(
+  input : Array[Double],
+  weight_q : Array[Double],
+  weight_k : Array[Double],
+  weight_v : Array[Double],
+  weight_o : Array[Double],
+  params : AttentionParams,
+) -> Array[Double] {
+  @cv_advanced.multi_head_attention(
+    input, weight_q, weight_k, weight_v, weight_o, params,
+  )
+}
+
+///|
+pub fn positional_encoding(seq_len : Int, d_model : Int) -> Array[Double] {
+  @cv_advanced.positional_encoding(seq_len, d_model)
+}

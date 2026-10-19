@@ -269,6 +269,8 @@ pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
 
 pub fn arnold_scramble_enc(@types.Image, @encryption.ArnoldParams) -> @encryption.EncryptionResult raise @types.LoadError
 
+pub fn attention_softmax(Array[Double]) -> Array[Double]
+
 pub fn augment_features(Array[Double], noise_level? : Double) -> Array[Double]
 
 pub fn augment_random_noise(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
@@ -944,6 +946,8 @@ pub fn crop(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadE
 pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError
 
 pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
+
+pub fn cross_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.AttentionParams) -> Array[Double]
 
 pub fn cross_entropy_loss(Array[Double], Int) -> Double
 
@@ -2599,6 +2603,8 @@ pub fn multi_band_blend_16(@types.Image16, @types.Image16, @types.Image16, num_b
 
 pub fn multi_band_blend_f(@types.ImageF, @types.ImageF, @types.ImageF, num_bands? : Int) -> @types.ImageF raise @types.LoadError
 
+pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.AttentionParams) -> Array[Double]
+
 pub fn multi_scale_recognize(@types.Image, Array[(String, Array[Double])], Array[Int], distance_metric? : String) -> (String, Double)
 
 pub fn multilingual_ocr_default_config() -> @ocr.MultilingualOcrConfig
@@ -2896,6 +2902,8 @@ pub fn point_cloud_new() -> @stereo3d.PointCloud
 pub fn pointcloud_voxel_downsample(@stereo3d.PointCloud, voxel_size? : Double) -> @stereo3d.PointCloud
 
 pub fn pose_estimation_report_to_string_pe(Array[@pose_estimation.HumanPose], @pose_estimation.ActionRecognitionResult) -> String
+
+pub fn positional_encoding(Int, Int) -> Array[Double]
 
 pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -3267,6 +3275,8 @@ pub fn scalar_field_to_image(@fieldimg.ScalarField) -> @types.Image
 
 pub fn scalar_field_zeros(Int, Int) -> @fieldimg.ScalarField raise @types.LoadError
 
+pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
+
 pub fn scan_document_preprocess(@types.Image, @ocr.ScanOCRConfig) -> @types.Image raise @types.LoadError
 
 pub fn scan_ocr_default_config() -> @ocr.ScanOCRConfig
@@ -3316,6 +3326,8 @@ pub fn segmentation_to_color(@segment.SegmentationResult, Int, Int) -> @types.Im
 pub fn segmentation_to_image(@segmentation.SemanticSegmentationResult) -> @types.Image
 
 pub fn select_adaptive_config(@ocr.ScanQuality) -> @ocr.AdaptivePreprocessConfig raise @types.LoadError
+
+pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.AttentionParams) -> Array[Double]
 
 pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 
@@ -3893,6 +3905,10 @@ pub using @encryption {type ArnoldParams}
 pub using @style_transfer {type ArtStyle}
 
 pub using @intelligent_vision {type AstronomicalImageTask as AstronomicalImageTaskIV}
+
+pub using @cv_advanced {type AttentionParams}
+
+pub using @cv_advanced {type AttentionType}
 
 pub using @ocr {type AugmentationConfig}
 
