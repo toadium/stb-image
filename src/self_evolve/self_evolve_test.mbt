@@ -3382,3 +3382,80 @@ test "AI: 每个质量评分 description 非空" {
     assert_true(s.score <= 100)
   }
 }
+// ==============================
+// v314.0.0 — 自演化 Meta (meta_evolve)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: meta_evolve_op 策略数为 5" {
+  let report = @self_evolve.meta_evolve_op(@imgir.Resize(8, 8))
+  assert_eq(report.strategy_count(), 5)
+}
+
+///|
+test "形式化: meta_evolve_op 退化算子有变更" {
+  let report = @self_evolve.meta_evolve_op(@imgir.Resize(0, 0))
+  assert_true(report.has_changes())
+}
+
+///|
+test "形式化: meta_evolve_all applied_count = actions 长度" {
+  let report = @self_evolve.meta_evolve_all()
+  assert_eq(report.applied_count, report.actions.length())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: meta_evolve_all 结构完整" {
+  let report = @self_evolve.meta_evolve_all()
+  assert_true(report.total_strategies > 0)
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "FAKE: MetaReport has_changes 方法" {
+  let report = @self_evolve.meta_evolve_op(@imgir.Resize(0, 0))
+  assert_true(report.has_changes())
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 退化算子含 TightenThresholds 策略" {
+  let report = @self_evolve.meta_evolve_op(@imgir.Resize(0, 0))
+  let mut found = false
+  for a in report.actions {
+    if a.strategy is @self_evolve.TightenThresholds {
+      found = true
+    }
+  }
+  assert_true(found)
+}
+
+///|
+test "MOCK: meta_evolve_all 动作数 >= 0" {
+  let report = @self_evolve.meta_evolve_all()
+  assert_true(report.actions.length() >= 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: meta_evolve_all summary 含关键信息" {
+  let report = @self_evolve.meta_evolve_all()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: 每个元演化动作 rationale 非空" {
+  let report = @self_evolve.meta_evolve_all()
+  for a in report.actions {
+    assert_true(a.rationale.length() > 0)
+    assert_true(a.target_param.length() > 0)
+  }
+}

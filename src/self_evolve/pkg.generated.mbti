@@ -163,6 +163,10 @@ pub fn is_identity_op(@imgir.IROp) -> Bool
 
 pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
 
+pub fn meta_evolve_all() -> MetaReport
+
+pub fn meta_evolve_op(@imgir.IROp) -> MetaReport
+
 pub fn optimize_all(@imgir.IRPipeline) -> OptimizationReport
 
 pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
@@ -741,6 +745,40 @@ pub(all) struct LoopStep {
 pub fn LoopStep::equal(Self, Self) -> Bool
 pub fn LoopStep::not_equal(Self, Self) -> Bool
 pub fn LoopStep::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaAction {
+  strategy : MetaStrategy
+  target_param : String
+  current_value : Int
+  new_value : Int
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn MetaAction::equal(Self, Self) -> Bool
+pub fn MetaAction::not_equal(Self, Self) -> Bool
+pub fn MetaAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaReport {
+  actions : Array[MetaAction]
+  total_strategies : Int
+  applied_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn MetaReport::equal(Self, Self) -> Bool
+pub fn MetaReport::has_changes(Self) -> Bool
+pub fn MetaReport::not_equal(Self, Self) -> Bool
+pub fn MetaReport::strategy_count(Self) -> Int
+pub fn MetaReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MetaStrategy {
+  TightenThresholds
+  LoosenThresholds
+  AddTestCategory
+  RemoveRedundancy
+  IncreaseCoverage
+} derive(Eq, @debug.Debug)
+pub fn MetaStrategy::equal(Self, Self) -> Bool
+pub fn MetaStrategy::not_equal(Self, Self) -> Bool
+pub fn MetaStrategy::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ModuleDep {
   source : String

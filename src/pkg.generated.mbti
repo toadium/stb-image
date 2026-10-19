@@ -2370,6 +2370,14 @@ pub fn merge_adjacent_components(Array[@ocr.OcrConnectedComponent], Int) -> Arra
 
 pub fn merge_small_segments(Array[(Int, Int, Int, Int)], Int, Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
 
+pub fn meta_evolve_all() -> @self_evolve.MetaReport
+
+pub fn meta_evolve_op(@imgir.IROp) -> @self_evolve.MetaReport
+
+pub fn meta_report_has_changes(@self_evolve.MetaReport) -> Bool
+
+pub fn meta_report_strategy_count(@self_evolve.MetaReport) -> Int
+
 pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
 
 pub fn morph_blackhat(@types.Image) -> @types.Image
@@ -4312,6 +4320,12 @@ pub using @medical {type MedicalSegmentationConfig}
 pub using @ocr {type MemoryUsageStats}
 
 pub using @stereo3d {type Mesh3d}
+
+pub using @self_evolve {type MetaAction}
+
+pub using @self_evolve {type MetaReport}
+
+pub using @self_evolve {type MetaStrategy}
 
 pub using @forensics_enhanced {type MetadataForensicsResult}
 

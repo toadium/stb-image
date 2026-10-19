@@ -13605,3 +13605,33 @@ pub fn quality_report_is_passing(report : QualityReport) -> Bool {
 pub fn quality_report_dimension_count(report : QualityReport) -> Int {
   @self_evolve.QualityReport::dimension_count(report)
 }
+// self_evolve — 自演化 Meta（v314.0.0）
+
+///|
+pub type MetaStrategy = @self_evolve.MetaStrategy
+
+///|
+pub type MetaAction = @self_evolve.MetaAction
+
+///|
+pub type MetaReport = @self_evolve.MetaReport
+
+///|
+pub fn meta_evolve_op(op : @imgir.IROp) -> MetaReport {
+  @self_evolve.meta_evolve_op(op)
+}
+
+///|
+pub fn meta_evolve_all() -> MetaReport {
+  @self_evolve.meta_evolve_all()
+}
+
+///|
+pub fn meta_report_has_changes(report : MetaReport) -> Bool {
+  @self_evolve.MetaReport::has_changes(report)
+}
+
+///|
+pub fn meta_report_strategy_count(report : MetaReport) -> Int {
+  @self_evolve.MetaReport::strategy_count(report)
+}
