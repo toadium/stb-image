@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v346.0.0 - GeoVerse Phase 14: DICOM 扩展
+- 扩展 `src/cv_advanced/`：DICOM 扩展 — 元数据/嵌套/多帧
+  - **dicom_ext**：DicomVR / DicomTag / DicomMetadata / DicomImage + parse_dicom_metadata / extract_dicom_pixels / dicom_window_level / dicom_to_image / dicom_multiframe_extract / set_window_level
+  - Phase 14 医学影像大扩展开始 — DICOM 医学影像格式
+- 新增 4 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7361×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v345.0.0 - GeoVerse Phase 13 完成: 综合报告
 - 扩展 `src/cv_advanced/`：Phase 13 综合报告 — 汇总 v331-v344 全部能力
   - **phase13_report**：Phase13Capability / Phase13Report + phase13_capabilities / phase13_total_types / phase13_total_functions / phase13_total_tests / phase13_report / phase13_is_complete

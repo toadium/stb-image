@@ -129,6 +129,12 @@ pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> Mot
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
+pub fn dicom_multiframe_extract(DicomImage, Int) -> Array[Double]
+
+pub fn dicom_to_image(DicomImage) -> Array[Double]
+
+pub fn dicom_window_level(Double, Double, Double) -> Double
+
 pub fn diffusion_forward(Array[Double], Array[Double], Double) -> Array[Double]
 
 pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[Double]
@@ -148,6 +154,8 @@ pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) 
 pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
+
+pub fn extract_dicom_pixels(Array[Int], Int, Int) -> Array[Double]
 
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
 
@@ -269,6 +277,8 @@ pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
 
+pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, Int) -> DicomMetadata
+
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
 pub fn phase12_capabilities() -> Array[Phase12Capability]
@@ -348,6 +358,8 @@ pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double],
 pub fn score_based_loss(Array[Double], Array[Double]) -> Double
 
 pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
+
+pub fn set_window_level(DicomMetadata, Double, Double) -> DicomMetadata
 
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
 
@@ -672,6 +684,60 @@ pub(all) struct DepthwiseConvParams {
 pub fn DepthwiseConvParams::equal(Self, Self) -> Bool
 pub fn DepthwiseConvParams::not_equal(Self, Self) -> Bool
 pub fn DepthwiseConvParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DicomImage {
+  metadata : DicomMetadata
+  pixel_data : Array[Double]
+  num_frames : Int
+} derive(Eq, @debug.Debug)
+pub fn DicomImage::equal(Self, Self) -> Bool
+pub fn DicomImage::not_equal(Self, Self) -> Bool
+pub fn DicomImage::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DicomMetadata {
+  patient_id : String
+  study_id : String
+  series_id : String
+  instance_id : String
+  modality : String
+  rows : Int
+  cols : Int
+  bits_allocated : Int
+  window_center : Double
+  window_width : Double
+} derive(Eq, @debug.Debug)
+pub fn DicomMetadata::equal(Self, Self) -> Bool
+pub fn DicomMetadata::not_equal(Self, Self) -> Bool
+pub fn DicomMetadata::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DicomTag {
+  group : Int
+  element : Int
+  vr : DicomVR
+  value : String
+} derive(Eq, @debug.Debug)
+pub fn DicomTag::equal(Self, Self) -> Bool
+pub fn DicomTag::not_equal(Self, Self) -> Bool
+pub fn DicomTag::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DicomVR {
+  US
+  SS
+  UI
+  CS
+  DA
+  TM
+  PN
+  LO
+  SH
+  OB
+  OW
+  OF
+  SQ
+} derive(Eq, @debug.Debug)
+pub fn DicomVR::equal(Self, Self) -> Bool
+pub fn DicomVR::not_equal(Self, Self) -> Bool
+pub fn DicomVR::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DiffusionConfig {
   num_steps : Int

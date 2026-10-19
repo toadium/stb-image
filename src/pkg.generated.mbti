@@ -1245,6 +1245,12 @@ pub fn dhash_16(@types.Image16) -> Array[Int] raise @types.LoadError
 
 pub fn dhash_f(@types.ImageF) -> Array[Int] raise @types.LoadError
 
+pub fn dicom_multiframe_extract(@cv_advanced.DicomImage, Int) -> Array[Double]
+
+pub fn dicom_to_image(@cv_advanced.DicomImage) -> Array[Double]
+
+pub fn dicom_window_level(Double, Double, Double) -> Double
+
 pub fn dictionary_create(Array[String]) -> @ocr.Dictionary raise @types.LoadError
 
 pub fn dictionary_create_common_english() -> @ocr.Dictionary
@@ -1550,6 +1556,8 @@ pub fn extract_combined_enhanced_features(@types.Image, @ocr.OcrAccuracyEnhanced
 pub fn extract_combined_features_cbir(@types.Image) -> @retrieval.CBIRImageFeature
 
 pub fn extract_combined_ocr_features(@types.Image) -> Array[Double] raise @types.LoadError
+
+pub fn extract_dicom_pixels(Array[Int], Int, Int) -> Array[Double]
 
 pub fn extract_directional_features(@types.Image) -> Array[Double]
 
@@ -2837,6 +2845,8 @@ pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.Loa
 
 pub fn parse_cli_args(Array[String]) -> @ocr.CliConfig raise @types.LoadError
 
+pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, Int) -> @cv_advanced.DicomMetadata
+
 pub fn paste_tile(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
 pub fn perf_check_regression(@self_evolve.PerfBaseline, @self_evolve.PerfBaseline) -> @self_evolve.PerfRegression
@@ -3460,6 +3470,8 @@ pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 pub fn set_flip_vertically_on_load(Bool) -> Unit
 
 pub fn set_unpremultiply_on_load(Bool) -> Unit
+
+pub fn set_window_level(@cv_advanced.DicomMetadata, Double, Double) -> @cv_advanced.DicomMetadata
 
 pub fn shadow_removal(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
 
@@ -4313,6 +4325,14 @@ pub using @feature {type DescriptorMatch}
 pub using @forensics {type DetailAnalysisResult}
 
 pub using @intelligent_vision {type DetectionResultIV}
+
+pub using @cv_advanced {type DicomImage}
+
+pub using @cv_advanced {type DicomMetadata}
+
+pub using @cv_advanced {type DicomTag}
+
+pub using @cv_advanced {type DicomVR}
 
 pub using @ocr {type DictCharEntry}
 

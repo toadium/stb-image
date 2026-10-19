@@ -15607,3 +15607,71 @@ pub fn phase13_report() -> Phase13Report {
 pub fn phase13_is_complete() -> Bool {
   @cv_advanced.phase13_is_complete()
 }
+
+///|
+pub type DicomVR = @cv_advanced.DicomVR
+
+///|
+pub type DicomTag = @cv_advanced.DicomTag
+
+///|
+pub type DicomMetadata = @cv_advanced.DicomMetadata
+
+///|
+pub type DicomImage = @cv_advanced.DicomImage
+
+///|
+pub fn parse_dicom_metadata(
+  patient_id : String,
+  study_id : String,
+  series_id : String,
+  instance_id : String,
+  modality : String,
+  rows : Int,
+  cols : Int,
+  bits_allocated : Int,
+) -> DicomMetadata {
+  @cv_advanced.parse_dicom_metadata(
+    patient_id, study_id, series_id, instance_id, modality, rows, cols, bits_allocated,
+  )
+}
+
+///|
+pub fn extract_dicom_pixels(
+  raw_data : Array[Int],
+  rows : Int,
+  cols : Int,
+) -> Array[Double] {
+  @cv_advanced.extract_dicom_pixels(raw_data, rows, cols)
+}
+
+///|
+pub fn dicom_window_level(
+  pixel : Double,
+  window_center : Double,
+  window_width : Double,
+) -> Double {
+  @cv_advanced.dicom_window_level(pixel, window_center, window_width)
+}
+
+///|
+pub fn dicom_to_image(dicom : DicomImage) -> Array[Double] {
+  @cv_advanced.dicom_to_image(dicom)
+}
+
+///|
+pub fn dicom_multiframe_extract(
+  dicom : DicomImage,
+  frame_idx : Int,
+) -> Array[Double] {
+  @cv_advanced.dicom_multiframe_extract(dicom, frame_idx)
+}
+
+///|
+pub fn set_window_level(
+  metadata : DicomMetadata,
+  window_center : Double,
+  window_width : Double,
+) -> DicomMetadata {
+  @cv_advanced.set_window_level(metadata, window_center, window_width)
+}
