@@ -14603,3 +14603,40 @@ pub fn reset_vins(config : VinsConfig) -> (VinsState, VinsConfig) {
 pub fn vins_check_initialization(state : VinsState) -> Bool {
   @cv_advanced.vins_check_initialization(state)
 }
+// cv_advanced — Phase 12 报告（v330.0.0）
+
+///|
+pub type Phase12Capability = @cv_advanced.Phase12Capability
+
+///|
+pub type Phase12Report = @cv_advanced.Phase12Report
+
+///|
+pub fn phase12_capabilities() -> Array[Phase12Capability] {
+  @cv_advanced.phase12_capabilities()
+}
+
+///|
+pub fn phase12_total_types() -> Int {
+  @cv_advanced.phase12_total_types()
+}
+
+///|
+pub fn phase12_total_functions() -> Int {
+  @cv_advanced.phase12_total_functions()
+}
+
+///|
+pub fn phase12_total_tests() -> Int {
+  @cv_advanced.phase12_total_tests()
+}
+
+///|
+pub fn phase12_report() -> Phase12Report {
+  @cv_advanced.phase12_report()
+}
+
+///|
+pub fn phase12_is_complete() -> Bool {
+  @cv_advanced.phase12_is_complete()
+}

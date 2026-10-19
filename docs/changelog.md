@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v330.0.0 - GeoVerse Phase 12 完成: 综合报告
+- 扩展 `src/cv_advanced/`：Phase 12 综合报告 — 汇总 v316-v329 全部能力
+  - **phase12_report**：Phase12Capability / Phase12Report + phase12_capabilities / phase12_total_types / phase12_total_functions / phase12_total_tests / phase12_report / phase12_is_complete
+  - Phase 12 CV算法大扩展完成：特征检测→描述子匹配→相机标定→极线几何→立体视觉→光流→目标跟踪→背景建模→运动检测→图像配准→SLAM前端→SLAM后端→ORB-SLAM→VINS
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + E2E + AI 多手段测试）
+- 7217×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- **Phase 12 ✅ 完成**：14 个版本，49 类型 + 100 函数 + 126 tests
 ## v329.0.0 - GeoVerse Phase 12: VINS
 - 扩展 `src/cv_advanced/`：VINS — 视觉惯性导航系统
   - **vins**：ImuData / VinsConfig / VinsState / VinsStats + init_vins / process_imu / process_image_vins / vins_optimize / get_vins_state / vins_stats / reset_vins / vins_check_initialization

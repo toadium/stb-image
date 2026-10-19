@@ -165,6 +165,18 @@ pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
+pub fn phase12_capabilities() -> Array[Phase12Capability]
+
+pub fn phase12_is_complete() -> Bool
+
+pub fn phase12_report() -> Phase12Report
+
+pub fn phase12_total_functions() -> Int
+
+pub fn phase12_total_tests() -> Int
+
+pub fn phase12_total_types() -> Int
+
 pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
 
 pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
@@ -616,6 +628,29 @@ pub(all) struct OrbSlamSystem {
 pub fn OrbSlamSystem::equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::not_equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase12Capability {
+  version : String
+  name : String
+  types : Int
+  functions : Int
+  tests : Int
+} derive(Eq, @debug.Debug)
+pub fn Phase12Capability::equal(Self, Self) -> Bool
+pub fn Phase12Capability::not_equal(Self, Self) -> Bool
+pub fn Phase12Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase12Report {
+  total_versions : Int
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  capabilities : Array[Phase12Capability]
+  is_complete : Bool
+} derive(Eq, @debug.Debug)
+pub fn Phase12Report::equal(Self, Self) -> Bool
+pub fn Phase12Report::not_equal(Self, Self) -> Bool
+pub fn Phase12Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Point3D {
   x : Double
