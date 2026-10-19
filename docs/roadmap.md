@@ -2799,7 +2799,7 @@ flowchart LR
 | v333.0.0 | Transformer | Encoder/Decoder/Positional | ✅ |
 | v334.0.0 | 模型量化 | INT8/INT4/混合精度 | ✅ |
 | v335.0.0 | 模型剪枝 | 结构化/非结构化/通道剪枝 | ✅ |
-| v336.0.0 | 知识蒸馏 | 教师-学生/特征蒸馏 | ⬜ |
+| v336.0.0 | 知识蒸馏 | 教师-学生/特征蒸馏 | ✅ |
 | v337.0.0 | GAN 扩展 | DCGAN/StyleGAN/WGAN | ⬜ |
 | v338.0.0 | VAE 扩展 | β-VAE/VQ-VAE/Conditional | ⬜ |
 | v339.0.0 | Diffusion 模型 | DDPM/DDIM/Score-based | ⬜ |

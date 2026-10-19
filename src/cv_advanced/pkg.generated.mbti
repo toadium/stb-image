@@ -51,6 +51,8 @@ pub fn compute_horn_schunck(@types.Image, @types.Image, FlowParams) -> FlowField
 
 pub fn compute_iou(Track, Track) -> Double
 
+pub fn compute_kl_divergence(Array[Double], Array[Double]) -> Double
+
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
 
 pub fn compute_motion_energy(MotionMask) -> Double
@@ -80,6 +82,8 @@ pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
 pub fn create_tracked_object(Int, Array[Int], String, Double) -> TrackedObject
 
 pub fn cross_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
+
+pub fn cross_entropy_loss(Array[Double], Array[Double]) -> Double
 
 pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
@@ -114,6 +118,8 @@ pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
+
+pub fn feature_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
 
 pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
 
@@ -170,6 +176,8 @@ pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -
 pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn knowledge_distill(Array[Double], Array[Double], Array[Double], DistillationConfig) -> DistillationResult
 
 pub fn layer_norm(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
 
@@ -235,6 +243,8 @@ pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResul
 
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
+pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
+
 pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
 
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
@@ -254,6 +264,8 @@ pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double],
 pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
+
+pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
 pub fn softmax(Array[Double]) -> Array[Double]
 
@@ -530,6 +542,35 @@ pub(all) struct DisparityMap {
 pub fn DisparityMap::equal(Self, Self) -> Bool
 pub fn DisparityMap::not_equal(Self, Self) -> Bool
 pub fn DisparityMap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DistillationConfig {
+  temperature : Double
+  alpha : Double
+  beta : Double
+  distill_type : DistillationType
+} derive(Eq, @debug.Debug)
+pub fn DistillationConfig::equal(Self, Self) -> Bool
+pub fn DistillationConfig::not_equal(Self, Self) -> Bool
+pub fn DistillationConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DistillationResult {
+  teacher_loss : Double
+  student_loss : Double
+  distill_loss : Double
+  total_loss : Double
+} derive(Eq, @debug.Debug)
+pub fn DistillationResult::equal(Self, Self) -> Bool
+pub fn DistillationResult::not_equal(Self, Self) -> Bool
+pub fn DistillationResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DistillationType {
+  ResponseBased
+  FeatureBased
+  RelationBased
+} derive(Eq, @debug.Debug)
+pub fn DistillationType::equal(Self, Self) -> Bool
+pub fn DistillationType::not_equal(Self, Self) -> Bool
+pub fn DistillationType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EpipolarLine {
   a : Double

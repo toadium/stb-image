@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v336.0.0 - GeoVerse Phase 13: 知识蒸馏
+- 扩展 `src/cv_advanced/`：知识蒸馏 — 教师-学生/特征蒸馏
+  - **distillation**：DistillationType / DistillationConfig / DistillationResult + soft_targets / compute_kl_divergence / cross_entropy_loss / knowledge_distill / feature_distill / relation_distill
+  - Phase 13 深度学习大扩展 — 模型压缩知识蒸馏
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API（cross_entropy_loss 重名→distill_cross_entropy_loss）
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7271×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v335.0.0 - GeoVerse Phase 13: 模型剪枝
 - 扩展 `src/cv_advanced/`：模型剪枝 — 结构化/非结构化/通道剪枝
   - **pruning**：PruningType / PruningConfig / PruningResult + compute_pruning_mask / prune_unstructured / prune_structured / prune_channels / apply_pruning_mask / compute_sparsity

@@ -693,6 +693,8 @@ pub fn compute_image_text_similarity_vlm(@types.Image, String, @vlm_multimodal.V
 
 pub fn compute_iou(@cv_advanced.Track, @cv_advanced.Track) -> Double
 
+pub fn compute_kl_divergence(Array[Double], Array[Double]) -> Double
+
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], @cv_advanced.FlowParams) -> @cv_advanced.FlowField
 
 pub fn compute_mae(@types.Image, @types.Image) -> Double
@@ -1247,6 +1249,8 @@ pub fn disparity_to_depth(@types.Image, baseline? : Double, focal_length? : Doub
 
 pub fn distance_transform(@types.Image, distance_type? : Int) -> Array[Float] raise @types.LoadError
 
+pub fn distill_cross_entropy_loss(Array[Double], Array[Double]) -> Double
+
 pub fn document_enhance(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn document_statistics_enhanced(Array[@ocr.DocumentBlock]) -> (Int, Int, Int, Int, Int, Int, Int)
@@ -1586,6 +1590,8 @@ pub fn fast_gaussian_blur_1d(@types.Image, Array[Double]) -> @types.Image raise 
 pub fn fast_threshold_lut(@types.Image, Array[Int]) -> @types.Image raise @types.LoadError
 
 pub fn feature_based_registration_ra(@types.Image, @types.Image, @registration_advanced.RegistrationConfigAdvanced) -> @registration_advanced.RegistrationResultAdvanced
+
+pub fn feature_distill(Array[Double], Array[Double], @cv_advanced.DistillationConfig) -> @cv_advanced.DistillationResult
 
 pub fn feature_euclidean_distance(@cv_advanced.FloatDescriptor, @cv_advanced.FloatDescriptor) -> Double
 
@@ -2389,6 +2395,8 @@ pub fn knn_predict(@ocr.KnnClassifier, Array[Double]) -> @ocr.ClassificationResu
 
 pub fn knn_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
 
+pub fn knowledge_distill(Array[Double], Array[Double], Array[Double], @cv_advanced.DistillationConfig) -> @cv_advanced.DistillationResult
+
 pub fn knowledge_graph_edge_count(@self_evolve.KnowledgeGraph) -> Int
 
 pub fn knowledge_graph_find_degradations(@self_evolve.KnowledgeGraph, String) -> Array[@self_evolve.KnowledgeNode]
@@ -3101,6 +3109,8 @@ pub fn reinhard_tonemap_16(@types.ImageF, key? : Float) -> @types.Image16 raise 
 
 pub fn reinhard_tonemap_f(@types.ImageF, key? : Float) -> @types.ImageF raise @types.LoadError
 
+pub fn relation_distill(Array[Double], Array[Double], @cv_advanced.DistillationConfig) -> @cv_advanced.DistillationResult
+
 pub fn relevance_feedback_advanced(Array[Double], Array[Int], Array[Int], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.RelevanceFeedbackResult
 
 pub fn relocalize(@cv_advanced.SlamFrontend, @cv_advanced.SlamKeyFrame) -> @cv_advanced.SlamFrontend
@@ -3416,6 +3426,8 @@ pub fn smart_reading_order(Array[@ocr.EnhancedDocumentElement], @ocr.LayoutType,
 pub fn smart_segment_chars(@types.Image, @ocr.MultilingualOcrEnhancedConfig) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError
 
 pub fn smart_spacing_process(String, Array[String]) -> String
+
+pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
 pub fn softmax(Array[Double]) -> Array[Double]
 
@@ -4219,6 +4231,12 @@ pub using @ocr {type DigitOcrConfig}
 pub using @cv_advanced {type DisparityMap}
 
 pub using @ocr {type DistanceMetric}
+
+pub using @cv_advanced {type DistillationConfig}
+
+pub using @cv_advanced {type DistillationResult}
+
+pub using @cv_advanced {type DistillationType}
 
 pub using @ocr {type DistortionDetectionResult}
 

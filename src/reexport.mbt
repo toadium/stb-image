@@ -15013,3 +15013,63 @@ pub fn apply_pruning_mask(
 pub fn compute_sparsity(weights : Array[Double]) -> Double {
   @cv_advanced.compute_sparsity(weights)
 }
+
+///|
+pub type DistillationType = @cv_advanced.DistillationType
+
+///|
+pub type DistillationConfig = @cv_advanced.DistillationConfig
+
+///|
+pub type DistillationResult = @cv_advanced.DistillationResult
+
+///|
+pub fn soft_targets(
+  logits : Array[Double],
+  temperature : Double,
+) -> Array[Double] {
+  @cv_advanced.soft_targets(logits, temperature)
+}
+
+///|
+pub fn compute_kl_divergence(p : Array[Double], q : Array[Double]) -> Double {
+  @cv_advanced.compute_kl_divergence(p, q)
+}
+
+///|
+pub fn distill_cross_entropy_loss(
+  predictions : Array[Double],
+  targets : Array[Double],
+) -> Double {
+  @cv_advanced.cross_entropy_loss(predictions, targets)
+}
+
+///|
+pub fn knowledge_distill(
+  teacher_logits : Array[Double],
+  student_logits : Array[Double],
+  hard_targets : Array[Double],
+  config : DistillationConfig,
+) -> DistillationResult {
+  @cv_advanced.knowledge_distill(
+    teacher_logits, student_logits, hard_targets, config,
+  )
+}
+
+///|
+pub fn feature_distill(
+  teacher_features : Array[Double],
+  student_features : Array[Double],
+  config : DistillationConfig,
+) -> DistillationResult {
+  @cv_advanced.feature_distill(teacher_features, student_features, config)
+}
+
+///|
+pub fn relation_distill(
+  teacher_features : Array[Double],
+  student_features : Array[Double],
+  config : DistillationConfig,
+) -> DistillationResult {
+  @cv_advanced.relation_distill(teacher_features, student_features, config)
+}
