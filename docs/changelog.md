@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v348.0.0 - GeoVerse Phase 14: MRI 处理
+- 扩展 `src/cv_advanced/`：MRI 处理 — K空间/伪影校正/分割
+  - **mri_processing**：MRIPulseType / KSpaceData / MRIConfig + mri_kspace_to_image / mri_image_to_kspace / mri_correct_bias_field / mri_correct_ghosting / mri_compute_t1_map / mri_compute_t2_map
+  - Phase 14 医学影像大扩展 — MRI K空间处理与定量映射
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7379×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v347.0.0 - GeoVerse Phase 14: CT 重建
 - 扩展 `src/cv_advanced/`：CT 重建 — FBP/迭代重建/ART
   - **ct_reconstruction**：ReconstructionMethod / CTProjection / CTConfig + ct_radon_transform / ct_ramp_filter / ct_fbp_reconstruct / ct_art_reconstruct / ct_iterative_reconstruct

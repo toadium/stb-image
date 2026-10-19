@@ -2683,6 +2683,18 @@ pub fn motion_morphology(@cv_advanced.MotionMask, Int) -> @cv_advanced.MotionMas
 
 pub fn motion_optical_flow(@cv_advanced.FlowField, Double) -> @cv_advanced.MotionMask
 
+pub fn mri_compute_t1_map(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn mri_compute_t2_map(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn mri_correct_bias_field(Array[Double], Array[Double], Int, Int) -> Array[Double]
+
+pub fn mri_correct_ghosting(Array[Double], Int, Int, Double) -> Array[Double]
+
+pub fn mri_image_to_kspace(Array[Double], Int, Int) -> @cv_advanced.KSpaceData
+
+pub fn mri_kspace_to_image(@cv_advanced.KSpaceData) -> Array[Double]
+
 pub fn mri_synthesize_ai(Int, Int, Double) -> @advanced_imaging.MRIData
 
 pub fn mse(@types.Image, @types.Image) -> Double raise @types.LoadError
@@ -4750,6 +4762,8 @@ pub using @codec {type JpegXlInfoExtended}
 
 pub using @segmentation {type KMeansConfig}
 
+pub using @cv_advanced {type KSpaceData}
+
 pub using @cv_advanced {type KalmanState}
 
 pub using @slam {type KeyFrame as KeyFrameSL}
@@ -4822,7 +4836,11 @@ pub using @self_evolve {type LoopStep}
 
 pub using @photo_enhance {type LowLightConfig}
 
+pub using @cv_advanced {type MRIConfig}
+
 pub using @advanced_imaging {type MRIData as MRIDataAI}
+
+pub using @cv_advanced {type MRIPulseType}
 
 pub using @slam {type MapPoint as MapPointSL}
 

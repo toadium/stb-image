@@ -15724,3 +15724,62 @@ pub fn ct_iterative_reconstruct(
 ) -> Array[Double] {
   @cv_advanced.ct_iterative_reconstruct(projection, config, num_iterations)
 }
+
+///|
+pub type MRIPulseType = @cv_advanced.MRIPulseType
+
+///|
+pub type KSpaceData = @cv_advanced.KSpaceData
+
+///|
+pub type MRIConfig = @cv_advanced.MRIConfig
+
+///|
+pub fn mri_kspace_to_image(kspace : KSpaceData) -> Array[Double] {
+  @cv_advanced.mri_kspace_to_image(kspace)
+}
+
+///|
+pub fn mri_image_to_kspace(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+) -> KSpaceData {
+  @cv_advanced.mri_image_to_kspace(image, width, height)
+}
+
+///|
+pub fn mri_correct_bias_field(
+  image : Array[Double],
+  bias_field : Array[Double],
+  width : Int,
+  height : Int,
+) -> Array[Double] {
+  @cv_advanced.mri_correct_bias_field(image, bias_field, width, height)
+}
+
+///|
+pub fn mri_correct_ghosting(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  ghost_phase : Double,
+) -> Array[Double] {
+  @cv_advanced.mri_correct_ghosting(image, width, height, ghost_phase)
+}
+
+///|
+pub fn mri_compute_t1_map(
+  images : Array[Array[Double]],
+  inversion_times : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.mri_compute_t1_map(images, inversion_times)
+}
+
+///|
+pub fn mri_compute_t2_map(
+  images : Array[Array[Double]],
+  echo_times : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.mri_compute_t2_map(images, echo_times)
+}

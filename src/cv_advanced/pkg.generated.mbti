@@ -279,6 +279,18 @@ pub fn motion_morphology(MotionMask, Int) -> MotionMask
 
 pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
+pub fn mri_compute_t1_map(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn mri_compute_t2_map(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn mri_correct_bias_field(Array[Double], Array[Double], Int, Int) -> Array[Double]
+
+pub fn mri_correct_ghosting(Array[Double], Int, Int, Double) -> Array[Double]
+
+pub fn mri_image_to_kspace(Array[Double], Int, Int) -> KSpaceData
+
+pub fn mri_kspace_to_image(KSpaceData) -> Array[Double]
+
 pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
 pub fn nas_search((Array[Double]) -> Double, Int, Int, AutoMLConfig) -> AutoMLResult
@@ -1037,6 +1049,16 @@ pub fn ImuData::equal(Self, Self) -> Bool
 pub fn ImuData::not_equal(Self, Self) -> Bool
 pub fn ImuData::to_repr(Self) -> @debug.Repr
 
+pub(all) struct KSpaceData {
+  data_real : Array[Double]
+  data_imag : Array[Double]
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn KSpaceData::equal(Self, Self) -> Bool
+pub fn KSpaceData::not_equal(Self, Self) -> Bool
+pub fn KSpaceData::to_repr(Self) -> @debug.Repr
+
 pub(all) struct KalmanState {
   x : Double
   y : Double
@@ -1072,6 +1094,26 @@ pub(all) struct LoopClosingResult {
 pub fn LoopClosingResult::equal(Self, Self) -> Bool
 pub fn LoopClosingResult::not_equal(Self, Self) -> Bool
 pub fn LoopClosingResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MRIConfig {
+  field_strength : Double
+  te : Double
+  tr : Double
+  pulse_type : MRIPulseType
+} derive(Eq, @debug.Debug)
+pub fn MRIConfig::equal(Self, Self) -> Bool
+pub fn MRIConfig::not_equal(Self, Self) -> Bool
+pub fn MRIConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MRIPulseType {
+  SpinEcho
+  GradientEcho
+  InversionRecovery
+  EPI
+} derive(Eq, @debug.Debug)
+pub fn MRIPulseType::equal(Self, Self) -> Bool
+pub fn MRIPulseType::not_equal(Self, Self) -> Bool
+pub fn MRIPulseType::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MatcherKind {
   BruteForce
