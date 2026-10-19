@@ -529,6 +529,8 @@ pub fn check_dims(Int, Int, Int) -> Unit raise @types.LoadError
 
 pub fn check_early_stopping(@ocr.TrainingState, @ocr.TrainingConfig, Double) -> (Bool, @ocr.TrainingState)
 
+pub fn check_epipolar_constraint(@cv_advanced.EpipolarLine, Double, Double) -> Double
+
 pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> @self_evolve.EquivalenceCheck
 
 pub fn check_equivalence_all() -> @self_evolve.EquivalenceReport
@@ -647,9 +649,15 @@ pub fn compute_energy_16(@types.Image16) -> Array[Double]
 
 pub fn compute_energy_f(@types.ImageF) -> Array[Double]
 
+pub fn compute_epipolar_line(@cv_advanced.FundamentalMatrix, Double, Double) -> @cv_advanced.EpipolarLine
+
+pub fn compute_essential_matrix(@cv_advanced.FundamentalMatrix, @cv_advanced.CameraIntrinsics, @cv_advanced.CameraIntrinsics) -> @cv_advanced.EssentialMatrix
+
 pub fn compute_evi(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
+
+pub fn compute_fundamental_matrix(Array[@cv_advanced.PointCorrespondence]) -> @cv_advanced.FundamentalMatrix
 
 pub fn compute_glcm(@types.Image, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
@@ -1335,6 +1343,8 @@ pub fn erode_custom_f(@types.ImageF, @segment.StructuringElement) -> @types.Imag
 
 pub fn erode_f(@types.ImageF) -> @types.ImageF
 
+pub fn essential_matrix_svd(@cv_advanced.EssentialMatrix) -> (Double, Double, Double)
+
 pub fn estimate_affine_transform_ra(Array[@registration_advanced.FeatureMatch]) -> @registration_advanced.TransformMatrix
 
 pub fn estimate_age_gender_fr(@types.Image, @face_recognition.FaceDetectionResult) -> @face_recognition.AgeGenderEstimationResult raise @types.LoadError
@@ -1624,6 +1634,8 @@ pub fn freq_filter(@types.Image, @frequency.FreqFilterType, Float, band_width? :
 pub fn freq_filter_gaussian(@types.Image, @frequency.FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
 pub fn full_postprocess_correction(String, context_type? : String) -> @ocr.CorrectionResult raise @types.LoadError
+
+pub fn fundamental_matrix_rank(@cv_advanced.FundamentalMatrix) -> Int
 
 pub fn fuse_alpha(@types.Image, @types.Image, alpha? : Double) -> @types.Image
 
@@ -3459,6 +3471,8 @@ pub fn transpose_16(@types.Image16) -> @types.Image16
 
 pub fn transpose_f(@types.ImageF) -> @types.ImageF
 
+pub fn triangulate_point(@cv_advanced.PointCorrespondence, @cv_advanced.FundamentalMatrix) -> @cv_advanced.Point3D
+
 pub fn triangulate_points_sl(Array[Array[Double]], @slam.CameraPose, @slam.CameraPose, @slam.SLAMConfig) -> Array[@slam.MapPoint]
 
 pub fn true_color_composite(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
@@ -4022,6 +4036,8 @@ pub using @denoise {type EnhancementResult}
 
 pub using @ocr {type EnsembleConfig}
 
+pub using @cv_advanced {type EpipolarLine}
+
 pub using @self_evolve {type EquivalenceCheck}
 
 pub using @self_evolve {type EquivalenceReport}
@@ -4029,6 +4045,8 @@ pub using @self_evolve {type EquivalenceReport}
 pub using @ocr {type ErrorAnalysisEntry}
 
 pub using @ocr {type ErrorAnalysisReport}
+
+pub using @cv_advanced {type EssentialMatrix}
 
 pub using @self_evolve {type EvolutionPrediction}
 
@@ -4093,6 +4111,8 @@ pub using @feature {type FlowResult}
 pub using @frequency {type FreqFilterType}
 
 pub using @forensics {type FrequencyAnalysisResult}
+
+pub using @cv_advanced {type FundamentalMatrix}
 
 pub using @fusion_enhanced {type FusionAlgorithm}
 
@@ -4542,6 +4562,8 @@ pub using @meta {type PngTextChunk}
 
 pub using @codec {type PnmInfoExtended}
 
+pub using @cv_advanced {type Point3D}
+
 pub using @neural_rendering {type Point3D as Point3DNR}
 
 pub using @stereo3d {type Point3d}
@@ -4549,6 +4571,8 @@ pub using @stereo3d {type Point3d}
 pub using @stereo3d {type PointCloud}
 
 pub using @stereo3d {type PointCloud3D}
+
+pub using @cv_advanced {type PointCorrespondence}
 
 pub using @advanced_imaging {type PolarizationData as PolarizationDataAI}
 

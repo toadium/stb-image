@@ -2775,7 +2775,7 @@ flowchart LR
 | v316.0.0 | 特征检测扩展 | SURF/FAST/BRIEF/AKAZE | ✅ 7091×4 |
 | v317.0.0 | 描述子匹配 | BFMatcher/FLANN/KNN | ✅ 7100×4 |
 | v318.0.0 | 相机标定 | 张正友标定/畸变校正 | ✅ |
-| v319.0.0 | 极线几何 | 基础矩阵/本质矩阵 | ⬜ |
+| v319.0.0 | 极线几何 | 基础矩阵/本质矩阵 | ✅ |
 | v320.0.0 | 立体视觉扩展 | 视差/SGM/深度图 | ⬜ |
 | v321.0.0 | 光流扩展 | Lucas-Kanade/Horn-Schunck/Farneback | ⬜ |
 | v322.0.0 | 目标跟踪 | KCF/MOSSE/CSRT/DeepSORT | ⬜ |

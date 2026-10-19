@@ -13867,3 +13867,71 @@ pub fn calibration_principal_point(
 ) -> (Double, Double) {
   result.principal_point()
 }
+// cv_advanced — 极线几何（v319.0.0）
+
+///|
+pub type FundamentalMatrix = @cv_advanced.FundamentalMatrix
+
+///|
+pub type EssentialMatrix = @cv_advanced.EssentialMatrix
+
+///|
+pub type EpipolarLine = @cv_advanced.EpipolarLine
+
+///|
+pub type PointCorrespondence = @cv_advanced.PointCorrespondence
+
+///|
+pub type Point3D = @cv_advanced.Point3D
+
+///|
+pub fn compute_fundamental_matrix(
+  correspondences : Array[PointCorrespondence],
+) -> FundamentalMatrix {
+  @cv_advanced.compute_fundamental_matrix(correspondences)
+}
+
+///|
+pub fn compute_essential_matrix(
+  f : FundamentalMatrix,
+  k1 : CameraIntrinsics,
+  k2 : CameraIntrinsics,
+) -> EssentialMatrix {
+  @cv_advanced.compute_essential_matrix(f, k1, k2)
+}
+
+///|
+pub fn compute_epipolar_line(
+  f : FundamentalMatrix,
+  x : Double,
+  y : Double,
+) -> EpipolarLine {
+  @cv_advanced.compute_epipolar_line(f, x, y)
+}
+
+///|
+pub fn check_epipolar_constraint(
+  line : EpipolarLine,
+  x : Double,
+  y : Double,
+) -> Double {
+  @cv_advanced.check_epipolar_constraint(line, x, y)
+}
+
+///|
+pub fn triangulate_point(
+  p1 : PointCorrespondence,
+  f : FundamentalMatrix,
+) -> Point3D {
+  @cv_advanced.triangulate_point(p1, f)
+}
+
+///|
+pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int {
+  @cv_advanced.fundamental_matrix_rank(f)
+}
+
+///|
+pub fn essential_matrix_svd(e : EssentialMatrix) -> (Double, Double, Double) {
+  @cv_advanced.essential_matrix_svd(e)
+}

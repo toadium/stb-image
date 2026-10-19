@@ -15,9 +15,17 @@ pub fn calculate_iou(Array[Int], Array[Int]) -> Double
 
 pub fn calibrate_camera(ChessboardCorners, Int, Int) -> CalibrationResult
 
+pub fn check_epipolar_constraint(EpipolarLine, Double, Double) -> Double
+
 pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
+
+pub fn compute_epipolar_line(FundamentalMatrix, Double, Double) -> EpipolarLine
+
+pub fn compute_essential_matrix(FundamentalMatrix, CameraIntrinsics, CameraIntrinsics) -> EssentialMatrix
+
+pub fn compute_fundamental_matrix(Array[PointCorrespondence]) -> FundamentalMatrix
 
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
@@ -37,9 +45,13 @@ pub fn detect_fast_corners(@types.Image, Int) -> Array[KeyPoint]
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
+pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
+
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
+
+pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
@@ -54,6 +66,8 @@ pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
+
+pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
 pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
 
@@ -170,6 +184,30 @@ pub fn DMatch::equal(Self, Self) -> Bool
 pub fn DMatch::not_equal(Self, Self) -> Bool
 pub fn DMatch::to_repr(Self) -> @debug.Repr
 
+pub(all) struct EpipolarLine {
+  a : Double
+  b : Double
+  c : Double
+} derive(Eq, @debug.Debug)
+pub fn EpipolarLine::equal(Self, Self) -> Bool
+pub fn EpipolarLine::not_equal(Self, Self) -> Bool
+pub fn EpipolarLine::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EssentialMatrix {
+  m00 : Double
+  m01 : Double
+  m02 : Double
+  m10 : Double
+  m11 : Double
+  m12 : Double
+  m20 : Double
+  m21 : Double
+  m22 : Double
+} derive(Eq, @debug.Debug)
+pub fn EssentialMatrix::equal(Self, Self) -> Bool
+pub fn EssentialMatrix::not_equal(Self, Self) -> Bool
+pub fn EssentialMatrix::to_repr(Self) -> @debug.Repr
+
 pub(all) struct FloatDescriptor {
   values : Array[Double]
   keypoint : KeyPoint
@@ -177,6 +215,21 @@ pub(all) struct FloatDescriptor {
 pub fn FloatDescriptor::equal(Self, Self) -> Bool
 pub fn FloatDescriptor::not_equal(Self, Self) -> Bool
 pub fn FloatDescriptor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FundamentalMatrix {
+  m00 : Double
+  m01 : Double
+  m02 : Double
+  m10 : Double
+  m11 : Double
+  m12 : Double
+  m20 : Double
+  m21 : Double
+  m22 : Double
+} derive(Eq, @debug.Debug)
+pub fn FundamentalMatrix::equal(Self, Self) -> Bool
+pub fn FundamentalMatrix::not_equal(Self, Self) -> Bool
+pub fn FundamentalMatrix::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageCaptioningResult {
   image_id : String
@@ -209,6 +262,25 @@ pub(all) enum MatcherKind {
 pub fn MatcherKind::equal(Self, Self) -> Bool
 pub fn MatcherKind::not_equal(Self, Self) -> Bool
 pub fn MatcherKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Point3D {
+  x : Double
+  y : Double
+  z : Double
+} derive(Eq, @debug.Debug)
+pub fn Point3D::equal(Self, Self) -> Bool
+pub fn Point3D::not_equal(Self, Self) -> Bool
+pub fn Point3D::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PointCorrespondence {
+  x1 : Double
+  y1 : Double
+  x2 : Double
+  y2 : Double
+} derive(Eq, @debug.Debug)
+pub fn PointCorrespondence::equal(Self, Self) -> Bool
+pub fn PointCorrespondence::not_equal(Self, Self) -> Bool
+pub fn PointCorrespondence::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SceneParsingResult {
   image_id : String
