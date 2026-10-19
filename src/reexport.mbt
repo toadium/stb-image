@@ -13466,3 +13466,68 @@ pub fn phase10_report() -> Phase10Report {
 pub fn phase10_is_complete() -> Bool {
   @self_evolve.phase10_is_complete()
 }
+// self_evolve — 演化知识图谱（v311.0.0）
+
+///|
+pub type KnowledgeNodeKind = @self_evolve.KnowledgeNodeKind
+
+///|
+pub type KnowledgeNode = @self_evolve.KnowledgeNode
+
+///|
+pub type KnowledgeEdgeKind = @self_evolve.KnowledgeEdgeKind
+
+///|
+pub type KnowledgeEdge = @self_evolve.KnowledgeEdge
+
+///|
+pub type KnowledgeGraph = @self_evolve.KnowledgeGraph
+
+///|
+pub fn build_knowledge_graph_for_op(op : @imgir.IROp) -> KnowledgeGraph {
+  @self_evolve.build_knowledge_graph_for_op(op)
+}
+
+///|
+pub fn build_knowledge_graph() -> KnowledgeGraph {
+  @self_evolve.build_knowledge_graph()
+}
+
+///|
+pub fn knowledge_graph_find_nodes_by_kind(
+  graph : KnowledgeGraph,
+  kind : KnowledgeNodeKind,
+) -> Array[KnowledgeNode] {
+  @self_evolve.KnowledgeGraph::find_nodes_by_kind(graph, kind)
+}
+
+///|
+pub fn knowledge_graph_find_degradations(
+  graph : KnowledgeGraph,
+  op_tag : String,
+) -> Array[KnowledgeNode] {
+  @self_evolve.KnowledgeGraph::find_degradations(graph, op_tag)
+}
+
+///|
+pub fn knowledge_graph_find_fixes(
+  graph : KnowledgeGraph,
+  degradation_label : String,
+) -> Array[KnowledgeNode] {
+  @self_evolve.KnowledgeGraph::find_fixes(graph, degradation_label)
+}
+
+///|
+pub fn knowledge_graph_node_count(graph : KnowledgeGraph) -> Int {
+  @self_evolve.KnowledgeGraph::node_count(graph)
+}
+
+///|
+pub fn knowledge_graph_edge_count(graph : KnowledgeGraph) -> Int {
+  @self_evolve.KnowledgeGraph::edge_count(graph)
+}
+
+///|
+pub fn knowledge_graph_is_non_empty(graph : KnowledgeGraph) -> Bool {
+  @self_evolve.KnowledgeGraph::is_non_empty(graph)
+}

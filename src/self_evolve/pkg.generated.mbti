@@ -31,6 +31,10 @@ pub fn best_repair(@imgir.IROp) -> StrategyRepairResult
 
 pub fn best_repair_all() -> Array[StrategyRepairResult]
 
+pub fn build_knowledge_graph() -> KnowledgeGraph
+
+pub fn build_knowledge_graph_for_op(@imgir.IROp) -> KnowledgeGraph
+
 pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
 
 pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> EquivalenceCheck
@@ -606,6 +610,63 @@ pub fn HistoryLog::equal(Self, Self) -> Bool
 pub fn HistoryLog::is_empty(Self) -> Bool
 pub fn HistoryLog::not_equal(Self, Self) -> Bool
 pub fn HistoryLog::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeEdge {
+  source : String
+  target : String
+  kind : KnowledgeEdgeKind
+  weight : Int
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeEdge::equal(Self, Self) -> Bool
+pub fn KnowledgeEdge::not_equal(Self, Self) -> Bool
+pub fn KnowledgeEdge::to_repr(Self) -> @debug.Repr
+
+pub(all) enum KnowledgeEdgeKind {
+  Causes
+  Fixes
+  Prevents
+  Depends
+  Equivalent
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeEdgeKind::equal(Self, Self) -> Bool
+pub fn KnowledgeEdgeKind::not_equal(Self, Self) -> Bool
+pub fn KnowledgeEdgeKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeGraph {
+  nodes : Array[KnowledgeNode]
+  edges : Array[KnowledgeEdge]
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeGraph::edge_count(Self) -> Int
+pub fn KnowledgeGraph::equal(Self, Self) -> Bool
+pub fn KnowledgeGraph::find_degradations(Self, String) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::find_fixes(Self, String) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::find_nodes_by_kind(Self, KnowledgeNodeKind) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::is_non_empty(Self) -> Bool
+pub fn KnowledgeGraph::node_count(Self) -> Int
+pub fn KnowledgeGraph::not_equal(Self, Self) -> Bool
+pub fn KnowledgeGraph::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeNode {
+  id : String
+  kind : KnowledgeNodeKind
+  label : String
+  confidence : Int
+  occurrence : Int
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeNode::equal(Self, Self) -> Bool
+pub fn KnowledgeNode::not_equal(Self, Self) -> Bool
+pub fn KnowledgeNode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum KnowledgeNodeKind {
+  OpNode
+  DegradationNode
+  FixNode
+  TestNode
+  PerfNode
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeNodeKind::equal(Self, Self) -> Bool
+pub fn KnowledgeNodeKind::not_equal(Self, Self) -> Bool
+pub fn KnowledgeNodeKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum LoopPhase {
   Predict

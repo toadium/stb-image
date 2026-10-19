@@ -3136,3 +3136,85 @@ test "AI: phase10 每个能力描述非空" {
     assert_true(c.name.length() > 0)
   }
 }
+// ==============================
+// v311.0.0 — 演化知识图谱 (knowledge_graph)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: build_knowledge_graph_for_op 退化算子返回 5 节点" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(0, 0))
+  assert_eq(kg.node_count(), 5)
+  assert_eq(kg.edge_count(), 5)
+}
+
+///|
+test "形式化: build_knowledge_graph_for_op 正常算子返回 3 节点" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(8, 8))
+  assert_eq(kg.node_count(), 3)
+  assert_eq(kg.edge_count(), 2)
+}
+
+///|
+test "形式化: find_nodes_by_kind 按类型过滤" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(0, 0))
+  let op_nodes = kg.find_nodes_by_kind(@self_evolve.OpNode)
+  assert_eq(op_nodes.length(), 1)
+  let deg_nodes = kg.find_nodes_by_kind(@self_evolve.DegradationNode)
+  assert_eq(deg_nodes.length(), 1)
+  let perf_nodes = kg.find_nodes_by_kind(@self_evolve.PerfNode)
+  assert_eq(perf_nodes.length(), 1)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: build_knowledge_graph 全量图谱非空" {
+  let kg = @self_evolve.build_knowledge_graph()
+  assert_true(kg.node_count() > 0)
+  assert_true(kg.edge_count() > 0)
+  assert_true(kg.is_non_empty())
+}
+
+///|
+test "FAKE: KnowledgeGraph is_non_empty 方法" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(8, 8))
+  assert_true(kg.is_non_empty())
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 退化算子图谱含退化节点" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(0, 0))
+  let degs = kg.find_degradations("Resize")
+  assert_true(degs.length() > 0)
+}
+
+///|
+test "MOCK: find_fixes 查找修复策略" {
+  let kg = @self_evolve.build_knowledge_graph_for_op(@imgir.Resize(0, 0))
+  let fixes = kg.find_fixes("DivisionByZero")
+  assert_true(fixes.length() > 0)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: build_knowledge_graph 全量图谱规模合理" {
+  let kg = @self_evolve.build_knowledge_graph()
+  assert_true(kg.node_count() >= 19 * 3)
+  assert_true(kg.edge_count() >= 19 * 2)
+}
+
+// --- AI ---
+
+///|
+test "AI: 每个知识节点 label 非空" {
+  let kg = @self_evolve.build_knowledge_graph()
+  for n in kg.nodes {
+    assert_true(n.label.length() > 0)
+    assert_true(n.id.length() > 0)
+  }
+}

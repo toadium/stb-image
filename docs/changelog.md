@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v311.0.0 - GeoVerse Phase 11: 演化知识图谱
+- 扩展 `src/self_evolve/`：演化知识图谱 — 将演化经验构建为知识图谱
+  - **knowledge_graph**：KnowledgeNodeKind / KnowledgeNode / KnowledgeEdgeKind / KnowledgeEdge / KnowledgeGraph + build_knowledge_graph_for_op / build_knowledge_graph / find_nodes_by_kind / find_degradations / find_fixes / node_count / edge_count / is_non_empty
+  - 将演化从"闭环"推向"知识图谱" — 结构化存储演化经验
+- 新增 5 类型 + 2 公共函数 + 5 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7049×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v310.0.0 - GeoVerse Phase 10 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 10 综合报告 — 汇总 v306-v309 全部能力
   - **phase10_report**：Phase10Capability / Phase10Report + phase10_capabilities / phase10_total_types / phase10_total_functions / phase10_total_tests / phase10_report / phase10_is_complete

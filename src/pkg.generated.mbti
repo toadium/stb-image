@@ -384,6 +384,10 @@ pub fn build_grayscale_lut() -> Array[Int]
 
 pub fn build_index_advanced(Array[Array[Double]], @image_retrieval_advanced.IndexStructureType) -> @image_retrieval_advanced.IndexConstructionResult
 
+pub fn build_knowledge_graph() -> @self_evolve.KnowledgeGraph
+
+pub fn build_knowledge_graph_for_op(@imgir.IROp) -> @self_evolve.KnowledgeGraph
+
 pub fn build_laplacian_pyramid(@types.Image, Int) -> Array[@types.Image] raise @types.LoadError
 
 pub fn build_laplacian_pyramid_16(@types.Image16, Int) -> Array[@types.Image16] raise @types.LoadError
@@ -2213,6 +2217,18 @@ pub fn knn_add_samples(@ocr.KnnClassifier, Array[(Array[Double], String)]) -> @o
 pub fn knn_create(k? : Int, distance_metric? : String) -> @ocr.KnnClassifier raise @types.LoadError
 
 pub fn knn_predict(@ocr.KnnClassifier, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
+
+pub fn knowledge_graph_edge_count(@self_evolve.KnowledgeGraph) -> Int
+
+pub fn knowledge_graph_find_degradations(@self_evolve.KnowledgeGraph, String) -> Array[@self_evolve.KnowledgeNode]
+
+pub fn knowledge_graph_find_fixes(@self_evolve.KnowledgeGraph, String) -> Array[@self_evolve.KnowledgeNode]
+
+pub fn knowledge_graph_find_nodes_by_kind(@self_evolve.KnowledgeGraph, @self_evolve.KnowledgeNodeKind) -> Array[@self_evolve.KnowledgeNode]
+
+pub fn knowledge_graph_is_non_empty(@self_evolve.KnowledgeGraph) -> Bool
+
+pub fn knowledge_graph_node_count(@self_evolve.KnowledgeGraph) -> Int
 
 pub fn lab_to_rgb(Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError
 
@@ -4184,6 +4200,16 @@ pub using @video {type KeyframeType}
 pub using @pose_estimation {type Keypoint as KeypointPE}
 
 pub using @ocr {type KnnClassifier}
+
+pub using @self_evolve {type KnowledgeEdge}
+
+pub using @self_evolve {type KnowledgeEdgeKind}
+
+pub using @self_evolve {type KnowledgeGraph}
+
+pub using @self_evolve {type KnowledgeNode}
+
+pub using @self_evolve {type KnowledgeNodeKind}
 
 pub using @retrieval {type LBPConfig}
 
