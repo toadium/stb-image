@@ -1257,6 +1257,24 @@ pub fn dhash_f(@types.ImageF) -> Array[Int] raise @types.LoadError
 
 pub fn dicom_multiframe_extract(@cv_advanced.DicomImage, Int) -> Array[Double]
 
+pub fn dicom_net_build_config(String, String, Int, Int) -> @cv_advanced.PACSConfig
+
+pub fn dicom_net_build_query(@cv_advanced.DicomQueryLevel, String, String) -> @cv_advanced.DicomQuery
+
+pub fn dicom_net_cecho(@cv_advanced.PACSConfig) -> Bool
+
+pub fn dicom_net_cfind(@cv_advanced.PACSConfig, @cv_advanced.DicomQuery, Array[@cv_advanced.DicomQuery]) -> @cv_advanced.DicomQueryResult
+
+pub fn dicom_net_cget(@cv_advanced.PACSConfig, String, Int) -> @cv_advanced.DicomQueryResult
+
+pub fn dicom_net_cmove(@cv_advanced.PACSConfig, String, Array[String]) -> @cv_advanced.DicomQueryResult
+
+pub fn dicom_net_cstore(@cv_advanced.PACSConfig, String, Array[Double]) -> @cv_advanced.DicomQueryResult
+
+pub fn dicom_net_generate_uid(String, Int) -> String
+
+pub fn dicom_net_parse_uid(String) -> Array[String]
+
 pub fn dicom_to_image(@cv_advanced.DicomImage) -> Array[Double]
 
 pub fn dicom_window_level(Double, Double, Double) -> Double
@@ -4494,6 +4512,14 @@ pub using @cv_advanced {type DicomImage}
 
 pub using @cv_advanced {type DicomMetadata}
 
+pub using @cv_advanced {type DicomNetOp}
+
+pub using @cv_advanced {type DicomQuery}
+
+pub using @cv_advanced {type DicomQueryLevel}
+
+pub using @cv_advanced {type DicomQueryResult}
+
 pub using @cv_advanced {type DicomTag}
 
 pub using @cv_advanced {type DicomVR}
@@ -5151,6 +5177,8 @@ pub using @cv_advanced {type OrganSegMethod}
 pub using @cv_advanced {type OrganSegResult}
 
 pub using @cv_advanced {type OrganType}
+
+pub using @cv_advanced {type PACSConfig}
 
 pub using @advanced_imaging {type PETData as PETDataAI}
 

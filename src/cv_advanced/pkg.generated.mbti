@@ -141,6 +141,24 @@ pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
 pub fn dicom_multiframe_extract(DicomImage, Int) -> Array[Double]
 
+pub fn dicom_net_build_config(String, String, Int, Int) -> PACSConfig
+
+pub fn dicom_net_build_query(DicomQueryLevel, String, String) -> DicomQuery
+
+pub fn dicom_net_cecho(PACSConfig) -> Bool
+
+pub fn dicom_net_cfind(PACSConfig, DicomQuery, Array[DicomQuery]) -> DicomQueryResult
+
+pub fn dicom_net_cget(PACSConfig, String, Int) -> DicomQueryResult
+
+pub fn dicom_net_cmove(PACSConfig, String, Array[String]) -> DicomQueryResult
+
+pub fn dicom_net_cstore(PACSConfig, String, Array[Double]) -> DicomQueryResult
+
+pub fn dicom_net_generate_uid(String, Int) -> String
+
+pub fn dicom_net_parse_uid(String) -> Array[String]
+
 pub fn dicom_to_image(DicomImage) -> Array[Double]
 
 pub fn dicom_window_level(Double, Double, Double) -> Double
@@ -911,6 +929,49 @@ pub fn DicomMetadata::equal(Self, Self) -> Bool
 pub fn DicomMetadata::not_equal(Self, Self) -> Bool
 pub fn DicomMetadata::to_repr(Self) -> @debug.Repr
 
+pub(all) enum DicomNetOp {
+  CStore
+  CFind
+  CGet
+  CMove
+  CEcho
+} derive(Eq, @debug.Debug)
+pub fn DicomNetOp::equal(Self, Self) -> Bool
+pub fn DicomNetOp::not_equal(Self, Self) -> Bool
+pub fn DicomNetOp::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DicomQuery {
+  level : DicomQueryLevel
+  patient_id : String
+  study_uid : String
+  series_uid : String
+  modality : String
+} derive(Eq, @debug.Debug)
+pub fn DicomQuery::equal(Self, Self) -> Bool
+pub fn DicomQuery::not_equal(Self, Self) -> Bool
+pub fn DicomQuery::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DicomQueryLevel {
+  Patient
+  Study
+  Series
+  Image
+} derive(Eq, @debug.Debug)
+pub fn DicomQueryLevel::equal(Self, Self) -> Bool
+pub fn DicomQueryLevel::not_equal(Self, Self) -> Bool
+pub fn DicomQueryLevel::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DicomQueryResult {
+  found : Bool
+  num_results : Int
+  study_uids : Array[String]
+  series_uids : Array[String]
+  error_message : String
+} derive(Eq, @debug.Debug)
+pub fn DicomQueryResult::equal(Self, Self) -> Bool
+pub fn DicomQueryResult::not_equal(Self, Self) -> Bool
+pub fn DicomQueryResult::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DicomTag {
   group : Int
   element : Int
@@ -1600,6 +1661,16 @@ pub(all) enum OrganType {
 pub fn OrganType::equal(Self, Self) -> Bool
 pub fn OrganType::not_equal(Self, Self) -> Bool
 pub fn OrganType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PACSConfig {
+  ae_title : String
+  host : String
+  port : Int
+  timeout : Int
+} derive(Eq, @debug.Debug)
+pub fn PACSConfig::equal(Self, Self) -> Bool
+pub fn PACSConfig::not_equal(Self, Self) -> Bool
+pub fn PACSConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PETParams {
   suv : Array[Double]

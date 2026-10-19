@@ -16516,3 +16516,88 @@ pub fn medviz_gradient_shading(
 ) -> Array[Double] {
   @cv_advanced.medviz_gradient_shading(volume, width, height, depth)
 }
+
+///|
+pub type DicomNetOp = @cv_advanced.DicomNetOp
+
+///|
+pub type DicomQueryLevel = @cv_advanced.DicomQueryLevel
+
+///|
+pub type PACSConfig = @cv_advanced.PACSConfig
+
+///|
+pub type DicomQuery = @cv_advanced.DicomQuery
+
+///|
+pub type DicomQueryResult = @cv_advanced.DicomQueryResult
+
+///|
+pub fn dicom_net_build_config(
+  ae_title : String,
+  host : String,
+  port : Int,
+  timeout : Int,
+) -> PACSConfig {
+  @cv_advanced.dicom_net_build_config(ae_title, host, port, timeout)
+}
+
+///|
+pub fn dicom_net_build_query(
+  level : DicomQueryLevel,
+  patient_id : String,
+  modality : String,
+) -> DicomQuery {
+  @cv_advanced.dicom_net_build_query(level, patient_id, modality)
+}
+
+///|
+pub fn dicom_net_cfind(
+  config : PACSConfig,
+  query : DicomQuery,
+  available_studies : Array[DicomQuery],
+) -> DicomQueryResult {
+  @cv_advanced.dicom_net_cfind(config, query, available_studies)
+}
+
+///|
+pub fn dicom_net_cget(
+  config : PACSConfig,
+  study_uid : String,
+  available_count : Int,
+) -> DicomQueryResult {
+  @cv_advanced.dicom_net_cget(config, study_uid, available_count)
+}
+
+///|
+pub fn dicom_net_cmove(
+  config : PACSConfig,
+  destination_ae : String,
+  study_uids : Array[String],
+) -> DicomQueryResult {
+  @cv_advanced.dicom_net_cmove(config, destination_ae, study_uids)
+}
+
+///|
+pub fn dicom_net_cecho(config : PACSConfig) -> Bool {
+  @cv_advanced.dicom_net_cecho(config)
+}
+
+///|
+pub fn dicom_net_cstore(
+  config : PACSConfig,
+  study_uid : String,
+  image_data : Array[Double],
+) -> DicomQueryResult {
+  @cv_advanced.dicom_net_cstore(config, study_uid, image_data)
+}
+
+///|
+pub fn dicom_net_generate_uid(root : String, instance : Int) -> String {
+  @cv_advanced.dicom_net_generate_uid(root, instance)
+}
+
+///|
+pub fn dicom_net_parse_uid(uid : String) -> Array[String] {
+  @cv_advanced.dicom_net_parse_uid(uid)
+}
