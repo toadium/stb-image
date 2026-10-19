@@ -3218,3 +3218,76 @@ test "AI: 每个知识节点 label 非空" {
     assert_true(n.id.length() > 0)
   }
 }
+// ==============================
+// v312.0.0 — 跨模块演化协同 (cross_module)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: build_module_deps 返回 17 条依赖" {
+  let deps = @self_evolve.build_module_deps()
+  assert_eq(deps.length(), 17)
+}
+
+///|
+test "形式化: co_evolve_op 退化算子含同步演化" {
+  let report = @self_evolve.co_evolve_op(@imgir.Resize(0, 0))
+  assert_true(report.sync_count > 0)
+}
+
+///|
+test "形式化: co_evolve_op 正常算子有动作" {
+  let report = @self_evolve.co_evolve_op(@imgir.Resize(8, 8))
+  assert_true(report.total_actions() > 0)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: co_evolve_all 结构完整" {
+  let report = @self_evolve.co_evolve_all()
+  assert_true(report.actions.length() > 0)
+  assert_true(report.total_modules > 0)
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "FAKE: CoEvolveReport total_actions 方法" {
+  let report = @self_evolve.co_evolve_op(@imgir.Resize(0, 0))
+  assert_eq(report.total_actions(), report.actions.length())
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 退化算子协同含级联演化" {
+  let report = @self_evolve.co_evolve_op(@imgir.Resize(0, 0))
+  assert_true(report.has_cascade())
+}
+
+///|
+test "MOCK: co_evolve_all 动作数 >= 算子数" {
+  let report = @self_evolve.co_evolve_all()
+  assert_true(report.actions.length() >= 19)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: co_evolve_all summary 含关键信息" {
+  let report = @self_evolve.co_evolve_all()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: 每个协同动作 description 非空" {
+  let report = @self_evolve.co_evolve_all()
+  for a in report.actions {
+    assert_true(a.description.length() > 0)
+    assert_true(a.source_module.length() > 0)
+    assert_true(a.target_module.length() > 0)
+  }
+}

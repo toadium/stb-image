@@ -13531,3 +13531,44 @@ pub fn knowledge_graph_edge_count(graph : KnowledgeGraph) -> Int {
 pub fn knowledge_graph_is_non_empty(graph : KnowledgeGraph) -> Bool {
   @self_evolve.KnowledgeGraph::is_non_empty(graph)
 }
+// self_evolve — 跨模块演化协同（v312.0.0）
+
+///|
+pub type ModuleDepKind = @self_evolve.ModuleDepKind
+
+///|
+pub type ModuleDep = @self_evolve.ModuleDep
+
+///|
+pub type CoEvolveActionKind = @self_evolve.CoEvolveActionKind
+
+///|
+pub type CoEvolveAction = @self_evolve.CoEvolveAction
+
+///|
+pub type CoEvolveReport = @self_evolve.CoEvolveReport
+
+///|
+pub fn build_module_deps() -> Array[ModuleDep] {
+  @self_evolve.build_module_deps()
+}
+
+///|
+pub fn co_evolve_op(op : @imgir.IROp) -> CoEvolveReport {
+  @self_evolve.co_evolve_op(op)
+}
+
+///|
+pub fn co_evolve_all() -> CoEvolveReport {
+  @self_evolve.co_evolve_all()
+}
+
+///|
+pub fn co_evolve_report_has_cascade(report : CoEvolveReport) -> Bool {
+  @self_evolve.CoEvolveReport::has_cascade(report)
+}
+
+///|
+pub fn co_evolve_report_total_actions(report : CoEvolveReport) -> Int {
+  @self_evolve.CoEvolveReport::total_actions(report)
+}

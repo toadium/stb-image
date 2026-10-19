@@ -35,6 +35,8 @@ pub fn build_knowledge_graph() -> KnowledgeGraph
 
 pub fn build_knowledge_graph_for_op(@imgir.IROp) -> KnowledgeGraph
 
+pub fn build_module_deps() -> Array[ModuleDep]
+
 pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
 
 pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> EquivalenceCheck
@@ -52,6 +54,10 @@ pub fn ci_gate_check(@imgir.IRPipeline) -> CIGateResult
 pub fn ci_regression_all_pass() -> Bool
 
 pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
+
+pub fn co_evolve_all() -> CoEvolveReport
+
+pub fn co_evolve_op(@imgir.IROp) -> CoEvolveReport
 
 pub fn combine_all_strategies() -> ComboReport
 
@@ -372,6 +378,38 @@ pub fn CIGateResult::is_green(Self) -> Bool
 pub fn CIGateResult::not_equal(Self, Self) -> Bool
 pub fn CIGateResult::pass_rate(Self) -> Int
 pub fn CIGateResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoEvolveAction {
+  action_kind : CoEvolveActionKind
+  source_module : String
+  target_module : String
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveAction::equal(Self, Self) -> Bool
+pub fn CoEvolveAction::not_equal(Self, Self) -> Bool
+pub fn CoEvolveAction::to_repr(Self) -> @debug.Repr
+
+pub(all) enum CoEvolveActionKind {
+  SyncEvolve
+  CascadeEvolve
+  IndependentEvolve
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveActionKind::equal(Self, Self) -> Bool
+pub fn CoEvolveActionKind::not_equal(Self, Self) -> Bool
+pub fn CoEvolveActionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoEvolveReport {
+  actions : Array[CoEvolveAction]
+  total_modules : Int
+  sync_count : Int
+  cascade_count : Int
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveReport::equal(Self, Self) -> Bool
+pub fn CoEvolveReport::has_cascade(Self) -> Bool
+pub fn CoEvolveReport::not_equal(Self, Self) -> Bool
+pub fn CoEvolveReport::to_repr(Self) -> @debug.Repr
+pub fn CoEvolveReport::total_actions(Self) -> Int
 
 pub(all) struct ComboCoverageReport {
   total_combos : Int
@@ -699,6 +737,24 @@ pub(all) struct LoopStep {
 pub fn LoopStep::equal(Self, Self) -> Bool
 pub fn LoopStep::not_equal(Self, Self) -> Bool
 pub fn LoopStep::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ModuleDep {
+  source : String
+  target : String
+  kind : ModuleDepKind
+} derive(Eq, @debug.Debug)
+pub fn ModuleDep::equal(Self, Self) -> Bool
+pub fn ModuleDep::not_equal(Self, Self) -> Bool
+pub fn ModuleDep::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ModuleDepKind {
+  Uses
+  Extends
+  Composes
+} derive(Eq, @debug.Debug)
+pub fn ModuleDepKind::equal(Self, Self) -> Bool
+pub fn ModuleDepKind::not_equal(Self, Self) -> Bool
+pub fn ModuleDepKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OpCombo {
   first_tag : String

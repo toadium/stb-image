@@ -396,6 +396,8 @@ pub fn build_laplacian_pyramid_f(@types.ImageF, Int) -> Array[@types.ImageF] rai
 
 pub fn build_markdown_document(@ocr.OCRPageResult, title? : String) -> @ocr.MarkdownDocument raise @types.LoadError
 
+pub fn build_module_deps() -> Array[@self_evolve.ModuleDep]
+
 pub fn build_threshold_lut(Int) -> Array[Int]
 
 pub fn bulk_copy_4x(Bytes, Int, Array[Byte], Int, Int) -> Unit
@@ -569,6 +571,14 @@ pub fn cnn_recognize_letters(@types.Image, @ocr.DLCnnModelConfig) -> @ocr.DLInfe
 pub fn cnn_train(Array[@ocr.DLTrainingSample], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double, Int) -> (Array[Double], Array[Double], Array[Double], Array[Double], Array[@ocr.DLTrainingHistory]) raise @types.LoadError
 
 pub fn cnn_train_step(Array[Double], Int, Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError
+
+pub fn co_evolve_all() -> @self_evolve.CoEvolveReport
+
+pub fn co_evolve_op(@imgir.IROp) -> @self_evolve.CoEvolveReport
+
+pub fn co_evolve_report_has_cascade(@self_evolve.CoEvolveReport) -> Bool
+
+pub fn co_evolve_report_total_actions(@self_evolve.CoEvolveReport) -> Int
 
 pub fn coded_aperture_reconstruct_ci(@types.Image, @computational_imaging.CodedAperturePattern) -> @computational_imaging.ImagingReconstructionResult
 
@@ -3709,6 +3719,12 @@ pub using @pipeline {type CliCommand}
 
 pub using @forensics_enhanced {type CloneDetectionResult}
 
+pub using @self_evolve {type CoEvolveAction}
+
+pub using @self_evolve {type CoEvolveActionKind}
+
+pub using @self_evolve {type CoEvolveReport}
+
 pub using @barcode {type Code128Charset}
 
 pub using @computational_imaging {type CodedAperturePattern as CodedAperturePatternCI}
@@ -4290,6 +4306,10 @@ pub using @ocr {type MemoryUsageStats}
 pub using @stereo3d {type Mesh3d}
 
 pub using @forensics_enhanced {type MetadataForensicsResult}
+
+pub using @self_evolve {type ModuleDep}
+
+pub using @self_evolve {type ModuleDepKind}
 
 pub using @edge {type Moments}
 
