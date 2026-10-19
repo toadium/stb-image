@@ -189,6 +189,18 @@ pub fn phase10_total_tests() -> Int
 
 pub fn phase10_total_types() -> Int
 
+pub fn phase11_capabilities() -> Array[Phase11Capability]
+
+pub fn phase11_is_complete() -> Bool
+
+pub fn phase11_report() -> Phase11Report
+
+pub fn phase11_total_functions() -> Int
+
+pub fn phase11_total_tests() -> Int
+
+pub fn phase11_total_types() -> Int
+
 pub fn phase4_capabilities() -> Array[Phase4Capability]
 
 pub fn phase4_is_complete() -> Bool
@@ -918,6 +930,29 @@ pub(all) struct Phase10Report {
 pub fn Phase10Report::equal(Self, Self) -> Bool
 pub fn Phase10Report::not_equal(Self, Self) -> Bool
 pub fn Phase10Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase11Capability {
+  version : String
+  name : String
+  types : Int
+  functions : Int
+  tests : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase11Capability::equal(Self, Self) -> Bool
+pub fn Phase11Capability::not_equal(Self, Self) -> Bool
+pub fn Phase11Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase11Report {
+  capabilities : Array[Phase11Capability]
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase11Report::equal(Self, Self) -> Bool
+pub fn Phase11Report::not_equal(Self, Self) -> Bool
+pub fn Phase11Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase4Capability {
   version : String

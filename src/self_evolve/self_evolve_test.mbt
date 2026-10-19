@@ -3459,3 +3459,56 @@ test "AI: 每个元演化动作 rationale 非空" {
     assert_true(a.target_param.length() > 0)
   }
 }
+// ==============================
+// v315.0.0 — Phase 11 综合总结 (phase11_report)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: phase11_capabilities 返回 4 条" {
+  let caps = @self_evolve.phase11_capabilities()
+  assert_eq(caps.length(), 4)
+}
+
+///|
+test "形式化: phase11 总计正确" {
+  assert_eq(@self_evolve.phase11_total_types(), 17)
+  assert_eq(@self_evolve.phase11_total_functions(), 9)
+  assert_eq(@self_evolve.phase11_total_tests(), 36)
+}
+
+///|
+test "形式化: phase11_is_complete 为 true" {
+  assert_true(@self_evolve.phase11_is_complete())
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: phase11_report 结构完整" {
+  let report = @self_evolve.phase11_report()
+  assert_eq(report.capabilities.length(), 4)
+  assert_eq(report.total_types, 17)
+  assert_eq(report.total_functions, 9)
+  assert_eq(report.total_tests, 36)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: phase11_report summary 含关键信息" {
+  let report = @self_evolve.phase11_report()
+  assert_true(report.phase_summary.length() > 20)
+  assert_true(report.phase_summary[0] == 'P')
+}
+
+// --- AI ---
+
+///|
+test "AI: phase11 每个能力描述非空" {
+  for c in @self_evolve.phase11_capabilities() {
+    assert_true(c.description.length() > 0)
+    assert_true(c.name.length() > 0)
+  }
+}

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v315.0.0 - GeoVerse Phase 11 完成: 综合报告
+- 扩展 `src/self_evolve/`：Phase 11 综合报告 — 汇总 v311-v314 全部能力
+  - **phase11_report**：Phase11Capability / Phase11Report + phase11_capabilities / phase11_total_types / phase11_total_functions / phase11_total_tests / phase11_report / phase11_is_complete
+  - Phase 11 自演化生态期完成：知识图谱→跨模块协同→质量评估→元演化
+- 新增 2 类型 + 5 公共函数，reexport.mbt 注册顶层 API
+- +6 tests（形式化证明 + FAKE + E2E + AI 多手段测试）
+- 7082×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v314.0.0 - GeoVerse Phase 11: 自演化 Meta
 - 扩展 `src/self_evolve/`：自演化 Meta — 元演化（演化演化本身）
   - **meta_evolve**：MetaStrategy / MetaAction / MetaReport + meta_evolve_op / meta_evolve_all / has_changes / strategy_count

@@ -2616,6 +2616,18 @@ pub fn phase10_total_tests() -> Int
 
 pub fn phase10_total_types() -> Int
 
+pub fn phase11_capabilities() -> Array[@self_evolve.Phase11Capability]
+
+pub fn phase11_is_complete() -> Bool
+
+pub fn phase11_report() -> @self_evolve.Phase11Report
+
+pub fn phase11_total_functions() -> Int
+
+pub fn phase11_total_tests() -> Int
+
+pub fn phase11_total_types() -> Int
+
 pub fn phase4_capabilities() -> Array[@self_evolve.Phase4Capability]
 
 pub fn phase4_is_complete() -> Bool
@@ -4424,6 +4436,10 @@ pub using @transform {type PerspectiveMatrix}
 pub using @self_evolve {type Phase10Capability}
 
 pub using @self_evolve {type Phase10Report}
+
+pub using @self_evolve {type Phase11Capability}
+
+pub using @self_evolve {type Phase11Report}
 
 pub using @self_evolve {type Phase4Capability}
 

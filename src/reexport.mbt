@@ -13635,3 +13635,40 @@ pub fn meta_report_has_changes(report : MetaReport) -> Bool {
 pub fn meta_report_strategy_count(report : MetaReport) -> Int {
   @self_evolve.MetaReport::strategy_count(report)
 }
+// self_evolve — Phase 11 综合报告（v315.0.0）
+
+///|
+pub type Phase11Capability = @self_evolve.Phase11Capability
+
+///|
+pub type Phase11Report = @self_evolve.Phase11Report
+
+///|
+pub fn phase11_capabilities() -> Array[Phase11Capability] {
+  @self_evolve.phase11_capabilities()
+}
+
+///|
+pub fn phase11_total_types() -> Int {
+  @self_evolve.phase11_total_types()
+}
+
+///|
+pub fn phase11_total_functions() -> Int {
+  @self_evolve.phase11_total_functions()
+}
+
+///|
+pub fn phase11_total_tests() -> Int {
+  @self_evolve.phase11_total_tests()
+}
+
+///|
+pub fn phase11_report() -> Phase11Report {
+  @self_evolve.phase11_report()
+}
+
+///|
+pub fn phase11_is_complete() -> Bool {
+  @self_evolve.phase11_is_complete()
+}
