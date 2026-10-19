@@ -16167,3 +16167,67 @@ pub fn lesion_extract_features(
 ) -> Array[Double] {
   @cv_advanced.lesion_extract_features(image, width, height, candidate)
 }
+
+///|
+pub type MedPoint3D = @cv_advanced.MedPoint3D
+
+///|
+pub type MedTriangle3D = @cv_advanced.MedTriangle3D
+
+///|
+pub type MedMesh3D = @cv_advanced.MedMesh3D
+
+///|
+pub fn recon_marching_cubes(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  isovalue : Double,
+) -> MedMesh3D {
+  @cv_advanced.recon_marching_cubes(volume, width, height, depth, isovalue)
+}
+
+///|
+pub fn recon_mip(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+) -> Array[Double] {
+  @cv_advanced.recon_mip(volume, width, height, depth)
+}
+
+///|
+pub fn recon_volume_render(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  opacity : Double,
+) -> Array[Double] {
+  @cv_advanced.recon_volume_render(volume, width, height, depth, opacity)
+}
+
+///|
+pub fn recon_surface_extract(
+  volume : Array[Double],
+  threshold : Double,
+) -> Array[Int] {
+  @cv_advanced.recon_surface_extract(volume, threshold)
+}
+
+///|
+pub fn recon_compute_surface_area(mesh : MedMesh3D) -> Double {
+  @cv_advanced.recon_compute_surface_area(mesh)
+}
+
+///|
+pub fn recon_compute_volume(mesh : MedMesh3D) -> Double {
+  @cv_advanced.recon_compute_volume(mesh)
+}
+
+///|
+pub fn recon_simplify_mesh(mesh : MedMesh3D, tolerance : Double) -> MedMesh3D {
+  @cv_advanced.recon_simplify_mesh(mesh, tolerance)
+}

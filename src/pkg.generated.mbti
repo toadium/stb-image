@@ -3241,6 +3241,20 @@ pub fn recommend_next(@imgir.IROp) -> @self_evolve.Recommendation
 
 pub fn recommendation_report_has_urgent(@self_evolve.RecommendationReport) -> Bool
 
+pub fn recon_compute_surface_area(@cv_advanced.MedMesh3D) -> Double
+
+pub fn recon_compute_volume(@cv_advanced.MedMesh3D) -> Double
+
+pub fn recon_marching_cubes(Array[Double], Int, Int, Int, Double) -> @cv_advanced.MedMesh3D
+
+pub fn recon_mip(Array[Double], Int, Int, Int) -> Array[Double]
+
+pub fn recon_simplify_mesh(@cv_advanced.MedMesh3D, Double) -> @cv_advanced.MedMesh3D
+
+pub fn recon_surface_extract(Array[Double], Double) -> Array[Int]
+
+pub fn recon_volume_render(Array[Double], Int, Int, Int, Double) -> Array[Double]
+
 pub fn reconstruct_hologram_ci(@computational_imaging.Hologram) -> @computational_imaging.ImagingReconstructionResult
 
 pub fn reconstruction_report_to_string_nr(@neural_rendering.ReconstructionResult, @neural_rendering.ReconstructionAlgorithm) -> String
@@ -4938,11 +4952,17 @@ pub using @cv_advanced {type MatcherKind}
 
 pub using @cv_advanced {type MedAffineTransform}
 
+pub using @cv_advanced {type MedMesh3D}
+
+pub using @cv_advanced {type MedPoint3D}
+
 pub using @cv_advanced {type MedRegResult}
 
 pub using @cv_advanced {type MedRegType}
 
 pub using @cv_advanced {type MedRigidTransform}
+
+pub using @cv_advanced {type MedTriangle3D}
 
 pub using @medical {type MedicalImage}
 

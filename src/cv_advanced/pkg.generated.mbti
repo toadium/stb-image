@@ -409,6 +409,20 @@ pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
 
+pub fn recon_compute_surface_area(MedMesh3D) -> Double
+
+pub fn recon_compute_volume(MedMesh3D) -> Double
+
+pub fn recon_marching_cubes(Array[Double], Int, Int, Int, Double) -> MedMesh3D
+
+pub fn recon_mip(Array[Double], Int, Int, Int) -> Array[Double]
+
+pub fn recon_simplify_mesh(MedMesh3D, Double) -> MedMesh3D
+
+pub fn recon_surface_extract(Array[Double], Double) -> Array[Int]
+
+pub fn recon_volume_render(Array[Double], Int, Int, Int, Double) -> Array[Double]
+
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
 pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
@@ -1246,6 +1260,23 @@ pub fn MedAffineTransform::equal(Self, Self) -> Bool
 pub fn MedAffineTransform::not_equal(Self, Self) -> Bool
 pub fn MedAffineTransform::to_repr(Self) -> @debug.Repr
 
+pub(all) struct MedMesh3D {
+  vertices : Array[MedPoint3D]
+  faces : Array[MedTriangle3D]
+} derive(Eq, @debug.Debug)
+pub fn MedMesh3D::equal(Self, Self) -> Bool
+pub fn MedMesh3D::not_equal(Self, Self) -> Bool
+pub fn MedMesh3D::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MedPoint3D {
+  x : Double
+  y : Double
+  z : Double
+} derive(Eq, @debug.Debug)
+pub fn MedPoint3D::equal(Self, Self) -> Bool
+pub fn MedPoint3D::not_equal(Self, Self) -> Bool
+pub fn MedPoint3D::to_repr(Self) -> @debug.Repr
+
 pub(all) struct MedRegResult {
   transform_type : MedRegType
   rigid : MedRigidTransform
@@ -1275,6 +1306,15 @@ pub(all) struct MedRigidTransform {
 pub fn MedRigidTransform::equal(Self, Self) -> Bool
 pub fn MedRigidTransform::not_equal(Self, Self) -> Bool
 pub fn MedRigidTransform::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MedTriangle3D {
+  v0 : MedPoint3D
+  v1 : MedPoint3D
+  v2 : MedPoint3D
+} derive(Eq, @debug.Debug)
+pub fn MedTriangle3D::equal(Self, Self) -> Bool
+pub fn MedTriangle3D::not_equal(Self, Self) -> Bool
+pub fn MedTriangle3D::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MetaLearningConfig {
   inner_lr : Double
