@@ -439,6 +439,18 @@ pub fn phase13_total_tests() -> Int
 
 pub fn phase13_total_types() -> Int
 
+pub fn phase14_capabilities() -> Array[Phase14Capability]
+
+pub fn phase14_is_complete() -> Bool
+
+pub fn phase14_report() -> Phase14Report
+
+pub fn phase14_total_functions() -> Int
+
+pub fn phase14_total_tests() -> Int
+
+pub fn phase14_total_types() -> Int
+
 pub fn positional_encoding(Int, Int) -> Array[Double]
 
 pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
@@ -1737,6 +1749,30 @@ pub(all) struct Phase13Report {
 pub fn Phase13Report::equal(Self, Self) -> Bool
 pub fn Phase13Report::not_equal(Self, Self) -> Bool
 pub fn Phase13Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase14Capability {
+  version : String
+  module_name : String
+  description : String
+  num_types : Int
+  num_functions : Int
+  num_tests : Int
+} derive(Eq, @debug.Debug)
+pub fn Phase14Capability::equal(Self, Self) -> Bool
+pub fn Phase14Capability::not_equal(Self, Self) -> Bool
+pub fn Phase14Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase14Report {
+  capabilities : Array[Phase14Capability]
+  total_types : Int
+  total_functions : Int
+  total_tests : Int
+  total_versions : Int
+  is_complete : Bool
+} derive(Eq, @debug.Debug)
+pub fn Phase14Report::equal(Self, Self) -> Bool
+pub fn Phase14Report::not_equal(Self, Self) -> Bool
+pub fn Phase14Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Point3D {
   x : Double

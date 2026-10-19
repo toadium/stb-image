@@ -3047,6 +3047,18 @@ pub fn phase13_total_tests() -> Int
 
 pub fn phase13_total_types() -> Int
 
+pub fn phase14_capabilities() -> Array[@cv_advanced.Phase14Capability]
+
+pub fn phase14_is_complete() -> Bool
+
+pub fn phase14_report() -> @cv_advanced.Phase14Report
+
+pub fn phase14_total_functions() -> Int
+
+pub fn phase14_total_tests() -> Int
+
+pub fn phase14_total_types() -> Int
+
 pub fn phase4_capabilities() -> Array[@self_evolve.Phase4Capability]
 
 pub fn phase4_is_complete() -> Bool
@@ -5219,6 +5231,10 @@ pub using @cv_advanced {type Phase12Report}
 pub using @cv_advanced {type Phase13Capability}
 
 pub using @cv_advanced {type Phase13Report}
+
+pub using @cv_advanced {type Phase14Capability}
+
+pub using @cv_advanced {type Phase14Report}
 
 pub using @self_evolve {type Phase4Capability}
 

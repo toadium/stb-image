@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v360.0.0 - GeoVerse Phase 14 完成: 综合报告
+- 扩展 `src/cv_advanced/`：Phase 14 综合报告 — 汇总 v346-v359 全部能力
+  - **phase14_report**：Phase14Capability / Phase14Report + phase14_capabilities / phase14_total_types / phase14_total_functions / phase14_total_tests / phase14_report / phase14_is_complete
+  - Phase 14 医学影像大扩展完成：DICOM→CT→MRI→超声→病理→配准→分割→病灶→3D→功能→组学→剂量→可视化→网络
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +6 tests（形式化证明 + FAKE + E2E + AI 多手段测试）
+- 7497×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- **Phase 14 ✅ 完成**：15 个版本，44 类型 + 92 函数 + 139 tests
 ## v359.0.0 - GeoVerse Phase 14: DICOM 网络
 - 扩展 `src/cv_advanced/`：DICOM 网络 — PACS/查询/检索/存储
   - **dicom_network**：DicomNetOp / DicomQueryLevel / PACSConfig / DicomQuery / DicomQueryResult + dicom_net_build_config / dicom_net_build_query / dicom_net_cfind / dicom_net_cget / dicom_net_cmove / dicom_net_cecho / dicom_net_cstore / dicom_net_generate_uid / dicom_net_parse_uid

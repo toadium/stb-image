@@ -16601,3 +16601,39 @@ pub fn dicom_net_generate_uid(root : String, instance : Int) -> String {
 pub fn dicom_net_parse_uid(uid : String) -> Array[String] {
   @cv_advanced.dicom_net_parse_uid(uid)
 }
+
+///|
+pub type Phase14Capability = @cv_advanced.Phase14Capability
+
+///|
+pub type Phase14Report = @cv_advanced.Phase14Report
+
+///|
+pub fn phase14_capabilities() -> Array[Phase14Capability] {
+  @cv_advanced.phase14_capabilities()
+}
+
+///|
+pub fn phase14_total_types() -> Int {
+  @cv_advanced.phase14_total_types()
+}
+
+///|
+pub fn phase14_total_functions() -> Int {
+  @cv_advanced.phase14_total_functions()
+}
+
+///|
+pub fn phase14_total_tests() -> Int {
+  @cv_advanced.phase14_total_tests()
+}
+
+///|
+pub fn phase14_report() -> Phase14Report {
+  @cv_advanced.phase14_report()
+}
+
+///|
+pub fn phase14_is_complete() -> Bool {
+  @cv_advanced.phase14_is_complete()
+}
