@@ -1847,6 +1847,10 @@ pub fn get_image_info_extended(Bytes) -> @codec.ImageInfoExtended raise @types.L
 
 pub fn get_image_summary(Bytes) -> String raise @types.LoadError
 
+pub fn get_orb_map(@cv_advanced.OrbSlamSystem) -> Array[@cv_advanced.SlamMapPoint]
+
+pub fn get_orb_trajectory(@cv_advanced.OrbSlamSystem) -> Array[@cv_advanced.SlamPose]
+
 pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.PerspectiveMatrix?
 
 pub fn get_rotation_matrix_2d((Float, Float), Float, Float) -> @transform.AffineMatrix
@@ -2090,6 +2094,8 @@ pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 pub fn infrared_pseudocolor_ai(@types.Image, @advanced_imaging.InfraredImagingType) -> @types.Image
 
 pub fn init_background_model(@types.Image, @cv_advanced.BackgroundParams) -> @cv_advanced.BackgroundModel
+
+pub fn init_orb_slam(@cv_advanced.OrbSlamConfig) -> @cv_advanced.OrbSlamSystem
 
 pub fn init_slam_backend() -> @cv_advanced.SlamBackend
 
@@ -2709,6 +2715,8 @@ pub fn orb_hamming(@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int
 
 pub fn orb_match(Array[@feature.OrbDescriptor], Array[@feature.OrbDescriptor], max_distance? : Int) -> Array[@feature.DescriptorMatch] raise @types.LoadError
 
+pub fn orb_slam_stats(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamStats
+
 pub fn otsu_threshold(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn otsu_threshold_value(@types.Image) -> Double raise @types.LoadError
@@ -3077,6 +3085,8 @@ pub fn repair_with_strategies(@imgir.IROp) -> Array[@self_evolve.StrategyRepairR
 
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
+pub fn reset_orb_slam(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamSystem
+
 pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
 pub fn resize_16(@types.Image16, Int, Int) -> @types.Image16
@@ -3173,6 +3183,8 @@ pub fn run_length_decode_cp(Bytes) -> Bytes
 
 pub fn run_length_encode_cp(Bytes) -> Bytes
 
+pub fn run_orb_slam(@cv_advanced.OrbSlamSystem, @cv_advanced.SlamPose, Int, Double) -> @cv_advanced.OrbSlamSystem
+
 pub fn run_schedule(@self_evolve.EvolutionSchedule) -> @self_evolve.ScheduleResult
 
 pub fn run_summary(Array[@self_evolve.TestRunResult]) -> @self_evolve.RunSummary
@@ -3200,6 +3212,8 @@ pub fn save_image_auto(@types.Image, @types.ImageFormat) -> Bytes raise @types.L
 pub fn save_image_with_quality(@types.Image, @types.ImageFormat, Int) -> Bytes raise @types.LoadError
 
 pub fn save_model(@ocr.DLCnnModelConfig, Array[Double], String) -> Bool
+
+pub fn save_orb_trajectory(@cv_advanced.OrbSlamSystem) -> String
 
 pub fn scalar_field_constant(Int, Int, Float) -> @fieldimg.ScalarField raise @types.LoadError
 
@@ -3286,6 +3300,8 @@ pub fn sharpen_16(@types.Image16, Float) -> @types.Image16 raise @types.LoadErro
 pub fn sharpen_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 
 pub fn sharpen_image_sr(@types.Image, Double) -> @types.Image
+
+pub fn shutdown_orb_slam(@cv_advanced.OrbSlamSystem, @cv_advanced.SlamBackendParams) -> @cv_advanced.OrbSlamSystem
 
 pub fn sift_detect(@types.Image, max_features? : Int, contrast_threshold? : Float) -> Array[@feature.SiftDescriptor] raise @types.LoadError
 
@@ -4637,6 +4653,14 @@ pub using @ocr {type OptimizerType}
 pub using @feature {type OrbDescriptor}
 
 pub using @feature {type OrbKeyPoint}
+
+pub using @cv_advanced {type OrbSlamConfig}
+
+pub using @cv_advanced {type OrbSlamMode}
+
+pub using @cv_advanced {type OrbSlamStats}
+
+pub using @cv_advanced {type OrbSlamSystem}
 
 pub using @advanced_imaging {type PETData as PETDataAI}
 

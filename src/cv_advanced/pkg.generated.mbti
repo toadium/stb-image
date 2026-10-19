@@ -103,6 +103,10 @@ pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
+pub fn get_orb_map(OrbSlamSystem) -> Array[SlamMapPoint]
+
+pub fn get_orb_trajectory(OrbSlamSystem) -> Array[SlamPose]
+
 pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
@@ -114,6 +118,8 @@ pub fn identity_affine() -> AffineMatrix
 pub fn identity_pose() -> SlamPose
 
 pub fn init_background_model(@types.Image, BackgroundParams) -> BackgroundModel
+
+pub fn init_orb_slam(OrbSlamConfig) -> OrbSlamSystem
 
 pub fn init_slam_backend() -> SlamBackend
 
@@ -151,6 +157,8 @@ pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
+pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
+
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
 pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
@@ -164,6 +172,14 @@ pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> Regist
 pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
 
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
+
+pub fn reset_orb_slam(OrbSlamSystem) -> OrbSlamSystem
+
+pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
+
+pub fn save_orb_trajectory(OrbSlamSystem) -> String
+
+pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
@@ -528,6 +544,49 @@ pub(all) struct MotionRegion {
 pub fn MotionRegion::equal(Self, Self) -> Bool
 pub fn MotionRegion::not_equal(Self, Self) -> Bool
 pub fn MotionRegion::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OrbSlamConfig {
+  mode : OrbSlamMode
+  vocab_size : Int
+  n_features : Int
+  scale_levels : Int
+  init_threshold : Int
+} derive(Eq, @debug.Debug)
+pub fn OrbSlamConfig::equal(Self, Self) -> Bool
+pub fn OrbSlamConfig::not_equal(Self, Self) -> Bool
+pub fn OrbSlamConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OrbSlamMode {
+  Monocular
+  Stereo
+  RGBD
+} derive(Eq, @debug.Debug)
+pub fn OrbSlamMode::equal(Self, Self) -> Bool
+pub fn OrbSlamMode::not_equal(Self, Self) -> Bool
+pub fn OrbSlamMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OrbSlamStats {
+  total_frames : Int
+  total_keyframes : Int
+  total_map_points : Int
+  trajectory_length : Double
+  fps : Double
+} derive(Eq, @debug.Debug)
+pub fn OrbSlamStats::equal(Self, Self) -> Bool
+pub fn OrbSlamStats::not_equal(Self, Self) -> Bool
+pub fn OrbSlamStats::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OrbSlamSystem {
+  config : OrbSlamConfig
+  frontend : SlamFrontend
+  backend : SlamBackend
+  trajectory : Array[SlamPose]
+  initialized : Bool
+  frame_count : Int
+} derive(Eq, @debug.Debug)
+pub fn OrbSlamSystem::equal(Self, Self) -> Bool
+pub fn OrbSlamSystem::not_equal(Self, Self) -> Bool
+pub fn OrbSlamSystem::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Point3D {
   x : Double

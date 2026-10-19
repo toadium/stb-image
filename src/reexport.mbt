@@ -14480,3 +14480,64 @@ pub fn optimize_map(
 pub fn map_statistics(backend : SlamBackend) -> (Int, Int, Double) {
   @cv_advanced.map_statistics(backend)
 }
+// cv_advanced — ORB-SLAM 核心（v328.0.0）
+
+///|
+pub type OrbSlamMode = @cv_advanced.OrbSlamMode
+
+///|
+pub type OrbSlamConfig = @cv_advanced.OrbSlamConfig
+
+///|
+pub type OrbSlamSystem = @cv_advanced.OrbSlamSystem
+
+///|
+pub type OrbSlamStats = @cv_advanced.OrbSlamStats
+
+///|
+pub fn init_orb_slam(config : OrbSlamConfig) -> OrbSlamSystem {
+  @cv_advanced.init_orb_slam(config)
+}
+
+///|
+pub fn run_orb_slam(
+  system : OrbSlamSystem,
+  pose : SlamPose,
+  feature_count : Int,
+  timestamp : Double,
+) -> OrbSlamSystem {
+  @cv_advanced.run_orb_slam(system, pose, feature_count, timestamp)
+}
+
+///|
+pub fn get_orb_trajectory(system : OrbSlamSystem) -> Array[SlamPose] {
+  @cv_advanced.get_orb_trajectory(system)
+}
+
+///|
+pub fn get_orb_map(system : OrbSlamSystem) -> Array[SlamMapPoint] {
+  @cv_advanced.get_orb_map(system)
+}
+
+///|
+pub fn save_orb_trajectory(system : OrbSlamSystem) -> String {
+  @cv_advanced.save_orb_trajectory(system)
+}
+
+///|
+pub fn orb_slam_stats(system : OrbSlamSystem) -> OrbSlamStats {
+  @cv_advanced.orb_slam_stats(system)
+}
+
+///|
+pub fn reset_orb_slam(system : OrbSlamSystem) -> OrbSlamSystem {
+  @cv_advanced.reset_orb_slam(system)
+}
+
+///|
+pub fn shutdown_orb_slam(
+  system : OrbSlamSystem,
+  params : SlamBackendParams,
+) -> OrbSlamSystem {
+  @cv_advanced.shutdown_orb_slam(system, params)
+}
