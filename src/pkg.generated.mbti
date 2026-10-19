@@ -87,6 +87,8 @@ pub fn adaptive_threshold_ocr(@types.Image, block_size? : Int, c? : Int) -> @typ
 
 pub fn add_border(@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
 
+pub fn add_dp_noise(Array[Double], Double, Double) -> Array[Double]
+
 pub fn add_face_to_database_fr(@face_recognition.FaceDatabase, @face_recognition.FaceFeature, String) -> @face_recognition.FaceDatabase
 
 pub fn add_map_point(@cv_advanced.SlamBackend, @cv_advanced.Point3D, Int, Double) -> @cv_advanced.SlamBackend
@@ -652,6 +654,8 @@ pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
 pub fn compute_beta_schedule(@cv_advanced.DiffusionConfig) -> Array[Double]
 
 pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
+
+pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
 
 pub fn compute_confusion_matrix(Array[Int], Array[Int], Int) -> Array[Array[Int]]
 
@@ -1618,6 +1622,12 @@ pub fn feature_distill(Array[Double], Array[Double], @cv_advanced.DistillationCo
 pub fn feature_euclidean_distance(@cv_advanced.FloatDescriptor, @cv_advanced.FloatDescriptor) -> Double
 
 pub fn feature_hamming_distance(@cv_advanced.BinaryDescriptor, @cv_advanced.BinaryDescriptor) -> Int
+
+pub fn fedavg_aggregate(Array[@cv_advanced.ClientUpdate]) -> Array[Double]
+
+pub fn federated_round(Array[Double], Array[@cv_advanced.ClientUpdate], @cv_advanced.FederatedConfig, Int) -> @cv_advanced.FederatedState
+
+pub fn fedprox_update(Array[Double], Array[Double], Array[Double], @cv_advanced.FederatedConfig) -> Array[Double]
 
 pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
 
@@ -4124,6 +4134,8 @@ pub using @ocr {type ClassificationResult}
 
 pub using @pipeline {type CliCommand}
 
+pub using @cv_advanced {type ClientUpdate}
+
 pub using @forensics_enhanced {type CloneDetectionResult}
 
 pub using @self_evolve {type CoEvolveAction}
@@ -4443,6 +4455,12 @@ pub using @registration_advanced {type FeaturePoint as FeaturePointRA}
 pub using @slam {type FeatureTrackingResult as FeatureTrackingResultSL}
 
 pub using @retrieval {type FeatureType}
+
+pub using @cv_advanced {type FederatedConfig}
+
+pub using @cv_advanced {type FederatedState}
+
+pub using @cv_advanced {type FederatedType}
 
 pub using @cv_advanced {type FloatDescriptor}
 

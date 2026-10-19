@@ -15466,3 +15466,59 @@ pub fn meta_train_step(
     meta_params, support_gradients, query_gradients, config,
   )
 }
+
+///|
+pub type FederatedType = @cv_advanced.FederatedType
+
+///|
+pub type FederatedConfig = @cv_advanced.FederatedConfig
+
+///|
+pub type ClientUpdate = @cv_advanced.ClientUpdate
+
+///|
+pub type FederatedState = @cv_advanced.FederatedState
+
+///|
+pub fn fedavg_aggregate(client_updates : Array[ClientUpdate]) -> Array[Double] {
+  @cv_advanced.fedavg_aggregate(client_updates)
+}
+
+///|
+pub fn fedprox_update(
+  local_params : Array[Double],
+  global_params : Array[Double],
+  gradients : Array[Double],
+  config : FederatedConfig,
+) -> Array[Double] {
+  @cv_advanced.fedprox_update(local_params, global_params, gradients, config)
+}
+
+///|
+pub fn add_dp_noise(
+  params : Array[Double],
+  sensitivity : Double,
+  epsilon : Double,
+) -> Array[Double] {
+  @cv_advanced.add_dp_noise(params, sensitivity, epsilon)
+}
+
+///|
+pub fn federated_round(
+  global_params : Array[Double],
+  client_updates : Array[ClientUpdate],
+  config : FederatedConfig,
+  current_round : Int,
+) -> FederatedState {
+  @cv_advanced.federated_round(
+    global_params, client_updates, config, current_round,
+  )
+}
+
+///|
+pub fn compute_client_drift(
+  client_params : Array[Double],
+  global_params : Array[Double],
+) -> Double {
+  @cv_advanced.compute_client_drift(client_params, global_params)
+}

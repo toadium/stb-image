@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub fn add_dp_noise(Array[Double], Double, Double) -> Array[Double]
+
 pub fn add_map_point(SlamBackend, Point3D, Int, Double) -> SlamBackend
 
 pub fn aggregate_neighbors(GraphData, Int, GNNType) -> Array[Double]
@@ -36,6 +38,8 @@ pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
 pub fn compute_beta_schedule(DiffusionConfig) -> Array[Double]
 
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
+
+pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
 
 pub fn compute_correlation_filter(@types.Image, Track, Double) -> Double
 
@@ -144,6 +148,12 @@ pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
 
 pub fn feature_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
+
+pub fn fedavg_aggregate(Array[ClientUpdate]) -> Array[Double]
+
+pub fn federated_round(Array[Double], Array[ClientUpdate], FederatedConfig, Int) -> FederatedState
+
+pub fn fedprox_update(Array[Double], Array[Double], Array[Double], FederatedConfig) -> Array[Double]
 
 pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
 
@@ -550,6 +560,15 @@ pub fn ChessboardCorners::equal(Self, Self) -> Bool
 pub fn ChessboardCorners::not_equal(Self, Self) -> Bool
 pub fn ChessboardCorners::to_repr(Self) -> @debug.Repr
 
+pub(all) struct ClientUpdate {
+  params : Array[Double]
+  num_samples : Int
+  loss : Double
+} derive(Eq, @debug.Debug)
+pub fn ClientUpdate::equal(Self, Self) -> Bool
+pub fn ClientUpdate::not_equal(Self, Self) -> Bool
+pub fn ClientUpdate::to_repr(Self) -> @debug.Repr
+
 pub(all) struct Conv1DParams {
   in_channels : Int
   out_channels : Int
@@ -697,6 +716,37 @@ pub(all) struct EssentialMatrix {
 pub fn EssentialMatrix::equal(Self, Self) -> Bool
 pub fn EssentialMatrix::not_equal(Self, Self) -> Bool
 pub fn EssentialMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FederatedConfig {
+  num_clients : Int
+  num_rounds : Int
+  client_fraction : Double
+  prox_mu : Double
+  dp_epsilon : Double
+  fed_type : FederatedType
+} derive(Eq, @debug.Debug)
+pub fn FederatedConfig::equal(Self, Self) -> Bool
+pub fn FederatedConfig::not_equal(Self, Self) -> Bool
+pub fn FederatedConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FederatedState {
+  global_params : Array[Double]
+  round : Int
+  converged : Bool
+} derive(Eq, @debug.Debug)
+pub fn FederatedState::equal(Self, Self) -> Bool
+pub fn FederatedState::not_equal(Self, Self) -> Bool
+pub fn FederatedState::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FederatedType {
+  FedAvg
+  FedProx
+  DifferentialPrivacy
+  FedNova
+} derive(Eq, @debug.Debug)
+pub fn FederatedType::equal(Self, Self) -> Bool
+pub fn FederatedType::not_equal(Self, Self) -> Bool
+pub fn FederatedType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FloatDescriptor {
   values : Array[Double]
