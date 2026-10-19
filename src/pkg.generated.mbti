@@ -3187,6 +3187,16 @@ pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[@cv_advanced.Quant
 
 pub fn quantum_ghost_imaging_ai(Int, Int, Int, @advanced_imaging.QuantumImagingAlgorithm) -> @types.Image
 
+pub fn radiomics_compute_icc(Array[Array[Double]], Int) -> Double
+
+pub fn radiomics_first_order(Array[Double], Array[Int]) -> Array[@cv_advanced.RadiomicsFeature]
+
+pub fn radiomics_glcm_features(Array[Double], Int, Int, Int) -> Array[@cv_advanced.RadiomicsFeature]
+
+pub fn radiomics_select_features(Array[Array[Double]], Double) -> @cv_advanced.FeatureSelectionResult
+
+pub fn radiomics_shape_features(Array[Int], Int, Int) -> Array[@cv_advanced.RadiomicsFeature]
+
 pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], @cv_advanced.AutoMLConfig) -> @cv_advanced.AutoMLResult
 
 pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]? raise @types.LoadError
@@ -4624,6 +4634,8 @@ pub using @stitch {type FeaturePoint}
 
 pub using @registration_advanced {type FeaturePoint as FeaturePointRA}
 
+pub using @cv_advanced {type FeatureSelectionResult}
+
 pub using @slam {type FeatureTrackingResult as FeatureTrackingResultSL}
 
 pub using @retrieval {type FeatureType}
@@ -5253,6 +5265,10 @@ pub using @cv_advanced {type QuantizedTensor}
 pub using @advanced_imaging {type QuantumImagingAlgorithm as QuantumImagingAlgorithmAI}
 
 pub using @image_retrieval_advanced {type QueryExpansionResult}
+
+pub using @cv_advanced {type RadiomicsFeature}
+
+pub using @cv_advanced {type RadiomicsFeatureClass}
 
 pub using @neural_rendering {type Ray as RayNR}
 

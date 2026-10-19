@@ -415,6 +415,16 @@ pub fn quantize_int8(Array[Double], QuantizationConfig) -> QuantizedTensor
 
 pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[QuantizedTensor]
 
+pub fn radiomics_compute_icc(Array[Array[Double]], Int) -> Double
+
+pub fn radiomics_first_order(Array[Double], Array[Int]) -> Array[RadiomicsFeature]
+
+pub fn radiomics_glcm_features(Array[Double], Int, Int, Int) -> Array[RadiomicsFeature]
+
+pub fn radiomics_select_features(Array[Array[Double]], Double) -> FeatureSelectionResult
+
+pub fn radiomics_shape_features(Array[Int], Int, Int) -> Array[RadiomicsFeature]
+
 pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig) -> AutoMLResult
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
@@ -997,6 +1007,15 @@ pub(all) struct FMRIActivation {
 pub fn FMRIActivation::equal(Self, Self) -> Bool
 pub fn FMRIActivation::not_equal(Self, Self) -> Bool
 pub fn FMRIActivation::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FeatureSelectionResult {
+  selected_features : Array[Int]
+  scores : Array[Double]
+  num_selected : Int
+} derive(Eq, @debug.Debug)
+pub fn FeatureSelectionResult::equal(Self, Self) -> Bool
+pub fn FeatureSelectionResult::not_equal(Self, Self) -> Bool
+pub fn FeatureSelectionResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FederatedConfig {
   num_clients : Int
@@ -1639,6 +1658,27 @@ pub(all) struct QuantizedTensor {
 pub fn QuantizedTensor::equal(Self, Self) -> Bool
 pub fn QuantizedTensor::not_equal(Self, Self) -> Bool
 pub fn QuantizedTensor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RadiomicsFeature {
+  name : String
+  value : Double
+  class : RadiomicsFeatureClass
+} derive(Eq, @debug.Debug)
+pub fn RadiomicsFeature::equal(Self, Self) -> Bool
+pub fn RadiomicsFeature::not_equal(Self, Self) -> Bool
+pub fn RadiomicsFeature::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RadiomicsFeatureClass {
+  Shape
+  FirstOrder
+  GLCM
+  GLRLM
+  GLSZM
+  GLDM
+} derive(Eq, @debug.Debug)
+pub fn RadiomicsFeatureClass::equal(Self, Self) -> Bool
+pub fn RadiomicsFeatureClass::not_equal(Self, Self) -> Bool
+pub fn RadiomicsFeatureClass::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ReconstructionMethod {
   FBP

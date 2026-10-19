@@ -16304,3 +16304,55 @@ pub fn functional_build_pet_params(
     suv, injection_dose, patient_weight, lumped_constant, plasma_glucose,
   )
 }
+
+///|
+pub type RadiomicsFeatureClass = @cv_advanced.RadiomicsFeatureClass
+
+///|
+pub type RadiomicsFeature = @cv_advanced.RadiomicsFeature
+
+///|
+pub type FeatureSelectionResult = @cv_advanced.FeatureSelectionResult
+
+///|
+pub fn radiomics_first_order(
+  image : Array[Double],
+  mask : Array[Int],
+) -> Array[RadiomicsFeature] {
+  @cv_advanced.radiomics_first_order(image, mask)
+}
+
+///|
+pub fn radiomics_shape_features(
+  mask : Array[Int],
+  width : Int,
+  height : Int,
+) -> Array[RadiomicsFeature] {
+  @cv_advanced.radiomics_shape_features(mask, width, height)
+}
+
+///|
+pub fn radiomics_glcm_features(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  num_levels : Int,
+) -> Array[RadiomicsFeature] {
+  @cv_advanced.radiomics_glcm_features(image, width, height, num_levels)
+}
+
+///|
+pub fn radiomics_select_features(
+  features : Array[Array[Double]],
+  threshold : Double,
+) -> FeatureSelectionResult {
+  @cv_advanced.radiomics_select_features(features, threshold)
+}
+
+///|
+pub fn radiomics_compute_icc(
+  features : Array[Array[Double]],
+  feature_idx : Int,
+) -> Double {
+  @cv_advanced.radiomics_compute_icc(features, feature_idx)
+}
