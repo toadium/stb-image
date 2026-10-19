@@ -561,6 +561,8 @@ pub fn classify_markdown_element(@ocr.TextBlock, avg_font_size? : Double) -> @oc
 
 pub fn classify_scene_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.SceneClassificationResult
 
+pub fn clean_foreground_mask(@cv_advanced.ForegroundMask) -> @cv_advanced.ForegroundMask
+
 pub fn cli_help() -> String
 
 pub fn cli_parse(Array[String]) -> @pipeline.CliCommand
@@ -1837,6 +1839,8 @@ pub fn glcm_features_multi_direction_16(@types.Image16, levels? : Int) -> Array[
 
 pub fn glcm_features_multi_direction_f(@types.ImageF, levels? : Int) -> Array[@feature.GlcmFeatures] raise @types.LoadError
 
+pub fn gmm_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
+
 pub fn good_features_to_track(@types.Image, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
 
 pub fn good_features_to_track_16(@types.Image16, Int, Float, min_distance? : Int) -> Array[@feature.CornerPoint] raise @types.LoadError
@@ -2056,6 +2060,8 @@ pub fn images_equal(@types.Image, @types.Image) -> Bool
 pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
 pub fn infrared_pseudocolor_ai(@types.Image, @advanced_imaging.InfraredImagingType) -> @types.Image
+
+pub fn init_background_model(@types.Image, @cv_advanced.BackgroundParams) -> @cv_advanced.BackgroundModel
 
 pub fn init_tracker(Double, Double, Double, Double, @cv_advanced.TrackerParams) -> @cv_advanced.Track
 
@@ -2306,6 +2312,8 @@ pub fn knn_match_binary(Array[@cv_advanced.BinaryDescriptor], Array[@cv_advanced
 pub fn knn_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor], Int) -> Array[Array[@cv_advanced.DMatch]]
 
 pub fn knn_predict(@ocr.KnnClassifier, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
+
+pub fn knn_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
 
 pub fn knowledge_graph_edge_count(@self_evolve.KnowledgeGraph) -> Int
 
@@ -3341,6 +3349,8 @@ pub fn stylize(@types.Image, String, config? : @stylize.StylizeConfig) -> @types
 
 pub fn stylize_default_config() -> @stylize.StylizeConfig
 
+pub fn subtract_background(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.ForegroundMask
+
 pub fn suggest_optimization(@imgir.IRPipeline) -> @self_evolve.PipelineOptReport
 
 pub fn suggest_test_count(Int) -> Int
@@ -3541,6 +3551,8 @@ pub fn unrolled_pixel_sum(@types.Image) -> Int raise @types.LoadError
 
 pub fn unsharp_mask_enhance_dn(@types.Image, Double, Int) -> @types.Image raise @types.LoadError
 
+pub fn update_background_model(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
+
 pub fn update_object_tracking(Array[@detection.YoloTrackedObject], @detection.YoloDetectionResult, Int) -> Array[@detection.YoloTrackedObject] raise @types.LoadError
 
 pub fn update_task_progress(@ocr.BatchTask, Double, Int, Int) -> @ocr.BatchTask
@@ -3582,6 +3594,8 @@ pub fn verify_image_source_fs(@types.Image, @forensics.SourceVerificationConfig)
 pub fn verify_result_make(is_valid~ : Bool, issues? : Array[String]) -> @aoci.VerifyResult
 
 pub fn vertical_projection(@types.Image) -> @ocr.ProjectionResult raise @types.LoadError
+
+pub fn vibe_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
 
 pub fn video_concat(@video.VideoFrames, @video.VideoFrames) -> @video.VideoFrames
 
@@ -3769,6 +3783,12 @@ pub using @self_evolve {type AutoDecision}
 pub using @intelligent_vision {type AutonomousDrivingTask as AutonomousDrivingTaskIV}
 
 pub using @codec {type AvifInfoExtended}
+
+pub using @cv_advanced {type BackgroundMethod}
+
+pub using @cv_advanced {type BackgroundModel}
+
+pub using @cv_advanced {type BackgroundParams}
 
 pub using @barcode {type BarcodeConfig}
 
@@ -4153,6 +4173,8 @@ pub using @cv_advanced {type FlowField}
 pub using @cv_advanced {type FlowParams}
 
 pub using @feature {type FlowResult}
+
+pub using @cv_advanced {type ForegroundMask}
 
 pub using @frequency {type FreqFilterType}
 

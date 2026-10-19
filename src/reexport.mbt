@@ -14119,3 +14119,69 @@ pub fn track_objects(
 pub fn compute_iou(a : Track, b : Track) -> Double {
   @cv_advanced.compute_iou(a, b)
 }
+// cv_advanced — 背景建模（v323.0.0）
+
+///|
+pub type BackgroundMethod = @cv_advanced.BackgroundMethod
+
+///|
+pub type BackgroundParams = @cv_advanced.BackgroundParams
+
+///|
+pub type BackgroundModel = @cv_advanced.BackgroundModel
+
+///|
+pub type ForegroundMask = @cv_advanced.ForegroundMask
+
+///|
+pub fn init_background_model(
+  img : @types.Image,
+  params : BackgroundParams,
+) -> BackgroundModel {
+  @cv_advanced.init_background_model(img, params)
+}
+
+///|
+pub fn update_background_model(
+  model : BackgroundModel,
+  img : @types.Image,
+) -> BackgroundModel {
+  @cv_advanced.update_background_model(model, img)
+}
+
+///|
+pub fn subtract_background(
+  model : BackgroundModel,
+  img : @types.Image,
+) -> ForegroundMask {
+  @cv_advanced.subtract_background(model, img)
+}
+
+///|
+pub fn gmm_update(
+  model : BackgroundModel,
+  img : @types.Image,
+) -> BackgroundModel {
+  @cv_advanced.gmm_update(model, img)
+}
+
+///|
+pub fn knn_update(
+  model : BackgroundModel,
+  img : @types.Image,
+) -> BackgroundModel {
+  @cv_advanced.knn_update(model, img)
+}
+
+///|
+pub fn vibe_update(
+  model : BackgroundModel,
+  img : @types.Image,
+) -> BackgroundModel {
+  @cv_advanced.vibe_update(model, img)
+}
+
+///|
+pub fn clean_foreground_mask(mask : ForegroundMask) -> ForegroundMask {
+  @cv_advanced.clean_foreground_mask(mask)
+}
