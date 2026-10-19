@@ -21,6 +21,12 @@ pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDe
 
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
 
+pub fn compute_depth_map(DisparityMap, Double, Double) -> DepthMap
+
+pub fn compute_disparity_block_matching(@types.Image, @types.Image, StereoParams) -> DisparityMap
+
+pub fn compute_disparity_sgm(@types.Image, @types.Image, StereoParams) -> DisparityMap
+
 pub fn compute_epipolar_line(FundamentalMatrix, Double, Double) -> EpipolarLine
 
 pub fn compute_essential_matrix(FundamentalMatrix, CameraIntrinsics, CameraIntrinsics) -> EssentialMatrix
@@ -45,6 +51,8 @@ pub fn detect_fast_corners(@types.Image, Int) -> Array[KeyPoint]
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
+pub fn disparity_to_depth(Double, Double, Double) -> Double
+
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
@@ -67,6 +75,8 @@ pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
 
+pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
+
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
 pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
@@ -74,6 +84,8 @@ pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
 pub fn undistort_point(CameraIntrinsics, Double, Double) -> (Double, Double)
 
 pub fn update_tracked_object(TrackedObject, Array[Int], Double) -> TrackedObject
+
+pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
 pub fn visual_question_answering(String, String) -> VQAResult
 
@@ -184,6 +196,26 @@ pub fn DMatch::equal(Self, Self) -> Bool
 pub fn DMatch::not_equal(Self, Self) -> Bool
 pub fn DMatch::to_repr(Self) -> @debug.Repr
 
+pub(all) struct DepthMap {
+  width : Int
+  height : Int
+  depths : Array[Double]
+  valid : Array[Bool]
+} derive(Eq, @debug.Debug)
+pub fn DepthMap::equal(Self, Self) -> Bool
+pub fn DepthMap::not_equal(Self, Self) -> Bool
+pub fn DepthMap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DisparityMap {
+  width : Int
+  height : Int
+  disparities : Array[Double]
+  valid : Array[Bool]
+} derive(Eq, @debug.Debug)
+pub fn DisparityMap::equal(Self, Self) -> Bool
+pub fn DisparityMap::not_equal(Self, Self) -> Bool
+pub fn DisparityMap::to_repr(Self) -> @debug.Repr
+
 pub(all) struct EpipolarLine {
   a : Double
   b : Double
@@ -292,6 +324,16 @@ pub(all) struct SceneParsingResult {
   objects : Array[String]
   num_objects : Int
 }
+
+pub(all) struct StereoParams {
+  max_disparity : Int
+  block_size : Int
+  threshold : Double
+  baseline : Double
+} derive(Eq, @debug.Debug)
+pub fn StereoParams::equal(Self, Self) -> Bool
+pub fn StereoParams::not_equal(Self, Self) -> Bool
+pub fn StereoParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TrackedObject {
   object_id : Int

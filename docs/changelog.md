@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v320.0.0 - GeoVerse Phase 12: 立体视觉扩展
+- 扩展 `src/cv_advanced/`：立体视觉 — 视差/SGM/深度图
+  - **stereo_vision**：DisparityMap / StereoParams / DepthMap + compute_disparity_block_matching / compute_disparity_sgm / disparity_to_depth / compute_depth_map / validate_disparity / stereo_rectify
+  - Phase 12 CV算法大扩展 — 立体视觉与深度重建
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7127×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v319.0.0 - GeoVerse Phase 12: 极线几何
 - 扩展 `src/cv_advanced/`：极线几何 — 基础矩阵/本质矩阵/三角化
   - **epipolar_geometry**：FundamentalMatrix / EssentialMatrix / EpipolarLine / PointCorrespondence / Point3D + compute_fundamental_matrix / compute_essential_matrix / compute_epipolar_line / check_epipolar_constraint / triangulate_point / fundamental_matrix_rank / essential_matrix_svd

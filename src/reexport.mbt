@@ -13935,3 +13935,66 @@ pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int {
 pub fn essential_matrix_svd(e : EssentialMatrix) -> (Double, Double, Double) {
   @cv_advanced.essential_matrix_svd(e)
 }
+// cv_advanced — 立体视觉（v320.0.0）
+
+///|
+pub type DisparityMap = @cv_advanced.DisparityMap
+
+///|
+pub type StereoParams = @cv_advanced.StereoParams
+
+///|
+pub type DepthMap = @cv_advanced.DepthMap
+
+///|
+pub fn compute_disparity_block_matching(
+  left : @types.Image,
+  right : @types.Image,
+  params : StereoParams,
+) -> DisparityMap {
+  @cv_advanced.compute_disparity_block_matching(left, right, params)
+}
+
+///|
+pub fn compute_disparity_sgm(
+  left : @types.Image,
+  right : @types.Image,
+  params : StereoParams,
+) -> DisparityMap {
+  @cv_advanced.compute_disparity_sgm(left, right, params)
+}
+
+///|
+pub fn stereo_disparity_to_depth(
+  disparity : Double,
+  baseline : Double,
+  focal_length : Double,
+) -> Double {
+  @cv_advanced.disparity_to_depth(disparity, baseline, focal_length)
+}
+
+///|
+pub fn compute_depth_map(
+  disparity : DisparityMap,
+  baseline : Double,
+  focal_length : Double,
+) -> DepthMap {
+  @cv_advanced.compute_depth_map(disparity, baseline, focal_length)
+}
+
+///|
+pub fn validate_disparity(
+  left_disp : DisparityMap,
+  right_disp : DisparityMap,
+  threshold : Double,
+) -> DisparityMap {
+  @cv_advanced.validate_disparity(left_disp, right_disp, threshold)
+}
+
+///|
+pub fn stereo_rectify(
+  left : @types.Image,
+  right : @types.Image,
+) -> (@types.Image, @types.Image) {
+  @cv_advanced.stereo_rectify(left, right)
+}
