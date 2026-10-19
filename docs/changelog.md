@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v318.0.0 - GeoVerse Phase 12: 相机标定
+- 扩展 `src/cv_advanced/`：相机标定 — 张正友标定/畸变校正
+  - **camera_calibration**：CameraIntrinsics / ChessboardCorners / CalibrationResult + calibrate_camera / undistort_point / undistort_image / compute_reprojection_error + focal_length / principal_point
+  - Phase 12 CV算法大扩展 — 相机标定与畸变校正
+- 新增 3 类型 + 4 公共函数 + 2 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7109×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v317.0.0 - GeoVerse Phase 12: 描述子匹配
 - 扩展 `src/cv_advanced/`：描述子匹配 — BFMatcher/FLANN/KNN
   - **descriptor_matchers**：DMatch / MatcherKind + bf_match_binary / bf_match_float / knn_match_binary / knn_match_float / ratio_test / flann_match_float / cross_validate_match

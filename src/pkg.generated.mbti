@@ -499,9 +499,15 @@ pub fn calculate_texture_features_st(@types.Image) -> @style_transfer.StyleTrans
 
 pub fn calculate_word_accuracy(String, String) -> Double
 
+pub fn calibrate_camera(@cv_advanced.ChessboardCorners, Int, Int) -> @cv_advanced.CalibrationResult
+
 pub fn calibrate_confidence(@ocr.OcrResult, factor? : Double) -> @ocr.OcrResult raise @types.LoadError
 
 pub fn calibrate_confidence_enhanced(Double, Array[Double]) -> Double
+
+pub fn calibration_focal_length(@cv_advanced.CalibrationResult) -> (Double, Double)
+
+pub fn calibration_principal_point(@cv_advanced.CalibrationResult) -> (Double, Double)
 
 pub fn canny_edge(@types.Image, low_threshold? : Int, high_threshold? : Int) -> @types.Image raise @types.LoadError
 
@@ -672,6 +678,8 @@ pub fn compute_psnr(@types.Image, @types.Image) -> Double
 pub fn compute_quality_metrics(@types.Image, @types.Image) -> @quality.QualityMetrics
 
 pub fn compute_reading_order(Array[@ocr.DocumentElement]) -> Array[Int] raise @types.LoadError
+
+pub fn compute_reprojection_error(@cv_advanced.CameraIntrinsics, @cv_advanced.ChessboardCorners) -> Double
 
 pub fn compute_ssim(@types.Image, @types.Image) -> Double
 
@@ -3471,6 +3479,10 @@ pub fn understand_document_enhanced(@types.Image, config? : @ocr.DocumentUnderst
 
 pub fn understand_scene_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> (@scene_understanding.SceneClassificationResult, @scene_understanding.ImageCaptioningResult, @scene_understanding.SceneGraph)
 
+pub fn undistort_image(@types.Image, @cv_advanced.CameraIntrinsics) -> @types.Image
+
+pub fn undistort_point(@cv_advanced.CameraIntrinsics, Double, Double) -> (Double, Double)
+
 pub fn unique_combo_count() -> Int
 
 pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
@@ -3746,7 +3758,11 @@ pub using @self_evolve {type CIGateResult}
 
 pub using @computational_imaging {type CTProjectionData as CTProjectionDataCI}
 
+pub using @cv_advanced {type CalibrationResult}
+
 pub using @stereo3d {type CameraExtrinsics3d}
+
+pub using @cv_advanced {type CameraIntrinsics}
 
 pub using @stereo3d {type CameraIntrinsics3d}
 
@@ -3763,6 +3779,8 @@ pub using @encryption {type ChaoticParams}
 pub using @ocr {type CharRecognitionResult}
 
 pub using @ocr {type CharSegment}
+
+pub using @cv_advanced {type ChessboardCorners}
 
 pub using @ocr {type ChineseCharInfo}
 

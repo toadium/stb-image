@@ -13811,3 +13811,59 @@ pub fn cross_validate_match(
 ) -> Array[DMatch] {
   @cv_advanced.cross_validate_match(matches1, matches2)
 }
+// cv_advanced — 相机标定（v318.0.0）
+
+///|
+pub type CameraIntrinsics = @cv_advanced.CameraIntrinsics
+
+///|
+pub type ChessboardCorners = @cv_advanced.ChessboardCorners
+
+///|
+pub type CalibrationResult = @cv_advanced.CalibrationResult
+
+///|
+pub fn calibrate_camera(
+  corners : ChessboardCorners,
+  image_width : Int,
+  image_height : Int,
+) -> CalibrationResult {
+  @cv_advanced.calibrate_camera(corners, image_width, image_height)
+}
+
+///|
+pub fn undistort_point(
+  intrinsics : CameraIntrinsics,
+  x : Double,
+  y : Double,
+) -> (Double, Double) {
+  @cv_advanced.undistort_point(intrinsics, x, y)
+}
+
+///|
+pub fn undistort_image(
+  img : @types.Image,
+  intrinsics : CameraIntrinsics,
+) -> @types.Image {
+  @cv_advanced.undistort_image(img, intrinsics)
+}
+
+///|
+pub fn compute_reprojection_error(
+  intrinsics : CameraIntrinsics,
+  corners : ChessboardCorners,
+) -> Double {
+  @cv_advanced.compute_reprojection_error(intrinsics, corners)
+}
+
+///|
+pub fn calibration_focal_length(result : CalibrationResult) -> (Double, Double) {
+  result.focal_length()
+}
+
+///|
+pub fn calibration_principal_point(
+  result : CalibrationResult,
+) -> (Double, Double) {
+  result.principal_point()
+}
