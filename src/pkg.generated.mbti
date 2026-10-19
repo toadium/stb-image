@@ -2051,6 +2051,8 @@ pub fn identity_affine() -> @cv_advanced.AffineMatrix
 
 pub fn identity_homography() -> @stitch.Homography
 
+pub fn identity_pose() -> @cv_advanced.SlamPose
+
 pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
 
 pub fn ifft_2d_16(@frequency.FFTResult) -> @types.Image16
@@ -2084,6 +2086,8 @@ pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 pub fn infrared_pseudocolor_ai(@types.Image, @advanced_imaging.InfraredImagingType) -> @types.Image
 
 pub fn init_background_model(@types.Image, @cv_advanced.BackgroundParams) -> @cv_advanced.BackgroundModel
+
+pub fn init_slam_frontend() -> @cv_advanced.SlamFrontend
 
 pub fn init_tracker(Double, Double, Double, Double, @cv_advanced.TrackerParams) -> @cv_advanced.Track
 
@@ -2293,6 +2297,8 @@ pub fn is_tga_format(Bytes) -> Bool
 
 pub fn is_tiff_format(Bytes) -> Bool
 
+pub fn is_tracking_lost(@cv_advanced.SlamFrontend, @cv_advanced.SlamFrontendParams) -> Bool
+
 pub fn is_webp_format(Bytes) -> Bool
 
 pub fn jpeg_info_extended(Bytes) -> @codec.JpegInfoExtended raise @types.LoadError
@@ -2308,6 +2314,8 @@ pub fn kalman_correct(@cv_advanced.KalmanState, Double, Double) -> @cv_advanced.
 pub fn kalman_predict(@cv_advanced.KalmanState) -> @cv_advanced.KalmanState
 
 pub fn key_sensitivity_test(@types.Image, Double, delta? : Double) -> Double raise @types.LoadError
+
+pub fn keyframe_selection(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, @cv_advanced.SlamFrontendParams) -> Bool
 
 pub fn kmeans_quantize(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
 
@@ -2388,6 +2396,8 @@ pub fn load_from_bytes(Bytes, req_channels? : Int?) -> @types.Image raise @types
 pub fn load_gif_from_bytes(Bytes) -> @types.GifAnimation raise @types.LoadError
 
 pub fn load_model(String) -> @ocr.DLCnnModelConfig?
+
+pub fn local_bundle_adjustment(Array[@cv_advanced.SlamKeyFrame]) -> Array[@cv_advanced.SlamKeyFrame]
 
 pub fn lookup_by_pinyin(@ocr.DictChineseDict, String) -> Array[@ocr.DictCharEntry] raise @types.LoadError
 
@@ -2863,6 +2873,8 @@ pub fn priority_from_coverage(Int) -> @self_evolve.TestPriority
 
 pub fn process_frame_slam_sl(@slam.SLAMState, @types.Image, @slam.SLAMConfig) -> @slam.SLAMState
 
+pub fn process_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, Double, Int, Int) -> @cv_advanced.SlamFrontend
+
 pub fn progress_bar_to_string(Double, width? : Int) -> String
 
 pub fn projection_features(@types.Image) -> @ocr.ProjectionFeatures raise @types.LoadError
@@ -3002,6 +3014,8 @@ pub fn reinhard_tonemap_16(@types.ImageF, key? : Float) -> @types.Image16 raise 
 pub fn reinhard_tonemap_f(@types.ImageF, key? : Float) -> @types.ImageF raise @types.LoadError
 
 pub fn relevance_feedback_advanced(Array[Double], Array[Int], Array[Int], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.RelevanceFeedbackResult
+
+pub fn relocalize(@cv_advanced.SlamFrontend, @cv_advanced.SlamKeyFrame) -> @cv_advanced.SlamFrontend
 
 pub fn relu(Double) -> Double
 
@@ -3277,6 +3291,8 @@ pub fn sketch(@types.Image, blend? : Double) -> @types.Image
 
 pub fn sketch_effect_st(@types.Image, Double) -> @types.Image raise @types.LoadError
 
+pub fn slam_estimate_pose(Array[@cv_advanced.Point3D], Array[(Double, Double)], @cv_advanced.CameraIntrinsics) -> @cv_advanced.SlamPose
+
 pub fn slam_report_to_string_sl(@slam.SLAMState) -> String
 
 pub fn slic(@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError
@@ -3534,6 +3550,8 @@ pub fn tone_mapping_reinhard(@types.Image, key? : Double) -> @types.Image raise 
 pub fn tone_mapping_sigmoid(@types.Image, strength? : Double) -> @types.Image raise @types.LoadError
 
 pub fn track_features_slam_sl(@types.Image, @types.Image, Array[Array[Double]], Int) -> @slam.FeatureTrackingResult
+
+pub fn track_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, (Double, Double, Double), Int, @cv_advanced.SlamFrontendParams) -> (@cv_advanced.SlamFrontend, Bool)
 
 pub fn track_objects(Array[@cv_advanced.Track], Array[@cv_advanced.Track], Double) -> Array[@cv_advanced.Track]
 
@@ -4871,6 +4889,14 @@ pub using @image_retrieval_advanced {type SimilarityMetricType}
 pub using @image_retrieval_advanced {type SimilarityResult}
 
 pub using @pose_estimation {type SkeletonConnection as SkeletonConnectionPE}
+
+pub using @cv_advanced {type SlamFrontend}
+
+pub using @cv_advanced {type SlamFrontendParams}
+
+pub using @cv_advanced {type SlamKeyFrame}
+
+pub using @cv_advanced {type SlamPose}
 
 pub using @self_evolve {type SmartPriorityReport}
 

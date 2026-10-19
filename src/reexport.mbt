@@ -14316,3 +14316,93 @@ pub fn register_images(
 pub fn compute_ncc(a : @types.Image, b : @types.Image) -> Double {
   @cv_advanced.compute_ncc(a, b)
 }
+// cv_advanced — SLAM 前端（v326.0.0）
+
+///|
+pub type SlamPose = @cv_advanced.SlamPose
+
+///|
+pub type SlamKeyFrame = @cv_advanced.SlamKeyFrame
+
+///|
+pub type SlamFrontend = @cv_advanced.SlamFrontend
+
+///|
+pub type SlamFrontendParams = @cv_advanced.SlamFrontendParams
+
+///|
+pub fn identity_pose() -> SlamPose {
+  @cv_advanced.identity_pose()
+}
+
+///|
+pub fn init_slam_frontend() -> SlamFrontend {
+  @cv_advanced.init_slam_frontend()
+}
+
+///|
+pub fn process_keyframe(
+  frontend : SlamFrontend,
+  pose : SlamPose,
+  timestamp : Double,
+  feature_count : Int,
+  matched_count : Int,
+) -> SlamFrontend {
+  @cv_advanced.process_keyframe(
+    frontend, pose, timestamp, feature_count, matched_count,
+  )
+}
+
+///|
+pub fn track_keyframe(
+  frontend : SlamFrontend,
+  prev_pose : SlamPose,
+  motion : (Double, Double, Double),
+  feature_count : Int,
+  params : SlamFrontendParams,
+) -> (SlamFrontend, Bool) {
+  @cv_advanced.track_keyframe(
+    frontend, prev_pose, motion, feature_count, params,
+  )
+}
+
+///|
+pub fn slam_estimate_pose(
+  object_points : Array[Point3D],
+  image_points : Array[(Double, Double)],
+  intrinsics : CameraIntrinsics,
+) -> SlamPose {
+  @cv_advanced.estimate_pose(object_points, image_points, intrinsics)
+}
+
+///|
+pub fn keyframe_selection(
+  frontend : SlamFrontend,
+  new_pose : SlamPose,
+  params : SlamFrontendParams,
+) -> Bool {
+  @cv_advanced.keyframe_selection(frontend, new_pose, params)
+}
+
+///|
+pub fn local_bundle_adjustment(
+  keyframes : Array[SlamKeyFrame],
+) -> Array[SlamKeyFrame] {
+  @cv_advanced.local_bundle_adjustment(keyframes)
+}
+
+///|
+pub fn is_tracking_lost(
+  frontend : SlamFrontend,
+  params : SlamFrontendParams,
+) -> Bool {
+  @cv_advanced.is_tracking_lost(frontend, params)
+}
+
+///|
+pub fn relocalize(
+  frontend : SlamFrontend,
+  reference_kf : SlamKeyFrame,
+) -> SlamFrontend {
+  @cv_advanced.relocalize(frontend, reference_kf)
+}

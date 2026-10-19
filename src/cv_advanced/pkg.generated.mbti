@@ -83,6 +83,8 @@ pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
 pub fn estimate_affine(@types.Image, @types.Image) -> AffineMatrix
 
+pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) -> SlamPose
+
 pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
@@ -105,19 +107,29 @@ pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
 
 pub fn identity_affine() -> AffineMatrix
 
+pub fn identity_pose() -> SlamPose
+
 pub fn init_background_model(@types.Image, BackgroundParams) -> BackgroundModel
 
+pub fn init_slam_frontend() -> SlamFrontend
+
 pub fn init_tracker(Double, Double, Double, Double, TrackerParams) -> Track
+
+pub fn is_tracking_lost(SlamFrontend, SlamFrontendParams) -> Bool
 
 pub fn kalman_correct(KalmanState, Double, Double) -> KalmanState
 
 pub fn kalman_predict(KalmanState) -> KalmanState
+
+pub fn keyframe_selection(SlamFrontend, SlamPose, SlamFrontendParams) -> Bool
 
 pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
 pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
 
@@ -127,15 +139,21 @@ pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
+pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
+
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
 
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
+pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
+
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
 pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
+
+pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
 
 pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
 
@@ -543,6 +561,51 @@ pub(all) struct SceneParsingResult {
   objects : Array[String]
   num_objects : Int
 }
+
+pub(all) struct SlamFrontend {
+  keyframes : Array[SlamKeyFrame]
+  current_pose : SlamPose
+  tracking_status : Int
+  lost_count : Int
+} derive(Eq, @debug.Debug)
+pub fn SlamFrontend::equal(Self, Self) -> Bool
+pub fn SlamFrontend::not_equal(Self, Self) -> Bool
+pub fn SlamFrontend::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlamFrontendParams {
+  min_features : Int
+  max_features : Int
+  keyframe_distance : Double
+  keyframe_angle : Double
+  lost_threshold : Int
+} derive(Eq, @debug.Debug)
+pub fn SlamFrontendParams::equal(Self, Self) -> Bool
+pub fn SlamFrontendParams::not_equal(Self, Self) -> Bool
+pub fn SlamFrontendParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlamKeyFrame {
+  id : Int
+  pose : SlamPose
+  timestamp : Double
+  feature_count : Int
+  matched_count : Int
+} derive(Eq, @debug.Debug)
+pub fn SlamKeyFrame::equal(Self, Self) -> Bool
+pub fn SlamKeyFrame::not_equal(Self, Self) -> Bool
+pub fn SlamKeyFrame::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlamPose {
+  tx : Double
+  ty : Double
+  tz : Double
+  qw : Double
+  qx : Double
+  qy : Double
+  qz : Double
+} derive(Eq, @debug.Debug)
+pub fn SlamPose::equal(Self, Self) -> Bool
+pub fn SlamPose::not_equal(Self, Self) -> Bool
+pub fn SlamPose::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StereoParams {
   max_disparity : Int
