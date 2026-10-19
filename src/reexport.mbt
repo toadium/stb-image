@@ -14541,3 +14541,65 @@ pub fn shutdown_orb_slam(
 ) -> OrbSlamSystem {
   @cv_advanced.shutdown_orb_slam(system, params)
 }
+// cv_advanced — VINS（v329.0.0）
+
+///|
+pub type ImuData = @cv_advanced.ImuData
+
+///|
+pub type VinsConfig = @cv_advanced.VinsConfig
+
+///|
+pub type VinsState = @cv_advanced.VinsState
+
+///|
+pub type VinsStats = @cv_advanced.VinsStats
+
+///|
+pub fn init_vins(config : VinsConfig) -> (VinsState, VinsConfig) {
+  @cv_advanced.init_vins(config)
+}
+
+///|
+pub fn process_imu(
+  state : VinsState,
+  config : VinsConfig,
+  imu : ImuData,
+  dt : Double,
+) -> VinsState {
+  @cv_advanced.process_imu(state, config, imu, dt)
+}
+
+///|
+pub fn process_image_vins(
+  state : VinsState,
+  pose : SlamPose,
+  timestamp : Double,
+) -> VinsState {
+  @cv_advanced.process_image_vins(state, pose, timestamp)
+}
+
+///|
+pub fn vins_optimize(state : VinsState, config : VinsConfig) -> VinsState {
+  @cv_advanced.vins_optimize(state, config)
+}
+
+///|
+pub fn get_vins_state(state : VinsState) -> SlamPose {
+  @cv_advanced.get_vins_state(state)
+}
+
+///|
+pub fn vins_stats(state : VinsState, trajectory : Array[SlamPose]) -> VinsStats {
+  @cv_advanced.vins_stats(state, trajectory)
+}
+
+///|
+pub fn reset_vins(config : VinsConfig) -> (VinsState, VinsConfig) {
+  @cv_advanced.reset_vins(config)
+}
+
+///|
+pub fn vins_check_initialization(state : VinsState) -> Bool {
+  @cv_advanced.vins_check_initialization(state)
+}

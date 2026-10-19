@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v329.0.0 - GeoVerse Phase 12: VINS
+- 扩展 `src/cv_advanced/`：VINS — 视觉惯性导航系统
+  - **vins**：ImuData / VinsConfig / VinsState / VinsStats + init_vins / process_imu / process_image_vins / vins_optimize / get_vins_state / vins_stats / reset_vins / vins_check_initialization
+  - Phase 12 CV算法大扩展 — 视觉惯性导航
+- 新增 4 类型 + 8 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7208×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v328.0.0 - GeoVerse Phase 12: ORB-SLAM 核心
 - 扩展 `src/cv_advanced/`：ORB-SLAM 核心 — 完整 SLAM 系统
   - **orb_slam**：OrbSlamMode / OrbSlamConfig / OrbSlamSystem / OrbSlamStats + init_orb_slam / run_orb_slam / get_orb_trajectory / get_orb_map / save_orb_trajectory / orb_slam_stats / reset_orb_slam / shutdown_orb_slam

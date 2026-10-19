@@ -107,6 +107,8 @@ pub fn get_orb_map(OrbSlamSystem) -> Array[SlamMapPoint]
 
 pub fn get_orb_trajectory(OrbSlamSystem) -> Array[SlamPose]
 
+pub fn get_vins_state(VinsState) -> SlamPose
+
 pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
@@ -126,6 +128,8 @@ pub fn init_slam_backend() -> SlamBackend
 pub fn init_slam_frontend() -> SlamFrontend
 
 pub fn init_tracker(Double, Double, Double, Double, TrackerParams) -> Track
+
+pub fn init_vins(VinsConfig) -> (VinsState, VinsConfig)
 
 pub fn is_tracking_lost(SlamFrontend, SlamFrontendParams) -> Bool
 
@@ -161,6 +165,10 @@ pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
+pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
+
+pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
+
 pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
@@ -174,6 +182,8 @@ pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn reset_orb_slam(OrbSlamSystem) -> OrbSlamSystem
+
+pub fn reset_vins(VinsConfig) -> (VinsState, VinsConfig)
 
 pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
 
@@ -204,6 +214,12 @@ pub fn update_tracker(Track, Double, Double, TrackerParams) -> Track
 pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
 pub fn vibe_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn vins_check_initialization(VinsState) -> Bool
+
+pub fn vins_optimize(VinsState, VinsConfig) -> VinsState
+
+pub fn vins_stats(VinsState, Array[SlamPose]) -> VinsStats
 
 pub fn visual_question_answering(String, String) -> VQAResult
 
@@ -467,6 +483,19 @@ pub(all) struct ImageCaptioningResult {
   meteor_score : Double
   cider_score : Double
 }
+
+pub(all) struct ImuData {
+  timestamp : Double
+  ax : Double
+  ay : Double
+  az : Double
+  gx : Double
+  gy : Double
+  gz : Double
+} derive(Eq, @debug.Debug)
+pub fn ImuData::equal(Self, Self) -> Bool
+pub fn ImuData::not_equal(Self, Self) -> Bool
+pub fn ImuData::to_repr(Self) -> @debug.Repr
 
 pub(all) struct KalmanState {
   x : Double
@@ -798,6 +827,41 @@ pub(all) struct VQAResult {
   reasoning_steps : Array[String]
   num_steps : Int
 }
+
+pub(all) struct VinsConfig {
+  gravity : Double
+  imu_freq : Double
+  cam_freq : Double
+  init_period : Double
+  max_iterations : Int
+} derive(Eq, @debug.Debug)
+pub fn VinsConfig::equal(Self, Self) -> Bool
+pub fn VinsConfig::not_equal(Self, Self) -> Bool
+pub fn VinsConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VinsState {
+  pose : SlamPose
+  velocity : (Double, Double, Double)
+  ba : (Double, Double, Double)
+  bg : (Double, Double, Double)
+  initialized : Bool
+  imu_count : Int
+  frame_count : Int
+} derive(Eq, @debug.Debug)
+pub fn VinsState::equal(Self, Self) -> Bool
+pub fn VinsState::not_equal(Self, Self) -> Bool
+pub fn VinsState::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VinsStats {
+  total_imu : Int
+  total_frames : Int
+  trajectory_length : Double
+  avg_velocity : Double
+  initialized : Bool
+} derive(Eq, @debug.Debug)
+pub fn VinsStats::equal(Self, Self) -> Bool
+pub fn VinsStats::not_equal(Self, Self) -> Bool
+pub fn VinsStats::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

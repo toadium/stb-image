@@ -1855,6 +1855,8 @@ pub fn get_perspective_transform(Array[(Float, Float)], Array[(Float, Float)]) -
 
 pub fn get_rotation_matrix_2d((Float, Float), Float, Float) -> @transform.AffineMatrix
 
+pub fn get_vins_state(@cv_advanced.VinsState) -> @cv_advanced.SlamPose
+
 pub fn gif_info_extended(Bytes) -> @codec.GifInfoExtended raise @types.LoadError
 
 pub fn glcm_features(Array[Array[Int]]) -> @feature.GlcmFeatures
@@ -2102,6 +2104,8 @@ pub fn init_slam_backend() -> @cv_advanced.SlamBackend
 pub fn init_slam_frontend() -> @cv_advanced.SlamFrontend
 
 pub fn init_tracker(Double, Double, Double, Double, @cv_advanced.TrackerParams) -> @cv_advanced.Track
+
+pub fn init_vins(@cv_advanced.VinsConfig) -> (@cv_advanced.VinsState, @cv_advanced.VinsConfig)
 
 pub fn initialize_object_tracking(@detection.YoloDetectionResult) -> Array[@detection.YoloTrackedObject] raise @types.LoadError
 
@@ -2893,6 +2897,10 @@ pub fn priority_from_coverage(Int) -> @self_evolve.TestPriority
 
 pub fn process_frame_slam_sl(@slam.SLAMState, @types.Image, @slam.SLAMConfig) -> @slam.SLAMState
 
+pub fn process_image_vins(@cv_advanced.VinsState, @cv_advanced.SlamPose, Double) -> @cv_advanced.VinsState
+
+pub fn process_imu(@cv_advanced.VinsState, @cv_advanced.VinsConfig, @cv_advanced.ImuData, Double) -> @cv_advanced.VinsState
+
 pub fn process_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, Double, Int, Int) -> @cv_advanced.SlamFrontend
 
 pub fn progress_bar_to_string(Double, width? : Int) -> String
@@ -3086,6 +3094,8 @@ pub fn repair_with_strategies(@imgir.IROp) -> Array[@self_evolve.StrategyRepairR
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
 
 pub fn reset_orb_slam(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamSystem
+
+pub fn reset_vins(@cv_advanced.VinsConfig) -> (@cv_advanced.VinsState, @cv_advanced.VinsConfig)
 
 pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
@@ -3694,6 +3704,12 @@ pub fn video_get_frame(@video.VideoFrames, Int) -> @types.Image?
 pub fn video_reverse(@video.VideoFrames) -> @video.VideoFrames
 
 pub fn video_sample(@video.VideoFrames, interval? : Int) -> @video.VideoFrames
+
+pub fn vins_check_initialization(@cv_advanced.VinsState) -> Bool
+
+pub fn vins_optimize(@cv_advanced.VinsState, @cv_advanced.VinsConfig) -> @cv_advanced.VinsState
+
+pub fn vins_stats(@cv_advanced.VinsState, Array[@cv_advanced.SlamPose]) -> @cv_advanced.VinsStats
 
 pub fn vision_3d_report_to_string(@stereo3d.PointCloud3D, @stereo3d.DepthMap3d, @stereo3d.RegistrationResult3d) -> String
 
@@ -4422,6 +4438,8 @@ pub using @advanced_imaging {type ImagingModality as ImagingModalityAI}
 
 pub using @computational_imaging {type ImagingReconstructionResult as ImagingReconstructionResultCI}
 
+pub using @cv_advanced {type ImuData}
+
 pub using @image_retrieval_advanced {type IndexConstructionResult}
 
 pub using @image_retrieval_advanced {type IndexStructureType}
@@ -5137,6 +5155,12 @@ pub using @video {type VideoStabilizationConfig}
 pub using @video {type VideoSummary}
 
 pub using @computational_imaging {type ViewSynthesisResult as ViewSynthesisResultCI}
+
+pub using @cv_advanced {type VinsConfig}
+
+pub using @cv_advanced {type VinsState}
+
+pub using @cv_advanced {type VinsStats}
 
 pub using @vlm_multimodal {type VisionLanguageModelType as VisionLanguageModelTypeVLM}
 
