@@ -16231,3 +16231,76 @@ pub fn recon_compute_volume(mesh : MedMesh3D) -> Double {
 pub fn recon_simplify_mesh(mesh : MedMesh3D, tolerance : Double) -> MedMesh3D {
   @cv_advanced.recon_simplify_mesh(mesh, tolerance)
 }
+
+///|
+pub type FunctionalImagingType = @cv_advanced.FunctionalImagingType
+
+///|
+pub type FMRIActivation = @cv_advanced.FMRIActivation
+
+///|
+pub type PETParams = @cv_advanced.PETParams
+
+///|
+pub fn functional_fmri_detect(
+  brain_data : Array[Array[Double]],
+  stimulus_pattern : Array[Int],
+  width : Int,
+  height : Int,
+) -> FMRIActivation {
+  @cv_advanced.functional_fmri_detect(
+    brain_data, stimulus_pattern, width, height,
+  )
+}
+
+///|
+pub fn functional_pet_suv(
+  pet_image : Array[Double],
+  injection_dose : Double,
+  patient_weight : Double,
+) -> Array[Double] {
+  @cv_advanced.functional_pet_suv(pet_image, injection_dose, patient_weight)
+}
+
+///|
+pub fn functional_pet_metabolic_rate(
+  suv_values : Array[Double],
+  lumped_constant : Double,
+  plasma_glucose : Double,
+) -> Double {
+  @cv_advanced.functional_pet_metabolic_rate(
+    suv_values, lumped_constant, plasma_glucose,
+  )
+}
+
+///|
+pub fn functional_perfusion_params(
+  time_signal : Array[Double],
+  time_points : Array[Double],
+  arterial_input : Array[Double],
+) -> (Double, Double, Double) {
+  @cv_advanced.functional_perfusion_params(
+    time_signal, time_points, arterial_input,
+  )
+}
+
+///|
+pub fn functional_diffusion_adc(
+  images : Array[Array[Double]],
+  b_values : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.functional_diffusion_adc(images, b_values)
+}
+
+///|
+pub fn functional_build_pet_params(
+  suv : Array[Double],
+  injection_dose : Double,
+  patient_weight : Double,
+  lumped_constant : Double,
+  plasma_glucose : Double,
+) -> PETParams {
+  @cv_advanced.functional_build_pet_params(
+    suv, injection_dose, patient_weight, lumped_constant, plasma_glucose,
+  )
+}

@@ -1765,6 +1765,18 @@ pub fn freq_filter_gaussian(@types.Image, @frequency.FreqFilterType, Float, band
 
 pub fn full_postprocess_correction(String, context_type? : String) -> @ocr.CorrectionResult raise @types.LoadError
 
+pub fn functional_build_pet_params(Array[Double], Double, Double, Double, Double) -> @cv_advanced.PETParams
+
+pub fn functional_diffusion_adc(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn functional_fmri_detect(Array[Array[Double]], Array[Int], Int, Int) -> @cv_advanced.FMRIActivation
+
+pub fn functional_perfusion_params(Array[Double], Array[Double], Array[Double]) -> (Double, Double, Double)
+
+pub fn functional_pet_metabolic_rate(Array[Double], Double, Double) -> Double
+
+pub fn functional_pet_suv(Array[Double], Double, Double) -> Array[Double]
+
 pub fn fundamental_matrix_rank(@cv_advanced.FundamentalMatrix) -> Int
 
 pub fn fuse_alpha(@types.Image, @types.Image, alpha? : Double) -> @types.Image
@@ -4584,6 +4596,8 @@ pub using @ocr {type ExtractedImage}
 
 pub using @frequency {type FFTResult}
 
+pub using @cv_advanced {type FMRIActivation}
+
 pub using @face_recognition {type FaceAttributeAnalysis as FaceAttributeAnalysisFR}
 
 pub using @face_recognition {type FaceDatabase as FaceDatabaseFR}
@@ -4633,6 +4647,8 @@ pub using @cv_advanced {type ForegroundMask}
 pub using @frequency {type FreqFilterType}
 
 pub using @forensics {type FrequencyAnalysisResult}
+
+pub using @cv_advanced {type FunctionalImagingType}
 
 pub using @cv_advanced {type FundamentalMatrix}
 
@@ -5085,6 +5101,8 @@ pub using @cv_advanced {type OrganSegResult}
 pub using @cv_advanced {type OrganType}
 
 pub using @advanced_imaging {type PETData as PETDataAI}
+
+pub using @cv_advanced {type PETParams}
 
 pub using @ocr {type PageRegion}
 

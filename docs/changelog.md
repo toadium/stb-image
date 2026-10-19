@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v355.0.0 - GeoVerse Phase 14: 功能成像
+- 扩展 `src/cv_advanced/`：功能成像 — fMRI/PET/灌注/弥散
+  - **functional_imaging**：FunctionalImagingType / FMRIActivation / PETParams + functional_fmri_detect / functional_pet_suv / functional_pet_metabolic_rate / functional_perfusion_params / functional_diffusion_adc / functional_build_pet_params
+  - Phase 14 医学影像大扩展 — 功能成像与代谢分析
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7448×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v354.0.0 - GeoVerse Phase 14: 3D 重建
 - 扩展 `src/cv_advanced/`：3D 重建 — Marching Cubes/表面渲染/体绘制
   - **reconstruction_3d**：MedPoint3D / MedTriangle3D / MedMesh3D + recon_marching_cubes / recon_mip / recon_volume_render / recon_surface_extract / recon_compute_surface_area / recon_compute_volume / recon_simplify_mesh

@@ -185,6 +185,18 @@ pub fn flow_consistency(FlowField, FlowField) -> Double
 
 pub fn flow_magnitude(FlowField) -> Array[Double]
 
+pub fn functional_build_pet_params(Array[Double], Double, Double, Double, Double) -> PETParams
+
+pub fn functional_diffusion_adc(Array[Array[Double]], Array[Double]) -> Array[Double]
+
+pub fn functional_fmri_detect(Array[Array[Double]], Array[Int], Int, Int) -> FMRIActivation
+
+pub fn functional_perfusion_params(Array[Double], Array[Double], Array[Double]) -> (Double, Double, Double)
+
+pub fn functional_pet_metabolic_rate(Array[Double], Double, Double) -> Double
+
+pub fn functional_pet_suv(Array[Double], Double, Double) -> Array[Double]
+
 pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
 pub fn gan_discriminator_forward(Array[Double], Array[Double], GANConfig) -> Double
@@ -975,6 +987,17 @@ pub fn EssentialMatrix::equal(Self, Self) -> Bool
 pub fn EssentialMatrix::not_equal(Self, Self) -> Bool
 pub fn EssentialMatrix::to_repr(Self) -> @debug.Repr
 
+pub(all) struct FMRIActivation {
+  activation : Array[Double]
+  t_values : Array[Double]
+  p_values : Array[Double]
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn FMRIActivation::equal(Self, Self) -> Bool
+pub fn FMRIActivation::not_equal(Self, Self) -> Bool
+pub fn FMRIActivation::to_repr(Self) -> @debug.Repr
+
 pub(all) struct FederatedConfig {
   num_clients : Int
   num_rounds : Int
@@ -1042,6 +1065,17 @@ pub(all) struct ForegroundMask {
 pub fn ForegroundMask::equal(Self, Self) -> Bool
 pub fn ForegroundMask::not_equal(Self, Self) -> Bool
 pub fn ForegroundMask::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FunctionalImagingType {
+  FMRI
+  PET
+  SPECT
+  Perfusion
+  Diffusion
+} derive(Eq, @debug.Debug)
+pub fn FunctionalImagingType::equal(Self, Self) -> Bool
+pub fn FunctionalImagingType::not_equal(Self, Self) -> Bool
+pub fn FunctionalImagingType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FundamentalMatrix {
   m00 : Double
@@ -1458,6 +1492,16 @@ pub(all) enum OrganType {
 pub fn OrganType::equal(Self, Self) -> Bool
 pub fn OrganType::not_equal(Self, Self) -> Bool
 pub fn OrganType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PETParams {
+  suv : Array[Double]
+  metabolic_rate : Double
+  injection_dose : Double
+  patient_weight : Double
+} derive(Eq, @debug.Debug)
+pub fn PETParams::equal(Self, Self) -> Bool
+pub fn PETParams::not_equal(Self, Self) -> Bool
+pub fn PETParams::to_repr(Self) -> @debug.Repr
 
 pub(all) enum PathologyStain {
   HAndE
