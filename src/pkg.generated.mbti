@@ -1303,6 +1303,18 @@ pub fn document_structure_stats(@ocr.DocumentStructure) -> (Int, Int, Int, Int, 
 
 pub fn document_understanding_enhanced_default_config() -> @ocr.DocumentUnderstandingEnhancedConfig
 
+pub fn dose_compute_dvh(Array[Double], Array[Int], Int, Double, String) -> @cv_advanced.DVHResult
+
+pub fn dose_compute_eud(Array[Double], Array[Int], Double) -> Double
+
+pub fn dose_compute_metrics(Array[Double], Array[Int]) -> @cv_advanced.DoseMetrics
+
+pub fn dose_compute_ntcp(Array[Double], Array[Int], Double, Double) -> Double
+
+pub fn dose_compute_tcp(Array[Double], Array[Int], Double, Double) -> Double
+
+pub fn dose_evaluate_plan(Array[Double], Array[Int], Array[Array[Double]], Array[Array[Int]], Double) -> (Double, Double, Double)
+
 pub fn draw_circle(@types.Image, Int, Int, Int, Array[Byte], thickness? : Int, fill? : Bool) -> @types.Image
 
 pub fn draw_circle_16(@types.Image16, Int, Int, Int, Array[Int], thickness? : Int, fill? : Bool) -> @types.Image16
@@ -1440,6 +1452,8 @@ pub fn entropy_value(@types.Image) -> Float
 pub fn equivalence_class(@imgir.IROp) -> Array[String]
 
 pub fn equivalence_report_all_equivalent(@self_evolve.EquivalenceReport) -> Bool
+
+pub fn erf_approx(Double) -> Double
 
 pub fn erode(@types.Image) -> @types.Image
 
@@ -4412,6 +4426,10 @@ pub using @ocr {type DLTrainingSample}
 
 pub using @cv_advanced {type DMatch}
 
+pub using @cv_advanced {type DVHResult}
+
+pub using @cv_advanced {type DVHType}
+
 pub using @ocr {type DataLoader}
 
 pub using @forensics_enhanced {type DctCoefficientResult}
@@ -4523,6 +4541,8 @@ pub using @ocr {type DocumentStructure}
 pub using @ocr {type DocumentTreeNode}
 
 pub using @ocr {type DocumentUnderstandingEnhancedConfig}
+
+pub using @cv_advanced {type DoseMetrics}
 
 pub using @ocr {type DropFallResult}
 

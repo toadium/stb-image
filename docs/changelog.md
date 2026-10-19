@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v357.0.0 - GeoVerse Phase 14: 放射剂量
+- 扩展 `src/cv_advanced/`：放射剂量 — DVH/剂量计算/治疗计划评估
+  - **radiation_dose**：DVHType / DVHResult / DoseMetrics + dose_compute_dvh / dose_compute_metrics / dose_compute_eud / dose_compute_tcp / dose_compute_ntcp / erf_approx / dose_evaluate_plan
+  - Phase 14 医学影像大扩展 — 放射治疗剂量评估
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +10 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7468×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v356.0.0 - GeoVerse Phase 14: 影像组学
 - 扩展 `src/cv_advanced/`：影像组学 — 特征提取/特征选择/稳定性
   - **radiomics**：RadiomicsFeatureClass / RadiomicsFeature / FeatureSelectionResult + radiomics_first_order / radiomics_shape_features / radiomics_glcm_features / radiomics_select_features / radiomics_compute_icc

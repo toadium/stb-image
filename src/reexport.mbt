@@ -16356,3 +16356,80 @@ pub fn radiomics_compute_icc(
 ) -> Double {
   @cv_advanced.radiomics_compute_icc(features, feature_idx)
 }
+
+///|
+pub type DVHType = @cv_advanced.DVHType
+
+///|
+pub type DVHResult = @cv_advanced.DVHResult
+
+///|
+pub type DoseMetrics = @cv_advanced.DoseMetrics
+
+///|
+pub fn dose_compute_dvh(
+  dose_image : Array[Double],
+  structure_mask : Array[Int],
+  num_bins : Int,
+  max_dose : Double,
+  structure_name : String,
+) -> DVHResult {
+  @cv_advanced.dose_compute_dvh(
+    dose_image, structure_mask, num_bins, max_dose, structure_name,
+  )
+}
+
+///|
+pub fn dose_compute_metrics(
+  dose_image : Array[Double],
+  structure_mask : Array[Int],
+) -> DoseMetrics {
+  @cv_advanced.dose_compute_metrics(dose_image, structure_mask)
+}
+
+///|
+pub fn dose_compute_eud(
+  dose_image : Array[Double],
+  structure_mask : Array[Int],
+  n_param : Double,
+) -> Double {
+  @cv_advanced.dose_compute_eud(dose_image, structure_mask, n_param)
+}
+
+///|
+pub fn dose_compute_tcp(
+  dose_image : Array[Double],
+  structure_mask : Array[Int],
+  d50 : Double,
+  gamma : Double,
+) -> Double {
+  @cv_advanced.dose_compute_tcp(dose_image, structure_mask, d50, gamma)
+}
+
+///|
+pub fn dose_compute_ntcp(
+  dose_image : Array[Double],
+  structure_mask : Array[Int],
+  td50 : Double,
+  m_param : Double,
+) -> Double {
+  @cv_advanced.dose_compute_ntcp(dose_image, structure_mask, td50, m_param)
+}
+
+///|
+pub fn erf_approx(x : Double) -> Double {
+  @cv_advanced.erf_approx(x)
+}
+
+///|
+pub fn dose_evaluate_plan(
+  target_dose : Array[Double],
+  target_mask : Array[Int],
+  oar_doses : Array[Array[Double]],
+  oar_masks : Array[Array[Int]],
+  prescription_dose : Double,
+) -> (Double, Double, Double) {
+  @cv_advanced.dose_evaluate_plan(
+    target_dose, target_mask, oar_doses, oar_masks, prescription_dose,
+  )
+}

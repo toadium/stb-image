@@ -153,7 +153,21 @@ pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) 
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
 
+pub fn dose_compute_dvh(Array[Double], Array[Int], Int, Double, String) -> DVHResult
+
+pub fn dose_compute_eud(Array[Double], Array[Int], Double) -> Double
+
+pub fn dose_compute_metrics(Array[Double], Array[Int]) -> DoseMetrics
+
+pub fn dose_compute_ntcp(Array[Double], Array[Int], Double, Double) -> Double
+
+pub fn dose_compute_tcp(Array[Double], Array[Int], Double, Double) -> Double
+
+pub fn dose_evaluate_plan(Array[Double], Array[Int], Array[Array[Double]], Array[Array[Int]], Double) -> (Double, Double, Double)
+
 pub fn ensemble_select(Array[TrialResult], Int) -> Array[TrialResult]
+
+pub fn erf_approx(Double) -> Double
 
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
@@ -819,6 +833,24 @@ pub fn DMatch::equal(Self, Self) -> Bool
 pub fn DMatch::not_equal(Self, Self) -> Bool
 pub fn DMatch::to_repr(Self) -> @debug.Repr
 
+pub(all) struct DVHResult {
+  dose_bins : Array[Double]
+  volume_bins : Array[Double]
+  dvh_type : DVHType
+  structure_name : String
+} derive(Eq, @debug.Debug)
+pub fn DVHResult::equal(Self, Self) -> Bool
+pub fn DVHResult::not_equal(Self, Self) -> Bool
+pub fn DVHResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DVHType {
+  Cumulative
+  Differential
+} derive(Eq, @debug.Debug)
+pub fn DVHType::equal(Self, Self) -> Bool
+pub fn DVHType::not_equal(Self, Self) -> Bool
+pub fn DVHType::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DepthMap {
   width : Int
   height : Int
@@ -962,6 +994,18 @@ pub(all) enum DistillationType {
 pub fn DistillationType::equal(Self, Self) -> Bool
 pub fn DistillationType::not_equal(Self, Self) -> Bool
 pub fn DistillationType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DoseMetrics {
+  d95 : Double
+  d50 : Double
+  d2 : Double
+  mean_dose : Double
+  max_dose : Double
+  min_dose : Double
+} derive(Eq, @debug.Debug)
+pub fn DoseMetrics::equal(Self, Self) -> Bool
+pub fn DoseMetrics::not_equal(Self, Self) -> Bool
+pub fn DoseMetrics::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ElastographyResult {
   strain : Array[Double]
