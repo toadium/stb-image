@@ -15868,3 +15868,76 @@ pub fn ultrasound_time_gain_compensation(
     image, width, height, attenuation,
   )
 }
+
+///|
+pub type PathologyStain = @cv_advanced.PathologyStain
+
+///|
+pub type WSIConfig = @cv_advanced.WSIConfig
+
+///|
+pub type StainSeparation = @cv_advanced.StainSeparation
+
+///|
+pub fn pathology_wsi_extract_tiles(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  config : WSIConfig,
+) -> Array[Array[Double]] {
+  @cv_advanced.pathology_wsi_extract_tiles(image, width, height, config)
+}
+
+///|
+pub fn pathology_wsi_stitch_tiles(
+  tiles : Array[Array[Double]],
+  config : WSIConfig,
+) -> Array[Double] {
+  @cv_advanced.pathology_wsi_stitch_tiles(tiles, config)
+}
+
+///|
+pub fn pathology_stain_normalize(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  target_stain : PathologyStain,
+) -> Array[Double] {
+  @cv_advanced.pathology_stain_normalize(image, width, height, target_stain)
+}
+
+///|
+pub fn pathology_stain_separation(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+) -> StainSeparation {
+  @cv_advanced.pathology_stain_separation(image, width, height)
+}
+
+///|
+pub fn pathology_detect_nuclei(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  threshold : Double,
+) -> Array[Int] {
+  @cv_advanced.pathology_detect_nuclei(image, width, height, threshold)
+}
+
+///|
+pub fn pathology_count_mitosis(
+  nuclei_positions : Array[Int],
+  width : Int,
+  min_distance : Int,
+) -> Int {
+  @cv_advanced.pathology_count_mitosis(nuclei_positions, width, min_distance)
+}
+
+///|
+pub fn pathology_segment_tissue(
+  image : Array[Double],
+  num_clusters : Int,
+) -> Array[Int] {
+  @cv_advanced.pathology_segment_tissue(image, num_clusters)
+}

@@ -303,6 +303,20 @@ pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, In
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
+pub fn pathology_count_mitosis(Array[Int], Int, Int) -> Int
+
+pub fn pathology_detect_nuclei(Array[Double], Int, Int, Double) -> Array[Int]
+
+pub fn pathology_segment_tissue(Array[Double], Int) -> Array[Int]
+
+pub fn pathology_stain_normalize(Array[Double], Int, Int, PathologyStain) -> Array[Double]
+
+pub fn pathology_stain_separation(Array[Double], Int, Int) -> StainSeparation
+
+pub fn pathology_wsi_extract_tiles(Array[Double], Int, Int, WSIConfig) -> Array[Array[Double]]
+
+pub fn pathology_wsi_stitch_tiles(Array[Array[Double]], WSIConfig) -> Array[Double]
+
 pub fn phase12_capabilities() -> Array[Phase12Capability]
 
 pub fn phase12_is_complete() -> Bool
@@ -1255,6 +1269,17 @@ pub fn OrbSlamSystem::equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::not_equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::to_repr(Self) -> @debug.Repr
 
+pub(all) enum PathologyStain {
+  HAndE
+  PAS
+  MassonTrichrome
+  Immunohistochemistry
+  Silver
+} derive(Eq, @debug.Debug)
+pub fn PathologyStain::equal(Self, Self) -> Bool
+pub fn PathologyStain::not_equal(Self, Self) -> Bool
+pub fn PathologyStain::to_repr(Self) -> @debug.Repr
+
 pub(all) struct Phase12Capability {
   version : String
   name : String
@@ -1545,6 +1570,16 @@ pub fn SlamPose::equal(Self, Self) -> Bool
 pub fn SlamPose::not_equal(Self, Self) -> Bool
 pub fn SlamPose::to_repr(Self) -> @debug.Repr
 
+pub(all) struct StainSeparation {
+  stain1 : Array[Double]
+  stain2 : Array[Double]
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn StainSeparation::equal(Self, Self) -> Bool
+pub fn StainSeparation::not_equal(Self, Self) -> Bool
+pub fn StainSeparation::to_repr(Self) -> @debug.Repr
+
 pub(all) struct StereoParams {
   max_disparity : Int
   block_size : Int
@@ -1757,6 +1792,17 @@ pub(all) struct VinsStats {
 pub fn VinsStats::equal(Self, Self) -> Bool
 pub fn VinsStats::not_equal(Self, Self) -> Bool
 pub fn VinsStats::to_repr(Self) -> @debug.Repr
+
+pub(all) struct WSIConfig {
+  tile_size : Int
+  overlap : Int
+  levels : Int
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn WSIConfig::equal(Self, Self) -> Bool
+pub fn WSIConfig::not_equal(Self, Self) -> Bool
+pub fn WSIConfig::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
