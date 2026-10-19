@@ -16095,3 +16095,75 @@ pub fn organ_morph_dilate(
 ) -> Array[Int] {
   @cv_advanced.organ_morph_dilate(mask, width, height, radius)
 }
+
+///|
+pub type LesionType = @cv_advanced.LesionType
+
+///|
+pub type LesionCandidate = @cv_advanced.LesionCandidate
+
+///|
+pub type CADDetectionResult = @cv_advanced.CADDetectionResult
+
+///|
+pub fn lesion_detect_candidates(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  min_radius : Int,
+  max_radius : Int,
+  threshold : Double,
+) -> Array[LesionCandidate] {
+  @cv_advanced.lesion_detect_candidates(
+    image, width, height, min_radius, max_radius, threshold,
+  )
+}
+
+///|
+pub fn lesion_reduce_false_positives(
+  candidates : Array[LesionCandidate],
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  score_threshold : Double,
+) -> Array[LesionCandidate] {
+  @cv_advanced.lesion_reduce_false_positives(
+    candidates, image, width, height, score_threshold,
+  )
+}
+
+///|
+pub fn lesion_compute_sensitivity(
+  detected : Array[LesionCandidate],
+  ground_truth : Array[LesionCandidate],
+  tolerance : Int,
+) -> (Int, Int, Double) {
+  @cv_advanced.lesion_compute_sensitivity(detected, ground_truth, tolerance)
+}
+
+///|
+pub fn lesion_nms(
+  candidates : Array[LesionCandidate],
+  overlap_threshold : Double,
+) -> Array[LesionCandidate] {
+  @cv_advanced.lesion_nms(candidates, overlap_threshold)
+}
+
+///|
+pub fn lesion_build_cad_result(
+  candidates : Array[LesionCandidate],
+  ground_truth : Array[LesionCandidate],
+  tolerance : Int,
+) -> CADDetectionResult {
+  @cv_advanced.lesion_build_cad_result(candidates, ground_truth, tolerance)
+}
+
+///|
+pub fn lesion_extract_features(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  candidate : LesionCandidate,
+) -> Array[Double] {
+  @cv_advanced.lesion_extract_features(image, width, height, candidate)
+}

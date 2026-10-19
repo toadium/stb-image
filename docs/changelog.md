@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v353.0.0 - GeoVerse Phase 14: 病灶检测
+- 扩展 `src/cv_advanced/`：病灶检测 — CAD/假阳性抑制/NMS
+  - **lesion_detection**：LesionType / LesionCandidate / CADDetectionResult + lesion_detect_candidates / lesion_reduce_false_positives / lesion_compute_sensitivity / lesion_nms / lesion_build_cad_result / lesion_extract_features
+  - Phase 14 医学影像大扩展 — 病灶检测与CAD系统
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +8 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7430×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v352.0.0 - GeoVerse Phase 14: 器官分割
 - 扩展 `src/cv_advanced/`：器官分割 — Atlas/水平集/区域生长/形态学
   - **organ_segmentation**：OrganType / OrganSegMethod / OrganSegResult + organ_region_growing / organ_level_set / organ_atlas_based / organ_compute_volume / organ_dice_coefficient / organ_morph_open / organ_morph_erode / organ_morph_dilate

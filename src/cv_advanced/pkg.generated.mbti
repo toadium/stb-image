@@ -253,6 +253,18 @@ pub fn knowledge_distill(Array[Double], Array[Double], Array[Double], Distillati
 
 pub fn layer_norm(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
 
+pub fn lesion_build_cad_result(Array[LesionCandidate], Array[LesionCandidate], Int) -> CADDetectionResult
+
+pub fn lesion_compute_sensitivity(Array[LesionCandidate], Array[LesionCandidate], Int) -> (Int, Int, Double)
+
+pub fn lesion_detect_candidates(Array[Double], Int, Int, Int, Int, Double) -> Array[LesionCandidate]
+
+pub fn lesion_extract_features(Array[Double], Int, Int, LesionCandidate) -> Array[Double]
+
+pub fn lesion_nms(Array[LesionCandidate], Double) -> Array[LesionCandidate]
+
+pub fn lesion_reduce_false_positives(Array[LesionCandidate], Array[Double], Int, Int, Double) -> Array[LesionCandidate]
+
 pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
 pub fn loop_closing(SlamBackend, SlamKeyFrame, SlamBackendParams) -> LoopClosingResult
@@ -635,6 +647,16 @@ pub(all) struct BinaryDescriptor {
 pub fn BinaryDescriptor::equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::not_equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CADDetectionResult {
+  candidates : Array[LesionCandidate]
+  num_true_positives : Int
+  num_false_positives : Int
+  sensitivity : Double
+} derive(Eq, @debug.Debug)
+pub fn CADDetectionResult::equal(Self, Self) -> Bool
+pub fn CADDetectionResult::not_equal(Self, Self) -> Bool
+pub fn CADDetectionResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CTConfig {
   image_size : Int
@@ -1150,6 +1172,28 @@ pub(all) struct KeyPoint {
 pub fn KeyPoint::equal(Self, Self) -> Bool
 pub fn KeyPoint::not_equal(Self, Self) -> Bool
 pub fn KeyPoint::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LesionCandidate {
+  x : Int
+  y : Int
+  radius : Int
+  score : Double
+  lesion_type : LesionType
+} derive(Eq, @debug.Debug)
+pub fn LesionCandidate::equal(Self, Self) -> Bool
+pub fn LesionCandidate::not_equal(Self, Self) -> Bool
+pub fn LesionCandidate::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LesionType {
+  Nodule
+  Mass
+  Calcification
+  Cyst
+  Tumor
+} derive(Eq, @debug.Debug)
+pub fn LesionType::equal(Self, Self) -> Bool
+pub fn LesionType::not_equal(Self, Self) -> Bool
+pub fn LesionType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct LoopClosingResult {
   loop_found : Bool

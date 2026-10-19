@@ -2509,6 +2509,18 @@ pub fn ldr_to_hdr_gamma(Float) -> Unit
 
 pub fn ldr_to_hdr_scale(Float) -> Unit
 
+pub fn lesion_build_cad_result(Array[@cv_advanced.LesionCandidate], Array[@cv_advanced.LesionCandidate], Int) -> @cv_advanced.CADDetectionResult
+
+pub fn lesion_compute_sensitivity(Array[@cv_advanced.LesionCandidate], Array[@cv_advanced.LesionCandidate], Int) -> (Int, Int, Double)
+
+pub fn lesion_detect_candidates(Array[Double], Int, Int, Int, Int, Double) -> Array[@cv_advanced.LesionCandidate]
+
+pub fn lesion_extract_features(Array[Double], Int, Int, @cv_advanced.LesionCandidate) -> Array[Double]
+
+pub fn lesion_nms(Array[@cv_advanced.LesionCandidate], Double) -> Array[@cv_advanced.LesionCandidate]
+
+pub fn lesion_reduce_false_positives(Array[@cv_advanced.LesionCandidate], Array[Double], Int, Int, Double) -> Array[@cv_advanced.LesionCandidate]
+
 pub fn lightfield_refocus_ci(@computational_imaging.LightFieldData, Double, Double) -> @computational_imaging.RefocusResult
 
 pub fn load_any_f(Bytes) -> @types.ImageF raise @types.LoadError
@@ -4200,6 +4212,8 @@ pub using @detection {type BoundingBox}
 
 pub using @stereo3d {type BoundingBox3d}
 
+pub using @cv_advanced {type CADDetectionResult}
+
 pub using @retrieval {type CBIRImageFeature}
 
 pub using @retrieval {type CBIRImageIndex}
@@ -4869,6 +4883,10 @@ pub using @ocr {type LayoutType}
 pub using @ocr {type LbpFeatures}
 
 pub using @medical {type Lesion}
+
+pub using @cv_advanced {type LesionCandidate}
+
+pub using @cv_advanced {type LesionType}
 
 pub using @computational_imaging {type LightFieldCameraParams as LightFieldCameraParamsCI}
 
