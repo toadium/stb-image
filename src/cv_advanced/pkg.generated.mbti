@@ -131,6 +131,14 @@ pub fn flow_magnitude(FlowField) -> Array[Double]
 
 pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
+pub fn gan_discriminator_forward(Array[Double], Array[Double], GANConfig) -> Double
+
+pub fn gan_generate_samples(Array[Double], GANConfig, Int) -> Array[Array[Double]]
+
+pub fn gan_generator_forward(Array[Double], Array[Double], GANConfig) -> Array[Double]
+
+pub fn gan_train_step(Array[Double], Array[Double], GANConfig) -> GANState
+
 pub fn generate_caption(String) -> ImageCaptioningResult
 
 pub fn get_orb_map(OrbSlamSystem) -> Array[SlamMapPoint]
@@ -271,6 +279,8 @@ pub fn softmax(Array[Double]) -> Array[Double]
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
+pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int) -> Array[Double]
+
 pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
 
 pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
@@ -314,6 +324,8 @@ pub fn vins_stats(VinsState, Array[SlamPose]) -> VinsStats
 pub fn visual_question_answering(String, String) -> VQAResult
 
 pub fn warp_image(@types.Image, FlowField) -> @types.Image
+
+pub fn wgan_gradient_penalty(Array[Double], Array[Double], Array[Double], GANConfig) -> Double
 
 // Errors
 
@@ -647,6 +659,37 @@ pub(all) struct FundamentalMatrix {
 pub fn FundamentalMatrix::equal(Self, Self) -> Bool
 pub fn FundamentalMatrix::not_equal(Self, Self) -> Bool
 pub fn FundamentalMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GANConfig {
+  latent_dim : Int
+  img_channels : Int
+  img_size : Int
+  learning_rate : Double
+  lambda_gp : Double
+} derive(Eq, @debug.Debug)
+pub fn GANConfig::equal(Self, Self) -> Bool
+pub fn GANConfig::not_equal(Self, Self) -> Bool
+pub fn GANConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GANState {
+  generator_loss : Double
+  discriminator_loss : Double
+  iteration : Int
+  converged : Bool
+} derive(Eq, @debug.Debug)
+pub fn GANState::equal(Self, Self) -> Bool
+pub fn GANState::not_equal(Self, Self) -> Bool
+pub fn GANState::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GANType {
+  DCGAN
+  StyleGAN
+  WGAN
+  ConditionalGAN
+} derive(Eq, @debug.Debug)
+pub fn GANType::equal(Self, Self) -> Bool
+pub fn GANType::not_equal(Self, Self) -> Bool
+pub fn GANType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageCaptioningResult {
   image_id : String

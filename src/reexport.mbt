@@ -15073,3 +15073,73 @@ pub fn relation_distill(
 ) -> DistillationResult {
   @cv_advanced.relation_distill(teacher_features, student_features, config)
 }
+
+///|
+pub type GANType = @cv_advanced.GANType
+
+///|
+pub type GANConfig = @cv_advanced.GANConfig
+
+///|
+pub type GANState = @cv_advanced.GANState
+
+///|
+pub fn gan_generator_forward(
+  latent : Array[Double],
+  weights : Array[Double],
+  config : GANConfig,
+) -> Array[Double] {
+  @cv_advanced.gan_generator_forward(latent, weights, config)
+}
+
+///|
+pub fn gan_discriminator_forward(
+  image : Array[Double],
+  weights : Array[Double],
+  config : GANConfig,
+) -> Double {
+  @cv_advanced.gan_discriminator_forward(image, weights, config)
+}
+
+///|
+pub fn gan_train_step(
+  real_images : Array[Double],
+  fake_images : Array[Double],
+  config : GANConfig,
+) -> GANState {
+  @cv_advanced.gan_train_step(real_images, fake_images, config)
+}
+
+///|
+pub fn wgan_gradient_penalty(
+  real : Array[Double],
+  fake : Array[Double],
+  grad : Array[Double],
+  config : GANConfig,
+) -> Double {
+  @cv_advanced.wgan_gradient_penalty(real, fake, grad, config)
+}
+
+///|
+pub fn stylegan_modulated_conv(
+  input : Array[Double],
+  weight : Array[Double],
+  style : Array[Double],
+  bias : Array[Double],
+  in_channels : Int,
+  out_channels : Int,
+  kernel_size : Int,
+) -> Array[Double] {
+  @cv_advanced.stylegan_modulated_conv(
+    input, weight, style, bias, in_channels, out_channels, kernel_size,
+  )
+}
+
+///|
+pub fn gan_generate_samples(
+  weights : Array[Double],
+  config : GANConfig,
+  num_samples : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.gan_generate_samples(weights, config, num_samples)
+}

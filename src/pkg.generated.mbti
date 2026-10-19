@@ -1763,6 +1763,14 @@ pub fn gamma_tonemap_16(@types.ImageF, Float) -> @types.Image16 raise @types.Loa
 
 pub fn gamma_tonemap_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 
+pub fn gan_discriminator_forward(Array[Double], Array[Double], @cv_advanced.GANConfig) -> Double
+
+pub fn gan_generate_samples(Array[Double], @cv_advanced.GANConfig, Int) -> Array[Array[Double]]
+
+pub fn gan_generator_forward(Array[Double], Array[Double], @cv_advanced.GANConfig) -> Array[Double]
+
+pub fn gan_train_step(Array[Double], Array[Double], @cv_advanced.GANConfig) -> @cv_advanced.GANState
+
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
 pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16 raise @types.LoadError
@@ -3511,6 +3519,8 @@ pub fn style_transfer_report_to_string_st(@style_transfer.StyleTransferResult, @
 
 pub fn style_transfer_st(@types.Image, @types.Image, @style_transfer.StyleTransferConfig) -> @style_transfer.StyleTransferResult raise @types.LoadError
 
+pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int) -> Array[Double]
+
 pub fn stylize(@types.Image, String, config? : @stylize.StylizeConfig) -> @types.Image
 
 pub fn stylize_default_config() -> @stylize.StylizeConfig
@@ -3862,6 +3872,8 @@ pub fn watershed_segmentation(@types.Image, @segmentation.WatershedConfig) -> @s
 pub fn webp_info_extended(Bytes) -> @codec.WebpInfoExtended raise @types.LoadError
 
 pub fn weighted_knn_classify(Array[Double], Array[(String, Array[Double])], k? : Int, distance_metric? : String) -> (String, Double, Array[(String, Double)])
+
+pub fn wgan_gradient_penalty(Array[Double], Array[Double], Array[Double], @cv_advanced.GANConfig) -> Double
 
 pub fn white_balance(@types.Image) -> @types.Image
 
@@ -4393,6 +4405,12 @@ pub using @fusion_enhanced {type FusionConfig as FusionEnhancedConfig}
 pub using @fusion_enhanced {type FusionResult}
 
 pub using @vlm_multimodal {type FusionResult as FusionResultVLM}
+
+pub using @cv_advanced {type GANConfig}
+
+pub using @cv_advanced {type GANState}
+
+pub using @cv_advanced {type GANType}
 
 pub using @retrieval {type GaborConfig}
 
