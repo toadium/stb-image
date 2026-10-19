@@ -15571,3 +15571,39 @@ pub fn ensemble_select(
 ) -> Array[TrialResult] {
   @cv_advanced.ensemble_select(model_scores, num_models)
 }
+
+///|
+pub type Phase13Capability = @cv_advanced.Phase13Capability
+
+///|
+pub type Phase13Report = @cv_advanced.Phase13Report
+
+///|
+pub fn phase13_capabilities() -> Array[Phase13Capability] {
+  @cv_advanced.phase13_capabilities()
+}
+
+///|
+pub fn phase13_total_types() -> Int {
+  @cv_advanced.phase13_total_types()
+}
+
+///|
+pub fn phase13_total_functions() -> Int {
+  @cv_advanced.phase13_total_functions()
+}
+
+///|
+pub fn phase13_total_tests() -> Int {
+  @cv_advanced.phase13_total_tests()
+}
+
+///|
+pub fn phase13_report() -> Phase13Report {
+  @cv_advanced.phase13_report()
+}
+
+///|
+pub fn phase13_is_complete() -> Bool {
+  @cv_advanced.phase13_is_complete()
+}
