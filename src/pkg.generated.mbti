@@ -253,6 +253,8 @@ pub fn apply_homography(@stitch.Homography, Double, Double) -> (Double, Double)
 
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
+pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
+
 pub fn apply_translation_fe(@types.Image, Int, Int) -> @types.Image
 
 pub fn apply_translation_ra(@types.Image, Int, Int) -> @types.Image
@@ -713,6 +715,8 @@ pub fn compute_per_class_accuracy(Array[Array[Int]]) -> Array[Double]
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> @cv_advanced.RegistrationResult
 
+pub fn compute_pruning_mask(Array[Double], Double) -> Array[Bool]
+
 pub fn compute_psnr(@types.Image, @types.Image) -> Double
 
 pub fn compute_quality_metrics(@types.Image, @types.Image) -> @quality.QualityMetrics
@@ -724,6 +728,8 @@ pub fn compute_quantization_error(Array[Double], @cv_advanced.QuantizedTensor) -
 pub fn compute_reading_order(Array[@ocr.DocumentElement]) -> Array[Int] raise @types.LoadError
 
 pub fn compute_reprojection_error(@cv_advanced.CameraIntrinsics, @cv_advanced.ChessboardCorners) -> Double
+
+pub fn compute_sparsity(Array[Double]) -> Double
 
 pub fn compute_ssim(@types.Image, @types.Image) -> Double
 
@@ -2955,6 +2961,12 @@ pub fn propagation_report_is_safe(@self_evolve.PropagationReport) -> Bool
 
 pub fn propagation_viz_is_valid(@self_evolve.PropagationViz) -> Bool
 
+pub fn prune_channels(Array[Double], Int, @cv_advanced.PruningConfig) -> @cv_advanced.PruningResult
+
+pub fn prune_structured(Array[Double], Int, @cv_advanced.PruningConfig) -> @cv_advanced.PruningResult
+
+pub fn prune_unstructured(Array[Double], @cv_advanced.PruningConfig) -> @cv_advanced.PruningResult
+
 pub fn psd_info_extended(Bytes) -> @codec.PsdInfoExtended raise @types.LoadError
 
 pub fn psnr(@types.Image, @types.Image) -> Double raise @types.LoadError
@@ -4857,6 +4869,12 @@ pub using @self_evolve {type PropagationReport}
 pub using @self_evolve {type PropagationStep}
 
 pub using @self_evolve {type PropagationViz}
+
+pub using @cv_advanced {type PruningConfig}
+
+pub using @cv_advanced {type PruningResult}
+
+pub using @cv_advanced {type PruningType}
 
 pub using @codec {type PsdInfoExtended}
 

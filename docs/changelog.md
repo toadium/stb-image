@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v335.0.0 - GeoVerse Phase 13: 模型剪枝
+- 扩展 `src/cv_advanced/`：模型剪枝 — 结构化/非结构化/通道剪枝
+  - **pruning**：PruningType / PruningConfig / PruningResult + compute_pruning_mask / prune_unstructured / prune_structured / prune_channels / apply_pruning_mask / compute_sparsity
+  - Phase 13 深度学习大扩展 — 模型压缩剪枝
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7262×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v334.0.0 - GeoVerse Phase 13: 模型量化
 - 扩展 `src/cv_advanced/`：模型量化 — INT8/INT4/混合精度
   - **quantization**：QuantizationType / QuantizationConfig / QuantizedTensor + compute_quant_params / quantize_int8 / quantize_int4 / dequantize / quantize_per_channel / mixed_precision_quantize / compute_quantization_error

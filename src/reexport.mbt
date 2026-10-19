@@ -14957,3 +14957,59 @@ pub fn compute_quantization_error(
 ) -> Double {
   @cv_advanced.compute_quantization_error(original, quantized)
 }
+
+///|
+pub type PruningType = @cv_advanced.PruningType
+
+///|
+pub type PruningConfig = @cv_advanced.PruningConfig
+
+///|
+pub type PruningResult = @cv_advanced.PruningResult
+
+///|
+pub fn compute_pruning_mask(
+  weights : Array[Double],
+  threshold : Double,
+) -> Array[Bool] {
+  @cv_advanced.compute_pruning_mask(weights, threshold)
+}
+
+///|
+pub fn prune_unstructured(
+  weights : Array[Double],
+  config : PruningConfig,
+) -> PruningResult {
+  @cv_advanced.prune_unstructured(weights, config)
+}
+
+///|
+pub fn prune_structured(
+  weights : Array[Double],
+  block_size : Int,
+  config : PruningConfig,
+) -> PruningResult {
+  @cv_advanced.prune_structured(weights, block_size, config)
+}
+
+///|
+pub fn prune_channels(
+  weights : Array[Double],
+  num_channels : Int,
+  config : PruningConfig,
+) -> PruningResult {
+  @cv_advanced.prune_channels(weights, num_channels, config)
+}
+
+///|
+pub fn apply_pruning_mask(
+  weights : Array[Double],
+  mask : Array[Bool],
+) -> Array[Double] {
+  @cv_advanced.apply_pruning_mask(weights, mask)
+}
+
+///|
+pub fn compute_sparsity(weights : Array[Double]) -> Double {
+  @cv_advanced.compute_sparsity(weights)
+}

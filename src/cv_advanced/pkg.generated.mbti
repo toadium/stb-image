@@ -9,6 +9,8 @@ import {
 // Values
 pub fn add_map_point(SlamBackend, Point3D, Int, Double) -> SlamBackend
 
+pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
+
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
 
 pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Array[DMatch]
@@ -57,11 +59,15 @@ pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
+pub fn compute_pruning_mask(Array[Double], Double) -> Array[Bool]
+
 pub fn compute_quant_params(Double, Double, Int) -> (Double, Int)
 
 pub fn compute_quantization_error(Array[Double], QuantizedTensor) -> Double
 
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
+
+pub fn compute_sparsity(Array[Double]) -> Double
 
 pub fn compute_surf_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
@@ -210,6 +216,12 @@ pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
 pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
 
 pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
+
+pub fn prune_channels(Array[Double], Int, PruningConfig) -> PruningResult
+
+pub fn prune_structured(Array[Double], Int, PruningConfig) -> PruningResult
+
+pub fn prune_unstructured(Array[Double], PruningConfig) -> PruningResult
 
 pub fn quantize_int4(Array[Double], QuantizationConfig) -> QuantizedTensor
 
@@ -780,6 +792,37 @@ pub(all) struct PointCorrespondence {
 pub fn PointCorrespondence::equal(Self, Self) -> Bool
 pub fn PointCorrespondence::not_equal(Self, Self) -> Bool
 pub fn PointCorrespondence::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PruningConfig {
+  sparsity : Double
+  pruning_type : PruningType
+  threshold : Double
+  min_channels : Int
+} derive(Eq, @debug.Debug)
+pub fn PruningConfig::equal(Self, Self) -> Bool
+pub fn PruningConfig::not_equal(Self, Self) -> Bool
+pub fn PruningConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PruningResult {
+  mask : Array[Bool]
+  pruned_indices : Array[Int]
+  sparsity_achieved : Double
+  original_size : Int
+  pruned_size : Int
+} derive(Eq, @debug.Debug)
+pub fn PruningResult::equal(Self, Self) -> Bool
+pub fn PruningResult::not_equal(Self, Self) -> Bool
+pub fn PruningResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum PruningType {
+  Unstructured
+  Structured
+  Channel
+  Filter
+} derive(Eq, @debug.Debug)
+pub fn PruningType::equal(Self, Self) -> Bool
+pub fn PruningType::not_equal(Self, Self) -> Bool
+pub fn PruningType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct QuantizationConfig {
   bits : Int
