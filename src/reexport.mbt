@@ -15401,3 +15401,68 @@ pub fn compute_embeddings_sim(
 ) -> Array[Double] {
   @cv_advanced.compute_embeddings_sim(embeddings)
 }
+
+///|
+pub type MetaLearningType = @cv_advanced.MetaLearningType
+
+///|
+pub type MetaLearningConfig = @cv_advanced.MetaLearningConfig
+
+///|
+pub type MetaLearningResult = @cv_advanced.MetaLearningResult
+
+///|
+pub fn maml_inner_update(
+  params : Array[Double],
+  gradients : Array[Double],
+  config : MetaLearningConfig,
+) -> Array[Double] {
+  @cv_advanced.maml_inner_update(params, gradients, config)
+}
+
+///|
+pub fn maml_meta_update(
+  meta_params : Array[Double],
+  task_gradients : Array[Array[Double]],
+  config : MetaLearningConfig,
+) -> Array[Double] {
+  @cv_advanced.maml_meta_update(meta_params, task_gradients, config)
+}
+
+///|
+pub fn reptile_update(
+  meta_params : Array[Double],
+  adapted_params : Array[Double],
+  config : MetaLearningConfig,
+) -> Array[Double] {
+  @cv_advanced.reptile_update(meta_params, adapted_params, config)
+}
+
+///|
+pub fn compute_prototypes(
+  support_features : Array[Array[Double]],
+  support_labels : Array[Int],
+  num_classes : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.compute_prototypes(support_features, support_labels, num_classes)
+}
+
+///|
+pub fn prototypical_loss(
+  query_features : Array[Double],
+  prototypes : Array[Array[Double]],
+) -> (Int, Double) {
+  @cv_advanced.prototypical_loss(query_features, prototypes)
+}
+
+///|
+pub fn meta_train_step(
+  meta_params : Array[Double],
+  support_gradients : Array[Double],
+  query_gradients : Array[Double],
+  config : MetaLearningConfig,
+) -> MetaLearningResult {
+  @cv_advanced.meta_train_step(
+    meta_params, support_gradients, query_gradients, config,
+  )
+}

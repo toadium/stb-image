@@ -727,6 +727,8 @@ pub fn compute_per_class_accuracy(Array[Array[Int]]) -> Array[Double]
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> @cv_advanced.RegistrationResult
 
+pub fn compute_prototypes(Array[Array[Double]], Array[Int], Int) -> Array[Array[Double]]
+
 pub fn compute_pruning_mask(Array[Double], Double) -> Array[Bool]
 
 pub fn compute_psnr(@types.Image, @types.Image) -> Double
@@ -2509,6 +2511,10 @@ pub fn lucas_kanade_16(@types.Image16, @types.Image16, Array[(Int, Int)], window
 
 pub fn lucas_kanade_f(@types.ImageF, @types.ImageF, Array[(Int, Int)], window_size? : Int, max_iter? : Int) -> Array[@feature.FlowResult] raise @types.LoadError
 
+pub fn maml_inner_update(Array[Double], Array[Double], @cv_advanced.MetaLearningConfig) -> Array[Double]
+
+pub fn maml_meta_update(Array[Double], Array[Array[Double]], @cv_advanced.MetaLearningConfig) -> Array[Double]
+
 pub fn manhattan_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
 
 pub fn manhattan_distance_cbir_api(Array[Double], Array[Double]) -> Double
@@ -2588,6 +2594,8 @@ pub fn meta_evolve_op(@imgir.IROp) -> @self_evolve.MetaReport
 pub fn meta_report_has_changes(@self_evolve.MetaReport) -> Bool
 
 pub fn meta_report_strategy_count(@self_evolve.MetaReport) -> Int
+
+pub fn meta_train_step(Array[Double], Array[Double], Array[Double], @cv_advanced.MetaLearningConfig) -> @cv_advanced.MetaLearningResult
 
 pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
 
@@ -3009,6 +3017,8 @@ pub fn propagation_report_is_safe(@self_evolve.PropagationReport) -> Bool
 
 pub fn propagation_viz_is_valid(@self_evolve.PropagationViz) -> Bool
 
+pub fn prototypical_loss(Array[Double], Array[Array[Double]]) -> (Int, Double)
+
 pub fn prune_channels(Array[Double], Int, @cv_advanced.PruningConfig) -> @cv_advanced.PruningResult
 
 pub fn prune_structured(Array[Double], Int, @cv_advanced.PruningConfig) -> @cv_advanced.PruningResult
@@ -3202,6 +3212,8 @@ pub fn repair_report(@imgir.IRPipeline) -> @self_evolve.RepairReport
 pub fn repair_with_strategies(@imgir.IROp) -> Array[@self_evolve.StrategyRepairResult]
 
 pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
+
+pub fn reptile_update(Array[Double], Array[Double], @cv_advanced.MetaLearningConfig) -> Array[Double]
 
 pub fn reset_orb_slam(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamSystem
 
@@ -4767,6 +4779,12 @@ pub using @ocr {type MemoryUsageStats}
 pub using @stereo3d {type Mesh3d}
 
 pub using @self_evolve {type MetaAction}
+
+pub using @cv_advanced {type MetaLearningConfig}
+
+pub using @cv_advanced {type MetaLearningResult}
+
+pub using @cv_advanced {type MetaLearningType}
 
 pub using @self_evolve {type MetaReport}
 

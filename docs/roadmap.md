@@ -2805,7 +2805,7 @@ flowchart LR
 | v339.0.0 | Diffusion 模型 | DDPM/DDIM/Score-based | ✅ |
 | v340.0.0 | 图神经网络 | GCN/GAT/GraphSAGE | ✅ |
 | v341.0.0 | 自监督学习 | 对比学习/掩码学习 | ✅ |
-| v342.0.0 | 元学习 | MAML/Reptile/Prototypical | ⬜ |
+| v342.0.0 | 元学习 | MAML/Reptile/Prototypical | ✅ |
 | v343.0.0 | 联邦学习扩展 | FedAvg/FedProx/差分隐私 | ⬜ |
 | v344.0.0 | AutoML 扩展 | NAS/HPO/集成搜索 | ⬜ |
 | v345.0.0 | Phase 13 总结 | DL/AI大扩展总结 | ⬜ |

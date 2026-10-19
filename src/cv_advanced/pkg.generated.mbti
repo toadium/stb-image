@@ -71,6 +71,8 @@ pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
+pub fn compute_prototypes(Array[Array[Double]], Array[Int], Int) -> Array[Array[Double]]
+
 pub fn compute_pruning_mask(Array[Double], Double) -> Array[Bool]
 
 pub fn compute_quant_params(Double, Double, Int) -> (Double, Int)
@@ -223,11 +225,17 @@ pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
 pub fn loop_closing(SlamBackend, SlamKeyFrame, SlamBackendParams) -> LoopClosingResult
 
+pub fn maml_inner_update(Array[Double], Array[Double], MetaLearningConfig) -> Array[Double]
+
+pub fn maml_meta_update(Array[Double], Array[Array[Double]], MetaLearningConfig) -> Array[Double]
+
 pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
 
 pub fn masked_modeling(Array[Double], Array[Bool], Array[Double], Array[Double]) -> Double
 
 pub fn merge_map_points(SlamBackend, Double) -> SlamBackend
+
+pub fn meta_train_step(Array[Double], Array[Double], Array[Double], MetaLearningConfig) -> MetaLearningResult
 
 pub fn mixed_precision_quantize(Array[Double], Double) -> Array[QuantizedTensor]
 
@@ -267,6 +275,8 @@ pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
 
 pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
 
+pub fn prototypical_loss(Array[Double], Array[Array[Double]]) -> (Int, Double)
+
 pub fn prune_channels(Array[Double], Int, PruningConfig) -> PruningResult
 
 pub fn prune_structured(Array[Double], Int, PruningConfig) -> PruningResult
@@ -290,6 +300,8 @@ pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> Dis
 pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
 
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
+
+pub fn reptile_update(Array[Double], Array[Double], MetaLearningConfig) -> Array[Double]
 
 pub fn reset_orb_slam(OrbSlamSystem) -> OrbSlamSystem
 
@@ -875,6 +887,38 @@ pub(all) enum MatcherKind {
 pub fn MatcherKind::equal(Self, Self) -> Bool
 pub fn MatcherKind::not_equal(Self, Self) -> Bool
 pub fn MatcherKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaLearningConfig {
+  inner_lr : Double
+  meta_lr : Double
+  num_inner_steps : Int
+  num_support : Int
+  num_query : Int
+  ml_type : MetaLearningType
+} derive(Eq, @debug.Debug)
+pub fn MetaLearningConfig::equal(Self, Self) -> Bool
+pub fn MetaLearningConfig::not_equal(Self, Self) -> Bool
+pub fn MetaLearningConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaLearningResult {
+  meta_loss : Double
+  adapted_params : Array[Double]
+  support_loss : Double
+  query_loss : Double
+} derive(Eq, @debug.Debug)
+pub fn MetaLearningResult::equal(Self, Self) -> Bool
+pub fn MetaLearningResult::not_equal(Self, Self) -> Bool
+pub fn MetaLearningResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MetaLearningType {
+  MAML
+  Reptile
+  Prototypical
+  ANIL
+} derive(Eq, @debug.Debug)
+pub fn MetaLearningType::equal(Self, Self) -> Bool
+pub fn MetaLearningType::not_equal(Self, Self) -> Bool
+pub fn MetaLearningType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MotionMask {
   width : Int
