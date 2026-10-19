@@ -13,6 +13,8 @@ pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
 
+pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
+
 pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Array[DMatch]
 
 pub fn bf_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
@@ -311,6 +313,14 @@ pub fn update_tracked_object(TrackedObject, Array[Int], Double) -> TrackedObject
 
 pub fn update_tracker(Track, Double, Double, TrackerParams) -> Track
 
+pub fn vae_decode(Array[Double], Array[Double], VAEConfig) -> Array[Double]
+
+pub fn vae_encode(Array[Double], Array[Double], Array[Double], VAEConfig) -> (Array[Double], Array[Double])
+
+pub fn vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], VAEConfig) -> VAEResult
+
+pub fn vae_reparameterize(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
 pub fn vibe_update(BackgroundModel, @types.Image) -> BackgroundModel
@@ -322,6 +332,8 @@ pub fn vins_optimize(VinsState, VinsConfig) -> VinsState
 pub fn vins_stats(VinsState, Array[SlamPose]) -> VinsStats
 
 pub fn visual_question_answering(String, String) -> VQAResult
+
+pub fn vq_vae_quantize(Array[Double], Array[Double], Int) -> (Array[Double], Int)
 
 pub fn warp_image(@types.Image, FlowField) -> @types.Image
 
@@ -1160,6 +1172,38 @@ pub(all) enum TransformerLayerKind {
 pub fn TransformerLayerKind::equal(Self, Self) -> Bool
 pub fn TransformerLayerKind::not_equal(Self, Self) -> Bool
 pub fn TransformerLayerKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VAEConfig {
+  latent_dim : Int
+  input_dim : Int
+  beta : Double
+  learning_rate : Double
+  vae_type : VAEType
+} derive(Eq, @debug.Debug)
+pub fn VAEConfig::equal(Self, Self) -> Bool
+pub fn VAEConfig::not_equal(Self, Self) -> Bool
+pub fn VAEConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VAEResult {
+  reconstruction_loss : Double
+  kl_loss : Double
+  total_loss : Double
+  z_mean : Array[Double]
+  z_log_var : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn VAEResult::equal(Self, Self) -> Bool
+pub fn VAEResult::not_equal(Self, Self) -> Bool
+pub fn VAEResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VAEType {
+  Standard
+  BetaVAE
+  VQVAE
+  ConditionalVAE
+} derive(Eq, @debug.Debug)
+pub fn VAEType::equal(Self, Self) -> Bool
+pub fn VAEType::not_equal(Self, Self) -> Bool
+pub fn VAEType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VQAResult {
   image_id : String

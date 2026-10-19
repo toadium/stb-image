@@ -323,6 +323,8 @@ pub fn best_repair(@imgir.IROp) -> @self_evolve.StrategyRepairResult
 
 pub fn best_repair_all() -> Array[@self_evolve.StrategyRepairResult]
 
+pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
+
 pub fn bf_match_binary(Array[@cv_advanced.BinaryDescriptor], Array[@cv_advanced.BinaryDescriptor]) -> Array[@cv_advanced.DMatch]
 
 pub fn bf_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor]) -> Array[@cv_advanced.DMatch]
@@ -3751,6 +3753,14 @@ pub fn upscale_2x(@types.Image) -> @types.Image
 
 pub fn upscale_4x(@types.Image) -> @types.Image
 
+pub fn vae_decode(Array[Double], Array[Double], @cv_advanced.VAEConfig) -> Array[Double]
+
+pub fn vae_encode(Array[Double], Array[Double], Array[Double], @cv_advanced.VAEConfig) -> (Array[Double], Array[Double])
+
+pub fn vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.VAEConfig) -> @cv_advanced.VAEResult
+
+pub fn vae_reparameterize(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn validate_disparity(@cv_advanced.DisparityMap, @cv_advanced.DisparityMap, Double) -> @cv_advanced.DisparityMap
 
 pub fn variance_value(@types.Image) -> Float
@@ -3824,6 +3834,8 @@ pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
 pub fn vlm_report_to_string_vlm(@vlm_multimodal.VisionTextEmbedding, @vlm_multimodal.VisionLanguageModelType) -> String
 
 pub fn voxel_downsample_3d(@stereo3d.PointCloud3D, Double) -> @stereo3d.PointCloud3D
+
+pub fn vq_vae_quantize(Array[Double], Array[Double], Int) -> (Array[Double], Int)
 
 pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
@@ -5281,6 +5293,12 @@ pub using @forensics {type UIDetectionResult}
 pub using @advanced_imaging {type UltrasoundData as UltrasoundDataAI}
 
 pub using @lib {type UnifiedImageInfo}
+
+pub using @cv_advanced {type VAEConfig}
+
+pub using @cv_advanced {type VAEResult}
+
+pub using @cv_advanced {type VAEType}
 
 pub using @vlm_multimodal {type VLMConfig as VLMConfigVLM}
 

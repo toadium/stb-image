@@ -15143,3 +15143,70 @@ pub fn gan_generate_samples(
 ) -> Array[Array[Double]] {
   @cv_advanced.gan_generate_samples(weights, config, num_samples)
 }
+
+///|
+pub type VAEType = @cv_advanced.VAEType
+
+///|
+pub type VAEConfig = @cv_advanced.VAEConfig
+
+///|
+pub type VAEResult = @cv_advanced.VAEResult
+
+///|
+pub fn vae_encode(
+  input : Array[Double],
+  weight_mean : Array[Double],
+  weight_log_var : Array[Double],
+  config : VAEConfig,
+) -> (Array[Double], Array[Double]) {
+  @cv_advanced.vae_encode(input, weight_mean, weight_log_var, config)
+}
+
+///|
+pub fn vae_decode(
+  z : Array[Double],
+  weight : Array[Double],
+  config : VAEConfig,
+) -> Array[Double] {
+  @cv_advanced.vae_decode(z, weight, config)
+}
+
+///|
+pub fn vae_reparameterize(
+  z_mean : Array[Double],
+  z_log_var : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.vae_reparameterize(z_mean, z_log_var)
+}
+
+///|
+pub fn vae_loss(
+  input : Array[Double],
+  reconstruction : Array[Double],
+  z_mean : Array[Double],
+  z_log_var : Array[Double],
+  config : VAEConfig,
+) -> VAEResult {
+  @cv_advanced.vae_loss(input, reconstruction, z_mean, z_log_var, config)
+}
+
+///|
+pub fn beta_vae_loss(
+  input : Array[Double],
+  reconstruction : Array[Double],
+  z_mean : Array[Double],
+  z_log_var : Array[Double],
+  beta : Double,
+) -> Double {
+  @cv_advanced.beta_vae_loss(input, reconstruction, z_mean, z_log_var, beta)
+}
+
+///|
+pub fn vq_vae_quantize(
+  z : Array[Double],
+  codebook : Array[Double],
+  latent_dim : Int,
+) -> (Array[Double], Int) {
+  @cv_advanced.vq_vae_quantize(z, codebook, latent_dim)
+}
