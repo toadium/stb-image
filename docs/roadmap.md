@@ -2778,7 +2778,7 @@ flowchart LR
 | v319.0.0 | 极线几何 | 基础矩阵/本质矩阵 | ✅ |
 | v320.0.0 | 立体视觉扩展 | 视差/SGM/深度图 | ✅ |
 | v321.0.0 | 光流扩展 | Lucas-Kanade/Horn-Schunck/Farneback | ✅ |
-| v322.0.0 | 目标跟踪 | KCF/MOSSE/CSRT/DeepSORT | ⬜ |
+| v322.0.0 | 目标跟踪 | KCF/MOSSE/CSRT/DeepSORT | ✅ |
 | v323.0.0 | 背景建模 | GMM/KNN/VIBE | ⬜ |
 | v324.0.0 | 运动检测扩展 | 帧差/光流/背景差分 | ⬜ |
 | v325.0.0 | 图像配准扩展 | ECC/特征配准/相位相关 | ⬜ |

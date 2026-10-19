@@ -14048,3 +14048,74 @@ pub fn flow_magnitude(flow : FlowField) -> Array[Double] {
 pub fn flow_consistency(forward : FlowField, backward : FlowField) -> Double {
   @cv_advanced.flow_consistency(forward, backward)
 }
+// cv_advanced — 目标跟踪（v322.0.0）
+
+///|
+pub type TrackerKind = @cv_advanced.TrackerKind
+
+///|
+pub type Track = @cv_advanced.Track
+
+///|
+pub type TrackerParams = @cv_advanced.TrackerParams
+
+///|
+pub type KalmanState = @cv_advanced.KalmanState
+
+///|
+pub fn init_tracker(
+  x : Double,
+  y : Double,
+  w : Double,
+  h : Double,
+  params : TrackerParams,
+) -> Track {
+  @cv_advanced.init_tracker(x, y, w, h, params)
+}
+
+///|
+pub fn update_tracker(
+  track : Track,
+  new_x : Double,
+  new_y : Double,
+  params : TrackerParams,
+) -> Track {
+  @cv_advanced.update_tracker(track, new_x, new_y, params)
+}
+
+///|
+pub fn compute_correlation_filter(
+  img : @types.Image,
+  track : Track,
+  sigma : Double,
+) -> Double {
+  @cv_advanced.compute_correlation_filter(img, track, sigma)
+}
+
+///|
+pub fn kalman_predict(state : KalmanState) -> KalmanState {
+  @cv_advanced.kalman_predict(state)
+}
+
+///|
+pub fn kalman_correct(
+  state : KalmanState,
+  measured_x : Double,
+  measured_y : Double,
+) -> KalmanState {
+  @cv_advanced.kalman_correct(state, measured_x, measured_y)
+}
+
+///|
+pub fn track_objects(
+  existing : Array[Track],
+  detections : Array[Track],
+  iou_threshold : Double,
+) -> Array[Track] {
+  @cv_advanced.track_objects(existing, detections, iou_threshold)
+}
+
+///|
+pub fn compute_iou(a : Track, b : Track) -> Double {
+  @cv_advanced.compute_iou(a, b)
+}

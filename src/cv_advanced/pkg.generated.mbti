@@ -21,6 +21,8 @@ pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDe
 
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
 
+pub fn compute_correlation_filter(@types.Image, Track, Double) -> Double
+
 pub fn compute_depth_map(DisparityMap, Double, Double) -> DepthMap
 
 pub fn compute_disparity_block_matching(@types.Image, @types.Image, StereoParams) -> DisparityMap
@@ -36,6 +38,8 @@ pub fn compute_farneback(@types.Image, @types.Image, FlowParams) -> FlowField
 pub fn compute_fundamental_matrix(Array[PointCorrespondence]) -> FundamentalMatrix
 
 pub fn compute_horn_schunck(@types.Image, @types.Image, FlowParams) -> FlowField
+
+pub fn compute_iou(Track, Track) -> Double
 
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
 
@@ -75,6 +79,12 @@ pub fn generate_caption(String) -> ImageCaptioningResult
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
 
+pub fn init_tracker(Double, Double, Double, Double, TrackerParams) -> Track
+
+pub fn kalman_correct(KalmanState, Double, Double) -> KalmanState
+
+pub fn kalman_predict(KalmanState) -> KalmanState
+
 pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
@@ -87,6 +97,8 @@ pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResul
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
+pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
+
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
 pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
@@ -94,6 +106,8 @@ pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
 pub fn undistort_point(CameraIntrinsics, Double, Double) -> (Double, Double)
 
 pub fn update_tracked_object(TrackedObject, Array[Int], Double) -> TrackedObject
+
+pub fn update_tracker(Track, Double, Double, TrackerParams) -> Track
 
 pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
@@ -306,6 +320,20 @@ pub(all) struct ImageCaptioningResult {
   cider_score : Double
 }
 
+pub(all) struct KalmanState {
+  x : Double
+  y : Double
+  vx : Double
+  vy : Double
+  px : Double
+  py : Double
+  pvx : Double
+  pvy : Double
+} derive(Eq, @debug.Debug)
+pub fn KalmanState::equal(Self, Self) -> Bool
+pub fn KalmanState::not_equal(Self, Self) -> Bool
+pub fn KalmanState::to_repr(Self) -> @debug.Repr
+
 pub(all) struct KeyPoint {
   x : Int
   y : Int
@@ -367,6 +395,18 @@ pub fn StereoParams::equal(Self, Self) -> Bool
 pub fn StereoParams::not_equal(Self, Self) -> Bool
 pub fn StereoParams::to_repr(Self) -> @debug.Repr
 
+pub(all) struct Track {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+  id : Int
+  score : Double
+} derive(Eq, @debug.Debug)
+pub fn Track::equal(Self, Self) -> Bool
+pub fn Track::not_equal(Self, Self) -> Bool
+pub fn Track::to_repr(Self) -> @debug.Repr
+
 pub(all) struct TrackedObject {
   object_id : Int
   bounding_box : Array[Int]
@@ -378,6 +418,25 @@ pub(all) struct TrackedObject {
   hits : Int
   is_active : Bool
 }
+
+pub(all) enum TrackerKind {
+  KCF
+  MOSSE
+  CSRT
+} derive(Eq, @debug.Debug)
+pub fn TrackerKind::equal(Self, Self) -> Bool
+pub fn TrackerKind::not_equal(Self, Self) -> Bool
+pub fn TrackerKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TrackerParams {
+  kind : TrackerKind
+  learning_rate : Double
+  sigma : Double
+  max_gap : Int
+} derive(Eq, @debug.Debug)
+pub fn TrackerParams::equal(Self, Self) -> Bool
+pub fn TrackerParams::not_equal(Self, Self) -> Bool
+pub fn TrackerParams::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TrackingAlgorithm {
   KCF

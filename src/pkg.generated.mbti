@@ -637,6 +637,8 @@ pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> 
 
 pub fn compute_confusion_matrix(Array[Int], Array[Int], Int) -> Array[Array[Int]]
 
+pub fn compute_correlation_filter(@types.Image, @cv_advanced.Track, Double) -> Double
+
 pub fn compute_depth_map(@cv_advanced.DisparityMap, Double, Double) -> @cv_advanced.DepthMap
 
 pub fn compute_diff_image(@types.Image, @types.Image) -> @types.Image
@@ -676,6 +678,8 @@ pub fn compute_glcm_f(@types.ImageF, Int, Int, levels? : Int) -> Array[Array[Int
 pub fn compute_horn_schunck(@types.Image, @types.Image, @cv_advanced.FlowParams) -> @cv_advanced.FlowField
 
 pub fn compute_image_text_similarity_vlm(@types.Image, String, @vlm_multimodal.VLMConfig) -> @vlm_multimodal.VisionTextEmbedding
+
+pub fn compute_iou(@cv_advanced.Track, @cv_advanced.Track) -> Double
 
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], @cv_advanced.FlowParams) -> @cv_advanced.FlowField
 
@@ -2053,6 +2057,8 @@ pub fn info_from_bytes(Bytes) -> @types.ImageInfo? raise @types.LoadError
 
 pub fn infrared_pseudocolor_ai(@types.Image, @advanced_imaging.InfraredImagingType) -> @types.Image
 
+pub fn init_tracker(Double, Double, Double, Double, @cv_advanced.TrackerParams) -> @cv_advanced.Track
+
 pub fn initialize_object_tracking(@detection.YoloDetectionResult) -> Array[@detection.YoloTrackedObject] raise @types.LoadError
 
 pub fn initialize_slam_sl(@slam.SLAMConfig) -> @slam.SLAMState
@@ -2268,6 +2274,10 @@ pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
 pub fn jpegxl_info(Bytes) -> @codec.JpegXlInfo raise @types.LoadError
 
 pub fn jpegxl_info_extended(Bytes) -> @codec.JpegXlInfoExtended raise @types.LoadError
+
+pub fn kalman_correct(@cv_advanced.KalmanState, Double, Double) -> @cv_advanced.KalmanState
+
+pub fn kalman_predict(@cv_advanced.KalmanState) -> @cv_advanced.KalmanState
 
 pub fn key_sensitivity_test(@types.Image, Double, delta? : Double) -> Double raise @types.LoadError
 
@@ -3485,6 +3495,8 @@ pub fn tone_mapping_sigmoid(@types.Image, strength? : Double) -> @types.Image ra
 
 pub fn track_features_slam_sl(@types.Image, @types.Image, Array[Array[Double]], Int) -> @slam.FeatureTrackingResult
 
+pub fn track_objects(Array[@cv_advanced.Track], Array[@cv_advanced.Track], Double) -> Array[@cv_advanced.Track]
+
 pub fn transpose(@types.Image) -> @types.Image
 
 pub fn transpose_16(@types.Image16) -> @types.Image16
@@ -3532,6 +3544,8 @@ pub fn unsharp_mask_enhance_dn(@types.Image, Double, Int) -> @types.Image raise 
 pub fn update_object_tracking(Array[@detection.YoloTrackedObject], @detection.YoloDetectionResult, Int) -> Array[@detection.YoloTrackedObject] raise @types.LoadError
 
 pub fn update_task_progress(@ocr.BatchTask, Double, Int, Int) -> @ocr.BatchTask
+
+pub fn update_tracker(@cv_advanced.Track, Double, Double, @cv_advanced.TrackerParams) -> @cv_advanced.Track
 
 pub fn update_tracking(@video.TrackedObject, @types.Image) -> @video.TrackedObject
 
@@ -4342,6 +4356,8 @@ pub using @codec {type JpegXlInfoExtended}
 
 pub using @segmentation {type KMeansConfig}
 
+pub using @cv_advanced {type KalmanState}
+
 pub using @slam {type KeyFrame as KeyFrameSL}
 
 pub using @cv_advanced {type KeyPoint}
@@ -4928,7 +4944,13 @@ pub using @photo_enhance {type ToneMappingConfig}
 
 pub using @photo_enhance {type ToneMappingType}
 
+pub using @cv_advanced {type Track}
+
 pub using @video {type TrackedObject}
+
+pub using @cv_advanced {type TrackerKind}
+
+pub using @cv_advanced {type TrackerParams}
 
 pub using @video {type TrackingResult}
 

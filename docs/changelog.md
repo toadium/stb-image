@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v322.0.0 - GeoVerse Phase 12: 目标跟踪
+- 扩展 `src/cv_advanced/`：目标跟踪 — KCF/MOSSE/CSRT/Kalman
+  - **object_tracking**：TrackerKind / Track / TrackerParams / KalmanState + init_tracker / update_tracker / compute_correlation_filter / kalman_predict / kalman_correct / track_objects / compute_iou
+  - Phase 12 CV算法大扩展 — 目标跟踪与 Kalman 滤波
+- 新增 4 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7145×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v321.0.0 - GeoVerse Phase 12: 光流扩展
 - 扩展 `src/cv_advanced/`：光流 — Lucas-Kanade/Horn-Schunck/Farneback
   - **optical_flow**：FlowField / FlowParams + compute_lucas_kanade / compute_horn_schunck / compute_farneback / warp_image / flow_magnitude / flow_consistency
