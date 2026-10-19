@@ -2811,7 +2811,19 @@ pub fn multilingual_ocr_default_config() -> @ocr.MultilingualOcrConfig
 
 pub fn multilingual_ocr_enhanced_default_config() -> @ocr.MultilingualOcrEnhancedConfig
 
+pub fn multispectral_band_arithmetic(Array[Double], Array[Double], Int) -> Array[Double]
+
+pub fn multispectral_band_ratio(Array[Double], Array[Double]) -> Array[Double]
+
+pub fn multispectral_band_stats(Array[Double]) -> (Double, Double, Double, Double)
+
+pub fn multispectral_classify(@cv_advanced.MultispecImage, Int, Int) -> Array[Int]
+
 pub fn multispectral_new(Int, Int, Array[@types.Image], band_names? : Array[String]) -> @remote_sensing.MultispectralImage
+
+pub fn multispectral_normalized_difference(Array[Double], Array[Double]) -> Array[Double]
+
+pub fn multispectral_pca(@cv_advanced.MultispecImage, Int) -> Array[Array[Double]]
 
 pub fn multiview_stereo_reconstruction_nr(Array[@types.Image], Array[@neural_rendering.CameraParams]) -> @neural_rendering.ReconstructionResult
 
@@ -5115,6 +5127,10 @@ pub using @ocr {type MultilingualOcrConfig}
 pub using @ocr {type MultilingualOcrEnhancedConfig}
 
 pub using @vlm_multimodal {type MultimodalFusionStrategy as MultimodalFusionStrategyVLM}
+
+pub using @cv_advanced {type MultispecImage}
+
+pub using @cv_advanced {type MultispectralBand}
 
 pub using @remote_sensing {type MultispectralImage}
 

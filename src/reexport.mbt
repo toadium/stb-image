@@ -16637,3 +16637,58 @@ pub fn phase14_report() -> Phase14Report {
 pub fn phase14_is_complete() -> Bool {
   @cv_advanced.phase14_is_complete()
 }
+
+///|
+pub type MultispectralBand = @cv_advanced.MultispectralBand
+
+///|
+pub type MultispecImage = @cv_advanced.MultispecImage
+
+///|
+pub fn multispectral_band_arithmetic(
+  band1 : Array[Double],
+  band2 : Array[Double],
+  op : Int,
+) -> Array[Double] {
+  @cv_advanced.multispectral_band_arithmetic(band1, band2, op)
+}
+
+///|
+pub fn multispectral_normalized_difference(
+  band1 : Array[Double],
+  band2 : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.multispectral_normalized_difference(band1, band2)
+}
+
+///|
+pub fn multispectral_band_ratio(
+  numerator : Array[Double],
+  denominator : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.multispectral_band_ratio(numerator, denominator)
+}
+
+///|
+pub fn multispectral_band_stats(
+  band : Array[Double],
+) -> (Double, Double, Double, Double) {
+  @cv_advanced.multispectral_band_stats(band)
+}
+
+///|
+pub fn multispectral_classify(
+  image : MultispecImage,
+  num_classes : Int,
+  max_iterations : Int,
+) -> Array[Int] {
+  @cv_advanced.multispectral_classify(image, num_classes, max_iterations)
+}
+
+///|
+pub fn multispectral_pca(
+  image : MultispecImage,
+  num_components : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.multispectral_pca(image, num_components)
+}

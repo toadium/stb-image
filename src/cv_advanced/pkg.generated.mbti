@@ -375,6 +375,18 @@ pub fn mri_kspace_to_image(KSpaceData) -> Array[Double]
 
 pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
+pub fn multispectral_band_arithmetic(Array[Double], Array[Double], Int) -> Array[Double]
+
+pub fn multispectral_band_ratio(Array[Double], Array[Double]) -> Array[Double]
+
+pub fn multispectral_band_stats(Array[Double]) -> (Double, Double, Double, Double)
+
+pub fn multispectral_classify(MultispecImage, Int, Int) -> Array[Int]
+
+pub fn multispectral_normalized_difference(Array[Double], Array[Double]) -> Array[Double]
+
+pub fn multispectral_pca(MultispecImage, Int) -> Array[Array[Double]]
+
 pub fn nas_search((Array[Double]) -> Double, Int, Int, AutoMLConfig) -> AutoMLResult
 
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
@@ -1594,6 +1606,29 @@ pub(all) struct MotionRegion {
 pub fn MotionRegion::equal(Self, Self) -> Bool
 pub fn MotionRegion::not_equal(Self, Self) -> Bool
 pub fn MotionRegion::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MultispecImage {
+  bands : Array[Array[Double]]
+  width : Int
+  height : Int
+  num_bands : Int
+} derive(Eq, @debug.Debug)
+pub fn MultispecImage::equal(Self, Self) -> Bool
+pub fn MultispecImage::not_equal(Self, Self) -> Bool
+pub fn MultispecImage::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MultispectralBand {
+  Blue
+  Green
+  Red
+  NearIR
+  ShortwaveIR1
+  ShortwaveIR2
+  ThermalIR
+} derive(Eq, @debug.Debug)
+pub fn MultispectralBand::equal(Self, Self) -> Bool
+pub fn MultispectralBand::not_equal(Self, Self) -> Bool
+pub fn MultispectralBand::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OrbSlamConfig {
   mode : OrbSlamMode

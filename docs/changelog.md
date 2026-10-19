@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v361.0.0 - GeoVerse Phase 15: 多光谱分析
+- 扩展 `src/cv_advanced/`：多光谱分析 — 波段运算/指数/分类/PCA
+  - **multispectral_analysis**：MultispectralBand / MultispecImage + multispectral_band_arithmetic / multispectral_normalized_difference / multispectral_band_ratio / multispectral_band_stats / multispectral_classify / multispectral_pca
+  - Phase 15 遥感与地理空间大扩展 — 多光谱影像分析
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +12 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7509×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v360.0.0 - GeoVerse Phase 14 完成: 综合报告
 - 扩展 `src/cv_advanced/`：Phase 14 综合报告 — 汇总 v346-v359 全部能力
   - **phase14_report**：Phase14Capability / Phase14Report + phase14_capabilities / phase14_total_types / phase14_total_functions / phase14_total_tests / phase14_report / phase14_is_complete
