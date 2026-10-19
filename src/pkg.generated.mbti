@@ -985,6 +985,16 @@ pub fn cross_entropy_loss(Array[Double], Int) -> Double
 
 pub fn cross_validate_match(Array[@cv_advanced.DMatch], Array[@cv_advanced.DMatch]) -> Array[@cv_advanced.DMatch]
 
+pub fn ct_art_reconstruct(@cv_advanced.CTProjection, @cv_advanced.CTConfig, Int) -> Array[Double]
+
+pub fn ct_fbp_reconstruct(@cv_advanced.CTProjection, @cv_advanced.CTConfig) -> Array[Double]
+
+pub fn ct_iterative_reconstruct(@cv_advanced.CTProjection, @cv_advanced.CTConfig, Int) -> Array[Double]
+
+pub fn ct_radon_transform(Array[Double], Int, Array[Double]) -> @cv_advanced.CTProjection
+
+pub fn ct_ramp_filter(Int, Double) -> Array[Double]
+
 pub fn ct_reconstruct_fbp_ci(@computational_imaging.CTProjectionData, Int) -> @computational_imaging.ImagingReconstructionResult
 
 pub fn cur_info_extended(Bytes) -> @codec.CurInfoExtended raise @types.LoadError
@@ -4132,6 +4142,10 @@ pub using @retrieval {type CBIRRetrievalResultList}
 
 pub using @self_evolve {type CIGateResult}
 
+pub using @cv_advanced {type CTConfig}
+
+pub using @cv_advanced {type CTProjection}
+
 pub using @computational_imaging {type CTProjectionData as CTProjectionDataCI}
 
 pub using @cv_advanced {type CalibrationResult}
@@ -5101,6 +5115,8 @@ pub using @self_evolve {type Recommendation}
 pub using @self_evolve {type RecommendationReport}
 
 pub using @neural_rendering {type ReconstructionAlgorithm as ReconstructionAlgorithmNR}
+
+pub using @cv_advanced {type ReconstructionMethod}
 
 pub using @neural_rendering {type ReconstructionResult as ReconstructionResultNR}
 

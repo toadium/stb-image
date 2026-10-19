@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v347.0.0 - GeoVerse Phase 14: CT 重建
+- 扩展 `src/cv_advanced/`：CT 重建 — FBP/迭代重建/ART
+  - **ct_reconstruction**：ReconstructionMethod / CTProjection / CTConfig + ct_radon_transform / ct_ramp_filter / ct_fbp_reconstruct / ct_art_reconstruct / ct_iterative_reconstruct
+  - Phase 14 医学影像大扩展 — CT 断层重建
+- 新增 3 类型 + 5 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7370×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v346.0.0 - GeoVerse Phase 14: DICOM 扩展
 - 扩展 `src/cv_advanced/`：DICOM 扩展 — 元数据/嵌套/多帧
   - **dicom_ext**：DicomVR / DicomTag / DicomMetadata / DicomImage + parse_dicom_metadata / extract_dicom_pixels / dicom_window_level / dicom_to_image / dicom_multiframe_extract / set_window_level

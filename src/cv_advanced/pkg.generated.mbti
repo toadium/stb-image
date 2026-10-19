@@ -109,6 +109,16 @@ pub fn cross_entropy_loss(Array[Double], Array[Double]) -> Double
 
 pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
+pub fn ct_art_reconstruct(CTProjection, CTConfig, Int) -> Array[Double]
+
+pub fn ct_fbp_reconstruct(CTProjection, CTConfig) -> Array[Double]
+
+pub fn ct_iterative_reconstruct(CTProjection, CTConfig, Int) -> Array[Double]
+
+pub fn ct_radon_transform(Array[Double], Int, Array[Double]) -> CTProjection
+
+pub fn ct_ramp_filter(Int, Double) -> Array[Double]
+
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
 
 pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Array[Double]
@@ -557,6 +567,25 @@ pub(all) struct BinaryDescriptor {
 pub fn BinaryDescriptor::equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::not_equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CTConfig {
+  image_size : Int
+  num_angles : Int
+  detector_count : Int
+  recon_method : ReconstructionMethod
+} derive(Eq, @debug.Debug)
+pub fn CTConfig::equal(Self, Self) -> Bool
+pub fn CTConfig::not_equal(Self, Self) -> Bool
+pub fn CTConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CTProjection {
+  angles : Array[Double]
+  detector_count : Int
+  projection_data : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn CTProjection::equal(Self, Self) -> Bool
+pub fn CTProjection::not_equal(Self, Self) -> Bool
+pub fn CTProjection::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CVAdvancedConfig {
   task_type : CVAdvancedTaskType
@@ -1285,6 +1314,16 @@ pub(all) struct QuantizedTensor {
 pub fn QuantizedTensor::equal(Self, Self) -> Bool
 pub fn QuantizedTensor::not_equal(Self, Self) -> Bool
 pub fn QuantizedTensor::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ReconstructionMethod {
+  FBP
+  Iterative
+  ART
+  SART
+} derive(Eq, @debug.Debug)
+pub fn ReconstructionMethod::equal(Self, Self) -> Bool
+pub fn ReconstructionMethod::not_equal(Self, Self) -> Bool
+pub fn ReconstructionMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RegistrationMethod {
   ECC

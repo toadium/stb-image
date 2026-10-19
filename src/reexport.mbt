@@ -15675,3 +15675,52 @@ pub fn set_window_level(
 ) -> DicomMetadata {
   @cv_advanced.set_window_level(metadata, window_center, window_width)
 }
+
+///|
+pub type ReconstructionMethod = @cv_advanced.ReconstructionMethod
+
+///|
+pub type CTProjection = @cv_advanced.CTProjection
+
+///|
+pub type CTConfig = @cv_advanced.CTConfig
+
+///|
+pub fn ct_radon_transform(
+  image : Array[Double],
+  image_size : Int,
+  angles : Array[Double],
+) -> CTProjection {
+  @cv_advanced.ct_radon_transform(image, image_size, angles)
+}
+
+///|
+pub fn ct_ramp_filter(detector_count : Int, cutoff : Double) -> Array[Double] {
+  @cv_advanced.ct_ramp_filter(detector_count, cutoff)
+}
+
+///|
+pub fn ct_fbp_reconstruct(
+  projection : CTProjection,
+  config : CTConfig,
+) -> Array[Double] {
+  @cv_advanced.ct_fbp_reconstruct(projection, config)
+}
+
+///|
+pub fn ct_art_reconstruct(
+  projection : CTProjection,
+  config : CTConfig,
+  num_iterations : Int,
+) -> Array[Double] {
+  @cv_advanced.ct_art_reconstruct(projection, config, num_iterations)
+}
+
+///|
+pub fn ct_iterative_reconstruct(
+  projection : CTProjection,
+  config : CTConfig,
+  num_iterations : Int,
+) -> Array[Double] {
+  @cv_advanced.ct_iterative_reconstruct(projection, config, num_iterations)
+}
