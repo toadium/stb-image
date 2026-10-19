@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v341.0.0 - GeoVerse Phase 13: 自监督学习
+- 扩展 `src/cv_advanced/`：自监督学习 — 对比学习/掩码学习
+  - **self_supervised**：SSLType / SSLConfig / SSLResult + cosine_similarity / contrastive_loss / masked_modeling / simclr_forward / moco_forward / compute_embeddings_sim
+  - Phase 13 深度学习大扩展 — 自监督表示学习
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API（cosine_similarity 重名→ssl_cosine_similarity）
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7316×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v340.0.0 - GeoVerse Phase 13: 图神经网络
 - 扩展 `src/cv_advanced/`：图神经网络 — GCN/GAT/GraphSAGE
   - **graph_nn**：GNNType / GraphData / GNNConfig / GNNResult + graph_convolution / gcn_forward / aggregate_neighbors / gat_forward / graphsage_forward

@@ -47,6 +47,8 @@ pub fn compute_disparity_sgm(@types.Image, @types.Image, StereoParams) -> Dispar
 
 pub fn compute_ecc_alignment(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
+pub fn compute_embeddings_sim(Array[Array[Double]]) -> Array[Double]
+
 pub fn compute_epipolar_line(FundamentalMatrix, Double, Double) -> EpipolarLine
 
 pub fn compute_essential_matrix(FundamentalMatrix, CameraIntrinsics, CameraIntrinsics) -> EssentialMatrix
@@ -81,9 +83,13 @@ pub fn compute_sparsity(Array[Double]) -> Double
 
 pub fn compute_surf_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
+pub fn contrastive_loss(Array[Double], Array[Double], Array[Array[Double]], SSLConfig) -> SSLResult
+
 pub fn conv1d(Array[Double], Array[Double], Array[Double], Conv1DParams) -> Array[Double]
 
 pub fn conv3d(Array[Double], Array[Double], Array[Double], Conv3DParams) -> Array[Double]
+
+pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
 
@@ -219,9 +225,13 @@ pub fn loop_closing(SlamBackend, SlamKeyFrame, SlamBackendParams) -> LoopClosing
 
 pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
 
+pub fn masked_modeling(Array[Double], Array[Bool], Array[Double], Array[Double]) -> Double
+
 pub fn merge_map_points(SlamBackend, Double) -> SlamBackend
 
 pub fn mixed_precision_quantize(Array[Double], Double) -> Array[QuantizedTensor]
+
+pub fn moco_forward(Array[Double], Array[Double], Array[Array[Double]], SSLConfig) -> Double
 
 pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
 
@@ -298,6 +308,8 @@ pub fn score_based_loss(Array[Double], Array[Double]) -> Double
 pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
+
+pub fn simclr_forward(Array[Double], Array[Double], SSLConfig) -> Double
 
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
@@ -1071,6 +1083,36 @@ pub(all) struct RegistrationResult {
 pub fn RegistrationResult::equal(Self, Self) -> Bool
 pub fn RegistrationResult::not_equal(Self, Self) -> Bool
 pub fn RegistrationResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SSLConfig {
+  temperature : Double
+  projection_dim : Int
+  num_negatives : Int
+  ssl_type : SSLType
+} derive(Eq, @debug.Debug)
+pub fn SSLConfig::equal(Self, Self) -> Bool
+pub fn SSLConfig::not_equal(Self, Self) -> Bool
+pub fn SSLConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SSLResult {
+  loss : Double
+  embeddings : Array[Double]
+  positive_sim : Double
+  negative_sim : Double
+} derive(Eq, @debug.Debug)
+pub fn SSLResult::equal(Self, Self) -> Bool
+pub fn SSLResult::not_equal(Self, Self) -> Bool
+pub fn SSLResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SSLType {
+  Contrastive
+  Masked
+  Predictive
+  NonContrastive
+} derive(Eq, @debug.Debug)
+pub fn SSLType::equal(Self, Self) -> Bool
+pub fn SSLType::not_equal(Self, Self) -> Bool
+pub fn SSLType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SceneParsingResult {
   image_id : String

@@ -671,6 +671,8 @@ pub fn compute_distance(Array[Double], Array[Double], @ocr.DistanceMetric) -> Do
 
 pub fn compute_ecc_alignment(@types.Image, @types.Image, @cv_advanced.RegistrationParams) -> @cv_advanced.RegistrationResult
 
+pub fn compute_embeddings_sim(Array[Array[Double]]) -> Array[Double]
+
 pub fn compute_energy(@types.Image) -> Array[Double]
 
 pub fn compute_energy_16(@types.Image16) -> Array[Double]
@@ -774,6 +776,8 @@ pub fn contour_area(@edge.Contour) -> Float
 pub fn contour_perimeter(@edge.Contour) -> Float
 
 pub fn contrast_value(@types.Image) -> Float
+
+pub fn contrastive_loss(Array[Double], Array[Double], Array[Array[Double]], @cv_advanced.SSLConfig) -> @cv_advanced.SSLResult
 
 pub fn conv1d(Array[Double], Array[Double], Array[Double], @cv_advanced.Conv1DParams) -> Array[Double]
 
@@ -2521,6 +2525,8 @@ pub fn markdown_table_to_string(@ocr.MarkdownTable) -> String
 
 pub fn mask_blend(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn masked_modeling(Array[Double], Array[Bool], Array[Double], Array[Double]) -> Double
+
 pub fn match_feature_points_ra(Array[@registration_advanced.FeaturePoint], Array[@registration_advanced.FeaturePoint], Double) -> Array[@registration_advanced.FeatureMatch]
 
 pub fn match_features(Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], ratio_threshold? : Double) -> Array[@stitch.MatchPair]
@@ -2586,6 +2592,8 @@ pub fn meta_report_strategy_count(@self_evolve.MetaReport) -> Int
 pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
 
 pub fn mixed_precision_quantize(Array[Double], Double) -> Array[@cv_advanced.QuantizedTensor]
+
+pub fn moco_forward(Array[Double], Array[Double], Array[Array[Double]], @cv_advanced.SSLConfig) -> Double
 
 pub fn morph_blackhat(@types.Image) -> @types.Image
 
@@ -3435,6 +3443,8 @@ pub fn sigmoid(Double) -> Double
 
 pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
 
+pub fn simclr_forward(Array[Double], Array[Double], @cv_advanced.SSLConfig) -> Double
+
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn sketch(@types.Image, blend? : Double) -> @types.Image
@@ -3478,6 +3488,8 @@ pub fn ssim(@types.Image, @types.Image) -> Double raise @types.LoadError
 pub fn ssim_16(@types.Image16, @types.Image16) -> Double raise @types.LoadError
 
 pub fn ssim_f(@types.ImageF, @types.ImageF) -> Double raise @types.LoadError
+
+pub fn ssl_cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn ssr(@types.Image, sigma? : Float, gain? : Float, offset? : Float) -> @types.Image raise @types.LoadError
 
@@ -5073,6 +5085,12 @@ pub using @slam {type SLAMAlgorithm as SLAMAlgorithmSL}
 pub using @slam {type SLAMConfig as SLAMConfigSL}
 
 pub using @slam {type SLAMState as SLAMStateSL}
+
+pub using @cv_advanced {type SSLConfig}
+
+pub using @cv_advanced {type SSLResult}
+
+pub using @cv_advanced {type SSLType}
 
 pub using @fieldimg {type ScalarField}
 

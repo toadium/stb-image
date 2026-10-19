@@ -15341,3 +15341,63 @@ pub fn graphsage_forward(
 ) -> Array[Double] {
   @cv_advanced.graphsage_forward(graph, weight, config)
 }
+
+///|
+pub type SSLType = @cv_advanced.SSLType
+
+///|
+pub type SSLConfig = @cv_advanced.SSLConfig
+
+///|
+pub type SSLResult = @cv_advanced.SSLResult
+
+///|
+pub fn ssl_cosine_similarity(a : Array[Double], b : Array[Double]) -> Double {
+  @cv_advanced.cosine_similarity(a, b)
+}
+
+///|
+pub fn contrastive_loss(
+  anchor : Array[Double],
+  positive : Array[Double],
+  negatives : Array[Array[Double]],
+  config : SSLConfig,
+) -> SSLResult {
+  @cv_advanced.contrastive_loss(anchor, positive, negatives, config)
+}
+
+///|
+pub fn masked_modeling(
+  input : Array[Double],
+  mask : Array[Bool],
+  predictions : Array[Double],
+  targets : Array[Double],
+) -> Double {
+  @cv_advanced.masked_modeling(input, mask, predictions, targets)
+}
+
+///|
+pub fn simclr_forward(
+  z_i : Array[Double],
+  z_j : Array[Double],
+  config : SSLConfig,
+) -> Double {
+  @cv_advanced.simclr_forward(z_i, z_j, config)
+}
+
+///|
+pub fn moco_forward(
+  q : Array[Double],
+  k_pos : Array[Double],
+  k_neg_queue : Array[Array[Double]],
+  config : SSLConfig,
+) -> Double {
+  @cv_advanced.moco_forward(q, k_pos, k_neg_queue, config)
+}
+
+///|
+pub fn compute_embeddings_sim(
+  embeddings : Array[Array[Double]],
+) -> Array[Double] {
+  @cv_advanced.compute_embeddings_sim(embeddings)
+}
