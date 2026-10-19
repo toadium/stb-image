@@ -29,6 +29,10 @@ pub fn clean_foreground_mask(ForegroundMask) -> ForegroundMask
 
 pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
+pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
+
+pub fn compute_beta_schedule(DiffusionConfig) -> Array[Double]
+
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
 
 pub fn compute_correlation_filter(@types.Image, Track, Double) -> Double
@@ -91,6 +95,10 @@ pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
 
+pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Array[Double]
+
+pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) -> Array[Double]
+
 pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int, Int) -> Array[Double]
 
 pub fn dequantize(QuantizedTensor) -> Array[Double]
@@ -104,6 +112,10 @@ pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, Moti
 pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> MotionMask
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
+
+pub fn diffusion_forward(Array[Double], Array[Double], Double) -> Array[Double]
+
+pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[Double]
 
 pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) -> Array[Double]
 
@@ -270,6 +282,8 @@ pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
 pub fn save_orb_trajectory(OrbSlamSystem) -> String
 
 pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
+
+pub fn score_based_loss(Array[Double], Array[Double]) -> Double
 
 pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
@@ -556,6 +570,36 @@ pub(all) struct DepthwiseConvParams {
 pub fn DepthwiseConvParams::equal(Self, Self) -> Bool
 pub fn DepthwiseConvParams::not_equal(Self, Self) -> Bool
 pub fn DepthwiseConvParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DiffusionConfig {
+  num_steps : Int
+  beta_start : Double
+  beta_end : Double
+  schedule_type : ScheduleType
+  diffusion_type : DiffusionType
+} derive(Eq, @debug.Debug)
+pub fn DiffusionConfig::equal(Self, Self) -> Bool
+pub fn DiffusionConfig::not_equal(Self, Self) -> Bool
+pub fn DiffusionConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DiffusionState {
+  current_step : Int
+  x_t : Array[Double]
+  noise : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn DiffusionState::equal(Self, Self) -> Bool
+pub fn DiffusionState::not_equal(Self, Self) -> Bool
+pub fn DiffusionState::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DiffusionType {
+  DDPM
+  DDIM
+  ScoreBased
+  StableDiffusion
+} derive(Eq, @debug.Debug)
+pub fn DiffusionType::equal(Self, Self) -> Bool
+pub fn DiffusionType::not_equal(Self, Self) -> Bool
+pub fn DiffusionType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DisparityMap {
   width : Int
@@ -990,6 +1034,15 @@ pub(all) struct SceneParsingResult {
   objects : Array[String]
   num_objects : Int
 }
+
+pub(all) enum ScheduleType {
+  Linear
+  Cosine
+  Quadratic
+} derive(Eq, @debug.Debug)
+pub fn ScheduleType::equal(Self, Self) -> Bool
+pub fn ScheduleType::not_equal(Self, Self) -> Bool
+pub fn ScheduleType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamBackend {
   map_points : Array[SlamMapPoint]

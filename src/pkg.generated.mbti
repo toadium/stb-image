@@ -645,6 +645,10 @@ pub fn computational_photography_report(@photo_enhance.HdrImage, @photo_enhance.
 
 pub fn compute_akaze_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.FloatDescriptor]
 
+pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
+
+pub fn compute_beta_schedule(@cv_advanced.DiffusionConfig) -> Array[Double]
+
 pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
 
 pub fn compute_confusion_matrix(Array[Int], Array[Int], Int) -> Array[Array[Int]]
@@ -993,6 +997,10 @@ pub fn dct_2d_16(@types.Image16) -> Array[Array[Double]]
 
 pub fn dct_2d_f(@types.ImageF) -> Array[Array[Double]]
 
+pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Array[Double]
+
+pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) -> Array[Double]
+
 pub fn deblur_motion(@types.Image, kernel_size? : Int, angle? : Double) -> @types.Image
 
 pub fn decide_all() -> @self_evolve.DecisionReport
@@ -1229,7 +1237,11 @@ pub fn dictionary_create_common_english() -> @ocr.Dictionary
 
 pub fn dictionary_match(String, @ocr.Dictionary, max_distance? : Int) -> Array[(String, Int)] raise @types.LoadError
 
+pub fn diffusion_forward(Array[Double], Array[Double], Double) -> Array[Double]
+
 pub fn diffusion_generate_vlm(String, String, @vlm_multimodal.DiffusionConfig, Int) -> @vlm_multimodal.DiffusionResult
+
+pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[Double]
 
 pub fn digit_ocr_default_config() -> @ocr.DigitOcrConfig
 
@@ -3341,6 +3353,8 @@ pub fn schedule_result_is_successful(@self_evolve.ScheduleResult) -> Bool
 
 pub fn score_all_ops() -> @self_evolve.SmartPriorityReport
 
+pub fn score_based_loss(Array[Double], Array[Double]) -> Double
+
 pub fn score_op(@imgir.IROp) -> @self_evolve.SmartScore
 
 pub fn se_cross(Int) -> @segment.StructuringElement
@@ -4244,11 +4258,17 @@ pub using @ocr {type Dictionary}
 
 pub using @ocr {type DictionaryEntry}
 
+pub using @cv_advanced {type DiffusionConfig}
+
 pub using @vlm_multimodal {type DiffusionConfig as DiffusionConfigVLM}
 
 pub using @vlm_multimodal {type DiffusionModelType as DiffusionModelTypeVLM}
 
 pub using @vlm_multimodal {type DiffusionResult as DiffusionResultVLM}
+
+pub using @cv_advanced {type DiffusionState}
+
+pub using @cv_advanced {type DiffusionType}
 
 pub using @ocr {type DigitOcrConfig}
 
@@ -5059,6 +5079,8 @@ pub using @scene_understanding {type SceneUnderstandingConfig as SceneUnderstand
 pub using @self_evolve {type ScheduleResult}
 
 pub using @self_evolve {type ScheduleStatus}
+
+pub using @cv_advanced {type ScheduleType}
 
 pub using @self_evolve {type ScoreFactor}
 

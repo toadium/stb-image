@@ -15210,3 +15210,76 @@ pub fn vq_vae_quantize(
 ) -> (Array[Double], Int) {
   @cv_advanced.vq_vae_quantize(z, codebook, latent_dim)
 }
+
+///|
+pub type DiffusionType = @cv_advanced.DiffusionType
+
+///|
+pub type ScheduleType = @cv_advanced.ScheduleType
+
+///|
+pub type DiffusionConfig = @cv_advanced.DiffusionConfig
+
+///|
+pub type DiffusionState = @cv_advanced.DiffusionState
+
+///|
+pub fn compute_beta_schedule(config : DiffusionConfig) -> Array[Double] {
+  @cv_advanced.compute_beta_schedule(config)
+}
+
+///|
+pub fn compute_alpha_cumprod(betas : Array[Double]) -> Array[Double] {
+  @cv_advanced.compute_alpha_cumprod(betas)
+}
+
+///|
+pub fn diffusion_forward(
+  x_0 : Array[Double],
+  noise : Array[Double],
+  alpha_cumprod_t : Double,
+) -> Array[Double] {
+  @cv_advanced.diffusion_forward(x_0, noise, alpha_cumprod_t)
+}
+
+///|
+pub fn diffusion_reverse(
+  x_t : Array[Double],
+  predicted_noise : Array[Double],
+  beta_t : Double,
+  alpha_cumprod_t : Double,
+) -> Array[Double] {
+  @cv_advanced.diffusion_reverse(x_t, predicted_noise, beta_t, alpha_cumprod_t)
+}
+
+///|
+pub fn ddpm_sample(
+  x_t : Array[Double],
+  predicted_noise : Array[Double],
+  beta_t : Double,
+  alpha_cumprod_t : Double,
+  noise : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.ddpm_sample(x_t, predicted_noise, beta_t, alpha_cumprod_t, noise)
+}
+
+///|
+pub fn ddim_sample(
+  x_t : Array[Double],
+  predicted_noise : Array[Double],
+  alpha_cumprod_t : Double,
+  alpha_cumprod_prev : Double,
+  eta : Double,
+) -> Array[Double] {
+  @cv_advanced.ddim_sample(
+    x_t, predicted_noise, alpha_cumprod_t, alpha_cumprod_prev, eta,
+  )
+}
+
+///|
+pub fn score_based_loss(
+  score_pred : Array[Double],
+  noise : Array[Double],
+) -> Double {
+  @cv_advanced.score_based_loss(score_pred, noise)
+}
