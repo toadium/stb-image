@@ -15522,3 +15522,52 @@ pub fn compute_client_drift(
 ) -> Double {
   @cv_advanced.compute_client_drift(client_params, global_params)
 }
+
+///|
+pub type AutoMLType = @cv_advanced.AutoMLType
+
+///|
+pub type AutoMLConfig = @cv_advanced.AutoMLConfig
+
+///|
+pub type TrialResult = @cv_advanced.TrialResult
+
+///|
+pub type AutoMLResult = @cv_advanced.AutoMLResult
+
+///|
+pub fn random_search(
+  objective : (Array[Double]) -> Double,
+  search_space : Array[(Double, Double)],
+  config : AutoMLConfig,
+) -> AutoMLResult {
+  @cv_advanced.random_search(objective, search_space, config)
+}
+
+///|
+pub fn bayesian_optimize(
+  objective : (Array[Double]) -> Double,
+  search_space : Array[(Double, Double)],
+  config : AutoMLConfig,
+  num_initial : Int,
+) -> AutoMLResult {
+  @cv_advanced.bayesian_optimize(objective, search_space, config, num_initial)
+}
+
+///|
+pub fn nas_search(
+  objective : (Array[Double]) -> Double,
+  max_layers : Int,
+  max_channels : Int,
+  config : AutoMLConfig,
+) -> AutoMLResult {
+  @cv_advanced.nas_search(objective, max_layers, max_channels, config)
+}
+
+///|
+pub fn ensemble_select(
+  model_scores : Array[TrialResult],
+  num_models : Int,
+) -> Array[TrialResult] {
+  @cv_advanced.ensemble_select(model_scores, num_models)
+}

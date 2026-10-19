@@ -17,6 +17,8 @@ pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
 
+pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig, Int) -> AutoMLResult
+
 pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
 
 pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Array[DMatch]
@@ -134,6 +136,8 @@ pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[
 pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) -> Array[Double]
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
+
+pub fn ensemble_select(Array[TrialResult], Int) -> Array[TrialResult]
 
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
@@ -259,6 +263,8 @@ pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
 pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
+pub fn nas_search((Array[Double]) -> Double, Int, Int, AutoMLConfig) -> AutoMLResult
+
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
@@ -298,6 +304,8 @@ pub fn quantize_int4(Array[Double], QuantizationConfig) -> QuantizedTensor
 pub fn quantize_int8(Array[Double], QuantizationConfig) -> QuantizedTensor
 
 pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[QuantizedTensor]
+
+pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig) -> AutoMLResult
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
@@ -455,6 +463,35 @@ pub(all) enum AttentionType {
 pub fn AttentionType::equal(Self, Self) -> Bool
 pub fn AttentionType::not_equal(Self, Self) -> Bool
 pub fn AttentionType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AutoMLConfig {
+  max_trials : Int
+  budget : Int
+  automl_type : AutoMLType
+  minimize : Bool
+} derive(Eq, @debug.Debug)
+pub fn AutoMLConfig::equal(Self, Self) -> Bool
+pub fn AutoMLConfig::not_equal(Self, Self) -> Bool
+pub fn AutoMLConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AutoMLResult {
+  best_params : Array[Double]
+  best_score : Double
+  total_trials : Int
+} derive(Eq, @debug.Debug)
+pub fn AutoMLResult::equal(Self, Self) -> Bool
+pub fn AutoMLResult::not_equal(Self, Self) -> Bool
+pub fn AutoMLResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum AutoMLType {
+  NAS
+  HPO
+  RandomSearch
+  BayesianOpt
+} derive(Eq, @debug.Debug)
+pub fn AutoMLType::equal(Self, Self) -> Bool
+pub fn AutoMLType::not_equal(Self, Self) -> Bool
+pub fn AutoMLType::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BackgroundMethod {
   GMM
@@ -1409,6 +1446,15 @@ pub(all) enum TransformerLayerKind {
 pub fn TransformerLayerKind::equal(Self, Self) -> Bool
 pub fn TransformerLayerKind::not_equal(Self, Self) -> Bool
 pub fn TransformerLayerKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TrialResult {
+  params : Array[Double]
+  score : Double
+  trial_id : Int
+} derive(Eq, @debug.Debug)
+pub fn TrialResult::equal(Self, Self) -> Bool
+pub fn TrialResult::not_equal(Self, Self) -> Bool
+pub fn TrialResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VAEConfig {
   latent_dim : Int

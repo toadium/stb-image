@@ -317,6 +317,8 @@ pub fn batch_summary(@pipeline.BatchResult) -> String
 
 pub fn batch_summary_to_string(@ocr.BatchResultSummary) -> String
 
+pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], @cv_advanced.AutoMLConfig, Int) -> @cv_advanced.AutoMLResult
+
 pub fn bbox_iou(@detection.BoundingBox, @detection.BoundingBox) -> Double raise @types.LoadError
 
 pub fn bbox_new(Int, Int, Int, Int, score? : Double, class_id? : Int) -> @detection.BoundingBox raise @types.LoadError
@@ -1414,6 +1416,8 @@ pub fn enhanced_verification_report_to_string_fs(@forensics.EnhancedVerification
 pub fn ensemble_default_config() -> @ocr.EnsembleConfig
 
 pub fn ensemble_predict(Array[Double], @ocr.KnnClassifier, Array[(String, Array[Double])], config? : @ocr.EnsembleConfig) -> @ocr.ClassificationResult raise @types.LoadError
+
+pub fn ensemble_select(Array[@cv_advanced.TrialResult], Int) -> Array[@cv_advanced.TrialResult]
 
 pub fn entropy_value(@types.Image) -> Float
 
@@ -2699,6 +2703,8 @@ pub fn multispectral_new(Int, Int, Array[@types.Image], band_names? : Array[Stri
 
 pub fn multiview_stereo_reconstruction_nr(Array[@types.Image], Array[@neural_rendering.CameraParams]) -> @neural_rendering.ReconstructionResult
 
+pub fn nas_search((Array[Double]) -> Double, Int, Int, @cv_advanced.AutoMLConfig) -> @cv_advanced.AutoMLResult
+
 pub fn nearest_neighbor_interpolate_sr(@types.Image, Double) -> @types.Image
 
 pub fn neural_rendering_report_to_string_nr(@neural_rendering.RenderingResult, @neural_rendering.NeuralRenderingAlgorithm) -> String
@@ -3070,6 +3076,8 @@ pub fn quantize_int8(Array[Double], @cv_advanced.QuantizationConfig) -> @cv_adva
 pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[@cv_advanced.QuantizedTensor]
 
 pub fn quantum_ghost_imaging_ai(Int, Int, Int, @advanced_imaging.QuantumImagingAlgorithm) -> @types.Image
+
+pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], @cv_advanced.AutoMLConfig) -> @cv_advanced.AutoMLResult
 
 pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]? raise @types.LoadError
 
@@ -4045,6 +4053,12 @@ pub using @ocr {type AugmentationConfig}
 pub using @ocr {type AugmentationType}
 
 pub using @self_evolve {type AutoDecision}
+
+pub using @cv_advanced {type AutoMLConfig}
+
+pub using @cv_advanced {type AutoMLResult}
+
+pub using @cv_advanced {type AutoMLType}
 
 pub using @intelligent_vision {type AutonomousDrivingTask as AutonomousDrivingTaskIV}
 
@@ -5377,6 +5391,8 @@ pub using @cv_advanced {type TransformerDecoder}
 pub using @cv_advanced {type TransformerEncoder}
 
 pub using @cv_advanced {type TransformerLayerKind}
+
+pub using @cv_advanced {type TrialResult}
 
 pub using @self_evolve {type TuneReport}
 

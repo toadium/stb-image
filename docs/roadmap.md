@@ -2807,7 +2807,7 @@ flowchart LR
 | v341.0.0 | 自监督学习 | 对比学习/掩码学习 | ✅ |
 | v342.0.0 | 元学习 | MAML/Reptile/Prototypical | ✅ |
 | v343.0.0 | 联邦学习扩展 | FedAvg/FedProx/差分隐私 | ✅ |
-| v344.0.0 | AutoML 扩展 | NAS/HPO/集成搜索 | ⬜ |
+| v344.0.0 | AutoML 扩展 | NAS/HPO/集成搜索 | ✅ |
 | v345.0.0 | Phase 13 总结 | DL/AI大扩展总结 | ⬜ |
 
 ### Phase 14｜医学影像大扩展（v346.0.0 ~ v360.0.0）目标 +100,000 行

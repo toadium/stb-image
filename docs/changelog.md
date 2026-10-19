@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v344.0.0 - GeoVerse Phase 13: AutoML 扩展
+- 扩展 `src/cv_advanced/`：AutoML 扩展 — NAS/HPO/集成搜索
+  - **automl**：AutoMLType / AutoMLConfig / TrialResult / AutoMLResult + random_search / bayesian_optimize / nas_search / ensemble_select
+  - Phase 13 深度学习大扩展 — 自动化机器学习
+- 新增 4 类型 + 4 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7343×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v343.0.0 - GeoVerse Phase 13: 联邦学习扩展
 - 扩展 `src/cv_advanced/`：联邦学习扩展 — FedAvg/FedProx/差分隐私
   - **federated**：FederatedType / FederatedConfig / ClientUpdate / FederatedState + fedavg_aggregate / fedprox_update / add_dp_noise / federated_round / compute_client_drift
