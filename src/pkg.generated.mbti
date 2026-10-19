@@ -717,6 +717,10 @@ pub fn compute_psnr(@types.Image, @types.Image) -> Double
 
 pub fn compute_quality_metrics(@types.Image, @types.Image) -> @quality.QualityMetrics
 
+pub fn compute_quant_params(Double, Double, Int) -> (Double, Int)
+
+pub fn compute_quantization_error(Array[Double], @cv_advanced.QuantizedTensor) -> Double
+
 pub fn compute_reading_order(Array[@ocr.DocumentElement]) -> Array[Int] raise @types.LoadError
 
 pub fn compute_reprojection_error(@cv_advanced.CameraIntrinsics, @cv_advanced.ChessboardCorners) -> Double
@@ -1082,6 +1086,8 @@ pub fn depth_to_point_cloud_3d(@stereo3d.DepthMap3d, @stereo3d.CameraIntrinsics3
 pub fn depth_to_pointcloud(@types.Image, fx? : Double, fy? : Double, cx? : Double, cy? : Double, scale? : Double) -> @stereo3d.PointCloud
 
 pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], @cv_advanced.DepthwiseConvParams, Int, Int) -> Array[Double]
+
+pub fn dequantize(@cv_advanced.QuantizedTensor) -> Array[Double]
 
 pub fn derain_ip(@types.Image, @inpainting.DerainAlgorithm) -> @inpainting.DerainResult
 
@@ -2533,6 +2539,8 @@ pub fn meta_report_strategy_count(@self_evolve.MetaReport) -> Int
 
 pub fn min_enclosing_circle(Array[@edge.ContourPoint]) -> (@edge.ContourPoint, Float)
 
+pub fn mixed_precision_quantize(Array[Double], Double) -> Array[@cv_advanced.QuantizedTensor]
+
 pub fn morph_blackhat(@types.Image) -> @types.Image
 
 pub fn morph_blackhat_16(@types.Image16) -> @types.Image16
@@ -2974,6 +2982,12 @@ pub fn quality_report_dimension_count(@self_evolve.QualityReport) -> Int
 pub fn quality_report_is_passing(@self_evolve.QualityReport) -> Bool
 
 pub fn quantize_image_cp(@types.Image, Int) -> @types.Image raise @types.LoadError
+
+pub fn quantize_int4(Array[Double], @cv_advanced.QuantizationConfig) -> @cv_advanced.QuantizedTensor
+
+pub fn quantize_int8(Array[Double], @cv_advanced.QuantizationConfig) -> @cv_advanced.QuantizedTensor
+
+pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[@cv_advanced.QuantizedTensor]
 
 pub fn quantum_ghost_imaging_ai(Int, Int, Int, @advanced_imaging.QuantumImagingAlgorithm) -> @types.Image
 
@@ -4864,7 +4878,13 @@ pub using @self_evolve {type QualityReport}
 
 pub using @self_evolve {type QualityScore}
 
+pub using @cv_advanced {type QuantizationConfig}
+
 pub using @compression {type QuantizationTableType}
+
+pub using @cv_advanced {type QuantizationType}
+
+pub using @cv_advanced {type QuantizedTensor}
 
 pub using @advanced_imaging {type QuantumImagingAlgorithm as QuantumImagingAlgorithmAI}
 

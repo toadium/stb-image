@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v334.0.0 - GeoVerse Phase 13: 模型量化
+- 扩展 `src/cv_advanced/`：模型量化 — INT8/INT4/混合精度
+  - **quantization**：QuantizationType / QuantizationConfig / QuantizedTensor + compute_quant_params / quantize_int8 / quantize_int4 / dequantize / quantize_per_channel / mixed_precision_quantize / compute_quantization_error
+  - Phase 13 深度学习大扩展 — 模型压缩量化
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7253×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v333.0.0 - GeoVerse Phase 13: Transformer 模型
 - 扩展 `src/cv_advanced/`：Transformer 模型 — Encoder/Decoder/Positional
   - **transformer**：TransformerLayerKind / TransformerConfig / TransformerEncoder / TransformerDecoder + layer_norm / feed_forward / residual_add / transformer_encode / transformer_decode / transformer_forward

@@ -14893,3 +14893,67 @@ pub fn transformer_decode(
     w1, b1, w2, b2, config,
   )
 }
+
+///|
+pub type QuantizationType = @cv_advanced.QuantizationType
+
+///|
+pub type QuantizationConfig = @cv_advanced.QuantizationConfig
+
+///|
+pub type QuantizedTensor = @cv_advanced.QuantizedTensor
+
+///|
+pub fn compute_quant_params(
+  min_val : Double,
+  max_val : Double,
+  bits : Int,
+) -> (Double, Int) {
+  @cv_advanced.compute_quant_params(min_val, max_val, bits)
+}
+
+///|
+pub fn quantize_int8(
+  input : Array[Double],
+  config : QuantizationConfig,
+) -> QuantizedTensor {
+  @cv_advanced.quantize_int8(input, config)
+}
+
+///|
+pub fn quantize_int4(
+  input : Array[Double],
+  config : QuantizationConfig,
+) -> QuantizedTensor {
+  @cv_advanced.quantize_int4(input, config)
+}
+
+///|
+pub fn dequantize(tensor : QuantizedTensor) -> Array[Double] {
+  @cv_advanced.dequantize(tensor)
+}
+
+///|
+pub fn quantize_per_channel(
+  input : Array[Double],
+  num_channels : Int,
+  bits : Int,
+) -> Array[QuantizedTensor] {
+  @cv_advanced.quantize_per_channel(input, num_channels, bits)
+}
+
+///|
+pub fn mixed_precision_quantize(
+  input : Array[Double],
+  threshold : Double,
+) -> Array[QuantizedTensor] {
+  @cv_advanced.mixed_precision_quantize(input, threshold)
+}
+
+///|
+pub fn compute_quantization_error(
+  original : Array[Double],
+  quantized : QuantizedTensor,
+) -> Double {
+  @cv_advanced.compute_quantization_error(original, quantized)
+}

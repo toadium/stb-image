@@ -57,6 +57,10 @@ pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
+pub fn compute_quant_params(Double, Double, Int) -> (Double, Int)
+
+pub fn compute_quantization_error(Array[Double], QuantizedTensor) -> Double
+
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
 pub fn compute_surf_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
@@ -76,6 +80,8 @@ pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
 
 pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int, Int) -> Array[Double]
+
+pub fn dequantize(QuantizedTensor) -> Array[Double]
 
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
@@ -169,6 +175,8 @@ pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
 
 pub fn merge_map_points(SlamBackend, Double) -> SlamBackend
 
+pub fn mixed_precision_quantize(Array[Double], Double) -> Array[QuantizedTensor]
+
 pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
 
 pub fn motion_morphology(MotionMask, Int) -> MotionMask
@@ -202,6 +210,12 @@ pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
 pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
 
 pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
+
+pub fn quantize_int4(Array[Double], QuantizationConfig) -> QuantizedTensor
+
+pub fn quantize_int8(Array[Double], QuantizationConfig) -> QuantizedTensor
+
+pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[QuantizedTensor]
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
@@ -766,6 +780,37 @@ pub(all) struct PointCorrespondence {
 pub fn PointCorrespondence::equal(Self, Self) -> Bool
 pub fn PointCorrespondence::not_equal(Self, Self) -> Bool
 pub fn PointCorrespondence::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QuantizationConfig {
+  bits : Int
+  per_channel : Bool
+  symmetric : Bool
+  calibration_min : Double
+  calibration_max : Double
+} derive(Eq, @debug.Debug)
+pub fn QuantizationConfig::equal(Self, Self) -> Bool
+pub fn QuantizationConfig::not_equal(Self, Self) -> Bool
+pub fn QuantizationConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QuantizationType {
+  Int8
+  Int4
+  Int16
+  MixedPrecision
+} derive(Eq, @debug.Debug)
+pub fn QuantizationType::equal(Self, Self) -> Bool
+pub fn QuantizationType::not_equal(Self, Self) -> Bool
+pub fn QuantizationType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QuantizedTensor {
+  data : Array[Int]
+  scale : Double
+  zero_point : Int
+  bits : Int
+} derive(Eq, @debug.Debug)
+pub fn QuantizedTensor::equal(Self, Self) -> Bool
+pub fn QuantizedTensor::not_equal(Self, Self) -> Bool
+pub fn QuantizedTensor::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RegistrationMethod {
   ECC
