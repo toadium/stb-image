@@ -31,7 +31,13 @@ pub fn compute_epipolar_line(FundamentalMatrix, Double, Double) -> EpipolarLine
 
 pub fn compute_essential_matrix(FundamentalMatrix, CameraIntrinsics, CameraIntrinsics) -> EssentialMatrix
 
+pub fn compute_farneback(@types.Image, @types.Image, FlowParams) -> FlowField
+
 pub fn compute_fundamental_matrix(Array[PointCorrespondence]) -> FundamentalMatrix
+
+pub fn compute_horn_schunck(@types.Image, @types.Image, FlowParams) -> FlowField
+
+pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
 
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
@@ -58,6 +64,10 @@ pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
+
+pub fn flow_consistency(FlowField, FlowField) -> Double
+
+pub fn flow_magnitude(FlowField) -> Array[Double]
 
 pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
@@ -88,6 +98,8 @@ pub fn update_tracked_object(TrackedObject, Array[Int], Double) -> TrackedObject
 pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
 pub fn visual_question_answering(String, String) -> VQAResult
+
+pub fn warp_image(@types.Image, FlowField) -> @types.Image
 
 // Errors
 
@@ -247,6 +259,26 @@ pub(all) struct FloatDescriptor {
 pub fn FloatDescriptor::equal(Self, Self) -> Bool
 pub fn FloatDescriptor::not_equal(Self, Self) -> Bool
 pub fn FloatDescriptor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FlowField {
+  width : Int
+  height : Int
+  u : Array[Double]
+  v : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn FlowField::equal(Self, Self) -> Bool
+pub fn FlowField::not_equal(Self, Self) -> Bool
+pub fn FlowField::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FlowParams {
+  window_size : Int
+  max_iterations : Int
+  epsilon : Double
+  alpha : Double
+} derive(Eq, @debug.Debug)
+pub fn FlowParams::equal(Self, Self) -> Bool
+pub fn FlowParams::not_equal(Self, Self) -> Bool
+pub fn FlowParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FundamentalMatrix {
   m00 : Double

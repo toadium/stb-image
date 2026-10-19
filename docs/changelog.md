@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v321.0.0 - GeoVerse Phase 12: 光流扩展
+- 扩展 `src/cv_advanced/`：光流 — Lucas-Kanade/Horn-Schunck/Farneback
+  - **optical_flow**：FlowField / FlowParams + compute_lucas_kanade / compute_horn_schunck / compute_farneback / warp_image / flow_magnitude / flow_consistency
+  - Phase 12 CV算法大扩展 — 光流估计
+- 新增 2 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7136×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v320.0.0 - GeoVerse Phase 12: 立体视觉扩展
 - 扩展 `src/cv_advanced/`：立体视觉 — 视差/SGM/深度图
   - **stereo_vision**：DisparityMap / StereoParams / DepthMap + compute_disparity_block_matching / compute_disparity_sgm / disparity_to_depth / compute_depth_map / validate_disparity / stereo_rectify

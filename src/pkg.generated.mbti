@@ -661,6 +661,8 @@ pub fn compute_essential_matrix(@cv_advanced.FundamentalMatrix, @cv_advanced.Cam
 
 pub fn compute_evi(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn compute_farneback(@types.Image, @types.Image, @cv_advanced.FlowParams) -> @cv_advanced.FlowField
+
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
 
 pub fn compute_fundamental_matrix(Array[@cv_advanced.PointCorrespondence]) -> @cv_advanced.FundamentalMatrix
@@ -671,7 +673,11 @@ pub fn compute_glcm_16(@types.Image16, Int, Int, levels? : Int) -> Array[Array[I
 
 pub fn compute_glcm_f(@types.ImageF, Int, Int, levels? : Int) -> Array[Array[Int]] raise @types.LoadError
 
+pub fn compute_horn_schunck(@types.Image, @types.Image, @cv_advanced.FlowParams) -> @cv_advanced.FlowField
+
 pub fn compute_image_text_similarity_vlm(@types.Image, String, @vlm_multimodal.VLMConfig) -> @vlm_multimodal.VisionTextEmbedding
+
+pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], @cv_advanced.FlowParams) -> @cv_advanced.FlowField
 
 pub fn compute_mae(@types.Image, @types.Image) -> Double
 
@@ -1624,6 +1630,10 @@ pub fn flip_vertical_f(@types.ImageF) -> @types.ImageF
 pub fn flip_vertically_on_write(Bool) -> Unit
 
 pub fn flood_fill(@types.Image, Int, Int, Array[Byte], threshold? : Int) -> @types.Image raise @types.LoadError
+
+pub fn flow_consistency(@cv_advanced.FlowField, @cv_advanced.FlowField) -> Double
+
+pub fn flow_magnitude(@cv_advanced.FlowField) -> Array[Double]
 
 pub fn floyd_steinberg(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -3607,6 +3617,8 @@ pub fn warp_affine_f(@types.ImageF, (Float, Float, Float, Float, Float, Float), 
 
 pub fn warp_affine_transform(@types.Image, @registration.AffineTransform, out_width? : Int, out_height? : Int) -> @types.Image raise @types.LoadError
 
+pub fn warp_image(@types.Image, @cv_advanced.FlowField) -> @types.Image
+
 pub fn warp_perspective(@types.Image, @transform.PerspectiveMatrix, Int, Int) -> @types.Image
 
 pub fn warp_perspective_16(@types.Image16, @transform.PerspectiveMatrix, Int, Int) -> @types.Image16
@@ -4121,6 +4133,10 @@ pub using @slam {type FeatureTrackingResult as FeatureTrackingResultSL}
 pub using @retrieval {type FeatureType}
 
 pub using @cv_advanced {type FloatDescriptor}
+
+pub using @cv_advanced {type FlowField}
+
+pub using @cv_advanced {type FlowParams}
 
 pub using @feature {type FlowResult}
 

@@ -13998,3 +13998,53 @@ pub fn stereo_rectify(
 ) -> (@types.Image, @types.Image) {
   @cv_advanced.stereo_rectify(left, right)
 }
+// cv_advanced — 光流（v321.0.0）
+
+///|
+pub type FlowField = @cv_advanced.FlowField
+
+///|
+pub type FlowParams = @cv_advanced.FlowParams
+
+///|
+pub fn compute_lucas_kanade(
+  prev : @types.Image,
+  curr : @types.Image,
+  points : Array[(Int, Int)],
+  params : FlowParams,
+) -> FlowField {
+  @cv_advanced.compute_lucas_kanade(prev, curr, points, params)
+}
+
+///|
+pub fn compute_horn_schunck(
+  prev : @types.Image,
+  curr : @types.Image,
+  params : FlowParams,
+) -> FlowField {
+  @cv_advanced.compute_horn_schunck(prev, curr, params)
+}
+
+///|
+pub fn compute_farneback(
+  prev : @types.Image,
+  curr : @types.Image,
+  params : FlowParams,
+) -> FlowField {
+  @cv_advanced.compute_farneback(prev, curr, params)
+}
+
+///|
+pub fn warp_image(img : @types.Image, flow : FlowField) -> @types.Image {
+  @cv_advanced.warp_image(img, flow)
+}
+
+///|
+pub fn flow_magnitude(flow : FlowField) -> Array[Double] {
+  @cv_advanced.flow_magnitude(flow)
+}
+
+///|
+pub fn flow_consistency(forward : FlowField, backward : FlowField) -> Double {
+  @cv_advanced.flow_consistency(forward, backward)
+}
