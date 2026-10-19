@@ -2869,6 +2869,22 @@ pub fn orb_match(Array[@feature.OrbDescriptor], Array[@feature.OrbDescriptor], m
 
 pub fn orb_slam_stats(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamStats
 
+pub fn organ_atlas_based(Array[Double], Array[Double], Array[Int], Int, Int) -> Array[Int]
+
+pub fn organ_compute_volume(Array[Int]) -> Int
+
+pub fn organ_dice_coefficient(Array[Int], Array[Int]) -> Double
+
+pub fn organ_level_set(Array[Double], Int, Int, Int, Double) -> Array[Double]
+
+pub fn organ_morph_dilate(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_morph_erode(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_morph_open(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_region_growing(Array[Double], Int, Int, Int, Int, Double) -> Array[Int]
+
 pub fn otsu_threshold(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn otsu_threshold_value(@types.Image) -> Double raise @types.LoadError
@@ -5023,6 +5039,12 @@ pub using @cv_advanced {type OrbSlamMode}
 pub using @cv_advanced {type OrbSlamStats}
 
 pub using @cv_advanced {type OrbSlamSystem}
+
+pub using @cv_advanced {type OrganSegMethod}
+
+pub using @cv_advanced {type OrganSegResult}
+
+pub using @cv_advanced {type OrganType}
 
 pub using @advanced_imaging {type PETData as PETDataAI}
 

@@ -16008,3 +16008,90 @@ pub fn medreg_affine(
 pub fn medreg_mse(fixed : Array[Double], moving : Array[Double]) -> Double {
   @cv_advanced.medreg_mse(fixed, moving)
 }
+
+///|
+pub type OrganType = @cv_advanced.OrganType
+
+///|
+pub type OrganSegMethod = @cv_advanced.OrganSegMethod
+
+///|
+pub type OrganSegResult = @cv_advanced.OrganSegResult
+
+///|
+pub fn organ_region_growing(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  seed_x : Int,
+  seed_y : Int,
+  threshold : Double,
+) -> Array[Int] {
+  @cv_advanced.organ_region_growing(
+    image, width, height, seed_x, seed_y, threshold,
+  )
+}
+
+///|
+pub fn organ_level_set(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  iterations : Int,
+  curvature_weight : Double,
+) -> Array[Double] {
+  @cv_advanced.organ_level_set(
+    image, width, height, iterations, curvature_weight,
+  )
+}
+
+///|
+pub fn organ_atlas_based(
+  image : Array[Double],
+  atlas : Array[Double],
+  atlas_mask : Array[Int],
+  width : Int,
+  height : Int,
+) -> Array[Int] {
+  @cv_advanced.organ_atlas_based(image, atlas, atlas_mask, width, height)
+}
+
+///|
+pub fn organ_compute_volume(mask : Array[Int]) -> Int {
+  @cv_advanced.organ_compute_volume(mask)
+}
+
+///|
+pub fn organ_dice_coefficient(mask1 : Array[Int], mask2 : Array[Int]) -> Double {
+  @cv_advanced.organ_dice_coefficient(mask1, mask2)
+}
+
+///|
+pub fn organ_morph_open(
+  mask : Array[Int],
+  width : Int,
+  height : Int,
+  radius : Int,
+) -> Array[Int] {
+  @cv_advanced.organ_morph_open(mask, width, height, radius)
+}
+
+///|
+pub fn organ_morph_erode(
+  mask : Array[Int],
+  width : Int,
+  height : Int,
+  radius : Int,
+) -> Array[Int] {
+  @cv_advanced.organ_morph_erode(mask, width, height, radius)
+}
+
+///|
+pub fn organ_morph_dilate(
+  mask : Array[Int],
+  width : Int,
+  height : Int,
+  radius : Int,
+) -> Array[Int] {
+  @cv_advanced.organ_morph_dilate(mask, width, height, radius)
+}

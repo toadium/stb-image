@@ -311,6 +311,22 @@ pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
 
+pub fn organ_atlas_based(Array[Double], Array[Double], Array[Int], Int, Int) -> Array[Int]
+
+pub fn organ_compute_volume(Array[Int]) -> Int
+
+pub fn organ_dice_coefficient(Array[Int], Array[Int]) -> Double
+
+pub fn organ_level_set(Array[Double], Int, Int, Int, Double) -> Array[Double]
+
+pub fn organ_morph_dilate(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_morph_erode(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_morph_open(Array[Int], Int, Int, Int) -> Array[Int]
+
+pub fn organ_region_growing(Array[Double], Int, Int, Int, Int, Double) -> Array[Int]
+
 pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, Int) -> DicomMetadata
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
@@ -1322,6 +1338,42 @@ pub(all) struct OrbSlamSystem {
 pub fn OrbSlamSystem::equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::not_equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OrganSegMethod {
+  AtlasBased
+  LevelSet
+  RegionGrowing
+  GraphCut
+  DeepLearning
+} derive(Eq, @debug.Debug)
+pub fn OrganSegMethod::equal(Self, Self) -> Bool
+pub fn OrganSegMethod::not_equal(Self, Self) -> Bool
+pub fn OrganSegMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OrganSegResult {
+  mask : Array[Int]
+  organ : OrganType
+  seg_method : OrganSegMethod
+  volume : Int
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn OrganSegResult::equal(Self, Self) -> Bool
+pub fn OrganSegResult::not_equal(Self, Self) -> Bool
+pub fn OrganSegResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OrganType {
+  Heart
+  Liver
+  Kidney
+  Lung
+  Brain
+  Spleen
+  Pancreas
+} derive(Eq, @debug.Debug)
+pub fn OrganType::equal(Self, Self) -> Bool
+pub fn OrganType::not_equal(Self, Self) -> Bool
+pub fn OrganType::to_repr(Self) -> @debug.Repr
 
 pub(all) enum PathologyStain {
   HAndE
