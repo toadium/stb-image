@@ -13672,3 +13672,77 @@ pub fn phase11_report() -> Phase11Report {
 pub fn phase11_is_complete() -> Bool {
   @self_evolve.phase11_is_complete()
 }
+// cv_advanced — 特征检测扩展（v316.0.0）
+
+///|
+pub type KeyPoint = @cv_advanced.KeyPoint
+
+///|
+pub type BinaryDescriptor = @cv_advanced.BinaryDescriptor
+
+///|
+pub type FloatDescriptor = @cv_advanced.FloatDescriptor
+
+///|
+pub fn detect_fast_corners(
+  img : @types.Image,
+  threshold : Int,
+) -> Array[KeyPoint] {
+  @cv_advanced.detect_fast_corners(img, threshold)
+}
+
+///|
+pub fn compute_brief_descriptors(
+  img : @types.Image,
+  keypoints : Array[KeyPoint],
+) -> Array[BinaryDescriptor] {
+  @cv_advanced.compute_brief_descriptors(img, keypoints)
+}
+
+///|
+pub fn detect_surf_keypoints(
+  img : @types.Image,
+  threshold : Double,
+) -> Array[KeyPoint] {
+  @cv_advanced.detect_surf_keypoints(img, threshold)
+}
+
+///|
+pub fn compute_surf_descriptors(
+  img : @types.Image,
+  keypoints : Array[KeyPoint],
+) -> Array[FloatDescriptor] {
+  @cv_advanced.compute_surf_descriptors(img, keypoints)
+}
+
+///|
+pub fn detect_akaze_keypoints(
+  img : @types.Image,
+  threshold : Double,
+) -> Array[KeyPoint] {
+  @cv_advanced.detect_akaze_keypoints(img, threshold)
+}
+
+///|
+pub fn compute_akaze_descriptors(
+  img : @types.Image,
+  keypoints : Array[KeyPoint],
+) -> Array[FloatDescriptor] {
+  @cv_advanced.compute_akaze_descriptors(img, keypoints)
+}
+
+///|
+pub fn feature_hamming_distance(
+  d1 : BinaryDescriptor,
+  d2 : BinaryDescriptor,
+) -> Int {
+  @cv_advanced.hamming_distance(d1, d2)
+}
+
+///|
+pub fn feature_euclidean_distance(
+  d1 : FloatDescriptor,
+  d2 : FloatDescriptor,
+) -> Double {
+  @cv_advanced.euclidean_distance(d1, d2)
+}

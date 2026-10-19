@@ -9,6 +9,7 @@ import {
   "walkzzz/image/src/color",
   "walkzzz/image/src/compression",
   "walkzzz/image/src/computational_imaging",
+  "walkzzz/image/src/cv_advanced",
   "walkzzz/image/src/denoise",
   "walkzzz/image/src/detection",
   "walkzzz/image/src/edge",
@@ -618,6 +619,10 @@ pub fn computational_imaging_report_to_string_ci(@computational_imaging.ImagingR
 
 pub fn computational_photography_report(@photo_enhance.HdrImage, @photo_enhance.PanoramaResult) -> String
 
+pub fn compute_akaze_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.FloatDescriptor]
+
+pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
+
 pub fn compute_confusion_matrix(Array[Int], Array[Int], Int) -> Array[Array[Int]]
 
 pub fn compute_diff_image(@types.Image, @types.Image) -> @types.Image
@@ -671,6 +676,8 @@ pub fn compute_stats(@types.Image) -> @util.ImageStats
 pub fn compute_stats_16(@types.Image16) -> @util.ImageStats
 
 pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
+
+pub fn compute_surf_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.FloatDescriptor]
 
 pub fn connected_components(@types.Image, Int) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
@@ -1018,6 +1025,8 @@ pub fn derain_morphological_ip(@types.Image) -> @inpainting.DerainResult
 
 pub fn deskew(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[@cv_advanced.KeyPoint]
+
 pub fn detect_changes_simple_rs(@remote_sensing.RemoteSensingImage, @remote_sensing.RemoteSensingImage, Double) -> @remote_sensing.ChangeDetectionResult
 
 pub fn detect_char_language(@types.Image) -> @ocr.LanguageType raise @types.LoadError
@@ -1041,6 +1050,8 @@ pub fn detect_document_language(@types.Image) -> @ocr.LanguageType raise @types.
 pub fn detect_exposure_type(@types.Image) -> (@photo_enhance.ExposureType, Double)
 
 pub fn detect_faces_fr(@types.Image, @face_recognition.FaceRecognitionConfig) -> Array[@face_recognition.FaceDetectionResult] raise @types.LoadError
+
+pub fn detect_fast_corners(@types.Image, Int) -> Array[@cv_advanced.KeyPoint]
 
 pub fn detect_features_simple(@types.Image, max_features? : Int) -> Array[@stitch.FeaturePoint]
 
@@ -1095,6 +1106,8 @@ pub fn detect_skew_angle(@types.Image) -> Double raise @types.LoadError
 pub fn detect_skew_angle_robust(@types.Image) -> Double raise @types.LoadError
 
 pub fn detect_stars_iv(@types.Image, @intelligent_vision.IntelligentVisionConfig) -> @intelligent_vision.StarDetectionResult
+
+pub fn detect_surf_keypoints(@types.Image, Double) -> Array[@cv_advanced.KeyPoint]
 
 pub fn detect_table_enhanced(@types.Image, min_table_size? : Int) -> Array[@ocr.EnhancedTableResult] raise @types.LoadError
 
@@ -1485,6 +1498,10 @@ pub fn fast_gaussian_blur_1d(@types.Image, Array[Double]) -> @types.Image raise 
 pub fn fast_threshold_lut(@types.Image, Array[Int]) -> @types.Image raise @types.LoadError
 
 pub fn feature_based_registration_ra(@types.Image, @types.Image, @registration_advanced.RegistrationConfigAdvanced) -> @registration_advanced.RegistrationResultAdvanced
+
+pub fn feature_euclidean_distance(@cv_advanced.FloatDescriptor, @cv_advanced.FloatDescriptor) -> Double
+
+pub fn feature_hamming_distance(@cv_advanced.BinaryDescriptor, @cv_advanced.BinaryDescriptor) -> Int
 
 pub fn fft_2d(@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError
 
@@ -3695,6 +3712,8 @@ pub using @ocr {type BatchTask}
 
 pub using @ocr {type BatchTaskStatus}
 
+pub using @cv_advanced {type BinaryDescriptor}
+
 pub using @codec {type BmpInfoExtended}
 
 pub using @detection {type BoundingBox}
@@ -4033,6 +4052,8 @@ pub using @slam {type FeatureTrackingResult as FeatureTrackingResultSL}
 
 pub using @retrieval {type FeatureType}
 
+pub using @cv_advanced {type FloatDescriptor}
+
 pub using @feature {type FlowResult}
 
 pub using @frequency {type FreqFilterType}
@@ -4236,6 +4257,8 @@ pub using @codec {type JpegXlInfoExtended}
 pub using @segmentation {type KMeansConfig}
 
 pub using @slam {type KeyFrame as KeyFrameSL}
+
+pub using @cv_advanced {type KeyPoint}
 
 pub using @video {type Keyframe}
 

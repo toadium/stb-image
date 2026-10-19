@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v316.0.0 - GeoVerse Phase 12: 特征检测扩展
+- 扩展 `src/cv_advanced/`：特征检测扩展 — SURF/FAST/BRIEF/AKAZE
+  - **feature_detectors**：KeyPoint / BinaryDescriptor / FloatDescriptor + detect_fast_corners / compute_brief_descriptors / detect_surf_keypoints / compute_surf_descriptors / detect_akaze_keypoints / compute_akaze_descriptors / hamming_distance / euclidean_distance
+  - Phase 12 CV算法大扩展开始 — 特征检测算法扩展
+- 新增 3 类型 + 8 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7091×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v315.0.0 - GeoVerse Phase 11 完成: 综合报告
 - 扩展 `src/self_evolve/`：Phase 11 综合报告 — 汇总 v311-v314 全部能力
   - **phase11_report**：Phase11Capability / Phase11Report + phase11_capabilities / phase11_total_types / phase11_total_functions / phase11_total_tests / phase11_report / phase11_is_complete
