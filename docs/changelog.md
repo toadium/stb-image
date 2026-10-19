@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v325.0.0 - GeoVerse Phase 12: 图像配准扩展
+- 扩展 `src/cv_advanced/`：图像配准 — ECC/相位相关/特征配准
+  - **image_registration**：RegistrationMethod / RegistrationParams / AffineMatrix / RegistrationResult + identity_affine / estimate_translation / estimate_affine / apply_warp / compute_ecc_alignment / compute_phase_correlation / register_images / compute_ncc
+  - Phase 12 CV算法大扩展 — 图像配准与对齐
+- 新增 4 类型 + 8 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7172×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v324.0.0 - GeoVerse Phase 12: 运动检测扩展
 - 扩展 `src/cv_advanced/`：运动检测 — 帧差/累积/能量/光流
   - **motion_detection**：MotionMask / MotionParams / MotionRegion + detect_motion_frame_diff / detect_motion_accumulator / compute_motion_energy / motion_morphology / motion_optical_flow / motion_density / extract_motion_regions

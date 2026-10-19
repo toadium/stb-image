@@ -255,6 +255,8 @@ pub fn apply_translation_fe(@types.Image, Int, Int) -> @types.Image
 
 pub fn apply_translation_ra(@types.Image, Int, Int) -> @types.Image
 
+pub fn apply_warp(@types.Image, @cv_advanced.AffineMatrix) -> @types.Image
+
 pub fn apply_window_level(@types.Image, @medical.WindowLevel) -> @types.Image
 
 pub fn apply_window_level_medical(@medical.MedicalImage, @medical.WindowLevelConfig) -> @types.Image
@@ -653,6 +655,8 @@ pub fn compute_disparity_sgm(@types.Image, @types.Image, @cv_advanced.StereoPara
 
 pub fn compute_distance(Array[Double], Array[Double], @ocr.DistanceMetric) -> Double raise @types.LoadError
 
+pub fn compute_ecc_alignment(@types.Image, @types.Image, @cv_advanced.RegistrationParams) -> @cv_advanced.RegistrationResult
+
 pub fn compute_energy(@types.Image) -> Array[Double]
 
 pub fn compute_energy_16(@types.Image16) -> Array[Double]
@@ -691,6 +695,8 @@ pub fn compute_motion_energy(@cv_advanced.MotionMask) -> Double
 
 pub fn compute_mse(@types.Image, @types.Image) -> Double
 
+pub fn compute_ncc(@types.Image, @types.Image) -> Double
+
 pub fn compute_ndbi(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
 pub fn compute_ndvi(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
@@ -700,6 +706,8 @@ pub fn compute_ndwi(@types.Image, @types.Image) -> @types.Image raise @types.Loa
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int, search_range? : Int) -> @video.OpticalFlowField
 
 pub fn compute_per_class_accuracy(Array[Array[Int]]) -> Array[Double]
+
+pub fn compute_phase_correlation(@types.Image, @types.Image) -> @cv_advanced.RegistrationResult
 
 pub fn compute_psnr(@types.Image, @types.Image) -> Double
 
@@ -938,6 +946,8 @@ pub fn cross_validate_match(Array[@cv_advanced.DMatch], Array[@cv_advanced.DMatc
 pub fn ct_reconstruct_fbp_ci(@computational_imaging.CTProjectionData, Int) -> @computational_imaging.ImagingReconstructionResult
 
 pub fn cur_info_extended(Bytes) -> @codec.CurInfoExtended raise @types.LoadError
+
+pub fn cv_estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
 pub fn dark_channel(@types.Image, patch_size? : Int) -> @types.Image raise @types.LoadError
 
@@ -1368,6 +1378,8 @@ pub fn erode_custom_f(@types.ImageF, @segment.StructuringElement) -> @types.Imag
 pub fn erode_f(@types.ImageF) -> @types.ImageF
 
 pub fn essential_matrix_svd(@cv_advanced.EssentialMatrix) -> (Double, Double, Double)
+
+pub fn estimate_affine(@types.Image, @types.Image) -> @cv_advanced.AffineMatrix
 
 pub fn estimate_affine_transform_ra(Array[@registration_advanced.FeatureMatch]) -> @registration_advanced.TransformMatrix
 
@@ -2034,6 +2046,8 @@ pub fn idct_2d(Array[Array[Double]]) -> @types.Image
 pub fn idct_2d_16(Array[Array[Double]]) -> @types.Image16
 
 pub fn idct_2d_f(Array[Array[Double]]) -> @types.ImageF
+
+pub fn identity_affine() -> @cv_advanced.AffineMatrix
 
 pub fn identity_homography() -> @stitch.Homography
 
@@ -2968,6 +2982,8 @@ pub fn region_growing(@types.Image, Array[(Int, Int)], threshold? : Double) -> @
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
 
 pub fn region_growing_segmentation_medical(@medical.MedicalImage, Int, Int, Int, Double) -> Array[Bool]
+
+pub fn register_images(@types.Image, @types.Image, @cv_advanced.RegistrationParams) -> @cv_advanced.RegistrationResult
 
 pub fn register_images_advanced_ra(@types.Image, @types.Image, @registration_advanced.RegistrationConfigAdvanced) -> @registration_advanced.RegistrationResultAdvanced
 
@@ -3958,6 +3974,10 @@ pub using @intelligent_vision {type CropDetectionResult as CropDetectionResultIV
 
 pub using @codec {type CurInfoExtended}
 
+pub using @cv_advanced {type AffineMatrix as CvAffineMatrix}
+
+pub using @cv_advanced {type RegistrationResult as CvRegistrationResult}
+
 pub using @compression {type DCTBlock}
 
 pub using @ocr {type DLCnnModelConfig}
@@ -4737,6 +4757,10 @@ pub using @fusion_enhanced {type RegistrationConfig}
 pub using @registration_advanced {type RegistrationConfigAdvanced}
 
 pub using @fusion_enhanced {type RegistrationResult as RegistrationEnhancedResult}
+
+pub using @cv_advanced {type RegistrationMethod}
+
+pub using @cv_advanced {type RegistrationParams}
 
 pub using @registration {type RegistrationResult}
 

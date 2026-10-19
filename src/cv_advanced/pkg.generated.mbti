@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
+
 pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Array[DMatch]
 
 pub fn bf_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
@@ -31,6 +33,8 @@ pub fn compute_disparity_block_matching(@types.Image, @types.Image, StereoParams
 
 pub fn compute_disparity_sgm(@types.Image, @types.Image, StereoParams) -> DisparityMap
 
+pub fn compute_ecc_alignment(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
+
 pub fn compute_epipolar_line(FundamentalMatrix, Double, Double) -> EpipolarLine
 
 pub fn compute_essential_matrix(FundamentalMatrix, CameraIntrinsics, CameraIntrinsics) -> EssentialMatrix
@@ -46,6 +50,10 @@ pub fn compute_iou(Track, Track) -> Double
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
 
 pub fn compute_motion_energy(MotionMask) -> Double
+
+pub fn compute_ncc(@types.Image, @types.Image) -> Double
+
+pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
@@ -73,6 +81,10 @@ pub fn disparity_to_depth(Double, Double, Double) -> Double
 
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
+pub fn estimate_affine(@types.Image, @types.Image) -> AffineMatrix
+
+pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
+
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
@@ -90,6 +102,8 @@ pub fn generate_caption(String) -> ImageCaptioningResult
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
+
+pub fn identity_affine() -> AffineMatrix
 
 pub fn init_background_model(@types.Image, BackgroundParams) -> BackgroundModel
 
@@ -116,6 +130,8 @@ pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
+
+pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
@@ -169,6 +185,18 @@ pub(all) struct ActionRecognitionResult {
   end_time : Double
   num_frames : Int
 }
+
+pub(all) struct AffineMatrix {
+  m00 : Double
+  m01 : Double
+  m02 : Double
+  m10 : Double
+  m11 : Double
+  m12 : Double
+} derive(Eq, @debug.Debug)
+pub fn AffineMatrix::equal(Self, Self) -> Bool
+pub fn AffineMatrix::not_equal(Self, Self) -> Bool
+pub fn AffineMatrix::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BackgroundMethod {
   GMM
@@ -475,6 +503,35 @@ pub(all) struct PointCorrespondence {
 pub fn PointCorrespondence::equal(Self, Self) -> Bool
 pub fn PointCorrespondence::not_equal(Self, Self) -> Bool
 pub fn PointCorrespondence::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RegistrationMethod {
+  ECC
+  PhaseCorrelation
+  FeatureBased
+} derive(Eq, @debug.Debug)
+pub fn RegistrationMethod::equal(Self, Self) -> Bool
+pub fn RegistrationMethod::not_equal(Self, Self) -> Bool
+pub fn RegistrationMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegistrationParams {
+  reg_method : RegistrationMethod
+  max_iterations : Int
+  epsilon : Double
+  warp_type : Int
+} derive(Eq, @debug.Debug)
+pub fn RegistrationParams::equal(Self, Self) -> Bool
+pub fn RegistrationParams::not_equal(Self, Self) -> Bool
+pub fn RegistrationParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegistrationResult {
+  warp : AffineMatrix
+  success : Bool
+  error : Double
+  iterations : Int
+} derive(Eq, @debug.Debug)
+pub fn RegistrationResult::equal(Self, Self) -> Bool
+pub fn RegistrationResult::not_equal(Self, Self) -> Bool
+pub fn RegistrationResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SceneParsingResult {
   image_id : String

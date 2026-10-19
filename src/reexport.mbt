@@ -14246,3 +14246,73 @@ pub fn extract_motion_regions(
 ) -> Array[MotionRegion] {
   @cv_advanced.extract_motion_regions(motion, params)
 }
+// cv_advanced — 图像配准（v325.0.0）
+
+///|
+pub type RegistrationMethod = @cv_advanced.RegistrationMethod
+
+///|
+pub type RegistrationParams = @cv_advanced.RegistrationParams
+
+///|
+pub type CvAffineMatrix = @cv_advanced.AffineMatrix
+
+///|
+pub type CvRegistrationResult = @cv_advanced.RegistrationResult
+
+///|
+pub fn identity_affine() -> CvAffineMatrix {
+  @cv_advanced.identity_affine()
+}
+
+///|
+pub fn cv_estimate_translation(
+  ref_img : @types.Image,
+  src_img : @types.Image,
+) -> (Double, Double) {
+  @cv_advanced.estimate_translation(ref_img, src_img)
+}
+
+///|
+pub fn estimate_affine(
+  ref_img : @types.Image,
+  src_img : @types.Image,
+) -> CvAffineMatrix {
+  @cv_advanced.estimate_affine(ref_img, src_img)
+}
+
+///|
+pub fn apply_warp(img : @types.Image, warp : CvAffineMatrix) -> @types.Image {
+  @cv_advanced.apply_warp(img, warp)
+}
+
+///|
+pub fn compute_ecc_alignment(
+  ref_img : @types.Image,
+  src_img : @types.Image,
+  params : RegistrationParams,
+) -> CvRegistrationResult {
+  @cv_advanced.compute_ecc_alignment(ref_img, src_img, params)
+}
+
+///|
+pub fn compute_phase_correlation(
+  ref_img : @types.Image,
+  src_img : @types.Image,
+) -> CvRegistrationResult {
+  @cv_advanced.compute_phase_correlation(ref_img, src_img)
+}
+
+///|
+pub fn register_images(
+  ref_img : @types.Image,
+  src_img : @types.Image,
+  params : RegistrationParams,
+) -> CvRegistrationResult {
+  @cv_advanced.register_images(ref_img, src_img, params)
+}
+
+///|
+pub fn compute_ncc(a : @types.Image, b : @types.Image) -> Double {
+  @cv_advanced.compute_ncc(a, b)
+}
