@@ -15283,3 +15283,61 @@ pub fn score_based_loss(
 ) -> Double {
   @cv_advanced.score_based_loss(score_pred, noise)
 }
+
+///|
+pub type GNNType = @cv_advanced.GNNType
+
+///|
+pub type GraphData = @cv_advanced.GraphData
+
+///|
+pub type GNNConfig = @cv_advanced.GNNConfig
+
+///|
+pub type GNNResult = @cv_advanced.GNNResult
+
+///|
+pub fn graph_convolution(
+  graph : GraphData,
+  weight : Array[Double],
+  out_dim : Int,
+) -> Array[Double] {
+  @cv_advanced.graph_convolution(graph, weight, out_dim)
+}
+
+///|
+pub fn gcn_forward(
+  graph : GraphData,
+  weights : Array[Array[Double]],
+  config : GNNConfig,
+) -> Array[Double] {
+  @cv_advanced.gcn_forward(graph, weights, config)
+}
+
+///|
+pub fn aggregate_neighbors(
+  graph : GraphData,
+  node_idx : Int,
+  agg_type : GNNType,
+) -> Array[Double] {
+  @cv_advanced.aggregate_neighbors(graph, node_idx, agg_type)
+}
+
+///|
+pub fn gat_forward(
+  graph : GraphData,
+  weight : Array[Double],
+  attention_weight : Array[Double],
+  config : GNNConfig,
+) -> GNNResult {
+  @cv_advanced.gat_forward(graph, weight, attention_weight, config)
+}
+
+///|
+pub fn graphsage_forward(
+  graph : GraphData,
+  weight : Array[Double],
+  config : GNNConfig,
+) -> Array[Double] {
+  @cv_advanced.graphsage_forward(graph, weight, config)
+}

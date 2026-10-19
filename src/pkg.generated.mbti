@@ -139,6 +139,8 @@ pub fn affine_translation(Double, Double) -> @registration.AffineTransform
 
 pub fn agent_compile(Array[@agent_kit.Intent]) -> @imgir.IRPipeline
 
+pub fn aggregate_neighbors(@cv_advanced.GraphData, Int, @cv_advanced.GNNType) -> Array[Double]
+
 pub fn ahash(@types.Image) -> Array[Int] raise @types.LoadError
 
 pub fn ahash_16(@types.Image16) -> Array[Int] raise @types.LoadError
@@ -1785,6 +1787,8 @@ pub fn gan_generator_forward(Array[Double], Array[Double], @cv_advanced.GANConfi
 
 pub fn gan_train_step(Array[Double], Array[Double], @cv_advanced.GANConfig) -> @cv_advanced.GANState
 
+pub fn gat_forward(@cv_advanced.GraphData, Array[Double], Array[Double], @cv_advanced.GNNConfig) -> @cv_advanced.GNNResult
+
 pub fn gaussian_blur(@types.Image, Int, Float) -> @types.Image raise @types.LoadError
 
 pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16 raise @types.LoadError
@@ -1792,6 +1796,8 @@ pub fn gaussian_blur_16(@types.Image16, Int, Float) -> @types.Image16 raise @typ
 pub fn gaussian_blur_f(@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError
 
 pub fn gaussian_filter_denoise_dn(@types.Image, Int, Double) -> @types.Image raise @types.LoadError
+
+pub fn gcn_forward(@cv_advanced.GraphData, Array[Array[Double]], @cv_advanced.GNNConfig) -> Array[Double]
 
 pub fn gen_all_combos() -> Array[@self_evolve.OpCombo]
 
@@ -1936,6 +1942,10 @@ pub fn grab_cut(@types.Image, Int, Int, Int, Int, iterations? : Int) -> @types.I
 pub fn grabcut_segmentation(@types.Image, Int, Int, Int, Int, @segmentation.GrabCutConfig) -> @segmentation.SemanticSegmentationResult raise @types.LoadError
 
 pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
+
+pub fn graph_convolution(@cv_advanced.GraphData, Array[Double], Int) -> Array[Double]
+
+pub fn graphsage_forward(@cv_advanced.GraphData, Array[Double], @cv_advanced.GNNConfig) -> Array[Double]
 
 pub fn grid_features(@types.Image, grid_rows? : Int, grid_cols? : Int) -> @ocr.GridFeatures raise @types.LoadError
 
@@ -4444,6 +4454,12 @@ pub using @cv_advanced {type GANState}
 
 pub using @cv_advanced {type GANType}
 
+pub using @cv_advanced {type GNNConfig}
+
+pub using @cv_advanced {type GNNResult}
+
+pub using @cv_advanced {type GNNType}
+
 pub using @retrieval {type GaborConfig}
 
 pub using @self_evolve {type GapKind}
@@ -4475,6 +4491,8 @@ pub using @codec {type GifInfoExtended}
 pub using @feature {type GlcmFeatures}
 
 pub using @segmentation {type GrabCutConfig}
+
+pub using @cv_advanced {type GraphData}
 
 pub using @ocr {type GridFeatures}
 

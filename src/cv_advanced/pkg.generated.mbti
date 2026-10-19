@@ -9,6 +9,8 @@ import {
 // Values
 pub fn add_map_point(SlamBackend, Point3D, Int, Double) -> SlamBackend
 
+pub fn aggregate_neighbors(GraphData, Int, GNNType) -> Array[Double]
+
 pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
@@ -153,6 +155,10 @@ pub fn gan_generator_forward(Array[Double], Array[Double], GANConfig) -> Array[D
 
 pub fn gan_train_step(Array[Double], Array[Double], GANConfig) -> GANState
 
+pub fn gat_forward(GraphData, Array[Double], Array[Double], GNNConfig) -> GNNResult
+
+pub fn gcn_forward(GraphData, Array[Array[Double]], GNNConfig) -> Array[Double]
+
 pub fn generate_caption(String) -> ImageCaptioningResult
 
 pub fn get_orb_map(OrbSlamSystem) -> Array[SlamMapPoint]
@@ -164,6 +170,10 @@ pub fn get_vins_state(VinsState) -> SlamPose
 pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn graph_convolution(GraphData, Array[Double], Int) -> Array[Double]
+
+pub fn graphsage_forward(GraphData, Array[Double], GNNConfig) -> Array[Double]
 
 pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
 
@@ -746,6 +756,44 @@ pub(all) enum GANType {
 pub fn GANType::equal(Self, Self) -> Bool
 pub fn GANType::not_equal(Self, Self) -> Bool
 pub fn GANType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GNNConfig {
+  hidden_dim : Int
+  num_layers : Int
+  dropout : Double
+  gnn_type : GNNType
+} derive(Eq, @debug.Debug)
+pub fn GNNConfig::equal(Self, Self) -> Bool
+pub fn GNNConfig::not_equal(Self, Self) -> Bool
+pub fn GNNConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GNNResult {
+  node_embeddings : Array[Double]
+  attention_weights : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn GNNResult::equal(Self, Self) -> Bool
+pub fn GNNResult::not_equal(Self, Self) -> Bool
+pub fn GNNResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GNNType {
+  GCN
+  GAT
+  GraphSAGE
+  GIN
+} derive(Eq, @debug.Debug)
+pub fn GNNType::equal(Self, Self) -> Bool
+pub fn GNNType::not_equal(Self, Self) -> Bool
+pub fn GNNType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GraphData {
+  num_nodes : Int
+  adj_matrix : Array[Double]
+  node_features : Array[Double]
+  feature_dim : Int
+} derive(Eq, @debug.Debug)
+pub fn GraphData::equal(Self, Self) -> Bool
+pub fn GraphData::not_equal(Self, Self) -> Bool
+pub fn GraphData::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageCaptioningResult {
   image_id : String
