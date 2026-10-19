@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v358.0.0 - GeoVerse Phase 14: 医学可视化
+- 扩展 `src/cv_advanced/`：医学可视化 — MIP/VR/MPR/CPR/着色
+  - **medical_visualization**：MedVizMode / MPROrientation / MedVizConfig + medviz_window_level / medviz_mpr_slice / medviz_cpr_centerline / medviz_pseudo_color / medviz_volume_render / medviz_depth_shading / medviz_gradient_shading
+  - Phase 14 医学影像大扩展 — 医学可视化与多平面重建
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +11 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7479×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v357.0.0 - GeoVerse Phase 14: 放射剂量
 - 扩展 `src/cv_advanced/`：放射剂量 — DVH/剂量计算/治疗计划评估
   - **radiation_dose**：DVHType / DVHResult / DoseMetrics + dose_compute_dvh / dose_compute_metrics / dose_compute_eud / dose_compute_tcp / dose_compute_ntcp / erf_approx / dose_evaluate_plan

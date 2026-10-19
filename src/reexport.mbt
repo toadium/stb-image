@@ -16433,3 +16433,86 @@ pub fn dose_evaluate_plan(
     target_dose, target_mask, oar_doses, oar_masks, prescription_dose,
   )
 }
+
+///|
+pub type MedVizMode = @cv_advanced.MedVizMode
+
+///|
+pub type MPROrientation = @cv_advanced.MPROrientation
+
+///|
+pub type MedVizConfig = @cv_advanced.MedVizConfig
+
+///|
+pub fn medviz_window_level(
+  image : Array[Double],
+  center : Double,
+  width : Double,
+) -> Array[Double] {
+  @cv_advanced.medviz_window_level(image, center, width)
+}
+
+///|
+pub fn medviz_mpr_slice(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  orientation : MPROrientation,
+  slice_idx : Int,
+) -> Array[Double] {
+  @cv_advanced.medviz_mpr_slice(
+    volume, width, height, depth, orientation, slice_idx,
+  )
+}
+
+///|
+pub fn medviz_cpr_centerline(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  path_points : Array[(Int, Int, Int)],
+) -> Array[Double] {
+  @cv_advanced.medviz_cpr_centerline(volume, width, height, depth, path_points)
+}
+
+///|
+pub fn medviz_pseudo_color(
+  image : Array[Double],
+  color_scheme : Int,
+) -> Array[Double] {
+  @cv_advanced.medviz_pseudo_color(image, color_scheme)
+}
+
+///|
+pub fn medviz_volume_render(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  config : MedVizConfig,
+) -> Array[Double] {
+  @cv_advanced.medviz_volume_render(volume, width, height, depth, config)
+}
+
+///|
+pub fn medviz_depth_shading(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+  threshold : Double,
+) -> Array[Double] {
+  @cv_advanced.medviz_depth_shading(volume, width, height, depth, threshold)
+}
+
+///|
+pub fn medviz_gradient_shading(
+  volume : Array[Double],
+  width : Int,
+  height : Int,
+  depth : Int,
+) -> Array[Double] {
+  @cv_advanced.medviz_gradient_shading(volume, width, height, depth)
+}

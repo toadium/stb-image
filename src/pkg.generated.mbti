@@ -2663,6 +2663,20 @@ pub fn medreg_mutual_information(Array[Double], Array[Double], Int) -> Double
 
 pub fn medreg_rigid(Array[Double], Array[Double], Int, Int, Int) -> @cv_advanced.MedRegResult
 
+pub fn medviz_cpr_centerline(Array[Double], Int, Int, Int, Array[(Int, Int, Int)]) -> Array[Double]
+
+pub fn medviz_depth_shading(Array[Double], Int, Int, Int, Double) -> Array[Double]
+
+pub fn medviz_gradient_shading(Array[Double], Int, Int, Int) -> Array[Double]
+
+pub fn medviz_mpr_slice(Array[Double], Int, Int, Int, @cv_advanced.MPROrientation, Int) -> Array[Double]
+
+pub fn medviz_pseudo_color(Array[Double], Int) -> Array[Double]
+
+pub fn medviz_volume_render(Array[Double], Int, Int, Int, @cv_advanced.MedVizConfig) -> Array[Double]
+
+pub fn medviz_window_level(Array[Double], Double, Double) -> Array[Double]
+
 pub fn merge_adjacent_components(Array[@ocr.OcrConnectedComponent], Int) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
 
 pub fn merge_map_points(@cv_advanced.SlamBackend, Double) -> @cv_advanced.SlamBackend
@@ -4974,6 +4988,8 @@ pub using @self_evolve {type LoopStep}
 
 pub using @photo_enhance {type LowLightConfig}
 
+pub using @cv_advanced {type MPROrientation}
+
 pub using @cv_advanced {type MRIConfig}
 
 pub using @advanced_imaging {type MRIData as MRIDataAI}
@@ -5011,6 +5027,10 @@ pub using @cv_advanced {type MedRegType}
 pub using @cv_advanced {type MedRigidTransform}
 
 pub using @cv_advanced {type MedTriangle3D}
+
+pub using @cv_advanced {type MedVizConfig}
+
+pub using @cv_advanced {type MedVizMode}
 
 pub using @medical {type MedicalImage}
 
