@@ -13746,3 +13746,68 @@ pub fn feature_euclidean_distance(
 ) -> Double {
   @cv_advanced.euclidean_distance(d1, d2)
 }
+// cv_advanced — 描述子匹配（v317.0.0）
+
+///|
+pub type DMatch = @cv_advanced.DMatch
+
+///|
+pub type MatcherKind = @cv_advanced.MatcherKind
+
+///|
+pub fn bf_match_binary(
+  query : Array[BinaryDescriptor],
+  train : Array[BinaryDescriptor],
+) -> Array[DMatch] {
+  @cv_advanced.bf_match_binary(query, train)
+}
+
+///|
+pub fn bf_match_float(
+  query : Array[FloatDescriptor],
+  train : Array[FloatDescriptor],
+) -> Array[DMatch] {
+  @cv_advanced.bf_match_float(query, train)
+}
+
+///|
+pub fn knn_match_binary(
+  query : Array[BinaryDescriptor],
+  train : Array[BinaryDescriptor],
+  k : Int,
+) -> Array[Array[DMatch]] {
+  @cv_advanced.knn_match_binary(query, train, k)
+}
+
+///|
+pub fn knn_match_float(
+  query : Array[FloatDescriptor],
+  train : Array[FloatDescriptor],
+  k : Int,
+) -> Array[Array[DMatch]] {
+  @cv_advanced.knn_match_float(query, train, k)
+}
+
+///|
+pub fn ratio_test(
+  knn_matches : Array[Array[DMatch]],
+  ratio : Double,
+) -> Array[DMatch] {
+  @cv_advanced.ratio_test(knn_matches, ratio)
+}
+
+///|
+pub fn flann_match_float(
+  query : Array[FloatDescriptor],
+  train : Array[FloatDescriptor],
+) -> Array[DMatch] {
+  @cv_advanced.flann_match_float(query, train)
+}
+
+///|
+pub fn cross_validate_match(
+  matches1 : Array[DMatch],
+  matches2 : Array[DMatch],
+) -> Array[DMatch] {
+  @cv_advanced.cross_validate_match(matches1, matches2)
+}

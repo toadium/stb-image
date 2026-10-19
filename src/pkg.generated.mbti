@@ -315,6 +315,10 @@ pub fn best_repair(@imgir.IROp) -> @self_evolve.StrategyRepairResult
 
 pub fn best_repair_all() -> Array[@self_evolve.StrategyRepairResult]
 
+pub fn bf_match_binary(Array[@cv_advanced.BinaryDescriptor], Array[@cv_advanced.BinaryDescriptor]) -> Array[@cv_advanced.DMatch]
+
+pub fn bf_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor]) -> Array[@cv_advanced.DMatch]
+
 pub fn bicubic_interpolate_sr(@types.Image, Double) -> @types.Image
 
 pub fn bilateral_filter(@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError
@@ -892,6 +896,8 @@ pub fn crop_16(@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @type
 pub fn crop_f(@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError
 
 pub fn cross_entropy_loss(Array[Double], Int) -> Double
+
+pub fn cross_validate_match(Array[@cv_advanced.DMatch], Array[@cv_advanced.DMatch]) -> Array[@cv_advanced.DMatch]
 
 pub fn ct_reconstruct_fbp_ci(@computational_imaging.CTProjectionData, Int) -> @computational_imaging.ImagingReconstructionResult
 
@@ -1577,6 +1583,8 @@ pub fn find_untested_ops() -> Array[String]
 
 pub fn find_vertical_seam(Array[Double], Int, Int) -> Array[Int]
 
+pub fn flann_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor]) -> Array[@cv_advanced.DMatch]
+
 pub fn flip_horizontal(@types.Image) -> @types.Image
 
 pub fn flip_horizontal_16(@types.Image16) -> @types.Image16
@@ -2247,6 +2255,10 @@ pub fn knn_add_samples(@ocr.KnnClassifier, Array[(Array[Double], String)]) -> @o
 
 pub fn knn_create(k? : Int, distance_metric? : String) -> @ocr.KnnClassifier raise @types.LoadError
 
+pub fn knn_match_binary(Array[@cv_advanced.BinaryDescriptor], Array[@cv_advanced.BinaryDescriptor], Int) -> Array[Array[@cv_advanced.DMatch]]
+
+pub fn knn_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor], Int) -> Array[Array[@cv_advanced.DMatch]]
+
 pub fn knn_predict(@ocr.KnnClassifier, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
 
 pub fn knowledge_graph_edge_count(@self_evolve.KnowledgeGraph) -> Int
@@ -2810,6 +2822,8 @@ pub fn quantize_image_cp(@types.Image, Int) -> @types.Image raise @types.LoadErr
 pub fn quantum_ghost_imaging_ai(Int, Int, Int, @advanced_imaging.QuantumImagingAlgorithm) -> @types.Image
 
 pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : Int, threshold? : Float) -> Array[Float]? raise @types.LoadError
+
+pub fn ratio_test(Array[Array[@cv_advanced.DMatch]], Double) -> Array[@cv_advanced.DMatch]
 
 pub fn read_exif_extended_from_bytes(Bytes) -> @meta.ExifInfoExtended?
 
@@ -3860,6 +3874,8 @@ pub using @ocr {type DLTrainingHistory}
 
 pub using @ocr {type DLTrainingSample}
 
+pub using @cv_advanced {type DMatch}
+
 pub using @ocr {type DataLoader}
 
 pub using @forensics_enhanced {type DctCoefficientResult}
@@ -4341,6 +4357,8 @@ pub using @ocr {type MarkdownSymbol}
 pub using @ocr {type MarkdownTable}
 
 pub using @stitch {type MatchPair}
+
+pub using @cv_advanced {type MatcherKind}
 
 pub using @medical {type MedicalImage}
 
