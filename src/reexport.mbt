@@ -14640,3 +14640,96 @@ pub fn phase12_report() -> Phase12Report {
 pub fn phase12_is_complete() -> Bool {
   @cv_advanced.phase12_is_complete()
 }
+// cv_advanced — 卷积层扩展（v331.0.0）
+
+///|
+pub type Conv1DParams = @cv_advanced.Conv1DParams
+
+///|
+pub type Conv3DParams = @cv_advanced.Conv3DParams
+
+///|
+pub type DepthwiseConvParams = @cv_advanced.DepthwiseConvParams
+
+///|
+pub fn conv1d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Array[Double],
+  params : Conv1DParams,
+) -> Array[Double] {
+  @cv_advanced.conv1d(input, weight, bias, params)
+}
+
+///|
+pub fn conv3d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Array[Double],
+  params : Conv3DParams,
+) -> Array[Double] {
+  @cv_advanced.conv3d(input, weight, bias, params)
+}
+
+///|
+pub fn depthwise_conv2d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Array[Double],
+  params : DepthwiseConvParams,
+  input_w : Int,
+  input_h : Int,
+) -> Array[Double] {
+  @cv_advanced.depthwise_conv2d(input, weight, bias, params, input_w, input_h)
+}
+
+///|
+pub fn grouped_conv2d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Array[Double],
+  in_channels : Int,
+  out_channels : Int,
+  groups : Int,
+  kernel_size : Int,
+  input_w : Int,
+  input_h : Int,
+) -> Array[Double] {
+  @cv_advanced.grouped_conv2d(
+    input, weight, bias, in_channels, out_channels, groups, kernel_size, input_w,
+    input_h,
+  )
+}
+
+///|
+pub fn dilated_conv2d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Double,
+  kernel_size : Int,
+  dilation : Int,
+  input_w : Int,
+  input_h : Int,
+) -> Array[Double] {
+  @cv_advanced.dilated_conv2d(
+    input, weight, bias, kernel_size, dilation, input_w, input_h,
+  )
+}
+
+///|
+pub fn transpose_conv2d(
+  input : Array[Double],
+  weight : Array[Double],
+  bias : Array[Double],
+  in_channels : Int,
+  out_channels : Int,
+  kernel_size : Int,
+  stride : Int,
+  input_w : Int,
+  input_h : Int,
+) -> Array[Double] {
+  @cv_advanced.transpose_conv2d(
+    input, weight, bias, in_channels, out_channels, kernel_size, stride, input_w,
+    input_h,
+  )
+}

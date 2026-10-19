@@ -753,7 +753,11 @@ pub fn contour_perimeter(@edge.Contour) -> Float
 
 pub fn contrast_value(@types.Image) -> Float
 
+pub fn conv1d(Array[Double], Array[Double], Array[Double], @cv_advanced.Conv1DParams) -> Array[Double]
+
 pub fn conv2d(Array[Double], Int, Int, Int, Array[Double], Int, Int, Int, Int) -> Array[Double] raise @types.LoadError
+
+pub fn conv3d(Array[Double], Array[Double], Array[Double], @cv_advanced.Conv3DParams) -> Array[Double]
 
 pub fn convert_iphone_png_to_rgb(Bool) -> Unit
 
@@ -1073,6 +1077,8 @@ pub fn depth_to_point_cloud_3d(@stereo3d.DepthMap3d, @stereo3d.CameraIntrinsics3
 
 pub fn depth_to_pointcloud(@types.Image, fx? : Double, fy? : Double, cx? : Double, cy? : Double, scale? : Double) -> @stereo3d.PointCloud
 
+pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], @cv_advanced.DepthwiseConvParams, Int, Int) -> Array[Double]
+
 pub fn derain_ip(@types.Image, @inpainting.DerainAlgorithm) -> @inpainting.DerainResult
 
 pub fn derain_morphological_ip(@types.Image) -> @inpainting.DerainResult
@@ -1218,6 +1224,8 @@ pub fn dilate_custom_16(@types.Image16, @segment.StructuringElement) -> @types.I
 pub fn dilate_custom_f(@types.ImageF, @segment.StructuringElement) -> @types.ImageF
 
 pub fn dilate_f(@types.ImageF) -> @types.ImageF
+
+pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) -> Array[Double]
 
 pub fn disparity_to_depth(@types.Image, baseline? : Double, focal_length? : Double) -> @types.Image
 
@@ -1894,6 +1902,8 @@ pub fn grill_passed_count(@self_evolve.GrillReport) -> Int
 pub fn grill_rule_desc(@self_evolve.GrillRule) -> String
 
 pub fn grill_rules() -> Array[@self_evolve.GrillRule]
+
+pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
 
 pub fn guided_filter(@types.Image, Array[Float], radius? : Int, eps? : Float) -> Array[Float] raise @types.LoadError
 
@@ -3613,6 +3623,8 @@ pub fn transpose(@types.Image) -> @types.Image
 
 pub fn transpose_16(@types.Image16) -> @types.Image16
 
+pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
+
 pub fn transpose_f(@types.ImageF) -> @types.ImageF
 
 pub fn triangulate_point(@cv_advanced.PointCorrespondence, @cv_advanced.FundamentalMatrix) -> @cv_advanced.Point3D
@@ -4038,6 +4050,10 @@ pub using @edge {type Contour}
 
 pub using @edge {type ContourPoint}
 
+pub using @cv_advanced {type Conv1DParams}
+
+pub using @cv_advanced {type Conv3DParams}
+
 pub using @feature {type CornerPoint}
 
 pub using @ocr {type CorrectionEntry}
@@ -4111,6 +4127,8 @@ pub using @cv_advanced {type DepthMap}
 pub using @stereo3d {type DepthMap3d}
 
 pub using @photo_enhance {type DepthOfFieldConfig}
+
+pub using @cv_advanced {type DepthwiseConvParams}
 
 pub using @inpainting {type DerainAlgorithm}
 

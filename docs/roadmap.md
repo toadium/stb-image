@@ -2794,7 +2794,7 @@ flowchart LR
 
 | 版本 | 方向 | 具体任务 | 状态 |
 |------|------|----------|------|
-| v331.0.0 | 卷积层扩展 | Conv1D/Conv3D/Depthwise/Grouped | ⬜ |
+| v331.0.0 | 卷积层扩展 | Conv1D/Conv3D/Depthwise/Grouped | ✅ |
 | v332.0.0 | 注意力机制 | SelfAttention/CrossAttention/MultiHead | ⬜ |
 | v333.0.0 | Transformer | Encoder/Decoder/Positional | ⬜ |
 | v334.0.0 | 模型量化 | INT8/INT4/混合精度 | ⬜ |

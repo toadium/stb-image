@@ -61,6 +61,10 @@ pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
 pub fn compute_surf_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
+pub fn conv1d(Array[Double], Array[Double], Array[Double], Conv1DParams) -> Array[Double]
+
+pub fn conv3d(Array[Double], Array[Double], Array[Double], Conv3DParams) -> Array[Double]
+
 pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
 
 pub fn create_tracked_object(Int, Array[Int], String, Double) -> TrackedObject
@@ -68,6 +72,8 @@ pub fn create_tracked_object(Int, Array[Int], String, Double) -> TrackedObject
 pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
+
+pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int, Int) -> Array[Double]
 
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
@@ -78,6 +84,8 @@ pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, Moti
 pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> MotionMask
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
+
+pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) -> Array[Double]
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
 
@@ -112,6 +120,8 @@ pub fn get_vins_state(VinsState) -> SlamPose
 pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
 
@@ -210,6 +220,8 @@ pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
 pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
 
 pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
+
+pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
 
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
@@ -380,6 +392,31 @@ pub fn ChessboardCorners::equal(Self, Self) -> Bool
 pub fn ChessboardCorners::not_equal(Self, Self) -> Bool
 pub fn ChessboardCorners::to_repr(Self) -> @debug.Repr
 
+pub(all) struct Conv1DParams {
+  in_channels : Int
+  out_channels : Int
+  kernel_size : Int
+  stride : Int
+  padding : Int
+  dilation : Int
+} derive(Eq, @debug.Debug)
+pub fn Conv1DParams::equal(Self, Self) -> Bool
+pub fn Conv1DParams::not_equal(Self, Self) -> Bool
+pub fn Conv1DParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Conv3DParams {
+  in_channels : Int
+  out_channels : Int
+  kernel_d : Int
+  kernel_h : Int
+  kernel_w : Int
+  stride : Int
+  padding : Int
+} derive(Eq, @debug.Debug)
+pub fn Conv3DParams::equal(Self, Self) -> Bool
+pub fn Conv3DParams::not_equal(Self, Self) -> Bool
+pub fn Conv3DParams::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DMatch {
   query_idx : Int
   train_idx : Int
@@ -398,6 +435,17 @@ pub(all) struct DepthMap {
 pub fn DepthMap::equal(Self, Self) -> Bool
 pub fn DepthMap::not_equal(Self, Self) -> Bool
 pub fn DepthMap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DepthwiseConvParams {
+  channels : Int
+  kernel_size : Int
+  stride : Int
+  padding : Int
+  depth_multiplier : Int
+} derive(Eq, @debug.Debug)
+pub fn DepthwiseConvParams::equal(Self, Self) -> Bool
+pub fn DepthwiseConvParams::not_equal(Self, Self) -> Bool
+pub fn DepthwiseConvParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DisparityMap {
   width : Int

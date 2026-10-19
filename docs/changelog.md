@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v331.0.0 - GeoVerse Phase 13: 卷积层扩展
+- 扩展 `src/cv_advanced/`：卷积层扩展 — Conv1D/Conv3D/Depthwise/Grouped/Dilated/Transpose
+  - **conv_layers**：Conv1DParams / Conv3DParams / DepthwiseConvParams + conv1d / conv3d / depthwise_conv2d / grouped_conv2d / dilated_conv2d / transpose_conv2d
+  - Phase 13 深度学习大扩展开始 — 卷积层类型扩展
+- 新增 3 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7226×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v330.0.0 - GeoVerse Phase 12 完成: 综合报告
 - 扩展 `src/cv_advanced/`：Phase 12 综合报告 — 汇总 v316-v329 全部能力
   - **phase12_report**：Phase12Capability / Phase12Report + phase12_capabilities / phase12_total_types / phase12_total_functions / phase12_total_tests / phase12_report / phase12_is_complete
