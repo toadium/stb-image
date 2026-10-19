@@ -2613,6 +2613,18 @@ pub fn medical_image_report_to_string_medical(@medical.MedicalImage, Array[@medi
 
 pub fn medical_threshold_segmentation_medical(@medical.MedicalImage, Double, Double) -> Array[Bool]
 
+pub fn medreg_affine(Array[Double], Array[Double], Int, Int) -> @cv_advanced.MedRegResult
+
+pub fn medreg_apply_affine(Array[Double], Int, Int, @cv_advanced.MedAffineTransform) -> Array[Double]
+
+pub fn medreg_apply_rigid(Array[Double], Int, Int, @cv_advanced.MedRigidTransform) -> Array[Double]
+
+pub fn medreg_mse(Array[Double], Array[Double]) -> Double
+
+pub fn medreg_mutual_information(Array[Double], Array[Double], Int) -> Double
+
+pub fn medreg_rigid(Array[Double], Array[Double], Int, Int, Int) -> @cv_advanced.MedRegResult
+
 pub fn merge_adjacent_components(Array[@ocr.OcrConnectedComponent], Int) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
 
 pub fn merge_map_points(@cv_advanced.SlamBackend, Double) -> @cv_advanced.SlamBackend
@@ -4889,6 +4901,14 @@ pub using @ocr {type MarkdownTable}
 pub using @stitch {type MatchPair}
 
 pub using @cv_advanced {type MatcherKind}
+
+pub using @cv_advanced {type MedAffineTransform}
+
+pub using @cv_advanced {type MedRegResult}
+
+pub using @cv_advanced {type MedRegType}
+
+pub using @cv_advanced {type MedRigidTransform}
 
 pub using @medical {type MedicalImage}
 

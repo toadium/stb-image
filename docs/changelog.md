@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v351.0.0 - GeoVerse Phase 14: 医学图像配准
+- 扩展 `src/cv_advanced/`：医学图像配准 — 刚体/仿射/互信息
+  - **medical_registration**：MedRegType / MedRigidTransform / MedAffineTransform / MedRegResult + medreg_apply_rigid / medreg_apply_affine / medreg_mutual_information / medreg_rigid / medreg_affine / medreg_mse
+  - Phase 14 医学影像大扩展 — 图像配准与变换优化
+- 新增 4 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +10 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7411×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v350.0.0 - GeoVerse Phase 14: 病理切片
 - 扩展 `src/cv_advanced/`：病理切片 — WSI/拼接/染色归一化
   - **pathology_processing**：PathologyStain / WSIConfig / StainSeparation + pathology_wsi_extract_tiles / pathology_wsi_stitch_tiles / pathology_stain_normalize / pathology_stain_separation / pathology_detect_nuclei / pathology_count_mitosis / pathology_segment_tissue

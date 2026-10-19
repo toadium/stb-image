@@ -265,6 +265,18 @@ pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
 
 pub fn masked_modeling(Array[Double], Array[Bool], Array[Double], Array[Double]) -> Double
 
+pub fn medreg_affine(Array[Double], Array[Double], Int, Int) -> MedRegResult
+
+pub fn medreg_apply_affine(Array[Double], Int, Int, MedAffineTransform) -> Array[Double]
+
+pub fn medreg_apply_rigid(Array[Double], Int, Int, MedRigidTransform) -> Array[Double]
+
+pub fn medreg_mse(Array[Double], Array[Double]) -> Double
+
+pub fn medreg_mutual_information(Array[Double], Array[Double], Int) -> Double
+
+pub fn medreg_rigid(Array[Double], Array[Double], Int, Int, Int) -> MedRegResult
+
 pub fn merge_map_points(SlamBackend, Double) -> SlamBackend
 
 pub fn meta_train_step(Array[Double], Array[Double], Array[Double], MetaLearningConfig) -> MetaLearningResult
@@ -1161,6 +1173,48 @@ pub(all) enum MatcherKind {
 pub fn MatcherKind::equal(Self, Self) -> Bool
 pub fn MatcherKind::not_equal(Self, Self) -> Bool
 pub fn MatcherKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MedAffineTransform {
+  a11 : Double
+  a12 : Double
+  a21 : Double
+  a22 : Double
+  tx : Double
+  ty : Double
+} derive(Eq, @debug.Debug)
+pub fn MedAffineTransform::equal(Self, Self) -> Bool
+pub fn MedAffineTransform::not_equal(Self, Self) -> Bool
+pub fn MedAffineTransform::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MedRegResult {
+  transform_type : MedRegType
+  rigid : MedRigidTransform
+  affine : MedAffineTransform
+  final_error : Double
+  iterations : Int
+} derive(Eq, @debug.Debug)
+pub fn MedRegResult::equal(Self, Self) -> Bool
+pub fn MedRegResult::not_equal(Self, Self) -> Bool
+pub fn MedRegResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MedRegType {
+  Rigid
+  Affine
+  Elastic
+  BSpline
+} derive(Eq, @debug.Debug)
+pub fn MedRegType::equal(Self, Self) -> Bool
+pub fn MedRegType::not_equal(Self, Self) -> Bool
+pub fn MedRegType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MedRigidTransform {
+  angle : Double
+  tx : Double
+  ty : Double
+} derive(Eq, @debug.Debug)
+pub fn MedRigidTransform::equal(Self, Self) -> Bool
+pub fn MedRigidTransform::not_equal(Self, Self) -> Bool
+pub fn MedRigidTransform::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MetaLearningConfig {
   inner_lr : Double

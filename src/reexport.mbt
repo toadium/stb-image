@@ -15941,3 +15941,70 @@ pub fn pathology_segment_tissue(
 ) -> Array[Int] {
   @cv_advanced.pathology_segment_tissue(image, num_clusters)
 }
+
+///|
+pub type MedRegType = @cv_advanced.MedRegType
+
+///|
+pub type MedRigidTransform = @cv_advanced.MedRigidTransform
+
+///|
+pub type MedAffineTransform = @cv_advanced.MedAffineTransform
+
+///|
+pub type MedRegResult = @cv_advanced.MedRegResult
+
+///|
+pub fn medreg_apply_rigid(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  transform : MedRigidTransform,
+) -> Array[Double] {
+  @cv_advanced.medreg_apply_rigid(image, width, height, transform)
+}
+
+///|
+pub fn medreg_apply_affine(
+  image : Array[Double],
+  width : Int,
+  height : Int,
+  transform : MedAffineTransform,
+) -> Array[Double] {
+  @cv_advanced.medreg_apply_affine(image, width, height, transform)
+}
+
+///|
+pub fn medreg_mutual_information(
+  fixed : Array[Double],
+  moving : Array[Double],
+  num_bins : Int,
+) -> Double {
+  @cv_advanced.medreg_mutual_information(fixed, moving, num_bins)
+}
+
+///|
+pub fn medreg_rigid(
+  fixed : Array[Double],
+  moving : Array[Double],
+  width : Int,
+  height : Int,
+  max_iterations : Int,
+) -> MedRegResult {
+  @cv_advanced.medreg_rigid(fixed, moving, width, height, max_iterations)
+}
+
+///|
+pub fn medreg_affine(
+  fixed : Array[Double],
+  moving : Array[Double],
+  width : Int,
+  height : Int,
+) -> MedRegResult {
+  @cv_advanced.medreg_affine(fixed, moving, width, height)
+}
+
+///|
+pub fn medreg_mse(fixed : Array[Double], moving : Array[Double]) -> Double {
+  @cv_advanced.medreg_mse(fixed, moving)
+}
