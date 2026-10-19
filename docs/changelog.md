@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v313.0.0 - GeoVerse Phase 11: 演化质量评估
+- 扩展 `src/self_evolve/`：演化质量评估 — 多维度质量评分
+  - **quality_eval**：QualityDimension / QualityScore / QualityGrade / QualityReport + eval_quality_op / eval_quality_all / is_passing / dimension_count
+  - 将演化从"跨模块协同"推向"质量评估" — 多维度质量评分
+- 新增 4 类型 + 2 公共函数 + 2 方法，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7067×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v312.0.0 - GeoVerse Phase 11: 跨模块演化协同
 - 扩展 `src/self_evolve/`：跨模块演化协同 — 跨模块协同演化
   - **cross_module**：ModuleDepKind / ModuleDep / CoEvolveActionKind / CoEvolveAction / CoEvolveReport + build_module_deps / co_evolve_op / co_evolve_all / has_cascade / total_actions

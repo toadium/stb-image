@@ -93,6 +93,10 @@ pub fn estimate_op_cost(@imgir.IROp) -> OpCost
 
 pub fn estimate_pipeline_cost(@imgir.IRPipeline) -> PerfBaseline
 
+pub fn eval_quality_all() -> QualityReport
+
+pub fn eval_quality_op(@imgir.IROp) -> QualityReport
+
 pub fn evolve(Array[@imgir.IROp]) -> EvolveReport
 
 pub fn evolve_all() -> EvolveReport
@@ -1088,6 +1092,49 @@ pub fn PropagationViz::equal(Self, Self) -> Bool
 pub fn PropagationViz::is_valid(Self) -> Bool
 pub fn PropagationViz::not_equal(Self, Self) -> Bool
 pub fn PropagationViz::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QualityDimension {
+  TestCoverage
+  DegradationRate
+  PerformanceGain
+  CodeStability
+  ApiCompatibility
+} derive(Eq, @debug.Debug)
+pub fn QualityDimension::equal(Self, Self) -> Bool
+pub fn QualityDimension::not_equal(Self, Self) -> Bool
+pub fn QualityDimension::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QualityGrade {
+  GradeA
+  GradeB
+  GradeC
+  GradeD
+  GradeF
+} derive(Eq, @debug.Debug)
+pub fn QualityGrade::equal(Self, Self) -> Bool
+pub fn QualityGrade::not_equal(Self, Self) -> Bool
+pub fn QualityGrade::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QualityReport {
+  scores : Array[QualityScore]
+  overall_score : Int
+  grade : QualityGrade
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn QualityReport::dimension_count(Self) -> Int
+pub fn QualityReport::equal(Self, Self) -> Bool
+pub fn QualityReport::is_passing(Self) -> Bool
+pub fn QualityReport::not_equal(Self, Self) -> Bool
+pub fn QualityReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QualityScore {
+  dimension : QualityDimension
+  score : Int
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn QualityScore::equal(Self, Self) -> Bool
+pub fn QualityScore::not_equal(Self, Self) -> Bool
+pub fn QualityScore::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RecommendAction {
   AddTests

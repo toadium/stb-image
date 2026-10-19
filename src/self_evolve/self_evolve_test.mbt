@@ -3291,3 +3291,94 @@ test "AI: 每个协同动作 description 非空" {
     assert_true(a.target_module.length() > 0)
   }
 }
+// ==============================
+// v313.0.0 — 演化质量评估 (quality_eval)
+// ==============================
+
+// --- 形式化 ---
+
+///|
+test "形式化: eval_quality_op 返回 5 维度评分" {
+  let report = @self_evolve.eval_quality_op(@imgir.Resize(8, 8))
+  assert_eq(report.dimension_count(), 5)
+}
+
+///|
+test "形式化: eval_quality_op 退化算子 CodeStability 为 50" {
+  let report = @self_evolve.eval_quality_op(@imgir.Resize(0, 0))
+  let mut stability = 0
+  for s in report.scores {
+    if s.dimension is @self_evolve.CodeStability {
+      stability = s.score
+    }
+  }
+  assert_eq(stability, 50)
+}
+
+///|
+test "形式化: eval_quality_op 正常算子 CodeStability 为 90" {
+  let report = @self_evolve.eval_quality_op(@imgir.Resize(8, 8))
+  let mut stability = 0
+  for s in report.scores {
+    if s.dimension is @self_evolve.CodeStability {
+      stability = s.score
+    }
+  }
+  assert_eq(stability, 90)
+}
+
+// --- FAKE ---
+
+///|
+test "FAKE: eval_quality_all 结构完整" {
+  let report = @self_evolve.eval_quality_all()
+  assert_true(report.scores.length() > 0)
+  assert_true(report.overall_score >= 0)
+  assert_true(report.summary.length() > 0)
+}
+
+///|
+test "FAKE: QualityReport is_passing 方法" {
+  let report = @self_evolve.eval_quality_op(@imgir.Resize(8, 8))
+  let _ = report.is_passing()
+}
+
+// --- MOCK ---
+
+///|
+test "MOCK: 退化算子 DegradationRate < 100" {
+  let report = @self_evolve.eval_quality_op(@imgir.Resize(0, 0))
+  let mut deg_rate = 100
+  for s in report.scores {
+    if s.dimension is @self_evolve.DegradationRate {
+      deg_rate = s.score
+    }
+  }
+  assert_true(deg_rate < 100)
+}
+
+///|
+test "MOCK: eval_quality_all 维度数为 19*5" {
+  let report = @self_evolve.eval_quality_all()
+  assert_eq(report.dimension_count(), 19 * 5)
+}
+
+// --- E2E ---
+
+///|
+test "E2E: eval_quality_all summary 含关键信息" {
+  let report = @self_evolve.eval_quality_all()
+  assert_true(report.summary.length() > 10)
+}
+
+// --- AI ---
+
+///|
+test "AI: 每个质量评分 description 非空" {
+  let report = @self_evolve.eval_quality_all()
+  for s in report.scores {
+    assert_true(s.description.length() > 0)
+    assert_true(s.score >= 0)
+    assert_true(s.score <= 100)
+  }
+}

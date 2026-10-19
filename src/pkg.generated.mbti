@@ -1332,6 +1332,10 @@ pub fn euclidean_distance(Array[Double], Array[Double]) -> Double raise @types.L
 
 pub fn euclidean_distance_cbir_api(Array[Double], Array[Double]) -> Double
 
+pub fn eval_quality_all() -> @self_evolve.QualityReport
+
+pub fn eval_quality_op(@imgir.IROp) -> @self_evolve.QualityReport
+
 pub fn evaluate_cnn_model(Array[@ocr.DLTrainingSample], @ocr.DLCnnModelConfig, Array[String]) -> (Double, Double) raise @types.LoadError
 
 pub fn evaluate_encryption_quality(@types.Image, @types.Image) -> @encryption.EncryptionQuality raise @types.LoadError
@@ -2759,6 +2763,10 @@ pub fn pyr_up_16(@types.Image16) -> @types.Image16 raise @types.LoadError
 pub fn pyr_up_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
 pub fn qoi_info_extended(Bytes) -> @codec.QoiInfoExtended raise @types.LoadError
+
+pub fn quality_report_dimension_count(@self_evolve.QualityReport) -> Int
+
+pub fn quality_report_is_passing(@self_evolve.QualityReport) -> Bool
 
 pub fn quantize_image_cp(@types.Image, Int) -> @types.Image raise @types.LoadError
 
@@ -4485,7 +4493,15 @@ pub using @barcode {type QrDecodeResult}
 
 pub using @barcode {type QrFinderPattern}
 
+pub using @self_evolve {type QualityDimension}
+
+pub using @self_evolve {type QualityGrade}
+
 pub using @quality {type QualityMetrics}
+
+pub using @self_evolve {type QualityReport}
+
+pub using @self_evolve {type QualityScore}
 
 pub using @compression {type QuantizationTableType}
 

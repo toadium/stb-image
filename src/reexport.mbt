@@ -13572,3 +13572,36 @@ pub fn co_evolve_report_has_cascade(report : CoEvolveReport) -> Bool {
 pub fn co_evolve_report_total_actions(report : CoEvolveReport) -> Int {
   @self_evolve.CoEvolveReport::total_actions(report)
 }
+// self_evolve — 演化质量评估（v313.0.0）
+
+///|
+pub type QualityDimension = @self_evolve.QualityDimension
+
+///|
+pub type QualityScore = @self_evolve.QualityScore
+
+///|
+pub type QualityGrade = @self_evolve.QualityGrade
+
+///|
+pub type QualityReport = @self_evolve.QualityReport
+
+///|
+pub fn eval_quality_op(op : @imgir.IROp) -> QualityReport {
+  @self_evolve.eval_quality_op(op)
+}
+
+///|
+pub fn eval_quality_all() -> QualityReport {
+  @self_evolve.eval_quality_all()
+}
+
+///|
+pub fn quality_report_is_passing(report : QualityReport) -> Bool {
+  @self_evolve.QualityReport::is_passing(report)
+}
+
+///|
+pub fn quality_report_dimension_count(report : QualityReport) -> Int {
+  @self_evolve.QualityReport::dimension_count(report)
+}
