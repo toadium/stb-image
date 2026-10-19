@@ -2780,7 +2780,7 @@ flowchart LR
 | v321.0.0 | 光流扩展 | Lucas-Kanade/Horn-Schunck/Farneback | ✅ |
 | v322.0.0 | 目标跟踪 | KCF/MOSSE/CSRT/DeepSORT | ✅ |
 | v323.0.0 | 背景建模 | GMM/KNN/VIBE | ✅ |
-| v324.0.0 | 运动检测扩展 | 帧差/光流/背景差分 | ⬜ |
+| v324.0.0 | 运动检测扩展 | 帧差/光流/背景差分 | ✅ |
 | v325.0.0 | 图像配准扩展 | ECC/特征配准/相位相关 | ⬜ |
 | v326.0.0 | SLAM 前端 | 特征提取/跟踪/建图 | ⬜ |
 | v327.0.0 | SLAM 后端 | 局部BA/全局BA/回环 | ⬜ |

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v324.0.0 - GeoVerse Phase 12: 运动检测扩展
+- 扩展 `src/cv_advanced/`：运动检测 — 帧差/累积/能量/光流
+  - **motion_detection**：MotionMask / MotionParams / MotionRegion + detect_motion_frame_diff / detect_motion_accumulator / compute_motion_energy / motion_morphology / motion_optical_flow / motion_density / extract_motion_regions
+  - Phase 12 CV算法大扩展 — 运动检测与区域提取
+- 新增 3 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7163×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v323.0.0 - GeoVerse Phase 12: 背景建模
 - 扩展 `src/cv_advanced/`：背景建模 — GMM/KNN/VIBE
   - **background_modeling**：BackgroundMethod / BackgroundParams / BackgroundModel / ForegroundMask + init_background_model / update_background_model / subtract_background / gmm_update / knn_update / vibe_update / clean_foreground_mask

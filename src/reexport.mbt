@@ -14185,3 +14185,64 @@ pub fn vibe_update(
 pub fn clean_foreground_mask(mask : ForegroundMask) -> ForegroundMask {
   @cv_advanced.clean_foreground_mask(mask)
 }
+// cv_advanced — 运动检测（v324.0.0）
+
+///|
+pub type MotionMask = @cv_advanced.MotionMask
+
+///|
+pub type MotionParams = @cv_advanced.MotionParams
+
+///|
+pub type MotionRegion = @cv_advanced.MotionRegion
+
+///|
+pub fn detect_motion_frame_diff(
+  prev : @types.Image,
+  curr : @types.Image,
+  params : MotionParams,
+) -> MotionMask {
+  @cv_advanced.detect_motion_frame_diff(prev, curr, params)
+}
+
+///|
+pub fn detect_motion_accumulator(
+  accumulator : Array[Double],
+  curr : @types.Image,
+  prev : @types.Image,
+  params : MotionParams,
+) -> (MotionMask, Array[Double]) {
+  @cv_advanced.detect_motion_accumulator(accumulator, curr, prev, params)
+}
+
+///|
+pub fn compute_motion_energy(motion : MotionMask) -> Double {
+  @cv_advanced.compute_motion_energy(motion)
+}
+
+///|
+pub fn motion_morphology(motion : MotionMask, iter_count : Int) -> MotionMask {
+  @cv_advanced.motion_morphology(motion, iter_count)
+}
+
+///|
+pub fn motion_optical_flow(flow : FlowField, threshold : Double) -> MotionMask {
+  @cv_advanced.motion_optical_flow(flow, threshold)
+}
+
+///|
+pub fn motion_density(
+  motion : MotionMask,
+  grid_cols : Int,
+  grid_rows : Int,
+) -> Array[Double] {
+  @cv_advanced.motion_density(motion, grid_cols, grid_rows)
+}
+
+///|
+pub fn extract_motion_regions(
+  motion : MotionMask,
+  params : MotionParams,
+) -> Array[MotionRegion] {
+  @cv_advanced.extract_motion_regions(motion, params)
+}

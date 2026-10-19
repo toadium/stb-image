@@ -45,6 +45,8 @@ pub fn compute_iou(Track, Track) -> Double
 
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
 
+pub fn compute_motion_energy(MotionMask) -> Double
+
 pub fn compute_reprojection_error(CameraIntrinsics, ChessboardCorners) -> Double
 
 pub fn compute_surf_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
@@ -61,6 +63,10 @@ pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
 pub fn detect_fast_corners(@types.Image, Int) -> Array[KeyPoint]
 
+pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, MotionParams) -> (MotionMask, Array[Double])
+
+pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> MotionMask
+
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
@@ -68,6 +74,8 @@ pub fn disparity_to_depth(Double, Double, Double) -> Double
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
+
+pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
 
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
 
@@ -96,6 +104,12 @@ pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -
 pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
+
+pub fn motion_morphology(MotionMask, Int) -> MotionMask
+
+pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
 
@@ -410,6 +424,38 @@ pub(all) enum MatcherKind {
 pub fn MatcherKind::equal(Self, Self) -> Bool
 pub fn MatcherKind::not_equal(Self, Self) -> Bool
 pub fn MatcherKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MotionMask {
+  width : Int
+  height : Int
+  mask : Array[Bool]
+  intensity : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn MotionMask::equal(Self, Self) -> Bool
+pub fn MotionMask::not_equal(Self, Self) -> Bool
+pub fn MotionMask::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MotionParams {
+  threshold : Double
+  min_area : Int
+  blur_size : Int
+  dilate_iter : Int
+} derive(Eq, @debug.Debug)
+pub fn MotionParams::equal(Self, Self) -> Bool
+pub fn MotionParams::not_equal(Self, Self) -> Bool
+pub fn MotionParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MotionRegion {
+  x : Int
+  y : Int
+  width : Int
+  height : Int
+  area : Int
+  intensity : Double
+} derive(Eq, @debug.Debug)
+pub fn MotionRegion::equal(Self, Self) -> Bool
+pub fn MotionRegion::not_equal(Self, Self) -> Bool
+pub fn MotionRegion::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Point3D {
   x : Double

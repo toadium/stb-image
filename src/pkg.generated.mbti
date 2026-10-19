@@ -687,6 +687,8 @@ pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], @cv_a
 
 pub fn compute_mae(@types.Image, @types.Image) -> Double
 
+pub fn compute_motion_energy(@cv_advanced.MotionMask) -> Double
+
 pub fn compute_mse(@types.Image, @types.Image) -> Double
 
 pub fn compute_ndbi(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
@@ -1129,6 +1131,10 @@ pub fn detect_list_item(@ocr.TextLineAttributes) -> @ocr.ListItemInfo
 
 pub fn detect_loop_closure_sl(Array[Array[Double]], Array[@slam.KeyFrame], Double) -> @slam.LoopClosureResult
 
+pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, @cv_advanced.MotionParams) -> (@cv_advanced.MotionMask, Array[Double])
+
+pub fn detect_motion_frame_diff(@types.Image, @types.Image, @cv_advanced.MotionParams) -> @cv_advanced.MotionMask
+
 pub fn detect_objects_iv(@types.Image, @intelligent_vision.IntelligentVisionConfig) -> Array[@intelligent_vision.DetectionResultIV]
 
 pub fn detect_objects_simple(@types.Image, @detection.YoloConfig) -> @detection.YoloDetectionResult raise @types.LoadError
@@ -1502,6 +1508,8 @@ pub fn extract_images_enhanced(@types.Image, min_area? : Int) -> Array[@ocr.Extr
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[@video.Keyframe]
 
 pub fn extract_lbp_feature_cbir(@types.Image, @retrieval.LBPConfig) -> @retrieval.CBIRImageFeature
+
+pub fn extract_motion_regions(@cv_advanced.MotionMask, @cv_advanced.MotionParams) -> Array[@cv_advanced.MotionRegion]
 
 pub fn extract_paragraphs(@ocr.DocumentStructure) -> Array[@ocr.DocumentElement]
 
@@ -2504,6 +2512,12 @@ pub fn morph_tophat(@types.Image) -> @types.Image
 pub fn morph_tophat_16(@types.Image16) -> @types.Image16
 
 pub fn morph_tophat_f(@types.ImageF) -> @types.ImageF
+
+pub fn motion_density(@cv_advanced.MotionMask, Int, Int) -> Array[Double]
+
+pub fn motion_morphology(@cv_advanced.MotionMask, Int) -> @cv_advanced.MotionMask
+
+pub fn motion_optical_flow(@cv_advanced.FlowField, Double) -> @cv_advanced.MotionMask
 
 pub fn mri_synthesize_ai(Int, Int, Double) -> @advanced_imaging.MRIData
 
@@ -4495,6 +4509,12 @@ pub using @self_evolve {type ModuleDep}
 pub using @self_evolve {type ModuleDepKind}
 
 pub using @edge {type Moments}
+
+pub using @cv_advanced {type MotionMask}
+
+pub using @cv_advanced {type MotionParams}
+
+pub using @cv_advanced {type MotionRegion}
 
 pub using @ocr {type MultilingualOcrConfig}
 
