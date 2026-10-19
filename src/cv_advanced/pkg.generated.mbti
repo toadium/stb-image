@@ -103,6 +103,8 @@ pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
 
+pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
+
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
 
 pub fn flow_consistency(FlowField, FlowField) -> Double
@@ -156,6 +158,8 @@ pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -
 pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
 
 pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
+
+pub fn layer_norm(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
 
 pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
@@ -213,6 +217,8 @@ pub fn reset_orb_slam(OrbSlamSystem) -> OrbSlamSystem
 
 pub fn reset_vins(VinsConfig) -> (VinsState, VinsConfig)
 
+pub fn residual_add(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
 
 pub fn save_orb_trajectory(OrbSlamSystem) -> String
@@ -232,6 +238,16 @@ pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
 pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
 
 pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
+
+pub fn transformer_decode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> TransformerDecoder
+
+pub fn transformer_decoder_layer(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> Array[Double]
+
+pub fn transformer_encode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> TransformerEncoder
+
+pub fn transformer_encoder_layer(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> Array[Double]
+
+pub fn transformer_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> TransformerDecoder
 
 pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
 
@@ -932,6 +948,46 @@ pub(all) enum TrackingAlgorithm {
 } derive(Eq)
 pub fn TrackingAlgorithm::equal(Self, Self) -> Bool
 pub fn TrackingAlgorithm::not_equal(Self, Self) -> Bool
+
+pub(all) struct TransformerConfig {
+  d_model : Int
+  num_heads : Int
+  d_ff : Int
+  num_encoder_layers : Int
+  num_decoder_layers : Int
+  dropout : Double
+  scale : Double
+} derive(Eq, @debug.Debug)
+pub fn TransformerConfig::equal(Self, Self) -> Bool
+pub fn TransformerConfig::not_equal(Self, Self) -> Bool
+pub fn TransformerConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TransformerDecoder {
+  hidden : Array[Double]
+  cross_attention_weights : Array[Double]
+  self_attention_weights : Array[Double]
+  output : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn TransformerDecoder::equal(Self, Self) -> Bool
+pub fn TransformerDecoder::not_equal(Self, Self) -> Bool
+pub fn TransformerDecoder::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TransformerEncoder {
+  hidden : Array[Double]
+  attention_weights : Array[Double]
+  layer_output : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn TransformerEncoder::equal(Self, Self) -> Bool
+pub fn TransformerEncoder::not_equal(Self, Self) -> Bool
+pub fn TransformerEncoder::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TransformerLayerKind {
+  EncoderLayer
+  DecoderLayer
+} derive(Eq, @debug.Debug)
+pub fn TransformerLayerKind::equal(Self, Self) -> Bool
+pub fn TransformerLayerKind::not_equal(Self, Self) -> Bool
+pub fn TransformerLayerKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VQAResult {
   image_id : String

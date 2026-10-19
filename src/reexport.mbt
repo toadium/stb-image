@@ -14799,3 +14799,97 @@ pub fn multi_head_attention(
 pub fn positional_encoding(seq_len : Int, d_model : Int) -> Array[Double] {
   @cv_advanced.positional_encoding(seq_len, d_model)
 }
+
+///|
+pub type TransformerLayerKind = @cv_advanced.TransformerLayerKind
+
+///|
+pub type TransformerConfig = @cv_advanced.TransformerConfig
+
+///|
+pub type TransformerEncoder = @cv_advanced.TransformerEncoder
+
+///|
+pub type TransformerDecoder = @cv_advanced.TransformerDecoder
+
+///|
+pub fn layer_norm(
+  input : Array[Double],
+  gamma : Array[Double],
+  beta : Array[Double],
+  eps : Double,
+) -> Array[Double] {
+  @cv_advanced.layer_norm(input, gamma, beta, eps)
+}
+
+///|
+pub fn feed_forward(
+  input : Array[Double],
+  w1 : Array[Double],
+  b1 : Array[Double],
+  w2 : Array[Double],
+  b2 : Array[Double],
+  d_model : Int,
+  d_ff : Int,
+) -> Array[Double] {
+  @cv_advanced.feed_forward(input, w1, b1, w2, b2, d_model, d_ff)
+}
+
+///|
+pub fn residual_add(
+  input : Array[Double],
+  sublayer_output : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.residual_add(input, sublayer_output)
+}
+
+///|
+pub fn transformer_encode(
+  input : Array[Double],
+  weight_q : Array[Double],
+  weight_k : Array[Double],
+  weight_v : Array[Double],
+  gamma1 : Array[Double],
+  beta1 : Array[Double],
+  gamma2 : Array[Double],
+  beta2 : Array[Double],
+  w1 : Array[Double],
+  b1 : Array[Double],
+  w2 : Array[Double],
+  b2 : Array[Double],
+  config : TransformerConfig,
+) -> TransformerEncoder {
+  @cv_advanced.transformer_encode(
+    input, weight_q, weight_k, weight_v, gamma1, beta1, gamma2, beta2, w1, b1, w2,
+    b2, config,
+  )
+}
+
+///|
+pub fn transformer_decode(
+  decoder_input : Array[Double],
+  encoder_output : Array[Double],
+  weight_q_self : Array[Double],
+  weight_k_self : Array[Double],
+  weight_v_self : Array[Double],
+  weight_q_cross : Array[Double],
+  weight_k_cross : Array[Double],
+  weight_v_cross : Array[Double],
+  gamma1 : Array[Double],
+  beta1 : Array[Double],
+  gamma2 : Array[Double],
+  beta2 : Array[Double],
+  gamma3 : Array[Double],
+  beta3 : Array[Double],
+  w1 : Array[Double],
+  b1 : Array[Double],
+  w2 : Array[Double],
+  b2 : Array[Double],
+  config : TransformerConfig,
+) -> TransformerDecoder {
+  @cv_advanced.transformer_decode(
+    decoder_input, encoder_output, weight_q_self, weight_k_self, weight_v_self, weight_q_cross,
+    weight_k_cross, weight_v_cross, gamma1, beta1, gamma2, beta2, gamma3, beta3,
+    w1, b1, w2, b2, config,
+  )
+}

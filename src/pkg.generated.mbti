@@ -1579,6 +1579,8 @@ pub fn feature_euclidean_distance(@cv_advanced.FloatDescriptor, @cv_advanced.Flo
 
 pub fn feature_hamming_distance(@cv_advanced.BinaryDescriptor, @cv_advanced.BinaryDescriptor) -> Int
 
+pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
+
 pub fn fft_2d(@types.Image) -> Array[@frequency.FFTResult] raise @types.LoadError
 
 pub fn fft_2d_16(@types.Image16) -> Array[@frequency.FFTResult] raise @types.LoadError
@@ -2397,6 +2399,8 @@ pub fn land_cover_classification(@types.Image, @types.Image, @types.Image) -> @t
 
 pub fn language_model_postprocess(String, Array[String], Array[Double]) -> (String, Array[Double])
 
+pub fn layer_norm(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
+
 pub fn lbp(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn lbp_16(@types.Image16) -> @types.Image16 raise @types.LoadError
@@ -3127,6 +3131,8 @@ pub fn reset_orb_slam(@cv_advanced.OrbSlamSystem) -> @cv_advanced.OrbSlamSystem
 
 pub fn reset_vins(@cv_advanced.VinsConfig) -> (@cv_advanced.VinsState, @cv_advanced.VinsConfig)
 
+pub fn residual_add(Array[Double], Array[Double]) -> Array[Double]
+
 pub fn resize(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
 pub fn resize_16(@types.Image16, Int, Int) -> @types.Image16
@@ -3630,6 +3636,10 @@ pub fn track_features_slam_sl(@types.Image, @types.Image, Array[Array[Double]], 
 pub fn track_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, (Double, Double, Double), Int, @cv_advanced.SlamFrontendParams) -> (@cv_advanced.SlamFrontend, Bool)
 
 pub fn track_objects(Array[@cv_advanced.Track], Array[@cv_advanced.Track], Double) -> Array[@cv_advanced.Track]
+
+pub fn transformer_decode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.TransformerConfig) -> @cv_advanced.TransformerDecoder
+
+pub fn transformer_encode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.TransformerConfig) -> @cv_advanced.TransformerEncoder
 
 pub fn transpose(@types.Image) -> @types.Image
 
@@ -5179,6 +5189,14 @@ pub using @fusion_enhanced {type TransformMatrix}
 pub using @registration_advanced {type TransformMatrix as TransformMatrixRA}
 
 pub using @registration_advanced {type TransformType as TransformTypeRA}
+
+pub using @cv_advanced {type TransformerConfig}
+
+pub using @cv_advanced {type TransformerDecoder}
+
+pub using @cv_advanced {type TransformerEncoder}
+
+pub using @cv_advanced {type TransformerLayerKind}
 
 pub using @self_evolve {type TuneReport}
 

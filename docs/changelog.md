@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v333.0.0 - GeoVerse Phase 13: Transformer 模型
+- 扩展 `src/cv_advanced/`：Transformer 模型 — Encoder/Decoder/Positional
+  - **transformer**：TransformerLayerKind / TransformerConfig / TransformerEncoder / TransformerDecoder + layer_norm / feed_forward / residual_add / transformer_encode / transformer_decode / transformer_forward
+  - Phase 13 深度学习大扩展 — 完整 Transformer 编码器-解码器架构
+- 新增 4 类型 + 6 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7244×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v332.0.0 - GeoVerse Phase 13: 注意力机制
 - 扩展 `src/cv_advanced/`：注意力机制 — SelfAttention/CrossAttention/MultiHead
   - **attention**：AttentionType / AttentionParams + softmax / scaled_dot_product_attention / self_attention / cross_attention / multi_head_attention / positional_encoding
