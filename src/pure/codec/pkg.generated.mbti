@@ -16,6 +16,10 @@ pub fn avif_info_extended(Bytes) -> AvifInfoExtended raise @types.LoadError
 
 pub fn bmp_info_extended(Bytes) -> BmpInfoExtended raise @types.LoadError
 
+pub fn codec_decode_auto(Bytes) -> @types.AnyImage raise @types.LoadError
+
+pub fn codec_detect_format(Bytes) -> @types.ImageFormat
+
 pub fn cur_info_extended(Bytes) -> CurInfoExtended raise @types.LoadError
 
 pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
@@ -493,3 +497,12 @@ pub struct WebpInfoExtended {
 // Type aliases
 
 // Traits
+pub trait Codec {
+  fn format_name(Self) -> String
+  fn can_encode(Self) -> Bool
+  fn can_decode(Self) -> Bool
+  fn is_lossless(Self) -> Bool
+  fn encode(Self, @types.AnyImage) -> Bytes raise @types.LoadError
+  fn decode(Self, Bytes) -> @types.AnyImage raise @types.LoadError
+}
+pub impl Codec for @types.ImageFormat

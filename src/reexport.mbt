@@ -28,6 +28,9 @@ pub type ImageFormat = @types.ImageFormat
 pub type ImageInfo = @types.ImageInfo
 
 ///|
+pub type AnyImage = @types.AnyImage
+
+///|
 pub type ImageStats = @util.ImageStats
 
 ///|
@@ -17834,4 +17837,42 @@ pub fn phase15_report() -> Phase15Report {
 ///|
 pub fn phase15_is_complete() -> Bool {
   @cv_advanced.phase15_is_complete()
+}
+// trait ImageLike / AnyImage 函数 re-export
+
+///|
+pub fn image_to_any(img : Image) -> AnyImage {
+  @types.image_to_any(img)
+}
+
+///|
+pub fn image16_to_any(img : Image16) -> AnyImage {
+  @types.image16_to_any(img)
+}
+
+///|
+pub fn imagef_to_any(img : ImageF) -> AnyImage {
+  @types.imagef_to_any(img)
+}
+
+///|
+pub fn any_image_to_u8(img : AnyImage) -> Image {
+  @types.any_image_to_u8(img)
+}
+
+///|
+pub fn hdr_from_u8(img : Image) -> ImageF {
+  @types.hdr_from_u8(img)
+}
+
+// trait Codec 函数 re-export
+
+///|
+pub fn codec_decode_auto(data : Bytes) -> AnyImage raise LoadError {
+  @codec.codec_decode_auto(data)
+}
+
+///|
+pub fn codec_detect_format(data : Bytes) -> ImageFormat {
+  @codec.codec_detect_format(data)
 }

@@ -217,6 +217,8 @@ pub fn analyze_texture_fs(@types.Image) -> @forensics.TextureAnalysisResult rais
 
 pub fn answer_visual_question_su(@types.Image, String, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.VisualQuestionAnsweringResult
 
+pub fn any_image_to_u8(@types.AnyImage) -> @types.Image
+
 pub fn aoci_build_dependency_graph(@aoci.SymbolIndex) -> Array[(String, Array[String])]
 
 pub fn aoci_build_from_mbti(String, String) -> @aoci.SymbolIndex
@@ -682,6 +684,10 @@ pub fn co_evolve_op(@imgir.IROp) -> @self_evolve.CoEvolveReport
 pub fn co_evolve_report_has_cascade(@self_evolve.CoEvolveReport) -> Bool
 
 pub fn co_evolve_report_total_actions(@self_evolve.CoEvolveReport) -> Int
+
+pub fn codec_decode_auto(Bytes) -> @types.AnyImage raise @types.LoadError
+
+pub fn codec_detect_format(Bytes) -> @types.ImageFormat
 
 pub fn coded_aperture_reconstruct_ci(@types.Image, @computational_imaging.CodedAperturePattern) -> @computational_imaging.ImagingReconstructionResult
 
@@ -2203,6 +2209,8 @@ pub fn has_regression(String) -> Bool
 
 pub fn hdr_default_config() -> @enhance.HdrConfig
 
+pub fn hdr_from_u8(@types.Image) -> @types.ImageF
+
 pub fn hdr_fusion_average(Array[@types.Image]) -> @types.Image raise @types.LoadError
 
 pub fn hdr_fusion_weighted(Array[@types.Image]) -> @types.Image raise @types.LoadError
@@ -2343,6 +2351,8 @@ pub fn ifft_2d_f(@frequency.FFTResult) -> @types.ImageF
 
 pub fn ihaar_transform_1d(Array[Float]) -> Array[Float]
 
+pub fn image16_to_any(@types.Image16) -> @types.AnyImage
+
 pub fn image16_to_scalar_field(@types.Image16) -> @fieldimg.ScalarField raise @types.LoadError
 
 pub fn image_database_new() -> @retrieval.ImageDatabase
@@ -2353,11 +2363,15 @@ pub fn image_retrieval_report_to_string_advanced(@image_retrieval_advanced.Image
 
 pub fn image_similarity(@types.Image, @types.Image, method_type? : String) -> Double
 
+pub fn image_to_any(@types.Image) -> @types.AnyImage
+
 pub fn image_to_scalar_field(@types.Image) -> @fieldimg.ScalarField raise @types.LoadError
 
 pub fn image_to_text_vlm(@types.Image, @vlm_multimodal.GenerativeAIConfig) -> @vlm_multimodal.GenerativeAIResult
 
 pub fn image_to_vector_field(@types.Image) -> @fieldimg.VectorField raise @types.LoadError
+
+pub fn imagef_to_any(@types.ImageF) -> @types.AnyImage
 
 pub fn imagef_to_scalar_field(@types.ImageF) -> @fieldimg.ScalarField raise @types.LoadError
 
@@ -4509,6 +4523,8 @@ pub using @registration {type AffineTransform}
 pub using @face_recognition {type AgeGenderEstimationResult as AgeGenderEstimationResultFR}
 
 pub using @intelligent_vision {type AgriculturalVisionTask as AgriculturalVisionTaskIV}
+
+pub using @types {type AnyImage}
 
 pub using @codec {type ApngInfoExtended}
 
