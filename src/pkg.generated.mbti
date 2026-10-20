@@ -745,6 +745,8 @@ pub fn compute_correlation_filter(@types.Image, @cv_advanced.Track, Double) -> D
 
 pub fn compute_depth_map(@cv_advanced.DisparityMap, Double, Double) -> @cv_advanced.DepthMap
 
+pub fn compute_depth_of_field(Double, Double, Double, Double) -> @cv_advanced.DepthOfFieldRange
+
 pub fn compute_diff_image(@types.Image, @types.Image) -> @types.Image
 
 pub fn compute_disparity(@types.Image, @types.Image, max_disparity? : Int, block_size? : Int) -> @types.Image
@@ -1199,9 +1201,15 @@ pub fn dense_backward(Array[Double], Array[Double], Int, Int) -> (Array[Double],
 
 pub fn dense_forward(Array[Double], Array[Double], Array[Double], Int, Int, String) -> Array[Double]
 
+pub fn depth_estimation_pipeline(Array[@types.Image], Array[Array[Double]], Array[Double], @cv_advanced.DepthEstimationParams) -> @cv_advanced.DepthMap
+
 pub fn depth_map_to_image_3d(@stereo3d.DepthMap3d) -> @types.Image
 
+pub fn depth_post_process(@cv_advanced.DepthMap, @cv_advanced.DepthPostProcessParams) -> @cv_advanced.DepthMap
+
 pub fn depth_to_colormap(@types.Image, colormap? : String) -> @types.Image
+
+pub fn depth_to_grayscale_image(@cv_advanced.DepthMap) -> @types.Image
 
 pub fn depth_to_point_cloud_3d(@stereo3d.DepthMap3d, @stereo3d.CameraIntrinsics3d) -> @stereo3d.PointCloud3D
 
@@ -1579,6 +1587,12 @@ pub fn estimate_benefit(@imgir.IRPipeline) -> Int
 
 pub fn estimate_camera_pose_sl(@slam.FeatureTrackingResult, @slam.SLAMConfig, @slam.CameraPose) -> @slam.CameraPose
 
+pub fn estimate_depth_from_defocus(Array[Double], Int, Int, Double, Double, Double) -> @cv_advanced.DepthMap
+
+pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int, Int) -> @cv_advanced.DepthMap
+
+pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int, Int, Double, Double) -> @cv_advanced.DepthMap
+
 pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], iterations? : Int, threshold? : Double) -> (@stitch.Homography?, Array[@stitch.MatchPair])
 
 pub fn estimate_memory_usage(Int, Int, Int, Int) -> @ocr.MemoryUsageStats
@@ -1810,6 +1824,8 @@ pub fn field_mul_scalar(@fieldimg.ScalarField, Float) -> @fieldimg.ScalarField r
 pub fn field_sub(@fieldimg.ScalarField, @fieldimg.ScalarField) -> @fieldimg.ScalarField raise @types.LoadError
 
 pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
+
+pub fn fill_depth_holes(@cv_advanced.DepthMap) -> @cv_advanced.DepthMap
 
 pub fn filter_by_kind(Array[@self_evolve.RootCause], @self_evolve.DegradationKind) -> Array[@self_evolve.RootCause]
 
@@ -3069,6 +3085,8 @@ pub fn nms(Array[@detection.BoundingBox], iou_threshold? : Double) -> Array[@det
 
 pub fn non_max_suppression(Array[@detection.YoloBoundingBox], Double, Int) -> Array[@detection.YoloBoundingBox] raise @types.LoadError
 
+pub fn normalize_depth_map(@cv_advanced.DepthMap) -> @cv_advanced.DepthMap
+
 pub fn normalize_features(Array[Double]) -> Array[Double] raise @types.LoadError
 
 pub fn normalize_handwriting_size(@types.Image, Int) -> @types.Image raise @types.LoadError
@@ -3595,6 +3613,8 @@ pub fn record_training_metrics(@ocr.TrainingState, @ocr.TrainingMetrics) -> @ocr
 
 pub fn reed_solomon_decode(Array[Int], Int) -> (Array[Int], Int)
 
+pub fn refine_depth_edges(@cv_advanced.DepthMap, @types.Image) -> @cv_advanced.DepthMap
+
 pub fn region_growing(@types.Image, Array[(Int, Int)], threshold? : Double) -> @segment.SegmentationResult
 
 pub fn region_growing_segment(@types.Image, Array[(Int, Int)], threshold? : Int) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
@@ -3970,6 +3990,8 @@ pub fn smart_reading_order(Array[@ocr.EnhancedDocumentElement], @ocr.LayoutType,
 pub fn smart_segment_chars(@types.Image, @ocr.MultilingualOcrEnhancedConfig) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError
 
 pub fn smart_spacing_process(String, Array[String]) -> String
+
+pub fn smooth_depth_map(@cv_advanced.DepthMap, Int) -> @cv_advanced.DepthMap
 
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
@@ -4854,11 +4876,17 @@ pub using @denoise {type DenoiseResult}
 
 pub using @ocr {type DeploymentEnvironment}
 
+pub using @cv_advanced {type DepthEstimationParams}
+
 pub using @cv_advanced {type DepthMap}
 
 pub using @stereo3d {type DepthMap3d}
 
 pub using @photo_enhance {type DepthOfFieldConfig}
+
+pub using @cv_advanced {type DepthOfFieldRange}
+
+pub using @cv_advanced {type DepthPostProcessParams}
 
 pub using @cv_advanced {type DepthwiseConvParams}
 
@@ -5475,6 +5503,8 @@ pub using @self_evolve {type ModuleDep}
 pub using @self_evolve {type ModuleDepKind}
 
 pub using @edge {type Moments}
+
+pub using @cv_advanced {type MonocularDepthMethod}
 
 pub using @cv_advanced {type MotionMask}
 

@@ -2,6 +2,35 @@
 
 > 下表为**功能迭代版本**（v0.1 → v237.0.0）演进历史。mooncakes **包版本**为 `0.5.0`（mooncakes 早期阶段 0.x.y 格式），对应最新功能版本 v237.0.0。
 
+## Phase 16｜计算摄影大扩展（v376 ~ v391）
+
+### v380.0.0 — 景深估计
+
+**2026-10-20** — 单目深度估计/散焦深度/深度图后处理/景深流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `MonocularDepthMethod`(4模式) / `DepthPostProcessParams` / `DepthEstimationParams` / `DepthOfFieldRange` |
+| 新增函数 | `estimate_depth_from_focus` / `estimate_depth_from_defocus` / `estimate_depth_relative_blur` / `smooth_depth_map` / `fill_depth_holes` / `normalize_depth_map` / `refine_depth_edges` / `depth_to_grayscale_image` / `compute_depth_of_field` / `depth_post_process` / `depth_estimation_pipeline` |
+| 测试 | 7794×4（+13） |
+| 状态 | ✅ 0 warning, 0 error |
+
+### v379.0.0 — 夜景合成
+
+**2026-10-20** — 多帧时域降噪/运动检测/运动补偿降噪/亮度增强/对比度增强/色彩校正/流水线。
+
+### v378.0.0 — HDR+ 合成
+
+**2026-10-20** — 幽灵检测/幽灵映射/Mertens 融合/加权合并/响应校准/流水线/曝光估计。
+
+### v377.0.0 — RAW 处理
+
+**2026-10-20** — Bayer 解马赛克/白平衡(灰世界/自动/手动)/色彩校正/电平校正/流水线/Bayer 提取。
+
+### v376.0.0 — trait 全面重构
+
+**2026-10-20** — trait ImageLike(10方法) + trait Codec(6方法) + AnyImage + 辅助函数。
+
 ## v1.0.0（正式版）
 
 **2026-09-29** — 首个正式版，API 冻结。

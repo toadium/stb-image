@@ -121,6 +121,8 @@ pub fn compute_correlation_filter(@types.Image, Track, Double) -> Double
 
 pub fn compute_depth_map(DisparityMap, Double, Double) -> DepthMap
 
+pub fn compute_depth_of_field(Double, Double, Double, Double) -> DepthOfFieldRange
+
 pub fn compute_disparity_block_matching(@types.Image, @types.Image, StereoParams) -> DisparityMap
 
 pub fn compute_disparity_sgm(@types.Image, @types.Image, StereoParams) -> DisparityMap
@@ -199,6 +201,12 @@ pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Arra
 
 pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) -> Array[Double]
 
+pub fn depth_estimation_pipeline(Array[@types.Image], Array[Array[Double]], Array[Double], DepthEstimationParams) -> DepthMap
+
+pub fn depth_post_process(DepthMap, DepthPostProcessParams) -> DepthMap
+
+pub fn depth_to_grayscale_image(DepthMap) -> @types.Image
+
 pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int, Int) -> Array[Double]
 
 pub fn dequantize(QuantizedTensor) -> Array[Double]
@@ -265,6 +273,12 @@ pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
 pub fn estimate_affine(@types.Image, @types.Image) -> AffineMatrix
 
+pub fn estimate_depth_from_defocus(Array[Double], Int, Int, Double, Double, Double) -> DepthMap
+
+pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int, Int) -> DepthMap
+
+pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int, Int, Double, Double) -> DepthMap
+
 pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) -> SlamPose
 
 pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
@@ -284,6 +298,8 @@ pub fn federated_round(Array[Double], Array[ClientUpdate], FederatedConfig, Int)
 pub fn fedprox_update(Array[Double], Array[Double], Array[Double], FederatedConfig) -> Array[Double]
 
 pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
+
+pub fn fill_depth_holes(DepthMap) -> DepthMap
 
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
 
@@ -567,6 +583,8 @@ pub fn night_pipeline(Array[@types.Image], NightShotParams) -> @types.Image
 
 pub fn night_temporal_denoise(Array[@types.Image]) -> @types.Image
 
+pub fn normalize_depth_map(DepthMap) -> DepthMap
+
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
@@ -739,6 +757,8 @@ pub fn recon_surface_extract(Array[Double], Double) -> Array[Int]
 
 pub fn recon_volume_render(Array[Double], Int, Int, Int, Double) -> Array[Double]
 
+pub fn refine_depth_edges(DepthMap, @types.Image) -> DepthMap
+
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
 pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
@@ -794,6 +814,8 @@ pub fn set_window_level(DicomMetadata, Double, Double) -> DicomMetadata
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
 
 pub fn simclr_forward(Array[Double], Array[Double], SSLConfig) -> Double
+
+pub fn smooth_depth_map(DepthMap, Int) -> DepthMap
 
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
@@ -1305,6 +1327,17 @@ pub fn DVHType::equal(Self, Self) -> Bool
 pub fn DVHType::not_equal(Self, Self) -> Bool
 pub fn DVHType::to_repr(Self) -> @debug.Repr
 
+pub(all) struct DepthEstimationParams {
+  est_method : MonocularDepthMethod
+  focal_length : Double
+  aperture : Double
+  focus_distance : Double
+  post_process : DepthPostProcessParams
+} derive(Eq, @debug.Debug)
+pub fn DepthEstimationParams::equal(Self, Self) -> Bool
+pub fn DepthEstimationParams::not_equal(Self, Self) -> Bool
+pub fn DepthEstimationParams::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DepthMap {
   width : Int
   height : Int
@@ -1314,6 +1347,28 @@ pub(all) struct DepthMap {
 pub fn DepthMap::equal(Self, Self) -> Bool
 pub fn DepthMap::not_equal(Self, Self) -> Bool
 pub fn DepthMap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DepthOfFieldRange {
+  near : Double
+  far : Double
+  focal_plane : Double
+  hyperfocal : Double
+} derive(Eq, @debug.Debug)
+pub fn DepthOfFieldRange::equal(Self, Self) -> Bool
+pub fn DepthOfFieldRange::not_equal(Self, Self) -> Bool
+pub fn DepthOfFieldRange::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DepthPostProcessParams {
+  smooth_radius : Int
+  fill_holes : Bool
+  normalize : Bool
+  edge_refine : Bool
+  min_depth : Double
+  max_depth : Double
+} derive(Eq, @debug.Debug)
+pub fn DepthPostProcessParams::equal(Self, Self) -> Bool
+pub fn DepthPostProcessParams::not_equal(Self, Self) -> Bool
+pub fn DepthPostProcessParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DepthwiseConvParams {
   channels : Int
@@ -2048,6 +2103,16 @@ pub(all) enum MetaLearningType {
 pub fn MetaLearningType::equal(Self, Self) -> Bool
 pub fn MetaLearningType::not_equal(Self, Self) -> Bool
 pub fn MetaLearningType::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MonocularDepthMethod {
+  FromFocus
+  FromDefocus
+  RelativeBlur
+  Hybrid
+} derive(Eq, @debug.Debug)
+pub fn MonocularDepthMethod::equal(Self, Self) -> Bool
+pub fn MonocularDepthMethod::not_equal(Self, Self) -> Bool
+pub fn MonocularDepthMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MotionMask {
   width : Int

@@ -18079,3 +18079,121 @@ pub fn night_pipeline(images : Array[Image], params : NightShotParams) -> Image 
 pub fn night_estimate_noise(img : Image) -> Double {
   @cv_advanced.night_estimate_noise(img)
 }
+// v380.0.0 景深估计 re-export
+
+///|
+pub type MonocularDepthMethod = @cv_advanced.MonocularDepthMethod
+
+///|
+pub type DepthPostProcessParams = @cv_advanced.DepthPostProcessParams
+
+///|
+pub type DepthEstimationParams = @cv_advanced.DepthEstimationParams
+
+///|
+pub type DepthOfFieldRange = @cv_advanced.DepthOfFieldRange
+
+///|
+pub fn estimate_depth_from_focus(
+  sharpness_maps : Array[Array[Double]],
+  focus_positions : Array[Double],
+  width : Int,
+  height : Int,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.estimate_depth_from_focus(
+    sharpness_maps, focus_positions, width, height,
+  )
+}
+
+///|
+pub fn estimate_depth_from_defocus(
+  blur_map : Array[Double],
+  width : Int,
+  height : Int,
+  focal_length : Double,
+  aperture : Double,
+  focus_distance : Double,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.estimate_depth_from_defocus(
+    blur_map, width, height, focal_length, aperture, focus_distance,
+  )
+}
+
+///|
+pub fn estimate_depth_relative_blur(
+  near_image : Array[Double],
+  far_image : Array[Double],
+  width : Int,
+  height : Int,
+  near_focus : Double,
+  far_focus : Double,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.estimate_depth_relative_blur(
+    near_image, far_image, width, height, near_focus, far_focus,
+  )
+}
+
+///|
+pub fn smooth_depth_map(
+  depth : @cv_advanced.DepthMap,
+  radius : Int,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.smooth_depth_map(depth, radius)
+}
+
+///|
+pub fn fill_depth_holes(depth : @cv_advanced.DepthMap) -> @cv_advanced.DepthMap {
+  @cv_advanced.fill_depth_holes(depth)
+}
+
+///|
+pub fn normalize_depth_map(
+  depth : @cv_advanced.DepthMap,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.normalize_depth_map(depth)
+}
+
+///|
+pub fn refine_depth_edges(
+  depth : @cv_advanced.DepthMap,
+  image : Image,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.refine_depth_edges(depth, image)
+}
+
+///|
+pub fn depth_to_grayscale_image(depth : @cv_advanced.DepthMap) -> Image {
+  @cv_advanced.depth_to_grayscale_image(depth)
+}
+
+///|
+pub fn compute_depth_of_field(
+  focal_length : Double,
+  aperture_f_number : Double,
+  focus_distance : Double,
+  circle_of_confusion : Double,
+) -> DepthOfFieldRange {
+  @cv_advanced.compute_depth_of_field(
+    focal_length, aperture_f_number, focus_distance, circle_of_confusion,
+  )
+}
+
+///|
+pub fn depth_post_process(
+  depth : @cv_advanced.DepthMap,
+  params : DepthPostProcessParams,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.depth_post_process(depth, params)
+}
+
+///|
+pub fn depth_estimation_pipeline(
+  images : Array[Image],
+  sharpness_maps : Array[Array[Double]],
+  focus_positions : Array[Double],
+  params : DepthEstimationParams,
+) -> @cv_advanced.DepthMap {
+  @cv_advanced.depth_estimation_pipeline(
+    images, sharpness_maps, focus_positions, params,
+  )
+}
