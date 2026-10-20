@@ -721,6 +721,24 @@ pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Arra
 
 pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
 
+pub fn target_best_detection(Array[TargetResult]) -> TargetResult
+
+pub fn target_build_result(Int, Int, Int, Int, Double, Int) -> TargetResult
+
+pub fn target_cfar(Array[Array[Double]], Int, Int, Double) -> Array[TargetResult]
+
+pub fn target_compute_iou(TargetResult, TargetResult) -> Double
+
+pub fn target_count(Array[TargetResult]) -> Int
+
+pub fn target_detect(Array[Array[Double]], TargetDetMethod, Int, Double) -> Array[TargetResult]
+
+pub fn target_nms(Array[TargetResult], Double) -> Array[TargetResult]
+
+pub fn target_sliding_window(Array[Array[Double]], Int, Double) -> Array[TargetResult]
+
+pub fn target_template_match(Array[Array[Double]], Array[Array[Double]], Double) -> Array[TargetResult]
+
 pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
 
 pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
@@ -2468,6 +2486,27 @@ pub(all) struct StereoParams {
 pub fn StereoParams::equal(Self, Self) -> Bool
 pub fn StereoParams::not_equal(Self, Self) -> Bool
 pub fn StereoParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TargetDetMethod {
+  SlidingWindow
+  Cfar
+  TemplateMatch
+} derive(Eq, @debug.Debug)
+pub fn TargetDetMethod::equal(Self, Self) -> Bool
+pub fn TargetDetMethod::not_equal(Self, Self) -> Bool
+pub fn TargetDetMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TargetResult {
+  x : Int
+  y : Int
+  width : Int
+  height : Int
+  confidence : Double
+  class_id : Int
+} derive(Eq, @debug.Debug)
+pub fn TargetResult::equal(Self, Self) -> Bool
+pub fn TargetResult::not_equal(Self, Self) -> Bool
+pub fn TargetResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Track {
   x : Double

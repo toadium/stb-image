@@ -4015,6 +4015,24 @@ pub fn symbol_kind_to_string(@aoci.SymbolKind) -> String
 
 pub fn synthesize_view_ci(@computational_imaging.LightFieldData, Double, Double) -> @computational_imaging.ViewSynthesisResult
 
+pub fn target_best_detection(Array[@cv_advanced.TargetResult]) -> @cv_advanced.TargetResult
+
+pub fn target_build_result(Int, Int, Int, Int, Double, Int) -> @cv_advanced.TargetResult
+
+pub fn target_cfar(Array[Array[Double]], Int, Int, Double) -> Array[@cv_advanced.TargetResult]
+
+pub fn target_compute_iou(@cv_advanced.TargetResult, @cv_advanced.TargetResult) -> Double
+
+pub fn target_count(Array[@cv_advanced.TargetResult]) -> Int
+
+pub fn target_detect(Array[Array[Double]], @cv_advanced.TargetDetMethod, Int, Double) -> Array[@cv_advanced.TargetResult]
+
+pub fn target_nms(Array[@cv_advanced.TargetResult], Double) -> Array[@cv_advanced.TargetResult]
+
+pub fn target_sliding_window(Array[Array[Double]], Int, Double) -> Array[@cv_advanced.TargetResult]
+
+pub fn target_template_match(Array[Array[Double]], Array[Array[Double]], Double) -> Array[@cv_advanced.TargetResult]
+
 pub fn tcontext_make(Float) -> @spatiotemporal.TContext raise @types.LoadError
 
 pub fn tcontext_seek(@spatiotemporal.TContext, Float) -> @spatiotemporal.TContext
@@ -5853,6 +5871,10 @@ pub using @ocr {type TableLineType}
 pub using @ocr {type TableStructure}
 
 pub using @forensics_enhanced {type TamperDetectionResult}
+
+pub using @cv_advanced {type TargetDetMethod}
+
+pub using @cv_advanced {type TargetResult}
 
 pub using @feature {type TemplateMatchMethod}
 

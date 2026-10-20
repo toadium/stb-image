@@ -17565,3 +17565,82 @@ pub fn fusion_dispatch(
 pub fn fusion_quality_mean(fused : Array[Array[Array[Double]]]) -> Double {
   @cv_advanced.fusion_quality_mean(fused)
 }
+
+///|
+pub type TargetDetMethod = @cv_advanced.TargetDetMethod
+
+///|
+pub type TargetResult = @cv_advanced.TargetResult
+
+///|
+pub fn target_build_result(
+  x : Int,
+  y : Int,
+  width : Int,
+  height : Int,
+  confidence : Double,
+  class_id : Int,
+) -> TargetResult {
+  @cv_advanced.target_build_result(x, y, width, height, confidence, class_id)
+}
+
+///|
+pub fn target_sliding_window(
+  image : Array[Array[Double]],
+  window_size : Int,
+  threshold : Double,
+) -> Array[TargetResult] {
+  @cv_advanced.target_sliding_window(image, window_size, threshold)
+}
+
+///|
+pub fn target_cfar(
+  image : Array[Array[Double]],
+  guard_size : Int,
+  ref_size : Int,
+  threshold_factor : Double,
+) -> Array[TargetResult] {
+  @cv_advanced.target_cfar(image, guard_size, ref_size, threshold_factor)
+}
+
+///|
+pub fn target_template_match(
+  image : Array[Array[Double]],
+  template : Array[Array[Double]],
+  threshold : Double,
+) -> Array[TargetResult] {
+  @cv_advanced.target_template_match(image, template, threshold)
+}
+
+///|
+pub fn target_nms(
+  detections : Array[TargetResult],
+  iou_threshold : Double,
+) -> Array[TargetResult] {
+  @cv_advanced.target_nms(detections, iou_threshold)
+}
+
+///|
+pub fn target_compute_iou(box1 : TargetResult, box2 : TargetResult) -> Double {
+  @cv_advanced.target_compute_iou(box1, box2)
+}
+
+///|
+pub fn target_detect(
+  image : Array[Array[Double]],
+  det_method : TargetDetMethod,
+  window_size : Int,
+  threshold : Double,
+) -> Array[TargetResult] {
+  @cv_advanced.target_detect(image, det_method, window_size, threshold)
+}
+
+///|
+pub fn target_count(detections : Array[TargetResult]) -> Int {
+  @cv_advanced.target_count(detections)
+}
+
+///|
+pub fn target_best_detection(detections : Array[TargetResult]) -> TargetResult {
+  @cv_advanced.target_best_detection(detections)
+}
