@@ -519,6 +519,20 @@ pub fn organ_morph_open(Array[Int], Int, Int, Int) -> Array[Int]
 
 pub fn organ_region_growing(Array[Double], Int, Int, Int, Int, Double) -> Array[Int]
 
+pub fn ortho_build_params(Double, Double, Double, Array[Array[Double]]) -> OrthoParams
+
+pub fn ortho_color_balance(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn ortho_correct(Array[Array[Double]], OrthoParams) -> Array[Array[Double]]
+
+pub fn ortho_displacement(Double, Double, Double) -> Double
+
+pub fn ortho_mosaic(Array[Array[Array[Double]]], Array[(Int, Int)]) -> Array[Array[Double]]
+
+pub fn ortho_seamline(Int, Int) -> Array[(Int, Int)]
+
+pub fn ortho_wallis_dodging(Array[Array[Double]], Int, Double, Double) -> Array[Array[Double]]
+
 pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, Int) -> DicomMetadata
 
 pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
@@ -1964,6 +1978,16 @@ pub(all) enum OrganType {
 pub fn OrganType::equal(Self, Self) -> Bool
 pub fn OrganType::not_equal(Self, Self) -> Bool
 pub fn OrganType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OrthoParams {
+  focal_length : Double
+  flying_height : Double
+  ground_resolution : Double
+  dem_data : Array[Array[Double]]
+} derive(Eq, @debug.Debug)
+pub fn OrthoParams::equal(Self, Self) -> Bool
+pub fn OrthoParams::not_equal(Self, Self) -> Bool
+pub fn OrthoParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PACSConfig {
   ae_title : String

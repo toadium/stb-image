@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v370.0.0 - GeoVerse Phase 15: 正射校正
+- 扩展 `src/cv_advanced/`：正射校正 — DEM 纠正/镶嵌/匀色/拼接线
+  - **orthorectification**：OrthoParams + ortho_correct / ortho_mosaic / ortho_color_balance / ortho_wallis_dodging / ortho_seamline / ortho_build_params / ortho_displacement
+  - Phase 15 遥感与地理空间大扩展 — 正射校正（DEM 纠正, 图像镶嵌, 直方图匹配匀色, Wallis 滤波, 拼接线生成）
+- 新增 1 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +13 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7660×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v369.0.0 - GeoVerse Phase 15: 几何校正
 - 扩展 `src/cv_advanced/`：几何校正 — RPC/多项式/GCP/重采样
   - **geometric_correction**：GeoCorrectMethod / ResampleMethod / GcpPoint / RpcModel + geo_build_gcp / geo_build_rpc / geo_polynomial_transform / geo_compute_polynomial_coeffs / geo_rpc_transform / geo_resample_nearest / geo_resample_bilinear / geo_resample_cubic / geo_resample / geo_correct

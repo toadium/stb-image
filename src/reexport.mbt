@@ -17432,3 +17432,69 @@ pub fn geo_correct(
     image, gcps, output_width, output_height, resample_method,
   )
 }
+
+///|
+pub type OrthoParams = @cv_advanced.OrthoParams
+
+///|
+pub fn ortho_correct(
+  image : Array[Array[Double]],
+  params : OrthoParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.ortho_correct(image, params)
+}
+
+///|
+pub fn ortho_mosaic(
+  images : Array[Array[Array[Double]]],
+  offsets : Array[(Int, Int)],
+) -> Array[Array[Double]] {
+  @cv_advanced.ortho_mosaic(images, offsets)
+}
+
+///|
+pub fn ortho_color_balance(
+  source : Array[Array[Double]],
+  reference : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.ortho_color_balance(source, reference)
+}
+
+///|
+pub fn ortho_wallis_dodging(
+  image : Array[Array[Double]],
+  window_size : Int,
+  target_mean : Double,
+  target_var : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.ortho_wallis_dodging(image, window_size, target_mean, target_var)
+}
+
+///|
+pub fn ortho_seamline(
+  overlap_width : Int,
+  overlap_height : Int,
+) -> Array[(Int, Int)] {
+  @cv_advanced.ortho_seamline(overlap_width, overlap_height)
+}
+
+///|
+pub fn ortho_build_params(
+  focal_length : Double,
+  flying_height : Double,
+  ground_resolution : Double,
+  dem_data : Array[Array[Double]],
+) -> OrthoParams {
+  @cv_advanced.ortho_build_params(
+    focal_length, flying_height, ground_resolution, dem_data,
+  )
+}
+
+///|
+pub fn ortho_displacement(
+  elevation : Double,
+  focal_length : Double,
+  flying_height : Double,
+) -> Double {
+  @cv_advanced.ortho_displacement(elevation, focal_length, flying_height)
+}
