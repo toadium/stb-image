@@ -29,6 +29,26 @@ pub fn calculate_iou(Array[Int], Array[Int]) -> Double
 
 pub fn calibrate_camera(ChessboardCorners, Int, Int) -> CalibrationResult
 
+pub fn change_count_changed(Array[Array[Int]]) -> Int
+
+pub fn change_detect(Array[Array[Double]], Array[Array[Double]], ChangeMethod, Double) -> ChangeResult
+
+pub fn change_difference(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_log_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_multitemporal_trend(Array[Array[Array[Double]]]) -> Array[Array[Double]]
+
+pub fn change_otsu_threshold(Array[Array[Double]], Int) -> Double
+
+pub fn change_rate(Array[Array[Int]]) -> Double
+
+pub fn change_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_threshold(Array[Array[Double]], Double) -> Array[Array[Int]]
+
+pub fn change_vector_analysis(Array[Array[Array[Double]]], Array[Array[Array[Double]]]) -> Array[Array[Double]]
+
 pub fn check_epipolar_constraint(EpipolarLine, Double, Double) -> Double
 
 pub fn clean_foreground_mask(ForegroundMask) -> ForegroundMask
@@ -894,6 +914,27 @@ pub(all) struct CameraIntrinsics {
 pub fn CameraIntrinsics::equal(Self, Self) -> Bool
 pub fn CameraIntrinsics::not_equal(Self, Self) -> Bool
 pub fn CameraIntrinsics::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ChangeMethod {
+  Difference
+  Ratio
+  LogRatio
+  ChangeVector
+} derive(Eq, @debug.Debug)
+pub fn ChangeMethod::equal(Self, Self) -> Bool
+pub fn ChangeMethod::not_equal(Self, Self) -> Bool
+pub fn ChangeMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ChangeResult {
+  change_map : Array[Array[Double]]
+  binary_map : Array[Array[Int]]
+  threshold : Double
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn ChangeResult::equal(Self, Self) -> Bool
+pub fn ChangeResult::not_equal(Self, Self) -> Bool
+pub fn ChangeResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ChessboardCorners {
   corners : Array[(Double, Double)]

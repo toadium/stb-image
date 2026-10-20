@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v365.0.0 - GeoVerse Phase 15: 变化检测
+- 扩展 `src/cv_advanced/`：多时相变化检测 — 差值/比值/对数比值/变化向量/Otsu 阈值
+  - **change_detection**：ChangeMethod / ChangeResult + change_difference / change_ratio / change_log_ratio / change_vector_analysis / change_otsu_threshold / change_threshold / change_multitemporal_trend / change_detect / change_count_changed / change_rate
+  - Phase 15 遥感与地理空间大扩展 — 变化检测（图像差值, 比值, 对数比值, 变化向量分析, Otsu 自动阈值, 多时相趋势）
+- 新增 2 类型 + 11 公共函数，reexport.mbt 注册顶层 API
+- +19 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7576×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v364.0.0 - GeoVerse Phase 15: InSAR 处理
 - 扩展 `src/cv_advanced/`：InSAR 干涉测量 — 干涉图生成/相干性估计/相位解缠/DEM 生成
   - **insar_processing**：InsarInterferogram / UnwrapMethod + insar_wrap_phase / insar_create_interferogram / insar_estimate_coherence / insar_unwrap_phase / insar_phase_to_height / insar_filter_interferogram / insar_mean_coherence / insar_coherence_mask / insar_build_interferogram

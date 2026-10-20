@@ -535,6 +535,26 @@ pub fn cartoon(@types.Image, levels? : Int, edge_threshold? : Double) -> @types.
 
 pub fn cartoonize_st(@types.Image, Double) -> @types.Image raise @types.LoadError
 
+pub fn change_count_changed(Array[Array[Int]]) -> Int
+
+pub fn change_detect(Array[Array[Double]], Array[Array[Double]], @cv_advanced.ChangeMethod, Double) -> @cv_advanced.ChangeResult
+
+pub fn change_difference(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_log_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_multitemporal_trend(Array[Array[Array[Double]]]) -> Array[Array[Double]]
+
+pub fn change_otsu_threshold(Array[Array[Double]], Int) -> Double
+
+pub fn change_rate(Array[Array[Int]]) -> Double
+
+pub fn change_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn change_threshold(Array[Array[Double]], Double) -> Array[Array[Int]]
+
+pub fn change_vector_analysis(Array[Array[Array[Double]]], Array[Array[Array[Double]]]) -> Array[Array[Double]]
+
 pub fn chaotic_encrypt_enc(@types.Image, @encryption.ChaoticParams) -> @encryption.EncryptionResult raise @types.LoadError
 
 pub fn chebyshev_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
@@ -4411,6 +4431,10 @@ pub using @slam {type CameraPose as CameraPoseSL}
 pub using @forensics_enhanced {type CfaAnalysisResult}
 
 pub using @remote_sensing {type ChangeDetectionResult}
+
+pub using @cv_advanced {type ChangeMethod}
+
+pub using @cv_advanced {type ChangeResult}
 
 pub using @encryption {type ChaoticParams}
 

@@ -16969,3 +16969,84 @@ pub fn insar_build_interferogram(
 ) -> InsarInterferogram {
   @cv_advanced.insar_build_interferogram(phase, coherence)
 }
+
+///|
+pub type ChangeMethod = @cv_advanced.ChangeMethod
+
+///|
+pub type ChangeResult = @cv_advanced.ChangeResult
+
+///|
+pub fn change_difference(
+  image1 : Array[Array[Double]],
+  image2 : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.change_difference(image1, image2)
+}
+
+///|
+pub fn change_ratio(
+  image1 : Array[Array[Double]],
+  image2 : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.change_ratio(image1, image2)
+}
+
+///|
+pub fn change_log_ratio(
+  image1 : Array[Array[Double]],
+  image2 : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.change_log_ratio(image1, image2)
+}
+
+///|
+pub fn change_vector_analysis(
+  image1 : Array[Array[Array[Double]]],
+  image2 : Array[Array[Array[Double]]],
+) -> Array[Array[Double]] {
+  @cv_advanced.change_vector_analysis(image1, image2)
+}
+
+///|
+pub fn change_otsu_threshold(
+  change_map : Array[Array[Double]],
+  num_bins : Int,
+) -> Double {
+  @cv_advanced.change_otsu_threshold(change_map, num_bins)
+}
+
+///|
+pub fn change_threshold(
+  change_map : Array[Array[Double]],
+  threshold : Double,
+) -> Array[Array[Int]] {
+  @cv_advanced.change_threshold(change_map, threshold)
+}
+
+///|
+pub fn change_multitemporal_trend(
+  time_series : Array[Array[Array[Double]]],
+) -> Array[Array[Double]] {
+  @cv_advanced.change_multitemporal_trend(time_series)
+}
+
+///|
+pub fn change_detect(
+  image1 : Array[Array[Double]],
+  image2 : Array[Array[Double]],
+  det_method : ChangeMethod,
+  threshold : Double,
+) -> ChangeResult {
+  @cv_advanced.change_detect(image1, image2, det_method, threshold)
+}
+
+///|
+pub fn change_count_changed(binary_map : Array[Array[Int]]) -> Int {
+  @cv_advanced.change_count_changed(binary_map)
+}
+
+///|
+pub fn change_rate(binary_map : Array[Array[Int]]) -> Double {
+  @cv_advanced.change_rate(binary_map)
+}
