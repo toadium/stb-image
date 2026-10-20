@@ -275,6 +275,22 @@ pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
 
 pub fn arnold_scramble_enc(@types.Image, @encryption.ArnoldParams) -> @encryption.EncryptionResult raise @types.LoadError
 
+pub fn atmo_build_params(Double, Double, Double, Double, Double, Double) -> @cv_advanced.AtmoParams
+
+pub fn atmo_correct(Array[Array[Double]], @cv_advanced.AtmoMethod, Double, Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_dos_correction(Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn atmo_empirical_line(Array[Array[Double]], Array[Double], Array[Double]) -> Array[Array[Double]]
+
+pub fn atmo_mean_radiance(Array[Array[Double]]) -> Double
+
+pub fn atmo_radiometric_calibration(Array[Array[Double]], Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_rayleigh_correction(Array[Array[Double]], Double, Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_reflectance(Array[Array[Double]], @cv_advanced.AtmoParams) -> Array[Array[Double]]
+
 pub fn attention_softmax(Array[Double]) -> Array[Double]
 
 pub fn augment_features(Array[Double], noise_level? : Double) -> Array[Double]
@@ -4385,6 +4401,10 @@ pub using @encryption {type ArnoldParams}
 pub using @style_transfer {type ArtStyle}
 
 pub using @intelligent_vision {type AstronomicalImageTask as AstronomicalImageTaskIV}
+
+pub using @cv_advanced {type AtmoMethod}
+
+pub using @cv_advanced {type AtmoParams}
 
 pub using @cv_advanced {type AttentionParams}
 

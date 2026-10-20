@@ -17232,3 +17232,86 @@ pub fn veg_fractional_cover(
 ) -> Array[Array[Double]] {
   @cv_advanced.veg_fractional_cover(ndvi, ndvi_soil, ndvi_veg)
 }
+
+///|
+pub type AtmoMethod = @cv_advanced.AtmoMethod
+
+///|
+pub type AtmoParams = @cv_advanced.AtmoParams
+
+///|
+pub fn atmo_radiometric_calibration(
+  dn_image : Array[Array[Double]],
+  gain : Double,
+  offset : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_radiometric_calibration(dn_image, gain, offset)
+}
+
+///|
+pub fn atmo_dos_correction(
+  radiance : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_dos_correction(radiance)
+}
+
+///|
+pub fn atmo_reflectance(
+  radiance : Array[Array[Double]],
+  params : AtmoParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_reflectance(radiance, params)
+}
+
+///|
+pub fn atmo_empirical_line(
+  raw_image : Array[Array[Double]],
+  field_data : Array[Double],
+  image_data : Array[Double],
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_empirical_line(raw_image, field_data, image_data)
+}
+
+///|
+pub fn atmo_rayleigh_correction(
+  radiance : Array[Array[Double]],
+  wavelength : Double,
+  sun_elevation : Double,
+  view_angle : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_rayleigh_correction(
+    radiance, wavelength, sun_elevation, view_angle,
+  )
+}
+
+///|
+pub fn atmo_correct(
+  radiance : Array[Array[Double]],
+  atmo_method : AtmoMethod,
+  wavelength : Double,
+  sun_elevation : Double,
+  view_angle : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.atmo_correct(
+    radiance, atmo_method, wavelength, sun_elevation, view_angle,
+  )
+}
+
+///|
+pub fn atmo_build_params(
+  sun_elevation : Double,
+  sun_azimuth : Double,
+  gain : Double,
+  offset : Double,
+  earth_sun_distance : Double,
+  solar_irradiance : Double,
+) -> AtmoParams {
+  @cv_advanced.atmo_build_params(
+    sun_elevation, sun_azimuth, gain, offset, earth_sun_distance, solar_irradiance,
+  )
+}
+
+///|
+pub fn atmo_mean_radiance(radiance : Array[Array[Double]]) -> Double {
+  @cv_advanced.atmo_mean_radiance(radiance)
+}

@@ -17,6 +17,22 @@ pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
 
+pub fn atmo_build_params(Double, Double, Double, Double, Double, Double) -> AtmoParams
+
+pub fn atmo_correct(Array[Array[Double]], AtmoMethod, Double, Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_dos_correction(Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn atmo_empirical_line(Array[Array[Double]], Array[Double], Array[Double]) -> Array[Array[Double]]
+
+pub fn atmo_mean_radiance(Array[Array[Double]]) -> Double
+
+pub fn atmo_radiometric_calibration(Array[Array[Double]], Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_rayleigh_correction(Array[Array[Double]], Double, Double, Double) -> Array[Array[Double]]
+
+pub fn atmo_reflectance(Array[Array[Double]], AtmoParams) -> Array[Array[Double]]
+
 pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig, Int) -> AutoMLResult
 
 pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
@@ -783,6 +799,27 @@ pub(all) struct AffineMatrix {
 pub fn AffineMatrix::equal(Self, Self) -> Bool
 pub fn AffineMatrix::not_equal(Self, Self) -> Bool
 pub fn AffineMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) enum AtmoMethod {
+  DarkObjectSubtraction
+  EmpiricalLine
+  Rayleigh
+} derive(Eq, @debug.Debug)
+pub fn AtmoMethod::equal(Self, Self) -> Bool
+pub fn AtmoMethod::not_equal(Self, Self) -> Bool
+pub fn AtmoMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AtmoParams {
+  sun_elevation : Double
+  sun_azimuth : Double
+  gain : Double
+  offset : Double
+  earth_sun_distance : Double
+  solar_irradiance : Double
+} derive(Eq, @debug.Debug)
+pub fn AtmoParams::equal(Self, Self) -> Bool
+pub fn AtmoParams::not_equal(Self, Self) -> Bool
+pub fn AtmoParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AttentionParams {
   d_model : Int
