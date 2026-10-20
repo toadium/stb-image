@@ -18018,3 +18018,64 @@ pub fn hdr_plus_pipeline(
 pub fn hdr_plus_estimate_exposure(img : Image) -> Double {
   @cv_advanced.hdr_plus_estimate_exposure(img)
 }
+
+// v379.0.0 夜景合成 re-export
+
+///|
+pub type NightShotMode = @cv_advanced.NightShotMode
+
+///|
+pub type NightShotParams = @cv_advanced.NightShotParams
+
+///|
+pub fn night_build_params(mode : NightShotMode) -> NightShotParams {
+  @cv_advanced.night_build_params(mode)
+}
+
+///|
+pub fn night_temporal_denoise(images : Array[Image]) -> Image {
+  @cv_advanced.night_temporal_denoise(images)
+}
+
+///|
+pub fn night_detect_motion(
+  reference : Image,
+  current : Image,
+  threshold : Double,
+) -> Array[Bool] {
+  @cv_advanced.night_detect_motion(reference, current, threshold)
+}
+
+///|
+pub fn night_motion_compensated_denoise(
+  reference : Image,
+  images : Array[Image],
+  threshold : Double,
+) -> Image {
+  @cv_advanced.night_motion_compensated_denoise(reference, images, threshold)
+}
+
+///|
+pub fn night_enhance_brightness(img : Image, boost : Double) -> Image {
+  @cv_advanced.night_enhance_brightness(img, boost)
+}
+
+///|
+pub fn night_enhance_contrast(img : Image, boost : Double) -> Image {
+  @cv_advanced.night_enhance_contrast(img, boost)
+}
+
+///|
+pub fn night_correct_color(img : Image) -> Image {
+  @cv_advanced.night_correct_color(img)
+}
+
+///|
+pub fn night_pipeline(images : Array[Image], params : NightShotParams) -> Image {
+  @cv_advanced.night_pipeline(images, params)
+}
+
+///|
+pub fn night_estimate_noise(img : Image) -> Double {
+  @cv_advanced.night_estimate_noise(img)
+}

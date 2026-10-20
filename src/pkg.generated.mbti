@@ -3015,6 +3015,24 @@ pub fn ngram_score(String, @ocr.NgramModel) -> Double raise @types.LoadError
 
 pub fn niblack_threshold(@types.Image, window_size? : Int, k? : Double) -> @types.Image raise @types.LoadError
 
+pub fn night_build_params(@cv_advanced.NightShotMode) -> @cv_advanced.NightShotParams
+
+pub fn night_correct_color(@types.Image) -> @types.Image
+
+pub fn night_detect_motion(@types.Image, @types.Image, Double) -> Array[Bool]
+
+pub fn night_enhance_brightness(@types.Image, Double) -> @types.Image
+
+pub fn night_enhance_contrast(@types.Image, Double) -> @types.Image
+
+pub fn night_estimate_noise(@types.Image) -> Double
+
+pub fn night_motion_compensated_denoise(@types.Image, Array[@types.Image], Double) -> @types.Image
+
+pub fn night_pipeline(Array[@types.Image], @cv_advanced.NightShotParams) -> @types.Image
+
+pub fn night_temporal_denoise(Array[@types.Image]) -> @types.Image
+
 pub fn nl_describe(Array[@agent_kit.Intent]) -> String
 
 pub fn nl_intents(String) -> Array[@agent_kit.Intent]
@@ -5483,6 +5501,10 @@ pub using @neural_rendering {type NeuralRenderingAlgorithm as NeuralRenderingAlg
 pub using @ocr {type NgramModel}
 
 pub using @photo_enhance {type NightEnhanceConfig}
+
+pub using @cv_advanced {type NightShotMode}
+
+pub using @cv_advanced {type NightShotParams}
 
 pub using @enhance {type NlmConfig}
 

@@ -549,6 +549,24 @@ pub fn multispectral_pca(MultispecImage, Int) -> Array[Array[Double]]
 
 pub fn nas_search((Array[Double]) -> Double, Int, Int, AutoMLConfig) -> AutoMLResult
 
+pub fn night_build_params(NightShotMode, align_threshold? : Double, noise_strength? : Double, brightness_boost? : Double, contrast_boost? : Double) -> NightShotParams
+
+pub fn night_correct_color(@types.Image) -> @types.Image
+
+pub fn night_detect_motion(@types.Image, @types.Image, Double) -> Array[Bool]
+
+pub fn night_enhance_brightness(@types.Image, Double) -> @types.Image
+
+pub fn night_enhance_contrast(@types.Image, Double) -> @types.Image
+
+pub fn night_estimate_noise(@types.Image) -> Double
+
+pub fn night_motion_compensated_denoise(@types.Image, Array[@types.Image], Double) -> @types.Image
+
+pub fn night_pipeline(Array[@types.Image], NightShotParams) -> @types.Image
+
+pub fn night_temporal_denoise(Array[@types.Image]) -> @types.Image
+
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
@@ -2085,6 +2103,26 @@ pub(all) enum MultispectralBand {
 pub fn MultispectralBand::equal(Self, Self) -> Bool
 pub fn MultispectralBand::not_equal(Self, Self) -> Bool
 pub fn MultispectralBand::to_repr(Self) -> @debug.Repr
+
+pub(all) enum NightShotMode {
+  Temporal
+  Spatial
+  Hybrid
+} derive(Eq, @debug.Debug)
+pub fn NightShotMode::equal(Self, Self) -> Bool
+pub fn NightShotMode::not_equal(Self, Self) -> Bool
+pub fn NightShotMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct NightShotParams {
+  mode : NightShotMode
+  align_threshold : Double
+  noise_strength : Double
+  brightness_boost : Double
+  contrast_boost : Double
+} derive(Eq, @debug.Debug)
+pub fn NightShotParams::equal(Self, Self) -> Bool
+pub fn NightShotParams::not_equal(Self, Self) -> Bool
+pub fn NightShotParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OrbSlamConfig {
   mode : OrbSlamMode
