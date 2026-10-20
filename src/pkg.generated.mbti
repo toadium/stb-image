@@ -639,6 +639,22 @@ pub fn cli_help() -> String
 
 pub fn cli_parse(Array[String]) -> @pipeline.CliCommand
 
+pub fn cloud_build_result(Array[Array[Int]], Array[Array[Int]]) -> @cv_advanced.CloudResult
+
+pub fn cloud_compute_coverage(Array[Array[Int]]) -> Double
+
+pub fn cloud_detect(Array[Array[Double]], @cv_advanced.CloudDetectMethod, Double) -> Array[Array[Int]]
+
+pub fn cloud_morph_open(Array[Array[Int]], Int) -> Array[Array[Int]]
+
+pub fn cloud_multispectral_detect(Array[Array[Double]], Array[Array[Double]], Double, Double) -> Array[Array[Int]]
+
+pub fn cloud_progressive_refinement(Array[Array[Double]], Double, Int) -> Array[Array[Int]]
+
+pub fn cloud_shadow_detect(Array[Array[Double]], Array[Array[Int]], Double, Double, Double, Int) -> Array[Array[Int]]
+
+pub fn cloud_threshold_detect(Array[Array[Double]], Double) -> Array[Array[Int]]
+
 pub fn cmyk_to_rgb(Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError
 
 pub fn cmyk_to_rgb_16(Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError
@@ -4593,6 +4609,10 @@ pub using @pipeline {type CliCommand}
 pub using @cv_advanced {type ClientUpdate}
 
 pub using @forensics_enhanced {type CloneDetectionResult}
+
+pub using @cv_advanced {type CloudDetectMethod}
+
+pub using @cv_advanced {type CloudResult}
 
 pub using @self_evolve {type CoEvolveAction}
 

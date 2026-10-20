@@ -17644,3 +17644,84 @@ pub fn target_count(detections : Array[TargetResult]) -> Int {
 pub fn target_best_detection(detections : Array[TargetResult]) -> TargetResult {
   @cv_advanced.target_best_detection(detections)
 }
+
+///|
+pub type CloudDetectMethod = @cv_advanced.CloudDetectMethod
+
+///|
+pub type CloudResult = @cv_advanced.CloudResult
+
+///|
+pub fn cloud_threshold_detect(
+  image : Array[Array[Double]],
+  threshold : Double,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_threshold_detect(image, threshold)
+}
+
+///|
+pub fn cloud_multispectral_detect(
+  visible : Array[Array[Double]],
+  thermal : Array[Array[Double]],
+  vis_threshold : Double,
+  thermal_threshold : Double,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_multispectral_detect(
+    visible, thermal, vis_threshold, thermal_threshold,
+  )
+}
+
+///|
+pub fn cloud_shadow_detect(
+  image : Array[Array[Double]],
+  cloud_mask : Array[Array[Int]],
+  shadow_threshold : Double,
+  sun_azimuth : Double,
+  sun_elevation : Double,
+  shadow_offset : Int,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_shadow_detect(
+    image, cloud_mask, shadow_threshold, sun_azimuth, sun_elevation, shadow_offset,
+  )
+}
+
+///|
+pub fn cloud_progressive_refinement(
+  image : Array[Array[Double]],
+  initial_threshold : Double,
+  num_iterations : Int,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_progressive_refinement(
+    image, initial_threshold, num_iterations,
+  )
+}
+
+///|
+pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int]]) -> Double {
+  @cv_advanced.cloud_compute_coverage(cloud_mask)
+}
+
+///|
+pub fn cloud_morph_open(
+  mask : Array[Array[Int]],
+  kernel_size : Int,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_morph_open(mask, kernel_size)
+}
+
+///|
+pub fn cloud_build_result(
+  cloud_mask : Array[Array[Int]],
+  shadow_mask : Array[Array[Int]],
+) -> CloudResult {
+  @cv_advanced.cloud_build_result(cloud_mask, shadow_mask)
+}
+
+///|
+pub fn cloud_detect(
+  image : Array[Array[Double]],
+  det_method : CloudDetectMethod,
+  threshold : Double,
+) -> Array[Array[Int]] {
+  @cv_advanced.cloud_detect(image, det_method, threshold)
+}

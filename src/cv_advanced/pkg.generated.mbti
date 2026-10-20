@@ -89,6 +89,22 @@ pub fn classify_overall_accuracy(Array[Array[Int]]) -> Double
 
 pub fn clean_foreground_mask(ForegroundMask) -> ForegroundMask
 
+pub fn cloud_build_result(Array[Array[Int]], Array[Array[Int]]) -> CloudResult
+
+pub fn cloud_compute_coverage(Array[Array[Int]]) -> Double
+
+pub fn cloud_detect(Array[Array[Double]], CloudDetectMethod, Double) -> Array[Array[Int]]
+
+pub fn cloud_morph_open(Array[Array[Int]], Int) -> Array[Array[Int]]
+
+pub fn cloud_multispectral_detect(Array[Array[Double]], Array[Array[Double]], Double, Double) -> Array[Array[Int]]
+
+pub fn cloud_progressive_refinement(Array[Array[Double]], Double, Int) -> Array[Array[Int]]
+
+pub fn cloud_shadow_detect(Array[Array[Double]], Array[Array[Int]], Double, Double, Double, Int) -> Array[Array[Int]]
+
+pub fn cloud_threshold_detect(Array[Array[Double]], Double) -> Array[Array[Int]]
+
 pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
 pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
@@ -1120,6 +1136,26 @@ pub(all) struct ClientUpdate {
 pub fn ClientUpdate::equal(Self, Self) -> Bool
 pub fn ClientUpdate::not_equal(Self, Self) -> Bool
 pub fn ClientUpdate::to_repr(Self) -> @debug.Repr
+
+pub(all) enum CloudDetectMethod {
+  Threshold
+  Multispectral
+  Progressive
+} derive(Eq, @debug.Debug)
+pub fn CloudDetectMethod::equal(Self, Self) -> Bool
+pub fn CloudDetectMethod::not_equal(Self, Self) -> Bool
+pub fn CloudDetectMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CloudResult {
+  cloud_mask : Array[Array[Int]]
+  shadow_mask : Array[Array[Int]]
+  cloud_coverage : Double
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn CloudResult::equal(Self, Self) -> Bool
+pub fn CloudResult::not_equal(Self, Self) -> Bool
+pub fn CloudResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Conv1DParams {
   in_channels : Int

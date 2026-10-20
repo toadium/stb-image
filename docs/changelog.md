@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v373.0.0 - GeoVerse Phase 15: 云检测
+- 扩展 `src/cv_advanced/`：云检测 — 阈值/多光谱/渐进精化/阴影检测
+  - **cloud_detection**：CloudDetectMethod / CloudResult + cloud_threshold_detect / cloud_multispectral_detect / cloud_shadow_detect / cloud_progressive_refinement / cloud_compute_coverage / cloud_morph_open / cloud_build_result / cloud_detect
+  - Phase 15 遥感与地理空间大扩展 — 云检测（亮度阈值, 多光谱亮+冷, 云阴影投射, 渐进精化, 形态学开运算去噪）
+- 新增 2 类型 + 9 公共函数，reexport.mbt 注册顶层 API
+- +18 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7716×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v372.0.0 - GeoVerse Phase 15: 目标检测
 - 扩展 `src/cv_advanced/`：遥感目标检测 — 滑窗/CFAR/模板匹配/NMS
   - **target_detection**：TargetDetMethod / TargetResult + target_build_result / target_sliding_window / target_cfar / target_template_match / target_nms / target_compute_iou / target_detect / target_count / target_best_detection
