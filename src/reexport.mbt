@@ -17498,3 +17498,70 @@ pub fn ortho_displacement(
 ) -> Double {
   @cv_advanced.ortho_displacement(elevation, focal_length, flying_height)
 }
+
+///|
+pub type FusionMethod = @cv_advanced.FusionMethod
+
+///|
+pub fn fusion_rgb_to_ihs(
+  r : Double,
+  g : Double,
+  b : Double,
+) -> (Double, Double, Double) {
+  @cv_advanced.fusion_rgb_to_ihs(r, g, b)
+}
+
+///|
+pub fn fusion_ihs_to_rgb(
+  intensity : Double,
+  hue : Double,
+  saturation : Double,
+) -> (Double, Double, Double) {
+  @cv_advanced.fusion_ihs_to_rgb(intensity, hue, saturation)
+}
+
+///|
+pub fn fusion_ihs(
+  multispectral : Array[Array[Array[Double]]],
+  panchromatic : Array[Array[Double]],
+) -> Array[Array[Array[Double]]] {
+  @cv_advanced.fusion_ihs(multispectral, panchromatic)
+}
+
+///|
+pub fn fusion_pca(
+  multispectral : Array[Array[Array[Double]]],
+  panchromatic : Array[Array[Double]],
+) -> Array[Array[Array[Double]]] {
+  @cv_advanced.fusion_pca(multispectral, panchromatic)
+}
+
+///|
+pub fn fusion_wavelet(
+  multispectral : Array[Array[Array[Double]]],
+  panchromatic : Array[Array[Double]],
+) -> Array[Array[Array[Double]]] {
+  @cv_advanced.fusion_wavelet(multispectral, panchromatic)
+}
+
+///|
+pub fn fusion_gram_schmidt(
+  multispectral : Array[Array[Array[Double]]],
+  panchromatic : Array[Array[Double]],
+) -> Array[Array[Array[Double]]] {
+  @cv_advanced.fusion_gram_schmidt(multispectral, panchromatic)
+}
+
+///|
+pub fn fusion_dispatch(
+  multispectral : Array[Array[Array[Double]]],
+  panchromatic : Array[Array[Double]],
+  fusion_method : FusionMethod,
+) -> Array[Array[Array[Double]]] {
+  @cv_advanced.fusion_dispatch(multispectral, panchromatic, fusion_method)
+}
+
+///|
+pub fn fusion_quality_mean(fused : Array[Array[Array[Double]]]) -> Double {
+  @cv_advanced.fusion_quality_mean(fused)
+}

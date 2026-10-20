@@ -287,6 +287,22 @@ pub fn functional_pet_suv(Array[Double], Double, Double) -> Array[Double]
 
 pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
 
+pub fn fusion_dispatch(Array[Array[Array[Double]]], Array[Array[Double]], FusionMethod) -> Array[Array[Array[Double]]]
+
+pub fn fusion_gram_schmidt(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_ihs(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_ihs_to_rgb(Double, Double, Double) -> (Double, Double, Double)
+
+pub fn fusion_pca(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_quality_mean(Array[Array[Array[Double]]]) -> Double
+
+pub fn fusion_rgb_to_ihs(Double, Double, Double) -> (Double, Double, Double)
+
+pub fn fusion_wavelet(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
 pub fn gan_discriminator_forward(Array[Double], Array[Double], GANConfig) -> Double
 
 pub fn gan_generate_samples(Array[Double], GANConfig, Int) -> Array[Array[Double]]
@@ -1494,6 +1510,16 @@ pub(all) struct FundamentalMatrix {
 pub fn FundamentalMatrix::equal(Self, Self) -> Bool
 pub fn FundamentalMatrix::not_equal(Self, Self) -> Bool
 pub fn FundamentalMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FusionMethod {
+  Ihs
+  Pca
+  Wavelet
+  GramSchmidt
+} derive(Eq, @debug.Debug)
+pub fn FusionMethod::equal(Self, Self) -> Bool
+pub fn FusionMethod::not_equal(Self, Self) -> Bool
+pub fn FusionMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GANConfig {
   latent_dim : Int

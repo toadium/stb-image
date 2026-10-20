@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v371.0.0 - GeoVerse Phase 15: 影像融合
+- 扩展 `src/cv_advanced/`：影像融合 — IHS/PCA/小波/Gram-Schmidt
+  - **image_fusion**：FusionMethod + fusion_rgb_to_ihs / fusion_ihs_to_rgb / fusion_ihs / fusion_pca / fusion_wavelet / fusion_gram_schmidt / fusion_dispatch / fusion_quality_mean
+  - Phase 15 遥感与地理空间大扩展 — 影像融合（IHS 变换融合, PCA 融合, 小波融合, Gram-Schmidt 正交化融合）
+- 新增 1 类型 + 8 公共函数，reexport.mbt 注册顶层 API
+- +18 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7678×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v370.0.0 - GeoVerse Phase 15: 正射校正
 - 扩展 `src/cv_advanced/`：正射校正 — DEM 纠正/镶嵌/匀色/拼接线
   - **orthorectification**：OrthoParams + ortho_correct / ortho_mosaic / ortho_color_balance / ortho_wallis_dodging / ortho_seamline / ortho_build_params / ortho_displacement

@@ -1891,9 +1891,25 @@ pub fn fuse_weighted_average_fe(Array[@types.Image], Array[Double]) -> @types.Im
 
 pub fn fusion_default_config() -> @fusion.FusionConfig
 
+pub fn fusion_dispatch(Array[Array[Array[Double]]], Array[Array[Double]], @cv_advanced.FusionMethod) -> Array[Array[Array[Double]]]
+
+pub fn fusion_gram_schmidt(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_ihs(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_ihs_to_rgb(Double, Double, Double) -> (Double, Double, Double)
+
+pub fn fusion_pca(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
+
+pub fn fusion_quality_mean(Array[Array[Array[Double]]]) -> Double
+
 pub fn fusion_report_to_string_fe(@fusion_enhanced.FusionResult, Double) -> String
 
 pub fn fusion_report_to_string_vlm(@vlm_multimodal.FusionResult) -> String
+
+pub fn fusion_rgb_to_ihs(Double, Double, Double) -> (Double, Double, Double)
+
+pub fn fusion_wavelet(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Array[Double]]]
 
 pub fn gabor_filter(@types.Image, Int, Float, Float, lambda? : Float, gamma? : Float, phi? : Float) -> @types.Image raise @types.LoadError
 
@@ -4939,6 +4955,8 @@ pub using @fusion {type FusionConfig}
 pub using @vlm_multimodal {type FusionConfig as FusionConfigVLM}
 
 pub using @fusion_enhanced {type FusionConfig as FusionEnhancedConfig}
+
+pub using @cv_advanced {type FusionMethod}
 
 pub using @fusion_enhanced {type FusionResult}
 
