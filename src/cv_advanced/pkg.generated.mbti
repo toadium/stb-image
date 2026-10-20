@@ -373,6 +373,22 @@ pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
 
+pub fn hdr_plus_apply_ghost_map(@types.Image, @types.Image, GhostMap) -> @types.Image
+
+pub fn hdr_plus_build_params(HdrPlusMode, align_threshold? : Double, ghost_threshold? : Double, num_pyramid_levels? : Int) -> HdrPlusParams
+
+pub fn hdr_plus_calibrate_response(Array[@types.Image], Array[Double]) -> Array[Double]
+
+pub fn hdr_plus_detect_ghost(@types.Image, @types.Image, Double) -> GhostMap
+
+pub fn hdr_plus_estimate_exposure(@types.Image) -> Double
+
+pub fn hdr_plus_mertens_fusion(Array[@types.Image]) -> @types.Image
+
+pub fn hdr_plus_pipeline(Array[@types.Image], HdrPlusParams) -> @types.Image
+
+pub fn hdr_plus_weighted_merge(Array[@types.Image], Array[Double]) -> @types.Image
+
 pub fn hyperspectral_abundance_inversion(Array[Double], Array[Array[Double]]) -> Array[Double]
 
 pub fn hyperspectral_build_endmember_result(Array[Array[Double]], Int, Int, Int) -> EndmemberResult
@@ -1715,6 +1731,15 @@ pub fn GeoCorrectMethod::equal(Self, Self) -> Bool
 pub fn GeoCorrectMethod::not_equal(Self, Self) -> Bool
 pub fn GeoCorrectMethod::to_repr(Self) -> @debug.Repr
 
+pub(all) struct GhostMap {
+  width : Int
+  height : Int
+  mask : Array[Bool]
+} derive(Eq, @debug.Debug)
+pub fn GhostMap::equal(Self, Self) -> Bool
+pub fn GhostMap::not_equal(Self, Self) -> Bool
+pub fn GhostMap::to_repr(Self) -> @debug.Repr
+
 pub(all) struct GraphData {
   num_nodes : Int
   adj_matrix : Array[Double]
@@ -1724,6 +1749,25 @@ pub(all) struct GraphData {
 pub fn GraphData::equal(Self, Self) -> Bool
 pub fn GraphData::not_equal(Self, Self) -> Bool
 pub fn GraphData::to_repr(Self) -> @debug.Repr
+
+pub(all) enum HdrPlusMode {
+  Weighted
+  Mertens
+  DeGhost
+} derive(Eq, @debug.Debug)
+pub fn HdrPlusMode::equal(Self, Self) -> Bool
+pub fn HdrPlusMode::not_equal(Self, Self) -> Bool
+pub fn HdrPlusMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct HdrPlusParams {
+  mode : HdrPlusMode
+  align_threshold : Double
+  ghost_threshold : Double
+  num_pyramid_levels : Int
+} derive(Eq, @debug.Debug)
+pub fn HdrPlusParams::equal(Self, Self) -> Bool
+pub fn HdrPlusParams::not_equal(Self, Self) -> Bool
+pub fn HdrPlusParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageCaptioningResult {
   image_id : String

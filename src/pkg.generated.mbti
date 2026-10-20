@@ -2221,6 +2221,22 @@ pub fn hdr_info_extended(Bytes) -> @codec.HdrInfoExtended raise @types.LoadError
 
 pub fn hdr_merge(Array[@types.Image], Array[Double]) -> @photo_enhance.HdrImage
 
+pub fn hdr_plus_apply_ghost_map(@types.Image, @types.Image, @cv_advanced.GhostMap) -> @types.Image
+
+pub fn hdr_plus_build_params(@cv_advanced.HdrPlusMode) -> @cv_advanced.HdrPlusParams
+
+pub fn hdr_plus_calibrate_response(Array[@types.Image], Array[Double]) -> Array[Double]
+
+pub fn hdr_plus_detect_ghost(@types.Image, @types.Image, Double) -> @cv_advanced.GhostMap
+
+pub fn hdr_plus_estimate_exposure(@types.Image) -> Double
+
+pub fn hdr_plus_mertens_fusion(Array[@types.Image]) -> @types.Image
+
+pub fn hdr_plus_pipeline(Array[@types.Image], @cv_advanced.HdrPlusParams) -> @types.Image
+
+pub fn hdr_plus_weighted_merge(Array[@types.Image], Array[Double]) -> @types.Image
+
 pub fn hdr_process(Array[@types.Image], config? : @enhance.HdrConfig) -> @types.Image raise @types.LoadError
 
 pub fn hdr_to_ldr_gamma(Float) -> Unit
@@ -5110,6 +5126,8 @@ pub using @pose_estimation {type GestureRecognitionResult as GestureRecognitionR
 
 pub using @pose_estimation {type GestureType as GestureTypePE}
 
+pub using @cv_advanced {type GhostMap}
+
 pub using @types {type GifAnimation}
 
 pub using @codec {type GifInfoExtended}
@@ -5153,6 +5171,10 @@ pub using @enhance {type HdrConfig}
 pub using @photo_enhance {type HdrImage}
 
 pub using @codec {type HdrInfoExtended}
+
+pub using @cv_advanced {type HdrPlusMode}
+
+pub using @cv_advanced {type HdrPlusParams}
 
 pub using @codec {type HeifInfoExtended}
 

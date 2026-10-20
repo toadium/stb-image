@@ -17951,3 +17951,70 @@ pub fn raw_pipeline(raw : Image, params : RawParams) -> Image {
 pub fn raw_extract_bayer(img : Image, pattern : BayerPattern) -> Image {
   @cv_advanced.raw_extract_bayer(img, pattern)
 }
+// v378.0.0 HDR+ 合成 re-export
+
+///|
+pub type HdrPlusMode = @cv_advanced.HdrPlusMode
+
+///|
+pub type HdrPlusParams = @cv_advanced.HdrPlusParams
+
+///|
+pub type GhostMap = @cv_advanced.GhostMap
+
+///|
+pub fn hdr_plus_build_params(mode : HdrPlusMode) -> HdrPlusParams {
+  @cv_advanced.hdr_plus_build_params(mode)
+}
+
+///|
+pub fn hdr_plus_detect_ghost(
+  reference : Image,
+  other : Image,
+  threshold : Double,
+) -> GhostMap {
+  @cv_advanced.hdr_plus_detect_ghost(reference, other, threshold)
+}
+
+///|
+pub fn hdr_plus_apply_ghost_map(
+  reference : Image,
+  other : Image,
+  ghost : GhostMap,
+) -> Image {
+  @cv_advanced.hdr_plus_apply_ghost_map(reference, other, ghost)
+}
+
+///|
+pub fn hdr_plus_mertens_fusion(images : Array[Image]) -> Image {
+  @cv_advanced.hdr_plus_mertens_fusion(images)
+}
+
+///|
+pub fn hdr_plus_weighted_merge(
+  images : Array[Image],
+  exposures : Array[Double],
+) -> Image {
+  @cv_advanced.hdr_plus_weighted_merge(images, exposures)
+}
+
+///|
+pub fn hdr_plus_calibrate_response(
+  images : Array[Image],
+  exposures : Array[Double],
+) -> Array[Double] {
+  @cv_advanced.hdr_plus_calibrate_response(images, exposures)
+}
+
+///|
+pub fn hdr_plus_pipeline(
+  images : Array[Image],
+  params : HdrPlusParams,
+) -> Image {
+  @cv_advanced.hdr_plus_pipeline(images, params)
+}
+
+///|
+pub fn hdr_plus_estimate_exposure(img : Image) -> Double {
+  @cv_advanced.hdr_plus_estimate_exposure(img)
+}
