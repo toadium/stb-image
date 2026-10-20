@@ -43,6 +43,12 @@ pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Arra
 
 pub fn bf_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
 
+pub fn bokeh_blur_circular(@types.Image, Array[Double], Int) -> @types.Image
+
+pub fn bokeh_blur_polygonal(@types.Image, Array[Double], Int, ApertureShape) -> @types.Image
+
+pub fn bokeh_pipeline(@types.Image, DepthMap, BokehParams) -> BokehResult
+
 pub fn calculate_iou(Array[Int], Array[Int]) -> Double
 
 pub fn calibrate_camera(ChessboardCorners, Int, Int) -> CalibrationResult
@@ -113,7 +119,11 @@ pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
 
 pub fn compute_beta_schedule(DiffusionConfig) -> Array[Double]
 
+pub fn compute_blur_map(DepthMap, Double, Double, Double, Double) -> Array[Double]
+
 pub fn compute_brief_descriptors(@types.Image, Array[KeyPoint]) -> Array[BinaryDescriptor]
+
+pub fn compute_circle_of_confusion(Double, Double, Double, Double) -> Double
 
 pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
 
@@ -201,6 +211,8 @@ pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Arra
 
 pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) -> Array[Double]
 
+pub fn default_bokeh_params(ApertureShape, BokehQuality) -> BokehParams
+
 pub fn depth_estimation_pipeline(Array[@types.Image], Array[Array[Double]], Array[Double], DepthEstimationParams) -> DepthMap
 
 pub fn depth_post_process(DepthMap, DepthPostProcessParams) -> DepthMap
@@ -272,6 +284,8 @@ pub fn erf_approx(Double) -> Double
 pub fn essential_matrix_svd(EssentialMatrix) -> (Double, Double, Double)
 
 pub fn estimate_affine(@types.Image, @types.Image) -> AffineMatrix
+
+pub fn estimate_bokeh_strength(DepthMap) -> Double
 
 pub fn estimate_depth_from_defocus(Array[Double], Int, Int, Double, Double, Double) -> DepthMap
 
@@ -348,6 +362,8 @@ pub fn gan_train_step(Array[Double], Array[Double], GANConfig) -> GANState
 pub fn gat_forward(GraphData, Array[Double], Array[Double], GNNConfig) -> GNNResult
 
 pub fn gcn_forward(GraphData, Array[Array[Double]], GNNConfig) -> Array[Double]
+
+pub fn generate_aperture_mask(ApertureShape, Int) -> Array[Array[Double]]
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
@@ -815,6 +831,8 @@ pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
 
 pub fn simclr_forward(Array[Double], Array[Double], SSLConfig) -> Double
 
+pub fn simulate_lens_blur(@types.Image, DepthMap, BokehParams) -> BokehResult
+
 pub fn smooth_depth_map(DepthMap, Int) -> DepthMap
 
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
@@ -992,6 +1010,16 @@ pub fn AffineMatrix::equal(Self, Self) -> Bool
 pub fn AffineMatrix::not_equal(Self, Self) -> Bool
 pub fn AffineMatrix::to_repr(Self) -> @debug.Repr
 
+pub(all) enum ApertureShape {
+  Circular
+  Hexagonal
+  Octagonal
+  CatEye
+} derive(Eq, @debug.Debug)
+pub fn ApertureShape::equal(Self, Self) -> Bool
+pub fn ApertureShape::not_equal(Self, Self) -> Bool
+pub fn ApertureShape::to_repr(Self) -> @debug.Repr
+
 pub(all) enum AtmoMethod {
   DarkObjectSubtraction
   EmpiricalLine
@@ -1112,6 +1140,37 @@ pub(all) struct BinaryDescriptor {
 pub fn BinaryDescriptor::equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::not_equal(Self, Self) -> Bool
 pub fn BinaryDescriptor::to_repr(Self) -> @debug.Repr
+
+pub(all) struct BokehParams {
+  aperture_shape : ApertureShape
+  aperture_f_number : Double
+  focal_length : Double
+  focus_distance : Double
+  blur_strength : Double
+  quality : BokehQuality
+  circle_of_confusion : Double
+} derive(Eq, @debug.Debug)
+pub fn BokehParams::equal(Self, Self) -> Bool
+pub fn BokehParams::not_equal(Self, Self) -> Bool
+pub fn BokehParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum BokehQuality {
+  Fast
+  Medium
+  High
+} derive(Eq, @debug.Debug)
+pub fn BokehQuality::equal(Self, Self) -> Bool
+pub fn BokehQuality::not_equal(Self, Self) -> Bool
+pub fn BokehQuality::to_repr(Self) -> @debug.Repr
+
+pub(all) struct BokehResult {
+  image : @types.Image
+  max_blur_radius : Int
+  blur_map : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn BokehResult::equal(Self, Self) -> Bool
+pub fn BokehResult::not_equal(Self, Self) -> Bool
+pub fn BokehResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CADDetectionResult {
   candidates : Array[LesionCandidate]

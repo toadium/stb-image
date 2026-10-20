@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v381.0.0 — 散景渲染
+
+**2026-10-20** — 光圈形状模拟/弥散圆计算/深度感知模糊/散景渲染流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `ApertureShape`(4形状) / `BokehQuality`(3质量) / `BokehParams` / `BokehResult` |
+| 新增函数 | `compute_circle_of_confusion` / `generate_aperture_mask` / `compute_blur_map` / `bokeh_blur_circular` / `bokeh_blur_polygonal` / `simulate_lens_blur` / `estimate_bokeh_strength` / `bokeh_pipeline` / `default_bokeh_params` |
+| 测试 | 7811×4（+17） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v380.0.0 — 景深估计
 
 **2026-10-20** — 单目深度估计/散焦深度/深度图后处理/景深流水线。

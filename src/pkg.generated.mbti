@@ -401,6 +401,12 @@ pub fn blend_soft_light(@types.Image, @types.Image) -> @types.Image raise @types
 
 pub fn bmp_info_extended(Bytes) -> @codec.BmpInfoExtended raise @types.LoadError
 
+pub fn bokeh_blur_circular(@types.Image, Array[Double], Int) -> @types.Image
+
+pub fn bokeh_blur_polygonal(@types.Image, Array[Double], Int, @cv_advanced.ApertureShape) -> @types.Image
+
+pub fn bokeh_pipeline(@types.Image, @cv_advanced.DepthMap, @cv_advanced.BokehParams) -> @cv_advanced.BokehResult
+
 pub fn box_blur(@types.Image, Int) -> @types.Image raise @types.LoadError
 
 pub fn box_blur_16(@types.Image16, Int) -> @types.Image16 raise @types.LoadError
@@ -735,7 +741,11 @@ pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
 
 pub fn compute_beta_schedule(@cv_advanced.DiffusionConfig) -> Array[Double]
 
+pub fn compute_blur_map(@cv_advanced.DepthMap, Double, Double, Double, Double) -> Array[Double]
+
 pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
+
+pub fn compute_circle_of_confusion(Double, Double, Double, Double) -> Double
 
 pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
 
@@ -1163,6 +1173,8 @@ pub fn decrypt_image_xor(@types.Image, String) -> @types.Image raise @types.Load
 
 pub fn default_batch_config() -> @pipeline.BatchConfig
 
+pub fn default_bokeh_params(@cv_advanced.ApertureShape, @cv_advanced.BokehQuality) -> @cv_advanced.BokehParams
+
 pub fn default_tile_config() -> @performance.TileConfig
 
 pub fn dehaze(@types.Image, patch_size? : Int, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
@@ -1584,6 +1596,8 @@ pub fn estimate_age_gender_fr(@types.Image, @face_recognition.FaceDetectionResul
 pub fn estimate_atmospheric_light(@types.Image, @types.Image, top_percent? : Int) -> Array[Int] raise @types.LoadError
 
 pub fn estimate_benefit(@imgir.IRPipeline) -> Int
+
+pub fn estimate_bokeh_strength(@cv_advanced.DepthMap) -> Double
 
 pub fn estimate_camera_pose_sl(@slam.FeatureTrackingResult, @slam.SLAMConfig, @slam.CameraPose) -> @slam.CameraPose
 
@@ -2010,6 +2024,8 @@ pub fn gen_test_file_for_op(@imgir.IROp) -> @self_evolve.ExecutableTestFile
 pub fn generate_3500_chinese_templates(char_set? : String) -> Array[(String, Array[Double])]
 
 pub fn generate_accuracy_report(@ocr.AccuracyStats, String) -> String
+
+pub fn generate_aperture_mask(@cv_advanced.ApertureShape, Int) -> Array[Array[Double]]
 
 pub fn generate_api_config_json(@ocr.ApiServerConfig) -> String
 
@@ -3965,6 +3981,8 @@ pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn simclr_forward(Array[Double], Array[Double], @cv_advanced.SSLConfig) -> Double
 
+pub fn simulate_lens_blur(@types.Image, @cv_advanced.DepthMap, @cv_advanced.BokehParams) -> @cv_advanced.BokehResult
+
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn sketch(@types.Image, blend? : Double) -> @types.Image
@@ -4602,6 +4620,8 @@ pub using @intelligent_vision {type AgriculturalVisionTask as AgriculturalVision
 
 pub using @types {type AnyImage}
 
+pub using @cv_advanced {type ApertureShape}
+
 pub using @codec {type ApngInfoExtended}
 
 pub using @encryption {type ArnoldParams}
@@ -4665,6 +4685,12 @@ pub using @cv_advanced {type BayerPattern}
 pub using @cv_advanced {type BinaryDescriptor}
 
 pub using @codec {type BmpInfoExtended}
+
+pub using @cv_advanced {type BokehParams}
+
+pub using @cv_advanced {type BokehQuality}
+
+pub using @cv_advanced {type BokehResult}
 
 pub using @detection {type BoundingBox}
 

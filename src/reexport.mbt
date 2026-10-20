@@ -18197,3 +18197,99 @@ pub fn depth_estimation_pipeline(
     images, sharpness_maps, focus_positions, params,
   )
 }
+// v381.0.0 散景渲染 re-export
+
+///|
+pub type ApertureShape = @cv_advanced.ApertureShape
+
+///|
+pub type BokehQuality = @cv_advanced.BokehQuality
+
+///|
+pub type BokehParams = @cv_advanced.BokehParams
+
+///|
+pub type BokehResult = @cv_advanced.BokehResult
+
+///|
+pub fn compute_circle_of_confusion(
+  focus_distance : Double,
+  focal_length : Double,
+  aperture_f_number : Double,
+  pixel_distance : Double,
+) -> Double {
+  @cv_advanced.compute_circle_of_confusion(
+    focus_distance, focal_length, aperture_f_number, pixel_distance,
+  )
+}
+
+///|
+pub fn generate_aperture_mask(
+  shape : ApertureShape,
+  radius : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.generate_aperture_mask(shape, radius)
+}
+
+///|
+pub fn compute_blur_map(
+  depth : @cv_advanced.DepthMap,
+  focus_distance : Double,
+  focal_length : Double,
+  aperture_f_number : Double,
+  blur_strength : Double,
+) -> Array[Double] {
+  @cv_advanced.compute_blur_map(
+    depth, focus_distance, focal_length, aperture_f_number, blur_strength,
+  )
+}
+
+///|
+pub fn bokeh_blur_circular(
+  image : Image,
+  blur_map : Array[Double],
+  max_radius : Int,
+) -> Image {
+  @cv_advanced.bokeh_blur_circular(image, blur_map, max_radius)
+}
+
+///|
+pub fn bokeh_blur_polygonal(
+  image : Image,
+  blur_map : Array[Double],
+  max_radius : Int,
+  shape : ApertureShape,
+) -> Image {
+  @cv_advanced.bokeh_blur_polygonal(image, blur_map, max_radius, shape)
+}
+
+///|
+pub fn simulate_lens_blur(
+  image : Image,
+  depth : @cv_advanced.DepthMap,
+  params : BokehParams,
+) -> BokehResult {
+  @cv_advanced.simulate_lens_blur(image, depth, params)
+}
+
+///|
+pub fn estimate_bokeh_strength(depth : @cv_advanced.DepthMap) -> Double {
+  @cv_advanced.estimate_bokeh_strength(depth)
+}
+
+///|
+pub fn bokeh_pipeline(
+  image : Image,
+  depth : @cv_advanced.DepthMap,
+  params : BokehParams,
+) -> BokehResult {
+  @cv_advanced.bokeh_pipeline(image, depth, params)
+}
+
+///|
+pub fn default_bokeh_params(
+  shape : ApertureShape,
+  quality : BokehQuality,
+) -> BokehParams {
+  @cv_advanced.default_bokeh_params(shape, quality)
+}
