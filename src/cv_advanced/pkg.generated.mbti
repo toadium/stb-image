@@ -773,6 +773,24 @@ pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, I
 
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
+pub fn ts_anomaly_detect(TimeSeriesData, Double) -> Array[Int]
+
+pub fn ts_build_data(Array[Double]) -> TimeSeriesData
+
+pub fn ts_change_point_detect(TimeSeriesData, Int) -> Array[Int]
+
+pub fn ts_forecast(TimeSeriesData, Int) -> Array[Double]
+
+pub fn ts_linear_trend(TimeSeriesData) -> (Double, Double)
+
+pub fn ts_mean(TimeSeriesData) -> Double
+
+pub fn ts_moving_average(TimeSeriesData, Int) -> Array[Double]
+
+pub fn ts_seasonal_decompose(TimeSeriesData, Int) -> (Array[Double], Array[Double], Array[Double])
+
+pub fn ts_stddev(TimeSeriesData) -> Double
+
 pub fn ultrasound_doppler_shift(Double, Double, Double) -> Double
 
 pub fn ultrasound_elastography(Array[Double], Array[Double], Int, Int, Int) -> ElastographyResult
@@ -2543,6 +2561,14 @@ pub(all) struct TargetResult {
 pub fn TargetResult::equal(Self, Self) -> Bool
 pub fn TargetResult::not_equal(Self, Self) -> Bool
 pub fn TargetResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TimeSeriesData {
+  values : Array[Double]
+  num_points : Int
+} derive(Eq, @debug.Debug)
+pub fn TimeSeriesData::equal(Self, Self) -> Bool
+pub fn TimeSeriesData::not_equal(Self, Self) -> Bool
+pub fn TimeSeriesData::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Track {
   x : Double

@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v374.0.0 - GeoVerse Phase 15: 时间序列分析
+- 扩展 `src/cv_advanced/`：时间序列分析 — 趋势/季节/异常/变点/平滑/预测
+  - **time_series**：TimeSeriesData + ts_build_data / ts_linear_trend / ts_moving_average / ts_seasonal_decompose / ts_anomaly_detect / ts_change_point_detect / ts_forecast / ts_mean / ts_stddev
+  - Phase 15 遥感与地理空间大扩展 — 时间序列分析（线性趋势, 移动平均, 季节分解, Z-score 异常检测, 变点检测, 线性外推预测）
+- 新增 1 类型 + 9 公共函数，reexport.mbt 注册顶层 API
+- +21 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7737×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v373.0.0 - GeoVerse Phase 15: 云检测
 - 扩展 `src/cv_advanced/`：云检测 — 阈值/多光谱/渐进精化/阴影检测
   - **cloud_detection**：CloudDetectMethod / CloudResult + cloud_threshold_detect / cloud_multispectral_detect / cloud_shadow_detect / cloud_progressive_refinement / cloud_compute_coverage / cloud_morph_open / cloud_build_result / cloud_detect

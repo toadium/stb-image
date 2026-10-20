@@ -17725,3 +17725,63 @@ pub fn cloud_detect(
 ) -> Array[Array[Int]] {
   @cv_advanced.cloud_detect(image, det_method, threshold)
 }
+
+///|
+pub type TimeSeriesData = @cv_advanced.TimeSeriesData
+
+///|
+pub fn ts_build_data(values : Array[Double]) -> TimeSeriesData {
+  @cv_advanced.ts_build_data(values)
+}
+
+///|
+pub fn ts_linear_trend(data : TimeSeriesData) -> (Double, Double) {
+  @cv_advanced.ts_linear_trend(data)
+}
+
+///|
+pub fn ts_moving_average(
+  data : TimeSeriesData,
+  window_size : Int,
+) -> Array[Double] {
+  @cv_advanced.ts_moving_average(data, window_size)
+}
+
+///|
+pub fn ts_seasonal_decompose(
+  data : TimeSeriesData,
+  period : Int,
+) -> (Array[Double], Array[Double], Array[Double]) {
+  @cv_advanced.ts_seasonal_decompose(data, period)
+}
+
+///|
+pub fn ts_anomaly_detect(
+  data : TimeSeriesData,
+  threshold : Double,
+) -> Array[Int] {
+  @cv_advanced.ts_anomaly_detect(data, threshold)
+}
+
+///|
+pub fn ts_change_point_detect(
+  data : TimeSeriesData,
+  min_segment : Int,
+) -> Array[Int] {
+  @cv_advanced.ts_change_point_detect(data, min_segment)
+}
+
+///|
+pub fn ts_forecast(data : TimeSeriesData, num_steps : Int) -> Array[Double] {
+  @cv_advanced.ts_forecast(data, num_steps)
+}
+
+///|
+pub fn ts_mean(data : TimeSeriesData) -> Double {
+  @cv_advanced.ts_mean(data)
+}
+
+///|
+pub fn ts_stddev(data : TimeSeriesData) -> Double {
+  @cv_advanced.ts_stddev(data)
+}

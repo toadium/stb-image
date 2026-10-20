@@ -4177,6 +4177,24 @@ pub fn triangulate_points_sl(Array[Array[Double]], @slam.CameraPose, @slam.Camer
 
 pub fn true_color_composite(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
+pub fn ts_anomaly_detect(@cv_advanced.TimeSeriesData, Double) -> Array[Int]
+
+pub fn ts_build_data(Array[Double]) -> @cv_advanced.TimeSeriesData
+
+pub fn ts_change_point_detect(@cv_advanced.TimeSeriesData, Int) -> Array[Int]
+
+pub fn ts_forecast(@cv_advanced.TimeSeriesData, Int) -> Array[Double]
+
+pub fn ts_linear_trend(@cv_advanced.TimeSeriesData) -> (Double, Double)
+
+pub fn ts_mean(@cv_advanced.TimeSeriesData) -> Double
+
+pub fn ts_moving_average(@cv_advanced.TimeSeriesData, Int) -> Array[Double]
+
+pub fn ts_seasonal_decompose(@cv_advanced.TimeSeriesData, Int) -> (Array[Double], Array[Double], Array[Double])
+
+pub fn ts_stddev(@cv_advanced.TimeSeriesData) -> Double
+
 pub fn tune_all_params() -> @self_evolve.TuneReport
 
 pub fn tune_params(@imgir.IROp) -> Array[@self_evolve.TunedParam]
@@ -5937,6 +5955,8 @@ pub using @advanced_imaging {type ThermalData as ThermalDataAI}
 pub using @codec {type TiffInfoExtended}
 
 pub using @performance {type TileConfig}
+
+pub using @cv_advanced {type TimeSeriesData}
 
 pub using @photo_enhance {type ToneMappingConfig}
 
