@@ -4165,6 +4165,28 @@ pub fn vector_field_to_image(@fieldimg.VectorField) -> @types.Image
 
 pub fn vector_field_zeros(Int, Int, Int) -> @fieldimg.VectorField raise @types.LoadError
 
+pub fn veg_dvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_evi(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_fractional_cover(Array[Array[Double]], Double, Double) -> Array[Array[Double]]
+
+pub fn veg_gndvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_mean_index(Array[Array[Double]]) -> Double
+
+pub fn veg_msavi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndbi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndwi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_rvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_savi(Array[Array[Double]], Array[Array[Double]], Double) -> Array[Array[Double]]
+
 pub fn vegetation_coverage(@types.Image, ndvi_soil? : Double, ndvi_veg? : Double) -> @types.Image raise @types.LoadError
 
 pub fn verify_image_source_enhanced_fs(@types.Image, @forensics.EnhancedVerificationConfig) -> @forensics.EnhancedVerificationResult raise @types.LoadError

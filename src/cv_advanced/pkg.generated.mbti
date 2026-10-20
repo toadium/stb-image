@@ -707,6 +707,28 @@ pub fn vae_reparameterize(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn validate_disparity(DisparityMap, DisparityMap, Double) -> DisparityMap
 
+pub fn veg_dvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_evi(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_fractional_cover(Array[Array[Double]], Double, Double) -> Array[Array[Double]]
+
+pub fn veg_gndvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_mean_index(Array[Array[Double]]) -> Double
+
+pub fn veg_msavi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndbi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_ndwi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_rvi(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
+
+pub fn veg_savi(Array[Array[Double]], Array[Array[Double]], Double) -> Array[Array[Double]]
+
 pub fn vibe_update(BackgroundModel, @types.Image) -> BackgroundModel
 
 pub fn vins_check_initialization(VinsState) -> Bool

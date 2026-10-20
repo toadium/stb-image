@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v367.0.0 - GeoVerse Phase 15: 植被指数
+- 扩展 `src/cv_advanced/`：植被指数计算 — NDVI/EVI/SAVI/MSAVI/GNDVI/RVI/DVI/NDWI/NDBI/FVC
+  - **vegetation_index**：veg_ndvi / veg_evi / veg_savi / veg_msavi / veg_gndvi / veg_rvi / veg_dvi / veg_ndwi / veg_ndbi / veg_mean_index / veg_fractional_cover
+  - Phase 15 遥感与地理空间大扩展 — 植被指数（NDVI, EVI, SAVI, MSAVI, GNDVI, RVI, DVI, NDWI, NDBI, 植被覆盖度）
+- 新增 11 公共函数，reexport.mbt 注册顶层 API
+- +20 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7616×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v366.0.0 - GeoVerse Phase 15: 土地覆盖分类
 - 扩展 `src/cv_advanced/`：土地覆盖分类 — 监督/非监督分类/精度评估
   - **land_cover**：ClassMethod / TrainingSample / ClassificationResult + classify_compute_class_means / classify_min_distance / classify_max_likelihood / classify_kmeans / classify_isodata / classify_confusion_matrix / classify_kappa / classify_overall_accuracy / classify_build_result / classify_build_sample

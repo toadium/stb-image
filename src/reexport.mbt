@@ -17144,3 +17144,91 @@ pub fn classify_build_sample(
 ) -> LcTrainingSample {
   @cv_advanced.classify_build_sample(class_id, features)
 }
+
+///|
+pub fn veg_ndvi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_ndvi(nir, red)
+}
+
+///|
+pub fn veg_evi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+  blue : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_evi(nir, red, blue)
+}
+
+///|
+pub fn veg_savi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+  l : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_savi(nir, red, l)
+}
+
+///|
+pub fn veg_msavi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_msavi(nir, red)
+}
+
+///|
+pub fn veg_gndvi(
+  nir : Array[Array[Double]],
+  green : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_gndvi(nir, green)
+}
+
+///|
+pub fn veg_rvi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_rvi(nir, red)
+}
+
+///|
+pub fn veg_dvi(
+  nir : Array[Array[Double]],
+  red : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_dvi(nir, red)
+}
+
+///|
+pub fn veg_ndwi(
+  green : Array[Array[Double]],
+  nir : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_ndwi(green, nir)
+}
+
+///|
+pub fn veg_ndbi(
+  swir : Array[Array[Double]],
+  nir : Array[Array[Double]],
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_ndbi(swir, nir)
+}
+
+///|
+pub fn veg_mean_index(index : Array[Array[Double]]) -> Double {
+  @cv_advanced.veg_mean_index(index)
+}
+
+///|
+pub fn veg_fractional_cover(
+  ndvi : Array[Array[Double]],
+  ndvi_soil : Double,
+  ndvi_veg : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.veg_fractional_cover(ndvi, ndvi_soil, ndvi_veg)
+}
