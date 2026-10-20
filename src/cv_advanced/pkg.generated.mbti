@@ -263,6 +263,22 @@ pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int
 
 pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
 
+pub fn hyperspectral_abundance_inversion(Array[Double], Array[Array[Double]]) -> Array[Double]
+
+pub fn hyperspectral_build_endmember_result(Array[Array[Double]], Int, Int, Int) -> EndmemberResult
+
+pub fn hyperspectral_correlation(Array[Double], Array[Double]) -> Double
+
+pub fn hyperspectral_euclidean(Array[Double], Array[Double]) -> Double
+
+pub fn hyperspectral_extract_endmembers(Array[Array[Double]], Int, Int, Int) -> Array[Array[Double]]
+
+pub fn hyperspectral_match(Array[Double], Array[Array[Double]], SpectralMatchMethod) -> Int
+
+pub fn hyperspectral_ppi(Array[Array[Double]], Int, Int) -> Array[Int]
+
+pub fn hyperspectral_sam(Array[Double], Array[Double]) -> Double
+
 pub fn identity_affine() -> AffineMatrix
 
 pub fn identity_pose() -> SlamPose
@@ -1115,6 +1131,15 @@ pub(all) struct ElastographyResult {
 pub fn ElastographyResult::equal(Self, Self) -> Bool
 pub fn ElastographyResult::not_equal(Self, Self) -> Bool
 pub fn ElastographyResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EndmemberResult {
+  endmembers : Array[Array[Double]]
+  abundance_maps : Array[Array[Double]]
+  num_endmembers : Int
+} derive(Eq, @debug.Debug)
+pub fn EndmemberResult::equal(Self, Self) -> Bool
+pub fn EndmemberResult::not_equal(Self, Self) -> Bool
+pub fn EndmemberResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EpipolarLine {
   a : Double
@@ -2074,6 +2099,16 @@ pub(all) struct SlamPose {
 pub fn SlamPose::equal(Self, Self) -> Bool
 pub fn SlamPose::not_equal(Self, Self) -> Bool
 pub fn SlamPose::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SpectralMatchMethod {
+  SpectralAngleMapper
+  SpectralInformationDivergence
+  EuclideanDistance
+  CorrelationCoefficient
+} derive(Eq, @debug.Debug)
+pub fn SpectralMatchMethod::equal(Self, Self) -> Bool
+pub fn SpectralMatchMethod::not_equal(Self, Self) -> Bool
+pub fn SpectralMatchMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StainSeparation {
   stain1 : Array[Double]

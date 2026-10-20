@@ -2193,6 +2193,22 @@ pub fn hu_moments(@edge.Moments) -> Array[Double] raise @types.LoadError
 
 pub fn hu_moments_features(@types.Image) -> Array[Double] raise @types.LoadError
 
+pub fn hyperspectral_abundance_inversion(Array[Double], Array[Array[Double]]) -> Array[Double]
+
+pub fn hyperspectral_build_endmember_result(Array[Array[Double]], Int, Int, Int) -> @cv_advanced.EndmemberResult
+
+pub fn hyperspectral_correlation(Array[Double], Array[Double]) -> Double
+
+pub fn hyperspectral_euclidean(Array[Double], Array[Double]) -> Double
+
+pub fn hyperspectral_extract_endmembers(Array[Array[Double]], Int, Int, Int) -> Array[Array[Double]]
+
+pub fn hyperspectral_match(Array[Double], Array[Array[Double]], @cv_advanced.SpectralMatchMethod) -> Int
+
+pub fn hyperspectral_ppi(Array[Array[Double]], Int, Int) -> Array[Int]
+
+pub fn hyperspectral_sam(Array[Double], Array[Double]) -> Double
+
 pub fn icns_info_extended(Bytes) -> @codec.IcnsInfoExtended raise @types.LoadError
 
 pub fn ico_info_extended(Bytes) -> @codec.IcoInfoExtended raise @types.LoadError
@@ -4628,6 +4644,8 @@ pub using @encryption {type EncryptionQuality}
 
 pub using @encryption {type EncryptionResult}
 
+pub using @cv_advanced {type EndmemberResult}
+
 pub using @ocr {type EnglishOcrConfig}
 
 pub using @ocr {type EnhancedChineseOcrConfig}
@@ -5543,6 +5561,8 @@ pub using @forensics {type SourceVerificationConfig}
 pub using @forensics {type SourceVerificationFeatures}
 
 pub using @forensics {type SourceVerificationResult}
+
+pub using @cv_advanced {type SpectralMatchMethod}
 
 pub using @remote_sensing {type SpectralSignature}
 

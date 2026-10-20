@@ -16692,3 +16692,85 @@ pub fn multispectral_pca(
 ) -> Array[Array[Double]] {
   @cv_advanced.multispectral_pca(image, num_components)
 }
+
+///|
+pub type SpectralMatchMethod = @cv_advanced.SpectralMatchMethod
+
+///|
+pub type EndmemberResult = @cv_advanced.EndmemberResult
+
+///|
+pub fn hyperspectral_sam(
+  pixel_spectrum : Array[Double],
+  reference_spectrum : Array[Double],
+) -> Double {
+  @cv_advanced.hyperspectral_sam(pixel_spectrum, reference_spectrum)
+}
+
+///|
+pub fn hyperspectral_euclidean(
+  pixel_spectrum : Array[Double],
+  reference_spectrum : Array[Double],
+) -> Double {
+  @cv_advanced.hyperspectral_euclidean(pixel_spectrum, reference_spectrum)
+}
+
+///|
+pub fn hyperspectral_correlation(
+  pixel_spectrum : Array[Double],
+  reference_spectrum : Array[Double],
+) -> Double {
+  @cv_advanced.hyperspectral_correlation(pixel_spectrum, reference_spectrum)
+}
+
+///|
+pub fn hyperspectral_ppi(
+  data : Array[Array[Double]],
+  num_bands : Int,
+  num_iterations : Int,
+) -> Array[Int] {
+  @cv_advanced.hyperspectral_ppi(data, num_bands, num_iterations)
+}
+
+///|
+pub fn hyperspectral_extract_endmembers(
+  data : Array[Array[Double]],
+  num_bands : Int,
+  num_endmembers : Int,
+  num_iterations : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.hyperspectral_extract_endmembers(
+    data, num_bands, num_endmembers, num_iterations,
+  )
+}
+
+///|
+pub fn hyperspectral_abundance_inversion(
+  pixel_spectrum : Array[Double],
+  endmembers : Array[Array[Double]],
+) -> Array[Double] {
+  @cv_advanced.hyperspectral_abundance_inversion(pixel_spectrum, endmembers)
+}
+
+///|
+pub fn hyperspectral_match(
+  pixel_spectrum : Array[Double],
+  reference_spectra : Array[Array[Double]],
+  match_method : SpectralMatchMethod,
+) -> Int {
+  @cv_advanced.hyperspectral_match(
+    pixel_spectrum, reference_spectra, match_method,
+  )
+}
+
+///|
+pub fn hyperspectral_build_endmember_result(
+  data : Array[Array[Double]],
+  num_bands : Int,
+  num_endmembers : Int,
+  num_iterations : Int,
+) -> EndmemberResult {
+  @cv_advanced.hyperspectral_build_endmember_result(
+    data, num_bands, num_endmembers, num_iterations,
+  )
+}
