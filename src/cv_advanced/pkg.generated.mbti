@@ -33,6 +33,8 @@ pub fn atmo_rayleigh_correction(Array[Array[Double]], Double, Double, Double) ->
 
 pub fn atmo_reflectance(Array[Array[Double]], AtmoParams) -> Array[Array[Double]]
 
+pub fn bayer_channel_at(BayerPattern, Int, Int) -> Int
+
 pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig, Int) -> AutoMLResult
 
 pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
@@ -669,6 +671,24 @@ pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], AutoMLC
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
+pub fn raw_build_params(BayerPattern, WhiteBalanceMethod, wb_r_gain? : Double, wb_g_gain? : Double, wb_b_gain? : Double, black_level? : Int, white_level? : Int) -> RawParams
+
+pub fn raw_color_correction(@types.Image, Array[Array[Double]]) -> @types.Image
+
+pub fn raw_demosaic_bilinear(@types.Image, BayerPattern) -> @types.Image
+
+pub fn raw_extract_bayer(@types.Image, BayerPattern) -> @types.Image
+
+pub fn raw_level_correction(@types.Image, Int, Int) -> @types.Image
+
+pub fn raw_pipeline(@types.Image, RawParams) -> @types.Image
+
+pub fn raw_white_balance_auto(@types.Image) -> @types.Image
+
+pub fn raw_white_balance_grayworld(@types.Image) -> @types.Image
+
+pub fn raw_white_balance_manual(@types.Image, Double, Double, Double) -> @types.Image
+
 pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
 
 pub fn recon_compute_surface_area(MedMesh3D) -> Double
@@ -1018,6 +1038,16 @@ pub(all) struct BackgroundParams {
 pub fn BackgroundParams::equal(Self, Self) -> Bool
 pub fn BackgroundParams::not_equal(Self, Self) -> Bool
 pub fn BackgroundParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum BayerPattern {
+  RGGB
+  GBRG
+  GRBG
+  BGGR
+} derive(Eq, @debug.Debug)
+pub fn BayerPattern::equal(Self, Self) -> Bool
+pub fn BayerPattern::not_equal(Self, Self) -> Bool
+pub fn BayerPattern::to_repr(Self) -> @debug.Repr
 
 pub(all) struct BinaryDescriptor {
   bits : Array[Bool]
@@ -2327,6 +2357,19 @@ pub fn RadiomicsFeatureClass::equal(Self, Self) -> Bool
 pub fn RadiomicsFeatureClass::not_equal(Self, Self) -> Bool
 pub fn RadiomicsFeatureClass::to_repr(Self) -> @debug.Repr
 
+pub(all) struct RawParams {
+  pattern : BayerPattern
+  wb_method : WhiteBalanceMethod
+  wb_r_gain : Double
+  wb_g_gain : Double
+  wb_b_gain : Double
+  black_level : Int
+  white_level : Int
+} derive(Eq, @debug.Debug)
+pub fn RawParams::equal(Self, Self) -> Bool
+pub fn RawParams::not_equal(Self, Self) -> Bool
+pub fn RawParams::to_repr(Self) -> @debug.Repr
+
 pub(all) enum ReconstructionMethod {
   FBP
   Iterative
@@ -2838,6 +2881,15 @@ pub(all) struct WSIConfig {
 pub fn WSIConfig::equal(Self, Self) -> Bool
 pub fn WSIConfig::not_equal(Self, Self) -> Bool
 pub fn WSIConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum WhiteBalanceMethod {
+  GrayWorld
+  Auto
+  Manual
+} derive(Eq, @debug.Debug)
+pub fn WhiteBalanceMethod::equal(Self, Self) -> Bool
+pub fn WhiteBalanceMethod::not_equal(Self, Self) -> Bool
+pub fn WhiteBalanceMethod::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

@@ -335,6 +335,8 @@ pub fn batch_summary(@pipeline.BatchResult) -> String
 
 pub fn batch_summary_to_string(@ocr.BatchResultSummary) -> String
 
+pub fn bayer_channel_at(@cv_advanced.BayerPattern, Int, Int) -> Int
+
 pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], @cv_advanced.AutoMLConfig, Int) -> @cv_advanced.AutoMLResult
 
 pub fn bbox_iou(@detection.BoundingBox, @detection.BoundingBox) -> Double raise @types.LoadError
@@ -3457,6 +3459,24 @@ pub fn ransac_homography(Array[((Float, Float), (Float, Float))], iterations? : 
 
 pub fn ratio_test(Array[Array[@cv_advanced.DMatch]], Double) -> Array[@cv_advanced.DMatch]
 
+pub fn raw_build_params(@cv_advanced.BayerPattern, @cv_advanced.WhiteBalanceMethod) -> @cv_advanced.RawParams
+
+pub fn raw_color_correction(@types.Image, Array[Array[Double]]) -> @types.Image
+
+pub fn raw_demosaic_bilinear(@types.Image, @cv_advanced.BayerPattern) -> @types.Image
+
+pub fn raw_extract_bayer(@types.Image, @cv_advanced.BayerPattern) -> @types.Image
+
+pub fn raw_level_correction(@types.Image, Int, Int) -> @types.Image
+
+pub fn raw_pipeline(@types.Image, @cv_advanced.RawParams) -> @types.Image
+
+pub fn raw_white_balance_auto(@types.Image) -> @types.Image
+
+pub fn raw_white_balance_grayworld(@types.Image) -> @types.Image
+
+pub fn raw_white_balance_manual(@types.Image, Double, Double, Double) -> @types.Image
+
 pub fn read_exif_extended_from_bytes(Bytes) -> @meta.ExifInfoExtended?
 
 pub fn read_exif_from_bytes(Bytes) -> @meta.ExifInfo?
@@ -4584,6 +4604,8 @@ pub using @ocr {type BatchTask}
 
 pub using @ocr {type BatchTaskStatus}
 
+pub using @cv_advanced {type BayerPattern}
+
 pub using @cv_advanced {type BinaryDescriptor}
 
 pub using @codec {type BmpInfoExtended}
@@ -5674,6 +5696,8 @@ pub using @cv_advanced {type RadiomicsFeature}
 
 pub using @cv_advanced {type RadiomicsFeatureClass}
 
+pub using @cv_advanced {type RawParams}
+
 pub using @neural_rendering {type Ray as RayNR}
 
 pub using @self_evolve {type RecommendAction}
@@ -6103,6 +6127,8 @@ pub using @encryption {type WatermarkType}
 pub using @segment {type WatershedConfig}
 
 pub using @codec {type WebpInfoExtended}
+
+pub using @cv_advanced {type WhiteBalanceMethod}
 
 pub using @medical {type WindowLevel}
 

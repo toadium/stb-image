@@ -17876,3 +17876,78 @@ pub fn codec_decode_auto(data : Bytes) -> AnyImage raise LoadError {
 pub fn codec_detect_format(data : Bytes) -> ImageFormat {
   @codec.codec_detect_format(data)
 }
+// v377.0.0 RAW 处理 re-export
+
+///|
+pub type BayerPattern = @cv_advanced.BayerPattern
+
+///|
+pub type WhiteBalanceMethod = @cv_advanced.WhiteBalanceMethod
+
+///|
+pub type RawParams = @cv_advanced.RawParams
+
+///|
+pub fn raw_build_params(
+  pattern : BayerPattern,
+  wb_method : WhiteBalanceMethod,
+) -> RawParams {
+  @cv_advanced.raw_build_params(pattern, wb_method)
+}
+
+///|
+pub fn bayer_channel_at(pattern : BayerPattern, x : Int, y : Int) -> Int {
+  @cv_advanced.bayer_channel_at(pattern, x, y)
+}
+
+///|
+pub fn raw_demosaic_bilinear(raw : Image, pattern : BayerPattern) -> Image {
+  @cv_advanced.raw_demosaic_bilinear(raw, pattern)
+}
+
+///|
+pub fn raw_white_balance_grayworld(img : Image) -> Image {
+  @cv_advanced.raw_white_balance_grayworld(img)
+}
+
+///|
+pub fn raw_white_balance_auto(img : Image) -> Image {
+  @cv_advanced.raw_white_balance_auto(img)
+}
+
+///|
+pub fn raw_white_balance_manual(
+  img : Image,
+  gain_r : Double,
+  gain_g : Double,
+  gain_b : Double,
+) -> Image {
+  @cv_advanced.raw_white_balance_manual(img, gain_r, gain_g, gain_b)
+}
+
+///|
+pub fn raw_color_correction(
+  img : Image,
+  matrix : Array[Array[Double]],
+) -> Image {
+  @cv_advanced.raw_color_correction(img, matrix)
+}
+
+///|
+pub fn raw_level_correction(
+  img : Image,
+  black_level : Int,
+  white_level : Int,
+) -> Image {
+  @cv_advanced.raw_level_correction(img, black_level, white_level)
+}
+
+///|
+pub fn raw_pipeline(raw : Image, params : RawParams) -> Image {
+  @cv_advanced.raw_pipeline(raw, params)
+}
+
+///|
+pub fn raw_extract_bayer(img : Image, pattern : BayerPattern) -> Image {
+  @cv_advanced.raw_extract_bayer(img, pattern)
+}
