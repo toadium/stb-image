@@ -549,6 +549,30 @@ pub fn residual_add(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
 
+pub fn sar_azimuth_compression(Array[Array[Double]], SarParams) -> Array[Array[Double]]
+
+pub fn sar_build_image(Array[Array[Double]], SarParams) -> SarImage
+
+pub fn sar_build_params(Double, Double, Double, Double, Double, Double, Double) -> SarParams
+
+pub fn sar_csa(Array[Array[Double]], SarParams) -> Array[Array[Double]]
+
+pub fn sar_detect_point_target(Array[Array[Double]]) -> (Int, Int, Double)
+
+pub fn sar_focus(Array[Array[Double]], SarParams, SarMode) -> Array[Array[Double]]
+
+pub fn sar_mean_intensity(SarImage) -> Double
+
+pub fn sar_multilook(Array[Array[Double]], Int) -> Array[Array[Double]]
+
+pub fn sar_omega_k(Array[Array[Double]], SarParams) -> Array[Array[Double]]
+
+pub fn sar_range_compression(Array[Array[Double]], Array[Double]) -> Array[Array[Double]]
+
+pub fn sar_rda(Array[Array[Double]], SarParams) -> Array[Array[Double]]
+
+pub fn sar_simulate_chirp(Int, Double, Double) -> Array[Double]
+
 pub fn save_orb_trajectory(OrbSlamSystem) -> String
 
 pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
@@ -2004,6 +2028,39 @@ pub(all) enum SSLType {
 pub fn SSLType::equal(Self, Self) -> Bool
 pub fn SSLType::not_equal(Self, Self) -> Bool
 pub fn SSLType::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SarImage {
+  data : Array[Array[Double]]
+  width : Int
+  height : Int
+  params : SarParams
+} derive(Eq, @debug.Debug)
+pub fn SarImage::equal(Self, Self) -> Bool
+pub fn SarImage::not_equal(Self, Self) -> Bool
+pub fn SarImage::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SarMode {
+  RangeDoppler
+  ChirpScaling
+  OmegaK
+} derive(Eq, @debug.Debug)
+pub fn SarMode::equal(Self, Self) -> Bool
+pub fn SarMode::not_equal(Self, Self) -> Bool
+pub fn SarMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SarParams {
+  carrier_freq : Double
+  platform_velocity : Double
+  pulse_duration : Double
+  chirp_rate : Double
+  sampling_rate : Double
+  antenna_length : Double
+  slant_range : Double
+} derive(Eq, @debug.Debug)
+pub fn SarParams::equal(Self, Self) -> Bool
+pub fn SarParams::not_equal(Self, Self) -> Bool
+pub fn SarParams::to_repr(Self) -> @debug.Repr
+pub fn SarParams::wavelength(Self) -> Double
 
 pub(all) struct SceneParsingResult {
   image_id : String

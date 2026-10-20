@@ -16774,3 +16774,119 @@ pub fn hyperspectral_build_endmember_result(
     data, num_bands, num_endmembers, num_iterations,
   )
 }
+
+///|
+pub type SarMode = @cv_advanced.SarMode
+
+///|
+pub type SarParams = @cv_advanced.SarParams
+
+///|
+pub type SarImage = @cv_advanced.SarImage
+
+///|
+pub fn sar_build_params(
+  carrier_freq : Double,
+  platform_velocity : Double,
+  pulse_duration : Double,
+  chirp_rate : Double,
+  sampling_rate : Double,
+  antenna_length : Double,
+  slant_range : Double,
+) -> SarParams {
+  @cv_advanced.sar_build_params(
+    carrier_freq, platform_velocity, pulse_duration, chirp_rate, sampling_rate, antenna_length,
+    slant_range,
+  )
+}
+
+///|
+pub fn sar_simulate_chirp(
+  num_samples : Int,
+  pulse_duration : Double,
+  chirp_rate : Double,
+) -> Array[Double] {
+  @cv_advanced.sar_simulate_chirp(num_samples, pulse_duration, chirp_rate)
+}
+
+///|
+pub fn sar_range_compression(
+  raw_data : Array[Array[Double]],
+  chirp_ref : Array[Double],
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_range_compression(raw_data, chirp_ref)
+}
+
+///|
+pub fn sar_azimuth_compression(
+  range_compressed : Array[Array[Double]],
+  params : SarParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_azimuth_compression(range_compressed, params)
+}
+
+///|
+pub fn sar_rda(
+  raw_data : Array[Array[Double]],
+  params : SarParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_rda(raw_data, params)
+}
+
+///|
+pub fn sar_csa(
+  raw_data : Array[Array[Double]],
+  params : SarParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_csa(raw_data, params)
+}
+
+///|
+pub fn sar_omega_k(
+  raw_data : Array[Array[Double]],
+  params : SarParams,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_omega_k(raw_data, params)
+}
+
+///|
+pub fn sar_focus(
+  raw_data : Array[Array[Double]],
+  params : SarParams,
+  alg_mode : SarMode,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_focus(raw_data, params, alg_mode)
+}
+
+///|
+pub fn sar_multilook(
+  focused_data : Array[Array[Double]],
+  num_looks : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.sar_multilook(focused_data, num_looks)
+}
+
+///|
+pub fn sar_detect_point_target(
+  focused_data : Array[Array[Double]],
+) -> (Int, Int, Double) {
+  @cv_advanced.sar_detect_point_target(focused_data)
+}
+
+///|
+pub fn sar_build_image(
+  data : Array[Array[Double]],
+  params : SarParams,
+) -> SarImage {
+  @cv_advanced.sar_build_image(data, params)
+}
+
+///|
+pub fn sar_mean_intensity(image : SarImage) -> Double {
+  @cv_advanced.sar_mean_intensity(image)
+}
+
+///|
+pub fn sar_wavelength(params : SarParams) -> Double {
+  @cv_advanced.SarParams::wavelength(params)
+}
