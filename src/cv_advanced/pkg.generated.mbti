@@ -301,6 +301,26 @@ pub fn gcn_forward(GraphData, Array[Array[Double]], GNNConfig) -> Array[Double]
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
+pub fn geo_build_gcp(Double, Double, Double, Double) -> GcpPoint
+
+pub fn geo_build_rpc(Array[Double], Array[Double], Array[Double], Array[Double], Double, Double, Double, Double, Double, Double) -> RpcModel
+
+pub fn geo_compute_polynomial_coeffs(Array[GcpPoint]) -> (Array[Double], Array[Double])
+
+pub fn geo_correct(Array[Array[Double]], Array[GcpPoint], Int, Int, ResampleMethod) -> Array[Array[Double]]
+
+pub fn geo_polynomial_transform(Double, Double, Array[Double], Array[Double]) -> (Double, Double)
+
+pub fn geo_resample(Array[Array[Double]], Double, Double, ResampleMethod) -> Double
+
+pub fn geo_resample_bilinear(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_resample_cubic(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_resample_nearest(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_rpc_transform(Double, Double, RpcModel) -> (Double, Double)
+
 pub fn get_orb_map(OrbSlamSystem) -> Array[SlamMapPoint]
 
 pub fn get_orb_trajectory(OrbSlamSystem) -> Array[SlamPose]
@@ -1520,6 +1540,25 @@ pub fn GNNType::equal(Self, Self) -> Bool
 pub fn GNNType::not_equal(Self, Self) -> Bool
 pub fn GNNType::to_repr(Self) -> @debug.Repr
 
+pub(all) struct GcpPoint {
+  image_x : Double
+  image_y : Double
+  ground_x : Double
+  ground_y : Double
+} derive(Eq, @debug.Debug)
+pub fn GcpPoint::equal(Self, Self) -> Bool
+pub fn GcpPoint::not_equal(Self, Self) -> Bool
+pub fn GcpPoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GeoCorrectMethod {
+  Rpc
+  Polynomial
+  Strict
+} derive(Eq, @debug.Debug)
+pub fn GeoCorrectMethod::equal(Self, Self) -> Bool
+pub fn GeoCorrectMethod::not_equal(Self, Self) -> Bool
+pub fn GeoCorrectMethod::to_repr(Self) -> @debug.Repr
+
 pub(all) struct GraphData {
   num_nodes : Int
   adj_matrix : Array[Double]
@@ -2166,6 +2205,31 @@ pub(all) struct RegistrationResult {
 pub fn RegistrationResult::equal(Self, Self) -> Bool
 pub fn RegistrationResult::not_equal(Self, Self) -> Bool
 pub fn RegistrationResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ResampleMethod {
+  NearestNeighbor
+  Bilinear
+  CubicConvolution
+} derive(Eq, @debug.Debug)
+pub fn ResampleMethod::equal(Self, Self) -> Bool
+pub fn ResampleMethod::not_equal(Self, Self) -> Bool
+pub fn ResampleMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RpcModel {
+  line_num : Array[Double]
+  line_den : Array[Double]
+  sample_num : Array[Double]
+  sample_den : Array[Double]
+  line_off : Double
+  sample_off : Double
+  lat_off : Double
+  long_off : Double
+  lat_scale : Double
+  long_scale : Double
+} derive(Eq, @debug.Debug)
+pub fn RpcModel::equal(Self, Self) -> Bool
+pub fn RpcModel::not_equal(Self, Self) -> Bool
+pub fn RpcModel::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SSLConfig {
   temperature : Double

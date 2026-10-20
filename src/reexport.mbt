@@ -17315,3 +17315,120 @@ pub fn atmo_build_params(
 pub fn atmo_mean_radiance(radiance : Array[Array[Double]]) -> Double {
   @cv_advanced.atmo_mean_radiance(radiance)
 }
+
+///|
+pub type GeoCorrectMethod = @cv_advanced.GeoCorrectMethod
+
+///|
+pub type ResampleMethod = @cv_advanced.ResampleMethod
+
+///|
+pub type GcpPoint = @cv_advanced.GcpPoint
+
+///|
+pub type RpcModel = @cv_advanced.RpcModel
+
+///|
+pub fn geo_build_gcp(
+  image_x : Double,
+  image_y : Double,
+  ground_x : Double,
+  ground_y : Double,
+) -> GcpPoint {
+  @cv_advanced.geo_build_gcp(image_x, image_y, ground_x, ground_y)
+}
+
+///|
+pub fn geo_build_rpc(
+  line_num : Array[Double],
+  line_den : Array[Double],
+  sample_num : Array[Double],
+  sample_den : Array[Double],
+  line_off : Double,
+  sample_off : Double,
+  lat_off : Double,
+  long_off : Double,
+  lat_scale : Double,
+  long_scale : Double,
+) -> RpcModel {
+  @cv_advanced.geo_build_rpc(
+    line_num, line_den, sample_num, sample_den, line_off, sample_off, lat_off, long_off,
+    lat_scale, long_scale,
+  )
+}
+
+///|
+pub fn geo_polynomial_transform(
+  image_x : Double,
+  image_y : Double,
+  coeffs_x : Array[Double],
+  coeffs_y : Array[Double],
+) -> (Double, Double) {
+  @cv_advanced.geo_polynomial_transform(image_x, image_y, coeffs_x, coeffs_y)
+}
+
+///|
+pub fn geo_compute_polynomial_coeffs(
+  gcps : Array[GcpPoint],
+) -> (Array[Double], Array[Double]) {
+  @cv_advanced.geo_compute_polynomial_coeffs(gcps)
+}
+
+///|
+pub fn geo_rpc_transform(
+  latitude : Double,
+  longitude : Double,
+  rpc : RpcModel,
+) -> (Double, Double) {
+  @cv_advanced.geo_rpc_transform(latitude, longitude, rpc)
+}
+
+///|
+pub fn geo_resample_nearest(
+  image : Array[Array[Double]],
+  src_x : Double,
+  src_y : Double,
+) -> Double {
+  @cv_advanced.geo_resample_nearest(image, src_x, src_y)
+}
+
+///|
+pub fn geo_resample_bilinear(
+  image : Array[Array[Double]],
+  src_x : Double,
+  src_y : Double,
+) -> Double {
+  @cv_advanced.geo_resample_bilinear(image, src_x, src_y)
+}
+
+///|
+pub fn geo_resample_cubic(
+  image : Array[Array[Double]],
+  src_x : Double,
+  src_y : Double,
+) -> Double {
+  @cv_advanced.geo_resample_cubic(image, src_x, src_y)
+}
+
+///|
+pub fn geo_resample(
+  image : Array[Array[Double]],
+  src_x : Double,
+  src_y : Double,
+  resample_method : ResampleMethod,
+) -> Double {
+  @cv_advanced.geo_resample(image, src_x, src_y, resample_method)
+}
+
+///|
+pub fn geo_correct(
+  image : Array[Array[Double]],
+  gcps : Array[GcpPoint],
+  output_width : Int,
+  output_height : Int,
+  resample_method : ResampleMethod,
+) -> Array[Array[Double]] {
+  @cv_advanced.geo_correct(
+    image, gcps, output_width, output_height, resample_method,
+  )
+}

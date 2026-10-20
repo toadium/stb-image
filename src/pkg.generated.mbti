@@ -2029,6 +2029,26 @@ pub fn generate_video_summary(Array[@types.Image], Double) -> @video.VideoSummar
 
 pub fn generation_report_to_string_ig(@image_generation.GenerationResult) -> String
 
+pub fn geo_build_gcp(Double, Double, Double, Double) -> @cv_advanced.GcpPoint
+
+pub fn geo_build_rpc(Array[Double], Array[Double], Array[Double], Array[Double], Double, Double, Double, Double, Double, Double) -> @cv_advanced.RpcModel
+
+pub fn geo_compute_polynomial_coeffs(Array[@cv_advanced.GcpPoint]) -> (Array[Double], Array[Double])
+
+pub fn geo_correct(Array[Array[Double]], Array[@cv_advanced.GcpPoint], Int, Int, @cv_advanced.ResampleMethod) -> Array[Array[Double]]
+
+pub fn geo_polynomial_transform(Double, Double, Array[Double], Array[Double]) -> (Double, Double)
+
+pub fn geo_resample(Array[Array[Double]], Double, Double, @cv_advanced.ResampleMethod) -> Double
+
+pub fn geo_resample_bilinear(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_resample_cubic(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_resample_nearest(Array[Array[Double]], Double, Double) -> Double
+
+pub fn geo_rpc_transform(Double, Double, @cv_advanced.RpcModel) -> (Double, Double)
+
 pub fn get_affine_transform(Array[(Float, Float)], Array[(Float, Float)]) -> @transform.AffineMatrix?
 
 pub fn get_coco_keypoint_names_pe() -> Array[String]
@@ -4930,6 +4950,8 @@ pub using @neural_rendering {type Gaussian3D as Gaussian3DNR}
 
 pub using @neural_rendering {type GaussianSplattingConfig as GaussianSplattingConfigNR}
 
+pub using @cv_advanced {type GcpPoint}
+
 pub using @image_generation {type GenerationConfig as GenerationConfigIG}
 
 pub using @image_generation {type GenerationResult as GenerationResultIG}
@@ -4939,6 +4961,8 @@ pub using @vlm_multimodal {type GenerativeAIConfig as GenerativeAIConfigVLM}
 pub using @vlm_multimodal {type GenerativeAIResult as GenerativeAIResultVLM}
 
 pub using @vlm_multimodal {type GenerativeAITaskType as GenerativeAITaskTypeVLM}
+
+pub using @cv_advanced {type GeoCorrectMethod}
 
 pub using @forensics {type GeometryAnalysisResult}
 
@@ -5586,6 +5610,8 @@ pub using @self_evolve {type RepairReport}
 
 pub using @self_evolve {type RepairStrategy}
 
+pub using @cv_advanced {type ResampleMethod}
+
 pub using @types {type ResizeEdge}
 
 pub using @types {type ResizeFilter}
@@ -5599,6 +5625,8 @@ pub using @ocr {type RobustnessReport}
 pub using @self_evolve {type RootCause}
 
 pub using @self_evolve {type RootCauseReport}
+
+pub using @cv_advanced {type RpcModel}
 
 pub using @self_evolve {type RunSummary}
 

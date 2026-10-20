@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v369.0.0 - GeoVerse Phase 15: 几何校正
+- 扩展 `src/cv_advanced/`：几何校正 — RPC/多项式/GCP/重采样
+  - **geometric_correction**：GeoCorrectMethod / ResampleMethod / GcpPoint / RpcModel + geo_build_gcp / geo_build_rpc / geo_polynomial_transform / geo_compute_polynomial_coeffs / geo_rpc_transform / geo_resample_nearest / geo_resample_bilinear / geo_resample_cubic / geo_resample / geo_correct
+  - Phase 15 遥感与地理空间大扩展 — 几何校正（RPC 变换, 多项式校正, GCP 最小二乘, 最近邻/双线性/三次卷积重采样）
+- 新增 4 类型 + 11 公共函数，reexport.mbt 注册顶层 API
+- +15 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7647×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v368.0.0 - GeoVerse Phase 15: 大气校正
 - 扩展 `src/cv_advanced/`：大气校正 — 辐射定标/暗像元校正/瑞利校正/经验线校正
   - **atmospheric_correction**：AtmoMethod / AtmoParams + atmo_radiometric_calibration / atmo_dos_correction / atmo_reflectance / atmo_empirical_line / atmo_rayleigh_correction / atmo_correct / atmo_build_params / atmo_mean_radiance
