@@ -295,6 +295,24 @@ pub fn init_tracker(Double, Double, Double, Double, TrackerParams) -> Track
 
 pub fn init_vins(VinsConfig) -> (VinsState, VinsConfig)
 
+pub fn insar_build_interferogram(Array[Array[Double]], Array[Array[Double]]) -> InsarInterferogram
+
+pub fn insar_coherence_mask(InsarInterferogram, Double) -> Array[Array[Int]]
+
+pub fn insar_create_interferogram(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]], Array[Array[Double]]) -> InsarInterferogram
+
+pub fn insar_estimate_coherence(InsarInterferogram, Int) -> Array[Array[Double]]
+
+pub fn insar_filter_interferogram(Array[Array[Double]], Double) -> Array[Array[Double]]
+
+pub fn insar_mean_coherence(InsarInterferogram) -> Double
+
+pub fn insar_phase_to_height(Array[Array[Double]], Double, Double, Double, Double) -> Array[Array[Double]]
+
+pub fn insar_unwrap_phase(Array[Array[Double]], UnwrapMethod) -> Array[Array[Double]]
+
+pub fn insar_wrap_phase(Double) -> Double
+
 pub fn is_tracking_lost(SlamFrontend, SlamFrontendParams) -> Bool
 
 pub fn kalman_correct(KalmanState, Double, Double) -> KalmanState
@@ -1396,6 +1414,16 @@ pub fn ImuData::equal(Self, Self) -> Bool
 pub fn ImuData::not_equal(Self, Self) -> Bool
 pub fn ImuData::to_repr(Self) -> @debug.Repr
 
+pub(all) struct InsarInterferogram {
+  phase : Array[Array[Double]]
+  coherence : Array[Array[Double]]
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn InsarInterferogram::equal(Self, Self) -> Bool
+pub fn InsarInterferogram::not_equal(Self, Self) -> Bool
+pub fn InsarInterferogram::to_repr(Self) -> @debug.Repr
+
 pub(all) struct KSpaceData {
   data_real : Array[Double]
   data_imag : Array[Double]
@@ -2312,6 +2340,15 @@ pub(all) enum UltrasoundMode {
 pub fn UltrasoundMode::equal(Self, Self) -> Bool
 pub fn UltrasoundMode::not_equal(Self, Self) -> Bool
 pub fn UltrasoundMode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum UnwrapMethod {
+  LeastSquares
+  PathFollowing
+  QualityGuided
+} derive(Eq, @debug.Debug)
+pub fn UnwrapMethod::equal(Self, Self) -> Bool
+pub fn UnwrapMethod::not_equal(Self, Self) -> Bool
+pub fn UnwrapMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VAEConfig {
   latent_dim : Int

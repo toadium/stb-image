@@ -16890,3 +16890,82 @@ pub fn sar_mean_intensity(image : SarImage) -> Double {
 pub fn sar_wavelength(params : SarParams) -> Double {
   @cv_advanced.SarParams::wavelength(params)
 }
+
+///|
+pub type InsarInterferogram = @cv_advanced.InsarInterferogram
+
+///|
+pub type UnwrapMethod = @cv_advanced.UnwrapMethod
+
+///|
+pub fn insar_wrap_phase(phase : Double) -> Double {
+  @cv_advanced.insar_wrap_phase(phase)
+}
+
+///|
+pub fn insar_create_interferogram(
+  real1 : Array[Array[Double]],
+  imag1 : Array[Array[Double]],
+  real2 : Array[Array[Double]],
+  imag2 : Array[Array[Double]],
+) -> InsarInterferogram {
+  @cv_advanced.insar_create_interferogram(real1, imag1, real2, imag2)
+}
+
+///|
+pub fn insar_estimate_coherence(
+  interferogram : InsarInterferogram,
+  window_size : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.insar_estimate_coherence(interferogram, window_size)
+}
+
+///|
+pub fn insar_unwrap_phase(
+  wrapped_phase : Array[Array[Double]],
+  unwrap_method : UnwrapMethod,
+) -> Array[Array[Double]] {
+  @cv_advanced.insar_unwrap_phase(wrapped_phase, unwrap_method)
+}
+
+///|
+pub fn insar_phase_to_height(
+  unwrapped_phase : Array[Array[Double]],
+  wavelength : Double,
+  baseline : Double,
+  slant_range : Double,
+  look_angle : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.insar_phase_to_height(
+    unwrapped_phase, wavelength, baseline, slant_range, look_angle,
+  )
+}
+
+///|
+pub fn insar_filter_interferogram(
+  phase : Array[Array[Double]],
+  alpha : Double,
+) -> Array[Array[Double]] {
+  @cv_advanced.insar_filter_interferogram(phase, alpha)
+}
+
+///|
+pub fn insar_mean_coherence(interferogram : InsarInterferogram) -> Double {
+  @cv_advanced.insar_mean_coherence(interferogram)
+}
+
+///|
+pub fn insar_coherence_mask(
+  interferogram : InsarInterferogram,
+  threshold : Double,
+) -> Array[Array[Int]] {
+  @cv_advanced.insar_coherence_mask(interferogram, threshold)
+}
+
+///|
+pub fn insar_build_interferogram(
+  phase : Array[Array[Double]],
+  coherence : Array[Array[Double]],
+) -> InsarInterferogram {
+  @cv_advanced.insar_build_interferogram(phase, coherence)
+}

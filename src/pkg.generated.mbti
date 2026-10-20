@@ -2303,6 +2303,24 @@ pub fn inpaint_simple_ip(@types.Image, @types.Image, Int) -> @types.Image
 
 pub fn inpainting_report_to_string_ip(@inpainting.InpaintingResult) -> String
 
+pub fn insar_build_interferogram(Array[Array[Double]], Array[Array[Double]]) -> @cv_advanced.InsarInterferogram
+
+pub fn insar_coherence_mask(@cv_advanced.InsarInterferogram, Double) -> Array[Array[Int]]
+
+pub fn insar_create_interferogram(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]], Array[Array[Double]]) -> @cv_advanced.InsarInterferogram
+
+pub fn insar_estimate_coherence(@cv_advanced.InsarInterferogram, Int) -> Array[Array[Double]]
+
+pub fn insar_filter_interferogram(Array[Array[Double]], Double) -> Array[Array[Double]]
+
+pub fn insar_mean_coherence(@cv_advanced.InsarInterferogram) -> Double
+
+pub fn insar_phase_to_height(Array[Array[Double]], Double, Double, Double, Double) -> Array[Array[Double]]
+
+pub fn insar_unwrap_phase(Array[Array[Double]], @cv_advanced.UnwrapMethod) -> Array[Array[Double]]
+
+pub fn insar_wrap_phase(Double) -> Double
+
 pub fn integral_image(@types.Image) -> @feature.IntegralImage raise @types.LoadError
 
 pub fn integral_image_16(@types.Image16) -> @feature.IntegralImage raise @types.LoadError
@@ -4980,6 +4998,8 @@ pub using @inpainting {type InpaintingConfig}
 
 pub using @inpainting {type InpaintingResult}
 
+pub using @cv_advanced {type InsarInterferogram}
+
 pub using @segmentation {type InstanceSegmentationResult}
 
 pub using @feature {type IntegralImage}
@@ -5777,6 +5797,8 @@ pub using @advanced_imaging {type UltrasoundData as UltrasoundDataAI}
 pub using @cv_advanced {type UltrasoundMode}
 
 pub using @lib {type UnifiedImageInfo}
+
+pub using @cv_advanced {type UnwrapMethod}
 
 pub using @cv_advanced {type VAEConfig}
 

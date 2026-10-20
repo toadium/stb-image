@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v364.0.0 - GeoVerse Phase 15: InSAR 处理
+- 扩展 `src/cv_advanced/`：InSAR 干涉测量 — 干涉图生成/相干性估计/相位解缠/DEM 生成
+  - **insar_processing**：InsarInterferogram / UnwrapMethod + insar_wrap_phase / insar_create_interferogram / insar_estimate_coherence / insar_unwrap_phase / insar_phase_to_height / insar_filter_interferogram / insar_mean_coherence / insar_coherence_mask / insar_build_interferogram
+  - Phase 15 遥感与地理空间大扩展 — InSAR 处理（干涉图生成, 相干性估计, 相位解缠, 高程转换, Goldstein 滤波）
+- 新增 2 类型 + 10 公共函数，reexport.mbt 注册顶层 API
+- +17 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7557×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v363.0.0 - GeoVerse Phase 15: SAR 成像
 - 扩展 `src/cv_advanced/`：SAR 合成孔径雷达成像 — RDA/CSA/ωKA 聚焦算法
   - **sar_imaging**：SarMode / SarParams / SarImage + sar_build_params / sar_simulate_chirp / sar_range_compression / sar_azimuth_compression / sar_rda / sar_csa / sar_omega_k / sar_focus / sar_multilook / sar_detect_point_target / sar_build_image / sar_mean_intensity / SarParams::wavelength
