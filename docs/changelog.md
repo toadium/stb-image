@@ -2101,6 +2101,13 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v366.0.0 - GeoVerse Phase 15: 土地覆盖分类
+- 扩展 `src/cv_advanced/`：土地覆盖分类 — 监督/非监督分类/精度评估
+  - **land_cover**：ClassMethod / TrainingSample / ClassificationResult + classify_compute_class_means / classify_min_distance / classify_max_likelihood / classify_kmeans / classify_isodata / classify_confusion_matrix / classify_kappa / classify_overall_accuracy / classify_build_result / classify_build_sample
+  - Phase 15 遥感与地理空间大扩展 — 土地覆盖分类（最小距离, 最大似然, K-means, ISODATA, 混淆矩阵, Kappa 系数）
+- 新增 3 类型 + 11 公共函数，reexport.mbt 注册顶层 API（LcTrainingSample/LcClassificationResult 避免与 @ocr 重名）
+- +20 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7596×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
 ## v365.0.0 - GeoVerse Phase 15: 变化检测
 - 扩展 `src/cv_advanced/`：多时相变化检测 — 差值/比值/对数比值/变化向量/Otsu 阈值
   - **change_detection**：ChangeMethod / ChangeResult + change_difference / change_ratio / change_log_ratio / change_vector_analysis / change_otsu_threshold / change_threshold / change_multitemporal_trend / change_detect / change_count_changed / change_rate

@@ -17050,3 +17050,97 @@ pub fn change_count_changed(binary_map : Array[Array[Int]]) -> Int {
 pub fn change_rate(binary_map : Array[Array[Int]]) -> Double {
   @cv_advanced.change_rate(binary_map)
 }
+
+///|
+pub type ClassMethod = @cv_advanced.ClassMethod
+
+///|
+pub type LcTrainingSample = @cv_advanced.TrainingSample
+
+///|
+pub type LcClassificationResult = @cv_advanced.ClassificationResult
+
+///|
+pub fn classify_compute_class_means(
+  samples : Array[LcTrainingSample],
+  num_classes : Int,
+) -> Array[Array[Double]] {
+  @cv_advanced.classify_compute_class_means(samples, num_classes)
+}
+
+///|
+pub fn classify_min_distance(
+  pixel_features : Array[Array[Array[Double]]],
+  class_means : Array[Array[Double]],
+) -> Array[Array[Int]] {
+  @cv_advanced.classify_min_distance(pixel_features, class_means)
+}
+
+///|
+pub fn classify_max_likelihood(
+  pixel_features : Array[Array[Array[Double]]],
+  class_means : Array[Array[Double]],
+  class_variances : Array[Array[Double]],
+) -> Array[Array[Int]] {
+  @cv_advanced.classify_max_likelihood(
+    pixel_features, class_means, class_variances,
+  )
+}
+
+///|
+pub fn classify_kmeans(
+  pixel_features : Array[Array[Array[Double]]],
+  num_classes : Int,
+  max_iterations : Int,
+) -> (Array[Array[Int]], Array[Array[Double]]) {
+  @cv_advanced.classify_kmeans(pixel_features, num_classes, max_iterations)
+}
+
+///|
+pub fn classify_isodata(
+  pixel_features : Array[Array[Array[Double]]],
+  num_classes : Int,
+  max_iterations : Int,
+  min_samples : Int,
+) -> Array[Array[Int]] {
+  @cv_advanced.classify_isodata(
+    pixel_features, num_classes, max_iterations, min_samples,
+  )
+}
+
+///|
+pub fn classify_confusion_matrix(
+  predicted : Array[Array[Int]],
+  ground_truth : Array[Array[Int]],
+  num_classes : Int,
+) -> Array[Array[Int]] {
+  @cv_advanced.classify_confusion_matrix(predicted, ground_truth, num_classes)
+}
+
+///|
+pub fn classify_kappa(confusion_matrix : Array[Array[Int]]) -> Double {
+  @cv_advanced.classify_kappa(confusion_matrix)
+}
+
+///|
+pub fn classify_overall_accuracy(
+  confusion_matrix : Array[Array[Int]],
+) -> Double {
+  @cv_advanced.classify_overall_accuracy(confusion_matrix)
+}
+
+///|
+pub fn classify_build_result(
+  class_map : Array[Array[Int]],
+  num_classes : Int,
+) -> LcClassificationResult {
+  @cv_advanced.classify_build_result(class_map, num_classes)
+}
+
+///|
+pub fn classify_build_sample(
+  class_id : Int,
+  features : Array[Double],
+) -> LcTrainingSample {
+  @cv_advanced.classify_build_sample(class_id, features)
+}

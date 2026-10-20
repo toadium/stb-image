@@ -51,6 +51,26 @@ pub fn change_vector_analysis(Array[Array[Array[Double]]], Array[Array[Array[Dou
 
 pub fn check_epipolar_constraint(EpipolarLine, Double, Double) -> Double
 
+pub fn classify_build_result(Array[Array[Int]], Int) -> ClassificationResult
+
+pub fn classify_build_sample(Int, Array[Double]) -> TrainingSample
+
+pub fn classify_compute_class_means(Array[TrainingSample], Int) -> Array[Array[Double]]
+
+pub fn classify_confusion_matrix(Array[Array[Int]], Array[Array[Int]], Int) -> Array[Array[Int]]
+
+pub fn classify_isodata(Array[Array[Array[Double]]], Int, Int, Int) -> Array[Array[Int]]
+
+pub fn classify_kappa(Array[Array[Int]]) -> Double
+
+pub fn classify_kmeans(Array[Array[Array[Double]]], Int, Int) -> (Array[Array[Int]], Array[Array[Double]])
+
+pub fn classify_max_likelihood(Array[Array[Array[Double]]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Int]]
+
+pub fn classify_min_distance(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Int]]
+
+pub fn classify_overall_accuracy(Array[Array[Int]]) -> Double
+
 pub fn clean_foreground_mask(ForegroundMask) -> ForegroundMask
 
 pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
@@ -944,6 +964,26 @@ pub(all) struct ChessboardCorners {
 pub fn ChessboardCorners::equal(Self, Self) -> Bool
 pub fn ChessboardCorners::not_equal(Self, Self) -> Bool
 pub fn ChessboardCorners::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ClassMethod {
+  MaxLikelihood
+  MinDistance
+  KMeans
+  Isodata
+} derive(Eq, @debug.Debug)
+pub fn ClassMethod::equal(Self, Self) -> Bool
+pub fn ClassMethod::not_equal(Self, Self) -> Bool
+pub fn ClassMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ClassificationResult {
+  class_map : Array[Array[Int]]
+  num_classes : Int
+  width : Int
+  height : Int
+} derive(Eq, @debug.Debug)
+pub fn ClassificationResult::equal(Self, Self) -> Bool
+pub fn ClassificationResult::not_equal(Self, Self) -> Bool
+pub fn ClassificationResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ClientUpdate {
   params : Array[Double]
@@ -2312,6 +2352,14 @@ pub(all) enum TrackingAlgorithm {
 } derive(Eq)
 pub fn TrackingAlgorithm::equal(Self, Self) -> Bool
 pub fn TrackingAlgorithm::not_equal(Self, Self) -> Bool
+
+pub(all) struct TrainingSample {
+  class_id : Int
+  features : Array[Double]
+} derive(Eq, @debug.Debug)
+pub fn TrainingSample::equal(Self, Self) -> Bool
+pub fn TrainingSample::not_equal(Self, Self) -> Bool
+pub fn TrainingSample::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TransformerConfig {
   d_model : Int

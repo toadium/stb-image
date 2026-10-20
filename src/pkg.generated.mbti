@@ -591,9 +591,29 @@ pub fn clahe_enhance(@types.Image, clip_limit? : Double, tile_size? : Int) -> @t
 
 pub fn classification_colormap(@types.Image) -> @types.Image raise @types.LoadError
 
+pub fn classify_build_result(Array[Array[Int]], Int) -> @cv_advanced.ClassificationResult
+
+pub fn classify_build_sample(Int, Array[Double]) -> @cv_advanced.TrainingSample
+
+pub fn classify_compute_class_means(Array[@cv_advanced.TrainingSample], Int) -> Array[Array[Double]]
+
+pub fn classify_confusion_matrix(Array[Array[Int]], Array[Array[Int]], Int) -> Array[Array[Int]]
+
+pub fn classify_isodata(Array[Array[Array[Double]]], Int, Int, Int) -> Array[Array[Int]]
+
+pub fn classify_kappa(Array[Array[Int]]) -> Double
+
+pub fn classify_kmeans(Array[Array[Array[Double]]], Int, Int) -> (Array[Array[Int]], Array[Array[Double]])
+
 pub fn classify_land_cover_simple_rs(@remote_sensing.RemoteSensingImage) -> @remote_sensing.ClassificationResult
 
 pub fn classify_markdown_element(@ocr.TextBlock, avg_font_size? : Double) -> @ocr.MarkdownElementType
+
+pub fn classify_max_likelihood(Array[Array[Array[Double]]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Int]]
+
+pub fn classify_min_distance(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Int]]
+
+pub fn classify_overall_accuracy(Array[Array[Int]]) -> Double
 
 pub fn classify_scene_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.SceneClassificationResult
 
@@ -4454,6 +4474,8 @@ pub using @ocr {type ChineseRadical}
 
 pub using @edge {type Circle}
 
+pub using @cv_advanced {type ClassMethod}
+
 pub using @ocr {type ClassificationResult}
 
 pub using @pipeline {type CliCommand}
@@ -5095,6 +5117,10 @@ pub using @image_generation {type LatentVector as LatentVectorIG}
 pub using @ocr {type LayoutType}
 
 pub using @ocr {type LbpFeatures}
+
+pub using @cv_advanced {type ClassificationResult as LcClassificationResult}
+
+pub using @cv_advanced {type TrainingSample as LcTrainingSample}
 
 pub using @medical {type Lesion}
 
