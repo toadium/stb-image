@@ -17785,3 +17785,53 @@ pub fn ts_mean(data : TimeSeriesData) -> Double {
 pub fn ts_stddev(data : TimeSeriesData) -> Double {
   @cv_advanced.ts_stddev(data)
 }
+
+///|
+pub type Phase15Capability = @cv_advanced.Phase15Capability
+
+///|
+pub type Phase15Report = @cv_advanced.Phase15Report
+
+///|
+pub fn phase15_build_capability(
+  version : String,
+  name : String,
+  description : String,
+  num_types : Int,
+  num_functions : Int,
+  num_tests : Int,
+) -> Phase15Capability {
+  @cv_advanced.phase15_build_capability(
+    version, name, description, num_types, num_functions, num_tests,
+  )
+}
+
+///|
+pub fn phase15_capabilities() -> Array[Phase15Capability] {
+  @cv_advanced.phase15_capabilities()
+}
+
+///|
+pub fn phase15_total_types() -> Int {
+  @cv_advanced.phase15_total_types()
+}
+
+///|
+pub fn phase15_total_functions() -> Int {
+  @cv_advanced.phase15_total_functions()
+}
+
+///|
+pub fn phase15_total_tests() -> Int {
+  @cv_advanced.phase15_total_tests()
+}
+
+///|
+pub fn phase15_report() -> Phase15Report {
+  @cv_advanced.phase15_report()
+}
+
+///|
+pub fn phase15_is_complete() -> Bool {
+  @cv_advanced.phase15_is_complete()
+}

@@ -2101,6 +2101,14 @@
 - 修复 TGA 编码器 descriptor 字节 bug：写 top-down 数据但 descriptor=0x20（bit4=0, bottom-up），改为 0x30（bit4=1, top-down），修复 round-trip 垂直翻转
 - +35 tests
 - 6394×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+## v375.0.0 - GeoVerse Phase 15 完成: 综合报告
+- 扩展 `src/cv_advanced/`：Phase 15 综合报告 — 汇总 v361-v374 全部能力
+  - **phase15_report**：Phase15Capability / Phase15Report + phase15_build_capability / phase15_capabilities / phase15_total_types / phase15_total_functions / phase15_total_tests / phase15_report / phase15_is_complete
+  - Phase 15 遥感与地理空间大扩展完成：多光谱→高光谱→SAR→InSAR→变化检测→土地覆盖→植被指数→大气校正→几何校正→正射校正→影像融合→目标检测→云检测→时间序列
+- 新增 2 类型 + 7 公共函数，reexport.mbt 注册顶层 API
+- +9 tests（形式化证明 + FAKE + MOCK + E2E + AI 多手段测试）
+- 7746×4 全绿, 0 warning, 0 error (native/wasm-gc/js/wasm)
+- **Phase 15 完成统计**：14 版本, 25 类型 + 134 函数 + 240 tests
 ## v374.0.0 - GeoVerse Phase 15: 时间序列分析
 - 扩展 `src/cv_advanced/`：时间序列分析 — 趋势/季节/异常/变点/平滑/预测
   - **time_series**：TimeSeriesData + ts_build_data / ts_linear_trend / ts_moving_average / ts_seasonal_decompose / ts_anomaly_detect / ts_change_point_detect / ts_forecast / ts_mean / ts_stddev

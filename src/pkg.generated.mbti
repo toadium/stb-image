@@ -3227,6 +3227,20 @@ pub fn phase14_total_tests() -> Int
 
 pub fn phase14_total_types() -> Int
 
+pub fn phase15_build_capability(String, String, String, Int, Int, Int) -> @cv_advanced.Phase15Capability
+
+pub fn phase15_capabilities() -> Array[@cv_advanced.Phase15Capability]
+
+pub fn phase15_is_complete() -> Bool
+
+pub fn phase15_report() -> @cv_advanced.Phase15Report
+
+pub fn phase15_total_functions() -> Int
+
+pub fn phase15_total_tests() -> Int
+
+pub fn phase15_total_types() -> Int
+
 pub fn phase4_capabilities() -> Array[@self_evolve.Phase4Capability]
 
 pub fn phase4_is_complete() -> Bool
@@ -5521,6 +5535,10 @@ pub using @cv_advanced {type Phase13Report}
 pub using @cv_advanced {type Phase14Capability}
 
 pub using @cv_advanced {type Phase14Report}
+
+pub using @cv_advanced {type Phase15Capability}
+
+pub using @cv_advanced {type Phase15Report}
 
 pub using @self_evolve {type Phase4Capability}
 
