@@ -1,1 +1,7 @@
+import {
+}
 
+import {
+  "walkzzz/image-core/types",
+  "walkzzz/image-process/transform",
+} for "test"
