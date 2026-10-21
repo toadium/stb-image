@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v385.0.0 — 锐化扩展
+
+**2026-10-21** — Unsharp Mask/Laplacian/Wiener 反卷积/自适应/深度感知锐化。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `SharpeningMethod`(5方法) / `SharpeningParams` |
+| 新增函数 | `sharpen_unsharp_mask` / `sharpen_laplacian` / `sharpen_wiener_deconv` / `sharpen_adaptive` / `sharpen_depth_aware` / `sharpen_pipeline` / `default_sharpening_params` / `estimate_sharpness` |
+| 测试 | 15409×4（+13） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v381.0.0 — 散景渲染
 
 **2026-10-20** — 光圈形状模拟/弥散圆计算/深度感知模糊/散景渲染流水线。

@@ -213,6 +213,8 @@ pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) 
 
 pub fn default_bokeh_params(ApertureShape, BokehQuality) -> BokehParams
 
+pub fn default_sharpening_params(SharpeningMethod) -> SharpeningParams
+
 pub fn depth_estimation_pipeline(Array[@types.Image], Array[Array[Double]], Array[Double], DepthEstimationParams) -> DepthMap
 
 pub fn depth_post_process(DepthMap, DepthPostProcessParams) -> DepthMap
@@ -294,6 +296,8 @@ pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int32, Int
 pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int32, Int32, Double, Double) -> DepthMap
 
 pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) -> SlamPose
+
+pub fn estimate_sharpness(@types.Image) -> Double
 
 pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
@@ -826,6 +830,18 @@ pub fn score_based_loss(Array[Double], Array[Double]) -> Double
 pub fn self_attention(Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
 pub fn set_window_level(DicomMetadata, Double, Double) -> DicomMetadata
+
+pub fn sharpen_adaptive(@types.Image, Double, Int32, Double) -> @types.Image
+
+pub fn sharpen_depth_aware(@types.Image, DepthMap, Double, Double, Double) -> @types.Image
+
+pub fn sharpen_laplacian(@types.Image, Double) -> @types.Image
+
+pub fn sharpen_pipeline(@types.Image, SharpeningParams) -> @types.Image
+
+pub fn sharpen_unsharp_mask(@types.Image, Double, Int32) -> @types.Image
+
+pub fn sharpen_wiener_deconv(@types.Image, Double, Double) -> @types.Image
 
 pub fn shutdown_orb_slam(OrbSlamSystem, SlamBackendParams) -> OrbSlamSystem
 
@@ -2722,6 +2738,28 @@ pub(all) enum ScheduleType {
 pub fn ScheduleType::equal(Self, Self) -> Bool
 pub fn ScheduleType::not_equal(Self, Self) -> Bool
 pub fn ScheduleType::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SharpeningMethod {
+  UnsharpMask
+  Laplacian
+  WienerDeconv
+  Adaptive
+  DepthAware
+} derive(Eq, @debug.Debug)
+pub fn SharpeningMethod::equal(Self, Self) -> Bool
+pub fn SharpeningMethod::not_equal(Self, Self) -> Bool
+pub fn SharpeningMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SharpeningParams {
+  sharpen_method : SharpeningMethod
+  strength : Double
+  radius : Int32
+  threshold : Double
+  noise_level : Double
+} derive(Eq, @debug.Debug)
+pub fn SharpeningParams::equal(Self, Self) -> Bool
+pub fn SharpeningParams::not_equal(Self, Self) -> Bool
+pub fn SharpeningParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamBackend {
   map_points : Array[SlamMapPoint]

@@ -1175,6 +1175,8 @@ pub fn default_batch_config() -> @pipeline.BatchConfig
 
 pub fn default_bokeh_params(@cv_advanced.ApertureShape, @cv_advanced.BokehQuality) -> @cv_advanced.BokehParams
 
+pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
+
 pub fn default_tile_config() -> @performance.TileConfig
 
 pub fn dehaze(@types.Image, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
@@ -1612,6 +1614,8 @@ pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.Featur
 pub fn estimate_memory_usage(Int32, Int32, Int32, Int32) -> @ocr.MemoryUsageStats
 
 pub fn estimate_normals_3d(@stereo3d.PointCloud3D, Double) -> Array[(Double, Double, Double)]
+
+pub fn estimate_sharpness(@types.Image) -> Double
 
 pub fn estimate_translation(@types.Image, @types.Image, max_offset? : Int32) -> @registration.RegistrationResult raise @types.LoadError
 
@@ -3961,9 +3965,21 @@ pub fn sharpen(@types.Image, Float) -> @types.Image raise @types.LoadError
 
 pub fn sharpen_16(@types.Image16, Float) -> @types.Image16 raise @types.LoadError
 
+pub fn sharpen_adaptive(@types.Image, Double, Int32, Double) -> @types.Image
+
+pub fn sharpen_depth_aware(@types.Image, @cv_advanced.DepthMap, Double, Double, Double) -> @types.Image
+
 pub fn sharpen_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 
 pub fn sharpen_image_sr(@types.Image, Double) -> @types.Image
+
+pub fn sharpen_laplacian(@types.Image, Double) -> @types.Image
+
+pub fn sharpen_pipeline(@types.Image, @cv_advanced.SharpeningParams) -> @types.Image
+
+pub fn sharpen_unsharp_mask(@types.Image, Double, Int32) -> @types.Image
+
+pub fn sharpen_wiener_deconv(@types.Image, Double, Double) -> @types.Image
 
 pub fn shutdown_orb_slam(@cv_advanced.OrbSlamSystem, @cv_advanced.SlamBackendParams) -> @cv_advanced.OrbSlamSystem
 
@@ -5941,6 +5957,10 @@ pub using @segment {type SegmentationResult}
 pub using @segmentation {type SemanticSegmentationResult}
 
 pub using @self_evolve {type Severity}
+
+pub using @cv_advanced {type SharpeningMethod}
+
+pub using @cv_advanced {type SharpeningParams}
 
 pub using @feature {type SiftDescriptor}
 

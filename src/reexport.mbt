@@ -18313,3 +18313,72 @@ pub fn default_bokeh_params(
 ) -> BokehParams {
   @cv_advanced.default_bokeh_params(shape, quality)
 }
+
+// v385.0.0 锐化扩展 re-export
+
+///|
+pub type SharpeningMethod = @cv_advanced.SharpeningMethod
+
+///|
+pub type SharpeningParams = @cv_advanced.SharpeningParams
+
+///|
+pub fn sharpen_unsharp_mask(
+  img : Image,
+  strength : Double,
+  radius : Int32,
+) -> Image {
+  @cv_advanced.sharpen_unsharp_mask(img, strength, radius)
+}
+
+///|
+pub fn sharpen_laplacian(img : Image, strength : Double) -> Image {
+  @cv_advanced.sharpen_laplacian(img, strength)
+}
+
+///|
+pub fn sharpen_wiener_deconv(
+  img : Image,
+  strength : Double,
+  noise_level : Double,
+) -> Image {
+  @cv_advanced.sharpen_wiener_deconv(img, strength, noise_level)
+}
+
+///|
+pub fn sharpen_adaptive(
+  img : Image,
+  max_strength : Double,
+  radius : Int32,
+  threshold : Double,
+) -> Image {
+  @cv_advanced.sharpen_adaptive(img, max_strength, radius, threshold)
+}
+
+///|
+pub fn sharpen_depth_aware(
+  img : Image,
+  depth : @cv_advanced.DepthMap,
+  strength : Double,
+  near_depth : Double,
+  far_depth : Double,
+) -> Image {
+  @cv_advanced.sharpen_depth_aware(img, depth, strength, near_depth, far_depth)
+}
+
+///|
+pub fn sharpen_pipeline(img : Image, params : SharpeningParams) -> Image {
+  @cv_advanced.sharpen_pipeline(img, params)
+}
+
+///|
+pub fn default_sharpening_params(
+  sharpen_method : SharpeningMethod,
+) -> SharpeningParams {
+  @cv_advanced.default_sharpening_params(sharpen_method)
+}
+
+///|
+pub fn estimate_sharpness(img : Image) -> Double {
+  @cv_advanced.estimate_sharpness(img)
+}
