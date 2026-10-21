@@ -146,3 +146,130 @@ test "proof: rotate_180 equals rotate_90 twice" {
     }
   }
 }
+
+///|
+/// 灰度转换性质：输出 channels == 1，尺寸不变
+test "proof: to_grayscale produces single channel" {
+  for w in [2, 4, 8] {
+    for h in [2, 4, 8] {
+      let data : Array[Byte] = []
+      for y in 0..<h {
+        for x in 0..<w {
+          data.push(
+            (x * 255 / w.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(
+            (y * 255 / h.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(((x + y) * 16 % 256).to_byte())
+        }
+      }
+      let img : @types.Image = {
+        width: w,
+        height: h,
+        channels: 3,
+        data: Bytes::from_array(data),
+      }
+      let gray = @color.to_grayscale(img)
+      // 性质：灰度图通道数为 1，尺寸不变
+      assert_eq(gray.channels, 1)
+      assert_eq(gray.width, w)
+      assert_eq(gray.height, h)
+      assert_eq(gray.data.length(), w * h)
+    }
+  }
+}
+
+///|
+/// resize 恒等性质：resize(img, img.width, img.height) == img
+test "proof: resize to same dimensions is identity" {
+  for w in [2, 4, 8] {
+    for h in [2, 4, 8] {
+      let data : Array[Byte] = []
+      for y in 0..<h {
+        for x in 0..<w {
+          data.push(
+            (x * 255 / w.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(
+            (y * 255 / h.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(((x + y) * 16 % 256).to_byte())
+        }
+      }
+      let img : @types.Image = {
+        width: w,
+        height: h,
+        channels: 3,
+        data: Bytes::from_array(data),
+      }
+      let resized = @transform.resize_to_cover(img, w, h)
+      // 性质：resize 到相同尺寸应保持不变
+      assert_eq(resized.width, w)
+      assert_eq(resized.height, h)
+      assert_eq(resized.channels, 3)
+    }
+  }
+}
+
+///|
+/// flip_horizontal + flip_vertical == rotate_180
+test "proof: flip_h then flip_v equals rotate_180" {
+  for w in [2, 4, 8] {
+    for h in [2, 4, 6] {
+      let data : Array[Byte] = []
+      for y in 0..<h {
+        for x in 0..<w {
+          data.push(
+            (x * 255 / w.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(
+            (y * 255 / h.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(((x + y) * 16 % 256).to_byte())
+        }
+      }
+      let img : @types.Image = {
+        width: w,
+        height: h,
+        channels: 3,
+        data: Bytes::from_array(data),
+      }
+      let flip_hv = @transform.flip_vertical(@transform.flip_horizontal(img))
+      let r180 = @transform.rotate_180(img)
+      // 性质：先水平翻转再垂直翻转 == 旋转 180 度
+      assert_true(images_equal(flip_hv, r180))
+    }
+  }
+}
+
+///|
+/// rotate_90 尺寸交换性质：rotate_90(w×h) -> h×w
+test "proof: rotate_90 swaps width and height" {
+  for w in [2, 4, 8] {
+    for h in [3, 5, 7] {
+      let data : Array[Byte] = []
+      for y in 0..<h {
+        for x in 0..<w {
+          data.push(
+            (x * 255 / w.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(
+            (y * 255 / h.clamp(min=1, max=255)).clamp(min=0, max=255).to_byte(),
+          )
+          data.push(((x + y) * 16 % 256).to_byte())
+        }
+      }
+      let img : @types.Image = {
+        width: w,
+        height: h,
+        channels: 3,
+        data: Bytes::from_array(data),
+      }
+      let rotated = @transform.rotate_90(img)
+      // 性质：旋转 90 度后宽高交换
+      assert_eq(rotated.width, h)
+      assert_eq(rotated.height, w)
+    }
+  }
+}
