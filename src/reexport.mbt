@@ -18382,3 +18382,69 @@ pub fn default_sharpening_params(
 pub fn estimate_sharpness(img : Image) -> Double {
   @cv_advanced.estimate_sharpness(img)
 }
+// v386.0.0 色调映射 re-export
+
+///|
+pub type ToneMappingMethod = @cv_advanced.ToneMappingMethod
+
+///|
+pub type ToneMappingParams = @cv_advanced.ToneMappingParams
+
+///|
+pub fn tone_map_reinhard(
+  img : Image,
+  exposure : Double,
+  white_point : Double,
+) -> Image {
+  @cv_advanced.tone_map_reinhard(img, exposure, white_point)
+}
+
+///|
+pub fn tone_map_drago(img : Image, exposure : Double, bias : Double) -> Image {
+  @cv_advanced.tone_map_drago(img, exposure, bias)
+}
+
+///|
+pub fn tone_map_gamma(img : Image, exposure : Double, gamma : Double) -> Image {
+  @cv_advanced.tone_map_gamma(img, exposure, gamma)
+}
+
+///|
+pub fn tone_map_logarithmic(img : Image, exposure : Double) -> Image {
+  @cv_advanced.tone_map_logarithmic(img, exposure)
+}
+
+///|
+pub fn tone_map_local_laplacian(
+  img : Image,
+  exposure : Double,
+  sigma : Double,
+) -> Image {
+  @cv_advanced.tone_map_local_laplacian(img, exposure, sigma)
+}
+
+///|
+pub fn tone_map_bilateral(
+  img : Image,
+  exposure : Double,
+  detail_strength : Double,
+) -> Image {
+  @cv_advanced.tone_map_bilateral(img, exposure, detail_strength)
+}
+
+///|
+pub fn tone_mapping_pipeline(img : Image, params : ToneMappingParams) -> Image {
+  @cv_advanced.tone_mapping_pipeline(img, params)
+}
+
+///|
+pub fn default_tone_mapping_params(
+  tm_method : ToneMappingMethod,
+) -> ToneMappingParams {
+  @cv_advanced.default_tone_mapping_params(tm_method)
+}
+
+///|
+pub fn estimate_dynamic_range(img : Image) -> (Double, Double, Double) {
+  @cv_advanced.estimate_dynamic_range(img)
+}

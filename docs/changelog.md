@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v386.0.0 — 色调映射
+
+**2026-10-21** — Reinhard/Drago/Gamma/对数/局部拉普拉斯/双边滤波色调映射。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `ToneMappingMethod`(6方法) / `ToneMappingParams` |
+| 新增函数 | `tone_map_reinhard` / `tone_map_drago` / `tone_map_gamma` / `tone_map_logarithmic` / `tone_map_local_laplacian` / `tone_map_bilateral` / `tone_mapping_pipeline` / `default_tone_mapping_params` / `estimate_dynamic_range` |
+| 测试 | 15423×4（+14） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v385.0.0 — 锐化扩展
 
 **2026-10-21** — Unsharp Mask/Laplacian/Wiener 反卷积/自适应/深度感知锐化。

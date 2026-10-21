@@ -1179,6 +1179,8 @@ pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.
 
 pub fn default_tile_config() -> @performance.TileConfig
 
+pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
+
 pub fn dehaze(@types.Image, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
 pub fn dehaze_16(@types.Image16, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image16 raise @types.LoadError
@@ -1608,6 +1610,8 @@ pub fn estimate_depth_from_defocus(Array[Double], Int32, Int32, Double, Double, 
 pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int32, Int32) -> @cv_advanced.DepthMap
 
 pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int32, Int32, Double, Double) -> @cv_advanced.DepthMap
+
+pub fn estimate_dynamic_range(@types.Image) -> (Double, Double, Double)
 
 pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], iterations? : Int32, threshold? : Double) -> (@stitch.Homography?, Array[@stitch.MatchPair])
 
@@ -4285,7 +4289,21 @@ pub fn to_rgba_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
 pub fn tone_map(@photo_enhance.HdrImage, @photo_enhance.ToneMappingConfig) -> @types.Image
 
+pub fn tone_map_bilateral(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_drago(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_gamma(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_local_laplacian(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_logarithmic(@types.Image, Double) -> @types.Image
+
+pub fn tone_map_reinhard(@types.Image, Double, Double) -> @types.Image
+
 pub fn tone_mapping_gamma(@types.Image, gamma? : Double) -> @types.Image raise @types.LoadError
+
+pub fn tone_mapping_pipeline(@types.Image, @cv_advanced.ToneMappingParams) -> @types.Image
 
 pub fn tone_mapping_reinhard(@types.Image, key? : Double) -> @types.Image raise @types.LoadError
 
@@ -6137,6 +6155,10 @@ pub using @performance {type TileConfig}
 pub using @cv_advanced {type TimeSeriesData}
 
 pub using @photo_enhance {type ToneMappingConfig}
+
+pub using @cv_advanced {type ToneMappingMethod}
+
+pub using @cv_advanced {type ToneMappingParams}
 
 pub using @photo_enhance {type ToneMappingType}
 

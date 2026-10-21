@@ -215,6 +215,8 @@ pub fn default_bokeh_params(ApertureShape, BokehQuality) -> BokehParams
 
 pub fn default_sharpening_params(SharpeningMethod) -> SharpeningParams
 
+pub fn default_tone_mapping_params(ToneMappingMethod) -> ToneMappingParams
+
 pub fn depth_estimation_pipeline(Array[@types.Image], Array[Array[Double]], Array[Double], DepthEstimationParams) -> DepthMap
 
 pub fn depth_post_process(DepthMap, DepthPostProcessParams) -> DepthMap
@@ -294,6 +296,8 @@ pub fn estimate_depth_from_defocus(Array[Double], Int32, Int32, Double, Double, 
 pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int32, Int32) -> DepthMap
 
 pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int32, Int32, Double, Double) -> DepthMap
+
+pub fn estimate_dynamic_range(@types.Image) -> (Double, Double, Double)
 
 pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) -> SlamPose
 
@@ -878,6 +882,20 @@ pub fn target_nms(Array[TargetResult], Double) -> Array[TargetResult]
 pub fn target_sliding_window(Array[Array[Double]], Int32, Double) -> Array[TargetResult]
 
 pub fn target_template_match(Array[Array[Double]], Array[Array[Double]], Double) -> Array[TargetResult]
+
+pub fn tone_map_bilateral(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_drago(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_gamma(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_local_laplacian(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_map_logarithmic(@types.Image, Double) -> @types.Image
+
+pub fn tone_map_reinhard(@types.Image, Double, Double) -> @types.Image
+
+pub fn tone_mapping_pipeline(@types.Image, ToneMappingParams) -> @types.Image
 
 pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int32, SlamFrontendParams) -> (SlamFrontend, Bool)
 
@@ -2894,6 +2912,29 @@ pub(all) struct TimeSeriesData {
 pub fn TimeSeriesData::equal(Self, Self) -> Bool
 pub fn TimeSeriesData::not_equal(Self, Self) -> Bool
 pub fn TimeSeriesData::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ToneMappingMethod {
+  Reinhard
+  Drago
+  Gamma
+  Logarithmic
+  LocalLaplacian
+  Bilateral
+} derive(Eq, @debug.Debug)
+pub fn ToneMappingMethod::equal(Self, Self) -> Bool
+pub fn ToneMappingMethod::not_equal(Self, Self) -> Bool
+pub fn ToneMappingMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ToneMappingParams {
+  tm_method : ToneMappingMethod
+  exposure : Double
+  gamma : Double
+  white_point : Double
+  saturation : Double
+} derive(Eq, @debug.Debug)
+pub fn ToneMappingParams::equal(Self, Self) -> Bool
+pub fn ToneMappingParams::not_equal(Self, Self) -> Bool
+pub fn ToneMappingParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Track {
   x : Double
