@@ -1,7 +1,12 @@
 // v239 stereo3d 错误路径+边界条件测试
 
 ///|
-fn s3d_edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn s3d_edge_mk_img(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -11,7 +16,7 @@ fn s3d_edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn s3d_edge_mk_point_cloud(n : Int) -> @stereo3d.PointCloud3D {
+fn s3d_edge_mk_point_cloud(n : Int32) -> @stereo3d.PointCloud3D {
   let points : Array[@stereo3d.Point3d] = []
   for i in 0..<n {
     points.push(@stereo3d.Point3d::{

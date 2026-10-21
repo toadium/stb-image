@@ -54,9 +54,9 @@ test "video_processing_report_to_string: 基本测试" {
 
 ///|
 fn make_test_frame(
-  w : Int,
-  h : Int,
-  idx : Int,
+  w : Int32,
+  h : Int32,
+  idx : Int32,
 ) -> @video_processing_advanced.VideoFrame {
   @video_processing_advanced.VideoFrame::{
     frame_data: Array::make(w * h * 3, 128.0),

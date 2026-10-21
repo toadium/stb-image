@@ -26,27 +26,27 @@ pub extend DocumentElementType with Eq::{not_equal, equal}
 /// 文档元素结构体
 pub(all) struct DocumentElement {
   element_type : DocumentElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   confidence : Double
-  font_size : Int
+  font_size : Int32
   font_weight : String // "normal" / "bold"
-  reading_order : Int
+  reading_order : Int32
 }
 
 ///|
 /// 文档结构结构体
 pub(all) struct DocumentStructure {
   elements : Array[DocumentElement]
-  num_elements : Int
+  num_elements : Int32
   title : String
-  num_headings : Int
-  num_paragraphs : Int
-  reading_order : Array[Int]
-  bounding_box : (Int, Int, Int, Int)
+  num_headings : Int32
+  num_paragraphs : Int32
+  reading_order : Array[Int32]
+  bounding_box : (Int32, Int32, Int32, Int32)
 }
 
 ///|
@@ -103,7 +103,7 @@ pub fn analyze_document_layout(
     order += 1
   }
   // 5. 计算阅读顺序（从上到下，从左到右）
-  let reading_order : Array[Int] = []
+  let reading_order : Array[Int32] = []
   for i in 0..<elements.length() {
     reading_order.push(i)
   }
@@ -197,7 +197,7 @@ fn classify_element_type(
 /// 计算阅读顺序（从上到下，从左到右）
 pub fn compute_reading_order(
   elements : Array[DocumentElement],
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if elements.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -205,7 +205,7 @@ pub fn compute_reading_order(
     )
   }
   // 按 y 坐标排序，然后按 x 坐标排序
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for i in 0..<elements.length() {
     indices.push(i)
   }
@@ -299,7 +299,7 @@ pub fn get_elements_in_reading_order(
 /// 文档结构统计
 pub fn document_structure_stats(
   structure : DocumentStructure,
-) -> (Int, Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32, Int32) {
   let mut titles = 0
   let mut headings = 0
   let mut paragraphs = 0
@@ -324,7 +324,7 @@ pub fn document_structure_stats(
 /// 检测多栏布局并返回栏数
 pub fn detect_document_columns(
   img : @types.Image,
-) -> Int raise @types.LoadError {
+) -> Int32 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(

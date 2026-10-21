@@ -43,7 +43,7 @@ pub extend ImageEditingAlgorithm with Eq::{not_equal, equal}
 pub(all) struct GenerationResult {
   image : @types.Image
   algorithm : ImageGenerationAlgorithm
-  seed : Int
+  seed : Int32
   latent_vector : Array[Double]
   generation_time_ms : Double
   quality_score : Double
@@ -66,11 +66,11 @@ pub(all) struct EditingResult {
 /// 生成配置
 pub(all) struct GenerationConfig {
   algorithm : ImageGenerationAlgorithm
-  width : Int
-  height : Int
-  channels : Int
-  seed : Int
-  num_steps : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  seed : Int32
+  num_steps : Int32
   guidance_scale : Double
   temperature : Double
   use_pretrained : Bool
@@ -81,7 +81,7 @@ pub(all) struct GenerationConfig {
 pub(all) struct EditingConfig {
   algorithm : ImageEditingAlgorithm
   strength : Double
-  num_steps : Int
+  num_steps : Int32
   guidance_scale : Double
   preserve_background : Bool
   edge_aware : Bool
@@ -92,7 +92,7 @@ pub(all) struct EditingConfig {
 /// 潜空间向量
 pub(all) struct LatentVector {
   vector : Array[Double]
-  dimension : Int
+  dimension : Int32
   norm : Double
   is_normalized : Bool
 }
@@ -102,7 +102,7 @@ pub(all) struct LatentVector {
 pub(all) struct CompositionConfig {
   blend_mode : String
   opacity : Double
-  feather_radius : Int
+  feather_radius : Int32
   use_mask : Bool
   color_match : Bool
   perspective_correct : Bool
@@ -140,7 +140,7 @@ pub fn create_default_editing_config() -> EditingConfig {
 
 ///|
 /// 生成随机潜空间向量
-pub fn generate_random_latent(dimension : Int, seed : Int) -> LatentVector {
+pub fn generate_random_latent(dimension : Int32, seed : Int32) -> LatentVector {
   let vector : Array[Double] = []
   let mut state = seed
 
@@ -298,8 +298,8 @@ pub fn inpaint_image(
 /// 图像外扩（Outpainting）
 pub fn outpaint_image(
   img : @types.Image,
-  new_width : Int,
-  new_height : Int,
+  new_width : Int32,
+  new_height : Int32,
   config : EditingConfig,
 ) -> EditingResult {
   ignore(config)

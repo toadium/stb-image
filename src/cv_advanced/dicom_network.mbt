@@ -42,8 +42,8 @@ pub extend DicomQueryLevel with Eq::{not_equal, equal}
 pub(all) struct PACSConfig {
   ae_title : String
   host : String
-  port : Int
-  timeout : Int
+  port : Int32
+  timeout : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -74,7 +74,7 @@ pub extend DicomQuery with Eq::{not_equal, equal}
 /// DICOM query result.
 pub(all) struct DicomQueryResult {
   found : Bool
-  num_results : Int
+  num_results : Int32
   study_uids : Array[String]
   series_uids : Array[String]
   error_message : String
@@ -92,8 +92,8 @@ pub extend DicomQueryResult with Eq::{not_equal, equal}
 pub fn dicom_net_build_config(
   ae_title : String,
   host : String,
-  port : Int,
-  timeout : Int,
+  port : Int32,
+  timeout : Int32,
 ) -> PACSConfig {
   PACSConfig::{ ae_title, host, port, timeout, }
 }
@@ -156,7 +156,7 @@ pub fn dicom_net_cfind(
 pub fn dicom_net_cget(
   config : PACSConfig,
   study_uid : String,
-  available_count : Int,
+  available_count : Int32,
 ) -> DicomQueryResult {
   if config.port <= 0 {
     return DicomQueryResult::{
@@ -254,7 +254,7 @@ pub fn dicom_net_cstore(
 ///|
 /// 生成 DICOM UID。
 /// Generate DICOM UID.
-pub fn dicom_net_generate_uid(root : String, instance : Int) -> String {
+pub fn dicom_net_generate_uid(root : String, instance : Int32) -> String {
   root + "." + instance.to_string()
 }
 

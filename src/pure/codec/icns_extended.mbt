@@ -1,14 +1,14 @@
 ///|
 /// ICNS 扩展信息（包含图标数量、各图标类型/尺寸等）
 pub struct IcnsInfoExtended {
-  file_size : Int
-  num_icons : Int
+  file_size : Int32
+  num_icons : Int32
   icon_types : Array[String]
-  icon_sizes : Array[Int]
+  icon_sizes : Array[Int32]
   is_png_list : Array[Bool]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
@@ -36,7 +36,7 @@ pub fn icns_info_extended(
   let len = data.length()
   let file_size = read_u32_be(data, 4)
   let icon_types : Array[String] = []
-  let icon_sizes : Array[Int] = []
+  let icon_sizes : Array[Int32] = []
   let is_png_list : Array[Bool] = []
   let mut pos = 8
   let mut max_size = 0

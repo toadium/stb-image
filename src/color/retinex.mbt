@@ -14,9 +14,9 @@ fn logf(x : Float) -> Float {
 /// sigma 为高斯标准差，gain 为增益，offset 为偏移。
 pub fn ssr(
   img : @types.Image,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width == 0 || img.height == 0 {
@@ -85,9 +85,9 @@ pub fn ssr(
 /// gain 为增益，offset 为偏移。
 pub fn msr(
   img : @types.Image,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width == 0 || img.height == 0 {
@@ -171,11 +171,11 @@ pub fn msr(
 /// 适用于 RGB/RGBA 图（channels=3/4）。
 pub fn msrcr(
   img : @types.Image,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("msrcr 需要 RGB/RGBA 图像")
@@ -254,8 +254,8 @@ pub fn msrcr(
 /// 对单通道进行高斯模糊
 fn gaussian_blur_channel(
   channel : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   sigma : Float,
 ) -> Array[Float] {
   let n = w * h

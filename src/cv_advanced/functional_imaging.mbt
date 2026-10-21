@@ -27,8 +27,8 @@ pub(all) struct FMRIActivation {
   activation : Array[Double]
   t_values : Array[Double]
   p_values : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -58,9 +58,9 @@ pub extend PETParams with Eq::{not_equal, equal}
 /// fMRI activation detection (simplified t-test).
 pub fn functional_fmri_detect(
   brain_data : Array[Array[Double]],
-  stimulus_pattern : Array[Int],
-  width : Int,
-  height : Int,
+  stimulus_pattern : Array[Int32],
+  width : Int32,
+  height : Int32,
 ) -> FMRIActivation {
   let n = width * height
   let activation : Array[Double] = []

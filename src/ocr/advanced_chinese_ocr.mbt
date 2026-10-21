@@ -4,9 +4,9 @@
 ///|
 /// 完善中文 OCR 配置
 pub(all) struct AdvancedChineseOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   char_set : String // "common3500" / "common100" / "full"
   use_radical_decomposition : Bool
@@ -31,7 +31,7 @@ pub fn advanced_chinese_ocr_default_config() -> AdvancedChineseOcrConfig {
 /// 汉字部件结构体
 pub(all) struct ChineseRadical {
   name : String
-  strokes : Int
+  strokes : Int32
   position : String // "left" / "right" / "top" / "bottom" / "outer" / "inner"
 }
 
@@ -40,7 +40,7 @@ pub(all) struct ChineseRadical {
 pub(all) struct ChineseCharStructure {
   char : String
   radical : String
-  strokes : Int
+  strokes : Int32
   structure_type : String // "single" / "left-right" / "top-bottom" / "surround" / "complex"
   components : Array[String]
 }
@@ -48,7 +48,7 @@ pub(all) struct ChineseCharStructure {
 ///|
 /// 生成 3500 常用汉字模板
 pub fn generate_3500_chinese_templates(
-  char_set? : String = "common3500",
+  char_set~ : String = "common3500",
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   // 3500常用字（这里列出最常用的500个作为示例，实际应该包含全部3500个）
@@ -248,12 +248,12 @@ pub fn recognize_chinese_advanced(
 fn segment_advanced_chinese_chars(
   img : @types.Image,
   cfg : AdvancedChineseOcrConfig,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
   // 简单连通域标记
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -276,11 +276,11 @@ fn segment_advanced_chinese_chars(
     }
   }
   // 计算边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -302,7 +302,7 @@ fn segment_advanced_chinese_chars(
     }
   }
   // 过滤
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -324,11 +324,11 @@ fn segment_advanced_chinese_chars(
 /// 提取完善字符区域
 fn extract_advanced_char_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -366,7 +366,7 @@ fn extract_advanced_char_region(
 /// 提取完善字符特征
 fn extract_advanced_char_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height

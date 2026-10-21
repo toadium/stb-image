@@ -1,7 +1,7 @@
 // v16.0.0 YOLO 目标检测测试
 
 ///|
-fn make_det_img(w : Int, h : Int) -> @types.Image {
+fn make_det_img(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

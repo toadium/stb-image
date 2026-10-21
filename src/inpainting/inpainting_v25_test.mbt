@@ -2,7 +2,7 @@
 // 图像修复/去雾/去雨：Telea/NavierStrokes/FastMarching/PatchMatch、暗通道/CLAHE去雾、形态学去雨
 
 ///|
-fn make_varied_inpaint_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_inpaint_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

@@ -74,7 +74,7 @@ pub(all) struct KGEntity {
   description : String
   properties : Array[String]
   property_values : Array[String]
-  num_relations : Int
+  num_relations : Int32
   confidence : Double
 }
 
@@ -96,10 +96,10 @@ pub(all) struct KGRelation {
 pub(all) struct KnowledgeGraph {
   entities : Array[KGEntity]
   relations : Array[KGRelation]
-  num_entities : Int
-  num_relations : Int
-  num_entity_types : Int
-  num_relation_types : Int
+  num_entities : Int32
+  num_relations : Int32
+  num_entity_types : Int32
+  num_relation_types : Int32
   construction_method : KGConstructionMethod
 }
 
@@ -112,7 +112,7 @@ pub(all) struct EntityLinkingResult {
   linked_entity : String
   confidence : Double
   method_type : EntityLinkingMethod
-  num_candidates : Int
+  num_candidates : Int32
 }
 
 ///|
@@ -124,7 +124,7 @@ pub(all) struct RelationExtractionResult {
   confidence : Double
   method_type : RelationExtractionMethod
   sentence : String
-  evidence_span : Array[Int]
+  evidence_span : Array[Int32]
 }
 
 ///|
@@ -135,7 +135,7 @@ pub(all) struct KnowledgeReasoningResult {
   confidence : Double
   reasoning_path : Array[String]
   method_type : KnowledgeReasoningMethod
-  num_hops : Int
+  num_hops : Int32
   supporting_facts : Array[String]
 }
 
@@ -144,9 +144,9 @@ pub(all) struct KnowledgeReasoningResult {
 pub(all) struct KGEmbedding {
   entity_embeddings : Array[Array[Double]]
   relation_embeddings : Array[Array[Double]]
-  embedding_dim : Int
-  num_entities : Int
-  num_relations : Int
+  embedding_dim : Int32
+  num_entities : Int32
+  num_relations : Int32
   model_type : String
   training_loss : Double
 }
@@ -158,9 +158,9 @@ pub(all) struct KGConfig {
   entity_linking_method : EntityLinkingMethod
   relation_extraction_method : RelationExtractionMethod
   reasoning_method : KnowledgeReasoningMethod
-  embedding_dim : Int
+  embedding_dim : Int32
   confidence_threshold : Double
-  max_hops : Int
+  max_hops : Int32
   use_temporal : Bool
   use_spatial : Bool
 }

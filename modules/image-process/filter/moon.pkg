@@ -1,0 +1,9 @@
+import {
+  "walkzzz/image-core/types",
+  "walkzzz/image-process/transform",
+  "moonbitlang/core/math",
+}
+
+import {
+  "walkzzz/image-codec/lib",
+} for "test"

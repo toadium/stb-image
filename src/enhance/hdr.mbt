@@ -186,7 +186,7 @@ pub fn hdr_fusion_weighted(
 /// L_ mapped = L / (1 + L) （全局色调映射）
 pub fn tone_mapping_reinhard(
   img : @types.Image,
-  key? : Double = 0.18,
+  key~ : Double = 0.18,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -261,7 +261,7 @@ pub fn tone_mapping_reinhard(
 /// out = in ^ gamma
 pub fn tone_mapping_gamma(
   img : @types.Image,
-  gamma? : Double = 1.0 / 2.2,
+  gamma~ : Double = 1.0 / 2.2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -320,7 +320,7 @@ pub fn tone_mapping_gamma(
 /// out = 1 / (1 + exp(-strength * (in - 0.5)))
 pub fn tone_mapping_sigmoid(
   img : @types.Image,
-  strength? : Double = 5.0,
+  strength~ : Double = 5.0,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

@@ -5,7 +5,7 @@
 /// 扫描文档配置
 pub(all) struct ScanOCRConfig {
   language : String // "digit" / "english" / "chinese" / "multilingual"
-  dpi : Int // 扫描 DPI（通常 300）
+  dpi : Int32 // 扫描 DPI（通常 300）
   deskew : Bool // 是否自动倾斜校正
   denoise : Bool // 是否去噪
   binarization_method : String // "otsu" / "adaptive" / "sauvola"
@@ -42,22 +42,22 @@ pub(all) struct ScanQuality {
 ///|
 /// 文本块（版面分析结果）
 pub(all) struct TextBlock {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   block_type : String // "text" / "title" / "table" / "image" / "list"
   text : String
   confidence : Double
-  reading_order : Int
+  reading_order : Int32
 }
 
 ///|
 /// OCR 页面结果
 pub(all) struct OCRPageResult {
-  page_number : Int
-  width : Int
-  height : Int
+  page_number : Int32
+  width : Int32
+  height : Int32
   blocks : Array[TextBlock]
   full_text : String
   average_confidence : Double
@@ -269,7 +269,7 @@ fn denoise_scan(img : @types.Image) -> @types.Image {
       let idx = (y * w + x) * channels
       for c in 0..<channels {
         // 3x3 中值滤波（简化版：取 5 个点的中值）
-        let values : Array[Int] = []
+        let values : Array[Int32] = []
         // 中心
         values.push(img.data[idx + c].to_int())
         // 上
@@ -318,7 +318,7 @@ fn enhance_contrast_scan(img : @types.Image) -> @types.Image {
   let h = img.height
   let channels = img.channels
   // 计算最小值和最大值（忽略 1% 极值）
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -379,7 +379,7 @@ fn binarize_otsu_scan(img : @types.Image) -> @types.Image {
   let h = img.height
   let channels = img.channels
   // 计算直方图
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -601,7 +601,7 @@ pub fn analyze_layout_scan(
   let w = binary_img.width
   let h = binary_img.height
   // 水平投影（检测文本行）
-  let horizontal_proj : Array[Int] = []
+  let horizontal_proj : Array[Int32] = []
   for y in 0..<h {
     let mut count = 0
     for x in 0..<w {

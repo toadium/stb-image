@@ -11,9 +11,9 @@ pub fn build_symbol(
   pkg~ : String,
   name~ : String,
   kind~ : SymbolKind,
-  signature? : String = "",
-  doc? : String = "",
-  keywords? : Array[String] = [],
+  signature~ : String = "",
+  doc~ : String = "",
+  keywords~ : Array[String] = [],
 ) -> SymbolCoord {
   SymbolCoord::make(pkg~, name~, kind~, signature~, doc~, keywords~)
 }

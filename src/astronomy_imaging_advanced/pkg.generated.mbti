@@ -8,11 +8,11 @@ pub fn classify_galaxies(Array[DetectedCelestialObject], AstronomyImagingConfig)
 
 pub fn create_default_astronomy_config() -> AstronomyImagingConfig
 
-pub fn detect_celestial_objects(Array[Double], Int, Int, AstronomyImagingConfig) -> Array[DetectedCelestialObject]
+pub fn detect_celestial_objects(Array[Double], Int32, Int32, AstronomyImagingConfig) -> Array[DetectedCelestialObject]
 
 pub fn perform_photometry(Array[DetectedCelestialObject], AstronomyImagingConfig) -> Array[PhotometryResult]
 
-pub fn stack_images(Array[Array[Double]], Int, Int, AstronomyImagingConfig) -> ImageStackingResult
+pub fn stack_images(Array[Array[Double]], Int32, Int32, AstronomyImagingConfig) -> ImageStackingResult
 
 // Errors
 
@@ -35,7 +35,7 @@ pub(all) struct AstronomyImagingConfig {
   use_dark_subtraction : Bool
   use_flat_correction : Bool
   stacking_method : String
-  num_stack_images : Int
+  num_stack_images : Int32
 }
 
 pub(all) enum AstronomyImagingTaskType {
@@ -81,7 +81,7 @@ pub(all) struct CosmologicalParameterResult {
 }
 
 pub(all) struct DetectedCelestialObject {
-  object_id : Int
+  object_id : Int32
   object_type : CelestialObjectType
   ra : Double
   dec : Double
@@ -100,7 +100,7 @@ pub(all) struct DetectedCelestialObject {
 }
 
 pub(all) struct GalaxyClassificationResult {
-  galaxy_id : Int
+  galaxy_id : Int32
   morphology : GalaxyMorphologyType
   confidence : Double
   all_morphologies : Array[GalaxyMorphologyType]
@@ -125,20 +125,20 @@ pub fn GalaxyMorphologyType::equal(Self, Self) -> Bool
 pub fn GalaxyMorphologyType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ImageStackingResult {
-  num_images : Int
+  num_images : Int32
   stacked_image : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   exposure_time_total : Double
   noise_reduction_factor : Double
   dynamic_range_improvement : Double
   stacking_method : String
-  rejected_images : Int
+  rejected_images : Int32
   quality_score : Double
 }
 
 pub(all) struct PhotometryResult {
-  object_id : Int
+  object_id : Int32
   filter_name : String
   magnitude : Double
   magnitude_error : Double
@@ -166,7 +166,7 @@ pub fn SpectralType::equal(Self, Self) -> Bool
 pub fn SpectralType::not_equal(Self, Self) -> Bool
 
 pub(all) struct SpectroscopyResult {
-  object_id : Int
+  object_id : Int32
   spectral_type : SpectralType
   temperature : Double
   luminosity : Double
@@ -181,8 +181,8 @@ pub(all) struct SpectroscopyResult {
 }
 
 pub(all) struct TransitDetectionResult {
-  object_id : Int
-  planet_candidate_id : Int
+  object_id : Int32
+  planet_candidate_id : Int32
   period : Double
   period_error : Double
   transit_depth : Double

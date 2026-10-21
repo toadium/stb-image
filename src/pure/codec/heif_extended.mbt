@@ -1,24 +1,24 @@
 ///|
 /// HEIF 扩展信息（包含色彩空间、旋转、HEVC 编码配置等）
 pub struct HeifInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  rotation : Int
-  mirror : Int
+  rotation : Int32
+  mirror : Int32
   color_type : String
-  color_primaries : Int
-  transfer_characteristics : Int
-  matrix_coefficients : Int
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
   full_range : Bool
-  hevc_profile : Int
-  hevc_level : Int
-  hevc_tier : Int
-  hevc_chroma_format : Int
-  hevc_bit_depth_luma : Int
-  hevc_bit_depth_chroma : Int
+  hevc_profile : Int32
+  hevc_level : Int32
+  hevc_tier : Int32
+  hevc_chroma_format : Int32
+  hevc_bit_depth_luma : Int32
+  hevc_bit_depth_chroma : Int32
 }
 
 ///|
@@ -130,9 +130,9 @@ pub fn heif_info_extended(
 ///|
 fn heif_scan_boxes(
   data : Bytes,
-  start : Int,
-  end : Int,
-  callback : (Int, Int, String) -> Unit,
+  start : Int32,
+  end : Int32,
+  callback : (Int32, Int32, String) -> Unit,
 ) -> Unit {
   let mut offset = start
   while offset + 8 <= end {

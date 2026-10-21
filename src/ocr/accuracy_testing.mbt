@@ -8,24 +8,24 @@ pub(all) struct CharRecognitionResult {
   actual : String
   is_correct : Bool
   confidence : Double
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
 }
 
 ///|
 /// 准确率统计
 pub(all) struct AccuracyStats {
-  total_chars : Int
-  correct_chars : Int
+  total_chars : Int32
+  correct_chars : Int32
   char_accuracy : Double
-  total_words : Int
-  correct_words : Int
+  total_words : Int32
+  correct_words : Int32
   word_accuracy : Double
-  total_lines : Int
-  correct_lines : Int
+  total_lines : Int32
+  correct_lines : Int32
   line_accuracy : Double
-  false_positives : Int
-  false_negatives : Int
+  false_positives : Int32
+  false_negatives : Int32
   precision : Double
   recall : Double
   f1_score : Double
@@ -36,14 +36,14 @@ pub(all) struct AccuracyStats {
 pub(all) struct ConfusionEntry {
   expected : String
   actual : String
-  count : Int
+  count : Int32
 }
 
 ///|
 /// 混淆矩阵
 pub(all) struct ConfusionMatrix {
   entries : Array[ConfusionEntry]
-  total_errors : Int
+  total_errors : Int32
 }
 
 ///|
@@ -68,17 +68,17 @@ pub(all) struct ErrorAnalysisEntry {
   context_before : String
   context_after : String
   confidence : Double
-  count : Int
+  count : Int32
 }
 
 ///|
 /// 错误分析报告
 pub(all) struct ErrorAnalysisReport {
-  total_errors : Int
-  substitution_count : Int
-  insertion_count : Int
-  deletion_count : Int
-  reorder_count : Int
+  total_errors : Int32
+  substitution_count : Int32
+  insertion_count : Int32
+  deletion_count : Int32
+  reorder_count : Int32
   top_errors : Array[ErrorAnalysisEntry]
   suggestions : Array[String]
 }
@@ -171,7 +171,7 @@ fn split_words(text : String) -> Array[String] {
 
 ///|
 /// 计算编辑距离（Levenshtein）
-pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int {
+pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int32 {
   let m = s1.length()
   let n = s2.length()
   if m == 0 {
@@ -181,8 +181,8 @@ pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int {
     return m
   }
   // 使用滚动数组优化空间
-  let mut prev : Array[Int] = []
-  let mut curr : Array[Int] = []
+  let mut prev : Array[Int32] = []
+  let mut curr : Array[Int32] = []
   for j in 0..<(n + 1) {
     prev.push(j)
     curr.push(0)
@@ -480,9 +480,9 @@ pub fn generate_performance_report(
 /// 验证准确率是否达标
 pub fn check_accuracy_threshold(
   stats : AccuracyStats,
-  min_char_accuracy? : Double = 0.95,
-  min_word_accuracy? : Double = 0.90,
-  min_f1_score? : Double = 0.92,
+  min_char_accuracy~ : Double = 0.95,
+  min_word_accuracy~ : Double = 0.90,
+  min_f1_score~ : Double = 0.92,
 ) -> (Bool, Array[String]) raise @types.LoadError {
   // 输入验证
   if min_char_accuracy < 0.0 || min_char_accuracy > 1.0 {

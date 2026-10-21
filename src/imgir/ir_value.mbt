@@ -14,7 +14,7 @@ pub(all) enum IRValue {
   VVectorField(@fieldimg.VectorField)
   VTImage(@spatiotemporal.TImage)
   VFloat(Float)
-  VInt(Int)
+  VInt(Int32)
   VUnit
 } derive(Eq, @debug.Debug)
 

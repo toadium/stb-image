@@ -3,9 +3,9 @@
 
 ///|
 fn re_make_rgb(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -611,7 +611,7 @@ test "reexport: safe_mul3 normal" {
 
 ///|
 test "reexport: reinhard_tonemap" {
-  fn write_f32(data : Array[Byte], off : Int, v : Float) {
+  fn write_f32(data : Array[Byte], off : Int32, v : Float) {
     let bits = v.reinterpret_as_int()
     data[off] = (bits & 0xFF).to_byte()
     data[off + 1] = ((bits >> 8) & 0xFF).to_byte()

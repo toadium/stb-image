@@ -1,7 +1,7 @@
 // v224: forensics_enhanced 边界测试
 
 ///|
-fn fen_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn fen_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())

@@ -68,13 +68,13 @@ pub extend TransformType with Eq::{not_equal, equal}
 /// 压缩结果
 pub(all) struct CompressionResult {
   compressed_data : Array[Byte]
-  compressed_size_bytes : Int
-  original_size_bytes : Int
+  compressed_size_bytes : Int32
+  original_size_bytes : Int32
   compression_ratio : Double
   bits_per_pixel : Double
   compression_mode : CompressionMode
   compression_standard : CompressionStandardType
-  quality : Int
+  quality : Int32
   psnr : Double
   ssim : Double
   encoding_time_ms : Double
@@ -85,9 +85,9 @@ pub(all) struct CompressionResult {
 /// 解压缩结果
 pub(all) struct DecompressionResult {
   decompressed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   decompression_time_ms : Double
   compression_standard : CompressionStandardType
   quality_score : Double
@@ -109,12 +109,12 @@ pub(all) struct CompressionQualityResult {
 ///|
 /// 率失真优化结果
 pub(all) struct RateDistortionOptimizationResult {
-  optimal_quality : Int
+  optimal_quality : Int32
   optimal_bitrate : Double
   optimal_psnr : Double
   optimal_ssim : Double
   rate_distortion_curve : Array[Array[Double]]
-  num_points : Int
+  num_points : Int32
   lambda : Double
   optimization_method : String
 }
@@ -125,11 +125,11 @@ pub(all) struct ImageCompressionConfig {
   task_type : ImageCompressionTaskType
   compression_standard : CompressionStandardType
   compression_mode : CompressionMode
-  quality : Int
+  quality : Int32
   target_bitrate_kbps : Double
   target_compression_ratio : Double
   transform_type : TransformType
-  block_size : Int
+  block_size : Int32
   use_chroma_subsampling : Bool
   chroma_subsampling : String
   use_entropy_coding : Bool
@@ -137,10 +137,10 @@ pub(all) struct ImageCompressionConfig {
   use_prediction : Bool
   prediction_method : String
   use_loop_filter : Bool
-  loop_filter_strength : Int
+  loop_filter_strength : Int32
   use_gpu : Bool
   use_multithreading : Bool
-  num_threads : Int
+  num_threads : Int32
 }
 
 ///|
@@ -203,7 +203,7 @@ fn log_approx_comp(x : Double) -> Double {
 
 ///|
 /// 简化的DCT变换
-fn dct_2d(block : Array[Double], block_size : Int) -> Array[Double] {
+fn dct_2d(block : Array[Double], block_size : Int32) -> Array[Double] {
   let result : Array[Double] = []
   let pi = 3.141592653589793
 
@@ -237,8 +237,8 @@ fn dct_2d(block : Array[Double], block_size : Int) -> Array[Double] {
 
 ///|
 /// 简化的量化
-fn quantize(block : Array[Double], quality : Int) -> Array[Int] {
-  let result : Array[Int] = []
+fn quantize(block : Array[Double], quality : Int32) -> Array[Int32] {
+  let result : Array[Int32] = []
   let scale = if quality < 50 {
     5000.0 / quality.to_double()
   } else {
@@ -262,8 +262,8 @@ fn quantize(block : Array[Double], quality : Int) -> Array[Int] {
 /// 图像压缩（简化版）
 pub fn compress_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageCompressionConfig,
 ) -> CompressionResult {
   let compressed : Array[Byte] = []
@@ -347,8 +347,8 @@ pub fn compress_image(
 /// 图像解压缩（简化版）
 pub fn decompress_image(
   compressed_data : Array[Byte],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageCompressionConfig,
 ) -> DecompressionResult {
   let decompressed : Array[Double] = []
@@ -384,8 +384,8 @@ pub fn decompress_image(
 pub fn evaluate_compression_quality(
   original : Array[Double],
   compressed : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> CompressionQualityResult {
   ignore(height)
   ignore(width)
@@ -423,8 +423,8 @@ pub fn evaluate_compression_quality(
 /// 率失真优化（简化版）
 pub fn optimize_rate_distortion(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageCompressionConfig,
 ) -> RateDistortionOptimizationResult {
   ignore(config)

@@ -1,0 +1,508 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-codec/codec"
+
+import {
+  "walkzzz/image-core/types",
+}
+
+// Values
+pub fn apng_info_extended(Bytes) -> ApngInfoExtended raise @types.LoadError
+
+pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn avif_info(Bytes) -> AvifInfo raise @types.LoadError
+
+pub fn avif_info_extended(Bytes) -> AvifInfoExtended raise @types.LoadError
+
+pub fn bmp_info_extended(Bytes) -> BmpInfoExtended raise @types.LoadError
+
+pub fn codec_decode_auto(Bytes) -> @types.AnyImage raise @types.LoadError
+
+pub fn codec_detect_format(Bytes) -> @types.ImageFormat
+
+pub fn cur_info_extended(Bytes) -> CurInfoExtended raise @types.LoadError
+
+pub fn decode_apng_pure(Bytes) -> @types.PngAnimation raise @types.LoadError
+
+pub fn decode_bmp_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_cur_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_gif_animation_pure(Bytes) -> @types.GifAnimation raise @types.LoadError
+
+pub fn decode_gif_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_hdr_pure(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn decode_icns_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_ico_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_jpeg_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_png_16_pure(Bytes, req_channels? : Int32?) -> @types.Image16 raise @types.LoadError
+
+pub fn decode_png_pure(Bytes, req_channels? : Int32?) -> @types.Image raise @types.LoadError
+
+pub fn decode_pnm_16_pure(Bytes) -> @types.Image16 raise @types.LoadError
+
+pub fn decode_pnm_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_psd_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_qoi_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_tiff_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn decode_vp8_frame(Bytes, Int32) -> @types.Image raise @types.LoadError
+
+pub fn decode_vp8_inter_frame(Bytes, Int32, Vp8ReferenceFrames) -> (@types.Image, Vp8ReferenceFrames) raise @types.LoadError
+
+pub fn decode_webp_pure(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn detect_image_format(Bytes) -> String
+
+pub fn encode_apng_pure(@types.PngAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_bmp_pure(@types.Image) -> Bytes
+
+pub fn encode_cur_pure(@types.Image) -> Bytes
+
+pub fn encode_cur_with_hotspot_pure(@types.Image, Int32, Int32) -> Bytes
+
+pub fn encode_gif_animation_pure(@types.GifAnimation) -> Bytes raise @types.LoadError
+
+pub fn encode_gif_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_hdr_pure(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_icns_pure(@types.Image) -> Bytes
+
+pub fn encode_ico_pure(@types.Image) -> Bytes
+
+pub fn encode_ico_with_sizes_pure(Array[@types.Image]) -> Bytes
+
+pub fn encode_jpeg_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_pgm_pure(@types.Image) -> Bytes
+
+pub fn encode_png_pure(@types.Image) -> Bytes
+
+pub fn encode_pnm_pure(@types.Image) -> Bytes
+
+pub fn encode_ppm_pure(@types.Image) -> Bytes
+
+pub fn encode_qoi_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tga_pure(@types.Image) -> Bytes
+
+pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_webp_lossy_full(@types.Image, quality? : Int32) -> Bytes raise @types.LoadError
+
+pub fn encode_webp_lossy_pure(@types.Image, quality? : Int32) -> Bytes raise @types.LoadError
+
+pub fn get_image_info_extended(Bytes) -> ImageInfoExtended raise @types.LoadError
+
+pub fn gif_info_extended(Bytes) -> GifInfoExtended raise @types.LoadError
+
+pub fn hdr_info_extended(Bytes) -> HdrInfoExtended raise @types.LoadError
+
+pub fn heif_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn heif_info(Bytes) -> HeifInfo raise @types.LoadError
+
+pub fn heif_info_extended(Bytes) -> HeifInfoExtended raise @types.LoadError
+
+pub fn icns_info_extended(Bytes) -> IcnsInfoExtended raise @types.LoadError
+
+pub fn ico_info_extended(Bytes) -> IcoInfoExtended raise @types.LoadError
+
+pub fn is_apng_format(Bytes) -> Bool
+
+pub fn is_avif_format(Bytes) -> Bool
+
+pub fn is_bmp_format(Bytes) -> Bool
+
+pub fn is_cur_format(Bytes) -> Bool
+
+pub fn is_gif_format(Bytes) -> Bool
+
+pub fn is_hdr_format(Bytes) -> Bool
+
+pub fn is_heif_format(Bytes) -> Bool
+
+pub fn is_icns_format(Bytes) -> Bool
+
+pub fn is_ico_format(Bytes) -> Bool
+
+pub fn is_jpeg_format(Bytes) -> Bool
+
+pub fn is_jpegxl_codestream(Bytes) -> Bool
+
+pub fn is_jpegxl_container(Bytes) -> Bool
+
+pub fn is_jpegxl_format(Bytes) -> Bool
+
+pub fn is_png_format(Bytes) -> Bool
+
+pub fn is_pnm_format(Bytes) -> Bool
+
+pub fn is_psd_format(Bytes) -> Bool
+
+pub fn is_qoi_format(Bytes) -> Bool
+
+pub fn is_tga_format(Bytes) -> Bool
+
+pub fn is_tiff_format(Bytes) -> Bool
+
+pub fn is_webp_format(Bytes) -> Bool
+
+pub fn jpeg_info_extended(Bytes) -> JpegInfoExtended raise @types.LoadError
+
+pub fn jpegxl_decode(Bytes) -> @types.Image raise @types.LoadError
+
+pub fn jpegxl_info(Bytes) -> JpegXlInfo raise @types.LoadError
+
+pub fn jpegxl_info_extended(Bytes) -> JpegXlInfoExtended raise @types.LoadError
+
+pub fn png_info_extended(Bytes) -> PngInfoExtended raise @types.LoadError
+
+pub fn pnm_info_extended(Bytes) -> PnmInfoExtended raise @types.LoadError
+
+pub fn psd_info_extended(Bytes) -> PsdInfoExtended raise @types.LoadError
+
+pub fn qoi_info_extended(Bytes) -> QoiInfoExtended raise @types.LoadError
+
+pub fn tga_info_extended(Bytes) -> TgaInfoExtended raise @types.LoadError
+
+pub fn tiff_deflate_decode(Bytes) -> Array[Byte] raise @types.LoadError
+
+pub fn tiff_info_extended(Bytes) -> TiffInfoExtended raise @types.LoadError
+
+pub fn tiff_lzw_decode(Bytes) -> Array[Byte] raise @types.LoadError
+
+pub fn tiff_packbits_decode(Bytes) -> Array[Byte] raise @types.LoadError
+
+pub fn webp_info_extended(Bytes) -> WebpInfoExtended raise @types.LoadError
+
+// Errors
+
+// Types and methods
+pub struct ApngInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
+  color_type_name : String
+  num_channels : Int32
+  has_alpha : Bool
+  num_frames : Int32
+  num_plays : Int32
+  is_animated : Bool
+}
+
+pub struct AvifInfo {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct AvifInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  rotation : Int32
+  mirror : Int32
+  color_type : String
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
+  full_range : Bool
+  av1_profile : Int32
+  av1_level : Int32
+  av1_tier : Int32
+  av1_monochrome : Bool
+}
+
+pub struct BmpInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  compression : Int32
+  compression_name : String
+  is_bottom_up : Bool
+  dib_size : Int32
+  num_colors : Int32
+  data_offset : Int32
+}
+
+pub struct CurInfoExtended {
+  icon_type : Int32
+  num_images : Int32
+  widths : Array[Int32]
+  heights : Array[Int32]
+  hotspot_xs : Array[Int32]
+  hotspot_ys : Array[Int32]
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct GifInfoExtended {
+  width : Int32
+  height : Int32
+  version : String
+  has_global_color_table : Bool
+  global_color_table_size : Int32
+  color_resolution : Int32
+  is_sorted : Bool
+  background_color_index : Int32
+  pixel_aspect_ratio : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct HdrInfoExtended {
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  format : String
+}
+
+pub struct HeifInfo {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct HeifInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  rotation : Int32
+  mirror : Int32
+  color_type : String
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
+  full_range : Bool
+  hevc_profile : Int32
+  hevc_level : Int32
+  hevc_tier : Int32
+  hevc_chroma_format : Int32
+  hevc_bit_depth_luma : Int32
+  hevc_bit_depth_chroma : Int32
+}
+
+pub struct IcnsInfoExtended {
+  file_size : Int32
+  num_icons : Int32
+  icon_types : Array[String]
+  icon_sizes : Array[Int32]
+  is_png_list : Array[Bool]
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct IcoInfoExtended {
+  icon_type : Int32
+  icon_type_name : String
+  num_images : Int32
+  widths : Array[Int32]
+  heights : Array[Int32]
+  bit_depths : Array[Int32]
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub enum ImageInfoExtended {
+  Avif(AvifInfoExtended)
+  Heif(HeifInfoExtended)
+  JpegXl(JpegXlInfoExtended)
+  Webp(WebpInfoExtended)
+  Tiff(TiffInfoExtended)
+  Psd(PsdInfoExtended)
+  Bmp(BmpInfoExtended)
+  Gif(GifInfoExtended)
+  Png(PngInfoExtended)
+  Jpeg(JpegInfoExtended)
+  Qoi(QoiInfoExtended)
+  Tga(TgaInfoExtended)
+  Hdr(HdrInfoExtended)
+  Pnm(PnmInfoExtended)
+  Ico(IcoInfoExtended)
+  Cur(CurInfoExtended)
+  Icns(IcnsInfoExtended)
+  Apng(ApngInfoExtended)
+}
+
+pub struct JpegInfoExtended {
+  width : Int32
+  height : Int32
+  precision : Int32
+  num_components : Int32
+  is_grayscale : Bool
+  is_progressive : Bool
+  sof_marker : Int32
+  sof_name : String
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct JpegXlInfo {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  is_lossless : Bool
+}
+
+pub struct JpegXlInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  is_lossless : Bool
+  is_codestream : Bool
+  orientation : Int32
+}
+
+pub struct PngInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
+  color_type_name : String
+  num_channels : Int32
+  has_alpha : Bool
+  is_palette : Bool
+  compression_method : Int32
+  filter_method : Int32
+  interlace_method : Int32
+}
+
+pub struct PnmInfoExtended {
+  width : Int32
+  height : Int32
+  format_type : String
+  maxval : Int32
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  is_binary : Bool
+}
+
+pub struct PsdInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  channel_count : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  color_mode : Int32
+  color_mode_name : String
+  compression : Int32
+  compression_name : String
+  version : Int32
+}
+
+pub struct QoiInfoExtended {
+  width : Int32
+  height : Int32
+  channels : Int32
+  colorspace : Int32
+  colorspace_name : String
+  num_channels : Int32
+  has_alpha : Bool
+}
+
+pub struct TgaInfoExtended {
+  width : Int32
+  height : Int32
+  image_type : Int32
+  image_type_name : String
+  bit_depth : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  is_bottom_up : Bool
+  id_length : Int32
+  color_map_type : Int32
+  x_origin : Int32
+  y_origin : Int32
+}
+
+pub struct TiffInfoExtended {
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  samples_per_pixel : Int32
+  num_channels : Int32
+  has_alpha : Bool
+  compression : Int32
+  compression_name : String
+  photometric : Int32
+  photometric_name : String
+  orientation : Int32
+  resolution_unit : Int32
+  is_little_endian : Bool
+}
+
+pub struct Vp8ReferenceFrames {
+  last_y : Array[Int32]
+  last_u : Array[Int32]
+  last_v : Array[Int32]
+  golden_y : Array[Int32]
+  golden_u : Array[Int32]
+  golden_v : Array[Int32]
+  altref_y : Array[Int32]
+  altref_u : Array[Int32]
+  altref_v : Array[Int32]
+  width : Int32
+  height : Int32
+}
+
+pub struct WebpInfoExtended {
+  width : Int32
+  height : Int32
+  format : String
+  has_alpha : Bool
+  has_animation : Bool
+  has_icc_profile : Bool
+  has_exif : Bool
+  has_xmp : Bool
+  num_channels : Int32
+}
+
+// Type aliases
+
+// Traits
+pub trait Codec {
+  fn format_name(Self) -> String
+  fn can_encode(Self) -> Bool
+  fn can_decode(Self) -> Bool
+  fn is_lossless(Self) -> Bool
+  fn encode(Self, @types.AnyImage) -> Bytes raise @types.LoadError
+  fn decode(Self, Bytes) -> @types.AnyImage raise @types.LoadError
+}
+pub impl Codec for @types.ImageFormat

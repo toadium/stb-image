@@ -4,12 +4,12 @@
 ///|
 /// 批处理配置
 pub(all) struct BatchOcrConfig {
-  max_concurrent : Int // 最大并发数
-  batch_size : Int // 每批处理数量
+  max_concurrent : Int32 // 最大并发数
+  batch_size : Int32 // 每批处理数量
   enable_progress_callback : Bool // 是否启用进度回调
   enable_error_recovery : Bool // 是否启用错误恢复
   output_format : String // 输出格式："text" / "hocr" / "json" / "markdown"
-  dpi : Int // 处理 DPI
+  dpi : Int32 // 处理 DPI
   preprocess_config : String // 预处理配置："auto" / "standard" / "enhanced" / "heavy"
   save_intermediate : Bool // 是否保存中间结果
   output_directory : String // 输出目录
@@ -39,19 +39,19 @@ pub(all) struct BatchTask {
   error_message : String
   start_time : Double
   end_time : Double
-  page_count : Int
-  char_count : Int
+  page_count : Int32
+  char_count : Int32
   accuracy_estimate : Double
 }
 
 ///|
 /// 批处理进度
 pub(all) struct BatchProgress {
-  total_tasks : Int
-  completed_tasks : Int
-  failed_tasks : Int
-  skipped_tasks : Int
-  current_task_index : Int
+  total_tasks : Int32
+  completed_tasks : Int32
+  failed_tasks : Int32
+  skipped_tasks : Int32
+  current_task_index : Int32
   overall_progress : Double
   current_task_progress : Double
   elapsed_time_ms : Double
@@ -63,13 +63,13 @@ pub(all) struct BatchProgress {
 ///|
 /// 批处理结果汇总
 pub(all) struct BatchResultSummary {
-  total_tasks : Int
-  successful_tasks : Int
-  failed_tasks : Int
-  skipped_tasks : Int
+  total_tasks : Int32
+  successful_tasks : Int32
+  failed_tasks : Int32
+  skipped_tasks : Int32
   success_rate : Double
-  total_pages : Int
-  total_chars : Int
+  total_pages : Int32
+  total_chars : Int32
   total_time_ms : Double
   average_accuracy : Double
   average_pages_per_second : Double
@@ -84,9 +84,9 @@ pub(all) struct MemoryUsageStats {
   current_usage_mb : Double
   peak_usage_mb : Double
   average_usage_mb : Double
-  total_allocated : Int
-  total_freed : Int
-  gc_count : Int
+  total_allocated : Int32
+  total_freed : Int32
+  gc_count : Int32
 }
 
 ///|
@@ -163,8 +163,8 @@ pub fn create_batch_tasks(
 pub fn update_task_progress(
   task : BatchTask,
   progress : Double,
-  current_page : Int,
-  total_pages : Int,
+  current_page : Int32,
+  total_pages : Int32,
 ) -> BatchTask {
   ignore(current_page)
   let new_progress = if progress > 1.0 {
@@ -193,7 +193,7 @@ pub fn update_task_progress(
 /// 标记任务完成
 pub fn mark_task_completed(
   task : BatchTask,
-  char_count : Int,
+  char_count : Int32,
   accuracy : Double,
   end_time : Double,
 ) -> BatchTask {
@@ -482,7 +482,7 @@ pub fn batch_summary_to_string(summary : BatchResultSummary) -> String {
 
 ///|
 /// 生成进度条字符串
-pub fn progress_bar_to_string(progress : Double, width? : Int = 30) -> String {
+pub fn progress_bar_to_string(progress : Double, width~ : Int32 = 30) -> String {
   let bar_width = width
   let filled = (progress * bar_width.to_double()).to_int()
   let mut bar = "["
@@ -502,10 +502,10 @@ pub fn progress_bar_to_string(progress : Double, width? : Int = 30) -> String {
 ///|
 /// 估算内存使用（简化版）
 pub fn estimate_memory_usage(
-  image_count : Int,
-  image_width : Int,
-  image_height : Int,
-  channels : Int,
+  image_count : Int32,
+  image_width : Int32,
+  image_height : Int32,
+  channels : Int32,
 ) -> MemoryUsageStats {
   let per_image_mb = (image_width * image_height * channels).to_double() /
     (1024.0 * 1024.0)

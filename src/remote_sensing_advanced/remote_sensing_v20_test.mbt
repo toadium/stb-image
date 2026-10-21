@@ -2,7 +2,7 @@
 // 高级遥感：地物分类、目标检测、变化检测、报告生成
 
 ///|
-fn make_band_data(n : Int) -> Array[Double] {
+fn make_band_data(n : Int32) -> Array[Double] {
   let arr : Array[Double] = []
   for i in 0..<n {
     arr.push((i % 256).to_double())

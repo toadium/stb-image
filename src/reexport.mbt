@@ -49,24 +49,24 @@ pub type ResizeEdge = @types.ResizeEdge
 pub type ResizeFilter = @types.ResizeFilter
 
 ///|
-pub const MAX_IMAGE_DIMENSION : Int = @types.MAX_IMAGE_DIMENSION
+pub const MAX_IMAGE_DIMENSION : Int32 = @types.MAX_IMAGE_DIMENSION
 
 ///|
 pub fn check_dims(
-  width : Int,
-  height : Int,
-  channels : Int,
+  width : Int32,
+  height : Int32,
+  channels : Int32,
 ) -> Unit raise LoadError {
   @types.check_dims(width, height, channels)
 }
 
 ///|
-pub fn safe_mul(a : Int, b : Int) -> Int? {
+pub fn safe_mul(a : Int32, b : Int32) -> Int32? {
   @types.safe_mul(a, b)
 }
 
 ///|
-pub fn safe_mul3(a : Int, b : Int, c : Int) -> Int? {
+pub fn safe_mul3(a : Int32, b : Int32, c : Int32) -> Int32? {
   @types.safe_mul3(a, b, c)
 }
 
@@ -158,7 +158,7 @@ pub let convert_iphone_png_to_rgb : (Bool) -> Unit = @pure_util.convert_iphone_p
 /// 行为与 load_from_bytes 等价，两者均委托 @lib.load_from_bytes_auto
 pub fn decode_any(
   arg0 : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image raise @types.LoadError {
   @lib.load_from_bytes_auto(arg0, req_channels~)
 }
@@ -205,7 +205,7 @@ pub let ldr_to_hdr_scale : (Float) -> Unit = @pure_util.ldr_to_hdr_scale_pure
 /// 行为与 decode_any 等价，两者均委托 @lib.load_from_bytes_auto
 pub fn load_from_bytes(
   arg0 : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image raise @types.LoadError {
   @lib.load_from_bytes_auto(arg0, req_channels~)
 }
@@ -219,19 +219,19 @@ pub let load_f_from_bytes : (Bytes) -> @types.ImageF raise @types.LoadError = @c
 ///|
 pub fn resize(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  filter? : @types.ResizeFilter = Default,
-  edge? : @types.ResizeEdge = Clamp,
+  arg1 : Int32,
+  arg2 : Int32,
+  filter~ : @types.ResizeFilter = Default,
+  edge~ : @types.ResizeEdge = Clamp,
 ) -> @types.Image raise @types.LoadError {
   @pure_util.resize_pure(arg0, arg1, arg2, filter~, edge~)
 }
 
 ///|
-pub let resize_16 : (@types.Image16, Int, Int) -> @types.Image16 = @transform.resize_16
+pub let resize_16 : (@types.Image16, Int32, Int32) -> @types.Image16 = @transform.resize_16
 
 ///|
-pub let resize_f : (@types.ImageF, Int, Int) -> @types.ImageF = @transform.resize_f
+pub let resize_f : (@types.ImageF, Int32, Int32) -> @types.ImageF = @transform.resize_f
 
 ///|
 pub let set_flip_vertically_on_load : (Bool) -> Unit = @pure_util.set_flip_vertically_on_load_pure
@@ -270,7 +270,7 @@ pub fn save_image_auto(
 pub fn save_image_with_quality(
   img : @types.Image,
   format : @types.ImageFormat,
-  quality : Int,
+  quality : Int32,
 ) -> Bytes raise @types.LoadError {
   @lib.save_image_with_quality(img, format, quality)
 }
@@ -312,10 +312,10 @@ pub let format_supports_float : (@types.ImageFormat) -> Bool = @lib.format_suppo
 // From process/
 
 ///|
-pub let adjust_brightness : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.adjust_brightness
+pub let adjust_brightness : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @color.adjust_brightness
 
 ///|
-pub let adjust_brightness_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.adjust_brightness_16
+pub let adjust_brightness_16 : (@types.Image16, Int32) -> @types.Image16 raise @types.LoadError = @color.adjust_brightness_16
 
 ///|
 pub let adjust_brightness_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_brightness_f
@@ -345,80 +345,84 @@ pub let adjust_gamma_16 : (@types.Image16, Float) -> @types.Image16 raise @types
 pub let adjust_gamma_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadError = @color.adjust_gamma_f
 
 ///|
-pub let adaptive_threshold_mean : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
+pub let adaptive_threshold_mean : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_mean
 
 ///|
-pub let adaptive_threshold_mean_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_mean_16
+pub let adaptive_threshold_mean_16 : (@types.Image16, Int32, Int32) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_mean_16
 
 ///|
-pub let adaptive_threshold_mean_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_mean_f
+pub let adaptive_threshold_mean_f : (@types.ImageF, Int32, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_mean_f
 
 ///|
-pub let adaptive_threshold_gaussian : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_gaussian
+pub let adaptive_threshold_gaussian : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @color.adaptive_threshold_gaussian
 
 ///|
-pub let adaptive_threshold_gaussian_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_gaussian_16
+pub let adaptive_threshold_gaussian_16 : (@types.Image16, Int32, Int32) -> @types.Image16 raise @types.LoadError = @color.adaptive_threshold_gaussian_16
 
 ///|
-pub let adaptive_threshold_gaussian_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_gaussian_f
+pub let adaptive_threshold_gaussian_f : (@types.ImageF, Int32, Float) -> @types.ImageF raise @types.LoadError = @color.adaptive_threshold_gaussian_f
 
 ///|
-pub let bilateral_filter : (@types.Image, Int, Float, Float) -> @types.Image raise @types.LoadError = @filter.bilateral_filter
+pub let bilateral_filter : (@types.Image, Int32, Float, Float) -> @types.Image raise @types.LoadError = @filter.bilateral_filter
 
 ///|
-pub let bilateral_filter_16 : (@types.Image16, Int, Float, Float) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_16
+pub let bilateral_filter_16 : (@types.Image16, Int32, Float, Float) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_16
 
 ///|
-pub let bilateral_filter_f : (@types.ImageF, Int, Float, Float) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_f
+pub let bilateral_filter_f : (@types.ImageF, Int32, Float, Float) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_f
 
 ///|
-pub let bilateral_filter_fast : (@types.Image, Int, Float, Float, Int) -> @types.Image raise @types.LoadError = @filter.bilateral_filter_fast
+pub let bilateral_filter_fast : (@types.Image, Int32, Float, Float, Int32) -> @types.Image raise @types.LoadError = @filter.bilateral_filter_fast
 
 ///|
-pub let bilateral_filter_fast_16 : (@types.Image16, Int, Float, Float, Int) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_fast_16
+pub let bilateral_filter_fast_16 : (@types.Image16, Int32, Float, Float, Int32) -> @types.Image16 raise @types.LoadError = @filter.bilateral_filter_fast_16
 
 ///|
-pub let bilateral_filter_fast_f : (@types.ImageF, Int, Float, Float, Int) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_fast_f
+pub let bilateral_filter_fast_f : (@types.ImageF, Int32, Float, Float, Int32) -> @types.ImageF raise @types.LoadError = @filter.bilateral_filter_fast_f
 
 ///|
-pub let box_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.box_blur
+pub let box_blur : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @filter.box_blur
 
 ///|
-pub let box_blur_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @filter.box_blur_16
+pub let box_blur_16 : (@types.Image16, Int32) -> @types.Image16 raise @types.LoadError = @filter.box_blur_16
 
 ///|
-pub let box_blur_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @filter.box_blur_f
+pub let box_blur_f : (@types.ImageF, Int32) -> @types.ImageF raise @types.LoadError = @filter.box_blur_f
 
 ///|
-pub let build_gaussian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
+pub let build_gaussian_pyramid : (@types.Image, Int32) -> Array[@types.Image] raise @types.LoadError = @transform.build_gaussian_pyramid
 
 ///|
-pub let build_gaussian_pyramid_16 : (@types.Image16, Int) -> Array[
+pub let build_gaussian_pyramid_16 : (@types.Image16, Int32) -> Array[
   @types.Image16,
 ] raise @types.LoadError = @transform.build_gaussian_pyramid_16
 
 ///|
-pub let build_gaussian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_gaussian_pyramid_f
+pub let build_gaussian_pyramid_f : (@types.ImageF, Int32) -> Array[
+  @types.ImageF,
+] raise @types.LoadError = @transform.build_gaussian_pyramid_f
 
 ///|
-pub let build_laplacian_pyramid : (@types.Image, Int) -> Array[@types.Image] raise @types.LoadError = @transform.build_laplacian_pyramid
+pub let build_laplacian_pyramid : (@types.Image, Int32) -> Array[@types.Image] raise @types.LoadError = @transform.build_laplacian_pyramid
 
 ///|
-pub let build_laplacian_pyramid_16 : (@types.Image16, Int) -> Array[
+pub let build_laplacian_pyramid_16 : (@types.Image16, Int32) -> Array[
   @types.Image16,
 ] raise @types.LoadError = @transform.build_laplacian_pyramid_16
 
 ///|
-pub let build_laplacian_pyramid_f : (@types.ImageF, Int) -> Array[@types.ImageF] raise @types.LoadError = @transform.build_laplacian_pyramid_float
+pub let build_laplacian_pyramid_f : (@types.ImageF, Int32) -> Array[
+  @types.ImageF,
+] raise @types.LoadError = @transform.build_laplacian_pyramid_float
 
 ///|
-pub let clahe : (@types.Image, Int, Float) -> @types.Image raise @types.LoadError = @color.clahe
+pub let clahe : (@types.Image, Int32, Float) -> @types.Image raise @types.LoadError = @color.clahe
 
 ///|
 pub fn canny_edge(
   arg0 : @types.Image,
-  low_threshold? : Int = 50,
-  high_threshold? : Int = 100,
+  low_threshold~ : Int32 = 50,
+  high_threshold~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   @edge.canny_edge(arg0, low_threshold~, high_threshold~)
 }
@@ -426,8 +430,8 @@ pub fn canny_edge(
 ///|
 pub fn canny_edge_16(
   arg0 : @types.Image16,
-  low_threshold? : Int = 12800,
-  high_threshold? : Int = 25600,
+  low_threshold~ : Int32 = 12800,
+  high_threshold~ : Int32 = 25600,
 ) -> @types.Image16 raise @types.LoadError {
   @edge.canny_edge_16(arg0, low_threshold~, high_threshold~)
 }
@@ -435,14 +439,14 @@ pub fn canny_edge_16(
 ///|
 pub fn canny_edge_f(
   arg0 : @types.ImageF,
-  low_threshold? : Float = 0.2F,
-  high_threshold? : Float = 0.4F,
+  low_threshold~ : Float = 0.2F,
+  high_threshold~ : Float = 0.4F,
 ) -> @types.ImageF raise @types.LoadError {
   @edge.canny_edge_f(arg0, low_threshold~, high_threshold~)
 }
 
 ///|
-pub let connected_components : (@types.Image, Int) -> (
+pub let connected_components : (@types.Image, Int32) -> (
   @segment.ConnectedComponentLabelImage,
   Array[@segment.ConnectedComponent],
 ) raise @types.LoadError = @segment.connected_components
@@ -456,42 +460,42 @@ pub let contour_perimeter : (@edge.Contour) -> Float = @edge.contour_perimeter
 ///|
 pub fn compute_glcm(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  arg1 : Int32,
+  arg2 : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   @feature.compute_glcm(arg0, arg1, arg2, levels~)
 }
 
 ///|
 pub fn compute_glcm_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  arg2 : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  arg1 : Int32,
+  arg2 : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   @feature.compute_glcm_16(arg0, arg1, arg2, levels~)
 }
 
 ///|
 pub fn compute_glcm_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  arg2 : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  arg1 : Int32,
+  arg2 : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   @feature.compute_glcm_f(arg0, arg1, arg2, levels~)
 }
 
 ///|
-pub let crop : (@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError = @transform.crop
+pub let crop : (@types.Image, Int32, Int32, Int32, Int32) -> @types.Image raise @types.LoadError = @transform.crop
 
 ///|
 pub fn dehaze(
   arg0 : @types.Image,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.Image raise @types.LoadError {
   @color.dehaze(arg0, patch_size~, omega~, t0~)
 }
@@ -499,9 +503,9 @@ pub fn dehaze(
 ///|
 pub fn dehaze_16(
   arg0 : @types.Image16,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.Image16 raise @types.LoadError {
   @color.dehaze_16(arg0, patch_size~, omega~, t0~)
 }
@@ -509,9 +513,9 @@ pub fn dehaze_16(
 ///|
 pub fn dehaze_f(
   arg0 : @types.ImageF,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.ImageF raise @types.LoadError {
   @color.dehaze_f(arg0, patch_size~, omega~, t0~)
 }
@@ -520,7 +524,7 @@ pub fn dehaze_f(
 pub let draw_contours : (@types.Image, Array[@edge.Contour], Array[Byte]) -> @types.Image raise @types.LoadError = @edge.draw_contours
 
 ///|
-pub let draw_contours_16 : (@types.Image16, Array[@edge.Contour], Array[Int]) -> @types.Image16 raise @types.LoadError = @edge.draw_contours_16
+pub let draw_contours_16 : (@types.Image16, Array[@edge.Contour], Array[Int32]) -> @types.Image16 raise @types.LoadError = @edge.draw_contours_16
 
 ///|
 pub let draw_contours_f : (@types.ImageF, Array[@edge.Contour], Array[Float]) -> @types.ImageF raise @types.LoadError = @edge.draw_contours_f
@@ -529,17 +533,17 @@ pub let draw_contours_f : (@types.ImageF, Array[@edge.Contour], Array[Float]) ->
 pub fn draw_corners(
   arg0 : @types.Image,
   arg1 : Array[@feature.CornerPoint],
-  color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
-  radius? : Int = 2,
+  color~ : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
+  radius~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   @feature.draw_corners(arg0, arg1, color~, radius~)
 }
 
 ///|
-pub let crop_16 : (@types.Image16, Int, Int, Int, Int) -> @types.Image16 raise @types.LoadError = @transform.crop_16
+pub let crop_16 : (@types.Image16, Int32, Int32, Int32, Int32) -> @types.Image16 raise @types.LoadError = @transform.crop_16
 
 ///|
-pub let crop_f : (@types.ImageF, Int, Int, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.crop_f
+pub let crop_f : (@types.ImageF, Int32, Int32, Int32, Int32) -> @types.ImageF raise @types.LoadError = @transform.crop_f
 
 ///|
 pub let dilate : (@types.Image) -> @types.Image = @segment.dilate
@@ -551,17 +555,17 @@ pub let dilate_16 : (@types.Image16) -> @types.Image16 = @segment.dilate_16
 pub let dilate_f : (@types.ImageF) -> @types.ImageF = @segment.dilate_f
 
 ///|
-pub let draw_copy : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_copy
+pub let draw_copy : (@types.Image, @types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @transform.draw_copy
 
 ///|
 pub fn draw_line(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
   arg5 : Array[Byte],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.Image {
   @transform.draw_line(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
 }
@@ -569,13 +573,13 @@ pub fn draw_line(
 ///|
 pub fn draw_rectangle(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
   arg5 : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   @transform.draw_rectangle(
     arg0,
@@ -592,12 +596,12 @@ pub fn draw_rectangle(
 ///|
 pub fn draw_circle(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
   arg4 : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   @transform.draw_circle(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
 }
@@ -605,10 +609,10 @@ pub fn draw_circle(
 ///|
 pub fn draw_polygon(
   arg0 : @types.Image,
-  arg1 : Array[(Int, Int)],
+  arg1 : Array[(Int32, Int32)],
   arg2 : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   @transform.draw_polygon(arg0, arg1, arg2, thickness~, fill~)
 }
@@ -616,12 +620,12 @@ pub fn draw_polygon(
 ///|
 pub fn draw_line_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
-  arg5 : Array[Int],
-  thickness? : Int = 1,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
+  arg5 : Array[Int32],
+  thickness~ : Int32 = 1,
 ) -> @types.Image16 {
   @transform.draw_line_16(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
 }
@@ -629,13 +633,13 @@ pub fn draw_line_16(
 ///|
 pub fn draw_rectangle_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
-  arg5 : Array[Int],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
+  arg5 : Array[Int32],
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image16 {
   @transform.draw_rectangle_16(
     arg0,
@@ -652,12 +656,12 @@ pub fn draw_rectangle_16(
 ///|
 pub fn draw_circle_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Array[Int],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Array[Int32],
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image16 {
   @transform.draw_circle_16(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
 }
@@ -665,9 +669,9 @@ pub fn draw_circle_16(
 ///|
 pub fn draw_polygon_16(
   arg0 : @types.Image16,
-  arg1 : Array[(Int, Int)],
-  arg2 : Array[Int],
-  thickness? : Int = 1,
+  arg1 : Array[(Int32, Int32)],
+  arg2 : Array[Int32],
+  thickness~ : Int32 = 1,
 ) -> @types.Image16 {
   @transform.draw_polygon_16(arg0, arg1, arg2, thickness~)
 }
@@ -675,12 +679,12 @@ pub fn draw_polygon_16(
 ///|
 pub fn draw_line_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
   arg5 : Array[Float],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.ImageF {
   @transform.draw_line_f(arg0, arg1, arg2, arg3, arg4, arg5, thickness~)
 }
@@ -688,13 +692,13 @@ pub fn draw_line_f(
 ///|
 pub fn draw_rectangle_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
   arg5 : Array[Float],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.ImageF {
   @transform.draw_rectangle_f(
     arg0,
@@ -711,12 +715,12 @@ pub fn draw_rectangle_f(
 ///|
 pub fn draw_circle_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
   arg4 : Array[Float],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.ImageF {
   @transform.draw_circle_f(arg0, arg1, arg2, arg3, arg4, thickness~, fill~)
 }
@@ -724,15 +728,15 @@ pub fn draw_circle_f(
 ///|
 pub fn draw_polygon_f(
   arg0 : @types.ImageF,
-  arg1 : Array[(Int, Int)],
+  arg1 : Array[(Int32, Int32)],
   arg2 : Array[Float],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.ImageF {
   @transform.draw_polygon_f(arg0, arg1, arg2, thickness~)
 }
 
 ///|
-pub let draw_over : (@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.draw_over
+pub let draw_over : (@types.Image, @types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @transform.draw_over
 
 ///|
 pub let edge_detect_laplacian : (@types.Image) -> @types.Image raise @types.LoadError = @edge.edge_detect_laplacian
@@ -796,7 +800,7 @@ pub fn freq_filter(
   arg0 : @types.Image,
   arg1 : @frequency.FreqFilterType,
   arg2 : Float,
-  band_width? : Float = 0.0F,
+  band_width~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @frequency.freq_filter(arg0, arg1, arg2, band_width~)
 }
@@ -806,7 +810,7 @@ pub fn freq_filter_gaussian(
   arg0 : @types.Image,
   arg1 : @frequency.FreqFilterType,
   arg2 : Float,
-  band_width? : Float = 0.0F,
+  band_width~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @frequency.freq_filter_gaussian(arg0, arg1, arg2, band_width~)
 }
@@ -823,9 +827,9 @@ pub let flip_horizontal_f : (@types.ImageF) -> @types.ImageF = @transform.flip_h
 ///|
 pub fn harris_corners(
   arg0 : @types.Image,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.harris_corners(arg0, k~, threshold~, min_distance~)
 }
@@ -833,9 +837,9 @@ pub fn harris_corners(
 ///|
 pub fn harris_corners_16(
   arg0 : @types.Image16,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.harris_corners_16(arg0, k~, threshold~, min_distance~)
 }
@@ -843,9 +847,9 @@ pub fn harris_corners_16(
 ///|
 pub fn harris_corners_f(
   arg0 : @types.ImageF,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.harris_corners_f(arg0, k~, threshold~, min_distance~)
 }
@@ -854,8 +858,8 @@ pub fn harris_corners_f(
 /// ORB 特征检测
 pub fn orb_detect(
   arg0 : @types.Image,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
   @feature.orb_detect(arg0, max_features~, threshold~)
 }
@@ -863,8 +867,8 @@ pub fn orb_detect(
 ///|
 pub fn orb_detect_16(
   arg0 : @types.Image16,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
   @feature.orb_detect_16(arg0, max_features~, threshold~)
 }
@@ -872,22 +876,22 @@ pub fn orb_detect_16(
 ///|
 pub fn orb_detect_f(
   arg0 : @types.ImageF,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[@feature.OrbDescriptor] raise @types.LoadError {
   @feature.orb_detect_f(arg0, max_features~, threshold~)
 }
 
 ///|
 /// ORB 描述子汉明距离
-pub let orb_hamming : (@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int = @feature.orb_hamming
+pub let orb_hamming : (@feature.OrbDescriptor, @feature.OrbDescriptor) -> Int32 = @feature.orb_hamming
 
 ///|
 /// ORB 特征匹配
 pub fn orb_match(
   arg0 : Array[@feature.OrbDescriptor],
   arg1 : Array[@feature.OrbDescriptor],
-  max_distance? : Int = 64,
+  max_distance~ : Int32 = 64,
 ) -> Array[@feature.DescriptorMatch] raise @types.LoadError {
   @feature.orb_match(arg0, arg1, max_distance~)
 }
@@ -897,7 +901,7 @@ pub fn orb_match(
 pub fn template_match(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
   @feature.template_match(arg0, arg1, match_method~)
 }
@@ -906,7 +910,7 @@ pub fn template_match(
 pub fn template_match_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
   @feature.template_match_16(arg0, arg1, match_method~)
 }
@@ -915,7 +919,7 @@ pub fn template_match_16(
 pub fn template_match_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> Array[@feature.TemplateMatchResult] raise @types.LoadError {
   @feature.template_match_f(arg0, arg1, match_method~)
 }
@@ -925,7 +929,7 @@ pub fn template_match_f(
 pub fn template_match_best(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> @feature.TemplateMatchResult? raise @types.LoadError {
   @feature.template_match_best(arg0, arg1, match_method~)
 }
@@ -934,7 +938,7 @@ pub fn template_match_best(
 pub fn template_match_best_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> @feature.TemplateMatchResult? raise @types.LoadError {
   @feature.template_match_best_16(arg0, arg1, match_method~)
 }
@@ -943,7 +947,7 @@ pub fn template_match_best_16(
 pub fn template_match_best_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  match_method? : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
+  match_method~ : @feature.TemplateMatchMethod = @feature.TemplateMatchMethod::CCoeffNormed,
 ) -> @feature.TemplateMatchResult? raise @types.LoadError {
   @feature.template_match_best_f(arg0, arg1, match_method~)
 }
@@ -953,9 +957,9 @@ pub fn template_match_best_f(
 pub fn lucas_kanade(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  arg2 : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  arg2 : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[@feature.FlowResult] raise @types.LoadError {
   @feature.lucas_kanade(arg0, arg1, arg2, window_size~, max_iter~)
 }
@@ -964,9 +968,9 @@ pub fn lucas_kanade(
 pub fn lucas_kanade_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  arg2 : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  arg2 : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[@feature.FlowResult] raise @types.LoadError {
   @feature.lucas_kanade_16(arg0, arg1, arg2, window_size~, max_iter~)
 }
@@ -975,9 +979,9 @@ pub fn lucas_kanade_16(
 pub fn lucas_kanade_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  arg2 : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  arg2 : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[@feature.FlowResult] raise @types.LoadError {
   @feature.lucas_kanade_f(arg0, arg1, arg2, window_size~, max_iter~)
 }
@@ -987,8 +991,8 @@ pub fn lucas_kanade_f(
 pub fn horn_schunck(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   @feature.horn_schunck(arg0, arg1, alpha~, iterations~)
 }
@@ -997,8 +1001,8 @@ pub fn horn_schunck(
 pub fn horn_schunck_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   @feature.horn_schunck_16(arg0, arg1, alpha~, iterations~)
 }
@@ -1007,8 +1011,8 @@ pub fn horn_schunck_16(
 pub fn horn_schunck_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   @feature.horn_schunck_f(arg0, arg1, alpha~, iterations~)
 }
@@ -1017,8 +1021,8 @@ pub fn horn_schunck_f(
 /// SIFT 特征检测
 pub fn sift_detect(
   arg0 : @types.Image,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
   @feature.sift_detect(arg0, max_features~, contrast_threshold~)
 }
@@ -1026,8 +1030,8 @@ pub fn sift_detect(
 ///|
 pub fn sift_detect_16(
   arg0 : @types.Image16,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
   @feature.sift_detect_16(arg0, max_features~, contrast_threshold~)
 }
@@ -1035,8 +1039,8 @@ pub fn sift_detect_16(
 ///|
 pub fn sift_detect_f(
   arg0 : @types.ImageF,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[@feature.SiftDescriptor] raise @types.LoadError {
   @feature.sift_detect_f(arg0, max_features~, contrast_threshold~)
 }
@@ -1046,8 +1050,8 @@ pub fn sift_detect_f(
 pub fn sift_match(
   arg0 : Array[@feature.SiftDescriptor],
   arg1 : Array[@feature.SiftDescriptor],
-  max_distance? : Float = 300.0F,
-  ratio_test? : Float = 0.75F,
+  max_distance~ : Float = 300.0F,
+  ratio_test~ : Float = 0.75F,
 ) -> Array[@feature.SiftMatch] raise @types.LoadError {
   @feature.sift_match(arg0, arg1, max_distance~, ratio_test~)
 }
@@ -1056,8 +1060,8 @@ pub fn sift_match(
 /// RANSAC 单应性矩阵估计
 pub fn ransac_homography(
   arg0 : Array[((Float, Float), (Float, Float))],
-  iterations? : Int = 1000,
-  threshold? : Float = 3.0F,
+  iterations~ : Int32 = 1000,
+  threshold~ : Float = 3.0F,
 ) -> Array[Float]? raise @types.LoadError {
   @feature.ransac_homography(arg0, iterations~, threshold~)
 }
@@ -1066,7 +1070,7 @@ pub fn ransac_homography(
 /// 流式解码：逐行回调处理
 pub fn decode_stream(
   arg0 : Bytes,
-  arg1 : (Int, Array[Byte]) -> Unit,
+  arg1 : (Int32, Array[Byte]) -> Unit,
 ) -> @lib.StreamInfo raise @types.LoadError {
   @lib.decode_stream(arg0, arg1)
 }
@@ -1075,8 +1079,8 @@ pub fn decode_stream(
 /// 分块流式解码
 pub fn decode_stream_chunked(
   arg0 : Bytes,
-  arg1 : Int,
-  arg2 : (Int, @types.Image) -> Unit,
+  arg1 : Int32,
+  arg2 : (Int32, @types.Image) -> Unit,
 ) -> @lib.StreamInfo raise @types.LoadError {
   @lib.decode_stream_chunked(arg0, arg1, arg2)
 }
@@ -1085,8 +1089,8 @@ pub fn decode_stream_chunked(
 /// 流式解码（带 req_channels）
 pub fn decode_stream_channels(
   arg0 : Bytes,
-  arg1 : Int,
-  arg2 : (Int, Array[Byte]) -> Unit,
+  arg1 : Int32,
+  arg2 : (Int32, Array[Byte]) -> Unit,
 ) -> @lib.StreamInfo raise @types.LoadError {
   @lib.decode_stream_channels(arg0, arg1, arg2)
 }
@@ -1094,9 +1098,9 @@ pub fn decode_stream_channels(
 ///|
 pub fn hough_lines(
   arg0 : @types.Image,
-  arg1 : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  arg1 : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[@edge.HoughLine] raise @types.LoadError {
   @edge.hough_lines(arg0, arg1, theta_resolution~, rho_resolution~)
 }
@@ -1104,9 +1108,9 @@ pub fn hough_lines(
 ///|
 pub fn hough_lines_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  arg1 : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[@edge.HoughLine] raise @types.LoadError {
   @edge.hough_lines_16(arg0, arg1, theta_resolution~, rho_resolution~)
 }
@@ -1114,9 +1118,9 @@ pub fn hough_lines_16(
 ///|
 pub fn hough_lines_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  arg1 : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[@edge.HoughLine] raise @types.LoadError {
   @edge.hough_lines_f(arg0, arg1, theta_resolution~, rho_resolution~)
 }
@@ -1124,8 +1128,8 @@ pub fn hough_lines_f(
 ///|
 pub fn hough_lines_nms(
   arg0 : Array[@edge.HoughLine],
-  rho_threshold? : Float = 5.0F,
-  theta_threshold? : Float = 0.1F,
+  rho_threshold~ : Float = 5.0F,
+  theta_threshold~ : Float = 0.1F,
 ) -> Array[@edge.HoughLine] raise @types.LoadError {
   @edge.hough_lines_nms(arg0, rho_threshold~, theta_threshold~)
 }
@@ -1140,21 +1144,21 @@ pub let find_contours_16 : (@types.Image16) -> Array[@edge.Contour] raise @types
 pub let find_contours_f : (@types.ImageF) -> Array[@edge.Contour] raise @types.LoadError = @edge.find_contours_f
 
 ///|
-pub let floyd_steinberg : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.floyd_steinberg
+pub let floyd_steinberg : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @color.floyd_steinberg
 
 ///|
-pub let floyd_steinberg_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.floyd_steinberg_16
+pub let floyd_steinberg_16 : (@types.Image16, Int32) -> @types.Image16 raise @types.LoadError = @color.floyd_steinberg_16
 
 ///|
-pub let floyd_steinberg_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.floyd_steinberg_f
+pub let floyd_steinberg_f : (@types.ImageF, Int32) -> @types.ImageF raise @types.LoadError = @color.floyd_steinberg_f
 
 ///|
-pub let glcm_features : (Array[Array[Int]]) -> @feature.GlcmFeatures = @feature.glcm_features
+pub let glcm_features : (Array[Array[Int32]]) -> @feature.GlcmFeatures = @feature.glcm_features
 
 ///|
 pub fn glcm_features_multi_direction(
   arg0 : @types.Image,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
   @feature.glcm_features_multi_direction(arg0, levels~)
 }
@@ -1162,7 +1166,7 @@ pub fn glcm_features_multi_direction(
 ///|
 pub fn glcm_features_multi_direction_16(
   arg0 : @types.Image16,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
   @feature.glcm_features_multi_direction_16(arg0, levels~)
 }
@@ -1170,7 +1174,7 @@ pub fn glcm_features_multi_direction_16(
 ///|
 pub fn glcm_features_multi_direction_f(
   arg0 : @types.ImageF,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[@feature.GlcmFeatures] raise @types.LoadError {
   @feature.glcm_features_multi_direction_f(arg0, levels~)
 }
@@ -1178,12 +1182,12 @@ pub fn glcm_features_multi_direction_f(
 ///|
 pub fn gabor_filter(
   arg0 : @types.Image,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
   arg3 : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @feature.gabor_filter(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
@@ -1191,12 +1195,12 @@ pub fn gabor_filter(
 ///|
 pub fn gabor_filter_16(
   arg0 : @types.Image16,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
   arg3 : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   @feature.gabor_filter_16(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
@@ -1204,12 +1208,12 @@ pub fn gabor_filter_16(
 ///|
 pub fn gabor_filter_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
   arg3 : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   @feature.gabor_filter_f(arg0, arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
@@ -1217,11 +1221,11 @@ pub fn gabor_filter_f(
 ///|
 pub fn gabor_filter_bank(
   arg0 : @types.Image,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.Image raise @types.LoadError {
   @feature.gabor_filter_bank(
     arg0,
@@ -1236,11 +1240,11 @@ pub fn gabor_filter_bank(
 ///|
 pub fn gabor_filter_bank_16(
   arg0 : @types.Image16,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.Image16 raise @types.LoadError {
   @feature.gabor_filter_bank_16(
     arg0,
@@ -1255,11 +1259,11 @@ pub fn gabor_filter_bank_16(
 ///|
 pub fn gabor_filter_bank_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.ImageF raise @types.LoadError {
   @feature.gabor_filter_bank_f(
     arg0,
@@ -1273,33 +1277,33 @@ pub fn gabor_filter_bank_f(
 
 ///|
 pub fn gabor_kernel(
-  arg1 : Int,
+  arg1 : Int32,
   arg2 : Float,
   arg3 : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> Array[Array[Float]] raise @types.LoadError {
   @feature.gabor_kernel(arg1, arg2, arg3, lambda~, gamma~, phi~)
 }
 
 ///|
-pub let gaussian_blur : (@types.Image, Int, Float) -> @types.Image raise @types.LoadError = @filter.gaussian_blur
+pub let gaussian_blur : (@types.Image, Int32, Float) -> @types.Image raise @types.LoadError = @filter.gaussian_blur
 
 ///|
-pub let gaussian_blur_16 : (@types.Image16, Int, Float) -> @types.Image16 raise @types.LoadError = @filter.gaussian_blur_16
+pub let gaussian_blur_16 : (@types.Image16, Int32, Float) -> @types.Image16 raise @types.LoadError = @filter.gaussian_blur_16
 
 ///|
-pub let gaussian_blur_f : (@types.ImageF, Int, Float) -> @types.ImageF raise @types.LoadError = @filter.gaussian_blur_f
+pub let gaussian_blur_f : (@types.ImageF, Int32, Float) -> @types.ImageF raise @types.LoadError = @filter.gaussian_blur_f
 
 ///|
-pub let median_blur : (@types.Image, Int) -> @types.Image raise @types.LoadError = @filter.median_blur
+pub let median_blur : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @filter.median_blur
 
 ///|
-pub let median_blur_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @filter.median_blur_16
+pub let median_blur_16 : (@types.Image16, Int32) -> @types.Image16 raise @types.LoadError = @filter.median_blur_16
 
 ///|
-pub let median_blur_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @filter.median_blur_f
+pub let median_blur_f : (@types.ImageF, Int32) -> @types.ImageF raise @types.LoadError = @filter.median_blur_f
 
 ///|
 pub let ihaar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.ihaar_transform_1d
@@ -1319,7 +1323,7 @@ pub let haar_transform_1d : (Array[Float]) -> Array[Float] = @frequency.haar_tra
 ///|
 pub fn haar_transform_2d(
   arg0 : @types.Image,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> @frequency.HaarWaveletResult raise @types.LoadError {
   @frequency.haar_transform_2d(arg0, levels~)
 }
@@ -1327,7 +1331,7 @@ pub fn haar_transform_2d(
 ///|
 pub fn haar_transform_2d_16(
   arg0 : @types.Image16,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> @frequency.HaarWaveletResult raise @types.LoadError {
   @frequency.haar_transform_2d_16(arg0, levels~)
 }
@@ -1335,7 +1339,7 @@ pub fn haar_transform_2d_16(
 ///|
 pub fn haar_transform_2d_f(
   arg0 : @types.ImageF,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> @frequency.HaarWaveletResult raise @types.LoadError {
   @frequency.haar_transform_2d_f(arg0, levels~)
 }
@@ -1343,9 +1347,9 @@ pub fn haar_transform_2d_f(
 ///|
 pub fn haar_denoise(
   arg0 : @types.Image,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.Image raise @types.LoadError {
   @frequency.haar_denoise(arg0, threshold~, soft~, levels~)
 }
@@ -1353,9 +1357,9 @@ pub fn haar_denoise(
 ///|
 pub fn haar_denoise_16(
   arg0 : @types.Image16,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.Image16 raise @types.LoadError {
   @frequency.haar_denoise_16(arg0, threshold~, soft~, levels~)
 }
@@ -1363,21 +1367,21 @@ pub fn haar_denoise_16(
 ///|
 pub fn haar_denoise_f(
   arg0 : @types.ImageF,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.ImageF raise @types.LoadError {
   @frequency.haar_denoise_f(arg0, threshold~, soft~, levels~)
 }
 
 ///|
-pub let histogram : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.histogram
+pub let histogram : (@types.Image) -> Array[Int32] raise @types.LoadError = @feature.histogram
 
 ///|
-pub let histogram_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.histogram_16
+pub let histogram_16 : (@types.Image16) -> Array[Int32] raise @types.LoadError = @feature.histogram_16
 
 ///|
-pub let histogram_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.histogram_f
+pub let histogram_f : (@types.ImageF) -> Array[Int32] raise @types.LoadError = @feature.histogram_f
 
 ///|
 pub let histogram_equalize : (@types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_equalize
@@ -1398,34 +1402,34 @@ pub let histogram_normalize_16 : (@types.Image16) -> @types.Image16 raise @types
 pub let histogram_normalize_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_normalize_f
 
 ///|
-pub let ahash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.ahash
+pub let ahash : (@types.Image) -> Array[Int32] raise @types.LoadError = @feature.ahash
 
 ///|
-pub let ahash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.ahash_16
+pub let ahash_16 : (@types.Image16) -> Array[Int32] raise @types.LoadError = @feature.ahash_16
 
 ///|
-pub let ahash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.ahash_f
+pub let ahash_f : (@types.ImageF) -> Array[Int32] raise @types.LoadError = @feature.ahash_f
 
 ///|
-pub let dhash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.dhash
+pub let dhash : (@types.Image) -> Array[Int32] raise @types.LoadError = @feature.dhash
 
 ///|
-pub let dhash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.dhash_16
+pub let dhash_16 : (@types.Image16) -> Array[Int32] raise @types.LoadError = @feature.dhash_16
 
 ///|
-pub let dhash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.dhash_f
+pub let dhash_f : (@types.ImageF) -> Array[Int32] raise @types.LoadError = @feature.dhash_f
 
 ///|
-pub let phash : (@types.Image) -> Array[Int] raise @types.LoadError = @feature.phash
+pub let phash : (@types.Image) -> Array[Int32] raise @types.LoadError = @feature.phash
 
 ///|
-pub let phash_16 : (@types.Image16) -> Array[Int] raise @types.LoadError = @feature.phash_16
+pub let phash_16 : (@types.Image16) -> Array[Int32] raise @types.LoadError = @feature.phash_16
 
 ///|
-pub let phash_f : (@types.ImageF) -> Array[Int] raise @types.LoadError = @feature.phash_f
+pub let phash_f : (@types.ImageF) -> Array[Int32] raise @types.LoadError = @feature.phash_f
 
 ///|
-pub let hamming_distance : (Array[Int], Array[Int]) -> Int raise @types.LoadError = @feature.hamming_distance
+pub let hamming_distance : (Array[Int32], Array[Int32]) -> Int32 raise @types.LoadError = @feature.hamming_distance
 
 ///|
 pub let dct_2d : (@types.Image) -> Array[Array[Double]] = @frequency.dct_2d
@@ -1448,7 +1452,7 @@ pub let idct_2d_f : (Array[Array[Double]]) -> @types.ImageF = @frequency.idct_2d
 ///|
 pub fn reinhard_tonemap(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.Image raise @types.LoadError {
   @color.reinhard_tonemap(imgf, key~)
 }
@@ -1456,7 +1460,7 @@ pub fn reinhard_tonemap(
 ///|
 pub fn reinhard_tonemap_16(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.Image16 raise @types.LoadError {
   @color.reinhard_tonemap_16(imgf, key~)
 }
@@ -1464,7 +1468,7 @@ pub fn reinhard_tonemap_16(
 ///|
 pub fn reinhard_tonemap_f(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.ImageF raise @types.LoadError {
   @color.reinhard_tonemap_f(imgf, key~)
 }
@@ -1481,9 +1485,9 @@ pub let gamma_tonemap_f : (@types.ImageF, Float) -> @types.ImageF raise @types.L
 ///|
 pub fn good_features_to_track(
   img : @types.Image,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.good_features_to_track(
     img,
@@ -1496,9 +1500,9 @@ pub fn good_features_to_track(
 ///|
 pub fn good_features_to_track_16(
   img : @types.Image16,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.good_features_to_track_16(
     img,
@@ -1511,9 +1515,9 @@ pub fn good_features_to_track_16(
 ///|
 pub fn good_features_to_track_f(
   img : @types.ImageF,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[@feature.CornerPoint] raise @types.LoadError {
   @feature.good_features_to_track_f(
     img,
@@ -1527,7 +1531,7 @@ pub fn good_features_to_track_f(
 pub type HistCompareMethod = @feature.HistCompareMethod
 
 ///|
-pub let compare_hist : (Array[Int], Array[Int], @feature.HistCompareMethod) -> Float raise @types.LoadError = @feature.compare_hist
+pub let compare_hist : (Array[Int32], Array[Int32], @feature.HistCompareMethod) -> Float raise @types.LoadError = @feature.compare_hist
 
 ///|
 pub let histogram_matching : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @feature.histogram_matching
@@ -1539,19 +1543,19 @@ pub let histogram_matching_16 : (@types.Image16, @types.Image16) -> @types.Image
 pub let histogram_matching_f : (@types.ImageF, @types.ImageF) -> @types.ImageF raise @types.LoadError = @feature.histogram_matching_f
 
 ///|
-pub let hsl_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb
+pub let hsl_to_rgb : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.hsl_to_rgb
 
 ///|
-pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsl_to_rgb_16
+pub let hsl_to_rgb_16 : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.hsl_to_rgb_16
 
 ///|
 pub let hsl_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsl_to_rgb_f
 
 ///|
-pub let hsv_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb
+pub let hsv_to_rgb : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.hsv_to_rgb
 
 ///|
-pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.hsv_to_rgb_16
+pub let hsv_to_rgb_16 : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.hsv_to_rgb_16
 
 ///|
 pub let hsv_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.hsv_to_rgb_f
@@ -1584,22 +1588,22 @@ pub let integral_image_sq_16 : (@types.Image16) -> @feature.IntegralImageSq rais
 pub let integral_image_sq_f : (@types.ImageF) -> @feature.IntegralImageSq raise @types.LoadError = @feature.integral_image_sq_f
 
 ///|
-pub let integral_mean : (@feature.IntegralImage, Int, Int, Int, Int) -> Float raise @types.LoadError = @feature.integral_mean
+pub let integral_mean : (@feature.IntegralImage, Int32, Int32, Int32, Int32) -> Float raise @types.LoadError = @feature.integral_mean
 
 ///|
-pub let integral_sum : (@feature.IntegralImage, Int, Int, Int, Int) -> Int64 raise @types.LoadError = @feature.integral_sum
+pub let integral_sum : (@feature.IntegralImage, Int32, Int32, Int32, Int32) -> Int64 raise @types.LoadError = @feature.integral_sum
 
 ///|
-pub let integral_sum_sq : (@feature.IntegralImageSq, Int, Int, Int, Int) -> Int64 raise @types.LoadError = @feature.integral_sum_sq
+pub let integral_sum_sq : (@feature.IntegralImageSq, Int32, Int32, Int32, Int32) -> Int64 raise @types.LoadError = @feature.integral_sum_sq
 
 ///|
 pub let integral_variance : (
   @feature.IntegralImage,
   @feature.IntegralImageSq,
-  Int,
-  Int,
-  Int,
-  Int,
+  Int32,
+  Int32,
+  Int32,
+  Int32,
 ) -> Float raise @types.LoadError = @feature.integral_variance
 
 ///|
@@ -1612,19 +1616,19 @@ pub let invert_16 : (@types.Image16) -> @types.Image16 raise @types.LoadError = 
 pub let invert_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @color.invert_f
 
 ///|
-pub let kmeans_quantize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
+pub let kmeans_quantize : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @color.kmeans_quantize
 
 ///|
-pub let kmeans_quantize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @color.kmeans_quantize_16
+pub let kmeans_quantize_16 : (@types.Image16, Int32, Int32) -> @types.Image16 raise @types.LoadError = @color.kmeans_quantize_16
 
 ///|
-pub let kmeans_quantize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @color.kmeans_quantize_f
+pub let kmeans_quantize_f : (@types.ImageF, Int32, Int32) -> @types.ImageF raise @types.LoadError = @color.kmeans_quantize_f
 
 ///|
 pub fn kmeans_segment(
   arg0 : @types.Image,
-  arg1 : Int,
-  max_iters? : Int = 20,
+  arg1 : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
   @segment.kmeans_segment(arg0, arg1, max_iters~)
 }
@@ -1632,8 +1636,8 @@ pub fn kmeans_segment(
 ///|
 pub fn kmeans_segment_16(
   arg0 : @types.Image16,
-  arg1 : Int,
-  max_iters? : Int = 20,
+  arg1 : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
   @segment.kmeans_segment_16(arg0, arg1, max_iters~)
 }
@@ -1641,8 +1645,8 @@ pub fn kmeans_segment_16(
 ///|
 pub fn kmeans_segment_f(
   arg0 : @types.ImageF,
-  arg1 : Int,
-  max_iters? : Int = 20,
+  arg1 : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
   @segment.kmeans_segment_f(arg0, arg1, max_iters~)
 }
@@ -1668,9 +1672,9 @@ pub let lbp_uniform_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError 
 ///|
 pub fn nlm_denoise(
   arg0 : @types.Image,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.Image raise @types.LoadError {
   @filter.nlm_denoise(arg0, patch_size~, search_size~, h~)
 }
@@ -1678,10 +1682,10 @@ pub fn nlm_denoise(
 ///|
 pub fn nlm_denoise_fast(
   arg0 : @types.Image,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   @filter.nlm_denoise_fast(arg0, patch_size~, search_size~, h~, step~)
 }
@@ -1689,9 +1693,9 @@ pub fn nlm_denoise_fast(
 ///|
 pub fn nlm_denoise_16(
   arg0 : @types.Image16,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.Image16 raise @types.LoadError {
   @filter.nlm_denoise_16(arg0, patch_size~, search_size~, h~)
 }
@@ -1699,10 +1703,10 @@ pub fn nlm_denoise_16(
 ///|
 pub fn nlm_denoise_fast_16(
   arg0 : @types.Image16,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.Image16 raise @types.LoadError {
   @filter.nlm_denoise_fast_16(arg0, patch_size~, search_size~, h~, step~)
 }
@@ -1710,9 +1714,9 @@ pub fn nlm_denoise_fast_16(
 ///|
 pub fn nlm_denoise_f(
   arg0 : @types.ImageF,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.ImageF raise @types.LoadError {
   @filter.nlm_denoise_f(arg0, patch_size~, search_size~, h~)
 }
@@ -1720,22 +1724,22 @@ pub fn nlm_denoise_f(
 ///|
 pub fn nlm_denoise_fast_f(
   arg0 : @types.ImageF,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.ImageF raise @types.LoadError {
   @filter.nlm_denoise_fast_f(arg0, patch_size~, search_size~, h~, step~)
 }
 
 ///|
-pub let median_cut : (@types.Image, Int) -> @types.Image raise @types.LoadError = @color.median_cut
+pub let median_cut : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @color.median_cut
 
 ///|
-pub let median_cut_16 : (@types.Image16, Int) -> @types.Image16 raise @types.LoadError = @color.median_cut_16
+pub let median_cut_16 : (@types.Image16, Int32) -> @types.Image16 raise @types.LoadError = @color.median_cut_16
 
 ///|
-pub let median_cut_f : (@types.ImageF, Int) -> @types.ImageF raise @types.LoadError = @color.median_cut_f
+pub let median_cut_f : (@types.ImageF, Int32) -> @types.ImageF raise @types.LoadError = @color.median_cut_f
 
 ///|
 pub let morph_close : (@types.Image) -> @types.Image = @segment.morph_close
@@ -1777,13 +1781,13 @@ pub let morph_blackhat_f : (@types.ImageF) -> @types.ImageF = @segment.morph_bla
 pub type StructuringElement = @segment.StructuringElement
 
 ///|
-pub let se_rect : (Int, Int) -> @segment.StructuringElement = @segment.se_rect
+pub let se_rect : (Int32, Int32) -> @segment.StructuringElement = @segment.se_rect
 
 ///|
-pub let se_cross : (Int) -> @segment.StructuringElement = @segment.se_cross
+pub let se_cross : (Int32) -> @segment.StructuringElement = @segment.se_cross
 
 ///|
-pub let se_ellipse : (Int) -> @segment.StructuringElement = @segment.se_ellipse
+pub let se_ellipse : (Int32) -> @segment.StructuringElement = @segment.se_ellipse
 
 ///|
 pub let erode_custom : (@types.Image, @segment.StructuringElement) -> @types.Image = @segment.erode_custom
@@ -1878,98 +1882,98 @@ pub let pyr_up_f : (@types.ImageF) -> @types.ImageF raise @types.LoadError = @tr
 ///|
 pub fn region_growing_segment(
   arg0 : @types.Image,
-  arg1 : Array[(Int, Int)],
-  threshold? : Int = 30,
+  arg1 : Array[(Int32, Int32)],
+  threshold~ : Int32 = 30,
 ) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError {
   @segment.region_growing_segment(arg0, arg1, threshold~)
 }
 
 ///|
-pub let rgb_to_hsl : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl
+pub let rgb_to_hsl : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl
 
 ///|
-pub let rgb_to_hsl_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_16
+pub let rgb_to_hsl_16 : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_16
 
 ///|
 pub let rgb_to_hsl_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsl_f
 
 ///|
-pub let rgb_to_hsv : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv
+pub let rgb_to_hsv : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv
 
 ///|
-pub let rgb_to_hsv_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_16
+pub let rgb_to_hsv_16 : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_16
 
 ///|
 pub let rgb_to_hsv_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_hsv_f
 
 ///|
-pub let rgb_to_ycbcr : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr
+pub let rgb_to_ycbcr : (Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.rgb_to_ycbcr
 
 ///|
-pub let rgb_to_ycbcr_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.rgb_to_ycbcr_16
+pub let rgb_to_ycbcr_16 : (Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.rgb_to_ycbcr_16
 
 ///|
 pub let rgb_to_ycbcr_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_ycbcr_f
 
 ///|
-pub let ycbcr_to_rgb : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb
+pub let ycbcr_to_rgb : (Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.ycbcr_to_rgb
 
 ///|
-pub let ycbcr_to_rgb_16 : (Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.ycbcr_to_rgb_16
+pub let ycbcr_to_rgb_16 : (Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.ycbcr_to_rgb_16
 
 ///|
 pub let ycbcr_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.ycbcr_to_rgb_f
 
 ///|
-pub let rgb_to_xyz : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz
+pub let rgb_to_xyz : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz
 
 ///|
-pub let rgb_to_xyz_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_16
+pub let rgb_to_xyz_16 : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_16
 
 ///|
 pub let rgb_to_xyz_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_xyz_f
 
 ///|
-pub let xyz_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb
+pub let xyz_to_rgb : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.xyz_to_rgb
 
 ///|
-pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.xyz_to_rgb_16
+pub let xyz_to_rgb_16 : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.xyz_to_rgb_16
 
 ///|
 pub let xyz_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.xyz_to_rgb_f
 
 ///|
-pub let rgb_to_lab : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab
+pub let rgb_to_lab : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab
 
 ///|
-pub let rgb_to_lab_16 : (Int, Int, Int) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_16
+pub let rgb_to_lab_16 : (Int32, Int32, Int32) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_16
 
 ///|
 pub let rgb_to_lab_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.rgb_to_lab_f
 
 ///|
-pub let lab_to_rgb : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb
+pub let lab_to_rgb : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.lab_to_rgb
 
 ///|
-pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int, Int, Int) raise @types.LoadError = @color.lab_to_rgb_16
+pub let lab_to_rgb_16 : (Float, Float, Float) -> (Int32, Int32, Int32) raise @types.LoadError = @color.lab_to_rgb_16
 
 ///|
 pub let lab_to_rgb_f : (Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.lab_to_rgb_f
 
 ///|
-pub let rgb_to_cmyk : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk
+pub let rgb_to_cmyk : (Int32, Int32, Int32) -> (Int32, Int32, Int32, Int32) raise @types.LoadError = @color.rgb_to_cmyk
 
 ///|
-pub let rgb_to_cmyk_16 : (Int, Int, Int) -> (Int, Int, Int, Int) raise @types.LoadError = @color.rgb_to_cmyk_16
+pub let rgb_to_cmyk_16 : (Int32, Int32, Int32) -> (Int32, Int32, Int32, Int32) raise @types.LoadError = @color.rgb_to_cmyk_16
 
 ///|
 pub let rgb_to_cmyk_f : (Float, Float, Float) -> (Float, Float, Float, Float) raise @types.LoadError = @color.rgb_to_cmyk_f
 
 ///|
-pub let cmyk_to_rgb : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb
+pub let cmyk_to_rgb : (Int32, Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.cmyk_to_rgb
 
 ///|
-pub let cmyk_to_rgb_16 : (Int, Int, Int, Int) -> (Int, Int, Int) raise @types.LoadError = @color.cmyk_to_rgb_16
+pub let cmyk_to_rgb_16 : (Int32, Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError = @color.cmyk_to_rgb_16
 
 ///|
 pub let cmyk_to_rgb_f : (Float, Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError = @color.cmyk_to_rgb_f
@@ -2022,9 +2026,9 @@ pub let sharpen_f : (@types.ImageF, Float) -> @types.ImageF raise @types.LoadErr
 ///|
 pub fn ssr(
   arg0 : @types.Image,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @color.ssr(arg0, sigma~, gain~, offset~)
 }
@@ -2032,9 +2036,9 @@ pub fn ssr(
 ///|
 pub fn ssr_16(
   arg0 : @types.Image16,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   @color.ssr_16(arg0, sigma~, gain~, offset~)
 }
@@ -2042,9 +2046,9 @@ pub fn ssr_16(
 ///|
 pub fn ssr_f(
   arg0 : @types.ImageF,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   @color.ssr_f(arg0, sigma~, gain~, offset~)
 }
@@ -2052,9 +2056,9 @@ pub fn ssr_f(
 ///|
 pub fn msr(
   arg0 : @types.Image,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   @color.msr(arg0, sigmas~, gain~, offset~)
 }
@@ -2062,9 +2066,9 @@ pub fn msr(
 ///|
 pub fn msr_16(
   arg0 : @types.Image16,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   @color.msr_16(arg0, sigmas~, gain~, offset~)
 }
@@ -2072,9 +2076,9 @@ pub fn msr_16(
 ///|
 pub fn msr_f(
   arg0 : @types.ImageF,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   @color.msr_f(arg0, sigmas~, gain~, offset~)
 }
@@ -2082,11 +2086,11 @@ pub fn msr_f(
 ///|
 pub fn msrcr(
   arg0 : @types.Image,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.Image raise @types.LoadError {
   @color.msrcr(arg0, sigmas~, gain~, offset~, alpha~, beta~)
 }
@@ -2094,11 +2098,11 @@ pub fn msrcr(
 ///|
 pub fn msrcr_16(
   arg0 : @types.Image16,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.Image16 raise @types.LoadError {
   @color.msrcr_16(arg0, sigmas~, gain~, offset~, alpha~, beta~)
 }
@@ -2106,11 +2110,11 @@ pub fn msrcr_16(
 ///|
 pub fn msrcr_f(
   arg0 : @types.ImageF,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.ImageF raise @types.LoadError {
   @color.msrcr_f(arg0, sigmas~, gain~, offset~, alpha~, beta~)
 }
@@ -2173,54 +2177,54 @@ pub let unpremultiply_alpha_f : (@types.ImageF) -> @types.ImageF raise @types.Lo
 pub let warp_affine : (
   @types.Image,
   (Float, Float, Float, Float, Float, Float),
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.Image = @transform.warp_affine
 
 ///|
 pub let warp_affine_16 : (
   @types.Image16,
   (Float, Float, Float, Float, Float, Float),
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.Image16 = @transform.warp_affine_16
 
 ///|
 pub let warp_affine_f : (
   @types.ImageF,
   (Float, Float, Float, Float, Float, Float),
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.ImageF = @transform.warp_affine_f
 
 ///|
-pub let watershed : (@types.Image, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed
+pub let watershed : (@types.Image, Array[Int32]) -> Array[Int32] raise @types.LoadError = @segment.watershed
 
 ///|
-pub let watershed_16 : (@types.Image16, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_16
+pub let watershed_16 : (@types.Image16, Array[Int32]) -> Array[Int32] raise @types.LoadError = @segment.watershed_16
 
 ///|
-pub let watershed_f : (@types.ImageF, Array[Int]) -> Array[Int] raise @types.LoadError = @segment.watershed_f
+pub let watershed_f : (@types.ImageF, Array[Int32]) -> Array[Int32] raise @types.LoadError = @segment.watershed_f
 
 ///|
-pub let watershed_auto : (@types.Image) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto
+pub let watershed_auto : (@types.Image) -> (Array[Int32], Int32) raise @types.LoadError = @segment.watershed_auto
 
 ///|
-pub let watershed_auto_16 : (@types.Image16) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_16
+pub let watershed_auto_16 : (@types.Image16) -> (Array[Int32], Int32) raise @types.LoadError = @segment.watershed_auto_16
 
 ///|
-pub let watershed_auto_f : (@types.ImageF) -> (Array[Int], Int) raise @types.LoadError = @segment.watershed_auto_f
+pub let watershed_auto_f : (@types.ImageF) -> (Array[Int32], Int32) raise @types.LoadError = @segment.watershed_auto_f
 
 ///|
 pub fn distance_transform(
   arg0 : @types.Image,
-  distance_type? : Int = 2,
+  distance_type~ : Int32 = 2,
 ) -> Array[Float] raise @types.LoadError {
   @segment.distance_transform(arg0, distance_type~)
 }
 
 ///|
-pub let visualize_distance_transform : (Array[Float], Int, Int) -> @types.Image = @segment.visualize_distance_transform
+pub let visualize_distance_transform : (Array[Float], Int32, Int32) -> @types.Image = @segment.visualize_distance_transform
 
 ///|
 pub let skeletonize : (@types.Image) -> @types.Image raise @types.LoadError = @segment.skeletonize
@@ -2229,20 +2233,20 @@ pub let skeletonize : (@types.Image) -> @types.Image raise @types.LoadError = @s
 pub type SuperpixelResult = @segment.SuperpixelResult
 
 ///|
-pub let slic : (@types.Image, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic
+pub let slic : (@types.Image, Int32, Int32, Int32) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic
 
 ///|
-pub let slic_16 : (@types.Image16, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_16
+pub let slic_16 : (@types.Image16, Int32, Int32, Int32) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_16
 
 ///|
-pub let slic_f : (@types.ImageF, Int, Int, Int) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_f
+pub let slic_f : (@types.ImageF, Int32, Int32, Int32) -> @segment.SuperpixelResult raise @types.LoadError = @segment.slic_f
 
 ///|
 pub fn guided_filter(
   arg0 : @types.Image,
   arg1 : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   @color.guided_filter(arg0, arg1, radius~, eps~)
 }
@@ -2251,8 +2255,8 @@ pub fn guided_filter(
 pub fn guided_filter_16(
   arg0 : @types.Image16,
   arg1 : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   @color.guided_filter_16(arg0, arg1, radius~, eps~)
 }
@@ -2261,8 +2265,8 @@ pub fn guided_filter_16(
 pub fn guided_filter_f(
   arg0 : @types.ImageF,
   arg1 : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   @color.guided_filter_f(arg0, arg1, radius~, eps~)
 }
@@ -2270,10 +2274,10 @@ pub fn guided_filter_f(
 ///|
 pub fn flood_fill(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
+  arg1 : Int32,
+  arg2 : Int32,
   arg3 : Array[Byte],
-  threshold? : Int = 0,
+  threshold~ : Int32 = 0,
 ) -> @types.Image raise @types.LoadError {
   @segment.flood_fill(arg0, arg1, arg2, arg3, threshold~)
 }
@@ -2282,11 +2286,11 @@ pub fn flood_fill(
 /// grabCut 交互式前景提取
 pub fn grab_cut(
   arg0 : @types.Image,
-  arg1 : Int,
-  arg2 : Int,
-  arg3 : Int,
-  arg4 : Int,
-  iterations? : Int = 5,
+  arg1 : Int32,
+  arg2 : Int32,
+  arg3 : Int32,
+  arg4 : Int32,
+  iterations~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   @segment.grab_cut(arg0, arg1, arg2, arg3, arg4, iterations~)
 }
@@ -2313,24 +2317,24 @@ pub let get_perspective_transform : (
 pub let warp_perspective : (
   @types.Image,
   @transform.PerspectiveMatrix,
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.Image = @transform.warp_perspective
 
 ///|
 pub let warp_perspective_16 : (
   @types.Image16,
   @transform.PerspectiveMatrix,
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.Image16 = @transform.warp_perspective_16
 
 ///|
 pub let warp_perspective_f : (
   @types.ImageF,
   @transform.PerspectiveMatrix,
-  Int,
-  Int,
+  Int32,
+  Int32,
 ) -> @types.ImageF = @transform.warp_perspective_f
 
 ///|
@@ -2346,7 +2350,7 @@ pub let convex_hull : (Array[@edge.ContourPoint]) -> Array[@edge.ContourPoint] =
 pub fn approx_poly_dp(
   points : Array[@edge.ContourPoint],
   epsilon : Float,
-  closed? : Bool = true,
+  closed~ : Bool = true,
 ) -> Array[@edge.ContourPoint] raise @types.LoadError {
   @edge.approx_poly_dp(points, epsilon, closed~)
 }
@@ -2366,12 +2370,12 @@ pub let min_enclosing_circle : (Array[@edge.ContourPoint]) -> (
 ///|
 pub fn hough_circles(
   img : @types.Image,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[@edge.Circle] raise @types.LoadError {
   @edge.hough_circles(
     img,
@@ -2387,12 +2391,12 @@ pub fn hough_circles(
 ///|
 pub fn hough_circles_16(
   img : @types.Image16,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[@edge.Circle] raise @types.LoadError {
   @edge.hough_circles_16(
     img,
@@ -2408,12 +2412,12 @@ pub fn hough_circles_16(
 ///|
 pub fn hough_circles_f(
   img : @types.ImageF,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[@edge.Circle] raise @types.LoadError {
   @edge.hough_circles_f(
     img,
@@ -2431,7 +2435,7 @@ pub fn multi_band_blend(
   img_a : @types.Image,
   img_b : @types.Image,
   mask : @types.Image,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   @transform.multi_band_blend(img_a, img_b, mask, num_bands~)
 }
@@ -2441,7 +2445,7 @@ pub fn multi_band_blend_16(
   img_a : @types.Image16,
   img_b : @types.Image16,
   mask : @types.Image16,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.Image16 raise @types.LoadError {
   @transform.multi_band_blend_16(img_a, img_b, mask, num_bands~)
 }
@@ -2451,7 +2455,7 @@ pub fn multi_band_blend_f(
   img_a : @types.ImageF,
   img_b : @types.ImageF,
   mask : @types.ImageF,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.ImageF raise @types.LoadError {
   @transform.multi_band_blend_f(img_a, img_b, mask, num_bands~)
 }
@@ -2460,19 +2464,19 @@ pub fn multi_band_blend_f(
 pub let compute_energy : (@types.Image) -> Array[Double] = @transform.compute_energy
 
 ///|
-pub let find_vertical_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_vertical_seam
+pub let find_vertical_seam : (Array[Double], Int32, Int32) -> Array[Int32] = @transform.find_vertical_seam
 
 ///|
-pub let remove_vertical_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_vertical_seam
+pub let remove_vertical_seam : (@types.Image, Array[Int32]) -> @types.Image = @transform.remove_vertical_seam
 
 ///|
-pub let find_horizontal_seam : (Array[Double], Int, Int) -> Array[Int] = @transform.find_horizontal_seam
+pub let find_horizontal_seam : (Array[Double], Int32, Int32) -> Array[Int32] = @transform.find_horizontal_seam
 
 ///|
-pub let remove_horizontal_seam : (@types.Image, Array[Int]) -> @types.Image = @transform.remove_horizontal_seam
+pub let remove_horizontal_seam : (@types.Image, Array[Int32]) -> @types.Image = @transform.remove_horizontal_seam
 
 ///|
-pub let seam_carve_resize : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
+pub let seam_carve_resize : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @transform.seam_carve_resize
 
 ///|
 pub let compute_energy_16 : (@types.Image16) -> Array[Double] = @transform.compute_energy_16
@@ -2481,22 +2485,22 @@ pub let compute_energy_16 : (@types.Image16) -> Array[Double] = @transform.compu
 pub let compute_energy_f : (@types.ImageF) -> Array[Double] = @transform.compute_energy_f
 
 ///|
-pub let remove_vertical_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_vertical_seam_16
+pub let remove_vertical_seam_16 : (@types.Image16, Array[Int32]) -> @types.Image16 = @transform.remove_vertical_seam_16
 
 ///|
-pub let remove_vertical_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_vertical_seam_f
+pub let remove_vertical_seam_f : (@types.ImageF, Array[Int32]) -> @types.ImageF = @transform.remove_vertical_seam_f
 
 ///|
-pub let remove_horizontal_seam_16 : (@types.Image16, Array[Int]) -> @types.Image16 = @transform.remove_horizontal_seam_16
+pub let remove_horizontal_seam_16 : (@types.Image16, Array[Int32]) -> @types.Image16 = @transform.remove_horizontal_seam_16
 
 ///|
-pub let remove_horizontal_seam_f : (@types.ImageF, Array[Int]) -> @types.ImageF = @transform.remove_horizontal_seam_f
+pub let remove_horizontal_seam_f : (@types.ImageF, Array[Int32]) -> @types.ImageF = @transform.remove_horizontal_seam_f
 
 ///|
-pub let seam_carve_resize_16 : (@types.Image16, Int, Int) -> @types.Image16 raise @types.LoadError = @transform.seam_carve_resize_16
+pub let seam_carve_resize_16 : (@types.Image16, Int32, Int32) -> @types.Image16 raise @types.LoadError = @transform.seam_carve_resize_16
 
 ///|
-pub let seam_carve_resize_f : (@types.ImageF, Int, Int) -> @types.ImageF raise @types.LoadError = @transform.seam_carve_resize_f
+pub let seam_carve_resize_f : (@types.ImageF, Int32, Int32) -> @types.ImageF raise @types.LoadError = @transform.seam_carve_resize_f
 
 ///|
 pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_qoi_pure
@@ -2505,12 +2509,12 @@ pub let decode_qoi : (Bytes) -> @types.Image raise @types.LoadError = @codec.dec
 pub let decode_webp : (Bytes) -> @types.Image raise @types.LoadError = @codec.decode_webp_pure
 
 ///|
-pub let decode_vp8_frame : (Bytes, Int) -> @types.Image raise @types.LoadError = @codec.decode_vp8_frame
+pub let decode_vp8_frame : (Bytes, Int32) -> @types.Image raise @types.LoadError = @codec.decode_vp8_frame
 
 ///|
 pub fn encode_webp_lossy(
   img : @types.Image,
-  quality? : Int = 75,
+  quality~ : Int32 = 75,
 ) -> Bytes raise @types.LoadError {
   @codec.encode_webp_lossy_pure(img, quality~)
 }
@@ -2927,13 +2931,13 @@ pub fn write_iptc_to_bytes(
 // From util/
 
 ///|
-pub let add_border : (@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.add_border
+pub let add_border : (@types.Image, Int32, Int32, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError = @util.add_border
 
 ///|
-pub let add_noise_gaussian : (@types.Image, Float, UInt) -> @types.Image = @util.add_noise_gaussian
+pub let add_noise_gaussian : (@types.Image, Float, UInt32) -> @types.Image = @util.add_noise_gaussian
 
 ///|
-pub let add_noise_salt_pepper : (@types.Image, Float, UInt) -> @types.Image = @util.add_noise_salt_pepper
+pub let add_noise_salt_pepper : (@types.Image, Float, UInt32) -> @types.Image = @util.add_noise_salt_pepper
 
 ///|
 pub let apply_lut : (@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError = @util.apply_lut
@@ -2996,10 +3000,10 @@ pub let convolve_16 : (@types.Image16, Array[Float], Float, Float) -> @types.Ima
 pub let convolve_f : (@types.ImageF, Array[Float], Float, Float) -> @types.ImageF raise @types.LoadError = @filter.convolve_f
 
 ///|
-pub let extract_channel : (@types.Image, Int) -> @types.Image raise @types.LoadError = @util.extract_channel
+pub let extract_channel : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @util.extract_channel
 
 ///|
-pub let fill_alpha : (@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError = @util.fill_alpha
+pub let fill_alpha : (@types.Image, Int32, Byte, Byte, Byte) -> @types.Image raise @types.LoadError = @util.fill_alpha
 
 ///|
 pub let flip_vertical : (@types.Image) -> @types.Image = @transform.flip_vertical
@@ -3011,7 +3015,7 @@ pub let flip_vertical_16 : (@types.Image16) -> @types.Image16 = @transform.flip_
 pub let flip_vertical_f : (@types.ImageF) -> @types.ImageF = @transform.flip_vertical_f
 
 ///|
-pub let gradient_map : (@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError = @util.gradient_map
+pub let gradient_map : (@types.Image, Array[(Int32, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError = @util.gradient_map
 
 ///|
 pub let hstack : (@types.Image, @types.Image) -> @types.Image raise @types.LoadError = @util.hstack
@@ -3032,7 +3036,7 @@ pub let variance_value : (@types.Image) -> Float = @util.variance_value
 pub let entropy_value : (@types.Image) -> Float = @util.entropy_value
 
 ///|
-pub let median_value : (@types.Image) -> Int = @util.median_value
+pub let median_value : (@types.Image) -> Int32 = @util.median_value
 
 ///|
 pub let contrast_value : (@types.Image) -> Float = @util.contrast_value
@@ -3047,34 +3051,34 @@ pub let alpha_blend : (@types.Image, @types.Image, Float) -> @types.Image raise 
 pub let mask_blend : (@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError = @util.mask_blend
 
 ///|
-pub let pad : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @util.pad
+pub let pad : (@types.Image, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError = @util.pad
 
 ///|
-pub let pixelate : (@types.Image, Int) -> @types.Image raise @types.LoadError = @util.pixelate
+pub let pixelate : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @util.pixelate
 
 ///|
-pub let posterize : (@types.Image, Int) -> @types.Image raise @types.LoadError = @util.posterize
+pub let posterize : (@types.Image, Int32) -> @types.Image raise @types.LoadError = @util.posterize
 
 ///|
-pub let replace_color : (@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError = @util.replace_color
+pub let replace_color : (@types.Image, Array[Byte], Array[Byte], Int32) -> @types.Image raise @types.LoadError = @util.replace_color
 
 ///|
-pub let resize_to_contain : (@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError = @transform.resize_to_contain
+pub let resize_to_contain : (@types.Image, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError = @transform.resize_to_contain
 
 ///|
-pub let resize_to_cover : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @transform.resize_to_cover
+pub let resize_to_cover : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @transform.resize_to_cover
 
 ///|
 pub let set_alpha : (@types.Image, Byte) -> @types.Image raise @types.LoadError = @util.set_alpha
 
 ///|
-pub let swap_channels : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @util.swap_channels
+pub let swap_channels : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @util.swap_channels
 
 ///|
-pub let threshold : (@types.Image, Int) -> @types.Image = @util.threshold
+pub let threshold : (@types.Image, Int32) -> @types.Image = @util.threshold
 
 ///|
-pub let tile : (@types.Image, Int, Int) -> @types.Image raise @types.LoadError = @util.tile
+pub let tile : (@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError = @util.tile
 
 ///|
 pub let transpose : (@types.Image) -> @types.Image = @util.transpose
@@ -3093,7 +3097,7 @@ pub let vstack : (@types.Image, @types.Image) -> @types.Image raise @types.LoadE
 pub fn inpaint(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   @filter.inpaint(arg0, arg1, iterations~)
 }
@@ -3103,7 +3107,7 @@ pub fn inpaint(
 pub fn inpaint_fast(
   arg0 : @types.Image,
   arg1 : @types.Image,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   @filter.inpaint_fast(arg0, arg1, radius~)
 }
@@ -3112,7 +3116,7 @@ pub fn inpaint_fast(
 pub fn inpaint_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.Image16 raise @types.LoadError {
   @filter.inpaint_16(arg0, arg1, iterations~)
 }
@@ -3121,7 +3125,7 @@ pub fn inpaint_16(
 pub fn inpaint_fast_16(
   arg0 : @types.Image16,
   arg1 : @types.Image16,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image16 raise @types.LoadError {
   @filter.inpaint_fast_16(arg0, arg1, radius~)
 }
@@ -3130,7 +3134,7 @@ pub fn inpaint_fast_16(
 pub fn inpaint_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.ImageF raise @types.LoadError {
   @filter.inpaint_f(arg0, arg1, iterations~)
 }
@@ -3139,7 +3143,7 @@ pub fn inpaint_f(
 pub fn inpaint_fast_f(
   arg0 : @types.ImageF,
   arg1 : @types.ImageF,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.ImageF raise @types.LoadError {
   @filter.inpaint_fast_f(arg0, arg1, radius~)
 }
@@ -3158,7 +3162,7 @@ pub type TextLine = @ocr.TextLine
 ///|
 pub fn ocr_preprocess(
   img : @types.Image,
-  binarization_method? : String = "sauvola",
+  binarization_method~ : String = "sauvola",
 ) -> @types.Image raise @types.LoadError {
   @ocr.ocr_preprocess(img, binarization_method~)
 }
@@ -3173,7 +3177,7 @@ pub fn document_enhance(
 ///|
 pub fn shadow_removal(
   img : @types.Image,
-  kernel_size? : Int = 51,
+  kernel_size~ : Int32 = 51,
 ) -> @types.Image raise @types.LoadError {
   @ocr.shadow_removal(img, kernel_size~)
 }
@@ -3181,7 +3185,7 @@ pub fn shadow_removal(
 ///|
 pub fn background_normalization(
   img : @types.Image,
-  kernel_size? : Int = 31,
+  kernel_size~ : Int32 = 31,
 ) -> @types.Image raise @types.LoadError {
   @ocr.background_normalization(img, kernel_size~)
 }
@@ -3207,9 +3211,9 @@ pub fn rotate_document(
 ///|
 pub fn sauvola_threshold(
   img : @types.Image,
-  window_size? : Int = 15,
-  k? : Double = 0.5,
-  r? : Double = 128.0,
+  window_size~ : Int32 = 15,
+  k~ : Double = 0.5,
+  r~ : Double = 128.0,
 ) -> @types.Image raise @types.LoadError {
   @ocr.sauvola_threshold(img, window_size~, k~, r~)
 }
@@ -3217,8 +3221,8 @@ pub fn sauvola_threshold(
 ///|
 pub fn niblack_threshold(
   img : @types.Image,
-  window_size? : Int = 15,
-  k? : Double = -0.2,
+  window_size~ : Int32 = 15,
+  k~ : Double = -0.2,
 ) -> @types.Image raise @types.LoadError {
   @ocr.niblack_threshold(img, window_size~, k~)
 }
@@ -3226,8 +3230,8 @@ pub fn niblack_threshold(
 ///|
 pub fn adaptive_threshold_ocr(
   img : @types.Image,
-  block_size? : Int = 15,
-  c? : Int = 10,
+  block_size~ : Int32 = 15,
+  c~ : Int32 = 10,
 ) -> @types.Image raise @types.LoadError {
   @ocr.adaptive_threshold_ocr(img, block_size~, c~)
 }
@@ -3256,7 +3260,7 @@ pub fn segment_page(
 ///|
 pub fn detect_columns(
   img : @types.Image,
-) -> (Int, Array[(Int, Int)]) raise @types.LoadError {
+) -> (Int32, Array[(Int32, Int32)]) raise @types.LoadError {
   @ocr.detect_columns(img)
 }
 
@@ -3287,7 +3291,7 @@ pub type CharSegment = @ocr.CharSegment
 ///|
 pub fn connected_components_analysis(
   img : @types.Image,
-  connectivity? : Int = 8,
+  connectivity~ : Int32 = 8,
 ) -> @ocr.OcrConnectedComponentsResult raise @types.LoadError {
   @ocr.connected_components_analysis(img, connectivity~)
 }
@@ -3295,8 +3299,8 @@ pub fn connected_components_analysis(
 ///|
 pub fn filter_components_by_area(
   result : @ocr.OcrConnectedComponentsResult,
-  min_area : Int,
-  max_area : Int,
+  min_area : Int32,
+  max_area : Int32,
 ) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError {
   @ocr.filter_components_by_area(result, min_area, max_area)
 }
@@ -3313,7 +3317,7 @@ pub fn filter_components_by_aspect_ratio(
 ///|
 pub fn merge_adjacent_components(
   components : Array[@ocr.OcrConnectedComponent],
-  max_gap : Int,
+  max_gap : Int32,
 ) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError {
   @ocr.merge_adjacent_components(components, max_gap)
 }
@@ -3335,8 +3339,8 @@ pub fn vertical_projection(
 ///|
 pub fn detect_text_lines_projection(
   img : @types.Image,
-  min_height? : Int = 5,
-  max_gap? : Int = 3,
+  min_height~ : Int32 = 5,
+  max_gap~ : Int32 = 3,
 ) -> Array[@ocr.TextLineInfo] raise @types.LoadError {
   @ocr.detect_text_lines_projection(img, min_height~, max_gap~)
 }
@@ -3345,8 +3349,8 @@ pub fn detect_text_lines_projection(
 pub fn segment_chars_projection(
   img : @types.Image,
   line : @ocr.TextLineInfo,
-  min_width? : Int = 2,
-  max_gap? : Int = 2,
+  min_width~ : Int32 = 2,
+  max_gap~ : Int32 = 2,
 ) -> Array[@ocr.CharSegment] raise @types.LoadError {
   @ocr.segment_chars_projection(img, line, min_width~, max_gap~)
 }
@@ -3355,7 +3359,7 @@ pub fn segment_chars_projection(
 pub fn extract_text_line_image(
   img : @types.Image,
   line : @ocr.TextLineInfo,
-  padding? : Int = 2,
+  padding~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   @ocr.extract_text_line_image(img, line, padding~)
 }
@@ -3364,8 +3368,8 @@ pub fn extract_text_line_image(
 pub fn extract_char_image(
   img : @types.Image,
   char : @ocr.CharSegment,
-  target_size? : Int = 32,
-  padding? : Int = 2,
+  target_size~ : Int32 = 32,
+  padding~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   @ocr.extract_char_image(img, char, target_size~, padding~)
 }
@@ -3381,7 +3385,7 @@ pub type DropFallResult = @ocr.DropFallResult
 ///|
 pub fn drop_fall_segmentation(
   img : @types.Image,
-  start_x? : Int = -1,
+  start_x~ : Int32 = -1,
 ) -> @ocr.DropFallResult raise @types.LoadError {
   @ocr.drop_fall_segmentation(img, start_x~)
 }
@@ -3389,38 +3393,38 @@ pub fn drop_fall_segmentation(
 ///|
 pub fn detect_touching_chars(
   img : @types.Image,
-  min_char_width? : Int = 8,
-  max_char_width? : Int = 50,
-) -> Array[Int] raise @types.LoadError {
+  min_char_width~ : Int32 = 8,
+  max_char_width~ : Int32 = 50,
+) -> Array[Int32] raise @types.LoadError {
   @ocr.detect_touching_chars(img, min_char_width~, max_char_width~)
 }
 
 ///|
 pub fn segment_by_connected_components(
   img : @types.Image,
-  min_area? : Int = 5,
-  max_area? : Int = 10000,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  min_area~ : Int32 = 5,
+  max_area~ : Int32 = 10000,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.segment_by_connected_components(img, min_area~, max_area~)
 }
 
 ///|
 pub fn merge_small_segments(
-  segments : Array[(Int, Int, Int, Int)],
-  min_width : Int,
-  min_height : Int,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  segments : Array[(Int32, Int32, Int32, Int32)],
+  min_width : Int32,
+  min_height : Int32,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.merge_small_segments(segments, min_width, min_height)
 }
 
 ///|
 pub fn filter_noise_segments(
-  segments : Array[(Int, Int, Int, Int)],
-  img_width : Int,
-  img_height : Int,
-  min_area_ratio? : Double = 0.001,
-  max_area_ratio? : Double = 0.5,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  segments : Array[(Int32, Int32, Int32, Int32)],
+  img_width : Int32,
+  img_height : Int32,
+  min_area_ratio~ : Double = 0.001,
+  max_area_ratio~ : Double = 0.5,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.filter_noise_segments(
     segments,
     img_width,
@@ -3433,9 +3437,9 @@ pub fn filter_noise_segments(
 ///|
 pub fn complete_char_segmentation(
   img : @types.Image,
-  min_char_width? : Int = 5,
-  max_char_width? : Int = 60,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  min_char_width~ : Int32 = 5,
+  max_char_width~ : Int32 = 60,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.complete_char_segmentation(img, min_char_width~, max_char_width~)
 }
 
@@ -3459,8 +3463,8 @@ pub type StatisticalFeatures = @ocr.StatisticalFeatures
 ///|
 pub fn hog_features(
   img : @types.Image,
-  cell_size? : Int = 8,
-  num_bins? : Int = 9,
+  cell_size~ : Int32 = 8,
+  num_bins~ : Int32 = 9,
 ) -> @ocr.HogFeatures raise @types.LoadError {
   @ocr.hog_features(img, cell_size~, num_bins~)
 }
@@ -3468,9 +3472,9 @@ pub fn hog_features(
 ///|
 pub fn lbp_features(
   img : @types.Image,
-  radius? : Int = 1,
-  num_points? : Int = 8,
-  num_bins? : Int = 256,
+  radius~ : Int32 = 1,
+  num_points~ : Int32 = 8,
+  num_bins~ : Int32 = 256,
 ) -> @ocr.LbpFeatures raise @types.LoadError {
   @ocr.lbp_features(img, radius~, num_points~, num_bins~)
 }
@@ -3485,8 +3489,8 @@ pub fn projection_features(
 ///|
 pub fn grid_features(
   img : @types.Image,
-  grid_rows? : Int = 4,
-  grid_cols? : Int = 4,
+  grid_rows~ : Int32 = 4,
+  grid_cols~ : Int32 = 4,
 ) -> @ocr.GridFeatures raise @types.LoadError {
   @ocr.grid_features(img, grid_rows~, grid_cols~)
 }
@@ -3565,8 +3569,8 @@ pub fn compute_distance(
 
 ///|
 pub fn knn_create(
-  k? : Int = 3,
-  distance_metric? : String = "euclidean",
+  k~ : Int32 = 3,
+  distance_metric~ : String = "euclidean",
 ) -> @ocr.KnnClassifier raise @types.LoadError {
   @ocr.knn_create(k~, distance_metric~)
 }
@@ -3598,7 +3602,7 @@ pub fn knn_predict(
 
 ///|
 pub fn template_matcher_create(
-  distance_metric? : String = "euclidean",
+  distance_metric~ : String = "euclidean",
 ) -> @ocr.TemplateMatcher {
   @ocr.template_matcher_create(distance_metric~)
 }
@@ -3678,7 +3682,7 @@ pub fn english_ocr_default_config() -> @ocr.EnglishOcrConfig {
 
 ///|
 pub fn generate_english_templates(
-  case_sensitive? : Bool = false,
+  case_sensitive~ : Bool = false,
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_english_templates(case_sensitive~)
 }
@@ -3723,7 +3727,7 @@ pub fn dictionary_create_common_english() -> @ocr.Dictionary {
 }
 
 ///|
-pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
+pub fn edit_distance(s1 : String, s2 : String) -> Int32 raise @types.LoadError {
   @ocr.edit_distance(s1, s2)
 }
 
@@ -3731,15 +3735,15 @@ pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
 pub fn dictionary_match(
   word : String,
   dictionary : @ocr.Dictionary,
-  max_distance? : Int = 2,
-) -> Array[(String, Int)] raise @types.LoadError {
+  max_distance~ : Int32 = 2,
+) -> Array[(String, Int32)] raise @types.LoadError {
   @ocr.dictionary_match(word, dictionary, max_distance~)
 }
 
 ///|
 pub fn ngram_create(
   texts : Array[String],
-  n? : Int = 2,
+  n~ : Int32 = 2,
 ) -> @ocr.NgramModel raise @types.LoadError {
   @ocr.ngram_create(texts, n~)
 }
@@ -3782,7 +3786,7 @@ pub fn ocr_postprocess(
 ///|
 pub fn calibrate_confidence(
   result : @ocr.OcrResult,
-  factor? : Double = 1.0,
+  factor~ : Double = 1.0,
 ) -> @ocr.OcrResult raise @types.LoadError {
   @ocr.calibrate_confidence(result, factor~)
 }
@@ -3799,7 +3803,7 @@ pub fn chinese_ocr_default_config() -> @ocr.ChineseOcrConfig {
 
 ///|
 pub fn generate_chinese_templates(
-  char_set? : String = "common",
+  char_set~ : String = "common",
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_chinese_templates(char_set~)
 }
@@ -3832,8 +3836,8 @@ pub type TableStructure = @ocr.TableStructure
 ///|
 pub fn detect_horizontal_lines(
   img : @types.Image,
-  min_length? : Int = 20,
-  max_gap? : Int = 2,
+  min_length~ : Int32 = 20,
+  max_gap~ : Int32 = 2,
 ) -> Array[@ocr.TableLine] raise @types.LoadError {
   @ocr.detect_horizontal_lines(img, min_length~, max_gap~)
 }
@@ -3841,8 +3845,8 @@ pub fn detect_horizontal_lines(
 ///|
 pub fn detect_vertical_lines(
   img : @types.Image,
-  min_length? : Int = 20,
-  max_gap? : Int = 2,
+  min_length~ : Int32 = 20,
+  max_gap~ : Int32 = 2,
 ) -> Array[@ocr.TableLine] raise @types.LoadError {
   @ocr.detect_vertical_lines(img, min_length~, max_gap~)
 }
@@ -3858,7 +3862,7 @@ pub fn analyze_table_structure(
 ///|
 pub fn recognize_table(
   img : @types.Image,
-  min_line_length? : Int = 20,
+  min_line_length~ : Int32 = 20,
 ) -> @ocr.TableStructure raise @types.LoadError {
   @ocr.recognize_table(img, min_line_length~)
 }
@@ -3867,7 +3871,7 @@ pub fn recognize_table(
 pub fn extract_cell_image(
   img : @types.Image,
   cell : @ocr.TableCell,
-  padding? : Int = 1,
+  padding~ : Int32 = 1,
 ) -> @types.Image raise @types.LoadError {
   @ocr.extract_cell_image(img, cell, padding~)
 }
@@ -3876,7 +3880,7 @@ pub fn extract_cell_image(
 pub fn extract_all_cells(
   img : @types.Image,
   structure : @ocr.TableStructure,
-  padding? : Int = 1,
+  padding~ : Int32 = 1,
 ) -> Array[@types.Image] raise @types.LoadError {
   @ocr.extract_all_cells(img, structure, padding~)
 }
@@ -3899,7 +3903,7 @@ pub fn advanced_chinese_ocr_default_config() -> @ocr.AdvancedChineseOcrConfig {
 
 ///|
 pub fn generate_3500_chinese_templates(
-  char_set? : String = "common3500",
+  char_set~ : String = "common3500",
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_3500_chinese_templates(char_set~)
 }
@@ -3952,14 +3956,14 @@ pub fn dataset_add_sample(
 ///|
 pub fn dataset_stats(
   dataset : @ocr.TrainingDataset,
-) -> (Int, Int, Array[(String, Int)]) {
+) -> (Int32, Int32, Array[(String, Int32)]) {
   @ocr.dataset_stats(dataset)
 }
 
 ///|
 pub fn augment_features(
   features : Array[Double],
-  noise_level? : Double = 0.05,
+  noise_level~ : Double = 0.05,
 ) -> Array[Double] {
   @ocr.augment_features(features, noise_level~)
 }
@@ -4013,7 +4017,7 @@ pub fn analyze_document_layout(
 ///|
 pub fn compute_reading_order(
   elements : Array[@ocr.DocumentElement],
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   @ocr.compute_reading_order(elements)
 }
 
@@ -4046,14 +4050,14 @@ pub fn get_elements_in_reading_order(
 ///|
 pub fn document_structure_stats(
   structure : @ocr.DocumentStructure,
-) -> (Int, Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32, Int32) {
   @ocr.document_structure_stats(structure)
 }
 
 ///|
 pub fn detect_document_columns(
   img : @types.Image,
-) -> Int raise @types.LoadError {
+) -> Int32 raise @types.LoadError {
   @ocr.detect_document_columns(img)
 }
 
@@ -4076,7 +4080,7 @@ pub fn handwriting_ocr_default_config() -> @ocr.HandwritingOcrConfig {
 
 ///|
 pub fn generate_handwriting_templates(
-  char_set? : String = "digits",
+  char_set~ : String = "digits",
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_handwriting_templates(char_set~)
 }
@@ -4084,7 +4088,7 @@ pub fn generate_handwriting_templates(
 ///|
 pub fn correct_slant(
   img : @types.Image,
-  max_slant? : Double = 15.0,
+  max_slant~ : Double = 15.0,
 ) -> @types.Image raise @types.LoadError {
   @ocr.correct_slant(img, max_slant~)
 }
@@ -4166,7 +4170,7 @@ pub fn generate_chinese_char_info_db() -> Array[@ocr.ChineseCharInfo] {
 
 ///|
 pub fn generate_enhanced_chinese_templates(
-  char_set_size? : Int = 1000,
+  char_set_size~ : Int32 = 1000,
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_enhanced_chinese_templates(char_set_size~)
 }
@@ -4175,7 +4179,7 @@ pub fn generate_enhanced_chinese_templates(
 pub fn structure_based_filter(
   char_img : @types.Image,
   char_db : Array[@ocr.ChineseCharInfo],
-  max_candidates? : Int = 50,
+  max_candidates~ : Int32 = 50,
 ) -> Array[@ocr.ChineseCharInfo] {
   @ocr.structure_based_filter(char_img, char_db, max_candidates~)
 }
@@ -4211,7 +4215,7 @@ pub fn ocr_accuracy_enhanced_default_config() -> @ocr.OcrAccuracyEnhancedConfig 
 ///|
 pub fn extract_zernike_moments(
   char_img : @types.Image,
-  max_order? : Int = 4,
+  max_order~ : Int32 = 4,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.extract_zernike_moments(char_img, max_order~)
 }
@@ -4219,8 +4223,8 @@ pub fn extract_zernike_moments(
 ///|
 pub fn extract_gabor_ocr_features(
   char_img : @types.Image,
-  num_orientations? : Int = 4,
-  num_frequencies? : Int = 2,
+  num_orientations~ : Int32 = 4,
+  num_frequencies~ : Int32 = 2,
 ) -> Array[Double] {
   @ocr.extract_gabor_ocr_features(char_img, num_orientations~, num_frequencies~)
 }
@@ -4234,8 +4238,8 @@ pub fn extract_directional_features(char_img : @types.Image) -> Array[Double] {
 pub fn weighted_knn_classify(
   features : Array[Double],
   training_data : Array[(String, Array[Double])],
-  k? : Int = 5,
-  distance_metric? : String = "euclidean",
+  k~ : Int32 = 5,
+  distance_metric~ : String = "euclidean",
 ) -> (String, Double, Array[(String, Double)]) {
   @ocr.weighted_knn_classify(features, training_data, k~, distance_metric~)
 }
@@ -4252,8 +4256,8 @@ pub fn calibrate_confidence_enhanced(
 pub fn multi_scale_recognize(
   char_img : @types.Image,
   templates : Array[(String, Array[Double])],
-  scales : Array[Int],
-  distance_metric? : String = "euclidean",
+  scales : Array[Int32],
+  distance_metric~ : String = "euclidean",
 ) -> (String, Double) {
   @ocr.multi_scale_recognize(char_img, templates, scales, distance_metric~)
 }
@@ -4311,24 +4315,24 @@ pub fn analyze_layout_enhanced(
 ///|
 pub fn optimize_reading_order(
   blocks : Array[@ocr.DocumentBlock],
-  num_columns : Int,
-) -> Array[Int] {
+  num_columns : Int32,
+) -> Array[Int32] {
   @ocr.optimize_reading_order(blocks, num_columns)
 }
 
 ///|
 pub fn detect_paragraphs(
   blocks : Array[@ocr.DocumentBlock],
-  max_line_spacing_ratio? : Double = 2.0,
-) -> Array[Array[Int]] {
+  max_line_spacing_ratio~ : Double = 2.0,
+) -> Array[Array[Int32]] {
   @ocr.detect_paragraphs(blocks, max_line_spacing_ratio~)
 }
 
 ///|
 pub fn detect_titles(
   blocks : Array[@ocr.DocumentBlock],
-  title_font_size_threshold? : Int = 24,
-) -> Array[Int] {
+  title_font_size_threshold~ : Int32 = 24,
+) -> Array[Int32] {
   @ocr.detect_titles(blocks, title_font_size_threshold~)
 }
 
@@ -4342,8 +4346,8 @@ pub fn build_document_structure_tree(
 ///|
 pub fn extract_document_text(
   blocks : Array[@ocr.DocumentBlock],
-  include_headers? : Bool = true,
-  include_footers? : Bool = false,
+  include_headers~ : Bool = true,
+  include_footers~ : Bool = false,
 ) -> String {
   @ocr.extract_document_text(blocks, include_headers~, include_footers~)
 }
@@ -4351,7 +4355,7 @@ pub fn extract_document_text(
 ///|
 pub fn document_statistics_enhanced(
   blocks : Array[@ocr.DocumentBlock],
-) -> (Int, Int, Int, Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32, Int32, Int32, Int32) {
   @ocr.document_statistics_enhanced(blocks)
 }
 
@@ -4381,8 +4385,8 @@ pub fn handwriting_ocr_enhanced_default_config() -> @ocr.HandwritingOcrEnhancedC
 
 ///|
 pub fn generate_enhanced_handwriting_templates(
-  char_set? : String = "digits+letters",
-  num_variants? : Int = 5,
+  char_set~ : String = "digits+letters",
+  num_variants~ : Int32 = 5,
 ) -> Array[(String, Array[Double])] {
   @ocr.generate_enhanced_handwriting_templates(char_set~, num_variants~)
 }
@@ -4398,8 +4402,8 @@ pub fn extract_handwriting_stroke_features(
 pub fn elastic_match(
   features : Array[Double],
   template : Array[Double],
-  elasticity? : Double = 0.5,
-  grid_size? : Int = 16,
+  elasticity~ : Double = 0.5,
+  grid_size~ : Int32 = 16,
 ) -> Double {
   @ocr.elastic_match(features, template, elasticity~, grid_size~)
 }
@@ -4407,9 +4411,9 @@ pub fn elastic_match(
 ///|
 pub fn segment_cursive_chars(
   img : @types.Image,
-  min_char_width? : Int = 8,
-  max_char_width? : Int = 80,
-) -> Array[(Int, Int, Int, Int)] {
+  min_char_width~ : Int32 = 8,
+  max_char_width~ : Int32 = 80,
+) -> Array[(Int32, Int32, Int32, Int32)] {
   @ocr.segment_cursive_chars(img, min_char_width~, max_char_width~)
 }
 
@@ -4456,7 +4460,7 @@ pub fn detect_language_enhanced(
 pub fn smart_segment_chars(
   img : @types.Image,
   config : @ocr.MultilingualOcrEnhancedConfig,
-) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError {
+) -> Array[(Int32, Int32, Int32, Int32, String)] raise @types.LoadError {
   @ocr.smart_segment_chars(img, config)
 }
 
@@ -4596,7 +4600,7 @@ pub fn invert_homography(h : @stitch.Homography) -> @stitch.Homography? {
 ///|
 pub fn detect_features_simple(
   img : @types.Image,
-  max_features? : Int = 500,
+  max_features~ : Int32 = 500,
 ) -> Array[@stitch.FeaturePoint] {
   @stitch.detect_features_simple(img, max_features~)
 }
@@ -4605,7 +4609,7 @@ pub fn detect_features_simple(
 pub fn match_features(
   query : Array[@stitch.FeaturePoint],
   train : Array[@stitch.FeaturePoint],
-  ratio_threshold? : Double = 0.75,
+  ratio_threshold~ : Double = 0.75,
 ) -> Array[@stitch.MatchPair] {
   @stitch.match_features(query, train, ratio_threshold~)
 }
@@ -4615,8 +4619,8 @@ pub fn estimate_homography_ransac(
   matches : Array[@stitch.MatchPair],
   query_points : Array[@stitch.FeaturePoint],
   train_points : Array[@stitch.FeaturePoint],
-  iterations? : Int = 1000,
-  threshold? : Double = 3.0,
+  iterations~ : Int32 = 1000,
+  threshold~ : Double = 3.0,
 ) -> (@stitch.Homography?, Array[@stitch.MatchPair]) {
   @stitch.estimate_homography_ransac(
     matches,
@@ -4661,7 +4665,7 @@ pub fn super_resolution_bicubic(
 pub fn super_resolution_lanczos(
   img : @types.Image,
   scale : Double,
-  a? : Int = 3,
+  a~ : Int32 = 3,
 ) -> @types.Image {
   @superres.super_resolution_lanczos(img, scale, a~)
 }
@@ -4670,8 +4674,8 @@ pub fn super_resolution_lanczos(
 pub fn super_resolution_edge_preserving(
   img : @types.Image,
   scale : Double,
-  edge_threshold? : Double = 30.0,
-  sharpen_amount? : Double = 0.5,
+  edge_threshold~ : Double = 30.0,
+  sharpen_amount~ : Double = 0.5,
 ) -> @types.Image {
   @superres.super_resolution_edge_preserving(
     img,
@@ -4749,9 +4753,9 @@ pub fn decode_qrcode_full(
 
 ///|
 pub fn reed_solomon_decode(
-  data : Array[Int],
-  ec_bytes : Int,
-) -> (Array[Int], Int) {
+  data : Array[Int32],
+  ec_bytes : Int32,
+) -> (Array[Int32], Int32) {
   @barcode.reed_solomon_decode(data, ec_bytes)
 }
 
@@ -4768,27 +4772,27 @@ pub fn stylize_default_config() -> @stylize.StylizeConfig {
 ///|
 pub fn oil_paint(
   img : @types.Image,
-  radius? : Int = 3,
-  intensity? : Int = 20,
+  radius~ : Int32 = 3,
+  intensity~ : Int32 = 20,
 ) -> @types.Image {
   @stylize.oil_paint(img, radius~, intensity~)
 }
 
 ///|
-pub fn sketch(img : @types.Image, blend? : Double = 0.7) -> @types.Image {
+pub fn sketch(img : @types.Image, blend~ : Double = 0.7) -> @types.Image {
   @stylize.sketch(img, blend~)
 }
 
 ///|
-pub fn watercolor(img : @types.Image, blur_radius? : Int = 5) -> @types.Image {
+pub fn watercolor(img : @types.Image, blur_radius~ : Int32 = 5) -> @types.Image {
   @stylize.watercolor(img, blur_radius~)
 }
 
 ///|
 pub fn cartoon(
   img : @types.Image,
-  levels? : Int = 8,
-  edge_threshold? : Double = 30.0,
+  levels~ : Int32 = 8,
+  edge_threshold~ : Double = 30.0,
 ) -> @types.Image {
   @stylize.cartoon(img, levels~, edge_threshold~)
 }
@@ -4818,7 +4822,7 @@ pub fn dehaze_default_config() -> @enhance.DehazeConfig {
 ///|
 pub fn dark_channel(
   img : @types.Image,
-  patch_size? : Int = 15,
+  patch_size~ : Int32 = 15,
 ) -> @types.Image raise @types.LoadError {
   @enhance.dark_channel(img, patch_size~)
 }
@@ -4827,17 +4831,17 @@ pub fn dark_channel(
 pub fn estimate_atmospheric_light(
   img : @types.Image,
   dark : @types.Image,
-  top_percent? : Int = 1000,
-) -> Array[Int] raise @types.LoadError {
+  top_percent~ : Int32 = 1000,
+) -> Array[Int32] raise @types.LoadError {
   @enhance.estimate_atmospheric_light(img, dark, top_percent~)
 }
 
 ///|
 pub fn estimate_transmission(
   img : @types.Image,
-  atmospheric : Array[Int],
-  omega? : Double = 0.95,
-  patch_size? : Int = 15,
+  atmospheric : Array[Int32],
+  omega~ : Double = 0.95,
+  patch_size~ : Int32 = 15,
 ) -> @types.Image raise @types.LoadError {
   @enhance.estimate_transmission(img, atmospheric, omega~, patch_size~)
 }
@@ -4846,8 +4850,8 @@ pub fn estimate_transmission(
 pub fn guided_filter_image(
   input : @types.Image,
   guide : @types.Image,
-  radius? : Int = 20,
-  eps? : Double = 0.0001,
+  radius~ : Int32 = 20,
+  eps~ : Double = 0.0001,
 ) -> @types.Image raise @types.LoadError {
   @enhance.guided_filter_image(input, guide, radius~, eps~)
 }
@@ -4856,8 +4860,8 @@ pub fn guided_filter_image(
 pub fn dehaze_recover(
   img : @types.Image,
   transmission : @types.Image,
-  atmospheric : Array[Int],
-  t_min? : Double = 0.1,
+  atmospheric : Array[Int32],
+  t_min~ : Double = 0.1,
 ) -> @types.Image raise @types.LoadError {
   @enhance.dehaze_recover(img, transmission, atmospheric, t_min~)
 }
@@ -4900,7 +4904,7 @@ pub fn hdr_fusion_weighted(
 ///|
 pub fn tone_mapping_reinhard(
   img : @types.Image,
-  key? : Double = 0.18,
+  key~ : Double = 0.18,
 ) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_reinhard(img, key~)
 }
@@ -4908,7 +4912,7 @@ pub fn tone_mapping_reinhard(
 ///|
 pub fn tone_mapping_gamma(
   img : @types.Image,
-  gamma? : Double = 0.4545,
+  gamma~ : Double = 0.4545,
 ) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_gamma(img, gamma~)
 }
@@ -4916,7 +4920,7 @@ pub fn tone_mapping_gamma(
 ///|
 pub fn tone_mapping_sigmoid(
   img : @types.Image,
-  strength? : Double = 5.0,
+  strength~ : Double = 5.0,
 ) -> @types.Image raise @types.LoadError {
   @enhance.tone_mapping_sigmoid(img, strength~)
 }
@@ -4946,19 +4950,19 @@ pub fn inpaint_default_config() -> @enhance.InpaintConfig {
 pub fn inpaint_advanced(
   img : @types.Image,
   mask : @types.Image,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   @enhance.inpaint_advanced(img, mask, radius~)
 }
 
 ///|
 pub fn create_rect_mask(
-  width : Int,
-  height : Int,
-  x : Int,
-  y : Int,
-  rect_w : Int,
-  rect_h : Int,
+  width : Int32,
+  height : Int32,
+  x : Int32,
+  y : Int32,
+  rect_w : Int32,
+  rect_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   @enhance.create_rect_mask(width, height, x, y, rect_w, rect_h)
 }
@@ -4966,7 +4970,7 @@ pub fn create_rect_mask(
 ///|
 pub fn remove_small_objects(
   img : @types.Image,
-  max_size? : Int = 100,
+  max_size~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   @enhance.remove_small_objects(img, max_size~)
 }
@@ -4974,10 +4978,10 @@ pub fn remove_small_objects(
 ///|
 pub fn remove_watermark(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image raise @types.LoadError {
   @enhance.remove_watermark(img, x, y, width, height)
 }
@@ -5006,9 +5010,9 @@ pub fn denoise_nlm(
 ///|
 pub fn denoise_bilateral(
   img : @types.Image,
-  diameter? : Int = 9,
-  sigma_color? : Double = 75.0,
-  sigma_space? : Double = 75.0,
+  diameter~ : Int32 = 9,
+  sigma_color~ : Double = 75.0,
+  sigma_space~ : Double = 75.0,
 ) -> @types.Image raise @types.LoadError {
   @enhance.denoise_bilateral(img, diameter~, sigma_color~, sigma_space~)
 }
@@ -5016,7 +5020,7 @@ pub fn denoise_bilateral(
 ///|
 pub fn denoise_median(
   img : @types.Image,
-  kernel_size? : Int = 3,
+  kernel_size~ : Int32 = 3,
 ) -> @types.Image raise @types.LoadError {
   @enhance.denoise_median(img, kernel_size~)
 }
@@ -5056,8 +5060,8 @@ pub fn watershed_segment(
 ///|
 pub fn region_growing(
   img : @types.Image,
-  seeds : Array[(Int, Int)],
-  threshold? : Double = 30.0,
+  seeds : Array[(Int32, Int32)],
+  threshold~ : Double = 30.0,
 ) -> @segment.SegmentationResult {
   @segment.region_growing(img, seeds, threshold~)
 }
@@ -5065,8 +5069,8 @@ pub fn region_growing(
 ///|
 pub fn segmentation_to_color(
   result : @segment.SegmentationResult,
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image {
   @segment.segmentation_to_color(result, width, height)
 }
@@ -5078,12 +5082,12 @@ pub type BoundingBox = @detection.BoundingBox
 
 ///|
 pub fn bbox_new(
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  score? : Double = 0.0,
-  class_id? : Int = 0,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  score~ : Double = 0.0,
+  class_id~ : Int32 = 0,
 ) -> @detection.BoundingBox raise @types.LoadError {
   @detection.bbox_new(x, y, width, height, score~, class_id~)
 }
@@ -5099,7 +5103,7 @@ pub fn bbox_iou(
 ///|
 pub fn nms(
   boxes : Array[@detection.BoundingBox],
-  iou_threshold? : Double = 0.5,
+  iou_threshold~ : Double = 0.5,
 ) -> Array[@detection.BoundingBox] raise @types.LoadError {
   @detection.nms(boxes, iou_threshold~)
 }
@@ -5172,7 +5176,7 @@ pub fn fusion_default_config() -> @fusion.FusionConfig {
 pub fn fuse_alpha(
   img1 : @types.Image,
   img2 : @types.Image,
-  alpha? : Double = 0.5,
+  alpha~ : Double = 0.5,
 ) -> @types.Image {
   @fusion.fuse_alpha(img1, img2, alpha~)
 }
@@ -5254,7 +5258,7 @@ pub fn affine_apply(
 pub fn estimate_translation(
   img1 : @types.Image,
   img2 : @types.Image,
-  max_offset? : Int = 20,
+  max_offset~ : Int32 = 20,
 ) -> @registration.RegistrationResult raise @types.LoadError {
   @registration.estimate_translation(img1, img2, max_offset~)
 }
@@ -5263,8 +5267,8 @@ pub fn estimate_translation(
 pub fn warp_affine_transform(
   img : @types.Image,
   transform : @registration.AffineTransform,
-  out_width? : Int = 0,
-  out_height? : Int = 0,
+  out_width~ : Int32 = 0,
+  out_height~ : Int32 = 0,
 ) -> @types.Image raise @types.LoadError {
   @registration.warp_affine_transform(img, transform, out_width~, out_height~)
 }
@@ -5285,20 +5289,20 @@ pub type VideoFrames = @video.VideoFrames
 ///|
 pub fn video_frames_new(
   frames : Array[@types.Image],
-  fps? : Double = 30.0,
+  fps~ : Double = 30.0,
 ) -> @video.VideoFrames {
   @video.video_frames_new(frames, fps~)
 }
 
 ///|
-pub fn video_frame_count(video : @video.VideoFrames) -> Int {
+pub fn video_frame_count(video : @video.VideoFrames) -> Int32 {
   @video.video_frame_count(video)
 }
 
 ///|
 pub fn video_get_frame(
   video : @video.VideoFrames,
-  index : Int,
+  index : Int32,
 ) -> @types.Image? {
   @video.video_get_frame(video, index)
 }
@@ -5307,7 +5311,7 @@ pub fn video_get_frame(
 pub fn interpolate_frames(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  num_frames? : Int = 1,
+  num_frames~ : Int32 = 1,
 ) -> Array[@types.Image] {
   @video.interpolate_frames(frame1, frame2, num_frames~)
 }
@@ -5315,7 +5319,7 @@ pub fn interpolate_frames(
 ///|
 pub fn video_fade_in(
   video : @video.VideoFrames,
-  duration_frames? : Int = 30,
+  duration_frames~ : Int32 = 30,
 ) -> @video.VideoFrames {
   @video.video_fade_in(video, duration_frames~)
 }
@@ -5323,7 +5327,7 @@ pub fn video_fade_in(
 ///|
 pub fn video_fade_out(
   video : @video.VideoFrames,
-  duration_frames? : Int = 30,
+  duration_frames~ : Int32 = 30,
 ) -> @video.VideoFrames {
   @video.video_fade_out(video, duration_frames~)
 }
@@ -5331,7 +5335,7 @@ pub fn video_fade_out(
 ///|
 pub fn video_sample(
   video : @video.VideoFrames,
-  interval? : Int = 2,
+  interval~ : Int32 = 2,
 ) -> @video.VideoFrames {
   @video.video_sample(video, interval~)
 }
@@ -5352,7 +5356,7 @@ pub fn video_concat(
 ///|
 pub fn create_animation(
   frames : Array[@types.Image],
-  fps? : Double = 10.0,
+  fps~ : Double = 10.0,
 ) -> @video.VideoFrames {
   @video.create_animation(frames, fps~)
 }
@@ -5375,7 +5379,7 @@ pub fn point_cloud_new() -> @stereo3d.PointCloud {
 ///|
 pub fn depth_to_colormap(
   depth : @types.Image,
-  colormap? : String = "jet",
+  colormap~ : String = "jet",
 ) -> @types.Image {
   @stereo3d.depth_to_colormap(depth, colormap~)
 }
@@ -5383,11 +5387,11 @@ pub fn depth_to_colormap(
 ///|
 pub fn depth_to_pointcloud(
   depth : @types.Image,
-  fx? : Double = 500.0,
-  fy? : Double = 500.0,
-  cx? : Double = 0.0,
-  cy? : Double = 0.0,
-  scale? : Double = 1.0,
+  fx~ : Double = 500.0,
+  fy~ : Double = 500.0,
+  cx~ : Double = 0.0,
+  cy~ : Double = 0.0,
+  scale~ : Double = 1.0,
 ) -> @stereo3d.PointCloud {
   @stereo3d.depth_to_pointcloud(depth, fx~, fy~, cx~, cy~, scale~)
 }
@@ -5395,7 +5399,7 @@ pub fn depth_to_pointcloud(
 ///|
 pub fn pointcloud_voxel_downsample(
   cloud : @stereo3d.PointCloud,
-  voxel_size? : Double = 1.0,
+  voxel_size~ : Double = 1.0,
 ) -> @stereo3d.PointCloud {
   @stereo3d.pointcloud_voxel_downsample(cloud, voxel_size~)
 }
@@ -5404,8 +5408,8 @@ pub fn pointcloud_voxel_downsample(
 pub fn compute_disparity(
   left : @types.Image,
   right : @types.Image,
-  max_disparity? : Int = 64,
-  block_size? : Int = 7,
+  max_disparity~ : Int32 = 64,
+  block_size~ : Int32 = 7,
 ) -> @types.Image {
   @stereo3d.compute_disparity(left, right, max_disparity~, block_size~)
 }
@@ -5413,8 +5417,8 @@ pub fn compute_disparity(
 ///|
 pub fn disparity_to_depth(
   disparity : @types.Image,
-  baseline? : Double = 1.0,
-  focal_length? : Double = 500.0,
+  baseline~ : Double = 1.0,
+  focal_length~ : Double = 500.0,
 ) -> @types.Image {
   @stereo3d.disparity_to_depth(disparity, baseline~, focal_length~)
 }
@@ -5455,7 +5459,7 @@ pub fn apply_window_level(
 ///|
 pub fn medical_colormap(
   img : @types.Image,
-  colormap? : String = "hot",
+  colormap~ : String = "hot",
 ) -> @types.Image {
   @medical.medical_colormap(img, colormap~)
 }
@@ -5463,8 +5467,8 @@ pub fn medical_colormap(
 ///|
 pub fn medical_contrast_enhance(
   img : @types.Image,
-  clip_limit? : Double = 2.0,
-  tile_size? : Int = 8,
+  clip_limit~ : Double = 2.0,
+  tile_size~ : Int32 = 8,
 ) -> @types.Image {
   @medical.medical_contrast_enhance(img, clip_limit~, tile_size~)
 }
@@ -5472,25 +5476,25 @@ pub fn medical_contrast_enhance(
 ///|
 pub fn medical_denoise(
   img : @types.Image,
-  iterations? : Int = 5,
-  kappa? : Double = 30.0,
+  iterations~ : Int32 = 5,
+  kappa~ : Double = 30.0,
 ) -> @types.Image {
   @medical.medical_denoise(img, iterations~, kappa~)
 }
 
 ///|
 pub fn measure_distance(
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
-  pixel_spacing? : Double = 1.0,
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
+  pixel_spacing~ : Double = 1.0,
 ) -> Double {
   @medical.measure_distance(x1, y1, x2, y2, pixel_spacing~)
 }
 
 ///|
-pub fn measure_area(mask : @types.Image, pixel_area? : Double = 1.0) -> Double {
+pub fn measure_area(mask : @types.Image, pixel_area~ : Double = 1.0) -> Double {
   @medical.measure_area(mask, pixel_area~)
 }
 
@@ -5501,10 +5505,10 @@ pub type MultispectralImage = @remote_sensing.MultispectralImage
 
 ///|
 pub fn multispectral_new(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   bands : Array[@types.Image],
-  band_names? : Array[String] = [],
+  band_names~ : Array[String] = [],
 ) -> @remote_sensing.MultispectralImage {
   @remote_sensing.multispectral_new(width, height, bands, band_names~)
 }
@@ -5563,8 +5567,8 @@ pub fn true_color_composite(
 ///|
 pub fn vegetation_coverage(
   ndvi : @types.Image,
-  ndvi_soil? : Double = 0.2,
-  ndvi_veg? : Double = 0.8,
+  ndvi_soil~ : Double = 0.2,
+  ndvi_veg~ : Double = 0.8,
 ) -> @types.Image raise @types.LoadError {
   @remote_sensing.vegetation_coverage(ndvi, ndvi_soil~, ndvi_veg~)
 }
@@ -5599,7 +5603,7 @@ pub fn watermark_default_config() -> @watermark.WatermarkConfig {
 pub fn embed_watermark_lsb(
   cover : @types.Image,
   watermark : @types.Image,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> @types.Image {
   @watermark.embed_watermark_lsb(cover, watermark, key~)
 }
@@ -5613,7 +5617,7 @@ pub fn extract_watermark_lsb(stego : @types.Image) -> @types.Image {
 pub fn embed_text_watermark(
   cover : @types.Image,
   text : String,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> @types.Image {
   @watermark.embed_text_watermark(cover, text, key~)
 }
@@ -5621,8 +5625,8 @@ pub fn embed_text_watermark(
 ///|
 pub fn extract_text_watermark(
   stego : @types.Image,
-  length : Int,
-  key? : Int = 42,
+  length : Int32,
+  key~ : Int32 = 42,
 ) -> String {
   @watermark.extract_text_watermark(stego, length, key~)
 }
@@ -5639,7 +5643,7 @@ pub fn watermark_psnr(
 pub fn watermark_robustness_test(
   watermarked : @types.Image,
   original_watermark : @types.Image,
-  noise_level? : Double = 10.0,
+  noise_level~ : Double = 10.0,
 ) -> Double {
   @watermark.watermark_robustness_test(
     watermarked,
@@ -5652,7 +5656,7 @@ pub fn watermark_robustness_test(
 pub fn batch_embed_watermark(
   images : Array[@types.Image],
   watermark : @types.Image,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> Array[@types.Image] {
   @watermark.batch_embed_watermark(images, watermark, key~)
 }
@@ -5701,8 +5705,8 @@ pub fn database_remove_image(
 pub fn search_similar_images(
   db : @retrieval.ImageDatabase,
   query : @retrieval.ImageFeature,
-  top_k? : Int = 5,
-  method_type? : String = "cosine",
+  top_k~ : Int32 = 5,
+  method_type~ : String = "cosine",
 ) -> Array[@retrieval.SearchResult] {
   @retrieval.search_similar_images(db, query, top_k~, method_type~)
 }
@@ -5711,7 +5715,7 @@ pub fn search_similar_images(
 pub fn image_similarity(
   img1 : @types.Image,
   img2 : @types.Image,
-  method_type? : String = "cosine",
+  method_type~ : String = "cosine",
 ) -> Double {
   @retrieval.image_similarity(img1, img2, method_type~)
 }
@@ -5724,7 +5728,7 @@ pub fn batch_extract_features(
 }
 
 ///|
-pub fn database_size(db : @retrieval.ImageDatabase) -> Int {
+pub fn database_size(db : @retrieval.ImageDatabase) -> Int32 {
   @retrieval.database_size(db)
 }
 
@@ -5744,8 +5748,8 @@ pub fn encryption_default_config() -> @encryption.EncryptionConfig {
 ///|
 pub fn encrypt_image_logistic(
   img : @types.Image,
-  key? : Double = 0.123456789,
-  mu? : Double = 3.99,
+  key~ : Double = 0.123456789,
+  mu~ : Double = 3.99,
 ) -> @types.Image raise @types.LoadError {
   @encryption.encrypt_image_logistic(img, key~, mu~)
 }
@@ -5753,8 +5757,8 @@ pub fn encrypt_image_logistic(
 ///|
 pub fn decrypt_image_logistic(
   img : @types.Image,
-  key? : Double = 0.123456789,
-  mu? : Double = 3.99,
+  key~ : Double = 0.123456789,
+  mu~ : Double = 3.99,
 ) -> @types.Image raise @types.LoadError {
   @encryption.decrypt_image_logistic(img, key~, mu~)
 }
@@ -5783,7 +5787,7 @@ pub fn histogram_entropy(img : @types.Image) -> Double raise @types.LoadError {
 ///|
 pub fn adjacent_correlation(
   img : @types.Image,
-  direction? : String = "horizontal",
+  direction~ : String = "horizontal",
 ) -> Double raise @types.LoadError {
   @encryption.adjacent_correlation(img, direction~)
 }
@@ -5800,7 +5804,7 @@ pub fn evaluate_encryption_quality(
 pub fn key_sensitivity_test(
   img : @types.Image,
   key : Double,
-  delta? : Double = 0.0000001,
+  delta~ : Double = 0.0000001,
 ) -> Double raise @types.LoadError {
   @encryption.key_sensitivity_test(img, key, delta~)
 }
@@ -5837,8 +5841,8 @@ pub fn low_light_enhance(
 ///|
 pub fn deblur_motion(
   img : @types.Image,
-  kernel_size? : Int = 15,
-  angle? : Double = 0.0,
+  kernel_size~ : Int32 = 15,
+  angle~ : Double = 0.0,
 ) -> @types.Image {
   @photo_enhance.deblur_motion(img, kernel_size~, angle~)
 }
@@ -5846,8 +5850,8 @@ pub fn deblur_motion(
 ///|
 pub fn color_enhance(
   img : @types.Image,
-  saturation? : Double = 1.3,
-  contrast? : Double = 1.1,
+  saturation~ : Double = 1.3,
+  contrast~ : Double = 1.1,
 ) -> @types.Image {
   @photo_enhance.color_enhance(img, saturation~, contrast~)
 }
@@ -5855,8 +5859,8 @@ pub fn color_enhance(
 ///|
 pub fn clahe_enhance(
   img : @types.Image,
-  clip_limit? : Double = 2.0,
-  tile_size? : Int = 8,
+  clip_limit~ : Double = 2.0,
+  tile_size~ : Int32 = 8,
 ) -> @types.Image {
   @photo_enhance.clahe_enhance(img, clip_limit~, tile_size~)
 }
@@ -5974,7 +5978,7 @@ pub fn recognize_symbols_markdown(text : String) -> Array[@ocr.MarkdownSymbol] {
 ///|
 pub fn detect_image_regions_markdown(
   binary_img : @types.Image,
-  min_area? : Int = 500,
+  min_area~ : Int32 = 500,
 ) -> Array[@ocr.MarkdownImage] raise @types.LoadError {
   @ocr.detect_image_regions_markdown(binary_img, min_area~)
 }
@@ -5982,7 +5986,7 @@ pub fn detect_image_regions_markdown(
 ///|
 pub fn classify_markdown_element(
   block : @ocr.TextBlock,
-  avg_font_size? : Double = 16.0,
+  avg_font_size~ : Double = 16.0,
 ) -> @ocr.MarkdownElementType {
   @ocr.classify_markdown_element(block, avg_font_size~)
 }
@@ -5995,7 +5999,7 @@ pub fn markdown_table_to_string(table : @ocr.MarkdownTable) -> String {
 ///|
 pub fn determine_reading_order_markdown(
   elements : Array[@ocr.MarkdownElement],
-) -> Array[Int] {
+) -> Array[Int32] {
   @ocr.determine_reading_order_markdown(elements)
 }
 
@@ -6018,7 +6022,7 @@ pub fn build_markdown_document(
 ///|
 pub fn generate_markdown_image_placeholder(
   image : @ocr.MarkdownImage,
-  index : Int,
+  index : Int32,
 ) -> String {
   @ocr.generate_markdown_image_placeholder(image, index)
 }
@@ -6026,7 +6030,7 @@ pub fn generate_markdown_image_placeholder(
 ///|
 pub fn analyze_markdown_element_distribution(
   doc : @ocr.MarkdownDocument,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   @ocr.analyze_markdown_element_distribution(doc)
 }
 
@@ -6059,8 +6063,8 @@ pub type EnhancedDocument = @ocr.EnhancedDocument
 ///|
 pub fn detect_layout_type(
   text_lines : Array[@ocr.TextLineAttributes],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> @ocr.LayoutType raise @types.LoadError {
   @ocr.detect_layout_type(text_lines, page_width, page_height)
 }
@@ -6068,17 +6072,17 @@ pub fn detect_layout_type(
 ///|
 pub fn detect_header_footer(
   text_lines : Array[@ocr.TextLineAttributes],
-  page_height : Int,
-) -> (Int, Int) raise @types.LoadError {
+  page_height : Int32,
+) -> (Int32, Int32) raise @types.LoadError {
   @ocr.detect_header_footer(text_lines, page_height)
 }
 
 ///|
 pub fn detect_column_boundaries(
   text_lines : Array[@ocr.TextLineAttributes],
-  page_width : Int,
+  page_width : Int32,
   layout_type : @ocr.LayoutType,
-) -> Array[Int] {
+) -> Array[Int32] {
   @ocr.detect_column_boundaries(text_lines, page_width, layout_type)
 }
 
@@ -6086,7 +6090,7 @@ pub fn detect_column_boundaries(
 pub fn is_heading_line(
   line : @ocr.TextLineAttributes,
   avg_font_size : Double,
-) -> (Bool, Int) {
+) -> (Bool, Int32) {
   @ocr.is_heading_line(line, avg_font_size)
 }
 
@@ -6098,13 +6102,13 @@ pub fn detect_list_item(line : @ocr.TextLineAttributes) -> @ocr.ListItemInfo {
 ///|
 pub fn is_code_block_line(
   line : @ocr.TextLineAttributes,
-  avg_indent : Int,
+  avg_indent : Int32,
 ) -> Bool {
   @ocr.is_code_block_line(line, avg_indent)
 }
 
 ///|
-pub fn is_quote_line(line : @ocr.TextLineAttributes, avg_x : Int) -> Bool {
+pub fn is_quote_line(line : @ocr.TextLineAttributes, avg_x : Int32) -> Bool {
   @ocr.is_quote_line(line, avg_x)
 }
 
@@ -6119,16 +6123,16 @@ pub fn segment_paragraphs(
 pub fn smart_reading_order(
   elements : Array[@ocr.EnhancedDocumentElement],
   layout_type : @ocr.LayoutType,
-  column_boundaries : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  column_boundaries : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   @ocr.smart_reading_order(elements, layout_type, column_boundaries)
 }
 
 ///|
 pub fn build_enhanced_elements(
   lines : Array[@ocr.TextLineAttributes],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> @ocr.EnhancedDocument raise @types.LoadError {
   @ocr.build_enhanced_elements(lines, page_width, page_height)
 }
@@ -6136,7 +6140,7 @@ pub fn build_enhanced_elements(
 ///|
 pub fn enhanced_document_to_markdown(
   doc : @ocr.EnhancedDocument,
-  include_header_footer? : Bool = false,
+  include_header_footer~ : Bool = false,
 ) -> String {
   @ocr.enhanced_document_to_markdown(doc, include_header_footer~)
 }
@@ -6144,7 +6148,7 @@ pub fn enhanced_document_to_markdown(
 ///|
 pub fn enhanced_element_distribution(
   doc : @ocr.EnhancedDocument,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   @ocr.enhanced_element_distribution(doc)
 }
 
@@ -6165,33 +6169,33 @@ pub type ExtractedImage = @ocr.ExtractedImage
 ///|
 pub fn detect_horizontal_table_lines(
   binary_img : @types.Image,
-  min_length? : Int = 50,
-  max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  min_length~ : Int32 = 50,
+  max_gap~ : Int32 = 3,
+) -> Array[(Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.detect_horizontal_table_lines(binary_img, min_length~, max_gap~)
 }
 
 ///|
 pub fn detect_vertical_table_lines(
   binary_img : @types.Image,
-  min_length? : Int = 50,
-  max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  min_length~ : Int32 = 50,
+  max_gap~ : Int32 = 3,
+) -> Array[(Int32, Int32, Int32)] raise @types.LoadError {
   @ocr.detect_vertical_table_lines(binary_img, min_length~, max_gap~)
 }
 
 ///|
 pub fn find_line_intersections(
-  h_lines : Array[(Int, Int, Int)],
-  v_lines : Array[(Int, Int, Int)],
-) -> Array[(Int, Int)] {
+  h_lines : Array[(Int32, Int32, Int32)],
+  v_lines : Array[(Int32, Int32, Int32)],
+) -> Array[(Int32, Int32)] {
   @ocr.find_line_intersections(h_lines, v_lines)
 }
 
 ///|
 pub fn detect_table_enhanced(
   binary_img : @types.Image,
-  min_table_size? : Int = 100,
+  min_table_size~ : Int32 = 100,
 ) -> Array[@ocr.EnhancedTableResult] raise @types.LoadError {
   @ocr.detect_table_enhanced(binary_img, min_table_size~)
 }
@@ -6204,7 +6208,7 @@ pub fn enhanced_table_to_markdown(table : @ocr.EnhancedTableResult) -> String {
 ///|
 pub fn extract_images_enhanced(
   binary_img : @types.Image,
-  min_area? : Int = 500,
+  min_area~ : Int32 = 500,
 ) -> Array[@ocr.ExtractedImage] {
   @ocr.extract_images_enhanced(binary_img, min_area~)
 }
@@ -6219,7 +6223,7 @@ pub fn generate_image_extraction_report(
 ///|
 pub fn analyze_table_results(
   tables : Array[@ocr.EnhancedTableResult],
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   @ocr.analyze_table_results(tables)
 }
 
@@ -6260,7 +6264,7 @@ pub fn calculate_word_accuracy(expected : String, actual : String) -> Double {
 }
 
 ///|
-pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int {
+pub fn calculate_edit_distance(s1 : String, s2 : String) -> Int32 {
   @ocr.calculate_edit_distance(s1, s2)
 }
 
@@ -6291,9 +6295,9 @@ pub fn generate_performance_report(
 ///|
 pub fn check_accuracy_threshold(
   stats : @ocr.AccuracyStats,
-  min_char_accuracy? : Double = 0.95,
-  min_word_accuracy? : Double = 0.90,
-  min_f1_score? : Double = 0.92,
+  min_char_accuracy~ : Double = 0.95,
+  min_word_accuracy~ : Double = 0.90,
+  min_f1_score~ : Double = 0.92,
 ) -> (Bool, Array[String]) raise @types.LoadError {
   @ocr.check_accuracy_threshold(
     stats,
@@ -6344,7 +6348,7 @@ pub fn correct_common_patterns(text : String) -> @ocr.CorrectionResult {
 ///|
 pub fn full_postprocess_correction(
   text : String,
-  context_type? : String = "mixed",
+  context_type~ : String = "mixed",
 ) -> @ocr.CorrectionResult raise @types.LoadError {
   @ocr.full_postprocess_correction(text, context_type~)
 }
@@ -6352,7 +6356,7 @@ pub fn full_postprocess_correction(
 ///|
 pub fn batch_correct_texts(
   texts : Array[String],
-  context_type? : String = "mixed",
+  context_type~ : String = "mixed",
 ) -> Array[@ocr.CorrectionResult] raise @types.LoadError {
   @ocr.batch_correct_texts(texts, context_type~)
 }
@@ -6433,7 +6437,7 @@ pub fn calculate_chinese_similarity(
 pub fn find_similar_chinese_chars(
   dict : @ocr.DictChineseDict,
   target_char : String,
-  top_n? : Int = 5,
+  top_n~ : Int32 = 5,
 ) -> Array[@ocr.DictCharMatch] raise @types.LoadError {
   @ocr.find_similar_chinese_chars(dict, target_char, top_n~)
 }
@@ -6451,7 +6455,7 @@ pub fn recognize_by_components(
   dict : @ocr.DictChineseDict,
   detected_structure : @ocr.DictCharStructure,
   detected_components : Array[String],
-  stroke_count_hint? : Int = 0,
+  stroke_count_hint~ : Int32 = 0,
 ) -> Array[(String, Double)] {
   @ocr.recognize_by_components(
     dict,
@@ -6515,8 +6519,8 @@ pub fn detect_distortions(
 ///|
 pub fn analyze_complex_layout(
   text_blocks : Array[@ocr.TextBlock],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> @ocr.ComplexLayoutAnalysis {
   @ocr.analyze_complex_layout(text_blocks, page_width, page_height)
 }
@@ -6573,8 +6577,8 @@ pub fn create_batch_tasks(
 pub fn update_task_progress(
   task : @ocr.BatchTask,
   progress : Double,
-  current_page : Int,
-  total_pages : Int,
+  current_page : Int32,
+  total_pages : Int32,
 ) -> @ocr.BatchTask {
   @ocr.update_task_progress(task, progress, current_page, total_pages)
 }
@@ -6582,7 +6586,7 @@ pub fn update_task_progress(
 ///|
 pub fn mark_task_completed(
   task : @ocr.BatchTask,
-  char_count : Int,
+  char_count : Int32,
   accuracy : Double,
   end_time : Double,
 ) -> @ocr.BatchTask {
@@ -6620,16 +6624,16 @@ pub fn batch_summary_to_string(summary : @ocr.BatchResultSummary) -> String {
 }
 
 ///|
-pub fn progress_bar_to_string(progress : Double, width? : Int = 30) -> String {
+pub fn progress_bar_to_string(progress : Double, width~ : Int32 = 30) -> String {
   @ocr.progress_bar_to_string(progress, width~)
 }
 
 ///|
 pub fn estimate_memory_usage(
-  image_count : Int,
-  image_width : Int,
-  image_height : Int,
-  channels : Int,
+  image_count : Int32,
+  image_width : Int32,
+  image_height : Int32,
+  channels : Int32,
 ) -> @ocr.MemoryUsageStats {
   @ocr.estimate_memory_usage(image_count, image_width, image_height, channels)
 }
@@ -6665,7 +6669,7 @@ pub type DLFeatureExtractor = @ocr.DLFeatureExtractor
 
 ///|
 pub fn create_default_char_cnn_config(
-  num_classes : Int,
+  num_classes : Int32,
 ) -> @ocr.DLCnnModelConfig {
   @ocr.create_default_char_cnn_config(num_classes)
 }
@@ -6674,7 +6678,7 @@ pub fn create_default_char_cnn_config(
 pub fn create_neural_layer(
   layer_type : @ocr.DLLayerType,
   name : String,
-  input_shape : Array[Int],
+  input_shape : Array[Int32],
 ) -> @ocr.DLNeuralLayer {
   @ocr.create_neural_layer(layer_type, name, input_shape)
 }
@@ -6691,8 +6695,8 @@ pub fn normalize_image(
 ///|
 pub fn resize_image_for_cnn(
   img : @types.Image,
-  target_width : Int,
-  target_height : Int,
+  target_width : Int32,
+  target_height : Int32,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.resize_image_for_cnn(img, target_width, target_height)
 }
@@ -6715,14 +6719,14 @@ pub fn softmax(logits : Array[Double]) -> Array[Double] {
 ///|
 pub fn conv2d(
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
   kernel : Array[Double],
-  out_c : Int,
-  k_size : Int,
-  stride : Int,
-  padding : Int,
+  out_c : Int32,
+  k_size : Int32,
+  stride : Int32,
+  padding : Int32,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.conv2d(input, in_h, in_w, in_c, kernel, out_c, k_size, stride, padding)
 }
@@ -6730,10 +6734,10 @@ pub fn conv2d(
 ///|
 pub fn max_pool2d(
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  channels : Int,
-  pool_size : Int,
+  in_h : Int32,
+  in_w : Int32,
+  channels : Int32,
+  pool_size : Int32,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.max_pool2d(input, in_h, in_w, channels, pool_size)
 }
@@ -6743,8 +6747,8 @@ pub fn dense_forward(
   input : Array[Double],
   weights : Array[Double],
   biases : Array[Double],
-  in_features : Int,
-  out_features : Int,
+  in_features : Int32,
+  out_features : Int32,
   activation : String,
 ) -> Array[Double] {
   @ocr.dense_forward(
@@ -6764,20 +6768,20 @@ pub fn cnn_infer(
 ///|
 pub fn create_training_sample(
   img : @types.Image,
-  label : Int,
+  label : Int32,
   label_text : String,
 ) -> @ocr.DLTrainingSample raise @types.LoadError {
   @ocr.create_training_sample(img, label, label_text)
 }
 
 ///|
-pub fn cross_entropy_loss(predicted : Array[Double], target : Int) -> Double {
+pub fn cross_entropy_loss(predicted : Array[Double], target : Int32) -> Double {
   @ocr.cross_entropy_loss(predicted, target)
 }
 
 ///|
 pub fn create_training_history(
-  epoch : Int,
+  epoch : Int32,
   train_loss : Double,
   train_accuracy : Double,
   val_loss : Double,
@@ -6815,7 +6819,7 @@ pub fn load_model(path : String) -> @ocr.DLCnnModelConfig? {
 ///|
 pub fn create_feature_extractor(
   model_name : String,
-  feature_dim : Int,
+  feature_dim : Int32,
 ) -> @ocr.DLFeatureExtractor {
   @ocr.create_feature_extractor(model_name, feature_dim)
 }
@@ -6857,7 +6861,7 @@ pub fn sigmoid_backward(
 ///|
 pub fn softmax_cross_entropy_backward(
   predicted : Array[Double],
-  target : Int,
+  target : Int32,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.softmax_cross_entropy_backward(predicted, target)
 }
@@ -6866,8 +6870,8 @@ pub fn softmax_cross_entropy_backward(
 pub fn dense_backward(
   grad_output : Array[Double],
   weights : Array[Double],
-  in_features : Int,
-  out_features : Int,
+  in_features : Int32,
+  out_features : Int32,
 ) -> (Array[Double], Array[Double], Array[Double]) {
   @ocr.dense_backward(grad_output, weights, in_features, out_features)
 }
@@ -6876,10 +6880,10 @@ pub fn dense_backward(
 pub fn max_pool2d_backward(
   grad_output : Array[Double],
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  pool_size : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  pool_size : Int32,
 ) -> Array[Double] {
   @ocr.max_pool2d_backward(grad_output, input, in_h, in_w, in_c, pool_size)
 }
@@ -6896,17 +6900,17 @@ pub fn update_weights_sgd(
 ///|
 pub fn cnn_train_step(
   input : Array[Double],
-  target : Int,
+  target : Int32,
   conv_weights : Array[Double],
   conv_bias : Array[Double],
   dense_weights : Array[Double],
   dense_bias : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  conv_out_c : Int,
-  k_size : Int,
-  num_classes : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  conv_out_c : Int32,
+  k_size : Int32,
+  num_classes : Int32,
   learning_rate : Double,
 ) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError {
   @ocr.cnn_train_step(
@@ -6922,14 +6926,14 @@ pub fn cnn_train(
   conv_bias : Array[Double],
   dense_weights : Array[Double],
   dense_bias : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  conv_out_c : Int,
-  k_size : Int,
-  num_classes : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  conv_out_c : Int32,
+  k_size : Int32,
+  num_classes : Int32,
   learning_rate : Double,
-  epochs : Int,
+  epochs : Int32,
 ) -> (
   Array[Double],
   Array[Double],
@@ -6982,7 +6986,7 @@ pub fn cnn_confusion_matrix(
   test_samples : Array[@ocr.DLTrainingSample],
   config : @ocr.DLCnnModelConfig,
   labels : Array[String],
-) -> Array[Array[Int]] raise @types.LoadError {
+) -> Array[Array[Int32]] raise @types.LoadError {
   @ocr.cnn_confusion_matrix(test_samples, config, labels)
 }
 
@@ -7026,7 +7030,7 @@ pub fn create_default_training_config() -> @ocr.TrainingConfig {
 ///|
 pub fn create_data_loader(
   samples : Array[@ocr.DLTrainingSample],
-  batch_size : Int,
+  batch_size : Int32,
   shuffle : Bool,
 ) -> @ocr.DataLoader raise @types.LoadError {
   @ocr.create_data_loader(samples, batch_size, shuffle)
@@ -7042,7 +7046,7 @@ pub fn next_batch(
 ///|
 pub fn calculate_learning_rate(
   config : @ocr.LRSchedulerConfig,
-  epoch : Int,
+  epoch : Int32,
   current_lr : Double,
   val_loss : Double,
 ) -> Double raise @types.LoadError {
@@ -7091,8 +7095,8 @@ pub fn apply_augmentation(
 
 ///|
 pub fn calculate_accuracy(
-  predictions : Array[Int],
-  labels : Array[Int],
+  predictions : Array[Int32],
+  labels : Array[Int32],
 ) -> Double {
   @ocr.calculate_accuracy(predictions, labels)
 }
@@ -7138,16 +7142,16 @@ pub fn split_train_validation(
 
 ///|
 pub fn compute_confusion_matrix(
-  predictions : Array[Int],
-  labels : Array[Int],
-  num_classes : Int,
-) -> Array[Array[Int]] {
+  predictions : Array[Int32],
+  labels : Array[Int32],
+  num_classes : Int32,
+) -> Array[Array[Int32]] {
   @ocr.compute_confusion_matrix(predictions, labels, num_classes)
 }
 
 ///|
 pub fn compute_per_class_accuracy(
-  confusion_matrix : Array[Array[Int]],
+  confusion_matrix : Array[Array[Int32]],
 ) -> Array[Double] {
   @ocr.compute_per_class_accuracy(confusion_matrix)
 }
@@ -7155,19 +7159,19 @@ pub fn compute_per_class_accuracy(
 // ==================== OCR 性能优化（v13.5.0） ====================
 
 ///|
-pub fn build_grayscale_lut() -> Array[Int] {
+pub fn build_grayscale_lut() -> Array[Int32] {
   @ocr.build_grayscale_lut()
 }
 
 ///|
-pub fn build_threshold_lut(threshold : Int) -> Array[Int] {
+pub fn build_threshold_lut(threshold : Int32) -> Array[Int32] {
   @ocr.build_threshold_lut(threshold)
 }
 
 ///|
 pub fn fast_threshold_lut(
   img : @types.Image,
-  lut : Array[Int],
+  lut : Array[Int32],
 ) -> @types.Image raise @types.LoadError {
   @ocr.fast_threshold_lut(img, lut)
 }
@@ -7175,33 +7179,33 @@ pub fn fast_threshold_lut(
 ///|
 pub fn cache_friendly_horizontal_projection(
   img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   @ocr.cache_friendly_horizontal_projection(img)
 }
 
 ///|
 pub fn cache_friendly_vertical_projection(
   img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   @ocr.cache_friendly_vertical_projection(img)
 }
 
 ///|
-pub fn unrolled_pixel_sum(img : @types.Image) -> Int raise @types.LoadError {
+pub fn unrolled_pixel_sum(img : @types.Image) -> Int32 raise @types.LoadError {
   @ocr.unrolled_pixel_sum(img)
 }
 
 ///|
 pub fn fast_connected_components(
   binary_img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   @ocr.fast_connected_components(binary_img)
 }
 
 ///|
 pub fn build_gaussian_kernel_lut(
   sigma : Double,
-  radius : Int,
+  radius : Int32,
 ) -> Array[Double] raise @types.LoadError {
   @ocr.build_gaussian_kernel_lut(sigma, radius)
 }
@@ -7226,7 +7230,7 @@ pub fn batch_recognize_chars(
 ///|
 pub fn ocr_pipeline_stats(
   img : @types.Image,
-) -> (Int, Int, Double) raise @types.LoadError {
+) -> (Int32, Int32, Double) raise @types.LoadError {
   @ocr.ocr_pipeline_stats(img)
 }
 
@@ -7354,7 +7358,7 @@ pub fn detect_handwriting_slant(
 ///|
 pub fn normalize_handwriting_size(
   img : @types.Image,
-  target_size : Int,
+  target_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   @ocr.normalize_handwriting_size(img, target_size)
 }
@@ -7456,7 +7460,7 @@ pub fn create_default_stabilization_config() -> @video.VideoStabilizationConfig 
 pub fn compute_frame_difference(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  threshold? : Double = 30.0,
+  threshold~ : Double = 30.0,
 ) -> Double {
   @video.compute_frame_difference(frame1, frame2, threshold~)
 }
@@ -7465,8 +7469,8 @@ pub fn compute_frame_difference(
 pub fn compute_optical_flow(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  block_size? : Int = 8,
-  search_range? : Int = 4,
+  block_size~ : Int32 = 8,
+  search_range~ : Int32 = 4,
 ) -> @video.OpticalFlowField {
   @video.compute_optical_flow(frame1, frame2, block_size~, search_range~)
 }
@@ -7474,10 +7478,10 @@ pub fn compute_optical_flow(
 ///|
 pub fn initialize_tracking(
   first_frame : @types.Image,
-  roi_x : Int,
-  roi_y : Int,
-  roi_width : Int,
-  roi_height : Int,
+  roi_x : Int32,
+  roi_y : Int32,
+  roi_width : Int32,
+  roi_height : Int32,
   label : String,
 ) -> @video.TrackedObject {
   @video.initialize_tracking(
@@ -7496,8 +7500,8 @@ pub fn update_tracking(
 ///|
 pub fn recognize_action(
   frames : Array[@types.Image],
-  start_frame : Int,
-  end_frame : Int,
+  start_frame : Int32,
+  end_frame : Int32,
 ) -> @video.ActionRecognitionResult {
   @video.recognize_action(frames, start_frame, end_frame)
 }
@@ -7506,7 +7510,7 @@ pub fn recognize_action(
 pub fn detect_scene_change(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  threshold? : Double = 0.3,
+  threshold~ : Double = 0.3,
 ) -> (Bool, Double) {
   @video.detect_scene_change(frame1, frame2, threshold~)
 }
@@ -7515,7 +7519,7 @@ pub fn detect_scene_change(
 pub fn extract_keyframes(
   frames : Array[@types.Image],
   fps : Double,
-  method_type? : String = "auto",
+  method_type~ : String = "auto",
 ) -> Array[@video.Keyframe] {
   @video.extract_keyframes(frames, fps, method_type~)
 }
@@ -7574,8 +7578,8 @@ pub fn create_default_panorama_config() -> @photo_enhance.PanoramaConfig {
 
 ///|
 pub fn create_default_dof_config(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @photo_enhance.DepthOfFieldConfig {
   @photo_enhance.create_default_dof_config(width, height)
 }
@@ -7680,7 +7684,7 @@ pub fn calculate_iou(
 pub fn non_max_suppression(
   boxes : Array[@detection.YoloBoundingBox],
   iou_threshold : Double,
-  max_detections : Int,
+  max_detections : Int32,
 ) -> Array[@detection.YoloBoundingBox] raise @types.LoadError {
   @detection.non_max_suppression(boxes, iou_threshold, max_detections)
 }
@@ -7704,7 +7708,7 @@ pub fn initialize_object_tracking(
 pub fn update_object_tracking(
   tracked_objects : Array[@detection.YoloTrackedObject],
   detection : @detection.YoloDetectionResult,
-  max_age : Int,
+  max_age : Int32,
 ) -> Array[@detection.YoloTrackedObject] raise @types.LoadError {
   @detection.update_object_tracking(tracked_objects, detection, max_age)
 }
@@ -7792,7 +7796,7 @@ pub fn kmeans_segmentation(
 ///|
 pub fn superpixel_segmentation(
   img : @types.Image,
-  num_superpixels : Int,
+  num_superpixels : Int32,
 ) -> @segmentation.SuperpixelResult raise @types.LoadError {
   @segmentation.superpixel_segmentation(img, num_superpixels)
 }
@@ -7808,10 +7812,10 @@ pub fn watershed_segmentation(
 ///|
 pub fn grabcut_segmentation(
   img : @types.Image,
-  rect_x : Int,
-  rect_y : Int,
-  rect_w : Int,
-  rect_h : Int,
+  rect_x : Int32,
+  rect_y : Int32,
+  rect_w : Int32,
+  rect_h : Int32,
   config : @segmentation.GrabCutConfig,
 ) -> @segmentation.SemanticSegmentationResult raise @types.LoadError {
   @segmentation.grabcut_segmentation(
@@ -7821,9 +7825,9 @@ pub fn grabcut_segmentation(
 
 ///|
 pub fn calculate_segmentation_metrics(
-  prediction : Array[Int],
-  ground_truth : Array[Int],
-  num_classes : Int,
+  prediction : Array[Int32],
+  ground_truth : Array[Int32],
+  num_classes : Int32,
 ) -> @segmentation.SegmentationMetrics {
   @segmentation.calculate_segmentation_metrics(
     prediction, ground_truth, num_classes,
@@ -7881,8 +7885,8 @@ pub fn create_default_stereo_config_3d() -> @stereo3d.StereoConfig3d {
 
 ///|
 pub fn create_default_camera_intrinsics_3d(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @stereo3d.CameraIntrinsics3d {
   @stereo3d.create_default_camera_intrinsics(width, height)
 }
@@ -7915,7 +7919,7 @@ pub fn voxel_downsample_3d(
 ///|
 pub fn statistical_outlier_removal_3d(
   cloud : @stereo3d.PointCloud3D,
-  mean_k : Int,
+  mean_k : Int32,
   std_ratio : Double,
 ) -> @stereo3d.PointCloud3D {
   @stereo3d.statistical_outlier_removal(cloud, mean_k, std_ratio)
@@ -7925,7 +7929,7 @@ pub fn statistical_outlier_removal_3d(
 pub fn icp_registration_3d(
   source : @stereo3d.PointCloud3D,
   target : @stereo3d.PointCloud3D,
-  max_iterations : Int,
+  max_iterations : Int32,
   tolerance : Double,
 ) -> @stereo3d.RegistrationResult3d {
   @stereo3d.icp_registration(source, target, max_iterations, tolerance)
@@ -8011,9 +8015,9 @@ pub fn medical_threshold_segmentation_medical(
 ///|
 pub fn region_growing_segmentation_medical(
   image : @medical.MedicalImage,
-  seed_x : Int,
-  seed_y : Int,
-  seed_z : Int,
+  seed_x : Int32,
+  seed_y : Int32,
+  seed_z : Int32,
   threshold : Double,
 ) -> Array[Bool] {
   @medical.region_growing_segmentation(image, seed_x, seed_y, seed_z, threshold)
@@ -8023,7 +8027,7 @@ pub fn region_growing_segmentation_medical(
 pub fn calculate_roi_stats_medical(
   image : @medical.MedicalImage,
   mask : Array[Bool],
-) -> (Double, Double, Int) {
+) -> (Double, Double, Int32) {
   @medical.calculate_roi_stats(image, mask)
 }
 
@@ -8040,7 +8044,7 @@ pub fn detect_lesions_simple_medical(
 pub fn medical_image_registration_medical(
   fixed : @medical.MedicalImage,
   moving : @medical.MedicalImage,
-  max_iterations : Int,
+  max_iterations : Int32,
 ) -> @medical.MedicalRegistrationResult {
   @medical.medical_image_registration(fixed, moving, max_iterations)
 }
@@ -8089,9 +8093,9 @@ pub type RemoteSensingQuality = @remote_sensing.RemoteSensingQuality
 
 ///|
 pub fn create_default_remote_sensing_image(
-  width : Int,
-  height : Int,
-  bands : Int,
+  width : Int32,
+  height : Int32,
+  bands : Int32,
 ) -> @remote_sensing.RemoteSensingImage {
   @remote_sensing.create_default_remote_sensing_image(width, height, bands)
 }
@@ -8099,8 +8103,8 @@ pub fn create_default_remote_sensing_image(
 ///|
 pub fn calculate_ndvi_rs(
   image : @remote_sensing.RemoteSensingImage,
-  red_band : Int,
-  nir_band : Int,
+  red_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   @remote_sensing.calculate_ndvi(image, red_band, nir_band)
 }
@@ -8108,8 +8112,8 @@ pub fn calculate_ndvi_rs(
 ///|
 pub fn calculate_ndwi_rs(
   image : @remote_sensing.RemoteSensingImage,
-  green_band : Int,
-  nir_band : Int,
+  green_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   @remote_sensing.calculate_ndwi(image, green_band, nir_band)
 }
@@ -8117,8 +8121,8 @@ pub fn calculate_ndwi_rs(
 ///|
 pub fn calculate_ndbi_rs(
   image : @remote_sensing.RemoteSensingImage,
-  swir_band : Int,
-  nir_band : Int,
+  swir_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   @remote_sensing.calculate_ndbi(image, swir_band, nir_band)
 }
@@ -8149,9 +8153,9 @@ pub fn detect_changes_simple_rs(
 ///|
 pub fn calculate_texture_features_rs(
   image : @types.Image,
-  x : Int,
-  y : Int,
-  window_size : Int,
+  x : Int32,
+  y : Int32,
+  window_size : Int32,
 ) -> @remote_sensing.TextureFeatures raise @types.LoadError {
   @remote_sensing.calculate_texture_features(image, x, y, window_size)
 }
@@ -8159,8 +8163,8 @@ pub fn calculate_texture_features_rs(
 ///|
 pub fn calculate_spectral_signature_rs(
   image : @remote_sensing.RemoteSensingImage,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> @remote_sensing.SpectralSignature {
   @remote_sensing.calculate_spectral_signature(image, x, y)
 }
@@ -8256,7 +8260,7 @@ pub fn arnold_scramble_enc(
 pub fn embed_watermark_lsb_enc(
   img : @types.Image,
   watermark : Array[Byte],
-  strength : Int,
+  strength : Int32,
 ) -> (@types.Image, @encryption.WatermarkInfo) raise @types.LoadError {
   @encryption.embed_watermark_lsb(img, watermark, strength)
 }
@@ -8264,8 +8268,8 @@ pub fn embed_watermark_lsb_enc(
 ///|
 pub fn extract_watermark_lsb_enc(
   img : @types.Image,
-  watermark_length : Int,
-  strength : Int,
+  watermark_length : Int32,
+  strength : Int32,
 ) -> @encryption.WatermarkExtractionResult raise @types.LoadError {
   @encryption.extract_watermark_lsb(img, watermark_length, strength)
 }
@@ -8274,8 +8278,8 @@ pub fn extract_watermark_lsb_enc(
 pub fn embed_visible_watermark_enc(
   img : @types.Image,
   watermark_text : String,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   opacity : Double,
 ) -> @types.Image raise @types.LoadError {
   @encryption.embed_visible_watermark(img, watermark_text, x, y, opacity)
@@ -8450,7 +8454,7 @@ pub fn add_to_index_cbir(
 pub fn retrieve_images_cbir(
   query_feature : @retrieval.CBIRImageFeature,
   index : @retrieval.CBIRImageIndex,
-  num_results : Int,
+  num_results : Int32,
   metric : @retrieval.SimilarityMetric,
 ) -> @retrieval.CBIRRetrievalResultList {
   @retrieval.retrieve_images(query_feature, index, num_results, metric)
@@ -8514,8 +8518,8 @@ pub fn create_default_retrieval_config() -> @image_retrieval_advanced.ImageRetri
 ///|
 pub fn extract_features_advanced(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : @image_retrieval_advanced.ImageRetrievalConfig,
 ) -> @image_retrieval_advanced.FeatureExtractionResult {
   @image_retrieval_advanced.extract_features(image, width, height, config)
@@ -8533,8 +8537,8 @@ pub fn calculate_similarity_advanced(
 ///|
 pub fn retrieve_images_advanced(
   query_image : Array[Double],
-  query_width : Int,
-  query_height : Int,
+  query_width : Int32,
+  query_height : Int32,
   database_images : Array[Array[Double]],
   config : @image_retrieval_advanced.ImageRetrievalConfig,
 ) -> @image_retrieval_advanced.RetrievalResult {
@@ -8565,8 +8569,8 @@ pub fn expand_query_advanced(
 ///|
 pub fn relevance_feedback_advanced(
   original_query : Array[Double],
-  relevant_indices : Array[Int],
-  irrelevant_indices : Array[Int],
+  relevant_indices : Array[Int32],
+  irrelevant_indices : Array[Int32],
   database_features : Array[Array[Double]],
   config : @image_retrieval_advanced.ImageRetrievalConfig,
 ) -> @image_retrieval_advanced.RelevanceFeedbackResult {
@@ -8754,8 +8758,8 @@ pub fn cartoonize_st(
 ///|
 pub fn oil_painting_st(
   img : @types.Image,
-  radius : Int,
-  intensity_levels : Int,
+  radius : Int32,
+  intensity_levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   @style_transfer.oil_painting(img, radius, intensity_levels)
 }
@@ -8819,12 +8823,12 @@ pub fn create_default_inpainting_config_ip() -> @inpainting.InpaintingConfig {
 
 ///|
 pub fn create_rect_mask_ip(
-  width : Int,
-  height : Int,
-  x : Int,
-  y : Int,
-  rect_width : Int,
-  rect_height : Int,
+  width : Int32,
+  height : Int32,
+  x : Int32,
+  y : Int32,
+  rect_width : Int32,
+  rect_height : Int32,
 ) -> @types.Image {
   @inpainting.create_rect_mask(width, height, x, y, rect_width, rect_height)
 }
@@ -8833,7 +8837,7 @@ pub fn create_rect_mask_ip(
 pub fn inpaint_simple_ip(
   img : @types.Image,
   mask : @types.Image,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image {
   @inpainting.inpaint_simple(img, mask, radius)
 }
@@ -8842,7 +8846,7 @@ pub fn inpaint_simple_ip(
 pub fn inpaint_diffusion_ip(
   img : @types.Image,
   mask : @types.Image,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image {
   @inpainting.inpaint_diffusion(img, mask, radius)
 }
@@ -8869,7 +8873,7 @@ pub fn dehaze_dark_channel_ip(
 pub fn dehaze_clahe_ip(
   img : @types.Image,
   clip_limit : Double,
-  tile_size : Int,
+  tile_size : Int32,
 ) -> @types.Image {
   @inpainting.dehaze_clahe(img, clip_limit, tile_size)
 }
@@ -8961,7 +8965,7 @@ pub fn fuse_simple_mean_fe(images : Array[@types.Image]) -> @types.Image {
 ///|
 pub fn fuse_laplacian_pyramid_fe(
   images : Array[@types.Image],
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image {
   @fusion_enhanced.fuse_laplacian_pyramid(images, levels)
 }
@@ -8994,8 +8998,8 @@ pub fn register_images_fe(
 ///|
 pub fn apply_translation_fe(
   img : @types.Image,
-  dx : Int,
-  dy : Int,
+  dx : Int32,
+  dy : Int32,
 ) -> @types.Image {
   @fusion_enhanced.apply_translation(img, dx, dy)
 }
@@ -9220,7 +9224,7 @@ pub type CfaAnalysisResult = @forensics_enhanced.CfaAnalysisResult
 ///|
 pub fn analyze_ela_fe(
   img : @types.Image,
-  quality_level : Int,
+  quality_level : Int32,
 ) -> @forensics_enhanced.ElaAnalysisResult raise @types.LoadError {
   @forensics_enhanced.analyze_ela(img, quality_level)
 }
@@ -9242,7 +9246,7 @@ pub fn analyze_dct_coefficients_fe(
 ///|
 pub fn detect_clone_regions_fe(
   img : @types.Image,
-  block_size : Int,
+  block_size : Int32,
   threshold : Double,
 ) -> @forensics_enhanced.CloneDetectionResult raise @types.LoadError {
   @forensics_enhanced.detect_clone_regions(img, block_size, threshold)
@@ -9279,7 +9283,7 @@ pub fn analyze_cfa_pattern_fe(
 ///|
 pub fn detect_tamper_comprehensive_fe(
   img : @types.Image,
-  ela_quality : Int,
+  ela_quality : Int32,
 ) -> @forensics_enhanced.TamperDetectionResult raise @types.LoadError {
   @forensics_enhanced.detect_tamper_comprehensive(img, ela_quality)
 }
@@ -9332,7 +9336,7 @@ pub fn calculate_image_entropy_cp(
 ///|
 pub fn quantize_image_cp(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   @compression.quantize_image(img, levels)
 }
@@ -9344,17 +9348,17 @@ pub fn predictive_encode_cp(img : @types.Image) -> Bytes raise @types.LoadError 
 
 ///|
 pub fn calculate_compression_ratio_cp(
-  original_size : Int,
-  compressed_size : Int,
+  original_size : Int32,
+  compressed_size : Int32,
 ) -> Double {
   @compression.calculate_compression_ratio(original_size, compressed_size)
 }
 
 ///|
 pub fn calculate_bits_per_pixel_cp(
-  compressed_size : Int,
-  width : Int,
-  height : Int,
+  compressed_size : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Double {
   @compression.calculate_bits_per_pixel(compressed_size, width, height)
 }
@@ -9363,8 +9367,8 @@ pub fn calculate_bits_per_pixel_cp(
 pub fn calculate_compression_quality_cp(
   original : @types.Image,
   compressed : @types.Image,
-  original_size : Int,
-  compressed_size : Int,
+  original_size : Int32,
+  compressed_size : Int32,
 ) -> @compression.CompressionQualityMetrics raise @types.LoadError {
   @compression.calculate_compression_quality(
     original, compressed, original_size, compressed_size,
@@ -9430,7 +9434,7 @@ pub fn create_default_denoise_config_dn() -> @denoise.DenoiseConfig {
 ///|
 pub fn mean_filter_denoise_dn(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   @denoise.mean_filter_denoise(img, kernel_size)
 }
@@ -9438,7 +9442,7 @@ pub fn mean_filter_denoise_dn(
 ///|
 pub fn median_filter_denoise_dn(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   @denoise.median_filter_denoise(img, kernel_size)
 }
@@ -9446,7 +9450,7 @@ pub fn median_filter_denoise_dn(
 ///|
 pub fn gaussian_filter_denoise_dn(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
   sigma : Double,
 ) -> @types.Image raise @types.LoadError {
   @denoise.gaussian_filter_denoise(img, kernel_size, sigma)
@@ -9455,7 +9459,7 @@ pub fn gaussian_filter_denoise_dn(
 ///|
 pub fn bilateral_filter_denoise_dn(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
   sigma_color : Double,
   sigma_space : Double,
 ) -> @types.Image raise @types.LoadError {
@@ -9488,7 +9492,7 @@ pub fn gamma_correction_enhance_dn(
 pub fn unsharp_mask_enhance_dn(
   img : @types.Image,
   amount : Double,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image raise @types.LoadError {
   @denoise.unsharp_mask_enhance(img, amount, radius)
 }
@@ -9574,8 +9578,8 @@ pub fn phase_correlation_registration_ra(
 ///|
 pub fn apply_translation_ra(
   img : @types.Image,
-  dx : Int,
-  dy : Int,
+  dx : Int32,
+  dy : Int32,
 ) -> @types.Image {
   @registration_advanced.apply_translation(img, dx, dy)
 }
@@ -9687,7 +9691,7 @@ pub fn create_default_slam_config_sl() -> @slam.SLAMConfig {
 ///|
 pub fn detect_features_slam_sl(
   img : @types.Image,
-  max_features : Int,
+  max_features : Int32,
   threshold : Double,
 ) -> Array[Array[Double]] {
   @slam.detect_features_slam(img, max_features, threshold)
@@ -9698,7 +9702,7 @@ pub fn track_features_slam_sl(
   prev_img : @types.Image,
   curr_img : @types.Image,
   prev_features : Array[Array[Double]],
-  search_radius : Int,
+  search_radius : Int32,
 ) -> @slam.FeatureTrackingResult {
   @slam.track_features_slam(prev_img, curr_img, prev_features, search_radius)
 }
@@ -9798,7 +9802,7 @@ pub fn get_coco_keypoint_names_pe() -> Array[String] {
 }
 
 ///|
-pub fn get_coco_skeleton_connections_pe() -> Array[Array[Int]] {
+pub fn get_coco_skeleton_connections_pe() -> Array[Array[Int32]] {
   @pose_estimation.get_coco_skeleton_connections()
 }
 
@@ -9820,9 +9824,9 @@ pub fn extract_skeleton_pe(
 ///|
 pub fn calculate_joint_angle_pe(
   pose : @pose_estimation.HumanPose,
-  joint1 : Int,
-  joint_center : Int,
-  joint2 : Int,
+  joint1 : Int32,
+  joint_center : Int32,
+  joint2 : Int32,
 ) -> Double {
   @pose_estimation.calculate_joint_angle(pose, joint1, joint_center, joint2)
 }
@@ -10028,8 +10032,8 @@ pub fn create_default_editing_config_ig() -> @image_generation.EditingConfig {
 
 ///|
 pub fn generate_random_latent_ig(
-  dimension : Int,
-  seed : Int,
+  dimension : Int32,
+  seed : Int32,
 ) -> @image_generation.LatentVector {
   @image_generation.generate_random_latent(dimension, seed)
 }
@@ -10061,8 +10065,8 @@ pub fn inpaint_image_ig(
 ///|
 pub fn outpaint_image_ig(
   img : @types.Image,
-  new_width : Int,
-  new_height : Int,
+  new_width : Int32,
+  new_height : Int32,
   config : @image_generation.EditingConfig,
 ) -> @image_generation.EditingResult {
   @image_generation.outpaint_image(img, new_width, new_height, config)
@@ -10292,7 +10296,7 @@ pub fn render_gaussian_splatting_nr(
 
 ///|
 pub fn generate_sample_gaussians_nr(
-  num_gaussians : Int,
+  num_gaussians : Int32,
 ) -> Array[@neural_rendering.Gaussian3D] {
   @neural_rendering.generate_sample_gaussians(num_gaussians)
 }
@@ -10308,8 +10312,8 @@ pub fn multiview_stereo_reconstruction_nr(
 ///|
 pub fn visualize_point_cloud_nr(
   point_cloud : Array[@neural_rendering.Point3D],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image {
   @neural_rendering.visualize_point_cloud(point_cloud, width, height)
 }
@@ -10380,7 +10384,7 @@ pub fn create_default_phase_config_ci() -> @computational_imaging.PhaseRetrieval
 
 ///|
 pub fn create_default_coded_aperture_ci(
-  size : Int,
+  size : Int32,
 ) -> @computational_imaging.CodedAperturePattern {
   @computational_imaging.create_default_coded_aperture(size)
 }
@@ -10435,7 +10439,7 @@ pub fn reconstruct_hologram_ci(
 ///|
 pub fn ct_reconstruct_fbp_ci(
   projections : @computational_imaging.CTProjectionData,
-  output_size : Int,
+  output_size : Int32,
 ) -> @computational_imaging.ImagingReconstructionResult {
   @computational_imaging.ct_reconstruct_fbp(projections, output_size)
 }
@@ -10547,7 +10551,7 @@ pub fn diffusion_generate_vlm(
   prompt : String,
   negative_prompt : String,
   config : @vlm_multimodal.DiffusionConfig,
-  seed : Int,
+  seed : Int32,
 ) -> @vlm_multimodal.DiffusionResult {
   @vlm_multimodal.diffusion_generate(prompt, negative_prompt, config, seed)
 }
@@ -10556,7 +10560,7 @@ pub fn diffusion_generate_vlm(
 pub fn text_to_image_vlm(
   prompt : String,
   config : @vlm_multimodal.GenerativeAIConfig,
-  seed : Int,
+  seed : Int32,
 ) -> @vlm_multimodal.GenerativeAIResult {
   @vlm_multimodal.text_to_image(prompt, config, seed)
 }
@@ -10693,7 +10697,7 @@ pub fn detect_stars_iv(
 ///|
 pub fn intelligent_vision_report_to_string_iv(
   task_name : String,
-  num_results : Int,
+  num_results : Int32,
   avg_confidence : Double,
   config : @intelligent_vision.IntelligentVisionConfig,
 ) -> String {
@@ -10746,9 +10750,9 @@ pub fn create_default_advanced_imaging_config_ai(
 
 ///|
 pub fn quantum_ghost_imaging_ai(
-  num_patterns : Int,
-  width : Int,
-  height : Int,
+  num_patterns : Int32,
+  width : Int32,
+  height : Int32,
   algorithm : @advanced_imaging.QuantumImagingAlgorithm,
 ) -> @types.Image {
   @advanced_imaging.quantum_ghost_imaging(
@@ -10767,7 +10771,7 @@ pub fn infrared_pseudocolor_ai(
 ///|
 pub fn generate_hyperspectral_cube_ai(
   base_image : @types.Image,
-  num_bands : Int,
+  num_bands : Int32,
   start_wavelength : Double,
   end_wavelength : Double,
 ) -> @advanced_imaging.HyperspectralData {
@@ -10810,8 +10814,8 @@ pub fn xray_enhance_ai(
 
 ///|
 pub fn ultrasound_synthesize_ai(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   frequency_mhz : Double,
   depth_cm : Double,
 ) -> @advanced_imaging.UltrasoundData {
@@ -10822,8 +10826,8 @@ pub fn ultrasound_synthesize_ai(
 
 ///|
 pub fn mri_synthesize_ai(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   field_strength_t : Double,
 ) -> @advanced_imaging.MRIData {
   @advanced_imaging.mri_synthesize(width, height, field_strength_t)
@@ -10831,8 +10835,8 @@ pub fn mri_synthesize_ai(
 
 ///|
 pub fn pet_synthesize_ai(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   radiotracer : String,
 ) -> @advanced_imaging.PETData {
   @advanced_imaging.pet_synthesize(width, height, radiotracer)
@@ -10856,29 +10860,29 @@ pub let default_tile_config : () -> @performance.TileConfig = @performance.defau
 
 ///|
 pub fn num_tiles(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : @performance.TileConfig,
-) -> (Int, Int) {
+) -> (Int32, Int32) {
   @performance.num_tiles(width, height, config)
 }
 
 ///|
 pub fn tile_region(
-  tile_col : Int,
-  tile_row : Int,
+  tile_col : Int32,
+  tile_row : Int32,
   config : @performance.TileConfig,
-) -> (Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32) {
   @performance.tile_region(tile_col, tile_row, config)
 }
 
 ///|
 pub fn extract_tile(
   img : @types.Image,
-  x0 : Int,
-  y0 : Int,
-  tile_w : Int,
-  tile_h : Int,
+  x0 : Int32,
+  y0 : Int32,
+  tile_w : Int32,
+  tile_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   @performance.extract_tile(img, x0, y0, tile_w, tile_h)
 }
@@ -10887,8 +10891,8 @@ pub fn extract_tile(
 pub fn paste_tile(
   img : @types.Image,
   tile : @types.Image,
-  x0 : Int,
-  y0 : Int,
+  x0 : Int32,
+  y0 : Int32,
 ) -> @types.Image raise @types.LoadError {
   @performance.paste_tile(img, tile, x0, y0)
 }
@@ -10896,10 +10900,10 @@ pub fn paste_tile(
 ///|
 pub fn bulk_copy_4x(
   src : Bytes,
-  src_offset : Int,
+  src_offset : Int32,
   dst : Array[Byte],
-  dst_offset : Int,
-  len : Int,
+  dst_offset : Int32,
+  len : Int32,
 ) -> Unit {
   @performance.bulk_copy_4x(src, src_offset, dst, dst_offset, len)
 }
@@ -10907,8 +10911,8 @@ pub fn bulk_copy_4x(
 ///|
 pub fn bulk_fill_4x(
   dst : Array[Byte],
-  offset : Int,
-  len : Int,
+  offset : Int32,
+  len : Int32,
   value : Byte,
 ) -> Unit {
   @performance.bulk_fill_4x(dst, offset, len, value)
@@ -10942,7 +10946,7 @@ pub fn pipeline_describe(p : @pipeline.Pipeline) -> String {
 }
 
 ///|
-pub fn pipeline_len(p : @pipeline.Pipeline) -> Int {
+pub fn pipeline_len(p : @pipeline.Pipeline) -> Int32 {
   @pipeline.pipeline_len(p)
 }
 
@@ -10986,8 +10990,8 @@ pub type TensorField = @fieldimg.TensorField
 
 ///|
 pub fn scalar_field_make(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   data : Array[Float],
 ) -> ScalarField raise LoadError {
   @fieldimg.ScalarField::make(width, height, data)
@@ -10995,31 +10999,35 @@ pub fn scalar_field_make(
 
 ///|
 pub fn scalar_field_zeros(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> ScalarField raise LoadError {
   @fieldimg.ScalarField::zeros(width, height)
 }
 
 ///|
 pub fn scalar_field_constant(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   value : Float,
 ) -> ScalarField raise LoadError {
   @fieldimg.ScalarField::constant(width, height, value)
 }
 
 ///|
-pub fn scalar_field_evaluate(field : ScalarField, x : Int, y : Int) -> Float {
+pub fn scalar_field_evaluate(
+  field : ScalarField,
+  x : Int32,
+  y : Int32,
+) -> Float {
   @fieldimg.ScalarField::evaluate(field, x, y)
 }
 
 ///|
 pub fn scalar_field_evaluate_clamped(
   field : ScalarField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> Float {
   @fieldimg.ScalarField::evaluate_clamped(field, x, y)
 }
@@ -11027,15 +11035,15 @@ pub fn scalar_field_evaluate_clamped(
 ///|
 pub fn scalar_field_set(
   field : ScalarField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   value : Float,
 ) -> Unit {
   @fieldimg.ScalarField::set(field, x, y, value)
 }
 
 ///|
-pub fn scalar_field_size(field : ScalarField) -> Int {
+pub fn scalar_field_size(field : ScalarField) -> Int32 {
   @fieldimg.ScalarField::size(field)
 }
 
@@ -11053,9 +11061,9 @@ pub fn scalar_field_max_value(field : ScalarField) -> Float {
 
 ///|
 pub fn vector_field_make(
-  width : Int,
-  height : Int,
-  dim : Int,
+  width : Int32,
+  height : Int32,
+  dim : Int32,
   data : Array[Float],
 ) -> VectorField raise LoadError {
   @fieldimg.VectorField::make(width, height, dim, data)
@@ -11063,9 +11071,9 @@ pub fn vector_field_make(
 
 ///|
 pub fn vector_field_zeros(
-  width : Int,
-  height : Int,
-  dim : Int,
+  width : Int32,
+  height : Int32,
+  dim : Int32,
 ) -> VectorField raise LoadError {
   @fieldimg.VectorField::zeros(width, height, dim)
 }
@@ -11073,8 +11081,8 @@ pub fn vector_field_zeros(
 ///|
 pub fn vector_field_evaluate(
   field : VectorField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> Array[Float] {
   @fieldimg.VectorField::evaluate(field, x, y)
 }
@@ -11082,9 +11090,9 @@ pub fn vector_field_evaluate(
 ///|
 pub fn vector_field_evaluate_component(
   field : VectorField,
-  x : Int,
-  y : Int,
-  k : Int,
+  x : Int32,
+  y : Int32,
+  k : Int32,
 ) -> Float {
   @fieldimg.VectorField::evaluate_component(field, x, y, k)
 }
@@ -11092,9 +11100,9 @@ pub fn vector_field_evaluate_component(
 ///|
 pub fn vector_field_set_component(
   field : VectorField,
-  x : Int,
-  y : Int,
-  k : Int,
+  x : Int32,
+  y : Int32,
+  k : Int32,
   value : Float,
 ) -> Unit {
   @fieldimg.VectorField::set_component(field, x, y, k, value)
@@ -11111,10 +11119,10 @@ pub fn vector_field_magnitude(
 
 ///|
 pub fn tensor_field_make(
-  width : Int,
-  height : Int,
-  rows : Int,
-  cols : Int,
+  width : Int32,
+  height : Int32,
+  rows : Int32,
+  cols : Int32,
   data : Array[Float],
 ) -> TensorField raise LoadError {
   @fieldimg.TensorField::make(width, height, rows, cols, data)
@@ -11122,10 +11130,10 @@ pub fn tensor_field_make(
 
 ///|
 pub fn tensor_field_zeros(
-  width : Int,
-  height : Int,
-  rows : Int,
-  cols : Int,
+  width : Int32,
+  height : Int32,
+  rows : Int32,
+  cols : Int32,
 ) -> TensorField raise LoadError {
   @fieldimg.TensorField::zeros(width, height, rows, cols)
 }
@@ -11133,10 +11141,10 @@ pub fn tensor_field_zeros(
 ///|
 pub fn tensor_field_evaluate(
   field : TensorField,
-  x : Int,
-  y : Int,
-  r : Int,
-  c : Int,
+  x : Int32,
+  y : Int32,
+  r : Int32,
+  c : Int32,
 ) -> Float {
   @fieldimg.TensorField::evaluate(field, x, y, r, c)
 }
@@ -11144,10 +11152,10 @@ pub fn tensor_field_evaluate(
 ///|
 pub fn tensor_field_set(
   field : TensorField,
-  x : Int,
-  y : Int,
-  r : Int,
-  c : Int,
+  x : Int32,
+  y : Int32,
+  r : Int32,
+  c : Int32,
   value : Float,
 ) -> Unit {
   @fieldimg.TensorField::set(field, x, y, r, c, value)
@@ -11197,10 +11205,10 @@ pub fn field_integrate(field : ScalarField) -> Float {
 ///|
 pub fn field_integrate_region(
   field : ScalarField,
-  x0 : Int,
-  y0 : Int,
-  x1 : Int,
-  y1 : Int,
+  x0 : Int32,
+  y0 : Int32,
+  x1 : Int32,
+  y1 : Int32,
 ) -> Float {
   @fieldimg.field_integrate_region(field, x0, y0, x1, y1)
 }
@@ -11277,8 +11285,8 @@ pub fn field_histogram(
   field : ScalarField,
   min_val : Float,
   max_val : Float,
-  bins : Int,
-) -> Array[Int] raise LoadError {
+  bins : Int32,
+) -> Array[Int32] raise LoadError {
   @fieldimg.field_histogram(field, min_val, max_val, bins)
 }
 
@@ -11363,7 +11371,7 @@ pub fn timage_make(
 }
 
 ///|
-pub fn timage_frame_count(ti : TImage) -> Int {
+pub fn timage_frame_count(ti : TImage) -> Int32 {
   @spatiotemporal.TImage::frame_count(ti)
 }
 
@@ -11497,7 +11505,10 @@ pub fn st_subclip(
 }
 
 ///|
-pub fn st_extract_frame(timage : TImage, index : Int) -> Image raise LoadError {
+pub fn st_extract_frame(
+  timage : TImage,
+  index : Int32,
+) -> Image raise LoadError {
   @spatiotemporal.st_extract_frame(timage, index)
 }
 
@@ -11606,15 +11617,15 @@ pub fn ir_pipeline_add(pipeline : IRPipeline, op : IROp) -> IRPipeline {
 }
 
 ///|
-pub fn ir_pipeline_length(pipeline : IRPipeline) -> Int {
+pub fn ir_pipeline_length(pipeline : IRPipeline) -> Int32 {
   @imgir.IRPipeline::length(pipeline)
 }
 
 ///|
 pub fn ir_pipeline_resize(
   pipeline : IRPipeline,
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> IRPipeline {
   @imgir.IRPipeline::resize(pipeline, width, height)
 }
@@ -11637,10 +11648,10 @@ pub fn ir_pipeline_flip_v(pipeline : IRPipeline) -> IRPipeline {
 ///|
 pub fn ir_pipeline_crop(
   pipeline : IRPipeline,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> IRPipeline {
   @imgir.IRPipeline::crop(pipeline, x, y, width, height)
 }
@@ -11651,21 +11662,27 @@ pub fn ir_pipeline_to_gray(pipeline : IRPipeline) -> IRPipeline {
 }
 
 ///|
-pub fn ir_pipeline_brightness(pipeline : IRPipeline, delta : Int) -> IRPipeline {
+pub fn ir_pipeline_brightness(
+  pipeline : IRPipeline,
+  delta : Int32,
+) -> IRPipeline {
   @imgir.IRPipeline::brightness(pipeline, delta)
 }
 
 ///|
 pub fn ir_pipeline_gaussian_blur(
   pipeline : IRPipeline,
-  radius : Int,
+  radius : Int32,
   sigma : Float,
 ) -> IRPipeline {
   @imgir.IRPipeline::gaussian_blur(pipeline, radius, sigma)
 }
 
 ///|
-pub fn ir_pipeline_box_blur(pipeline : IRPipeline, radius : Int) -> IRPipeline {
+pub fn ir_pipeline_box_blur(
+  pipeline : IRPipeline,
+  radius : Int32,
+) -> IRPipeline {
   @imgir.IRPipeline::box_blur(pipeline, radius)
 }
 
@@ -11778,8 +11795,8 @@ pub fn ir_serialize_op(op : IROp, buf : Array[Byte]) -> Unit {
 ///|
 pub fn ir_deserialize_op(
   bytes : Bytes,
-  offset : Int,
-) -> (IROp, Int) raise LoadError {
+  offset : Int32,
+) -> (IROp, Int32) raise LoadError {
   @imgir.ir_deserialize_op(bytes, offset)
 }
 // =============================================================================
@@ -11816,9 +11833,9 @@ pub fn symbol_coord_make(
   pkg~ : String,
   name~ : String,
   kind~ : SymbolKind,
-  signature? : String = "",
-  doc? : String = "",
-  keywords? : Array[String] = [],
+  signature~ : String = "",
+  doc~ : String = "",
+  keywords~ : Array[String] = [],
 ) -> SymbolCoord {
   @aoci.SymbolCoord::make(pkg~, name~, kind~, signature~, doc~, keywords~)
 }
@@ -11834,7 +11851,7 @@ pub fn symbol_coord_has_keyword(sym : SymbolCoord, keyword : String) -> Bool {
 }
 
 ///|
-pub fn symbol_coord_estimated_tokens(sym : SymbolCoord) -> Int {
+pub fn symbol_coord_estimated_tokens(sym : SymbolCoord) -> Int32 {
   @aoci.SymbolCoord::estimated_tokens(sym)
 }
 
@@ -11846,14 +11863,14 @@ pub fn symbol_index_make(symbols : Array[SymbolCoord]) -> SymbolIndex {
 }
 
 ///|
-pub fn symbol_index_size(index : SymbolIndex) -> Int {
+pub fn symbol_index_size(index : SymbolIndex) -> Int32 {
   @aoci.SymbolIndex::size(index)
 }
 
 ///|
 pub fn symbol_index_get(
   index : SymbolIndex,
-  i : Int,
+  i : Int32,
 ) -> SymbolCoord raise Failure {
   @aoci.SymbolIndex::get(index, i)
 }
@@ -11891,7 +11908,7 @@ pub fn symbol_index_find_by_kind(
 }
 
 ///|
-pub fn symbol_index_total_tokens(index : SymbolIndex) -> Int {
+pub fn symbol_index_total_tokens(index : SymbolIndex) -> Int32 {
   @aoci.SymbolIndex::total_tokens(index)
 }
 
@@ -11907,9 +11924,9 @@ pub fn aoci_build_symbol(
   pkg~ : String,
   name~ : String,
   kind~ : SymbolKind,
-  signature? : String = "",
-  doc? : String = "",
-  keywords? : Array[String] = [],
+  signature~ : String = "",
+  doc~ : String = "",
+  keywords~ : Array[String] = [],
 ) -> SymbolCoord {
   @aoci.build_symbol(pkg~, name~, kind~, signature~, doc~, keywords~)
 }
@@ -11940,7 +11957,7 @@ pub fn aoci_route(index : SymbolIndex, query : String) -> Array[SymbolCoord] {
 pub fn aoci_route_top_k(
   index : SymbolIndex,
   query : String,
-  k : Int,
+  k : Int32,
 ) -> Array[SymbolCoord] {
   @aoci.route_top_k(index, query, k)
 }
@@ -11964,12 +11981,12 @@ pub fn aoci_route_by_kind(
 // --- ContextBudget 方法重导出 ---
 
 ///|
-pub fn context_budget_make(quota : Int) -> ContextBudget {
+pub fn context_budget_make(quota : Int32) -> ContextBudget {
   @aoci.ContextBudget::make(quota)
 }
 
 ///|
-pub fn context_budget_remaining(budget : ContextBudget) -> Int {
+pub fn context_budget_remaining(budget : ContextBudget) -> Int32 {
   @aoci.ContextBudget::remaining(budget)
 }
 
@@ -11982,7 +11999,7 @@ pub fn context_budget_is_exhausted(budget : ContextBudget) -> Bool {
 pub fn context_budget_add_partition(
   budget : ContextBudget,
   name : String,
-  quota : Int,
+  quota : Int32,
 ) -> ContextBudget {
   @aoci.ContextBudget::add_partition(budget, name, quota)
 }
@@ -11998,7 +12015,7 @@ pub fn context_budget_allocate(
 ///|
 pub fn context_budget_allocate_with_priority(
   budget : ContextBudget,
-  symbols : Array[(SymbolCoord, Int)],
+  symbols : Array[(SymbolCoord, Int32)],
 ) -> Array[SymbolCoord] {
   @aoci.ContextBudget::allocate_with_priority(budget, symbols)
 }
@@ -12013,7 +12030,7 @@ pub fn context_budget_usage_report(budget : ContextBudget) -> String {
 ///|
 pub fn verify_result_make(
   is_valid~ : Bool,
-  issues? : Array[String] = [],
+  issues~ : Array[String] = [],
 ) -> VerifyResult {
   @aoci.VerifyResult::make(is_valid~, issues~)
 }
@@ -12047,7 +12064,7 @@ pub fn aoci_verify_budget(
 ///|
 pub fn aoci_verify_all(
   index : SymbolIndex,
-  budget? : ContextBudget = @aoci.ContextBudget::make(1000000),
+  budget~ : ContextBudget = @aoci.ContextBudget::make(1000000),
 ) -> VerifyResult {
   @aoci.verify_all(index, budget~)
 }
@@ -12155,17 +12172,17 @@ pub type EvolveReport = @self_evolve.EvolveReport
 // --- EvolveReport 方法 ---
 
 ///|
-pub fn evolve_report_test_count(report : EvolveReport) -> Int {
+pub fn evolve_report_test_count(report : EvolveReport) -> Int32 {
   @self_evolve.EvolveReport::test_count(report)
 }
 
 ///|
-pub fn evolve_report_degradation_count(report : EvolveReport) -> Int {
+pub fn evolve_report_degradation_count(report : EvolveReport) -> Int32 {
   @self_evolve.EvolveReport::degradation_count(report)
 }
 
 ///|
-pub fn evolve_report_severe_count(report : EvolveReport) -> Int {
+pub fn evolve_report_severe_count(report : EvolveReport) -> Int32 {
   @self_evolve.EvolveReport::severe_count(report)
 }
 
@@ -12219,7 +12236,7 @@ pub fn evolve_filter_severity(
 ///|
 pub fn evolve_count_kind(
   cases : Array[DegradationCase],
-) -> Array[(DegradationKind, Int)] {
+) -> Array[(DegradationKind, Int32)] {
   @self_evolve.count_by_kind(cases)
 }
 
@@ -12253,7 +12270,7 @@ pub fn evolve_degradation_scan(ops : Array[IROp]) -> EvolveReport {
 ///|
 pub fn evolve_count_category(
   tests : Array[TestCase],
-) -> Array[(TestCategory, Int)] {
+) -> Array[(TestCategory, Int32)] {
   @self_evolve.count_by_category(tests)
 }
 // --- 算法优化 ---
@@ -12273,7 +12290,7 @@ pub fn optimize_report_is_reduced(report : OptimizationReport) -> Bool {
 }
 
 ///|
-pub fn optimize_report_reduction(report : OptimizationReport) -> Int {
+pub fn optimize_report_reduction(report : OptimizationReport) -> Int32 {
   @self_evolve.OptimizationReport::reduction(report)
 }
 
@@ -12298,7 +12315,7 @@ pub fn optimize_merge_ops(op1 : IROp, op2 : IROp) -> IROp {
 }
 
 ///|
-pub fn optimize_rotate90_identity(n : Int) -> Bool {
+pub fn optimize_rotate90_identity(n : Int32) -> Bool {
   @self_evolve.rotate90_power_is_identity(n)
 }
 
@@ -12318,7 +12335,7 @@ pub fn optimize_all(pipeline : IRPipeline) -> OptimizationReport {
 }
 
 ///|
-pub fn optimize_count(pipeline : IRPipeline) -> Int {
+pub fn optimize_count(pipeline : IRPipeline) -> Int32 {
   @self_evolve.optimized_op_count(pipeline)
 }
 // --- 性能回归检测 ---
@@ -12338,7 +12355,7 @@ pub fn perf_is_improvement(regression : PerfRegression) -> Bool {
 }
 
 ///|
-pub fn perf_improvement_pct(regression : PerfRegression) -> Int {
+pub fn perf_improvement_pct(regression : PerfRegression) -> Int32 {
   @self_evolve.PerfRegression::improvement_pct(regression)
 }
 
@@ -12395,7 +12412,7 @@ pub fn evolve_cycle_has_degradation_risk(report : EvolveCycleReport) -> Bool {
 }
 
 ///|
-pub fn evolve_cycle_safety_score(report : EvolveCycleReport) -> Int {
+pub fn evolve_cycle_safety_score(report : EvolveCycleReport) -> Int32 {
   @self_evolve.EvolveCycleReport::safety_score(report)
 }
 // self_evolve — grill-me 拷问引擎（v279.0.0）
@@ -12435,12 +12452,12 @@ pub fn grill_all_passed(report : GrillReport) -> Bool {
 }
 
 ///|
-pub fn grill_failed_count(report : GrillReport) -> Int {
+pub fn grill_failed_count(report : GrillReport) -> Int32 {
   @self_evolve.GrillReport::failed_count(report)
 }
 
 ///|
-pub fn grill_passed_count(report : GrillReport) -> Int {
+pub fn grill_passed_count(report : GrillReport) -> Int32 {
   @self_evolve.GrillReport::passed_count(report)
 }
 // self_evolve — Phase 4 综合报告（v280.0.0）
@@ -12457,17 +12474,17 @@ pub fn phase4_capabilities() -> Array[Phase4Capability] {
 }
 
 ///|
-pub fn phase4_total_types() -> Int {
+pub fn phase4_total_types() -> Int32 {
   @self_evolve.phase4_total_types()
 }
 
 ///|
-pub fn phase4_total_functions() -> Int {
+pub fn phase4_total_functions() -> Int32 {
   @self_evolve.phase4_total_functions()
 }
 
 ///|
-pub fn phase4_total_tests() -> Int {
+pub fn phase4_total_tests() -> Int32 {
   @self_evolve.phase4_total_tests()
 }
 
@@ -12514,7 +12531,7 @@ pub fn gen_test_file_for_all() -> Array[ExecutableTestFile] {
 }
 
 ///|
-pub fn exec_test_count(file : ExecutableTestFile) -> Int {
+pub fn exec_test_count(file : ExecutableTestFile) -> Int32 {
   @self_evolve.ExecutableTestFile::test_count(file)
 }
 
@@ -12556,7 +12573,7 @@ pub fn repair_is_fully_repaired(report : RepairReport) -> Bool {
 }
 
 ///|
-pub fn repair_count(report : RepairReport) -> Int {
+pub fn repair_count(report : RepairReport) -> Int32 {
   @self_evolve.RepairReport::repair_count(report)
 }
 // self_evolve — 管道优化执行（v283.0.0）
@@ -12585,7 +12602,7 @@ pub fn optimize_exec_is_significant(result : OptimizeExecResult) -> Bool {
 }
 
 ///|
-pub fn optimize_exec_efficiency_pct(result : OptimizeExecResult) -> Int {
+pub fn optimize_exec_efficiency_pct(result : OptimizeExecResult) -> Int32 {
   @self_evolve.OptimizeExecResult::efficiency_pct(result)
 }
 // self_evolve — 自演化 CI 集成（v284.0.0）
@@ -12614,7 +12631,7 @@ pub fn ci_regression_all_pass() -> Bool {
 }
 
 ///|
-pub fn ci_gate_pass_rate(result : CIGateResult) -> Int {
+pub fn ci_gate_pass_rate(result : CIGateResult) -> Int32 {
   @self_evolve.CIGateResult::pass_rate(result)
 }
 
@@ -12636,17 +12653,17 @@ pub fn phase5_capabilities() -> Array[Phase5Capability] {
 }
 
 ///|
-pub fn phase5_total_types() -> Int {
+pub fn phase5_total_types() -> Int32 {
   @self_evolve.phase5_total_types()
 }
 
 ///|
-pub fn phase5_total_functions() -> Int {
+pub fn phase5_total_functions() -> Int32 {
   @self_evolve.phase5_total_functions()
 }
 
 ///|
-pub fn phase5_total_tests() -> Int {
+pub fn phase5_total_tests() -> Int32 {
   @self_evolve.phase5_total_tests()
 }
 
@@ -12757,7 +12774,7 @@ pub fn combo_coverage_report() -> ComboCoverageReport {
 }
 
 ///|
-pub fn unique_combo_count() -> Int {
+pub fn unique_combo_count() -> Int32 {
   @self_evolve.unique_combo_count()
 }
 // self_evolve — 退化根因分析（v289.0.0）
@@ -12811,17 +12828,17 @@ pub fn phase6_capabilities() -> Array[Phase6Capability] {
 }
 
 ///|
-pub fn phase6_total_types() -> Int {
+pub fn phase6_total_types() -> Int32 {
   @self_evolve.phase6_total_types()
 }
 
 ///|
-pub fn phase6_total_functions() -> Int {
+pub fn phase6_total_functions() -> Int32 {
   @self_evolve.phase6_total_functions()
 }
 
 ///|
-pub fn phase6_total_tests() -> Int {
+pub fn phase6_total_tests() -> Int32 {
   @self_evolve.phase6_total_tests()
 }
 
@@ -12880,12 +12897,12 @@ pub type AdaptiveStrategy = @self_evolve.AdaptiveStrategy
 pub type AdaptiveReport = @self_evolve.AdaptiveReport
 
 ///|
-pub fn suggest_test_count(coverage : Int) -> Int {
+pub fn suggest_test_count(coverage : Int32) -> Int32 {
   @self_evolve.suggest_test_count(coverage)
 }
 
 ///|
-pub fn priority_from_coverage(coverage : Int) -> TestPriority {
+pub fn priority_from_coverage(coverage : Int32) -> TestPriority {
   @self_evolve.priority_from_coverage(coverage)
 }
 
@@ -12995,17 +13012,17 @@ pub fn phase7_capabilities() -> Array[Phase7Capability] {
 }
 
 ///|
-pub fn phase7_total_types() -> Int {
+pub fn phase7_total_types() -> Int32 {
   @self_evolve.phase7_total_types()
 }
 
 ///|
-pub fn phase7_total_functions() -> Int {
+pub fn phase7_total_functions() -> Int32 {
   @self_evolve.phase7_total_functions()
 }
 
 ///|
-pub fn phase7_total_tests() -> Int {
+pub fn phase7_total_tests() -> Int32 {
   @self_evolve.phase7_total_tests()
 }
 
@@ -13065,7 +13082,7 @@ pub type CoverageGap = @self_evolve.CoverageGap
 pub type CoverageGapReport = @self_evolve.CoverageGapReport
 
 ///|
-pub fn coverage_percentage(op : @imgir.IROp) -> Int {
+pub fn coverage_percentage(op : @imgir.IROp) -> Int32 {
   @self_evolve.coverage_percentage(op)
 }
 
@@ -13137,7 +13154,7 @@ pub fn find_redundant_ops(pipeline : @imgir.IRPipeline) -> Array[String] {
 }
 
 ///|
-pub fn estimate_benefit(pipeline : @imgir.IRPipeline) -> Int {
+pub fn estimate_benefit(pipeline : @imgir.IRPipeline) -> Int32 {
   @self_evolve.estimate_benefit(pipeline)
 }
 
@@ -13164,17 +13181,17 @@ pub fn phase8_capabilities() -> Array[Phase8Capability] {
 }
 
 ///|
-pub fn phase8_total_types() -> Int {
+pub fn phase8_total_types() -> Int32 {
   @self_evolve.phase8_total_types()
 }
 
 ///|
-pub fn phase8_total_functions() -> Int {
+pub fn phase8_total_functions() -> Int32 {
   @self_evolve.phase8_total_functions()
 }
 
 ///|
-pub fn phase8_total_tests() -> Int {
+pub fn phase8_total_tests() -> Int32 {
   @self_evolve.phase8_total_tests()
 }
 
@@ -13266,7 +13283,7 @@ pub fn score_all_ops() -> SmartPriorityReport {
 ///|
 pub fn smart_priority_report_top_priority(
   report : SmartPriorityReport,
-  n : Int,
+  n : Int32,
 ) -> Array[SmartScore] {
   @self_evolve.SmartPriorityReport::top_priority(report, n)
 }
@@ -13309,17 +13326,17 @@ pub fn phase9_capabilities() -> Array[Phase9Capability] {
 }
 
 ///|
-pub fn phase9_total_types() -> Int {
+pub fn phase9_total_types() -> Int32 {
   @self_evolve.phase9_total_types()
 }
 
 ///|
-pub fn phase9_total_functions() -> Int {
+pub fn phase9_total_functions() -> Int32 {
   @self_evolve.phase9_total_functions()
 }
 
 ///|
-pub fn phase9_total_tests() -> Int {
+pub fn phase9_total_tests() -> Int32 {
   @self_evolve.phase9_total_tests()
 }
 
@@ -13446,17 +13463,17 @@ pub fn phase10_capabilities() -> Array[Phase10Capability] {
 }
 
 ///|
-pub fn phase10_total_types() -> Int {
+pub fn phase10_total_types() -> Int32 {
   @self_evolve.phase10_total_types()
 }
 
 ///|
-pub fn phase10_total_functions() -> Int {
+pub fn phase10_total_functions() -> Int32 {
   @self_evolve.phase10_total_functions()
 }
 
 ///|
-pub fn phase10_total_tests() -> Int {
+pub fn phase10_total_tests() -> Int32 {
   @self_evolve.phase10_total_tests()
 }
 
@@ -13521,12 +13538,12 @@ pub fn knowledge_graph_find_fixes(
 }
 
 ///|
-pub fn knowledge_graph_node_count(graph : KnowledgeGraph) -> Int {
+pub fn knowledge_graph_node_count(graph : KnowledgeGraph) -> Int32 {
   @self_evolve.KnowledgeGraph::node_count(graph)
 }
 
 ///|
-pub fn knowledge_graph_edge_count(graph : KnowledgeGraph) -> Int {
+pub fn knowledge_graph_edge_count(graph : KnowledgeGraph) -> Int32 {
   @self_evolve.KnowledgeGraph::edge_count(graph)
 }
 
@@ -13572,7 +13589,7 @@ pub fn co_evolve_report_has_cascade(report : CoEvolveReport) -> Bool {
 }
 
 ///|
-pub fn co_evolve_report_total_actions(report : CoEvolveReport) -> Int {
+pub fn co_evolve_report_total_actions(report : CoEvolveReport) -> Int32 {
   @self_evolve.CoEvolveReport::total_actions(report)
 }
 // self_evolve — 演化质量评估（v313.0.0）
@@ -13605,7 +13622,7 @@ pub fn quality_report_is_passing(report : QualityReport) -> Bool {
 }
 
 ///|
-pub fn quality_report_dimension_count(report : QualityReport) -> Int {
+pub fn quality_report_dimension_count(report : QualityReport) -> Int32 {
   @self_evolve.QualityReport::dimension_count(report)
 }
 // self_evolve — 自演化 Meta（v314.0.0）
@@ -13635,7 +13652,7 @@ pub fn meta_report_has_changes(report : MetaReport) -> Bool {
 }
 
 ///|
-pub fn meta_report_strategy_count(report : MetaReport) -> Int {
+pub fn meta_report_strategy_count(report : MetaReport) -> Int32 {
   @self_evolve.MetaReport::strategy_count(report)
 }
 // self_evolve — Phase 11 综合报告（v315.0.0）
@@ -13652,17 +13669,17 @@ pub fn phase11_capabilities() -> Array[Phase11Capability] {
 }
 
 ///|
-pub fn phase11_total_types() -> Int {
+pub fn phase11_total_types() -> Int32 {
   @self_evolve.phase11_total_types()
 }
 
 ///|
-pub fn phase11_total_functions() -> Int {
+pub fn phase11_total_functions() -> Int32 {
   @self_evolve.phase11_total_functions()
 }
 
 ///|
-pub fn phase11_total_tests() -> Int {
+pub fn phase11_total_tests() -> Int32 {
   @self_evolve.phase11_total_tests()
 }
 
@@ -13689,7 +13706,7 @@ pub type FloatDescriptor = @cv_advanced.FloatDescriptor
 ///|
 pub fn detect_fast_corners(
   img : @types.Image,
-  threshold : Int,
+  threshold : Int32,
 ) -> Array[KeyPoint] {
   @cv_advanced.detect_fast_corners(img, threshold)
 }
@@ -13738,7 +13755,7 @@ pub fn compute_akaze_descriptors(
 pub fn feature_hamming_distance(
   d1 : BinaryDescriptor,
   d2 : BinaryDescriptor,
-) -> Int {
+) -> Int32 {
   @cv_advanced.hamming_distance(d1, d2)
 }
 
@@ -13777,7 +13794,7 @@ pub fn bf_match_float(
 pub fn knn_match_binary(
   query : Array[BinaryDescriptor],
   train : Array[BinaryDescriptor],
-  k : Int,
+  k : Int32,
 ) -> Array[Array[DMatch]] {
   @cv_advanced.knn_match_binary(query, train, k)
 }
@@ -13786,7 +13803,7 @@ pub fn knn_match_binary(
 pub fn knn_match_float(
   query : Array[FloatDescriptor],
   train : Array[FloatDescriptor],
-  k : Int,
+  k : Int32,
 ) -> Array[Array[DMatch]] {
   @cv_advanced.knn_match_float(query, train, k)
 }
@@ -13828,8 +13845,8 @@ pub type CalibrationResult = @cv_advanced.CalibrationResult
 ///|
 pub fn calibrate_camera(
   corners : ChessboardCorners,
-  image_width : Int,
-  image_height : Int,
+  image_width : Int32,
+  image_height : Int32,
 ) -> CalibrationResult {
   @cv_advanced.calibrate_camera(corners, image_width, image_height)
 }
@@ -13930,7 +13947,7 @@ pub fn triangulate_point(
 }
 
 ///|
-pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int {
+pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int32 {
   @cv_advanced.fundamental_matrix_rank(f)
 }
 
@@ -14013,7 +14030,7 @@ pub type FlowParams = @cv_advanced.FlowParams
 pub fn compute_lucas_kanade(
   prev : @types.Image,
   curr : @types.Image,
-  points : Array[(Int, Int)],
+  points : Array[(Int32, Int32)],
   params : FlowParams,
 ) -> FlowField {
   @cv_advanced.compute_lucas_kanade(prev, curr, points, params)
@@ -14224,7 +14241,7 @@ pub fn compute_motion_energy(motion : MotionMask) -> Double {
 }
 
 ///|
-pub fn motion_morphology(motion : MotionMask, iter_count : Int) -> MotionMask {
+pub fn motion_morphology(motion : MotionMask, iter_count : Int32) -> MotionMask {
   @cv_advanced.motion_morphology(motion, iter_count)
 }
 
@@ -14236,8 +14253,8 @@ pub fn motion_optical_flow(flow : FlowField, threshold : Double) -> MotionMask {
 ///|
 pub fn motion_density(
   motion : MotionMask,
-  grid_cols : Int,
-  grid_rows : Int,
+  grid_cols : Int32,
+  grid_rows : Int32,
 ) -> Array[Double] {
   @cv_advanced.motion_density(motion, grid_cols, grid_rows)
 }
@@ -14348,8 +14365,8 @@ pub fn process_keyframe(
   frontend : SlamFrontend,
   pose : SlamPose,
   timestamp : Double,
-  feature_count : Int,
-  matched_count : Int,
+  feature_count : Int32,
+  matched_count : Int32,
 ) -> SlamFrontend {
   @cv_advanced.process_keyframe(
     frontend, pose, timestamp, feature_count, matched_count,
@@ -14361,7 +14378,7 @@ pub fn track_keyframe(
   frontend : SlamFrontend,
   prev_pose : SlamPose,
   motion : (Double, Double, Double),
-  feature_count : Int,
+  feature_count : Int32,
   params : SlamFrontendParams,
 ) -> (SlamFrontend, Bool) {
   @cv_advanced.track_keyframe(
@@ -14432,7 +14449,7 @@ pub fn init_slam_backend() -> SlamBackend {
 pub fn add_map_point(
   backend : SlamBackend,
   position : Point3D,
-  observations : Int,
+  observations : Int32,
   quality : Double,
 ) -> SlamBackend {
   @cv_advanced.add_map_point(backend, position, observations, quality)
@@ -14480,7 +14497,7 @@ pub fn optimize_map(
 }
 
 ///|
-pub fn map_statistics(backend : SlamBackend) -> (Int, Int, Double) {
+pub fn map_statistics(backend : SlamBackend) -> (Int32, Int32, Double) {
   @cv_advanced.map_statistics(backend)
 }
 // cv_advanced — ORB-SLAM 核心（v328.0.0）
@@ -14506,7 +14523,7 @@ pub fn init_orb_slam(config : OrbSlamConfig) -> OrbSlamSystem {
 pub fn run_orb_slam(
   system : OrbSlamSystem,
   pose : SlamPose,
-  feature_count : Int,
+  feature_count : Int32,
   timestamp : Double,
 ) -> OrbSlamSystem {
   @cv_advanced.run_orb_slam(system, pose, feature_count, timestamp)
@@ -14620,17 +14637,17 @@ pub fn phase12_capabilities() -> Array[Phase12Capability] {
 }
 
 ///|
-pub fn phase12_total_types() -> Int {
+pub fn phase12_total_types() -> Int32 {
   @cv_advanced.phase12_total_types()
 }
 
 ///|
-pub fn phase12_total_functions() -> Int {
+pub fn phase12_total_functions() -> Int32 {
   @cv_advanced.phase12_total_functions()
 }
 
 ///|
-pub fn phase12_total_tests() -> Int {
+pub fn phase12_total_tests() -> Int32 {
   @cv_advanced.phase12_total_tests()
 }
 
@@ -14680,8 +14697,8 @@ pub fn depthwise_conv2d(
   weight : Array[Double],
   bias : Array[Double],
   params : DepthwiseConvParams,
-  input_w : Int,
-  input_h : Int,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   @cv_advanced.depthwise_conv2d(input, weight, bias, params, input_w, input_h)
 }
@@ -14691,12 +14708,12 @@ pub fn grouped_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  groups : Int,
-  kernel_size : Int,
-  input_w : Int,
-  input_h : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  groups : Int32,
+  kernel_size : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   @cv_advanced.grouped_conv2d(
     input, weight, bias, in_channels, out_channels, groups, kernel_size, input_w,
@@ -14709,10 +14726,10 @@ pub fn dilated_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Double,
-  kernel_size : Int,
-  dilation : Int,
-  input_w : Int,
-  input_h : Int,
+  kernel_size : Int32,
+  dilation : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   @cv_advanced.dilated_conv2d(
     input, weight, bias, kernel_size, dilation, input_w, input_h,
@@ -14724,12 +14741,12 @@ pub fn transpose_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  kernel_size : Int,
-  stride : Int,
-  input_w : Int,
-  input_h : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  kernel_size : Int32,
+  stride : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   @cv_advanced.transpose_conv2d(
     input, weight, bias, in_channels, out_channels, kernel_size, stride, input_w,
@@ -14799,7 +14816,7 @@ pub fn multi_head_attention(
 }
 
 ///|
-pub fn positional_encoding(seq_len : Int, d_model : Int) -> Array[Double] {
+pub fn positional_encoding(seq_len : Int32, d_model : Int32) -> Array[Double] {
   @cv_advanced.positional_encoding(seq_len, d_model)
 }
 
@@ -14832,8 +14849,8 @@ pub fn feed_forward(
   b1 : Array[Double],
   w2 : Array[Double],
   b2 : Array[Double],
-  d_model : Int,
-  d_ff : Int,
+  d_model : Int32,
+  d_ff : Int32,
 ) -> Array[Double] {
   @cv_advanced.feed_forward(input, w1, b1, w2, b2, d_model, d_ff)
 }
@@ -14910,8 +14927,8 @@ pub type QuantizedTensor = @cv_advanced.QuantizedTensor
 pub fn compute_quant_params(
   min_val : Double,
   max_val : Double,
-  bits : Int,
-) -> (Double, Int) {
+  bits : Int32,
+) -> (Double, Int32) {
   @cv_advanced.compute_quant_params(min_val, max_val, bits)
 }
 
@@ -14939,8 +14956,8 @@ pub fn dequantize(tensor : QuantizedTensor) -> Array[Double] {
 ///|
 pub fn quantize_per_channel(
   input : Array[Double],
-  num_channels : Int,
-  bits : Int,
+  num_channels : Int32,
+  bits : Int32,
 ) -> Array[QuantizedTensor] {
   @cv_advanced.quantize_per_channel(input, num_channels, bits)
 }
@@ -14989,7 +15006,7 @@ pub fn prune_unstructured(
 ///|
 pub fn prune_structured(
   weights : Array[Double],
-  block_size : Int,
+  block_size : Int32,
   config : PruningConfig,
 ) -> PruningResult {
   @cv_advanced.prune_structured(weights, block_size, config)
@@ -14998,7 +15015,7 @@ pub fn prune_structured(
 ///|
 pub fn prune_channels(
   weights : Array[Double],
-  num_channels : Int,
+  num_channels : Int32,
   config : PruningConfig,
 ) -> PruningResult {
   @cv_advanced.prune_channels(weights, num_channels, config)
@@ -15129,9 +15146,9 @@ pub fn stylegan_modulated_conv(
   weight : Array[Double],
   style : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  kernel_size : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  kernel_size : Int32,
 ) -> Array[Double] {
   @cv_advanced.stylegan_modulated_conv(
     input, weight, style, bias, in_channels, out_channels, kernel_size,
@@ -15142,7 +15159,7 @@ pub fn stylegan_modulated_conv(
 pub fn gan_generate_samples(
   weights : Array[Double],
   config : GANConfig,
-  num_samples : Int,
+  num_samples : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.gan_generate_samples(weights, config, num_samples)
 }
@@ -15209,8 +15226,8 @@ pub fn beta_vae_loss(
 pub fn vq_vae_quantize(
   z : Array[Double],
   codebook : Array[Double],
-  latent_dim : Int,
-) -> (Array[Double], Int) {
+  latent_dim : Int32,
+) -> (Array[Double], Int32) {
   @cv_advanced.vq_vae_quantize(z, codebook, latent_dim)
 }
 
@@ -15303,7 +15320,7 @@ pub type GNNResult = @cv_advanced.GNNResult
 pub fn graph_convolution(
   graph : GraphData,
   weight : Array[Double],
-  out_dim : Int,
+  out_dim : Int32,
 ) -> Array[Double] {
   @cv_advanced.graph_convolution(graph, weight, out_dim)
 }
@@ -15320,7 +15337,7 @@ pub fn gcn_forward(
 ///|
 pub fn aggregate_neighbors(
   graph : GraphData,
-  node_idx : Int,
+  node_idx : Int32,
   agg_type : GNNType,
 ) -> Array[Double] {
   @cv_advanced.aggregate_neighbors(graph, node_idx, agg_type)
@@ -15444,8 +15461,8 @@ pub fn reptile_update(
 ///|
 pub fn compute_prototypes(
   support_features : Array[Array[Double]],
-  support_labels : Array[Int],
-  num_classes : Int,
+  support_labels : Array[Int32],
+  num_classes : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.compute_prototypes(support_features, support_labels, num_classes)
 }
@@ -15454,7 +15471,7 @@ pub fn compute_prototypes(
 pub fn prototypical_loss(
   query_features : Array[Double],
   prototypes : Array[Array[Double]],
-) -> (Int, Double) {
+) -> (Int32, Double) {
   @cv_advanced.prototypical_loss(query_features, prototypes)
 }
 
@@ -15511,7 +15528,7 @@ pub fn federated_round(
   global_params : Array[Double],
   client_updates : Array[ClientUpdate],
   config : FederatedConfig,
-  current_round : Int,
+  current_round : Int32,
 ) -> FederatedState {
   @cv_advanced.federated_round(
     global_params, client_updates, config, current_round,
@@ -15552,7 +15569,7 @@ pub fn bayesian_optimize(
   objective : (Array[Double]) -> Double,
   search_space : Array[(Double, Double)],
   config : AutoMLConfig,
-  num_initial : Int,
+  num_initial : Int32,
 ) -> AutoMLResult {
   @cv_advanced.bayesian_optimize(objective, search_space, config, num_initial)
 }
@@ -15560,8 +15577,8 @@ pub fn bayesian_optimize(
 ///|
 pub fn nas_search(
   objective : (Array[Double]) -> Double,
-  max_layers : Int,
-  max_channels : Int,
+  max_layers : Int32,
+  max_channels : Int32,
   config : AutoMLConfig,
 ) -> AutoMLResult {
   @cv_advanced.nas_search(objective, max_layers, max_channels, config)
@@ -15570,7 +15587,7 @@ pub fn nas_search(
 ///|
 pub fn ensemble_select(
   model_scores : Array[TrialResult],
-  num_models : Int,
+  num_models : Int32,
 ) -> Array[TrialResult] {
   @cv_advanced.ensemble_select(model_scores, num_models)
 }
@@ -15587,17 +15604,17 @@ pub fn phase13_capabilities() -> Array[Phase13Capability] {
 }
 
 ///|
-pub fn phase13_total_types() -> Int {
+pub fn phase13_total_types() -> Int32 {
   @cv_advanced.phase13_total_types()
 }
 
 ///|
-pub fn phase13_total_functions() -> Int {
+pub fn phase13_total_functions() -> Int32 {
   @cv_advanced.phase13_total_functions()
 }
 
 ///|
-pub fn phase13_total_tests() -> Int {
+pub fn phase13_total_tests() -> Int32 {
   @cv_advanced.phase13_total_tests()
 }
 
@@ -15630,9 +15647,9 @@ pub fn parse_dicom_metadata(
   series_id : String,
   instance_id : String,
   modality : String,
-  rows : Int,
-  cols : Int,
-  bits_allocated : Int,
+  rows : Int32,
+  cols : Int32,
+  bits_allocated : Int32,
 ) -> DicomMetadata {
   @cv_advanced.parse_dicom_metadata(
     patient_id, study_id, series_id, instance_id, modality, rows, cols, bits_allocated,
@@ -15641,9 +15658,9 @@ pub fn parse_dicom_metadata(
 
 ///|
 pub fn extract_dicom_pixels(
-  raw_data : Array[Int],
-  rows : Int,
-  cols : Int,
+  raw_data : Array[Int32],
+  rows : Int32,
+  cols : Int32,
 ) -> Array[Double] {
   @cv_advanced.extract_dicom_pixels(raw_data, rows, cols)
 }
@@ -15665,7 +15682,7 @@ pub fn dicom_to_image(dicom : DicomImage) -> Array[Double] {
 ///|
 pub fn dicom_multiframe_extract(
   dicom : DicomImage,
-  frame_idx : Int,
+  frame_idx : Int32,
 ) -> Array[Double] {
   @cv_advanced.dicom_multiframe_extract(dicom, frame_idx)
 }
@@ -15691,14 +15708,14 @@ pub type CTConfig = @cv_advanced.CTConfig
 ///|
 pub fn ct_radon_transform(
   image : Array[Double],
-  image_size : Int,
+  image_size : Int32,
   angles : Array[Double],
 ) -> CTProjection {
   @cv_advanced.ct_radon_transform(image, image_size, angles)
 }
 
 ///|
-pub fn ct_ramp_filter(detector_count : Int, cutoff : Double) -> Array[Double] {
+pub fn ct_ramp_filter(detector_count : Int32, cutoff : Double) -> Array[Double] {
   @cv_advanced.ct_ramp_filter(detector_count, cutoff)
 }
 
@@ -15714,7 +15731,7 @@ pub fn ct_fbp_reconstruct(
 pub fn ct_art_reconstruct(
   projection : CTProjection,
   config : CTConfig,
-  num_iterations : Int,
+  num_iterations : Int32,
 ) -> Array[Double] {
   @cv_advanced.ct_art_reconstruct(projection, config, num_iterations)
 }
@@ -15723,7 +15740,7 @@ pub fn ct_art_reconstruct(
 pub fn ct_iterative_reconstruct(
   projection : CTProjection,
   config : CTConfig,
-  num_iterations : Int,
+  num_iterations : Int32,
 ) -> Array[Double] {
   @cv_advanced.ct_iterative_reconstruct(projection, config, num_iterations)
 }
@@ -15745,8 +15762,8 @@ pub fn mri_kspace_to_image(kspace : KSpaceData) -> Array[Double] {
 ///|
 pub fn mri_image_to_kspace(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> KSpaceData {
   @cv_advanced.mri_image_to_kspace(image, width, height)
 }
@@ -15755,8 +15772,8 @@ pub fn mri_image_to_kspace(
 pub fn mri_correct_bias_field(
   image : Array[Double],
   bias_field : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> Array[Double] {
   @cv_advanced.mri_correct_bias_field(image, bias_field, width, height)
 }
@@ -15764,8 +15781,8 @@ pub fn mri_correct_bias_field(
 ///|
 pub fn mri_correct_ghosting(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   ghost_phase : Double,
 ) -> Array[Double] {
   @cv_advanced.mri_correct_ghosting(image, width, height, ghost_phase)
@@ -15799,9 +15816,9 @@ pub type ElastographyResult = @cv_advanced.ElastographyResult
 ///|
 pub fn ultrasound_speckle_reduction(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  window_size : Int,
+  width : Int32,
+  height : Int32,
+  window_size : Int32,
 ) -> Array[Double] {
   @cv_advanced.ultrasound_speckle_reduction(image, width, height, window_size)
 }
@@ -15825,11 +15842,11 @@ pub fn ultrasound_log_compression(
 ///|
 pub fn ultrasound_scan_conversion(
   polar_data : Array[Double],
-  num_lines : Int,
-  num_samples : Int,
+  num_lines : Int32,
+  num_samples : Int32,
   max_depth : Double,
-  output_width : Int,
-  output_height : Int,
+  output_width : Int32,
+  output_height : Int32,
 ) -> Array[Double] {
   @cv_advanced.ultrasound_scan_conversion(
     polar_data, num_lines, num_samples, max_depth, output_width, output_height,
@@ -15840,9 +15857,9 @@ pub fn ultrasound_scan_conversion(
 pub fn ultrasound_elastography(
   pre_image : Array[Double],
   post_image : Array[Double],
-  width : Int,
-  height : Int,
-  window_size : Int,
+  width : Int32,
+  height : Int32,
+  window_size : Int32,
 ) -> ElastographyResult {
   @cv_advanced.ultrasound_elastography(
     pre_image, post_image, width, height, window_size,
@@ -15863,8 +15880,8 @@ pub fn ultrasound_doppler_shift(
 ///|
 pub fn ultrasound_time_gain_compensation(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   attenuation : Double,
 ) -> Array[Double] {
   @cv_advanced.ultrasound_time_gain_compensation(
@@ -15884,8 +15901,8 @@ pub type StainSeparation = @cv_advanced.StainSeparation
 ///|
 pub fn pathology_wsi_extract_tiles(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : WSIConfig,
 ) -> Array[Array[Double]] {
   @cv_advanced.pathology_wsi_extract_tiles(image, width, height, config)
@@ -15902,8 +15919,8 @@ pub fn pathology_wsi_stitch_tiles(
 ///|
 pub fn pathology_stain_normalize(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   target_stain : PathologyStain,
 ) -> Array[Double] {
   @cv_advanced.pathology_stain_normalize(image, width, height, target_stain)
@@ -15912,8 +15929,8 @@ pub fn pathology_stain_normalize(
 ///|
 pub fn pathology_stain_separation(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> StainSeparation {
   @cv_advanced.pathology_stain_separation(image, width, height)
 }
@@ -15921,27 +15938,27 @@ pub fn pathology_stain_separation(
 ///|
 pub fn pathology_detect_nuclei(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   @cv_advanced.pathology_detect_nuclei(image, width, height, threshold)
 }
 
 ///|
 pub fn pathology_count_mitosis(
-  nuclei_positions : Array[Int],
-  width : Int,
-  min_distance : Int,
-) -> Int {
+  nuclei_positions : Array[Int32],
+  width : Int32,
+  min_distance : Int32,
+) -> Int32 {
   @cv_advanced.pathology_count_mitosis(nuclei_positions, width, min_distance)
 }
 
 ///|
 pub fn pathology_segment_tissue(
   image : Array[Double],
-  num_clusters : Int,
-) -> Array[Int] {
+  num_clusters : Int32,
+) -> Array[Int32] {
   @cv_advanced.pathology_segment_tissue(image, num_clusters)
 }
 
@@ -15960,8 +15977,8 @@ pub type MedRegResult = @cv_advanced.MedRegResult
 ///|
 pub fn medreg_apply_rigid(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   transform : MedRigidTransform,
 ) -> Array[Double] {
   @cv_advanced.medreg_apply_rigid(image, width, height, transform)
@@ -15970,8 +15987,8 @@ pub fn medreg_apply_rigid(
 ///|
 pub fn medreg_apply_affine(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   transform : MedAffineTransform,
 ) -> Array[Double] {
   @cv_advanced.medreg_apply_affine(image, width, height, transform)
@@ -15981,7 +15998,7 @@ pub fn medreg_apply_affine(
 pub fn medreg_mutual_information(
   fixed : Array[Double],
   moving : Array[Double],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Double {
   @cv_advanced.medreg_mutual_information(fixed, moving, num_bins)
 }
@@ -15990,9 +16007,9 @@ pub fn medreg_mutual_information(
 pub fn medreg_rigid(
   fixed : Array[Double],
   moving : Array[Double],
-  width : Int,
-  height : Int,
-  max_iterations : Int,
+  width : Int32,
+  height : Int32,
+  max_iterations : Int32,
 ) -> MedRegResult {
   @cv_advanced.medreg_rigid(fixed, moving, width, height, max_iterations)
 }
@@ -16001,8 +16018,8 @@ pub fn medreg_rigid(
 pub fn medreg_affine(
   fixed : Array[Double],
   moving : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> MedRegResult {
   @cv_advanced.medreg_affine(fixed, moving, width, height)
 }
@@ -16024,12 +16041,12 @@ pub type OrganSegResult = @cv_advanced.OrganSegResult
 ///|
 pub fn organ_region_growing(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  seed_x : Int,
-  seed_y : Int,
+  width : Int32,
+  height : Int32,
+  seed_x : Int32,
+  seed_y : Int32,
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   @cv_advanced.organ_region_growing(
     image, width, height, seed_x, seed_y, threshold,
   )
@@ -16038,9 +16055,9 @@ pub fn organ_region_growing(
 ///|
 pub fn organ_level_set(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  iterations : Int,
+  width : Int32,
+  height : Int32,
+  iterations : Int32,
   curvature_weight : Double,
 ) -> Array[Double] {
   @cv_advanced.organ_level_set(
@@ -16052,50 +16069,53 @@ pub fn organ_level_set(
 pub fn organ_atlas_based(
   image : Array[Double],
   atlas : Array[Double],
-  atlas_mask : Array[Int],
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  atlas_mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   @cv_advanced.organ_atlas_based(image, atlas, atlas_mask, width, height)
 }
 
 ///|
-pub fn organ_compute_volume(mask : Array[Int]) -> Int {
+pub fn organ_compute_volume(mask : Array[Int32]) -> Int32 {
   @cv_advanced.organ_compute_volume(mask)
 }
 
 ///|
-pub fn organ_dice_coefficient(mask1 : Array[Int], mask2 : Array[Int]) -> Double {
+pub fn organ_dice_coefficient(
+  mask1 : Array[Int32],
+  mask2 : Array[Int32],
+) -> Double {
   @cv_advanced.organ_dice_coefficient(mask1, mask2)
 }
 
 ///|
 pub fn organ_morph_open(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
   @cv_advanced.organ_morph_open(mask, width, height, radius)
 }
 
 ///|
 pub fn organ_morph_erode(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
   @cv_advanced.organ_morph_erode(mask, width, height, radius)
 }
 
 ///|
 pub fn organ_morph_dilate(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
   @cv_advanced.organ_morph_dilate(mask, width, height, radius)
 }
 
@@ -16111,10 +16131,10 @@ pub type CADDetectionResult = @cv_advanced.CADDetectionResult
 ///|
 pub fn lesion_detect_candidates(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  min_radius : Int,
-  max_radius : Int,
+  width : Int32,
+  height : Int32,
+  min_radius : Int32,
+  max_radius : Int32,
   threshold : Double,
 ) -> Array[LesionCandidate] {
   @cv_advanced.lesion_detect_candidates(
@@ -16126,8 +16146,8 @@ pub fn lesion_detect_candidates(
 pub fn lesion_reduce_false_positives(
   candidates : Array[LesionCandidate],
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   score_threshold : Double,
 ) -> Array[LesionCandidate] {
   @cv_advanced.lesion_reduce_false_positives(
@@ -16139,8 +16159,8 @@ pub fn lesion_reduce_false_positives(
 pub fn lesion_compute_sensitivity(
   detected : Array[LesionCandidate],
   ground_truth : Array[LesionCandidate],
-  tolerance : Int,
-) -> (Int, Int, Double) {
+  tolerance : Int32,
+) -> (Int32, Int32, Double) {
   @cv_advanced.lesion_compute_sensitivity(detected, ground_truth, tolerance)
 }
 
@@ -16156,7 +16176,7 @@ pub fn lesion_nms(
 pub fn lesion_build_cad_result(
   candidates : Array[LesionCandidate],
   ground_truth : Array[LesionCandidate],
-  tolerance : Int,
+  tolerance : Int32,
 ) -> CADDetectionResult {
   @cv_advanced.lesion_build_cad_result(candidates, ground_truth, tolerance)
 }
@@ -16164,8 +16184,8 @@ pub fn lesion_build_cad_result(
 ///|
 pub fn lesion_extract_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   candidate : LesionCandidate,
 ) -> Array[Double] {
   @cv_advanced.lesion_extract_features(image, width, height, candidate)
@@ -16183,9 +16203,9 @@ pub type MedMesh3D = @cv_advanced.MedMesh3D
 ///|
 pub fn recon_marching_cubes(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   isovalue : Double,
 ) -> MedMesh3D {
   @cv_advanced.recon_marching_cubes(volume, width, height, depth, isovalue)
@@ -16194,9 +16214,9 @@ pub fn recon_marching_cubes(
 ///|
 pub fn recon_mip(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
 ) -> Array[Double] {
   @cv_advanced.recon_mip(volume, width, height, depth)
 }
@@ -16204,9 +16224,9 @@ pub fn recon_mip(
 ///|
 pub fn recon_volume_render(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   opacity : Double,
 ) -> Array[Double] {
   @cv_advanced.recon_volume_render(volume, width, height, depth, opacity)
@@ -16216,7 +16236,7 @@ pub fn recon_volume_render(
 pub fn recon_surface_extract(
   volume : Array[Double],
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   @cv_advanced.recon_surface_extract(volume, threshold)
 }
 
@@ -16247,9 +16267,9 @@ pub type PETParams = @cv_advanced.PETParams
 ///|
 pub fn functional_fmri_detect(
   brain_data : Array[Array[Double]],
-  stimulus_pattern : Array[Int],
-  width : Int,
-  height : Int,
+  stimulus_pattern : Array[Int32],
+  width : Int32,
+  height : Int32,
 ) -> FMRIActivation {
   @cv_advanced.functional_fmri_detect(
     brain_data, stimulus_pattern, width, height,
@@ -16320,16 +16340,16 @@ pub type FeatureSelectionResult = @cv_advanced.FeatureSelectionResult
 ///|
 pub fn radiomics_first_order(
   image : Array[Double],
-  mask : Array[Int],
+  mask : Array[Int32],
 ) -> Array[RadiomicsFeature] {
   @cv_advanced.radiomics_first_order(image, mask)
 }
 
 ///|
 pub fn radiomics_shape_features(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
 ) -> Array[RadiomicsFeature] {
   @cv_advanced.radiomics_shape_features(mask, width, height)
 }
@@ -16337,9 +16357,9 @@ pub fn radiomics_shape_features(
 ///|
 pub fn radiomics_glcm_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  num_levels : Int,
+  width : Int32,
+  height : Int32,
+  num_levels : Int32,
 ) -> Array[RadiomicsFeature] {
   @cv_advanced.radiomics_glcm_features(image, width, height, num_levels)
 }
@@ -16355,7 +16375,7 @@ pub fn radiomics_select_features(
 ///|
 pub fn radiomics_compute_icc(
   features : Array[Array[Double]],
-  feature_idx : Int,
+  feature_idx : Int32,
 ) -> Double {
   @cv_advanced.radiomics_compute_icc(features, feature_idx)
 }
@@ -16372,8 +16392,8 @@ pub type DoseMetrics = @cv_advanced.DoseMetrics
 ///|
 pub fn dose_compute_dvh(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
-  num_bins : Int,
+  structure_mask : Array[Int32],
+  num_bins : Int32,
   max_dose : Double,
   structure_name : String,
 ) -> DVHResult {
@@ -16385,7 +16405,7 @@ pub fn dose_compute_dvh(
 ///|
 pub fn dose_compute_metrics(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
 ) -> DoseMetrics {
   @cv_advanced.dose_compute_metrics(dose_image, structure_mask)
 }
@@ -16393,7 +16413,7 @@ pub fn dose_compute_metrics(
 ///|
 pub fn dose_compute_eud(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   n_param : Double,
 ) -> Double {
   @cv_advanced.dose_compute_eud(dose_image, structure_mask, n_param)
@@ -16402,7 +16422,7 @@ pub fn dose_compute_eud(
 ///|
 pub fn dose_compute_tcp(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   d50 : Double,
   gamma : Double,
 ) -> Double {
@@ -16412,7 +16432,7 @@ pub fn dose_compute_tcp(
 ///|
 pub fn dose_compute_ntcp(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   td50 : Double,
   m_param : Double,
 ) -> Double {
@@ -16427,9 +16447,9 @@ pub fn erf_approx(x : Double) -> Double {
 ///|
 pub fn dose_evaluate_plan(
   target_dose : Array[Double],
-  target_mask : Array[Int],
+  target_mask : Array[Int32],
   oar_doses : Array[Array[Double]],
-  oar_masks : Array[Array[Int]],
+  oar_masks : Array[Array[Int32]],
   prescription_dose : Double,
 ) -> (Double, Double, Double) {
   @cv_advanced.dose_evaluate_plan(
@@ -16458,11 +16478,11 @@ pub fn medviz_window_level(
 ///|
 pub fn medviz_mpr_slice(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   orientation : MPROrientation,
-  slice_idx : Int,
+  slice_idx : Int32,
 ) -> Array[Double] {
   @cv_advanced.medviz_mpr_slice(
     volume, width, height, depth, orientation, slice_idx,
@@ -16472,10 +16492,10 @@ pub fn medviz_mpr_slice(
 ///|
 pub fn medviz_cpr_centerline(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
-  path_points : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  depth : Int32,
+  path_points : Array[(Int32, Int32, Int32)],
 ) -> Array[Double] {
   @cv_advanced.medviz_cpr_centerline(volume, width, height, depth, path_points)
 }
@@ -16483,7 +16503,7 @@ pub fn medviz_cpr_centerline(
 ///|
 pub fn medviz_pseudo_color(
   image : Array[Double],
-  color_scheme : Int,
+  color_scheme : Int32,
 ) -> Array[Double] {
   @cv_advanced.medviz_pseudo_color(image, color_scheme)
 }
@@ -16491,9 +16511,9 @@ pub fn medviz_pseudo_color(
 ///|
 pub fn medviz_volume_render(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   config : MedVizConfig,
 ) -> Array[Double] {
   @cv_advanced.medviz_volume_render(volume, width, height, depth, config)
@@ -16502,9 +16522,9 @@ pub fn medviz_volume_render(
 ///|
 pub fn medviz_depth_shading(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   threshold : Double,
 ) -> Array[Double] {
   @cv_advanced.medviz_depth_shading(volume, width, height, depth, threshold)
@@ -16513,9 +16533,9 @@ pub fn medviz_depth_shading(
 ///|
 pub fn medviz_gradient_shading(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
 ) -> Array[Double] {
   @cv_advanced.medviz_gradient_shading(volume, width, height, depth)
 }
@@ -16539,8 +16559,8 @@ pub type DicomQueryResult = @cv_advanced.DicomQueryResult
 pub fn dicom_net_build_config(
   ae_title : String,
   host : String,
-  port : Int,
-  timeout : Int,
+  port : Int32,
+  timeout : Int32,
 ) -> PACSConfig {
   @cv_advanced.dicom_net_build_config(ae_title, host, port, timeout)
 }
@@ -16567,7 +16587,7 @@ pub fn dicom_net_cfind(
 pub fn dicom_net_cget(
   config : PACSConfig,
   study_uid : String,
-  available_count : Int,
+  available_count : Int32,
 ) -> DicomQueryResult {
   @cv_advanced.dicom_net_cget(config, study_uid, available_count)
 }
@@ -16596,7 +16616,7 @@ pub fn dicom_net_cstore(
 }
 
 ///|
-pub fn dicom_net_generate_uid(root : String, instance : Int) -> String {
+pub fn dicom_net_generate_uid(root : String, instance : Int32) -> String {
   @cv_advanced.dicom_net_generate_uid(root, instance)
 }
 
@@ -16617,17 +16637,17 @@ pub fn phase14_capabilities() -> Array[Phase14Capability] {
 }
 
 ///|
-pub fn phase14_total_types() -> Int {
+pub fn phase14_total_types() -> Int32 {
   @cv_advanced.phase14_total_types()
 }
 
 ///|
-pub fn phase14_total_functions() -> Int {
+pub fn phase14_total_functions() -> Int32 {
   @cv_advanced.phase14_total_functions()
 }
 
 ///|
-pub fn phase14_total_tests() -> Int {
+pub fn phase14_total_tests() -> Int32 {
   @cv_advanced.phase14_total_tests()
 }
 
@@ -16651,7 +16671,7 @@ pub type MultispecImage = @cv_advanced.MultispecImage
 pub fn multispectral_band_arithmetic(
   band1 : Array[Double],
   band2 : Array[Double],
-  op : Int,
+  op : Int32,
 ) -> Array[Double] {
   @cv_advanced.multispectral_band_arithmetic(band1, band2, op)
 }
@@ -16682,16 +16702,16 @@ pub fn multispectral_band_stats(
 ///|
 pub fn multispectral_classify(
   image : MultispecImage,
-  num_classes : Int,
-  max_iterations : Int,
-) -> Array[Int] {
+  num_classes : Int32,
+  max_iterations : Int32,
+) -> Array[Int32] {
   @cv_advanced.multispectral_classify(image, num_classes, max_iterations)
 }
 
 ///|
 pub fn multispectral_pca(
   image : MultispecImage,
-  num_components : Int,
+  num_components : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.multispectral_pca(image, num_components)
 }
@@ -16729,18 +16749,18 @@ pub fn hyperspectral_correlation(
 ///|
 pub fn hyperspectral_ppi(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_iterations : Int,
-) -> Array[Int] {
+  num_bands : Int32,
+  num_iterations : Int32,
+) -> Array[Int32] {
   @cv_advanced.hyperspectral_ppi(data, num_bands, num_iterations)
 }
 
 ///|
 pub fn hyperspectral_extract_endmembers(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_endmembers : Int,
-  num_iterations : Int,
+  num_bands : Int32,
+  num_endmembers : Int32,
+  num_iterations : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.hyperspectral_extract_endmembers(
     data, num_bands, num_endmembers, num_iterations,
@@ -16760,7 +16780,7 @@ pub fn hyperspectral_match(
   pixel_spectrum : Array[Double],
   reference_spectra : Array[Array[Double]],
   match_method : SpectralMatchMethod,
-) -> Int {
+) -> Int32 {
   @cv_advanced.hyperspectral_match(
     pixel_spectrum, reference_spectra, match_method,
   )
@@ -16769,9 +16789,9 @@ pub fn hyperspectral_match(
 ///|
 pub fn hyperspectral_build_endmember_result(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_endmembers : Int,
-  num_iterations : Int,
+  num_bands : Int32,
+  num_endmembers : Int32,
+  num_iterations : Int32,
 ) -> EndmemberResult {
   @cv_advanced.hyperspectral_build_endmember_result(
     data, num_bands, num_endmembers, num_iterations,
@@ -16805,7 +16825,7 @@ pub fn sar_build_params(
 
 ///|
 pub fn sar_simulate_chirp(
-  num_samples : Int,
+  num_samples : Int32,
   pulse_duration : Double,
   chirp_rate : Double,
 ) -> Array[Double] {
@@ -16864,7 +16884,7 @@ pub fn sar_focus(
 ///|
 pub fn sar_multilook(
   focused_data : Array[Array[Double]],
-  num_looks : Int,
+  num_looks : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.sar_multilook(focused_data, num_looks)
 }
@@ -16872,7 +16892,7 @@ pub fn sar_multilook(
 ///|
 pub fn sar_detect_point_target(
   focused_data : Array[Array[Double]],
-) -> (Int, Int, Double) {
+) -> (Int32, Int32, Double) {
   @cv_advanced.sar_detect_point_target(focused_data)
 }
 
@@ -16918,7 +16938,7 @@ pub fn insar_create_interferogram(
 ///|
 pub fn insar_estimate_coherence(
   interferogram : InsarInterferogram,
-  window_size : Int,
+  window_size : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.insar_estimate_coherence(interferogram, window_size)
 }
@@ -16961,7 +16981,7 @@ pub fn insar_mean_coherence(interferogram : InsarInterferogram) -> Double {
 pub fn insar_coherence_mask(
   interferogram : InsarInterferogram,
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.insar_coherence_mask(interferogram, threshold)
 }
 
@@ -17014,7 +17034,7 @@ pub fn change_vector_analysis(
 ///|
 pub fn change_otsu_threshold(
   change_map : Array[Array[Double]],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Double {
   @cv_advanced.change_otsu_threshold(change_map, num_bins)
 }
@@ -17023,7 +17043,7 @@ pub fn change_otsu_threshold(
 pub fn change_threshold(
   change_map : Array[Array[Double]],
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.change_threshold(change_map, threshold)
 }
 
@@ -17045,12 +17065,12 @@ pub fn change_detect(
 }
 
 ///|
-pub fn change_count_changed(binary_map : Array[Array[Int]]) -> Int {
+pub fn change_count_changed(binary_map : Array[Array[Int32]]) -> Int32 {
   @cv_advanced.change_count_changed(binary_map)
 }
 
 ///|
-pub fn change_rate(binary_map : Array[Array[Int]]) -> Double {
+pub fn change_rate(binary_map : Array[Array[Int32]]) -> Double {
   @cv_advanced.change_rate(binary_map)
 }
 
@@ -17066,7 +17086,7 @@ pub type LcClassificationResult = @cv_advanced.ClassificationResult
 ///|
 pub fn classify_compute_class_means(
   samples : Array[LcTrainingSample],
-  num_classes : Int,
+  num_classes : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.classify_compute_class_means(samples, num_classes)
 }
@@ -17075,7 +17095,7 @@ pub fn classify_compute_class_means(
 pub fn classify_min_distance(
   pixel_features : Array[Array[Array[Double]]],
   class_means : Array[Array[Double]],
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.classify_min_distance(pixel_features, class_means)
 }
 
@@ -17084,7 +17104,7 @@ pub fn classify_max_likelihood(
   pixel_features : Array[Array[Array[Double]]],
   class_means : Array[Array[Double]],
   class_variances : Array[Array[Double]],
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.classify_max_likelihood(
     pixel_features, class_means, class_variances,
   )
@@ -17093,19 +17113,19 @@ pub fn classify_max_likelihood(
 ///|
 pub fn classify_kmeans(
   pixel_features : Array[Array[Array[Double]]],
-  num_classes : Int,
-  max_iterations : Int,
-) -> (Array[Array[Int]], Array[Array[Double]]) {
+  num_classes : Int32,
+  max_iterations : Int32,
+) -> (Array[Array[Int32]], Array[Array[Double]]) {
   @cv_advanced.classify_kmeans(pixel_features, num_classes, max_iterations)
 }
 
 ///|
 pub fn classify_isodata(
   pixel_features : Array[Array[Array[Double]]],
-  num_classes : Int,
-  max_iterations : Int,
-  min_samples : Int,
-) -> Array[Array[Int]] {
+  num_classes : Int32,
+  max_iterations : Int32,
+  min_samples : Int32,
+) -> Array[Array[Int32]] {
   @cv_advanced.classify_isodata(
     pixel_features, num_classes, max_iterations, min_samples,
   )
@@ -17113,36 +17133,36 @@ pub fn classify_isodata(
 
 ///|
 pub fn classify_confusion_matrix(
-  predicted : Array[Array[Int]],
-  ground_truth : Array[Array[Int]],
-  num_classes : Int,
-) -> Array[Array[Int]] {
+  predicted : Array[Array[Int32]],
+  ground_truth : Array[Array[Int32]],
+  num_classes : Int32,
+) -> Array[Array[Int32]] {
   @cv_advanced.classify_confusion_matrix(predicted, ground_truth, num_classes)
 }
 
 ///|
-pub fn classify_kappa(confusion_matrix : Array[Array[Int]]) -> Double {
+pub fn classify_kappa(confusion_matrix : Array[Array[Int32]]) -> Double {
   @cv_advanced.classify_kappa(confusion_matrix)
 }
 
 ///|
 pub fn classify_overall_accuracy(
-  confusion_matrix : Array[Array[Int]],
+  confusion_matrix : Array[Array[Int32]],
 ) -> Double {
   @cv_advanced.classify_overall_accuracy(confusion_matrix)
 }
 
 ///|
 pub fn classify_build_result(
-  class_map : Array[Array[Int]],
-  num_classes : Int,
+  class_map : Array[Array[Int32]],
+  num_classes : Int32,
 ) -> LcClassificationResult {
   @cv_advanced.classify_build_result(class_map, num_classes)
 }
 
 ///|
 pub fn classify_build_sample(
-  class_id : Int,
+  class_id : Int32,
   features : Array[Double],
 ) -> LcTrainingSample {
   @cv_advanced.classify_build_sample(class_id, features)
@@ -17427,8 +17447,8 @@ pub fn geo_resample(
 pub fn geo_correct(
   image : Array[Array[Double]],
   gcps : Array[GcpPoint],
-  output_width : Int,
-  output_height : Int,
+  output_width : Int32,
+  output_height : Int32,
   resample_method : ResampleMethod,
 ) -> Array[Array[Double]] {
   @cv_advanced.geo_correct(
@@ -17450,7 +17470,7 @@ pub fn ortho_correct(
 ///|
 pub fn ortho_mosaic(
   images : Array[Array[Array[Double]]],
-  offsets : Array[(Int, Int)],
+  offsets : Array[(Int32, Int32)],
 ) -> Array[Array[Double]] {
   @cv_advanced.ortho_mosaic(images, offsets)
 }
@@ -17466,7 +17486,7 @@ pub fn ortho_color_balance(
 ///|
 pub fn ortho_wallis_dodging(
   image : Array[Array[Double]],
-  window_size : Int,
+  window_size : Int32,
   target_mean : Double,
   target_var : Double,
 ) -> Array[Array[Double]] {
@@ -17475,9 +17495,9 @@ pub fn ortho_wallis_dodging(
 
 ///|
 pub fn ortho_seamline(
-  overlap_width : Int,
-  overlap_height : Int,
-) -> Array[(Int, Int)] {
+  overlap_width : Int32,
+  overlap_height : Int32,
+) -> Array[(Int32, Int32)] {
   @cv_advanced.ortho_seamline(overlap_width, overlap_height)
 }
 
@@ -17577,12 +17597,12 @@ pub type TargetResult = @cv_advanced.TargetResult
 
 ///|
 pub fn target_build_result(
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
   confidence : Double,
-  class_id : Int,
+  class_id : Int32,
 ) -> TargetResult {
   @cv_advanced.target_build_result(x, y, width, height, confidence, class_id)
 }
@@ -17590,7 +17610,7 @@ pub fn target_build_result(
 ///|
 pub fn target_sliding_window(
   image : Array[Array[Double]],
-  window_size : Int,
+  window_size : Int32,
   threshold : Double,
 ) -> Array[TargetResult] {
   @cv_advanced.target_sliding_window(image, window_size, threshold)
@@ -17599,8 +17619,8 @@ pub fn target_sliding_window(
 ///|
 pub fn target_cfar(
   image : Array[Array[Double]],
-  guard_size : Int,
-  ref_size : Int,
+  guard_size : Int32,
+  ref_size : Int32,
   threshold_factor : Double,
 ) -> Array[TargetResult] {
   @cv_advanced.target_cfar(image, guard_size, ref_size, threshold_factor)
@@ -17632,14 +17652,14 @@ pub fn target_compute_iou(box1 : TargetResult, box2 : TargetResult) -> Double {
 pub fn target_detect(
   image : Array[Array[Double]],
   det_method : TargetDetMethod,
-  window_size : Int,
+  window_size : Int32,
   threshold : Double,
 ) -> Array[TargetResult] {
   @cv_advanced.target_detect(image, det_method, window_size, threshold)
 }
 
 ///|
-pub fn target_count(detections : Array[TargetResult]) -> Int {
+pub fn target_count(detections : Array[TargetResult]) -> Int32 {
   @cv_advanced.target_count(detections)
 }
 
@@ -17658,7 +17678,7 @@ pub type CloudResult = @cv_advanced.CloudResult
 pub fn cloud_threshold_detect(
   image : Array[Array[Double]],
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_threshold_detect(image, threshold)
 }
 
@@ -17668,7 +17688,7 @@ pub fn cloud_multispectral_detect(
   thermal : Array[Array[Double]],
   vis_threshold : Double,
   thermal_threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_multispectral_detect(
     visible, thermal, vis_threshold, thermal_threshold,
   )
@@ -17677,12 +17697,12 @@ pub fn cloud_multispectral_detect(
 ///|
 pub fn cloud_shadow_detect(
   image : Array[Array[Double]],
-  cloud_mask : Array[Array[Int]],
+  cloud_mask : Array[Array[Int32]],
   shadow_threshold : Double,
   sun_azimuth : Double,
   sun_elevation : Double,
-  shadow_offset : Int,
-) -> Array[Array[Int]] {
+  shadow_offset : Int32,
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_shadow_detect(
     image, cloud_mask, shadow_threshold, sun_azimuth, sun_elevation, shadow_offset,
   )
@@ -17692,30 +17712,30 @@ pub fn cloud_shadow_detect(
 pub fn cloud_progressive_refinement(
   image : Array[Array[Double]],
   initial_threshold : Double,
-  num_iterations : Int,
-) -> Array[Array[Int]] {
+  num_iterations : Int32,
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_progressive_refinement(
     image, initial_threshold, num_iterations,
   )
 }
 
 ///|
-pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int]]) -> Double {
+pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int32]]) -> Double {
   @cv_advanced.cloud_compute_coverage(cloud_mask)
 }
 
 ///|
 pub fn cloud_morph_open(
-  mask : Array[Array[Int]],
-  kernel_size : Int,
-) -> Array[Array[Int]] {
+  mask : Array[Array[Int32]],
+  kernel_size : Int32,
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_morph_open(mask, kernel_size)
 }
 
 ///|
 pub fn cloud_build_result(
-  cloud_mask : Array[Array[Int]],
-  shadow_mask : Array[Array[Int]],
+  cloud_mask : Array[Array[Int32]],
+  shadow_mask : Array[Array[Int32]],
 ) -> CloudResult {
   @cv_advanced.cloud_build_result(cloud_mask, shadow_mask)
 }
@@ -17725,7 +17745,7 @@ pub fn cloud_detect(
   image : Array[Array[Double]],
   det_method : CloudDetectMethod,
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   @cv_advanced.cloud_detect(image, det_method, threshold)
 }
 
@@ -17745,7 +17765,7 @@ pub fn ts_linear_trend(data : TimeSeriesData) -> (Double, Double) {
 ///|
 pub fn ts_moving_average(
   data : TimeSeriesData,
-  window_size : Int,
+  window_size : Int32,
 ) -> Array[Double] {
   @cv_advanced.ts_moving_average(data, window_size)
 }
@@ -17753,7 +17773,7 @@ pub fn ts_moving_average(
 ///|
 pub fn ts_seasonal_decompose(
   data : TimeSeriesData,
-  period : Int,
+  period : Int32,
 ) -> (Array[Double], Array[Double], Array[Double]) {
   @cv_advanced.ts_seasonal_decompose(data, period)
 }
@@ -17762,20 +17782,20 @@ pub fn ts_seasonal_decompose(
 pub fn ts_anomaly_detect(
   data : TimeSeriesData,
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   @cv_advanced.ts_anomaly_detect(data, threshold)
 }
 
 ///|
 pub fn ts_change_point_detect(
   data : TimeSeriesData,
-  min_segment : Int,
-) -> Array[Int] {
+  min_segment : Int32,
+) -> Array[Int32] {
   @cv_advanced.ts_change_point_detect(data, min_segment)
 }
 
 ///|
-pub fn ts_forecast(data : TimeSeriesData, num_steps : Int) -> Array[Double] {
+pub fn ts_forecast(data : TimeSeriesData, num_steps : Int32) -> Array[Double] {
   @cv_advanced.ts_forecast(data, num_steps)
 }
 
@@ -17800,9 +17820,9 @@ pub fn phase15_build_capability(
   version : String,
   name : String,
   description : String,
-  num_types : Int,
-  num_functions : Int,
-  num_tests : Int,
+  num_types : Int32,
+  num_functions : Int32,
+  num_tests : Int32,
 ) -> Phase15Capability {
   @cv_advanced.phase15_build_capability(
     version, name, description, num_types, num_functions, num_tests,
@@ -17815,17 +17835,17 @@ pub fn phase15_capabilities() -> Array[Phase15Capability] {
 }
 
 ///|
-pub fn phase15_total_types() -> Int {
+pub fn phase15_total_types() -> Int32 {
   @cv_advanced.phase15_total_types()
 }
 
 ///|
-pub fn phase15_total_functions() -> Int {
+pub fn phase15_total_functions() -> Int32 {
   @cv_advanced.phase15_total_functions()
 }
 
 ///|
-pub fn phase15_total_tests() -> Int {
+pub fn phase15_total_tests() -> Int32 {
   @cv_advanced.phase15_total_tests()
 }
 
@@ -17896,7 +17916,7 @@ pub fn raw_build_params(
 }
 
 ///|
-pub fn bayer_channel_at(pattern : BayerPattern, x : Int, y : Int) -> Int {
+pub fn bayer_channel_at(pattern : BayerPattern, x : Int32, y : Int32) -> Int32 {
   @cv_advanced.bayer_channel_at(pattern, x, y)
 }
 
@@ -17936,8 +17956,8 @@ pub fn raw_color_correction(
 ///|
 pub fn raw_level_correction(
   img : Image,
-  black_level : Int,
-  white_level : Int,
+  black_level : Int32,
+  white_level : Int32,
 ) -> Image {
   @cv_advanced.raw_level_correction(img, black_level, white_level)
 }
@@ -18097,8 +18117,8 @@ pub type DepthOfFieldRange = @cv_advanced.DepthOfFieldRange
 pub fn estimate_depth_from_focus(
   sharpness_maps : Array[Array[Double]],
   focus_positions : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @cv_advanced.DepthMap {
   @cv_advanced.estimate_depth_from_focus(
     sharpness_maps, focus_positions, width, height,
@@ -18108,8 +18128,8 @@ pub fn estimate_depth_from_focus(
 ///|
 pub fn estimate_depth_from_defocus(
   blur_map : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   focal_length : Double,
   aperture : Double,
   focus_distance : Double,
@@ -18123,8 +18143,8 @@ pub fn estimate_depth_from_defocus(
 pub fn estimate_depth_relative_blur(
   near_image : Array[Double],
   far_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   near_focus : Double,
   far_focus : Double,
 ) -> @cv_advanced.DepthMap {
@@ -18136,7 +18156,7 @@ pub fn estimate_depth_relative_blur(
 ///|
 pub fn smooth_depth_map(
   depth : @cv_advanced.DepthMap,
-  radius : Int,
+  radius : Int32,
 ) -> @cv_advanced.DepthMap {
   @cv_advanced.smooth_depth_map(depth, radius)
 }
@@ -18226,7 +18246,7 @@ pub fn compute_circle_of_confusion(
 ///|
 pub fn generate_aperture_mask(
   shape : ApertureShape,
-  radius : Int,
+  radius : Int32,
 ) -> Array[Array[Double]] {
   @cv_advanced.generate_aperture_mask(shape, radius)
 }
@@ -18248,7 +18268,7 @@ pub fn compute_blur_map(
 pub fn bokeh_blur_circular(
   image : Image,
   blur_map : Array[Double],
-  max_radius : Int,
+  max_radius : Int32,
 ) -> Image {
   @cv_advanced.bokeh_blur_circular(image, blur_map, max_radius)
 }
@@ -18257,7 +18277,7 @@ pub fn bokeh_blur_circular(
 pub fn bokeh_blur_polygonal(
   image : Image,
   blur_map : Array[Double],
-  max_radius : Int,
+  max_radius : Int32,
   shape : ApertureShape,
 ) -> Image {
   @cv_advanced.bokeh_blur_polygonal(image, blur_map, max_radius, shape)

@@ -2,7 +2,7 @@
 // 语义分割与实例分割：阈值分割、Otsu、K-Means、超像素、分水岭、GrabCut、评估指标、可视化、报告
 
 ///|
-fn make_seg_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_seg_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_seg_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_bimodal_img(w : Int, h : Int) -> @types.Image {
+fn make_bimodal_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for y in 0..<h {
     for _ in 0..<w {
@@ -32,7 +32,7 @@ fn make_bimodal_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_gradient_img(w : Int, h : Int) -> @types.Image {
+fn make_gradient_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for _ in 0..<h {
     for x in 0..<w {
@@ -289,8 +289,8 @@ test "calculate_segmentation_metrics: 部分正确" {
 
 ///|
 test "calculate_segmentation_metrics: 空数组" {
-  let pred : Array[Int] = []
-  let gt : Array[Int] = []
+  let pred : Array[Int32] = []
+  let gt : Array[Int32] = []
   let metrics = @segmentation.calculate_segmentation_metrics(pred, gt, 2)
   assert_true(metrics.pixel_accuracy == 0.0)
   assert_true(metrics.mean_iou == 0.0)

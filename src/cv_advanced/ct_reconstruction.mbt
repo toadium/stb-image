@@ -24,7 +24,7 @@ pub extend ReconstructionMethod with Eq::{not_equal, equal}
 /// CT projection data.
 pub(all) struct CTProjection {
   angles : Array[Double]
-  detector_count : Int
+  detector_count : Int32
   projection_data : Array[Double]
 } derive(Eq, @debug.Debug)
 
@@ -38,9 +38,9 @@ pub extend CTProjection with Eq::{not_equal, equal}
 /// CT 配置。
 /// CT configuration.
 pub(all) struct CTConfig {
-  image_size : Int
-  num_angles : Int
-  detector_count : Int
+  image_size : Int32
+  num_angles : Int32
+  detector_count : Int32
   recon_method : ReconstructionMethod
 } derive(Eq, @debug.Debug)
 
@@ -55,7 +55,7 @@ pub extend CTConfig with Eq::{not_equal, equal}
 /// Radon transform (forward projection).
 pub fn ct_radon_transform(
   image : Array[Double],
-  image_size : Int,
+  image_size : Int32,
   angles : Array[Double],
 ) -> CTProjection {
   let num_angles = angles.length()
@@ -92,7 +92,7 @@ pub fn ct_radon_transform(
 ///|
 /// Ramp 滤波器。
 /// Ramp filter.
-pub fn ct_ramp_filter(detector_count : Int, cutoff : Double) -> Array[Double] {
+pub fn ct_ramp_filter(detector_count : Int32, cutoff : Double) -> Array[Double] {
   let filter : Array[Double] = []
   let center = detector_count / 2
   for d in 0..<detector_count {
@@ -155,7 +155,7 @@ pub fn ct_fbp_reconstruct(
 pub fn ct_art_reconstruct(
   projection : CTProjection,
   config : CTConfig,
-  num_iterations : Int,
+  num_iterations : Int32,
 ) -> Array[Double] {
   let n = config.image_size
   let result : Array[Double] = []
@@ -216,7 +216,7 @@ pub fn ct_art_reconstruct(
 pub fn ct_iterative_reconstruct(
   projection : CTProjection,
   config : CTConfig,
-  num_iterations : Int,
+  num_iterations : Int32,
 ) -> Array[Double] {
   ct_art_reconstruct(projection, config, num_iterations)
 }

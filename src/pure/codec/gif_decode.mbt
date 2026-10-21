@@ -8,22 +8,22 @@
 /// 返回颜色索引序列
 fn lzw_decode(
   data : Array[Byte],
-  min_code_size : Int,
-) -> Array[Int] raise @types.LoadError {
+  min_code_size : Int32,
+) -> Array[Int32] raise @types.LoadError {
   let clear_code = 1 << min_code_size
   let end_code = clear_code + 1
   let mut code_width = min_code_size + 1
-  let mut dict : Array[Array[Int]] = []
+  let mut dict : Array[Array[Int32]] = []
   for i in 0..<clear_code {
     dict.push([i])
   }
   dict.push([])
   dict.push([])
-  let output : Array[Int] = []
+  let output : Array[Int32] = []
   let mut bit_buffer = 0
   let mut bit_count = 0
   let mut data_pos = 0
-  let mut prev : Int = -1
+  let mut prev : Int32 = -1
   let data_len = data.length()
   let mut done = false
   while !done {
@@ -54,11 +54,11 @@ fn lzw_decode(
     } else if code == end_code {
       done = true
     } else {
-      let entry : Array[Int] = if code < dict.length() {
+      let entry : Array[Int32] = if code < dict.length() {
         dict[code]
       } else if code == dict.length() && prev >= 0 {
         let prev_entry = dict[prev]
-        let new_entry : Array[Int] = []
+        let new_entry : Array[Int32] = []
         for v in prev_entry {
           new_entry.push(v)
         }
@@ -74,7 +74,7 @@ fn lzw_decode(
       }
       if prev >= 0 {
         let prev_entry = dict[prev]
-        let new_entry : Array[Int] = []
+        let new_entry : Array[Int32] = []
         for v in prev_entry {
           new_entry.push(v)
         }

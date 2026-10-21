@@ -24,10 +24,10 @@ pub extend TestRunResult with Eq::{not_equal, equal}
 /// 测试运行汇总。
 /// Test run summary.
 pub(all) struct RunSummary {
-  total : Int
-  passed : Int
-  failed : Int
-  pass_rate_pct : Int
+  total : Int32
+  passed : Int32
+  failed : Int32
+  pass_rate_pct : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

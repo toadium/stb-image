@@ -10,13 +10,13 @@ pub fn apply_depth_of_field(@types.Image, DepthOfFieldConfig) -> @types.Image
 
 pub fn batch_photo_enhance(Array[@types.Image], String) -> Array[@types.Image]
 
-pub fn clahe_enhance(@types.Image, clip_limit? : Double, tile_size? : Int) -> @types.Image
+pub fn clahe_enhance(@types.Image, clip_limit? : Double, tile_size? : Int32) -> @types.Image
 
 pub fn color_enhance(@types.Image, saturation? : Double, contrast? : Double) -> @types.Image
 
 pub fn computational_photography_report(HdrImage, PanoramaResult) -> String
 
-pub fn create_default_dof_config(Int, Int) -> DepthOfFieldConfig
+pub fn create_default_dof_config(Int32, Int32) -> DepthOfFieldConfig
 
 pub fn create_default_hdr_config() -> ToneMappingConfig
 
@@ -24,7 +24,7 @@ pub fn create_default_night_config() -> NightEnhanceConfig
 
 pub fn create_default_panorama_config() -> PanoramaConfig
 
-pub fn deblur_motion(@types.Image, kernel_size? : Int, angle? : Double) -> @types.Image
+pub fn deblur_motion(@types.Image, kernel_size? : Int32, angle? : Double) -> @types.Image
 
 pub fn detect_exposure_type(@types.Image) -> (ExposureType, Double)
 
@@ -46,8 +46,8 @@ pub fn white_balance(@types.Image) -> @types.Image
 
 // Types and methods
 pub(all) struct DepthOfFieldConfig {
-  focal_point_x : Int
-  focal_point_y : Int
+  focal_point_x : Int32
+  focal_point_y : Int32
   aperture : Double
   blur_strength : Double
 }
@@ -62,12 +62,12 @@ pub fn ExposureType::equal(Self, Self) -> Bool
 pub fn ExposureType::not_equal(Self, Self) -> Bool
 
 pub(all) struct HdrImage {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Array[Double]
   exposure_values : Array[Double]
-  num_exposures : Int
+  num_exposures : Int32
 }
 
 pub(all) struct LowLightConfig {
@@ -85,17 +85,17 @@ pub(all) struct NightEnhanceConfig {
 
 pub(all) struct PanoramaConfig {
   overlap_threshold : Double
-  max_features : Int
-  ransac_iterations : Int
-  blend_width : Int
+  max_features : Int32
+  ransac_iterations : Int32
+  blend_width : Int32
   crop_black_borders : Bool
 }
 
 pub(all) struct PanoramaResult {
-  width : Int
-  height : Int
-  num_images : Int
-  inliers : Int
+  width : Int32
+  height : Int32
+  num_images : Int32
+  inliers : Int32
   confidence : Double
 }
 

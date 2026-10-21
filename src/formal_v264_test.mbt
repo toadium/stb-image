@@ -6,7 +6,12 @@
 // ============================================================
 
 ///|
-fn v264_fake_solid(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn v264_fake_solid(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -16,7 +21,7 @@ fn v264_fake_solid(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn v264_fake_gradient(w : Int, h : Int, ch : Int) -> @types.Image {
+fn v264_fake_gradient(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {
@@ -36,7 +41,7 @@ fn v264_fake_gradient(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn v264_fake_checkerboard(w : Int, h : Int, block : Int) -> @types.Image {
+fn v264_fake_checkerboard(w : Int32, h : Int32, block : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {
@@ -57,7 +62,7 @@ fn v264_fake_checkerboard(w : Int, h : Int, block : Int) -> @types.Image {
 }
 
 ///|
-fn v264_fake_stripes(w : Int, h : Int) -> @types.Image {
+fn v264_fake_stripes(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for _ in 0..<w {
@@ -76,7 +81,7 @@ fn v264_fake_stripes(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn v264_lcg(seed : Int) -> () -> Int {
+fn v264_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -85,7 +90,12 @@ fn v264_lcg(seed : Int) -> () -> Int {
 }
 
 ///|
-fn v264_fake_random(seed : Int, w : Int, h : Int, ch : Int) -> @types.Image {
+fn v264_fake_random(
+  seed : Int32,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+) -> @types.Image {
   let rng = v264_lcg(seed)
   let data : Array[Byte] = []
   for _ in 0..<(w * h * ch) {

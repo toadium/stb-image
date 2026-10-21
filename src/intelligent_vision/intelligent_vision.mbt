@@ -109,15 +109,15 @@ pub(all) struct DetectionResultIV {
   class_name : String
   confidence : Double
   bounding_box : Array[Double]
-  class_id : Int
-  num_detections : Int
+  class_id : Int32
+  num_detections : Int32
 }
 
 ///|
 /// 车道线检测结果
 pub(all) struct LaneDetectionResult {
   lanes : Array[Array[Array[Double]]]
-  num_lanes : Int
+  num_lanes : Int32
   lane_type : String
   confidence : Double
   curvature : Double
@@ -130,7 +130,7 @@ pub(all) struct TrafficSignResult {
   sign_value : String
   confidence : Double
   bounding_box : Array[Double]
-  num_signs : Int
+  num_signs : Int32
 }
 
 ///|
@@ -141,7 +141,7 @@ pub(all) struct DefectDetectionResult {
   confidence : Double
   bounding_box : Array[Double]
   defect_area : Double
-  num_defects : Int
+  num_defects : Int32
 }
 
 ///|
@@ -152,7 +152,7 @@ pub(all) struct IntrusionDetectionResult {
   intrusion_region : Array[Double]
   object_type : String
   timestamp : Double
-  num_intrusions : Int
+  num_intrusions : Int32
 }
 
 ///|
@@ -163,14 +163,14 @@ pub(all) struct CropDetectionResult {
   confidence : Double
   bounding_box : Array[Double]
   growth_stage : String
-  num_crops : Int
+  num_crops : Int32
 }
 
 ///|
 /// 星体检测结果
 pub(all) struct StarDetectionResult {
   stars : Array[Array[Double]]
-  num_stars : Int
+  num_stars : Int32
   magnitudes : Array[Double]
   brightest_star : Array[Double]
   sky_background : Double
@@ -181,8 +181,8 @@ pub(all) struct StarDetectionResult {
 pub(all) struct IntelligentVisionConfig {
   confidence_threshold : Double
   nms_threshold : Double
-  max_detections : Int
-  input_size : Int
+  max_detections : Int32
+  input_size : Int32
   use_gpu : Bool
   model_type : String
 }
@@ -520,7 +520,7 @@ pub fn detect_stars(
 /// 生成智能视觉报告
 pub fn intelligent_vision_report_to_string(
   task_name : String,
-  num_results : Int,
+  num_results : Int32,
   avg_confidence : Double,
   config : IntelligentVisionConfig,
 ) -> String {

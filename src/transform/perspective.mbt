@@ -19,7 +19,7 @@ pub(all) struct PerspectiveMatrix {
 fn solve_linear_system(
   a : Array[Array[Float]],
   b : Array[Float],
-  n : Int,
+  n : Int32,
 ) -> Array[Float]? {
   let mat : Array[Array[Float]] = Array::make(n, [])
   for i in 0..<n {
@@ -114,13 +114,13 @@ pub fn get_perspective_transform(
 pub fn warp_perspective(
   img : @types.Image,
   matrix : PerspectiveMatrix,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image {
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -156,14 +156,14 @@ pub fn warp_perspective(
 
 ///|
 fn persp_sample_bilinear(
-  data : Array[Int],
-  w : Int,
-  h : Int,
-  ch : Int,
-  c : Int,
+  data : Array[Int32],
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  c : Int32,
   x : Float,
   y : Float,
-) -> Int {
+) -> Int32 {
   let x0 = x.to_int()
   let y0 = y.to_int()
   let w1 = w - 1

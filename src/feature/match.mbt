@@ -3,8 +3,8 @@
 ///|
 /// SIFT 匹配结果
 pub(all) struct SiftMatch {
-  query_idx : Int
-  train_idx : Int
+  query_idx : Int32
+  train_idx : Int32
   distance : Float // L2 距离
 }
 
@@ -15,8 +15,8 @@ pub(all) struct SiftMatch {
 pub fn sift_match(
   query : Array[SiftDescriptor],
   train : Array[SiftDescriptor],
-  max_distance? : Float = 300.0F,
-  ratio_test? : Float = 0.75F,
+  max_distance~ : Float = 300.0F,
+  ratio_test~ : Float = 0.75F,
 ) -> Array[SiftMatch] raise @types.LoadError {
   // 参数验证
   if max_distance <= 0.0F {
@@ -72,8 +72,8 @@ pub fn sift_match(
 /// iterations 为 RANSAC 迭代次数，threshold 为重投影误差阈值。
 pub fn ransac_homography(
   matches : Array[((Float, Float), (Float, Float))],
-  iterations? : Int = 1000,
-  threshold? : Float = 3.0F,
+  iterations~ : Int32 = 1000,
+  threshold~ : Float = 3.0F,
 ) -> Array[Float]? raise @types.LoadError {
   // 参数验证
   if iterations <= 0 {
@@ -136,8 +136,8 @@ fn l2_distance(a : Array[Float], b : Array[Float]) -> Float {
 }
 
 ///|
-fn deterministic_indices(n : Int, k : Int, seed : Int) -> Array[Int] {
-  let result : Array[Int] = []
+fn deterministic_indices(n : Int32, k : Int32, seed : Int32) -> Array[Int32] {
+  let result : Array[Int32] = []
   let mut s = seed
   let mut count = 0
   let mut attempts = 0
@@ -227,7 +227,7 @@ fn compute_homography_dlt(
 fn gauss_elimination(
   a : Array[Array[Float]],
   b : Array[Float],
-  n : Int,
+  n : Int32,
 ) -> Array[Float] {
   // 前向消元
   for col in 0..<n {

@@ -4,8 +4,8 @@
 ///|
 /// 多光谱图像波段
 pub(all) struct MultispectralImage {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   bands : Array[@types.Image] // 每个波段一个灰度图像
   band_names : Array[String] // 波段名称
 }
@@ -13,10 +13,10 @@ pub(all) struct MultispectralImage {
 ///|
 /// 创建多光谱图像
 pub fn multispectral_new(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   bands : Array[@types.Image],
-  band_names? : Array[String] = [],
+  band_names~ : Array[String] = [],
 ) -> MultispectralImage {
   let names = if band_names.length() > 0 {
     band_names
@@ -467,8 +467,8 @@ pub fn true_color_composite(
 /// 植被覆盖度估算（基于 NDVI 阈值法）
 pub fn vegetation_coverage(
   ndvi : @types.Image,
-  ndvi_soil? : Double = 0.2,
-  ndvi_veg? : Double = 0.8,
+  ndvi_soil~ : Double = 0.2,
+  ndvi_veg~ : Double = 0.8,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if ndvi.width <= 0 || ndvi.height <= 0 {

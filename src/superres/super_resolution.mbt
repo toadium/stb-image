@@ -6,7 +6,7 @@
 pub(all) struct SuperResolutionConfig {
   scale : Double // 放大倍数
   method_type : String // "bicubic" / "lanczos" / "edge_preserving"
-  lanczos_a : Int // Lanczos 参数（2或3）
+  lanczos_a : Int32 // Lanczos 参数（2或3）
   edge_threshold : Double // 边缘阈值
   sharpen_amount : Double // 锐化强度
 }
@@ -42,7 +42,7 @@ fn bicubic_kernel(x : Double) -> Double {
 
 ///|
 /// Lanczos 插值核
-fn lanczos_kernel(x : Double, a : Int) -> Double {
+fn lanczos_kernel(x : Double, a : Int32) -> Double {
   let a_d = a.to_double()
   let abs_x = x.abs()
   if abs_x < 0.0001 {
@@ -118,7 +118,7 @@ pub fn super_resolution_bicubic(
 pub fn super_resolution_lanczos(
   img : @types.Image,
   scale : Double,
-  a? : Int = 3,
+  a~ : Int32 = 3,
 ) -> @types.Image {
   let lanczos_a = a
   let w = img.width
@@ -176,8 +176,8 @@ pub fn super_resolution_lanczos(
 pub fn super_resolution_edge_preserving(
   img : @types.Image,
   scale : Double,
-  edge_threshold? : Double = 30.0,
-  sharpen_amount? : Double = 0.5,
+  edge_threshold~ : Double = 30.0,
+  sharpen_amount~ : Double = 0.5,
 ) -> @types.Image {
   let et = edge_threshold
   let sa = sharpen_amount

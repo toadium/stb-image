@@ -2,7 +2,7 @@
 // 覆盖 denoise/advanced_denoise_enhance.mbt 的 15 个公开函数
 
 ///|
-fn create_solid_dn(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_dn(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())
@@ -16,7 +16,7 @@ fn create_solid_dn(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_dn(w : Int, h : Int) -> @types.Image {
+fn create_gradient_dn(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {
@@ -32,7 +32,7 @@ fn create_gradient_dn(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn create_noise_dn(w : Int, h : Int) -> @types.Image {
+fn create_noise_dn(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   let mut s = 42
   for _ in 0..<(w * h) {

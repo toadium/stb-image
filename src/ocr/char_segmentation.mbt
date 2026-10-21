@@ -4,9 +4,9 @@
 ///|
 /// 分割点结构体
 pub(all) struct SplitPoint {
-  x : Int
-  y_top : Int
-  y_bottom : Int
+  x : Int32
+  y_top : Int32
+  y_bottom : Int32
   confidence : Double
 }
 
@@ -14,7 +14,7 @@ pub(all) struct SplitPoint {
 /// 滴水算法分割结果
 pub(all) struct DropFallResult {
   split_points : Array[SplitPoint]
-  char_regions : Array[(Int, Int)]
+  char_regions : Array[(Int32, Int32)]
   success : Bool
 }
 
@@ -23,7 +23,7 @@ pub(all) struct DropFallResult {
 /// 用于分割粘连字符，模拟水滴从顶部落下的路径
 pub fn drop_fall_segmentation(
   img : @types.Image,
-  start_x? : Int = -1,
+  start_x~ : Int32 = -1,
 ) -> DropFallResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -52,7 +52,7 @@ pub fn drop_fall_segmentation(
   // 如果未指定起始x，使用中间位置
   let sx = if start_x < 0 { w / 2 } else { start_x }
   // 滴水路径
-  let path : Array[(Int, Int)] = []
+  let path : Array[(Int32, Int32)] = []
   let mut x = sx
   let mut y = 0
   let stuck = false
@@ -115,7 +115,7 @@ pub fn drop_fall_segmentation(
     })
   }
   // 计算字符区域
-  let char_regions : Array[(Int, Int)] = []
+  let char_regions : Array[(Int32, Int32)] = []
   if split_points.length() > 0 {
     let mut prev_x = 0
     for sp in split_points {
@@ -138,9 +138,9 @@ pub fn drop_fall_segmentation(
 /// 返回粘连位置列表
 pub fn detect_touching_chars(
   img : @types.Image,
-  min_char_width? : Int = 8,
-  max_char_width? : Int = 50,
-) -> Array[Int] raise @types.LoadError {
+  min_char_width~ : Int32 = 8,
+  max_char_width~ : Int32 = 50,
+) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -176,7 +176,7 @@ pub fn detect_touching_chars(
   let h = img.height
   let data = img.data
   // 垂直投影
-  let projection : Array[Int] = Array::make(w, 0)
+  let projection : Array[Int32] = Array::make(w, 0)
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() > 128 {
@@ -185,7 +185,7 @@ pub fn detect_touching_chars(
     }
   }
   // 找局部最小值（可能的分割点）
-  let minima : Array[Int] = []
+  let minima : Array[Int32] = []
   for x in 2..<(w - 2) {
     if projection[x] < projection[x - 1] &&
       projection[x] <= projection[x + 1] &&
@@ -195,7 +195,7 @@ pub fn detect_touching_chars(
     }
   }
   // 过滤：只保留在合理字符宽度范围内的分割点
-  let touching_points : Array[Int] = []
+  let touching_points : Array[Int32] = []
   let mut last_split = 0
   for x in minima {
     let width = x - last_split
@@ -215,9 +215,9 @@ pub fn detect_touching_chars(
 /// 返回字符区域列表
 pub fn segment_by_connected_components(
   img : @types.Image,
-  min_area? : Int = 5,
-  max_area? : Int = 10000,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  min_area~ : Int32 = 5,
+  max_area~ : Int32 = 10000,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -253,7 +253,7 @@ pub fn segment_by_connected_components(
   let h = img.height
   let data = img.data
   // 简单连通域标记（两遍扫描的简化版）
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   // 第一遍
   for y in 0..<h {
@@ -279,11 +279,11 @@ pub fn segment_by_connected_components(
   }
   // 第二遍：合并等价标签（简化版，只处理4邻域）
   // 计算每个标签的边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -305,7 +305,7 @@ pub fn segment_by_connected_components(
     }
   }
   // 过滤并返回
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     if area[label] >= min_area && area[label] <= max_area {
       let rw = max_x[label] - min_x[label] + 1
@@ -321,10 +321,10 @@ pub fn segment_by_connected_components(
 ///|
 /// 分割后处理：合并过小的分割区域
 pub fn merge_small_segments(
-  segments : Array[(Int, Int, Int, Int)],
-  min_width : Int,
-  min_height : Int,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  segments : Array[(Int32, Int32, Int32, Int32)],
+  min_width : Int32,
+  min_height : Int32,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if segments.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -342,7 +342,7 @@ pub fn merge_small_segments(
     )
   }
 
-  let merged : Array[(Int, Int, Int, Int)] = []
+  let merged : Array[(Int32, Int32, Int32, Int32)] = []
   let mut current = segments[0]
   for i in 1..<segments.length() {
     let next = segments[i]
@@ -385,12 +385,12 @@ pub fn merge_small_segments(
 ///|
 /// 分割后处理：过滤噪声区域
 pub fn filter_noise_segments(
-  segments : Array[(Int, Int, Int, Int)],
-  img_width : Int,
-  img_height : Int,
-  min_area_ratio? : Double = 0.001,
-  max_area_ratio? : Double = 0.5,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  segments : Array[(Int32, Int32, Int32, Int32)],
+  img_width : Int32,
+  img_height : Int32,
+  min_area_ratio~ : Double = 0.001,
+  max_area_ratio~ : Double = 0.5,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if segments.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -421,7 +421,7 @@ pub fn filter_noise_segments(
   let img_area = img_width * img_height
   let min_area = (img_area.to_double() * min_area_ratio).to_int()
   let max_area = (img_area.to_double() * max_area_ratio).to_int()
-  let filtered : Array[(Int, Int, Int, Int)] = []
+  let filtered : Array[(Int32, Int32, Int32, Int32)] = []
   for _tup0 in segments {
     let (x, y, w, h) = _tup0
     let area = w * h
@@ -440,9 +440,9 @@ pub fn filter_noise_segments(
 /// 4. 后处理（合并过小、过滤噪声）
 pub fn complete_char_segmentation(
   img : @types.Image,
-  min_char_width? : Int = 5,
-  max_char_width? : Int = 60,
-) -> Array[(Int, Int, Int, Int)] raise @types.LoadError {
+  min_char_width~ : Int32 = 5,
+  max_char_width~ : Int32 = 60,
+) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -483,7 +483,7 @@ pub fn complete_char_segmentation(
     max_area=100000,
   )
   // 2. 检测粘连字符（宽度过大的区域）
-  let final_segments : Array[(Int, Int, Int, Int)] = []
+  let final_segments : Array[(Int32, Int32, Int32, Int32)] = []
   for _tup1 in segments {
     let (x, y, sw, sh) = _tup1
     if sw > max_char_width && sh > min_char_width {
@@ -532,10 +532,10 @@ pub fn complete_char_segmentation(
 /// 裁剪子图像
 fn crop_sub_image(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image? {
   let w = img.width
   let h = img.height
@@ -563,7 +563,7 @@ fn crop_sub_image(
 
 ///|
 /// 辅助函数：最小值
-fn _min_seg(a : Int, b : Int) -> Int {
+fn _min_seg(a : Int32, b : Int32) -> Int32 {
   if a < b {
     a
   } else {
@@ -573,7 +573,7 @@ fn _min_seg(a : Int, b : Int) -> Int {
 
 ///|
 /// 辅助函数：最大值
-fn _max_seg(a : Int, b : Int) -> Int {
+fn _max_seg(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

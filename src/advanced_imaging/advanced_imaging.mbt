@@ -53,11 +53,11 @@ pub extend InfraredImagingType with Eq::{not_equal, equal}
 /// 高光谱数据
 pub(all) struct HyperspectralData {
   image_cube : Array[@types.Image]
-  num_bands : Int
+  num_bands : Int32
   wavelengths : Array[Double]
   spectral_resolution : Double
-  spatial_width : Int
-  spatial_height : Int
+  spatial_width : Int32
+  spatial_height : Int32
 }
 
 ///|
@@ -67,7 +67,7 @@ pub(all) struct PolarizationData {
   degree_of_polarization : @types.Image
   angle_of_polarization : @types.Image
   stokes_parameters : Array[@types.Image]
-  num_stokes : Int
+  num_stokes : Int32
 }
 
 ///|
@@ -129,9 +129,9 @@ pub(all) struct PETData {
 /// 成像配置
 pub(all) struct AdvancedImagingConfig {
   modality : ImagingModality
-  image_width : Int
-  image_height : Int
-  num_slices : Int
+  image_width : Int32
+  image_height : Int32
+  num_slices : Int32
   use_noise_reduction : Bool
   use_enhancement : Bool
   calibration_factor : Double
@@ -156,9 +156,9 @@ pub fn create_default_advanced_imaging_config(
 ///|
 /// 量子成像（鬼成像简化版）
 pub fn quantum_ghost_imaging(
-  num_patterns : Int,
-  width : Int,
-  height : Int,
+  num_patterns : Int32,
+  width : Int32,
+  height : Int32,
   algorithm : QuantumImagingAlgorithm,
 ) -> @types.Image {
   ignore(algorithm)
@@ -270,7 +270,7 @@ pub fn infrared_pseudocolor(
 /// 生成高光谱数据立方体（简化版）
 pub fn generate_hyperspectral_cube(
   base_image : @types.Image,
-  num_bands : Int,
+  num_bands : Int32,
   start_wavelength : Double,
   end_wavelength : Double,
 ) -> HyperspectralData {
@@ -510,8 +510,8 @@ pub fn xray_enhance(xray_image : @types.Image, energy_kev : Double) -> XRayData 
 ///|
 /// 超声图像合成（简化版）
 pub fn ultrasound_synthesize(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   frequency_mhz : Double,
   depth_cm : Double,
 ) -> UltrasoundData {
@@ -577,8 +577,8 @@ pub fn ultrasound_synthesize(
 ///|
 /// MRI图像合成（简化版）
 pub fn mri_synthesize(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   field_strength_t : Double,
 ) -> MRIData {
   let _ = width * height
@@ -658,8 +658,8 @@ pub fn mri_synthesize(
 ///|
 /// PET图像合成（简化版）
 pub fn pet_synthesize(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   radiotracer : String,
 ) -> PETData {
   let _ = width * height

@@ -1,12 +1,12 @@
 ///|
 /// QOI 扩展信息（包含通道数、色彩空间等）
 pub struct QoiInfoExtended {
-  width : Int
-  height : Int
-  channels : Int
-  colorspace : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  colorspace : Int32
   colorspace_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
 }
 

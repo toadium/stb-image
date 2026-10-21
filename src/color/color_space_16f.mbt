@@ -15,7 +15,7 @@ fn clamp_float_cs(v : Float, lo : Float, hi : Float) -> Float {
 }
 
 ///|
-fn clamp_int_cs(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_cs(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -30,9 +30,9 @@ fn clamp_int_cs(v : Int, lo : Int, hi : Int) -> Int {
 ///|
 /// 16-bit RGB → HSL。输入 r,g,b ∈ [0,65535]，输出 h ∈ [0,360), s,l ∈ [0,1]
 pub fn rgb_to_hsl_16(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
@@ -71,7 +71,7 @@ pub fn hsl_to_rgb_16(
   h : Float,
   s : Float,
   l : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || l < 0.0F || l > 1.0F {
     raise @types.LoadError::DecodeFailed(
@@ -195,9 +195,9 @@ pub fn hsl_to_rgb_f(
 ///|
 /// 16-bit RGB → HSV。输入 r,g,b ∈ [0,65535]，输出 h ∈ [0,360), s,v ∈ [0,1]
 pub fn rgb_to_hsv_16(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
@@ -232,7 +232,7 @@ pub fn hsv_to_rgb_16(
   h : Float,
   s : Float,
   v : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || v < 0.0F || v > 1.0F {
     raise @types.LoadError::DecodeFailed(
@@ -352,9 +352,9 @@ pub fn hsv_to_rgb_f(
 ///|
 /// 16-bit RGB → XYZ。输入 r,g,b ∈ [0,65535]，输出 x,y,z ∈ [0,1]
 pub fn rgb_to_xyz_16(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
@@ -362,7 +362,7 @@ pub fn rgb_to_xyz_16(
       "rgb_to_xyz_16: r,g,b必须在[0,65535]范围内",
     )
   }
-  fn linearize(c : Int) -> Float {
+  fn linearize(c : Int32) -> Float {
     let cf = Float::from_int(c) / 65535.0F
     if cf <= 0.04045F {
       cf / 12.92F
@@ -385,7 +385,7 @@ pub fn xyz_to_rgb_16(
   x : Float,
   y : Float,
   z : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证（XYZ空间允许z值超过1.0）
   if x < 0.0F || y < 0.0F || z < 0.0F {
     raise @types.LoadError::DecodeFailed("xyz_to_rgb_16: x,y,z必须>=0")
@@ -393,7 +393,7 @@ pub fn xyz_to_rgb_16(
   let rl = 3.2406F * x - 1.5372F * y - 0.4986F * z
   let gl = -0.9689F * x + 1.8758F * y + 0.0415F * z
   let bl = 0.0557F * x - 0.2040F * y + 1.0570F * z
-  fn srgb(c : Float) -> Int {
+  fn srgb(c : Float) -> Int32 {
     let v = if c <= 0.0031308F {
       c * 12.92F
     } else {
@@ -466,9 +466,9 @@ pub fn xyz_to_rgb_f(
 ///|
 /// 16-bit RGB → LAB。输入 r,g,b ∈ [0,65535]，输出 L ∈ [0,100], a,b ∈ [-128,127]
 pub fn rgb_to_lab_16(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
@@ -502,7 +502,7 @@ pub fn lab_to_rgb_16(
   l : Float,
   a : Float,
   b : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if l < 0.0F || l > 100.0F {
     raise @types.LoadError::DecodeFailed(

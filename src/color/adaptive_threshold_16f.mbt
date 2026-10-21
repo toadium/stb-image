@@ -10,8 +10,8 @@
 /// 输出二值图像（0 或 65535），alpha 通道不变。
 pub fn adaptive_threshold_mean_16(
   img : @types.Image16,
-  block_size : Int,
-  c : Int,
+  block_size : Int32,
+  c : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -44,7 +44,7 @@ pub fn adaptive_threshold_mean_16(
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
   let half = block_size / 2
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_c(img.data, i * 2)
   }
@@ -114,7 +114,7 @@ pub fn adaptive_threshold_mean_16(
 /// 输出二值图像（0.0 或 1.0），alpha 通道不变。
 pub fn adaptive_threshold_mean_f(
   img : @types.ImageF,
-  block_size : Int,
+  block_size : Int32,
   c : Float,
 ) -> @types.ImageF raise @types.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
@@ -203,8 +203,8 @@ pub fn adaptive_threshold_mean_f(
 /// 16-bit 自适应阈值（高斯加权法）。
 pub fn adaptive_threshold_gaussian_16(
   img : @types.Image16,
-  block_size : Int,
-  c : Int,
+  block_size : Int32,
+  c : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -320,7 +320,7 @@ pub fn adaptive_threshold_gaussian_16(
 /// float 自适应阈值（高斯加权法）。
 pub fn adaptive_threshold_gaussian_f(
   img : @types.ImageF,
-  block_size : Int,
+  block_size : Int32,
   c : Float,
 ) -> @types.ImageF raise @types.LoadError {
   if block_size < 3 || block_size % 2 == 0 {
@@ -453,7 +453,7 @@ pub fn threshold_otsu_16(
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
   for c_idx in 0..<color_ch {
-    let hist : Array[Int] = Array::make(65536, 0)
+    let hist : Array[Int32] = Array::make(65536, 0)
     for i in 0..<n {
       hist[read_u16_le_c(img.data, i * bpp + c_idx * 2)] += 1
     }
@@ -527,7 +527,7 @@ pub fn threshold_otsu_f(
   let bpp = ch * 4
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
   for c_idx in 0..<color_ch {
-    let hist : Array[Int] = Array::make(256, 0)
+    let hist : Array[Int32] = Array::make(256, 0)
     let src : Array[Float] = Array::make(n, 0.0F)
     for i in 0..<n {
       let v = read_float_le(img.data, i * bpp + c_idx * 4)

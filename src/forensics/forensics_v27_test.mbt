@@ -3,7 +3,7 @@
 
 ///|
 /// 创建纯色图像（低噪声，模拟 AI 生成）
-fn create_solid_image_v27(w : Int, h : Int, value : Int) -> @types.Image {
+fn create_solid_image_v27(w : Int32, h : Int32, value : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(value.to_byte())
@@ -18,7 +18,7 @@ fn create_solid_image_v27(w : Int, h : Int, value : Int) -> @types.Image {
 
 ///|
 /// 创建随机噪声图像（高噪声，模拟物理拍摄）
-fn create_noise_image_v27(w : Int, h : Int) -> @types.Image {
+fn create_noise_image_v27(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   let mut state = 12345
   for _ in 0..<(w * h) {
@@ -35,7 +35,7 @@ fn create_noise_image_v27(w : Int, h : Int) -> @types.Image {
 
 ///|
 /// 创建渐变图像
-fn create_gradient_image_v27(w : Int, h : Int) -> @types.Image {
+fn create_gradient_image_v27(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<h {
     for x in 0..<w {
@@ -53,7 +53,7 @@ fn create_gradient_image_v27(w : Int, h : Int) -> @types.Image {
 
 ///|
 /// 创建模拟 UI 截图图像（有边框和线条）
-fn create_ui_screenshot_v27(w : Int, h : Int) -> @types.Image {
+fn create_ui_screenshot_v27(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {
@@ -79,7 +79,7 @@ fn create_ui_screenshot_v27(w : Int, h : Int) -> @types.Image {
 
 ///|
 /// 创建棋盘格图像
-fn create_checkerboard_v27(w : Int, h : Int, block : Int) -> @types.Image {
+fn create_checkerboard_v27(w : Int32, h : Int32, block : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

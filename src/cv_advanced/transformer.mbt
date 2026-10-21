@@ -21,11 +21,11 @@ pub extend TransformerLayerKind with Eq::{not_equal, equal}
 /// Transformer 配置。
 /// Transformer configuration.
 pub(all) struct TransformerConfig {
-  d_model : Int
-  num_heads : Int
-  d_ff : Int
-  num_encoder_layers : Int
-  num_decoder_layers : Int
+  d_model : Int32
+  num_heads : Int32
+  d_ff : Int32
+  num_encoder_layers : Int32
+  num_decoder_layers : Int32
   dropout : Double
   scale : Double
 } derive(Eq, @debug.Debug)
@@ -111,8 +111,8 @@ pub fn feed_forward(
   b1 : Array[Double],
   w2 : Array[Double],
   b2 : Array[Double],
-  d_model : Int,
-  d_ff : Int,
+  d_model : Int32,
+  d_ff : Int32,
 ) -> Array[Double] {
   let hidden = linear(input, w1, b1, d_model, d_ff)
   let activated : Array[Double] = []
@@ -385,8 +385,8 @@ fn linear(
   input : Array[Double],
   weight : Array[Double],
   bias : Array[Double],
-  in_dim : Int,
-  out_dim : Int,
+  in_dim : Int32,
+  out_dim : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for o in 0..<out_dim {

@@ -23,7 +23,7 @@ fn enc_mismatch() -> @types.Image {
 }
 
 ///|
-fn enc_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn enc_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

@@ -2,7 +2,7 @@
 // 医学图像分割、配准、窗宽窗位、病灶检测、质量评估、报告生成
 
 ///|
-fn make_medical_image(w : Int, h : Int) -> @medical.MedicalImage {
+fn make_medical_image(w : Int32, h : Int32) -> @medical.MedicalImage {
   let data : Array[Double] = []
   for i in 0..<(w * h) {
     data.push((i % 256).to_double())
@@ -23,8 +23,8 @@ fn make_medical_image(w : Int, h : Int) -> @medical.MedicalImage {
 
 ///|
 fn make_uniform_medical(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   value : Double,
 ) -> @medical.MedicalImage {
   @medical.MedicalImage::{
@@ -42,7 +42,7 @@ fn make_uniform_medical(
 }
 
 ///|
-fn make_gray_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_gray_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

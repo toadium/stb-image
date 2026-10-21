@@ -4,7 +4,7 @@
 
 ///|
 /// PNG 颜色类型对应的通道数
-fn png_channels(color_type : Int) -> Int? {
+fn png_channels(color_type : Int32) -> Int32? {
   match color_type {
     0 => Some(1) // gray
     2 => Some(3) // rgb
@@ -17,7 +17,7 @@ fn png_channels(color_type : Int) -> Int? {
 
 ///|
 /// Paeth 预测函数
-fn paeth_predict(a : Int, b : Int, c : Int) -> Int {
+fn paeth_predict(a : Int32, b : Int32, c : Int32) -> Int32 {
   let p = a + b - c
   let pa = (p - a).abs()
   let pb = (p - b).abs()
@@ -38,7 +38,7 @@ fn paeth_predict(a : Int, b : Int, c : Int) -> Int {
 /// req_channels: None=原色（保留 alpha）, 1=灰度, 2=灰度+alpha, 3=RGB, 4=RGBA
 pub fn decode_png_pure(
   data : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image raise @types.LoadError {
   let len = data.length()
   // 验证 PNG signature
@@ -52,7 +52,7 @@ pub fn decode_png_pure(
   let mut bit_depth = 0
   let mut color_type = 0
   let mut interlace = 0
-  let palette : Array[(Int, Int, Int)] = []
+  let palette : Array[(Int32, Int32, Int32)] = []
   let idat_data : Array[Byte] = []
   let mut found_ihdr = false
   let mut found_iend = false

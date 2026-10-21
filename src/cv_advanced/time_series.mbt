@@ -8,7 +8,7 @@
 /// Time series data.
 pub(all) struct TimeSeriesData {
   values : Array[Double]
-  num_points : Int
+  num_points : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -57,7 +57,7 @@ pub fn ts_linear_trend(data : TimeSeriesData) -> (Double, Double) {
 /// Moving average smoothing.
 pub fn ts_moving_average(
   data : TimeSeriesData,
-  window_size : Int,
+  window_size : Int32,
 ) -> Array[Double] {
   let n = data.num_points
   if n == 0 || window_size <= 0 {
@@ -85,7 +85,7 @@ pub fn ts_moving_average(
 /// Seasonal decomposition (simplified).
 pub fn ts_seasonal_decompose(
   data : TimeSeriesData,
-  period : Int,
+  period : Int32,
 ) -> (Array[Double], Array[Double], Array[Double]) {
   let n = data.num_points
   if n == 0 || period <= 0 {
@@ -131,7 +131,7 @@ pub fn ts_seasonal_decompose(
 pub fn ts_anomaly_detect(
   data : TimeSeriesData,
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let n = data.num_points
   if n == 0 {
     return []
@@ -163,8 +163,8 @@ pub fn ts_anomaly_detect(
 /// Change point detection (mean difference).
 pub fn ts_change_point_detect(
   data : TimeSeriesData,
-  min_segment : Int,
-) -> Array[Int] {
+  min_segment : Int32,
+) -> Array[Int32] {
   let n = data.num_points
   if n < 2 * min_segment {
     return []
@@ -199,7 +199,7 @@ pub fn ts_change_point_detect(
 ///|
 /// 简单预测（线性外推）。
 /// Simple forecast (linear extrapolation).
-pub fn ts_forecast(data : TimeSeriesData, num_steps : Int) -> Array[Double] {
+pub fn ts_forecast(data : TimeSeriesData, num_steps : Int32) -> Array[Double] {
   let (slope, intercept) = ts_linear_trend(data)
   let n = data.num_points
   let result = Array::make(num_steps, 0.0)

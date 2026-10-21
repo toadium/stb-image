@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_geo(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_geo(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_geo(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_geo(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_geo(data : Bytes, offset : Int) -> Float {
+fn read_float_le_geo(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_geo(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_geo(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_geo(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_geo(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_geo(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_geo(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -46,14 +46,14 @@ fn clamp_int_geo(v : Int, lo : Int, hi : Int) -> Int {
 
 ///|
 fn sample_bilinear_16(
-  data : Array[Int],
-  w : Int,
-  h : Int,
-  ch : Int,
-  c : Int,
+  data : Array[Int32],
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  c : Int32,
   x : Float,
   y : Float,
-) -> Int {
+) -> Int32 {
   let x0 = x.to_int()
   let y0 = y.to_int()
   let w_minus_1 = w - 1
@@ -76,10 +76,10 @@ fn sample_bilinear_16(
 ///|
 fn sample_bilinear_f(
   data : Array[Float],
-  w : Int,
-  h : Int,
-  ch : Int,
-  c : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  c : Int32,
   x : Float,
   y : Float,
 ) -> Float {
@@ -109,14 +109,14 @@ fn sample_bilinear_f(
 pub fn warp_affine_16(
   img : @types.Image16,
   matrix : (Float, Float, Float, Float, Float, Float),
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image16 {
   let (a, b, c, d, e, f) = matrix
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = read_u16_le_geo(img.data, i * 2)
   }
@@ -151,8 +151,8 @@ pub fn warp_affine_16(
 pub fn warp_affine_f(
   img : @types.ImageF,
   matrix : (Float, Float, Float, Float, Float, Float),
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.ImageF {
   let (a, b, c, d, e, f) = matrix
   let ch = img.channels
@@ -189,13 +189,13 @@ pub fn warp_affine_f(
 pub fn warp_perspective_16(
   img : @types.Image16,
   matrix : PerspectiveMatrix,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image16 {
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = read_u16_le_geo(img.data, i * 2)
   }
@@ -232,8 +232,8 @@ pub fn warp_perspective_16(
 pub fn warp_perspective_f(
   img : @types.ImageF,
   matrix : PerspectiveMatrix,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.ImageF {
   let ch = img.channels
   let w = img.width
@@ -270,13 +270,13 @@ pub fn warp_perspective_f(
 /// 16-bit 图像缩放。
 pub fn resize_16(
   img : @types.Image16,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image16 {
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = read_u16_le_geo(img.data, i * 2)
   }
@@ -309,7 +309,11 @@ pub fn resize_16(
 
 ///|
 /// float 图像缩放。
-pub fn resize_f(img : @types.ImageF, new_w : Int, new_h : Int) -> @types.ImageF {
+pub fn resize_f(
+  img : @types.ImageF,
+  new_w : Int32,
+  new_h : Int32,
+) -> @types.ImageF {
   let ch = img.channels
   let w = img.width
   let h = img.height

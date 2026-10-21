@@ -7,12 +7,12 @@
 /// 优化执行结果。
 /// Optimization execution result.
 pub(all) struct OptimizeExecResult {
-  original_length : Int
-  optimized_length : Int
-  ops_reduced : Int
-  original_cost : Int
-  optimized_cost : Int
-  cost_reduced : Int
+  original_length : Int32
+  optimized_length : Int32
+  ops_reduced : Int32
+  original_cost : Int32
+  optimized_cost : Int32
+  cost_reduced : Int32
   is_improved : Bool
   optimized_pipeline_desc : String
 } derive(Eq, @debug.Debug)
@@ -77,7 +77,7 @@ pub fn OptimizeExecResult::is_significant(self : OptimizeExecResult) -> Bool {
 ///|
 /// 优化效率（成本降低百分比，0-100）。
 /// Optimization efficiency (cost reduction percentage, 0-100).
-pub fn OptimizeExecResult::efficiency_pct(self : OptimizeExecResult) -> Int {
+pub fn OptimizeExecResult::efficiency_pct(self : OptimizeExecResult) -> Int32 {
   if self.original_cost == 0 {
     0
   } else {

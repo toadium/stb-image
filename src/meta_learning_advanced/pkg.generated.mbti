@@ -4,11 +4,11 @@ package "walkzzz/image/src/meta_learning_advanced"
 // Values
 pub fn create_default_meta_learning_config() -> MetaLearningConfig
 
-pub fn meta_learn(Int, MetaLearningConfig) -> MetaLearningResult
+pub fn meta_learn(Int32, MetaLearningConfig) -> MetaLearningResult
 
 pub fn meta_learning_report_to_string(MetaLearningTaskType, MetaLearningConfig, String) -> String
 
-pub fn train_maml(Int, MetaLearningConfig) -> MAMLResult
+pub fn train_maml(Int32, MetaLearningConfig) -> MAMLResult
 
 pub fn train_matching_net(Array[Array[Double]], Array[Array[Double]], MetaLearningConfig) -> MatchingNetResult
 
@@ -16,7 +16,7 @@ pub fn train_protonet(Array[Array[Double]], Array[Array[Double]], MetaLearningCo
 
 pub fn train_relation_net(Array[Array[Double]], Array[Double], MetaLearningConfig) -> RelationNetResult
 
-pub fn train_reptile(Int, MetaLearningConfig) -> ReptileResult
+pub fn train_reptile(Int32, MetaLearningConfig) -> ReptileResult
 
 // Errors
 
@@ -24,18 +24,18 @@ pub fn train_reptile(Int, MetaLearningConfig) -> ReptileResult
 pub(all) struct MAMLResult {
   initial_parameters : Array[Double]
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   meta_loss : Double
   meta_accuracy : Double
   inner_loss : Array[Double]
   inner_accuracy : Array[Double]
-  num_inner_steps : Int
+  num_inner_steps : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   learning_time_ms : Double
   first_order : Bool
 }
@@ -43,15 +43,15 @@ pub(all) struct MAMLResult {
 pub(all) struct MatchingNetResult {
   support_embeddings : Array[Array[Double]]
   query_embeddings : Array[Array[Double]]
-  num_classes : Int
-  num_support : Int
-  num_query : Int
+  num_classes : Int32
+  num_support : Int32
+  num_query : Int32
   training_loss : Double
   test_loss : Double
   training_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
   use_fce : Bool
@@ -83,29 +83,29 @@ pub(all) struct MetaLearningConfig {
   algorithm_type : MetaLearningAlgorithmType
   optimizer_type : MetaOptimizerType
   task_distribution : TaskDistributionType
-  num_way : Int
-  num_shot : Int
-  num_query : Int
-  num_meta_iterations : Int
-  num_tasks_per_batch : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
+  num_meta_iterations : Int32
+  num_tasks_per_batch : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_inner_steps : Int
+  num_inner_steps : Int32
   first_order : Bool
   use_curriculum : Bool
   use_data_augmentation : Bool
   use_regularization : Bool
   regularization_strength : Double
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 pub(all) struct MetaLearningResult {
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   meta_training_loss : Double
   meta_validation_loss : Double
   meta_test_loss : Double
@@ -113,10 +113,10 @@ pub(all) struct MetaLearningResult {
   meta_validation_accuracy : Double
   meta_test_accuracy : Double
   confidence_interval : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   meta_learning_rate : Double
   inner_learning_rate : Double
-  inner_steps : Int
+  inner_steps : Int32
   learning_time_ms : Double
   converged : Bool
 }
@@ -149,8 +149,8 @@ pub fn MetaOptimizerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct ProtoNetResult {
   prototypes : Array[Array[Double]]
-  num_classes : Int
-  feature_dimension : Int
+  num_classes : Int32
+  feature_dimension : Int32
   training_loss : Double
   validation_loss : Double
   test_loss : Double
@@ -158,7 +158,7 @@ pub(all) struct ProtoNetResult {
   validation_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
   distance_metric : String
@@ -166,32 +166,32 @@ pub(all) struct ProtoNetResult {
 
 pub(all) struct RelationNetResult {
   relation_scores : Array[Array[Double]]
-  num_classes : Int
-  num_support : Int
-  num_query : Int
+  num_classes : Int32
+  num_support : Int32
+  num_query : Int32
   training_loss : Double
   test_loss : Double
   training_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
-  relation_module_layers : Int
+  relation_module_layers : Int32
 }
 
 pub(all) struct ReptileResult {
   initial_parameters : Array[Double]
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
   meta_loss : Double
   meta_accuracy : Double
-  num_inner_steps : Int
+  num_inner_steps : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   learning_time_ms : Double
 }
 

@@ -1,17 +1,17 @@
 ///|
 /// BMP 扩展信息（包含位深、压缩方式、行序、调色板等）
 pub struct BmpInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  compression : Int
+  compression : Int32
   compression_name : String
   is_bottom_up : Bool
-  dib_size : Int
-  num_colors : Int
-  data_offset : Int
+  dib_size : Int32
+  num_colors : Int32
+  data_offset : Int32
 }
 
 ///|
@@ -25,7 +25,7 @@ pub fn is_bmp_format(data : Bytes) -> Bool {
 }
 
 ///|
-fn bmp_compression_name(c : Int) -> String {
+fn bmp_compression_name(c : Int32) -> String {
   match c {
     0 => "BI_RGB"
     1 => "BI_RLE8"

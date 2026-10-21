@@ -4,9 +4,9 @@
 ///|
 /// 中文 OCR 配置
 pub(all) struct ChineseOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   char_set : String // "common" / "full"
 }
@@ -26,7 +26,7 @@ pub fn chinese_ocr_default_config() -> ChineseOcrConfig {
 ///|
 /// 生成常用汉字模板（100个常用汉字）
 pub fn generate_chinese_templates(
-  char_set? : String = "common",
+  char_set~ : String = "common",
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   // 常用汉字列表（100个最常用汉字）
@@ -180,12 +180,12 @@ pub fn recognize_chinese(
 fn segment_chinese_chars(
   img : @types.Image,
   cfg : ChineseOcrConfig,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
   // 简单连通域标记
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -208,11 +208,11 @@ fn segment_chinese_chars(
     }
   }
   // 计算每个连通域的边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -234,7 +234,7 @@ fn segment_chinese_chars(
     }
   }
   // 过滤并返回（中文字符通常接近正方形）
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -257,11 +257,11 @@ fn segment_chinese_chars(
 /// 提取中文字符区域
 fn extract_chinese_char_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -300,7 +300,7 @@ fn extract_chinese_char_region(
 /// 提取中文字符特征（16x16网格特征）
 fn extract_chinese_char_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height

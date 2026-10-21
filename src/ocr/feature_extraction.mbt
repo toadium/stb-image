@@ -5,19 +5,19 @@
 /// HOG 特征描述子
 pub(all) struct HogFeatures {
   features : Array[Double]
-  cell_size : Int
-  num_bins : Int
-  width : Int
-  height : Int
+  cell_size : Int32
+  num_bins : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
 /// LBP 特征描述子
 pub(all) struct LbpFeatures {
   features : Array[Double]
-  num_bins : Int
-  radius : Int
-  num_points : Int
+  num_bins : Int32
+  radius : Int32
+  num_points : Int32
 }
 
 ///|
@@ -35,8 +35,8 @@ pub(all) struct ProjectionFeatures {
 /// 网格特征
 pub(all) struct GridFeatures {
   features : Array[Double]
-  grid_rows : Int
-  grid_cols : Int
+  grid_rows : Int32
+  grid_cols : Int32
 }
 
 ///|
@@ -56,8 +56,8 @@ pub(all) struct StatisticalFeatures {
 /// 计算 HOG 特征（方向梯度直方图）
 pub fn hog_features(
   img : @types.Image,
-  cell_size? : Int = 8,
-  num_bins? : Int = 9,
+  cell_size~ : Int32 = 8,
+  num_bins~ : Int32 = 9,
 ) -> HogFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -155,9 +155,9 @@ pub fn hog_features(
 /// 计算 LBP 特征（局部二值模式）
 pub fn lbp_features(
   img : @types.Image,
-  radius? : Int = 1,
-  num_points? : Int = 8,
-  num_bins? : Int = 256,
+  radius~ : Int32 = 1,
+  num_points~ : Int32 = 8,
+  num_bins~ : Int32 = 256,
 ) -> LbpFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -195,7 +195,7 @@ pub fn lbp_features(
   let h = img.height
   let data = img.data
   // 计算 LBP 码
-  let lbp_codes : Array[Int] = Array::make(w * h, 0)
+  let lbp_codes : Array[Int32] = Array::make(w * h, 0)
   for y in radius..<(h - radius) {
     for x in radius..<(w - radius) {
       let center = data[y * w + x].to_int()
@@ -306,8 +306,8 @@ pub fn projection_features(
 /// 计算网格特征（将图像分成网格，每个格子计算像素密度）
 pub fn grid_features(
   img : @types.Image,
-  grid_rows? : Int = 4,
-  grid_cols? : Int = 4,
+  grid_rows~ : Int32 = 4,
+  grid_cols~ : Int32 = 4,
 ) -> GridFeatures raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

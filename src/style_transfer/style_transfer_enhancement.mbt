@@ -30,7 +30,7 @@ pub(all) struct StyleTransferResult {
   style_strength : Double
   content_strength : Double
   processing_time_ms : Double
-  iterations : Int
+  iterations : Int32
 }
 
 ///|
@@ -39,10 +39,10 @@ pub(all) struct StyleTransferConfig {
   algorithm : StyleTransferAlgorithm
   style_strength : Double
   content_strength : Double
-  iterations : Int
+  iterations : Int32
   learning_rate : Double
   use_color_preservation : Bool
-  resolution : Int
+  resolution : Int32
 }
 
 ///|
@@ -456,8 +456,8 @@ pub fn cartoonize(
 /// 油画效果
 pub fn oil_painting(
   img : @types.Image,
-  radius : Int,
-  intensity_levels : Int,
+  radius : Int32,
+  intensity_levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -482,7 +482,7 @@ pub fn oil_painting(
   for y in 0..<h {
     for x in 0..<w {
       // 统计邻域内的强度直方图
-      let histogram : Array[Int] = []
+      let histogram : Array[Int32] = []
       let sum_histogram : Array[Double] = []
       for _ in 0..<intensity_levels {
         histogram.push(0)

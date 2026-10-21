@@ -9,8 +9,8 @@
 pub(all) struct InsarInterferogram {
   phase : Array[Array[Double]]
   coherence : Array[Array[Double]]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -99,7 +99,7 @@ pub fn insar_create_interferogram(
 /// Estimate coherence with window averaging.
 pub fn insar_estimate_coherence(
   interferogram : InsarInterferogram,
-  window_size : Int,
+  window_size : Int32,
 ) -> Array[Array[Double]] {
   let half = window_size / 2
   let result = Array::make(interferogram.height, [])
@@ -254,7 +254,7 @@ pub fn insar_mean_coherence(interferogram : InsarInterferogram) -> Double {
 pub fn insar_coherence_mask(
   interferogram : InsarInterferogram,
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let result = Array::make(interferogram.height, [])
   for row in 0..<interferogram.height {
     let row_data = Array::make(interferogram.width, 0)

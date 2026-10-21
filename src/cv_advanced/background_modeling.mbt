@@ -25,7 +25,7 @@ pub(all) struct BackgroundParams {
   bg_method : BackgroundMethod
   threshold : Double
   learning_rate : Double
-  history : Int
+  history : Int32
   var_init : Double
 } derive(Eq, @debug.Debug)
 
@@ -39,12 +39,12 @@ pub extend BackgroundParams with Eq::{not_equal, equal}
 /// 背景模型。
 /// Background model.
 pub(all) struct BackgroundModel {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   means : Array[Double]
   variances : Array[Double]
   weights : Array[Double]
-  frame_count : Int
+  frame_count : Int32
   params : BackgroundParams
 } derive(Eq, @debug.Debug)
 
@@ -58,8 +58,8 @@ pub extend BackgroundModel with Eq::{not_equal, equal}
 /// 前景掩码。
 /// Foreground mask.
 pub(all) struct ForegroundMask {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
 } derive(Eq, @debug.Debug)
 

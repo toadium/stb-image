@@ -2,7 +2,7 @@
 // 仿射变换/平移估计/图像对齐
 
 ///|
-fn make_varied_reg_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_reg_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

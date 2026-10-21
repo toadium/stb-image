@@ -73,7 +73,7 @@ pub fn apply_window_level(
 /// 支持多种医学常用伪彩色方案
 pub fn medical_colormap(
   img : @types.Image,
-  colormap? : String = "hot",
+  colormap~ : String = "hot",
 ) -> @types.Image {
   let cmap = colormap
   let w = img.width
@@ -152,8 +152,8 @@ pub fn medical_colormap(
 /// 医学图像对比度增强（CLAHE 简化版，自适应直方图均衡化）
 pub fn medical_contrast_enhance(
   img : @types.Image,
-  clip_limit? : Double = 2.0,
-  tile_size? : Int = 8,
+  clip_limit~ : Double = 2.0,
+  tile_size~ : Int32 = 8,
 ) -> @types.Image {
   let _ = clip_limit
   let _ = tile_size
@@ -161,7 +161,7 @@ pub fn medical_contrast_enhance(
   let h = img.height
   let channels = img.channels
   // 转换为灰度
-  let gray : Array[Int] = Array::make(w * h, 0)
+  let gray : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     let idx = i * channels
     let r = img.data[idx].to_int()
@@ -172,12 +172,12 @@ pub fn medical_contrast_enhance(
     0.114 * b.to_double()).to_int()
   }
   // 全局直方图均衡化（简化版）
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<(w * h) {
     histogram[gray[i]] += 1
   }
   // 累积分布函数
-  let cdf : Array[Int] = Array::make(256, 0)
+  let cdf : Array[Int32] = Array::make(256, 0)
   let mut sum = 0
   for i in 0..<256 {
     sum += histogram[i]
@@ -207,8 +207,8 @@ pub fn medical_contrast_enhance(
 /// 医学图像降噪（各向异性扩散，简化版）
 pub fn medical_denoise(
   img : @types.Image,
-  iterations? : Int = 5,
-  kappa? : Double = 30.0,
+  iterations~ : Int32 = 5,
+  kappa~ : Double = 30.0,
 ) -> @types.Image {
   let iter = iterations
   let k = kappa
@@ -271,11 +271,11 @@ pub fn medical_denoise(
 ///|
 /// 测量图像中两点之间的距离（像素距离）
 pub fn measure_distance(
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
-  pixel_spacing? : Double = 1.0,
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
+  pixel_spacing~ : Double = 1.0,
 ) -> Double {
   let spacing = pixel_spacing
   let dx = (x2 - x1).to_double()
@@ -285,7 +285,7 @@ pub fn measure_distance(
 
 ///|
 /// 测量图像中区域的面积（像素面积）
-pub fn measure_area(mask : @types.Image, pixel_area? : Double = 1.0) -> Double {
+pub fn measure_area(mask : @types.Image, pixel_area~ : Double = 1.0) -> Double {
   let area_per_pixel = pixel_area
   let w = mask.width
   let h = mask.height

@@ -6,14 +6,14 @@
 ///|
 /// LZW 编码辅助（用于测试，与 gif_encode.mbt 逻辑一致）
 fn lzw_encode_for_test(
-  indices : Array[Int],
-  min_code_size : Int,
+  indices : Array[Int32],
+  min_code_size : Int32,
 ) -> Array[Byte] {
   let clear_code = 1 << min_code_size
   let end_code = clear_code + 1
   let code_width = Ref(min_code_size + 1)
   let max_code = Ref((1 << code_width.val) - 1)
-  let code_table : Array[(Int, Int)] = []
+  let code_table : Array[(Int32, Int32)] = []
   for i in 0..<clear_code {
     code_table.push((-1, i))
   }
@@ -23,7 +23,7 @@ fn lzw_encode_for_test(
   let bit_buffer = Ref(0)
   let bit_count = Ref(0)
   let output : Array[Byte] = []
-  fn emit(code : Int) -> Unit {
+  fn emit(code : Int32) -> Unit {
     bit_buffer.val = bit_buffer.val | (code << bit_count.val)
     bit_count.val += code_width.val
     while bit_count.val >= 8 {
@@ -72,9 +72,9 @@ fn lzw_encode_for_test(
 ///|
 /// 构造 GIF header + LSD + GCT
 fn make_gif_header_gct(
-  width : Int,
-  height : Int,
-  gct_entries : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  gct_entries : Array[(Int32, Int32, Int32)],
 ) -> Array[Byte] {
   let out : Array[Byte] = []
   // GIF89a header
@@ -115,12 +115,12 @@ fn make_gif_header_gct(
 /// 追加 Image Descriptor + LZW data + Trailer
 fn append_gif_image(
   out : Array[Byte],
-  width : Int,
-  height : Int,
-  indices : Array[Int],
-  min_code_size : Int,
-  img_packed : Int,
-  lct_entries : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  indices : Array[Int32],
+  min_code_size : Int32,
+  img_packed : Int32,
+  lct_entries : Array[(Int32, Int32, Int32)],
 ) -> Unit {
   out.push(b'\x2C')
   out.push(b'\x00')

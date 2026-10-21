@@ -2,7 +2,7 @@
 // 将 HDR float 图像 (ImageF) 映射到 LDR 8-bit 图像 (Image)
 
 ///|
-fn read_float_le(data : Bytes, offset : Int) -> Float {
+fn read_float_le(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -22,7 +22,7 @@ fn log_f(x : Float) -> Float {
 /// 公式：L_out = L_scaled / (1 + L_scaled)，其中 L_scaled = key * L / L_avg。
 pub fn reinhard_tonemap(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {

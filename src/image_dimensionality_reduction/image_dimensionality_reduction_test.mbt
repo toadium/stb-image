@@ -67,7 +67,7 @@ test "dimensionality_reduction_report_to_string: 基本测试" {
 }
 
 ///|
-fn make_test_data(n : Int, d : Int) -> Array[Array[Double]] {
+fn make_test_data(n : Int32, d : Int32) -> Array[Array[Double]] {
   let data : Array[Array[Double]] = []
   for i in 0..<n {
     let row : Array[Double] = []

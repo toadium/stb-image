@@ -23,8 +23,8 @@ pub extend VAEType with Eq::{not_equal, equal}
 /// VAE 配置。
 /// VAE configuration.
 pub(all) struct VAEConfig {
-  latent_dim : Int
-  input_dim : Int
+  latent_dim : Int32
+  input_dim : Int32
   beta : Double
   learning_rate : Double
   vae_type : VAEType
@@ -178,8 +178,8 @@ pub fn beta_vae_loss(
 pub fn vq_vae_quantize(
   z : Array[Double],
   codebook : Array[Double],
-  latent_dim : Int,
-) -> (Array[Double], Int) {
+  latent_dim : Int32,
+) -> (Array[Double], Int32) {
   let num_codes = codebook.length() / latent_dim
   let mut best_idx = 0
   let mut best_dist = 1.7976931348623157e308
@@ -214,8 +214,8 @@ pub fn vq_vae_quantize(
 fn linear_layer(
   input : Array[Double],
   weight : Array[Double],
-  in_dim : Int,
-  out_dim : Int,
+  in_dim : Int32,
+  out_dim : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for o in 0..<out_dim {
@@ -232,7 +232,7 @@ fn linear_layer(
 }
 
 ///|
-fn pseudo_random(seed : Int) -> Double {
+fn pseudo_random(seed : Int32) -> Double {
   let x = seed.to_double() * 12.9898 + 78.233
   let frac = x - x.floor()
   frac * 2.0 - 1.0

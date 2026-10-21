@@ -77,13 +77,13 @@ pub extend DehazingMethod with Eq::{not_equal, equal}
 /// HDR图像
 pub(all) struct HDRImage {
   hdr_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   min_luminance : Double
   max_luminance : Double
   exposure_values : Array[Double]
-  num_exposures : Int
+  num_exposures : Int32
   tone_mapped : Bool
 }
 
@@ -91,26 +91,26 @@ pub(all) struct HDRImage {
 /// 全景图像
 pub(all) struct PanoramaImage {
   panorama_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_images : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_images : Int32
   stitching_method : PanoramaStitchingMethod
   focal_length : Double
   projection_type : String
   blending_method : String
-  seam_line : Array[Array[Int]]
+  seam_line : Array[Array[Int32]]
 }
 
 ///|
 /// 景深合成结果
 pub(all) struct FocusStackingResult {
   focused_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_images : Int
-  focus_map : Array[Array[Int]]
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_images : Int32
+  focus_map : Array[Array[Int32]]
   sharpness_map : Array[Array[Double]]
   stacking_method : String
   depth_estimation : Array[Double]
@@ -120,10 +120,10 @@ pub(all) struct FocusStackingResult {
 /// 多帧降噪结果
 pub(all) struct MultiFrameDenoisingResult {
   denoised_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_frames : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_frames : Int32
   noise_reduction_db : Double
   detail_preservation : Double
   denoising_method : String
@@ -134,30 +134,30 @@ pub(all) struct MultiFrameDenoisingResult {
 /// 超分辨率结果
 pub(all) struct ComputationalPhotographySRResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
   ssim : Double
-  num_input_frames : Int
+  num_input_frames : Int32
 }
 
 ///|
 /// 去模糊结果
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   deblurring_method : DeblurringMethod
-  kernel_size : Int
+  kernel_size : Int32
   kernel_estimate : Array[Array[Double]]
   psnr_improvement : Double
   ssim_improvement : Double
-  iterations : Int
+  iterations : Int32
   is_blind : Bool
 }
 
@@ -165,9 +165,9 @@ pub(all) struct DeblurringResult {
 /// 去雾结果
 pub(all) struct DehazingResult {
   dehazed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   dehazing_method : DehazingMethod
   transmission_map : Array[Double]
   atmospheric_light : Array[Double]
@@ -180,9 +180,9 @@ pub(all) struct DehazingResult {
 /// 色彩管理结果
 pub(all) struct ColorManagementResult {
   corrected_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   input_color_space : String
   output_color_space : String
   white_balance_temperature : Double
@@ -249,8 +249,8 @@ pub fn create_default_computational_photography_config() -> ComputationalPhotogr
 pub fn create_hdr_image(
   exposures : Array[Array[Double]],
   exposure_values : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> HDRImage {
   ignore(config)
@@ -320,8 +320,8 @@ pub fn tone_map_hdr(
 /// 全景拼接（简化版）
 pub fn stitch_panorama(
   images : Array[Array[Double]],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> PanoramaImage {
   let panorama_width = width * images.length()
@@ -359,16 +359,16 @@ pub fn stitch_panorama(
 /// 景深合成（简化版）
 pub fn focus_stack(
   images : Array[Array[Double]],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> FocusStackingResult {
   let focused_image : Array[Double] = []
-  let focus_map : Array[Array[Int]] = []
+  let focus_map : Array[Array[Int32]] = []
   let sharpness_map : Array[Array[Double]] = []
 
   for y in 0..<height {
-    let focus_row : Array[Int] = []
+    let focus_row : Array[Int32] = []
     let sharpness_row : Array[Double] = []
     for x in 0..<width {
       let mut best_sharpness = 0.0
@@ -417,8 +417,8 @@ pub fn focus_stack(
 /// 多帧降噪（简化版）
 pub fn multi_frame_denoise(
   frames : Array[Array[Double]],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> MultiFrameDenoisingResult {
   ignore(config)
@@ -484,8 +484,8 @@ fn log_approx_cp(x : Double) -> Double {
 /// 去模糊（简化版）
 pub fn deblur_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> DeblurringResult {
   let deblurred : Array[Double] = []
@@ -560,8 +560,8 @@ pub fn deblur_image(
 /// 去雾（简化版）
 pub fn dehaze_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ComputationalPhotographyConfig,
 ) -> DehazingResult {
   let dehazed : Array[Double] = []

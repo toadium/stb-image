@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn tbl_make_img(w : Int, h : Int, data : Array[Int]) -> @types.Image {
+fn tbl_make_img(w : Int32, h : Int32, data : Array[Int32]) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn tbl_make_img(w : Int, h : Int, data : Array[Int]) -> @types.Image {
 }
 
 ///|
-fn tbl_uniform(w : Int, h : Int, val : Int) -> @types.Image {
+fn tbl_uniform(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -36,8 +36,8 @@ fn tbl_make_detection(confidence : Double) -> @ocr.TableDetectionResult {
 
 ///|
 fn tbl_make_enhanced(
-  rows : Int,
-  cols : Int,
+  rows : Int32,
+  cols : Int32,
   has_header : Bool,
 ) -> @ocr.EnhancedTableResult {
   @ocr.EnhancedTableResult::{
@@ -145,7 +145,7 @@ test "detect_horizontal_table_lines: all white returns no lines" {
 ///|
 test "detect_horizontal_table_lines: detects horizontal black lines" {
   try {
-    let data : Array[Int] = Array::make(64 * 64, 255)
+    let data : Array[Int32] = Array::make(64 * 64, 255)
     for x in 0..<64 {
       data[10 * 64 + x] = 0
       data[40 * 64 + x] = 0
@@ -250,7 +250,7 @@ test "detect_vertical_table_lines: all white returns no lines" {
 ///|
 test "detect_vertical_table_lines: detects vertical black lines" {
   try {
-    let data : Array[Int] = Array::make(64 * 64, 255)
+    let data : Array[Int32] = Array::make(64 * 64, 255)
     for y in 0..<64 {
       data[y * 64 + 10] = 0
       data[y * 64 + 40] = 0
@@ -269,16 +269,16 @@ test "detect_vertical_table_lines: detects vertical black lines" {
 
 ///|
 test "find_line_intersections: no intersection" {
-  let h_lines : Array[(Int, Int, Int)] = [(10, 0, 30)]
-  let v_lines : Array[(Int, Int, Int)] = [(50, 0, 30)]
+  let h_lines : Array[(Int32, Int32, Int32)] = [(10, 0, 30)]
+  let v_lines : Array[(Int32, Int32, Int32)] = [(50, 0, 30)]
   let result = @ocr.find_line_intersections(h_lines, v_lines)
   assert_eq(result.length(), 0)
 }
 
 ///|
 test "find_line_intersections: single intersection" {
-  let h_lines : Array[(Int, Int, Int)] = [(10, 0, 30)]
-  let v_lines : Array[(Int, Int, Int)] = [(15, 0, 30)]
+  let h_lines : Array[(Int32, Int32, Int32)] = [(10, 0, 30)]
+  let v_lines : Array[(Int32, Int32, Int32)] = [(15, 0, 30)]
   let result = @ocr.find_line_intersections(h_lines, v_lines)
   assert_eq(result.length(), 1)
   assert_eq(result[0], (15, 10))
@@ -286,8 +286,8 @@ test "find_line_intersections: single intersection" {
 
 ///|
 test "find_line_intersections: multiple intersections" {
-  let h_lines : Array[(Int, Int, Int)] = [(10, 0, 50), (30, 0, 50)]
-  let v_lines : Array[(Int, Int, Int)] = [(15, 0, 50), (35, 0, 50)]
+  let h_lines : Array[(Int32, Int32, Int32)] = [(10, 0, 50), (30, 0, 50)]
+  let v_lines : Array[(Int32, Int32, Int32)] = [(15, 0, 50), (35, 0, 50)]
   let result = @ocr.find_line_intersections(h_lines, v_lines)
   assert_eq(result.length(), 4)
 }
@@ -374,7 +374,7 @@ test "detect_table_enhanced: all white returns no tables" {
 ///|
 test "detect_table_enhanced: grid table detected" {
   try {
-    let data : Array[Int] = Array::make(200 * 200, 255)
+    let data : Array[Int32] = Array::make(200 * 200, 255)
     for x in 0..<200 {
       data[20 * 200 + x] = 0
       data[100 * 200 + x] = 0

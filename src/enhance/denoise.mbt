@@ -4,8 +4,8 @@
 ///|
 /// 非局部均值去噪配置
 pub(all) struct NlmConfig {
-  search_window : Int // 搜索窗口大小
-  patch_size : Int // 补丁大小
+  search_window : Int32 // 搜索窗口大小
+  patch_size : Int32 // 补丁大小
   h : Double // 滤波强度参数
   sigma : Double // 噪声标准差
 }
@@ -142,9 +142,9 @@ pub fn denoise_nlm(
 /// 同时考虑空间距离和像素值差异
 pub fn denoise_bilateral(
   img : @types.Image,
-  diameter? : Int = 9,
-  sigma_color? : Double = 75.0,
-  sigma_space? : Double = 75.0,
+  diameter~ : Int32 = 9,
+  sigma_color~ : Double = 75.0,
+  sigma_space~ : Double = 75.0,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -244,7 +244,7 @@ pub fn denoise_bilateral(
 /// 中值滤波增强版（支持任意核大小）
 pub fn denoise_median(
   img : @types.Image,
-  kernel_size? : Int = 3,
+  kernel_size~ : Int32 = 3,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -283,7 +283,7 @@ pub fn denoise_median(
     for x in 0..<w {
       for c in 0..<channels {
         // 收集邻域像素
-        let neighborhood : Array[Int] = []
+        let neighborhood : Array[Int32] = []
         for dy in -half..<(half + 1) {
           for dx in -half..<(half + 1) {
             let nx = x + dx

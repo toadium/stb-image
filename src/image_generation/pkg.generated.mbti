@@ -22,13 +22,13 @@ pub fn generate_from_latent(LatentVector, GenerationConfig) -> GenerationResult
 
 pub fn generate_random_image(GenerationConfig) -> GenerationResult
 
-pub fn generate_random_latent(Int, Int) -> LatentVector
+pub fn generate_random_latent(Int32, Int32) -> LatentVector
 
 pub fn generation_report_to_string(GenerationResult) -> String
 
 pub fn inpaint_image(@types.Image, @types.Image, EditingConfig) -> EditingResult
 
-pub fn outpaint_image(@types.Image, Int, Int, EditingConfig) -> EditingResult
+pub fn outpaint_image(@types.Image, Int32, Int32, EditingConfig) -> EditingResult
 
 pub fn remove_background(@types.Image, EditingConfig) -> EditingResult
 
@@ -38,7 +38,7 @@ pub fn remove_background(@types.Image, EditingConfig) -> EditingResult
 pub(all) struct CompositionConfig {
   blend_mode : String
   opacity : Double
-  feather_radius : Int
+  feather_radius : Int32
   use_mask : Bool
   color_match : Bool
   perspective_correct : Bool
@@ -47,7 +47,7 @@ pub(all) struct CompositionConfig {
 pub(all) struct EditingConfig {
   algorithm : ImageEditingAlgorithm
   strength : Double
-  num_steps : Int
+  num_steps : Int32
   guidance_scale : Double
   preserve_background : Bool
   edge_aware : Bool
@@ -66,11 +66,11 @@ pub(all) struct EditingResult {
 
 pub(all) struct GenerationConfig {
   algorithm : ImageGenerationAlgorithm
-  width : Int
-  height : Int
-  channels : Int
-  seed : Int
-  num_steps : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  seed : Int32
+  num_steps : Int32
   guidance_scale : Double
   temperature : Double
   use_pretrained : Bool
@@ -79,7 +79,7 @@ pub(all) struct GenerationConfig {
 pub(all) struct GenerationResult {
   image : @types.Image
   algorithm : ImageGenerationAlgorithm
-  seed : Int
+  seed : Int32
   latent_vector : Array[Double]
   generation_time_ms : Double
   quality_score : Double
@@ -119,7 +119,7 @@ pub fn ImageGenerationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct LatentVector {
   vector : Array[Double]
-  dimension : Int
+  dimension : Int32
   norm : Double
   is_normalized : Bool
 }

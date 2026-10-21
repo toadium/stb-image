@@ -25,7 +25,7 @@ pub extend RootCause with Eq::{not_equal, equal}
 /// Root cause analysis report.
 pub(all) struct RootCauseReport {
   causes : Array[RootCause]
-  total : Int
+  total : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

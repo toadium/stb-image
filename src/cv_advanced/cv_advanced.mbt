@@ -53,14 +53,14 @@ pub extend ActionRecognitionAlgorithm with Eq::{not_equal, equal}
 ///|
 /// 跟踪目标
 pub(all) struct TrackedObject {
-  object_id : Int
-  bounding_box : Array[Int]
+  object_id : Int32
+  bounding_box : Array[Int32]
   class_label : String
   confidence : Double
   velocity : Array[Double]
-  trajectory : Array[Array[Int]]
-  age : Int
-  hits : Int
+  trajectory : Array[Array[Int32]]
+  age : Int32
+  hits : Int32
   is_active : Bool
 }
 
@@ -74,7 +74,7 @@ pub(all) struct ActionRecognitionResult {
   all_scores : Array[Double]
   start_time : Double
   end_time : Double
-  num_frames : Int
+  num_frames : Int32
 }
 
 ///|
@@ -83,11 +83,11 @@ pub(all) struct SceneParsingResult {
   image_id : String
   scene_type : String
   confidence : Double
-  semantic_map : Array[Array[Int]]
-  num_classes : Int
+  semantic_map : Array[Array[Int32]]
+  num_classes : Int32
   class_distribution : Array[Double]
   objects : Array[String]
-  num_objects : Int
+  num_objects : Int32
 }
 
 ///|
@@ -99,7 +99,7 @@ pub(all) struct VQAResult {
   confidence : Double
   answer_type : String
   reasoning_steps : Array[String]
-  num_steps : Int
+  num_steps : Int32
 }
 
 ///|
@@ -121,13 +121,13 @@ pub(all) struct CVAdvancedConfig {
   task_type : CVAdvancedTaskType
   tracking_algorithm : TrackingAlgorithm
   action_algorithm : ActionRecognitionAlgorithm
-  tracking_window_size : Int
+  tracking_window_size : Int32
   confidence_threshold : Double
   iou_threshold : Double
-  max_age : Int
-  min_hits : Int
-  num_actions : Int
-  num_scene_classes : Int
+  max_age : Int32
+  min_hits : Int32
+  num_actions : Int32
+  num_scene_classes : Int32
   use_temporal : Bool
   use_attention : Bool
 }
@@ -154,12 +154,12 @@ pub fn create_default_cv_advanced_config() -> CVAdvancedConfig {
 ///|
 /// 创建跟踪目标
 pub fn create_tracked_object(
-  object_id : Int,
-  bounding_box : Array[Int],
+  object_id : Int32,
+  bounding_box : Array[Int32],
   class_label : String,
   confidence : Double,
 ) -> TrackedObject {
-  let trajectory : Array[Array[Int]] = []
+  let trajectory : Array[Array[Int32]] = []
   trajectory.push(bounding_box)
 
   TrackedObject::{
@@ -177,7 +177,7 @@ pub fn create_tracked_object(
 
 ///|
 /// 计算IoU
-pub fn calculate_iou(box1 : Array[Int], box2 : Array[Int]) -> Double {
+pub fn calculate_iou(box1 : Array[Int32], box2 : Array[Int32]) -> Double {
   let x1 = if box1[0] > box2[0] { box1[0] } else { box2[0] }
   let y1 = if box1[1] > box2[1] { box1[1] } else { box2[1] }
   let x2 = if box1[2] < box2[2] { box1[2] } else { box2[2] }
@@ -204,7 +204,7 @@ pub fn calculate_iou(box1 : Array[Int], box2 : Array[Int]) -> Double {
 /// 更新跟踪目标
 pub fn update_tracked_object(
   obj : TrackedObject,
-  new_box : Array[Int],
+  new_box : Array[Int32],
   confidence : Double,
 ) -> TrackedObject {
   // 计算速度
@@ -237,7 +237,7 @@ pub fn update_tracked_object(
 /// 动作识别（简化版）
 pub fn recognize_action(
   video_id : String,
-  num_frames : Int,
+  num_frames : Int32,
   config : CVAdvancedConfig,
 ) -> ActionRecognitionResult {
   ignore(config)
@@ -288,8 +288,8 @@ pub fn recognize_action(
 /// 场景解析（简化版）
 pub fn parse_scene(
   image_id : String,
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : CVAdvancedConfig,
 ) -> SceneParsingResult {
   ignore(height)

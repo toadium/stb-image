@@ -14,7 +14,7 @@ pub fn create_default_nerf_config() -> NeRFConfig
 
 pub fn generate_rays(CameraParams) -> Array[Ray]
 
-pub fn generate_sample_gaussians(Int) -> Array[Gaussian3D]
+pub fn generate_sample_gaussians(Int32) -> Array[Gaussian3D]
 
 pub fn multiview_stereo_reconstruction(Array[@types.Image], Array[CameraParams]) -> ReconstructionResult
 
@@ -26,7 +26,7 @@ pub fn render_gaussian_splatting(CameraParams, Array[Gaussian3D], GaussianSplatt
 
 pub fn render_nerf(CameraParams, NeRFConfig) -> RenderingResult
 
-pub fn visualize_point_cloud(Array[Point3D], Int, Int) -> @types.Image
+pub fn visualize_point_cloud(Array[Point3D], Int32, Int32) -> @types.Image
 
 pub fn volume_render(Ray, Array[Voxel], NeRFConfig) -> (Array[Double], Double)
 
@@ -38,8 +38,8 @@ pub(all) struct CameraParams {
   rotation : Array[Double]
   focal_length : Double
   principal_point : Array[Double]
-  image_width : Int
-  image_height : Int
+  image_width : Int32
+  image_height : Int32
   near_plane : Double
   far_plane : Double
 }
@@ -54,8 +54,8 @@ pub(all) struct Gaussian3D {
 }
 
 pub(all) struct GaussianSplattingConfig {
-  num_gaussians : Int
-  sh_degree : Int
+  num_gaussians : Int32
+  sh_degree : Int32
   use_antialiasing : Bool
   use_depth_test : Bool
   opacity_threshold : Double
@@ -63,8 +63,8 @@ pub(all) struct GaussianSplattingConfig {
 }
 
 pub(all) struct NeRFConfig {
-  num_samples_per_ray : Int
-  num_importance_samples : Int
+  num_samples_per_ray : Int32
+  num_importance_samples : Int32
   near_plane : Double
   far_plane : Double
   use_perturbation : Bool
@@ -116,9 +116,9 @@ pub fn ReconstructionAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct ReconstructionResult {
   point_cloud : Array[Point3D]
-  num_points : Int
+  num_points : Int32
   cameras : Array[CameraParams]
-  num_cameras : Int
+  num_cameras : Int32
   reconstruction_time_ms : Double
   coverage : Double
   accuracy : Double

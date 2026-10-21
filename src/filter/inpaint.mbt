@@ -11,7 +11,7 @@
 pub fn inpaint(
   img : @types.Image,
   mask : @types.Image,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -69,7 +69,7 @@ pub fn inpaint(
     return img
   }
   // 复制原图数据
-  let out : Array[Int] = Array::make(n * ch, 0)
+  let out : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     out[i] = img.data[i].to_int()
   }
@@ -139,7 +139,7 @@ pub fn inpaint(
 pub fn inpaint_fast(
   img : @types.Image,
   mask : @types.Image,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -189,7 +189,7 @@ pub fn inpaint_fast(
   let n = w * h
   let r = radius
   // 复制原图数据
-  let out : Array[Int] = Array::make(n * ch, 0)
+  let out : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     out[i] = img.data[i].to_int()
   }

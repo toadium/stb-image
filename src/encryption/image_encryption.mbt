@@ -7,7 +7,7 @@ pub(all) struct EncryptionConfig {
   method_type : String // "logistic" / "xor"
   key : Double // 混沌系统初始值
   mu : Double // Logistic 映射参数（通常 3.5699456 < mu <= 4）
-  iterations : Int // 混沌迭代次数
+  iterations : Int32 // 混沌迭代次数
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn encryption_default_config() -> EncryptionConfig {
 
 ///|
 /// 简单的伪随机数生成器（线性同余）
-fn lcg_next(seed : Int) -> (Int, Int) {
+fn lcg_next(seed : Int32) -> (Int32, Int32) {
   let a = 1103515245
   let c = 12345
   let m = 1073741824
@@ -40,10 +40,10 @@ fn logistic_map(x : Double, mu : Double) -> Double {
 ///|
 /// 生成混沌序列
 fn generate_chaotic_sequence(
-  length : Int,
+  length : Int32,
   key : Double,
   mu : Double,
-  warmup? : Int = 100,
+  warmup~ : Int32 = 100,
 ) -> Array[Double] {
   let warm = warmup
   let sequence : Array[Double] = []
@@ -64,8 +64,8 @@ fn generate_chaotic_sequence(
 /// 基于 Logistic 混沌映射的图像加密
 pub fn encrypt_image_logistic(
   img : @types.Image,
-  key? : Double = 0.123456789,
-  mu? : Double = 3.99,
+  key~ : Double = 0.123456789,
+  mu~ : Double = 3.99,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -113,8 +113,8 @@ pub fn encrypt_image_logistic(
 /// 基于 Logistic 混沌映射的图像解密（与加密相同，因为 XOR 是对称的）
 pub fn decrypt_image_logistic(
   img : @types.Image,
-  key? : Double = 0.123456789,
-  mu? : Double = 3.99,
+  key~ : Double = 0.123456789,
+  mu~ : Double = 3.99,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -219,8 +219,8 @@ pub fn decrypt_image_xor(
 
 ///|
 /// 计算图像直方图
-fn compute_histogram(img : @types.Image) -> Array[Int] {
-  let histogram : Array[Int] = []
+fn compute_histogram(img : @types.Image) -> Array[Int32] {
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -278,7 +278,7 @@ pub fn histogram_entropy(img : @types.Image) -> Double raise @types.LoadError {
 /// 计算相邻像素相关性（加密后应接近 0）
 pub fn adjacent_correlation(
   img : @types.Image,
-  direction? : String = "horizontal",
+  direction~ : String = "horizontal",
 ) -> Double raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -473,7 +473,7 @@ pub fn evaluate_encryption_quality(
 pub fn key_sensitivity_test(
   img : @types.Image,
   key : Double,
-  delta? : Double = 0.0000001,
+  delta~ : Double = 0.0000001,
 ) -> Double raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

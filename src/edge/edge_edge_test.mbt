@@ -1,7 +1,7 @@
 // v207 edge 模块边界/错误路径增强测试
 
 ///|
-fn edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn edge_mk_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, (val & 0xFF).to_byte())
   @types.Image::{
     width: w,
@@ -12,7 +12,7 @@ fn edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn edge_mk_img_bad_data(w : Int, h : Int, ch : Int) -> @types.Image {
+fn edge_mk_img_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -22,7 +22,12 @@ fn edge_mk_img_bad_data(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn edge_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn edge_mk_img16(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -37,7 +42,7 @@ fn edge_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn edge_mk_img16_bad(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn edge_mk_img16_bad(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   @types.Image16::{
     width: w,
     height: h,
@@ -47,7 +52,7 @@ fn edge_mk_img16_bad(w : Int, h : Int, ch : Int) -> @types.Image16 {
 }
 
 ///|
-fn edge_mk_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn edge_mk_imgf(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -65,7 +70,7 @@ fn edge_mk_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn edge_mk_imgf_bad(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn edge_mk_imgf_bad(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   @types.ImageF::{
     width: w,
     height: h,

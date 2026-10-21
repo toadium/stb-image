@@ -2,19 +2,19 @@
 package "walkzzz/image/src/image_clustering_advanced"
 
 // Values
-pub fn calculate_silhouette_score(Array[Array[Double]], Array[Int]) -> Double
+pub fn calculate_silhouette_score(Array[Array[Double]], Array[Int32]) -> Double
 
 pub fn cluster_images(Array[Array[Double]], ImageClusteringConfig) -> ClusteringResult
 
 pub fn create_default_clustering_config() -> ImageClusteringConfig
 
-pub fn dbscan_clustering(Array[Array[Double]], Double, Int, ImageClusteringConfig) -> DBSCANResult
+pub fn dbscan_clustering(Array[Array[Double]], Double, Int32, ImageClusteringConfig) -> DBSCANResult
 
-pub fn hierarchical_clustering(Array[Array[Double]], Int, ImageClusteringConfig) -> HierarchicalClusteringResult
+pub fn hierarchical_clustering(Array[Array[Double]], Int32, ImageClusteringConfig) -> HierarchicalClusteringResult
 
 pub fn image_clustering_report_to_string(ImageClusteringTaskType, ImageClusteringConfig, String) -> String
 
-pub fn kmeans_clustering(Array[Array[Double]], Int, ImageClusteringConfig) -> KMeansResult
+pub fn kmeans_clustering(Array[Array[Double]], Int32, ImageClusteringConfig) -> KMeansResult
 
 // Errors
 
@@ -51,29 +51,29 @@ pub(all) struct ClusteringEvaluationResult {
 }
 
 pub(all) struct ClusteringResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   cluster_centers : Array[Array[Double]]
-  cluster_sizes : Array[Int]
+  cluster_sizes : Array[Int32]
   inertia : Double
   silhouette_score : Double
   davies_bouldin_index : Double
   calinski_harabasz_index : Double
   clustering_time_ms : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
 }
 
 pub(all) struct DBSCANResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise_points : Int
-  num_core_points : Int
-  num_border_points : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise_points : Int32
+  num_core_points : Int32
+  num_border_points : Int32
   eps : Double
-  min_samples : Int
-  cluster_sizes : Array[Int]
+  min_samples : Int32
+  cluster_sizes : Array[Int32]
   clustering_time_ms : Double
 }
 
@@ -94,22 +94,22 @@ pub fn DistanceMetricType::equal(Self, Self) -> Bool
 pub fn DistanceMetricType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FuzzyCMeansResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   cluster_centers : Array[Array[Double]]
   membership_matrix : Array[Array[Double]]
   fuzziness_parameter : Double
   objective_function : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
 }
 
 pub(all) struct GMMResult {
-  labels : Array[Int]
-  num_components : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_components : Int32
+  num_samples : Int32
   means : Array[Array[Double]]
   covariances : Array[Array[Array[Double]]]
   weights : Array[Double]
@@ -117,19 +117,19 @@ pub(all) struct GMMResult {
   log_likelihood : Double
   bic : Double
   aic : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
 }
 
 pub(all) struct HierarchicalClusteringResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   linkage_type : LinkageType
   dendrogram : Array[Array[Double]]
-  merge_history : Array[Array[Int]]
-  cluster_sizes : Array[Int]
+  merge_history : Array[Array[Int32]]
+  cluster_sizes : Array[Int32]
   cophenetic_correlation : Double
   clustering_time_ms : Double
 }
@@ -137,20 +137,20 @@ pub(all) struct HierarchicalClusteringResult {
 pub(all) struct ImageClusteringConfig {
   task_type : ImageClusteringTaskType
   algorithm_type : ClusteringAlgorithmType
-  num_clusters : Int
+  num_clusters : Int32
   distance_metric : DistanceMetricType
-  max_iterations : Int
+  max_iterations : Int32
   tolerance : Double
-  random_seed : Int
+  random_seed : Int32
   eps : Double
-  min_samples : Int
+  min_samples : Int32
   linkage_type : LinkageType
   fuzziness_parameter : Double
   covariance_type : String
   use_feature_extraction : Bool
   feature_extraction_method : String
   use_pca : Bool
-  pca_dimension : Int
+  pca_dimension : Int32
   use_normalization : Bool
   use_gpu : Bool
 }
@@ -170,12 +170,12 @@ pub fn ImageClusteringTaskType::equal(Self, Self) -> Bool
 pub fn ImageClusteringTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct KMeansResult {
-  labels : Array[Int]
+  labels : Array[Int32]
   cluster_centers : Array[Array[Double]]
-  num_clusters : Int
-  num_samples : Int
+  num_clusters : Int32
+  num_samples : Int32
   inertia : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
   initial_centroids : Array[Array[Double]]

@@ -38,7 +38,7 @@ pub extend ScheduleType with Eq::{not_equal, equal}
 /// Diffusion 配置。
 /// Diffusion configuration.
 pub(all) struct DiffusionConfig {
-  num_steps : Int
+  num_steps : Int32
   beta_start : Double
   beta_end : Double
   schedule_type : ScheduleType
@@ -55,7 +55,7 @@ pub extend DiffusionConfig with Eq::{not_equal, equal}
 /// Diffusion 状态。
 /// Diffusion state.
 pub(all) struct DiffusionState {
-  current_step : Int
+  current_step : Int32
   x_t : Array[Double]
   noise : Array[Double]
 } derive(Eq, @debug.Debug)

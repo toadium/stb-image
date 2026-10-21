@@ -31,7 +31,7 @@ fn fe_bad_channels_f() -> @types.ImageF {
 }
 
 ///|
-fn fe_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn fe_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())

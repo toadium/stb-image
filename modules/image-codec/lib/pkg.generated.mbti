@@ -1,0 +1,83 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-codec/lib"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image-core/types",
+}
+
+// Values
+pub fn decode_stream(Bytes, (Int32, Array[Byte]) -> Unit) -> StreamInfo raise @types.LoadError
+
+pub fn decode_stream_channels(Bytes, Int32, (Int32, Array[Byte]) -> Unit) -> StreamInfo raise @types.LoadError
+
+pub fn decode_stream_chunked(Bytes, Int32, (Int32, @types.Image) -> Unit) -> StreamInfo raise @types.LoadError
+
+pub fn detect_format(Bytes) -> @types.ImageFormat
+
+pub fn encode_bmp(@types.Image) -> Bytes
+
+pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_hdr(@types.ImageF) -> Bytes raise @types.LoadError
+
+pub fn encode_jpeg(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_pgm_auto(@types.Image) -> Bytes
+
+pub fn encode_png(@types.Image) -> Bytes
+
+pub fn encode_pnm_auto(@types.Image) -> Bytes
+
+pub fn encode_ppm_auto(@types.Image) -> Bytes
+
+pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_tga(@types.Image) -> Bytes
+
+pub fn format_supports_16bit(@types.ImageFormat) -> Bool
+
+pub fn format_supports_float(@types.ImageFormat) -> Bool
+
+pub fn get_image_info(Bytes) -> UnifiedImageInfo raise @types.LoadError
+
+pub fn get_image_summary(Bytes) -> String raise @types.LoadError
+
+pub fn load_16_from_bytes_auto(Bytes, req_channels? : Int32?) -> @types.Image16 raise @types.LoadError
+
+pub fn load_any_f(Bytes) -> @types.ImageF raise @types.LoadError
+
+pub fn load_from_bytes_auto(Bytes, req_channels? : Int32?) -> @types.Image raise @types.LoadError
+
+pub fn save_any_f(@types.ImageF, @types.ImageFormat) -> Bytes raise @types.LoadError
+
+pub fn save_image_auto(@types.Image, @types.ImageFormat) -> Bytes raise @types.LoadError
+
+pub fn save_image_with_quality(@types.Image, @types.ImageFormat, Int32) -> Bytes raise @types.LoadError
+
+// Errors
+
+// Types and methods
+pub(all) struct StreamInfo {
+  width : Int32
+  height : Int32
+  channels : Int32
+}
+
+pub(all) struct UnifiedImageInfo {
+  format : @types.ImageFormat
+  format_name : String
+  width : Int32
+  height : Int32
+  channels : Int32
+  bit_depth : Int32
+  has_alpha : Bool
+} derive(Eq, @debug.Debug)
+pub fn UnifiedImageInfo::equal(Self, Self) -> Bool
+pub fn UnifiedImageInfo::not_equal(Self, Self) -> Bool
+pub fn UnifiedImageInfo::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+pub using @types {type ImageFormat}
+
+// Traits

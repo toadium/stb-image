@@ -105,7 +105,7 @@ test "computational_photography_report_to_string: 基本测试" {
 }
 
 ///|
-fn make_double_image(w : Int, h : Int) -> Array[Double] {
+fn make_double_image(w : Int32, h : Int32) -> Array[Double] {
   let data : Array[Double] = []
   for i in 0..<(w * h * 3) {
     data.push((i % 256).to_double())

@@ -34,8 +34,8 @@ test "detect_vertical_table_lines: 基本检测" {
 
 ///|
 test "find_line_intersections: 基本交叉" {
-  let h_lines : Array[(Int, Int, Int)] = [(4, 0, 15)]
-  let v_lines : Array[(Int, Int, Int)] = [(4, 0, 15)]
+  let h_lines : Array[(Int32, Int32, Int32)] = [(4, 0, 15)]
+  let v_lines : Array[(Int32, Int32, Int32)] = [(4, 0, 15)]
   let intersections = @ocr.find_line_intersections(h_lines, v_lines)
   assert_true(intersections.length() >= 0)
 }

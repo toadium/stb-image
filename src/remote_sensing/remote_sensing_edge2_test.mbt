@@ -2,7 +2,7 @@
 // 覆盖：无效通道、数据不匹配（已有测试仅覆盖零宽度）
 
 ///|
-fn rs_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs_mk_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -16,7 +16,7 @@ fn rs_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn rs_mk_bad_data(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs_mk_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{ width: w, height: h, channels: ch, data: b"\x00\x01\x02", }
 }
 

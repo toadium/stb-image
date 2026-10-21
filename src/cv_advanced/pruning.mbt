@@ -26,7 +26,7 @@ pub(all) struct PruningConfig {
   sparsity : Double
   pruning_type : PruningType
   threshold : Double
-  min_channels : Int
+  min_channels : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -40,10 +40,10 @@ pub extend PruningConfig with Eq::{not_equal, equal}
 /// Pruning result.
 pub(all) struct PruningResult {
   mask : Array[Bool]
-  pruned_indices : Array[Int]
+  pruned_indices : Array[Int32]
   sparsity_achieved : Double
-  original_size : Int
-  pruned_size : Int
+  original_size : Int32
+  pruned_size : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -87,7 +87,7 @@ pub fn prune_unstructured(
     }
   }
   let mask = compute_pruning_mask(weights, threshold)
-  let pruned_indices : Array[Int] = []
+  let pruned_indices : Array[Int32] = []
   let mut pruned_count = 0
   for i in 0..<n {
     if !mask[i] {
@@ -114,7 +114,7 @@ pub fn prune_unstructured(
 /// Structured pruning.
 pub fn prune_structured(
   weights : Array[Double],
-  block_size : Int,
+  block_size : Int32,
   config : PruningConfig,
 ) -> PruningResult {
   let n = weights.length()
@@ -136,7 +136,7 @@ pub fn prune_structured(
   let k = (num_blocks.to_double() * config.sparsity).to_int()
   let threshold = if k > 0 && k < num_blocks { sorted_norms[k] } else { 0.0 }
   let mask : Array[Bool] = []
-  let pruned_indices : Array[Int] = []
+  let pruned_indices : Array[Int32] = []
   let mut pruned_count = 0
   for b in 0..<num_blocks {
     let keep = block_norms[b] > threshold
@@ -171,7 +171,7 @@ pub fn prune_structured(
 /// Channel pruning.
 pub fn prune_channels(
   weights : Array[Double],
-  num_channels : Int,
+  num_channels : Int32,
   config : PruningConfig,
 ) -> PruningResult {
   let n = weights.length()
@@ -201,7 +201,7 @@ pub fn prune_channels(
     0.0
   }
   let mask : Array[Bool] = []
-  let pruned_indices : Array[Int] = []
+  let pruned_indices : Array[Int32] = []
   let mut pruned_count = 0
   for c in 0..<num_channels {
     let keep = channel_norms[c] > threshold

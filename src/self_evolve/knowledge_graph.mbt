@@ -27,8 +27,8 @@ pub(all) struct KnowledgeNode {
   id : String
   kind : KnowledgeNodeKind
   label : String
-  confidence : Int
-  occurrence : Int
+  confidence : Int32
+  occurrence : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -61,7 +61,7 @@ pub(all) struct KnowledgeEdge {
   source : String
   target : String
   kind : KnowledgeEdgeKind
-  weight : Int
+  weight : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -99,7 +99,7 @@ fn degradation_kind_label(kind : DegradationKind) -> String {
 
 ///|
 /// 严重程度转置信度（内部辅助）。
-fn severity_to_confidence(sev : Severity) -> Int {
+fn severity_to_confidence(sev : Severity) -> Int32 {
   match sev {
     Fatal => 100
     Critical => 80
@@ -263,14 +263,14 @@ pub fn KnowledgeGraph::find_fixes(
 ///|
 /// 知识图谱节点数。
 /// Knowledge graph node count.
-pub fn KnowledgeGraph::node_count(self : KnowledgeGraph) -> Int {
+pub fn KnowledgeGraph::node_count(self : KnowledgeGraph) -> Int32 {
   self.nodes.length()
 }
 
 ///|
 /// 知识图谱边数。
 /// Knowledge graph edge count.
-pub fn KnowledgeGraph::edge_count(self : KnowledgeGraph) -> Int {
+pub fn KnowledgeGraph::edge_count(self : KnowledgeGraph) -> Int32 {
   self.edges.length()
 }
 

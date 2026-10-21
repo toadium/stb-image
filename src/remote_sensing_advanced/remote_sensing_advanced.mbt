@@ -91,20 +91,20 @@ pub extend ChangeType with Eq::{not_equal, equal}
 ///|
 /// 地物分类结果
 pub(all) struct LandCoverClassificationResult {
-  classification_map : Array[Array[Int]]
-  num_classes : Int
+  classification_map : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   class_distribution : Array[Double]
   overall_accuracy : Double
   kappa_coefficient : Double
-  confusion_matrix : Array[Array[Int]]
+  confusion_matrix : Array[Array[Int32]]
   confidence_map : Array[Array[Double]]
 }
 
 ///|
 /// 检测到的遥感目标
 pub(all) struct DetectedRemoteSensingObject {
-  object_id : Int
+  object_id : Int32
   object_type : RemoteSensingObjectType
   bounding_box : Array[Double]
   polygon : Array[Array[Double]]
@@ -119,8 +119,8 @@ pub(all) struct DetectedRemoteSensingObject {
 /// 变化检测结果
 pub(all) struct ChangeDetectionResult {
   change_map : Array[Array[Bool]]
-  change_mask : Array[Array[Int]]
-  num_change_regions : Int
+  change_mask : Array[Array[Int32]]
+  num_change_regions : Int32
   total_change_area : Double
   change_types : Array[ChangeType]
   change_areas : Array[Double]
@@ -134,9 +134,9 @@ pub(all) struct ChangeDetectionResult {
 /// 图像融合结果
 pub(all) struct RemoteSensingFusionResult {
   fused_image : Array[Double]
-  width : Int
-  height : Int
-  num_bands : Int
+  width : Int32
+  height : Int32
+  num_bands : Int32
   fusion_method : String
   spectral_angle_mapper : Double
   erreur_relative_globale : Double
@@ -149,10 +149,10 @@ pub(all) struct RemoteSensingFusionResult {
 /// 超分辨率结果
 pub(all) struct RemoteSensingSuperResolutionResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
@@ -163,12 +163,12 @@ pub(all) struct RemoteSensingSuperResolutionResult {
 ///|
 /// 时间序列分析结果
 pub(all) struct TimeSeriesAnalysisResult {
-  num_timestamps : Int
-  time_interval_days : Int
+  num_timestamps : Int32
+  time_interval_days : Int32
   trend_map : Array[Array[Double]]
   seasonal_map : Array[Array[Double]]
   anomaly_map : Array[Array[Bool]]
-  breakpoints : Array[Array[Int]]
+  breakpoints : Array[Array[Int32]]
   ndvi_trend : Double
   vegetation_change_rate : Double
   phenology_metrics : Array[Double]
@@ -179,10 +179,10 @@ pub(all) struct TimeSeriesAnalysisResult {
 pub(all) struct RemoteSensingConfig {
   task_type : RemoteSensingTaskType
   image_type : RemoteSensingImageType
-  num_bands : Int
+  num_bands : Int32
   spatial_resolution : Double
   spectral_resolution : Double
-  temporal_resolution_days : Int
+  temporal_resolution_days : Int32
   projection : String
   datum : String
   classification_method : String
@@ -225,7 +225,7 @@ pub fn create_default_remote_sensing_config() -> RemoteSensingConfig {
 pub fn calculate_ndvi(
   nir_band : Array[Double],
   red_band : Array[Double],
-  num_pixels : Int,
+  num_pixels : Int32,
 ) -> Array[Double] {
   let ndvi : Array[Double] = []
 
@@ -245,7 +245,7 @@ pub fn calculate_ndvi(
 pub fn calculate_ndwi(
   green_band : Array[Double],
   nir_band : Array[Double],
-  num_pixels : Int,
+  num_pixels : Int32,
 ) -> Array[Double] {
   let ndwi : Array[Double] = []
 
@@ -264,13 +264,13 @@ pub fn calculate_ndwi(
 /// 地物分类（简化版）
 pub fn classify_land_cover(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : RemoteSensingConfig,
 ) -> LandCoverClassificationResult {
   ignore(config)
   ignore(image)
-  let classification_map : Array[Array[Int]] = []
+  let classification_map : Array[Array[Int32]] = []
   let confidence_map : Array[Array[Double]] = []
   let class_names = [
     "water", "forest", "grassland", "cropland", "urban", "barren", "wetland", "snow",
@@ -283,7 +283,7 @@ pub fn classify_land_cover(
 
   let mut state = 42
   for _ in 0..<height {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     let conf_row : Array[Double] = []
     for _ in 0..<width {
       state = (state * 11035 + 12345).abs() % 1000000
@@ -303,9 +303,9 @@ pub fn classify_land_cover(
     class_distribution[i] /= total_pixels
   }
 
-  let confusion_matrix : Array[Array[Int]] = []
+  let confusion_matrix : Array[Array[Int32]] = []
   for _ in class_names {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in class_names {
       row.push(0)
     }
@@ -328,8 +328,8 @@ pub fn classify_land_cover(
 /// 检测遥感目标（简化版）
 pub fn detect_remote_sensing_objects(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : RemoteSensingConfig,
 ) -> Array[DetectedRemoteSensingObject] {
   ignore(image)
@@ -393,21 +393,21 @@ pub fn detect_remote_sensing_objects(
 pub fn detect_changes(
   image1 : Array[Double],
   image2 : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : RemoteSensingConfig,
 ) -> ChangeDetectionResult {
   ignore(image2)
   ignore(image1)
   let change_map : Array[Array[Bool]] = []
-  let change_mask : Array[Array[Int]] = []
+  let change_mask : Array[Array[Int32]] = []
   let mut num_changes = 0
   let mut total_change_area = 0.0
 
   let mut state = 42
   for _ in 0..<height {
     let row : Array[Bool] = []
-    let mask_row : Array[Int] = []
+    let mask_row : Array[Int32] = []
     for _ in 0..<width {
       state = (state * 11035 + 12345).abs() % 1000000
       let is_change = (state % 100).to_double() / 100.0 <

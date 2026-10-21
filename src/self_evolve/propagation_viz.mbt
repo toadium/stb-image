@@ -24,8 +24,8 @@ pub extend VizFormat with Eq::{not_equal, equal}
 pub(all) struct PropagationViz {
   format : VizFormat
   content : String
-  node_count : Int
-  edge_count : Int
+  node_count : Int32
+  edge_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|

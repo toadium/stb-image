@@ -34,7 +34,7 @@ fn make_3x3_rgb_image() -> @types.Image {
 fn make_ico_bmp(
   dib : Array[Byte],
   pixel : Array[Byte],
-  byte_size_override? : Int? = None,
+  byte_size_override~ : Int32? = None,
 ) -> Bytes {
   let out : Array[Byte] = []
   // ICONDIR (6 bytes)

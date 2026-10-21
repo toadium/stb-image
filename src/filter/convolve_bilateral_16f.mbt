@@ -3,18 +3,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_cb(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_cb(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_cb(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_cb(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_cb(data : Bytes, offset : Int) -> Float {
+fn read_float_le_cb(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -24,7 +24,7 @@ fn read_float_le_cb(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_cb(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_cb(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -33,7 +33,7 @@ fn write_f32_le_cb(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_cb(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_cb(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -210,7 +210,7 @@ pub fn convolve_f(
 /// 16-bit 双边滤波。
 pub fn bilateral_filter_16(
   img : @types.Image16,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.Image16 raise @types.LoadError {
@@ -261,7 +261,7 @@ pub fn bilateral_filter_16(
 /// float 双边滤波。
 pub fn bilateral_filter_f(
   img : @types.ImageF,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.ImageF raise @types.LoadError {
@@ -312,10 +312,10 @@ pub fn bilateral_filter_f(
 /// 16-bit 快速双边滤波。
 pub fn bilateral_filter_fast_16(
   img : @types.Image16,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
-  downsample : Int,
+  downsample : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -371,10 +371,10 @@ pub fn bilateral_filter_fast_16(
 /// float 快速双边滤波。
 pub fn bilateral_filter_fast_f(
   img : @types.ImageF,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
-  downsample : Int,
+  downsample : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

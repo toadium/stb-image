@@ -23,10 +23,10 @@ pub extend OrbSlamMode with Eq::{not_equal, equal}
 /// ORB-SLAM configuration.
 pub(all) struct OrbSlamConfig {
   mode : OrbSlamMode
-  vocab_size : Int
-  n_features : Int
-  scale_levels : Int
-  init_threshold : Int
+  vocab_size : Int32
+  n_features : Int32
+  scale_levels : Int32
+  init_threshold : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -44,7 +44,7 @@ pub(all) struct OrbSlamSystem {
   backend : SlamBackend
   trajectory : Array[SlamPose]
   initialized : Bool
-  frame_count : Int
+  frame_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -57,9 +57,9 @@ pub extend OrbSlamSystem with Eq::{not_equal, equal}
 /// ORB-SLAM 统计信息。
 /// ORB-SLAM statistics.
 pub(all) struct OrbSlamStats {
-  total_frames : Int
-  total_keyframes : Int
-  total_map_points : Int
+  total_frames : Int32
+  total_keyframes : Int32
+  total_map_points : Int32
   trajectory_length : Double
   fps : Double
 } derive(Eq, @debug.Debug)
@@ -90,7 +90,7 @@ pub fn init_orb_slam(config : OrbSlamConfig) -> OrbSlamSystem {
 pub fn run_orb_slam(
   system : OrbSlamSystem,
   pose : SlamPose,
-  feature_count : Int,
+  feature_count : Int32,
   timestamp : Double,
 ) -> OrbSlamSystem {
   let frame_count = system.frame_count + 1

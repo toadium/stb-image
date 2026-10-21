@@ -2,10 +2,10 @@
 
 ///|
 fn v252_make_img(
-  w : Int,
-  h : Int,
-  ch : Int,
-  pixels : Array[Int],
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  pixels : Array[Int32],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {

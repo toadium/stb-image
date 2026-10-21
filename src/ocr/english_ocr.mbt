@@ -4,9 +4,9 @@
 ///|
 /// 英文 OCR 配置
 pub(all) struct EnglishOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   case_sensitive : Bool
 }
@@ -27,7 +27,7 @@ pub fn english_ocr_default_config() -> EnglishOcrConfig {
 /// 生成英文字符模板（0-9, A-Z）
 /// 不区分大小写时只生成大写
 pub fn generate_english_templates(
-  case_sensitive? : Bool = false,
+  case_sensitive~ : Bool = false,
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   // 数字 0-9
@@ -354,11 +354,11 @@ fn generate_char_template_simple(char : String) -> Array[Double] {
 /// 设置字符模板像素
 fn set_char_pixels(
   features : Array[Double],
-  size : Int,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  size : Int32,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Unit {
   for r in 0..<height {
     for c in 0..<width {
@@ -474,11 +474,11 @@ pub fn recognize_english(
 /// 提取字符区域（英文OCR专用）
 fn extract_char_region_english(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -526,7 +526,7 @@ fn extract_char_region_english(
 /// 提取字符特征（英文OCR专用）
 fn extract_char_features_english(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height
@@ -631,7 +631,7 @@ fn cosine_distance_eng(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 辅助函数：最大值
-fn max_eng(a : Int, b : Int) -> Int {
+fn max_eng(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

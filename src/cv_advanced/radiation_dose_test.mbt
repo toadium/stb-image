@@ -81,7 +81,7 @@ test "dose_evaluate_plan: 基本评估" {
   let target_mask = [1, 1, 1, 1]
   let oar_doses : Array[Array[Double]] = []
   oar_doses.push([10.0, 10.0, 10.0, 10.0])
-  let oar_masks : Array[Array[Int]] = []
+  let oar_masks : Array[Array[Int32]] = []
   oar_masks.push([0, 0, 1, 1])
   let (coverage, conformality, mean_oar) = @cv_advanced.dose_evaluate_plan(
     target_dose, target_mask, oar_doses, oar_masks, 60.0,

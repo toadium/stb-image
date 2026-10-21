@@ -7,20 +7,20 @@
 pub(all) struct ExifInfoExtended {
   make : String
   model : String
-  orientation : Int
+  orientation : Int32
   date_time : String
   exposure_time : String
   f_number : Double
-  iso : Int
+  iso : Int32
   focal_length : Double
-  exposure_mode : Int
-  white_balance : Int
-  flash : Int
+  exposure_mode : Int32
+  white_balance : Int32
+  flash : Int32
   gps_latitude : Double
   gps_longitude : Double
   gps_altitude : Double
-  pixel_x_dim : Int
-  pixel_y_dim : Int
+  pixel_x_dim : Int32
+  pixel_y_dim : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -30,17 +30,17 @@ pub extend ExifInfoExtended with Eq::{not_equal, equal}
 pub extend ExifInfoExtended with @debug.Debug::{to_repr}
 
 ///|
-fn exif_read_u16_be(data : Bytes, offset : Int) -> Int {
+fn exif_read_u16_be(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() * 256 + data[offset + 1].to_int()
 }
 
 ///|
-fn exif_read_u16_le(data : Bytes, offset : Int) -> Int {
+fn exif_read_u16_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn exif_read_u32_be(data : Bytes, offset : Int) -> Int {
+fn exif_read_u32_be(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() * 16777216 +
   data[offset + 1].to_int() * 65536 +
   data[offset + 2].to_int() * 256 +
@@ -48,7 +48,7 @@ fn exif_read_u32_be(data : Bytes, offset : Int) -> Int {
 }
 
 ///|
-fn exif_read_u32_le(data : Bytes, offset : Int) -> Int {
+fn exif_read_u32_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() +
   data[offset + 1].to_int() * 256 +
   data[offset + 2].to_int() * 65536 +
@@ -56,7 +56,7 @@ fn exif_read_u32_le(data : Bytes, offset : Int) -> Int {
 }
 
 ///|
-fn exif_read_u16(data : Bytes, offset : Int, little : Bool) -> Int {
+fn exif_read_u16(data : Bytes, offset : Int32, little : Bool) -> Int32 {
   if little {
     exif_read_u16_le(data, offset)
   } else {
@@ -65,7 +65,7 @@ fn exif_read_u16(data : Bytes, offset : Int, little : Bool) -> Int {
 }
 
 ///|
-fn exif_read_u32(data : Bytes, offset : Int, little : Bool) -> Int {
+fn exif_read_u32(data : Bytes, offset : Int32, little : Bool) -> Int32 {
   if little {
     exif_read_u32_le(data, offset)
   } else {
@@ -76,9 +76,9 @@ fn exif_read_u32(data : Bytes, offset : Int, little : Bool) -> Int {
 ///|
 fn exif_read_string(
   data : Bytes,
-  tiff_start : Int,
-  entry_offset : Int,
-  count : Int,
+  tiff_start : Int32,
+  entry_offset : Int32,
+  count : Int32,
   little : Bool,
 ) -> String {
   let val_offset = if count <= 4 {
@@ -106,8 +106,8 @@ fn exif_read_string(
 ///|
 fn exif_read_rational(
   data : Bytes,
-  tiff_start : Int,
-  entry_offset : Int,
+  tiff_start : Int32,
+  entry_offset : Int32,
   little : Bool,
 ) -> Double {
   let ptr = exif_read_u32(data, tiff_start + entry_offset + 8, little)
@@ -126,8 +126,8 @@ fn exif_read_rational(
 ///|
 fn exif_read_gps_coord(
   data : Bytes,
-  tiff_start : Int,
-  entry_offset : Int,
+  tiff_start : Int32,
+  entry_offset : Int32,
   little : Bool,
 ) -> Double {
   let ptr = exif_read_u32(data, tiff_start + entry_offset + 8, little)

@@ -7,9 +7,9 @@
 ///|
 /// 分块处理参数
 pub(all) struct TileConfig {
-  tile_width : Int
-  tile_height : Int
-  overlap : Int
+  tile_width : Int32
+  tile_height : Int32
+  overlap : Int32
 }
 
 ///|
@@ -20,7 +20,11 @@ pub fn default_tile_config() -> TileConfig {
 
 ///|
 /// 计算分块数量
-pub fn num_tiles(width : Int, height : Int, config : TileConfig) -> (Int, Int) {
+pub fn num_tiles(
+  width : Int32,
+  height : Int32,
+  config : TileConfig,
+) -> (Int32, Int32) {
   let cols = (width + config.tile_width - 1) / config.tile_width
   let rows = (height + config.tile_height - 1) / config.tile_height
   (cols, rows)
@@ -29,10 +33,10 @@ pub fn num_tiles(width : Int, height : Int, config : TileConfig) -> (Int, Int) {
 ///|
 /// 获取分块在源图像中的区域
 pub fn tile_region(
-  tile_col : Int,
-  tile_row : Int,
+  tile_col : Int32,
+  tile_row : Int32,
   config : TileConfig,
-) -> (Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32) {
   let x0 = tile_col * config.tile_width
   let y0 = tile_row * config.tile_height
   let x1 = x0 + config.tile_width
@@ -44,10 +48,10 @@ pub fn tile_region(
 /// 从图像中提取分块
 pub fn extract_tile(
   img : @types.Image,
-  x0 : Int,
-  y0 : Int,
-  tile_w : Int,
-  tile_h : Int,
+  x0 : Int32,
+  y0 : Int32,
+  tile_w : Int32,
+  tile_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   if x0 < 0 || y0 < 0 || tile_w <= 0 || tile_h <= 0 {
     raise @types.LoadError::DecodeFailed("Invalid tile parameters")
@@ -77,8 +81,8 @@ pub fn extract_tile(
 pub fn paste_tile(
   img : @types.Image,
   tile : @types.Image,
-  x0 : Int,
-  y0 : Int,
+  x0 : Int32,
+  y0 : Int32,
 ) -> @types.Image raise @types.LoadError {
   if x0 < 0 || y0 < 0 {
     raise @types.LoadError::DecodeFailed("Invalid paste position")
@@ -174,10 +178,10 @@ pub fn process_tiled(
 /// 将源数组的一段复制到目标数组，使用4次循环展开减少分支开销
 pub fn bulk_copy_4x(
   src : Bytes,
-  src_offset : Int,
+  src_offset : Int32,
   dst : Array[Byte],
-  dst_offset : Int,
-  len : Int,
+  dst_offset : Int32,
+  len : Int32,
 ) -> Unit {
   let mut i = 0
   let len4 = len / 4 * 4
@@ -198,8 +202,8 @@ pub fn bulk_copy_4x(
 /// 循环展开的批量填充（4x展开）
 pub fn bulk_fill_4x(
   dst : Array[Byte],
-  offset : Int,
-  len : Int,
+  offset : Int32,
+  len : Int32,
   value : Byte,
 ) -> Unit {
   let mut i = 0
@@ -223,7 +227,7 @@ pub fn bulk_fill_4x(
 /// 按行处理图像，每行处理完后立即写入结果，提高缓存命中率
 pub fn process_row_major(
   img : @types.Image,
-  process_row : (Int, Array[Byte]) -> Array[Byte],
+  process_row : (Int32, Array[Byte]) -> Array[Byte],
 ) -> @types.Image {
   let ch = img.channels
   let row_len = img.width * ch

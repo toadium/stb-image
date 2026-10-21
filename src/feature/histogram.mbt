@@ -4,7 +4,7 @@
 /// 计算灰度直方图。返回 256 个 bin 的计数数组。
 /// 彩色图像先转灰度（BT.601）再计算。
 /// 优化：直接从 Bytes 读取，避免额外数组分配
-pub fn histogram(img : @types.Image) -> Array[Int] raise @types.LoadError {
+pub fn histogram(img : @types.Image) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("histogram: 图像尺寸必须大于0")
@@ -24,7 +24,7 @@ pub fn histogram(img : @types.Image) -> Array[Int] raise @types.LoadError {
     )
   }
 
-  let hist : Array[Int] = Array::make(256, 0)
+  let hist : Array[Int32] = Array::make(256, 0)
   let n = img.width * img.height
   let ch = img.channels
   let data = img.data
@@ -73,7 +73,7 @@ pub fn histogram_equalize(
   let hist = histogram(img)
   let n = img.width * img.height
   // 计算 CDF
-  let cdf : Array[Int] = Array::make(256, 0)
+  let cdf : Array[Int32] = Array::make(256, 0)
   let mut cum = 0
   for i in 0..<256 {
     cum += hist[i]
@@ -101,7 +101,7 @@ pub fn histogram_equalize(
   // 应用 LUT
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -152,7 +152,7 @@ pub fn histogram_normalize(
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
   let n = img.width * img.height
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -206,8 +206,8 @@ pub(all) enum HistCompareMethod {
 /// 比较两个直方图的相似度。返回值越大表示越相似（Correlation/ChiSquare），
 /// 或距离越小越相似（Bhattacharyya）。
 pub fn compare_hist(
-  hist1 : Array[Int],
-  hist2 : Array[Int],
+  hist1 : Array[Int32],
+  hist2 : Array[Int32],
   compare_method : HistCompareMethod,
 ) -> Float raise @types.LoadError {
   // 参数验证
@@ -340,8 +340,8 @@ pub fn histogram_matching(
   let n = img.width * img.height
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for c in 0..<color_ch {
-    let hist_in : Array[Int] = Array::make(256, 0)
-    let hist_ref : Array[Int] = Array::make(256, 0)
+    let hist_in : Array[Int32] = Array::make(256, 0)
+    let hist_ref : Array[Int32] = Array::make(256, 0)
     for i in 0..<n {
       hist_in[img.data[i * ch + c].to_int()] += 1
     }

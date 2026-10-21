@@ -6,21 +6,21 @@ pub fn add_experience(ReplayBuffer, Experience) -> ReplayBuffer
 
 pub fn create_default_rl_config() -> RLConfig
 
-pub fn create_q_learning_agent(Int, Int, Double, Double, Double) -> RLAgent
+pub fn create_q_learning_agent(Int32, Int32, Double, Double, Double) -> RLAgent
 
-pub fn create_replay_buffer(Int, Int, ReplayBufferType) -> ReplayBuffer
+pub fn create_replay_buffer(Int32, Int32, ReplayBufferType) -> ReplayBuffer
 
-pub fn create_rl_environment(String, Int, Int, Int, Int, Bool, Int) -> RLEnvironment
+pub fn create_rl_environment(String, Int32, Int32, Int32, Int32, Bool, Int32) -> RLEnvironment
 
-pub fn evaluate_policy(RLAgent, RLEnvironment, Int) -> PolicyEvaluationResult
+pub fn evaluate_policy(RLAgent, RLEnvironment, Int32) -> PolicyEvaluationResult
 
-pub fn q_learning_update(RLAgent, Int, Int, Double, Int, Bool) -> RLAgent
+pub fn q_learning_update(RLAgent, Int32, Int32, Double, Int32, Bool) -> RLAgent
 
 pub fn reinforcement_learning_report_to_string(RLTrainingResult, RLConfig, RLEnvironment) -> String
 
-pub fn sample_experiences(ReplayBuffer, Int) -> Array[Experience]
+pub fn sample_experiences(ReplayBuffer, Int32) -> Array[Experience]
 
-pub fn select_action(RLAgent, Int) -> Int
+pub fn select_action(RLAgent, Int32) -> Int32
 
 pub fn simulate_rl_training(RLConfig, RLEnvironment) -> RLTrainingResult
 
@@ -29,7 +29,7 @@ pub fn simulate_rl_training(RLConfig, RLEnvironment) -> RLTrainingResult
 // Types and methods
 pub(all) struct Experience {
   state : Array[Double]
-  action : Int
+  action : Int32
   reward : Double
   next_state : Array[Double]
   is_done : Bool
@@ -54,7 +54,7 @@ pub(all) struct PolicyEvaluationResult {
   std_reward : Double
   min_reward : Double
   max_reward : Double
-  num_episodes : Int
+  num_episodes : Int32
   success_rate : Double
   average_steps : Double
 }
@@ -67,10 +67,10 @@ pub(all) struct RLAgent {
   epsilon_decay : Double
   epsilon_min : Double
   q_table : Array[Array[Double]]
-  num_states : Int
-  num_actions : Int
+  num_states : Int32
+  num_actions : Int32
   total_reward : Double
-  episodes_completed : Int
+  episodes_completed : Int32
 }
 
 pub(all) enum RLAlgorithm {
@@ -94,16 +94,16 @@ pub(all) struct RLConfig {
   algorithm : RLAlgorithm
   exploration_strategy : ExplorationStrategy
   replay_buffer_type : ReplayBufferType
-  num_episodes : Int
-  max_steps_per_episode : Int
+  num_episodes : Int32
+  max_steps_per_episode : Int32
   learning_rate : Double
   gamma : Double
   epsilon_start : Double
   epsilon_end : Double
   epsilon_decay : Double
-  batch_size : Int
-  buffer_size : Int
-  target_update_freq : Int
+  batch_size : Int32
+  buffer_size : Int32
+  target_update_freq : Int32
   use_soft_update : Bool
   tau : Double
   use_dueling : Bool
@@ -117,37 +117,37 @@ pub(all) struct RLConfig {
 
 pub(all) struct RLEnvironment {
   env_name : String
-  num_states : Int
-  num_actions : Int
-  state_dim : Int
-  action_dim : Int
+  num_states : Int32
+  num_actions : Int32
+  state_dim : Int32
+  action_dim : Int32
   is_discrete : Bool
-  max_steps : Int
+  max_steps : Int32
   current_state : Array[Double]
-  current_step : Int
+  current_step : Int32
   is_done : Bool
 }
 
 pub(all) struct RLTrainingResult {
   algorithm : RLAlgorithm
-  num_episodes : Int
+  num_episodes : Int32
   total_reward : Double
   average_reward : Double
   final_epsilon : Double
-  episodes_to_solve : Int
+  episodes_to_solve : Int32
   reward_history : Array[Double]
   loss_history : Array[Double]
   epsilon_history : Array[Double]
   training_time_s : Double
-  convergence_episode : Int
+  convergence_episode : Int32
 }
 
 pub(all) struct ReplayBuffer {
   buffer : Array[Experience]
-  buffer_size : Int
-  current_size : Int
+  buffer_size : Int32
+  current_size : Int32
   buffer_type : ReplayBufferType
-  batch_size : Int
+  batch_size : Int32
   alpha : Double
   beta : Double
 }

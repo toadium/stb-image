@@ -22,10 +22,10 @@ pub extend AttentionType with Eq::{not_equal, equal}
 /// 注意力参数。
 /// Attention parameters.
 pub(all) struct AttentionParams {
-  d_model : Int
-  num_heads : Int
-  d_k : Int
-  d_v : Int
+  d_model : Int32
+  num_heads : Int32
+  d_k : Int32
+  d_v : Int32
   scale : Double
 } derive(Eq, @debug.Debug)
 
@@ -155,7 +155,7 @@ pub fn multi_head_attention(
 ///|
 /// 正弦位置编码。
 /// Sinusoidal positional encoding.
-pub fn positional_encoding(seq_len : Int, d_model : Int) -> Array[Double] {
+pub fn positional_encoding(seq_len : Int32, d_model : Int32) -> Array[Double] {
   let result : Array[Double] = []
   for pos in 0..<seq_len {
     let mut i = 0
@@ -178,8 +178,8 @@ pub fn positional_encoding(seq_len : Int, d_model : Int) -> Array[Double] {
 fn matmul(
   input : Array[Double],
   weight : Array[Double],
-  in_dim : Int,
-  out_dim : Int,
+  in_dim : Int32,
+  out_dim : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for o in 0..<out_dim {
@@ -201,9 +201,9 @@ fn matmul(
 fn matmul_offset(
   input : Array[Double],
   weight : Array[Double],
-  in_dim : Int,
-  out_dim : Int,
-  offset : Int,
+  in_dim : Int32,
+  out_dim : Int32,
+  offset : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for o in 0..<out_dim {

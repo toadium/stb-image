@@ -1,5 +1,5 @@
 ///|
-fn create_test_image_su(w : Int, h : Int, value : Byte) -> @types.Image {
+fn create_test_image_su(w : Int32, h : Int32, value : Byte) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(value)

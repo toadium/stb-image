@@ -189,7 +189,7 @@ test "decode_webp_pure: lossy VP8 raises" {
 ///|
 test "decode_webp_pure: VP8L with transform skips" {
   // Construct a VP8L with a predictor transform (type 0)
-  let vp8l_data : Array[Int] = [
+  let vp8l_data : Array[Int32] = [
     0x2F, // VP8L signature
      0x00, 0x00, // width=1, height=1 (14-bit: 0,0)
      0x00, // alpha=0, version=0

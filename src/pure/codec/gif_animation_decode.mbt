@@ -6,16 +6,16 @@
 /// 读取 GIF 颜色表
 fn gif_read_color_table(
   data : Bytes,
-  pos : Int,
-  size : Int,
-  len : Int,
-) -> (Array[(Int, Int, Int)], Int) raise @types.LoadError {
+  pos : Int32,
+  size : Int32,
+  len : Int32,
+) -> (Array[(Int32, Int32, Int32)], Int32) raise @types.LoadError {
   if pos + size * 3 > len {
     raise @types.LoadError::DecodeFailed(
       "GIF 数据过短：无法读取 Color Table",
     )
   }
-  let table : Array[(Int, Int, Int)] = []
+  let table : Array[(Int32, Int32, Int32)] = []
   let mut p = pos
   for _ in 0..<size {
     let r = data[p].to_int()
@@ -31,9 +31,9 @@ fn gif_read_color_table(
 /// 读取 GIF 子块数据（收集模式）
 fn gif_read_sub_blocks(
   data : Bytes,
-  pos : Int,
-  len : Int,
-) -> (Array[Byte], Int) raise @types.LoadError {
+  pos : Int32,
+  len : Int32,
+) -> (Array[Byte], Int32) raise @types.LoadError {
   let result : Array[Byte] = []
   let mut p = pos
   while p < len {
@@ -57,9 +57,9 @@ fn gif_read_sub_blocks(
 /// 跳过 GIF 子块（不收集数据）
 fn gif_skip_sub_blocks(
   data : Bytes,
-  pos : Int,
-  len : Int,
-) -> Int raise @types.LoadError {
+  pos : Int32,
+  len : Int32,
+) -> Int32 raise @types.LoadError {
   let mut p = pos
   while p < len {
     let sub_len = data[p].to_int()
@@ -78,18 +78,18 @@ fn gif_skip_sub_blocks(
 ///|
 /// 处理 GIF disposal 方法
 fn gif_apply_disposal(
-  disposal : Int,
+  disposal : Int32,
   canvas : Array[Byte],
   prev_canvas : Array[Byte],
-  left : Int,
-  top : Int,
-  img_width : Int,
-  img_height : Int,
-  screen_width : Int,
-  screen_height : Int,
-  bg_r : Int,
-  bg_g : Int,
-  bg_b : Int,
+  left : Int32,
+  top : Int32,
+  img_width : Int32,
+  img_height : Int32,
+  screen_width : Int32,
+  screen_height : Int32,
+  bg_r : Int32,
+  bg_g : Int32,
+  bg_b : Int32,
 ) -> Unit {
   match disposal {
     2 =>
@@ -119,15 +119,15 @@ fn gif_apply_disposal(
 ///|
 /// 将 GIF 帧像素写入 canvas
 fn gif_write_frame_pixels(
-  indices : Array[Int],
-  color_table : Array[(Int, Int, Int)],
-  left : Int,
-  top : Int,
-  img_width : Int,
-  img_height : Int,
-  screen_width : Int,
-  screen_height : Int,
-  gce_transparent : Int,
+  indices : Array[Int32],
+  color_table : Array[(Int32, Int32, Int32)],
+  left : Int32,
+  top : Int32,
+  img_width : Int32,
+  img_height : Int32,
+  screen_width : Int32,
+  screen_height : Int32,
+  gce_transparent : Int32,
   canvas : Array[Byte],
 ) -> Unit raise @types.LoadError {
   for y in 0..<img_height {
@@ -184,7 +184,7 @@ pub fn decode_gif_animation_pure(
   let gct_size = 1 << ((packed & 0x07) + 1)
   let bg_idx = data[11].to_int()
   let mut pos = 13
-  let gct : Array[(Int, Int, Int)] = if has_gct {
+  let gct : Array[(Int32, Int32, Int32)] = if has_gct {
     let (table, new_pos) = gif_read_color_table(data, pos, gct_size, len)
     pos = new_pos
     table
@@ -197,7 +197,7 @@ pub fn decode_gif_animation_pure(
     (0, 0, 0)
   }
   let frames : Array[@types.Image] = []
-  let delays : Array[Int] = []
+  let delays : Array[Int32] = []
   let canvas : Array[Byte] = Array::make(
     screen_width * screen_height * 3,
     bg_r.to_byte(),
@@ -237,7 +237,7 @@ pub fn decode_gif_animation_pure(
         if is_interlaced {
           raise @types.LoadError::DecodeFailed("GIF interlace 不支持")
         }
-        let lct : Array[(Int, Int, Int)] = if has_lct {
+        let lct : Array[(Int32, Int32, Int32)] = if has_lct {
           let (table, new_pos) = gif_read_color_table(
             data, pos, lct_size_val, len,
           )

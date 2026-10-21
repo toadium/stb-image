@@ -5,7 +5,7 @@
 
 ///|
 /// 向位数组写入 n 位 (LSB-first，与解码器 BitReader 读取顺序一致)
-fn wv_write_bits(bits : Array[Int], value : Int, n : Int) -> Unit {
+fn wv_write_bits(bits : Array[Int32], value : Int32, n : Int32) -> Unit {
   for i in 0..<n {
     bits.push((value >> i) & 1)
   }
@@ -13,7 +13,12 @@ fn wv_write_bits(bits : Array[Int], value : Int, n : Int) -> Unit {
 
 ///|
 /// 写入 VP8L 图像头: width-1(14) height-1(14) alpha(1) version(3)
-fn wv_header(bits : Array[Int], width : Int, height : Int, alpha : Int) -> Unit {
+fn wv_header(
+  bits : Array[Int32],
+  width : Int32,
+  height : Int32,
+  alpha : Int32,
+) -> Unit {
   wv_write_bits(bits, width - 1, 14)
   wv_write_bits(bits, height - 1, 14)
   wv_write_bits(bits, alpha, 1)
@@ -22,7 +27,7 @@ fn wv_header(bits : Array[Int], width : Int, height : Int, alpha : Int) -> Unit 
 
 ///|
 /// MSB-first 写入 Huffman 码 (add_code/decode 按码位 MSB-first 遍历树)
-fn wv_write_code_msb(bits : Array[Int], code : Int, len : Int) -> Unit {
+fn wv_write_code_msb(bits : Array[Int32], code : Int32, len : Int32) -> Unit {
   for i in 0..<len {
     bits.push((code >> (len - 1 - i)) & 1)
   }
@@ -30,7 +35,11 @@ fn wv_write_code_msb(bits : Array[Int], code : Int, len : Int) -> Unit {
 
 ///|
 /// 简单 Huffman 树 (单符号): is_simple=1, num_symbols=1
-fn wv_simple_tree_1sym(bits : Array[Int], max_bits : Int, symbol : Int) -> Unit {
+fn wv_simple_tree_1sym(
+  bits : Array[Int32],
+  max_bits : Int32,
+  symbol : Int32,
+) -> Unit {
   wv_write_bits(bits, 1, 1)
   wv_write_bits(bits, 0, 1)
   wv_write_bits(bits, max_bits - 1, 4)
@@ -40,10 +49,10 @@ fn wv_simple_tree_1sym(bits : Array[Int], max_bits : Int, symbol : Int) -> Unit 
 ///|
 /// 简单 Huffman 树 (两符号): 覆盖 add_code 右子树路径
 fn wv_simple_tree_2sym(
-  bits : Array[Int],
-  max_bits : Int,
-  s0 : Int,
-  s1 : Int,
+  bits : Array[Int32],
+  max_bits : Int32,
+  s0 : Int32,
+  s1 : Int32,
 ) -> Unit {
   wv_write_bits(bits, 1, 1)
   wv_write_bits(bits, 1, 1)
@@ -54,7 +63,7 @@ fn wv_simple_tree_2sym(
 
 ///|
 /// 位数组打包为 VP8L 数据 (前置 0x2F 签名字节，LSB-first 填充)
-fn wv_pack(bits : Array[Int]) -> Bytes {
+fn wv_pack(bits : Array[Int32]) -> Bytes {
   let out : Array[Byte] = [0x2F]
   let total = bits.length()
   let mut i = 0
@@ -106,7 +115,7 @@ fn wv_wrap(vp8l : Bytes) -> Bytes {
 ///|
 test "decode_webp: 2符号简单 Huffman 解码" {
   // 覆盖 read_huffman_tree 两符号分支 + add_code 右子树
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 0, 1) // 无 color cache
@@ -128,7 +137,7 @@ test "decode_webp: 2符号简单 Huffman 解码" {
 ///|
 test "decode_webp: alpha 通道 4 通道输出" {
   // alpha_used=1 → 每像素 4 次解码 (g,r,b,a)，输出 4 通道
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 1) // alpha_used=1
   wv_write_bits(bits, 0, 1)
   wv_write_bits(bits, 0, 1)
@@ -147,7 +156,7 @@ test "decode_webp: alpha 通道 4 通道输出" {
 ///|
 test "decode_webp: color cache 读写" {
   // sym=256 → 从 color cache 读取像素
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 2, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 1, 1) // 使用 color cache
@@ -175,7 +184,7 @@ test "decode_webp: color cache 读写" {
 ///|
 test "decode_webp: LZ77 回参考距离越界安全" {
   // sym=257 (copy_len=1) 在 pixel_idx=0 时 distance=1 越界 → 安全跳过
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 2, 1, 0)
   wv_write_bits(bits, 0, 1)
   wv_write_bits(bits, 0, 1)
@@ -198,7 +207,7 @@ test "decode_webp: LZ77 回参考距离越界安全" {
 test "decode_webp: predictor+subtract-green 变换 2x2" {
   // 变换读取顺序 [subtract-green, predictor]；应用顺序相反:
   // 先 predictor 逆变换，再 subtract-green 逆变换
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 2, 2, 0)
   // 变换1: subtract-green (type 2)
   wv_write_bits(bits, 1, 1) // has_transform
@@ -233,7 +242,7 @@ test "decode_webp: predictor+subtract-green 变换 2x2" {
 
 ///|
 test "decode_webp: cross-color+palette 变换与 meta huffman" {
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   // 变换1: cross-color (type 1)
   wv_write_bits(bits, 1, 1) // has_transform
@@ -266,7 +275,7 @@ test "decode_webp: cross-color+palette 变换与 meta huffman" {
 test "decode_webp: 空 code-length 树解码" {
   // 复杂 Huffman 但所有 code length code lengths 为 0 → cl_tree 为空
   // → HuffmanTree::decode 的空树分支 (直接返回 0)
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 0, 1) // 无 cache
@@ -289,7 +298,7 @@ test "decode_webp: code-length sym17 与无效符号分支" {
   // cl_tree 仅含 sym17 (1-bit code "1"):
   //   bit=0 → 返回 -1 (内部节点值) → else 分支重新 decode
   //   bit=1 → sym17 → 重复 0 × (3+extra)
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 0, 1) // 无 cache
@@ -324,7 +333,7 @@ test "decode_webp: code-length sym16 与 canonical 编码" {
   // sym16 空 prev → 0；非空 prev → 复制前值
   // code_lens = [0,0,0,5,5,5,5,5,5,0,...] (6 个 5-bit 码，合法 Huffman 集)
   // → canonical: sym3..8 → codes 0..5
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 0, 1) // 无 cache
@@ -385,7 +394,7 @@ test "decode_webp: code-length sym16 与 canonical 编码" {
 ///|
 test "decode_webp: RIFF 奇数 chunk padding 跳过" {
   // VP8L chunk 前放置一个奇数长度的 ICCP chunk → 解码器需跳过 padding 字节
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   wv_header(bits, 1, 1, 0)
   wv_write_bits(bits, 0, 1) // 无变换
   wv_write_bits(bits, 0, 1) // 无 cache

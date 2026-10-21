@@ -1,17 +1,17 @@
 ///|
 /// PNG 扩展信息（包含位深、颜色类型、隔行扫描等）
 pub struct PngInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  color_type : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
   color_type_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
   is_palette : Bool
-  compression_method : Int
-  filter_method : Int
-  interlace_method : Int
+  compression_method : Int32
+  filter_method : Int32
+  interlace_method : Int32
 }
 
 ///|
@@ -32,7 +32,7 @@ pub fn is_png_format(data : Bytes) -> Bool {
 }
 
 ///|
-fn png_color_type_name(ct : Int) -> String {
+fn png_color_type_name(ct : Int32) -> String {
   match ct {
     0 => "Grayscale"
     2 => "RGB"
@@ -44,7 +44,7 @@ fn png_color_type_name(ct : Int) -> String {
 }
 
 ///|
-fn png_channels_count(ct : Int) -> Int {
+fn png_channels_count(ct : Int32) -> Int32 {
   match ct {
     0 => 1
     2 => 3

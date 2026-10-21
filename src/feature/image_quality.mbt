@@ -52,7 +52,7 @@ pub fn mse(
   }
 
   let n = img1.data.length()
-  let mut sum : Int = 0
+  let mut sum : Int32 = 0
   for i in 0..<n {
     let d = img1.data[i].to_int() - img2.data[i].to_int()
     sum += d * d

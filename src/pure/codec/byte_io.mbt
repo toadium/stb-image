@@ -3,13 +3,13 @@
 
 ///|
 /// 读取 2 字节小端无符号整数
-fn read_u16_le(data : Bytes, offset : Int) -> Int {
+fn read_u16_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 
 ///|
 /// 读取 4 字节小端无符号整数
-fn read_u32_le(data : Bytes, offset : Int) -> Int {
+fn read_u32_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() |
   (data[offset + 1].to_int() << 8) |
   (data[offset + 2].to_int() << 16) |
@@ -18,7 +18,7 @@ fn read_u32_le(data : Bytes, offset : Int) -> Int {
 
 ///|
 /// 读取 2 字节大端无符号整数
-fn read_u16_be(data : Bytes, offset : Int) -> Int {
+fn read_u16_be(data : Bytes, offset : Int32) -> Int32 {
   (data[offset].to_int() << 8) | data[offset + 1].to_int()
 }
 
@@ -26,7 +26,7 @@ fn read_u16_be(data : Bytes, offset : Int) -> Int {
 /// 读取 4 字节大端无符号整数
 
 ///|
-fn read_u32_be(data : Bytes, offset : Int) -> Int {
+fn read_u32_be(data : Bytes, offset : Int32) -> Int32 {
   (data[offset].to_int() << 24) |
   (data[offset + 1].to_int() << 16) |
   (data[offset + 2].to_int() << 8) |
@@ -35,14 +35,14 @@ fn read_u32_be(data : Bytes, offset : Int) -> Int {
 
 ///|
 /// 写入 2 字节小端
-fn write_u16_le(buf : Array[Byte], val : Int) -> Unit {
+fn write_u16_le(buf : Array[Byte], val : Int32) -> Unit {
   buf.push((val & 0xFF).to_byte())
   buf.push(((val >> 8) & 0xFF).to_byte())
 }
 
 ///|
 /// 写入 4 字节小端
-fn write_u32_le(buf : Array[Byte], val : Int) -> Unit {
+fn write_u32_le(buf : Array[Byte], val : Int32) -> Unit {
   buf.push((val & 0xFF).to_byte())
   buf.push(((val >> 8) & 0xFF).to_byte())
   buf.push(((val >> 16) & 0xFF).to_byte())
@@ -51,14 +51,14 @@ fn write_u32_le(buf : Array[Byte], val : Int) -> Unit {
 
 ///|
 /// 写入 2 字节大端
-fn write_u16_be(buf : Array[Byte], val : Int) -> Unit {
+fn write_u16_be(buf : Array[Byte], val : Int32) -> Unit {
   buf.push(((val >> 8) & 0xFF).to_byte())
   buf.push((val & 0xFF).to_byte())
 }
 
 ///|
 /// 写入 4 字节大端
-fn write_u32_be(buf : Array[Byte], val : Int) -> Unit {
+fn write_u32_be(buf : Array[Byte], val : Int32) -> Unit {
   buf.push(((val >> 24) & 0xFF).to_byte())
   buf.push(((val >> 16) & 0xFF).to_byte())
   buf.push(((val >> 8) & 0xFF).to_byte())
@@ -68,7 +68,7 @@ fn write_u32_be(buf : Array[Byte], val : Int) -> Unit {
 ///|
 /// 验证 PNG signature（8 字节：89 50 4E 47 0D 0A 1A 0A）
 /// 越界时返回 false
-fn is_png_signature(data : Bytes, offset : Int) -> Bool {
+fn is_png_signature(data : Bytes, offset : Int32) -> Bool {
   if offset + 8 > data.length() {
     return false
   }

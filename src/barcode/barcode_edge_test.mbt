@@ -1,7 +1,7 @@
 // v201 barcode 错误路径/边界增强测试
 
 ///|
-fn bc_make_varied(w : Int, h : Int, ch : Int) -> @types.Image {
+fn bc_make_varied(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -15,7 +15,12 @@ fn bc_make_varied(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn bc_make_uniform(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn bc_make_uniform(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, (val & 0xFF).to_byte())
   @types.Image::{
     width: w,
@@ -26,7 +31,7 @@ fn bc_make_uniform(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn bc_make_bar_pattern(w : Int, h : Int) -> @types.Image {
+fn bc_make_bar_pattern(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for x in 0..<w {
     let v = if x % 4 < 2 { 0 } else { 255 }

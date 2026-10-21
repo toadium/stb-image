@@ -2,7 +2,7 @@
 
 ///|
 /// 均值哈希（aHash）。将图像缩放至 8×8 灰度，与均值比较生成 64 位哈希。
-pub fn ahash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+pub fn ahash(img : @types.Image) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("ahash: 图像尺寸必须大于0")
@@ -27,7 +27,7 @@ pub fn ahash(img : @types.Image) -> Array[Int] raise @types.LoadError {
     sum += small[i]
   }
   let mean = sum / 64
-  let hash : Array[Int] = Array::make(64, 0)
+  let hash : Array[Int32] = Array::make(64, 0)
   for i in 0..<64 {
     hash[i] = if small[i] > mean { 1 } else { 0 }
   }
@@ -36,7 +36,7 @@ pub fn ahash(img : @types.Image) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// 差值哈希（dHash）。将图像缩放至 9×8 灰度，比较水平相邻像素差。
-pub fn dhash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+pub fn dhash(img : @types.Image) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("dhash: 图像尺寸必须大于0")
@@ -55,7 +55,7 @@ pub fn dhash(img : @types.Image) -> Array[Int] raise @types.LoadError {
   }
 
   let small = resize_to_gray_9x8(img)
-  let hash : Array[Int] = Array::make(64, 0)
+  let hash : Array[Int32] = Array::make(64, 0)
   for row in 0..<8 {
     for col in 0..<8 {
       hash[row * 8 + col] = if small[row * 9 + col] > small[row * 9 + col + 1] {
@@ -71,7 +71,7 @@ pub fn dhash(img : @types.Image) -> Array[Int] raise @types.LoadError {
 ///|
 /// 感知哈希（pHash 简化版）。将图像缩放至 8×8 灰度，用 DCT 近似：取每行均值与全局均值比较。
 /// 完整 pHash 需 2D DCT，此处用简化版本（行列均值差分），足以满足去重需求。
-pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
+pub fn phash(img : @types.Image) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("phash: 图像尺寸必须大于0")
@@ -91,8 +91,8 @@ pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
 
   let small = resize_to_gray_8x8(img)
   // 简化 DCT：计算行均值和列均值
-  let row_means : Array[Int] = Array::make(8, 0)
-  let col_means : Array[Int] = Array::make(8, 0)
+  let row_means : Array[Int32] = Array::make(8, 0)
+  let col_means : Array[Int32] = Array::make(8, 0)
   for r in 0..<8 {
     let mut s = 0
     for c in 0..<8 {
@@ -114,7 +114,7 @@ pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
   }
   let global_mean = total / 8
   // 生成哈希：行均值和列均值与全局均值比较
-  let hash : Array[Int] = Array::make(64, 0)
+  let hash : Array[Int32] = Array::make(64, 0)
   for i in 0..<8 {
     hash[i] = if row_means[i] > global_mean { 1 } else { 0 }
   }
@@ -131,9 +131,9 @@ pub fn phash(img : @types.Image) -> Array[Int] raise @types.LoadError {
 ///|
 /// 汉明距离。计算两个哈希的差异位数。
 pub fn hamming_distance(
-  h1 : Array[Int],
-  h2 : Array[Int],
-) -> Int raise @types.LoadError {
+  h1 : Array[Int32],
+  h2 : Array[Int32],
+) -> Int32 raise @types.LoadError {
   // 参数验证
   if h1.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -162,11 +162,11 @@ pub fn hamming_distance(
 }
 
 ///|
-fn resize_to_gray_8x8(img : @types.Image) -> Array[Int] {
+fn resize_to_gray_8x8(img : @types.Image) -> Array[Int32] {
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let out : Array[Int] = Array::make(64, 0)
+  let out : Array[Int32] = Array::make(64, 0)
   for y in 0..<8 {
     for x in 0..<8 {
       // 最近邻采样
@@ -187,11 +187,11 @@ fn resize_to_gray_8x8(img : @types.Image) -> Array[Int] {
 }
 
 ///|
-fn resize_to_gray_9x8(img : @types.Image) -> Array[Int] {
+fn resize_to_gray_9x8(img : @types.Image) -> Array[Int32] {
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let out : Array[Int] = Array::make(72, 0)
+  let out : Array[Int32] = Array::make(72, 0)
   for y in 0..<8 {
     for x in 0..<9 {
       let sx = x * w / 9

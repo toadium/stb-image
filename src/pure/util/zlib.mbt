@@ -4,8 +4,8 @@
 
 ///|
 /// CRC-32 查表法
-fn crc32_table() -> Array[Int] {
-  let table : Array[Int] = Array::make(256, 0)
+fn crc32_table() -> Array[Int32] {
+  let table : Array[Int32] = Array::make(256, 0)
   for i in 0..<256 {
     let mut crc = i
     for _ in 0..<8 {
@@ -18,7 +18,7 @@ fn crc32_table() -> Array[Int] {
 
 ///|
 /// 计算 CRC-32 校验和
-pub fn crc32(data : Bytes) -> Int {
+pub fn crc32(data : Bytes) -> Int32 {
   let table = crc32_table()
   let mut crc = 0xFFFFFFFF
   for i in 0..<data.length() {
@@ -29,7 +29,7 @@ pub fn crc32(data : Bytes) -> Int {
 
 ///|
 /// 计算 Adler-32 校验和
-pub fn adler32(data : Bytes) -> Int {
+pub fn adler32(data : Bytes) -> Int32 {
   let mut a = 1
   let mut b = 0
   for i in 0..<data.length() {
@@ -42,25 +42,28 @@ pub fn adler32(data : Bytes) -> Int {
 ///|
 /// Huffman 解码树
 priv struct HuffmanTree {
-  counts : Array[Int]
-  symbols : Array[Int]
+  counts : Array[Int32]
+  symbols : Array[Int32]
 }
 
 ///|
 /// 构建 Huffman 解码树
-fn build_huffman_tree(code_lengths : Array[Int], max_bits : Int) -> HuffmanTree {
-  let counts : Array[Int] = Array::make(max_bits + 1, 0)
+fn build_huffman_tree(
+  code_lengths : Array[Int32],
+  max_bits : Int32,
+) -> HuffmanTree {
+  let counts : Array[Int32] = Array::make(max_bits + 1, 0)
   for i in 0..<code_lengths.length() {
     counts[code_lengths[i]] += 1
   }
   counts[0] = 0
-  let offsets : Array[Int] = Array::make(max_bits + 1, 0)
+  let offsets : Array[Int32] = Array::make(max_bits + 1, 0)
   let mut total = 0
   for i in 1..<=max_bits {
     offsets[i] = total
     total += counts[i]
   }
-  let symbols : Array[Int] = Array::make(total, 0)
+  let symbols : Array[Int32] = Array::make(total, 0)
   for i in 0..<code_lengths.length() {
     let cl = code_lengths[i]
     if cl > 0 {
@@ -75,9 +78,9 @@ fn build_huffman_tree(code_lengths : Array[Int], max_bits : Int) -> HuffmanTree 
 /// DEFLATE 位读取器（用可变字段）
 priv struct BitReader {
   data : Bytes
-  mut pos : Int
-  mut bit_buf : Int
-  mut bit_count : Int
+  mut pos : Int32
+  mut bit_buf : Int32
+  mut bit_count : Int32
 }
 
 ///|
@@ -88,8 +91,8 @@ fn bit_reader_new(data : Bytes) -> BitReader {
 ///|
 fn bit_reader_read_bits(
   reader : BitReader,
-  n : Int,
-) -> Int raise @types.LoadError {
+  n : Int32,
+) -> Int32 raise @types.LoadError {
   while reader.bit_count < n {
     if reader.pos >= reader.data.length() {
       raise @types.LoadError::DecodeFailed("DEFLATE 数据意外结束")
@@ -109,7 +112,7 @@ fn bit_reader_read_bits(
 fn bit_reader_read_huffman(
   reader : BitReader,
   tree : HuffmanTree,
-) -> Int raise @types.LoadError {
+) -> Int32 raise @types.LoadError {
   let mut code = 0
   let mut first = 0
   let mut index = 0
@@ -216,7 +219,7 @@ fn inflate_block_data(
 }
 
 ///|
-fn length_base_extra(code : Int) -> (Int, Int) {
+fn length_base_extra(code : Int32) -> (Int32, Int32) {
   let base = [
     3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67,
     83, 99, 115, 131, 163, 195, 227, 258,
@@ -233,7 +236,7 @@ fn length_base_extra(code : Int) -> (Int, Int) {
 }
 
 ///|
-fn distance_base_extra(code : Int) -> (Int, Int) {
+fn distance_base_extra(code : Int32) -> (Int32, Int32) {
   let base = [
     1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769,
     1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577,
@@ -251,7 +254,7 @@ fn distance_base_extra(code : Int) -> (Int, Int) {
 
 ///|
 fn build_fixed_trees() -> (HuffmanTree, HuffmanTree) {
-  let lit_lengths : Array[Int] = Array::make(288, 0)
+  let lit_lengths : Array[Int32] = Array::make(288, 0)
   for i in 0..<144 {
     lit_lengths[i] = 8
   }
@@ -264,7 +267,7 @@ fn build_fixed_trees() -> (HuffmanTree, HuffmanTree) {
   for i in 280..<288 {
     lit_lengths[i] = 8
   }
-  let dist_lengths : Array[Int] = Array::make(30, 5)
+  let dist_lengths : Array[Int32] = Array::make(30, 5)
   (build_huffman_tree(lit_lengths, 15), build_huffman_tree(dist_lengths, 15))
 }
 
@@ -282,14 +285,14 @@ fn read_dynamic_trees(
   let cl_order = [
     16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
   ]
-  let cl_lengths : Array[Int] = Array::make(19, 0)
+  let cl_lengths : Array[Int32] = Array::make(19, 0)
   for i in 0..<num_clen {
     let cl = bit_reader_read_bits(reader, 3)
     cl_lengths[cl_order[i]] = cl
   }
   let cl_tree = build_huffman_tree(cl_lengths, 7)
   // 读取 literal/length 和 distance code lengths
-  let all_lengths : Array[Int] = Array::make(num_lit + num_dist, 0)
+  let all_lengths : Array[Int32] = Array::make(num_lit + num_dist, 0)
   let mut idx = 0
   while idx < num_lit + num_dist {
     let sym = bit_reader_read_huffman(reader, cl_tree)
@@ -328,11 +331,11 @@ fn read_dynamic_trees(
     }
   }
   // 拆分 lit 和 dist
-  let lit_lengths : Array[Int] = Array::make(num_lit, 0)
+  let lit_lengths : Array[Int32] = Array::make(num_lit, 0)
   for i in 0..<num_lit {
     lit_lengths[i] = all_lengths[i]
   }
-  let dist_lengths : Array[Int] = Array::make(num_dist, 0)
+  let dist_lengths : Array[Int32] = Array::make(num_dist, 0)
   for i in 0..<num_dist {
     dist_lengths[i] = all_lengths[num_lit + i]
   }

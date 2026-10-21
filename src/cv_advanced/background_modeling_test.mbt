@@ -2,7 +2,7 @@
 // Background modeling tests
 
 ///|
-fn make_bg_test_image(v : Int) -> @types.Image {
+fn make_bg_test_image(v : Int32) -> @types.Image {
   let width = 8
   let height = 8
   let channels = 1

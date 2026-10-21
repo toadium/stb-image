@@ -10,7 +10,7 @@ pub(all) struct VerifyResult {
 ///|
 pub fn VerifyResult::make(
   is_valid~ : Bool,
-  issues? : Array[String] = [],
+  issues~ : Array[String] = [],
 ) -> VerifyResult {
   { is_valid, issues, }
 }
@@ -109,7 +109,7 @@ pub fn verify_budget(
 ///|
 pub fn verify_all(
   index : SymbolIndex,
-  budget? : ContextBudget = ContextBudget::make(1000000),
+  budget~ : ContextBudget = ContextBudget::make(1000000),
 ) -> VerifyResult {
   let issues : Array[String] = []
   let r1 = verify_consistency(index)

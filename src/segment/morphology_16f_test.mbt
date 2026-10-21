@@ -1,7 +1,12 @@
 // 形态学操作 16-bit/float 变体测试
 
 ///|
-fn make_img16_morph(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_morph(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +21,12 @@ fn make_img16_morph(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_morph(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_morph(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -34,12 +44,12 @@ fn make_imgf_morph(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn read_u16_at_m(data : Bytes, offset : Int) -> Int {
+fn read_u16_at_m(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_f32_at_m(data : Bytes, offset : Int) -> Float {
+fn read_f32_at_m(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()

@@ -24,10 +24,10 @@ pub extend ChangeMethod with Eq::{not_equal, equal}
 /// Change detection result.
 pub(all) struct ChangeResult {
   change_map : Array[Array[Double]]
-  binary_map : Array[Array[Int]]
+  binary_map : Array[Array[Int32]]
   threshold : Double
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -146,7 +146,7 @@ pub fn change_vector_analysis(
 /// Otsu automatic thresholding.
 pub fn change_otsu_threshold(
   change_map : Array[Array[Double]],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Double {
   let height = change_map.length()
   if height == 0 {
@@ -215,7 +215,7 @@ pub fn change_otsu_threshold(
 pub fn change_threshold(
   change_map : Array[Array[Double]],
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let height = change_map.length()
   if height == 0 {
     return []
@@ -299,7 +299,7 @@ pub fn change_detect(
 ///|
 /// 统计变化像素数量。
 /// Count changed pixels.
-pub fn change_count_changed(binary_map : Array[Array[Int]]) -> Int {
+pub fn change_count_changed(binary_map : Array[Array[Int32]]) -> Int32 {
   let height = binary_map.length()
   let mut count = 0
   for row in 0..<height {
@@ -315,7 +315,7 @@ pub fn change_count_changed(binary_map : Array[Array[Int]]) -> Int {
 ///|
 /// 计算变化率。
 /// Compute change rate.
-pub fn change_rate(binary_map : Array[Array[Int]]) -> Double {
+pub fn change_rate(binary_map : Array[Array[Int32]]) -> Double {
   let height = binary_map.length()
   if height == 0 {
     return 0.0

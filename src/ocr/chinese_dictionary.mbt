@@ -21,7 +21,7 @@ pub extend DictCharStructure with Eq::{not_equal, equal}
 /// 汉字部件
 pub(all) struct DictComponent {
   name : String
-  stroke_count : Int
+  stroke_count : Int32
   position : String // "left" / "right" / "top" / "bottom" / "outer" / "inner"
   width_ratio : Double
   height_ratio : Double
@@ -33,11 +33,11 @@ pub(all) struct DictCharEntry {
   char : String
   unicode : String
   pinyin : Array[String]
-  stroke_count : Int
+  stroke_count : Int32
   structure : DictCharStructure
   radical : String
   components : Array[DictComponent]
-  frequency : Int // 使用频率（1-10000）
+  frequency : Int32 // 使用频率（1-10000）
   level : String // "一级" / "二级" / "三级"
 }
 
@@ -45,12 +45,12 @@ pub(all) struct DictCharEntry {
 /// 中文字库
 pub(all) struct DictChineseDict {
   chars : Array[DictCharEntry]
-  total_chars : Int
-  level1_count : Int
-  level2_count : Int
-  level3_count : Int
-  radical_index : Array[(String, Array[Int])]
-  pinyin_index : Array[(String, Array[Int])]
+  total_chars : Int32
+  level1_count : Int32
+  level2_count : Int32
+  level3_count : Int32
+  radical_index : Array[(String, Array[Int32])]
+  pinyin_index : Array[(String, Array[Int32])]
 }
 
 ///|
@@ -70,9 +70,9 @@ pub(all) struct DictCharMatch {
   matched_char : String
   similarity : Double
   structure_match : Bool
-  component_match_count : Int
-  total_components : Int
-  stroke_diff : Int
+  component_match_count : Int32
+  total_components : Int32
+  stroke_diff : Int32
 }
 
 ///|
@@ -496,8 +496,8 @@ pub fn create_default_chinese_dictionary() -> DictChineseDict {
       _ => level3 += 1
     }
   }
-  let radical_index : Array[(String, Array[Int])] = []
-  let pinyin_index : Array[(String, Array[Int])] = []
+  let radical_index : Array[(String, Array[Int32])] = []
+  let pinyin_index : Array[(String, Array[Int32])] = []
   DictChineseDict::{
     chars,
     total_chars: chars.length(),
@@ -621,7 +621,7 @@ pub fn calculate_chinese_similarity(
 pub fn find_similar_chinese_chars(
   dict : DictChineseDict,
   target_char : String,
-  top_n? : Int = 5,
+  top_n~ : Int32 = 5,
 ) -> Array[DictCharMatch] raise @types.LoadError {
   // 输入验证
   if target_char.length() == 0 {
@@ -715,7 +715,7 @@ pub fn recognize_by_components(
   dict : DictChineseDict,
   detected_structure : DictCharStructure,
   detected_components : Array[String],
-  stroke_count_hint? : Int = 0,
+  stroke_count_hint~ : Int32 = 0,
 ) -> Array[(String, Double)] {
   let stroke_hint = stroke_count_hint
   let candidates : Array[(String, Double)] = []

@@ -10,13 +10,13 @@ pub fn coded_aperture_reconstruct(@types.Image, CodedAperturePattern) -> Imaging
 
 pub fn computational_imaging_report_to_string(ImagingReconstructionResult, String) -> String
 
-pub fn create_default_coded_aperture(Int) -> CodedAperturePattern
+pub fn create_default_coded_aperture(Int32) -> CodedAperturePattern
 
 pub fn create_default_lightfield_camera() -> LightFieldCameraParams
 
 pub fn create_default_phase_config() -> PhaseRetrievalConfig
 
-pub fn ct_reconstruct_fbp(CTProjectionData, Int) -> ImagingReconstructionResult
+pub fn ct_reconstruct_fbp(CTProjectionData, Int32) -> ImagingReconstructionResult
 
 pub fn generate_hologram(@types.Image, Double, Double, Double) -> Hologram
 
@@ -35,8 +35,8 @@ pub fn synthesize_view(LightFieldData, Double, Double) -> ViewSynthesisResult
 // Types and methods
 pub(all) struct CTProjectionData {
   projections : Array[@types.Image]
-  num_angles : Int
-  num_detectors : Int
+  num_angles : Int32
+  num_detectors : Int32
   angular_range : Double
   source_distance : Double
   detector_distance : Double
@@ -44,9 +44,9 @@ pub(all) struct CTProjectionData {
 
 pub(all) struct CodedAperturePattern {
   pattern : @types.Image
-  pattern_size : Int
+  pattern_size : Int32
   code_type : String
-  num_elements : Int
+  num_elements : Int32
 }
 
 pub(all) enum ComputationalImagingAlgorithm {
@@ -86,7 +86,7 @@ pub fn HologramType::not_equal(Self, Self) -> Bool
 pub(all) struct ImagingReconstructionResult {
   image : @types.Image
   algorithm : ComputationalImagingAlgorithm
-  num_iterations : Int
+  num_iterations : Int32
   convergence_error : Double
   reconstruction_time_ms : Double
   psnr : Double
@@ -94,19 +94,19 @@ pub(all) struct ImagingReconstructionResult {
 }
 
 pub(all) struct LightFieldCameraParams {
-  num_views_x : Int
-  num_views_y : Int
+  num_views_x : Int32
+  num_views_y : Int32
   micro_lens_pitch : Double
   focal_length : Double
   sensor_pitch : Double
-  num_aperture_samples : Int
+  num_aperture_samples : Int32
 }
 
 pub(all) struct LightFieldData {
   views : Array[@types.Image]
-  num_views_x : Int
-  num_views_y : Int
-  total_views : Int
+  num_views_x : Int32
+  num_views_y : Int32
+  total_views : Int32
   representation : LightFieldRepresentation
 }
 
@@ -121,7 +121,7 @@ pub fn LightFieldRepresentation::equal(Self, Self) -> Bool
 pub fn LightFieldRepresentation::not_equal(Self, Self) -> Bool
 
 pub(all) struct PhaseRetrievalConfig {
-  num_iterations : Int
+  num_iterations : Int32
   algorithm : String
   support_threshold : Double
   use_hybrid_input_output : Bool
@@ -132,13 +132,13 @@ pub(all) struct RefocusResult {
   image : @types.Image
   focus_depth : Double
   aperture_size : Double
-  num_views_used : Int
+  num_views_used : Int32
 }
 
 pub(all) struct ViewSynthesisResult {
   image : @types.Image
   view_position : Array[Double]
-  num_source_views : Int
+  num_source_views : Int32
   interpolation_method : String
 }
 

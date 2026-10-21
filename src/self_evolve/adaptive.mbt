@@ -23,9 +23,9 @@ pub extend TestPriority with Eq::{not_equal, equal}
 /// Adaptive strategy for a single op.
 pub(all) struct AdaptiveStrategy {
   op_tag : String
-  current_coverage : Int
+  current_coverage : Int32
   priority : TestPriority
-  suggested_tests : Int
+  suggested_tests : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -39,8 +39,8 @@ pub extend AdaptiveStrategy with Eq::{not_equal, equal}
 /// Adaptive report.
 pub(all) struct AdaptiveReport {
   strategies : Array[AdaptiveStrategy]
-  total_prioritized : Int
-  high_priority_count : Int
+  total_prioritized : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -53,7 +53,7 @@ pub extend AdaptiveReport with Eq::{not_equal, equal}
 ///|
 /// 根据覆盖度建议测试数量。
 /// Suggest test count based on coverage (0-100).
-pub fn suggest_test_count(coverage : Int) -> Int {
+pub fn suggest_test_count(coverage : Int32) -> Int32 {
   if coverage >= 80 {
     2
   } else if coverage >= 50 {
@@ -68,7 +68,7 @@ pub fn suggest_test_count(coverage : Int) -> Int {
 ///|
 /// 根据覆盖度判定优先级。
 /// Determine priority based on coverage.
-pub fn priority_from_coverage(coverage : Int) -> TestPriority {
+pub fn priority_from_coverage(coverage : Int32) -> TestPriority {
   if coverage >= 50 {
     LowPriority
   } else if coverage >= 25 {

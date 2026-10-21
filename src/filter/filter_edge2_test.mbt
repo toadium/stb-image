@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn fe2_flt16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn fe2_flt16(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -18,7 +18,7 @@ fn fe2_flt16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn fe2_fltf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn fe2_fltf(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -36,7 +36,7 @@ fn fe2_fltf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn fe2_flt16_bad(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn fe2_flt16_bad(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   @types.Image16::{
     width: w,
     height: h,

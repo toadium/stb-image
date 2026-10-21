@@ -2,7 +2,7 @@
 
 ///|
 fn create_test_sample(
-  label : Int,
+  label : Int32,
   label_text : String,
 ) -> @ocr.DLTrainingSample raise @types.LoadError {
   let img = @types.Image::{

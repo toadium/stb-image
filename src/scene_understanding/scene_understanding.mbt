@@ -60,7 +60,7 @@ pub(all) struct SceneClassificationResult {
   confidence : Double
   top_predictions : Array[String]
   top_confidences : Array[Double]
-  num_classes : Int
+  num_classes : Int32
   scene_category : String
 }
 
@@ -70,7 +70,7 @@ pub(all) struct ImageCaptioningResult {
   caption : String
   confidence : Double
   alternative_captions : Array[String]
-  num_captions : Int
+  num_captions : Int32
   bleu_score : Double
   cider_score : Double
   generation_time_ms : Double
@@ -90,7 +90,7 @@ pub(all) struct VisualQuestionAnsweringResult {
 ///|
 /// 场景图节点
 pub(all) struct SceneGraphNode {
-  object_id : Int
+  object_id : Int32
   object_name : String
   bounding_box : Array[Double]
   attributes : Array[String]
@@ -100,8 +100,8 @@ pub(all) struct SceneGraphNode {
 ///|
 /// 场景图关系
 pub(all) struct SceneGraphRelation {
-  subject_id : Int
-  object_id : Int
+  subject_id : Int32
+  object_id : Int32
   relation : String
   confidence : Double
 }
@@ -111,8 +111,8 @@ pub(all) struct SceneGraphRelation {
 pub(all) struct SceneGraph {
   nodes : Array[SceneGraphNode]
   relations : Array[SceneGraphRelation]
-  num_objects : Int
-  num_relations : Int
+  num_objects : Int32
+  num_relations : Int32
 }
 
 ///|
@@ -123,7 +123,7 @@ pub(all) struct SceneUnderstandingConfig {
   vqa_algorithm : VisualQuestionAnsweringAlgorithm
   classification_threshold : Double
   caption_temperature : Double
-  max_caption_length : Int
+  max_caption_length : Int32
   use_attention : Bool
   use_scene_graph : Bool
 }

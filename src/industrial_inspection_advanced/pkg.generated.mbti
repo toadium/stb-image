@@ -4,15 +4,15 @@ package "walkzzz/image/src/industrial_inspection_advanced"
 // Values
 pub fn create_default_industrial_config() -> IndustrialInspectionConfig
 
-pub fn detect_anomalies(Array[Double], Array[Double], Int, Int, IndustrialInspectionConfig) -> AnomalyDetectionResult
+pub fn detect_anomalies(Array[Double], Array[Double], Int32, Int32, IndustrialInspectionConfig) -> AnomalyDetectionResult
 
-pub fn detect_defects(Array[Double], Int, Int, IndustrialInspectionConfig) -> Array[DetectedDefect]
+pub fn detect_defects(Array[Double], Int32, Int32, IndustrialInspectionConfig) -> Array[DetectedDefect]
 
-pub fn evaluate_surface_quality(Array[Double], Int, Int, Array[DetectedDefect], IndustrialInspectionConfig) -> SurfaceQualityResult
+pub fn evaluate_surface_quality(Array[Double], Int32, Int32, Array[DetectedDefect], IndustrialInspectionConfig) -> SurfaceQualityResult
 
 pub fn industrial_inspection_report_to_string(IndustrialInspectionTaskType, IndustrialInspectionConfig, String) -> String
 
-pub fn measure_dimensions(Array[Double], Int, Int, Double, IndustrialInspectionConfig) -> Array[DimensionalMeasurementResult]
+pub fn measure_dimensions(Array[Double], Int32, Int32, Double, IndustrialInspectionConfig) -> Array[DimensionalMeasurementResult]
 
 // Errors
 
@@ -22,8 +22,8 @@ pub(all) struct AnomalyDetectionResult {
   anomaly_score : Double
   threshold : Double
   anomaly_map : Array[Array[Double]]
-  anomaly_regions : Array[Array[Int]]
-  num_anomaly_regions : Int
+  anomaly_regions : Array[Array[Int32]]
+  num_anomaly_regions : Int32
   confidence : Double
   reconstruction_error : Double
 }
@@ -45,9 +45,9 @@ pub fn DefectType::equal(Self, Self) -> Bool
 pub fn DefectType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DetectedDefect {
-  defect_id : Int
+  defect_id : Int32
   defect_type : DefectType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   segmentation_mask : Array[Array[Bool]]
   confidence : Double
   severity : Double
@@ -83,7 +83,7 @@ pub(all) struct IndustrialInspectionConfig {
   use_ai_detection : Bool
   use_traditional_vision : Bool
   use_hybrid : Bool
-  camera_resolution : Array[Int]
+  camera_resolution : Array[Int32]
   lighting_type : String
   inspection_speed : Double
   reject_on_critical : Bool
@@ -134,8 +134,8 @@ pub(all) struct SurfaceQualityResult {
   glossiness : Double
   color_uniformity : Double
   defect_density : Double
-  num_defects : Int
-  critical_defects : Int
+  num_defects : Int32
+  critical_defects : Int32
 }
 
 // Type aliases

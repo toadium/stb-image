@@ -22,7 +22,7 @@ pub fn fusion_default_config() -> FusionConfig
 pub(all) struct FusionConfig {
   method_type : String
   alpha : Double
-  pyramid_levels : Int
+  pyramid_levels : Int32
 }
 
 // Type aliases

@@ -76,8 +76,8 @@ pub(all) struct Gaussian3D {
 ///|
 /// NeRF 配置
 pub(all) struct NeRFConfig {
-  num_samples_per_ray : Int
-  num_importance_samples : Int
+  num_samples_per_ray : Int32
+  num_importance_samples : Int32
   near_plane : Double
   far_plane : Double
   use_perturbation : Bool
@@ -89,8 +89,8 @@ pub(all) struct NeRFConfig {
 ///|
 /// 3D 高斯泼溅配置
 pub(all) struct GaussianSplattingConfig {
-  num_gaussians : Int
-  sh_degree : Int
+  num_gaussians : Int32
+  sh_degree : Int32
   use_antialiasing : Bool
   use_depth_test : Bool
   opacity_threshold : Double
@@ -104,8 +104,8 @@ pub(all) struct CameraParams {
   rotation : Array[Double]
   focal_length : Double
   principal_point : Array[Double]
-  image_width : Int
-  image_height : Int
+  image_width : Int32
+  image_height : Int32
   near_plane : Double
   far_plane : Double
 }
@@ -126,9 +126,9 @@ pub(all) struct RenderingResult {
 /// 3D 重建结果
 pub(all) struct ReconstructionResult {
   point_cloud : Array[Point3D]
-  num_points : Int
+  num_points : Int32
   cameras : Array[CameraParams]
-  num_cameras : Int
+  num_cameras : Int32
   reconstruction_time_ms : Double
   coverage : Double
   accuracy : Double
@@ -418,7 +418,7 @@ pub fn render_gaussian_splatting(
 
 ///|
 /// 生成示例 3D 高斯
-pub fn generate_sample_gaussians(num_gaussians : Int) -> Array[Gaussian3D] {
+pub fn generate_sample_gaussians(num_gaussians : Int32) -> Array[Gaussian3D] {
   let gaussians : Array[Gaussian3D] = []
   let mut state = 42
 
@@ -515,8 +515,8 @@ pub fn multiview_stereo_reconstruction(
 /// 点云可视化
 pub fn visualize_point_cloud(
   point_cloud : Array[Point3D],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image {
   let total = width * height
   let out : Array[Byte] = []

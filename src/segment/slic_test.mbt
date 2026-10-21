@@ -1,7 +1,7 @@
 // SLIC 超像素分割测试
 
 ///|
-fn make_slic_test_image(w : Int, h : Int, ch : Int) -> @types.Image {
+fn make_slic_test_image(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

@@ -4,12 +4,12 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_seg(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_seg(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_float_le_seg(data : Bytes, offset : Int) -> Float {
+fn read_float_le_seg(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -19,7 +19,7 @@ fn read_float_le_seg(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn clamp_int_seg(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_seg(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -72,8 +72,8 @@ fn imgf_to_img8(img : @types.ImageF) -> @types.Image {
 /// 16-bit Watershed 分割。
 pub fn watershed_16(
   img : @types.Image16,
-  markers : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  markers : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   let img8 = img16_to_img8(img)
   watershed(img8, markers)
 }
@@ -82,7 +82,7 @@ pub fn watershed_16(
 /// 16-bit 自动 Watershed 分割。
 pub fn watershed_auto_16(
   img : @types.Image16,
-) -> (Array[Int], Int) raise @types.LoadError {
+) -> (Array[Int32], Int32) raise @types.LoadError {
   let img8 = img16_to_img8(img)
   watershed_auto(img8)
 }
@@ -93,8 +93,8 @@ pub fn watershed_auto_16(
 /// float Watershed 分割。
 pub fn watershed_f(
   img : @types.ImageF,
-  markers : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  markers : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   let img8 = imgf_to_img8(img)
   watershed(img8, markers)
 }
@@ -103,7 +103,7 @@ pub fn watershed_f(
 /// float 自动 Watershed 分割。
 pub fn watershed_auto_f(
   img : @types.ImageF,
-) -> (Array[Int], Int) raise @types.LoadError {
+) -> (Array[Int32], Int32) raise @types.LoadError {
   let img8 = imgf_to_img8(img)
   watershed_auto(img8)
 }
@@ -114,8 +114,8 @@ pub fn watershed_auto_f(
 /// 16-bit K-means 图像分割。
 pub fn kmeans_segment_16(
   img : @types.Image16,
-  k : Int,
-  max_iters? : Int = 20,
+  k : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   let img8 = img16_to_img8(img)
   kmeans_segment(img8, k, max_iters~)
@@ -127,8 +127,8 @@ pub fn kmeans_segment_16(
 /// float K-means 图像分割。
 pub fn kmeans_segment_f(
   img : @types.ImageF,
-  k : Int,
-  max_iters? : Int = 20,
+  k : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   let img8 = imgf_to_img8(img)
   kmeans_segment(img8, k, max_iters~)
@@ -140,9 +140,9 @@ pub fn kmeans_segment_f(
 /// 16-bit SLIC 超像素分割。
 pub fn slic_16(
   img : @types.Image16,
-  k : Int,
-  m : Int,
-  max_iters : Int,
+  k : Int32,
+  m : Int32,
+  max_iters : Int32,
 ) -> SuperpixelResult raise @types.LoadError {
   let img8 = img16_to_img8(img)
   slic(img8, k, m, max_iters)
@@ -154,9 +154,9 @@ pub fn slic_16(
 /// float SLIC 超像素分割。
 pub fn slic_f(
   img : @types.ImageF,
-  k : Int,
-  m : Int,
-  max_iters : Int,
+  k : Int32,
+  m : Int32,
+  max_iters : Int32,
 ) -> SuperpixelResult raise @types.LoadError {
   let img8 = imgf_to_img8(img)
   slic(img8, k, m, max_iters)

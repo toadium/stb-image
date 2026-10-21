@@ -70,7 +70,7 @@ test "median_cut: num_colors=2 reduces colors" {
   let img = @lib.load_from_bytes_auto(test_4x4_red_png, req_channels=Some(3))
   let result = @color.median_cut(img, 2)
   // 最多 2 种不同颜色
-  let colors : Array[(Int, Int, Int)] = []
+  let colors : Array[(Int32, Int32, Int32)] = []
   for i in 0..<(result.width * result.height) {
     let r = result.data[i * 3].to_int()
     let g = result.data[i * 3 + 1].to_int()

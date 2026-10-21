@@ -73,11 +73,11 @@ pub extend WatermarkAttackType with Eq::{not_equal, equal}
 /// 水印嵌入结果
 pub(all) struct WatermarkEmbeddingResult {
   watermarked_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   watermark_data : Array[Byte]
-  watermark_size_bytes : Int
+  watermark_size_bytes : Int32
   watermark_type : WatermarkType
   embedding_domain : WatermarkDomain
   watermark_strength : Double
@@ -85,7 +85,7 @@ pub(all) struct WatermarkEmbeddingResult {
   ssim : Double
   imperceptibility_score : Double
   robustness_score : Double
-  capacity_bits : Int
+  capacity_bits : Int32
   embedding_time_ms : Double
 }
 
@@ -93,7 +93,7 @@ pub(all) struct WatermarkEmbeddingResult {
 /// 水印检测结果
 pub(all) struct WatermarkDetectionResult {
   detected_watermark : Array[Byte]
-  watermark_size_bytes : Int
+  watermark_size_bytes : Int32
   is_detected : Bool
   detection_confidence : Double
   correlation_coefficient : Double
@@ -108,9 +108,9 @@ pub(all) struct WatermarkDetectionResult {
 /// 水印攻击结果
 pub(all) struct WatermarkAttackResult {
   attacked_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   attack_type : WatermarkAttackType
   attack_parameters : Array[Double]
   psnr : Double
@@ -132,7 +132,7 @@ pub(all) struct WatermarkPerformanceResult {
   robustness_against_scaling : Double
   robustness_against_rotation : Double
   overall_robustness : Double
-  capacity_bits : Int
+  capacity_bits : Int32
   embedding_time_ms : Double
   detection_time_ms : Double
   overall_score : Double
@@ -142,11 +142,11 @@ pub(all) struct WatermarkPerformanceResult {
 /// 数字指纹结果
 pub(all) struct DigitalFingerprintResult {
   fingerprinted_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   fingerprint_data : Array[Byte]
-  fingerprint_size_bytes : Int
+  fingerprint_size_bytes : Int32
   user_id : String
   embedding_domain : WatermarkDomain
   fingerprint_strength : Double
@@ -163,19 +163,19 @@ pub(all) struct VisibleWatermarkConfig {
   watermark_text : String
   watermark_image : Array[Double]
   watermark_type : WatermarkType
-  position_x : Int
-  position_y : Int
+  position_x : Int32
+  position_y : Int32
   opacity : Double
   scale : Double
   rotation : Double
   tile_mode : Bool
-  tile_spacing_x : Int
-  tile_spacing_y : Int
-  font_size : Int
+  tile_spacing_x : Int32
+  tile_spacing_y : Int32
+  font_size : Int32
   font_color : Array[Double]
   use_shadow : Bool
-  shadow_offset_x : Int
-  shadow_offset_y : Int
+  shadow_offset_x : Int32
+  shadow_offset_y : Int32
   shadow_opacity : Double
 }
 
@@ -189,7 +189,7 @@ pub(all) struct ImageWatermarkConfig {
   use_encryption : Bool
   encryption_key : Array[Byte]
   use_error_correction : Bool
-  error_correction_level : Int
+  error_correction_level : Int32
   use_scrambling : Bool
   visible_config : VisibleWatermarkConfig
   use_gpu : Bool
@@ -264,7 +264,7 @@ fn lsb_embed(
 
 ///|
 /// 简化的LSB水印提取
-fn lsb_extract(image : Array[Double], num_bytes : Int) -> Array[Byte] {
+fn lsb_extract(image : Array[Double], num_bytes : Int32) -> Array[Byte] {
   let result : Array[Byte] = []
   let mut current_byte = 0
   let mut bit_count = 0
@@ -290,8 +290,8 @@ fn lsb_extract(image : Array[Double], num_bytes : Int) -> Array[Byte] {
 /// 嵌入水印（简化版）
 pub fn embed_watermark(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   watermark : Array[Byte],
   config : ImageWatermarkConfig,
 ) -> WatermarkEmbeddingResult {
@@ -322,9 +322,9 @@ pub fn embed_watermark(
 /// 检测水印（简化版）
 pub fn detect_watermark(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  watermark_size : Int,
+  width : Int32,
+  height : Int32,
+  watermark_size : Int32,
   config : ImageWatermarkConfig,
 ) -> WatermarkDetectionResult {
   ignore(height)
@@ -362,8 +362,8 @@ pub fn detect_watermark(
 /// 水印攻击（简化版）
 pub fn attack_watermark(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   attack_type : WatermarkAttackType,
   attack_strength : Double,
 ) -> WatermarkAttackResult {
@@ -417,8 +417,8 @@ pub fn attack_watermark(
 /// 嵌入可见水印（简化版）
 pub fn embed_visible_watermark(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageWatermarkConfig,
 ) -> Array[Double] {
   let result : Array[Double] = []

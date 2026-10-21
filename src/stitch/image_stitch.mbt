@@ -14,8 +14,8 @@ pub(all) struct FeaturePoint {
 ///|
 /// 匹配对
 pub(all) struct MatchPair {
-  query_idx : Int
-  train_idx : Int
+  query_idx : Int32
+  train_idx : Int32
   distance : Double
 }
 
@@ -36,12 +36,12 @@ pub(all) struct Homography {
 ///|
 /// 图像拼接配置
 pub(all) struct StitchConfig {
-  max_features : Int // 最大特征点数
+  max_features : Int32 // 最大特征点数
   ratio_threshold : Double // Lowe 比率测试阈值
-  ransac_iterations : Int // RANSAC 迭代次数
+  ransac_iterations : Int32 // RANSAC 迭代次数
   ransac_threshold : Double // RANSAC 内点阈值（像素）
-  min_inliers : Int // 最小内点数
-  blend_width : Int // 融合宽度（像素）
+  min_inliers : Int32 // 最小内点数
+  blend_width : Int32 // 融合宽度（像素）
   use_multi_band : Bool // 是否使用多频段融合
 }
 
@@ -133,7 +133,7 @@ pub fn invert_homography(h : Homography) -> Homography? {
 /// 简单特征检测（基于 FAST 角点的简化版）
 pub fn detect_features_simple(
   img : @types.Image,
-  max_features? : Int = 500,
+  max_features~ : Int32 = 500,
 ) -> Array[FeaturePoint] {
   let w = img.width
   let h = img.height
@@ -220,10 +220,10 @@ pub fn detect_features_simple(
 /// 计算简单描述子（8x8 网格的灰度直方图）
 fn compute_simple_descriptor(
   data : Bytes,
-  w : Int,
-  h : Int,
-  cx : Int,
-  cy : Int,
+  w : Int32,
+  h : Int32,
+  cx : Int32,
+  cy : Int32,
 ) -> Array[Double] {
   let grid_size = 8
   let cell_size = 2
@@ -287,7 +287,7 @@ fn sort_features_by_response(
 pub fn match_features(
   query : Array[FeaturePoint],
   train : Array[FeaturePoint],
-  ratio_threshold? : Double = 0.75,
+  ratio_threshold~ : Double = 0.75,
 ) -> Array[MatchPair] {
   let rt = ratio_threshold
   let matches : Array[MatchPair] = []
@@ -335,8 +335,8 @@ pub fn estimate_homography_ransac(
   matches : Array[MatchPair],
   query_points : Array[FeaturePoint],
   train_points : Array[FeaturePoint],
-  iterations? : Int = 1000,
-  threshold? : Double = 3.0,
+  iterations~ : Int32 = 1000,
+  threshold~ : Double = 3.0,
 ) -> (Homography?, Array[MatchPair]) {
   let iter = iterations
   let thresh = threshold
@@ -394,12 +394,12 @@ pub fn estimate_homography_ransac(
 
 ///|
 /// 随机采样
-fn random_sample(matches : Array[MatchPair], count : Int) -> Array[MatchPair] {
+fn random_sample(matches : Array[MatchPair], count : Int32) -> Array[MatchPair] {
   let n = matches.length()
   if n < count {
     return matches
   }
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   let result : Array[MatchPair] = []
   let mut i = 0
   while i < count && indices.length() < n {
@@ -528,7 +528,7 @@ fn compute_output_size(
   img1 : @types.Image,
   img2 : @types.Image,
   h : Homography,
-) -> (Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32) {
   let w1 = img1.width
   let h1 = img1.height
   let w2 = img2.width
@@ -572,10 +572,10 @@ fn compute_output_size(
 fn warp_image(
   img : @types.Image,
   h : Homography,
-  out_w : Int,
-  out_h : Int,
-  offset_x : Int,
-  offset_y : Int,
+  out_w : Int32,
+  out_h : Int32,
+  offset_x : Int32,
+  offset_y : Int32,
 ) -> @types.Image {
   let w = img.width
   let hgt = img.height
@@ -616,9 +616,9 @@ fn warp_image(
 fn blend_images(
   img1 : @types.Image,
   img2 : @types.Image,
-  offset_x : Int,
-  offset_y : Int,
-  blend_width : Int,
+  offset_x : Int32,
+  offset_y : Int32,
+  blend_width : Int32,
 ) -> @types.Image {
   let w = img2.width
   let h = img2.height

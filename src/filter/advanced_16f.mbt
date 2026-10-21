@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_adv(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_adv(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_adv(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_adv(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_adv(data : Bytes, offset : Int) -> Float {
+fn read_float_le_adv(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_adv(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_adv(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_adv(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_adv(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_adv(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_adv(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -124,7 +124,7 @@ fn img8_to_imgf_adv(img : @types.Image) -> @types.ImageF {
 pub fn inpaint_16(
   img : @types.Image16,
   mask : @types.Image16,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -166,7 +166,7 @@ pub fn inpaint_16(
 pub fn inpaint_fast_16(
   img : @types.Image16,
   mask : @types.Image16,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -210,7 +210,7 @@ pub fn inpaint_fast_16(
 pub fn inpaint_f(
   img : @types.ImageF,
   mask : @types.ImageF,
-  iterations? : Int = 100,
+  iterations~ : Int32 = 100,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -250,7 +250,7 @@ pub fn inpaint_f(
 pub fn inpaint_fast_f(
   img : @types.ImageF,
   mask : @types.ImageF,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -293,9 +293,9 @@ pub fn inpaint_fast_f(
 /// 16-bit 非局部均值去噪。
 pub fn nlm_denoise_16(
   img : @types.Image16,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -340,10 +340,10 @@ pub fn nlm_denoise_16(
 /// 16-bit 快速非局部均值去噪。
 pub fn nlm_denoise_fast_16(
   img : @types.Image16,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -395,9 +395,9 @@ pub fn nlm_denoise_fast_16(
 /// float 非局部均值去噪。
 pub fn nlm_denoise_f(
   img : @types.ImageF,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -442,10 +442,10 @@ pub fn nlm_denoise_f(
 /// float 快速非局部均值去噪。
 pub fn nlm_denoise_fast_f(
   img : @types.ImageF,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

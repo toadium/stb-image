@@ -1,7 +1,7 @@
 // 接缝裁剪测试
 
 ///|
-fn make_test_image(w : Int, h : Int, ch : Int) -> @types.Image {
+fn make_test_image(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -19,7 +19,7 @@ fn make_test_image(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn make_gradient_image(w : Int, h : Int) -> @types.Image {
+fn make_gradient_image(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * 3, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

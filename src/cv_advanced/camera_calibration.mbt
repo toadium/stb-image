@@ -29,8 +29,8 @@ pub extend CameraIntrinsics with Eq::{not_equal, equal}
 /// Chessboard corners.
 pub(all) struct ChessboardCorners {
   corners : Array[(Double, Double)]
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -59,8 +59,8 @@ pub extend CalibrationResult with Eq::{not_equal, equal}
 /// Calibrate camera from chessboard corners (simplified).
 pub fn calibrate_camera(
   corners : ChessboardCorners,
-  image_width : Int,
-  image_height : Int,
+  image_width : Int32,
+  image_height : Int32,
 ) -> CalibrationResult {
   let cx = image_width.to_double() / 2.0
   let cy = image_height.to_double() / 2.0

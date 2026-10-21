@@ -9,9 +9,9 @@
 /// h 为滤波强度参数（默认 10），越大平滑越强。
 pub fn nlm_denoise(
   img : @types.Image,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -56,7 +56,7 @@ pub fn nlm_denoise(
   // 预计算常数
   let patch_area = (2 * patch_d + 1) * (2 * patch_d + 1)
   // 预计算像素 Int 数组，避免重复 .to_int() 转换
-  let pixels : Array[Int] = Array::make(n * ch, 0)
+  let pixels : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     pixels[i] = img.data[i].to_int()
   }
@@ -153,17 +153,17 @@ pub fn nlm_denoise(
 ///|
 /// 计算两个像素块之间的平方距离（内部区域，无边界检查）
 fn patch_distance_inner(
-  pixels : Array[Int],
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
-  w : Int,
-  ch : Int,
-  c : Int,
-  patch_d : Int,
-  early_term : Int,
-) -> Int {
+  pixels : Array[Int32],
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
+  w : Int32,
+  ch : Int32,
+  c : Int32,
+  patch_d : Int32,
+  early_term : Int32,
+) -> Int32 {
   let mut dist = 0
   for dy in -patch_d..<=patch_d {
     let row1 = (y1 + dy) * w
@@ -184,18 +184,18 @@ fn patch_distance_inner(
 ///|
 /// 计算两个像素块之间的平方距离（使用预计算 Int 数组，内联边界检查）
 fn patch_distance_fast(
-  pixels : Array[Int],
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
-  w : Int,
-  h : Int,
-  ch : Int,
-  c : Int,
-  patch_d : Int,
-  early_term : Int,
-) -> Int {
+  pixels : Array[Int32],
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  c : Int32,
+  patch_d : Int32,
+  early_term : Int32,
+) -> Int32 {
   let mut dist = 0
   let w_max = w - 1
   let h_max = h - 1
@@ -254,10 +254,10 @@ fn patch_distance_fast(
 /// 适用于灰度图（channels=1）或 RGB/RGBA 图（channels=3/4）。
 pub fn nlm_denoise_fast(
   img : @types.Image,
-  patch_size? : Int = 3,
-  search_size? : Int = 7,
-  h? : Int = 10,
-  step? : Int = 2,
+  patch_size~ : Int32 = 3,
+  search_size~ : Int32 = 7,
+  h~ : Int32 = 10,
+  step~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -304,7 +304,7 @@ pub fn nlm_denoise_fast(
   let search_d = search_size
   let patch_area = (2 * patch_d + 1) * (2 * patch_d + 1)
   // 预计算像素 Int 数组
-  let pixels : Array[Int] = Array::make(n * ch, 0)
+  let pixels : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     pixels[i] = img.data[i].to_int()
   }

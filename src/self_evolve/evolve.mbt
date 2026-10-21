@@ -72,9 +72,11 @@ pub fn evolve_degradation_scan(ops : Array[@imgir.IROp]) -> EvolveReport {
 ///|
 /// 按类别统计测试用例。
 /// Count test cases by category.
-pub fn count_by_category(tests : Array[TestCase]) -> Array[(TestCategory, Int)] {
+pub fn count_by_category(
+  tests : Array[TestCase],
+) -> Array[(TestCategory, Int32)] {
   let categories = [Boundary, Normal, EdgeCase, Degradation]
-  let result : Array[(TestCategory, Int)] = []
+  let result : Array[(TestCategory, Int32)] = []
   for cat in categories {
     let mut count = 0
     for t in tests {

@@ -54,14 +54,14 @@ pub extend ColorSpaceType with Eq::{not_equal, equal}
 /// 上色结果
 pub(all) struct ColorizationResult {
   colorized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   grayscale_image : Array[Double]
   colorization_method : ColorizationModelType
   color_space : ColorSpaceType
   color_palette : Array[Array[Double]]
-  num_colors : Int
+  num_colors : Int32
   color_consistency : Double
   color_vibrancy : Double
   skin_tone_accuracy : Double
@@ -75,13 +75,13 @@ pub(all) struct ColorizationResult {
 /// 参考上色结果
 pub(all) struct ReferenceColorizationResult {
   colorized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   grayscale_image : Array[Double]
   reference_image : Array[Double]
   color_transfer_map : Array[Array[Double]]
-  matched_regions : Int
+  matched_regions : Int32
   color_consistency : Double
   reference_similarity : Double
   processing_time_ms : Double
@@ -92,9 +92,9 @@ pub(all) struct ReferenceColorizationResult {
 /// 颜色修复结果
 pub(all) struct ColorRestorationResult {
   restored_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_image : Array[Double]
   fade_correction : Double
   color_cast_removal : Double
@@ -109,9 +109,9 @@ pub(all) struct ColorRestorationResult {
 /// 老照片上色结果
 pub(all) struct OldPhotoColorizationResult {
   colorized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   old_photo : Array[Double]
   scratch_removal : Bool
   noise_reduction : Double
@@ -127,9 +127,9 @@ pub(all) struct OldPhotoColorizationResult {
 /// 颜色迁移结果
 pub(all) struct ColorTransferResult {
   transferred_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   source_image : Array[Double]
   reference_image : Array[Double]
   transfer_method : String
@@ -144,9 +144,9 @@ pub(all) struct ColorTransferResult {
 /// 颜色增强结果
 pub(all) struct ColorEnhancementResult {
   enhanced_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_image : Array[Double]
   saturation_boost : Double
   contrast_boost : Double
@@ -161,9 +161,9 @@ pub(all) struct ColorEnhancementResult {
 /// 颜色校正结果
 pub(all) struct ColorCorrectionResult {
   corrected_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_image : Array[Double]
   color_cast_type : String
   color_temperature : Double
@@ -228,8 +228,8 @@ pub fn create_default_colorization_config() -> ImageColorizationConfig {
 /// 自动上色（简化版）
 pub fn automatic_colorization(
   grayscale_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageColorizationConfig,
 ) -> ColorizationResult {
   let colorized : Array[Double] = []
@@ -299,8 +299,8 @@ pub fn automatic_colorization(
 pub fn reference_based_colorization(
   grayscale_image : Array[Double],
   reference_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageColorizationConfig,
 ) -> ReferenceColorizationResult {
   ignore(config)
@@ -351,8 +351,8 @@ pub fn reference_based_colorization(
 /// 老照片上色（简化版）
 pub fn old_photo_colorization(
   old_photo : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageColorizationConfig,
 ) -> OldPhotoColorizationResult {
   let colorized : Array[Double] = []
@@ -416,8 +416,8 @@ pub fn old_photo_colorization(
 pub fn transfer_colors(
   source_image : Array[Double],
   reference_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageColorizationConfig,
 ) -> ColorTransferResult {
   let transferred : Array[Double] = []
@@ -465,8 +465,8 @@ pub fn transfer_colors(
 /// 颜色增强（简化版）
 pub fn enhance_colors(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageColorizationConfig,
 ) -> ColorEnhancementResult {
   let enhanced : Array[Double] = []

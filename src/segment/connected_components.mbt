@@ -3,12 +3,12 @@
 ///|
 /// 连通域信息
 pub struct ConnectedComponent {
-  label : Int // 标签号（从 1 开始）
-  area : Int // 面积（像素数）
-  bbox_x : Int // 边界框左上角 x
-  bbox_y : Int // 边界框左上角 y
-  bbox_w : Int // 边界框宽
-  bbox_h : Int // 边界框高
+  label : Int32 // 标签号（从 1 开始）
+  area : Int32 // 面积（像素数）
+  bbox_x : Int32 // 边界框左上角 x
+  bbox_y : Int32 // 边界框左上角 y
+  bbox_w : Int32 // 边界框宽
+  bbox_h : Int32 // 边界框高
   centroid_x : Float // 质心 x
   centroid_y : Float // 质心 y
 }
@@ -19,7 +19,7 @@ pub struct ConnectedComponent {
 /// 返回标记图（每个像素的标签，0=背景，1..N=前景域）和连通域信息列表。
 pub fn connected_components(
   img : @types.Image,
-  connectivity : Int,
+  connectivity : Int32,
 ) -> (ConnectedComponentLabelImage, Array[ConnectedComponent]) raise @types.LoadError {
   if connectivity != 4 && connectivity != 8 {
     raise @types.LoadError::DecodeFailed("connectivity 必须为 4 或 8")
@@ -39,8 +39,8 @@ pub fn connected_components(
     binary[i] = img.data[i * ch].to_int() > 0
   }
   // 第一遍扫描：标记 + Union-Find
-  let labels : Array[Int] = Array::make(n, 0)
-  let parent : Array[Int] = [0] // parent[0] 是背景
+  let labels : Array[Int32] = Array::make(n, 0)
+  let parent : Array[Int32] = [0] // parent[0] 是背景
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -143,7 +143,7 @@ pub fn connected_components(
     }
   }
   // 压缩路径并建立标签映射
-  let label_map : Array[Int] = Array::make(parent.length(), 0)
+  let label_map : Array[Int32] = Array::make(parent.length(), 0)
   let mut final_count = 0
   for i in 1..<parent.length() {
     let root = find_root(parent, i)
@@ -154,18 +154,18 @@ pub fn connected_components(
     label_map[i] = label_map[root]
   }
   // 第二遍扫描：替换为最终标签
-  let out_labels : Array[Int] = Array::make(n, 0)
+  let out_labels : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     out_labels[i] = label_map[labels[i]]
   }
   // 统计连通域信息
-  let areas : Array[Int] = Array::make(final_count + 1, 0)
-  let sum_x : Array[Int] = Array::make(final_count + 1, 0)
-  let sum_y : Array[Int] = Array::make(final_count + 1, 0)
-  let min_x : Array[Int] = Array::make(final_count + 1, w)
-  let min_y : Array[Int] = Array::make(final_count + 1, h)
-  let max_x : Array[Int] = Array::make(final_count + 1, 0)
-  let max_y : Array[Int] = Array::make(final_count + 1, 0)
+  let areas : Array[Int32] = Array::make(final_count + 1, 0)
+  let sum_x : Array[Int32] = Array::make(final_count + 1, 0)
+  let sum_y : Array[Int32] = Array::make(final_count + 1, 0)
+  let min_x : Array[Int32] = Array::make(final_count + 1, w)
+  let min_y : Array[Int32] = Array::make(final_count + 1, h)
+  let max_x : Array[Int32] = Array::make(final_count + 1, 0)
+  let max_y : Array[Int32] = Array::make(final_count + 1, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = out_labels[y * w + x]
@@ -222,13 +222,13 @@ pub fn connected_components(
 ///|
 /// 连通域标记图
 pub struct ConnectedComponentLabelImage {
-  width : Int
-  height : Int
-  labels : Array[Int] // 每个像素的标签（0=背景）
+  width : Int32
+  height : Int32
+  labels : Array[Int32] // 每个像素的标签（0=背景）
 }
 
 ///|
-fn find_root(parent : Array[Int], x : Int) -> Int {
+fn find_root(parent : Array[Int32], x : Int32) -> Int32 {
   let mut root = x
   while parent[root] != root {
     root = parent[root]
@@ -244,7 +244,7 @@ fn find_root(parent : Array[Int], x : Int) -> Int {
 }
 
 ///|
-fn union_labels(parent : Array[Int], a : Int, b : Int) -> Unit {
+fn union_labels(parent : Array[Int32], a : Int32, b : Int32) -> Unit {
   let ra = find_root(parent, a)
   let rb = find_root(parent, b)
   if ra != rb {

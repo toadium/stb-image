@@ -57,6 +57,6 @@ pub fn merge_ops(op1 : @imgir.IROp, op2 : @imgir.IROp) -> @imgir.IROp {
 ///|
 /// 判断 Rotate90 的连续次数是否为恒等。
 /// Check if n consecutive Rotate90 = identity (n % 4 == 0).
-pub fn rotate90_power_is_identity(n : Int) -> Bool {
+pub fn rotate90_power_is_identity(n : Int32) -> Bool {
   n % 4 == 0
 }

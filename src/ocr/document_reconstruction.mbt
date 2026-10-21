@@ -26,10 +26,10 @@ pub extend MarkdownElementType with Eq::{not_equal, equal}
 /// Markdown 元素
 pub(all) struct MarkdownElement {
   element_type : MarkdownElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   content : String
   confidence : Double
 }
@@ -37,8 +37,8 @@ pub(all) struct MarkdownElement {
 ///|
 /// 表格数据
 pub(all) struct MarkdownTable {
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
   cells : Array[Array[String]]
   has_header : Bool
 }
@@ -46,10 +46,10 @@ pub(all) struct MarkdownTable {
 ///|
 /// 图片区域
 pub(all) struct MarkdownImage {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   image_type : String
   confidence : Double
 }
@@ -60,8 +60,8 @@ pub(all) struct MarkdownSymbol {
   symbol : String
   unicode : String
   category : String
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   confidence : Double
 }
 
@@ -73,7 +73,7 @@ pub(all) struct MarkdownDocument {
   tables : Array[MarkdownTable]
   images : Array[MarkdownImage]
   symbols : Array[MarkdownSymbol]
-  reading_order : Array[Int]
+  reading_order : Array[Int32]
 }
 
 ///|
@@ -156,7 +156,7 @@ pub fn recognize_symbols_markdown(text : String) -> Array[MarkdownSymbol] {
 /// 检测图片区域（基于连通域分析的简化版）
 pub fn detect_image_regions_markdown(
   binary_img : @types.Image,
-  min_area? : Int = 500,
+  min_area~ : Int32 = 500,
 ) -> Array[MarkdownImage] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
@@ -195,8 +195,8 @@ pub fn detect_image_regions_markdown(
     for x in 0..<w {
       let idx = y * w + x
       if !visited[idx] && binary_img.data[idx].to_int() < 128 {
-        let stack_x : Array[Int] = []
-        let stack_y : Array[Int] = []
+        let stack_x : Array[Int32] = []
+        let stack_y : Array[Int32] = []
         stack_x.push(x)
         stack_y.push(y)
         visited[idx] = true
@@ -279,7 +279,7 @@ pub fn detect_image_regions_markdown(
 /// 分类 Markdown 元素类型
 pub fn classify_markdown_element(
   block : TextBlock,
-  avg_font_size? : Double = 16.0,
+  avg_font_size~ : Double = 16.0,
 ) -> MarkdownElementType {
   let avg_size = avg_font_size
   let height_ratio = block.height.to_double() / avg_size
@@ -352,8 +352,8 @@ pub fn markdown_table_to_string(table : MarkdownTable) -> String {
 /// 确定阅读顺序
 pub fn determine_reading_order_markdown(
   elements : Array[MarkdownElement],
-) -> Array[Int] {
-  let indices : Array[Int] = []
+) -> Array[Int32] {
+  let indices : Array[Int32] = []
   for i in 0..<elements.length() {
     indices.push(i)
   }
@@ -463,7 +463,7 @@ pub fn build_markdown_document(
 /// 生成 Markdown 图片占位符
 pub fn generate_markdown_image_placeholder(
   image : MarkdownImage,
-  index : Int,
+  index : Int32,
 ) -> String {
   "![图片" +
   index.to_string() +
@@ -486,7 +486,7 @@ pub fn generate_markdown_image_placeholder(
 /// 统计文档元素类型分布
 pub fn analyze_markdown_element_distribution(
   doc : MarkdownDocument,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   let mut title_count = 0
   let mut heading_count = 0
   let mut paragraph_count = 0

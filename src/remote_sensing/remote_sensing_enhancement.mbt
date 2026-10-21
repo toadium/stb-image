@@ -19,9 +19,9 @@ pub extend RemoteSensingImageType with Eq::{not_equal, equal}
 ///|
 /// 遥感图像
 pub(all) struct RemoteSensingImage {
-  width : Int
-  height : Int
-  bands : Int
+  width : Int32
+  height : Int32
+  bands : Int32
   data : Array[Double]
   image_type : RemoteSensingImageType
   wavelength : Array[Double] // 每个波段的波长（nm）
@@ -52,12 +52,12 @@ pub extend LandCoverClass with Eq::{not_equal, equal}
 ///|
 /// 分类结果
 pub(all) struct ClassificationResult {
-  width : Int
-  height : Int
-  labels : Array[Int]
+  width : Int32
+  height : Int32
+  labels : Array[Int32]
   class_names : Array[String]
-  class_colors : Array[(Int, Int, Int)]
-  num_classes : Int
+  class_colors : Array[(Int32, Int32, Int32)]
+  num_classes : Int32
   overall_accuracy : Double
   kappa_coefficient : Double
 }
@@ -65,11 +65,11 @@ pub(all) struct ClassificationResult {
 ///|
 /// 变化检测结果
 pub(all) struct ChangeDetectionResult {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   change_mask : Array[Bool]
   change_percentage : Double
-  num_changed_pixels : Int
+  num_changed_pixels : Int32
   change_intensity : Array[Double]
   threshold : Double
 }
@@ -90,7 +90,7 @@ pub(all) struct VegetationIndices {
 pub(all) struct SpectralSignature {
   wavelengths : Array[Double]
   reflectance : Array[Double]
-  num_bands : Int
+  num_bands : Int32
   mean_reflectance : Double
   std_reflectance : Double
   absorption_features : Array[(Double, Double)] // (波长, 深度)
@@ -121,9 +121,9 @@ pub(all) struct RemoteSensingQuality {
 ///|
 /// 创建默认遥感图像
 pub fn create_default_remote_sensing_image(
-  width : Int,
-  height : Int,
-  bands : Int,
+  width : Int32,
+  height : Int32,
+  bands : Int32,
 ) -> RemoteSensingImage {
   let data : Array[Double] = []
   let wavelength : Array[Double] = []
@@ -150,8 +150,8 @@ pub fn create_default_remote_sensing_image(
 /// 计算 NDVI（归一化植被指数）
 pub fn calculate_ndvi(
   image : RemoteSensingImage,
-  red_band : Int,
-  nir_band : Int,
+  red_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   let w = image.width
   let h = image.height
@@ -176,8 +176,8 @@ pub fn calculate_ndvi(
 /// 计算 NDWI（归一化水体指数）
 pub fn calculate_ndwi(
   image : RemoteSensingImage,
-  green_band : Int,
-  nir_band : Int,
+  green_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   let w = image.width
   let h = image.height
@@ -202,8 +202,8 @@ pub fn calculate_ndwi(
 /// 计算 NDBI（归一化建筑指数）
 pub fn calculate_ndbi(
   image : RemoteSensingImage,
-  swir_band : Int,
-  nir_band : Int,
+  swir_band : Int32,
+  nir_band : Int32,
 ) -> Array[Double] {
   let w = image.width
   let h = image.height
@@ -244,7 +244,7 @@ pub fn classify_land_cover_simple(
   let w = image.width
   let h = image.height
   let total = w * h
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
 
   let ndvi = if image.bands > 4 { calculate_ndvi(image, 2, 3) } else { [] }
   let ndwi = if image.bands > 4 { calculate_ndwi(image, 1, 3) } else { [] }
@@ -275,7 +275,7 @@ pub fn classify_land_cover_simple(
     "Water", "Forest", "Grassland", "Cropland", "Urban", "Barren", "Wetland", "Snow",
     "Cloud", "Shadow", "Unknown",
   ]
-  let class_colors : Array[(Int, Int, Int)] = [
+  let class_colors : Array[(Int32, Int32, Int32)] = [
     (0, 0, 255),
     (0, 128, 0),
     (128, 255, 0),
@@ -358,9 +358,9 @@ pub fn detect_changes_simple(
 /// 计算纹理特征（基于灰度共生矩阵简化版）
 pub fn calculate_texture_features(
   image : @types.Image,
-  x : Int,
-  y : Int,
-  window_size : Int,
+  x : Int32,
+  y : Int32,
+  window_size : Int32,
 ) -> TextureFeatures raise @types.LoadError {
   // 输入验证
   if image.width <= 0 || image.height <= 0 {
@@ -385,7 +385,7 @@ pub fn calculate_texture_features(
   let mut sum = 0.0
   let mut sum_sq = 0.0
   let mut count = 0
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -451,8 +451,8 @@ pub fn calculate_texture_features(
 /// 计算光谱特征
 pub fn calculate_spectral_signature(
   image : RemoteSensingImage,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> SpectralSignature {
   let reflectance : Array[Double] = []
   let wavelengths : Array[Double] = []

@@ -3,7 +3,7 @@
 
 ///|
 /// 辅助函数：限制字节范围
-fn _clamp_byte_ocr(v : Int) -> Byte {
+fn _clamp_byte_ocr(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -16,12 +16,12 @@ fn _clamp_byte_ocr(v : Int) -> Byte {
 ///|
 /// 辅助函数：计算局部窗口的均值和标准差
 fn local_mean_std(
-  data : Array[Int],
-  width : Int,
-  height : Int,
-  x : Int,
-  y : Int,
-  radius : Int,
+  data : Array[Int32],
+  width : Int32,
+  height : Int32,
+  x : Int32,
+  y : Int32,
+  radius : Int32,
 ) -> (Double, Double) {
   let mut sum = 0.0
   let mut sum_sq = 0.0
@@ -54,8 +54,8 @@ fn local_mean_std(
 /// window_size: 局部窗口大小（奇数）
 pub fn niblack_threshold(
   img : @types.Image,
-  window_size? : Int = 15,
-  k? : Double = -0.2,
+  window_size~ : Int32 = 15,
+  k~ : Double = -0.2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -87,7 +87,7 @@ pub fn niblack_threshold(
   let h = img.height
   let radius = window_size / 2
   // 转换为 Int 数组
-  let data : Array[Int] = Array::make(w * h, 0)
+  let data : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     data[i] = img.data[i].to_int()
   }
@@ -116,9 +116,9 @@ pub fn niblack_threshold(
 /// window_size: 局部窗口大小（奇数）
 pub fn sauvola_threshold(
   img : @types.Image,
-  window_size? : Int = 15,
-  k? : Double = 0.5,
-  r? : Double = 128.0,
+  window_size~ : Int32 = 15,
+  k~ : Double = 0.5,
+  r~ : Double = 128.0,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -153,7 +153,7 @@ pub fn sauvola_threshold(
   let h = img.height
   let radius = window_size / 2
   // 转换为 Int 数组
-  let data : Array[Int] = Array::make(w * h, 0)
+  let data : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     data[i] = img.data[i].to_int()
   }
@@ -179,8 +179,8 @@ pub fn sauvola_threshold(
 /// 适用于光照不均匀的文档图像
 pub fn adaptive_threshold_ocr(
   img : @types.Image,
-  block_size? : Int = 15,
-  c? : Int = 10,
+  block_size~ : Int32 = 15,
+  c~ : Int32 = 10,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -212,7 +212,7 @@ pub fn adaptive_threshold_ocr(
   let h = img.height
   let radius = block_size / 2
   // 转换为 Int 数组
-  let data : Array[Int] = Array::make(w * h, 0)
+  let data : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     data[i] = img.data[i].to_int()
   }
@@ -264,7 +264,7 @@ pub fn otsu_threshold(
   let h = img.height
   let n = w * h
   // 计算直方图
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<n {
     histogram[img.data[i].to_int()] += 1
   }

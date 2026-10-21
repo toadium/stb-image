@@ -1,7 +1,7 @@
 // v252.0.0 process 模块覆盖率提升 — quality 边界测试
 
 ///|
-fn v252_solid(w : Int, h : Int, ch : Int, v : Int) -> @types.Image {
+fn v252_solid(w : Int32, h : Int32, ch : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h * ch) {
     data.push(v.to_byte())

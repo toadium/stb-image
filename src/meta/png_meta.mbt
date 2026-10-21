@@ -16,7 +16,7 @@ pub extend PngTextChunk with @debug.Debug::{to_repr}
 pub extend PngTextChunk with Eq::{not_equal, equal}
 
 ///|
-fn read_png_bytes_as_string(data : Bytes, start : Int, end : Int) -> String {
+fn read_png_bytes_as_string(data : Bytes, start : Int32, end : Int32) -> String {
   let chars : Array[Byte] = []
   for i in start..<end {
     chars.push(data[i])

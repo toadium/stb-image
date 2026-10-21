@@ -58,7 +58,7 @@ pub extend BokehParams with Eq::{not_equal, equal}
 /// Bokeh rendering result.
 pub(all) struct BokehResult {
   image : @types.Image // 渲染后图像
-  max_blur_radius : Int // 最大模糊半径
+  max_blur_radius : Int32 // 最大模糊半径
   blur_map : Array[Double] // 每像素模糊半径
 } derive(Eq, @debug.Debug)
 
@@ -101,7 +101,7 @@ pub fn compute_circle_of_confusion(
 /// Generate aperture shape mask.
 pub fn generate_aperture_mask(
   shape : ApertureShape,
-  radius : Int,
+  radius : Int32,
 ) -> Array[Array[Double]] {
   if radius <= 0 {
     return []
@@ -216,7 +216,7 @@ pub fn compute_blur_map(
 pub fn bokeh_blur_circular(
   image : @types.Image,
   blur_map : Array[Double],
-  max_radius : Int,
+  max_radius : Int32,
 ) -> @types.Image {
   let w = image.width
   let h = image.height
@@ -272,7 +272,7 @@ pub fn bokeh_blur_circular(
 pub fn bokeh_blur_polygonal(
   image : @types.Image,
   blur_map : Array[Double],
-  max_radius : Int,
+  max_radius : Int32,
   shape : ApertureShape,
 ) -> @types.Image {
   let w = image.width

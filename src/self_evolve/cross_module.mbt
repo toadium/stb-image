@@ -69,9 +69,9 @@ pub extend CoEvolveAction with Eq::{not_equal, equal}
 /// Co-evolution report.
 pub(all) struct CoEvolveReport {
   actions : Array[CoEvolveAction]
-  total_modules : Int
-  sync_count : Int
-  cascade_count : Int
+  total_modules : Int32
+  sync_count : Int32
+  cascade_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -221,6 +221,6 @@ pub fn CoEvolveReport::has_cascade(self : CoEvolveReport) -> Bool {
 ///|
 /// 协同演化报告总动作数。
 /// Total action count.
-pub fn CoEvolveReport::total_actions(self : CoEvolveReport) -> Int {
+pub fn CoEvolveReport::total_actions(self : CoEvolveReport) -> Int32 {
   self.actions.length()
 }

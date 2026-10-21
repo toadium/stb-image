@@ -4,17 +4,17 @@ package "walkzzz/image/src/image_restoration_advanced"
 // Values
 pub fn create_default_restoration_config() -> ImageRestorationConfig
 
-pub fn deblur_image(Array[Double], Int, Int, ImageRestorationConfig) -> DeblurringResult
+pub fn deblur_image(Array[Double], Int32, Int32, ImageRestorationConfig) -> DeblurringResult
 
-pub fn dehaze_image(Array[Double], Int, Int, ImageRestorationConfig) -> DehazingResult
+pub fn dehaze_image(Array[Double], Int32, Int32, ImageRestorationConfig) -> DehazingResult
 
-pub fn denoise_image(Array[Double], Int, Int, ImageRestorationConfig) -> DenoisingResult
+pub fn denoise_image(Array[Double], Int32, Int32, ImageRestorationConfig) -> DenoisingResult
 
 pub fn image_restoration_report_to_string(ImageRestorationTaskType, ImageRestorationConfig, String) -> String
 
-pub fn restore_old_photo(Array[Double], Int, Int, ImageRestorationConfig) -> OldPhotoRestorationResult
+pub fn restore_old_photo(Array[Double], Int32, Int32, ImageRestorationConfig) -> OldPhotoRestorationResult
 
-pub fn super_resolution(Array[Double], Int, Int, ImageRestorationConfig) -> RestorationSRResult
+pub fn super_resolution(Array[Double], Int32, Int32, ImageRestorationConfig) -> RestorationSRResult
 
 // Errors
 
@@ -43,26 +43,26 @@ pub fn DeblurringMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   blurry_image : Array[Double]
   deblurring_method : DeblurringMethod
   blur_type : BlurType
-  kernel_size : Int
+  kernel_size : Int32
   kernel_estimate : Array[Array[Double]]
   psnr : Double
   ssim : Double
   sharpness_improvement : Double
-  iterations : Int
+  iterations : Int32
   processing_time_ms : Double
 }
 
 pub(all) struct DehazingResult {
   dehazed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   hazy_image : Array[Double]
   transmission_map : Array[Double]
   atmospheric_light : Array[Double]
@@ -87,9 +87,9 @@ pub fn DenoisingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DenoisingResult {
   denoised_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   noisy_image : Array[Double]
   denoising_method : DenoisingMethod
   noise_type : NoiseType
@@ -103,12 +103,12 @@ pub(all) struct DenoisingResult {
 
 pub(all) struct DeocclusionResult {
   deoccluded_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   occluded_image : Array[Double]
   occlusion_mask : Array[Bool]
-  num_occluded_pixels : Int
+  num_occluded_pixels : Int32
   inpainting_method : String
   consistency_score : Double
   processing_time_ms : Double
@@ -116,11 +116,11 @@ pub(all) struct DeocclusionResult {
 
 pub(all) struct DerainingResult {
   derained_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   rainy_image : Array[Double]
-  rain_streaks_removed : Int
+  rain_streaks_removed : Int32
   rain_density : Double
   detail_preservation : Double
   processing_time_ms : Double
@@ -128,11 +128,11 @@ pub(all) struct DerainingResult {
 
 pub(all) struct DesnowingResult {
   desnowed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   snowy_image : Array[Double]
-  snowflakes_removed : Int
+  snowflakes_removed : Int32
   snow_density : Double
   visibility_improvement : Double
   processing_time_ms : Double
@@ -145,7 +145,7 @@ pub(all) struct ImageRestorationConfig {
   noise_type : NoiseType
   blur_type : BlurType
   noise_level : Double
-  kernel_size : Int
+  kernel_size : Int32
   scale_factor : Double
   sr_method : String
   use_gpu : Bool
@@ -186,9 +186,9 @@ pub fn NoiseType::not_equal(Self, Self) -> Bool
 
 pub(all) struct OldPhotoRestorationResult {
   restored_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   old_photo : Array[Double]
   scratch_removal : Bool
   noise_reduction : Double
@@ -202,10 +202,10 @@ pub(all) struct OldPhotoRestorationResult {
 
 pub(all) struct RestorationSRResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
@@ -215,12 +215,12 @@ pub(all) struct RestorationSRResult {
 
 pub(all) struct ScratchRemovalResult {
   repaired_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   scratched_image : Array[Double]
   scratch_mask : Array[Bool]
-  num_scratches : Int
+  num_scratches : Int32
   total_scratch_length : Double
   repair_method : String
   processing_time_ms : Double

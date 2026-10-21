@@ -1,12 +1,12 @@
 ///|
 /// PNM 扩展信息（包含格式类型、maxval、位深等）
 pub struct PnmInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   format_type : String
-  maxval : Int
-  bit_depth : Int
-  num_channels : Int
+  maxval : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_binary : Bool
 }

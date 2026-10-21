@@ -8,7 +8,7 @@ pub fn compression_report_to_string(ModelCompressionTaskType, ModelCompressionCo
 
 pub fn create_default_compression_config() -> ModelCompressionConfig
 
-pub fn distill_model(Array[Array[Double]], Int, Int, ModelCompressionConfig) -> DistillationResult
+pub fn distill_model(Array[Array[Double]], Int32, Int32, ModelCompressionConfig) -> DistillationResult
 
 pub fn low_rank_decomposition(Array[Array[Double]], ModelCompressionConfig) -> LowRankResult
 
@@ -30,7 +30,7 @@ pub(all) struct DistillationResult {
   temperature : Double
   alpha : Double
   distillation_type : KnowledgeDistillationType
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   distillation_time_ms : Double
   model_compression_ratio : Double
@@ -68,11 +68,11 @@ pub fn LowRankFactorizationType::not_equal(Self, Self) -> Bool
 pub(all) struct LowRankResult {
   decomposed_weights : Array[Array[Array[Double]]]
   original_weights : Array[Array[Double]]
-  num_layers : Int
-  rank : Int
+  num_layers : Int32
+  rank : Int32
   decomposition_type : LowRankFactorizationType
-  original_params : Int
-  decomposed_params : Int
+  original_params : Int32
+  decomposed_params : Int32
   compression_ratio : Double
   reconstruction_error : Double
   original_accuracy : Double
@@ -89,24 +89,24 @@ pub(all) struct ModelCompressionConfig {
   low_rank_type : LowRankFactorizationType
   target_compression_ratio : Double
   target_accuracy_drop : Double
-  bit_width : Int
+  bit_width : Int32
   pruning_ratio : Double
   temperature : Double
   alpha : Double
-  rank : Int
-  num_fine_tune_epochs : Int
+  rank : Int32
+  num_fine_tune_epochs : Int32
   learning_rate : Double
   use_calibration : Bool
-  calibration_samples : Int
+  calibration_samples : Int32
   use_fine_tuning : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 pub(all) struct ModelCompressionResult {
-  original_params : Int
-  compressed_params : Int
-  original_flops : Int
-  compressed_flops : Int
+  original_params : Int32
+  compressed_params : Int32
+  original_flops : Int32
+  compressed_flops : Int32
   compression_ratio : Double
   speedup_ratio : Double
   original_accuracy : Double
@@ -139,16 +139,16 @@ pub(all) struct PruningResult {
   pruned_weights : Array[Array[Double]]
   pruning_mask : Array[Array[Bool]]
   original_weights : Array[Array[Double]]
-  num_layers : Int
+  num_layers : Int32
   pruning_type : PruningType
   pruning_ratio : Double
-  original_params : Int
-  remaining_params : Int
+  original_params : Int32
+  remaining_params : Int32
   original_accuracy : Double
   pruned_accuracy : Double
   accuracy_drop : Double
   fine_tuned_accuracy : Double
-  num_fine_tune_epochs : Int
+  num_fine_tune_epochs : Int32
   pruning_time_ms : Double
 }
 
@@ -173,15 +173,15 @@ pub(all) struct QuantizationResult {
   quantization_scale : Array[Double]
   zero_point : Array[Double]
   original_weights : Array[Array[Double]]
-  num_layers : Int
+  num_layers : Int32
   quantization_type : QuantizationType
-  bit_width : Int
+  bit_width : Int32
   original_accuracy : Double
   quantized_accuracy : Double
   accuracy_drop : Double
   model_size_reduction : Double
   quantization_error : Double
-  calibration_samples : Int
+  calibration_samples : Int32
   quantization_time_ms : Double
 }
 

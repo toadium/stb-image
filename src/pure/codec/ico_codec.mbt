@@ -6,17 +6,17 @@
 ///|
 /// ICO/CUR 目录条目
 priv struct IconDirEntry {
-  width : Int
-  height : Int
-  byte_size : Int
-  offset : Int
+  width : Int32
+  height : Int32
+  byte_size : Int32
+  offset : Int32
 }
 
 ///|
 /// 解析 ICO/CUR 目录条目，返回 (icon_type, entries)
 fn parse_ico_header(
   data : Bytes,
-) -> (Int, Array[IconDirEntry]) raise @types.LoadError {
+) -> (Int32, Array[IconDirEntry]) raise @types.LoadError {
   let len = data.length()
   if len < 6 {
     raise @types.LoadError::DecodeFailed("ICO/CUR 数据过短")
@@ -59,7 +59,7 @@ fn parse_ico_header(
 
 ///|
 /// 从 ICO/CUR 中选择最佳条目（面积最大优先）
-fn select_best_entry(entries : Array[IconDirEntry]) -> Int {
+fn select_best_entry(entries : Array[IconDirEntry]) -> Int32 {
   let mut best_idx = 0
   let mut best_area = 0
   for i in 0..<entries.length() {
@@ -76,8 +76,8 @@ fn select_best_entry(entries : Array[IconDirEntry]) -> Int {
 /// 解码 BMP 子图像（ICO 内嵌，无文件头，height 翻倍）
 fn decode_ico_bmp_subimage(
   data : Bytes,
-  offset : Int,
-  byte_size : Int,
+  offset : Int32,
+  byte_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   let len = data.length()
   if offset + 40 > len {
@@ -209,7 +209,7 @@ pub fn decode_cur_pure(data : Bytes) -> @types.Image raise @types.LoadError {
 ///|
 /// 将单个 Image 编码为 ICO 内嵌 BMP 子图像（32-bit BGRA + AND 掩码）
 /// 返回 (子图像字节数组, 宽, 高)
-fn encode_ico_bmp_subimage(img : @types.Image) -> (Array[Byte], Int, Int) {
+fn encode_ico_bmp_subimage(img : @types.Image) -> (Array[Byte], Int32, Int32) {
   let width = img.width
   let height = img.height
   let channels = img.channels
@@ -283,7 +283,7 @@ pub fn encode_ico_with_sizes_pure(images : Array[@types.Image]) -> Bytes {
   write_u16_le(out, 1) // type = ICO
   write_u16_le(out, count)
   // 先编码所有子图像，收集偏移和大小
-  let subimages : Array[(Array[Byte], Int, Int)] = []
+  let subimages : Array[(Array[Byte], Int32, Int32)] = []
   for i in 0..<count {
     subimages.push(encode_ico_bmp_subimage(images[i]))
   }
@@ -325,8 +325,8 @@ pub fn encode_cur_pure(img : @types.Image) -> Bytes {
 /// 将单个 Image 编码为 CUR 字节流，指定热点坐标
 pub fn encode_cur_with_hotspot_pure(
   img : @types.Image,
-  hotspot_x : Int,
-  hotspot_y : Int,
+  hotspot_x : Int32,
+  hotspot_y : Int32,
 ) -> Bytes {
   let out : Array[Byte] = []
   // ICONDIR (6 bytes)

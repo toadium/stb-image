@@ -5,8 +5,8 @@
 /// pad_color 长度应等于 channels，不足则循环使用。
 pub fn pad(
   img : @types.Image,
-  px : Int,
-  py : Int,
+  px : Int32,
+  py : Int32,
   pad_color : Array[Byte],
 ) -> @types.Image raise @types.LoadError {
   if px < 0 || py < 0 {
@@ -50,10 +50,10 @@ pub fn pad(
 /// 添加边框。top/right/bottom/left 分别为四边边框宽度，border_color 为边框颜色。
 pub fn add_border(
   img : @types.Image,
-  top : Int,
-  right : Int,
-  bottom : Int,
-  left : Int,
+  top : Int32,
+  right : Int32,
+  bottom : Int32,
+  left : Int32,
   border_color : Array[Byte],
 ) -> @types.Image raise @types.LoadError {
   if top < 0 || right < 0 || bottom < 0 || left < 0 {

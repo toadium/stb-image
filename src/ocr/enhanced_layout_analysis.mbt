@@ -32,24 +32,24 @@ pub extend PageRegionType with Eq::{not_equal, equal}
 /// 页面区域
 pub(all) struct PageRegion {
   region_type : PageRegionType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   confidence : Double
 }
 
 ///|
 /// 文本行属性
 pub(all) struct TextLineAttributes {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   font_size : Double
   font_weight : String // "normal" / "bold" / "light"
   is_indented : Bool
-  indent_level : Int
+  indent_level : Int32
   line_spacing : Double
   text : String
   alignment : String // "left" / "center" / "right" / "justify"
@@ -74,26 +74,26 @@ pub extend ListItemType with Eq::{not_equal, equal}
 pub(all) struct ListItemInfo {
   item_type : ListItemType
   marker : String
-  level : Int
-  number : Int
+  level : Int32
+  number : Int32
 }
 
 ///|
 /// 增强版文档元素
 pub(all) struct EnhancedDocumentElement {
   element_type : MarkdownElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   content : String
   confidence : Double
   font_size : Double
   font_weight : String
   alignment : String
   list_info : ListItemInfo
-  column_index : Int
-  indent_level : Int
+  column_index : Int32
+  indent_level : Int32
   is_header : Bool
   is_footer : Bool
 }
@@ -102,24 +102,24 @@ pub(all) struct EnhancedDocumentElement {
 /// 增强版文档结构
 pub(all) struct EnhancedDocument {
   layout_type : LayoutType
-  num_columns : Int
-  page_width : Int
-  page_height : Int
-  header_height : Int
-  footer_height : Int
-  body_top : Int
-  body_bottom : Int
+  num_columns : Int32
+  page_width : Int32
+  page_height : Int32
+  header_height : Int32
+  footer_height : Int32
+  body_top : Int32
+  body_bottom : Int32
   elements : Array[EnhancedDocumentElement]
-  reading_order : Array[Int]
-  column_boundaries : Array[Int]
+  reading_order : Array[Int32]
+  column_boundaries : Array[Int32]
 }
 
 ///|
 /// 检测页面布局类型（单栏/双栏/多栏）
 pub fn detect_layout_type(
   text_lines : Array[TextLineAttributes],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> LayoutType raise @types.LoadError {
   // 输入验证
   if text_lines.length() == 0 {
@@ -171,8 +171,8 @@ pub fn detect_layout_type(
 /// 检测页眉页脚区域
 pub fn detect_header_footer(
   text_lines : Array[TextLineAttributes],
-  page_height : Int,
-) -> (Int, Int) raise @types.LoadError {
+  page_height : Int32,
+) -> (Int32, Int32) raise @types.LoadError {
   // 输入验证
   if text_lines.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -218,11 +218,11 @@ pub fn detect_header_footer(
 /// 检测列边界
 pub fn detect_column_boundaries(
   text_lines : Array[TextLineAttributes],
-  page_width : Int,
+  page_width : Int32,
   layout_type : LayoutType,
-) -> Array[Int] {
+) -> Array[Int32] {
   ignore(text_lines)
-  let boundaries : Array[Int] = []
+  let boundaries : Array[Int32] = []
   boundaries.push(0)
   match layout_type {
     LayoutType::DoubleColumn => {
@@ -249,7 +249,7 @@ pub fn detect_column_boundaries(
 pub fn is_heading_line(
   line : TextLineAttributes,
   avg_font_size : Double,
-) -> (Bool, Int) {
+) -> (Bool, Int32) {
   let size_ratio = line.font_size / avg_font_size
   if line.font_weight == "bold" && size_ratio > 1.3 {
     if size_ratio > 2.0 {
@@ -348,7 +348,10 @@ pub fn detect_list_item(line : TextLineAttributes) -> ListItemInfo {
 
 ///|
 /// 判断是否为代码块（基于缩进和等宽字体特征）
-pub fn is_code_block_line(line : TextLineAttributes, avg_indent : Int) -> Bool {
+pub fn is_code_block_line(
+  line : TextLineAttributes,
+  avg_indent : Int32,
+) -> Bool {
   // 代码块特征：缩进大于平均缩进、包含特殊字符、等宽字体
   let has_code_chars = line.text.length() > 0 ||
     line.text.length() > 0 ||
@@ -362,7 +365,7 @@ pub fn is_code_block_line(line : TextLineAttributes, avg_indent : Int) -> Bool {
 
 ///|
 /// 判断是否为引用块（基于左边距和竖线）
-pub fn is_quote_line(line : TextLineAttributes, avg_x : Int) -> Bool {
+pub fn is_quote_line(line : TextLineAttributes, avg_x : Int32) -> Bool {
   // 引用块特征：左边距大于平均值、可能以 > 开头
   let starts_with_quote = line.text.length() > 0 && line.text[0] == '>'
   let is_indented = line.x > avg_x + 30
@@ -405,8 +408,8 @@ pub fn segment_paragraphs(
 pub fn smart_reading_order(
   elements : Array[EnhancedDocumentElement],
   layout_type : LayoutType,
-  column_boundaries : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  column_boundaries : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   ignore(column_boundaries)
   // 输入验证
   if elements.length() == 0 {
@@ -414,7 +417,7 @@ pub fn smart_reading_order(
       "smart_reading_order: 文档元素列表不能为空",
     )
   }
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for i in 0..<elements.length() {
     indices.push(i)
   }
@@ -448,8 +451,8 @@ pub fn smart_reading_order(
 /// 从文本行构建增强版文档元素
 pub fn build_enhanced_elements(
   lines : Array[TextLineAttributes],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> EnhancedDocument raise @types.LoadError {
   // 输入验证
   if lines.length() == 0 {
@@ -572,7 +575,7 @@ pub fn build_enhanced_elements(
 /// 增强版文档转 Markdown
 pub fn enhanced_document_to_markdown(
   doc : EnhancedDocument,
-  include_header_footer? : Bool = false,
+  include_header_footer~ : Bool = false,
 ) -> String {
   let include_flag = include_header_footer
   let mut md = ""
@@ -625,7 +628,7 @@ pub fn enhanced_document_to_markdown(
 /// 统计增强版文档元素分布
 pub fn enhanced_element_distribution(
   doc : EnhancedDocument,
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   let mut title_count = 0
   let mut heading_count = 0
   let mut paragraph_count = 0

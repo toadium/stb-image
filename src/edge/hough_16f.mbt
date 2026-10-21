@@ -5,9 +5,9 @@
 /// 霍夫直线变换 16-bit 版本。
 pub fn hough_lines_16(
   img : @types.Image16,
-  threshold : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  threshold : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -51,7 +51,7 @@ pub fn hough_lines_16(
   let diag = Float::from_int(w * w + h * h).sqrt()
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
-  let accumulator : Array[Int] = Array::make(n_rho * n_theta, 0)
+  let accumulator : Array[Int32] = Array::make(n_rho * n_theta, 0)
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
   let angle_scale = theta_resolution * 3.141592653589793F / 180.0F
@@ -62,7 +62,7 @@ pub fn hough_lines_16(
   }
   let inv_rho_res = 1.0F / rho_resolution
   let rho_max_idx = n_rho - 1
-  let data_int : Array[Int] = Array::make(w * h, 0)
+  let data_int : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     data_int[i] = img.data[i * ch * 2].to_int() |
       (img.data[i * ch * 2 + 1].to_int() << 8)
@@ -110,9 +110,9 @@ pub fn hough_lines_16(
 /// 霍夫直线变换 float 版本。
 pub fn hough_lines_f(
   img : @types.ImageF,
-  threshold : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  threshold : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -156,7 +156,7 @@ pub fn hough_lines_f(
   let diag = Float::from_int(w * w + h * h).sqrt()
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
-  let accumulator : Array[Int] = Array::make(n_rho * n_theta, 0)
+  let accumulator : Array[Int32] = Array::make(n_rho * n_theta, 0)
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
   let angle_scale = theta_resolution * 3.141592653589793F / 180.0F

@@ -34,8 +34,8 @@ pub(all) struct DctCoefficientResult {
 ///|
 /// 克隆检测结果
 pub(all) struct CloneDetectionResult {
-  clone_region_count : Int
-  clone_regions : Array[(Int, Int, Int, Int)]
+  clone_region_count : Int32
+  clone_regions : Array[(Int32, Int32, Int32, Int32)]
   clone_similarity : Double
   has_clone : Bool
 }
@@ -56,7 +56,7 @@ pub(all) struct TamperDetectionResult {
   is_tampered : Bool
   tamper_probability : Double
   tamper_type : String
-  tampered_regions : Array[(Int, Int, Int, Int)]
+  tampered_regions : Array[(Int32, Int32, Int32, Int32)]
   confidence : Double
   analysis_details : String
 }
@@ -75,11 +75,11 @@ pub(all) struct MetadataForensicsResult {
 ///|
 /// JPEG ghost 分析结果
 pub(all) struct JpegGhostResult {
-  ghost_quality_levels : Array[Int]
-  ghost_region_count : Int
+  ghost_quality_levels : Array[Int32]
+  ghost_region_count : Int32
   has_ghost : Bool
-  primary_quality : Int
-  secondary_quality : Int
+  primary_quality : Int32
+  secondary_quality : Int32
 }
 
 ///|
@@ -96,7 +96,7 @@ pub(all) struct CfaAnalysisResult {
 /// 通过模拟 JPEG 重压缩分析图像篡改区域
 pub fn analyze_ela(
   img : @types.Image,
-  quality_level : Int,
+  quality_level : Int32,
 ) -> ElaAnalysisResult raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -191,7 +191,7 @@ pub fn analyze_noise_residual(img : @types.Image) -> NoiseResidualResult {
     for x in 0..<w {
       let idx = y * w + x
       // 3x3 中值滤波
-      let neighbors : Array[Int] = []
+      let neighbors : Array[Int32] = []
       for dy in -1..<2 {
         for dx in -1..<2 {
           let ny = y + dy
@@ -362,7 +362,7 @@ pub fn analyze_dct_coefficients(img : @types.Image) -> DctCoefficientResult {
 /// 检测图像中的复制移动区域
 pub fn detect_clone_regions(
   img : @types.Image,
-  block_size : Int,
+  block_size : Int32,
   threshold : Double,
 ) -> CloneDetectionResult raise @types.LoadError {
   let w = img.width
@@ -376,7 +376,7 @@ pub fn detect_clone_regions(
   let num_blocks_y = h - block_size + 1
 
   // 提取块特征（简化：均值+方差）
-  let block_features : Array[(Double, Double, Int, Int)] = []
+  let block_features : Array[(Double, Double, Int32, Int32)] = []
   for by in 0..<num_blocks_y {
     for bx in 0..<num_blocks_x {
       let mut mean = 0.0
@@ -397,7 +397,7 @@ pub fn detect_clone_regions(
   }
 
   // 比较块特征，找相似块
-  let clone_regions : Array[(Int, Int, Int, Int)] = []
+  let clone_regions : Array[(Int32, Int32, Int32, Int32)] = []
   let mut clone_count = 0
   let mut total_similarity = 0.0
   let mut comparison_count = 0
@@ -527,7 +527,7 @@ pub fn analyze_metadata_forensics(
   let total = w * h
 
   // 基于图像特征推断元数据
-  let unique_values : Array[Int] = []
+  let unique_values : Array[Int32] = []
   for i in 0..<total {
     let v = img.data[i].to_int()
     let mut found = false
@@ -712,7 +712,7 @@ pub fn analyze_cfa_pattern(img : @types.Image) -> CfaAnalysisResult {
 /// 融合多种取证分析结果，给出综合篡改判定
 pub fn detect_tamper_comprehensive(
   img : @types.Image,
-  ela_quality : Int,
+  ela_quality : Int32,
 ) -> TamperDetectionResult raise @types.LoadError {
   let ela = analyze_ela(img, ela_quality)
   let noise = analyze_noise_residual(img)
@@ -792,7 +792,7 @@ pub fn detect_tamper_comprehensive(
     meta_score.to_string()
 
   // 篡改区域（简化：返回整图区域）
-  let tampered_regions : Array[(Int, Int, Int, Int)] = []
+  let tampered_regions : Array[(Int32, Int32, Int32, Int32)] = []
   if is_tampered {
     tampered_regions.push((0, 0, img.width, img.height))
   }

@@ -6,31 +6,31 @@ import {
 }
 
 // Values
-pub fn bulk_copy_4x(Bytes, Int, Array[Byte], Int, Int) -> Unit
+pub fn bulk_copy_4x(Bytes, Int32, Array[Byte], Int32, Int32) -> Unit
 
-pub fn bulk_fill_4x(Array[Byte], Int, Int, Byte) -> Unit
+pub fn bulk_fill_4x(Array[Byte], Int32, Int32, Byte) -> Unit
 
 pub fn default_tile_config() -> TileConfig
 
-pub fn extract_tile(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
+pub fn extract_tile(@types.Image, Int32, Int32, Int32, Int32) -> @types.Image raise @types.LoadError
 
-pub fn num_tiles(Int, Int, TileConfig) -> (Int, Int)
+pub fn num_tiles(Int32, Int32, TileConfig) -> (Int32, Int32)
 
-pub fn paste_tile(@types.Image, @types.Image, Int, Int) -> @types.Image raise @types.LoadError
+pub fn paste_tile(@types.Image, @types.Image, Int32, Int32) -> @types.Image raise @types.LoadError
 
-pub fn process_row_major(@types.Image, (Int, Array[Byte]) -> Array[Byte]) -> @types.Image
+pub fn process_row_major(@types.Image, (Int32, Array[Byte]) -> Array[Byte]) -> @types.Image
 
 pub fn process_tiled(@types.Image, TileConfig, (@types.Image) -> @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn tile_region(Int, Int, TileConfig) -> (Int, Int, Int, Int)
+pub fn tile_region(Int32, Int32, TileConfig) -> (Int32, Int32, Int32, Int32)
 
 // Errors
 
 // Types and methods
 pub(all) struct TileConfig {
-  tile_width : Int
-  tile_height : Int
-  overlap : Int
+  tile_width : Int32
+  tile_height : Int32
+  overlap : Int32
 }
 
 // Type aliases

@@ -4,13 +4,13 @@
 ///|
 /// 增强手写体识别配置
 pub(all) struct HandwritingOcrEnhancedConfig {
-  min_char_width : Int
-  max_char_width : Int
-  min_char_height : Int
-  max_char_height : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  min_char_height : Int32
+  max_char_height : Int32
+  target_size : Int32
   distance_metric : String
-  num_variants : Int // 每字符变体数量
+  num_variants : Int32 // 每字符变体数量
   elasticity : Double // 弹性匹配程度 0.0-1.0
   use_slant_correction : Bool
   use_elastic_matching : Bool
@@ -40,7 +40,7 @@ pub fn handwriting_ocr_enhanced_default_config() -> HandwritingOcrEnhancedConfig
 ///|
 /// 手写体笔画特征
 pub(all) struct HandwritingStrokeFeatures {
-  num_strokes : Int // 估计笔画数
+  num_strokes : Int32 // 估计笔画数
   stroke_directions : Array[Double] // 主要笔画方向（弧度）
   stroke_lengths : Array[Double] // 笔画长度
   connectivity : Double // 连通性（连笔程度）
@@ -50,8 +50,8 @@ pub(all) struct HandwritingStrokeFeatures {
 ///|
 /// 生成增强手写体模板（每字符5种变体）
 pub fn generate_enhanced_handwriting_templates(
-  char_set? : String = "digits+letters",
-  num_variants? : Int = 5,
+  char_set~ : String = "digits+letters",
+  num_variants~ : Int32 = 5,
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   let chars = if char_set == "digits" {
@@ -81,8 +81,8 @@ pub fn generate_enhanced_handwriting_templates(
 /// 生成增强手写体字符模板（带弹性变形）
 fn generate_enhanced_handwriting_char_template(
   char : String,
-  variant : Int,
-  num_variants : Int,
+  variant : Int32,
+  num_variants : Int32,
 ) -> Array[Double] {
   let size = 32
   let features : Array[Double] = Array::make(size * size, 0.0)
@@ -160,14 +160,14 @@ pub fn extract_handwriting_stroke_features(
   let h = char_img.height
   let data = char_img.data
   // 估计笔画数（基于连通域数量）
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut num_components = 0
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() > 128 && labels[y * w + x] == 0 {
         num_components += 1
         // 简单洪水填充
-        let stack : Array[(Int, Int)] = []
+        let stack : Array[(Int32, Int32)] = []
         stack.push((x, y))
         labels[y * w + x] = num_components
         while stack.length() > 0 {
@@ -259,8 +259,8 @@ pub fn extract_handwriting_stroke_features(
 pub fn elastic_match(
   features : Array[Double],
   template : Array[Double],
-  elasticity? : Double = 0.5,
-  grid_size? : Int = 16,
+  elasticity~ : Double = 0.5,
+  grid_size~ : Int32 = 16,
 ) -> Double {
   let n = if features.length() < template.length() {
     features.length()
@@ -298,14 +298,14 @@ pub fn elastic_match(
 /// 连笔字符分割（基于笔画特征的分割点检测）
 pub fn segment_cursive_chars(
   img : @types.Image,
-  min_char_width? : Int = 8,
-  max_char_width? : Int = 80,
-) -> Array[(Int, Int, Int, Int)] {
+  min_char_width~ : Int32 = 8,
+  max_char_width~ : Int32 = 80,
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
   // 计算垂直投影
-  let projection : Array[Int] = Array::make(w, 0)
+  let projection : Array[Int32] = Array::make(w, 0)
   for x in 0..<w {
     let mut count = 0
     for y in 0..<h {
@@ -316,7 +316,7 @@ pub fn segment_cursive_chars(
     projection[x] = count
   }
   // 检测分割点（投影局部最小值）
-  let split_points : Array[Int] = []
+  let split_points : Array[Int32] = []
   for x in 2..<(w - 2) {
     if projection[x] < projection[x - 1] &&
       projection[x] < projection[x + 1] &&
@@ -325,7 +325,7 @@ pub fn segment_cursive_chars(
     }
   }
   // 基于分割点提取字符区域
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   let mut prev_x = 0
   for split_x in split_points {
     let char_w = split_x - prev_x
@@ -507,11 +507,11 @@ pub fn recognize_handwriting_enhanced(
 fn segment_handwriting_chars_simple(
   img : @types.Image,
   cfg : HandwritingOcrEnhancedConfig,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -533,11 +533,11 @@ fn segment_handwriting_chars_simple(
       }
     }
   }
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -558,7 +558,7 @@ fn segment_handwriting_chars_simple(
       }
     }
   }
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -577,11 +577,11 @@ fn segment_handwriting_chars_simple(
 /// 提取手写体字符区域（增强版）
 fn extract_handwriting_char_region_enhanced(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -619,7 +619,7 @@ fn extract_handwriting_char_region_enhanced(
 /// 提取手写体网格特征
 fn extract_handwriting_grid_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height

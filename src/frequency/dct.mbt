@@ -5,7 +5,7 @@
 ///|
 /// 预计算 DCT 余弦表：cos_table[m][k] = cos((2*k+1)*m*π/(2*N))
 /// 注意索引顺序：第一维是频率 m，第二维是空间 k
-fn dct_cos_table(n : Int) -> Array[Array[Float]] {
+fn dct_cos_table(n : Int32) -> Array[Array[Float]] {
   let pi = 3.14159265358979F
   let nf = Float::from_int(n)
   let table : Array[Array[Float]] = Array::make(n, [])
@@ -23,7 +23,7 @@ fn dct_cos_table(n : Int) -> Array[Array[Float]] {
 
 ///|
 /// 预计算 DCT 归一化系数：C(0)=sqrt(1/N), C(k)=sqrt(2/N)
-fn dct_coeffs(n : Int) -> Array[Float] {
+fn dct_coeffs(n : Int32) -> Array[Float] {
   let nf = Float::from_int(n)
   let coeffs : Array[Float] = Array::make(n, 0.0F)
   for i in 0..<n {
@@ -41,7 +41,7 @@ fn dct_1d(
   dst : Array[Float],
   cos_table : Array[Array[Float]],
   coeffs : ArrayView[Float],
-  n : Int,
+  n : Int32,
 ) -> Unit {
   for m in 0..<n {
     let mut sum = 0.0F
@@ -62,7 +62,7 @@ fn idct_1d(
   dst : Array[Float],
   cos_table : Array[Array[Float]],
   coeffs : ArrayView[Float],
-  n : Int,
+  n : Int32,
 ) -> Unit {
   for k in 0..<n {
     let mut sum = 0.0F

@@ -20,7 +20,7 @@ pub fn pipeline_add_all(Pipeline, Array[Operation]) -> Pipeline
 
 pub fn pipeline_describe(Pipeline) -> String
 
-pub fn pipeline_len(Pipeline) -> Int
+pub fn pipeline_len(Pipeline) -> Int32
 
 pub fn pipeline_new() -> Pipeline
 
@@ -35,9 +35,9 @@ pub(all) struct BatchConfig {
 }
 
 pub struct BatchResult {
-  total : Int
-  succeeded : Int
-  failed : Int
+  total : Int32
+  succeeded : Int32
+  failed : Int32
   results : Array[ProcessResult]
 }
 
@@ -49,7 +49,7 @@ pub struct BatchTask {
 
 pub(all) enum CliCommand {
   Convert(String, String)
-  Resize(String, String, Int, Int)
+  Resize(String, String, Int32, Int32)
   Rotate(String, String, Double)
   Batch(String, String, String)
   Info(String)
@@ -57,7 +57,7 @@ pub(all) enum CliCommand {
 }
 
 pub(all) enum Operation {
-  Resize(Int, Int)
+  Resize(Int32, Int32)
   Rotate(Double)
   FlipH
   FlipV
@@ -77,7 +77,7 @@ pub struct Pipeline {
 pub struct ProcessResult {
   success : Bool
   message : String
-  output_size : Int
+  output_size : Int32
 }
 
 // Type aliases

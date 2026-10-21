@@ -1,15 +1,15 @@
 ///|
 /// CUR 扩展信息（包含图像数量、热点坐标等）
 pub struct CurInfoExtended {
-  icon_type : Int
-  num_images : Int
-  widths : Array[Int]
-  heights : Array[Int]
-  hotspot_xs : Array[Int]
-  hotspot_ys : Array[Int]
-  width : Int
-  height : Int
-  num_channels : Int
+  icon_type : Int32
+  num_images : Int32
+  widths : Array[Int32]
+  heights : Array[Int32]
+  hotspot_xs : Array[Int32]
+  hotspot_ys : Array[Int32]
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
@@ -45,10 +45,10 @@ pub fn cur_info_extended(
   if len < 6 + count * 16 {
     raise @types.LoadError::DecodeFailed("CUR 目录数据不完整")
   }
-  let widths : Array[Int] = []
-  let heights : Array[Int] = []
-  let hotspot_xs : Array[Int] = []
-  let hotspot_ys : Array[Int] = []
+  let widths : Array[Int32] = []
+  let heights : Array[Int32] = []
+  let hotspot_xs : Array[Int32] = []
+  let hotspot_ys : Array[Int32] = []
   let mut best_w = 0
   let mut best_h = 0
   let mut best_area = 0

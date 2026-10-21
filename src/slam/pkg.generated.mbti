@@ -8,7 +8,7 @@ import {
 // Values
 pub fn create_default_slam_config() -> SLAMConfig
 
-pub fn detect_features_slam(@types.Image, Int, Double) -> Array[Array[Double]]
+pub fn detect_features_slam(@types.Image, Int32, Double) -> Array[Array[Double]]
 
 pub fn detect_loop_closure(Array[Array[Double]], Array[KeyFrame], Double) -> LoopClosureResult
 
@@ -20,7 +20,7 @@ pub fn process_frame_slam(SLAMState, @types.Image, SLAMConfig) -> SLAMState
 
 pub fn slam_report_to_string(SLAMState) -> String
 
-pub fn track_features_slam(@types.Image, @types.Image, Array[Array[Double]], Int) -> FeatureTrackingResult
+pub fn track_features_slam(@types.Image, @types.Image, Array[Array[Double]], Int32) -> FeatureTrackingResult
 
 pub fn triangulate_points(Array[Array[Double]], CameraPose, CameraPose, SLAMConfig) -> Array[MapPoint]
 
@@ -36,8 +36,8 @@ pub(all) struct CameraPose {
 
 pub(all) struct FeatureTrackingResult {
   tracked_features : Array[Array[Double]]
-  num_tracked : Int
-  num_lost : Int
+  num_tracked : Int32
+  num_lost : Int32
   parallax : Double
   is_keyframe : Bool
 }
@@ -47,25 +47,25 @@ pub(all) struct KeyFrame {
   image : @types.Image
   features : Array[Array[Double]]
   descriptors : Array[Array[Double]]
-  map_points : Array[Int]
+  map_points : Array[Int32]
   timestamp : Double
   is_loop_closure : Bool
 }
 
 pub(all) struct LoopClosureResult {
   is_loop_detected : Bool
-  loop_frame_index : Int
+  loop_frame_index : Int32
   similarity_score : Double
   transformation : Array[Double]
-  num_inliers : Int
+  num_inliers : Int32
 }
 
 pub(all) struct MapPoint {
   position : Array[Double]
-  color : Array[Int]
+  color : Array[Int32]
   normal : Array[Double]
   descriptor : Array[Double]
-  num_observations : Int
+  num_observations : Int32
   is_outlier : Bool
 }
 
@@ -86,8 +86,8 @@ pub fn SLAMAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct SLAMConfig {
   algorithm : SLAMAlgorithm
   feature_threshold : Double
-  max_features : Int
-  keyframe_interval : Int
+  max_features : Int32
+  keyframe_interval : Int32
   min_parallax : Double
   use_loop_closure : Bool
   use_bundle_adjustment : Bool
@@ -102,8 +102,8 @@ pub(all) struct SLAMState {
   trajectory : Array[CameraPose]
   map_points : Array[MapPoint]
   keyframes : Array[KeyFrame]
-  num_frames_processed : Int
-  num_lost_frames : Int
+  num_frames_processed : Int32
+  num_lost_frames : Int32
   is_tracking : Bool
   is_mapping : Bool
   processing_time_ms : Double

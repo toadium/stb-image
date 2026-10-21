@@ -1,10 +1,10 @@
 // v192c forensics 增强测试：多图像类型 + 全分析函数 + 增强验证
 
 ///|
-fn fo_make_img(w : Int, h : Int, ch : Int, seed : Int) -> @types.Image {
+fn fo_make_img(w : Int32, h : Int32, ch : Int32, seed : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * ch) {
-    let v : Int = (i * 41 + seed * 23) % 256
+    let v : Int32 = (i * 41 + seed * 23) % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -16,7 +16,12 @@ fn fo_make_img(w : Int, h : Int, ch : Int, seed : Int) -> @types.Image {
 }
 
 ///|
-fn fo_make_solid_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn fo_make_solid_img(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h * ch) {
     data.push(val.to_byte())
@@ -30,7 +35,7 @@ fn fo_make_solid_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn fo_make_checkerboard(w : Int, h : Int, ch : Int) -> @types.Image {
+fn fo_make_checkerboard(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

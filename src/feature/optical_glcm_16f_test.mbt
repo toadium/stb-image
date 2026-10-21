@@ -1,7 +1,12 @@
 // 光流 + GLCM 16-bit/float 变体测试
 
 ///|
-fn make_img16_og(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_og(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +21,7 @@ fn make_img16_og(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_og(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_og(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -39,7 +44,7 @@ fn make_imgf_og(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 test "lucas_kanade_16: basic" {
   let prev = make_img16_og(32, 32, 1, 30000)
   let next = make_img16_og(32, 32, 1, 30000)
-  let points : Array[(Int, Int)] = [(10, 10), (20, 20)]
+  let points : Array[(Int32, Int32)] = [(10, 10), (20, 20)]
   let result = @feature.lucas_kanade_16(prev, next, points)
   assert_eq(result.length(), 2)
   let _ = prev
@@ -52,7 +57,7 @@ test "lucas_kanade_16: basic" {
 test "lucas_kanade_f: basic" {
   let prev = make_imgf_og(32, 32, 1, 0.5F)
   let next = make_imgf_og(32, 32, 1, 0.5F)
-  let points : Array[(Int, Int)] = [(10, 10), (20, 20)]
+  let points : Array[(Int32, Int32)] = [(10, 10), (20, 20)]
   let result = @feature.lucas_kanade_f(prev, next, points)
   assert_eq(result.length(), 2)
   let _ = prev

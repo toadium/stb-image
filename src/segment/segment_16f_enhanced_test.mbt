@@ -1,10 +1,10 @@
 // v198 segment 16f 变体增强测试
 
 ///|
-fn s16_make_varied16(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn s16_make_varied16(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
-    let val : Int = (i * 137 + 42) % 65536
+    let val : Int32 = (i * 137 + 42) % 65536
     data[i * 2] = (val & 0xFF).to_byte()
     data[i * 2 + 1] = ((val >> 8) & 0xFF).to_byte()
   }
@@ -17,7 +17,7 @@ fn s16_make_varied16(w : Int, h : Int, ch : Int) -> @types.Image16 {
 }
 
 ///|
-fn s16_make_variedf(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn s16_make_variedf(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let v : Float = Float::from_int(i % 100) / 100.0F
@@ -36,7 +36,12 @@ fn s16_make_variedf(w : Int, h : Int, ch : Int) -> @types.ImageF {
 }
 
 ///|
-fn s16_make_uniform16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn s16_make_uniform16(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -51,7 +56,12 @@ fn s16_make_uniform16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn s16_make_uniformf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn s16_make_uniformf(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()

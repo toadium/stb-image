@@ -2,7 +2,7 @@
 // 覆盖 image_compression_advanced/image_compression_advanced.mbt 的 6 个公开函数
 
 ///|
-fn create_flat_data(w : Int, h : Int, value : Double) -> Array[Double] {
+fn create_flat_data(w : Int32, h : Int32, value : Double) -> Array[Double] {
   let data : Array[Double] = []
   for _ in 0..<(w * h) {
     data.push(value)
@@ -11,7 +11,7 @@ fn create_flat_data(w : Int, h : Int, value : Double) -> Array[Double] {
 }
 
 ///|
-fn create_gradient_data(w : Int, h : Int) -> Array[Double] {
+fn create_gradient_data(w : Int32, h : Int32) -> Array[Double] {
   let data : Array[Double] = []
   for _ in 0..<h {
     for x in 0..<w {

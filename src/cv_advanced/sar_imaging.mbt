@@ -42,8 +42,8 @@ pub extend SarParams with Eq::{not_equal, equal}
 /// SAR image (magnitude data).
 pub(all) struct SarImage {
   data : Array[Array[Double]]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   params : SarParams
 } derive(Eq, @debug.Debug)
 
@@ -80,7 +80,7 @@ pub fn sar_build_params(
 /// 生成线性调频脉冲（chirp 信号）。
 /// Generate linear frequency modulated chirp pulse.
 pub fn sar_simulate_chirp(
-  num_samples : Int,
+  num_samples : Int32,
   pulse_duration : Double,
   chirp_rate : Double,
 ) -> Array[Double] {
@@ -294,7 +294,7 @@ pub fn sar_focus(
 /// Multi-look processing (reduce speckle noise).
 pub fn sar_multilook(
   focused_data : Array[Array[Double]],
-  num_looks : Int,
+  num_looks : Int32,
 ) -> Array[Array[Double]] {
   let height = focused_data.length()
   if height == 0 || num_looks <= 1 {
@@ -326,7 +326,7 @@ pub fn sar_multilook(
 /// Point target detection (peak search).
 pub fn sar_detect_point_target(
   focused_data : Array[Array[Double]],
-) -> (Int, Int, Double) {
+) -> (Int32, Int32, Double) {
   let height = focused_data.length()
   if height == 0 {
     return (0, 0, 0.0)

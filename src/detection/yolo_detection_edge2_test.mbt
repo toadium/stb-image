@@ -19,7 +19,7 @@ fn mk_box(
 }
 
 ///|
-fn mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn mk_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -29,14 +29,14 @@ fn mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn mk_bad_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn mk_bad_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{ width: w, height: h, channels: ch, data: b"\x00", }
 }
 
 ///|
 fn mk_config(
-  input_size : Int,
-  num_classes : Int,
+  input_size : Int32,
+  num_classes : Int32,
   conf_thresh : Double,
   iou_thresh : Double,
 ) -> @detection.YoloConfig {

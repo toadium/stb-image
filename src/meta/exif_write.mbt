@@ -2,13 +2,13 @@
 // 支持将 ExifInfo 写入 JPEG 字节流
 
 ///|
-fn write_u16_be(buf : Array[Byte], val : Int) -> Unit {
+fn write_u16_be(buf : Array[Byte], val : Int32) -> Unit {
   buf.push(((val >> 8) & 0xFF).to_byte())
   buf.push((val & 0xFF).to_byte())
 }
 
 ///|
-fn write_u32_be(buf : Array[Byte], val : Int) -> Unit {
+fn write_u32_be(buf : Array[Byte], val : Int32) -> Unit {
   buf.push(((val >> 24) & 0xFF).to_byte())
   buf.push(((val >> 16) & 0xFF).to_byte())
   buf.push(((val >> 8) & 0xFF).to_byte())

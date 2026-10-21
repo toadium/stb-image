@@ -5,8 +5,8 @@
 ///|
 // 构造 ImageF，pixels 为 (r, g, b) float 三元组数组
 fn he_make_imagef(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   pixels : Array[(Float, Float, Float)],
 ) -> @types.ImageF {
   let data : Array[Byte] = []

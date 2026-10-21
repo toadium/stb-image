@@ -78,7 +78,7 @@ pub(all) struct SensorData {
   sensor_id : String
   timestamp : Double
   data : Array[Double]
-  data_size : Int
+  data_size : Int32
   calibration_params : Array[Double]
   is_valid : Bool
 }
@@ -86,7 +86,7 @@ pub(all) struct SensorData {
 ///|
 /// 检测目标
 pub(all) struct ADDetectedObject {
-  object_id : Int
+  object_id : Int32
   object_type : ADObjectType
   bounding_box : Array[Double]
   confidence : Double
@@ -95,18 +95,18 @@ pub(all) struct ADDetectedObject {
   position_3d : Array[Double]
   dimensions : Array[Double]
   orientation : Double
-  tracking_id : Int
-  age : Int
+  tracking_id : Int32
+  age : Int32
   is_static : Bool
 }
 
 ///|
 /// 车道线
 pub(all) struct LaneLine {
-  lane_id : Int
+  lane_id : Int32
   lane_type : String
   points : Array[Array[Double]]
-  num_points : Int
+  num_points : Int32
   confidence : Double
   color : String
   is_occluded : Bool
@@ -115,7 +115,7 @@ pub(all) struct LaneLine {
 ///|
 /// 交通信号灯
 pub(all) struct TrafficLight {
-  light_id : Int
+  light_id : Int32
   position : Array[Double]
   state : String
   confidence : Double
@@ -140,7 +140,7 @@ pub(all) struct PathPoint {
 /// 规划路径
 pub(all) struct PlannedPath {
   points : Array[PathPoint]
-  num_points : Int
+  num_points : Int32
   path_length : Double
   estimated_time : Double
   is_safe : Bool
@@ -168,11 +168,11 @@ pub(all) struct ControlCommand {
 pub(all) struct ADConfig {
   task_type : AutonomousDrivingTaskType
   sensors : Array[SensorType]
-  num_sensors : Int
+  num_sensors : Int32
   detection_threshold : Double
   tracking_threshold : Double
   planning_horizon : Double
-  control_frequency : Int
+  control_frequency : Int32
   max_speed : Double
   max_acceleration : Double
   max_deceleration : Double
@@ -211,7 +211,7 @@ pub fn create_sensor_data(
   sensor_type : SensorType,
   sensor_id : String,
   timestamp : Double,
-  data_size : Int,
+  data_size : Int32,
 ) -> SensorData {
   let data : Array[Double] = []
   let calibration : Array[Double] = []
@@ -240,7 +240,7 @@ pub fn create_sensor_data(
 ///|
 /// 创建检测目标
 pub fn create_detected_object(
-  object_id : Int,
+  object_id : Int32,
   object_type : ADObjectType,
   bounding_box : Array[Double],
   confidence : Double,

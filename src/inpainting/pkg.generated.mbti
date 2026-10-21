@@ -8,11 +8,11 @@ import {
 // Values
 pub fn create_default_inpainting_config() -> InpaintingConfig
 
-pub fn create_rect_mask(Int, Int, Int, Int, Int, Int) -> @types.Image
+pub fn create_rect_mask(Int32, Int32, Int32, Int32, Int32, Int32) -> @types.Image
 
 pub fn dehaze(@types.Image, DehazeAlgorithm) -> DehazeResult
 
-pub fn dehaze_clahe(@types.Image, Double, Int) -> @types.Image
+pub fn dehaze_clahe(@types.Image, Double, Int32) -> @types.Image
 
 pub fn dehaze_dark_channel(@types.Image, Double, Double) -> DehazeResult
 
@@ -22,9 +22,9 @@ pub fn derain_morphological(@types.Image) -> DerainResult
 
 pub fn inpaint(@types.Image, @types.Image, InpaintingConfig) -> InpaintingResult
 
-pub fn inpaint_diffusion(@types.Image, @types.Image, Int) -> @types.Image
+pub fn inpaint_diffusion(@types.Image, @types.Image, Int32) -> @types.Image
 
-pub fn inpaint_simple(@types.Image, @types.Image, Int) -> @types.Image
+pub fn inpaint_simple(@types.Image, @types.Image, Int32) -> @types.Image
 
 pub fn inpainting_report_to_string(InpaintingResult) -> String
 
@@ -63,7 +63,7 @@ pub fn DerainAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct DerainResult {
   image : @types.Image
   algorithm : DerainAlgorithm
-  rain_streaks_removed : Int
+  rain_streaks_removed : Int32
   processing_time_ms : Double
 }
 
@@ -80,8 +80,8 @@ pub fn InpaintingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct InpaintingConfig {
   algorithm : InpaintingAlgorithm
-  radius : Int
-  iterations : Int
+  radius : Int32
+  iterations : Int32
   use_edge_preservation : Bool
   tolerance : Double
 }
@@ -90,10 +90,10 @@ pub(all) struct InpaintingResult {
   image : @types.Image
   mask : @types.Image
   algorithm : InpaintingAlgorithm
-  inpainted_pixels : Int
-  total_mask_pixels : Int
+  inpainted_pixels : Int32
+  total_mask_pixels : Int32
   processing_time_ms : Double
-  iterations : Int
+  iterations : Int32
 }
 
 // Type aliases

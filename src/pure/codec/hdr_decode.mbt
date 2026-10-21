@@ -42,7 +42,7 @@ fn float_to_rgbe(r : Float, g : Float, b : Float) -> (Byte, Byte, Byte, Byte) {
 
 ///|
 /// 解析 HDR 头部，返回 (width, height, data_start_offset)
-fn parse_hdr_header(data : Bytes) -> (Int, Int, Int)? {
+fn parse_hdr_header(data : Bytes) -> (Int32, Int32, Int32)? {
   let len = data.length()
   // 检查 magic "#?"
   if len < 2 || data[0].to_int() != 0x23 || data[1].to_int() != 0x3F {
@@ -72,8 +72,8 @@ fn parse_hdr_header(data : Bytes) -> (Int, Int, Int)? {
   let mut sign = 1
   let mut current_val = 0
   let mut has_digit = false
-  let vals : Array[Int] = []
-  let signs : Array[Int] = []
+  let vals : Array[Int32] = []
+  let signs : Array[Int32] = []
   while pos < len && data[pos].to_int() != 0x0A {
     let b = data[pos].to_int()
     if b == 0x2D {
@@ -121,10 +121,10 @@ fn parse_hdr_header(data : Bytes) -> (Int, Int, Int)? {
 /// RLE 解码单个通道扫描线
 fn rle_decode_scanline_channel(
   data : Bytes,
-  pos : Int,
-  len : Int,
-  scanline_len : Int,
-) -> (Array[Byte], Int)? {
+  pos : Int32,
+  len : Int32,
+  scanline_len : Int32,
+) -> (Array[Byte], Int32)? {
   let out : Array[Byte] = []
   let mut p = pos
   while out.length() < scanline_len {

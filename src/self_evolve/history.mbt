@@ -8,9 +8,9 @@
 /// Single evolution snapshot.
 pub(all) struct HistoryEntry {
   version : String
-  op_count : Int
-  degradation_count : Int
-  test_count : Int
+  op_count : Int32
+  degradation_count : Int32
+  test_count : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -25,7 +25,7 @@ pub extend HistoryEntry with Eq::{not_equal, equal}
 /// Evolution history log.
 pub(all) struct HistoryLog {
   entries : Array[HistoryEntry]
-  total_snapshots : Int
+  total_snapshots : Int32
   latest_version : String
   summary : String
 } derive(Eq, @debug.Debug)

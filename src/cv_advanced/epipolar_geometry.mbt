@@ -233,7 +233,7 @@ pub fn triangulate_point(
 ///|
 /// 基础矩阵的秩（简化估计）。
 /// Rank of fundamental matrix (simplified estimate).
-pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int {
+pub fn fundamental_matrix_rank(f : FundamentalMatrix) -> Int32 {
   let det = f.m00 * (f.m11 * f.m22 - f.m12 * f.m21) -
     f.m01 * (f.m10 * f.m22 - f.m12 * f.m20) +
     f.m02 * (f.m10 * f.m21 - f.m11 * f.m20)

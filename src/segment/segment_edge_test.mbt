@@ -1,7 +1,7 @@
 // v209 segment 模块补充错误路径测试
 
 ///|
-fn seg_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn seg_mk_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, (val & 0xFF).to_byte())
   @types.Image::{
     width: w,

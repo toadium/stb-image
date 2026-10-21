@@ -1,10 +1,10 @@
 // v193c enhance 增强测试
 
 ///|
-fn enh_make_gray(w : Int, h : Int) -> @types.Image {
+fn enh_make_gray(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h) {
-    let v : Int = i * 41 % 256
+    let v : Int32 = i * 41 % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -16,10 +16,10 @@ fn enh_make_gray(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn enh_make_rgb(w : Int, h : Int) -> @types.Image {
+fn enh_make_rgb(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * 3) {
-    let v : Int = i * 29 % 256
+    let v : Int32 = i * 29 % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -31,7 +31,7 @@ fn enh_make_rgb(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn enh_make_uniform(w : Int, h : Int, val : Int) -> @types.Image {
+fn enh_make_uniform(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

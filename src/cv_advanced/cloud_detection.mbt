@@ -22,11 +22,11 @@ pub extend CloudDetectMethod with Eq::{not_equal, equal}
 /// 云检测结果。
 /// Cloud detection result.
 pub(all) struct CloudResult {
-  cloud_mask : Array[Array[Int]]
-  shadow_mask : Array[Array[Int]]
+  cloud_mask : Array[Array[Int32]]
+  shadow_mask : Array[Array[Int32]]
   cloud_coverage : Double
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -41,7 +41,7 @@ pub extend CloudResult with Eq::{not_equal, equal}
 pub fn cloud_threshold_detect(
   image : Array[Array[Double]],
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let height = image.length()
   if height == 0 {
     return []
@@ -66,7 +66,7 @@ pub fn cloud_multispectral_detect(
   thermal : Array[Array[Double]],
   vis_threshold : Double,
   thermal_threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let height = visible.length()
   if height == 0 {
     return []
@@ -90,12 +90,12 @@ pub fn cloud_multispectral_detect(
 /// Cloud shadow detection.
 pub fn cloud_shadow_detect(
   image : Array[Array[Double]],
-  cloud_mask : Array[Array[Int]],
+  cloud_mask : Array[Array[Int32]],
   shadow_threshold : Double,
   sun_azimuth : Double,
   sun_elevation : Double,
-  shadow_offset : Int,
-) -> Array[Array[Int]] {
+  shadow_offset : Int32,
+) -> Array[Array[Int32]] {
   let height = image.length()
   if height == 0 {
     return []
@@ -134,8 +134,8 @@ pub fn cloud_shadow_detect(
 pub fn cloud_progressive_refinement(
   image : Array[Array[Double]],
   initial_threshold : Double,
-  num_iterations : Int,
-) -> Array[Array[Int]] {
+  num_iterations : Int32,
+) -> Array[Array[Int32]] {
   let height = image.length()
   if height == 0 {
     return []
@@ -178,7 +178,7 @@ pub fn cloud_progressive_refinement(
 ///|
 /// 计算云覆盖率。
 /// Compute cloud coverage percentage.
-pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int]]) -> Double {
+pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int32]]) -> Double {
   let height = cloud_mask.length()
   if height == 0 {
     return 0.0
@@ -204,9 +204,9 @@ pub fn cloud_compute_coverage(cloud_mask : Array[Array[Int]]) -> Double {
 /// 形态学开运算（去噪）。
 /// Morphological opening (denoising).
 pub fn cloud_morph_open(
-  mask : Array[Array[Int]],
-  kernel_size : Int,
-) -> Array[Array[Int]] {
+  mask : Array[Array[Int32]],
+  kernel_size : Int32,
+) -> Array[Array[Int32]] {
   let height = mask.length()
   if height == 0 {
     return []
@@ -256,8 +256,8 @@ pub fn cloud_morph_open(
 /// 构建云检测结果。
 /// Build cloud detection result.
 pub fn cloud_build_result(
-  cloud_mask : Array[Array[Int]],
-  shadow_mask : Array[Array[Int]],
+  cloud_mask : Array[Array[Int32]],
+  shadow_mask : Array[Array[Int32]],
 ) -> CloudResult {
   let height = cloud_mask.length()
   let width = if height > 0 { cloud_mask[0].length() } else { 0 }
@@ -272,7 +272,7 @@ pub fn cloud_detect(
   image : Array[Array[Double]],
   det_method : CloudDetectMethod,
   threshold : Double,
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   match det_method {
     Threshold => cloud_threshold_detect(image, threshold)
     Multispectral => cloud_threshold_detect(image, threshold)

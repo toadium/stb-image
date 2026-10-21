@@ -1,7 +1,7 @@
 // v202 remote_sensing 错误路径/边界增强测试
 
 ///|
-fn rs_make_varied(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs_make_varied(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -15,7 +15,12 @@ fn rs_make_varied(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn rs_make_uniform(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn rs_make_uniform(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, (val & 0xFF).to_byte())
   @types.Image::{
     width: w,

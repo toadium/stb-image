@@ -3,12 +3,12 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_iq(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_iq(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_float_le_iq(data : Bytes, offset : Int) -> Float {
+fn read_float_le_iq(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -18,7 +18,7 @@ fn read_float_le_iq(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn clamp_int_iq(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_iq(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -69,7 +69,7 @@ fn imgf_to_img8_iq(img : @types.ImageF) -> @types.Image {
 
 ///|
 /// 16-bit 平均哈希。
-pub fn ahash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+pub fn ahash_16(img : @types.Image16) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("ahash_16: 图像尺寸必须大于0")
@@ -95,7 +95,7 @@ pub fn ahash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// 16-bit 差异哈希。
-pub fn dhash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+pub fn dhash_16(img : @types.Image16) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("dhash_16: 图像尺寸必须大于0")
@@ -121,7 +121,7 @@ pub fn dhash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// 16-bit 感知哈希。
-pub fn phash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+pub fn phash_16(img : @types.Image16) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("phash_16: 图像尺寸必须大于0")
@@ -149,7 +149,7 @@ pub fn phash_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// float 平均哈希。
-pub fn ahash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+pub fn ahash_f(img : @types.ImageF) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("ahash_f: 图像尺寸必须大于0")
@@ -173,7 +173,7 @@ pub fn ahash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// float 差异哈希。
-pub fn dhash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+pub fn dhash_f(img : @types.ImageF) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("dhash_f: 图像尺寸必须大于0")
@@ -197,7 +197,7 @@ pub fn dhash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// float 感知哈希。
-pub fn phash_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+pub fn phash_f(img : @types.ImageF) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed("phash_f: 图像尺寸必须大于0")

@@ -4,7 +4,7 @@
 ///|
 pub(all) struct SymbolIndex {
   symbols : Array[SymbolCoord]
-  keyword_map : Array[(String, Array[Int])]
+  keyword_map : Array[(String, Array[Int32])]
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -15,7 +15,7 @@ pub extend SymbolIndex with @debug.Debug::{to_repr}
 
 ///|
 pub fn SymbolIndex::make(symbols : Array[SymbolCoord]) -> SymbolIndex {
-  let keyword_map : Array[(String, Array[Int])] = []
+  let keyword_map : Array[(String, Array[Int32])] = []
   for i in 0..<symbols.length() {
     for kw in symbols[i].keywords {
       let mut found = false
@@ -35,14 +35,14 @@ pub fn SymbolIndex::make(symbols : Array[SymbolCoord]) -> SymbolIndex {
 }
 
 ///|
-pub fn SymbolIndex::size(self : SymbolIndex) -> Int {
+pub fn SymbolIndex::size(self : SymbolIndex) -> Int32 {
   self.symbols.length()
 }
 
 ///|
 pub fn SymbolIndex::get(
   self : SymbolIndex,
-  index : Int,
+  index : Int32,
 ) -> SymbolCoord raise Failure {
   if index < 0 || index >= self.symbols.length() {
     fail("symbol index out of bounds: \{index}")
@@ -110,7 +110,7 @@ pub fn SymbolIndex::find_by_kind(
 }
 
 ///|
-pub fn SymbolIndex::total_tokens(self : SymbolIndex) -> Int {
+pub fn SymbolIndex::total_tokens(self : SymbolIndex) -> Int32 {
   let mut sum = 0
   for sym in self.symbols {
     sum = sum + sym.estimated_tokens()

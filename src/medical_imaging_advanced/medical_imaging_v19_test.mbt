@@ -2,7 +2,7 @@
 // 高级医学图像分割、病灶检测、器官分割、影像组学、配准、报告
 
 ///|
-fn make_medical_data(w : Int, h : Int) -> Array[Double] {
+fn make_medical_data(w : Int32, h : Int32) -> Array[Double] {
   let arr : Array[Double] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_double())

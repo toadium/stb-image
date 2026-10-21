@@ -56,8 +56,8 @@ pub extend DoseMetrics with Eq::{not_equal, equal}
 /// Compute DVH.
 pub fn dose_compute_dvh(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
-  num_bins : Int,
+  structure_mask : Array[Int32],
+  num_bins : Int32,
   max_dose : Double,
   structure_name : String,
 ) -> DVHResult {
@@ -98,7 +98,7 @@ pub fn dose_compute_dvh(
 /// Compute dose evaluation metrics.
 pub fn dose_compute_metrics(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
 ) -> DoseMetrics {
   let doses : Array[Double] = []
   for i in 0..<dose_image.length() {
@@ -156,7 +156,7 @@ pub fn dose_compute_metrics(
 /// EUD computation (equivalent uniform dose).
 pub fn dose_compute_eud(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   n_param : Double,
 ) -> Double {
   let mut sum = 0.0
@@ -178,7 +178,7 @@ pub fn dose_compute_eud(
 /// TCP computation (tumor control probability).
 pub fn dose_compute_tcp(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   d50 : Double,
   gamma : Double,
 ) -> Double {
@@ -196,7 +196,7 @@ pub fn dose_compute_tcp(
 /// NTCP computation (normal tissue complication probability).
 pub fn dose_compute_ntcp(
   dose_image : Array[Double],
-  structure_mask : Array[Int],
+  structure_mask : Array[Int32],
   td50 : Double,
   m_param : Double,
 ) -> Double {
@@ -235,9 +235,9 @@ pub fn erf_approx(x : Double) -> Double {
 /// Treatment plan evaluation.
 pub fn dose_evaluate_plan(
   target_dose : Array[Double],
-  target_mask : Array[Int],
+  target_mask : Array[Int32],
   oar_doses : Array[Array[Double]],
-  oar_masks : Array[Array[Int]],
+  oar_masks : Array[Array[Int32]],
   prescription_dose : Double,
 ) -> (Double, Double, Double) {
   let target_metrics = dose_compute_metrics(target_dose, target_mask)

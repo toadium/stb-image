@@ -24,9 +24,9 @@ pub extend ParamKind with Eq::{not_equal, equal}
 /// Single tuned parameter.
 pub(all) struct TunedParam {
   param_kind : ParamKind
-  old_value : Int
-  new_value : Int
-  adjustment : Int
+  old_value : Int32
+  new_value : Int32
+  adjustment : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 
@@ -41,8 +41,8 @@ pub extend TunedParam with Eq::{not_equal, equal}
 /// Parameter tuning report.
 pub(all) struct TuneReport {
   params : Array[TunedParam]
-  total : Int
-  adjusted_count : Int
+  total : Int32
+  adjusted_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

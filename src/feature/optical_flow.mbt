@@ -21,9 +21,9 @@ pub(all) struct FlowResult {
 pub fn lucas_kanade(
   prev : @types.Image,
   next : @types.Image,
-  points : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  points : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[FlowResult] raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -168,8 +168,8 @@ pub fn lucas_kanade(
 pub fn horn_schunck(
   prev : @types.Image,
   next : @types.Image,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -293,12 +293,12 @@ pub fn horn_schunck(
 // ==================== 辅助函数 ====================
 
 ///|
-fn to_gray_lk(img : @types.Image) -> (Array[Int], Int) {
+fn to_gray_lk(img : @types.Image) -> (Array[Int32], Int32) {
   let w = img.width
   let h = img.height
   let ch = img.channels
   let n = w * h
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch >= 3 {
       let r = img.data[i * ch].to_int()
@@ -314,9 +314,9 @@ fn to_gray_lk(img : @types.Image) -> (Array[Int], Int) {
 
 ///|
 fn sample_bilinear_lk(
-  gray : Array[Int],
-  w : Int,
-  h : Int,
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
   fx : Float,
   fy : Float,
 ) -> Float {

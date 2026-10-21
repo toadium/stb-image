@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_c(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_c(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_c(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_c(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_c(data : Bytes, offset : Int) -> Float {
+fn read_float_le_c(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_c(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_c(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_c(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_c(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_c(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_c(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -47,10 +47,14 @@ fn clamp_int_c(v : Int, lo : Int, hi : Int) -> Int {
 // 5x5 高斯模糊 (sigma=1.0)
 
 ///|
-fn canny_gaussian_blur_16(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
+fn canny_gaussian_blur_16(
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
+) -> Array[Int32] {
   let n = w * h
-  let out : Array[Int] = Array::make(n, 0)
-  let kernel : Array[Int] = [
+  let out : Array[Int32] = Array::make(n, 0)
+  let kernel : Array[Int32] = [
     2, 4, 5, 4, 2, 4, 9, 12, 9, 4, 5, 12, 15, 12, 5, 4, 9, 12, 9, 4, 2, 4, 5, 4,
     2,
   ]
@@ -95,8 +99,8 @@ fn canny_gaussian_blur_16(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
 /// 16-bit Canny 边缘检测。阈值范围 0-65535，输出二值图像（0/65535）。
 pub fn canny_edge_16(
   img : @types.Image16,
-  low_threshold? : Int = 12800,
-  high_threshold? : Int = 25600,
+  low_threshold~ : Int32 = 12800,
+  high_threshold~ : Int32 = 25600,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -140,7 +144,7 @@ pub fn canny_edge_16(
   let ch = img.channels
   let bpp = ch * 2
   // 转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch == 1 {
       gray[i] = read_u16_le_c(img.data, i * 2)
@@ -154,8 +158,8 @@ pub fn canny_edge_16(
   // 1. 高斯模糊
   let blurred = canny_gaussian_blur_16(gray, w, h)
   // 2. Sobel 梯度
-  let gradient : Array[Int] = Array::make(n, 0)
-  let direction : Array[Int] = Array::make(n, 0)
+  let gradient : Array[Int32] = Array::make(n, 0)
+  let direction : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -189,7 +193,7 @@ pub fn canny_edge_16(
     }
   }
   // 3. 非极大值抑制
-  let nms : Array[Int] = Array::make(n, 0)
+  let nms : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -220,7 +224,7 @@ pub fn canny_edge_16(
       weak[i] = true
     }
   }
-  let stack : Array[Int] = []
+  let stack : Array[Int32] = []
   for i in 0..<n {
     if strong[i] {
       write_u16_le_c(out, i * 2, 65535)
@@ -263,8 +267,8 @@ pub fn canny_edge_16(
 /// float Canny 边缘检测。阈值范围 0.0-1.0，输出二值图像（0.0/1.0）。
 pub fn canny_edge_f(
   img : @types.ImageF,
-  low_threshold? : Float = 0.2F,
-  high_threshold? : Float = 0.4F,
+  low_threshold~ : Float = 0.2F,
+  high_threshold~ : Float = 0.4F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -359,7 +363,7 @@ pub fn canny_edge_f(
   }
   // 2. Sobel 梯度
   let gradient : Array[Float] = Array::make(n, 0.0F)
-  let direction : Array[Int] = Array::make(n, 0)
+  let direction : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -422,7 +426,7 @@ pub fn canny_edge_f(
       weak[i] = true
     }
   }
-  let stack : Array[Int] = []
+  let stack : Array[Int32] = []
   for i in 0..<n {
     if strong[i] {
       write_f32_le_c(out, i * 4, 1.0F)

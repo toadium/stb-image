@@ -4,7 +4,7 @@
 
 ///|
 // 构造 BMP 头部（30+ 字节），width/height/bpp 可配置
-fn ii_make_bmp_header(width : Int, height : Int, bpp : Int) -> Bytes {
+fn ii_make_bmp_header(width : Int32, height : Int32, bpp : Int32) -> Bytes {
   let out : Array[Byte] = Array::make(30, b'\x00')
   // "BM"
   out[0] = b'\x42'
@@ -23,7 +23,7 @@ fn ii_make_bmp_header(width : Int, height : Int, bpp : Int) -> Bytes {
 
 ///|
 // 构造 QOI 头部（14 字节）
-fn ii_make_qoi_header(width : Int, height : Int, channels : Int) -> Bytes {
+fn ii_make_qoi_header(width : Int32, height : Int32, channels : Int32) -> Bytes {
   let out : Array[Byte] = [
     b'\x71',
     b'\x6F',
@@ -45,7 +45,7 @@ fn ii_make_qoi_header(width : Int, height : Int, channels : Int) -> Bytes {
 
 ///|
 // 构造 PSD 头部（16+ 字节）
-fn ii_make_psd_header(channels : Int, height : Int, width : Int) -> Bytes {
+fn ii_make_psd_header(channels : Int32, height : Int32, width : Int32) -> Bytes {
   let out : Array[Byte] = Array::make(16, b'\x00')
   // "8BPS"
   out[0] = b'\x38'
@@ -70,7 +70,7 @@ fn ii_make_psd_header(channels : Int, height : Int, width : Int) -> Bytes {
 
 ///|
 // 构造 GIF 头部（10 字节）
-fn ii_make_gif_header(width : Int, height : Int) -> Bytes {
+fn ii_make_gif_header(width : Int32, height : Int32) -> Bytes {
   let out : Array[Byte] = [
     b'\x47',
     b'\x49',
@@ -89,10 +89,10 @@ fn ii_make_gif_header(width : Int, height : Int) -> Bytes {
 ///|
 // 构造 PNG 头部（26 字节），color_type 可配置
 fn ii_make_png_header(
-  width : Int,
-  height : Int,
-  bit_depth : Int,
-  color_type : Int,
+  width : Int32,
+  height : Int32,
+  bit_depth : Int32,
+  color_type : Int32,
 ) -> Bytes {
   let out : Array[Byte] = Array::make(26, b'\x00')
   // PNG signature
@@ -121,7 +121,11 @@ fn ii_make_png_header(
 
 ///|
 // 构造 JPEG 头部：SOI + APP0 + SOF0
-fn ii_make_jpeg_header(width : Int, height : Int, channels : Int) -> Bytes {
+fn ii_make_jpeg_header(
+  width : Int32,
+  height : Int32,
+  channels : Int32,
+) -> Bytes {
   let out : Array[Byte] = []
   // SOI
   out.push(b'\xFF')
@@ -154,7 +158,7 @@ fn ii_make_jpeg_header(width : Int, height : Int, channels : Int) -> Bytes {
 
 ///|
 // 将整数的 ASCII 数字推入字节数组
-fn ii_push_ascii_int(out : Array[Byte], v : Int) -> Unit {
+fn ii_push_ascii_int(out : Array[Byte], v : Int32) -> Unit {
   for c in v.to_string() {
     out.push(c.to_int().to_byte())
   }
@@ -162,7 +166,7 @@ fn ii_push_ascii_int(out : Array[Byte], v : Int) -> Unit {
 
 ///|
 // 构造 PNM 头部 (P5/P6)
-fn ii_make_pnm_header(format : Int, width : Int, height : Int) -> Bytes {
+fn ii_make_pnm_header(format : Int32, width : Int32, height : Int32) -> Bytes {
   let out : Array[Byte] = []
   out.push(b'\x50') // 'P'
   out.push(format.to_byte()) // '5' or '6'

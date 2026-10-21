@@ -7,9 +7,9 @@
 /// 适用于光流跟踪的前置角点检测。
 pub fn good_features_to_track(
   img : @types.Image,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -181,8 +181,8 @@ pub fn good_features_to_track(
 ///|
 fn shi_tomasi_gaussian_blur(
   data : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)

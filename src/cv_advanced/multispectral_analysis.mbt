@@ -27,9 +27,9 @@ pub extend MultispectralBand with Eq::{not_equal, equal}
 /// Multispectral image.
 pub(all) struct MultispecImage {
   bands : Array[Array[Double]]
-  width : Int
-  height : Int
-  num_bands : Int
+  width : Int32
+  height : Int32
+  num_bands : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -44,7 +44,7 @@ pub extend MultispecImage with Eq::{not_equal, equal}
 pub fn multispectral_band_arithmetic(
   band1 : Array[Double],
   band2 : Array[Double],
-  op : Int,
+  op : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let min_len = if band1.length() < band2.length() {
@@ -149,11 +149,11 @@ pub fn multispectral_band_stats(
 /// Multispectral classification (simplified K-means).
 pub fn multispectral_classify(
   image : MultispecImage,
-  num_classes : Int,
-  max_iterations : Int,
-) -> Array[Int] {
+  num_classes : Int32,
+  max_iterations : Int32,
+) -> Array[Int32] {
   let n = image.width * image.height
-  let result : Array[Int] = []
+  let result : Array[Int32] = []
   let centroids : Array[Array[Double]] = []
   for k in 0..<num_classes {
     let center : Array[Double] = []
@@ -164,7 +164,7 @@ pub fn multispectral_classify(
   }
   for _ in 0..<max_iterations {
     let new_centroids : Array[Array[Double]] = []
-    let counts : Array[Int] = []
+    let counts : Array[Int32] = []
     for _ in 0..<num_classes {
       let center : Array[Double] = []
       for _ in 0..<image.num_bands {
@@ -240,7 +240,7 @@ pub fn multispectral_classify(
 /// PCA dimensionality reduction.
 pub fn multispectral_pca(
   image : MultispecImage,
-  num_components : Int,
+  num_components : Int32,
 ) -> Array[Array[Double]] {
   let result : Array[Array[Double]] = []
   let n = image.width * image.height

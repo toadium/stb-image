@@ -117,7 +117,7 @@ pub fn gen_test_file_for_all() -> Array[ExecutableTestFile] {
 ///|
 /// 统计可执行测试文件中的测试数。
 /// Count tests in an executable test file.
-pub fn ExecutableTestFile::test_count(self : ExecutableTestFile) -> Int {
+pub fn ExecutableTestFile::test_count(self : ExecutableTestFile) -> Int32 {
   self.tests.length()
 }
 

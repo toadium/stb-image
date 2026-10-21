@@ -64,7 +64,7 @@ fn log_enhance(img : @types.Image, strength : Double) -> @types.Image {
 
 ///|
 /// 简化版 Retinex 低光增强（单尺度 Retinex）
-fn retinex_enhance(img : @types.Image, sigma? : Double = 50.0) -> @types.Image {
+fn retinex_enhance(img : @types.Image, sigma~ : Double = 50.0) -> @types.Image {
   let _ = sigma
   let w = img.width
   let h = img.height
@@ -134,8 +134,8 @@ pub fn low_light_enhance(
 /// 去运动模糊（简化版维纳滤波）
 pub fn deblur_motion(
   img : @types.Image,
-  kernel_size? : Int = 15,
-  angle? : Double = 0.0,
+  kernel_size~ : Int32 = 15,
+  angle~ : Double = 0.0,
 ) -> @types.Image {
   let ks = kernel_size
   let _ = angle
@@ -190,8 +190,8 @@ pub fn deblur_motion(
 /// 色彩增强（饱和度和对比度增强）
 pub fn color_enhance(
   img : @types.Image,
-  saturation? : Double = 1.3,
-  contrast? : Double = 1.1,
+  saturation~ : Double = 1.3,
+  contrast~ : Double = 1.1,
 ) -> @types.Image {
   let sat = saturation
   let con = contrast
@@ -239,8 +239,8 @@ pub fn color_enhance(
 /// 自适应直方图均衡化（CLAHE 简化版）
 pub fn clahe_enhance(
   img : @types.Image,
-  clip_limit? : Double = 2.0,
-  tile_size? : Int = 8,
+  clip_limit~ : Double = 2.0,
+  tile_size~ : Int32 = 8,
 ) -> @types.Image {
   let clip = clip_limit
   let _ = tile_size
@@ -251,7 +251,7 @@ pub fn clahe_enhance(
   let out_data : Array[Byte] = Array::make(w * h * channels, b'\x00')
   for c in 0..<channels {
     // 计算直方图
-    let histogram : Array[Int] = []
+    let histogram : Array[Int32] = []
     for _ in 0..<256 {
       histogram.push(0)
     }
@@ -277,7 +277,7 @@ pub fn clahe_enhance(
       histogram[i] += redistribute
     }
     // 计算累积分布函数（CDF）
-    let cdf : Array[Int] = []
+    let cdf : Array[Int32] = []
     let mut cumsum = 0
     for i in 0..<256 {
       cumsum += histogram[i]

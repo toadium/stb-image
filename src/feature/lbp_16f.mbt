@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_l(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_l(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_l(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_l(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_l(data : Bytes, offset : Int) -> Float {
+fn read_float_le_l(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_l(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_l(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_l(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_l(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_l(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_l(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -46,14 +46,14 @@ fn clamp_int_l(v : Int, lo : Int, hi : Int) -> Int {
 
 ///|
 fn get_pixel_safe_16(
-  src : Array[Int],
-  x : Int,
-  y : Int,
-  c : Int,
-  ch : Int,
-  w : Int,
-  h : Int,
-) -> Int {
+  src : Array[Int32],
+  x : Int32,
+  y : Int32,
+  c : Int32,
+  ch : Int32,
+  w : Int32,
+  h : Int32,
+) -> Int32 {
   let sx = clamp_int_l(x, 0, w - 1)
   let sy = clamp_int_l(y, 0, h - 1)
   src[(sy * w + sx) * ch + c]
@@ -62,12 +62,12 @@ fn get_pixel_safe_16(
 ///|
 fn get_pixel_safe_f(
   src : Array[Float],
-  x : Int,
-  y : Int,
-  c : Int,
-  ch : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  c : Int32,
+  ch : Int32,
+  w : Int32,
+  h : Int32,
 ) -> Float {
   let sx = clamp_int_l(x, 0, w - 1)
   let sy = clamp_int_l(y, 0, h - 1)
@@ -77,7 +77,7 @@ fn get_pixel_safe_f(
 // 计算均匀 LBP 映射（跳变次数 <= 2）
 
 ///|
-fn uniform_lbp_map(lbp_val : Int) -> Int {
+fn uniform_lbp_map(lbp_val : Int32) -> Int32 {
   // 计算 0->1 和 1->0 跳变次数
   let mut transitions = 0
   let mut prev = (lbp_val >> 7) & 1
@@ -131,7 +131,7 @@ pub fn lbp_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError {
   let n = w * h
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_l(img.data, i * 2)
   }
@@ -374,7 +374,7 @@ pub fn lbp_uniform_16(
   let n = w * h
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_l(img.data, i * 2)
   }

@@ -4,9 +4,9 @@
 ///|
 /// 图像修复配置
 pub(all) struct InpaintConfig {
-  radius : Int // 修复半径
+  radius : Int32 // 修复半径
   method_type : String // "telea" / "ns"（Navier-Stokes）
-  max_iterations : Int // 最大迭代次数
+  max_iterations : Int32 // 最大迭代次数
 }
 
 ///|
@@ -21,7 +21,7 @@ pub fn inpaint_default_config() -> InpaintConfig {
 pub fn inpaint_advanced(
   img : @types.Image,
   mask : @types.Image,
-  radius? : Int = 5,
+  radius~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -87,7 +87,7 @@ pub fn inpaint_advanced(
     changed = false
     iteration += 1
     // 找到所有待修复区域的边界像素
-    let boundary : Array[(Int, Int)] = []
+    let boundary : Array[(Int32, Int32)] = []
     for y in 0..<h {
       for x in 0..<w {
         if to_inpaint[y * w + x] {
@@ -181,12 +181,12 @@ pub fn inpaint_advanced(
 ///|
 /// 创建矩形修复掩码
 pub fn create_rect_mask(
-  width : Int,
-  height : Int,
-  x : Int,
-  y : Int,
-  rect_w : Int,
-  rect_h : Int,
+  width : Int32,
+  height : Int32,
+  x : Int32,
+  y : Int32,
+  rect_w : Int32,
+  rect_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if width <= 0 || height <= 0 {
@@ -230,7 +230,7 @@ pub fn create_rect_mask(
 /// 去除图像中的小物体（基于连通域分析）
 pub fn remove_small_objects(
   img : @types.Image,
-  max_size? : Int = 100,
+  max_size~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -264,7 +264,7 @@ pub fn remove_small_objects(
   let channels = img.channels
   let data = img.data
   // 转换为灰度
-  let gray : Array[Int] = []
+  let gray : Array[Int32] = []
   for i in 0..<(w * h) {
     let idx = i * channels
     let r = data[idx].to_int()
@@ -275,14 +275,14 @@ pub fn remove_small_objects(
     )
   }
   // 连通域分析（洪水填充）
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
-  let sizes : Array[Int] = []
+  let sizes : Array[Int32] = []
   for y in 0..<h {
     for x in 0..<w {
       if gray[y * w + x] > 128 && labels[y * w + x] == 0 {
         // 洪水填充
-        let stack : Array[(Int, Int)] = []
+        let stack : Array[(Int32, Int32)] = []
         stack.push((x, y))
         labels[y * w + x] = next_label
         let mut size = 0
@@ -344,10 +344,10 @@ pub fn remove_small_objects(
 /// 将指定区域的像素用周围像素填充
 pub fn remove_watermark(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

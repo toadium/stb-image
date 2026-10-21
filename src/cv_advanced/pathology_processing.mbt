@@ -24,11 +24,11 @@ pub extend PathologyStain with Eq::{not_equal, equal}
 /// WSI 配置。
 /// WSI configuration.
 pub(all) struct WSIConfig {
-  tile_size : Int
-  overlap : Int
-  levels : Int
-  width : Int
-  height : Int
+  tile_size : Int32
+  overlap : Int32
+  levels : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -43,8 +43,8 @@ pub extend WSIConfig with Eq::{not_equal, equal}
 pub(all) struct StainSeparation {
   stain1 : Array[Double]
   stain2 : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -58,8 +58,8 @@ pub extend StainSeparation with Eq::{not_equal, equal}
 /// WSI tile extraction.
 pub fn pathology_wsi_extract_tiles(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : WSIConfig,
 ) -> Array[Array[Double]] {
   let tiles : Array[Array[Double]] = []
@@ -136,8 +136,8 @@ pub fn pathology_wsi_stitch_tiles(
 /// Stain normalization (simplified Macenko method).
 pub fn pathology_stain_normalize(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   target_stain : PathologyStain,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -167,8 +167,8 @@ pub fn pathology_stain_normalize(
 /// Stain separation (simplified Ruifrok-Johnston).
 pub fn pathology_stain_separation(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> StainSeparation {
   let stain1 : Array[Double] = []
   let stain2 : Array[Double] = []
@@ -188,11 +188,11 @@ pub fn pathology_stain_separation(
 /// Cell nucleus detection (simplified threshold + morphology).
 pub fn pathology_detect_nuclei(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   threshold : Double,
-) -> Array[Int] {
-  let nuclei_positions : Array[Int] = []
+) -> Array[Int32] {
+  let nuclei_positions : Array[Int32] = []
   for y in 1..<(height - 1) {
     for x in 1..<(width - 1) {
       let idx = y * width + x
@@ -223,10 +223,10 @@ pub fn pathology_detect_nuclei(
 /// 有丝分裂计数。
 /// Mitosis counting.
 pub fn pathology_count_mitosis(
-  nuclei_positions : Array[Int],
-  width : Int,
-  min_distance : Int,
-) -> Int {
+  nuclei_positions : Array[Int32],
+  width : Int32,
+  min_distance : Int32,
+) -> Int32 {
   let mut count = 0
   let used : Array[Bool] = []
   for _ in 0..<nuclei_positions.length() {
@@ -266,16 +266,16 @@ pub fn pathology_count_mitosis(
 /// Tissue segmentation (simplified K-means).
 pub fn pathology_segment_tissue(
   image : Array[Double],
-  num_clusters : Int,
-) -> Array[Int] {
-  let result : Array[Int] = []
+  num_clusters : Int32,
+) -> Array[Int32] {
+  let result : Array[Int32] = []
   let centroids : Array[Double] = []
   for k in 0..<num_clusters {
     centroids.push(k.to_double() / num_clusters.to_double())
   }
   for _ in 0..<10 {
     let new_centroids : Array[Double] = []
-    let counts : Array[Int] = []
+    let counts : Array[Int32] = []
     for _ in 0..<num_clusters {
       new_centroids.push(0.0)
       counts.push(0)

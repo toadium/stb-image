@@ -1,7 +1,7 @@
 // pixel_ops 测试：threshold / posterize / extract_channel / blend_*
 
 ///|
-fn make_img(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+fn make_img(w : Int32, h : Int32, ch : Int32, v : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

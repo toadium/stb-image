@@ -2,7 +2,7 @@
 // 覆盖 decode_tiff_pure 的各种错误分支
 
 ///|
-fn make_tiff_header_le(out : Array[Byte], ifd_offset : Int) -> Unit {
+fn make_tiff_header_le(out : Array[Byte], ifd_offset : Int32) -> Unit {
   out.push(b'\x49')
   out.push(b'\x49')
   out.push(b'\x2A')
@@ -16,10 +16,10 @@ fn make_tiff_header_le(out : Array[Byte], ifd_offset : Int) -> Unit {
 ///|
 fn write_le_entry(
   out : Array[Byte],
-  tag : Int,
-  type_id : Int,
-  count : Int,
-  value : Int,
+  tag : Int32,
+  type_id : Int32,
+  count : Int32,
+  value : Int32,
 ) -> Unit {
   out.push((tag & 0xFF).to_byte())
   out.push(((tag >> 8) & 0xFF).to_byte())
@@ -205,10 +205,10 @@ test "decode_tiff_pure: big-endian RGB roundtrip" {
   out.push(b'\x08')
   let pixel_offset = 8 + 2 + 8 * 12 + 4
   let write_be = fn(
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     out.push(((tag >> 8) & 0xFF).to_byte())
     out.push((tag & 0xFF).to_byte())

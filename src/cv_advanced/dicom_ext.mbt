@@ -32,8 +32,8 @@ pub extend DicomVR with Eq::{not_equal, equal}
 /// DICOM 标签。
 /// DICOM tag.
 pub(all) struct DicomTag {
-  group : Int
-  element : Int
+  group : Int32
+  element : Int32
   vr : DicomVR
   value : String
 } derive(Eq, @debug.Debug)
@@ -53,9 +53,9 @@ pub(all) struct DicomMetadata {
   series_id : String
   instance_id : String
   modality : String
-  rows : Int
-  cols : Int
-  bits_allocated : Int
+  rows : Int32
+  cols : Int32
+  bits_allocated : Int32
   window_center : Double
   window_width : Double
 } derive(Eq, @debug.Debug)
@@ -72,7 +72,7 @@ pub extend DicomMetadata with Eq::{not_equal, equal}
 pub(all) struct DicomImage {
   metadata : DicomMetadata
   pixel_data : Array[Double]
-  num_frames : Int
+  num_frames : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -90,9 +90,9 @@ pub fn parse_dicom_metadata(
   series_id : String,
   instance_id : String,
   modality : String,
-  rows : Int,
-  cols : Int,
-  bits_allocated : Int,
+  rows : Int32,
+  cols : Int32,
+  bits_allocated : Int32,
 ) -> DicomMetadata {
   DicomMetadata::{
     patient_id,
@@ -112,9 +112,9 @@ pub fn parse_dicom_metadata(
 /// 提取 DICOM 像素数据。
 /// Extract DICOM pixel data.
 pub fn extract_dicom_pixels(
-  raw_data : Array[Int],
-  rows : Int,
-  cols : Int,
+  raw_data : Array[Int32],
+  rows : Int32,
+  cols : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let n = rows * cols
@@ -172,7 +172,7 @@ pub fn dicom_to_image(dicom : DicomImage) -> Array[Double] {
 /// DICOM multiframe extract.
 pub fn dicom_multiframe_extract(
   dicom : DicomImage,
-  frame_idx : Int,
+  frame_idx : Int32,
 ) -> Array[Double] {
   if frame_idx < 0 || frame_idx >= dicom.num_frames {
     return []

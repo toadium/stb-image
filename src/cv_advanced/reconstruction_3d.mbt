@@ -52,9 +52,9 @@ pub extend MedMesh3D with Eq::{not_equal, equal}
 /// Marching Cubes algorithm (simplified).
 pub fn recon_marching_cubes(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   isovalue : Double,
 ) -> MedMesh3D {
   let vertices : Array[MedPoint3D] = []
@@ -131,9 +131,9 @@ pub fn recon_marching_cubes(
 /// Maximum intensity projection.
 pub fn recon_mip(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for y in 0..<height {
@@ -161,9 +161,9 @@ pub fn recon_mip(
 /// Volume rendering (simplified accumulation).
 pub fn recon_volume_render(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   opacity : Double,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -191,8 +191,8 @@ pub fn recon_volume_render(
 pub fn recon_surface_extract(
   volume : Array[Double],
   threshold : Double,
-) -> Array[Int] {
-  let result : Array[Int] = []
+) -> Array[Int32] {
+  let result : Array[Int32] = []
   for i in 0..<volume.length() {
     if volume[i] > threshold {
       result.push(1)
@@ -245,7 +245,7 @@ pub fn recon_compute_volume(mesh : MedMesh3D) -> Double {
 /// Simplify mesh (vertex merging).
 pub fn recon_simplify_mesh(mesh : MedMesh3D, tolerance : Double) -> MedMesh3D {
   let new_vertices : Array[MedPoint3D] = []
-  let old_to_new : Array[Int] = []
+  let old_to_new : Array[Int32] = []
   for i in 0..<mesh.vertices.length() {
     let v = mesh.vertices[i]
     let mut found = -1

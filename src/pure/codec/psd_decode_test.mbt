@@ -4,13 +4,13 @@
 // 规范: Adobe Photoshop PSD File Format + stb_image.h:6126-6280 stbi__psd_load
 
 ///|
-fn push_be16(arr : Array[Byte], v : Int) -> Unit {
+fn push_be16(arr : Array[Byte], v : Int32) -> Unit {
   arr.push(((v >> 8) & 0xFF).to_byte())
   arr.push((v & 0xFF).to_byte())
 }
 
 ///|
-fn push_be32(arr : Array[Byte], v : Int) -> Unit {
+fn push_be32(arr : Array[Byte], v : Int32) -> Unit {
   arr.push(((v >> 24) & 0xFF).to_byte())
   arr.push(((v >> 16) & 0xFF).to_byte())
   arr.push(((v >> 8) & 0xFF).to_byte())
@@ -21,11 +21,11 @@ fn push_be32(arr : Array[Byte], v : Int) -> Unit {
 /// 构造 PSD header（26 字节）+ 3 个空段（color mode / image resources / layer and mask）
 /// 不含 image data，由调用方追加 compression + 像素数据
 fn make_psd_header_and_empty_sections(
-  channel_count : Int,
-  h : Int,
-  w : Int,
-  bitdepth : Int,
-  color_mode : Int,
+  channel_count : Int32,
+  h : Int32,
+  w : Int32,
+  bitdepth : Int32,
+  color_mode : Int32,
 ) -> Array[Byte] {
   let out : Array[Byte] = []
   // signature "8BPS"

@@ -11,10 +11,10 @@
 /// 直接在 Bytes 上操作，减少 O(n) 内存拷贝和重复浮点运算。
 pub fn resize_pure(
   img : @types.Image,
-  out_w : Int,
-  out_h : Int,
-  filter? : @types.ResizeFilter = @types.ResizeFilter::Default,
-  edge? : @types.ResizeEdge = @types.ResizeEdge::Clamp,
+  out_w : Int32,
+  out_h : Int32,
+  filter~ : @types.ResizeFilter = @types.ResizeFilter::Default,
+  edge~ : @types.ResizeEdge = @types.ResizeEdge::Clamp,
 ) -> @types.Image raise @types.LoadError {
   let _ = edge
   if out_w <= 0 || out_h <= 0 {
@@ -33,12 +33,12 @@ pub fn resize_pure(
   let h_minus_1 = h - 1
   let out : Array[Byte] = Array::make(out_w * out_h * ch, b'\x00')
   if use_nearest {
-    let sx_xi : Array[Int] = Array::make(out_w, 0)
+    let sx_xi : Array[Int32] = Array::make(out_w, 0)
     for dx in 0..<out_w {
       let sx = (Float::from_int(dx) + 0.5F) * scale_x - 0.5F
       sx_xi[dx] = (sx + 0.5F).to_int().clamp(min=0, max=w_minus_1)
     }
-    let sy_yi : Array[Int] = Array::make(out_h, 0)
+    let sy_yi : Array[Int32] = Array::make(out_h, 0)
     for dy in 0..<out_h {
       let sy = (Float::from_int(dy) + 0.5F) * scale_y - 0.5F
       sy_yi[dy] = (sy + 0.5F).to_int().clamp(min=0, max=h_minus_1)
@@ -55,8 +55,8 @@ pub fn resize_pure(
       }
     }
   } else {
-    let sx_x0c : Array[Int] = Array::make(out_w, 0)
-    let sx_x1 : Array[Int] = Array::make(out_w, 0)
+    let sx_x0c : Array[Int32] = Array::make(out_w, 0)
+    let sx_x1 : Array[Int32] = Array::make(out_w, 0)
     let sx_fx : Array[Float] = Array::make(out_w, 0.0F)
     for dx in 0..<out_w {
       let sx = (Float::from_int(dx) + 0.5F) * scale_x - 0.5F
@@ -65,8 +65,8 @@ pub fn resize_pure(
       sx_x1[dx] = (x0 + 1).clamp(min=0, max=w_minus_1)
       sx_fx[dx] = sx - Float::from_int(x0)
     }
-    let sy_y0c : Array[Int] = Array::make(out_h, 0)
-    let sy_y1 : Array[Int] = Array::make(out_h, 0)
+    let sy_y0c : Array[Int32] = Array::make(out_h, 0)
+    let sy_y1 : Array[Int32] = Array::make(out_h, 0)
     let sy_fy : Array[Float] = Array::make(out_h, 0.0F)
     for dy in 0..<out_h {
       let sy = (Float::from_int(dy) + 0.5F) * scale_y - 0.5F

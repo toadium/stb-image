@@ -49,10 +49,10 @@ pub extend VideoFrameType with Eq::{not_equal, equal}
 /// 视频帧
 pub(all) struct VideoFrame {
   frame_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  frame_index : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  frame_index : Int32
   timestamp_ms : Double
   frame_type : VideoFrameType
   quality_score : Double
@@ -63,14 +63,14 @@ pub(all) struct VideoFrame {
 /// 视频流
 pub(all) struct VideoStream {
   frames : Array[VideoFrame]
-  num_frames : Int
-  width : Int
-  height : Int
+  num_frames : Int32
+  width : Int32
+  height : Int32
   fps : Double
   duration_ms : Double
   codec : VideoCodecType
   bitrate_kbps : Double
-  num_channels : Int
+  num_channels : Int32
   color_space : String
 }
 
@@ -78,12 +78,12 @@ pub(all) struct VideoStream {
 /// 视频编码结果
 pub(all) struct VideoEncodingResult {
   encoded_data : Array[Byte]
-  encoded_size_bytes : Int
-  original_size_bytes : Int
+  encoded_size_bytes : Int32
+  original_size_bytes : Int32
   compression_ratio : Double
   bitrate_kbps : Double
   codec : VideoCodecType
-  num_frames : Int
+  num_frames : Int32
   encoding_time_ms : Double
   quality_psnr : Double
   quality_ssim : Double
@@ -93,9 +93,9 @@ pub(all) struct VideoEncodingResult {
 /// 视频解码结果
 pub(all) struct VideoDecodingResult {
   decoded_frames : Array[VideoFrame]
-  num_frames : Int
-  width : Int
-  height : Int
+  num_frames : Int32
+  width : Int32
+  height : Int32
   fps : Double
   duration_ms : Double
   decoding_time_ms : Double
@@ -107,7 +107,7 @@ pub(all) struct VideoDecodingResult {
 /// 视频增强结果
 pub(all) struct VideoEnhancementResult {
   enhanced_frames : Array[VideoFrame]
-  num_frames : Int
+  num_frames : Int32
   enhancement_method : String
   brightness_improvement : Double
   contrast_improvement : Double
@@ -121,10 +121,10 @@ pub(all) struct VideoEnhancementResult {
 /// 视频超分辨率结果
 pub(all) struct VideoSuperResolutionResult {
   sr_frames : Array[VideoFrame]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
@@ -136,7 +136,7 @@ pub(all) struct VideoSuperResolutionResult {
 /// 视频稳定结果
 pub(all) struct VideoStabilizationResult {
   stabilized_frames : Array[VideoFrame]
-  num_frames : Int
+  num_frames : Int32
   stabilization_method : String
   cropping_ratio : Double
   smoothness_score : Double
@@ -149,11 +149,11 @@ pub(all) struct VideoStabilizationResult {
 /// 视频摘要结果
 pub(all) struct VideoSummarizationResult {
   keyframes : Array[VideoFrame]
-  num_keyframes : Int
+  num_keyframes : Int32
   summary_duration_ms : Double
   original_duration_ms : Double
   compression_ratio : Double
-  keyframe_indices : Array[Int]
+  keyframe_indices : Array[Int32]
   importance_scores : Array[Double]
   summarization_method : String
 }
@@ -165,9 +165,9 @@ pub(all) struct VideoProcessingConfig {
   codec : VideoCodecType
   target_fps : Double
   target_bitrate_kbps : Double
-  target_width : Int
-  target_height : Int
-  quality : Int
+  target_width : Int32
+  target_height : Int32
+  quality : Int32
   use_gpu : Bool
   use_hardware_acceleration : Bool
   denoise_strength : Double
@@ -179,7 +179,7 @@ pub(all) struct VideoProcessingConfig {
   sr_scale_factor : Double
   sr_method : String
   keyframe_detection_threshold : Double
-  max_keyframes : Int
+  max_keyframes : Int32
 }
 
 ///|
@@ -368,7 +368,7 @@ pub fn summarize_video(
   config : VideoProcessingConfig,
 ) -> VideoSummarizationResult {
   let keyframes : Array[VideoFrame] = []
-  let keyframe_indices : Array[Int] = []
+  let keyframe_indices : Array[Int32] = []
   let importance_scores : Array[Double] = []
 
   let mut state = 42

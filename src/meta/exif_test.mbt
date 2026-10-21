@@ -44,7 +44,7 @@ test "ExifInfo: default values" {
 fn build_exif_be_jpeg(
   make : String,
   model : String,
-  orientation : Int,
+  orientation : Int32,
   date_time : String,
 ) -> Bytes {
   // EXIF IFD entries: Make(0x010F), Model(0x0110), Orientation(0x0112), DateTime(0x0132)
@@ -63,7 +63,7 @@ fn build_exif_be_jpeg(
   let mut str_offset = string_area_offset
   let str_data : Array[Byte] = []
   // Helper: push a string as ASCII + null terminator
-  fn push_str(s : String) -> Int {
+  fn push_str(s : String) -> Int32 {
     let start = str_offset
     for c in s.to_array() {
       str_data.push(c.to_int().to_byte())
@@ -187,14 +187,14 @@ fn build_exif_be_jpeg(
 fn build_exif_le_jpeg(
   make : String,
   model : String,
-  orientation : Int,
+  orientation : Int32,
 ) -> Bytes {
   let entries : Array[Byte] = []
   // String data area: after TIFF header (8) + IFD0 (2 + 3*12 + 4 = 42) = 50 from TIFF start
   let string_area_offset = 50
   let mut str_offset = string_area_offset
   let str_data : Array[Byte] = []
-  fn push_str(s : String) -> Int {
+  fn push_str(s : String) -> Int32 {
     let start = str_offset
     for c in s.to_array() {
       str_data.push(c.to_int().to_byte())

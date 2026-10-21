@@ -1,0 +1,7 @@
+import {
+  "walkzzz/image-core/types",
+  "walkzzz/image-process/color",
+  "walkzzz/image-process/transform",
+}
+
+pkgtype(kind: "executable")

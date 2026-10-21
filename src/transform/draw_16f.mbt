@@ -4,13 +4,13 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn write_u16_le_draw(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_draw(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn write_f32_le_draw(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_draw(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -19,7 +19,7 @@ fn write_f32_le_draw(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_draw(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_draw(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -32,11 +32,11 @@ fn clamp_int_draw(v : Int, lo : Int, hi : Int) -> Int {
 ///|
 fn set_pixel_16(
   buf : Array[Byte],
-  x : Int,
-  y : Int,
-  w : Int,
-  ch : Int,
-  color : Array[Int],
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  ch : Int32,
+  color : Array[Int32],
 ) -> Unit {
   if x < 0 || x >= w || y < 0 {
     return
@@ -52,10 +52,10 @@ fn set_pixel_16(
 ///|
 fn set_pixel_f(
   buf : Array[Byte],
-  x : Int,
-  y : Int,
-  w : Int,
-  ch : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  ch : Int32,
   color : Array[Float],
 ) -> Unit {
   if x < 0 || x >= w || y < 0 {
@@ -75,12 +75,12 @@ fn set_pixel_f(
 /// 16-bit 绘制直线。
 pub fn draw_line_16(
   img : @types.Image16,
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
-  color : Array[Int],
-  thickness? : Int = 1,
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
+  color : Array[Int32],
+  thickness~ : Int32 = 1,
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -128,13 +128,13 @@ pub fn draw_line_16(
 /// 16-bit 绘制矩形。
 pub fn draw_rectangle_16(
   img : @types.Image16,
-  x : Int,
-  y : Int,
-  rw : Int,
-  rh : Int,
-  color : Array[Int],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  x : Int32,
+  y : Int32,
+  rw : Int32,
+  rh : Int32,
+  color : Array[Int32],
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -173,12 +173,12 @@ pub fn draw_rectangle_16(
 /// 16-bit 绘制圆形。
 pub fn draw_circle_16(
   img : @types.Image16,
-  cx : Int,
-  cy : Int,
-  r : Int,
-  color : Array[Int],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  cx : Int32,
+  cy : Int32,
+  r : Int32,
+  color : Array[Int32],
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -230,9 +230,9 @@ pub fn draw_circle_16(
 /// 16-bit 绘制多边形。
 pub fn draw_polygon_16(
   img : @types.Image16,
-  points : Array[(Int, Int)],
-  color : Array[Int],
-  thickness? : Int = 1,
+  points : Array[(Int32, Int32)],
+  color : Array[Int32],
+  thickness~ : Int32 = 1,
 ) -> @types.Image16 {
   let mut result = img
   let n = points.length()
@@ -253,12 +253,12 @@ pub fn draw_polygon_16(
 /// float 绘制直线。
 pub fn draw_line_f(
   img : @types.ImageF,
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
   color : Array[Float],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -306,13 +306,13 @@ pub fn draw_line_f(
 /// float 绘制矩形。
 pub fn draw_rectangle_f(
   img : @types.ImageF,
-  x : Int,
-  y : Int,
-  rw : Int,
-  rh : Int,
+  x : Int32,
+  y : Int32,
+  rw : Int32,
+  rh : Int32,
   color : Array[Float],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -351,12 +351,12 @@ pub fn draw_rectangle_f(
 /// float 绘制圆形。
 pub fn draw_circle_f(
   img : @types.ImageF,
-  cx : Int,
-  cy : Int,
-  r : Int,
+  cx : Int32,
+  cy : Int32,
+  r : Int32,
   color : Array[Float],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -408,9 +408,9 @@ pub fn draw_circle_f(
 /// float 绘制多边形。
 pub fn draw_polygon_f(
   img : @types.ImageF,
-  points : Array[(Int, Int)],
+  points : Array[(Int32, Int32)],
   color : Array[Float],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.ImageF {
   let mut result = img
   let n = points.length()

@@ -66,7 +66,7 @@ pub fn ortho_correct(
 /// Image mosaicking.
 pub fn ortho_mosaic(
   images : Array[Array[Array[Double]]],
-  offsets : Array[(Int, Int)],
+  offsets : Array[(Int32, Int32)],
 ) -> Array[Array[Double]] {
   if images.length() == 0 {
     return []
@@ -178,7 +178,7 @@ pub fn ortho_color_balance(
 /// Wallis filter dodging.
 pub fn ortho_wallis_dodging(
   image : Array[Array[Double]],
-  window_size : Int,
+  window_size : Int32,
   target_mean : Double,
   target_var : Double,
 ) -> Array[Array[Double]] {
@@ -229,9 +229,9 @@ pub fn ortho_wallis_dodging(
 /// 生成简单拼接线（重叠区域中线）。
 /// Generate simple seamline (center line of overlap).
 pub fn ortho_seamline(
-  overlap_width : Int,
-  overlap_height : Int,
-) -> Array[(Int, Int)] {
+  overlap_width : Int32,
+  overlap_height : Int32,
+) -> Array[(Int32, Int32)] {
   let result = Array::make(overlap_height, (0, 0))
   for row in 0..<overlap_height {
     result[row] = (row, overlap_width / 2)

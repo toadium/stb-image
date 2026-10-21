@@ -6,11 +6,11 @@ import {
 }
 
 // Values
-pub fn adaptive_threshold_ocr(@types.Image, block_size? : Int, c? : Int) -> @types.Image raise @types.LoadError
+pub fn adaptive_threshold_ocr(@types.Image, block_size? : Int32, c? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn advanced_chinese_ocr_default_config() -> AdvancedChineseOcrConfig
 
-pub fn analyze_complex_layout(Array[TextBlock], Int, Int) -> ComplexLayoutAnalysis
+pub fn analyze_complex_layout(Array[TextBlock], Int32, Int32) -> ComplexLayoutAnalysis
 
 pub fn analyze_document_layout(@types.Image) -> DocumentStructure raise @types.LoadError
 
@@ -18,9 +18,9 @@ pub fn analyze_layout_enhanced(@types.Image, config? : DocumentUnderstandingEnha
 
 pub fn analyze_layout_scan(@types.Image) -> Array[TextBlock] raise @types.LoadError
 
-pub fn analyze_markdown_element_distribution(MarkdownDocument) -> Array[(String, Int)]
+pub fn analyze_markdown_element_distribution(MarkdownDocument) -> Array[(String, Int32)]
 
-pub fn analyze_table_results(Array[EnhancedTableResult]) -> Array[(String, Int)]
+pub fn analyze_table_results(Array[EnhancedTableResult]) -> Array[(String, Int32)]
 
 pub fn analyze_table_structure(Array[TableLine], Array[TableLine]) -> TableStructure raise @types.LoadError
 
@@ -36,7 +36,7 @@ pub fn augment_random_scale(DLTrainingSample, Double) -> DLTrainingSample
 
 pub fn augment_random_shift(DLTrainingSample, Double) -> DLTrainingSample
 
-pub fn background_normalization(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
+pub fn background_normalization(@types.Image, kernel_size? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn batch_correct_texts(Array[String], context_type? : String) -> Array[CorrectionResult] raise @types.LoadError
 
@@ -48,21 +48,21 @@ pub fn batch_summary_to_string(BatchResultSummary) -> String
 
 pub fn build_document_structure_tree(Array[DocumentBlock]) -> Array[DocumentTreeNode]
 
-pub fn build_enhanced_elements(Array[TextLineAttributes], Int, Int) -> EnhancedDocument raise @types.LoadError
+pub fn build_enhanced_elements(Array[TextLineAttributes], Int32, Int32) -> EnhancedDocument raise @types.LoadError
 
-pub fn build_gaussian_kernel_lut(Double, Int) -> Array[Double] raise @types.LoadError
+pub fn build_gaussian_kernel_lut(Double, Int32) -> Array[Double] raise @types.LoadError
 
-pub fn build_grayscale_lut() -> Array[Int]
+pub fn build_grayscale_lut() -> Array[Int32]
 
 pub fn build_markdown_document(OCRPageResult, title? : String) -> MarkdownDocument raise @types.LoadError
 
-pub fn build_threshold_lut(Int) -> Array[Int]
+pub fn build_threshold_lut(Int32) -> Array[Int32]
 
-pub fn cache_friendly_horizontal_projection(@types.Image) -> Array[Int] raise @types.LoadError
+pub fn cache_friendly_horizontal_projection(@types.Image) -> Array[Int32] raise @types.LoadError
 
-pub fn cache_friendly_vertical_projection(@types.Image) -> Array[Int] raise @types.LoadError
+pub fn cache_friendly_vertical_projection(@types.Image) -> Array[Int32] raise @types.LoadError
 
-pub fn calculate_accuracy(Array[Int], Array[Int]) -> Double
+pub fn calculate_accuracy(Array[Int32], Array[Int32]) -> Double
 
 pub fn calculate_accuracy_improvement(Array[CorrectionResult], Array[String]) -> (Double, Double, Double)
 
@@ -74,9 +74,9 @@ pub fn calculate_char_accuracy(String, String) -> Double
 
 pub fn calculate_chinese_similarity(DictCharEntry, DictCharEntry) -> Double
 
-pub fn calculate_edit_distance(String, String) -> Int
+pub fn calculate_edit_distance(String, String) -> Int32
 
-pub fn calculate_learning_rate(LRSchedulerConfig, Int, Double, Double) -> Double raise @types.LoadError
+pub fn calculate_learning_rate(LRSchedulerConfig, Int32, Double, Double) -> Double raise @types.LoadError
 
 pub fn calculate_word_accuracy(String, String) -> Double
 
@@ -94,7 +94,7 @@ pub fn chinese_ocr_default_config() -> ChineseOcrConfig
 
 pub fn classify_markdown_element(TextBlock, avg_font_size? : Double) -> MarkdownElementType
 
-pub fn cnn_confusion_matrix(Array[DLTrainingSample], DLCnnModelConfig, Array[String]) -> Array[Array[Int]] raise @types.LoadError
+pub fn cnn_confusion_matrix(Array[DLTrainingSample], DLCnnModelConfig, Array[String]) -> Array[Array[Int32]] raise @types.LoadError
 
 pub fn cnn_infer(Array[Double], DLCnnModelConfig, Array[String]) -> DLInferenceResult
 
@@ -104,25 +104,25 @@ pub fn cnn_recognize_digits(@types.Image, DLCnnModelConfig) -> DLInferenceResult
 
 pub fn cnn_recognize_letters(@types.Image, DLCnnModelConfig) -> DLInferenceResult raise @types.LoadError
 
-pub fn cnn_train(Array[DLTrainingSample], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double, Int) -> (Array[Double], Array[Double], Array[Double], Array[Double], Array[DLTrainingHistory]) raise @types.LoadError
+pub fn cnn_train(Array[DLTrainingSample], Array[Double], Array[Double], Array[Double], Array[Double], Int32, Int32, Int32, Int32, Int32, Int32, Double, Int32) -> (Array[Double], Array[Double], Array[Double], Array[Double], Array[DLTrainingHistory]) raise @types.LoadError
 
-pub fn cnn_train_step(Array[Double], Int, Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int, Double) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError
+pub fn cnn_train_step(Array[Double], Int32, Array[Double], Array[Double], Array[Double], Array[Double], Int32, Int32, Int32, Int32, Int32, Int32, Double) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError
 
 pub fn combined_features(@types.Image) -> Array[Double] raise @types.LoadError
 
-pub fn complete_char_segmentation(@types.Image, min_char_width? : Int, max_char_width? : Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
+pub fn complete_char_segmentation(@types.Image, min_char_width? : Int32, max_char_width? : Int32) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn compute_confusion_matrix(Array[Int], Array[Int], Int) -> Array[Array[Int]]
+pub fn compute_confusion_matrix(Array[Int32], Array[Int32], Int32) -> Array[Array[Int32]]
 
 pub fn compute_distance(Array[Double], Array[Double], DistanceMetric) -> Double raise @types.LoadError
 
-pub fn compute_per_class_accuracy(Array[Array[Int]]) -> Array[Double]
+pub fn compute_per_class_accuracy(Array[Array[Int32]]) -> Array[Double]
 
-pub fn compute_reading_order(Array[DocumentElement]) -> Array[Int] raise @types.LoadError
+pub fn compute_reading_order(Array[DocumentElement]) -> Array[Int32] raise @types.LoadError
 
-pub fn connected_components_analysis(@types.Image, connectivity? : Int) -> OcrConnectedComponentsResult raise @types.LoadError
+pub fn connected_components_analysis(@types.Image, connectivity? : Int32) -> OcrConnectedComponentsResult raise @types.LoadError
 
-pub fn conv2d(Array[Double], Int, Int, Int, Array[Double], Int, Int, Int, Int) -> Array[Double] raise @types.LoadError
+pub fn conv2d(Array[Double], Int32, Int32, Int32, Array[Double], Int32, Int32, Int32, Int32) -> Array[Double] raise @types.LoadError
 
 pub fn correct_common_patterns(String) -> CorrectionResult
 
@@ -136,13 +136,13 @@ pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn create_batch_tasks(Array[String], String, String) -> Array[BatchTask] raise @types.LoadError
 
-pub fn create_data_loader(Array[DLTrainingSample], Int, Bool) -> DataLoader raise @types.LoadError
+pub fn create_data_loader(Array[DLTrainingSample], Int32, Bool) -> DataLoader raise @types.LoadError
 
 pub fn create_default_api_server_config() -> ApiServerConfig
 
 pub fn create_default_batch_config() -> BatchOcrConfig
 
-pub fn create_default_char_cnn_config(Int) -> DLCnnModelConfig
+pub fn create_default_char_cnn_config(Int32) -> DLCnnModelConfig
 
 pub fn create_default_chinese_dictionary() -> DictChineseDict
 
@@ -158,105 +158,105 @@ pub fn create_default_model_package_config() -> ModelPackageConfig
 
 pub fn create_default_training_config() -> TrainingConfig
 
-pub fn create_feature_extractor(String, Int) -> DLFeatureExtractor
+pub fn create_feature_extractor(String, Int32) -> DLFeatureExtractor
 
 pub fn create_handwriting_template(String, HandwritingStyle, Array[@types.Image]) -> HandwritingTemplate raise @types.LoadError
 
-pub fn create_neural_layer(DLLayerType, String, Array[Int]) -> DLNeuralLayer
+pub fn create_neural_layer(DLLayerType, String, Array[Int32]) -> DLNeuralLayer
 
-pub fn create_training_history(Int, Double, Double, Double, Double, Double, Double) -> DLTrainingHistory
+pub fn create_training_history(Int32, Double, Double, Double, Double, Double, Double) -> DLTrainingHistory
 
-pub fn create_training_sample(@types.Image, Int, String) -> DLTrainingSample raise @types.LoadError
+pub fn create_training_sample(@types.Image, Int32, String) -> DLTrainingSample raise @types.LoadError
 
 pub fn create_training_state() -> TrainingState
 
-pub fn cross_entropy_loss(Array[Double], Int) -> Double
+pub fn cross_entropy_loss(Array[Double], Int32) -> Double
 
 pub fn dataset_add_sample(TrainingDataset, Array[Double], String) -> TrainingDataset
 
 pub fn dataset_create() -> TrainingDataset
 
-pub fn dataset_stats(TrainingDataset) -> (Int, Int, Array[(String, Int)])
+pub fn dataset_stats(TrainingDataset) -> (Int32, Int32, Array[(String, Int32)])
 
 pub fn decompose_chinese_char(String) -> ChineseCharStructure raise @types.LoadError
 
-pub fn dense_backward(Array[Double], Array[Double], Int, Int) -> (Array[Double], Array[Double], Array[Double])
+pub fn dense_backward(Array[Double], Array[Double], Int32, Int32) -> (Array[Double], Array[Double], Array[Double])
 
-pub fn dense_forward(Array[Double], Array[Double], Array[Double], Int, Int, String) -> Array[Double]
+pub fn dense_forward(Array[Double], Array[Double], Array[Double], Int32, Int32, String) -> Array[Double]
 
 pub fn deskew(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn detect_char_language(@types.Image) -> LanguageType raise @types.LoadError
 
-pub fn detect_column_boundaries(Array[TextLineAttributes], Int, LayoutType) -> Array[Int]
+pub fn detect_column_boundaries(Array[TextLineAttributes], Int32, LayoutType) -> Array[Int32]
 
-pub fn detect_columns(@types.Image) -> (Int, Array[(Int, Int)]) raise @types.LoadError
+pub fn detect_columns(@types.Image) -> (Int32, Array[(Int32, Int32)]) raise @types.LoadError
 
 pub fn detect_distortions(@types.Image) -> Array[DistortionDetectionResult] raise @types.LoadError
 
-pub fn detect_document_columns(@types.Image) -> Int raise @types.LoadError
+pub fn detect_document_columns(@types.Image) -> Int32 raise @types.LoadError
 
 pub fn detect_document_language(@types.Image) -> LanguageType raise @types.LoadError
 
 pub fn detect_handwriting_slant(@types.Image) -> Double raise @types.LoadError
 
-pub fn detect_header_footer(Array[TextLineAttributes], Int) -> (Int, Int) raise @types.LoadError
+pub fn detect_header_footer(Array[TextLineAttributes], Int32) -> (Int32, Int32) raise @types.LoadError
 
-pub fn detect_horizontal_lines(@types.Image, min_length? : Int, max_gap? : Int) -> Array[TableLine] raise @types.LoadError
+pub fn detect_horizontal_lines(@types.Image, min_length? : Int32, max_gap? : Int32) -> Array[TableLine] raise @types.LoadError
 
-pub fn detect_horizontal_table_lines(@types.Image, min_length? : Int, max_gap? : Int) -> Array[(Int, Int, Int)] raise @types.LoadError
+pub fn detect_horizontal_table_lines(@types.Image, min_length? : Int32, max_gap? : Int32) -> Array[(Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn detect_image_regions_markdown(@types.Image, min_area? : Int) -> Array[MarkdownImage] raise @types.LoadError
+pub fn detect_image_regions_markdown(@types.Image, min_area? : Int32) -> Array[MarkdownImage] raise @types.LoadError
 
 pub fn detect_language_enhanced(@types.Image) -> LanguageDetectionResult raise @types.LoadError
 
-pub fn detect_layout_type(Array[TextLineAttributes], Int, Int) -> LayoutType raise @types.LoadError
+pub fn detect_layout_type(Array[TextLineAttributes], Int32, Int32) -> LayoutType raise @types.LoadError
 
 pub fn detect_list_item(TextLineAttributes) -> ListItemInfo
 
-pub fn detect_paragraphs(Array[DocumentBlock], max_line_spacing_ratio? : Double) -> Array[Array[Int]]
+pub fn detect_paragraphs(Array[DocumentBlock], max_line_spacing_ratio? : Double) -> Array[Array[Int32]]
 
 pub fn detect_skew_angle(@types.Image) -> Double raise @types.LoadError
 
 pub fn detect_skew_angle_robust(@types.Image) -> Double raise @types.LoadError
 
-pub fn detect_table_enhanced(@types.Image, min_table_size? : Int) -> Array[EnhancedTableResult] raise @types.LoadError
+pub fn detect_table_enhanced(@types.Image, min_table_size? : Int32) -> Array[EnhancedTableResult] raise @types.LoadError
 
-pub fn detect_text_lines_projection(@types.Image, min_height? : Int, max_gap? : Int) -> Array[TextLineInfo] raise @types.LoadError
+pub fn detect_text_lines_projection(@types.Image, min_height? : Int32, max_gap? : Int32) -> Array[TextLineInfo] raise @types.LoadError
 
 pub fn detect_text_regions(@types.Image) -> Array[TextRegion] raise @types.LoadError
 
-pub fn detect_titles(Array[DocumentBlock], title_font_size_threshold? : Int) -> Array[Int]
+pub fn detect_titles(Array[DocumentBlock], title_font_size_threshold? : Int32) -> Array[Int32]
 
-pub fn detect_touching_chars(@types.Image, min_char_width? : Int, max_char_width? : Int) -> Array[Int] raise @types.LoadError
+pub fn detect_touching_chars(@types.Image, min_char_width? : Int32, max_char_width? : Int32) -> Array[Int32] raise @types.LoadError
 
-pub fn detect_vertical_lines(@types.Image, min_length? : Int, max_gap? : Int) -> Array[TableLine] raise @types.LoadError
+pub fn detect_vertical_lines(@types.Image, min_length? : Int32, max_gap? : Int32) -> Array[TableLine] raise @types.LoadError
 
-pub fn detect_vertical_table_lines(@types.Image, min_length? : Int, max_gap? : Int) -> Array[(Int, Int, Int)] raise @types.LoadError
+pub fn detect_vertical_table_lines(@types.Image, min_length? : Int32, max_gap? : Int32) -> Array[(Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn determine_reading_order_markdown(Array[MarkdownElement]) -> Array[Int]
+pub fn determine_reading_order_markdown(Array[MarkdownElement]) -> Array[Int32]
 
 pub fn dictionary_create(Array[String]) -> Dictionary raise @types.LoadError
 
 pub fn dictionary_create_common_english() -> Dictionary
 
-pub fn dictionary_match(String, Dictionary, max_distance? : Int) -> Array[(String, Int)] raise @types.LoadError
+pub fn dictionary_match(String, Dictionary, max_distance? : Int32) -> Array[(String, Int32)] raise @types.LoadError
 
 pub fn digit_ocr_default_config() -> DigitOcrConfig
 
 pub fn document_enhance(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn document_statistics_enhanced(Array[DocumentBlock]) -> (Int, Int, Int, Int, Int, Int, Int)
+pub fn document_statistics_enhanced(Array[DocumentBlock]) -> (Int32, Int32, Int32, Int32, Int32, Int32, Int32)
 
-pub fn document_structure_stats(DocumentStructure) -> (Int, Int, Int, Int, Int)
+pub fn document_structure_stats(DocumentStructure) -> (Int32, Int32, Int32, Int32, Int32)
 
 pub fn document_understanding_enhanced_default_config() -> DocumentUnderstandingEnhancedConfig
 
-pub fn drop_fall_segmentation(@types.Image, start_x? : Int) -> DropFallResult raise @types.LoadError
+pub fn drop_fall_segmentation(@types.Image, start_x? : Int32) -> DropFallResult raise @types.LoadError
 
-pub fn edit_distance(String, String) -> Int raise @types.LoadError
+pub fn edit_distance(String, String) -> Int32 raise @types.LoadError
 
-pub fn elastic_match(Array[Double], Array[Double], elasticity? : Double, grid_size? : Int) -> Double
+pub fn elastic_match(Array[Double], Array[Double], elasticity? : Double, grid_size? : Int32) -> Double
 
 pub fn english_ocr_default_config() -> EnglishOcrConfig
 
@@ -264,7 +264,7 @@ pub fn enhanced_chinese_ocr_default_config() -> EnhancedChineseOcrConfig
 
 pub fn enhanced_document_to_markdown(EnhancedDocument, include_header_footer? : Bool) -> String
 
-pub fn enhanced_element_distribution(EnhancedDocument) -> Array[(String, Int)]
+pub fn enhanced_element_distribution(EnhancedDocument) -> Array[(String, Int32)]
 
 pub fn enhanced_table_to_markdown(EnhancedTableResult) -> String
 
@@ -272,7 +272,7 @@ pub fn ensemble_default_config() -> EnsembleConfig
 
 pub fn ensemble_predict(Array[Double], KnnClassifier, Array[(String, Array[Double])], config? : EnsembleConfig) -> ClassificationResult raise @types.LoadError
 
-pub fn estimate_memory_usage(Int, Int, Int, Int) -> MemoryUsageStats
+pub fn estimate_memory_usage(Int32, Int32, Int32, Int32) -> MemoryUsageStats
 
 pub fn euclidean_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
 
@@ -280,11 +280,11 @@ pub fn evaluate_cnn_model(Array[DLTrainingSample], DLCnnModelConfig, Array[Strin
 
 pub fn evaluate_scan_quality(@types.Image) -> ScanQuality raise @types.LoadError
 
-pub fn extract_all_cells(@types.Image, TableStructure, padding? : Int) -> Array[@types.Image] raise @types.LoadError
+pub fn extract_all_cells(@types.Image, TableStructure, padding? : Int32) -> Array[@types.Image] raise @types.LoadError
 
-pub fn extract_cell_image(@types.Image, TableCell, padding? : Int) -> @types.Image raise @types.LoadError
+pub fn extract_cell_image(@types.Image, TableCell, padding? : Int32) -> @types.Image raise @types.LoadError
 
-pub fn extract_char_image(@types.Image, CharSegment, target_size? : Int, padding? : Int) -> @types.Image raise @types.LoadError
+pub fn extract_char_image(@types.Image, CharSegment, target_size? : Int32, padding? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn extract_combined_enhanced_features(@types.Image, OcrAccuracyEnhancedConfig) -> Array[Double] raise @types.LoadError
 
@@ -296,7 +296,7 @@ pub fn extract_document_text(Array[DocumentBlock], include_headers? : Bool, incl
 
 pub fn extract_features(DLFeatureExtractor, @types.Image) -> Array[Double]
 
-pub fn extract_gabor_ocr_features(@types.Image, num_orientations? : Int, num_frequencies? : Int) -> Array[Double]
+pub fn extract_gabor_ocr_features(@types.Image, num_orientations? : Int32, num_frequencies? : Int32) -> Array[Double]
 
 pub fn extract_handwriting_features(@types.Image, String) -> HandwritingCharFeature raise @types.LoadError
 
@@ -306,39 +306,39 @@ pub fn extract_headings(DocumentStructure) -> Array[DocumentElement]
 
 pub fn extract_hw_stroke_features(@types.Image) -> Array[StrokeFeature]
 
-pub fn extract_images_enhanced(@types.Image, min_area? : Int) -> Array[ExtractedImage]
+pub fn extract_images_enhanced(@types.Image, min_area? : Int32) -> Array[ExtractedImage]
 
 pub fn extract_paragraphs(DocumentStructure) -> Array[DocumentElement]
 
 pub fn extract_stroke_features(@types.Image) -> Array[Double] raise @types.LoadError
 
-pub fn extract_text_line_image(@types.Image, TextLineInfo, padding? : Int) -> @types.Image raise @types.LoadError
+pub fn extract_text_line_image(@types.Image, TextLineInfo, padding? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn extract_text_lines(@types.Image) -> Array[@types.Image] raise @types.LoadError
 
 pub fn extract_title(DocumentStructure) -> String
 
-pub fn extract_zernike_moments(@types.Image, max_order? : Int) -> Array[Double] raise @types.LoadError
+pub fn extract_zernike_moments(@types.Image, max_order? : Int32) -> Array[Double] raise @types.LoadError
 
-pub fn fast_connected_components(@types.Image) -> Array[Int] raise @types.LoadError
+pub fn fast_connected_components(@types.Image) -> Array[Int32] raise @types.LoadError
 
 pub fn fast_downsample_2x(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn fast_gaussian_blur_1d(@types.Image, Array[Double]) -> @types.Image raise @types.LoadError
 
-pub fn fast_threshold_lut(@types.Image, Array[Int]) -> @types.Image raise @types.LoadError
+pub fn fast_threshold_lut(@types.Image, Array[Int32]) -> @types.Image raise @types.LoadError
 
-pub fn filter_components_by_area(OcrConnectedComponentsResult, Int, Int) -> Array[OcrConnectedComponent] raise @types.LoadError
+pub fn filter_components_by_area(OcrConnectedComponentsResult, Int32, Int32) -> Array[OcrConnectedComponent] raise @types.LoadError
 
 pub fn filter_components_by_aspect_ratio(OcrConnectedComponentsResult, Double, Double) -> Array[OcrConnectedComponent] raise @types.LoadError
 
-pub fn filter_components_by_position(OcrConnectedComponentsResult, Int, Int, Int, Int) -> Array[OcrConnectedComponent] raise @types.LoadError
+pub fn filter_components_by_position(OcrConnectedComponentsResult, Int32, Int32, Int32, Int32) -> Array[OcrConnectedComponent] raise @types.LoadError
 
-pub fn filter_noise_segments(Array[(Int, Int, Int, Int)], Int, Int, min_area_ratio? : Double, max_area_ratio? : Double) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
+pub fn filter_noise_segments(Array[(Int32, Int32, Int32, Int32)], Int32, Int32, min_area_ratio? : Double, max_area_ratio? : Double) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn find_line_intersections(Array[(Int, Int, Int)], Array[(Int, Int, Int)]) -> Array[(Int, Int)]
+pub fn find_line_intersections(Array[(Int32, Int32, Int32)], Array[(Int32, Int32, Int32)]) -> Array[(Int32, Int32)]
 
-pub fn find_similar_chinese_chars(DictChineseDict, String, top_n? : Int) -> Array[DictCharMatch] raise @types.LoadError
+pub fn find_similar_chinese_chars(DictChineseDict, String, top_n? : Int32) -> Array[DictCharMatch] raise @types.LoadError
 
 pub fn full_postprocess_correction(String, context_type? : String) -> CorrectionResult raise @types.LoadError
 
@@ -370,9 +370,9 @@ pub fn generate_dockerfile(DockerConfig) -> String
 
 pub fn generate_english_templates(case_sensitive? : Bool) -> Array[(String, Array[Double])]
 
-pub fn generate_enhanced_chinese_templates(char_set_size? : Int) -> Array[(String, Array[Double])]
+pub fn generate_enhanced_chinese_templates(char_set_size? : Int32) -> Array[(String, Array[Double])]
 
-pub fn generate_enhanced_handwriting_templates(char_set? : String, num_variants? : Int) -> Array[(String, Array[Double])]
+pub fn generate_enhanced_handwriting_templates(char_set? : String, num_variants? : Int32) -> Array[(String, Array[Double])]
 
 pub fn generate_env_config(DeploymentEnvironment) -> String
 
@@ -382,7 +382,7 @@ pub fn generate_health_check_config(ApiServerConfig) -> String
 
 pub fn generate_image_extraction_report(Array[ExtractedImage]) -> String
 
-pub fn generate_markdown_image_placeholder(MarkdownImage, Int) -> String
+pub fn generate_markdown_image_placeholder(MarkdownImage, Int32) -> String
 
 pub fn generate_model_manifest(ModelPackageConfig) -> String
 
@@ -398,7 +398,7 @@ pub fn generate_training_report(Array[DLTrainingHistory], DLCnnModelConfig) -> S
 
 pub fn get_elements_in_reading_order(DocumentStructure) -> Array[DocumentElement]
 
-pub fn grid_features(@types.Image, grid_rows? : Int, grid_cols? : Int) -> GridFeatures raise @types.LoadError
+pub fn grid_features(@types.Image, grid_rows? : Int32, grid_cols? : Int32) -> GridFeatures raise @types.LoadError
 
 pub fn handwriting_feature_similarity(HandwritingCharFeature, HandwritingCharFeature) -> Double
 
@@ -410,29 +410,29 @@ pub fn handwriting_postprocess(String, Double) -> (String, Double)
 
 pub fn handwriting_report_to_string(HandwritingRecognitionResult) -> String
 
-pub fn hog_features(@types.Image, cell_size? : Int, num_bins? : Int) -> HogFeatures raise @types.LoadError
+pub fn hog_features(@types.Image, cell_size? : Int32, num_bins? : Int32) -> HogFeatures raise @types.LoadError
 
 pub fn horizontal_projection(@types.Image) -> ProjectionResult raise @types.LoadError
 
 pub fn hu_moments_features(@types.Image) -> Array[Double] raise @types.LoadError
 
-pub fn is_code_block_line(TextLineAttributes, Int) -> Bool
+pub fn is_code_block_line(TextLineAttributes, Int32) -> Bool
 
-pub fn is_heading_line(TextLineAttributes, Double) -> (Bool, Int)
+pub fn is_heading_line(TextLineAttributes, Double) -> (Bool, Int32)
 
-pub fn is_quote_line(TextLineAttributes, Int) -> Bool
+pub fn is_quote_line(TextLineAttributes, Int32) -> Bool
 
 pub fn knn_add_sample(KnnClassifier, Array[Double], String) -> KnnClassifier raise @types.LoadError
 
 pub fn knn_add_samples(KnnClassifier, Array[(Array[Double], String)]) -> KnnClassifier raise @types.LoadError
 
-pub fn knn_create(k? : Int, distance_metric? : String) -> KnnClassifier raise @types.LoadError
+pub fn knn_create(k? : Int32, distance_metric? : String) -> KnnClassifier raise @types.LoadError
 
 pub fn knn_predict(KnnClassifier, Array[Double]) -> ClassificationResult raise @types.LoadError
 
 pub fn language_model_postprocess(String, Array[String], Array[Double]) -> (String, Array[Double])
 
-pub fn lbp_features(@types.Image, radius? : Int, num_points? : Int, num_bins? : Int) -> LbpFeatures raise @types.LoadError
+pub fn lbp_features(@types.Image, radius? : Int32, num_points? : Int32, num_bins? : Int32) -> LbpFeatures raise @types.LoadError
 
 pub fn load_model(String) -> DLCnnModelConfig?
 
@@ -446,7 +446,7 @@ pub fn lookup_char(DictChineseDict, String) -> DictCharEntry? raise @types.LoadE
 
 pub fn manhattan_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
 
-pub fn mark_task_completed(BatchTask, Int, Double, Double) -> BatchTask
+pub fn mark_task_completed(BatchTask, Int32, Double, Double) -> BatchTask
 
 pub fn mark_task_failed(BatchTask, String, Double) -> BatchTask
 
@@ -454,15 +454,15 @@ pub fn markdown_document_to_string(MarkdownDocument) -> String
 
 pub fn markdown_table_to_string(MarkdownTable) -> String
 
-pub fn max_pool2d(Array[Double], Int, Int, Int, Int) -> Array[Double] raise @types.LoadError
+pub fn max_pool2d(Array[Double], Int32, Int32, Int32, Int32) -> Array[Double] raise @types.LoadError
 
-pub fn max_pool2d_backward(Array[Double], Array[Double], Int, Int, Int, Int) -> Array[Double]
+pub fn max_pool2d_backward(Array[Double], Array[Double], Int32, Int32, Int32, Int32) -> Array[Double]
 
-pub fn merge_adjacent_components(Array[OcrConnectedComponent], Int) -> Array[OcrConnectedComponent] raise @types.LoadError
+pub fn merge_adjacent_components(Array[OcrConnectedComponent], Int32) -> Array[OcrConnectedComponent] raise @types.LoadError
 
-pub fn merge_small_segments(Array[(Int, Int, Int, Int)], Int, Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
+pub fn merge_small_segments(Array[(Int32, Int32, Int32, Int32)], Int32, Int32) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn multi_scale_recognize(@types.Image, Array[(String, Array[Double])], Array[Int], distance_metric? : String) -> (String, Double)
+pub fn multi_scale_recognize(@types.Image, Array[(String, Array[Double])], Array[Int32], distance_metric? : String) -> (String, Double)
 
 pub fn multilingual_ocr_default_config() -> MultilingualOcrConfig
 
@@ -470,15 +470,15 @@ pub fn multilingual_ocr_enhanced_default_config() -> MultilingualOcrEnhancedConf
 
 pub fn next_batch(DataLoader) -> (Array[DLTrainingSample], DataLoader) raise @types.LoadError
 
-pub fn ngram_create(Array[String], n? : Int) -> NgramModel raise @types.LoadError
+pub fn ngram_create(Array[String], n? : Int32) -> NgramModel raise @types.LoadError
 
 pub fn ngram_score(String, NgramModel) -> Double raise @types.LoadError
 
-pub fn niblack_threshold(@types.Image, window_size? : Int, k? : Double) -> @types.Image raise @types.LoadError
+pub fn niblack_threshold(@types.Image, window_size? : Int32, k? : Double) -> @types.Image raise @types.LoadError
 
 pub fn normalize_features(Array[Double]) -> Array[Double] raise @types.LoadError
 
-pub fn normalize_handwriting_size(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn normalize_handwriting_size(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
 pub fn normalize_image(Array[Double], Double, Double) -> Array[Double] raise @types.LoadError
 
@@ -486,7 +486,7 @@ pub fn normalize_punctuation(String, Array[String]) -> String
 
 pub fn ocr_accuracy_enhanced_default_config() -> OcrAccuracyEnhancedConfig
 
-pub fn ocr_pipeline_stats(@types.Image) -> (Int, Int, Double) raise @types.LoadError
+pub fn ocr_pipeline_stats(@types.Image) -> (Int32, Int32, Double) raise @types.LoadError
 
 pub fn ocr_postprocess(OcrResult, config? : PostProcessConfig, dictionary? : Dictionary, ngram_model? : NgramModel) -> OcrResult raise @types.LoadError
 
@@ -498,7 +498,7 @@ pub fn ocr_result_to_json(OCRPageResult) -> String
 
 pub fn ocr_result_to_text(OCRPageResult) -> String
 
-pub fn optimize_reading_order(Array[DocumentBlock], Int) -> Array[Int]
+pub fn optimize_reading_order(Array[DocumentBlock], Int32) -> Array[Int32]
 
 pub fn otsu_threshold(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -506,11 +506,11 @@ pub fn parse_cli_args(Array[String]) -> CliConfig raise @types.LoadError
 
 pub fn postprocess_default_config() -> PostProcessConfig
 
-pub fn progress_bar_to_string(Double, width? : Int) -> String
+pub fn progress_bar_to_string(Double, width? : Int32) -> String
 
 pub fn projection_features(@types.Image) -> ProjectionFeatures raise @types.LoadError
 
-pub fn recognize_by_components(DictChineseDict, DictCharStructure, Array[String], stroke_count_hint? : Int) -> Array[(String, Double)]
+pub fn recognize_by_components(DictChineseDict, DictCharStructure, Array[String], stroke_count_hint? : Int32) -> Array[(String, Double)]
 
 pub fn recognize_chinese(@types.Image, config? : ChineseOcrConfig) -> OcrResult raise @types.LoadError
 
@@ -536,7 +536,7 @@ pub fn recognize_ocr_enhanced(@types.Image, Array[(String, Array[Double])], conf
 
 pub fn recognize_symbols_markdown(String) -> Array[MarkdownSymbol]
 
-pub fn recognize_table(@types.Image, min_line_length? : Int) -> TableStructure raise @types.LoadError
+pub fn recognize_table(@types.Image, min_line_length? : Int32) -> TableStructure raise @types.LoadError
 
 pub fn record_training_metrics(TrainingState, TrainingMetrics) -> TrainingState
 
@@ -544,13 +544,13 @@ pub fn relu(Double) -> Double
 
 pub fn relu_backward(Array[Double], Array[Double]) -> Array[Double]
 
-pub fn resize_image_for_cnn(@types.Image, Int, Int) -> Array[Double] raise @types.LoadError
+pub fn resize_image_for_cnn(@types.Image, Int32, Int32) -> Array[Double] raise @types.LoadError
 
 pub fn robustness_report_to_string(RobustnessReport) -> String
 
 pub fn rotate_document(@types.Image, Double) -> @types.Image raise @types.LoadError
 
-pub fn sauvola_threshold(@types.Image, window_size? : Int, k? : Double, r? : Double) -> @types.Image raise @types.LoadError
+pub fn sauvola_threshold(@types.Image, window_size? : Int32, k? : Double, r? : Double) -> @types.Image raise @types.LoadError
 
 pub fn save_model(DLCnnModelConfig, Array[Double], String) -> Bool
 
@@ -560,13 +560,13 @@ pub fn scan_ocr_default_config() -> ScanOCRConfig
 
 pub fn scan_ocr_recognize(@types.Image, ScanOCRConfig) -> OCRPageResult raise @types.LoadError
 
-pub fn segment_by_connected_components(@types.Image, min_area? : Int, max_area? : Int) -> Array[(Int, Int, Int, Int)] raise @types.LoadError
+pub fn segment_by_connected_components(@types.Image, min_area? : Int32, max_area? : Int32) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
 
-pub fn segment_chars_projection(@types.Image, TextLineInfo, min_width? : Int, max_gap? : Int) -> Array[CharSegment] raise @types.LoadError
+pub fn segment_chars_projection(@types.Image, TextLineInfo, min_width? : Int32, max_gap? : Int32) -> Array[CharSegment] raise @types.LoadError
 
 pub fn segment_connected_strokes(@types.Image, HandwritingRecognitionConfig) -> StrokeSegmentationResult
 
-pub fn segment_cursive_chars(@types.Image, min_char_width? : Int, max_char_width? : Int) -> Array[(Int, Int, Int, Int)]
+pub fn segment_cursive_chars(@types.Image, min_char_width? : Int32, max_char_width? : Int32) -> Array[(Int32, Int32, Int32, Int32)]
 
 pub fn segment_page(@types.Image) -> Array[TextRegion] raise @types.LoadError
 
@@ -574,21 +574,21 @@ pub fn segment_paragraphs(Array[TextLineAttributes]) -> Array[Array[TextLineAttr
 
 pub fn select_adaptive_config(ScanQuality) -> AdaptivePreprocessConfig raise @types.LoadError
 
-pub fn shadow_removal(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
+pub fn shadow_removal(@types.Image, kernel_size? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn sigmoid(Double) -> Double
 
 pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
 
-pub fn smart_reading_order(Array[EnhancedDocumentElement], LayoutType, Array[Int]) -> Array[Int] raise @types.LoadError
+pub fn smart_reading_order(Array[EnhancedDocumentElement], LayoutType, Array[Int32]) -> Array[Int32] raise @types.LoadError
 
-pub fn smart_segment_chars(@types.Image, MultilingualOcrEnhancedConfig) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError
+pub fn smart_segment_chars(@types.Image, MultilingualOcrEnhancedConfig) -> Array[(Int32, Int32, Int32, Int32, String)] raise @types.LoadError
 
 pub fn smart_spacing_process(String, Array[String]) -> String
 
 pub fn softmax(Array[Double]) -> Array[Double]
 
-pub fn softmax_cross_entropy_backward(Array[Double], Int) -> Array[Double] raise @types.LoadError
+pub fn softmax_cross_entropy_backward(Array[Double], Int32) -> Array[Double] raise @types.LoadError
 
 pub fn split_train_validation(Array[DLTrainingSample], Double, Bool) -> (Array[DLTrainingSample], Array[DLTrainingSample])
 
@@ -596,7 +596,7 @@ pub fn standardize_features(Array[Double]) -> Array[Double] raise @types.LoadErr
 
 pub fn statistical_features(@types.Image) -> StatisticalFeatures raise @types.LoadError
 
-pub fn structure_based_filter(@types.Image, Array[ChineseCharInfo], max_candidates? : Int) -> Array[ChineseCharInfo]
+pub fn structure_based_filter(@types.Image, Array[ChineseCharInfo], max_candidates? : Int32) -> Array[ChineseCharInfo]
 
 pub fn template_matcher_add(TemplateMatcher, String, Array[Double]) -> TemplateMatcher raise @types.LoadError
 
@@ -608,31 +608,31 @@ pub fn understand_document(@types.Image) -> DocumentStructure raise @types.LoadE
 
 pub fn understand_document_enhanced(@types.Image, config? : DocumentUnderstandingEnhancedConfig) -> (Array[DocumentBlock], Array[DocumentTreeNode], String) raise @types.LoadError
 
-pub fn unrolled_pixel_sum(@types.Image) -> Int raise @types.LoadError
+pub fn unrolled_pixel_sum(@types.Image) -> Int32 raise @types.LoadError
 
-pub fn update_task_progress(BatchTask, Double, Int, Int) -> BatchTask
+pub fn update_task_progress(BatchTask, Double, Int32, Int32) -> BatchTask
 
 pub fn update_weights_sgd(Array[Double], Array[Double], Double) -> Array[Double] raise @types.LoadError
 
 pub fn vertical_projection(@types.Image) -> ProjectionResult raise @types.LoadError
 
-pub fn weighted_knn_classify(Array[Double], Array[(String, Array[Double])], k? : Int, distance_metric? : String) -> (String, Double, Array[(String, Double)])
+pub fn weighted_knn_classify(Array[Double], Array[(String, Array[Double])], k? : Int32, distance_metric? : String) -> (String, Double, Array[(String, Double)])
 
 // Errors
 
 // Types and methods
 pub(all) struct AccuracyStats {
-  total_chars : Int
-  correct_chars : Int
+  total_chars : Int32
+  correct_chars : Int32
   char_accuracy : Double
-  total_words : Int
-  correct_words : Int
+  total_words : Int32
+  correct_words : Int32
   word_accuracy : Double
-  total_lines : Int
-  correct_lines : Int
+  total_lines : Int32
+  correct_lines : Int32
   line_accuracy : Double
-  false_positives : Int
-  false_negatives : Int
+  false_positives : Int32
+  false_negatives : Int32
   precision : Double
   recall : Double
   f1_score : Double
@@ -640,20 +640,20 @@ pub(all) struct AccuracyStats {
 
 pub(all) struct AdaptivePreprocessConfig {
   quality_level : ScanQualityLevel
-  denoise_strength : Int
+  denoise_strength : Int32
   contrast_enhance : Double
   binarization_method : String
   deskew_enabled : Bool
   sharpen_enabled : Bool
   morph_open_enabled : Bool
   morph_close_enabled : Bool
-  recommended_dpi : Int
+  recommended_dpi : Int32
 }
 
 pub(all) struct AdvancedChineseOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   char_set : String
   use_radical_decomposition : Bool
@@ -662,13 +662,13 @@ pub(all) struct AdvancedChineseOcrConfig {
 
 pub(all) struct ApiServerConfig {
   host : String
-  port : Int
-  max_concurrent_requests : Int
-  request_timeout_ms : Int
-  max_image_size_mb : Int
+  port : Int32
+  max_concurrent_requests : Int32
+  request_timeout_ms : Int32
+  max_image_size_mb : Int32
   enable_cors : Bool
   auth_token : String
-  rate_limit_per_minute : Int
+  rate_limit_per_minute : Int32
 }
 
 pub(all) struct AugmentationConfig {
@@ -699,23 +699,23 @@ pub fn AugmentationType::equal(Self, Self) -> Bool
 pub fn AugmentationType::not_equal(Self, Self) -> Bool
 
 pub(all) struct BatchOcrConfig {
-  max_concurrent : Int
-  batch_size : Int
+  max_concurrent : Int32
+  batch_size : Int32
   enable_progress_callback : Bool
   enable_error_recovery : Bool
   output_format : String
-  dpi : Int
+  dpi : Int32
   preprocess_config : String
   save_intermediate : Bool
   output_directory : String
 }
 
 pub(all) struct BatchProgress {
-  total_tasks : Int
-  completed_tasks : Int
-  failed_tasks : Int
-  skipped_tasks : Int
-  current_task_index : Int
+  total_tasks : Int32
+  completed_tasks : Int32
+  failed_tasks : Int32
+  skipped_tasks : Int32
+  current_task_index : Int32
   overall_progress : Double
   current_task_progress : Double
   elapsed_time_ms : Double
@@ -725,13 +725,13 @@ pub(all) struct BatchProgress {
 }
 
 pub(all) struct BatchResultSummary {
-  total_tasks : Int
-  successful_tasks : Int
-  failed_tasks : Int
-  skipped_tasks : Int
+  total_tasks : Int32
+  successful_tasks : Int32
+  failed_tasks : Int32
+  skipped_tasks : Int32
   success_rate : Double
-  total_pages : Int
-  total_chars : Int
+  total_pages : Int32
+  total_chars : Int32
   total_time_ms : Double
   average_accuracy : Double
   average_pages_per_second : Double
@@ -749,8 +749,8 @@ pub(all) struct BatchTask {
   error_message : String
   start_time : Double
   end_time : Double
-  page_count : Int
-  char_count : Int
+  page_count : Int32
+  char_count : Int32
   accuracy_estimate : Double
 }
 
@@ -769,48 +769,48 @@ pub(all) struct CharRecognitionResult {
   actual : String
   is_correct : Bool
   confidence : Double
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
 }
 
 pub(all) struct CharSegment {
-  x_start : Int
-  x_end : Int
-  width : Int
-  y_start : Int
-  y_end : Int
-  height : Int
-  pixel_count : Int
+  x_start : Int32
+  x_end : Int32
+  width : Int32
+  y_start : Int32
+  y_end : Int32
+  height : Int32
+  pixel_count : Int32
 }
 
 pub(all) struct ChineseCharInfo {
   char : String
   radical : String
-  strokes : Int
+  strokes : Int32
   structure_type : String
-  complexity : Int
-  common_grade : Int
+  complexity : Int32
+  common_grade : Int32
 }
 
 pub(all) struct ChineseCharStructure {
   char : String
   radical : String
-  strokes : Int
+  strokes : Int32
   structure_type : String
   components : Array[String]
 }
 
 pub(all) struct ChineseOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   char_set : String
 }
 
 pub(all) struct ChineseRadical {
   name : String
-  strokes : Int
+  strokes : Int32
   position : String
 }
 
@@ -829,23 +829,23 @@ pub(all) struct CliConfig {
   enable_multilingual : Bool
   enable_document_analysis : Bool
   verbose : Bool
-  batch_size : Int
+  batch_size : Int32
 }
 
 pub(all) struct CommonErrorPattern {
   pattern : String
   correction : String
-  frequency : Int
+  frequency : Int32
   context_before : String
   context_after : String
 }
 
 pub(all) struct ComplexLayoutAnalysis {
   layout_type : ComplexLayoutType
-  num_columns : Int
+  num_columns : Int32
   has_floating_elements : Bool
   has_cross_page_elements : Bool
-  column_boundaries : Array[Int]
+  column_boundaries : Array[Int32]
   reading_order_strategy : String
   confidence : Double
 }
@@ -866,16 +866,16 @@ pub fn ComplexLayoutType::not_equal(Self, Self) -> Bool
 pub(all) struct ConfusionEntry {
   expected : String
   actual : String
-  count : Int
+  count : Int32
 }
 
 pub(all) struct ConfusionMatrix {
   entries : Array[ConfusionEntry]
-  total_errors : Int
+  total_errors : Int32
 }
 
 pub(all) struct CorrectionEntry {
-  position : Int
+  position : Int32
   original_char : String
   corrected_char : String
   reason : String
@@ -892,45 +892,45 @@ pub(all) struct CorrectionResult {
 
 pub(all) struct DLCnnModelConfig {
   model_name : String
-  input_width : Int
-  input_height : Int
-  input_channels : Int
-  num_classes : Int
+  input_width : Int32
+  input_height : Int32
+  input_channels : Int32
+  num_classes : Int32
   conv_layers : Array[DLConv2DConfig]
   dense_layers : Array[DLDenseConfig]
   learning_rate : Double
-  batch_size : Int
-  epochs : Int
+  batch_size : Int32
+  epochs : Int32
 }
 
 pub(all) struct DLConv2DConfig {
-  in_channels : Int
-  out_channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
   activation : String
 }
 
 pub(all) struct DLDenseConfig {
-  in_features : Int
-  out_features : Int
+  in_features : Int32
+  out_features : Int32
   activation : String
   dropout_rate : Double
 }
 
 pub(all) struct DLFeatureExtractor {
   model_name : String
-  feature_dim : Int
+  feature_dim : Int32
   layer_name : String
   weights : Array[Double]
 }
 
 pub(all) struct DLInferenceResult {
-  predicted_class : Int
+  predicted_class : Int32
   predicted_label : String
   confidence : Double
-  top_k_predictions : Array[(Int, Double)]
+  top_k_predictions : Array[(Int32, Double)]
   inference_time_ms : Double
 }
 
@@ -956,12 +956,12 @@ pub(all) struct DLNeuralLayer {
   config : String
   weights : Array[Double]
   biases : Array[Double]
-  input_shape : Array[Int]
-  output_shape : Array[Int]
+  input_shape : Array[Int32]
+  output_shape : Array[Int32]
 }
 
 pub(all) struct DLTrainingHistory {
-  epoch : Int
+  epoch : Int32
   train_loss : Double
   train_accuracy : Double
   val_loss : Double
@@ -972,18 +972,18 @@ pub(all) struct DLTrainingHistory {
 
 pub(all) struct DLTrainingSample {
   image_data : Array[Double]
-  label : Int
+  label : Int32
   label_text : String
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct DataLoader {
   samples : Array[DLTrainingSample]
-  batch_size : Int
+  batch_size : Int32
   shuffle : Bool
-  current_index : Int
-  epoch : Int
+  current_index : Int32
+  epoch : Int32
 }
 
 pub(all) enum DeploymentEnvironment {
@@ -998,11 +998,11 @@ pub(all) struct DictCharEntry {
   char : String
   unicode : String
   pinyin : Array[String]
-  stroke_count : Int
+  stroke_count : Int32
   structure : DictCharStructure
   radical : String
   components : Array[DictComponent]
-  frequency : Int
+  frequency : Int32
   level : String
 }
 
@@ -1011,9 +1011,9 @@ pub(all) struct DictCharMatch {
   matched_char : String
   similarity : Double
   structure_match : Bool
-  component_match_count : Int
-  total_components : Int
-  stroke_diff : Int
+  component_match_count : Int32
+  total_components : Int32
+  stroke_diff : Int32
 }
 
 pub(all) enum DictCharStructure {
@@ -1031,17 +1031,17 @@ pub fn DictCharStructure::not_equal(Self, Self) -> Bool
 
 pub(all) struct DictChineseDict {
   chars : Array[DictCharEntry]
-  total_chars : Int
-  level1_count : Int
-  level2_count : Int
-  level3_count : Int
-  radical_index : Array[(String, Array[Int])]
-  pinyin_index : Array[(String, Array[Int])]
+  total_chars : Int32
+  level1_count : Int32
+  level2_count : Int32
+  level3_count : Int32
+  radical_index : Array[(String, Array[Int32])]
+  pinyin_index : Array[(String, Array[Int32])]
 }
 
 pub(all) struct DictComponent {
   name : String
-  stroke_count : Int
+  stroke_count : Int32
   position : String
   width_ratio : Double
   height_ratio : Double
@@ -1062,16 +1062,16 @@ pub(all) struct Dictionary {
 
 pub(all) struct DictionaryEntry {
   word : String
-  frequency : Int
+  frequency : Int32
   category : String
 }
 
 pub(all) struct DigitOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   use_knn : Bool
-  k : Int
+  k : Int32
   distance_metric : String
 }
 
@@ -1107,8 +1107,8 @@ pub fn DistortionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DockerConfig {
   base_image : String
-  app_port : Int
-  memory_limit_mb : Int
+  app_port : Int32
+  memory_limit_mb : Int32
   cpu_limit : Double
   enable_gpu : Bool
   environment : DeploymentEnvironment
@@ -1117,21 +1117,21 @@ pub(all) struct DockerConfig {
 
 pub(all) struct DocumentBlock {
   block_type : DocumentBlockType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   confidence : Double
-  font_size : Int
+  font_size : Int32
   is_bold : Bool
   is_italic : Bool
   line_spacing : Double
-  indent_level : Int
-  column_index : Int
-  mut reading_order : Int
-  parent_id : Int
-  children_ids : Array[Int]
+  indent_level : Int32
+  column_index : Int32
+  mut reading_order : Int32
+  parent_id : Int32
+  children_ids : Array[Int32]
 }
 
 pub(all) enum DocumentBlockType {
@@ -1154,15 +1154,15 @@ pub fn DocumentBlockType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DocumentElement {
   element_type : DocumentElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   confidence : Double
-  font_size : Int
+  font_size : Int32
   font_weight : String
-  reading_order : Int
+  reading_order : Int32
 }
 
 pub(all) enum DocumentElementType {
@@ -1185,26 +1185,26 @@ pub fn DocumentElementType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DocumentStructure {
   elements : Array[DocumentElement]
-  num_elements : Int
+  num_elements : Int32
   title : String
-  num_headings : Int
-  num_paragraphs : Int
-  reading_order : Array[Int]
-  bounding_box : (Int, Int, Int, Int)
+  num_headings : Int32
+  num_paragraphs : Int32
+  reading_order : Array[Int32]
+  bounding_box : (Int32, Int32, Int32, Int32)
 }
 
 pub(all) struct DocumentTreeNode {
-  node_id : Int
+  node_id : Int32
   block : DocumentBlock
   children : Array[DocumentTreeNode]
-  depth : Int
+  depth : Int32
 }
 
 pub(all) struct DocumentUnderstandingEnhancedConfig {
-  min_block_width : Int
-  min_block_height : Int
-  title_font_size_threshold : Int
-  heading_font_size_threshold : Int
+  min_block_width : Int32
+  min_block_height : Int32
+  title_font_size_threshold : Int32
+  heading_font_size_threshold : Int32
   max_line_spacing_ratio : Double
   enable_column_detection : Bool
   enable_hierarchy : Bool
@@ -1213,24 +1213,24 @@ pub(all) struct DocumentUnderstandingEnhancedConfig {
 
 pub(all) struct DropFallResult {
   split_points : Array[SplitPoint]
-  char_regions : Array[(Int, Int)]
+  char_regions : Array[(Int32, Int32)]
   success : Bool
 }
 
 pub(all) struct EnglishOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
   case_sensitive : Bool
 }
 
 pub(all) struct EnhancedChineseOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   distance_metric : String
-  char_set_size : Int
+  char_set_size : Int32
   use_structure_filter : Bool
   use_stroke_features : Bool
   use_radical_hint : Bool
@@ -1238,46 +1238,46 @@ pub(all) struct EnhancedChineseOcrConfig {
 
 pub(all) struct EnhancedDocument {
   layout_type : LayoutType
-  num_columns : Int
-  page_width : Int
-  page_height : Int
-  header_height : Int
-  footer_height : Int
-  body_top : Int
-  body_bottom : Int
+  num_columns : Int32
+  page_width : Int32
+  page_height : Int32
+  header_height : Int32
+  footer_height : Int32
+  body_top : Int32
+  body_bottom : Int32
   elements : Array[EnhancedDocumentElement]
-  reading_order : Array[Int]
-  column_boundaries : Array[Int]
+  reading_order : Array[Int32]
+  column_boundaries : Array[Int32]
 }
 
 pub(all) struct EnhancedDocumentElement {
   element_type : MarkdownElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   content : String
   confidence : Double
   font_size : Double
   font_weight : String
   alignment : String
   list_info : ListItemInfo
-  column_index : Int
-  indent_level : Int
+  column_index : Int32
+  indent_level : Int32
   is_header : Bool
   is_footer : Bool
 }
 
 pub(all) struct EnhancedTableResult {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  rows : Int
-  cols : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  rows : Int32
+  cols : Int32
   cells : Array[TableCellContent]
   has_header : Bool
-  header_rows : Int
+  header_rows : Int32
   detection : TableDetectionResult
   confidence : Double
 }
@@ -1286,7 +1286,7 @@ pub(all) struct EnsembleConfig {
   use_knn : Bool
   use_template : Bool
   use_svm_like : Bool
-  knn_k : Int
+  knn_k : Int32
   voting_method : String
 }
 
@@ -1297,24 +1297,24 @@ pub(all) struct ErrorAnalysisEntry {
   context_before : String
   context_after : String
   confidence : Double
-  count : Int
+  count : Int32
 }
 
 pub(all) struct ErrorAnalysisReport {
-  total_errors : Int
-  substitution_count : Int
-  insertion_count : Int
-  deletion_count : Int
-  reorder_count : Int
+  total_errors : Int32
+  substitution_count : Int32
+  insertion_count : Int32
+  deletion_count : Int32
+  reorder_count : Int32
   top_errors : Array[ErrorAnalysisEntry]
   suggestions : Array[String]
 }
 
 pub(all) struct ExtractedImage {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   image_type : String
   confidence : Double
   aspect_ratio : Double
@@ -1325,13 +1325,13 @@ pub(all) struct ExtractedImage {
 
 pub(all) struct GridFeatures {
   features : Array[Double]
-  grid_rows : Int
-  grid_cols : Int
+  grid_rows : Int32
+  grid_cols : Int32
 }
 
 pub(all) struct HandwritingCharFeature {
   char : String
-  num_strokes : Int
+  num_strokes : Int32
   stroke_types : Array[StrokeType]
   aspect_ratio : Double
   density : Double
@@ -1345,24 +1345,24 @@ pub(all) struct HandwritingCharFeature {
 }
 
 pub(all) struct HandwritingOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  min_char_height : Int
-  max_char_height : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  min_char_height : Int32
+  max_char_height : Int32
+  target_size : Int32
   distance_metric : String
   flexibility : Double
   use_slant_correction : Bool
 }
 
 pub(all) struct HandwritingOcrEnhancedConfig {
-  min_char_width : Int
-  max_char_width : Int
-  min_char_height : Int
-  max_char_height : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  min_char_height : Int32
+  max_char_height : Int32
+  target_size : Int32
   distance_metric : String
-  num_variants : Int
+  num_variants : Int32
   elasticity : Double
   use_slant_correction : Bool
   use_elastic_matching : Bool
@@ -1378,7 +1378,7 @@ pub(all) struct HandwritingRecognitionConfig {
   enable_slant_correction : Bool
   enable_size_normalization : Bool
   enable_stroke_order : Bool
-  max_candidates : Int
+  max_candidates : Int32
   style_priority : HandwritingStyle
 }
 
@@ -1387,7 +1387,7 @@ pub(all) struct HandwritingRecognitionResult {
   confidence : Double
   top_candidates : Array[(String, Double)]
   detected_style : HandwritingStyle
-  num_strokes_detected : Int
+  num_strokes_detected : Int32
   slant_angle : Double
   preprocessing_time_ms : Double
   feature_extraction_time_ms : Double
@@ -1396,7 +1396,7 @@ pub(all) struct HandwritingRecognitionResult {
 }
 
 pub(all) struct HandwritingStrokeFeatures {
-  num_strokes : Int
+  num_strokes : Int32
   stroke_directions : Array[Double]
   stroke_lengths : Array[Double]
   connectivity : Double
@@ -1417,21 +1417,21 @@ pub(all) struct HandwritingTemplate {
   char : String
   style : HandwritingStyle
   features : HandwritingCharFeature
-  sample_count : Int
+  sample_count : Int32
   avg_accuracy : Double
 }
 
 pub(all) struct HogFeatures {
   features : Array[Double]
-  cell_size : Int
-  num_bins : Int
-  width : Int
-  height : Int
+  cell_size : Int32
+  num_bins : Int32
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct KnnClassifier {
   samples : Array[TrainingSample]
-  k : Int
+  k : Int32
   distance_metric : String
 }
 
@@ -1440,9 +1440,9 @@ pub(all) struct LRSchedulerConfig {
   initial_lr : Double
   min_lr : Double
   decay_rate : Double
-  decay_steps : Int
-  warmup_steps : Int
-  patience : Int
+  decay_steps : Int32
+  warmup_steps : Int32
+  patience : Int32
   factor : Double
 }
 
@@ -1467,8 +1467,8 @@ pub(all) struct LanguageModelState {
   dictionary : Array[DictionaryEntry]
   common_errors : Array[CommonErrorPattern]
   similar_chars : Array[SimilarCharMapping]
-  total_words : Int
-  total_corrections : Int
+  total_words : Int32
+  total_corrections : Int32
 }
 
 pub(all) enum LanguageType {
@@ -1494,16 +1494,16 @@ pub fn LayoutType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LbpFeatures {
   features : Array[Double]
-  num_bins : Int
-  radius : Int
-  num_points : Int
+  num_bins : Int32
+  radius : Int32
+  num_points : Int32
 }
 
 pub(all) struct ListItemInfo {
   item_type : ListItemType
   marker : String
-  level : Int
-  number : Int
+  level : Int32
+  number : Int32
 }
 
 pub(all) enum ListItemType {
@@ -1523,15 +1523,15 @@ pub(all) struct MarkdownDocument {
   tables : Array[MarkdownTable]
   images : Array[MarkdownImage]
   symbols : Array[MarkdownSymbol]
-  reading_order : Array[Int]
+  reading_order : Array[Int32]
 }
 
 pub(all) struct MarkdownElement {
   element_type : MarkdownElementType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   content : String
   confidence : Double
 }
@@ -1555,10 +1555,10 @@ pub fn MarkdownElementType::equal(Self, Self) -> Bool
 pub fn MarkdownElementType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MarkdownImage {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   image_type : String
   confidence : Double
 }
@@ -1567,14 +1567,14 @@ pub(all) struct MarkdownSymbol {
   symbol : String
   unicode : String
   category : String
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   confidence : Double
 }
 
 pub(all) struct MarkdownTable {
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
   cells : Array[Array[String]]
   has_header : Bool
 }
@@ -1583,9 +1583,9 @@ pub(all) struct MemoryUsageStats {
   current_usage_mb : Double
   peak_usage_mb : Double
   average_usage_mb : Double
-  total_allocated : Int
-  total_freed : Int
-  gc_count : Int
+  total_allocated : Int32
+  total_freed : Int32
+  gc_count : Int32
 }
 
 pub(all) struct ModelPackageConfig {
@@ -1593,9 +1593,9 @@ pub(all) struct ModelPackageConfig {
   version : String
   model_path : String
   labels_path : String
-  input_width : Int
-  input_height : Int
-  num_classes : Int
+  input_width : Int32
+  input_height : Int32
+  num_classes : Int32
   compression : String
 }
 
@@ -1604,7 +1604,7 @@ pub(all) struct MultilingualOcrConfig {
   enable_english : Bool
   enable_digits : Bool
   enable_punctuation : Bool
-  target_size : Int
+  target_size : Int32
   distance_metric : String
   auto_language_detection : Bool
 }
@@ -1616,7 +1616,7 @@ pub(all) struct MultilingualOcrEnhancedConfig {
   enable_punctuation : Bool
   enable_japanese : Bool
   enable_korean : Bool
-  target_size : Int
+  target_size : Int32
   distance_metric : String
   auto_language_detection : Bool
   smart_spacing : Bool
@@ -1625,15 +1625,15 @@ pub(all) struct MultilingualOcrEnhancedConfig {
 }
 
 pub(all) struct NgramModel {
-  n : Int
-  bigram_counts : Array[(String, Int)]
-  unigram_counts : Array[(String, Int)]
+  n : Int32
+  bigram_counts : Array[(String, Int32)]
+  unigram_counts : Array[(String, Int32)]
 }
 
 pub(all) struct OCRPageResult {
-  page_number : Int
-  width : Int
-  height : Int
+  page_number : Int32
+  width : Int32
+  height : Int32
   blocks : Array[TextBlock]
   full_text : String
   average_confidence : Double
@@ -1647,34 +1647,34 @@ pub(all) struct OcrAccuracyEnhancedConfig {
   use_weighted_knn : Bool
   use_confidence_calibration : Bool
   use_multi_scale : Bool
-  knn_k : Int
-  scales : Array[Int]
+  knn_k : Int32
+  scales : Array[Int32]
 }
 
 pub(all) struct OcrCharResult {
   char : String
   confidence : Double
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct OcrConnectedComponent {
-  label : Int
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  area : Int
-  pixel_count : Int
-  bounding_box : (Int, Int, Int, Int)
+  label : Int32
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  area : Int32
+  pixel_count : Int32
+  bounding_box : (Int32, Int32, Int32, Int32)
   centroid : (Double, Double)
 }
 
 pub(all) struct OcrConnectedComponentsResult {
-  labels : Array[Int]
-  num_components : Int
+  labels : Array[Int32]
+  num_components : Int32
   components : Array[OcrConnectedComponent]
 }
 
@@ -1717,10 +1717,10 @@ pub fn OptimizerType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PageRegion {
   region_type : PageRegionType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   confidence : Double
 }
 
@@ -1750,9 +1750,9 @@ pub(all) struct PerformanceBenchmark {
 pub(all) struct PostProcessConfig {
   use_dictionary : Bool
   use_ngram : Bool
-  ngram_size : Int
+  ngram_size : Int32
   min_confidence : Double
-  max_candidates : Int
+  max_candidates : Int32
 }
 
 pub(all) struct ProjectionFeatures {
@@ -1765,9 +1765,9 @@ pub(all) struct ProjectionFeatures {
 }
 
 pub(all) struct ProjectionResult {
-  projection : Array[Int]
-  peaks : Array[Int]
-  valleys : Array[Int]
+  projection : Array[Int32]
+  peaks : Array[Int32]
+  valleys : Array[Int32]
   mean : Double
   stddev : Double
 }
@@ -1791,7 +1791,7 @@ pub(all) struct RobustnessReport {
 
 pub(all) struct ScanOCRConfig {
   language : String
-  dpi : Int
+  dpi : Int32
   deskew : Bool
   denoise : Bool
   binarization_method : String
@@ -1826,9 +1826,9 @@ pub(all) struct SimilarCharMapping {
 }
 
 pub(all) struct SplitPoint {
-  x : Int
-  y_top : Int
-  y_bottom : Int
+  x : Int32
+  y_top : Int32
+  y_bottom : Int32
   confidence : Double
 }
 
@@ -1856,9 +1856,9 @@ pub(all) struct StrokeFeature {
 }
 
 pub(all) struct StrokeSegmentationResult {
-  num_strokes : Int
+  num_strokes : Int32
   strokes : Array[StrokeFeature]
-  segmentation_points : Array[(Int, Int)]
+  segmentation_points : Array[(Int32, Int32)]
   confidence : Double
 }
 
@@ -1877,46 +1877,46 @@ pub fn StrokeType::equal(Self, Self) -> Bool
 pub fn StrokeType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TableCell {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  row : Int
-  col : Int
-  row_span : Int
-  col_span : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  row : Int32
+  col : Int32
+  row_span : Int32
+  col_span : Int32
 }
 
 pub(all) struct TableCellContent {
-  row : Int
-  col : Int
-  row_span : Int
-  col_span : Int
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  row : Int32
+  col : Int32
+  row_span : Int32
+  col_span : Int32
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   is_header : Bool
   is_merged : Bool
 }
 
 pub(all) struct TableDetectionResult {
-  horizontal_lines : Array[(Int, Int, Int)]
-  vertical_lines : Array[(Int, Int, Int)]
-  intersections : Array[(Int, Int)]
-  num_rows : Int
-  num_cols : Int
+  horizontal_lines : Array[(Int32, Int32, Int32)]
+  vertical_lines : Array[(Int32, Int32, Int32)]
+  intersections : Array[(Int32, Int32)]
+  num_rows : Int32
+  num_cols : Int32
   confidence : Double
 }
 
 pub(all) struct TableLine {
-  x1 : Int
-  y1 : Int
-  x2 : Int
-  y2 : Int
+  x1 : Int32
+  y1 : Int32
+  x2 : Int32
+  y2 : Int32
   line_type : TableLineType
-  thickness : Int
+  thickness : Int32
 }
 
 pub(all) enum TableLineType {
@@ -1927,12 +1927,12 @@ pub fn TableLineType::equal(Self, Self) -> Bool
 pub fn TableLineType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TableStructure {
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
   cells : Array[TableCell]
   horizontal_lines : Array[TableLine]
   vertical_lines : Array[TableLine]
-  bounding_box : (Int, Int, Int, Int)
+  bounding_box : (Int32, Int32, Int32, Int32)
 }
 
 pub(all) struct TemplateMatcher {
@@ -1941,53 +1941,53 @@ pub(all) struct TemplateMatcher {
 }
 
 pub(all) struct TextBlock {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   block_type : String
   text : String
   confidence : Double
-  reading_order : Int
+  reading_order : Int32
 }
 
 pub(all) struct TextLine {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct TextLineAttributes {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   font_size : Double
   font_weight : String
   is_indented : Bool
-  indent_level : Int
+  indent_level : Int32
   line_spacing : Double
   text : String
   alignment : String
 }
 
 pub(all) struct TextLineInfo {
-  y_start : Int
-  y_end : Int
-  height : Int
-  x_start : Int
-  x_end : Int
-  width : Int
-  pixel_count : Int
-  baseline : Int
+  y_start : Int32
+  y_end : Int32
+  height : Int32
+  x_start : Int32
+  x_end : Int32
+  width : Int32
+  pixel_count : Int32
+  baseline : Int32
 }
 
 pub(all) struct TextRegion {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   region_type : TextRegionType
 }
 
@@ -2001,30 +2001,30 @@ pub fn TextRegionType::equal(Self, Self) -> Bool
 pub fn TextRegionType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrainingConfig {
-  epochs : Int
-  batch_size : Int
+  epochs : Int32
+  batch_size : Int32
   optimizer : OptimizerConfig
   lr_scheduler : LRSchedulerConfig
   augmentation : AugmentationConfig
-  early_stopping_patience : Int
+  early_stopping_patience : Int32
   early_stopping_min_delta : Double
   save_best_only : Bool
-  checkpoint_interval : Int
-  log_interval : Int
+  checkpoint_interval : Int32
+  log_interval : Int32
   validation_split : Double
   shuffle : Bool
-  random_seed : Int
+  random_seed : Int32
 }
 
 pub(all) struct TrainingDataset {
   samples : Array[TrainingSample]
   labels : Array[String]
-  num_samples : Int
-  num_classes : Int
+  num_samples : Int32
+  num_classes : Int32
 }
 
 pub(all) struct TrainingMetrics {
-  epoch : Int
+  epoch : Int32
   train_loss : Double
   train_accuracy : Double
   val_loss : Double
@@ -2040,10 +2040,10 @@ pub(all) struct TrainingSample {
 }
 
 pub(all) struct TrainingState {
-  current_epoch : Int
+  current_epoch : Int32
   best_val_accuracy : Double
-  best_epoch : Int
-  epochs_without_improvement : Int
+  best_epoch : Int32
+  epochs_without_improvement : Int32
   total_training_time_ms : Double
   history : Array[TrainingMetrics]
   is_completed : Bool

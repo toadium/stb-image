@@ -6,11 +6,11 @@ import {
 }
 
 // Values
-pub fn adler32(Bytes) -> Int
+pub fn adler32(Bytes) -> Int32
 
 pub fn convert_iphone_png_to_rgb_pure(Bool) -> Unit
 
-pub fn crc32(Bytes) -> Int
+pub fn crc32(Bytes) -> Int32
 
 pub fn failure_reason_pure() -> String
 
@@ -46,7 +46,7 @@ pub fn ldr_to_hdr_gamma_pure(Float) -> Unit
 
 pub fn ldr_to_hdr_scale_pure(Float) -> Unit
 
-pub fn resize_pure(@types.Image, Int, Int, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
+pub fn resize_pure(@types.Image, Int32, Int32, filter? : @types.ResizeFilter, edge? : @types.ResizeEdge) -> @types.Image raise @types.LoadError
 
 pub fn set_flip_vertically_on_load_pure(Bool) -> Unit
 

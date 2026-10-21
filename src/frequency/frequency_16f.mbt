@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_freq(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_freq(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_freq(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_freq(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_freq(data : Bytes, offset : Int) -> Float {
+fn read_float_le_freq(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_freq(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_freq(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_freq(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_freq(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_freq(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_freq(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -279,7 +279,7 @@ pub fn idct_2d_f(coeffs : Array[Array[Double]]) -> @types.ImageF {
 /// 16-bit 2D Haar 小波变换。
 pub fn haar_transform_2d_16(
   img : @types.Image16,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> HaarWaveletResult raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -324,9 +324,9 @@ pub fn haar_inverse_transform_2d_16(
 /// 16-bit Haar 去噪。
 pub fn haar_denoise_16(
   img : @types.Image16,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.Image16 raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -362,7 +362,7 @@ pub fn haar_denoise_16(
 /// float 2D Haar 小波变换。
 pub fn haar_transform_2d_f(
   img : @types.ImageF,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> HaarWaveletResult raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -406,9 +406,9 @@ pub fn haar_inverse_transform_2d_f(result : HaarWaveletResult) -> @types.ImageF 
 /// float Haar 去噪。
 pub fn haar_denoise_f(
   img : @types.ImageF,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.ImageF raise @types.LoadError {
   let w = img.width
   let h = img.height

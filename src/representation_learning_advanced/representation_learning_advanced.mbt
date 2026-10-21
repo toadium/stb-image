@@ -98,19 +98,19 @@ pub extend SelfSupervisedTaskType with Eq::{not_equal, equal}
 /// 表示学习结果
 pub(all) struct RepresentationLearningResult {
   learned_representations : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  representation_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  representation_dimension : Int32
   reconstruction_error : Double
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   learning_time_ms : Double
-  num_epochs : Int
+  num_epochs : Int32
   converged : Bool
-  encoder_layers : Array[Int]
-  decoder_layers : Array[Int]
+  encoder_layers : Array[Int32]
+  decoder_layers : Array[Int32]
 }
 
 ///|
@@ -118,13 +118,13 @@ pub(all) struct RepresentationLearningResult {
 pub(all) struct AutoencoderResult {
   encoded_representations : Array[Array[Double]]
   reconstructed_data : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  latent_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  latent_dimension : Int32
   reconstruction_error : Double
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   autoencoder_type : AutoencoderType
   learning_time_ms : Double
@@ -139,13 +139,13 @@ pub(all) struct VAEResult {
   reconstructed_data : Array[Array[Double]]
   latent_means : Array[Array[Double]]
   latent_log_vars : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  latent_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  latent_dimension : Int32
   reconstruction_loss : Double
   kl_divergence : Double
   total_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   learning_time_ms : Double
 }
@@ -154,14 +154,14 @@ pub(all) struct VAEResult {
 /// GAN结果
 pub(all) struct GANResult {
   generated_samples : Array[Array[Double]]
-  num_generated : Int
+  num_generated : Int32
   generator_loss : Double
   discriminator_loss : Double
   total_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   gan_type : GANType
-  latent_dimension : Int
+  latent_dimension : Int32
   learning_time_ms : Double
   inception_score : Double
   fid_score : Double
@@ -171,18 +171,18 @@ pub(all) struct GANResult {
 /// 对比学习结果
 pub(all) struct ContrastiveLearningResult {
   learned_representations : Array[Array[Double]]
-  num_samples : Int
-  representation_dimension : Int
+  num_samples : Int32
+  representation_dimension : Int32
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   temperature : Double
-  batch_size : Int
+  batch_size : Int32
   contrastive_method : ContrastiveLearningMethodType
   learning_time_ms : Double
-  positive_pairs : Int
-  negative_pairs : Int
+  positive_pairs : Int32
+  negative_pairs : Int32
   top1_accuracy : Double
   top5_accuracy : Double
 }
@@ -191,12 +191,12 @@ pub(all) struct ContrastiveLearningResult {
 /// 自监督学习结果
 pub(all) struct SelfSupervisedLearningResult {
   learned_representations : Array[Array[Double]]
-  num_samples : Int
-  representation_dimension : Int
+  num_samples : Int32
+  representation_dimension : Int32
   pretraining_task : SelfSupervisedTaskType
   pretraining_loss : Double
   pretraining_accuracy : Double
-  num_pretraining_epochs : Int
+  num_pretraining_epochs : Int32
   downstream_accuracy : Double
   learning_time_ms : Double
   linear_probe_accuracy : Double
@@ -207,31 +207,31 @@ pub(all) struct SelfSupervisedLearningResult {
 /// 预训练结果
 pub(all) struct PretrainingResult {
   pretrained_model_weights : Array[Array[Double]]
-  num_layers : Int
-  num_parameters : Int
+  num_layers : Int32
+  num_parameters : Int32
   pretraining_loss : Double
   pretraining_accuracy : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   learning_rate : Double
   pretraining_time_ms : Double
   model_architecture : String
-  dataset_size : Int
+  dataset_size : Int32
 }
 
 ///|
 /// 微调结果
 pub(all) struct FineTuningResult {
   fine_tuned_weights : Array[Array[Double]]
-  num_layers : Int
-  num_frozen_layers : Int
-  num_trainable_layers : Int
+  num_layers : Int32
+  num_frozen_layers : Int32
+  num_trainable_layers : Int32
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   test_accuracy : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   fine_tuning_time_ms : Double
   learning_rate_scheduler : String
@@ -245,11 +245,11 @@ pub(all) struct RepresentationLearningConfig {
   gan_type : GANType
   contrastive_method : ContrastiveLearningMethodType
   self_supervised_task : SelfSupervisedTaskType
-  latent_dimension : Int
-  hidden_dimensions : Array[Int]
+  latent_dimension : Int32
+  hidden_dimensions : Array[Int32]
   learning_rate : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   temperature : Double
   margin : Double
   regularization : Double
@@ -257,10 +257,10 @@ pub(all) struct RepresentationLearningConfig {
   use_pretrained : Bool
   pretrained_model_path : String
   freeze_layers : Bool
-  num_frozen_layers : Int
+  num_frozen_layers : Int32
   use_data_augmentation : Bool
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 ///|
@@ -295,8 +295,8 @@ pub fn create_default_representation_learning_config() -> RepresentationLearning
 /// 简化的自编码器编码
 fn encode_simple(
   data : Array[Double],
-  input_dim : Int,
-  latent_dim : Int,
+  input_dim : Int32,
+  latent_dim : Int32,
 ) -> Array[Double] {
   let encoded : Array[Double] = []
   for i in 0..<latent_dim {
@@ -319,8 +319,8 @@ fn encode_simple(
 /// 简化的自编码器解码
 fn decode_simple(
   encoded : Array[Double],
-  latent_dim : Int,
-  output_dim : Int,
+  latent_dim : Int32,
+  output_dim : Int32,
 ) -> Array[Double] {
   let decoded : Array[Double] = []
   for i in 0..<output_dim {
@@ -532,9 +532,9 @@ fn exp_approx_rl(x : Double) -> Double {
 ///|
 /// GAN训练
 pub fn train_gan(
-  num_samples : Int,
-  latent_dim : Int,
-  output_dim : Int,
+  num_samples : Int32,
+  latent_dim : Int32,
+  output_dim : Int32,
   config : RepresentationLearningConfig,
 ) -> GANResult {
   let generated : Array[Array[Double]] = []

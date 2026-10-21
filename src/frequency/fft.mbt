@@ -10,8 +10,8 @@ pub struct Complex {
 ///|
 /// 2D FFT 结果
 pub struct FFTResult {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Complex]
 }
 
@@ -33,7 +33,7 @@ pub fn fft_2d(img : @types.Image) -> Array[FFTResult] raise @types.LoadError {
 }
 
 ///|
-fn fft_2d_channel(img : @types.Image, channel : Int, ch : Int) -> FFTResult {
+fn fft_2d_channel(img : @types.Image, channel : Int32, ch : Int32) -> FFTResult {
   let w = img.width
   let h = img.height
   let pw = next_pow2(w)
@@ -288,7 +288,7 @@ fn bit_reverse_split(re : Array[Float], im : Array[Float]) -> Unit {
   let bits = log2_int(n)
   let high_bit = 1 << (bits - 1)
   // 递推预计算 bit reversal：rev[i] = (rev[i>>1] >> 1) | ((i&1) << (bits-1))
-  let rev : Array[Int] = Array::make(n, 0)
+  let rev : Array[Int32] = Array::make(n, 0)
   for i in 1..<n {
     rev[i] = (rev[i >> 1] >> 1) | (if (i & 1) != 0 { high_bit } else { 0 })
   }
@@ -306,7 +306,7 @@ fn bit_reverse_split(re : Array[Float], im : Array[Float]) -> Unit {
 }
 
 ///|
-fn log2_int(n : Int) -> Int {
+fn log2_int(n : Int32) -> Int32 {
   let mut k = 0
   let mut v = n
   while v > 1 {
@@ -317,7 +317,7 @@ fn log2_int(n : Int) -> Int {
 }
 
 ///|
-fn next_pow2(n : Int) -> Int {
+fn next_pow2(n : Int32) -> Int32 {
   let mut p = 1
   while p < n {
     p *= 2

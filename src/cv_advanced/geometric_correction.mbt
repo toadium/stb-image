@@ -344,8 +344,8 @@ pub fn geo_resample(
 pub fn geo_correct(
   image : Array[Array[Double]],
   gcps : Array[GcpPoint],
-  output_width : Int,
-  output_height : Int,
+  output_width : Int32,
+  output_height : Int32,
   resample_method : ResampleMethod,
 ) -> Array[Array[Double]] {
   let (coeffs_x, coeffs_y) = geo_compute_polynomial_coeffs(gcps)

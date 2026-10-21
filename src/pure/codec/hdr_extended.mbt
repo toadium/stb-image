@@ -1,9 +1,9 @@
 ///|
 /// HDR 扩展信息（包含尺寸、通道数等）
 pub struct HdrInfoExtended {
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
   format : String
 }
@@ -72,7 +72,7 @@ pub fn hdr_info_extended(
   // 解析尺寸行: "-Y HEIGHT +X WIDTH\n"
   let mut width = 0
   let mut height = 0
-  let vals : Array[Int] = []
+  let vals : Array[Int32] = []
   while pos < len && data[pos].to_int() != 0x0A {
     let b = data[pos].to_int()
     if b == 0x2D || b == 0x2B {

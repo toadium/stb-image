@@ -2,7 +2,7 @@
 // 颜色转移/纹理特征/卡通化/油画/素描/风格迁移流水线
 
 ///|
-fn make_st_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_st_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_st_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_st_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_st_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

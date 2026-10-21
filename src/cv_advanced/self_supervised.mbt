@@ -24,8 +24,8 @@ pub extend SSLType with Eq::{not_equal, equal}
 /// SSL configuration.
 pub(all) struct SSLConfig {
   temperature : Double
-  projection_dim : Int
-  num_negatives : Int
+  projection_dim : Int32
+  num_negatives : Int32
   ssl_type : SSLType
 } derive(Eq, @debug.Debug)
 

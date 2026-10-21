@@ -70,15 +70,15 @@ pub(all) struct TransformerConfig {
   architecture : TransformerArchitecture
   attention_type : AttentionType
   pretraining_task : PretrainingTask
-  num_layers : Int
-  hidden_dim : Int
-  num_heads : Int
-  intermediate_dim : Int
+  num_layers : Int32
+  hidden_dim : Int32
+  num_heads : Int32
+  intermediate_dim : Int32
   dropout_rate : Double
   attention_dropout : Double
   activation : String
-  max_position_embeddings : Int
-  vocab_size : Int
+  max_position_embeddings : Int32
+  vocab_size : Int32
   use_layer_norm : Bool
   use_residual : Bool
   use_gradient_checkpointing : Bool
@@ -88,9 +88,9 @@ pub(all) struct TransformerConfig {
 /// 注意力权重
 pub(all) struct AttentionWeights {
   weights : Array[Array[Double]]
-  num_heads : Int
-  seq_length : Int
-  head_dim : Int
+  num_heads : Int32
+  seq_length : Int32
+  head_dim : Int32
   attention_type : AttentionType
 }
 
@@ -100,8 +100,8 @@ pub(all) struct TransformerLayerOutput {
   hidden_states : Array[Array[Double]]
   attention_weights : AttentionWeights
   layer_norm_output : Array[Array[Double]]
-  seq_length : Int
-  hidden_dim : Int
+  seq_length : Int32
+  hidden_dim : Int32
 }
 
 ///|
@@ -109,15 +109,15 @@ pub(all) struct TransformerLayerOutput {
 pub(all) struct PretrainedModelConfig {
   model_name : String
   model_type : String
-  num_parameters : Int
-  hidden_dim : Int
-  num_layers : Int
-  num_heads : Int
-  vocab_size : Int
-  max_seq_length : Int
+  num_parameters : Int32
+  hidden_dim : Int32
+  num_layers : Int32
+  num_heads : Int32
+  vocab_size : Int32
+  max_seq_length : Int32
   pretraining_data : String
-  pretraining_steps : Int
-  batch_size : Int
+  pretraining_steps : Int32
+  batch_size : Int32
   learning_rate : Double
   optimizer : String
   training_time_hours : Double
@@ -128,19 +128,19 @@ pub(all) struct PretrainedModelConfig {
 pub(all) struct FineTuningConfig {
   model_name : String
   task_type : String
-  num_classes : Int
+  num_classes : Int32
   learning_rate : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   warmup_ratio : Double
   weight_decay : Double
   max_grad_norm : Double
   use_gradient_accumulation : Bool
-  gradient_accumulation_steps : Int
+  gradient_accumulation_steps : Int32
   use_mixed_precision : Bool
-  freeze_layers : Int
+  freeze_layers : Int32
   use_lora : Bool
-  lora_r : Int
+  lora_r : Int32
   lora_alpha : Double
   lora_dropout : Double
 }
@@ -153,10 +153,10 @@ pub(all) struct TransferLearningResult {
   source_accuracy : Double
   target_accuracy : Double
   transfer_gain : Double
-  num_frozen_layers : Int
-  num_trainable_params : Int
+  num_frozen_layers : Int32
+  num_trainable_params : Int32
   training_time_s : Double
-  convergence_epoch : Int
+  convergence_epoch : Int32
 }
 
 ///|
@@ -165,13 +165,13 @@ pub(all) struct SelfSupervisedConfig {
   task_type : PretrainingTask
   mask_ratio : Double
   temperature : Double
-  num_negatives : Int
+  num_negatives : Int32
   use_momentum : Bool
   momentum : Double
   use_ema : Bool
   ema_decay : Double
-  projection_dim : Int
-  prediction_dim : Int
+  projection_dim : Int32
+  prediction_dim : Int32
 }
 
 ///|
@@ -247,8 +247,8 @@ pub fn compute_self_attention(
   query : Array[Array[Double]],
   key : Array[Array[Double]],
   value : Array[Array[Double]],
-  seq_length : Int,
-  head_dim : Int,
+  seq_length : Int32,
+  head_dim : Int32,
 ) -> AttentionWeights {
   ignore(value)
   let weights : Array[Array[Double]] = []

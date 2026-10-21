@@ -31,10 +31,10 @@ pub(all) struct CameraPose {
 /// 3D 地图点
 pub(all) struct MapPoint {
   position : Array[Double]
-  color : Array[Int]
+  color : Array[Int32]
   normal : Array[Double]
   descriptor : Array[Double]
-  num_observations : Int
+  num_observations : Int32
   is_outlier : Bool
 }
 
@@ -45,7 +45,7 @@ pub(all) struct KeyFrame {
   image : @types.Image
   features : Array[Array[Double]]
   descriptors : Array[Array[Double]]
-  map_points : Array[Int]
+  map_points : Array[Int32]
   timestamp : Double
   is_loop_closure : Bool
 }
@@ -57,8 +57,8 @@ pub(all) struct SLAMState {
   trajectory : Array[CameraPose]
   map_points : Array[MapPoint]
   keyframes : Array[KeyFrame]
-  num_frames_processed : Int
-  num_lost_frames : Int
+  num_frames_processed : Int32
+  num_lost_frames : Int32
   is_tracking : Bool
   is_mapping : Bool
   processing_time_ms : Double
@@ -69,8 +69,8 @@ pub(all) struct SLAMState {
 pub(all) struct SLAMConfig {
   algorithm : SLAMAlgorithm
   feature_threshold : Double
-  max_features : Int
-  keyframe_interval : Int
+  max_features : Int32
+  keyframe_interval : Int32
   min_parallax : Double
   use_loop_closure : Bool
   use_bundle_adjustment : Bool
@@ -84,8 +84,8 @@ pub(all) struct SLAMConfig {
 /// 特征跟踪结果
 pub(all) struct FeatureTrackingResult {
   tracked_features : Array[Array[Double]]
-  num_tracked : Int
-  num_lost : Int
+  num_tracked : Int32
+  num_lost : Int32
   parallax : Double
   is_keyframe : Bool
 }
@@ -94,10 +94,10 @@ pub(all) struct FeatureTrackingResult {
 /// 回环检测结果
 pub(all) struct LoopClosureResult {
   is_loop_detected : Bool
-  loop_frame_index : Int
+  loop_frame_index : Int32
   similarity_score : Double
   transformation : Array[Double]
-  num_inliers : Int
+  num_inliers : Int32
 }
 
 ///|
@@ -122,7 +122,7 @@ pub fn create_default_slam_config() -> SLAMConfig {
 /// 检测特征点（简化版：Harris 角点）
 pub fn detect_features_slam(
   img : @types.Image,
-  max_features : Int,
+  max_features : Int32,
   threshold : Double,
 ) -> Array[Array[Double]] {
   let w = img.width
@@ -151,7 +151,7 @@ pub fn track_features_slam(
   prev_img : @types.Image,
   curr_img : @types.Image,
   prev_features : Array[Array[Double]],
-  search_radius : Int,
+  search_radius : Int32,
 ) -> FeatureTrackingResult {
   let w = prev_img.width
   let h = prev_img.height

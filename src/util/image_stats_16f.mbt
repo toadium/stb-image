@@ -2,12 +2,12 @@
 // 支持 Image16 / ImageF 两种类型
 
 ///|
-fn read_u16_le_s(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_s(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_f32_le_s(data : Bytes, offset : Int) -> Float {
+fn read_f32_le_s(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()

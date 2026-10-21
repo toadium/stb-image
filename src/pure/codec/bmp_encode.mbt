@@ -3,7 +3,7 @@
 
 ///|
 /// 写入 4 字节小端整数
-fn bmp_write_i32_le(out : Array[Byte], val : Int) -> Unit {
+fn bmp_write_i32_le(out : Array[Byte], val : Int32) -> Unit {
   out.push((val & 0xFF).to_byte())
   out.push(((val >> 8) & 0xFF).to_byte())
   out.push(((val >> 16) & 0xFF).to_byte())

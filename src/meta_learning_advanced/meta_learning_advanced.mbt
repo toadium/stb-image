@@ -75,10 +75,10 @@ pub extend TaskDistributionType with Eq::{not_equal, equal}
 /// 元学习结果
 pub(all) struct MetaLearningResult {
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   meta_training_loss : Double
   meta_validation_loss : Double
   meta_test_loss : Double
@@ -86,10 +86,10 @@ pub(all) struct MetaLearningResult {
   meta_validation_accuracy : Double
   meta_test_accuracy : Double
   confidence_interval : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   meta_learning_rate : Double
   inner_learning_rate : Double
-  inner_steps : Int
+  inner_steps : Int32
   learning_time_ms : Double
   converged : Bool
 }
@@ -99,18 +99,18 @@ pub(all) struct MetaLearningResult {
 pub(all) struct MAMLResult {
   initial_parameters : Array[Double]
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   meta_loss : Double
   meta_accuracy : Double
   inner_loss : Array[Double]
   inner_accuracy : Array[Double]
-  num_inner_steps : Int
+  num_inner_steps : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   learning_time_ms : Double
   first_order : Bool
 }
@@ -120,15 +120,15 @@ pub(all) struct MAMLResult {
 pub(all) struct ReptileResult {
   initial_parameters : Array[Double]
   meta_learned_parameters : Array[Double]
-  num_tasks : Int
-  num_way : Int
-  num_shot : Int
+  num_tasks : Int32
+  num_way : Int32
+  num_shot : Int32
   meta_loss : Double
   meta_accuracy : Double
-  num_inner_steps : Int
+  num_inner_steps : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_meta_iterations : Int
+  num_meta_iterations : Int32
   learning_time_ms : Double
 }
 
@@ -136,8 +136,8 @@ pub(all) struct ReptileResult {
 /// 原型网络结果
 pub(all) struct ProtoNetResult {
   prototypes : Array[Array[Double]]
-  num_classes : Int
-  feature_dimension : Int
+  num_classes : Int32
+  feature_dimension : Int32
   training_loss : Double
   validation_loss : Double
   test_loss : Double
@@ -145,7 +145,7 @@ pub(all) struct ProtoNetResult {
   validation_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
   distance_metric : String
@@ -156,15 +156,15 @@ pub(all) struct ProtoNetResult {
 pub(all) struct MatchingNetResult {
   support_embeddings : Array[Array[Double]]
   query_embeddings : Array[Array[Double]]
-  num_classes : Int
-  num_support : Int
-  num_query : Int
+  num_classes : Int32
+  num_support : Int32
+  num_query : Int32
   training_loss : Double
   test_loss : Double
   training_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
   use_fce : Bool
@@ -174,18 +174,18 @@ pub(all) struct MatchingNetResult {
 /// 关系网络结果
 pub(all) struct RelationNetResult {
   relation_scores : Array[Array[Double]]
-  num_classes : Int
-  num_support : Int
-  num_query : Int
+  num_classes : Int32
+  num_support : Int32
+  num_query : Int32
   training_loss : Double
   test_loss : Double
   training_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
-  relation_module_layers : Int
+  relation_module_layers : Int32
 }
 
 ///|
@@ -195,21 +195,21 @@ pub(all) struct MetaLearningConfig {
   algorithm_type : MetaLearningAlgorithmType
   optimizer_type : MetaOptimizerType
   task_distribution : TaskDistributionType
-  num_way : Int
-  num_shot : Int
-  num_query : Int
-  num_meta_iterations : Int
-  num_tasks_per_batch : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
+  num_meta_iterations : Int32
+  num_tasks_per_batch : Int32
   inner_learning_rate : Double
   meta_learning_rate : Double
-  num_inner_steps : Int
+  num_inner_steps : Int32
   first_order : Bool
   use_curriculum : Bool
   use_data_augmentation : Bool
   use_regularization : Bool
   regularization_strength : Double
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 ///|
@@ -240,7 +240,7 @@ pub fn create_default_meta_learning_config() -> MetaLearningConfig {
 
 ///|
 /// 简化的参数初始化
-fn init_parameters(num_params : Int) -> Array[Double] {
+fn init_parameters(num_params : Int32) -> Array[Double] {
   let params : Array[Double] = []
   let mut state = 42
   for _ in 0..<num_params {
@@ -253,7 +253,10 @@ fn init_parameters(num_params : Int) -> Array[Double] {
 
 ///|
 /// MAML训练
-pub fn train_maml(num_params : Int, config : MetaLearningConfig) -> MAMLResult {
+pub fn train_maml(
+  num_params : Int32,
+  config : MetaLearningConfig,
+) -> MAMLResult {
   let initial_params = init_parameters(num_params)
   let meta_params = init_parameters(num_params)
 
@@ -288,7 +291,7 @@ pub fn train_maml(num_params : Int, config : MetaLearningConfig) -> MAMLResult {
 ///|
 /// Reptile训练
 pub fn train_reptile(
-  num_params : Int,
+  num_params : Int32,
   config : MetaLearningConfig,
 ) -> ReptileResult {
   let initial_params = init_parameters(num_params)
@@ -432,7 +435,7 @@ pub fn train_relation_net(
 ///|
 /// 元学习（统一接口）
 pub fn meta_learn(
-  num_params : Int,
+  num_params : Int32,
   config : MetaLearningConfig,
 ) -> MetaLearningResult {
   let maml_result = train_maml(num_params, config)

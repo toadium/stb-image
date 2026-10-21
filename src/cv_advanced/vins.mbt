@@ -30,7 +30,7 @@ pub(all) struct VinsConfig {
   imu_freq : Double
   cam_freq : Double
   init_period : Double
-  max_iterations : Int
+  max_iterations : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -48,8 +48,8 @@ pub(all) struct VinsState {
   ba : (Double, Double, Double)
   bg : (Double, Double, Double)
   initialized : Bool
-  imu_count : Int
-  frame_count : Int
+  imu_count : Int32
+  frame_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -62,8 +62,8 @@ pub extend VinsState with Eq::{not_equal, equal}
 /// VINS 统计信息。
 /// VINS statistics.
 pub(all) struct VinsStats {
-  total_imu : Int
-  total_frames : Int
+  total_imu : Int32
+  total_frames : Int32
   trajectory_length : Double
   avg_velocity : Double
   initialized : Bool

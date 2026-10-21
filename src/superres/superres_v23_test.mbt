@@ -2,7 +2,7 @@
 // 双三次/Lanczos/边缘保持超分、插值算法、USM锐化、均值去噪、PSNR/SSIM质量评估
 
 ///|
-fn make_sr_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_sr_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_sr_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_sr_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_sr_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

@@ -12,7 +12,7 @@ pub fn apply_window_level_medical(MedicalImage, WindowLevelConfig) -> @types.Ima
 
 pub fn calculate_medical_image_quality(MedicalImage) -> MedicalImageQuality
 
-pub fn calculate_roi_stats(MedicalImage, Array[Bool]) -> (Double, Double, Int)
+pub fn calculate_roi_stats(MedicalImage, Array[Bool]) -> (Double, Double, Int32)
 
 pub fn create_default_medical_segmentation_config() -> MedicalSegmentationConfig
 
@@ -22,21 +22,21 @@ pub fn detect_lesions_simple(MedicalImage, Double, Double) -> Array[Lesion]
 
 pub fn measure_area(@types.Image, pixel_area? : Double) -> Double
 
-pub fn measure_distance(Int, Int, Int, Int, pixel_spacing? : Double) -> Double
+pub fn measure_distance(Int32, Int32, Int32, Int32, pixel_spacing? : Double) -> Double
 
 pub fn medical_colormap(@types.Image, colormap? : String) -> @types.Image
 
-pub fn medical_contrast_enhance(@types.Image, clip_limit? : Double, tile_size? : Int) -> @types.Image
+pub fn medical_contrast_enhance(@types.Image, clip_limit? : Double, tile_size? : Int32) -> @types.Image
 
-pub fn medical_denoise(@types.Image, iterations? : Int, kappa? : Double) -> @types.Image
+pub fn medical_denoise(@types.Image, iterations? : Int32, kappa? : Double) -> @types.Image
 
-pub fn medical_image_registration(MedicalImage, MedicalImage, Int) -> MedicalRegistrationResult
+pub fn medical_image_registration(MedicalImage, MedicalImage, Int32) -> MedicalRegistrationResult
 
 pub fn medical_image_report_to_string(MedicalImage, Array[Lesion], MedicalImageQuality) -> String
 
 pub fn medical_threshold_segmentation(MedicalImage, Double, Double) -> Array[Bool]
 
-pub fn region_growing_segmentation(MedicalImage, Int, Int, Int, Double) -> Array[Bool]
+pub fn region_growing_segmentation(MedicalImage, Int32, Int32, Int32, Double) -> Array[Bool]
 
 pub fn window_level_bone() -> WindowLevel
 
@@ -50,7 +50,7 @@ pub fn window_level_mediastinum() -> WindowLevel
 
 // Types and methods
 pub(all) struct Lesion {
-  id : Int
+  id : Int32
   lesion_type : String
   x : Double
   y : Double
@@ -62,13 +62,13 @@ pub(all) struct Lesion {
   shape : String
   density : String
   confidence : Double
-  birads_category : Int
+  birads_category : Int32
 }
 
 pub(all) struct MedicalImage {
-  width : Int
-  height : Int
-  slices : Int
+  width : Int32
+  height : Int32
+  slices : Int32
   data : Array[Double]
   image_type : MedicalImageType
   pixel_spacing_x : Double
@@ -104,7 +104,7 @@ pub fn MedicalImageType::not_equal(Self, Self) -> Bool
 pub(all) struct MedicalRegistrationResult {
   transformation : Array[Double]
   similarity : Double
-  iterations : Int
+  iterations : Int32
   converged : Bool
   registration_type : String
 }
@@ -113,19 +113,19 @@ pub(all) struct MedicalSegmentationConfig {
   method_type : String
   lower_threshold : Double
   upper_threshold : Double
-  seed_points : Array[(Int, Int, Int)]
+  seed_points : Array[(Int32, Int32, Int32)]
   smoothness : Double
   curvature_weight : Double
 }
 
 pub(all) struct RegionOfInterest {
-  id : Int
+  id : Int32
   name : String
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  slice : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  slice : Int32
   volume : Double
   mean_intensity : Double
   std_intensity : Double

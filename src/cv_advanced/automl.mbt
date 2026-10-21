@@ -23,8 +23,8 @@ pub extend AutoMLType with Eq::{not_equal, equal}
 /// AutoML 配置。
 /// AutoML configuration.
 pub(all) struct AutoMLConfig {
-  max_trials : Int
-  budget : Int
+  max_trials : Int32
+  budget : Int32
   automl_type : AutoMLType
   minimize : Bool
 } derive(Eq, @debug.Debug)
@@ -41,7 +41,7 @@ pub extend AutoMLConfig with Eq::{not_equal, equal}
 pub(all) struct TrialResult {
   params : Array[Double]
   score : Double
-  trial_id : Int
+  trial_id : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -56,7 +56,7 @@ pub extend TrialResult with Eq::{not_equal, equal}
 pub(all) struct AutoMLResult {
   best_params : Array[Double]
   best_score : Double
-  total_trials : Int
+  total_trials : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -111,7 +111,7 @@ pub fn bayesian_optimize(
   objective : (Array[Double]) -> Double,
   search_space : Array[(Double, Double)],
   config : AutoMLConfig,
-  num_initial : Int,
+  num_initial : Int32,
 ) -> AutoMLResult {
   let trials : Array[TrialResult] = []
   let mut best_score = if config.minimize {
@@ -174,8 +174,8 @@ pub fn bayesian_optimize(
 /// NAS search.
 pub fn nas_search(
   objective : (Array[Double]) -> Double,
-  max_layers : Int,
-  max_channels : Int,
+  max_layers : Int32,
+  max_channels : Int32,
   config : AutoMLConfig,
 ) -> AutoMLResult {
   let mut best_score = if config.minimize {
@@ -214,7 +214,7 @@ pub fn nas_search(
 /// Ensemble selection.
 pub fn ensemble_select(
   model_scores : Array[TrialResult],
-  num_models : Int,
+  num_models : Int32,
 ) -> Array[TrialResult] {
   let sorted : Array[TrialResult] = []
   for m in model_scores {
@@ -237,7 +237,7 @@ pub fn ensemble_select(
 fn compute_ei_acquisition(
   trials : Array[TrialResult],
   search_space : Array[(Double, Double)],
-  trial_idx : Int,
+  trial_idx : Int32,
   minimize : Bool,
 ) -> Array[Double] {
   let _ = trials
@@ -253,7 +253,7 @@ fn compute_ei_acquisition(
 }
 
 ///|
-fn pseudo_rand(seed : Int) -> Double {
+fn pseudo_rand(seed : Int32) -> Double {
   let x = seed.to_double() * 12.9898 + 78.233
   let frac = x - x.floor()
   if frac < 0.0 {

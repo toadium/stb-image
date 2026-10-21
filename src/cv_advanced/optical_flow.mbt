@@ -7,8 +7,8 @@
 /// 光流场（2D 向量场）。
 /// Optical flow field (2D vector field).
 pub(all) struct FlowField {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   u : Array[Double]
   v : Array[Double]
 } derive(Eq, @debug.Debug)
@@ -23,8 +23,8 @@ pub extend FlowField with Eq::{not_equal, equal}
 /// 光流参数。
 /// Optical flow parameters.
 pub(all) struct FlowParams {
-  window_size : Int
-  max_iterations : Int
+  window_size : Int32
+  max_iterations : Int32
   epsilon : Double
   alpha : Double
 } derive(Eq, @debug.Debug)
@@ -41,7 +41,7 @@ pub extend FlowParams with Eq::{not_equal, equal}
 pub fn compute_lucas_kanade(
   prev : @types.Image,
   curr : @types.Image,
-  points : Array[(Int, Int)],
+  points : Array[(Int32, Int32)],
   params : FlowParams,
 ) -> FlowField {
   let w = prev.width

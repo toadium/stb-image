@@ -3,8 +3,8 @@
 
 ///|
 /// 计算 CRC32（PNG 使用的 IEEE 802.3 CRC32）
-fn png_crc32(data : Bytes) -> UInt {
-  let mut crc : UInt = 0xFFFFFFFFU
+fn png_crc32(data : Bytes) -> UInt32 {
+  let mut crc : UInt32 = 0xFFFFFFFFU
   for i in 0..<data.length() {
     let byte = data[i].to_uint()
     crc = crc ^ byte

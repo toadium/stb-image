@@ -36,9 +36,9 @@ pub fn compute_energy(img : @types.Image) -> Array[Double] {
 /// 找垂直最小能量 seam（返回每行的列索引，长度为 h）
 pub fn find_vertical_seam(
   energy : Array[Double],
-  w : Int,
-  h : Int,
-) -> Array[Int] {
+  w : Int32,
+  h : Int32,
+) -> Array[Int32] {
   let m = Array::make(w * h, 0.0)
   for j in 0..<w {
     m[j] = energy[j]
@@ -100,7 +100,7 @@ pub fn find_vertical_seam(
 /// 移除垂直 seam，宽度减 1
 pub fn remove_vertical_seam(
   img : @types.Image,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -134,9 +134,9 @@ pub fn remove_vertical_seam(
 /// 找水平最小能量 seam（返回每列的行索引，长度为 w）
 pub fn find_horizontal_seam(
   energy : Array[Double],
-  w : Int,
-  h : Int,
-) -> Array[Int] {
+  w : Int32,
+  h : Int32,
+) -> Array[Int32] {
   let m = Array::make(w * h, 0.0)
   for i in 0..<h {
     for j in 0..<w {
@@ -200,7 +200,7 @@ pub fn find_horizontal_seam(
 /// 移除水平 seam，高度减 1
 pub fn remove_horizontal_seam(
   img : @types.Image,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -230,7 +230,10 @@ pub fn remove_horizontal_seam(
 
 ///|
 /// 插入垂直 seam，宽度加 1
-fn insert_vertical_seam(img : @types.Image, seam : Array[Int]) -> @types.Image {
+fn insert_vertical_seam(
+  img : @types.Image,
+  seam : Array[Int32],
+) -> @types.Image {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -266,7 +269,7 @@ fn insert_vertical_seam(img : @types.Image, seam : Array[Int]) -> @types.Image {
 /// 插入水平 seam，高度加 1
 fn insert_horizontal_seam(
   img : @types.Image,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -302,8 +305,8 @@ fn insert_horizontal_seam(
 /// 支持缩小和放大，放大上限为原尺寸 2 倍
 pub fn seam_carve_resize(
   img : @types.Image,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   if new_w <= 0 || new_h <= 0 {
     raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")

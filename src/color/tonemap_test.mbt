@@ -1,7 +1,7 @@
 ///|
 fn tm_make_imagef(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   pixels : Array[(Float, Float, Float)],
 ) -> @types.ImageF {
   let data : Array[Byte] = []
@@ -76,8 +76,8 @@ test "gamma_tonemap: all-zero input" {
 
 ///|
 fn tm_make_imagef_rgba(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   pixels : Array[(Float, Float, Float, Float)],
 ) -> @types.ImageF {
   let data : Array[Byte] = []

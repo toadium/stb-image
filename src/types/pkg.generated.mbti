@@ -6,11 +6,11 @@ import {
 }
 
 // Values
-pub const MAX_IMAGE_DIMENSION : Int = 65535
+pub const MAX_IMAGE_DIMENSION : Int32 = 65535
 
 pub fn any_image_to_u8(AnyImage) -> Image
 
-pub fn check_dims(Int, Int, Int) -> Unit raise LoadError
+pub fn check_dims(Int32, Int32, Int32) -> Unit raise LoadError
 
 pub fn hdr_from_u8(Image) -> ImageF
 
@@ -20,9 +20,9 @@ pub fn image_to_any(Image) -> AnyImage
 
 pub fn imagef_to_any(ImageF) -> AnyImage
 
-pub fn safe_mul(Int, Int) -> Int?
+pub fn safe_mul(Int32, Int32) -> Int32?
 
-pub fn safe_mul3(Int, Int, Int) -> Int?
+pub fn safe_mul3(Int32, Int32, Int32) -> Int32?
 
 // Errors
 pub(all) suberror LoadError {
@@ -38,90 +38,90 @@ pub(all) enum AnyImage {
   U16(Image16)
   F32(ImageF)
 } derive(Eq, @debug.Debug)
-pub fn AnyImage::byte_count(Self) -> Int
-pub fn AnyImage::bytes_per_pixel(Self) -> Int
-pub fn AnyImage::channels(Self) -> Int
+pub fn AnyImage::byte_count(Self) -> Int32
+pub fn AnyImage::bytes_per_pixel(Self) -> Int32
+pub fn AnyImage::channels(Self) -> Int32
 pub fn AnyImage::data(Self) -> Bytes
 pub fn AnyImage::equal(Self, Self) -> Bool
-pub fn AnyImage::height(Self) -> Int
+pub fn AnyImage::height(Self) -> Int32
 pub fn AnyImage::is_grayscale(Self) -> Bool
 pub fn AnyImage::is_rgb(Self) -> Bool
 pub fn AnyImage::is_rgba(Self) -> Bool
 pub fn AnyImage::not_equal(Self, Self) -> Bool
-pub fn AnyImage::pixel_count(Self) -> Int
+pub fn AnyImage::pixel_count(Self) -> Int32
 pub fn AnyImage::to_repr(Self) -> @debug.Repr
-pub fn AnyImage::width(Self) -> Int
+pub fn AnyImage::width(Self) -> Int32
 pub impl ImageLike for AnyImage
 
 pub(all) struct GifAnimation {
   frames : Array[Image]
-  delays : Array[Int]
+  delays : Array[Int32]
 } derive(Eq, @debug.Debug)
 pub fn GifAnimation::equal(Self, Self) -> Bool
 pub fn GifAnimation::not_equal(Self, Self) -> Bool
 pub fn GifAnimation::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Image {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
-pub fn Image::byte_count(Self) -> Int
-pub fn Image::bytes_per_pixel(Self) -> Int
-pub fn Image::channels(Self) -> Int
+pub fn Image::byte_count(Self) -> Int32
+pub fn Image::bytes_per_pixel(Self) -> Int32
+pub fn Image::channels(Self) -> Int32
 pub fn Image::data(Self) -> Bytes
 pub fn Image::equal(Self, Self) -> Bool
-pub fn Image::height(Self) -> Int
+pub fn Image::height(Self) -> Int32
 pub fn Image::is_grayscale(Self) -> Bool
 pub fn Image::is_rgb(Self) -> Bool
 pub fn Image::is_rgba(Self) -> Bool
 pub fn Image::not_equal(Self, Self) -> Bool
-pub fn Image::pixel_count(Self) -> Int
+pub fn Image::pixel_count(Self) -> Int32
 pub fn Image::to_repr(Self) -> @debug.Repr
-pub fn Image::width(Self) -> Int
+pub fn Image::width(Self) -> Int32
 pub impl ImageLike for Image
 
 pub(all) struct Image16 {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
-pub fn Image16::byte_count(Self) -> Int
-pub fn Image16::bytes_per_pixel(Self) -> Int
-pub fn Image16::channels(Self) -> Int
+pub fn Image16::byte_count(Self) -> Int32
+pub fn Image16::bytes_per_pixel(Self) -> Int32
+pub fn Image16::channels(Self) -> Int32
 pub fn Image16::data(Self) -> Bytes
 pub fn Image16::equal(Self, Self) -> Bool
-pub fn Image16::height(Self) -> Int
+pub fn Image16::height(Self) -> Int32
 pub fn Image16::is_grayscale(Self) -> Bool
 pub fn Image16::is_rgb(Self) -> Bool
 pub fn Image16::is_rgba(Self) -> Bool
 pub fn Image16::not_equal(Self, Self) -> Bool
-pub fn Image16::pixel_count(Self) -> Int
+pub fn Image16::pixel_count(Self) -> Int32
 pub fn Image16::to_repr(Self) -> @debug.Repr
-pub fn Image16::width(Self) -> Int
+pub fn Image16::width(Self) -> Int32
 pub impl ImageLike for Image16
 
 pub(all) struct ImageF {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
-pub fn ImageF::byte_count(Self) -> Int
-pub fn ImageF::bytes_per_pixel(Self) -> Int
-pub fn ImageF::channels(Self) -> Int
+pub fn ImageF::byte_count(Self) -> Int32
+pub fn ImageF::bytes_per_pixel(Self) -> Int32
+pub fn ImageF::channels(Self) -> Int32
 pub fn ImageF::data(Self) -> Bytes
 pub fn ImageF::equal(Self, Self) -> Bool
-pub fn ImageF::height(Self) -> Int
+pub fn ImageF::height(Self) -> Int32
 pub fn ImageF::is_grayscale(Self) -> Bool
 pub fn ImageF::is_rgb(Self) -> Bool
 pub fn ImageF::is_rgba(Self) -> Bool
 pub fn ImageF::not_equal(Self, Self) -> Bool
-pub fn ImageF::pixel_count(Self) -> Int
+pub fn ImageF::pixel_count(Self) -> Int32
 pub fn ImageF::to_repr(Self) -> @debug.Repr
-pub fn ImageF::width(Self) -> Int
+pub fn ImageF::width(Self) -> Int32
 pub impl ImageLike for ImageF
 
 pub(all) enum ImageFormat {
@@ -150,9 +150,9 @@ pub fn ImageFormat::not_equal(Self, Self) -> Bool
 pub fn ImageFormat::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ImageInfo {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
 } derive(Eq, @debug.Debug)
 pub fn ImageInfo::equal(Self, Self) -> Bool
 pub fn ImageInfo::not_equal(Self, Self) -> Bool
@@ -160,7 +160,7 @@ pub fn ImageInfo::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PngAnimation {
   frames : Array[Image]
-  delays : Array[Int]
+  delays : Array[Int32]
 } derive(Eq, @debug.Debug)
 pub fn PngAnimation::equal(Self, Self) -> Bool
 pub fn PngAnimation::not_equal(Self, Self) -> Bool
@@ -193,13 +193,13 @@ pub fn ResizeFilter::to_repr(Self) -> @debug.Repr
 
 // Traits
 pub(open) trait ImageLike {
-  fn width(Self) -> Int
-  fn height(Self) -> Int
-  fn channels(Self) -> Int
+  fn width(Self) -> Int32
+  fn height(Self) -> Int32
+  fn channels(Self) -> Int32
   fn data(Self) -> Bytes
-  fn bytes_per_pixel(Self) -> Int
-  fn pixel_count(Self) -> Int = _
-  fn byte_count(Self) -> Int = _
+  fn bytes_per_pixel(Self) -> Int32
+  fn pixel_count(Self) -> Int32 = _
+  fn byte_count(Self) -> Int32 = _
   fn is_grayscale(Self) -> Bool = _
   fn is_rgb(Self) -> Bool = _
   fn is_rgba(Self) -> Bool = _

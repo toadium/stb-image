@@ -11,7 +11,11 @@
 ///|
 /// 追加 Resize 操作。
 /// Append Resize operation.
-pub fn IRPipeline::resize(self : IRPipeline, w : Int, h : Int) -> IRPipeline {
+pub fn IRPipeline::resize(
+  self : IRPipeline,
+  w : Int32,
+  h : Int32,
+) -> IRPipeline {
   self.add(Resize(w, h))
 }
 
@@ -41,10 +45,10 @@ pub fn IRPipeline::flip_v(self : IRPipeline) -> IRPipeline {
 /// Append Crop operation.
 pub fn IRPipeline::crop(
   self : IRPipeline,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> IRPipeline {
   self.add(Crop(x, y, w, h))
 }
@@ -59,7 +63,7 @@ pub fn IRPipeline::to_gray(self : IRPipeline) -> IRPipeline {
 ///|
 /// 追加 Brightness 操作。
 /// Append Brightness operation.
-pub fn IRPipeline::brightness(self : IRPipeline, delta : Int) -> IRPipeline {
+pub fn IRPipeline::brightness(self : IRPipeline, delta : Int32) -> IRPipeline {
   self.add(Brightness(delta))
 }
 
@@ -68,7 +72,7 @@ pub fn IRPipeline::brightness(self : IRPipeline, delta : Int) -> IRPipeline {
 /// Append GaussianBlur operation.
 pub fn IRPipeline::gaussian_blur(
   self : IRPipeline,
-  radius : Int,
+  radius : Int32,
   sigma : Float,
 ) -> IRPipeline {
   self.add(GaussianBlur(radius, sigma))
@@ -77,7 +81,7 @@ pub fn IRPipeline::gaussian_blur(
 ///|
 /// 追加 BoxBlur 操作。
 /// Append BoxBlur operation.
-pub fn IRPipeline::box_blur(self : IRPipeline, radius : Int) -> IRPipeline {
+pub fn IRPipeline::box_blur(self : IRPipeline, radius : Int32) -> IRPipeline {
   self.add(BoxBlur(radius))
 }
 

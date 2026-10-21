@@ -2,7 +2,7 @@
 // 亮度/对比度/gamma/反色 + HSV/HSL 色彩空间转换
 
 ///|
-fn clamp_byte(v : Int) -> Byte {
+fn clamp_byte(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -17,7 +17,7 @@ fn clamp_byte(v : Int) -> Byte {
 /// 仅影响颜色通道（前 min(channels,3) 个），alpha 通道不变。
 pub fn adjust_brightness(
   img : @types.Image,
-  delta : Int,
+  delta : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -239,9 +239,9 @@ pub fn invert(img : @types.Image) -> @types.Image raise @types.LoadError {
 /// RGB → HSV 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], v ∈ [0,1]
 pub fn rgb_to_hsv(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
@@ -277,7 +277,7 @@ pub fn hsv_to_rgb(
   h : Float,
   s : Float,
   v : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || v < 0.0F || v > 1.0F {
     raise @types.LoadError::DecodeFailed(
@@ -327,9 +327,9 @@ pub fn hsv_to_rgb(
 /// RGB → HSL 色彩空间转换。
 /// 输入 r,g,b ∈ [0,255]，输出 h ∈ [0,360), s ∈ [0,1], l ∈ [0,1]
 pub fn rgb_to_hsl(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
@@ -369,7 +369,7 @@ pub fn hsl_to_rgb(
   h : Float,
   s : Float,
   l : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if s < 0.0F || s > 1.0F || l < 0.0F || l > 1.0F {
     raise @types.LoadError::DecodeFailed(

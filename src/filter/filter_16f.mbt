@@ -2,18 +2,18 @@
 // 支持 Image16 / ImageF 两种类型
 
 ///|
-fn read_u16_le_f(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_f(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_f(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_f(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_f32_le_f(data : Bytes, offset : Int) -> Float {
+fn read_f32_le_f(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -23,7 +23,7 @@ fn read_f32_le_f(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_f(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_f(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -32,7 +32,7 @@ fn write_f32_le_f(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_coord_f(v : Int, max : Int) -> Int {
+fn clamp_coord_f(v : Int32, max : Int32) -> Int32 {
   if v < 0 {
     0
   } else if v >= max {
@@ -47,7 +47,7 @@ fn clamp_coord_f(v : Int, max : Int) -> Int {
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn box_blur_16(
   img : @types.Image16,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -83,7 +83,7 @@ pub fn box_blur_16(
   let win_size = 2 * radius + 1
   let bpp = ch * 2
   // 水平模糊：img -> temp
-  let temp : Array[Int] = Array::make(n * color_ch, 0)
+  let temp : Array[Int32] = Array::make(n * color_ch, 0)
   for y in 0..<h {
     for c in 0..<color_ch {
       let mut sum = 0
@@ -141,7 +141,7 @@ pub fn box_blur_16(
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn box_blur_f(
   img : @types.ImageF,
-  radius : Int,
+  radius : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -237,7 +237,7 @@ pub fn box_blur_f(
 /// 使用可分离高斯核，O(n*radius) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn gaussian_blur_16(
   img : @types.Image16,
-  radius : Int,
+  radius : Int32,
   sigma : Float,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
@@ -387,7 +387,7 @@ pub fn gaussian_blur_16(
 /// 使用可分离高斯核，O(n*radius) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn gaussian_blur_f(
   img : @types.ImageF,
-  radius : Int,
+  radius : Int32,
   sigma : Float,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
@@ -533,7 +533,7 @@ pub fn gaussian_blur_f(
 /// 仅滤波颜色通道，alpha 不变。
 pub fn median_blur_16(
   img : @types.Image16,
-  ksize : Int,
+  ksize : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -572,7 +572,7 @@ pub fn median_blur_16(
   let n = w * h
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let buf : Array[Int] = Array::make(ksize * ksize, 0)
+  let buf : Array[Int32] = Array::make(ksize * ksize, 0)
   for y in 0..<h {
     for x in 0..<w {
       for c in 0..<color_ch {
@@ -641,7 +641,7 @@ pub fn median_blur_16(
 /// 仅滤波颜色通道，alpha 不变。
 pub fn median_blur_f(
   img : @types.ImageF,
-  ksize : Int,
+  ksize : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -763,7 +763,7 @@ pub fn sharpen_16(
   let bpp = ch * 2
   let center = 1.0F + 4.0F * amount
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let px : Array[Int] = Array::make(n * ch, 0)
+  let px : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<n {
     for c in 0..<ch {
       px[i * ch + c] = read_u16_le_f(img.data, i * bpp + c * 2)

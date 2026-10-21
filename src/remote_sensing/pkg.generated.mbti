@@ -8,17 +8,17 @@ import {
 // Values
 pub fn calculate_all_vegetation_indices(RemoteSensingImage) -> VegetationIndices
 
-pub fn calculate_ndbi(RemoteSensingImage, Int, Int) -> Array[Double]
+pub fn calculate_ndbi(RemoteSensingImage, Int32, Int32) -> Array[Double]
 
-pub fn calculate_ndvi(RemoteSensingImage, Int, Int) -> Array[Double]
+pub fn calculate_ndvi(RemoteSensingImage, Int32, Int32) -> Array[Double]
 
-pub fn calculate_ndwi(RemoteSensingImage, Int, Int) -> Array[Double]
+pub fn calculate_ndwi(RemoteSensingImage, Int32, Int32) -> Array[Double]
 
 pub fn calculate_remote_sensing_quality(RemoteSensingImage) -> RemoteSensingQuality
 
-pub fn calculate_spectral_signature(RemoteSensingImage, Int, Int) -> SpectralSignature
+pub fn calculate_spectral_signature(RemoteSensingImage, Int32, Int32) -> SpectralSignature
 
-pub fn calculate_texture_features(@types.Image, Int, Int, Int) -> TextureFeatures raise @types.LoadError
+pub fn calculate_texture_features(@types.Image, Int32, Int32, Int32) -> TextureFeatures raise @types.LoadError
 
 pub fn classification_colormap(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -32,7 +32,7 @@ pub fn compute_ndvi(@types.Image, @types.Image) -> @types.Image raise @types.Loa
 
 pub fn compute_ndwi(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn create_default_remote_sensing_image(Int, Int, Int) -> RemoteSensingImage
+pub fn create_default_remote_sensing_image(Int32, Int32, Int32) -> RemoteSensingImage
 
 pub fn detect_changes_simple(RemoteSensingImage, RemoteSensingImage, Double) -> ChangeDetectionResult
 
@@ -40,7 +40,7 @@ pub fn false_color_composite(@types.Image, @types.Image, @types.Image) -> @types
 
 pub fn land_cover_classification(@types.Image, @types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
-pub fn multispectral_new(Int, Int, Array[@types.Image], band_names? : Array[String]) -> MultispectralImage
+pub fn multispectral_new(Int32, Int32, Array[@types.Image], band_names? : Array[String]) -> MultispectralImage
 
 pub fn remote_sensing_report_to_string(RemoteSensingImage, ClassificationResult, ChangeDetectionResult, RemoteSensingQuality) -> String
 
@@ -52,22 +52,22 @@ pub fn vegetation_coverage(@types.Image, ndvi_soil? : Double, ndvi_veg? : Double
 
 // Types and methods
 pub(all) struct ChangeDetectionResult {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   change_mask : Array[Bool]
   change_percentage : Double
-  num_changed_pixels : Int
+  num_changed_pixels : Int32
   change_intensity : Array[Double]
   threshold : Double
 }
 
 pub(all) struct ClassificationResult {
-  width : Int
-  height : Int
-  labels : Array[Int]
+  width : Int32
+  height : Int32
+  labels : Array[Int32]
   class_names : Array[String]
-  class_colors : Array[(Int, Int, Int)]
-  num_classes : Int
+  class_colors : Array[(Int32, Int32, Int32)]
+  num_classes : Int32
   overall_accuracy : Double
   kappa_coefficient : Double
 }
@@ -89,16 +89,16 @@ pub fn LandCoverClass::equal(Self, Self) -> Bool
 pub fn LandCoverClass::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultispectralImage {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   bands : Array[@types.Image]
   band_names : Array[String]
 }
 
 pub(all) struct RemoteSensingImage {
-  width : Int
-  height : Int
-  bands : Int
+  width : Int32
+  height : Int32
+  bands : Int32
   data : Array[Double]
   image_type : RemoteSensingImageType
   wavelength : Array[Double]
@@ -130,7 +130,7 @@ pub(all) struct RemoteSensingQuality {
 pub(all) struct SpectralSignature {
   wavelengths : Array[Double]
   reflectance : Array[Double]
-  num_bands : Int
+  num_bands : Int32
   mean_reflectance : Double
   std_reflectance : Double
   absorption_features : Array[(Double, Double)]

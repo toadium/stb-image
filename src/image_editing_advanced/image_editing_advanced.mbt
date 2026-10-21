@@ -85,12 +85,12 @@ pub extend MakeupType with Eq::{not_equal, equal}
 pub(all) struct CutoutResult {
   foreground : Array[Double]
   alpha_mask : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   cutout_method : CutoutMethod
-  foreground_pixels : Int
-  background_pixels : Int
+  foreground_pixels : Int32
+  background_pixels : Int32
   edge_quality : Double
   hair_detail : Double
   processing_time_ms : Double
@@ -100,9 +100,9 @@ pub(all) struct CutoutResult {
 /// 背景替换结果
 pub(all) struct BackgroundReplacementResult {
   composited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_background : Array[Double]
   new_background : Array[Double]
   alpha_mask : Array[Double]
@@ -118,15 +118,15 @@ pub(all) struct BackgroundReplacementResult {
 /// 物体移除结果
 pub(all) struct ObjectRemovalResult {
   repaired_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  removed_objects : Array[Array[Int]]
-  num_removed_objects : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  removed_objects : Array[Array[Int32]]
+  num_removed_objects : Int32
   removal_method : ObjectRemovalMethod
   mask : Array[Bool]
-  num_repaired_pixels : Int
-  inpainting_iterations : Int
+  num_repaired_pixels : Int32
+  inpainting_iterations : Int32
   processing_time_ms : Double
   consistency_score : Double
   texture_quality : Double
@@ -136,10 +136,10 @@ pub(all) struct ObjectRemovalResult {
 /// 人脸编辑结果
 pub(all) struct FaceEditingResult {
   edited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_faces_detected : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_faces_detected : Int32
   face_landmarks : Array[Array[Double]]
   editing_type : String
   editing_strength : Double
@@ -153,9 +153,9 @@ pub(all) struct FaceEditingResult {
 /// 美颜结果
 pub(all) struct BeautyRetouchResult {
   retouched_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   beauty_types : Array[BeautyType]
   beauty_strengths : Array[Double]
   skin_smoothness : Double
@@ -170,9 +170,9 @@ pub(all) struct BeautyRetouchResult {
 /// 妆容结果
 pub(all) struct MakeupResult {
   madeup_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   makeup_types : Array[MakeupType]
   makeup_colors : Array[Array[Double]]
   makeup_strengths : Array[Double]
@@ -188,11 +188,11 @@ pub(all) struct MakeupResult {
 /// 年龄变换结果
 pub(all) struct AgeTransformationResult {
   transformed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  original_age : Int
-  target_age : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  original_age : Int32
+  target_age : Int32
   age_direction : String
   face_alignment : Bool
   aging_strength : Double
@@ -205,9 +205,9 @@ pub(all) struct AgeTransformationResult {
 /// 表情编辑结果
 pub(all) struct ExpressionEditingResult {
   edited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_expression : String
   target_expression : String
   expression_strength : Double
@@ -237,8 +237,8 @@ pub(all) struct ImageEditingConfig {
   lipstick_color : Array[Double]
   eyeshadow_color : Array[Double]
   blush_color : Array[Double]
-  target_age : Int
-  original_age : Int
+  target_age : Int32
+  original_age : Int32
   target_expression : String
   expression_strength : Double
   use_face_detection : Bool
@@ -279,8 +279,8 @@ pub fn create_default_editing_config() -> ImageEditingConfig {
 /// 智能抠图（简化版）
 pub fn smart_cutout(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageEditingConfig,
 ) -> CutoutResult {
   let foreground : Array[Double] = []
@@ -337,8 +337,8 @@ pub fn replace_background(
   image : Array[Double],
   new_background : Array[Double],
   alpha_mask : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageEditingConfig,
 ) -> BackgroundReplacementResult {
   let composited : Array[Double] = []
@@ -373,8 +373,8 @@ pub fn replace_background(
 pub fn remove_objects(
   image : Array[Double],
   mask : Array[Bool],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageEditingConfig,
 ) -> ObjectRemovalResult {
   let repaired : Array[Double] = []
@@ -392,13 +392,13 @@ pub fn remove_objects(
     }
   }
 
-  let bbox : Array[Int] = []
+  let bbox : Array[Int32] = []
   bbox.push(0)
   bbox.push(0)
   bbox.push(width)
   bbox.push(height)
 
-  let removed_objects : Array[Array[Int]] = []
+  let removed_objects : Array[Array[Int32]] = []
   removed_objects.push(bbox)
 
   ObjectRemovalResult::{
@@ -422,8 +422,8 @@ pub fn remove_objects(
 /// 美颜（简化版）
 pub fn beauty_retouch(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageEditingConfig,
 ) -> BeautyRetouchResult {
   let retouched : Array[Double] = []

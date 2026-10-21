@@ -8,11 +8,11 @@ pub fn analyze_soil(Array[Double], AgricultureVisionConfig) -> SoilAnalysisResul
 
 pub fn create_default_agriculture_config() -> AgricultureVisionConfig
 
-pub fn detect_crops(Array[Double], Int, Int, AgricultureVisionConfig) -> Array[CropDetectionResult]
+pub fn detect_crops(Array[Double], Int32, Int32, AgricultureVisionConfig) -> Array[CropDetectionResult]
 
-pub fn detect_diseases(Array[Double], Int, Int, AgricultureVisionConfig) -> Array[DiseaseDetectionResult]
+pub fn detect_diseases(Array[Double], Int32, Int32, AgricultureVisionConfig) -> Array[DiseaseDetectionResult]
 
-pub fn detect_pests(Array[Double], Int, Int, AgricultureVisionConfig) -> Array[PestDetectionResult]
+pub fn detect_pests(Array[Double], Int32, Int32, AgricultureVisionConfig) -> Array[PestDetectionResult]
 
 pub fn predict_yield(CropType, Double, String, Double, AgricultureVisionConfig) -> YieldPredictionResult
 
@@ -31,7 +31,7 @@ pub(all) struct AgricultureVisionConfig {
   use_thermal : Bool
   use_ndvi : Bool
   drone_altitude : Double
-  camera_resolution : Array[Int]
+  camera_resolution : Array[Int32]
   gps_accuracy : Double
   auto_recommendation : Bool
   irrigation_control : Bool
@@ -52,14 +52,14 @@ pub fn AgricultureVisionTaskType::equal(Self, Self) -> Bool
 pub fn AgricultureVisionTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct CropDetectionResult {
-  crop_id : Int
+  crop_id : Int32
   crop_type : CropType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   confidence : Double
   growth_stage : String
   health_status : String
   height_cm : Double
-  leaf_count : Int
+  leaf_count : Int32
   canopy_coverage : Double
 }
 
@@ -79,11 +79,11 @@ pub fn CropType::equal(Self, Self) -> Bool
 pub fn CropType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DiseaseDetectionResult {
-  disease_id : Int
+  disease_id : Int32
   disease_type : DiseaseType
   severity : Double
   confidence : Double
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   affected_area_ratio : Double
   spread_direction : String
   recommendation : String
@@ -116,15 +116,15 @@ pub(all) struct GrowthMonitoringResult {
   health_index : Double
   stress_level : Double
   growth_stage : String
-  days_to_harvest : Int
+  days_to_harvest : Int32
 }
 
 pub(all) struct PestDetectionResult {
-  pest_id : Int
+  pest_id : Int32
   pest_type : PestType
-  count : Int
+  count : Int32
   confidence : Double
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   infestation_level : Double
   damage_severity : Double
   recommendation : String
@@ -171,9 +171,9 @@ pub fn SoilType::equal(Self, Self) -> Bool
 pub fn SoilType::not_equal(Self, Self) -> Bool
 
 pub(all) struct WeedDetectionResult {
-  weed_id : Int
+  weed_id : Int32
   weed_type : String
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   confidence : Double
   density : Double
   coverage_ratio : Double
@@ -190,7 +190,7 @@ pub(all) struct YieldPredictionResult {
   current_growth_stage : String
   expected_harvest_date : String
   factors_analysis : Array[String]
-  num_factors : Int
+  num_factors : Int32
   historical_comparison : Double
 }
 

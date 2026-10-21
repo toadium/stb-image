@@ -11,7 +11,7 @@ pub fn to_grayscale_pure(img : @types.Image) -> @types.Image {
   }
   let pixel_count = img.width * img.height
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(pixel_count * ch, 0)
+  let data_int : Array[Int32] = Array::make(pixel_count * ch, 0)
   for i in 0..<(pixel_count * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -94,7 +94,7 @@ pub fn to_rgba_pure(img : @types.Image) -> @types.Image {
 /// - 4: RGBA（alpha=255 若源无 alpha，灰度展开为 R=G=B）
 pub fn convert_channels_pure(
   img : @types.Image,
-  req_channels : Int,
+  req_channels : Int32,
 ) -> @types.Image raise @types.LoadError {
   if req_channels == img.channels {
     return img
@@ -164,7 +164,7 @@ pub fn premultiply_alpha_pure(
     )
   }
   let pixel_count = img.width * img.height
-  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  let data_int : Array[Int32] = Array::make(pixel_count * 4, 0)
   for i in 0..<(pixel_count * 4) {
     data_int[i] = img.data[i].to_int()
   }
@@ -199,7 +199,7 @@ pub fn unpremultiply_alpha_pure(
     )
   }
   let pixel_count = img.width * img.height
-  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  let data_int : Array[Int32] = Array::make(pixel_count * 4, 0)
   for i in 0..<(pixel_count * 4) {
     data_int[i] = img.data[i].to_int()
   }

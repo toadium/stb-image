@@ -1,0 +1,147 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-advanced/graph_neural"
+
+// Values
+pub fn create_default_gnn_config() -> GNNConfig
+
+pub fn create_default_reasoning_config() -> RelationReasoningConfig
+
+pub fn create_random_graph(Int32, Int32, Int32, Bool) -> GraphData
+
+pub fn detect_communities(GraphData, Int32) -> CommunityDetectionResult
+
+pub fn graph_attention(GraphData, GNNConfig) -> NodeEmbeddingResult
+
+pub fn graph_convolution(GraphData, GNNConfig) -> NodeEmbeddingResult
+
+pub fn graph_neural_report_to_string(NodeEmbeddingResult, GraphData, GNNConfig) -> String
+
+pub fn predict_relation(GraphData, Int32, Int32, RelationReasoningConfig) -> RelationPredictionResult
+
+// Errors
+
+// Types and methods
+pub(all) struct CommunityDetectionResult {
+  communities : Array[Array[Int32]]
+  num_communities : Int32
+  modularity : Double
+  community_sizes : Array[Int32]
+  method_type : String
+}
+
+pub(all) struct GNNConfig {
+  layer_type : GNNLayerType
+  num_layers : Int32
+  hidden_dim : Int32
+  output_dim : Int32
+  dropout_rate : Double
+  learning_rate : Double
+  num_heads : Int32
+  aggregation : String
+  use_residual : Bool
+  use_batch_norm : Bool
+  activation : String
+}
+
+pub(all) enum GNNLayerType {
+  GCN
+  GAT
+  GraphSAGE
+  GIN
+  GraphConv
+  ChebNet
+  APPNP
+  AGNN
+  Unknown
+} derive(Eq)
+pub fn GNNLayerType::equal(Self, Self) -> Bool
+pub fn GNNLayerType::not_equal(Self, Self) -> Bool
+
+pub(all) struct GraphData {
+  nodes : Array[GraphNode]
+  edges : Array[GraphEdge]
+  num_nodes : Int32
+  num_edges : Int32
+  adjacency_matrix : Array[Array[Double]]
+  is_directed : Bool
+  is_weighted : Bool
+}
+
+pub(all) struct GraphEdge {
+  source_id : Int32
+  target_id : Int32
+  weight : Double
+  relation_type : RelationType
+  features : Array[Double]
+}
+
+pub(all) struct GraphNode {
+  node_id : Int32
+  features : Array[Double]
+  label : Int32
+  num_features : Int32
+  degree : Int32
+  is_visited : Bool
+}
+
+pub(all) enum GraphTaskType {
+  NodeClassification
+  GraphClassification
+  LinkPrediction
+  GraphGeneration
+  NodeClustering
+  CommunityDetection
+  InfluenceMaximization
+  Recommendation
+  Unknown
+} derive(Eq)
+pub fn GraphTaskType::equal(Self, Self) -> Bool
+pub fn GraphTaskType::not_equal(Self, Self) -> Bool
+
+pub(all) struct NodeEmbeddingResult {
+  embeddings : Array[Array[Double]]
+  num_nodes : Int32
+  embedding_dim : Int32
+  method_type : String
+  training_loss : Double
+  training_accuracy : Double
+}
+
+pub(all) struct RelationPredictionResult {
+  source_id : Int32
+  target_id : Int32
+  predicted_relation : RelationType
+  confidence : Double
+  all_scores : Array[Double]
+  reasoning_path : Array[Int32]
+}
+
+pub(all) struct RelationReasoningConfig {
+  num_relations : Int32
+  embedding_dim : Int32
+  num_hops : Int32
+  use_attention : Bool
+  use_path_encoding : Bool
+  max_path_length : Int32
+  reasoning_method : String
+  threshold : Double
+}
+
+pub(all) enum RelationType {
+  IsA
+  PartOf
+  LocatedIn
+  WorksFor
+  HasProperty
+  CausedBy
+  SimilarTo
+  Contradicts
+  Entails
+  Unknown
+} derive(Eq)
+pub fn RelationType::equal(Self, Self) -> Bool
+pub fn RelationType::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits

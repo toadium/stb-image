@@ -81,11 +81,11 @@ pub fn medviz_window_level(
 /// MPR slice extraction.
 pub fn medviz_mpr_slice(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   orientation : MPROrientation,
-  slice_idx : Int,
+  slice_idx : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   match orientation {
@@ -125,10 +125,10 @@ pub fn medviz_mpr_slice(
 /// CPR centerline extraction (simplified).
 pub fn medviz_cpr_centerline(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
-  path_points : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  depth : Int32,
+  path_points : Array[(Int32, Int32, Int32)],
 ) -> Array[Double] {
   let result : Array[Double] = []
   for i in 0..<path_points.length() {
@@ -148,7 +148,7 @@ pub fn medviz_cpr_centerline(
 /// Pseudo-color mapping.
 pub fn medviz_pseudo_color(
   image : Array[Double],
-  color_scheme : Int,
+  color_scheme : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for i in 0..<image.length() {
@@ -176,9 +176,9 @@ pub fn medviz_pseudo_color(
 /// Volume rendering (simplified ray casting).
 pub fn medviz_volume_render(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   config : MedVizConfig,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -222,9 +222,9 @@ pub fn medviz_volume_render(
 /// Depth shading.
 pub fn medviz_depth_shading(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
   threshold : Double,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -249,9 +249,9 @@ pub fn medviz_depth_shading(
 /// Gradient shading.
 pub fn medviz_gradient_shading(
   volume : Array[Double],
-  width : Int,
-  height : Int,
-  depth : Int,
+  width : Int32,
+  height : Int32,
+  depth : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   for z in 0..<depth {

@@ -20,10 +20,10 @@ pub(all) struct BarcodeResult {
   barcode_type : BarcodeType
   data : String
   confidence : Double
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
@@ -33,9 +33,9 @@ pub(all) struct BarcodeConfig {
   enable_upca : Bool
   enable_code128 : Bool
   enable_qrcode : Bool
-  min_bar_width : Int // 最小条宽（像素）
-  max_bar_width : Int // 最大条宽（像素）
-  scan_lines : Int // 扫描线数量
+  min_bar_width : Int32 // 最小条宽（像素）
+  max_bar_width : Int32 // 最大条宽（像素）
+  scan_lines : Int32 // 扫描线数量
   quiet_zone_required : Bool // 是否要求静区
 }
 
@@ -59,7 +59,7 @@ pub fn barcode_default_config() -> BarcodeConfig {
 ///|
 /// EAN-13 编码表（左侧奇偶编码）
 /// L码（奇数）和 G码（偶数）的编码模式
-let ean13_l_codes : Array[Array[Int]] = [
+let ean13_l_codes : Array[Array[Int32]] = [
   [0, 0, 0, 1, 1, 0, 1], // 0
   [0, 0, 1, 1, 0, 0, 1], // 1
   [0, 0, 1, 0, 0, 1, 1], // 2
@@ -74,7 +74,7 @@ let ean13_l_codes : Array[Array[Int]] = [
 
 ///|
 /// EAN-13 G码（偶数编码）
-let ean13_g_codes : Array[Array[Int]] = [
+let ean13_g_codes : Array[Array[Int32]] = [
   [0, 1, 0, 0, 1, 1, 1], // 0
   [0, 1, 1, 0, 0, 1, 1], // 1
   [0, 0, 1, 1, 0, 1, 1], // 2
@@ -89,7 +89,7 @@ let ean13_g_codes : Array[Array[Int]] = [
 
 ///|
 /// EAN-13 右侧编码（R码）
-let ean13_r_codes : Array[Array[Int]] = [
+let ean13_r_codes : Array[Array[Int32]] = [
   [1, 1, 1, 0, 0, 1, 0], // 0
   [1, 1, 0, 0, 1, 1, 0], // 1
   [1, 1, 0, 1, 1, 0, 0], // 2
@@ -104,7 +104,7 @@ let ean13_r_codes : Array[Array[Int]] = [
 
 ///|
 /// EAN-13 前缀对应的奇偶编码模式
-let ean13_parity_patterns : Array[Array[Int]] = [
+let ean13_parity_patterns : Array[Array[Int32]] = [
   [0, 0, 0, 0, 0, 0], // 0
   [0, 0, 1, 0, 1, 1], // 1
   [0, 0, 1, 1, 0, 1], // 2
@@ -158,7 +158,7 @@ pub fn decode_ean13(
       break
     }
     // 提取扫描线的像素值
-    let scan_line : Array[Int] = []
+    let scan_line : Array[Int32] = []
     for x in 0..<w {
       scan_line.push(data[y * w + x].to_int())
     }
@@ -180,14 +180,14 @@ pub fn decode_ean13(
 
 ///|
 /// 扫描线二值化
-fn binarize_scanline(pixels : Array[Int]) -> Array[Int] {
+fn binarize_scanline(pixels : Array[Int32]) -> Array[Int32] {
   // 计算阈值（简单均值）
   let mut sum = 0
   for p in pixels {
     sum += p
   }
   let threshold = if pixels.length() > 0 { sum / pixels.length() } else { 128 }
-  let binary : Array[Int] = []
+  let binary : Array[Int32] = []
   for p in pixels {
     binary.push(if p < threshold { 1 } else { 0 })
   }
@@ -197,10 +197,10 @@ fn binarize_scanline(pixels : Array[Int]) -> Array[Int] {
 ///|
 /// 从二值化扫描线解码 EAN-13
 fn decode_ean13_from_binary(
-  binary : Array[Int],
-  y : Int,
-  _img_width : Int,
-  _img_height : Int,
+  binary : Array[Int32],
+  y : Int32,
+  _img_width : Int32,
+  _img_height : Int32,
 ) -> BarcodeResult? {
   let w = binary.length()
   if w < 95 { // EAN-13 至少需要 95 个模块
@@ -232,8 +232,8 @@ fn decode_ean13_from_binary(
     return None
   }
   // 解析左侧6位数字
-  let left_digits : Array[Int] = []
-  let left_parity : Array[Int] = []
+  let left_digits : Array[Int32] = []
+  let left_parity : Array[Int32] = []
   let mut pos = start_idx + 3 * module_width // 跳过起始符
   for _ in 0..<6 {
     let (digit, parity) = decode_ean13_digit(binary, pos, module_width, true)
@@ -247,7 +247,7 @@ fn decode_ean13_from_binary(
   // 检查中间分隔符（01010）
   pos += 5 * module_width // 跳过中间分隔符
   // 解析右侧6位数字
-  let right_digits : Array[Int] = []
+  let right_digits : Array[Int32] = []
   for _ in 0..<6 {
     let (digit, _) = decode_ean13_digit(binary, pos, module_width, false)
     if digit < 0 {
@@ -285,7 +285,7 @@ fn decode_ean13_from_binary(
 
 ///|
 /// 估计模块宽度
-fn estimate_module_width(binary : Array[Int], start_idx : Int) -> Int {
+fn estimate_module_width(binary : Array[Int32], start_idx : Int32) -> Int32 {
   // 起始符是 101，测量第一个条的宽度
   let mut width = 0
   let mut i = start_idx
@@ -302,13 +302,13 @@ fn estimate_module_width(binary : Array[Int], start_idx : Int) -> Int {
 ///|
 /// 解码单个 EAN-13 数字
 fn decode_ean13_digit(
-  binary : Array[Int],
-  start : Int,
-  module_width : Int,
+  binary : Array[Int32],
+  start : Int32,
+  module_width : Int32,
   is_left : Bool,
-) -> (Int, Int) {
+) -> (Int32, Int32) {
   // 采样7个模块
-  let modules : Array[Int] = []
+  let modules : Array[Int32] = []
   for i in 0..<7 {
     let pos = start + i * module_width + module_width / 2
     if pos < binary.length() {
@@ -344,7 +344,7 @@ fn decode_ean13_digit(
 
 ///|
 /// 根据奇偶编码模式匹配第一位数字
-fn match_parity_pattern(parity : Array[Int]) -> Int {
+fn match_parity_pattern(parity : Array[Int32]) -> Int32 {
   for d in 0..<10 {
     let mut is_match = true
     for i in 0..<6 {
@@ -454,10 +454,10 @@ pub fn detect_qr_finder_patterns(
 /// 水平扫描 QR 定位图案（1:1:3:1:1 比例）
 fn scan_qr_pattern_horizontal(
   data : Bytes,
-  w : Int,
-  start_x : Int,
-  y : Int,
-) -> (Bool, Int, Int) {
+  w : Int32,
+  start_x : Int32,
+  y : Int32,
+) -> (Bool, Int32, Int32) {
   let mut x = start_x
   // 模块1：黑条
   let mut m1 = 0
@@ -521,11 +521,11 @@ fn scan_qr_pattern_horizontal(
 /// 垂直验证 QR 定位图案
 fn verify_qr_pattern_vertical(
   data : Bytes,
-  w : Int,
-  h : Int,
-  start_x : Int,
-  start_y : Int,
-  size : Int,
+  w : Int32,
+  h : Int32,
+  start_x : Int32,
+  start_y : Int32,
+  size : Int32,
 ) -> Bool {
   let center_x = start_x + size / 2
   if center_x >= w {

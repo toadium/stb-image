@@ -4,12 +4,12 @@
 /// 霍夫圆检测 16-bit 版本。
 pub fn hough_circles_16(
   img : @types.Image16,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[Circle] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -67,7 +67,7 @@ pub fn hough_circles_16(
   }
   ignore(dp)
   let ch = img.channels
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     gray[i] = if ch == 1 {
       img.data[i * 2].to_int() | (img.data[i * 2 + 1].to_int() << 8)
@@ -81,8 +81,8 @@ pub fn hough_circles_16(
       (r * 299 + g * 587 + b * 114) / 1000
     }
   }
-  let gx : Array[Int] = Array::make(n, 0)
-  let gy : Array[Int] = Array::make(n, 0)
+  let gx : Array[Int32] = Array::make(n, 0)
+  let gy : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -108,7 +108,7 @@ pub fn hough_circles_16(
   let acc_w = w
   let acc_h = h
   let num_r = r_max - r_min + 1
-  let acc : Array[Int] = Array::make(acc_w * acc_h * num_r, 0)
+  let acc : Array[Int32] = Array::make(acc_w * acc_h * num_r, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -170,12 +170,12 @@ pub fn hough_circles_16(
 /// 霍夫圆检测 float 版本。
 pub fn hough_circles_f(
   img : @types.ImageF,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[Circle] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -280,7 +280,7 @@ pub fn hough_circles_f(
   let acc_w = w
   let acc_h = h
   let num_r = r_max - r_min + 1
-  let acc : Array[Int] = Array::make(acc_w * acc_h * num_r, 0)
+  let acc : Array[Int32] = Array::make(acc_w * acc_h * num_r, 0)
   let param1_f = Float::from_int(param1) / 255.0F
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {

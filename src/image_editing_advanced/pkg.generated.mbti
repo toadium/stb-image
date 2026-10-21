@@ -2,28 +2,28 @@
 package "walkzzz/image/src/image_editing_advanced"
 
 // Values
-pub fn beauty_retouch(Array[Double], Int, Int, ImageEditingConfig) -> BeautyRetouchResult
+pub fn beauty_retouch(Array[Double], Int32, Int32, ImageEditingConfig) -> BeautyRetouchResult
 
 pub fn create_default_editing_config() -> ImageEditingConfig
 
 pub fn image_editing_report_to_string(ImageEditingTaskType, ImageEditingConfig, String) -> String
 
-pub fn remove_objects(Array[Double], Array[Bool], Int, Int, ImageEditingConfig) -> ObjectRemovalResult
+pub fn remove_objects(Array[Double], Array[Bool], Int32, Int32, ImageEditingConfig) -> ObjectRemovalResult
 
-pub fn replace_background(Array[Double], Array[Double], Array[Double], Int, Int, ImageEditingConfig) -> BackgroundReplacementResult
+pub fn replace_background(Array[Double], Array[Double], Array[Double], Int32, Int32, ImageEditingConfig) -> BackgroundReplacementResult
 
-pub fn smart_cutout(Array[Double], Int, Int, ImageEditingConfig) -> CutoutResult
+pub fn smart_cutout(Array[Double], Int32, Int32, ImageEditingConfig) -> CutoutResult
 
 // Errors
 
 // Types and methods
 pub(all) struct AgeTransformationResult {
   transformed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  original_age : Int
-  target_age : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  original_age : Int32
+  target_age : Int32
   age_direction : String
   face_alignment : Bool
   aging_strength : Double
@@ -34,9 +34,9 @@ pub(all) struct AgeTransformationResult {
 
 pub(all) struct BackgroundReplacementResult {
   composited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_background : Array[Double]
   new_background : Array[Double]
   alpha_mask : Array[Double]
@@ -50,9 +50,9 @@ pub(all) struct BackgroundReplacementResult {
 
 pub(all) struct BeautyRetouchResult {
   retouched_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   beauty_types : Array[BeautyType]
   beauty_strengths : Array[Double]
   skin_smoothness : Double
@@ -90,12 +90,12 @@ pub fn CutoutMethod::not_equal(Self, Self) -> Bool
 pub(all) struct CutoutResult {
   foreground : Array[Double]
   alpha_mask : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   cutout_method : CutoutMethod
-  foreground_pixels : Int
-  background_pixels : Int
+  foreground_pixels : Int32
+  background_pixels : Int32
   edge_quality : Double
   hair_detail : Double
   processing_time_ms : Double
@@ -103,9 +103,9 @@ pub(all) struct CutoutResult {
 
 pub(all) struct ExpressionEditingResult {
   edited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   original_expression : String
   target_expression : String
   expression_strength : Double
@@ -119,10 +119,10 @@ pub(all) struct ExpressionEditingResult {
 
 pub(all) struct FaceEditingResult {
   edited_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_faces_detected : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_faces_detected : Int32
   face_landmarks : Array[Array[Double]]
   editing_type : String
   editing_strength : Double
@@ -148,8 +148,8 @@ pub(all) struct ImageEditingConfig {
   lipstick_color : Array[Double]
   eyeshadow_color : Array[Double]
   blush_color : Array[Double]
-  target_age : Int
-  original_age : Int
+  target_age : Int32
+  original_age : Int32
   target_expression : String
   expression_strength : Double
   use_face_detection : Bool
@@ -173,9 +173,9 @@ pub fn ImageEditingTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MakeupResult {
   madeup_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   makeup_types : Array[MakeupType]
   makeup_colors : Array[Array[Double]]
   makeup_strengths : Array[Double]
@@ -215,15 +215,15 @@ pub fn ObjectRemovalMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct ObjectRemovalResult {
   repaired_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  removed_objects : Array[Array[Int]]
-  num_removed_objects : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  removed_objects : Array[Array[Int32]]
+  num_removed_objects : Int32
   removal_method : ObjectRemovalMethod
   mask : Array[Bool]
-  num_repaired_pixels : Int
-  inpainting_iterations : Int
+  num_repaired_pixels : Int32
+  inpainting_iterations : Int32
   processing_time_ms : Double
   consistency_score : Double
   texture_quality : Double

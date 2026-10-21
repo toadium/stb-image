@@ -40,9 +40,9 @@ pub fn decode_ico_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_jpeg_pure(Bytes) -> @types.Image raise @types.LoadError
 
-pub fn decode_png_16_pure(Bytes, req_channels? : Int?) -> @types.Image16 raise @types.LoadError
+pub fn decode_png_16_pure(Bytes, req_channels? : Int32?) -> @types.Image16 raise @types.LoadError
 
-pub fn decode_png_pure(Bytes, req_channels? : Int?) -> @types.Image raise @types.LoadError
+pub fn decode_png_pure(Bytes, req_channels? : Int32?) -> @types.Image raise @types.LoadError
 
 pub fn decode_pnm_16_pure(Bytes) -> @types.Image16 raise @types.LoadError
 
@@ -56,9 +56,9 @@ pub fn decode_tga_pure(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_tiff_pure(Bytes) -> @types.Image raise @types.LoadError
 
-pub fn decode_vp8_frame(Bytes, Int) -> @types.Image raise @types.LoadError
+pub fn decode_vp8_frame(Bytes, Int32) -> @types.Image raise @types.LoadError
 
-pub fn decode_vp8_inter_frame(Bytes, Int, Vp8ReferenceFrames) -> (@types.Image, Vp8ReferenceFrames) raise @types.LoadError
+pub fn decode_vp8_inter_frame(Bytes, Int32, Vp8ReferenceFrames) -> (@types.Image, Vp8ReferenceFrames) raise @types.LoadError
 
 pub fn decode_webp_pure(Bytes) -> @types.Image raise @types.LoadError
 
@@ -70,7 +70,7 @@ pub fn encode_bmp_pure(@types.Image) -> Bytes
 
 pub fn encode_cur_pure(@types.Image) -> Bytes
 
-pub fn encode_cur_with_hotspot_pure(@types.Image, Int, Int) -> Bytes
+pub fn encode_cur_with_hotspot_pure(@types.Image, Int32, Int32) -> Bytes
 
 pub fn encode_gif_animation_pure(@types.GifAnimation) -> Bytes raise @types.LoadError
 
@@ -100,9 +100,9 @@ pub fn encode_tga_pure(@types.Image) -> Bytes
 
 pub fn encode_tiff_pure(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn encode_webp_lossy_full(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+pub fn encode_webp_lossy_full(@types.Image, quality? : Int32) -> Bytes raise @types.LoadError
 
-pub fn encode_webp_lossy_pure(@types.Image, quality? : Int) -> Bytes raise @types.LoadError
+pub fn encode_webp_lossy_pure(@types.Image, quality? : Int32) -> Bytes raise @types.LoadError
 
 pub fn get_image_info_extended(Bytes) -> ImageInfoExtended raise @types.LoadError
 
@@ -192,145 +192,145 @@ pub fn webp_info_extended(Bytes) -> WebpInfoExtended raise @types.LoadError
 
 // Types and methods
 pub struct ApngInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  color_type : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
   color_type_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
-  num_frames : Int
-  num_plays : Int
+  num_frames : Int32
+  num_plays : Int32
   is_animated : Bool
 }
 
 pub struct AvifInfo {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct AvifInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  rotation : Int
-  mirror : Int
+  rotation : Int32
+  mirror : Int32
   color_type : String
-  color_primaries : Int
-  transfer_characteristics : Int
-  matrix_coefficients : Int
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
   full_range : Bool
-  av1_profile : Int
-  av1_level : Int
-  av1_tier : Int
+  av1_profile : Int32
+  av1_level : Int32
+  av1_tier : Int32
   av1_monochrome : Bool
 }
 
 pub struct BmpInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  compression : Int
+  compression : Int32
   compression_name : String
   is_bottom_up : Bool
-  dib_size : Int
-  num_colors : Int
-  data_offset : Int
+  dib_size : Int32
+  num_colors : Int32
+  data_offset : Int32
 }
 
 pub struct CurInfoExtended {
-  icon_type : Int
-  num_images : Int
-  widths : Array[Int]
-  heights : Array[Int]
-  hotspot_xs : Array[Int]
-  hotspot_ys : Array[Int]
-  width : Int
-  height : Int
-  num_channels : Int
+  icon_type : Int32
+  num_images : Int32
+  widths : Array[Int32]
+  heights : Array[Int32]
+  hotspot_xs : Array[Int32]
+  hotspot_ys : Array[Int32]
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct GifInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   version : String
   has_global_color_table : Bool
-  global_color_table_size : Int
-  color_resolution : Int
+  global_color_table_size : Int32
+  color_resolution : Int32
   is_sorted : Bool
-  background_color_index : Int
-  pixel_aspect_ratio : Int
-  num_channels : Int
+  background_color_index : Int32
+  pixel_aspect_ratio : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct HdrInfoExtended {
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
   format : String
 }
 
 pub struct HeifInfo {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct HeifInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  rotation : Int
-  mirror : Int
+  rotation : Int32
+  mirror : Int32
   color_type : String
-  color_primaries : Int
-  transfer_characteristics : Int
-  matrix_coefficients : Int
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
   full_range : Bool
-  hevc_profile : Int
-  hevc_level : Int
-  hevc_tier : Int
-  hevc_chroma_format : Int
-  hevc_bit_depth_luma : Int
-  hevc_bit_depth_chroma : Int
+  hevc_profile : Int32
+  hevc_level : Int32
+  hevc_tier : Int32
+  hevc_chroma_format : Int32
+  hevc_bit_depth_luma : Int32
+  hevc_bit_depth_chroma : Int32
 }
 
 pub struct IcnsInfoExtended {
-  file_size : Int
-  num_icons : Int
+  file_size : Int32
+  num_icons : Int32
   icon_types : Array[String]
-  icon_sizes : Array[Int]
+  icon_sizes : Array[Int32]
   is_png_list : Array[Bool]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct IcoInfoExtended {
-  icon_type : Int
+  icon_type : Int32
   icon_type_name : String
-  num_images : Int
-  widths : Array[Int]
-  heights : Array[Int]
-  bit_depths : Array[Int]
-  width : Int
-  height : Int
-  num_channels : Int
+  num_images : Int32
+  widths : Array[Int32]
+  heights : Array[Int32]
+  bit_depths : Array[Int32]
+  width : Int32
+  height : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 
@@ -356,142 +356,142 @@ pub enum ImageInfoExtended {
 }
 
 pub struct JpegInfoExtended {
-  width : Int
-  height : Int
-  precision : Int
-  num_components : Int
+  width : Int32
+  height : Int32
+  precision : Int32
+  num_components : Int32
   is_grayscale : Bool
   is_progressive : Bool
-  sof_marker : Int
+  sof_marker : Int32
   sof_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct JpegXlInfo {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_lossless : Bool
 }
 
 pub struct JpegXlInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_lossless : Bool
   is_codestream : Bool
-  orientation : Int
+  orientation : Int32
 }
 
 pub struct PngInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  color_type : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
   color_type_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
   is_palette : Bool
-  compression_method : Int
-  filter_method : Int
-  interlace_method : Int
+  compression_method : Int32
+  filter_method : Int32
+  interlace_method : Int32
 }
 
 pub struct PnmInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   format_type : String
-  maxval : Int
-  bit_depth : Int
-  num_channels : Int
+  maxval : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_binary : Bool
 }
 
 pub struct PsdInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  channel_count : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  channel_count : Int32
+  num_channels : Int32
   has_alpha : Bool
-  color_mode : Int
+  color_mode : Int32
   color_mode_name : String
-  compression : Int
+  compression : Int32
   compression_name : String
-  version : Int
+  version : Int32
 }
 
 pub struct QoiInfoExtended {
-  width : Int
-  height : Int
-  channels : Int
-  colorspace : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  colorspace : Int32
   colorspace_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
 }
 
 pub struct TgaInfoExtended {
-  width : Int
-  height : Int
-  image_type : Int
+  width : Int32
+  height : Int32
+  image_type : Int32
   image_type_name : String
-  bit_depth : Int
-  num_channels : Int
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_bottom_up : Bool
-  id_length : Int
-  color_map_type : Int
-  x_origin : Int
-  y_origin : Int
+  id_length : Int32
+  color_map_type : Int32
+  x_origin : Int32
+  y_origin : Int32
 }
 
 pub struct TiffInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  samples_per_pixel : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  samples_per_pixel : Int32
+  num_channels : Int32
   has_alpha : Bool
-  compression : Int
+  compression : Int32
   compression_name : String
-  photometric : Int
+  photometric : Int32
   photometric_name : String
-  orientation : Int
-  resolution_unit : Int
+  orientation : Int32
+  resolution_unit : Int32
   is_little_endian : Bool
 }
 
 pub struct Vp8ReferenceFrames {
-  last_y : Array[Int]
-  last_u : Array[Int]
-  last_v : Array[Int]
-  golden_y : Array[Int]
-  golden_u : Array[Int]
-  golden_v : Array[Int]
-  altref_y : Array[Int]
-  altref_u : Array[Int]
-  altref_v : Array[Int]
-  width : Int
-  height : Int
+  last_y : Array[Int32]
+  last_u : Array[Int32]
+  last_v : Array[Int32]
+  golden_y : Array[Int32]
+  golden_u : Array[Int32]
+  golden_v : Array[Int32]
+  altref_y : Array[Int32]
+  altref_u : Array[Int32]
+  altref_v : Array[Int32]
+  width : Int32
+  height : Int32
 }
 
 pub struct WebpInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   format : String
   has_alpha : Bool
   has_animation : Bool
   has_icc_profile : Bool
   has_exif : Bool
   has_xmp : Bool
-  num_channels : Int
+  num_channels : Int32
 }
 
 // Type aliases

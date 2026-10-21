@@ -21,7 +21,7 @@ fn v254_box(box_type : String, payload : Array[Byte]) -> Array[Byte] {
 
 ///|
 /// 构造 ispe box: version(4) + width(4) + height(4)
-fn v254_ispe(w : Int, h : Int) -> Array[Byte] {
+fn v254_ispe(w : Int32, h : Int32) -> Array[Byte] {
   let payload : Array[Byte] = [
     0x00,
     0x00,
@@ -41,7 +41,7 @@ fn v254_ispe(w : Int, h : Int) -> Array[Byte] {
 
 ///|
 /// 构造 pixi box: version(4) + num_channels(1) + bit_depths(...)
-fn v254_pixi(num_ch : Int, bit_depth : Int) -> Array[Byte] {
+fn v254_pixi(num_ch : Int32, bit_depth : Int32) -> Array[Byte] {
   let payload : Array[Byte] = [0x00, 0x00, 0x00, 0x00, num_ch.to_byte()]
   for _ in 0..<num_ch {
     payload.push(bit_depth.to_byte())

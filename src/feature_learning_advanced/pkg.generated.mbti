@@ -4,7 +4,7 @@ package "walkzzz/image/src/feature_learning_advanced"
 // Values
 pub fn create_default_feature_learning_config() -> FeatureLearningConfig
 
-pub fn extract_features_fl(Array[Array[Double]], Array[Int], Array[Int], FeatureLearningConfig) -> FeatureExtractionResult
+pub fn extract_features_fl(Array[Array[Double]], Array[Int32], Array[Int32], FeatureLearningConfig) -> FeatureExtractionResult
 
 pub fn feature_learning_report_to_string(FeatureLearningTaskType, FeatureLearningConfig, String) -> String
 
@@ -12,7 +12,7 @@ pub fn fuse_features_fl(Array[Array[Array[Double]]], FeatureLearningConfig) -> F
 
 pub fn learn_features(Array[Array[Double]], FeatureLearningConfig) -> FeatureLearningResult
 
-pub fn select_features_fl(Array[Array[Double]], Int, FeatureLearningConfig) -> FeatureSelectionResult
+pub fn select_features_fl(Array[Array[Double]], Int32, FeatureLearningConfig) -> FeatureSelectionResult
 
 pub fn transform_features_fl(Array[Array[Double]], FeatureLearningConfig) -> FeatureTransformationResult
 
@@ -21,17 +21,17 @@ pub fn transform_features_fl(Array[Array[Double]], FeatureLearningConfig) -> Fea
 // Types and methods
 pub(all) struct ContrastiveLearningResult {
   learned_representations : Array[Array[Double]]
-  num_samples : Int
-  representation_dimension : Int
+  num_samples : Int32
+  representation_dimension : Int32
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   temperature : Double
-  batch_size : Int
+  batch_size : Int32
   learning_rate : Double
   learning_time_ms : Double
-  positive_pairs : Int
-  negative_pairs : Int
+  positive_pairs : Int32
+  negative_pairs : Int32
 }
 
 pub(all) enum FeatureExtractionMethodType {
@@ -53,12 +53,12 @@ pub fn FeatureExtractionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureExtractionResult {
   features : Array[Array[Double]]
-  num_samples : Int
-  feature_dimension : Int
+  num_samples : Int32
+  feature_dimension : Int32
   extraction_method : FeatureExtractionMethodType
   extraction_time_ms : Double
   feature_statistics : Array[Array[Double]]
-  num_layers : Int
+  num_layers : Int32
   layer_names : Array[String]
 }
 
@@ -78,9 +78,9 @@ pub fn FeatureFusionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureFusionResult {
   fused_features : Array[Array[Double]]
-  num_samples : Int
-  fused_dimension : Int
-  input_dimensions : Array[Int]
+  num_samples : Int32
+  fused_dimension : Int32
+  input_dimensions : Array[Int32]
   fusion_method : FeatureFusionMethodType
   fusion_weights : Array[Double]
   fusion_time_ms : Double
@@ -94,10 +94,10 @@ pub(all) struct FeatureLearningConfig {
   transformation_method : FeatureTransformationMethodType
   fusion_method : FeatureFusionMethodType
   metric_method : MetricLearningMethodType
-  num_features : Int
+  num_features : Int32
   learning_rate : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   margin : Double
   temperature : Double
   regularization : Double
@@ -106,23 +106,23 @@ pub(all) struct FeatureLearningConfig {
   pretrained_model : String
   use_augmentation : Bool
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 pub(all) struct FeatureLearningResult {
   learned_features : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  learned_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  learned_dimension : Int32
   feature_importance : Array[Double]
-  selected_features : Array[Int]
+  selected_features : Array[Int32]
   reconstruction_error : Double
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   learning_time_ms : Double
-  num_epochs : Int
+  num_epochs : Int32
   converged : Bool
 }
 
@@ -158,11 +158,11 @@ pub fn FeatureSelectionMethodType::equal(Self, Self) -> Bool
 pub fn FeatureSelectionMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureSelectionResult {
-  selected_features : Array[Int]
-  num_selected : Int
-  original_num_features : Int
+  selected_features : Array[Int32]
+  num_selected : Int32
+  original_num_features : Int32
   feature_scores : Array[Double]
-  feature_ranking : Array[Int]
+  feature_ranking : Array[Int32]
   selection_method : FeatureSelectionMethodType
   threshold : Double
   selection_time_ms : Double
@@ -189,9 +189,9 @@ pub fn FeatureTransformationMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FeatureTransformationResult {
   transformed_features : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  transformed_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  transformed_dimension : Int32
   transformation_method : FeatureTransformationMethodType
   transformation_parameters : Array[Double]
   transformation_time_ms : Double
@@ -219,15 +219,15 @@ pub fn MetricLearningMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct MetricLearningResult {
   learned_metric : Array[Array[Double]]
-  num_samples : Int
-  feature_dimension : Int
+  num_samples : Int32
+  feature_dimension : Int32
   metric_method : MetricLearningMethodType
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   margin : Double
-  embedding_dimension : Int
+  embedding_dimension : Int32
   learning_time_ms : Double
 }
 

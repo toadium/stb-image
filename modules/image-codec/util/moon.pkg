@@ -1,0 +1,7 @@
+import {
+  "walkzzz/image-core/types",
+}
+
+import {
+  "walkzzz/image-codec/codec",
+} for "test"

@@ -23,8 +23,8 @@ pub extend FederatedType with Eq::{not_equal, equal}
 /// 联邦学习配置。
 /// Federated learning configuration.
 pub(all) struct FederatedConfig {
-  num_clients : Int
-  num_rounds : Int
+  num_clients : Int32
+  num_rounds : Int32
   client_fraction : Double
   prox_mu : Double
   dp_epsilon : Double
@@ -42,7 +42,7 @@ pub extend FederatedConfig with Eq::{not_equal, equal}
 /// Client update.
 pub(all) struct ClientUpdate {
   params : Array[Double]
-  num_samples : Int
+  num_samples : Int32
   loss : Double
 } derive(Eq, @debug.Debug)
 
@@ -57,7 +57,7 @@ pub extend ClientUpdate with Eq::{not_equal, equal}
 /// Federated learning state.
 pub(all) struct FederatedState {
   global_params : Array[Double]
-  round : Int
+  round : Int32
   converged : Bool
 } derive(Eq, @debug.Debug)
 
@@ -71,7 +71,7 @@ pub extend FederatedState with Eq::{not_equal, equal}
 /// FedAvg 聚合。
 /// FedAvg aggregation.
 pub fn fedavg_aggregate(client_updates : Array[ClientUpdate]) -> Array[Double] {
-  let total_samples : Array[Int] = []
+  let total_samples : Array[Int32] = []
   let _ = total_samples
   let n = client_updates.length()
   if n == 0 {
@@ -149,7 +149,7 @@ pub fn federated_round(
   global_params : Array[Double],
   client_updates : Array[ClientUpdate],
   config : FederatedConfig,
-  current_round : Int,
+  current_round : Int32,
 ) -> FederatedState {
   let new_params = match config.fed_type {
     FederatedType::FedAvg => fedavg_aggregate(client_updates)
@@ -195,7 +195,7 @@ pub fn compute_client_drift(
 }
 
 ///|
-fn laplace_noise(seed : Int, scale : Double) -> Double {
+fn laplace_noise(seed : Int32, scale : Double) -> Double {
   let x = seed.to_double() * 4.12345 + 1.23456
   let frac = x - x.floor()
   let u = frac * 2.0 - 1.0

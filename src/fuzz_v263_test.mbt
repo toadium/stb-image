@@ -2,7 +2,7 @@
 // 所有错误路径应 raise LoadError 而非 panic，错误消息应非空
 
 ///|
-fn v263_lcg(seed : Int) -> () -> Int {
+fn v263_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -11,7 +11,7 @@ fn v263_lcg(seed : Int) -> () -> Int {
 }
 
 ///|
-fn v263_random_bytes(seed : Int, len : Int) -> Bytes {
+fn v263_random_bytes(seed : Int32, len : Int32) -> Bytes {
   let rng = v263_lcg(seed)
   let out : Array[Byte] = []
   for _ in 0..<len {

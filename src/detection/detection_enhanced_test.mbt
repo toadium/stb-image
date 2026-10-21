@@ -1,7 +1,7 @@
 // v193b detection 增强测试
 
 ///|
-fn det_make_rgb(w : Int, h : Int) -> @types.Image {
+fn det_make_rgb(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

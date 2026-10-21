@@ -3,7 +3,7 @@
 
 ///|
 /// 辅助函数：限制字节范围
-fn clamp_byte_deskew(v : Int) -> Byte {
+fn clamp_byte_deskew(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -61,8 +61,8 @@ pub fn detect_skew_angle(img : @types.Image) -> Double raise @types.LoadError {
 /// 计算指定角度下的水平投影方差
 fn projection_variance_at_angle(
   data : Bytes,
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   angle_deg : Double,
 ) -> Double {
   let angle_rad = angle_deg * 3.141592653589793 / 180.0
@@ -73,7 +73,7 @@ fn projection_variance_at_angle(
     width.to_double() * sin_a.abs()).to_int() +
     1
   // 计算水平投影
-  let projection : Array[Int] = Array::make(new_h, 0)
+  let projection : Array[Int32] = Array::make(new_h, 0)
   for y in 0..<height {
     for x in 0..<width {
       if data[y * width + x].to_int() < 128 {

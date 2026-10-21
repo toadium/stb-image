@@ -72,9 +72,9 @@ pub extend GenerativeAITaskType with Eq::{not_equal, equal}
 /// 视觉语言模型配置
 pub(all) struct VLMConfig {
   model_type : VisionLanguageModelType
-  image_encoder_size : Int
-  text_encoder_size : Int
-  projection_dim : Int
+  image_encoder_size : Int32
+  text_encoder_size : Int32
+  projection_dim : Int32
   temperature : Double
   use_contrastive_loss : Bool
   use_matching_loss : Bool
@@ -85,10 +85,10 @@ pub(all) struct VLMConfig {
 /// 多模态融合配置
 pub(all) struct FusionConfig {
   strategy : MultimodalFusionStrategy
-  num_modalities : Int
-  hidden_dim : Int
-  num_attention_heads : Int
-  num_layers : Int
+  num_modalities : Int32
+  hidden_dim : Int32
+  num_attention_heads : Int32
+  num_layers : Int32
   dropout_rate : Double
   use_gating : Bool
 }
@@ -97,13 +97,13 @@ pub(all) struct FusionConfig {
 /// 扩散模型配置
 pub(all) struct DiffusionConfig {
   model_type : DiffusionModelType
-  num_timesteps : Int
+  num_timesteps : Int32
   beta_start : Double
   beta_end : Double
   beta_schedule : String
   guidance_scale : Double
-  num_inference_steps : Int
-  image_size : Int
+  num_inference_steps : Int32
+  image_size : Int32
   use_ddim : Bool
   use_clip_guidance : Bool
 }
@@ -115,11 +115,11 @@ pub(all) struct GenerativeAIConfig {
   vlm_config : VLMConfig
   diffusion_config : DiffusionConfig
   fusion_config : FusionConfig
-  max_length : Int
-  num_beams : Int
+  max_length : Int32
+  num_beams : Int32
   temperature : Double
   top_p : Double
-  top_k : Int
+  top_k : Int32
 }
 
 ///|
@@ -128,7 +128,7 @@ pub(all) struct VisionTextEmbedding {
   image_embedding : Array[Double]
   text_embedding : Array[Double]
   similarity : Double
-  projection_dim : Int
+  projection_dim : Int32
 }
 
 ///|
@@ -137,18 +137,18 @@ pub(all) struct FusionResult {
   fused_representation : Array[Double]
   modality_weights : Array[Double]
   fusion_strategy : MultimodalFusionStrategy
-  hidden_dim : Int
+  hidden_dim : Int32
 }
 
 ///|
 /// 扩散生成结果
 pub(all) struct DiffusionResult {
   image : @types.Image
-  num_steps : Int
+  num_steps : Int32
   guidance_scale : Double
   prompt : String
   negative_prompt : String
-  seed : Int
+  seed : Int32
   generation_time_ms : Double
 }
 
@@ -160,7 +160,7 @@ pub(all) struct GenerativeAIResult {
   text : String
   confidence : Double
   generation_time_ms : Double
-  num_iterations : Int
+  num_iterations : Int32
 }
 
 ///|
@@ -344,7 +344,7 @@ pub fn diffusion_generate(
   prompt : String,
   negative_prompt : String,
   config : DiffusionConfig,
-  seed : Int,
+  seed : Int32,
 ) -> DiffusionResult {
   let size = config.image_size
   let _ = size * size
@@ -395,7 +395,7 @@ pub fn diffusion_generate(
 pub fn text_to_image(
   prompt : String,
   config : GenerativeAIConfig,
-  seed : Int,
+  seed : Int32,
 ) -> GenerativeAIResult {
   let diffusion_result = diffusion_generate(
     prompt,

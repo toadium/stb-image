@@ -40,7 +40,7 @@ fn make_flow_params() -> @cv_advanced.FlowParams {
 test "形式化: compute_lucas_kanade 返回正确尺寸" {
   let (prev, curr) = make_flow_test_images()
   let params = make_flow_params()
-  let points : Array[(Int, Int)] = [(8, 8), (10, 10), (12, 12)]
+  let points : Array[(Int32, Int32)] = [(8, 8), (10, 10), (12, 12)]
   let flow = @cv_advanced.compute_lucas_kanade(prev, curr, points, params)
   assert_eq(flow.width, prev.width)
   assert_eq(flow.height, prev.height)
@@ -100,7 +100,7 @@ test "MOCK: flow_consistency 返回非负值" {
 test "E2E: 完整光流流程" {
   let (prev, curr) = make_flow_test_images()
   let params = make_flow_params()
-  let points : Array[(Int, Int)] = [(8, 8), (10, 10)]
+  let points : Array[(Int32, Int32)] = [(8, 8), (10, 10)]
   let lk = @cv_advanced.compute_lucas_kanade(prev, curr, points, params)
   let hs = @cv_advanced.compute_horn_schunck(prev, curr, params)
   let fb = @cv_advanced.compute_farneback(prev, curr, params)

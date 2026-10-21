@@ -1,7 +1,7 @@
 // segmentation.mbt 功能测试：watershed_segment / region_growing / threshold_otsu / segmentation_to_color
 
 ///|
-fn make_gradient_img(w : Int, h : Int) -> @types.Image {
+fn make_gradient_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -17,7 +17,7 @@ fn make_gradient_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_bimodal_img(w : Int, h : Int) -> @types.Image {
+fn make_bimodal_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -33,7 +33,7 @@ fn make_bimodal_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_rgb_blocks_img(w : Int, h : Int) -> @types.Image {
+fn make_rgb_blocks_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * 3, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

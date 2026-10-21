@@ -26,7 +26,7 @@ pub fn database_add_image(ImageDatabase, ImageFeature) -> ImageDatabase
 
 pub fn database_remove_image(ImageDatabase, String) -> ImageDatabase
 
-pub fn database_size(ImageDatabase) -> Int
+pub fn database_size(ImageDatabase) -> Int32
 
 pub fn euclidean_distance_cbir(Array[Double], Array[Double]) -> Double
 
@@ -50,9 +50,9 @@ pub fn manhattan_distance_cbir(Array[Double], Array[Double]) -> Double
 
 pub fn retrieval_report_to_string(CBIRRetrievalResultList, CBIRImageFeature) -> String
 
-pub fn retrieve_images(CBIRImageFeature, CBIRImageIndex, Int, SimilarityMetric) -> CBIRRetrievalResultList
+pub fn retrieve_images(CBIRImageFeature, CBIRImageIndex, Int32, SimilarityMetric) -> CBIRRetrievalResultList
 
-pub fn search_similar_images(ImageDatabase, ImageFeature, top_k? : Int, method_type? : String) -> Array[SearchResult]
+pub fn search_similar_images(ImageDatabase, ImageFeature, top_k? : Int32, method_type? : String) -> Array[SearchResult]
 
 // Errors
 
@@ -60,17 +60,17 @@ pub fn search_similar_images(ImageDatabase, ImageFeature, top_k? : Int, method_t
 pub(all) struct CBIRImageFeature {
   feature_type : FeatureType
   feature_vector : Array[Double]
-  feature_length : Int
+  feature_length : Int32
   image_id : String
   image_path : String
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   extraction_time_ms : Double
 }
 
 pub(all) struct CBIRImageIndex {
   features : Array[CBIRImageFeature]
-  num_images : Int
+  num_images : Int32
   index_type : String
   built : Bool
   build_time_ms : Double
@@ -81,21 +81,21 @@ pub(all) struct CBIRRetrievalResult {
   image_path : String
   similarity : Double
   distance : Double
-  rank : Int
-  width : Int
-  height : Int
+  rank : Int32
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct CBIRRetrievalResultList {
   results : Array[CBIRRetrievalResult]
-  num_results : Int
+  num_results : Int32
   query_image_id : String
   retrieval_time_ms : Double
-  total_images_in_index : Int
+  total_images_in_index : Int32
 }
 
 pub(all) struct ColorHistogramConfig {
-  num_bins : Int
+  num_bins : Int32
   color_space : String
   normalize : Bool
   cumulative : Bool
@@ -120,16 +120,16 @@ pub fn FeatureType::equal(Self, Self) -> Bool
 pub fn FeatureType::not_equal(Self, Self) -> Bool
 
 pub(all) struct GaborConfig {
-  num_scales : Int
-  num_orientations : Int
+  num_scales : Int32
+  num_orientations : Int32
   wavelength : Double
   aspect_ratio : Double
 }
 
 pub(all) struct HOGConfig {
-  cell_size : Int
-  block_size : Int
-  num_bins : Int
+  cell_size : Int32
+  block_size : Int32
+  num_bins : Int32
   normalize : Bool
 }
 
@@ -141,13 +141,13 @@ pub(all) struct ImageDatabase {
 pub(all) struct ImageFeature {
   image_id : String
   features : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct LBPConfig {
-  radius : Int
-  num_points : Int
+  radius : Int32
+  num_points : Int32
   uniform : Bool
   rotation_invariant : Bool
 }
@@ -155,7 +155,7 @@ pub(all) struct LBPConfig {
 pub(all) struct SearchResult {
   image_id : String
   similarity : Double
-  rank : Int
+  rank : Int32
 }
 
 pub(all) enum SimilarityMetric {

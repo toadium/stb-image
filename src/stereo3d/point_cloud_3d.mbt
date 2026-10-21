@@ -7,9 +7,9 @@ pub(all) struct Point3d {
   x : Double
   y : Double
   z : Double
-  r : Int
-  g : Int
-  b : Int
+  r : Int32
+  g : Int32
+  b : Int32
   intensity : Double
 }
 
@@ -17,9 +17,9 @@ pub(all) struct Point3d {
 /// 点云
 pub(all) struct PointCloud3D {
   points : Array[Point3d]
-  num_points : Int
-  width : Int
-  height : Int
+  num_points : Int32
+  width : Int32
+  height : Int32
   is_organized : Bool
 }
 
@@ -35,19 +35,19 @@ pub(all) struct BoundingBox3d {
   yaw : Double
   pitch : Double
   roll : Double
-  class_id : Int
+  class_id : Int32
   confidence : Double
 }
 
 ///|
 /// 深度图
 pub(all) struct DepthMap3d {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   depths : Array[Double]
   min_depth : Double
   max_depth : Double
-  invalid_count : Int
+  invalid_count : Int32
 }
 
 ///|
@@ -57,8 +57,8 @@ pub(all) struct CameraIntrinsics3d {
   fy : Double
   cx : Double
   cy : Double
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   distortion : Array[Double]
 }
 
@@ -72,23 +72,23 @@ pub(all) struct CameraExtrinsics3d {
 ///|
 /// 立体匹配配置
 pub(all) struct StereoConfig3d {
-  min_disparity : Int
-  num_disparities : Int
-  block_size : Int
+  min_disparity : Int32
+  num_disparities : Int32
+  block_size : Int32
   uniqueness_ratio : Double
-  speckle_window_size : Int
-  speckle_range : Int
-  pre_filter_cap : Int
+  speckle_window_size : Int32
+  speckle_range : Int32
+  pre_filter_cap : Int32
 }
 
 ///|
 /// 点云配准结果
 pub(all) struct RegistrationResult3d {
   transformation : Array[Double] // 4x4 变换矩阵
-  inliers : Int
+  inliers : Int32
   rmse : Double
   fitness : Double
-  iterations : Int
+  iterations : Int32
   converged : Bool
 }
 
@@ -96,9 +96,9 @@ pub(all) struct RegistrationResult3d {
 /// 网格（Mesh3d）
 pub(all) struct Mesh3d {
   vertices : Array[Point3d]
-  faces : Array[(Int, Int, Int)]
-  num_vertices : Int
-  num_faces : Int
+  faces : Array[(Int32, Int32, Int32)]
+  num_vertices : Int32
+  num_faces : Int32
 }
 
 ///|
@@ -118,8 +118,8 @@ pub fn create_default_stereo_config() -> StereoConfig3d {
 ///|
 /// 创建默认相机内参
 pub fn create_default_camera_intrinsics(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> CameraIntrinsics3d {
   let fx = width.to_double() * 0.8
   let fy = height.to_double() * 0.8
@@ -308,7 +308,7 @@ pub fn voxel_downsample(
 /// 点云统计滤波（去除离群点）
 pub fn statistical_outlier_removal(
   cloud : PointCloud3D,
-  mean_k : Int,
+  mean_k : Int32,
   std_ratio : Double,
 ) -> PointCloud3D {
   if cloud.num_points < mean_k {
@@ -372,7 +372,7 @@ pub fn statistical_outlier_removal(
 pub fn icp_registration(
   source : PointCloud3D,
   target : PointCloud3D,
-  max_iterations : Int,
+  max_iterations : Int32,
   tolerance : Double,
 ) -> RegistrationResult3d {
   let transformation : Array[Double] = [

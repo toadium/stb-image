@@ -2,7 +2,7 @@
 // 相位相关配准/归一化互相关/互信息/Harris角点/特征匹配/仿射变换估计
 
 ///|
-fn make_varied_ra_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_ra_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

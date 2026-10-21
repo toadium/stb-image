@@ -4,22 +4,22 @@
 ///|
 /// 连通域结构体
 pub(all) struct OcrConnectedComponent {
-  label : Int
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  area : Int
-  pixel_count : Int
-  bounding_box : (Int, Int, Int, Int)
+  label : Int32
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  area : Int32
+  pixel_count : Int32
+  bounding_box : (Int32, Int32, Int32, Int32)
   centroid : (Double, Double)
 }
 
 ///|
 /// 连通域标记结果
 pub(all) struct OcrConnectedComponentsResult {
-  labels : Array[Int]
-  num_components : Int
+  labels : Array[Int32]
+  num_components : Int32
   components : Array[OcrConnectedComponent]
 }
 
@@ -28,7 +28,7 @@ pub(all) struct OcrConnectedComponentsResult {
 /// 使用两遍扫描算法
 pub fn connected_components_analysis(
   img : @types.Image,
-  connectivity? : Int = 8,
+  connectivity~ : Int32 = 8,
 ) -> OcrConnectedComponentsResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -61,15 +61,15 @@ pub fn connected_components_analysis(
   let n = w * h
   let data = img.data
   // 第一遍：临时标记
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let mut next_label = 1
   // 并查集（用于等价标签合并）
-  let parent : Array[Int] = Array::make(n + 1, 0)
+  let parent : Array[Int32] = Array::make(n + 1, 0)
   for i in 0..<(n + 1) {
     parent[i] = i
   }
   // find 函数（路径压缩）
-  fn find(x : Int, parent : Array[Int]) -> Int {
+  fn find(x : Int32, parent : Array[Int32]) -> Int32 {
     let mut root = x
     while parent[root] != root {
       root = parent[root]
@@ -84,7 +84,7 @@ pub fn connected_components_analysis(
     root
   }
   // union 函数
-  fn union(x : Int, y : Int, parent : Array[Int]) -> Unit {
+  fn union(x : Int32, y : Int32, parent : Array[Int32]) -> Unit {
     let rx = find(x, parent)
     let ry = find(y, parent)
     if rx != ry {
@@ -97,7 +97,7 @@ pub fn connected_components_analysis(
       let idx = y * w + x
       if data[idx].to_int() > 128 {
         // 前景像素
-        let neighbors : Array[Int] = []
+        let neighbors : Array[Int32] = []
         // 左邻域
         if x > 0 && labels[idx - 1] > 0 {
           neighbors.push(labels[idx - 1])
@@ -138,8 +138,8 @@ pub fn connected_components_analysis(
     }
   }
   // 第二遍：应用并查集
-  let final_labels : Array[Int] = Array::make(n, 0)
-  let label_map : Array[Int] = Array::make(next_label, 0)
+  let final_labels : Array[Int32] = Array::make(n, 0)
+  let label_map : Array[Int32] = Array::make(next_label, 0)
   let mut num_components = 0
   for i in 0..<n {
     if labels[i] > 0 {
@@ -211,8 +211,8 @@ pub fn connected_components_analysis(
 /// 按面积筛选连通域
 pub fn filter_components_by_area(
   result : OcrConnectedComponentsResult,
-  min_area : Int,
-  max_area : Int,
+  min_area : Int32,
+  max_area : Int32,
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if result.components.length() == 0 {
@@ -280,10 +280,10 @@ pub fn filter_components_by_aspect_ratio(
 /// 按位置筛选连通域（在指定矩形内）
 pub fn filter_components_by_position(
   result : OcrConnectedComponentsResult,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if result.components.length() == 0 {
@@ -312,7 +312,7 @@ pub fn filter_components_by_position(
 /// 合并相邻连通域（用于字符合并）
 pub fn merge_adjacent_components(
   components : Array[OcrConnectedComponent],
-  max_gap : Int,
+  max_gap : Int32,
 ) -> Array[OcrConnectedComponent] raise @types.LoadError {
   // 输入验证
   if components.length() == 0 {
@@ -365,7 +365,7 @@ pub fn merge_adjacent_components(
 
 ///|
 /// 辅助函数：最小值
-fn min(a : Int, b : Int) -> Int {
+fn min(a : Int32, b : Int32) -> Int32 {
   if a < b {
     a
   } else {
@@ -375,7 +375,7 @@ fn min(a : Int, b : Int) -> Int {
 
 ///|
 /// 辅助函数：最大值
-fn max(a : Int, b : Int) -> Int {
+fn max(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

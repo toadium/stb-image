@@ -98,7 +98,7 @@ fn to_gray(img : @types.Image) -> Array[Double] {
 pub fn estimate_translation(
   img1 : @types.Image,
   img2 : @types.Image,
-  max_offset? : Int = 20,
+  max_offset~ : Int32 = 20,
 ) -> RegistrationResult raise @types.LoadError {
   // 输入验证
   if img1.width <= 0 || img1.height <= 0 {
@@ -208,8 +208,8 @@ pub fn estimate_translation(
 pub fn warp_affine_transform(
   img : @types.Image,
   transform : AffineTransform,
-  out_width? : Int = 0,
-  out_height? : Int = 0,
+  out_width~ : Int32 = 0,
+  out_height~ : Int32 = 0,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

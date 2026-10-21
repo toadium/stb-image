@@ -5,8 +5,8 @@
 pub(all) struct ImageStats {
   mean : Float
   stddev : Float
-  min_val : Int
-  max_val : Int
+  min_val : Int32
+  max_val : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -67,7 +67,7 @@ pub fn entropy_value(img : @types.Image) -> Float {
     return 0.0F
   }
   // 计算直方图
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<n {
     let v = img.data[i].to_int()
     histogram[v] += 1
@@ -86,13 +86,13 @@ pub fn entropy_value(img : @types.Image) -> Float {
 
 ///|
 /// 计算图像中位数（所有通道所有像素，基于直方图近似）。
-pub fn median_value(img : @types.Image) -> Int {
+pub fn median_value(img : @types.Image) -> Int32 {
   let n = img.width * img.height * img.channels
   if n == 0 {
     return 0
   }
   // 计算直方图
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<n {
     let v = img.data[i].to_int()
     histogram[v] += 1

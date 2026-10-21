@@ -5,11 +5,11 @@
 
 ///|
 fn make_tga_header(
-  width : Int,
-  height : Int,
-  bpp : Int,
-  image_type : Int,
-  descriptor : Int,
+  width : Int32,
+  height : Int32,
+  bpp : Int32,
+  image_type : Int32,
+  descriptor : Int32,
 ) -> Array[Byte] {
   let out : Array[Byte] = []
   out.push(b'\x00') // ID length
@@ -34,14 +34,20 @@ fn make_tga_header(
 }
 
 ///|
-fn push_bgr(arr : Array[Byte], r : Int, g : Int, b : Int) -> Unit {
+fn push_bgr(arr : Array[Byte], r : Int32, g : Int32, b : Int32) -> Unit {
   arr.push(b.to_byte())
   arr.push(g.to_byte())
   arr.push(r.to_byte())
 }
 
 ///|
-fn push_bgra(arr : Array[Byte], r : Int, g : Int, b : Int, a : Int) -> Unit {
+fn push_bgra(
+  arr : Array[Byte],
+  r : Int32,
+  g : Int32,
+  b : Int32,
+  a : Int32,
+) -> Unit {
   arr.push(b.to_byte())
   arr.push(g.to_byte())
   arr.push(r.to_byte())

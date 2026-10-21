@@ -26,11 +26,11 @@ pub extend SlamPose with Eq::{not_equal, equal}
 /// SLAM 关键帧。
 /// SLAM keyframe.
 pub(all) struct SlamKeyFrame {
-  id : Int
+  id : Int32
   pose : SlamPose
   timestamp : Double
-  feature_count : Int
-  matched_count : Int
+  feature_count : Int32
+  matched_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -45,8 +45,8 @@ pub extend SlamKeyFrame with Eq::{not_equal, equal}
 pub(all) struct SlamFrontend {
   keyframes : Array[SlamKeyFrame]
   current_pose : SlamPose
-  tracking_status : Int
-  lost_count : Int
+  tracking_status : Int32
+  lost_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -59,11 +59,11 @@ pub extend SlamFrontend with Eq::{not_equal, equal}
 /// SLAM 前端参数。
 /// SLAM frontend parameters.
 pub(all) struct SlamFrontendParams {
-  min_features : Int
-  max_features : Int
+  min_features : Int32
+  max_features : Int32
   keyframe_distance : Double
   keyframe_angle : Double
-  lost_threshold : Int
+  lost_threshold : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -98,8 +98,8 @@ pub fn process_keyframe(
   frontend : SlamFrontend,
   pose : SlamPose,
   timestamp : Double,
-  feature_count : Int,
-  matched_count : Int,
+  feature_count : Int32,
+  matched_count : Int32,
 ) -> SlamFrontend {
   let id = frontend.keyframes.length()
   let kf : SlamKeyFrame = { id, pose, timestamp, feature_count, matched_count, }
@@ -118,7 +118,7 @@ pub fn track_keyframe(
   frontend : SlamFrontend,
   prev_pose : SlamPose,
   motion : (Double, Double, Double),
-  feature_count : Int,
+  feature_count : Int32,
   params : SlamFrontendParams,
 ) -> (SlamFrontend, Bool) {
   let (dx, dy, dz) = motion

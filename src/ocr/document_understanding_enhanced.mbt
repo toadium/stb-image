@@ -26,39 +26,39 @@ pub extend DocumentBlockType with Eq::{not_equal, equal}
 /// 文档块结构体（增强版）
 pub(all) struct DocumentBlock {
   block_type : DocumentBlockType
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   confidence : Double
-  font_size : Int
+  font_size : Int32
   is_bold : Bool
   is_italic : Bool
   line_spacing : Double
-  indent_level : Int
-  column_index : Int
-  mut reading_order : Int
-  parent_id : Int
-  children_ids : Array[Int]
+  indent_level : Int32
+  column_index : Int32
+  mut reading_order : Int32
+  parent_id : Int32
+  children_ids : Array[Int32]
 }
 
 ///|
 /// 文档结构树节点
 pub(all) struct DocumentTreeNode {
-  node_id : Int
+  node_id : Int32
   block : DocumentBlock
   children : Array[DocumentTreeNode]
-  depth : Int
+  depth : Int32
 }
 
 ///|
 /// 增强文档理解配置
 pub(all) struct DocumentUnderstandingEnhancedConfig {
-  min_block_width : Int
-  min_block_height : Int
-  title_font_size_threshold : Int
-  heading_font_size_threshold : Int
+  min_block_width : Int32
+  min_block_height : Int32
+  title_font_size_threshold : Int32
+  heading_font_size_threshold : Int32
   max_line_spacing_ratio : Double
   enable_column_detection : Bool
   enable_hierarchy : Bool
@@ -181,9 +181,9 @@ pub fn analyze_layout_enhanced(
 /// 分类块类型（增强版）
 fn classify_block_type_enhanced(
   line : TextLineInfo,
-  font_size : Int,
+  font_size : Int32,
   cfg : DocumentUnderstandingEnhancedConfig,
-  order : Int,
+  order : Int32,
 ) -> DocumentBlockType {
   // 标题检测（第一行且字体大）
   if cfg.enable_title_detection &&
@@ -250,12 +250,12 @@ fn estimate_bold(img : @types.Image, line : TextLineInfo) -> Bool {
 /// 优化阅读顺序（基于列和几何关系）
 pub fn optimize_reading_order(
   blocks : Array[DocumentBlock],
-  num_columns : Int,
-) -> Array[Int] {
+  num_columns : Int32,
+) -> Array[Int32] {
   // 按列分组，然后每列内按 y 排序，再按 x 排序
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for col in 0..<num_columns {
-    let col_indices : Array[Int] = []
+    let col_indices : Array[Int32] = []
     for i in 0..<blocks.length() {
       if blocks[i].column_index == col {
         col_indices.push(i)
@@ -315,10 +315,10 @@ pub fn optimize_reading_order(
 /// 段落检测（基于行间距和缩进）
 pub fn detect_paragraphs(
   blocks : Array[DocumentBlock],
-  max_line_spacing_ratio? : Double = 2.0,
-) -> Array[Array[Int]] {
-  let paragraphs : Array[Array[Int]] = []
-  let current_paragraph : Array[Int] = []
+  max_line_spacing_ratio~ : Double = 2.0,
+) -> Array[Array[Int32]] {
+  let paragraphs : Array[Array[Int32]] = []
+  let current_paragraph : Array[Int32] = []
   for i in 0..<blocks.length() {
     let block = blocks[i]
     // 只处理段落类型的块
@@ -360,9 +360,9 @@ pub fn detect_paragraphs(
 /// 标题检测（基于字体大小、位置、加粗特征）
 pub fn detect_titles(
   blocks : Array[DocumentBlock],
-  title_font_size_threshold? : Int = 24,
-) -> Array[Int] {
-  let title_indices : Array[Int] = []
+  title_font_size_threshold~ : Int32 = 24,
+) -> Array[Int32] {
+  let title_indices : Array[Int32] = []
   for i in 0..<blocks.length() {
     let block = blocks[i]
     // 标题特征：字体大、加粗、在页面顶部、独占一行
@@ -424,8 +424,8 @@ pub fn build_document_structure_tree(
 /// 提取文档纯文本（按阅读顺序）
 pub fn extract_document_text(
   blocks : Array[DocumentBlock],
-  include_headers? : Bool = true,
-  include_footers? : Bool = false,
+  include_headers~ : Bool = true,
+  include_footers~ : Bool = false,
 ) -> String {
   let order = optimize_reading_order(blocks, 1)
   let mut text = ""
@@ -459,7 +459,7 @@ pub fn extract_document_text(
 /// 文档统计信息（增强版）
 pub fn document_statistics_enhanced(
   blocks : Array[DocumentBlock],
-) -> (Int, Int, Int, Int, Int, Int, Int) {
+) -> (Int32, Int32, Int32, Int32, Int32, Int32, Int32) {
   let mut titles = 0
   let mut headings = 0
   let mut paragraphs = 0

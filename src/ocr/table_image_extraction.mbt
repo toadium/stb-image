@@ -4,25 +4,25 @@
 ///|
 /// 表格线检测结果
 pub(all) struct TableDetectionResult {
-  horizontal_lines : Array[(Int, Int, Int)] // (y, x_start, x_end)
-  vertical_lines : Array[(Int, Int, Int)] // (x, y_start, y_end)
-  intersections : Array[(Int, Int)] // (x, y) 交叉点
-  num_rows : Int
-  num_cols : Int
+  horizontal_lines : Array[(Int32, Int32, Int32)] // (y, x_start, x_end)
+  vertical_lines : Array[(Int32, Int32, Int32)] // (x, y_start, y_end)
+  intersections : Array[(Int32, Int32)] // (x, y) 交叉点
+  num_rows : Int32
+  num_cols : Int32
   confidence : Double
 }
 
 ///|
 /// 单元格内容
 pub(all) struct TableCellContent {
-  row : Int
-  col : Int
-  row_span : Int
-  col_span : Int
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  row : Int32
+  col : Int32
+  row_span : Int32
+  col_span : Int32
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   text : String
   is_header : Bool
   is_merged : Bool
@@ -31,15 +31,15 @@ pub(all) struct TableCellContent {
 ///|
 /// 完整表格识别结果
 pub(all) struct EnhancedTableResult {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  rows : Int
-  cols : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  rows : Int32
+  cols : Int32
   cells : Array[TableCellContent]
   has_header : Bool
-  header_rows : Int
+  header_rows : Int32
   detection : TableDetectionResult
   confidence : Double
 }
@@ -47,10 +47,10 @@ pub(all) struct EnhancedTableResult {
 ///|
 /// 提取的图片区域
 pub(all) struct ExtractedImage {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   image_type : String // "photo" / "diagram" / "chart" / "logo" / "signature"
   confidence : Double
   aspect_ratio : Double
@@ -63,9 +63,9 @@ pub(all) struct ExtractedImage {
 /// 检测水平表格线（基于形态学操作的简化版）
 pub fn detect_horizontal_table_lines(
   binary_img : @types.Image,
-  min_length? : Int = 50,
-  max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  min_length~ : Int32 = 50,
+  max_gap~ : Int32 = 3,
+) -> Array[(Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -100,7 +100,7 @@ pub fn detect_horizontal_table_lines(
   let max_g = max_gap
   let w = binary_img.width
   let h = binary_img.height
-  let lines : Array[(Int, Int, Int)] = []
+  let lines : Array[(Int32, Int32, Int32)] = []
   for y in 0..<h {
     let mut x = 0
     while x < w {
@@ -127,7 +127,7 @@ pub fn detect_horizontal_table_lines(
     }
   }
   // 合并相近的线（y 差 <= 2）
-  let merged : Array[(Int, Int, Int)] = []
+  let merged : Array[(Int32, Int32, Int32)] = []
   for line in lines {
     let mut found = false
     for i in 0..<merged.length() {
@@ -153,9 +153,9 @@ pub fn detect_horizontal_table_lines(
 /// 检测垂直表格线
 pub fn detect_vertical_table_lines(
   binary_img : @types.Image,
-  min_length? : Int = 50,
-  max_gap? : Int = 3,
-) -> Array[(Int, Int, Int)] raise @types.LoadError {
+  min_length~ : Int32 = 50,
+  max_gap~ : Int32 = 3,
+) -> Array[(Int32, Int32, Int32)] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -190,7 +190,7 @@ pub fn detect_vertical_table_lines(
   let max_g = max_gap
   let w = binary_img.width
   let h = binary_img.height
-  let lines : Array[(Int, Int, Int)] = []
+  let lines : Array[(Int32, Int32, Int32)] = []
   for x in 0..<w {
     let mut y = 0
     while y < h {
@@ -217,7 +217,7 @@ pub fn detect_vertical_table_lines(
     }
   }
   // 合并相近的线
-  let merged : Array[(Int, Int, Int)] = []
+  let merged : Array[(Int32, Int32, Int32)] = []
   for line in lines {
     let mut found = false
     for i in 0..<merged.length() {
@@ -241,10 +241,10 @@ pub fn detect_vertical_table_lines(
 ///|
 /// 检测表格线交叉点
 pub fn find_line_intersections(
-  h_lines : Array[(Int, Int, Int)],
-  v_lines : Array[(Int, Int, Int)],
-) -> Array[(Int, Int)] {
-  let intersections : Array[(Int, Int)] = []
+  h_lines : Array[(Int32, Int32, Int32)],
+  v_lines : Array[(Int32, Int32, Int32)],
+) -> Array[(Int32, Int32)] {
+  let intersections : Array[(Int32, Int32)] = []
   for _tup0 in h_lines {
     let (hy, hsx, hex) = _tup0
     for _tup1 in v_lines {
@@ -261,7 +261,7 @@ pub fn find_line_intersections(
 /// 完整表格检测
 pub fn detect_table_enhanced(
   binary_img : @types.Image,
-  min_table_size? : Int = 100,
+  min_table_size~ : Int32 = 100,
 ) -> Array[EnhancedTableResult] raise @types.LoadError {
   // 输入验证
   if binary_img.width <= 0 || binary_img.height <= 0 {
@@ -308,7 +308,7 @@ pub fn detect_table_enhanced(
   }
 
   // 提取唯一的行 y 坐标和列 x 坐标
-  let row_ys : Array[Int] = []
+  let row_ys : Array[Int32] = []
   for _tup2 in h_lines {
     let (y, _, _) = _tup2
     let mut exists = false
@@ -323,7 +323,7 @@ pub fn detect_table_enhanced(
     }
   }
 
-  let col_xs : Array[Int] = []
+  let col_xs : Array[Int32] = []
   for _tup3 in v_lines {
     let (x, _, _) = _tup3
     let mut exists = false
@@ -466,7 +466,11 @@ pub fn enhanced_table_to_markdown(table : EnhancedTableResult) -> String {
 
 ///|
 /// 获取单元格文本
-fn get_cell_text(table : EnhancedTableResult, row : Int, col : Int) -> String {
+fn get_cell_text(
+  table : EnhancedTableResult,
+  row : Int32,
+  col : Int32,
+) -> String {
   for cell in table.cells {
     if cell.row == row && cell.col == col {
       return cell.text
@@ -479,7 +483,7 @@ fn get_cell_text(table : EnhancedTableResult, row : Int, col : Int) -> String {
 /// 提取图片区域（增强版，支持多种图片类型判断）
 pub fn extract_images_enhanced(
   binary_img : @types.Image,
-  min_area? : Int = 500,
+  min_area~ : Int32 = 500,
 ) -> Array[ExtractedImage] {
   let min = min_area
   let w = binary_img.width
@@ -493,8 +497,8 @@ pub fn extract_images_enhanced(
     for x in 0..<w {
       let idx = y * w + x
       if !visited[idx] && binary_img.data[idx].to_int() < 128 {
-        let stack_x : Array[Int] = []
-        let stack_y : Array[Int] = []
+        let stack_x : Array[Int32] = []
+        let stack_y : Array[Int32] = []
         stack_x.push(x)
         stack_y.push(y)
         visited[idx] = true
@@ -633,7 +637,7 @@ pub fn generate_image_extraction_report(
 /// 统计表格识别结果
 pub fn analyze_table_results(
   tables : Array[EnhancedTableResult],
-) -> Array[(String, Int)] {
+) -> Array[(String, Int32)] {
   let total_tables = tables.length()
   let mut total_cells = 0
   let mut total_rows = 0

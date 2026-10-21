@@ -1,22 +1,22 @@
 ///|
 /// TGA 扩展信息（包含图像类型、位深、行序等）
 pub struct TgaInfoExtended {
-  width : Int
-  height : Int
-  image_type : Int
+  width : Int32
+  height : Int32
+  image_type : Int32
   image_type_name : String
-  bit_depth : Int
-  num_channels : Int
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_bottom_up : Bool
-  id_length : Int
-  color_map_type : Int
-  x_origin : Int
-  y_origin : Int
+  id_length : Int32
+  color_map_type : Int32
+  x_origin : Int32
+  y_origin : Int32
 }
 
 ///|
-fn tga_image_type_name(t : Int) -> String {
+fn tga_image_type_name(t : Int32) -> String {
   match t {
     0 => "no image data"
     1 => "uncompressed color-mapped"

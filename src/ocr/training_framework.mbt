@@ -48,9 +48,9 @@ pub(all) struct LRSchedulerConfig {
   initial_lr : Double
   min_lr : Double
   decay_rate : Double
-  decay_steps : Int
-  warmup_steps : Int
-  patience : Int
+  decay_steps : Int32
+  warmup_steps : Int32
+  patience : Int32
   factor : Double
 }
 
@@ -89,25 +89,25 @@ pub(all) struct AugmentationConfig {
 ///|
 /// 训练配置
 pub(all) struct TrainingConfig {
-  epochs : Int
-  batch_size : Int
+  epochs : Int32
+  batch_size : Int32
   optimizer : OptimizerConfig
   lr_scheduler : LRSchedulerConfig
   augmentation : AugmentationConfig
-  early_stopping_patience : Int
+  early_stopping_patience : Int32
   early_stopping_min_delta : Double
   save_best_only : Bool
-  checkpoint_interval : Int
-  log_interval : Int
+  checkpoint_interval : Int32
+  log_interval : Int32
   validation_split : Double
   shuffle : Bool
-  random_seed : Int
+  random_seed : Int32
 }
 
 ///|
 /// 训练指标
 pub(all) struct TrainingMetrics {
-  epoch : Int
+  epoch : Int32
   train_loss : Double
   train_accuracy : Double
   val_loss : Double
@@ -120,10 +120,10 @@ pub(all) struct TrainingMetrics {
 ///|
 /// 训练状态
 pub(all) struct TrainingState {
-  current_epoch : Int
+  current_epoch : Int32
   best_val_accuracy : Double
-  best_epoch : Int
-  epochs_without_improvement : Int
+  best_epoch : Int32
+  epochs_without_improvement : Int32
   total_training_time_ms : Double
   history : Array[TrainingMetrics]
   is_completed : Bool
@@ -134,10 +134,10 @@ pub(all) struct TrainingState {
 /// 数据加载器
 pub(all) struct DataLoader {
   samples : Array[DLTrainingSample]
-  batch_size : Int
+  batch_size : Int32
   shuffle : Bool
-  current_index : Int
-  epoch : Int
+  current_index : Int32
+  epoch : Int32
 }
 
 ///|
@@ -198,7 +198,7 @@ pub fn create_default_training_config() -> TrainingConfig {
 /// 创建数据加载器
 pub fn create_data_loader(
   samples : Array[DLTrainingSample],
-  batch_size : Int,
+  batch_size : Int32,
   shuffle : Bool,
 ) -> DataLoader raise @types.LoadError {
   // 输入验证
@@ -263,7 +263,7 @@ pub fn next_batch(
 
 ///|
 /// 幂运算
-fn power_double(base : Double, exp : Int) -> Double {
+fn power_double(base : Double, exp : Int32) -> Double {
   let mut result = 1.0
   for _ in 0..<exp {
     result = result * base
@@ -299,7 +299,7 @@ fn approx_cos(x : Double) -> Double {
 /// 计算学习率
 pub fn calculate_learning_rate(
   config : LRSchedulerConfig,
-  epoch : Int,
+  epoch : Int32,
   current_lr : Double,
   val_loss : Double,
 ) -> Double raise @types.LoadError {
@@ -457,8 +457,8 @@ pub fn apply_augmentation(
 ///|
 /// 计算准确率
 pub fn calculate_accuracy(
-  predictions : Array[Int],
-  labels : Array[Int],
+  predictions : Array[Int32],
+  labels : Array[Int32],
 ) -> Double {
   if predictions.length() == 0 || labels.length() == 0 {
     return 0.0
@@ -659,13 +659,13 @@ pub fn split_train_validation(
 ///|
 /// 混淆矩阵计算
 pub fn compute_confusion_matrix(
-  predictions : Array[Int],
-  labels : Array[Int],
-  num_classes : Int,
-) -> Array[Array[Int]] {
-  let matrix : Array[Array[Int]] = []
+  predictions : Array[Int32],
+  labels : Array[Int32],
+  num_classes : Int32,
+) -> Array[Array[Int32]] {
+  let matrix : Array[Array[Int32]] = []
   for _ in 0..<num_classes {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in 0..<num_classes {
       row.push(0)
     }
@@ -690,7 +690,7 @@ pub fn compute_confusion_matrix(
 ///|
 /// 计算每类准确率
 pub fn compute_per_class_accuracy(
-  confusion_matrix : Array[Array[Int]],
+  confusion_matrix : Array[Array[Int32]],
 ) -> Array[Double] {
   let accuracies : Array[Double] = []
   for i in 0..<confusion_matrix.length() {

@@ -6,10 +6,10 @@
 ///|
 /// TIFF IFD 条目
 priv struct TiffIfdEntry {
-  tag : Int
-  type_id : Int
-  count : Int
-  value_or_offset : Int
+  tag : Int32
+  type_id : Int32
+  count : Int32
+  value_or_offset : Int32
 }
 
 ///|
@@ -21,7 +21,7 @@ priv struct TiffContext {
 
 ///|
 /// 读取 16-bit 值（根据字节序）
-fn tiff_read_u16(ctx : TiffContext, offset : Int) -> Int {
+fn tiff_read_u16(ctx : TiffContext, offset : Int32) -> Int32 {
   if ctx.little_endian {
     read_u16_le(ctx.data, offset)
   } else {
@@ -31,7 +31,7 @@ fn tiff_read_u16(ctx : TiffContext, offset : Int) -> Int {
 
 ///|
 /// 读取 32-bit 值（根据字节序）
-fn tiff_read_u32(ctx : TiffContext, offset : Int) -> Int {
+fn tiff_read_u32(ctx : TiffContext, offset : Int32) -> Int32 {
   if ctx.little_endian {
     read_u32_le(ctx.data, offset)
   } else {
@@ -41,7 +41,7 @@ fn tiff_read_u32(ctx : TiffContext, offset : Int) -> Int {
 
 ///|
 /// 根据 type_id 和 count 计算 IFD 条目值的字节数
-fn tiff_type_size(type_id : Int) -> Int {
+fn tiff_type_size(type_id : Int32) -> Int32 {
   match type_id {
     1 => 1 // BYTE
     2 => 1 // ASCII
@@ -61,9 +61,9 @@ fn tiff_type_size(type_id : Int) -> Int {
 
 ///|
 /// 读取 IFD 条目的数值数组（当值超过 4 字节时从偏移处读取）
-fn tiff_read_values(ctx : TiffContext, entry : TiffIfdEntry) -> Array[Int] {
+fn tiff_read_values(ctx : TiffContext, entry : TiffIfdEntry) -> Array[Int32] {
   let total_bytes = tiff_type_size(entry.type_id) * entry.count
-  let values : Array[Int] = []
+  let values : Array[Int32] = []
   if total_bytes <= 4 {
     // 值内联在 value_or_offset 中
     let v = entry.value_or_offset
@@ -116,7 +116,7 @@ fn tiff_read_values(ctx : TiffContext, entry : TiffIfdEntry) -> Array[Int] {
 /// 解析 IFD 条目
 fn tiff_parse_ifd(
   ctx : TiffContext,
-  ifd_offset : Int,
+  ifd_offset : Int32,
 ) -> Array[TiffIfdEntry] raise @types.LoadError {
   let len = ctx.data.length()
   if ifd_offset + 2 > len {
@@ -148,8 +148,8 @@ fn tiff_parse_ifd(
 fn tiff_get_values(
   entries : Array[TiffIfdEntry],
   ctx : TiffContext,
-  tag : Int,
-) -> Array[Int]? {
+  tag : Int32,
+) -> Array[Int32]? {
   for i in 0..<entries.length() {
     if entries[i].tag == tag {
       return Some(tiff_read_values(ctx, entries[i]))
@@ -163,8 +163,8 @@ fn tiff_get_values(
 fn tiff_get_value(
   entries : Array[TiffIfdEntry],
   ctx : TiffContext,
-  tag : Int,
-) -> Int? {
+  tag : Int32,
+) -> Int32? {
   match tiff_get_values(entries, ctx, tag) {
     Some(arr) => if arr.length() > 0 { Some(arr[0]) } else { None }
     None => None
@@ -186,7 +186,7 @@ pub fn tiff_lzw_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
   }
   let clear_code = 1 << init_code_len
   let eoi_code = clear_code + 1
-  let dict : Array[Int] = Array::make(512, 0)
+  let dict : Array[Int32] = Array::make(512, 0)
   for i in 0..<=255 {
     dict[i] = i
   }
@@ -194,10 +194,15 @@ pub fn tiff_lzw_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
   let mut bit_pos = 8
   let data_len = data.length()
 
-  fn read_bits(data : Bytes, pos : Int, count : Int, len : Int) -> (Int, Int) {
-    let mut code : Int = 0
+  fn read_bits(
+    data : Bytes,
+    pos : Int32,
+    count : Int32,
+    len : Int32,
+  ) -> (Int32, Int32) {
+    let mut code : Int32 = 0
     let mut p = pos
-    let mut i : Int = 0
+    let mut i : Int32 = 0
     while i < count && p < len * 8 {
       let byte_idx = p / 8
       let bit_offset = p % 8
@@ -219,7 +224,7 @@ pub fn tiff_lzw_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
   }
 
   let output : Array[Byte] = []
-  let mut prev_code : Int = 0
+  let mut prev_code : Int32 = 0
   let mut code_len = init_code_len
   let mut done = false
 
@@ -242,7 +247,7 @@ pub fn tiff_lzw_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
       } else {
         // 回溯字典获取字符串
         let k = c
-        let path : Array[Int] = [k]
+        let path : Array[Int32] = [k]
         let mut current = dict[k]
         while current >= clear_code &&
               current < next_code &&
@@ -277,13 +282,13 @@ pub fn tiff_lzw_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
 /// 解码 TIFF PackBits 压缩的字节流
 pub fn tiff_packbits_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
   let len = data.length()
-  let mut pos : Int = 0
+  let mut pos : Int32 = 0
   let output : Array[Byte] = []
 
   while pos < len {
     let count = data[pos].to_int()
     pos += 1
-    let signed_count : Int = if count > 127 { count - 256 } else { count }
+    let signed_count : Int32 = if count > 127 { count - 256 } else { count }
 
     if signed_count == -128 {
       // Extended PackBits
@@ -443,7 +448,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   let decompressed : Bytes = if compression == 5 {
     // LZW 解压：逐 strip 读取并解码
     let all_data : Array[Byte] = []
-    let mut strip_idx : Int = 0
+    let mut strip_idx : Int32 = 0
     while strip_idx < strip_offsets.length() {
       let strip_offset = strip_offsets[strip_idx]
       let byte_count = if strip_idx < strip_byte_counts.length() {
@@ -475,7 +480,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   } else if compression == 32773 {
     // PackBits 解压：逐 strip 读取并解码
     let all_data : Array[Byte] = []
-    let mut strip_idx : Int = 0
+    let mut strip_idx : Int32 = 0
     while strip_idx < strip_offsets.length() {
       let strip_offset = strip_offsets[strip_idx]
       let byte_count = if strip_idx < strip_byte_counts.length() {
@@ -506,7 +511,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   } else if compression == 8 {
     // Deflate 解压：逐 strip 读取并解码
     let all_data : Array[Byte] = []
-    let mut strip_idx : Int = 0
+    let mut strip_idx : Int32 = 0
     while strip_idx < strip_offsets.length() {
       let strip_offset = strip_offsets[strip_idx]
       let byte_count = if strip_idx < strip_byte_counts.length() {
@@ -537,7 +542,7 @@ pub fn decode_tiff_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   } else {
     // 无压缩：直接从 strip offset 读取像素数据
     let all_data : Array[Byte] = []
-    let mut strip_idx : Int = 0
+    let mut strip_idx : Int32 = 0
     while strip_idx < strip_offsets.length() {
       let strip_offset = strip_offsets[strip_idx]
       let byte_count = if strip_idx < strip_byte_counts.length() {
@@ -654,10 +659,10 @@ pub fn encode_tiff_pure(img : @types.Image) -> Bytes raise @types.LoadError {
   write_u16_le(out, num_entries)
   // 辅助函数：写入 IFD 条目
   let write_entry = fn(
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     write_u16_le(out, tag)
     write_u16_le(out, type_id)
@@ -729,14 +734,19 @@ pub fn tiff_deflate_decode(data : Bytes) -> Array[Byte] raise @types.LoadError {
   // Deflate 格式：每个块以 1 位标记位 + 2 位块类型开始
   // 块类型：00=未压缩，01=静态 Huffman，10=动态 Huffman，11=保留
 
-  let mut bit_pos : Int = 0
+  let mut bit_pos : Int32 = 0
   let output : Array[Byte] = []
 
   // 位读取器
-  fn read_bits(data : Bytes, pos : Int, count : Int, len : Int) -> (Int, Int) {
-    let mut code : Int = 0
+  fn read_bits(
+    data : Bytes,
+    pos : Int32,
+    count : Int32,
+    len : Int32,
+  ) -> (Int32, Int32) {
+    let mut code : Int32 = 0
     let mut p = pos
-    let mut i : Int = 0
+    let mut i : Int32 = 0
     while i < count && p < len * 8 {
       let byte_idx = p / 8
       let bit_offset = p % 8

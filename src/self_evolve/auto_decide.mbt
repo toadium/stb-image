@@ -25,7 +25,7 @@ pub extend DecisionAction with Eq::{not_equal, equal}
 pub(all) struct AutoDecision {
   op_tag : String
   action : DecisionAction
-  confidence : Int
+  confidence : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 
@@ -40,9 +40,9 @@ pub extend AutoDecision with Eq::{not_equal, equal}
 /// Decision report.
 pub(all) struct DecisionReport {
   decisions : Array[AutoDecision]
-  total : Int
-  auto_count : Int
-  deferred_count : Int
+  total : Int32
+  auto_count : Int32
+  deferred_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

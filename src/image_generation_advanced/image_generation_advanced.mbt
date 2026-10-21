@@ -83,13 +83,13 @@ pub extend VAEType with Eq::{not_equal, equal}
 /// 生成的图像
 pub(all) struct GeneratedImage {
   image_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   generation_method : GenerativeModelType
   prompt : String
-  seed : Int
-  num_inference_steps : Int
+  seed : Int32
+  num_inference_steps : Int32
   guidance_scale : Double
   generation_time_ms : Double
   quality_score : Double
@@ -100,15 +100,15 @@ pub(all) struct GeneratedImage {
 /// 文本到图像结果
 pub(all) struct TextToImageResult {
   images : Array[GeneratedImage]
-  num_images : Int
+  num_images : Int32
   prompt : String
   negative_prompt : String
   model_type : DiffusionModelType
-  width : Int
-  height : Int
-  num_inference_steps : Int
+  width : Int32
+  height : Int32
+  num_inference_steps : Int32
   guidance_scale : Double
-  seed : Int
+  seed : Int32
   total_generation_time_ms : Double
 }
 
@@ -116,14 +116,14 @@ pub(all) struct TextToImageResult {
 /// 图像到图像结果
 pub(all) struct ImageToImageResult {
   images : Array[GeneratedImage]
-  num_images : Int
+  num_images : Int32
   input_image : Array[Double]
   prompt : String
   strength : Double
   model_type : DiffusionModelType
-  num_inference_steps : Int
+  num_inference_steps : Int32
   guidance_scale : Double
-  seed : Int
+  seed : Int32
   total_generation_time_ms : Double
 }
 
@@ -131,15 +131,15 @@ pub(all) struct ImageToImageResult {
 /// 图像修复结果
 pub(all) struct InpaintingResult {
   repaired_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   mask : Array[Bool]
-  num_repaired_pixels : Int
+  num_repaired_pixels : Int32
   repair_method : String
   model_type : GenerativeModelType
-  num_inference_steps : Int
-  seed : Int
+  num_inference_steps : Int32
+  seed : Int32
   repair_time_ms : Double
   consistency_score : Double
 }
@@ -148,16 +148,16 @@ pub(all) struct InpaintingResult {
 /// 风格迁移结果
 pub(all) struct StyleTransferResult {
   stylized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   content_image : Array[Double]
   style_image : Array[Double]
   style_strength : Double
   content_strength : Double
   transfer_method : String
   model_type : GANType
-  num_iterations : Int
+  num_iterations : Int32
   transfer_time_ms : Double
   content_loss : Double
   style_loss : Double
@@ -168,14 +168,14 @@ pub(all) struct StyleTransferResult {
 /// 图像上色结果
 pub(all) struct ColorizationResult {
   colorized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   grayscale_image : Array[Double]
   colorization_method : String
   model_type : GenerativeModelType
   color_palette : Array[Array[Double]]
-  num_colors : Int
+  num_colors : Int32
   colorization_time_ms : Double
   color_consistency : Double
 }
@@ -188,12 +188,12 @@ pub(all) struct ImageGenerationConfig {
   diffusion_model : DiffusionModelType
   gan_type : GANType
   vae_type : VAEType
-  width : Int
-  height : Int
-  num_inference_steps : Int
+  width : Int32
+  height : Int32
+  num_inference_steps : Int32
   guidance_scale : Double
-  seed : Int
-  num_images : Int
+  seed : Int32
+  num_images : Int32
   prompt : String
   negative_prompt : String
   strength : Double
@@ -239,10 +239,10 @@ pub fn create_default_generation_config() -> ImageGenerationConfig {
 ///|
 /// 生成随机噪声
 pub fn generate_noise(
-  width : Int,
-  height : Int,
-  num_channels : Int,
-  seed : Int,
+  width : Int32,
+  height : Int32,
+  num_channels : Int32,
+  seed : Int32,
 ) -> Array[Double] {
   let noise : Array[Double] = []
   let mut state = seed
@@ -260,8 +260,8 @@ pub fn generate_noise(
 /// 简化的扩散采样
 pub fn diffuse_sample(
   noise : Array[Double],
-  num_steps : Int,
-  seed : Int,
+  num_steps : Int32,
+  seed : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let mut state = seed
@@ -397,8 +397,8 @@ pub fn image_to_image(
 pub fn inpaint_image(
   image : Array[Double],
   mask : Array[Bool],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageGenerationConfig,
 ) -> InpaintingResult {
   let repaired : Array[Double] = []
@@ -438,8 +438,8 @@ pub fn inpaint_image(
 pub fn transfer_style(
   content_image : Array[Double],
   style_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageGenerationConfig,
 ) -> StyleTransferResult {
   let stylized : Array[Double] = []

@@ -1,7 +1,12 @@
 // v239 superres 错误路径+缺失函数测试
 
 ///|
-fn sr_edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn sr_edge_mk_img(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -11,7 +16,7 @@ fn sr_edge_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn sr_edge_mk_varied(w : Int, h : Int) -> @types.Image {
+fn sr_edge_mk_varied(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

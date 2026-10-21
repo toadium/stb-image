@@ -3,8 +3,8 @@
 
 ///|
 fn make_chessboard_corners(
-  rows : Int,
-  cols : Int,
+  rows : Int32,
+  cols : Int32,
   square_size : Double,
 ) -> @cv_advanced.ChessboardCorners {
   let corners : Array[(Double, Double)] = []
@@ -19,7 +19,10 @@ fn make_chessboard_corners(
 }
 
 ///|
-fn make_identity_intrinsics(w : Int, h : Int) -> @cv_advanced.CameraIntrinsics {
+fn make_identity_intrinsics(
+  w : Int32,
+  h : Int32,
+) -> @cv_advanced.CameraIntrinsics {
   {
     fx: w.to_double(),
     fy: h.to_double(),

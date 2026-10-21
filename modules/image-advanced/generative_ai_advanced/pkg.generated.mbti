@@ -1,0 +1,186 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-advanced/generative_ai_advanced"
+
+// Values
+pub fn create_default_diffusion_config() -> DiffusionConfig
+
+pub fn create_default_gan_config() -> GANConfig
+
+pub fn create_default_sampling_config() -> SamplingConfig
+
+pub fn create_default_vae_config() -> VAEConfig
+
+pub fn generate_noise(Int32, Int32, Int32) -> Array[Array[Double]]
+
+pub fn generative_ai_report_to_string(GenerativeAITaskType, GenerationResult, String) -> String
+
+pub fn simulate_diffusion_sampling(DiffusionConfig, SamplingConfig) -> GenerationResult
+
+pub fn simulate_gan_generation(GANConfig, SamplingConfig) -> GenerationResult
+
+pub fn simulate_vae_reconstruction(VAEConfig, Array[Array[Double]]) -> GenerationResult
+
+// Errors
+
+// Types and methods
+pub(all) struct DiffusionConfig {
+  model_type : DiffusionModelType
+  num_timesteps : Int32
+  beta_start : Double
+  beta_end : Double
+  beta_schedule : String
+  image_size : Int32
+  in_channels : Int32
+  out_channels : Int32
+  latent_dim : Int32
+  num_res_blocks : Int32
+  base_channels : Int32
+  channel_mults : Array[Int32]
+  attention_resolutions : Array[Int32]
+  dropout : Double
+  use_ema : Bool
+  ema_decay : Double
+  use_cfg : Bool
+  cfg_scale : Double
+  classifier_free_guidance : Bool
+}
+
+pub(all) enum DiffusionModelType {
+  DDPM
+  DDIM
+  ScoreBased
+  LatentDiffusion
+  StableDiffusion
+  ControlNet
+  InstructPix2Pix
+  Unknown
+} derive(Eq)
+pub fn DiffusionModelType::equal(Self, Self) -> Bool
+pub fn DiffusionModelType::not_equal(Self, Self) -> Bool
+
+pub(all) struct GANConfig {
+  gan_type : GANType
+  latent_dim : Int32
+  image_size : Int32
+  in_channels : Int32
+  generator_channels : Int32
+  discriminator_channels : Int32
+  num_layers : Int32
+  learning_rate_g : Double
+  learning_rate_d : Double
+  beta1 : Double
+  beta2 : Double
+  use_wasserstein : Bool
+  gradient_penalty : Double
+  use_spectral_norm : Bool
+  use_ema : Bool
+  ema_decay : Double
+  style_mixing_prob : Double
+  truncation_psi : Double
+}
+
+pub(all) enum GANType {
+  VanillaGAN
+  DCGAN
+  WGAN
+  WGANGP
+  StyleGAN
+  StyleGAN2
+  StyleGAN3
+  CycleGAN
+  Pix2Pix
+  Unknown
+} derive(Eq)
+pub fn GANType::equal(Self, Self) -> Bool
+pub fn GANType::not_equal(Self, Self) -> Bool
+
+pub(all) struct GenerationResult {
+  generated_samples : Array[Array[Double]]
+  num_samples : Int32
+  image_size : Int32
+  num_channels : Int32
+  model_type : String
+  inference_time_ms : Double
+  fid_score : Double
+  is_score : Double
+  precision : Double
+  recall : Double
+}
+
+pub(all) enum GenerativeAITaskType {
+  DiffusionModel
+  GAN
+  VAE
+  FlowModel
+  AutoregressiveModel
+  EnergyBasedModel
+  TextToImage
+  ImageToImage
+  Unknown
+} derive(Eq)
+pub fn GenerativeAITaskType::equal(Self, Self) -> Bool
+pub fn GenerativeAITaskType::not_equal(Self, Self) -> Bool
+
+pub(all) struct SamplingConfig {
+  num_samples : Int32
+  num_inference_steps : Int32
+  guidance_scale : Double
+  seed : Int32
+  use_ddim : Bool
+  eta : Double
+  use_parallel : Bool
+  batch_size : Int32
+  output_dir : String
+  save_intermediate : Bool
+  intermediate_steps : Array[Int32]
+}
+
+pub(all) struct TrainingState {
+  epoch : Int32
+  step : Int32
+  generator_loss : Double
+  discriminator_loss : Double
+  reconstruction_loss : Double
+  kl_loss : Double
+  diffusion_loss : Double
+  learning_rate : Double
+  elapsed_time_s : Double
+  best_metric : Double
+  is_best : Bool
+}
+
+pub(all) struct VAEConfig {
+  vae_type : VAEType
+  latent_dim : Int32
+  image_size : Int32
+  in_channels : Int32
+  hidden_dims : Array[Int32]
+  learning_rate : Double
+  beta : Double
+  gamma : Double
+  use_kl_annealing : Bool
+  kl_annealing_steps : Int32
+  num_embeddings : Int32
+  commitment_cost : Double
+  decay : Double
+  use_adversarial_loss : Bool
+  adversarial_weight : Double
+  perceptual_weight : Double
+}
+
+pub(all) enum VAEType {
+  VanillaVAE
+  BetaVAE
+  CVAE
+  VQVAE
+  VQVAE2
+  GumbelVAE
+  AdversarialAE
+  Unknown
+} derive(Eq)
+pub fn VAEType::equal(Self, Self) -> Bool
+pub fn VAEType::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits

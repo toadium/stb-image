@@ -1,7 +1,7 @@
 // v189.0.0 medical 模块增强测试：边值/属性/多预设/多参数
 
 ///|
-fn make_medical_image2(w : Int, h : Int) -> @medical.MedicalImage {
+fn make_medical_image2(w : Int32, h : Int32) -> @medical.MedicalImage {
   let data : Array[Double] = []
   for i in 0..<(w * h) {
     data.push((i % 256).to_double())
@@ -22,8 +22,8 @@ fn make_medical_image2(w : Int, h : Int) -> @medical.MedicalImage {
 
 ///|
 fn make_uniform_medical2(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   value : Double,
 ) -> @medical.MedicalImage {
   @medical.MedicalImage::{
@@ -41,7 +41,7 @@ fn make_uniform_medical2(
 }
 
 ///|
-fn make_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

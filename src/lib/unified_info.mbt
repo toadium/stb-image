@@ -5,10 +5,10 @@
 pub(all) struct UnifiedImageInfo {
   format : @types.ImageFormat
   format_name : String
-  width : Int
-  height : Int
-  channels : Int
-  bit_depth : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  bit_depth : Int32
   has_alpha : Bool
 } derive(Eq, @debug.Debug)
 

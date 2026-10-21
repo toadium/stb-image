@@ -1,0 +1,101 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-photography/inpainting"
+
+import {
+  "walkzzz/image-core/types",
+}
+
+// Values
+pub fn create_default_inpainting_config() -> InpaintingConfig
+
+pub fn create_rect_mask(Int32, Int32, Int32, Int32, Int32, Int32) -> @types.Image
+
+pub fn dehaze(@types.Image, DehazeAlgorithm) -> DehazeResult
+
+pub fn dehaze_clahe(@types.Image, Double, Int32) -> @types.Image
+
+pub fn dehaze_dark_channel(@types.Image, Double, Double) -> DehazeResult
+
+pub fn derain(@types.Image, DerainAlgorithm) -> DerainResult
+
+pub fn derain_morphological(@types.Image) -> DerainResult
+
+pub fn inpaint(@types.Image, @types.Image, InpaintingConfig) -> InpaintingResult
+
+pub fn inpaint_diffusion(@types.Image, @types.Image, Int32) -> @types.Image
+
+pub fn inpaint_simple(@types.Image, @types.Image, Int32) -> @types.Image
+
+pub fn inpainting_report_to_string(InpaintingResult) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum DehazeAlgorithm {
+  DarkChannelPrior
+  ColorAttenuation
+  HomomorphicFiltering
+  Retinex
+  CLAHE
+  Unknown
+} derive(Eq)
+pub fn DehazeAlgorithm::equal(Self, Self) -> Bool
+pub fn DehazeAlgorithm::not_equal(Self, Self) -> Bool
+
+pub(all) struct DehazeResult {
+  image : @types.Image
+  algorithm : DehazeAlgorithm
+  atmospheric_light : Double
+  transmission_map : Array[Double]
+  processing_time_ms : Double
+}
+
+pub(all) enum DerainAlgorithm {
+  DictionaryLearning
+  ConvolutionalNeuralNetwork
+  GAN
+  Morphological
+  Unknown
+} derive(Eq)
+pub fn DerainAlgorithm::equal(Self, Self) -> Bool
+pub fn DerainAlgorithm::not_equal(Self, Self) -> Bool
+
+pub(all) struct DerainResult {
+  image : @types.Image
+  algorithm : DerainAlgorithm
+  rain_streaks_removed : Int32
+  processing_time_ms : Double
+}
+
+pub(all) enum InpaintingAlgorithm {
+  Telea
+  NavierStokes
+  FastMarching
+  PatchMatch
+  DeepLearning
+  Unknown
+} derive(Eq)
+pub fn InpaintingAlgorithm::equal(Self, Self) -> Bool
+pub fn InpaintingAlgorithm::not_equal(Self, Self) -> Bool
+
+pub(all) struct InpaintingConfig {
+  algorithm : InpaintingAlgorithm
+  radius : Int32
+  iterations : Int32
+  use_edge_preservation : Bool
+  tolerance : Double
+}
+
+pub(all) struct InpaintingResult {
+  image : @types.Image
+  mask : @types.Image
+  algorithm : InpaintingAlgorithm
+  inpainted_pixels : Int32
+  total_mask_pixels : Int32
+  processing_time_ms : Double
+  iterations : Int32
+}
+
+// Type aliases
+
+// Traits

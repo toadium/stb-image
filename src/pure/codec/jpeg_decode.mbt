@@ -8,19 +8,19 @@
 /// JPEG 位读取器
 priv struct JpegBitReader {
   data : Bytes
-  len : Int
-  mut pos : Int
-  mut bit_buf : Int
-  mut bit_cnt : Int
+  len : Int32
+  mut pos : Int32
+  mut bit_buf : Int32
+  mut bit_cnt : Int32
 }
 
 ///|
 /// JPEG Huffman 表（规范解码）
 priv struct JpegHuffmanTable {
-  maxcode : Array[Int]
-  mincode : Array[Int]
-  valptr : Array[Int]
-  huffval : Array[Int]
+  maxcode : Array[Int32]
+  mincode : Array[Int32]
+  valptr : Array[Int32]
+  huffval : Array[Int32]
 }
 
 ///|
@@ -37,8 +37,8 @@ fn empty_huffman_table() -> JpegHuffmanTable {
 ///|
 /// 构建 Huffman 表
 fn build_jpeg_huffman(
-  counts : Array[Int],
-  values : Array[Int],
+  counts : Array[Int32],
+  values : Array[Int32],
 ) -> JpegHuffmanTable {
   let maxcode = Array::make(17, -1)
   let mincode = Array::make(17, 0)
@@ -60,7 +60,7 @@ fn build_jpeg_huffman(
 
 ///|
 /// 读取一位
-fn jpeg_read_bit(r : JpegBitReader) -> Int raise @types.LoadError {
+fn jpeg_read_bit(r : JpegBitReader) -> Int32 raise @types.LoadError {
   if r.bit_cnt == 0 {
     if r.pos >= r.len {
       raise @types.LoadError::DecodeFailed("JPEG 数据意外结束")
@@ -93,7 +93,7 @@ fn jpeg_read_bit(r : JpegBitReader) -> Int raise @types.LoadError {
 
 ///|
 /// 读取 n 位
-fn jpeg_read_bits(r : JpegBitReader, n : Int) -> Int raise @types.LoadError {
+fn jpeg_read_bits(r : JpegBitReader, n : Int32) -> Int32 raise @types.LoadError {
   let mut result = 0
   for _ in 0..<n {
     result = (result << 1) | jpeg_read_bit(r)
@@ -106,7 +106,7 @@ fn jpeg_read_bits(r : JpegBitReader, n : Int) -> Int raise @types.LoadError {
 fn jpeg_decode_huffman(
   r : JpegBitReader,
   table : JpegHuffmanTable,
-) -> Int raise @types.LoadError {
+) -> Int32 raise @types.LoadError {
   let mut code = 0
   for l in 1..<=16 {
     code = (code << 1) | jpeg_read_bit(r)
@@ -123,7 +123,7 @@ fn jpeg_decode_huffman(
 
 ///|
 /// JPEG 值扩展（符号扩展）
-fn jpeg_extend(val : Int, size : Int) -> Int {
+fn jpeg_extend(val : Int32, size : Int32) -> Int32 {
   let vt = 1 << (size - 1)
   if val < vt {
     val - (1 << size) + 1
@@ -151,7 +151,7 @@ fn idct_cos_table() -> Array[Float] {
 
 ///|
 /// 8x8 IDCT（含 +128 电平偏移，输出 0-255）
-fn idct_8x8(block : Array[Int]) -> Array[Int] {
+fn idct_8x8(block : Array[Int32]) -> Array[Int32] {
   let cos_table = idct_cos_table()
   let out = Array::make(64, 0)
   for y in 0..<8 {
@@ -177,7 +177,7 @@ fn idct_8x8(block : Array[Int]) -> Array[Int] {
 
 ///|
 /// Zigzag 顺序
-fn zigzag() -> Array[Int] {
+fn zigzag() -> Array[Int32] {
   [
     0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40, 48,
     41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36, 29, 22,
@@ -192,10 +192,10 @@ fn jpeg_decode_block(
   r : JpegBitReader,
   dc_table : JpegHuffmanTable,
   ac_table : JpegHuffmanTable,
-  quant : Array[Int],
-  prev_dc : Ref[Int],
-  zz : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  quant : Array[Int32],
+  prev_dc : Ref[Int32],
+  zz : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   let block = Array::make(64, 0)
   let s = jpeg_decode_huffman(r, dc_table)
   let diff = if s == 0 {
@@ -235,7 +235,7 @@ fn jpeg_decode_block(
 
 ///|
 /// YCbCr → RGB
-fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
+fn ycbcr_to_rgb(y : Int32, cb : Int32, cr : Int32) -> (Int32, Int32, Int32) {
   let cbf = Float::from_int(cb) - 128.0F
   let crf = Float::from_int(cr) - 128.0F
   let yf = Float::from_int(y)
@@ -248,21 +248,21 @@ fn ycbcr_to_rgb(y : Int, cb : Int, cr : Int) -> (Int, Int, Int) {
 ///|
 /// JPEG 解码头部信息
 priv struct JpegHeader {
-  width : Int
-  height : Int
-  num_components : Int
-  quant_tables : Array[Array[Int]]
+  width : Int32
+  height : Int32
+  num_components : Int32
+  quant_tables : Array[Array[Int32]]
   huff_dc : Array[JpegHuffmanTable]
   huff_ac : Array[JpegHuffmanTable]
-  component_h : Array[Int]
-  component_v : Array[Int]
-  component_qt : Array[Int]
-  restart_interval : Int
-  scan_comp_idx : Array[Int]
-  scan_dc_table : Array[Int]
-  scan_ac_table : Array[Int]
-  scan_ns : Int
-  entropy_start : Int
+  component_h : Array[Int32]
+  component_v : Array[Int32]
+  component_qt : Array[Int32]
+  restart_interval : Int32
+  scan_comp_idx : Array[Int32]
+  scan_dc_table : Array[Int32]
+  scan_ac_table : Array[Int32]
+  scan_ns : Int32
+  entropy_start : Int32
 }
 
 ///|
@@ -275,18 +275,18 @@ fn jpeg_parse_header(data : Bytes) -> JpegHeader raise @types.LoadError {
   let mut pos = 2
   let mut width = 0
   let mut height = 0
-  let quant_tables : Array[Array[Int]] = Array::make(4, Array::make(64, 0))
+  let quant_tables : Array[Array[Int32]] = Array::make(4, Array::make(64, 0))
   let huff_dc : Array[JpegHuffmanTable] = Array::make(4, empty_huffman_table())
   let huff_ac : Array[JpegHuffmanTable] = Array::make(4, empty_huffman_table())
   let mut num_components = 3
-  let component_ids : Array[Int] = Array::make(4, 0)
-  let component_h : Array[Int] = Array::make(4, 1)
-  let component_v : Array[Int] = Array::make(4, 1)
-  let component_qt : Array[Int] = Array::make(4, 0)
+  let component_ids : Array[Int32] = Array::make(4, 0)
+  let component_h : Array[Int32] = Array::make(4, 1)
+  let component_v : Array[Int32] = Array::make(4, 1)
+  let component_qt : Array[Int32] = Array::make(4, 0)
   let mut restart_interval = 0
-  let scan_comp_idx : Array[Int] = Array::make(4, 0)
-  let scan_dc_table : Array[Int] = Array::make(4, 0)
-  let scan_ac_table : Array[Int] = Array::make(4, 0)
+  let scan_comp_idx : Array[Int32] = Array::make(4, 0)
+  let scan_dc_table : Array[Int32] = Array::make(4, 0)
+  let scan_ac_table : Array[Int32] = Array::make(4, 0)
   let mut scan_ns = 0
   let mut entropy_start = 0
   let zz = zigzag()
@@ -444,14 +444,14 @@ fn jpeg_parse_header(data : Bytes) -> JpegHeader raise @types.LoadError {
 /// 写入单个 MCU 的像素到输出缓冲
 fn jpeg_write_mcu_pixels(
   header : JpegHeader,
-  comp_data : Array[Array[Int]],
-  mx : Int,
-  my : Int,
-  max_h : Int,
-  max_v : Int,
-  mcu_width : Int,
-  mcu_height : Int,
-  out_channels : Int,
+  comp_data : Array[Array[Int32]],
+  mx : Int32,
+  my : Int32,
+  max_h : Int32,
+  max_v : Int32,
+  mcu_width : Int32,
+  mcu_height : Int32,
+  out_channels : Int32,
   rgb_data : Array[Byte],
 ) -> Unit {
   let width = header.width
@@ -551,7 +551,7 @@ fn jpeg_decode_scan(
   let mcu_height = max_v * 8
   let mcus_x = (width + mcu_width - 1) / mcu_width
   let mcus_y = (height + mcu_height - 1) / mcu_height
-  let dc_pred : Array[Ref[Int]] = []
+  let dc_pred : Array[Ref[Int32]] = []
   for _ in 0..<num_components {
     dc_pred.push(Ref(0))
   }
@@ -582,7 +582,7 @@ fn jpeg_decode_scan(
           reader.pos += 1
         }
       }
-      let comp_data : Array[Array[Int]] = []
+      let comp_data : Array[Array[Int32]] = []
       for _ in 0..<num_components {
         comp_data.push(Array::make(256, 0))
       }

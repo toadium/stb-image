@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn bcd_make_img(w : Int, h : Int, val : Int) -> @types.Image {
+fn bcd_make_img(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,12 @@ fn bcd_make_img(w : Int, h : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn bcd_make_img_ch(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn bcd_make_img_ch(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -27,7 +32,7 @@ fn bcd_make_finder_pattern_img() -> @types.Image {
   let w = 30
   let h = 30
   let data : Array[Byte] = Array::make(w * h, b'\xFF')
-  let pattern : Array[Array[Int]] = [
+  let pattern : Array[Array[Int32]] = [
     [1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 0, 1],
@@ -65,7 +70,7 @@ fn bcd_make_three_finders_img() -> @types.Image {
   let w = 100
   let h = 100
   let data : Array[Byte] = Array::make(w * h, b'\xFF')
-  let pattern : Array[Array[Int]] = [
+  let pattern : Array[Array[Int32]] = [
     [1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 0, 1],
@@ -106,7 +111,7 @@ fn bcd_make_ean13_img() -> @types.Image {
   let w = 120
   let h = 60
   let data : Array[Byte] = Array::make(w * h, b'\xFF')
-  let bar_pattern : Array[Int] = [
+  let bar_pattern : Array[Int32] = [
     1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0,
     1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0,
     1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1,

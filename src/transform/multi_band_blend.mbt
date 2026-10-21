@@ -9,7 +9,7 @@ pub fn multi_band_blend(
   img_a : @types.Image,
   img_b : @types.Image,
   mask : @types.Image,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   if img_a.width != img_b.width || img_a.height != img_b.height {
     raise @types.LoadError::DecodeFailed("img_a 和 img_b 尺寸需相同")
@@ -88,7 +88,7 @@ pub fn multi_band_blend(
 }
 
 ///|
-fn get_w_from_n(n : Int, w : Int, h : Int) -> Int {
+fn get_w_from_n(n : Int32, w : Int32, h : Int32) -> Int32 {
   if h == 0 {
     return 0
   }
@@ -101,7 +101,7 @@ fn get_w_from_n(n : Int, w : Int, h : Int) -> Int {
 }
 
 ///|
-fn blur_downsample(data : Array[Float], w : Int, h : Int) -> Array[Float] {
+fn blur_downsample(data : Array[Float], w : Int32, h : Int32) -> Array[Float] {
   let nw = w / 2
   let nh = h / 2
   if nw == 0 || nh == 0 {
@@ -131,11 +131,11 @@ fn blur_downsample(data : Array[Float], w : Int, h : Int) -> Array[Float] {
 ///|
 fn build_laplacian_pyramid_f(
   data : Array[Float],
-  w : Int,
-  h : Int,
-  levels : Int,
+  w : Int32,
+  h : Int32,
+  levels : Int32,
 ) -> Array[Array[Float]] {
-  let gaussian : Array[(Array[Float], Int, Int)] = [(data, w, h)]
+  let gaussian : Array[(Array[Float], Int32, Int32)] = [(data, w, h)]
   for _l in 1..<levels {
     let (prev, pw, ph) = gaussian[gaussian.length() - 1]
     if pw <= 1 || ph <= 1 {
@@ -165,10 +165,10 @@ fn build_laplacian_pyramid_f(
 ///|
 fn upsample_f(
   data : Array[Float],
-  sw : Int,
-  sh : Int,
-  dw : Int,
-  dh : Int,
+  sw : Int32,
+  sh : Int32,
+  dw : Int32,
+  dh : Int32,
 ) -> Array[Float] {
   let out : Array[Float] = Array::make(dw * dh, 0.0F)
   for y in 0..<dh {
@@ -184,8 +184,8 @@ fn upsample_f(
 ///|
 fn collapse_laplacian_pyramid_f(
   pyramid : Array[Array[Float]],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> Array[Float] {
   if pyramid.length() == 0 {
     return Array::make(w * h, 0.0F)
@@ -197,7 +197,7 @@ fn collapse_laplacian_pyramid_f(
   // 推算最粗层尺寸
   let mut tw = w
   let mut th = h
-  let sizes : Array[(Int, Int)] = [(tw, th)]
+  let sizes : Array[(Int32, Int32)] = [(tw, th)]
   for _l in 1..<pyramid.length() {
     tw = tw / 2
     th = th / 2
@@ -235,7 +235,7 @@ pub fn multi_band_blend_16(
   img_a : @types.Image16,
   img_b : @types.Image16,
   mask : @types.Image16,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.Image16 raise @types.LoadError {
   if img_a.width != img_b.width || img_a.height != img_b.height {
     raise @types.LoadError::DecodeFailed("img_a 和 img_b 尺寸需相同")
@@ -318,7 +318,7 @@ pub fn multi_band_blend_f(
   img_a : @types.ImageF,
   img_b : @types.ImageF,
   mask : @types.ImageF,
-  num_bands? : Int = 5,
+  num_bands~ : Int32 = 5,
 ) -> @types.ImageF raise @types.LoadError {
   if img_a.width != img_b.width || img_a.height != img_b.height {
     raise @types.LoadError::DecodeFailed("img_a 和 img_b 尺寸需相同")

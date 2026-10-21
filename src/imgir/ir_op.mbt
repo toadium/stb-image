@@ -13,16 +13,16 @@
 /// IR operation: unified image/field/spatiotemporal operation enum.
 pub(all) enum IROp {
   // 图像变换
-  Resize(Int, Int) // 缩放到 (w, h)
+  Resize(Int32, Int32) // 缩放到 (w, h)
   Rotate90 // 旋转 90°
   FlipH // 水平翻转
   FlipV // 垂直翻转
-  Crop(Int, Int, Int, Int) // 裁剪 (x, y, w, h)
+  Crop(Int32, Int32, Int32, Int32) // 裁剪 (x, y, w, h)
   ToGray // 转灰度
   // 色彩/滤波
-  Brightness(Int) // 亮度调整 delta
-  GaussianBlur(Int, Float) // 高斯模糊 (radius, sigma)
-  BoxBlur(Int) // 均值模糊 (radius)
+  Brightness(Int32) // 亮度调整 delta
+  GaussianBlur(Int32, Float) // 高斯模糊 (radius, sigma)
+  BoxBlur(Int32) // 均值模糊 (radius)
   Sharpen(Float) // 锐化 (amount)
   // 场操作
   ToScalarField // Image → ScalarField
@@ -66,7 +66,7 @@ pub fn IRPipeline::new() -> IRPipeline {
 ///|
 /// 管道操作数。
 /// Number of operations in the pipeline.
-pub fn IRPipeline::length(self : IRPipeline) -> Int {
+pub fn IRPipeline::length(self : IRPipeline) -> Int32 {
   self.ops.length()
 }
 

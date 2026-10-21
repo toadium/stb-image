@@ -4,8 +4,8 @@
 /// 积分图像（Satoh 表达）。integral[y][x] = sum of img[0..y, 0..x]。
 /// 支持 64 位整数和 Float 两种表达。
 pub struct IntegralImage {
-  width : Int // 原图宽度
-  height : Int // 原图高度
+  width : Int32 // 原图宽度
+  height : Int32 // 原图高度
   data : Array[Int64] // (width+1) * (height+1) 的积分表，首行首列为 0
 }
 
@@ -39,7 +39,7 @@ pub fn integral_image(
   let ch = img.channels
   let iw = w + 1
   let ih = h + 1
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -58,10 +58,10 @@ pub fn integral_image(
 /// 查询积分图像中矩形区域 [x, x+w) × [y, y+h) 的像素和。
 pub fn integral_sum(
   integral : IntegralImage,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> Int64 raise @types.LoadError {
   // 参数验证
   if integral.width <= 0 || integral.height <= 0 {
@@ -95,10 +95,10 @@ pub fn integral_sum(
 /// 使用积分图像快速计算矩形区域均值。
 pub fn integral_mean(
   integral : IntegralImage,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> Float raise @types.LoadError {
   // 参数验证
   if integral.width <= 0 || integral.height <= 0 {
@@ -128,8 +128,8 @@ pub fn integral_mean(
 ///|
 /// 平方积分图像（用于快速计算方差）。
 pub struct IntegralImageSq {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Int64] // sum of img^2
 }
 
@@ -163,7 +163,7 @@ pub fn integral_image_sq(
   let ch = img.channels
   let iw = w + 1
   let ih = h + 1
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -185,10 +185,10 @@ pub fn integral_image_sq(
 pub fn integral_variance(
   integral : IntegralImage,
   integral_sq : IntegralImageSq,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> Float raise @types.LoadError {
   // 参数验证
   if integral.width <= 0 || integral.height <= 0 {
@@ -234,10 +234,10 @@ pub fn integral_variance(
 /// 查询平方积分图像中矩形区域的像素平方和。
 pub fn integral_sum_sq(
   integral_sq : IntegralImageSq,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> Int64 raise @types.LoadError {
   // 参数验证
   if integral_sq.width <= 0 || integral_sq.height <= 0 {

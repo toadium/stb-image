@@ -176,7 +176,7 @@ pub fn detect_format(data : Bytes) -> @types.ImageFormat {
 /// - 未识别格式 raise LoadError::DecodeFailed
 pub fn load_from_bytes_auto(
   data : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image raise @types.LoadError {
   let img = match detect_format(data) {
     @types.ImageFormat::Png => @codec.decode_png_pure(data, req_channels~)
@@ -226,7 +226,7 @@ pub fn load_from_bytes_auto(
 /// 注意：req_channels 仅对 PNG 生效，PNM 分支不传递 req_channels
 pub fn load_16_from_bytes_auto(
   data : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image16 raise @types.LoadError {
   match detect_format(data) {
     @types.ImageFormat::Png => @codec.decode_png_16_pure(data, req_channels~)
@@ -334,7 +334,7 @@ pub fn save_image_auto(
 pub fn save_image_with_quality(
   img : @types.Image,
   format : @types.ImageFormat,
-  quality : Int,
+  quality : Int32,
 ) -> Bytes raise @types.LoadError {
   match format {
     @types.ImageFormat::Webp => @codec.encode_webp_lossy_pure(img, quality~)

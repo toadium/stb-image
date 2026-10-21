@@ -20,14 +20,14 @@ pub extend EncryptionAlgorithm with Eq::{not_equal, equal}
 /// 加密结果
 pub(all) struct EncryptionResult {
   encrypted_data : Array[Byte]
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   algorithm : EncryptionAlgorithm
   key_hash : String
   encryption_time_ms : Double
-  file_size_original : Int
-  file_size_encrypted : Int
+  file_size_original : Int32
+  file_size_encrypted : Int32
 }
 
 ///|
@@ -50,8 +50,8 @@ pub extend WatermarkType with Eq::{not_equal, equal}
 pub(all) struct WatermarkInfo {
   watermark_type : WatermarkType
   watermark_data : Array[Byte]
-  watermark_width : Int
-  watermark_height : Int
+  watermark_width : Int32
+  watermark_height : Int32
   strength : Double
   embedded : Bool
   embedding_position : String
@@ -62,8 +62,8 @@ pub(all) struct WatermarkInfo {
 /// 水印提取结果
 pub(all) struct WatermarkExtractionResult {
   watermark_data : Array[Byte]
-  watermark_width : Int
-  watermark_height : Int
+  watermark_width : Int32
+  watermark_height : Int32
   similarity : Double
   extracted : Bool
   extraction_time_ms : Double
@@ -78,15 +78,15 @@ pub(all) struct ChaoticParams {
   a : Double
   b : Double
   c : Double
-  iterations : Int
+  iterations : Int32
 }
 
 ///|
 /// Arnold 置乱参数
 pub(all) struct ArnoldParams {
-  iterations : Int
-  a : Int
-  b : Int
+  iterations : Int32
+  a : Int32
+  b : Int32
 }
 
 ///|
@@ -201,7 +201,7 @@ pub fn xor_decrypt(
 /// 生成混沌序列（Lorenz 系统简化版）
 pub fn generate_chaotic_sequence_enc(
   params : ChaoticParams,
-  length : Int,
+  length : Int32,
 ) -> Array[Double] {
   let sequence : Array[Double] = []
   let mut x = params.x0
@@ -349,7 +349,7 @@ pub fn arnold_scramble(
 pub fn embed_watermark_lsb(
   img : @types.Image,
   watermark : Array[Byte],
-  strength : Int,
+  strength : Int32,
 ) -> (@types.Image, WatermarkInfo) raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -420,8 +420,8 @@ pub fn embed_watermark_lsb(
 /// LSB 水印提取
 pub fn extract_watermark_lsb(
   img : @types.Image,
-  watermark_length : Int,
-  strength : Int,
+  watermark_length : Int32,
+  strength : Int32,
 ) -> WatermarkExtractionResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -479,8 +479,8 @@ pub fn extract_watermark_lsb(
 pub fn embed_visible_watermark(
   img : @types.Image,
   watermark_text : String,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   opacity : Double,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
@@ -557,7 +557,7 @@ pub fn calculate_image_entropy(
   let w = img.width
   let h = img.height
   let total = w * h
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }

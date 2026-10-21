@@ -49,18 +49,18 @@ pub(all) struct Keypoint {
 /// 人体姿态
 pub(all) struct HumanPose {
   keypoints : Array[Keypoint]
-  num_keypoints : Int
+  num_keypoints : Int32
   bounding_box : Array[Double]
   confidence : Double
-  pose_id : Int
+  pose_id : Int32
   is_tracked : Bool
 }
 
 ///|
 /// 骨架连接
 pub(all) struct SkeletonConnection {
-  joint1 : Int
-  joint2 : Int
+  joint1 : Int32
+  joint2 : Int32
   confidence : Double
   length : Double
   angle : Double
@@ -71,10 +71,10 @@ pub(all) struct SkeletonConnection {
 pub(all) struct ActionRecognitionResult {
   action_name : String
   confidence : Double
-  action_id : Int
-  duration_frames : Int
-  start_frame : Int
-  end_frame : Int
+  action_id : Int32
+  duration_frames : Int32
+  start_frame : Int32
+  end_frame : Int32
   is_completed : Bool
 }
 
@@ -110,10 +110,10 @@ pub(all) struct GestureRecognitionResult {
 /// 姿态估计配置
 pub(all) struct PoseEstimationConfig {
   algorithm : PoseEstimationAlgorithm
-  num_keypoints : Int
+  num_keypoints : Int32
   confidence_threshold : Double
   nms_threshold : Double
-  max_num_people : Int
+  max_num_people : Int32
   use_tracking : Bool
   use_smoothing : Bool
   smoothing_factor : Double
@@ -123,12 +123,12 @@ pub(all) struct PoseEstimationConfig {
 /// 动作识别配置
 pub(all) struct ActionRecognitionConfig {
   algorithm : ActionRecognitionAlgorithm
-  num_classes : Int
-  window_size : Int
-  stride : Int
+  num_classes : Int32
+  window_size : Int32
+  stride : Int32
   confidence_threshold : Double
   use_temporal_smoothing : Bool
-  smoothing_window : Int
+  smoothing_window : Int32
 }
 
 ///|
@@ -172,7 +172,7 @@ pub fn get_coco_keypoint_names() -> Array[String] {
 
 ///|
 /// COCO 骨架连接对
-pub fn get_coco_skeleton_connections() -> Array[Array[Int]] {
+pub fn get_coco_skeleton_connections() -> Array[Array[Int32]] {
   [
     [0, 1],
     [0, 2],
@@ -433,9 +433,9 @@ pub fn extract_skeleton(pose : HumanPose) -> Array[SkeletonConnection] {
 /// 计算关节角度
 pub fn calculate_joint_angle(
   pose : HumanPose,
-  joint1 : Int,
-  joint_center : Int,
-  joint2 : Int,
+  joint1 : Int32,
+  joint_center : Int32,
+  joint2 : Int32,
 ) -> Double {
   if joint1 < pose.keypoints.length() &&
     joint_center < pose.keypoints.length() &&

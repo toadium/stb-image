@@ -1,31 +1,31 @@
 ///|
 /// JPEG-XL 扩展信息
 pub struct JpegXlInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_lossless : Bool
   is_codestream : Bool
-  orientation : Int
+  orientation : Int32
 }
 
 ///|
 /// 位流读取器
 priv struct JxlBitReader {
   data : Bytes
-  mut byte_pos : Int
-  mut bit_pos : Int
+  mut byte_pos : Int32
+  mut bit_pos : Int32
 }
 
 ///|
-fn JxlBitReader::new(data : Bytes, start : Int) -> JxlBitReader {
+fn JxlBitReader::new(data : Bytes, start : Int32) -> JxlBitReader {
   JxlBitReader::{ data, byte_pos: start, bit_pos: 0, }
 }
 
 ///|
-fn JxlBitReader::read_bit(self : JxlBitReader) -> Int {
+fn JxlBitReader::read_bit(self : JxlBitReader) -> Int32 {
   if self.byte_pos >= self.data.length() {
     return 0
   }
@@ -40,7 +40,7 @@ fn JxlBitReader::read_bit(self : JxlBitReader) -> Int {
 }
 
 ///|
-fn JxlBitReader::read_bits(self : JxlBitReader, n : Int) -> Int {
+fn JxlBitReader::read_bits(self : JxlBitReader, n : Int32) -> Int32 {
   let mut result = 0
   for _ in 0..<n {
     result = (result << 1) | self.read_bit()
@@ -51,11 +51,11 @@ fn JxlBitReader::read_bits(self : JxlBitReader, n : Int) -> Int {
 ///|
 fn JxlBitReader::read_u32(
   self : JxlBitReader,
-  d0 : Int,
-  d1 : Int,
-  d2 : Int,
-  d3 : Int,
-) -> Int {
+  d0 : Int32,
+  d1 : Int32,
+  d2 : Int32,
+  d3 : Int32,
+) -> Int32 {
   let selector = self.read_bits(2)
   match selector {
     0 => d0
@@ -68,10 +68,10 @@ fn JxlBitReader::read_u32(
 ///|
 /// 从宽高比计算宽度
 fn jxl_width_from_ratio(
-  height : Int,
-  ratio : Int,
+  height : Int32,
+  ratio : Int32,
   reader : JxlBitReader,
-) -> Int {
+) -> Int32 {
   match ratio {
     0 => height
     1 => height * 4 / 3
@@ -86,7 +86,7 @@ fn jxl_width_from_ratio(
 
 ///|
 /// 解析 JPEG-XL 裸码流 SizeHeader
-fn jxl_parse_size_header(data : Bytes, start : Int) -> (Int, Int) {
+fn jxl_parse_size_header(data : Bytes, start : Int32) -> (Int32, Int32) {
   let reader = JxlBitReader::new(data, start)
   let small = reader.read_bit()
   let height = if small == 1 {
@@ -101,7 +101,7 @@ fn jxl_parse_size_header(data : Bytes, start : Int) -> (Int, Int) {
 
 ///|
 /// 在 ISOBMFF 容器中查找 codestream box 的偏移
-fn jxl_find_codestream(data : Bytes) -> Int {
+fn jxl_find_codestream(data : Bytes) -> Int32 {
   let len = data.length()
   let mut offset = 0
   while offset + 8 <= len {

@@ -1,9 +1,9 @@
 ///|
 /// 解码结果值对象，承载图像几何元信息与像素数据（8-bit 无符号像素）
 pub(all) struct Image {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
 
@@ -16,9 +16,9 @@ pub extend Image with Eq::{not_equal, equal}
 ///|
 /// 16-bit 解码结果值对象，像素数据为 16-bit 无符号整数（little-endian，每像素 2 字节）
 pub(all) struct Image16 {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
 
@@ -31,9 +31,9 @@ pub extend Image16 with Eq::{not_equal, equal}
 ///|
 /// HDR float 解码结果值对象，像素数据为 32-bit IEEE float（little-endian，每像素 4 字节）
 pub(all) struct ImageF {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Bytes
 } derive(Eq, @debug.Debug)
 
@@ -46,9 +46,9 @@ pub extend ImageF with Eq::{not_equal, equal}
 ///|
 /// 图像信息查询结果，仅含几何元信息，不加载像素数据
 pub(all) struct ImageInfo {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -61,7 +61,7 @@ pub extend ImageInfo with Eq::{not_equal, equal}
 /// 动画 GIF 解码结果，包含多帧图像和每帧延迟（毫秒）
 pub(all) struct GifAnimation {
   frames : Array[Image]
-  delays : Array[Int]
+  delays : Array[Int32]
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -146,7 +146,7 @@ pub extend ResizeEdge with Eq::{not_equal, equal}
 /// APNG 动画解码结果
 pub(all) struct PngAnimation {
   frames : Array[Image]
-  delays : Array[Int] // 毫秒
+  delays : Array[Int32] // 毫秒
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -159,7 +159,7 @@ pub extend PngAnimation with Eq::{not_equal, equal}
 /// 图像维度上限（单边最大像素数）。
 /// 防止恶意图像声明超大尺寸导致 OOM 或整数溢出。
 /// 65535 覆盖常见图像格式最大尺寸（PNG/TIFF 32-bit、JPEG 65500、BMP 32-bit）。
-pub const MAX_IMAGE_DIMENSION : Int = 65535
+pub const MAX_IMAGE_DIMENSION : Int32 = 65535
 
 ///|
 /// 校验图像维度是否在安全范围内。
@@ -167,9 +167,9 @@ pub const MAX_IMAGE_DIMENSION : Int = 65535
 /// 且 width * height * channels 不超过 Int 最大值（防溢出）。
 /// 校验失败时 raise LoadError::DecodeFailed。
 pub fn check_dims(
-  width : Int,
-  height : Int,
-  channels : Int,
+  width : Int32,
+  height : Int32,
+  channels : Int32,
 ) -> Unit raise LoadError {
   if width <= 0 || height <= 0 || channels <= 0 {
     raise LoadError::DecodeFailed(
@@ -201,7 +201,7 @@ pub fn check_dims(
 ///|
 /// 安全乘法：返回 a * b，溢出时返回 None。
 /// 用于在分配大数组前检查是否会溢出。
-pub fn safe_mul(a : Int, b : Int) -> Int? {
+pub fn safe_mul(a : Int32, b : Int32) -> Int32? {
   if a <= 0 || b <= 0 {
     return Some(0)
   }
@@ -216,7 +216,7 @@ pub fn safe_mul(a : Int, b : Int) -> Int? {
 ///|
 /// 安全三参数乘法：返回 a * b * c，溢出时返回 None。
 /// 常用于计算 w * h * channels 的数组大小。
-pub fn safe_mul3(a : Int, b : Int, c : Int) -> Int? {
+pub fn safe_mul3(a : Int32, b : Int32, c : Int32) -> Int32? {
   match safe_mul(a, b) {
     Some(ab) =>
       match safe_mul(ab, c) {

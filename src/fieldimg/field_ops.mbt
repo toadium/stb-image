@@ -170,10 +170,10 @@ pub fn field_integrate(field : ScalarField) -> Float {
 /// Regional integrate: sum values in the region [x0,x1)×[y0,y1).
 pub fn field_integrate_region(
   field : ScalarField,
-  x0 : Int,
-  y0 : Int,
-  x1 : Int,
-  y1 : Int,
+  x0 : Int32,
+  y0 : Int32,
+  x1 : Int32,
+  y1 : Int32,
 ) -> Float {
   let mut sum = 0.0F
   let x_lo = x0.clamp(min=0, max=field.width)
@@ -332,8 +332,8 @@ pub fn field_histogram(
   field : ScalarField,
   min_val : Float,
   max_val : Float,
-  bins : Int,
-) -> Array[Int] raise @types.LoadError {
+  bins : Int32,
+) -> Array[Int32] raise @types.LoadError {
   if bins <= 0 {
     raise @types.LoadError::DecodeFailed("field_histogram: bins 必须大于0")
   }

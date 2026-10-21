@@ -16,12 +16,12 @@ pub extend ExposureType with Eq::{not_equal, equal}
 ///|
 /// HDR 图像
 pub(all) struct HdrImage {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   data : Array[Double]
   exposure_values : Array[Double]
-  num_exposures : Int
+  num_exposures : Int32
 }
 
 ///|
@@ -51,27 +51,27 @@ pub(all) struct ToneMappingConfig {
 /// 全景拼接配置
 pub(all) struct PanoramaConfig {
   overlap_threshold : Double
-  max_features : Int
-  ransac_iterations : Int
-  blend_width : Int
+  max_features : Int32
+  ransac_iterations : Int32
+  blend_width : Int32
   crop_black_borders : Bool
 }
 
 ///|
 /// 全景拼接结果
 pub(all) struct PanoramaResult {
-  width : Int
-  height : Int
-  num_images : Int
-  inliers : Int
+  width : Int32
+  height : Int32
+  num_images : Int32
+  inliers : Int32
   confidence : Double
 }
 
 ///|
 /// 景深配置
 pub(all) struct DepthOfFieldConfig {
-  focal_point_x : Int
-  focal_point_y : Int
+  focal_point_x : Int32
+  focal_point_y : Int32
   aperture : Double
   blur_strength : Double
 }
@@ -112,8 +112,8 @@ pub fn create_default_panorama_config() -> PanoramaConfig {
 ///|
 /// 创建默认景深配置
 pub fn create_default_dof_config(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> DepthOfFieldConfig {
   DepthOfFieldConfig::{
     focal_point_x: width / 2,

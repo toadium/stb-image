@@ -2,12 +2,12 @@
 // 特征提取、相似度计算、索引构建、查询扩展、相关反馈
 
 ///|
-fn make_double_image(w : Int, h : Int, value : Double) -> Array[Double] {
+fn make_double_image(w : Int32, h : Int32, value : Double) -> Array[Double] {
   Array::make(w * h, value)
 }
 
 ///|
-fn make_varied_double_image(w : Int, h : Int) -> Array[Double] {
+fn make_varied_double_image(w : Int32, h : Int32) -> Array[Double] {
   let arr : Array[Double] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_double())
@@ -206,8 +206,8 @@ test "relevance_feedback: 基本相关反馈" {
 ///|
 test "relevance_feedback: 无相关图像" {
   let query = [1.0, 2.0, 3.0]
-  let relevant_idx : Array[Int] = []
-  let irrelevant_idx : Array[Int] = []
+  let relevant_idx : Array[Int32] = []
+  let irrelevant_idx : Array[Int32] = []
   let db_features : Array[Array[Double]] = []
   let config = @image_retrieval_advanced.create_default_retrieval_config()
   let result = @image_retrieval_advanced.relevance_feedback(

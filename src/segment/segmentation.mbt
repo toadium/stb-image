@@ -4,17 +4,17 @@
 ///|
 /// 分割结果
 pub(all) struct SegmentationResult {
-  labels : Array[Int] // 每个像素的标签
-  num_regions : Int // 区域数量
-  region_sizes : Array[Int] // 每个区域的大小
+  labels : Array[Int32] // 每个像素的标签
+  num_regions : Int32 // 区域数量
+  region_sizes : Array[Int32] // 每个区域的大小
 }
 
 ///|
 /// 分水岭算法配置
 pub(all) struct WatershedConfig {
   threshold : Double // 梯度阈值
-  min_region_size : Int // 最小区域大小
-  connectivity : Int // 连通性（4或8）
+  min_region_size : Int32 // 最小区域大小
+  connectivity : Int32 // 连通性（4或8）
 }
 
 ///|
@@ -76,9 +76,9 @@ pub fn watershed_segment(
   // 1. 计算梯度
   let gradient = compute_gradient(img)
   // 2. 寻找局部最小值作为种子点
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
-  let seeds : Array[(Int, Int)] = []
+  let seeds : Array[(Int32, Int32)] = []
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let g = gradient[y * w + x]
@@ -146,7 +146,7 @@ pub fn watershed_segment(
     }
   }
   // 4. 合并小区域
-  let region_sizes : Array[Int] = Array::make(next_label, 0)
+  let region_sizes : Array[Int32] = Array::make(next_label, 0)
   for i in 0..<(w * h) {
     if labels[i] > 0 {
       region_sizes[labels[i]] += 1
@@ -190,9 +190,9 @@ pub fn watershed_segment(
     }
   }
   // 5. 重新编号标签
-  let label_map : Array[Int] = Array::make(next_label, 0)
+  let label_map : Array[Int32] = Array::make(next_label, 0)
   let mut new_num = 1
-  let new_sizes : Array[Int] = []
+  let new_sizes : Array[Int32] = []
   for label in 1..<next_label {
     if region_sizes[label] > 0 {
       label_map[label] = new_num
@@ -217,16 +217,16 @@ pub fn watershed_segment(
 /// 从种子点开始，根据相似度生长区域
 pub fn region_growing(
   img : @types.Image,
-  seeds : Array[(Int, Int)],
-  threshold? : Double = 30.0,
+  seeds : Array[(Int32, Int32)],
+  threshold~ : Double = 30.0,
 ) -> SegmentationResult {
   let thresh = threshold
   let w = img.width
   let h = img.height
   let channels = img.channels
   let data = img.data
-  let labels : Array[Int] = Array::make(w * h, 0)
-  let region_sizes : Array[Int] = []
+  let labels : Array[Int32] = Array::make(w * h, 0)
+  let region_sizes : Array[Int32] = []
   let mut label = 1
   for _tup3 in seeds {
     let (sx, sy) = _tup3
@@ -250,7 +250,7 @@ pub fn region_growing(
       seed_r
     }
     // 区域生长（洪水填充）
-    let stack : Array[(Int, Int)] = []
+    let stack : Array[(Int32, Int32)] = []
     stack.push((sx, sy))
     labels[sy * w + sx] = label
     let mut size = 0
@@ -299,7 +299,7 @@ pub fn threshold_otsu(img : @types.Image) -> @types.Image {
   let channels = img.channels
   let data = img.data
   // 计算灰度直方图
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<(w * h) {
     let idx = i * channels
     let r = data[idx].to_int()
@@ -365,8 +365,8 @@ pub fn threshold_otsu(img : @types.Image) -> @types.Image {
 /// 将分割结果可视化为彩色图像
 pub fn segmentation_to_color(
   result : SegmentationResult,
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image {
   let colors = [
     (255, 0, 0),

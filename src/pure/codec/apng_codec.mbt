@@ -5,7 +5,7 @@
 
 ///|
 /// 从 4 字节构造 chunk type 字符串
-fn apng_chunk_type(data : Bytes, offset : Int) -> String {
+fn apng_chunk_type(data : Bytes, offset : Int32) -> String {
   let buf : Array[Byte] = [
     data[offset],
     data[offset + 1],
@@ -21,8 +21,8 @@ fn apng_chunk_type(data : Bytes, offset : Int) -> String {
 /// PNG chunk 信息
 priv struct PngChunk {
   chunk_type : String
-  data_offset : Int
-  data_size : Int
+  data_offset : Int32
+  data_size : Int32
 }
 
 ///|
@@ -155,7 +155,7 @@ pub fn decode_apng_pure(
   }
   // APNG: 收集所有帧
   let frames : Array[@types.Image] = []
-  let delays : Array[Int] = []
+  let delays : Array[Int32] = []
   // 收集 IDAT 数据（第一帧可能用 IDAT）
   let mut idat_data : Bytes = b""
   let mut found_idat = false

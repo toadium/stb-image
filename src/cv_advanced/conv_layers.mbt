@@ -7,12 +7,12 @@
 /// 1D 卷积参数。
 /// 1D convolution parameters.
 pub(all) struct Conv1DParams {
-  in_channels : Int
-  out_channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
-  dilation : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
+  dilation : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -25,13 +25,13 @@ pub extend Conv1DParams with Eq::{not_equal, equal}
 /// 3D 卷积参数。
 /// 3D convolution parameters.
 pub(all) struct Conv3DParams {
-  in_channels : Int
-  out_channels : Int
-  kernel_d : Int
-  kernel_h : Int
-  kernel_w : Int
-  stride : Int
-  padding : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_d : Int32
+  kernel_h : Int32
+  kernel_w : Int32
+  stride : Int32
+  padding : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -44,11 +44,11 @@ pub extend Conv3DParams with Eq::{not_equal, equal}
 /// 深度可分离卷积参数。
 /// Depthwise separable convolution parameters.
 pub(all) struct DepthwiseConvParams {
-  channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
-  depth_multiplier : Int
+  channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
+  depth_multiplier : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -123,8 +123,8 @@ pub fn depthwise_conv2d(
   weight : Array[Double],
   bias : Array[Double],
   params : DepthwiseConvParams,
-  input_w : Int,
-  input_h : Int,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   let out_w = (input_w + 2 * params.padding - params.kernel_size) /
     params.stride +
@@ -169,12 +169,12 @@ pub fn grouped_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  groups : Int,
-  kernel_size : Int,
-  input_w : Int,
-  input_h : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  groups : Int32,
+  kernel_size : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   let in_per_group = in_channels / groups
   let out_per_group = out_channels / groups
@@ -230,10 +230,10 @@ pub fn dilated_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Double,
-  kernel_size : Int,
-  dilation : Int,
-  input_w : Int,
-  input_h : Int,
+  kernel_size : Int32,
+  dilation : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   let effective = dilation * (kernel_size - 1) + 1
   let out_w = input_w - effective + 1
@@ -269,12 +269,12 @@ pub fn transpose_conv2d(
   input : Array[Double],
   weight : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  kernel_size : Int,
-  stride : Int,
-  input_w : Int,
-  input_h : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  kernel_size : Int32,
+  stride : Int32,
+  input_w : Int32,
+  input_h : Int32,
 ) -> Array[Double] {
   let out_w = (input_w - 1) * stride + kernel_size
   let out_h = (input_h - 1) * stride + kernel_size

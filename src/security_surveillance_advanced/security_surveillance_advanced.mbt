@@ -65,14 +65,14 @@ pub extend AlertLevel with Eq::{not_equal, equal}
 ///|
 /// 检测到的人员
 pub(all) struct DetectedPerson {
-  person_id : Int
-  bounding_box : Array[Int]
+  person_id : Int32
+  bounding_box : Array[Int32]
   confidence : Double
   face_embedding : Array[Double]
   body_embedding : Array[Double]
   velocity : Array[Double]
-  trajectory : Array[Array[Int]]
-  age_estimate : Int
+  trajectory : Array[Array[Int32]]
+  age_estimate : Int32
   gender_estimate : String
   is_known : Bool
   identity : String
@@ -81,14 +81,14 @@ pub(all) struct DetectedPerson {
 ///|
 /// 入侵事件
 pub(all) struct IntrusionEvent {
-  event_id : Int
+  event_id : Int32
   intrusion_type : IntrusionType
   timestamp : Double
   location : Array[Double]
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   confidence : Double
   alert_level : AlertLevel
-  person_id : Int
+  person_id : Int32
   is_acknowledged : Bool
   video_clip_start : Double
   video_clip_end : Double
@@ -97,7 +97,7 @@ pub(all) struct IntrusionEvent {
 ///|
 /// 行为分析结果
 pub(all) struct BehaviorAnalysisResult {
-  person_id : Int
+  person_id : Int32
   behavior_type : BehaviorType
   confidence : Double
   timestamp : Double
@@ -110,7 +110,7 @@ pub(all) struct BehaviorAnalysisResult {
 ///|
 /// 人群分析结果
 pub(all) struct CrowdAnalysisResult {
-  num_people : Int
+  num_people : Int32
   density : Double
   density_map : Array[Array[Double]]
   crowd_direction : Array[Double]
@@ -118,7 +118,7 @@ pub(all) struct CrowdAnalysisResult {
   is_overcrowded : Bool
   panic_level : Double
   hotspots : Array[Array[Double]]
-  num_hotspots : Int
+  num_hotspots : Int32
 }
 
 ///|
@@ -126,7 +126,7 @@ pub(all) struct CrowdAnalysisResult {
 pub(all) struct LicensePlateResult {
   plate_number : String
   confidence : Double
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   vehicle_type : String
   vehicle_color : String
   plate_color : String
@@ -138,15 +138,15 @@ pub(all) struct LicensePlateResult {
 ///|
 /// 异常事件
 pub(all) struct AnomalyEvent {
-  event_id : Int
+  event_id : Int32
   event_type : String
   description : String
   timestamp : Double
   location : Array[Double]
   confidence : Double
   alert_level : AlertLevel
-  affected_people : Array[Int]
-  num_affected_people : Int
+  affected_people : Array[Int32]
+  num_affected_people : Int32
   is_verified : Bool
   video_clip_url : String
 }
@@ -158,11 +158,11 @@ pub(all) struct SecuritySurveillanceConfig {
   detection_threshold : Double
   recognition_threshold : Double
   alert_threshold : Double
-  intrusion_zones : Array[Array[Int]]
-  tripwires : Array[Array[Int]]
+  intrusion_zones : Array[Array[Int32]]
+  tripwires : Array[Array[Int32]]
   loitering_time : Double
-  min_person_size : Int
-  max_person_size : Int
+  min_person_size : Int32
+  max_person_size : Int32
   use_face_recognition : Bool
   use_behavior_analysis : Bool
   use_crowd_analysis : Bool
@@ -170,8 +170,8 @@ pub(all) struct SecuritySurveillanceConfig {
   alert_cooldown : Double
   auto_alert : Bool
   recording_on_alert : Bool
-  num_cameras : Int
-  fps : Int
+  num_cameras : Int32
+  fps : Int32
 }
 
 ///|
@@ -203,8 +203,8 @@ pub fn create_default_security_config() -> SecuritySurveillanceConfig {
 /// 检测人员（简化版）
 pub fn detect_people(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : SecuritySurveillanceConfig,
 ) -> Array[DetectedPerson] {
   ignore(config)
@@ -226,7 +226,7 @@ pub fn detect_people(
     state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
-    let bbox : Array[Int] = []
+    let bbox : Array[Int32] = []
     bbox.push(x)
     bbox.push(y)
     bbox.push(x + w)
@@ -264,7 +264,7 @@ pub fn detect_people(
 /// 检测入侵（简化版）
 pub fn detect_intrusion(
   people : Array[DetectedPerson],
-  intrusion_zone : Array[Int],
+  intrusion_zone : Array[Int32],
   config : SecuritySurveillanceConfig,
 ) -> Array[IntrusionEvent] {
   let events : Array[IntrusionEvent] = []
@@ -366,8 +366,8 @@ fn _sqrt_approx(x : Double) -> Double {
 /// 分析人群（简化版）
 pub fn analyze_crowd(
   people : Array[DetectedPerson],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : SecuritySurveillanceConfig,
 ) -> CrowdAnalysisResult {
   ignore(config)
@@ -395,8 +395,8 @@ pub fn analyze_crowd(
 /// 识别车牌（简化版）
 pub fn recognize_license_plate(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : SecuritySurveillanceConfig,
 ) -> LicensePlateResult {
   ignore(config)

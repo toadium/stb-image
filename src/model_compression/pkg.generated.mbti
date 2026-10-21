@@ -16,17 +16,17 @@ pub fn create_default_quantization_config() -> QuantizationConfig
 
 pub fn deploy_model(Double, Double, DeploymentConfig) -> DeploymentResult
 
-pub fn knowledge_distillation(Double, Double, Int, Int, KnowledgeDistillationConfig) -> ModelCompressionResult
+pub fn knowledge_distillation(Double, Double, Int32, Int32, KnowledgeDistillationConfig) -> ModelCompressionResult
 
-pub fn low_rank_factorization(Double, Int, Int, LowRankConfig) -> ModelCompressionResult
+pub fn low_rank_factorization(Double, Int32, Int32, LowRankConfig) -> ModelCompressionResult
 
 pub fn model_compression_report_to_string(ModelCompressionResult, String) -> String
 
 pub fn optimize_model_inference(Double, Double, ModelOptimizationConfig) -> (Double, Double, Double)
 
-pub fn prune_model(Double, Int, Int, PruningConfig) -> ModelCompressionResult
+pub fn prune_model(Double, Int32, Int32, PruningConfig) -> ModelCompressionResult
 
-pub fn quantize_model(Double, Int, Int, QuantizationConfig) -> ModelCompressionResult
+pub fn quantize_model(Double, Int32, Int32, QuantizationConfig) -> ModelCompressionResult
 
 // Errors
 
@@ -35,10 +35,10 @@ pub(all) struct DeploymentConfig {
   target : DeploymentTarget
   optimize_for_inference : Bool
   use_dynamic_shapes : Bool
-  batch_size : Int
-  input_shape : Array[Int]
+  batch_size : Int32
+  input_shape : Array[Int32]
   output_names : Array[String]
-  opset_version : Int
+  opset_version : Int32
   use_half_precision : Bool
 }
 
@@ -74,14 +74,14 @@ pub(all) struct KnowledgeDistillationConfig {
   use_hint_loss : Bool
   use_attention_transfer : Bool
   use_feature_distillation : Bool
-  teacher_layers : Array[Int]
-  student_layers : Array[Int]
+  teacher_layers : Array[Int32]
+  student_layers : Array[Int32]
 }
 
 pub(all) struct LowRankConfig {
   rank_ratio : Double
-  min_rank : Int
-  max_rank : Int
+  min_rank : Int32
+  max_rank : Int32
   use_svd : Bool
   use_cp_decomposition : Bool
   use_tucker_decomposition : Bool
@@ -106,11 +106,11 @@ pub(all) struct ModelCompressionResult {
   original_size_mb : Double
   compressed_size_mb : Double
   compression_ratio : Double
-  original_parameters : Int
-  compressed_parameters : Int
+  original_parameters : Int32
+  compressed_parameters : Int32
   parameter_reduction : Double
-  original_flops : Int
-  compressed_flops : Int
+  original_flops : Int32
+  compressed_flops : Int32
   flops_reduction : Double
   accuracy_drop : Double
   method_type : ModelCompressionMethod
@@ -125,7 +125,7 @@ pub(all) struct ModelOptimizationConfig {
   use_constant_folding : Bool
   use_dead_code_elimination : Bool
   target_device : String
-  optimization_level : Int
+  optimization_level : Int32
 }
 
 pub(all) struct PruningConfig {
@@ -135,8 +135,8 @@ pub(all) struct PruningConfig {
   structured : Bool
   global_pruning : Bool
   iterative_pruning : Bool
-  num_iterations : Int
-  fine_tune_epochs : Int
+  num_iterations : Int32
+  fine_tune_epochs : Int32
 }
 
 pub(all) enum PruningType {
@@ -155,10 +155,10 @@ pub fn PruningType::not_equal(Self, Self) -> Bool
 
 pub(all) struct QuantizationConfig {
   quantization_type : QuantizationType
-  num_bits : Int
+  num_bits : Int32
   symmetric : Bool
   per_channel : Bool
-  calibration_samples : Int
+  calibration_samples : Int32
   use_quant_aware_training : Bool
   activation_quantization : Bool
   weight_quantization : Bool

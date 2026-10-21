@@ -38,7 +38,7 @@ pub fn apply_lut(
 /// 返回 RGB 图像（channels=3）。
 pub fn gradient_map(
   img : @types.Image,
-  color_stops : Array[(Int, Byte, Byte, Byte)],
+  color_stops : Array[(Int32, Byte, Byte, Byte)],
 ) -> @types.Image raise @types.LoadError {
   if color_stops.length() < 2 {
     raise @types.LoadError::DecodeFailed(
@@ -81,8 +81,8 @@ pub fn gradient_map(
 
 ///|
 fn interp_gradient(
-  v : Int,
-  stops : Array[(Int, Byte, Byte, Byte)],
+  v : Int32,
+  stops : Array[(Int32, Byte, Byte, Byte)],
 ) -> (Byte, Byte, Byte) {
   let len = stops.length()
   if v <= stops[0].0 {
@@ -140,7 +140,7 @@ pub fn set_alpha(
 /// 用指定颜色填充 alpha 通道。将 alpha < threshold 的像素的 RGB 设为指定颜色。
 pub fn fill_alpha(
   img : @types.Image,
-  threshold : Int,
+  threshold : Int32,
   fill_r : Byte,
   fill_g : Byte,
   fill_b : Byte,

@@ -5,7 +5,7 @@
 pub(all) struct HoughLine {
   rho : Float // 极径（原点到直线的垂直距离）
   theta : Float // 极角（弧度）
-  votes : Int // 累加器票数
+  votes : Int32 // 累加器票数
 }
 
 ///|
@@ -14,9 +14,9 @@ pub(all) struct HoughLine {
 /// threshold 为最小票数阈值，返回票数 >= threshold 的直线，按票数降序排列。
 pub fn hough_lines(
   img : @types.Image,
-  threshold : Int,
-  theta_resolution? : Float = 1.0F,
-  rho_resolution? : Float = 1.0F,
+  threshold : Int32,
+  theta_resolution~ : Float = 1.0F,
+  rho_resolution~ : Float = 1.0F,
 ) -> Array[HoughLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -60,7 +60,7 @@ pub fn hough_lines(
   let max_rho = (diag / rho_resolution).to_int() + 1
   let n_rho = 2 * max_rho + 1
   // 累加器（一维数组，提高缓存友好性）
-  let accumulator : Array[Int] = Array::make(n_rho * n_theta, 0)
+  let accumulator : Array[Int32] = Array::make(n_rho * n_theta, 0)
   // 预计算 sin/cos 表
   let cos_table : Array[Float] = Array::make(n_theta, 0.0F)
   let sin_table : Array[Float] = Array::make(n_theta, 0.0F)
@@ -74,7 +74,7 @@ pub fn hough_lines(
   let inv_rho_res = 1.0F / rho_resolution
   let rho_max_idx = n_rho - 1
   // 预计算首通道 to_int（只看第一个通道判断边缘）
-  let data_int : Array[Int] = Array::make(w * h, 0)
+  let data_int : Array[Int32] = Array::make(w * h, 0)
   for i in 0..<(w * h) {
     data_int[i] = img.data[i * ch].to_int()
   }
@@ -127,8 +127,8 @@ pub fn hough_lines(
 /// 非极大值抑制。对霍夫变换结果做 NMS，去除相近的重复直线。
 pub fn hough_lines_nms(
   lines : Array[HoughLine],
-  rho_threshold? : Float = 5.0F,
-  theta_threshold? : Float = 0.1F,
+  rho_threshold~ : Float = 5.0F,
+  theta_threshold~ : Float = 0.1F,
 ) -> Array[HoughLine] raise @types.LoadError {
   // 参数验证
   if rho_threshold <= 0.0F {

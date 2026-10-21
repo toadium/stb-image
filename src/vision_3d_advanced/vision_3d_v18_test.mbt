@@ -2,7 +2,7 @@
 // 高级3D视觉：立体匹配、深度估计、三维重建、位姿估计、报告生成
 
 ///|
-fn make_double_image(w : Int, h : Int) -> Array[Double] {
+fn make_double_image(w : Int32, h : Int32) -> Array[Double] {
   let arr : Array[Double] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_double())

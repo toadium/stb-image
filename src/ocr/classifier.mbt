@@ -20,7 +20,7 @@ pub(all) struct TrainingSample {
 /// KNN 分类器
 pub(all) struct KnnClassifier {
   samples : Array[TrainingSample]
-  k : Int
+  k : Int32
   distance_metric : String
 }
 
@@ -186,8 +186,8 @@ pub fn compute_distance(
 ///|
 /// 创建 KNN 分类器
 pub fn knn_create(
-  k? : Int = 3,
-  distance_metric? : String = "euclidean",
+  k~ : Int32 = 3,
+  distance_metric~ : String = "euclidean",
 ) -> KnnClassifier raise @types.LoadError {
   // 输入验证
   if k <= 0 {
@@ -295,7 +295,7 @@ pub fn knn_predict(
     distances.length()
   }
   let top_k : Array[(String, Double)] = []
-  let label_votes : Array[(String, Int)] = []
+  let label_votes : Array[(String, Int32)] = []
   for i in 0..<k {
     let (dist, label) = distances[i]
     let confidence = if dist > 0.0 { 1.0 / (1.0 + dist) } else { 1.0 }
@@ -333,7 +333,7 @@ pub fn knn_predict(
 ///|
 /// 创建模板匹配分类器
 pub fn template_matcher_create(
-  distance_metric? : String = "euclidean",
+  distance_metric~ : String = "euclidean",
 ) -> TemplateMatcher {
   // 输入验证：distance_metric 不做强制验证，使用默认值兜底
   TemplateMatcher::{ templates: [], distance_metric, }

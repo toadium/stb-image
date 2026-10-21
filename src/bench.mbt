@@ -1,5 +1,5 @@
 ///|
-fn bench_make_rgb(width : Int, height : Int) -> @types.Image {
+fn bench_make_rgb(width : Int32, height : Int32) -> @types.Image {
   let n = width * height
   let data : Array[Byte] = Array::make(n * 3, b'\x80')
   for i in 0..<n {
@@ -11,7 +11,7 @@ fn bench_make_rgb(width : Int, height : Int) -> @types.Image {
 }
 
 ///|
-fn bench_make_rgba(width : Int, height : Int) -> @types.Image {
+fn bench_make_rgba(width : Int32, height : Int32) -> @types.Image {
   let n = width * height
   let data : Array[Byte] = Array::make(n * 4, b'\xFF')
   for i in 0..<n {

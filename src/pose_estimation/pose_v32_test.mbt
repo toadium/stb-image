@@ -1,7 +1,7 @@
 // v32.0.0 人体姿态估计与动作识别测试 — pose_estimation 模块 12 函数
 
 ///|
-fn create_solid_pe(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_pe(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())
@@ -15,7 +15,7 @@ fn create_solid_pe(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_pe(w : Int, h : Int) -> @types.Image {
+fn create_gradient_pe(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

@@ -8,8 +8,8 @@
 /// 返回分割结果，每个像素的标签对应其所属区域。
 pub fn watershed(
   img : @types.Image,
-  markers : Array[Int],
-) -> Array[Int] raise @types.LoadError {
+  markers : Array[Int32],
+) -> Array[Int32] raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("watershed 仅支持 channels=1/3/4")
   }
@@ -25,7 +25,7 @@ pub fn watershed(
     return []
   }
   // 转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   let ch = img.channels
   for i in 0..<n {
     if ch == 1 {
@@ -38,18 +38,18 @@ pub fn watershed(
     }
   }
   // 复制 markers
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     labels[i] = markers[i]
   }
   // 沉浸式分水岭：按灰度值从低到高处理
   // 创建像素索引按灰度值排序的列表
-  let indices : Array[Int] = Array::make(n, 0)
+  let indices : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     indices[i] = i
   }
   // 按灰度值排序（基数排序，0-255）
-  let sorted : Array[Array[Int]] = Array::make(256, [])
+  let sorted : Array[Array[Int32]] = Array::make(256, [])
   for i in 0..<256 {
     sorted[i] = []
   }
@@ -66,7 +66,7 @@ pub fn watershed(
   }
   // 按灰度级别处理
   for level in 0..<256 {
-    let queue : Array[Int] = []
+    let queue : Array[Int32] = []
     // 将当前级别的已标记像素加入队列
     for idx in sorted[level] {
       // 检查邻居是否有已标记的
@@ -165,7 +165,7 @@ pub fn watershed(
 /// 返回标签图和区域数量。
 pub fn watershed_auto(
   img : @types.Image,
-) -> (Array[Int], Int) raise @types.LoadError {
+) -> (Array[Int32], Int32) raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
       "watershed_auto 仅支持 channels=1/3/4",
@@ -178,7 +178,7 @@ pub fn watershed_auto(
     return ([], 0)
   }
   // 转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   let ch = img.channels
   for i in 0..<n {
     if ch == 1 {
@@ -191,7 +191,7 @@ pub fn watershed_auto(
     }
   }
   // 寻找局部最小值作为种子点
-  let markers : Array[Int] = Array::make(n, 0)
+  let markers : Array[Int32] = Array::make(n, 0)
   let mut current_label = 0
   for y in 0..<h {
     for x in 0..<w {
@@ -220,7 +220,7 @@ pub fn watershed_auto(
       if is_min && markers[idx] == 0 {
         current_label += 1
         // BFS 标记连通的等值像素（head 指针队列，避免 remove 开销）
-        let stack : Array[Int] = [idx]
+        let stack : Array[Int32] = [idx]
         let mut sp = 0
         markers[idx] = current_label
         while sp < stack.length() {

@@ -23,19 +23,19 @@ pub extend DLLayerType with Eq::{not_equal, equal}
 ///|
 /// 卷积层配置
 pub(all) struct DLConv2DConfig {
-  in_channels : Int
-  out_channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
   activation : String
 }
 
 ///|
 /// 全连接层配置
 pub(all) struct DLDenseConfig {
-  in_features : Int
-  out_features : Int
+  in_features : Int32
+  out_features : Int32
   activation : String
   dropout_rate : Double
 }
@@ -48,39 +48,39 @@ pub(all) struct DLNeuralLayer {
   config : String // JSON 格式的配置
   weights : Array[Double]
   biases : Array[Double]
-  input_shape : Array[Int]
-  output_shape : Array[Int]
+  input_shape : Array[Int32]
+  output_shape : Array[Int32]
 }
 
 ///|
 /// CNN 模型配置
 pub(all) struct DLCnnModelConfig {
   model_name : String
-  input_width : Int
-  input_height : Int
-  input_channels : Int
-  num_classes : Int
+  input_width : Int32
+  input_height : Int32
+  input_channels : Int32
+  num_classes : Int32
   conv_layers : Array[DLConv2DConfig]
   dense_layers : Array[DLDenseConfig]
   learning_rate : Double
-  batch_size : Int
-  epochs : Int
+  batch_size : Int32
+  epochs : Int32
 }
 
 ///|
 /// 训练样本
 pub(all) struct DLTrainingSample {
   image_data : Array[Double]
-  label : Int
+  label : Int32
   label_text : String
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 }
 
 ///|
 /// 训练历史
 pub(all) struct DLTrainingHistory {
-  epoch : Int
+  epoch : Int32
   train_loss : Double
   train_accuracy : Double
   val_loss : Double
@@ -92,10 +92,10 @@ pub(all) struct DLTrainingHistory {
 ///|
 /// 推理结果
 pub(all) struct DLInferenceResult {
-  predicted_class : Int
+  predicted_class : Int32
   predicted_label : String
   confidence : Double
-  top_k_predictions : Array[(Int, Double)]
+  top_k_predictions : Array[(Int32, Double)]
   inference_time_ms : Double
 }
 
@@ -103,14 +103,14 @@ pub(all) struct DLInferenceResult {
 /// 特征提取器
 pub(all) struct DLFeatureExtractor {
   model_name : String
-  feature_dim : Int
+  feature_dim : Int32
   layer_name : String
   weights : Array[Double]
 }
 
 ///|
 /// 创建默认 CNN 模型配置（用于字符识别）
-pub fn create_default_char_cnn_config(num_classes : Int) -> DLCnnModelConfig {
+pub fn create_default_char_cnn_config(num_classes : Int32) -> DLCnnModelConfig {
   let conv_layers : Array[DLConv2DConfig] = [
     DLConv2DConfig::{
       in_channels: 1,
@@ -170,7 +170,7 @@ pub fn create_default_char_cnn_config(num_classes : Int) -> DLCnnModelConfig {
 pub fn create_neural_layer(
   layer_type : DLLayerType,
   name : String,
-  input_shape : Array[Int],
+  input_shape : Array[Int32],
 ) -> DLNeuralLayer {
   let output_shape = match layer_type {
     DLLayerType::Conv2D => [input_shape[0], input_shape[1], input_shape[2]]
@@ -220,8 +220,8 @@ pub fn normalize_image(
 /// 图像缩放（双线性插值简化版）
 pub fn resize_image_for_cnn(
   img : @types.Image,
-  target_width : Int,
-  target_height : Int,
+  target_width : Int32,
+  target_height : Int32,
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -352,14 +352,14 @@ pub fn softmax(logits : Array[Double]) -> Array[Double] {
 /// 2D 卷积操作（简化版）
 pub fn conv2d(
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
   kernel : Array[Double],
-  out_c : Int,
-  k_size : Int,
-  stride : Int,
-  padding : Int,
+  out_c : Int32,
+  k_size : Int32,
+  stride : Int32,
+  padding : Int32,
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if input.length() == 0 {
@@ -432,10 +432,10 @@ pub fn conv2d(
 /// 2D 最大池化
 pub fn max_pool2d(
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  channels : Int,
-  pool_size : Int,
+  in_h : Int32,
+  in_w : Int32,
+  channels : Int32,
+  pool_size : Int32,
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if input.length() == 0 {
@@ -494,8 +494,8 @@ pub fn dense_forward(
   input : Array[Double],
   weights : Array[Double],
   biases : Array[Double],
-  in_features : Int,
-  out_features : Int,
+  in_features : Int32,
+  out_features : Int32,
   activation : String,
 ) -> Array[Double] {
   let output : Array[Double] = []
@@ -531,7 +531,7 @@ pub fn cnn_infer(
   // 实际部署时应加载预训练权重
   let mut best_class = 0
   let mut best_score = -1.0
-  let scores : Array[(Int, Double)] = []
+  let scores : Array[(Int32, Double)] = []
 
   for c in 0..<config.num_classes {
     // 简化：计算图像与模板的相似度
@@ -559,7 +559,7 @@ pub fn cnn_infer(
   let confidence = probs[best_class]
 
   // Top-K 预测
-  let top_k : Array[(Int, Double)] = []
+  let top_k : Array[(Int32, Double)] = []
   let sorted_scores = scores
   // 简单排序（冒泡）
   for i in 0..<sorted_scores.length() {
@@ -599,7 +599,7 @@ pub fn cnn_infer(
 /// 创建训练样本
 pub fn create_training_sample(
   img : @types.Image,
-  label : Int,
+  label : Int32,
   label_text : String,
 ) -> DLTrainingSample raise @types.LoadError {
   // 输入验证
@@ -625,7 +625,7 @@ pub fn create_training_sample(
 
 ///|
 /// 计算交叉熵损失
-pub fn cross_entropy_loss(predicted : Array[Double], target : Int) -> Double {
+pub fn cross_entropy_loss(predicted : Array[Double], target : Int32) -> Double {
   let eps = 0.0000001
   let p = if target < predicted.length() { predicted[target] } else { eps }
   -approx_log(p + eps)
@@ -634,7 +634,7 @@ pub fn cross_entropy_loss(predicted : Array[Double], target : Int) -> Double {
 ///|
 /// 训练历史记录
 pub fn create_training_history(
-  epoch : Int,
+  epoch : Int32,
   train_loss : Double,
   train_accuracy : Double,
   val_loss : Double,
@@ -741,7 +741,7 @@ pub fn load_model(path : String) -> DLCnnModelConfig? {
 /// 创建特征提取器
 pub fn create_feature_extractor(
   model_name : String,
-  feature_dim : Int,
+  feature_dim : Int32,
 ) -> DLFeatureExtractor {
   DLFeatureExtractor::{
     model_name,

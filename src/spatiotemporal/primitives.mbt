@@ -74,9 +74,9 @@ pub fn TFrame::make(
 /// Time-varying image: multi-frame sequence with dimensions and fps.
 pub(all) struct TImage {
   frames : Array[TFrame]
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   fps : Float
 } derive(Eq, @debug.Debug)
 
@@ -117,7 +117,7 @@ pub fn TImage::make(
 ///|
 /// 时变图像的帧数。
 /// Number of frames in the time-varying image.
-pub fn TImage::frame_count(self : TImage) -> Int {
+pub fn TImage::frame_count(self : TImage) -> Int32 {
   self.frames.length()
 }
 

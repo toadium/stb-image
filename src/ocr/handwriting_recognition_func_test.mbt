@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn hr_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn hr_make_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn hr_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn hr_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
+fn hr_make_img_mismatch(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

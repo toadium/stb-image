@@ -6,9 +6,9 @@
 pub(all) struct PostProcessConfig {
   use_dictionary : Bool
   use_ngram : Bool
-  ngram_size : Int
+  ngram_size : Int32
   min_confidence : Double
-  max_candidates : Int
+  max_candidates : Int32
 }
 
 ///|
@@ -82,7 +82,7 @@ pub fn dictionary_create_common_english() -> Dictionary {
 
 ///|
 /// 计算编辑距离（Levenshtein距离）
-pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
+pub fn edit_distance(s1 : String, s2 : String) -> Int32 raise @types.LoadError {
   // 输入验证
   if s1.length() == 0 && s2.length() == 0 {
     raise @types.LoadError::DecodeFailed(
@@ -99,7 +99,7 @@ pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
     return len1
   }
   // 创建动态规划表
-  let dp : Array[Int] = Array::make((len1 + 1) * (len2 + 1), 0)
+  let dp : Array[Int32] = Array::make((len1 + 1) * (len2 + 1), 0)
   // 初始化
   for i in 0..<(len1 + 1) {
     dp[i * (len2 + 1)] = i
@@ -126,8 +126,8 @@ pub fn edit_distance(s1 : String, s2 : String) -> Int raise @types.LoadError {
 pub fn dictionary_match(
   word : String,
   dictionary : Dictionary,
-  max_distance? : Int = 2,
-) -> Array[(String, Int)] raise @types.LoadError {
+  max_distance~ : Int32 = 2,
+) -> Array[(String, Int32)] raise @types.LoadError {
   // 输入验证
   if word.length() == 0 {
     raise @types.LoadError::DecodeFailed("dictionary_match: 单词不能为空")
@@ -141,7 +141,7 @@ pub fn dictionary_match(
     )
   }
 
-  let results : Array[(String, Int)] = []
+  let results : Array[(String, Int32)] = []
   for dict_word in dictionary.words {
     let dist = edit_distance(word, dict_word)
     if dist <= max_distance {
@@ -164,16 +164,16 @@ pub fn dictionary_match(
 ///|
 /// N-gram 语言模型
 pub(all) struct NgramModel {
-  n : Int
-  bigram_counts : Array[(String, Int)] // 简化版：存储bigram和计数
-  unigram_counts : Array[(String, Int)]
+  n : Int32
+  bigram_counts : Array[(String, Int32)] // 简化版：存储bigram和计数
+  unigram_counts : Array[(String, Int32)]
 }
 
 ///|
 /// 创建 N-gram 模型（从文本训练）
 pub fn ngram_create(
   texts : Array[String],
-  n? : Int = 2,
+  n~ : Int32 = 2,
 ) -> NgramModel raise @types.LoadError {
   // 输入验证
   if texts.length() == 0 {
@@ -185,8 +185,8 @@ pub fn ngram_create(
     raise @types.LoadError::DecodeFailed("ngram_create: n必须大于等于1")
   }
 
-  let bigram_counts : Array[(String, Int)] = []
-  let unigram_counts : Array[(String, Int)] = []
+  let bigram_counts : Array[(String, Int32)] = []
+  let unigram_counts : Array[(String, Int32)] = []
   for text in texts {
     // 简化：按字符处理
     for i in 0..<(text.length() - 1) {
@@ -404,7 +404,7 @@ fn split_into_words(text : String) -> Array[String] {
 /// 置信度校准
 pub fn calibrate_confidence(
   result : OcrResult,
-  factor? : Double = 1.0,
+  factor~ : Double = 1.0,
 ) -> OcrResult raise @types.LoadError {
   // 输入验证
   if result.characters.length() == 0 {

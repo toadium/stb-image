@@ -6,9 +6,9 @@ pub fn autonomous_driving_report_to_string(AutonomousDrivingTaskType, ADConfig, 
 
 pub fn create_default_ad_config() -> ADConfig
 
-pub fn create_detected_object(Int, ADObjectType, Array[Double], Double) -> ADDetectedObject
+pub fn create_detected_object(Int32, ADObjectType, Array[Double], Double) -> ADDetectedObject
 
-pub fn create_sensor_data(SensorType, String, Double, Int) -> SensorData
+pub fn create_sensor_data(SensorType, String, Double, Int32) -> SensorData
 
 pub fn decision_control(PlannedPath, Double, Array[ADDetectedObject], ADConfig) -> ControlCommand
 
@@ -22,11 +22,11 @@ pub fn plan_path(Array[Double], Array[Double], Array[ADDetectedObject], ADConfig
 pub(all) struct ADConfig {
   task_type : AutonomousDrivingTaskType
   sensors : Array[SensorType]
-  num_sensors : Int
+  num_sensors : Int32
   detection_threshold : Double
   tracking_threshold : Double
   planning_horizon : Double
-  control_frequency : Int
+  control_frequency : Int32
   max_speed : Double
   max_acceleration : Double
   max_deceleration : Double
@@ -38,7 +38,7 @@ pub(all) struct ADConfig {
 }
 
 pub(all) struct ADDetectedObject {
-  object_id : Int
+  object_id : Int32
   object_type : ADObjectType
   bounding_box : Array[Double]
   confidence : Double
@@ -47,8 +47,8 @@ pub(all) struct ADDetectedObject {
   position_3d : Array[Double]
   dimensions : Array[Double]
   orientation : Double
-  tracking_id : Int
-  age : Int
+  tracking_id : Int32
+  age : Int32
   is_static : Bool
 }
 
@@ -111,10 +111,10 @@ pub fn DrivingBehaviorType::equal(Self, Self) -> Bool
 pub fn DrivingBehaviorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct LaneLine {
-  lane_id : Int
+  lane_id : Int32
   lane_type : String
   points : Array[Array[Double]]
-  num_points : Int
+  num_points : Int32
   confidence : Double
   color : String
   is_occluded : Bool
@@ -133,7 +133,7 @@ pub(all) struct PathPoint {
 
 pub(all) struct PlannedPath {
   points : Array[PathPoint]
-  num_points : Int
+  num_points : Int32
   path_length : Double
   estimated_time : Double
   is_safe : Bool
@@ -146,7 +146,7 @@ pub(all) struct SensorData {
   sensor_id : String
   timestamp : Double
   data : Array[Double]
-  data_size : Int
+  data_size : Int32
   calibration_params : Array[Double]
   is_valid : Bool
 }
@@ -165,7 +165,7 @@ pub fn SensorType::equal(Self, Self) -> Bool
 pub fn SensorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrafficLight {
-  light_id : Int
+  light_id : Int32
   position : Array[Double]
   state : String
   confidence : Double

@@ -7,18 +7,18 @@
 ///|
 priv struct BitReader {
   data : Bytes
-  mut pos : Int
-  mut bit_buf : Int
-  mut bit_count : Int
+  mut pos : Int32
+  mut bit_buf : Int32
+  mut bit_count : Int32
 }
 
 ///|
-fn BitReader::new(data : Bytes, start : Int) -> BitReader {
+fn BitReader::new(data : Bytes, start : Int32) -> BitReader {
   BitReader::{ data, pos: start, bit_buf: 0, bit_count: 0, }
 }
 
 ///|
-fn BitReader::read_bits(self : BitReader, n : Int) -> Int {
+fn BitReader::read_bits(self : BitReader, n : Int32) -> Int32 {
   let mut result = 0
   for i in 0..<n {
     if self.bit_count == 0 {
@@ -40,7 +40,7 @@ fn BitReader::read_bits(self : BitReader, n : Int) -> Int {
 }
 
 ///|
-fn BitReader::read_bit(self : BitReader) -> Int {
+fn BitReader::read_bit(self : BitReader) -> Int32 {
   self.read_bits(1)
 }
 
@@ -48,9 +48,9 @@ fn BitReader::read_bit(self : BitReader) -> Int {
 
 ///|
 priv struct HuffmanCode {
-  mut value : Int
-  mut left : Int
-  mut right : Int
+  mut value : Int32
+  mut left : Int32
+  mut right : Int32
 }
 
 ///|
@@ -66,9 +66,9 @@ fn HuffmanTree::new() -> HuffmanTree {
 ///|
 fn HuffmanTree::add_code(
   self : HuffmanTree,
-  code : Int,
-  code_len : Int,
-  symbol : Int,
+  code : Int32,
+  code_len : Int32,
+  symbol : Int32,
 ) -> Unit {
   // Build a binary tree by walking the code bits MSB-first
   let mut node = 0
@@ -99,7 +99,7 @@ fn HuffmanTree::add_code(
 }
 
 ///|
-fn HuffmanTree::decode(self : HuffmanTree, br : BitReader) -> Int {
+fn HuffmanTree::decode(self : HuffmanTree, br : BitReader) -> Int32 {
   let mut node = 0
   while true {
     if self.codes.length() == 0 {
@@ -150,7 +150,7 @@ fn read_huffman_tree(br : BitReader) -> HuffmanTree {
   // Code length code order
   let order = [17, 18, 0, 1, 2, 3, 4, 5, 16, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
   // Read code length code lengths (3 bits each)
-  let code_len_code_lens : Array[Int] = Array::make(19, 0)
+  let code_len_code_lens : Array[Int32] = Array::make(19, 0)
   for i in 0..<num_code_lengths {
     code_len_code_lens[order[i]] = br.read_bits(3)
   }
@@ -162,7 +162,7 @@ fn read_huffman_tree(br : BitReader) -> HuffmanTree {
     }
   }
   // Decode code lengths using the code length tree
-  let code_lens : Array[Int] = []
+  let code_lens : Array[Int32] = []
   let mut sym = cl_tree.decode(br)
   while code_lens.length() < 256 {
     if sym < 16 {
@@ -209,14 +209,14 @@ fn read_huffman_tree(br : BitReader) -> HuffmanTree {
     return tree
   }
   // Count codes at each length
-  let bl_count : Array[Int] = Array::make(max_len + 1, 0)
+  let bl_count : Array[Int32] = Array::make(max_len + 1, 0)
   for cl in code_lens {
     if cl > 0 {
       bl_count[cl] += 1
     }
   }
   // Compute first code at each length
-  let next_code : Array[Int] = Array::make(max_len + 1, 0)
+  let next_code : Array[Int32] = Array::make(max_len + 1, 0)
   let mut code = 0
   for bits in 1..<=max_len {
     code = (code + bl_count[bits - 1]) << 1
@@ -238,10 +238,10 @@ fn read_huffman_tree(br : BitReader) -> HuffmanTree {
 ///|
 /// 预测器变换：每个像素减去预测值
 fn apply_predictor_inverse(
-  pixels : Array[Int],
-  width : Int,
-  height : Int,
-  bits : Int,
+  pixels : Array[Int32],
+  width : Int32,
+  height : Int32,
+  bits : Int32,
 ) -> Unit {
   let mask = (1 << bits) - 1
   // 逆预测：从左上到右下逐像素加回预测值
@@ -256,12 +256,12 @@ fn apply_predictor_inverse(
 
 ///|
 fn predict(
-  x : Int,
-  y : Int,
-  width : Int,
-  pixels : Array[Int],
-  idx : Int,
-) -> Int {
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  pixels : Array[Int32],
+  idx : Int32,
+) -> Int32 {
   if x == 0 && y == 0 {
     0
   } else if y == 0 {
@@ -280,7 +280,7 @@ fn predict(
 
 ///|
 /// Subtract-green 逆变换：R += G, B += G
-fn apply_subtract_green_inverse(pixels : Array[Int], n : Int) -> Unit {
+fn apply_subtract_green_inverse(pixels : Array[Int32], n : Int32) -> Unit {
   for i in 0..<n {
     let g = (pixels[i] >> 8) & 0xFF
     let r = pixels[i] & 0xFF
@@ -368,7 +368,7 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
     raise @types.LoadError::DecodeFailed("WebP 尺寸无效")
   }
   // Read transforms (up to 4, in reverse order)
-  let transforms : Array[Int] = [] // transform types in read order
+  let transforms : Array[Int32] = [] // transform types in read order
   let mut has_transform = true
   while has_transform && transforms.length() < 4 {
     has_transform = br.read_bit() == 1
@@ -425,9 +425,9 @@ pub fn decode_webp_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   }
   // Decode pixel data using Huffman-coded LZ77
   let n = width * height
-  let pixels : Array[Int] = Array::make(n, 0)
+  let pixels : Array[Int32] = Array::make(n, 0)
   // Color cache
-  let color_cache : Array[Int] = Array::make(cache_size, 0)
+  let color_cache : Array[Int32] = Array::make(cache_size, 0)
   // LZ77 decode
   let mut pixel_idx = 0
   let tree = if huffman_trees.length() > 0 {

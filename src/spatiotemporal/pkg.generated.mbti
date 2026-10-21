@@ -17,7 +17,7 @@ pub fn st_during(TInterval, TInterval) -> Bool
 
 pub fn st_equals(TInterval, TInterval) -> Bool
 
-pub fn st_extract_frame(TImage, Int) -> @types.Image raise @types.LoadError
+pub fn st_extract_frame(TImage, Int32) -> @types.Image raise @types.LoadError
 
 pub fn st_from_gif_animation(@types.GifAnimation) -> TImage raise @types.LoadError
 
@@ -69,13 +69,13 @@ pub fn TFrame::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TImage {
   frames : Array[TFrame]
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   fps : Float
 } derive(Eq, @debug.Debug)
 pub fn TImage::equal(Self, Self) -> Bool
-pub fn TImage::frame_count(Self) -> Int
+pub fn TImage::frame_count(Self) -> Int32
 pub fn TImage::from_static(@types.Image) -> Self raise @types.LoadError
 pub fn TImage::make(Array[TFrame], Float) -> Self raise @types.LoadError
 pub fn TImage::not_equal(Self, Self) -> Bool

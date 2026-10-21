@@ -6,7 +6,7 @@ import {
 }
 
 // Values
-pub fn apply_translation(@types.Image, Int, Int) -> @types.Image
+pub fn apply_translation(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn calculate_fusion_quality(@types.Image) -> Double
 
@@ -18,7 +18,7 @@ pub fn downsample_fe(@types.Image) -> @types.Image
 
 pub fn fuse_images(Array[@types.Image], FusionConfig) -> FusionResult
 
-pub fn fuse_laplacian_pyramid(Array[@types.Image], Int) -> @types.Image
+pub fn fuse_laplacian_pyramid(Array[@types.Image], Int32) -> @types.Image
 
 pub fn fuse_maximum(Array[@types.Image]) -> @types.Image
 
@@ -30,7 +30,7 @@ pub fn fuse_weighted_average(Array[@types.Image], Array[Double]) -> @types.Image
 
 pub fn fusion_report_to_string(FusionResult, Double) -> String
 
-pub fn gaussian_blur_fe(@types.Image, Int) -> @types.Image
+pub fn gaussian_blur_fe(@types.Image, Int32) -> @types.Image
 
 pub fn register_images(@types.Image, @types.Image, RegistrationConfig) -> RegistrationResult
 
@@ -60,14 +60,14 @@ pub fn FusionAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct FusionConfig {
   algorithm : FusionAlgorithm
   weights : Array[Double]
-  pyramid_levels : Int
+  pyramid_levels : Int32
   use_color_preservation : Bool
 }
 
 pub(all) struct FusionResult {
   image : @types.Image
   algorithm : FusionAlgorithm
-  num_images : Int
+  num_images : Int32
   processing_time_ms : Double
   fusion_quality : Double
 }
@@ -85,7 +85,7 @@ pub fn RegistrationAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct RegistrationConfig {
   algorithm : RegistrationAlgorithm
-  max_iterations : Int
+  max_iterations : Int32
   tolerance : Double
   use_multiscale : Bool
 }

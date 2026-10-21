@@ -6,8 +6,8 @@
 /// 先按宽高比缩放使图像"覆盖"目标尺寸，然后居中裁剪多余部分。
 pub fn resize_to_cover(
   img : @types.Image,
-  target_w : Int,
-  target_h : Int,
+  target_w : Int32,
+  target_h : Int32,
 ) -> @types.Image raise @types.LoadError {
   if target_w <= 0 || target_h <= 0 {
     raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")
@@ -27,8 +27,8 @@ pub fn resize_to_cover(
 /// Resize 到目标尺寸内（contain 模式），保持宽高比，不足部分用 fill_color 填充。
 pub fn resize_to_contain(
   img : @types.Image,
-  target_w : Int,
-  target_h : Int,
+  target_w : Int32,
+  target_h : Int32,
   fill_color : Array[Byte],
 ) -> @types.Image raise @types.LoadError {
   if target_w <= 0 || target_h <= 0 {
@@ -49,8 +49,8 @@ pub fn resize_to_contain(
 /// 内部 pad 辅助函数：在图像四周填充指定颜色，生成新尺寸 (width+2*px, height+2*py) 的新图像。
 fn pad_image(
   img : @types.Image,
-  px : Int,
-  py : Int,
+  px : Int32,
+  py : Int32,
   pad_color : Array[Byte],
 ) -> @types.Image raise @types.LoadError {
   if px < 0 || py < 0 {

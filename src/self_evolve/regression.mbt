@@ -26,7 +26,7 @@ pub(all) struct RegressionCase {
   from_version : String
   to_version : String
   kind : RegressionKind
-  delta : Int
+  delta : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -41,8 +41,8 @@ pub extend RegressionCase with Eq::{not_equal, equal}
 /// Regression detection report.
 pub(all) struct RegressionReport {
   cases : Array[RegressionCase]
-  total_regressions : Int
-  total_improvements : Int
+  total_regressions : Int32
+  total_improvements : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

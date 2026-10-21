@@ -147,10 +147,10 @@ test "batch_photo_enhance: 基本测试" {
 }
 
 ///|
-fn make_test_image(w : Int, h : Int) -> @types.Image {
+fn make_test_image(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h) {
-    let v : Int = i % 256
+    let v : Int32 = i % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -162,10 +162,10 @@ fn make_test_image(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_rgb_test_image(w : Int, h : Int) -> @types.Image {
+fn make_rgb_test_image(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * 3) {
-    let v : Int = i % 256
+    let v : Int32 = i % 256
     data.push(v.to_byte())
   }
   @types.Image::{

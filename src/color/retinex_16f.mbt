@@ -7,18 +7,18 @@ fn logf_r(x : Float) -> Float {
 }
 
 ///|
-fn read_u16_r(data : Bytes, offset : Int) -> Int {
+fn read_u16_r(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 
 ///|
-fn write_u16_r(data : Array[Byte], offset : Int, v : Int) -> Unit {
+fn write_u16_r(data : Array[Byte], offset : Int32, v : Int32) -> Unit {
   data[offset] = (v & 0xFF).to_byte()
   data[offset + 1] = ((v >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_f32_r(data : Bytes, offset : Int) -> Float {
+fn read_f32_r(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -28,7 +28,7 @@ fn read_f32_r(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_r(data : Array[Byte], offset : Int, v : Float) -> Unit {
+fn write_f32_r(data : Array[Byte], offset : Int32, v : Float) -> Unit {
   let bits = v.reinterpret_as_int()
   data[offset] = (bits & 0xFF).to_byte()
   data[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -42,9 +42,9 @@ fn write_f32_r(data : Array[Byte], offset : Int, v : Float) -> Unit {
 /// 单尺度 Retinex（SSR）16-bit 版本。
 pub fn ssr_16(
   img : @types.Image16,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width == 0 || img.height == 0 {
@@ -113,9 +113,9 @@ pub fn ssr_16(
 /// 单尺度 Retinex（SSR）float 版本。
 pub fn ssr_f(
   img : @types.ImageF,
-  sigma? : Float = 80.0F,
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigma~ : Float = 80.0F,
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width == 0 || img.height == 0 {
@@ -182,9 +182,9 @@ pub fn ssr_f(
 /// 多尺度 Retinex（MSR）16-bit 版本。
 pub fn msr_16(
   img : @types.Image16,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -266,9 +266,9 @@ pub fn msr_16(
 /// 多尺度 Retinex（MSR）float 版本。
 pub fn msr_f(
   img : @types.ImageF,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("msr_f 仅支持 channels=1/3/4")
@@ -335,11 +335,11 @@ pub fn msr_f(
 /// 带颜色恢复的多尺度 Retinex（MSRCR）16-bit 版本。
 pub fn msrcr_16(
   img : @types.Image16,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -437,11 +437,11 @@ pub fn msrcr_16(
 /// 带颜色恢复的多尺度 Retinex（MSRCR）float 版本。
 pub fn msrcr_f(
   img : @types.ImageF,
-  sigmas? : Array[Float] = [15.0F, 80.0F, 250.0F],
-  gain? : Float = 1.0F,
-  offset? : Float = 0.0F,
-  alpha? : Float = 125.0F,
-  beta? : Float = 46.0F,
+  sigmas~ : Array[Float] = [15.0F, 80.0F, 250.0F],
+  gain~ : Float = 1.0F,
+  offset~ : Float = 0.0F,
+  alpha~ : Float = 125.0F,
+  beta~ : Float = 46.0F,
 ) -> @types.ImageF raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("msrcr_f 需要 RGB/RGBA 图像")

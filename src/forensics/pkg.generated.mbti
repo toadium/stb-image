@@ -60,11 +60,11 @@ pub(all) struct ColorAnalysisResult {
 }
 
 pub(all) struct ColorQuantizationResult {
-  unique_color_count : Int
+  unique_color_count : Int32
   color_quantization_level : Double
   top_color_ratio : Double
   top_10_color_ratio : Double
-  color_palette_size : Int
+  color_palette_size : Int32
   color_quantization_indicator : Double
 }
 
@@ -145,8 +145,8 @@ pub(all) struct GeometryAnalysisResult {
   horizontal_edge_ratio : Double
   vertical_edge_ratio : Double
   diagonal_edge_ratio : Double
-  rectangle_like_region_count : Int
-  straight_line_count : Int
+  rectangle_like_region_count : Int32
+  straight_line_count : Int32
   geometry_regularity : Double
   geometry_indicator : Double
 }
@@ -203,9 +203,9 @@ pub(all) struct SourceVerificationResult {
 }
 
 pub(all) struct TextDetectionResult {
-  text_area_count : Int
+  text_area_count : Int32
   text_area_ratio : Double
-  dense_edge_region_count : Int
+  dense_edge_region_count : Int32
   small_edge_density : Double
   text_like_region_ratio : Double
   text_indicator : Double
@@ -223,10 +223,10 @@ pub(all) struct UIDetectionResult {
   has_window_border : Bool
   has_toolbar : Bool
   has_button_like_elements : Bool
-  ui_element_count : Int
+  ui_element_count : Int32
   ui_area_ratio : Double
-  horizontal_line_count : Int
-  vertical_line_count : Int
+  horizontal_line_count : Int32
+  vertical_line_count : Int32
   ui_indicator : Double
 }
 

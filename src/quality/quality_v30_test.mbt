@@ -1,7 +1,7 @@
 // v30.0.0 图像质量评估测试 — quality 模块 7 函数
 
 ///|
-fn create_solid_ql(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_ql(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())
@@ -15,7 +15,7 @@ fn create_solid_ql(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_ql(w : Int, h : Int) -> @types.Image {
+fn create_gradient_ql(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

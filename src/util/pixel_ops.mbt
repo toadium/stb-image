@@ -1,7 +1,7 @@
 // 像素操作（纯 MoonBit）：threshold / posterize / extract_channel / blend 模式
 
 ///|
-fn clamp_byte_v(v : Int) -> Byte {
+fn clamp_byte_v(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -14,7 +14,7 @@ fn clamp_byte_v(v : Int) -> Byte {
 ///|
 /// 二值化。像素值 >= threshold 设为 255，否则设为 0。
 /// 仅影响颜色通道，alpha 通道不变。
-pub fn threshold(img : @types.Image, thresh : Int) -> @types.Image {
+pub fn threshold(img : @types.Image, thresh : Int32) -> @types.Image {
   let n = img.width * img.height
   let ch = img.channels
   let color_ch = if ch >= 3 { 3 } else { ch }
@@ -44,7 +44,7 @@ pub fn threshold(img : @types.Image, thresh : Int) -> @types.Image {
 /// levels=2 等价于二值化，levels=4 将 0-255 分成 4 段。
 pub fn posterize(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   if levels < 2 || levels > 256 {
     raise @types.LoadError::DecodeFailed(
@@ -79,7 +79,7 @@ pub fn posterize(
 /// channel: 0=R/Gray, 1=G, 2=B, 3=A
 pub fn extract_channel(
   img : @types.Image,
-  channel : Int,
+  channel : Int32,
 ) -> @types.Image raise @types.LoadError {
   if channel < 0 || channel >= img.channels {
     raise @types.LoadError::DecodeFailed("channel 索引越界")

@@ -7,7 +7,7 @@
 /// 返回 Float 数组，背景像素距离为 0。
 pub fn distance_transform(
   img : @types.Image,
-  distance_type? : Int = 2,
+  distance_type~ : Int32 = 2,
 ) -> Array[Float] raise @types.LoadError {
   if distance_type != 1 && distance_type != 2 && distance_type != 3 {
     raise @types.LoadError::DecodeFailed(
@@ -173,8 +173,8 @@ pub fn distance_transform(
 /// 距离变换可视化。将距离变换结果归一化到 [0, 255] 并返回灰度图。
 pub fn visualize_distance_transform(
   dist : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> @types.Image {
   let n = w * h
   let out : Array[Byte] = Array::make(n, b'\x00')

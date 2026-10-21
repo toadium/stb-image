@@ -1,10 +1,10 @@
 // v193a photo_enhance 增强测试
 
 ///|
-fn pe_make_gray(w : Int, h : Int) -> @types.Image {
+fn pe_make_gray(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h) {
-    let v : Int = i * 37 % 256
+    let v : Int32 = i * 37 % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -16,10 +16,10 @@ fn pe_make_gray(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn pe_make_rgb(w : Int, h : Int) -> @types.Image {
+fn pe_make_rgb(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * 3) {
-    let v : Int = i * 31 % 256
+    let v : Int32 = i * 31 % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -31,7 +31,7 @@ fn pe_make_rgb(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn pe_make_uniform_rgb(w : Int, h : Int, val : Int) -> @types.Image {
+fn pe_make_uniform_rgb(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

@@ -69,11 +69,11 @@ pub fn compare_pipelines(@imgir.IRPipeline, @imgir.IRPipeline) -> PerfRegression
 
 pub fn compare_snapshots(HistoryEntry, HistoryEntry) -> String
 
-pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int)]
+pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int32)]
 
-pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int)]
+pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int32)]
 
-pub fn coverage_percentage(@imgir.IROp) -> Int
+pub fn coverage_percentage(@imgir.IROp) -> Int32
 
 pub fn create_schedule(Array[@imgir.IROp]) -> EvolutionSchedule
 
@@ -87,7 +87,7 @@ pub fn detect_regressions() -> RegressionReport
 
 pub fn equivalence_class(@imgir.IROp) -> Array[String]
 
-pub fn estimate_benefit(@imgir.IRPipeline) -> Int
+pub fn estimate_benefit(@imgir.IRPipeline) -> Int32
 
 pub fn estimate_op_cost(@imgir.IROp) -> OpCost
 
@@ -173,7 +173,7 @@ pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
 
 pub fn optimize_verified(@imgir.IRPipeline) -> Bool
 
-pub fn optimized_op_count(@imgir.IRPipeline) -> Int
+pub fn optimized_op_count(@imgir.IRPipeline) -> Int32
 
 pub fn perf_optimize_check(@imgir.IRPipeline) -> PerfRegression
 
@@ -183,11 +183,11 @@ pub fn phase10_is_complete() -> Bool
 
 pub fn phase10_report() -> Phase10Report
 
-pub fn phase10_total_functions() -> Int
+pub fn phase10_total_functions() -> Int32
 
-pub fn phase10_total_tests() -> Int
+pub fn phase10_total_tests() -> Int32
 
-pub fn phase10_total_types() -> Int
+pub fn phase10_total_types() -> Int32
 
 pub fn phase11_capabilities() -> Array[Phase11Capability]
 
@@ -195,11 +195,11 @@ pub fn phase11_is_complete() -> Bool
 
 pub fn phase11_report() -> Phase11Report
 
-pub fn phase11_total_functions() -> Int
+pub fn phase11_total_functions() -> Int32
 
-pub fn phase11_total_tests() -> Int
+pub fn phase11_total_tests() -> Int32
 
-pub fn phase11_total_types() -> Int
+pub fn phase11_total_types() -> Int32
 
 pub fn phase4_capabilities() -> Array[Phase4Capability]
 
@@ -207,11 +207,11 @@ pub fn phase4_is_complete() -> Bool
 
 pub fn phase4_report() -> Phase4Report
 
-pub fn phase4_total_functions() -> Int
+pub fn phase4_total_functions() -> Int32
 
-pub fn phase4_total_tests() -> Int
+pub fn phase4_total_tests() -> Int32
 
-pub fn phase4_total_types() -> Int
+pub fn phase4_total_types() -> Int32
 
 pub fn phase5_capabilities() -> Array[Phase5Capability]
 
@@ -219,11 +219,11 @@ pub fn phase5_is_complete() -> Bool
 
 pub fn phase5_report() -> Phase5Report
 
-pub fn phase5_total_functions() -> Int
+pub fn phase5_total_functions() -> Int32
 
-pub fn phase5_total_tests() -> Int
+pub fn phase5_total_tests() -> Int32
 
-pub fn phase5_total_types() -> Int
+pub fn phase5_total_types() -> Int32
 
 pub fn phase6_capabilities() -> Array[Phase6Capability]
 
@@ -231,11 +231,11 @@ pub fn phase6_is_complete() -> Bool
 
 pub fn phase6_report() -> Phase6Report
 
-pub fn phase6_total_functions() -> Int
+pub fn phase6_total_functions() -> Int32
 
-pub fn phase6_total_tests() -> Int
+pub fn phase6_total_tests() -> Int32
 
-pub fn phase6_total_types() -> Int
+pub fn phase6_total_types() -> Int32
 
 pub fn phase7_capabilities() -> Array[Phase7Capability]
 
@@ -243,11 +243,11 @@ pub fn phase7_is_complete() -> Bool
 
 pub fn phase7_report() -> Phase7Report
 
-pub fn phase7_total_functions() -> Int
+pub fn phase7_total_functions() -> Int32
 
-pub fn phase7_total_tests() -> Int
+pub fn phase7_total_tests() -> Int32
 
-pub fn phase7_total_types() -> Int
+pub fn phase7_total_types() -> Int32
 
 pub fn phase8_capabilities() -> Array[Phase8Capability]
 
@@ -255,11 +255,11 @@ pub fn phase8_is_complete() -> Bool
 
 pub fn phase8_report() -> Phase8Report
 
-pub fn phase8_total_functions() -> Int
+pub fn phase8_total_functions() -> Int32
 
-pub fn phase8_total_tests() -> Int
+pub fn phase8_total_tests() -> Int32
 
-pub fn phase8_total_types() -> Int
+pub fn phase8_total_types() -> Int32
 
 pub fn phase9_capabilities() -> Array[Phase9Capability]
 
@@ -267,17 +267,17 @@ pub fn phase9_is_complete() -> Bool
 
 pub fn phase9_report() -> Phase9Report
 
-pub fn phase9_total_functions() -> Int
+pub fn phase9_total_functions() -> Int32
 
-pub fn phase9_total_tests() -> Int
+pub fn phase9_total_tests() -> Int32
 
-pub fn phase9_total_types() -> Int
+pub fn phase9_total_types() -> Int32
 
 pub fn predict_all() -> PredictionReport
 
 pub fn predict_op(@imgir.IROp) -> EvolutionPrediction
 
-pub fn priority_from_coverage(Int) -> TestPriority
+pub fn priority_from_coverage(Int32) -> TestPriority
 
 pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
 
@@ -303,7 +303,7 @@ pub fn repair_with_strategies(@imgir.IROp) -> Array[StrategyRepairResult]
 
 pub fn rollback_to(String) -> HistoryEntry?
 
-pub fn rotate90_power_is_identity(Int) -> Bool
+pub fn rotate90_power_is_identity(Int32) -> Bool
 
 pub fn run_evolve_loop(@imgir.IROp) -> LoopResult
 
@@ -337,13 +337,13 @@ pub fn suggest_optimization(@imgir.IRPipeline) -> PipelineOptReport
 
 pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
 
-pub fn suggest_test_count(Int) -> Int
+pub fn suggest_test_count(Int32) -> Int32
 
 pub fn tune_all_params() -> TuneReport
 
 pub fn tune_params(@imgir.IROp) -> Array[TunedParam]
 
-pub fn unique_combo_count() -> Int
+pub fn unique_combo_count() -> Int32
 
 pub fn visualize_propagation(@imgir.IRPipeline, VizFormat) -> PropagationViz
 
@@ -358,8 +358,8 @@ pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
 // Types and methods
 pub(all) struct AdaptiveReport {
   strategies : Array[AdaptiveStrategy]
-  total_prioritized : Int
-  high_priority_count : Int
+  total_prioritized : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn AdaptiveReport::equal(Self, Self) -> Bool
@@ -369,9 +369,9 @@ pub fn AdaptiveReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AdaptiveStrategy {
   op_tag : String
-  current_coverage : Int
+  current_coverage : Int32
   priority : TestPriority
-  suggested_tests : Int
+  suggested_tests : Int32
 } derive(Eq, @debug.Debug)
 pub fn AdaptiveStrategy::equal(Self, Self) -> Bool
 pub fn AdaptiveStrategy::not_equal(Self, Self) -> Bool
@@ -380,7 +380,7 @@ pub fn AdaptiveStrategy::to_repr(Self) -> @debug.Repr
 pub(all) struct AutoDecision {
   op_tag : String
   action : DecisionAction
-  confidence : Int
+  confidence : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 pub fn AutoDecision::equal(Self, Self) -> Bool
@@ -389,14 +389,14 @@ pub fn AutoDecision::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CIGateResult {
   passed : Bool
-  total_checks : Int
-  failed_checks : Int
+  total_checks : Int32
+  failed_checks : Int32
   gate_summary : String
 } derive(Eq, @debug.Debug)
 pub fn CIGateResult::equal(Self, Self) -> Bool
 pub fn CIGateResult::is_green(Self) -> Bool
 pub fn CIGateResult::not_equal(Self, Self) -> Bool
-pub fn CIGateResult::pass_rate(Self) -> Int
+pub fn CIGateResult::pass_rate(Self) -> Int32
 pub fn CIGateResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CoEvolveAction {
@@ -420,21 +420,21 @@ pub fn CoEvolveActionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CoEvolveReport {
   actions : Array[CoEvolveAction]
-  total_modules : Int
-  sync_count : Int
-  cascade_count : Int
+  total_modules : Int32
+  sync_count : Int32
+  cascade_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn CoEvolveReport::equal(Self, Self) -> Bool
 pub fn CoEvolveReport::has_cascade(Self) -> Bool
 pub fn CoEvolveReport::not_equal(Self, Self) -> Bool
 pub fn CoEvolveReport::to_repr(Self) -> @debug.Repr
-pub fn CoEvolveReport::total_actions(Self) -> Int
+pub fn CoEvolveReport::total_actions(Self) -> Int32
 
 pub(all) struct ComboCoverageReport {
-  total_combos : Int
-  generated_tests : Int
-  coverage_pct : Int
+  total_combos : Int32
+  generated_tests : Int32
+  coverage_pct : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn ComboCoverageReport::equal(Self, Self) -> Bool
@@ -443,8 +443,8 @@ pub fn ComboCoverageReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ComboReport {
   combos : Array[StrategyCombo]
-  total : Int
-  parallel_count : Int
+  total : Int32
+  parallel_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn ComboReport::equal(Self, Self) -> Bool
@@ -463,8 +463,8 @@ pub fn CoverageGap::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CoverageGapReport {
   gaps : Array[CoverageGap]
-  total_gaps : Int
-  untested_count : Int
+  total_gaps : Int32
+  untested_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn CoverageGapReport::equal(Self, Self) -> Bool
@@ -484,9 +484,9 @@ pub fn DecisionAction::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DecisionReport {
   decisions : Array[AutoDecision]
-  total : Int
-  auto_count : Int
-  deferred_count : Int
+  total : Int32
+  auto_count : Int32
+  deferred_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn DecisionReport::can_auto_run(Self) -> Bool
@@ -528,8 +528,8 @@ pub fn EquivalenceCheck::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EquivalenceReport {
   checks : Array[EquivalenceCheck]
-  total_equivalent : Int
-  total_not_equivalent : Int
+  total_equivalent : Int32
+  total_not_equivalent : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn EquivalenceReport::all_equivalent(Self) -> Bool
@@ -540,8 +540,8 @@ pub fn EquivalenceReport::to_repr(Self) -> @debug.Repr
 pub(all) struct EvolutionPrediction {
   op_tag : String
   kind : PredictionKind
-  confidence : Int
-  predicted_value : Int
+  confidence : Int32
+  predicted_value : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn EvolutionPrediction::equal(Self, Self) -> Bool
@@ -550,7 +550,7 @@ pub fn EvolutionPrediction::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolutionSchedule {
   schedule_id : String
-  ops_count : Int
+  ops_count : Int32
   status : ScheduleStatus
   description : String
 } derive(Eq, @debug.Debug)
@@ -560,8 +560,8 @@ pub fn EvolutionSchedule::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolveCycleReport {
   pipeline_desc : String
-  original_op_count : Int
-  optimized_op_count : Int
+  original_op_count : Int32
+  optimized_op_count : Int32
   generated_tests : Array[TestCase]
   found_degradations : Array[DegradationCase]
   optimization_report : OptimizationReport
@@ -572,7 +572,7 @@ pub fn EvolveCycleReport::equal(Self, Self) -> Bool
 pub fn EvolveCycleReport::has_degradation_risk(Self) -> Bool
 pub fn EvolveCycleReport::is_improved(Self) -> Bool
 pub fn EvolveCycleReport::not_equal(Self, Self) -> Bool
-pub fn EvolveCycleReport::safety_score(Self) -> Int
+pub fn EvolveCycleReport::safety_score(Self) -> Int32
 pub fn EvolveCycleReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvolveReport {
@@ -580,11 +580,11 @@ pub(all) struct EvolveReport {
   found_degradations : Array[DegradationCase]
   summary : String
 } derive(Eq, @debug.Debug)
-pub fn EvolveReport::degradation_count(Self) -> Int
+pub fn EvolveReport::degradation_count(Self) -> Int32
 pub fn EvolveReport::equal(Self, Self) -> Bool
 pub fn EvolveReport::not_equal(Self, Self) -> Bool
-pub fn EvolveReport::severe_count(Self) -> Int
-pub fn EvolveReport::test_count(Self) -> Int
+pub fn EvolveReport::severe_count(Self) -> Int32
+pub fn EvolveReport::test_count(Self) -> Int32
 pub fn EvolveReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ExecutableTest {
@@ -603,7 +603,7 @@ pub(all) struct ExecutableTestFile {
 pub fn ExecutableTestFile::equal(Self, Self) -> Bool
 pub fn ExecutableTestFile::is_non_empty(Self) -> Bool
 pub fn ExecutableTestFile::not_equal(Self, Self) -> Bool
-pub fn ExecutableTestFile::test_count(Self) -> Int
+pub fn ExecutableTestFile::test_count(Self) -> Int32
 pub fn ExecutableTestFile::to_repr(Self) -> @debug.Repr
 
 pub(all) enum GapKind {
@@ -621,9 +621,9 @@ pub(all) struct GrillReport {
 } derive(Eq, @debug.Debug)
 pub fn GrillReport::all_passed(Self) -> Bool
 pub fn GrillReport::equal(Self, Self) -> Bool
-pub fn GrillReport::failed_count(Self) -> Int
+pub fn GrillReport::failed_count(Self) -> Int32
 pub fn GrillReport::not_equal(Self, Self) -> Bool
-pub fn GrillReport::passed_count(Self) -> Int
+pub fn GrillReport::passed_count(Self) -> Int32
 pub fn GrillReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GrillResult {
@@ -649,9 +649,9 @@ pub fn GrillRule::to_repr(Self) -> @debug.Repr
 
 pub(all) struct HistoryEntry {
   version : String
-  op_count : Int
-  degradation_count : Int
-  test_count : Int
+  op_count : Int32
+  degradation_count : Int32
+  test_count : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn HistoryEntry::equal(Self, Self) -> Bool
@@ -660,7 +660,7 @@ pub fn HistoryEntry::to_repr(Self) -> @debug.Repr
 
 pub(all) struct HistoryLog {
   entries : Array[HistoryEntry]
-  total_snapshots : Int
+  total_snapshots : Int32
   latest_version : String
   summary : String
 } derive(Eq, @debug.Debug)
@@ -673,7 +673,7 @@ pub(all) struct KnowledgeEdge {
   source : String
   target : String
   kind : KnowledgeEdgeKind
-  weight : Int
+  weight : Int32
 } derive(Eq, @debug.Debug)
 pub fn KnowledgeEdge::equal(Self, Self) -> Bool
 pub fn KnowledgeEdge::not_equal(Self, Self) -> Bool
@@ -694,13 +694,13 @@ pub(all) struct KnowledgeGraph {
   nodes : Array[KnowledgeNode]
   edges : Array[KnowledgeEdge]
 } derive(Eq, @debug.Debug)
-pub fn KnowledgeGraph::edge_count(Self) -> Int
+pub fn KnowledgeGraph::edge_count(Self) -> Int32
 pub fn KnowledgeGraph::equal(Self, Self) -> Bool
 pub fn KnowledgeGraph::find_degradations(Self, String) -> Array[KnowledgeNode]
 pub fn KnowledgeGraph::find_fixes(Self, String) -> Array[KnowledgeNode]
 pub fn KnowledgeGraph::find_nodes_by_kind(Self, KnowledgeNodeKind) -> Array[KnowledgeNode]
 pub fn KnowledgeGraph::is_non_empty(Self) -> Bool
-pub fn KnowledgeGraph::node_count(Self) -> Int
+pub fn KnowledgeGraph::node_count(Self) -> Int32
 pub fn KnowledgeGraph::not_equal(Self, Self) -> Bool
 pub fn KnowledgeGraph::to_repr(Self) -> @debug.Repr
 
@@ -708,8 +708,8 @@ pub(all) struct KnowledgeNode {
   id : String
   kind : KnowledgeNodeKind
   label : String
-  confidence : Int
-  occurrence : Int
+  confidence : Int32
+  occurrence : Int32
 } derive(Eq, @debug.Debug)
 pub fn KnowledgeNode::equal(Self, Self) -> Bool
 pub fn KnowledgeNode::not_equal(Self, Self) -> Bool
@@ -741,7 +741,7 @@ pub fn LoopPhase::to_repr(Self) -> @debug.Repr
 
 pub(all) struct LoopResult {
   steps : Array[LoopStep]
-  total_phases : Int
+  total_phases : Int32
   success : Bool
   summary : String
 } derive(Eq, @debug.Debug)
@@ -761,8 +761,8 @@ pub fn LoopStep::to_repr(Self) -> @debug.Repr
 pub(all) struct MetaAction {
   strategy : MetaStrategy
   target_param : String
-  current_value : Int
-  new_value : Int
+  current_value : Int32
+  new_value : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 pub fn MetaAction::equal(Self, Self) -> Bool
@@ -771,14 +771,14 @@ pub fn MetaAction::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MetaReport {
   actions : Array[MetaAction]
-  total_strategies : Int
-  applied_count : Int
+  total_strategies : Int32
+  applied_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn MetaReport::equal(Self, Self) -> Bool
 pub fn MetaReport::has_changes(Self) -> Bool
 pub fn MetaReport::not_equal(Self, Self) -> Bool
-pub fn MetaReport::strategy_count(Self) -> Int
+pub fn MetaReport::strategy_count(Self) -> Int32
 pub fn MetaReport::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MetaStrategy {
@@ -822,7 +822,7 @@ pub fn OpCombo::to_repr(Self) -> @debug.Repr
 pub(all) struct OpCost {
   op_tag : String
   time_complexity : String
-  estimated_cost : Int
+  estimated_cost : Int32
 } derive(Eq, @debug.Debug)
 pub fn OpCost::equal(Self, Self) -> Bool
 pub fn OpCost::not_equal(Self, Self) -> Bool
@@ -838,39 +838,39 @@ pub fn OptimizationKind::not_equal(Self, Self) -> Bool
 pub fn OptimizationKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OptimizationReport {
-  original_length : Int
-  optimized_length : Int
+  original_length : Int32
+  optimized_length : Int32
   suggestions : Array[OptimizationSuggestion]
   optimized_pipeline : @imgir.IRPipeline
 } derive(Eq, @debug.Debug)
 pub fn OptimizationReport::equal(Self, Self) -> Bool
 pub fn OptimizationReport::is_reduced(Self) -> Bool
 pub fn OptimizationReport::not_equal(Self, Self) -> Bool
-pub fn OptimizationReport::reduction(Self) -> Int
+pub fn OptimizationReport::reduction(Self) -> Int32
 pub fn OptimizationReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OptimizationSuggestion {
   kind : OptimizationKind
-  op_indices : Array[Int]
+  op_indices : Array[Int32]
   description : String
-  before_count : Int
-  after_count : Int
+  before_count : Int32
+  after_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn OptimizationSuggestion::equal(Self, Self) -> Bool
 pub fn OptimizationSuggestion::not_equal(Self, Self) -> Bool
 pub fn OptimizationSuggestion::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OptimizeExecResult {
-  original_length : Int
-  optimized_length : Int
-  ops_reduced : Int
-  original_cost : Int
-  optimized_cost : Int
-  cost_reduced : Int
+  original_length : Int32
+  optimized_length : Int32
+  ops_reduced : Int32
+  original_cost : Int32
+  optimized_cost : Int32
+  cost_reduced : Int32
   is_improved : Bool
   optimized_pipeline_desc : String
 } derive(Eq, @debug.Debug)
-pub fn OptimizeExecResult::efficiency_pct(Self) -> Int
+pub fn OptimizeExecResult::efficiency_pct(Self) -> Int32
 pub fn OptimizeExecResult::equal(Self, Self) -> Bool
 pub fn OptimizeExecResult::is_significant(Self) -> Bool
 pub fn OptimizeExecResult::not_equal(Self, Self) -> Bool
@@ -888,8 +888,8 @@ pub fn ParamKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PerfBaseline {
   pipeline_desc : String
-  total_cost : Int
-  op_count : Int
+  total_cost : Int32
+  op_count : Int32
   op_costs : Array[OpCost]
 } derive(Eq, @debug.Debug)
 pub fn PerfBaseline::equal(Self, Self) -> Bool
@@ -897,13 +897,13 @@ pub fn PerfBaseline::not_equal(Self, Self) -> Bool
 pub fn PerfBaseline::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PerfRegression {
-  original_cost : Int
-  optimized_cost : Int
-  delta : Int
+  original_cost : Int32
+  optimized_cost : Int32
+  delta : Int32
   is_regression : Bool
 } derive(Eq, @debug.Debug)
 pub fn PerfRegression::equal(Self, Self) -> Bool
-pub fn PerfRegression::improvement_pct(Self) -> Int
+pub fn PerfRegression::improvement_pct(Self) -> Int32
 pub fn PerfRegression::is_improvement(Self) -> Bool
 pub fn PerfRegression::not_equal(Self, Self) -> Bool
 pub fn PerfRegression::to_repr(Self) -> @debug.Repr
@@ -911,9 +911,9 @@ pub fn PerfRegression::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase10Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase10Capability::equal(Self, Self) -> Bool
@@ -922,9 +922,9 @@ pub fn Phase10Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase10Report {
   capabilities : Array[Phase10Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase10Report::equal(Self, Self) -> Bool
@@ -934,9 +934,9 @@ pub fn Phase10Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase11Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase11Capability::equal(Self, Self) -> Bool
@@ -945,9 +945,9 @@ pub fn Phase11Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase11Report {
   capabilities : Array[Phase11Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase11Report::equal(Self, Self) -> Bool
@@ -957,9 +957,9 @@ pub fn Phase11Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase4Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase4Capability::equal(Self, Self) -> Bool
@@ -968,9 +968,9 @@ pub fn Phase4Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase4Report {
   capabilities : Array[Phase4Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase4Report::equal(Self, Self) -> Bool
@@ -980,9 +980,9 @@ pub fn Phase4Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase5Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase5Capability::equal(Self, Self) -> Bool
@@ -991,9 +991,9 @@ pub fn Phase5Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase5Report {
   capabilities : Array[Phase5Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase5Report::equal(Self, Self) -> Bool
@@ -1003,9 +1003,9 @@ pub fn Phase5Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase6Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase6Capability::equal(Self, Self) -> Bool
@@ -1014,9 +1014,9 @@ pub fn Phase6Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase6Report {
   capabilities : Array[Phase6Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase6Report::equal(Self, Self) -> Bool
@@ -1026,9 +1026,9 @@ pub fn Phase6Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase7Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase7Capability::equal(Self, Self) -> Bool
@@ -1037,9 +1037,9 @@ pub fn Phase7Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase7Report {
   capabilities : Array[Phase7Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase7Report::equal(Self, Self) -> Bool
@@ -1049,9 +1049,9 @@ pub fn Phase7Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase8Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase8Capability::equal(Self, Self) -> Bool
@@ -1060,9 +1060,9 @@ pub fn Phase8Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase8Report {
   capabilities : Array[Phase8Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase8Report::equal(Self, Self) -> Bool
@@ -1072,9 +1072,9 @@ pub fn Phase8Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase9Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn Phase9Capability::equal(Self, Self) -> Bool
@@ -1083,9 +1083,9 @@ pub fn Phase9Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase9Report {
   capabilities : Array[Phase9Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 pub fn Phase9Report::equal(Self, Self) -> Bool
@@ -1094,8 +1094,8 @@ pub fn Phase9Report::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PipelineOptReport {
   suggestions : Array[PipelineOptSuggestion]
-  total : Int
-  best_benefit : Int
+  total : Int32
+  best_benefit : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn PipelineOptReport::equal(Self, Self) -> Bool
@@ -1106,7 +1106,7 @@ pub fn PipelineOptReport::to_repr(Self) -> @debug.Repr
 pub(all) struct PipelineOptSuggestion {
   pipeline_desc : String
   suggestion_kind : SuggestionKind
-  estimated_benefit : Int
+  estimated_benefit : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn PipelineOptSuggestion::equal(Self, Self) -> Bool
@@ -1125,8 +1125,8 @@ pub fn PredictionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PredictionReport {
   predictions : Array[EvolutionPrediction]
-  total : Int
-  high_risk_count : Int
+  total : Int32
+  high_risk_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn PredictionReport::equal(Self, Self) -> Bool
@@ -1136,8 +1136,8 @@ pub fn PredictionReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PropagationReport {
   steps : Array[PropagationStep]
-  total_propagations : Int
-  chain_length : Int
+  total_propagations : Int32
+  chain_length : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn PropagationReport::equal(Self, Self) -> Bool
@@ -1158,8 +1158,8 @@ pub fn PropagationStep::to_repr(Self) -> @debug.Repr
 pub(all) struct PropagationViz {
   format : VizFormat
   content : String
-  node_count : Int
-  edge_count : Int
+  node_count : Int32
+  edge_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn PropagationViz::equal(Self, Self) -> Bool
 pub fn PropagationViz::is_valid(Self) -> Bool
@@ -1190,11 +1190,11 @@ pub fn QualityGrade::to_repr(Self) -> @debug.Repr
 
 pub(all) struct QualityReport {
   scores : Array[QualityScore]
-  overall_score : Int
+  overall_score : Int32
   grade : QualityGrade
   summary : String
 } derive(Eq, @debug.Debug)
-pub fn QualityReport::dimension_count(Self) -> Int
+pub fn QualityReport::dimension_count(Self) -> Int32
 pub fn QualityReport::equal(Self, Self) -> Bool
 pub fn QualityReport::is_passing(Self) -> Bool
 pub fn QualityReport::not_equal(Self, Self) -> Bool
@@ -1202,7 +1202,7 @@ pub fn QualityReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct QualityScore {
   dimension : QualityDimension
-  score : Int
+  score : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn QualityScore::equal(Self, Self) -> Bool
@@ -1232,8 +1232,8 @@ pub fn Recommendation::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RecommendationReport {
   recommendations : Array[Recommendation]
-  total : Int
-  high_priority_count : Int
+  total : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn RecommendationReport::equal(Self, Self) -> Bool
@@ -1245,7 +1245,7 @@ pub(all) struct RegressionCase {
   from_version : String
   to_version : String
   kind : RegressionKind
-  delta : Int
+  delta : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn RegressionCase::equal(Self, Self) -> Bool
@@ -1264,8 +1264,8 @@ pub fn RegressionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RegressionReport {
   cases : Array[RegressionCase]
-  total_regressions : Int
-  total_improvements : Int
+  total_regressions : Int32
+  total_improvements : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn RegressionReport::equal(Self, Self) -> Bool
@@ -1283,8 +1283,8 @@ pub fn RepairAction::not_equal(Self, Self) -> Bool
 pub fn RepairAction::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RepairReport {
-  original_op_count : Int
-  repaired_op_count : Int
+  original_op_count : Int32
+  repaired_op_count : Int32
   repairs : Array[RepairAction]
   remaining_degradations : Array[DegradationCase]
   summary : String
@@ -1292,7 +1292,7 @@ pub(all) struct RepairReport {
 pub fn RepairReport::equal(Self, Self) -> Bool
 pub fn RepairReport::is_fully_repaired(Self) -> Bool
 pub fn RepairReport::not_equal(Self, Self) -> Bool
-pub fn RepairReport::repair_count(Self) -> Int
+pub fn RepairReport::repair_count(Self) -> Int32
 pub fn RepairReport::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RepairStrategy {
@@ -1317,7 +1317,7 @@ pub fn RootCause::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RootCauseReport {
   causes : Array[RootCause]
-  total : Int
+  total : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn RootCauseReport::equal(Self, Self) -> Bool
@@ -1326,10 +1326,10 @@ pub fn RootCauseReport::not_equal(Self, Self) -> Bool
 pub fn RootCauseReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RunSummary {
-  total : Int
-  passed : Int
-  failed : Int
-  pass_rate_pct : Int
+  total : Int32
+  passed : Int32
+  failed : Int32
+  pass_rate_pct : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn RunSummary::all_passed(Self) -> Bool
@@ -1339,9 +1339,9 @@ pub fn RunSummary::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ScheduleResult {
   schedule : EvolutionSchedule
-  evolved_count : Int
-  fixed_count : Int
-  remaining_count : Int
+  evolved_count : Int32
+  fixed_count : Int32
+  remaining_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn ScheduleResult::equal(Self, Self) -> Bool
@@ -1380,18 +1380,18 @@ pub fn Severity::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SmartPriorityReport {
   scores : Array[SmartScore]
-  total_ops : Int
-  high_priority_count : Int
+  total_ops : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn SmartPriorityReport::equal(Self, Self) -> Bool
 pub fn SmartPriorityReport::not_equal(Self, Self) -> Bool
 pub fn SmartPriorityReport::to_repr(Self) -> @debug.Repr
-pub fn SmartPriorityReport::top_priority(Self, Int) -> Array[SmartScore]
+pub fn SmartPriorityReport::top_priority(Self, Int32) -> Array[SmartScore]
 
 pub(all) struct SmartScore {
   op_tag : String
-  score : Int
+  score : Int32
   factors : Array[ScoreFactor]
   recommendation : String
 } derive(Eq, @debug.Debug)
@@ -1402,7 +1402,7 @@ pub fn SmartScore::to_repr(Self) -> @debug.Repr
 pub(all) struct StrategyCombo {
   strategies : Array[StrategyKind]
   op_tag : String
-  estimated_time : Int
+  estimated_time : Int32
   description : String
 } derive(Eq, @debug.Debug)
 pub fn StrategyCombo::equal(Self, Self) -> Bool
@@ -1423,9 +1423,9 @@ pub fn StrategyKind::to_repr(Self) -> @debug.Repr
 pub(all) struct StrategyRepairResult {
   strategy : RepairStrategy
   op_tag : String
-  degs_before : Int
-  degs_after : Int
-  quality_score : Int
+  degs_before : Int32
+  degs_after : Int32
+  quality_score : Int32
   repair_desc : String
 } derive(Eq, @debug.Debug)
 pub fn StrategyRepairResult::equal(Self, Self) -> Bool
@@ -1489,8 +1489,8 @@ pub fn TestRunResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TuneReport {
   params : Array[TunedParam]
-  total : Int
-  adjusted_count : Int
+  total : Int32
+  adjusted_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 pub fn TuneReport::equal(Self, Self) -> Bool
@@ -1500,9 +1500,9 @@ pub fn TuneReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TunedParam {
   param_kind : ParamKind
-  old_value : Int
-  new_value : Int
-  adjustment : Int
+  old_value : Int32
+  new_value : Int32
+  adjustment : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 pub fn TunedParam::equal(Self, Self) -> Bool

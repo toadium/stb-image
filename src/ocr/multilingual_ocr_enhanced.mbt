@@ -10,7 +10,7 @@ pub(all) struct MultilingualOcrEnhancedConfig {
   enable_punctuation : Bool
   enable_japanese : Bool
   enable_korean : Bool
-  target_size : Int
+  target_size : Int32
   distance_metric : String
   auto_language_detection : Bool
   smart_spacing : Bool // 中英文之间自动加空格
@@ -88,7 +88,7 @@ pub fn detect_language_enhanced(
     0.0
   }
   // 特征3：水平投影方差（中文字符通常更均匀）
-  let h_proj : Array[Int] = Array::make(h, 0)
+  let h_proj : Array[Int32] = Array::make(h, 0)
   for y in 0..<h {
     let mut count = 0
     for x in 0..<w {
@@ -110,7 +110,7 @@ pub fn detect_language_enhanced(
   }
   h_var = h_var / h.to_double()
   // 特征4：垂直投影方差
-  let v_proj : Array[Int] = Array::make(w, 0)
+  let v_proj : Array[Int32] = Array::make(w, 0)
   for x in 0..<w {
     let mut count = 0
     for y in 0..<h {
@@ -207,7 +207,7 @@ pub fn detect_language_enhanced(
 pub fn smart_segment_chars(
   img : @types.Image,
   config : MultilingualOcrEnhancedConfig,
-) -> Array[(Int, Int, Int, Int, String)] raise @types.LoadError {
+) -> Array[(Int32, Int32, Int32, Int32, String)] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -232,7 +232,7 @@ pub fn smart_segment_chars(
   let h = img.height
   let data = img.data
   // 先进行连通域分割
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -255,11 +255,11 @@ pub fn smart_segment_chars(
     }
   }
   // 计算边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -281,7 +281,7 @@ pub fn smart_segment_chars(
     }
   }
   // 对每个连通域进行语言检测和分类
-  let regions : Array[(Int, Int, Int, Int, String)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32, String)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -314,11 +314,11 @@ pub fn smart_segment_chars(
 /// 提取字符区域（智能分割用）
 fn extract_char_region_for_smart(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height

@@ -1,7 +1,7 @@
 // v13.3.0 多语言混合识别测试
 
 ///|
-fn make_ml_test_img(w : Int, h : Int) -> @types.Image {
+fn make_ml_test_img(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

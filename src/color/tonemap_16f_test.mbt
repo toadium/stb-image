@@ -1,7 +1,7 @@
 // 色调映射 16-bit/float 变体测试
 
 ///|
-fn make_imgf_tm(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_tm(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let n = w * h * ch
   let data : Array[Byte] = Array::make(n * 4, b'\x00')
   for i in 0..<n {
@@ -20,7 +20,7 @@ fn make_imgf_tm(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn read_f32(data : Bytes, offset : Int) -> Float {
+fn read_f32(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -30,7 +30,7 @@ fn read_f32(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn read_u16(data : Bytes, offset : Int) -> Int {
+fn read_u16(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 

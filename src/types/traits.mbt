@@ -4,13 +4,13 @@
 /// 所有图像类型（Image / Image16 / ImageF / AnyImage）均实现此 trait，
 /// 允许泛型算法以统一方式访问图像几何信息与像素数据
 pub(open) trait ImageLike {
-  fn width(Self) -> Int
-  fn height(Self) -> Int
-  fn channels(Self) -> Int
+  fn width(Self) -> Int32
+  fn height(Self) -> Int32
+  fn channels(Self) -> Int32
   fn data(Self) -> Bytes
-  fn bytes_per_pixel(Self) -> Int
-  fn pixel_count(Self) -> Int = _
-  fn byte_count(Self) -> Int = _
+  fn bytes_per_pixel(Self) -> Int32
+  fn pixel_count(Self) -> Int32 = _
+  fn byte_count(Self) -> Int32 = _
   fn is_grayscale(Self) -> Bool = _
   fn is_rgb(Self) -> Bool = _
   fn is_rgba(Self) -> Bool = _

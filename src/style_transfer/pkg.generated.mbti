@@ -16,7 +16,7 @@ pub fn color_transfer(@types.Image, @types.Image, Double) -> @types.Image raise 
 
 pub fn create_default_style_transfer_config() -> StyleTransferConfig
 
-pub fn oil_painting(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+pub fn oil_painting(@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError
 
 pub fn sketch_effect(@types.Image, Double) -> @types.Image raise @types.LoadError
 
@@ -78,10 +78,10 @@ pub(all) struct StyleTransferConfig {
   algorithm : StyleTransferAlgorithm
   style_strength : Double
   content_strength : Double
-  iterations : Int
+  iterations : Int32
   learning_rate : Double
   use_color_preservation : Bool
-  resolution : Int
+  resolution : Int32
 }
 
 pub(all) struct StyleTransferResult {
@@ -92,7 +92,7 @@ pub(all) struct StyleTransferResult {
   style_strength : Double
   content_strength : Double
   processing_time_ms : Double
-  iterations : Int
+  iterations : Int32
 }
 
 pub(all) struct StyleTransferTextureFeatures {

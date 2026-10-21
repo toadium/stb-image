@@ -5,8 +5,8 @@
 /// 点云数据
 pub(all) struct PointCloud {
   points : Array[(Double, Double, Double)] // (x, y, z)
-  colors : Array[(Int, Int, Int)] // (r, g, b)
-  num_points : Int
+  colors : Array[(Int32, Int32, Int32)] // (r, g, b)
+  num_points : Int32
 }
 
 ///|
@@ -19,7 +19,7 @@ pub fn point_cloud_new() -> PointCloud {
 /// 深度图可视化（伪彩色映射）
 pub fn depth_to_colormap(
   depth : @types.Image,
-  colormap? : String = "jet",
+  colormap~ : String = "jet",
 ) -> @types.Image {
   let cmap = colormap
   let w = depth.width
@@ -82,11 +82,11 @@ pub fn depth_to_colormap(
 /// 深度图转点云
 pub fn depth_to_pointcloud(
   depth : @types.Image,
-  fx? : Double = 500.0,
-  fy? : Double = 500.0,
-  cx? : Double = 0.0,
-  cy? : Double = 0.0,
-  scale? : Double = 1.0,
+  fx~ : Double = 500.0,
+  fy~ : Double = 500.0,
+  cx~ : Double = 0.0,
+  cy~ : Double = 0.0,
+  scale~ : Double = 1.0,
 ) -> PointCloud {
   let focal_x = fx
   let focal_y = fy
@@ -97,7 +97,7 @@ pub fn depth_to_pointcloud(
   let h = depth.height
   let channels = depth.channels
   let points : Array[(Double, Double, Double)] = []
-  let colors : Array[(Int, Int, Int)] = []
+  let colors : Array[(Int32, Int32, Int32)] = []
   for y in 0..<h {
     for x in 0..<w {
       let idx = (y * w + x) * channels
@@ -122,13 +122,13 @@ pub fn depth_to_pointcloud(
 /// 点云体素下采样（简化版）
 pub fn pointcloud_voxel_downsample(
   cloud : PointCloud,
-  voxel_size? : Double = 1.0,
+  voxel_size~ : Double = 1.0,
 ) -> PointCloud {
   let vs = voxel_size
   // 简单的体素下采样：每个体素保留第一个点
   let seen : Array[String] = []
   let points : Array[(Double, Double, Double)] = []
-  let colors : Array[(Int, Int, Int)] = []
+  let colors : Array[(Int32, Int32, Int32)] = []
   for i in 0..<cloud.points.length() {
     let (x, y, z) = cloud.points[i]
     let vx = (x / vs).floor().to_int()
@@ -159,8 +159,8 @@ pub fn pointcloud_voxel_downsample(
 pub fn compute_disparity(
   left : @types.Image,
   right : @types.Image,
-  max_disparity? : Int = 64,
-  block_size? : Int = 7,
+  max_disparity~ : Int32 = 64,
+  block_size~ : Int32 = 7,
 ) -> @types.Image {
   let max_disp = max_disparity
   let bs = block_size
@@ -171,7 +171,7 @@ pub fn compute_disparity(
   let h = left.height
   let channels = left.channels.min(right.channels)
   let half = bs / 2
-  let disparity : Array[Int] = Array::make(w * h, 0)
+  let disparity : Array[Int32] = Array::make(w * h, 0)
   for y in half..<(h - half) {
     for x in half..<(w - half) {
       let mut best_disp = 0
@@ -219,8 +219,8 @@ pub fn compute_disparity(
 /// 视差图转深度图
 pub fn disparity_to_depth(
   disparity : @types.Image,
-  baseline? : Double = 1.0,
-  focal_length? : Double = 500.0,
+  baseline~ : Double = 1.0,
+  focal_length~ : Double = 500.0,
 ) -> @types.Image {
   let b = baseline
   let f = focal_length

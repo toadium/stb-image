@@ -9,7 +9,7 @@ fn yolo_make_box(
   w : Double,
   h : Double,
   conf : Double,
-  cls : Int,
+  cls : Int32,
 ) -> @detection.YoloBoundingBox {
   @detection.YoloBoundingBox::{
     x,
@@ -23,7 +23,7 @@ fn yolo_make_box(
 }
 
 ///|
-fn yolo_make_img(w : Int, h : Int, val : Int) -> @types.Image {
+fn yolo_make_img(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -33,7 +33,7 @@ fn yolo_make_img(w : Int, h : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn yolo_make_high_variance_img(w : Int, h : Int) -> @types.Image {
+fn yolo_make_high_variance_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

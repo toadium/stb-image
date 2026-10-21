@@ -2,7 +2,7 @@
 // 覆盖：无效通道、数据不匹配、参数越界、尺寸不一致、config 参数错误
 
 ///|
-fn en2_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn en2_mk_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -16,12 +16,17 @@ fn en2_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn en2_mk_bad_data(w : Int, h : Int, ch : Int) -> @types.Image {
+fn en2_mk_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{ width: w, height: h, channels: ch, data: b"\x00\x01\x02", }
 }
 
 ///|
-fn en2_mk_uniform(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn en2_mk_uniform(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

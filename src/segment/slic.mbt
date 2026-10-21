@@ -4,9 +4,9 @@
 ///|
 /// SLIC 超像素分割结果
 pub(all) struct SuperpixelResult {
-  labels : Array[Int]
-  centers : Array[(Int, Int)]
-  num_labels : Int
+  labels : Array[Int32]
+  centers : Array[(Int32, Int32)]
+  num_labels : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -32,9 +32,9 @@ fn sqrt_d(x : Double) -> Double {
 /// k: 期望超像素数量, m: 紧凑度参数(通常10-40), max_iters: 迭代次数
 pub fn slic(
   img : @types.Image,
-  k : Int,
-  m : Int,
-  max_iters : Int,
+  k : Int32,
+  m : Int32,
+  max_iters : Int32,
 ) -> SuperpixelResult raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -55,8 +55,8 @@ pub fn slic(
   let s2 = s * s
   let m_d = m.to_double()
   let m2 = m_d * m_d
-  let centers_x : Array[Int] = []
-  let centers_y : Array[Int] = []
+  let centers_x : Array[Int32] = []
+  let centers_y : Array[Int32] = []
   let centers_l : Array[Double] = []
   let centers_a : Array[Double] = []
   let centers_b : Array[Double] = []
@@ -156,7 +156,7 @@ pub fn slic(
       }
     }
   }
-  let centers : Array[(Int, Int)] = []
+  let centers : Array[(Int32, Int32)] = []
   for k_idx in 0..<num_centers {
     centers.push((centers_x[k_idx], centers_y[k_idx]))
   }

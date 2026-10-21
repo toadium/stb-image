@@ -48,9 +48,9 @@ pub(all) struct StrokeFeature {
 ///|
 /// 连笔分割结果
 pub(all) struct StrokeSegmentationResult {
-  num_strokes : Int
+  num_strokes : Int32
   strokes : Array[StrokeFeature]
-  segmentation_points : Array[(Int, Int)]
+  segmentation_points : Array[(Int32, Int32)]
   confidence : Double
 }
 
@@ -58,7 +58,7 @@ pub(all) struct StrokeSegmentationResult {
 /// 手写字符特征
 pub(all) struct HandwritingCharFeature {
   char : String
-  num_strokes : Int
+  num_strokes : Int32
   stroke_types : Array[StrokeType]
   aspect_ratio : Double
   density : Double
@@ -77,7 +77,7 @@ pub(all) struct HandwritingTemplate {
   char : String
   style : HandwritingStyle
   features : HandwritingCharFeature
-  sample_count : Int
+  sample_count : Int32
   avg_accuracy : Double
 }
 
@@ -91,7 +91,7 @@ pub(all) struct HandwritingRecognitionConfig {
   enable_slant_correction : Bool
   enable_size_normalization : Bool
   enable_stroke_order : Bool
-  max_candidates : Int
+  max_candidates : Int32
   style_priority : HandwritingStyle
 }
 
@@ -102,7 +102,7 @@ pub(all) struct HandwritingRecognitionResult {
   confidence : Double
   top_candidates : Array[(String, Double)]
   detected_style : HandwritingStyle
-  num_strokes_detected : Int
+  num_strokes_detected : Int32
   slant_angle : Double
   preprocessing_time_ms : Double
   feature_extraction_time_ms : Double
@@ -193,7 +193,7 @@ pub fn detect_handwriting_slant(
 /// 手写字符大小归一化（简化版，返回尺寸信息）
 pub fn normalize_handwriting_size(
   img : @types.Image,
-  target_size : Int,
+  target_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -269,7 +269,7 @@ pub fn segment_connected_strokes(
   config : HandwritingRecognitionConfig,
 ) -> StrokeSegmentationResult {
   let strokes = extract_hw_stroke_features(img)
-  let segmentation_points : Array[(Int, Int)] = []
+  let segmentation_points : Array[(Int32, Int32)] = []
 
   // 简化版：基于笔画长度的分割
   for i in 0..<strokes.length() {

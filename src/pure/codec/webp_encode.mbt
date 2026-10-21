@@ -7,9 +7,9 @@
 /// VP8 Bool 编码器（算术编码）
 priv struct BoolEncoder {
   output : Array[Byte]
-  mut low : Int
-  mut count : Int
-  mut range : Int
+  mut low : Int32
+  mut count : Int32
+  mut range : Int32
 }
 
 ///|
@@ -21,8 +21,8 @@ fn BoolEncoder::new() -> BoolEncoder {
 /// 编码一个 bool 值，probability 为 0 时编码 0
 fn BoolEncoder::encode_bool(
   self : BoolEncoder,
-  bit : Int,
-  probability : Int,
+  bit : Int32,
+  probability : Int32,
 ) -> Unit {
   let split = 1 + (((self.range - 1) * probability) >> 8)
   if bit != 0 {
@@ -50,13 +50,17 @@ fn BoolEncoder::shift(self : BoolEncoder) -> Unit {
 
 ///|
 /// 编码固定概率的 bool (50%)
-fn BoolEncoder::encode_bit(self : BoolEncoder, bit : Int) -> Unit {
+fn BoolEncoder::encode_bit(self : BoolEncoder, bit : Int32) -> Unit {
   self.encode_bool(bit, 128)
 }
 
 ///|
 /// 编码无符号整数 (n bits, MSB first)
-fn BoolEncoder::encode_uint(self : BoolEncoder, value : Int, n : Int) -> Unit {
+fn BoolEncoder::encode_uint(
+  self : BoolEncoder,
+  value : Int32,
+  n : Int32,
+) -> Unit {
   for i in 0..<n {
     let bit = (value >> (n - 1 - i)) & 1
     self.encode_bit(bit)
@@ -65,7 +69,11 @@ fn BoolEncoder::encode_uint(self : BoolEncoder, value : Int, n : Int) -> Unit {
 
 ///|
 /// 编码带符号整数
-fn BoolEncoder::encode_int(self : BoolEncoder, value : Int, n : Int) -> Unit {
+fn BoolEncoder::encode_int(
+  self : BoolEncoder,
+  value : Int32,
+  n : Int32,
+) -> Unit {
   if value < 0 {
     self.encode_bit(1)
     self.encode_uint(-value, n)
@@ -86,7 +94,11 @@ fn BoolEncoder::finish(self : BoolEncoder) -> Bytes {
 
 ///|
 /// 构建 WebP RIFF 容器
-fn build_webp_container(width : Int, height : Int, vp8_data : Bytes) -> Bytes {
+fn build_webp_container(
+  width : Int32,
+  height : Int32,
+  vp8_data : Bytes,
+) -> Bytes {
   let result : Array[Byte] = []
   result.push(b'\x52')
   result.push(b'\x49')
@@ -132,9 +144,9 @@ fn build_webp_container(width : Int, height : Int, vp8_data : Bytes) -> Bytes {
 ///|
 /// 构建 VP8 frame header (key frame)
 fn build_vp8_frame_header(
-  width : Int,
-  height : Int,
-  first_part_size : Int,
+  width : Int32,
+  height : Int32,
+  first_part_size : Int32,
 ) -> Bytes {
   let result : Array[Byte] = []
   let tag = (0 << 0) | (0 << 1) | (1 << 4) | (first_part_size << 5)
@@ -159,7 +171,7 @@ fn build_vp8_frame_header(
 /// 编码结果可用于外部工具（如浏览器、libwebp）解码，但 decode_webp_pure 会失败。
 pub fn encode_webp_lossy_pure(
   img : @types.Image,
-  quality? : Int = 75,
+  quality~ : Int32 = 75,
 ) -> Bytes raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -175,7 +187,7 @@ pub fn encode_webp_lossy_pure(
     max=63,
   )
   // 转为 Y 分量
-  let y_data : Array[Int] = Array::make(w * h, 0)
+  let y_data : Array[Int32] = Array::make(w * h, 0)
   for y in 0..<h {
     for x in 0..<w {
       let idx = (y * w + x) * ch

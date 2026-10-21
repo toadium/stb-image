@@ -8,7 +8,7 @@
 //   Float = 4B (scaled by 1e6, stored as Int LE)
 
 ///|
-fn ir_write_int(buf : Array[Byte], v : Int) -> Unit {
+fn ir_write_int(buf : Array[Byte], v : Int32) -> Unit {
   buf.push((v & 0xFF).to_byte())
   buf.push(((v >> 8) & 0xFF).to_byte())
   buf.push(((v >> 16) & 0xFF).to_byte())
@@ -22,7 +22,7 @@ fn ir_write_float(buf : Array[Byte], v : Float) -> Unit {
 }
 
 ///|
-fn ir_read_int(data : Bytes, offset : Int) -> Int {
+fn ir_read_int(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() |
   (data[offset + 1].to_int() << 8) |
   (data[offset + 2].to_int() << 16) |
@@ -30,7 +30,7 @@ fn ir_read_int(data : Bytes, offset : Int) -> Int {
 }
 
 ///|
-fn ir_read_float(data : Bytes, offset : Int) -> Float {
+fn ir_read_float(data : Bytes, offset : Int32) -> Float {
   let scaled = ir_read_int(data, offset)
   Float::from_int(scaled) / 1000000.0F
 }
@@ -103,8 +103,8 @@ pub fn ir_serialize_op(op : IROp, buf : Array[Byte]) -> Unit {
 /// Deserialize a single operation.
 pub fn ir_deserialize_op(
   data : Bytes,
-  offset : Int,
-) -> (IROp, Int) raise @types.LoadError {
+  offset : Int32,
+) -> (IROp, Int32) raise @types.LoadError {
   let tag = data[offset].to_int()
   let pos = offset + 1
   match tag {

@@ -2,9 +2,9 @@
 
 ///|
 fn sa_make_rgb(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {

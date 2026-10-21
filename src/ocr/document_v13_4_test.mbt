@@ -1,7 +1,7 @@
 // v13.4.0 文档理解测试
 
 ///|
-fn make_doc_img(w : Int, h : Int) -> @types.Image {
+fn make_doc_img(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

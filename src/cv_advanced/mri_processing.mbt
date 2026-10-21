@@ -25,8 +25,8 @@ pub extend MRIPulseType with Eq::{not_equal, equal}
 pub(all) struct KSpaceData {
   data_real : Array[Double]
   data_imag : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -78,8 +78,8 @@ pub fn mri_kspace_to_image(kspace : KSpaceData) -> Array[Double] {
 /// Image to K-space (simplified FFT).
 pub fn mri_image_to_kspace(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> KSpaceData {
   let n = width * height
   let real : Array[Double] = []
@@ -98,8 +98,8 @@ pub fn mri_image_to_kspace(
 pub fn mri_correct_bias_field(
   image : Array[Double],
   bias_field : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let n = width * height
@@ -120,8 +120,8 @@ pub fn mri_correct_bias_field(
 /// Ghosting artifact correction.
 pub fn mri_correct_ghosting(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   ghost_phase : Double,
 ) -> Array[Double] {
   let result : Array[Double] = []

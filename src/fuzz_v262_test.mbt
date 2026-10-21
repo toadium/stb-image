@@ -2,7 +2,7 @@
 // 验证处理函数对各种随机输入不崩溃（可 raise LoadError 但不可 panic）
 
 ///|
-fn v262_lcg(seed : Int) -> () -> Int {
+fn v262_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -12,10 +12,10 @@ fn v262_lcg(seed : Int) -> () -> Int {
 
 ///|
 fn v262_random_image(
-  seed : Int,
-  width : Int,
-  height : Int,
-  channels : Int,
+  seed : Int32,
+  width : Int32,
+  height : Int32,
+  channels : Int32,
 ) -> @types.Image {
   let rng = v262_lcg(seed)
   let size = width * height * channels

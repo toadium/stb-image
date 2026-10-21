@@ -6,7 +6,7 @@
 pub(all) struct WatermarkConfig {
   method_type : String // "lsb" / "dct"
   strength : Double // 水印强度
-  key : Int // 随机种子密钥
+  key : Int32 // 随机种子密钥
 }
 
 ///|
@@ -17,7 +17,7 @@ pub fn watermark_default_config() -> WatermarkConfig {
 
 ///|
 /// 简单的伪随机数生成器（线性同余）
-fn lcg_next(seed : Int) -> (Int, Int) {
+fn lcg_next(seed : Int32) -> (Int32, Int32) {
   let a = 1103515245
   let c = 12345
   let m = 1073741824
@@ -28,11 +28,11 @@ fn lcg_next(seed : Int) -> (Int, Int) {
 ///|
 /// 生成伪随机像素位置序列
 fn generate_random_positions(
-  count : Int,
-  total_pixels : Int,
-  key : Int,
-) -> Array[Int] {
-  let positions : Array[Int] = []
+  count : Int32,
+  total_pixels : Int32,
+  key : Int32,
+) -> Array[Int32] {
+  let positions : Array[Int32] = []
   let mut seed = key
   let mut i = 0
   while i < count {
@@ -60,7 +60,7 @@ fn generate_random_positions(
 pub fn embed_watermark_lsb(
   cover : @types.Image,
   watermark : @types.Image,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> @types.Image {
   let _ = key
   if cover.width != watermark.width || cover.height != watermark.height {
@@ -127,7 +127,7 @@ pub fn extract_watermark_lsb(stego : @types.Image) -> @types.Image {
 pub fn embed_text_watermark(
   cover : @types.Image,
   text : String,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> @types.Image {
   let k = key
   let w = cover.width
@@ -165,8 +165,8 @@ pub fn embed_text_watermark(
 /// 文本水印提取
 pub fn extract_text_watermark(
   stego : @types.Image,
-  length : Int,
-  key? : Int = 42,
+  length : Int32,
+  key~ : Int32 = 42,
 ) -> String {
   let k = key
   let w = stego.width
@@ -234,7 +234,7 @@ pub fn watermark_psnr(
 pub fn watermark_robustness_test(
   watermarked : @types.Image,
   original_watermark : @types.Image,
-  noise_level? : Double = 10.0,
+  noise_level~ : Double = 10.0,
 ) -> Double {
   let noise = noise_level
   let w = watermarked.width
@@ -281,7 +281,7 @@ pub fn watermark_robustness_test(
 pub fn batch_embed_watermark(
   images : Array[@types.Image],
   watermark : @types.Image,
-  key? : Int = 42,
+  key~ : Int32 = 42,
 ) -> Array[@types.Image] {
   let result : Array[@types.Image] = []
   for img in images {

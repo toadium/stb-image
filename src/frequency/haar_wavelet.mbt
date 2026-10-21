@@ -3,9 +3,9 @@
 ///|
 /// Haar 小波变换结果
 pub struct HaarWaveletResult {
-  width : Int
-  height : Int
-  levels : Int // 分解层数
+  width : Int32
+  height : Int32
+  levels : Int32 // 分解层数
   coefficients : Array[Float] // 小波系数
 }
 
@@ -67,7 +67,7 @@ pub fn ihaar_transform_1d(data : Array[Float]) -> Array[Float] {
 /// levels 为分解层数。
 pub fn haar_transform_2d(
   img : @types.Image,
-  levels? : Int = 1,
+  levels~ : Int32 = 1,
 ) -> HaarWaveletResult raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -91,7 +91,7 @@ pub fn haar_transform_2d(
   // 转灰度为 Float
   let coeffs : Array[Float] = Array::make(n, 0.0F)
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -216,9 +216,9 @@ pub fn haar_inverse_transform_2d(result : HaarWaveletResult) -> @types.Image {
 /// threshold 为阈值，soft=true 为软阈值，false 为硬阈值。
 pub fn haar_denoise(
   img : @types.Image,
-  threshold? : Float = 10.0F,
-  soft? : Bool = true,
-  levels? : Int = 3,
+  threshold~ : Float = 10.0F,
+  soft~ : Bool = true,
+  levels~ : Int32 = 3,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(

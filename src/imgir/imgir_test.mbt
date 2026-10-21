@@ -3,9 +3,9 @@
 
 ///|
 fn ir_test_image(
-  width? : Int = 4,
-  height? : Int = 4,
-  value? : Int = 128,
+  width~ : Int32 = 4,
+  height~ : Int32 = 4,
+  value~ : Int32 = 128,
 ) -> @types.Image {
   {
     width,
@@ -17,11 +17,11 @@ fn ir_test_image(
 
 ///|
 fn ir_test_rgb_image(
-  w : Int,
-  h : Int,
-  r : Int,
-  g : Int,
-  b : Int,
+  w : Int32,
+  h : Int32,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
@@ -34,7 +34,7 @@ fn ir_test_rgb_image(
 
 ///|
 fn ir_test_timage(
-  values : Array[Int],
+  values : Array[Int32],
   dur : Float,
 ) -> @spatiotemporal.TImage raise @types.LoadError {
   let frames : Array[@spatiotemporal.TFrame] = []

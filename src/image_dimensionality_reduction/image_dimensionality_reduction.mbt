@@ -78,9 +78,9 @@ pub extend DistanceMetricTypeDR with Eq::{not_equal, equal}
 /// 降维结果
 pub(all) struct DimensionalityReductionResult {
   reduced_data : Array[Array[Double]]
-  original_dimension : Int
-  reduced_dimension : Int
-  num_samples : Int
+  original_dimension : Int32
+  reduced_dimension : Int32
+  num_samples : Int32
   explained_variance_ratio : Array[Double]
   cumulative_explained_variance : Double
   reconstruction_error : Double
@@ -97,9 +97,9 @@ pub(all) struct DimensionalityReductionResult {
 /// PCA结果
 pub(all) struct PCAResult {
   reduced_data : Array[Array[Double]]
-  num_components : Int
-  original_dimension : Int
-  num_samples : Int
+  num_components : Int32
+  original_dimension : Int32
+  num_samples : Int32
   explained_variance : Array[Double]
   explained_variance_ratio : Array[Double]
   cumulative_explained_variance : Double
@@ -115,28 +115,28 @@ pub(all) struct PCAResult {
 /// t-SNE结果
 pub(all) struct TSNEResult {
   reduced_data : Array[Array[Double]]
-  num_components : Int
-  num_samples : Int
+  num_components : Int32
+  num_samples : Int32
   perplexity : Double
   learning_rate : Double
-  num_iterations : Int
+  num_iterations : Int32
   kl_divergence : Double
   final_error : Double
   reduction_time_ms : Double
   early_exaggeration : Double
-  exaggeration_iterations : Int
+  exaggeration_iterations : Int32
 }
 
 ///|
 /// UMAP结果
 pub(all) struct UMAPResult {
   reduced_data : Array[Array[Double]]
-  num_components : Int
-  num_samples : Int
-  n_neighbors : Int
+  num_components : Int32
+  num_samples : Int32
+  n_neighbors : Int32
   min_dist : Double
   metric : DistanceMetricTypeDR
-  num_epochs : Int
+  num_epochs : Int32
   reconstruction_error : Double
   trustworthiness : Double
   continuity : Double
@@ -147,9 +147,9 @@ pub(all) struct UMAPResult {
 /// ISOMAP结果
 pub(all) struct ISOMAPResult {
   reduced_data : Array[Array[Double]]
-  num_components : Int
-  num_samples : Int
-  n_neighbors : Int
+  num_components : Int32
+  num_samples : Int32
+  n_neighbors : Int32
   geodesic_distances : Array[Array[Double]]
   reconstruction_error : Double
   residual_variance : Double
@@ -160,9 +160,9 @@ pub(all) struct ISOMAPResult {
 /// LLE结果
 pub(all) struct LLEResult {
   reduced_data : Array[Array[Double]]
-  num_components : Int
-  num_samples : Int
-  n_neighbors : Int
+  num_components : Int32
+  num_samples : Int32
+  n_neighbors : Int32
   reconstruction_error : Double
   regularization : Double
   reduction_time_ms : Double
@@ -171,11 +171,11 @@ pub(all) struct LLEResult {
 ///|
 /// 特征选择结果
 pub(all) struct FeatureSelectionResult {
-  selected_features : Array[Int]
-  num_selected : Int
-  original_num_features : Int
+  selected_features : Array[Int32]
+  num_selected : Int32
+  original_num_features : Int32
   feature_scores : Array[Double]
-  feature_ranking : Array[Int]
+  feature_ranking : Array[Int32]
   selection_method : String
   threshold : Double
   selection_time_ms : Double
@@ -186,21 +186,21 @@ pub(all) struct FeatureSelectionResult {
 pub(all) struct DimensionalityReductionConfig {
   task_type : DimensionalityReductionTaskType
   algorithm_type : DimensionalityReductionAlgorithmType
-  num_components : Int
+  num_components : Int32
   kernel_type : KernelType
   kernel_gamma : Double
-  kernel_degree : Int
+  kernel_degree : Int32
   kernel_coef0 : Double
   perplexity : Double
   learning_rate : Double
-  num_iterations : Int
-  n_neighbors : Int
+  num_iterations : Int32
+  n_neighbors : Int32
   min_dist : Double
   metric : DistanceMetricTypeDR
   regularization : Double
   use_whitening : Bool
   use_random_state : Bool
-  random_state : Int
+  random_state : Int32
   early_exaggeration : Double
   use_feature_selection : Bool
   feature_selection_method : String
@@ -239,7 +239,7 @@ pub fn create_default_dr_config() -> DimensionalityReductionConfig {
 /// 简化的均值计算
 fn calculate_mean(
   data : Array[Array[Double]],
-  dimension : Int,
+  dimension : Int32,
 ) -> Array[Double] {
   let mean : Array[Double] = []
   for _ in 0..<dimension {
@@ -289,7 +289,7 @@ fn center_data(
 /// 简化的协方差矩阵
 fn calculate_covariance(
   centered : Array[Array[Double]],
-  dimension : Int,
+  dimension : Int32,
 ) -> Array[Array[Double]] {
   let cov : Array[Array[Double]] = []
   for i in 0..<dimension {
@@ -313,7 +313,7 @@ fn calculate_covariance(
 /// 简化的PCA（使用幂迭代法求前k个特征向量）
 pub fn pca_reduce(
   data : Array[Array[Double]],
-  num_components : Int,
+  num_components : Int32,
   config : DimensionalityReductionConfig,
 ) -> PCAResult {
   ignore(config)
@@ -463,7 +463,7 @@ fn _sqrt_approx_dr(x : Double) -> Double {
 /// 简化的t-SNE（使用随机初始化和简单梯度下降）
 pub fn tsne_reduce(
   data : Array[Array[Double]],
-  num_components : Int,
+  num_components : Int32,
   config : DimensionalityReductionConfig,
 ) -> TSNEResult {
   let num_samples = data.length()
@@ -512,7 +512,7 @@ pub fn tsne_reduce(
 /// 简化的UMAP
 pub fn umap_reduce(
   data : Array[Array[Double]],
-  num_components : Int,
+  num_components : Int32,
   config : DimensionalityReductionConfig,
 ) -> UMAPResult {
   let num_samples = data.length()
@@ -610,8 +610,8 @@ pub fn select_features(
   }
 
   // 选择方差大于阈值的特征
-  let selected : Array[Int] = []
-  let ranking : Array[Int] = []
+  let selected : Array[Int32] = []
+  let ranking : Array[Int32] = []
   for f in 0..<num_features {
     ranking.push(f)
   }

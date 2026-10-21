@@ -6,13 +6,13 @@ import {
 }
 
 // Values
-pub fn batch_embed_watermark(Array[@types.Image], @types.Image, key? : Int) -> Array[@types.Image]
+pub fn batch_embed_watermark(Array[@types.Image], @types.Image, key? : Int32) -> Array[@types.Image]
 
-pub fn embed_text_watermark(@types.Image, String, key? : Int) -> @types.Image
+pub fn embed_text_watermark(@types.Image, String, key? : Int32) -> @types.Image
 
-pub fn embed_watermark_lsb(@types.Image, @types.Image, key? : Int) -> @types.Image
+pub fn embed_watermark_lsb(@types.Image, @types.Image, key? : Int32) -> @types.Image
 
-pub fn extract_text_watermark(@types.Image, Int, key? : Int) -> String
+pub fn extract_text_watermark(@types.Image, Int32, key? : Int32) -> String
 
 pub fn extract_watermark_lsb(@types.Image) -> @types.Image
 
@@ -28,7 +28,7 @@ pub fn watermark_robustness_test(@types.Image, @types.Image, noise_level? : Doub
 pub(all) struct WatermarkConfig {
   method_type : String
   strength : Double
-  key : Int
+  key : Int32
 }
 
 // Type aliases

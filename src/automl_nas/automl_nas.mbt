@@ -71,28 +71,28 @@ pub extend LayerType with Eq::{not_equal, equal}
 /// 网络架构
 pub(all) struct NetworkArchitecture {
   layers : Array[LayerType]
-  num_layers : Int
-  num_parameters : Int
-  flops : Int
+  num_layers : Int32
+  num_parameters : Int32
+  flops : Int32
   memory_mb : Double
   inference_time_ms : Double
-  architecture_id : Int
+  architecture_id : Int32
 }
 
 ///|
 /// 超参数配置
 pub(all) struct HyperparameterConfig {
   learning_rate : Double
-  batch_size : Int
-  num_epochs : Int
+  batch_size : Int32
+  num_epochs : Int32
   optimizer : String
   weight_decay : Double
   dropout_rate : Double
-  hidden_dim : Int
-  num_layers : Int
-  num_heads : Int
+  hidden_dim : Int32
+  num_layers : Int32
+  num_heads : Int32
   activation : String
-  config_id : Int
+  config_id : Int32
 }
 
 ///|
@@ -100,10 +100,10 @@ pub(all) struct HyperparameterConfig {
 pub(all) struct NASConfig {
   algorithm : NASAlgorithm
   search_space_type : SearchSpaceType
-  num_trials : Int
-  max_layers : Int
-  max_channels : Int
-  population_size : Int
+  num_trials : Int32
+  max_layers : Int32
+  max_channels : Int32
+  population_size : Int32
   mutation_rate : Double
   crossover_rate : Double
   learning_rate_controller : Double
@@ -117,13 +117,13 @@ pub(all) struct NASConfig {
 /// 超参数优化配置
 pub(all) struct HPOConfig {
   algorithm : HyperparameterOptimizationAlgorithm
-  num_trials : Int
-  num_epochs_per_trial : Int
+  num_trials : Int32
+  num_epochs_per_trial : Int32
   search_space : Array[String]
   use_early_stopping : Bool
-  early_stopping_patience : Int
+  early_stopping_patience : Int32
   use_parallel : Bool
-  num_workers : Int
+  num_workers : Int32
   resource_allocation : String
 }
 
@@ -134,7 +134,7 @@ pub(all) struct SearchResult {
   best_hyperparameters : HyperparameterConfig
   best_accuracy : Double
   best_loss : Double
-  num_trials_completed : Int
+  num_trials_completed : Int32
   search_time_s : Double
   all_accuracies : Array[Double]
   convergence_curve : Array[Double]
@@ -152,8 +152,8 @@ pub(all) struct ModelEvaluationMetrics {
   inference_time_ms : Double
   memory_usage_mb : Double
   model_size_mb : Double
-  num_parameters : Int
-  flops : Int
+  num_parameters : Int32
+  flops : Int32
 }
 
 ///|
@@ -195,8 +195,8 @@ pub fn create_default_hpo_config() -> HPOConfig {
 ///|
 /// 生成随机网络架构
 pub fn generate_random_architecture(
-  num_layers : Int,
-  max_channels : Int,
+  num_layers : Int32,
+  max_channels : Int32,
 ) -> NetworkArchitecture {
   let layers : Array[LayerType] = []
   let mut num_params = 0

@@ -3,7 +3,12 @@
 // ===== 辅助函数 =====
 
 ///|
-fn h16f_make_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn h16f_make_img16(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -19,12 +24,12 @@ fn h16f_make_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 
 ///|
 fn h16f_make_img16_rgba(
-  w : Int,
-  h : Int,
-  r : Int,
-  g : Int,
-  b : Int,
-  a : Int,
+  w : Int32,
+  h : Int32,
+  r : Int32,
+  g : Int32,
+  b : Int32,
+  a : Int32,
 ) -> @types.Image16 {
   let n = w * h
   let data : Array[Byte] = Array::make(n * 4 * 2, b'\x00')
@@ -44,7 +49,12 @@ fn h16f_make_img16_rgba(
 }
 
 ///|
-fn h16f_make_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn h16f_make_imgf(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -63,8 +73,8 @@ fn h16f_make_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 
 ///|
 fn h16f_make_imgf_rgba(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   r : Float,
   g : Float,
   b : Float,
@@ -92,7 +102,7 @@ fn h16f_make_imgf_rgba(
 }
 
 ///|
-fn h16f_make_imgf_range(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn h16f_make_imgf_range(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   let n = w * h
   let data : Array[Byte] = Array::make(n * ch * 4, b'\x00')
   for i in 0..<n {

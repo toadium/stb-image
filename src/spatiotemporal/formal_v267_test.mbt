@@ -13,7 +13,7 @@ fn v267_approx_eq(a : Float, b : Float, eps : Float) -> Bool {
 }
 
 ///|
-fn v267_lcg(seed : Int) -> () -> Int {
+fn v267_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -26,7 +26,7 @@ fn v267_lcg(seed : Int) -> () -> Int {
 // ============================================================
 
 ///|
-fn v267_fake_image(value : Int) -> @types.Image {
+fn v267_fake_image(value : Int32) -> @types.Image {
   {
     width: 1,
     height: 1,
@@ -36,7 +36,7 @@ fn v267_fake_image(value : Int) -> @types.Image {
 }
 
 ///|
-fn v267_fake_image_wh(w : Int, h : Int, value : Int) -> @types.Image {
+fn v267_fake_image_wh(w : Int32, h : Int32, value : Int32) -> @types.Image {
   {
     width: w,
     height: h,
@@ -47,7 +47,7 @@ fn v267_fake_image_wh(w : Int, h : Int, value : Int) -> @types.Image {
 
 ///|
 fn v267_fake_tframe(
-  value : Int,
+  value : Int32,
   ts : Float,
   dur : Float,
 ) -> @spatiotemporal.TFrame raise @types.LoadError {
@@ -56,7 +56,7 @@ fn v267_fake_tframe(
 
 ///|
 fn v267_fake_timage_uniform(
-  values : Array[Int],
+  values : Array[Int32],
   dur : Float,
   fps : Float,
 ) -> @spatiotemporal.TImage raise @types.LoadError {
@@ -73,8 +73,8 @@ fn v267_fake_timage_uniform(
 
 ///|
 fn v267_fake_timage_random(
-  seed : Int,
-  n_frames : Int,
+  seed : Int32,
+  n_frames : Int32,
   dur : Float,
 ) -> @spatiotemporal.TImage raise @types.LoadError {
   let rng = v267_lcg(seed)

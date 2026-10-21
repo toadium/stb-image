@@ -7,8 +7,8 @@
 /// 视差图。
 /// Disparity map.
 pub(all) struct DisparityMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   disparities : Array[Double]
   valid : Array[Bool]
 } derive(Eq, @debug.Debug)
@@ -23,8 +23,8 @@ pub extend DisparityMap with Eq::{not_equal, equal}
 /// 立体匹配参数。
 /// Stereo matching parameters.
 pub(all) struct StereoParams {
-  max_disparity : Int
-  block_size : Int
+  max_disparity : Int32
+  block_size : Int32
   threshold : Double
   baseline : Double
 } derive(Eq, @debug.Debug)
@@ -39,8 +39,8 @@ pub extend StereoParams with Eq::{not_equal, equal}
 /// 深度图。
 /// Depth map.
 pub(all) struct DepthMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   depths : Array[Double]
   valid : Array[Bool]
 } derive(Eq, @debug.Debug)

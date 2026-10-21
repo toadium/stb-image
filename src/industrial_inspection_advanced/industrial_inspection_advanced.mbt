@@ -53,9 +53,9 @@ pub extend SurfaceQualityGrade with Eq::{not_equal, equal}
 ///|
 /// 检测到的缺陷
 pub(all) struct DetectedDefect {
-  defect_id : Int
+  defect_id : Int32
   defect_type : DefectType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   segmentation_mask : Array[Array[Bool]]
   confidence : Double
   severity : Double
@@ -91,8 +91,8 @@ pub(all) struct SurfaceQualityResult {
   glossiness : Double
   color_uniformity : Double
   defect_density : Double
-  num_defects : Int
-  critical_defects : Int
+  num_defects : Int32
+  critical_defects : Int32
 }
 
 ///|
@@ -115,8 +115,8 @@ pub(all) struct AnomalyDetectionResult {
   anomaly_score : Double
   threshold : Double
   anomaly_map : Array[Array[Double]]
-  anomaly_regions : Array[Array[Int]]
-  num_anomaly_regions : Int
+  anomaly_regions : Array[Array[Int32]]
+  num_anomaly_regions : Int32
   confidence : Double
   reconstruction_error : Double
 }
@@ -136,7 +136,7 @@ pub(all) struct IndustrialInspectionConfig {
   use_ai_detection : Bool
   use_traditional_vision : Bool
   use_hybrid : Bool
-  camera_resolution : Array[Int]
+  camera_resolution : Array[Int32]
   lighting_type : String
   inspection_speed : Double
   reject_on_critical : Bool
@@ -176,8 +176,8 @@ pub fn create_default_industrial_config() -> IndustrialInspectionConfig {
 /// 检测缺陷（简化版）
 pub fn detect_defects(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : IndustrialInspectionConfig,
 ) -> Array[DetectedDefect] {
   ignore(image)
@@ -210,7 +210,7 @@ pub fn detect_defects(
     ]
     let defect_type = defect_types[i % defect_types.length()]
 
-    let bbox : Array[Int] = []
+    let bbox : Array[Int32] = []
     bbox.push(x)
     bbox.push(y)
     bbox.push(x + w)
@@ -244,8 +244,8 @@ pub fn detect_defects(
 /// 测量尺寸（简化版）
 pub fn measure_dimensions(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   calibration_factor : Double,
   config : IndustrialInspectionConfig,
 ) -> Array[DimensionalMeasurementResult] {
@@ -293,8 +293,8 @@ pub fn measure_dimensions(
 /// 评估表面质量（简化版）
 pub fn evaluate_surface_quality(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   defects : Array[DetectedDefect],
   config : IndustrialInspectionConfig,
 ) -> SurfaceQualityResult {
@@ -350,8 +350,8 @@ pub fn evaluate_surface_quality(
 pub fn detect_anomalies(
   image : Array[Double],
   reference : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : IndustrialInspectionConfig,
 ) -> AnomalyDetectionResult {
   ignore(height)
@@ -359,7 +359,7 @@ pub fn detect_anomalies(
   // 简化的异常检测：计算与参考图像的差异
   let mut total_error = 0.0
   let anomaly_map : Array[Array[Double]] = []
-  let anomaly_regions : Array[Array[Int]] = []
+  let anomaly_regions : Array[Array[Int32]] = []
 
   let min_len = if image.length() < reference.length() {
     image.length()

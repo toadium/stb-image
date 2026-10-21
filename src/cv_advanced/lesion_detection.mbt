@@ -24,9 +24,9 @@ pub extend LesionType with Eq::{not_equal, equal}
 /// 病灶候选。
 /// Lesion candidate.
 pub(all) struct LesionCandidate {
-  x : Int
-  y : Int
-  radius : Int
+  x : Int32
+  y : Int32
+  radius : Int32
   score : Double
   lesion_type : LesionType
 } derive(Eq, @debug.Debug)
@@ -42,8 +42,8 @@ pub extend LesionCandidate with Eq::{not_equal, equal}
 /// CAD detection result.
 pub(all) struct CADDetectionResult {
   candidates : Array[LesionCandidate]
-  num_true_positives : Int
-  num_false_positives : Int
+  num_true_positives : Int32
+  num_false_positives : Int32
   sensitivity : Double
 } derive(Eq, @debug.Debug)
 
@@ -58,10 +58,10 @@ pub extend CADDetectionResult with Eq::{not_equal, equal}
 /// Candidate lesion detection (multi-scale local extrema).
 pub fn lesion_detect_candidates(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  min_radius : Int,
-  max_radius : Int,
+  width : Int32,
+  height : Int32,
+  min_radius : Int32,
+  max_radius : Int32,
   threshold : Double,
 ) -> Array[LesionCandidate] {
   let candidates : Array[LesionCandidate] = []
@@ -104,8 +104,8 @@ pub fn lesion_detect_candidates(
 pub fn lesion_reduce_false_positives(
   candidates : Array[LesionCandidate],
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   score_threshold : Double,
 ) -> Array[LesionCandidate] {
   let result : Array[LesionCandidate] = []
@@ -155,8 +155,8 @@ pub fn lesion_reduce_false_positives(
 pub fn lesion_compute_sensitivity(
   detected : Array[LesionCandidate],
   ground_truth : Array[LesionCandidate],
-  tolerance : Int,
-) -> (Int, Int, Double) {
+  tolerance : Int32,
+) -> (Int32, Int32, Double) {
   let mut true_positives = 0
   for i in 0..<detected.length() {
     let d = detected[i]
@@ -238,7 +238,7 @@ pub fn lesion_nms(
 pub fn lesion_build_cad_result(
   candidates : Array[LesionCandidate],
   ground_truth : Array[LesionCandidate],
-  tolerance : Int,
+  tolerance : Int32,
 ) -> CADDetectionResult {
   let (tp, fp, sens) = lesion_compute_sensitivity(
     candidates, ground_truth, tolerance,
@@ -256,8 +256,8 @@ pub fn lesion_build_cad_result(
 /// Feature extraction (shape/texture/intensity).
 pub fn lesion_extract_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   candidate : LesionCandidate,
 ) -> Array[Double] {
   let features : Array[Double] = []

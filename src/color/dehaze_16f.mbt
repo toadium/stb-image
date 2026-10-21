@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_dh(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_dh(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_dh(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_dh(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_dh(data : Bytes, offset : Int) -> Float {
+fn read_float_le_dh(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_dh(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_dh(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_dh(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_dh(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_dh(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_dh(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -123,9 +123,9 @@ fn img8_to_imgf_dh(img : @types.Image) -> @types.ImageF {
 /// 16-bit 图像去雾。
 pub fn dehaze_16(
   img : @types.Image16,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -156,9 +156,9 @@ pub fn dehaze_16(
 /// float 图像去雾。
 pub fn dehaze_f(
   img : @types.ImageF,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -190,8 +190,8 @@ pub fn dehaze_f(
 pub fn guided_filter_16(
   img : @types.Image16,
   input : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -230,8 +230,8 @@ pub fn guided_filter_16(
 pub fn guided_filter_f(
   img : @types.ImageF,
   input : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

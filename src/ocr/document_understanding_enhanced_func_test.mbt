@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn due_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn due_make_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn due_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn due_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
+fn due_make_img_mismatch(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -25,10 +25,10 @@ fn due_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
 ///|
 fn due_make_block(
   bt : @ocr.DocumentBlockType,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
   text : String,
 ) -> @ocr.DocumentBlock {
   @ocr.DocumentBlock::{
@@ -54,14 +54,14 @@ fn due_make_block(
 ///|
 fn due_make_block_full(
   bt : @ocr.DocumentBlockType,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
   text : String,
-  font_size : Int,
+  font_size : Int32,
   is_bold : Bool,
-  col : Int,
+  col : Int32,
 ) -> @ocr.DocumentBlock {
   @ocr.DocumentBlock::{
     block_type: bt,

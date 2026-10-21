@@ -32,7 +32,7 @@ pub fn sigmoid_backward(
 /// Softmax + 交叉熵联合反向传播：grad = predicted - one_hot(target)
 pub fn softmax_cross_entropy_backward(
   predicted : Array[Double],
-  target : Int,
+  target : Int32,
 ) -> Array[Double] raise @types.LoadError {
   if target < 0 || target >= predicted.length() {
     raise @types.LoadError::DecodeFailed(
@@ -52,8 +52,8 @@ pub fn softmax_cross_entropy_backward(
 pub fn dense_backward(
   grad_output : Array[Double],
   weights : Array[Double],
-  in_features : Int,
-  out_features : Int,
+  in_features : Int32,
+  out_features : Int32,
 ) -> (Array[Double], Array[Double], Array[Double]) {
   // grad_input = W^T * grad_output
   let grad_input : Array[Double] = Array::make(in_features, 0.0)
@@ -87,10 +87,10 @@ pub fn dense_backward(
 pub fn max_pool2d_backward(
   grad_output : Array[Double],
   input : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  pool_size : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  pool_size : Int32,
 ) -> Array[Double] {
   let pool_h = in_h / pool_size
   let pool_w = in_w / pool_size
@@ -148,17 +148,17 @@ pub fn update_weights_sgd(
 /// CNN 单步训练
 pub fn cnn_train_step(
   input : Array[Double],
-  target : Int,
+  target : Int32,
   conv_weights : Array[Double],
   conv_bias : Array[Double],
   dense_weights : Array[Double],
   dense_bias : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  conv_out_c : Int,
-  k_size : Int,
-  num_classes : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  conv_out_c : Int32,
+  k_size : Int32,
+  num_classes : Int32,
   learning_rate : Double,
 ) -> (Array[Double], Array[Double], Array[Double], Array[Double], Double) raise @types.LoadError {
   if input.length() == 0 {
@@ -243,14 +243,14 @@ pub fn cnn_train(
   conv_bias : Array[Double],
   dense_weights : Array[Double],
   dense_bias : Array[Double],
-  in_h : Int,
-  in_w : Int,
-  in_c : Int,
-  conv_out_c : Int,
-  k_size : Int,
-  num_classes : Int,
+  in_h : Int32,
+  in_w : Int32,
+  in_c : Int32,
+  conv_out_c : Int32,
+  k_size : Int32,
+  num_classes : Int32,
   learning_rate : Double,
-  epochs : Int,
+  epochs : Int32,
 ) -> (
   Array[Double],
   Array[Double],
@@ -408,7 +408,7 @@ pub fn cnn_confusion_matrix(
   test_samples : Array[DLTrainingSample],
   config : DLCnnModelConfig,
   labels : Array[String],
-) -> Array[Array[Int]] raise @types.LoadError {
+) -> Array[Array[Int32]] raise @types.LoadError {
   if test_samples.length() == 0 {
     raise @types.LoadError::DecodeFailed(
       "cnn_confusion_matrix: 测试样本不能为空",
@@ -420,9 +420,9 @@ pub fn cnn_confusion_matrix(
     )
   }
   let n = config.num_classes
-  let matrix : Array[Array[Int]] = []
+  let matrix : Array[Array[Int32]] = []
   for _ in 0..<n {
-    let row : Array[Int] = Array::make(n, 0)
+    let row : Array[Int32] = Array::make(n, 0)
     matrix.push(row)
   }
   for i in 0..<test_samples.length() {

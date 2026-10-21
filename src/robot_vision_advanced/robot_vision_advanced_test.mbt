@@ -109,7 +109,7 @@ test "visual_servoing: computes control from error" {
 test "generate_point_cloud: generates point cloud from depth" {
   let config = @robot_vision_advanced.create_default_robot_vision_config()
   let depth_image : Array[Double] = []
-  let rgb_image : Array[Array[Int]] = []
+  let rgb_image : Array[Array[Int32]] = []
   for _ in 0..<307200 {
     depth_image.push(1.0)
   }

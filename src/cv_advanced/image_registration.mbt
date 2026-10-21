@@ -23,9 +23,9 @@ pub extend RegistrationMethod with Eq::{not_equal, equal}
 /// Registration parameters.
 pub(all) struct RegistrationParams {
   reg_method : RegistrationMethod
-  max_iterations : Int
+  max_iterations : Int32
   epsilon : Double
-  warp_type : Int
+  warp_type : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -59,7 +59,7 @@ pub(all) struct RegistrationResult {
   warp : AffineMatrix
   success : Bool
   error : Double
-  iterations : Int
+  iterations : Int32
 } derive(Eq, @debug.Debug)
 
 ///|

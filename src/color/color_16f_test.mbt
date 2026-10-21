@@ -1,7 +1,7 @@
 // color 16-bit/float 变体测试
 
 ///|
-fn make_img16(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn make_img16(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -22,7 +22,7 @@ fn make_img16(w : Int, h : Int, ch : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn make_imgf(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

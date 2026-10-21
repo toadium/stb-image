@@ -72,18 +72,18 @@ pub extend VAEType with Eq::{not_equal, equal}
 /// 扩散模型配置
 pub(all) struct DiffusionConfig {
   model_type : DiffusionModelType
-  num_timesteps : Int
+  num_timesteps : Int32
   beta_start : Double
   beta_end : Double
   beta_schedule : String
-  image_size : Int
-  in_channels : Int
-  out_channels : Int
-  latent_dim : Int
-  num_res_blocks : Int
-  base_channels : Int
-  channel_mults : Array[Int]
-  attention_resolutions : Array[Int]
+  image_size : Int32
+  in_channels : Int32
+  out_channels : Int32
+  latent_dim : Int32
+  num_res_blocks : Int32
+  base_channels : Int32
+  channel_mults : Array[Int32]
+  attention_resolutions : Array[Int32]
   dropout : Double
   use_ema : Bool
   ema_decay : Double
@@ -96,12 +96,12 @@ pub(all) struct DiffusionConfig {
 /// GAN配置
 pub(all) struct GANConfig {
   gan_type : GANType
-  latent_dim : Int
-  image_size : Int
-  in_channels : Int
-  generator_channels : Int
-  discriminator_channels : Int
-  num_layers : Int
+  latent_dim : Int32
+  image_size : Int32
+  in_channels : Int32
+  generator_channels : Int32
+  discriminator_channels : Int32
+  num_layers : Int32
   learning_rate_g : Double
   learning_rate_d : Double
   beta1 : Double
@@ -119,16 +119,16 @@ pub(all) struct GANConfig {
 /// VAE配置
 pub(all) struct VAEConfig {
   vae_type : VAEType
-  latent_dim : Int
-  image_size : Int
-  in_channels : Int
-  hidden_dims : Array[Int]
+  latent_dim : Int32
+  image_size : Int32
+  in_channels : Int32
+  hidden_dims : Array[Int32]
   learning_rate : Double
   beta : Double
   gamma : Double
   use_kl_annealing : Bool
-  kl_annealing_steps : Int
-  num_embeddings : Int
+  kl_annealing_steps : Int32
+  num_embeddings : Int32
   commitment_cost : Double
   decay : Double
   use_adversarial_loss : Bool
@@ -140,9 +140,9 @@ pub(all) struct VAEConfig {
 /// 生成结果
 pub(all) struct GenerationResult {
   generated_samples : Array[Array[Double]]
-  num_samples : Int
-  image_size : Int
-  num_channels : Int
+  num_samples : Int32
+  image_size : Int32
+  num_channels : Int32
   model_type : String
   inference_time_ms : Double
   fid_score : Double
@@ -154,8 +154,8 @@ pub(all) struct GenerationResult {
 ///|
 /// 训练状态
 pub(all) struct TrainingState {
-  epoch : Int
-  step : Int
+  epoch : Int32
+  step : Int32
   generator_loss : Double
   discriminator_loss : Double
   reconstruction_loss : Double
@@ -170,17 +170,17 @@ pub(all) struct TrainingState {
 ///|
 /// 采样配置
 pub(all) struct SamplingConfig {
-  num_samples : Int
-  num_inference_steps : Int
+  num_samples : Int32
+  num_inference_steps : Int32
   guidance_scale : Double
-  seed : Int
+  seed : Int32
   use_ddim : Bool
   eta : Double
   use_parallel : Bool
-  batch_size : Int
+  batch_size : Int32
   output_dir : String
   save_intermediate : Bool
-  intermediate_steps : Array[Int]
+  intermediate_steps : Array[Int32]
 }
 
 ///|
@@ -278,9 +278,9 @@ pub fn create_default_sampling_config() -> SamplingConfig {
 ///|
 /// 生成随机噪声
 pub fn generate_noise(
-  num_samples : Int,
-  latent_dim : Int,
-  seed : Int,
+  num_samples : Int32,
+  latent_dim : Int32,
+  seed : Int32,
 ) -> Array[Array[Double]] {
   let samples : Array[Array[Double]] = []
   let mut state = seed

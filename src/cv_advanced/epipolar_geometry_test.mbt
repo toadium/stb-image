@@ -32,8 +32,8 @@ fn make_simple_correspondences() -> Array[@cv_advanced.PointCorrespondence] {
 
 ///|
 fn make_identity_intrinsics_d(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> @cv_advanced.CameraIntrinsics {
   {
     fx: w.to_double(),

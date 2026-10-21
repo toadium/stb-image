@@ -101,7 +101,7 @@ pub extend SpectralType with Eq::{not_equal, equal}
 ///|
 /// 检测到的天体
 pub(all) struct DetectedCelestialObject {
-  object_id : Int
+  object_id : Int32
   object_type : CelestialObjectType
   ra : Double
   dec : Double
@@ -122,7 +122,7 @@ pub(all) struct DetectedCelestialObject {
 ///|
 /// 星系分类结果
 pub(all) struct GalaxyClassificationResult {
-  galaxy_id : Int
+  galaxy_id : Int32
   morphology : GalaxyMorphologyType
   confidence : Double
   all_morphologies : Array[GalaxyMorphologyType]
@@ -137,7 +137,7 @@ pub(all) struct GalaxyClassificationResult {
 ///|
 /// 测光结果
 pub(all) struct PhotometryResult {
-  object_id : Int
+  object_id : Int32
   filter_name : String
   magnitude : Double
   magnitude_error : Double
@@ -154,7 +154,7 @@ pub(all) struct PhotometryResult {
 ///|
 /// 光谱分析结果
 pub(all) struct SpectroscopyResult {
-  object_id : Int
+  object_id : Int32
   spectral_type : SpectralType
   temperature : Double
   luminosity : Double
@@ -171,15 +171,15 @@ pub(all) struct SpectroscopyResult {
 ///|
 /// 图像叠加结果
 pub(all) struct ImageStackingResult {
-  num_images : Int
+  num_images : Int32
   stacked_image : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   exposure_time_total : Double
   noise_reduction_factor : Double
   dynamic_range_improvement : Double
   stacking_method : String
-  rejected_images : Int
+  rejected_images : Int32
   quality_score : Double
 }
 
@@ -203,8 +203,8 @@ pub(all) struct CosmologicalParameterResult {
 ///|
 /// 凌星检测结果
 pub(all) struct TransitDetectionResult {
-  object_id : Int
-  planet_candidate_id : Int
+  object_id : Int32
+  planet_candidate_id : Int32
   period : Double
   period_error : Double
   transit_depth : Double
@@ -236,7 +236,7 @@ pub(all) struct AstronomyImagingConfig {
   use_dark_subtraction : Bool
   use_flat_correction : Bool
   stacking_method : String
-  num_stack_images : Int
+  num_stack_images : Int32
 }
 
 ///|
@@ -268,8 +268,8 @@ pub fn create_default_astronomy_config() -> AstronomyImagingConfig {
 /// 检测天体（简化版）
 pub fn detect_celestial_objects(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : AstronomyImagingConfig,
 ) -> Array[DetectedCelestialObject] {
   ignore(image)
@@ -424,8 +424,8 @@ pub fn perform_photometry(
 /// 图像叠加（简化版）
 pub fn stack_images(
   images : Array[Array[Double]],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : AstronomyImagingConfig,
 ) -> ImageStackingResult {
   let num_images = images.length()

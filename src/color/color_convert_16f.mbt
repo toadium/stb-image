@@ -418,10 +418,10 @@ pub fn unpremultiply_alpha_f(
 ///|
 /// 16-bit RGB → YCbCr（ITU-R BT.601）。输入范围 0-65535，输出范围 0-65535。
 pub fn rgb_to_ycbcr_16(
-  r : Int,
-  g : Int,
-  b : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  r : Int32,
+  g : Int32,
+  b : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
     raise @types.LoadError::DecodeFailed(
@@ -460,10 +460,10 @@ pub fn rgb_to_ycbcr_f(
 ///|
 /// 16-bit YCbCr → RGB（ITU-R BT.601）。输入范围 0-65535。
 pub fn ycbcr_to_rgb_16(
-  y : Int,
-  cb : Int,
-  cr : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  y : Int32,
+  cb : Int32,
+  cr : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if y < 0 || y > 65535 || cb < 0 || cb > 65535 || cr < 0 || cr > 65535 {
     raise @types.LoadError::DecodeFailed(
@@ -506,10 +506,10 @@ pub fn ycbcr_to_rgb_f(
 ///|
 /// 16-bit RGB → CMYK。输入范围 0-65535，输出范围 0-65535。
 pub fn rgb_to_cmyk_16(
-  r : Int,
-  g : Int,
-  b : Int,
-) -> (Int, Int, Int, Int) raise @types.LoadError {
+  r : Int32,
+  g : Int32,
+  b : Int32,
+) -> (Int32, Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 65535 || g < 0 || g > 65535 || b < 0 || b > 65535 {
     raise @types.LoadError::DecodeFailed(
@@ -561,11 +561,11 @@ pub fn rgb_to_cmyk_f(
 ///|
 /// 16-bit CMYK → RGB。输入范围 0-65535。
 pub fn cmyk_to_rgb_16(
-  c : Int,
-  m : Int,
-  y : Int,
-  k : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  c : Int32,
+  m : Int32,
+  y : Int32,
+  k : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if c < 0 ||
     c > 65535 ||

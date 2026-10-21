@@ -2,18 +2,18 @@
 // K-means 量化 + Median Cut
 
 ///|
-fn read_u16_q(data : Bytes, offset : Int) -> Int {
+fn read_u16_q(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 
 ///|
-fn write_u16_q(data : Array[Byte], offset : Int, v : Int) -> Unit {
+fn write_u16_q(data : Array[Byte], offset : Int32, v : Int32) -> Unit {
   data[offset] = (v & 0xFF).to_byte()
   data[offset + 1] = ((v >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_f32_q(data : Bytes, offset : Int) -> Float {
+fn read_f32_q(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -23,7 +23,7 @@ fn read_f32_q(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_q(data : Array[Byte], offset : Int, v : Float) -> Unit {
+fn write_f32_q(data : Array[Byte], offset : Int32, v : Float) -> Unit {
   let bits = v.reinterpret_as_int()
   data[offset] = (bits & 0xFF).to_byte()
   data[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -52,8 +52,8 @@ fn dist_sq_f(
 /// K-means 色彩量化 16-bit 版本。
 pub fn kmeans_quantize_16(
   img : @types.Image16,
-  k : Int,
-  max_iters : Int,
+  k : Int32,
+  max_iters : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
@@ -83,10 +83,10 @@ pub fn kmeans_quantize_16(
   if n == 0 {
     return img
   }
-  let centroids_r : Array[Int] = Array::make(k, 0)
-  let centroids_g : Array[Int] = Array::make(k, 0)
-  let centroids_b : Array[Int] = Array::make(k, 0)
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let centroids_r : Array[Int32] = Array::make(k, 0)
+  let centroids_g : Array[Int32] = Array::make(k, 0)
+  let centroids_b : Array[Int32] = Array::make(k, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = read_u16_q(img.data, i * 2)
   }
@@ -97,7 +97,7 @@ pub fn kmeans_quantize_16(
     centroids_g[i] = data_int[idx * ch + 1]
     centroids_b[i] = data_int[idx * ch + 2]
   }
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let iters = if max_iters < 1 { 20 } else { max_iters }
   for _ in 0..<iters {
     let mut changed = false
@@ -126,10 +126,10 @@ pub fn kmeans_quantize_16(
     if !changed {
       break
     }
-    let sum_r : Array[Int] = Array::make(k, 0)
-    let sum_g : Array[Int] = Array::make(k, 0)
-    let sum_b : Array[Int] = Array::make(k, 0)
-    let cnt : Array[Int] = Array::make(k, 0)
+    let sum_r : Array[Int32] = Array::make(k, 0)
+    let sum_g : Array[Int32] = Array::make(k, 0)
+    let sum_b : Array[Int32] = Array::make(k, 0)
+    let cnt : Array[Int32] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
       sum_r[label] += data_int[i * ch]
@@ -170,8 +170,8 @@ pub fn kmeans_quantize_16(
 /// K-means 色彩量化 float 版本。
 pub fn kmeans_quantize_f(
   img : @types.ImageF,
-  k : Int,
-  max_iters : Int,
+  k : Int32,
+  max_iters : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
@@ -215,7 +215,7 @@ pub fn kmeans_quantize_f(
     centroids_g[i] = data_f[idx * ch + 1]
     centroids_b[i] = data_f[idx * ch + 2]
   }
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let iters = if max_iters < 1 { 20 } else { max_iters }
   for _ in 0..<iters {
     let mut changed = false
@@ -257,7 +257,7 @@ pub fn kmeans_quantize_f(
     let sum_r : Array[Float] = Array::make(k, 0.0F)
     let sum_g : Array[Float] = Array::make(k, 0.0F)
     let sum_b : Array[Float] = Array::make(k, 0.0F)
-    let cnt : Array[Int] = Array::make(k, 0)
+    let cnt : Array[Int32] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
       sum_r[label] += data_f[i * ch]
@@ -298,7 +298,7 @@ pub fn kmeans_quantize_f(
 /// Floyd-Steinberg 误差扩散抖动量化 16-bit 版本。
 pub fn floyd_steinberg_16(
   img : @types.Image16,
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -328,7 +328,7 @@ pub fn floyd_steinberg_16(
   let w = img.width
   let h = img.height
   let n = w * h
-  let buf : Array[Int] = Array::make(n * color_ch, 0)
+  let buf : Array[Int32] = Array::make(n * color_ch, 0)
   for i in 0..<n {
     for c in 0..<color_ch {
       buf[i * color_ch + c] = read_u16_q(img.data, (i * ch + c) * 2)
@@ -403,7 +403,7 @@ pub fn floyd_steinberg_16(
 /// Floyd-Steinberg 误差扩散抖动量化 float 版本。
 pub fn floyd_steinberg_f(
   img : @types.ImageF,
-  levels : Int,
+  levels : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -506,7 +506,7 @@ pub fn floyd_steinberg_f(
 // ========== Median Cut 辅助函数 16-bit ==========
 
 ///|
-fn channel_value_mc16(pixel : (Int, Int, Int), ch : Int) -> Int {
+fn channel_value_mc16(pixel : (Int32, Int32, Int32), ch : Int32) -> Int32 {
   match ch {
     0 => pixel.0
     1 => pixel.1
@@ -516,9 +516,9 @@ fn channel_value_mc16(pixel : (Int, Int, Int), ch : Int) -> Int {
 
 ///|
 fn bucket_max_range_mc16(
-  pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int],
-) -> (Int, Int) {
+  pixels : Array[(Int32, Int32, Int32)],
+  bucket : Array[Int32],
+) -> (Int32, Int32) {
   let mut min_r = 65535
   let mut max_r = 0
   let mut min_g = 65535
@@ -560,9 +560,9 @@ fn bucket_max_range_mc16(
 
 ///|
 fn bucket_average_mc16(
-  pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int],
-) -> (Int, Int, Int) {
+  pixels : Array[(Int32, Int32, Int32)],
+  bucket : Array[Int32],
+) -> (Int32, Int32, Int32) {
   let mut sum_r = 0
   let mut sum_g = 0
   let mut sum_b = 0
@@ -586,7 +586,7 @@ fn bucket_average_mc16(
 /// Median Cut 色彩量化 16-bit 版本。
 pub fn median_cut_16(
   img : @types.Image16,
-  num_colors : Int,
+  num_colors : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -615,18 +615,18 @@ pub fn median_cut_16(
   let h = img.height
   let n = w * h
   let ch = img.channels
-  let pixels : Array[(Int, Int, Int)] = Array::make(n, (0, 0, 0))
+  let pixels : Array[(Int32, Int32, Int32)] = Array::make(n, (0, 0, 0))
   for i in 0..<n {
     let r = read_u16_q(img.data, i * ch * 2)
     let g = if ch >= 2 { read_u16_q(img.data, (i * ch + 1) * 2) } else { r }
     let b = if ch >= 3 { read_u16_q(img.data, (i * ch + 2) * 2) } else { r }
     pixels[i] = (r, g, b)
   }
-  let initial_bucket : Array[Int] = Array::make(n, 0)
+  let initial_bucket : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     initial_bucket[i] = i
   }
-  let buckets : Array[Array[Int]] = [initial_bucket]
+  let buckets : Array[Array[Int32]] = [initial_bucket]
   let mut num_buckets = 1
   while num_buckets < num_colors {
     let mut best_bucket_idx = -1
@@ -653,8 +653,8 @@ pub fn median_cut_16(
       va.compare(vb)
     })
     let mid = sorted.length() / 2
-    let left : Array[Int] = Array::make(mid, 0)
-    let right : Array[Int] = Array::make(sorted.length() - mid, 0)
+    let left : Array[Int32] = Array::make(mid, 0)
+    let right : Array[Int32] = Array::make(sorted.length() - mid, 0)
     for i in 0..<mid {
       left[i] = sorted[i]
     }
@@ -665,7 +665,7 @@ pub fn median_cut_16(
     buckets.push(right)
     num_buckets += 1
   }
-  let palette : Array[(Int, Int, Int)] = Array::make(
+  let palette : Array[(Int32, Int32, Int32)] = Array::make(
     buckets.length(),
     (0, 0, 0),
   )
@@ -701,7 +701,7 @@ pub fn median_cut_16(
 // ========== Median Cut 辅助函数 float ==========
 
 ///|
-fn channel_value_mcf(pixel : (Float, Float, Float), ch : Int) -> Float {
+fn channel_value_mcf(pixel : (Float, Float, Float), ch : Int32) -> Float {
   match ch {
     0 => pixel.0
     1 => pixel.1
@@ -712,8 +712,8 @@ fn channel_value_mcf(pixel : (Float, Float, Float), ch : Int) -> Float {
 ///|
 fn bucket_max_range_mcf(
   pixels : Array[(Float, Float, Float)],
-  bucket : Array[Int],
-) -> (Float, Int) {
+  bucket : Array[Int32],
+) -> (Float, Int32) {
   let mut min_r = 1.0F
   let mut max_r = 0.0F
   let mut min_g = 1.0F
@@ -756,7 +756,7 @@ fn bucket_max_range_mcf(
 ///|
 fn bucket_average_mcf(
   pixels : Array[(Float, Float, Float)],
-  bucket : Array[Int],
+  bucket : Array[Int32],
 ) -> (Float, Float, Float) {
   let mut sum_r = 0.0F
   let mut sum_g = 0.0F
@@ -781,7 +781,7 @@ fn bucket_average_mcf(
 /// Median Cut 色彩量化 float 版本。
 pub fn median_cut_f(
   img : @types.ImageF,
-  num_colors : Int,
+  num_colors : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -817,11 +817,11 @@ pub fn median_cut_f(
     let b = if ch >= 3 { read_f32_q(img.data, (i * ch + 2) * 4) } else { r }
     pixels[i] = (r, g, b)
   }
-  let initial_bucket : Array[Int] = Array::make(n, 0)
+  let initial_bucket : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     initial_bucket[i] = i
   }
-  let buckets : Array[Array[Int]] = [initial_bucket]
+  let buckets : Array[Array[Int32]] = [initial_bucket]
   let mut num_buckets = 1
   while num_buckets < num_colors {
     let mut best_bucket_idx = -1
@@ -848,8 +848,8 @@ pub fn median_cut_f(
       va.compare(vb)
     })
     let mid = sorted.length() / 2
-    let left : Array[Int] = Array::make(mid, 0)
-    let right : Array[Int] = Array::make(sorted.length() - mid, 0)
+    let left : Array[Int32] = Array::make(mid, 0)
+    let right : Array[Int32] = Array::make(sorted.length() - mid, 0)
     for i in 0..<mid {
       left[i] = sorted[i]
     }

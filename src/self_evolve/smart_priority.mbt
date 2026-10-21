@@ -24,7 +24,7 @@ pub extend ScoreFactor with Eq::{not_equal, equal}
 /// Smart score for a single op.
 pub(all) struct SmartScore {
   op_tag : String
-  score : Int
+  score : Int32
   factors : Array[ScoreFactor]
   recommendation : String
 } derive(Eq, @debug.Debug)
@@ -40,8 +40,8 @@ pub extend SmartScore with Eq::{not_equal, equal}
 /// Smart priority report.
 pub(all) struct SmartPriorityReport {
   scores : Array[SmartScore]
-  total_ops : Int
-  high_priority_count : Int
+  total_ops : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -126,7 +126,7 @@ pub fn score_all_ops() -> SmartPriorityReport {
 /// Get top N priority ops.
 pub fn SmartPriorityReport::top_priority(
   self : SmartPriorityReport,
-  n : Int,
+  n : Int32,
 ) -> Array[SmartScore] {
   let sorted : Array[SmartScore] = []
   for s in self.scores {

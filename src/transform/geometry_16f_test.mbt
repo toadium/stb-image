@@ -1,7 +1,12 @@
 // 高级几何变换 16-bit/float 变体测试
 
 ///|
-fn make_img16_geo(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_geo(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +21,12 @@ fn make_img16_geo(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_geo(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_geo(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()

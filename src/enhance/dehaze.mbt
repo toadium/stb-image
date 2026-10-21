@@ -4,12 +4,12 @@
 ///|
 /// 去雾配置
 pub(all) struct DehazeConfig {
-  patch_size : Int // 暗通道 patch 大小
+  patch_size : Int32 // 暗通道 patch 大小
   omega : Double // 透射率保留系数（0-1，越大去雾越强）
   t_min : Double // 最小透射率
-  guided_radius : Int // 引导滤波半径
+  guided_radius : Int32 // 引导滤波半径
   guided_eps : Double // 引导滤波正则化参数
-  max_atmospheric : Int // 大气光候选像素比例（前 0.1%）
+  max_atmospheric : Int32 // 大气光候选像素比例（前 0.1%）
 }
 
 ///|
@@ -30,7 +30,7 @@ pub fn dehaze_default_config() -> DehazeConfig {
 /// 暗通道：在局部 patch 内，取每个像素 RGB 三通道的最小值，再取 patch 内最小值
 pub fn dark_channel(
   img : @types.Image,
-  patch_size? : Int = 15,
+  patch_size~ : Int32 = 15,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -108,8 +108,8 @@ pub fn dark_channel(
 pub fn estimate_atmospheric_light(
   img : @types.Image,
   dark : @types.Image,
-  top_percent? : Int = 1000,
-) -> Array[Int] raise @types.LoadError {
+  top_percent~ : Int32 = 1000,
+) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -144,7 +144,7 @@ pub fn estimate_atmospheric_light(
   let img_data = img.data
   let dark_data = dark.data
   // 收集所有像素的暗通道值和坐标
-  let pixels : Array[(Int, Int)] = []
+  let pixels : Array[(Int32, Int32)] = []
   for y in 0..<h {
     for x in 0..<w {
       pixels.push((dark_data[y * w + x].to_int(), y * w + x))
@@ -152,7 +152,7 @@ pub fn estimate_atmospheric_light(
   }
   // 按暗通道值降序排序（选择排序，取前 top 个）
   let count = if top < pixels.length() { top } else { pixels.length() }
-  let selected_indices : Array[Int] = []
+  let selected_indices : Array[Int32] = []
   let used : Array[Bool] = Array::make(pixels.length(), false)
   for _ in 0..<count {
     let mut max_val = -1
@@ -167,7 +167,7 @@ pub fn estimate_atmospheric_light(
     selected_indices.push(pixels[max_idx].1)
   }
   // 在这些像素中取每个通道的最大值
-  let atmospheric : Array[Int] = []
+  let atmospheric : Array[Int32] = []
   for c in 0..<channels {
     let mut max_val = 0
     for idx in selected_indices {
@@ -186,9 +186,9 @@ pub fn estimate_atmospheric_light(
 /// t(x) = 1 - omega * dark_channel(I/A)
 pub fn estimate_transmission(
   img : @types.Image,
-  atmospheric : Array[Int],
-  omega? : Double = 0.95,
-  patch_size? : Int = 15,
+  atmospheric : Array[Int32],
+  omega~ : Double = 0.95,
+  patch_size~ : Int32 = 15,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -272,8 +272,8 @@ pub fn estimate_transmission(
 pub fn guided_filter_image(
   input : @types.Image,
   guide : @types.Image,
-  radius? : Int = 20,
-  eps? : Double = 0.0001,
+  radius~ : Int32 = 20,
+  eps~ : Double = 0.0001,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if input.width <= 0 || input.height <= 0 {
@@ -358,8 +358,8 @@ pub fn guided_filter_image(
 pub fn dehaze_recover(
   img : @types.Image,
   transmission : @types.Image,
-  atmospheric : Array[Int],
-  t_min? : Double = 0.1,
+  atmospheric : Array[Int32],
+  t_min~ : Double = 0.1,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

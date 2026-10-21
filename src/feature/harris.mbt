@@ -3,8 +3,8 @@
 ///|
 /// 角点信息
 pub(all) struct CornerPoint {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   response : Float // Harris 响应值
 }
 
@@ -14,9 +14,9 @@ pub(all) struct CornerPoint {
 /// k 为 Harris 参数（默认 0.04），threshold 为响应阈值，min_distance 为角点间最小距离。
 pub fn harris_corners(
   img : @types.Image,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -168,7 +168,11 @@ pub fn harris_corners(
 
 ///|
 /// 3x3 高斯模糊（sigma=1.0），分离内部/边界区域以消除热点 clamp 调用
-fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
+fn harris_gaussian_blur(
+  data : Array[Float],
+  w : Int32,
+  h : Int32,
+) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)
   let kernel : Array[Float] = [
@@ -215,8 +219,8 @@ fn harris_gaussian_blur(data : Array[Float], w : Int, h : Int) -> Array[Float] {
 pub fn draw_corners(
   img : @types.Image,
   corners : Array[CornerPoint],
-  color? : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
-  radius? : Int = 2,
+  color~ : Array[Byte] = [b'\xFF', b'\x00', b'\x00'],
+  radius~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

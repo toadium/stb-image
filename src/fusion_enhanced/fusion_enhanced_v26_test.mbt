@@ -2,7 +2,7 @@
 // 加权平均/最大值/最小值/均值融合、高斯模糊/下采样/上采样、拉普拉斯金字塔融合、相位相关配准
 
 ///|
-fn make_fe_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_fe_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_fe_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_fe_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_fe_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

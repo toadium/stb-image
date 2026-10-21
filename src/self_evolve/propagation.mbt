@@ -24,8 +24,8 @@ pub extend PropagationStep with Eq::{not_equal, equal}
 /// Degradation propagation report.
 pub(all) struct PropagationReport {
   steps : Array[PropagationStep]
-  total_propagations : Int
-  chain_length : Int
+  total_propagations : Int32
+  chain_length : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

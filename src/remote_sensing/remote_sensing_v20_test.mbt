@@ -2,7 +2,7 @@
 // 植被指数、地物分类、变化检测、纹理特征、光谱分析、质量评估
 
 ///|
-fn make_band(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_band(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,9 +13,9 @@ fn make_band(w : Int, h : Int, value : Byte) -> @types.Image {
 
 ///|
 fn make_rs_image(
-  w : Int,
-  h : Int,
-  bands : Int,
+  w : Int32,
+  h : Int32,
+  bands : Int32,
 ) -> @remote_sensing.RemoteSensingImage {
   @remote_sensing.create_default_remote_sensing_image(w, h, bands)
 }

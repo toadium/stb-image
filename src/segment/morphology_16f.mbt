@@ -16,7 +16,7 @@ pub fn erode_16(img : @types.Image16) -> @types.Image16 {
   let n = w * h
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_m(img.data, i * 2)
   }
@@ -174,7 +174,7 @@ pub fn dilate_16(img : @types.Image16) -> @types.Image16 {
   let n = w * h
   let bpp = ch * 2
   let out : Array[Byte] = Array::make(n * bpp, b'\x00')
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_m(img.data, i * 2)
   }
@@ -498,7 +498,7 @@ pub fn erode_custom_16(
   let h = img.height
   let n = w * h
   let bpp = ch * 2
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_m(img.data, i * 2)
   }
@@ -590,7 +590,7 @@ pub fn dilate_custom_16(
   let h = img.height
   let n = w * h
   let bpp = ch * 2
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = read_u16_le_m(img.data, i * 2)
   }
@@ -710,7 +710,7 @@ pub fn morph_close_custom_f(
 // ========== 辅助函数 ==========
 
 ///|
-fn clamp_morph(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_morph(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -721,18 +721,18 @@ fn clamp_morph(v : Int, lo : Int, hi : Int) -> Int {
 }
 
 ///|
-fn read_u16_le_m(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_m(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_m(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_m(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_m(data : Bytes, offset : Int) -> Float {
+fn read_float_le_m(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -742,7 +742,7 @@ fn read_float_le_m(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_m(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_m(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()

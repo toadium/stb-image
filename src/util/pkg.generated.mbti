@@ -7,11 +7,11 @@ import {
 }
 
 // Values
-pub fn add_border(@types.Image, Int, Int, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+pub fn add_border(@types.Image, Int32, Int32, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn add_noise_gaussian(@types.Image, Float, UInt) -> @types.Image
+pub fn add_noise_gaussian(@types.Image, Float, UInt32) -> @types.Image
 
-pub fn add_noise_salt_pepper(@types.Image, Float, UInt) -> @types.Image
+pub fn add_noise_salt_pepper(@types.Image, Float, UInt32) -> @types.Image
 
 pub fn alpha_blend(@types.Image, @types.Image, Float) -> @types.Image raise @types.LoadError
 
@@ -55,15 +55,15 @@ pub fn contrast_value(@types.Image) -> Float
 
 pub fn entropy_value(@types.Image) -> Float
 
-pub fn extract_channel(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn extract_channel(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
-pub fn fill_alpha(@types.Image, Int, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
+pub fn fill_alpha(@types.Image, Int32, Byte, Byte, Byte) -> @types.Image raise @types.LoadError
 
 pub fn flip_horizontal(@types.Image) -> @types.Image
 
 pub fn flip_vertical(@types.Image) -> @types.Image
 
-pub fn gradient_map(@types.Image, Array[(Int, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
+pub fn gradient_map(@types.Image, Array[(Int32, Byte, Byte, Byte)]) -> @types.Image raise @types.LoadError
 
 pub fn hstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
@@ -75,23 +75,23 @@ pub fn mean_value_16(@types.Image16) -> Float
 
 pub fn mean_value_f(@types.ImageF) -> Float
 
-pub fn median_value(@types.Image) -> Int
+pub fn median_value(@types.Image) -> Int32
 
-pub fn pad(@types.Image, Int, Int, Array[Byte]) -> @types.Image raise @types.LoadError
+pub fn pad(@types.Image, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError
 
-pub fn pixelate(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn pixelate(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
-pub fn posterize(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn posterize(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
-pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int) -> @types.Image raise @types.LoadError
+pub fn replace_color(@types.Image, Array[Byte], Array[Byte], Int32) -> @types.Image raise @types.LoadError
 
 pub fn set_alpha(@types.Image, Byte) -> @types.Image raise @types.LoadError
 
-pub fn swap_channels(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+pub fn swap_channels(@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError
 
-pub fn threshold(@types.Image, Int) -> @types.Image
+pub fn threshold(@types.Image, Int32) -> @types.Image
 
-pub fn tile(@types.Image, Int, Int) -> @types.Image raise @types.LoadError
+pub fn tile(@types.Image, Int32, Int32) -> @types.Image raise @types.LoadError
 
 pub fn transpose(@types.Image) -> @types.Image
 
@@ -105,8 +105,8 @@ pub fn vstack(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 pub(all) struct ImageStats {
   mean : Float
   stddev : Float
-  min_val : Int
-  max_val : Int
+  min_val : Int32
+  max_val : Int32
 } derive(Eq, @debug.Debug)
 pub fn ImageStats::equal(Self, Self) -> Bool
 pub fn ImageStats::not_equal(Self, Self) -> Bool

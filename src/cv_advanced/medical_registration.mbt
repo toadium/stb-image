@@ -60,7 +60,7 @@ pub(all) struct MedRegResult {
   rigid : MedRigidTransform
   affine : MedAffineTransform
   final_error : Double
-  iterations : Int
+  iterations : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -74,8 +74,8 @@ pub extend MedRegResult with Eq::{not_equal, equal}
 /// Apply rigid transform.
 pub fn medreg_apply_rigid(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   transform : MedRigidTransform,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -107,8 +107,8 @@ pub fn medreg_apply_rigid(
 /// Apply affine transform.
 pub fn medreg_apply_affine(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   transform : MedAffineTransform,
 ) -> Array[Double] {
   let result : Array[Double] = []
@@ -139,7 +139,7 @@ pub fn medreg_apply_affine(
 pub fn medreg_mutual_information(
   fixed : Array[Double],
   moving : Array[Double],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Double {
   let n = fixed.length()
   if n == 0 || moving.length() == 0 {
@@ -170,9 +170,9 @@ pub fn medreg_mutual_information(
   if fixed_range <= 0.0 || moving_range <= 0.0 {
     return 0.0
   }
-  let hist : Array[Array[Int]] = []
+  let hist : Array[Array[Int32]] = []
   for _ in 0..<num_bins {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in 0..<num_bins {
       row.push(0)
     }
@@ -219,9 +219,9 @@ pub fn medreg_mutual_information(
 pub fn medreg_rigid(
   fixed : Array[Double],
   moving : Array[Double],
-  width : Int,
-  height : Int,
-  max_iterations : Int,
+  width : Int32,
+  height : Int32,
+  max_iterations : Int32,
 ) -> MedRegResult {
   let mut best_angle = 0.0
   let mut best_tx = 0.0
@@ -278,8 +278,8 @@ pub fn medreg_rigid(
 pub fn medreg_affine(
   fixed : Array[Double],
   moving : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> MedRegResult {
   let mut best_a11 = 1.0
   let mut best_a22 = 1.0

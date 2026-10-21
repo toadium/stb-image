@@ -10,7 +10,7 @@ pub fn analyze_cfa_pattern(@types.Image) -> CfaAnalysisResult
 
 pub fn analyze_dct_coefficients(@types.Image) -> DctCoefficientResult
 
-pub fn analyze_ela(@types.Image, Int) -> ElaAnalysisResult raise @types.LoadError
+pub fn analyze_ela(@types.Image, Int32) -> ElaAnalysisResult raise @types.LoadError
 
 pub fn analyze_illumination_consistency(@types.Image) -> IlluminationConsistencyResult
 
@@ -20,9 +20,9 @@ pub fn analyze_metadata_forensics(@types.Image) -> MetadataForensicsResult
 
 pub fn analyze_noise_residual(@types.Image) -> NoiseResidualResult
 
-pub fn detect_clone_regions(@types.Image, Int, Double) -> CloneDetectionResult raise @types.LoadError
+pub fn detect_clone_regions(@types.Image, Int32, Double) -> CloneDetectionResult raise @types.LoadError
 
-pub fn detect_tamper_comprehensive(@types.Image, Int) -> TamperDetectionResult raise @types.LoadError
+pub fn detect_tamper_comprehensive(@types.Image, Int32) -> TamperDetectionResult raise @types.LoadError
 
 // Errors
 
@@ -35,8 +35,8 @@ pub(all) struct CfaAnalysisResult {
 }
 
 pub(all) struct CloneDetectionResult {
-  clone_region_count : Int
-  clone_regions : Array[(Int, Int, Int, Int)]
+  clone_region_count : Int32
+  clone_regions : Array[(Int32, Int32, Int32, Int32)]
   clone_similarity : Double
   has_clone : Bool
 }
@@ -66,11 +66,11 @@ pub(all) struct IlluminationConsistencyResult {
 }
 
 pub(all) struct JpegGhostResult {
-  ghost_quality_levels : Array[Int]
-  ghost_region_count : Int
+  ghost_quality_levels : Array[Int32]
+  ghost_region_count : Int32
   has_ghost : Bool
-  primary_quality : Int
-  secondary_quality : Int
+  primary_quality : Int32
+  secondary_quality : Int32
 }
 
 pub(all) struct MetadataForensicsResult {
@@ -94,7 +94,7 @@ pub(all) struct TamperDetectionResult {
   is_tampered : Bool
   tamper_probability : Double
   tamper_type : String
-  tampered_regions : Array[(Int, Int, Int, Int)]
+  tampered_regions : Array[(Int32, Int32, Int32, Int32)]
   confidence : Double
   analysis_details : String
 }

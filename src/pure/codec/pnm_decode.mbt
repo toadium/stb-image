@@ -4,12 +4,16 @@
 // 规范: https://netpbm.sourceforge.net/doc/pgm.html / ppm.html
 
 ///|
-fn pnm_is_whitespace(b : Int) -> Bool {
+fn pnm_is_whitespace(b : Int32) -> Bool {
   b == 0x20 || b == 0x09 || b == 0x0A || b == 0x0D
 }
 
 ///|
-fn pnm_skip_ws_and_comments(data : Bytes, pos : Ref[Int], len : Int) -> Unit {
+fn pnm_skip_ws_and_comments(
+  data : Bytes,
+  pos : Ref[Int32],
+  len : Int32,
+) -> Unit {
   while pos.val < len {
     let b = data[pos.val].to_int()
     if pnm_is_whitespace(b) {
@@ -32,9 +36,9 @@ fn pnm_skip_ws_and_comments(data : Bytes, pos : Ref[Int], len : Int) -> Unit {
 ///|
 fn pnm_read_ascii_int(
   data : Bytes,
-  pos : Ref[Int],
-  len : Int,
-) -> Int raise @types.LoadError {
+  pos : Ref[Int32],
+  len : Int32,
+) -> Int32 raise @types.LoadError {
   let start = pos.val
   while pos.val < len {
     let b = data[pos.val].to_int()

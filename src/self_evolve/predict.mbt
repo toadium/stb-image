@@ -25,8 +25,8 @@ pub extend PredictionKind with Eq::{not_equal, equal}
 pub(all) struct EvolutionPrediction {
   op_tag : String
   kind : PredictionKind
-  confidence : Int
-  predicted_value : Int
+  confidence : Int32
+  predicted_value : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -41,8 +41,8 @@ pub extend EvolutionPrediction with Eq::{not_equal, equal}
 /// Prediction report.
 pub(all) struct PredictionReport {
   predictions : Array[EvolutionPrediction]
-  total : Int
-  high_risk_count : Int
+  total : Int32
+  high_risk_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

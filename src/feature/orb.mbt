@@ -5,8 +5,8 @@
 ///|
 /// ORB 关键点：位置 + 响应 + 方向
 pub(all) struct OrbKeyPoint {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   response : Float
   angle : Float // 方向角（弧度）
 }
@@ -15,22 +15,22 @@ pub(all) struct OrbKeyPoint {
 /// ORB 描述子：256 位二进制描述（32 个 Int）
 pub(all) struct OrbDescriptor {
   kp : OrbKeyPoint
-  data : Array[Int] // 32 个 Int，每个 32 位，共 256 位
+  data : Array[Int32] // 32 个 Int，每个 32 位，共 256 位
 }
 
 ///|
 /// 特征匹配结果
 pub(all) struct DescriptorMatch {
-  query_idx : Int
-  train_idx : Int
-  distance : Int // 汉明距离
+  query_idx : Int32
+  train_idx : Int32
+  distance : Int32 // 汉明距离
 }
 
 // ==================== FAST 角点检测 ====================
 
 ///|
 /// FAST-9 圆周偏移（半径 3，16 个点）
-let fast_offsets : Array[(Int, Int)] = [
+let fast_offsets : Array[(Int32, Int32)] = [
   (0, -3),
   (1, -3),
   (2, -2),
@@ -52,10 +52,10 @@ let fast_offsets : Array[(Int, Int)] = [
 ///|
 /// FAST-9 角点检测
 fn fast_detect(
-  gray : Array[Int],
-  w : Int,
-  h : Int,
-  threshold : Int,
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
+  threshold : Int32,
 ) -> Array[OrbKeyPoint] {
   let corners : Array[OrbKeyPoint] = []
   for y in 3..<(h - 3) {
@@ -64,7 +64,7 @@ fn fast_detect(
       let high_thresh = p + threshold
       let low_thresh = p - threshold
       // 读取圆周 16 个像素
-      let vals : Array[Int] = Array::make(16, 0)
+      let vals : Array[Int32] = Array::make(16, 0)
       for i in 0..<16 {
         let (dx, dy) = fast_offsets[i]
         vals[i] = gray[(y + dy) * w + (x + dx)]
@@ -83,7 +83,7 @@ fn fast_detect(
 
 ///|
 /// 检查 FAST-9 条件：圆周上是否有 9 个连续像素都 > high 或都 < low
-fn check_fast9(vals : Array[Int], high : Int, low : Int) -> Bool {
+fn check_fast9(vals : Array[Int32], high : Int32, low : Int32) -> Bool {
   // 将 16 个点复制两遍以处理环绕
   let brighter : Array[Bool] = Array::make(32, false)
   let darker : Array[Bool] = Array::make(32, false)
@@ -121,11 +121,11 @@ fn check_fast9(vals : Array[Int], high : Int, low : Int) -> Bool {
 /// 计算关键点方向（图像矩质心法）
 /// θ = atan2(m01, m10), m_pq = Σ x^p * y^q * I(x,y)
 fn compute_orientation(
-  gray : Array[Int],
-  w : Int,
-  h : Int,
-  cx : Int,
-  cy : Int,
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
+  cx : Int32,
+  cy : Int32,
 ) -> Float {
   let r = 15 // 取 31x31 patch
   let mut m01 = 0.0F
@@ -159,7 +159,7 @@ fn brief_pattern() -> Array[(Float, Float, Float, Float)] {
   let pairs : Array[(Float, Float, Float, Float)] = []
   // 使用简单的 LCG 伪随机生成器
   let mut seed = 12345
-  fn next_rand() -> Int {
+  fn next_rand() -> Int32 {
     seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF
     seed
   }
@@ -176,13 +176,13 @@ fn brief_pattern() -> Array[(Float, Float, Float, Float)] {
 ///|
 /// 计算 rBRIEF 描述子（旋转后的 BRIEF）
 fn compute_brief(
-  gray : Array[Int],
-  w : Int,
-  h : Int,
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
   kp : OrbKeyPoint,
   pattern : Array[(Float, Float, Float, Float)],
-) -> Array[Int] {
-  let desc : Array[Int] = Array::make(32, 0)
+) -> Array[Int32] {
+  let desc : Array[Int32] = Array::make(32, 0)
   let cos_a = Float::from_double(@math.cos(kp.angle.to_double()))
   let sin_a = Float::from_double(@math.sin(kp.angle.to_double()))
   for i in 0..<256 {
@@ -208,14 +208,14 @@ fn compute_brief(
 ///|
 /// 双线性插值采样
 fn sample_bilinear(
-  gray : Array[Int],
-  w : Int,
-  h : Int,
-  cx : Int,
-  cy : Int,
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
+  cx : Int32,
+  cy : Int32,
   dx : Float,
   dy : Float,
-) -> Int {
+) -> Int32 {
   let fx = Float::from_int(cx) + dx
   let fy = Float::from_int(cy) + dy
   let x0 = fx.to_int()
@@ -242,12 +242,12 @@ fn sample_bilinear(
 // ==================== 灰度转换 ====================
 
 ///|
-fn to_gray_orb(img : @types.Image) -> (Array[Int], Int, Int) {
+fn to_gray_orb(img : @types.Image) -> (Array[Int32], Int32, Int32) {
   let w = img.width
   let h = img.height
   let ch = img.channels
   let n = w * h
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch >= 3 {
       let r = img.data[i * ch].to_int()
@@ -269,8 +269,8 @@ fn to_gray_orb(img : @types.Image) -> (Array[Int], Int, Int) {
 /// max_features 控制最大特征数，threshold 为 FAST 阈值。
 pub fn orb_detect(
   img : @types.Image,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[OrbDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -328,7 +328,7 @@ pub fn orb_detect(
 
 ///|
 /// ORB 描述子汉明距离
-pub fn orb_hamming(d1 : OrbDescriptor, d2 : OrbDescriptor) -> Int {
+pub fn orb_hamming(d1 : OrbDescriptor, d2 : OrbDescriptor) -> Int32 {
   let mut dist = 0
   for i in 0..<32 {
     let xor = d1.data[i] ^ d2.data[i]
@@ -351,7 +351,7 @@ pub fn orb_hamming(d1 : OrbDescriptor, d2 : OrbDescriptor) -> Int {
 pub fn orb_match(
   query : Array[OrbDescriptor],
   train : Array[OrbDescriptor],
-  max_distance? : Int = 64,
+  max_distance~ : Int32 = 64,
 ) -> Array[DescriptorMatch] raise @types.LoadError {
   // 参数验证
   if query.length() == 0 {

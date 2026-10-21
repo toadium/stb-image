@@ -6,7 +6,7 @@ import {
 }
 
 // Values
-pub fn convert_channels_pure(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn convert_channels_pure(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
 pub fn premultiply_alpha_pure(@types.Image) -> @types.Image raise @types.LoadError
 

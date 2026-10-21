@@ -1,7 +1,7 @@
 // v13.5.0 OCR 性能优化测试
 
 ///|
-fn make_perf_img(w : Int, h : Int) -> @types.Image {
+fn make_perf_img(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

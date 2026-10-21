@@ -20,9 +20,9 @@ pub fn affine_translation(Double, Double) -> AffineTransform
 
 pub fn align_images(@types.Image, @types.Image) -> (@types.Image, RegistrationResult) raise @types.LoadError
 
-pub fn estimate_translation(@types.Image, @types.Image, max_offset? : Int) -> RegistrationResult raise @types.LoadError
+pub fn estimate_translation(@types.Image, @types.Image, max_offset? : Int32) -> RegistrationResult raise @types.LoadError
 
-pub fn warp_affine_transform(@types.Image, AffineTransform, out_width? : Int, out_height? : Int) -> @types.Image raise @types.LoadError
+pub fn warp_affine_transform(@types.Image, AffineTransform, out_width? : Int32, out_height? : Int32) -> @types.Image raise @types.LoadError
 
 // Errors
 

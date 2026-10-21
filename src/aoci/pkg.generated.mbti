@@ -20,7 +20,7 @@ pub fn route_by_kind(SymbolIndex, SymbolKind) -> Array[SymbolCoord]
 
 pub fn route_by_package(SymbolIndex, String) -> Array[SymbolCoord]
 
-pub fn route_top_k(SymbolIndex, String, Int) -> Array[SymbolCoord]
+pub fn route_top_k(SymbolIndex, String, Int32) -> Array[SymbolCoord]
 
 pub fn verify_all(SymbolIndex, budget? : ContextBudget) -> VerifyResult
 
@@ -36,18 +36,18 @@ pub fn verify_keyword_coverage(SymbolIndex) -> VerifyResult
 
 // Types and methods
 pub(all) struct ContextBudget {
-  total_quota : Int
-  used : Int
-  partition : Array[(String, Int)]
+  total_quota : Int32
+  used : Int32
+  partition : Array[(String, Int32)]
 } derive(Eq, @debug.Debug)
-pub fn ContextBudget::add_partition(Self, String, Int) -> Self
+pub fn ContextBudget::add_partition(Self, String, Int32) -> Self
 pub fn ContextBudget::allocate(Self, Array[SymbolCoord]) -> Array[SymbolCoord]
-pub fn ContextBudget::allocate_with_priority(Self, Array[(SymbolCoord, Int)]) -> Array[SymbolCoord]
+pub fn ContextBudget::allocate_with_priority(Self, Array[(SymbolCoord, Int32)]) -> Array[SymbolCoord]
 pub fn ContextBudget::equal(Self, Self) -> Bool
 pub fn ContextBudget::is_exhausted(Self) -> Bool
-pub fn ContextBudget::make(Int) -> Self
+pub fn ContextBudget::make(Int32) -> Self
 pub fn ContextBudget::not_equal(Self, Self) -> Bool
-pub fn ContextBudget::remaining(Self) -> Int
+pub fn ContextBudget::remaining(Self) -> Int32
 pub fn ContextBudget::to_repr(Self) -> @debug.Repr
 pub fn ContextBudget::usage_report(Self) -> String
 
@@ -60,7 +60,7 @@ pub(all) struct SymbolCoord {
   keywords : Array[String]
 } derive(Eq, @debug.Debug)
 pub fn SymbolCoord::equal(Self, Self) -> Bool
-pub fn SymbolCoord::estimated_tokens(Self) -> Int
+pub fn SymbolCoord::estimated_tokens(Self) -> Int32
 pub fn SymbolCoord::full_name(Self) -> String
 pub fn SymbolCoord::has_keyword(Self, String) -> Bool
 pub fn SymbolCoord::make(pkg~ : String, name~ : String, kind~ : SymbolKind, signature? : String, doc? : String, keywords? : Array[String]) -> Self
@@ -69,19 +69,19 @@ pub fn SymbolCoord::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SymbolIndex {
   symbols : Array[SymbolCoord]
-  keyword_map : Array[(String, Array[Int])]
+  keyword_map : Array[(String, Array[Int32])]
 } derive(Eq, @debug.Debug)
 pub fn SymbolIndex::equal(Self, Self) -> Bool
 pub fn SymbolIndex::find_by_keyword(Self, String) -> Array[SymbolCoord]
 pub fn SymbolIndex::find_by_kind(Self, SymbolKind) -> Array[SymbolCoord]
 pub fn SymbolIndex::find_by_name(Self, String) -> Array[SymbolCoord]
 pub fn SymbolIndex::find_by_package(Self, String) -> Array[SymbolCoord]
-pub fn SymbolIndex::get(Self, Int) -> SymbolCoord raise Failure
+pub fn SymbolIndex::get(Self, Int32) -> SymbolCoord raise Failure
 pub fn SymbolIndex::make(Array[SymbolCoord]) -> Self
 pub fn SymbolIndex::not_equal(Self, Self) -> Bool
-pub fn SymbolIndex::size(Self) -> Int
+pub fn SymbolIndex::size(Self) -> Int32
 pub fn SymbolIndex::to_repr(Self) -> @debug.Repr
-pub fn SymbolIndex::total_tokens(Self) -> Int
+pub fn SymbolIndex::total_tokens(Self) -> Int32
 
 pub(all) enum SymbolKind {
   Function

@@ -5,8 +5,8 @@
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn adaptive_threshold_mean(
   img : @types.Image,
-  block_size : Int,
-  c : Int,
+  block_size : Int32,
+  c : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -39,7 +39,7 @@ pub fn adaptive_threshold_mean(
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   let half = block_size / 2
   // 预计算像素 Int 数组
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -113,8 +113,8 @@ pub fn adaptive_threshold_mean(
 /// 自适应阈值（高斯加权法）。以每个像素周围 block_size×block_size 区域的高斯加权均值减去 C 作为局部阈值。
 pub fn adaptive_threshold_gaussian(
   img : @types.Image,
-  block_size : Int,
-  c : Int,
+  block_size : Int32,
+  c : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -263,7 +263,7 @@ pub fn threshold_otsu(
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   for c_idx in 0..<color_ch {
-    let hist : Array[Int] = Array::make(256, 0)
+    let hist : Array[Int32] = Array::make(256, 0)
     for i in 0..<n {
       hist[img.data[i * ch + c_idx].to_int()] += 1
     }

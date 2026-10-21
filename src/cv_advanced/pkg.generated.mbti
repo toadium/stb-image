@@ -9,9 +9,9 @@ import {
 // Values
 pub fn add_dp_noise(Array[Double], Double, Double) -> Array[Double]
 
-pub fn add_map_point(SlamBackend, Point3D, Int, Double) -> SlamBackend
+pub fn add_map_point(SlamBackend, Point3D, Int32, Double) -> SlamBackend
 
-pub fn aggregate_neighbors(GraphData, Int, GNNType) -> Array[Double]
+pub fn aggregate_neighbors(GraphData, Int32, GNNType) -> Array[Double]
 
 pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
@@ -33,9 +33,9 @@ pub fn atmo_rayleigh_correction(Array[Array[Double]], Double, Double, Double) ->
 
 pub fn atmo_reflectance(Array[Array[Double]], AtmoParams) -> Array[Array[Double]]
 
-pub fn bayer_channel_at(BayerPattern, Int, Int) -> Int
+pub fn bayer_channel_at(BayerPattern, Int32, Int32) -> Int32
 
-pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig, Int) -> AutoMLResult
+pub fn bayesian_optimize((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig, Int32) -> AutoMLResult
 
 pub fn beta_vae_loss(Array[Double], Array[Double], Array[Double], Array[Double], Double) -> Double
 
@@ -43,17 +43,17 @@ pub fn bf_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor]) -> Arra
 
 pub fn bf_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
 
-pub fn bokeh_blur_circular(@types.Image, Array[Double], Int) -> @types.Image
+pub fn bokeh_blur_circular(@types.Image, Array[Double], Int32) -> @types.Image
 
-pub fn bokeh_blur_polygonal(@types.Image, Array[Double], Int, ApertureShape) -> @types.Image
+pub fn bokeh_blur_polygonal(@types.Image, Array[Double], Int32, ApertureShape) -> @types.Image
 
 pub fn bokeh_pipeline(@types.Image, DepthMap, BokehParams) -> BokehResult
 
-pub fn calculate_iou(Array[Int], Array[Int]) -> Double
+pub fn calculate_iou(Array[Int32], Array[Int32]) -> Double
 
-pub fn calibrate_camera(ChessboardCorners, Int, Int) -> CalibrationResult
+pub fn calibrate_camera(ChessboardCorners, Int32, Int32) -> CalibrationResult
 
-pub fn change_count_changed(Array[Array[Int]]) -> Int
+pub fn change_count_changed(Array[Array[Int32]]) -> Int32
 
 pub fn change_detect(Array[Array[Double]], Array[Array[Double]], ChangeMethod, Double) -> ChangeResult
 
@@ -63,55 +63,55 @@ pub fn change_log_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Arr
 
 pub fn change_multitemporal_trend(Array[Array[Array[Double]]]) -> Array[Array[Double]]
 
-pub fn change_otsu_threshold(Array[Array[Double]], Int) -> Double
+pub fn change_otsu_threshold(Array[Array[Double]], Int32) -> Double
 
-pub fn change_rate(Array[Array[Int]]) -> Double
+pub fn change_rate(Array[Array[Int32]]) -> Double
 
 pub fn change_ratio(Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Double]]
 
-pub fn change_threshold(Array[Array[Double]], Double) -> Array[Array[Int]]
+pub fn change_threshold(Array[Array[Double]], Double) -> Array[Array[Int32]]
 
 pub fn change_vector_analysis(Array[Array[Array[Double]]], Array[Array[Array[Double]]]) -> Array[Array[Double]]
 
 pub fn check_epipolar_constraint(EpipolarLine, Double, Double) -> Double
 
-pub fn classify_build_result(Array[Array[Int]], Int) -> ClassificationResult
+pub fn classify_build_result(Array[Array[Int32]], Int32) -> ClassificationResult
 
-pub fn classify_build_sample(Int, Array[Double]) -> TrainingSample
+pub fn classify_build_sample(Int32, Array[Double]) -> TrainingSample
 
-pub fn classify_compute_class_means(Array[TrainingSample], Int) -> Array[Array[Double]]
+pub fn classify_compute_class_means(Array[TrainingSample], Int32) -> Array[Array[Double]]
 
-pub fn classify_confusion_matrix(Array[Array[Int]], Array[Array[Int]], Int) -> Array[Array[Int]]
+pub fn classify_confusion_matrix(Array[Array[Int32]], Array[Array[Int32]], Int32) -> Array[Array[Int32]]
 
-pub fn classify_isodata(Array[Array[Array[Double]]], Int, Int, Int) -> Array[Array[Int]]
+pub fn classify_isodata(Array[Array[Array[Double]]], Int32, Int32, Int32) -> Array[Array[Int32]]
 
-pub fn classify_kappa(Array[Array[Int]]) -> Double
+pub fn classify_kappa(Array[Array[Int32]]) -> Double
 
-pub fn classify_kmeans(Array[Array[Array[Double]]], Int, Int) -> (Array[Array[Int]], Array[Array[Double]])
+pub fn classify_kmeans(Array[Array[Array[Double]]], Int32, Int32) -> (Array[Array[Int32]], Array[Array[Double]])
 
-pub fn classify_max_likelihood(Array[Array[Array[Double]]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Int]]
+pub fn classify_max_likelihood(Array[Array[Array[Double]]], Array[Array[Double]], Array[Array[Double]]) -> Array[Array[Int32]]
 
-pub fn classify_min_distance(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Int]]
+pub fn classify_min_distance(Array[Array[Array[Double]]], Array[Array[Double]]) -> Array[Array[Int32]]
 
-pub fn classify_overall_accuracy(Array[Array[Int]]) -> Double
+pub fn classify_overall_accuracy(Array[Array[Int32]]) -> Double
 
 pub fn clean_foreground_mask(ForegroundMask) -> ForegroundMask
 
-pub fn cloud_build_result(Array[Array[Int]], Array[Array[Int]]) -> CloudResult
+pub fn cloud_build_result(Array[Array[Int32]], Array[Array[Int32]]) -> CloudResult
 
-pub fn cloud_compute_coverage(Array[Array[Int]]) -> Double
+pub fn cloud_compute_coverage(Array[Array[Int32]]) -> Double
 
-pub fn cloud_detect(Array[Array[Double]], CloudDetectMethod, Double) -> Array[Array[Int]]
+pub fn cloud_detect(Array[Array[Double]], CloudDetectMethod, Double) -> Array[Array[Int32]]
 
-pub fn cloud_morph_open(Array[Array[Int]], Int) -> Array[Array[Int]]
+pub fn cloud_morph_open(Array[Array[Int32]], Int32) -> Array[Array[Int32]]
 
-pub fn cloud_multispectral_detect(Array[Array[Double]], Array[Array[Double]], Double, Double) -> Array[Array[Int]]
+pub fn cloud_multispectral_detect(Array[Array[Double]], Array[Array[Double]], Double, Double) -> Array[Array[Int32]]
 
-pub fn cloud_progressive_refinement(Array[Array[Double]], Double, Int) -> Array[Array[Int]]
+pub fn cloud_progressive_refinement(Array[Array[Double]], Double, Int32) -> Array[Array[Int32]]
 
-pub fn cloud_shadow_detect(Array[Array[Double]], Array[Array[Int]], Double, Double, Double, Int) -> Array[Array[Int]]
+pub fn cloud_shadow_detect(Array[Array[Double]], Array[Array[Int32]], Double, Double, Double, Int32) -> Array[Array[Int32]]
 
-pub fn cloud_threshold_detect(Array[Array[Double]], Double) -> Array[Array[Int]]
+pub fn cloud_threshold_detect(Array[Array[Double]], Double) -> Array[Array[Int32]]
 
 pub fn compute_akaze_descriptors(@types.Image, Array[KeyPoint]) -> Array[FloatDescriptor]
 
@@ -155,7 +155,7 @@ pub fn compute_iou(Track, Track) -> Double
 
 pub fn compute_kl_divergence(Array[Double], Array[Double]) -> Double
 
-pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int, Int)], FlowParams) -> FlowField
+pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int32, Int32)], FlowParams) -> FlowField
 
 pub fn compute_motion_energy(MotionMask) -> Double
 
@@ -163,11 +163,11 @@ pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
-pub fn compute_prototypes(Array[Array[Double]], Array[Int], Int) -> Array[Array[Double]]
+pub fn compute_prototypes(Array[Array[Double]], Array[Int32], Int32) -> Array[Array[Double]]
 
 pub fn compute_pruning_mask(Array[Double], Double) -> Array[Bool]
 
-pub fn compute_quant_params(Double, Double, Int) -> (Double, Int)
+pub fn compute_quant_params(Double, Double, Int32) -> (Double, Int32)
 
 pub fn compute_quantization_error(Array[Double], QuantizedTensor) -> Double
 
@@ -187,7 +187,7 @@ pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
 
-pub fn create_tracked_object(Int, Array[Int], String, Double) -> TrackedObject
+pub fn create_tracked_object(Int32, Array[Int32], String, Double) -> TrackedObject
 
 pub fn cross_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
@@ -195,15 +195,15 @@ pub fn cross_entropy_loss(Array[Double], Array[Double]) -> Double
 
 pub fn cross_validate_match(Array[DMatch], Array[DMatch]) -> Array[DMatch]
 
-pub fn ct_art_reconstruct(CTProjection, CTConfig, Int) -> Array[Double]
+pub fn ct_art_reconstruct(CTProjection, CTConfig, Int32) -> Array[Double]
 
 pub fn ct_fbp_reconstruct(CTProjection, CTConfig) -> Array[Double]
 
-pub fn ct_iterative_reconstruct(CTProjection, CTConfig, Int) -> Array[Double]
+pub fn ct_iterative_reconstruct(CTProjection, CTConfig, Int32) -> Array[Double]
 
-pub fn ct_radon_transform(Array[Double], Int, Array[Double]) -> CTProjection
+pub fn ct_radon_transform(Array[Double], Int32, Array[Double]) -> CTProjection
 
-pub fn ct_ramp_filter(Int, Double) -> Array[Double]
+pub fn ct_ramp_filter(Int32, Double) -> Array[Double]
 
 pub fn cv_advanced_report_to_string(CVAdvancedTaskType, CVAdvancedConfig, String) -> String
 
@@ -219,13 +219,13 @@ pub fn depth_post_process(DepthMap, DepthPostProcessParams) -> DepthMap
 
 pub fn depth_to_grayscale_image(DepthMap) -> @types.Image
 
-pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int, Int) -> Array[Double]
+pub fn depthwise_conv2d(Array[Double], Array[Double], Array[Double], DepthwiseConvParams, Int32, Int32) -> Array[Double]
 
 pub fn dequantize(QuantizedTensor) -> Array[Double]
 
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
-pub fn detect_fast_corners(@types.Image, Int) -> Array[KeyPoint]
+pub fn detect_fast_corners(@types.Image, Int32) -> Array[KeyPoint]
 
 pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, MotionParams) -> (MotionMask, Array[Double])
 
@@ -233,9 +233,9 @@ pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> Mot
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
-pub fn dicom_multiframe_extract(DicomImage, Int) -> Array[Double]
+pub fn dicom_multiframe_extract(DicomImage, Int32) -> Array[Double]
 
-pub fn dicom_net_build_config(String, String, Int, Int) -> PACSConfig
+pub fn dicom_net_build_config(String, String, Int32, Int32) -> PACSConfig
 
 pub fn dicom_net_build_query(DicomQueryLevel, String, String) -> DicomQuery
 
@@ -243,13 +243,13 @@ pub fn dicom_net_cecho(PACSConfig) -> Bool
 
 pub fn dicom_net_cfind(PACSConfig, DicomQuery, Array[DicomQuery]) -> DicomQueryResult
 
-pub fn dicom_net_cget(PACSConfig, String, Int) -> DicomQueryResult
+pub fn dicom_net_cget(PACSConfig, String, Int32) -> DicomQueryResult
 
 pub fn dicom_net_cmove(PACSConfig, String, Array[String]) -> DicomQueryResult
 
 pub fn dicom_net_cstore(PACSConfig, String, Array[Double]) -> DicomQueryResult
 
-pub fn dicom_net_generate_uid(String, Int) -> String
+pub fn dicom_net_generate_uid(String, Int32) -> String
 
 pub fn dicom_net_parse_uid(String) -> Array[String]
 
@@ -261,23 +261,23 @@ pub fn diffusion_forward(Array[Double], Array[Double], Double) -> Array[Double]
 
 pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[Double]
 
-pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int, Int, Int, Int) -> Array[Double]
+pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int32, Int32, Int32, Int32) -> Array[Double]
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
 
-pub fn dose_compute_dvh(Array[Double], Array[Int], Int, Double, String) -> DVHResult
+pub fn dose_compute_dvh(Array[Double], Array[Int32], Int32, Double, String) -> DVHResult
 
-pub fn dose_compute_eud(Array[Double], Array[Int], Double) -> Double
+pub fn dose_compute_eud(Array[Double], Array[Int32], Double) -> Double
 
-pub fn dose_compute_metrics(Array[Double], Array[Int]) -> DoseMetrics
+pub fn dose_compute_metrics(Array[Double], Array[Int32]) -> DoseMetrics
 
-pub fn dose_compute_ntcp(Array[Double], Array[Int], Double, Double) -> Double
+pub fn dose_compute_ntcp(Array[Double], Array[Int32], Double, Double) -> Double
 
-pub fn dose_compute_tcp(Array[Double], Array[Int], Double, Double) -> Double
+pub fn dose_compute_tcp(Array[Double], Array[Int32], Double, Double) -> Double
 
-pub fn dose_evaluate_plan(Array[Double], Array[Int], Array[Array[Double]], Array[Array[Int]], Double) -> (Double, Double, Double)
+pub fn dose_evaluate_plan(Array[Double], Array[Int32], Array[Array[Double]], Array[Array[Int32]], Double) -> (Double, Double, Double)
 
-pub fn ensemble_select(Array[TrialResult], Int) -> Array[TrialResult]
+pub fn ensemble_select(Array[TrialResult], Int32) -> Array[TrialResult]
 
 pub fn erf_approx(Double) -> Double
 
@@ -287,11 +287,11 @@ pub fn estimate_affine(@types.Image, @types.Image) -> AffineMatrix
 
 pub fn estimate_bokeh_strength(DepthMap) -> Double
 
-pub fn estimate_depth_from_defocus(Array[Double], Int, Int, Double, Double, Double) -> DepthMap
+pub fn estimate_depth_from_defocus(Array[Double], Int32, Int32, Double, Double, Double) -> DepthMap
 
-pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int, Int) -> DepthMap
+pub fn estimate_depth_from_focus(Array[Array[Double]], Array[Double], Int32, Int32) -> DepthMap
 
-pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int, Int, Double, Double) -> DepthMap
+pub fn estimate_depth_relative_blur(Array[Double], Array[Double], Int32, Int32, Double, Double) -> DepthMap
 
 pub fn estimate_pose(Array[Point3D], Array[(Double, Double)], CameraIntrinsics) -> SlamPose
 
@@ -299,7 +299,7 @@ pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
 
-pub fn extract_dicom_pixels(Array[Int], Int, Int) -> Array[Double]
+pub fn extract_dicom_pixels(Array[Int32], Int32, Int32) -> Array[Double]
 
 pub fn extract_motion_regions(MotionMask, MotionParams) -> Array[MotionRegion]
 
@@ -307,11 +307,11 @@ pub fn feature_distill(Array[Double], Array[Double], DistillationConfig) -> Dist
 
 pub fn fedavg_aggregate(Array[ClientUpdate]) -> Array[Double]
 
-pub fn federated_round(Array[Double], Array[ClientUpdate], FederatedConfig, Int) -> FederatedState
+pub fn federated_round(Array[Double], Array[ClientUpdate], FederatedConfig, Int32) -> FederatedState
 
 pub fn fedprox_update(Array[Double], Array[Double], Array[Double], FederatedConfig) -> Array[Double]
 
-pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int, Int) -> Array[Double]
+pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Int32, Int32) -> Array[Double]
 
 pub fn fill_depth_holes(DepthMap) -> DepthMap
 
@@ -325,7 +325,7 @@ pub fn functional_build_pet_params(Array[Double], Double, Double, Double, Double
 
 pub fn functional_diffusion_adc(Array[Array[Double]], Array[Double]) -> Array[Double]
 
-pub fn functional_fmri_detect(Array[Array[Double]], Array[Int], Int, Int) -> FMRIActivation
+pub fn functional_fmri_detect(Array[Array[Double]], Array[Int32], Int32, Int32) -> FMRIActivation
 
 pub fn functional_perfusion_params(Array[Double], Array[Double], Array[Double]) -> (Double, Double, Double)
 
@@ -333,7 +333,7 @@ pub fn functional_pet_metabolic_rate(Array[Double], Double, Double) -> Double
 
 pub fn functional_pet_suv(Array[Double], Double, Double) -> Array[Double]
 
-pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int
+pub fn fundamental_matrix_rank(FundamentalMatrix) -> Int32
 
 pub fn fusion_dispatch(Array[Array[Array[Double]]], Array[Array[Double]], FusionMethod) -> Array[Array[Array[Double]]]
 
@@ -353,7 +353,7 @@ pub fn fusion_wavelet(Array[Array[Array[Double]]], Array[Array[Double]]) -> Arra
 
 pub fn gan_discriminator_forward(Array[Double], Array[Double], GANConfig) -> Double
 
-pub fn gan_generate_samples(Array[Double], GANConfig, Int) -> Array[Array[Double]]
+pub fn gan_generate_samples(Array[Double], GANConfig, Int32) -> Array[Array[Double]]
 
 pub fn gan_generator_forward(Array[Double], Array[Double], GANConfig) -> Array[Double]
 
@@ -363,7 +363,7 @@ pub fn gat_forward(GraphData, Array[Double], Array[Double], GNNConfig) -> GNNRes
 
 pub fn gcn_forward(GraphData, Array[Array[Double]], GNNConfig) -> Array[Double]
 
-pub fn generate_aperture_mask(ApertureShape, Int) -> Array[Array[Double]]
+pub fn generate_aperture_mask(ApertureShape, Int32) -> Array[Array[Double]]
 
 pub fn generate_caption(String) -> ImageCaptioningResult
 
@@ -373,7 +373,7 @@ pub fn geo_build_rpc(Array[Double], Array[Double], Array[Double], Array[Double],
 
 pub fn geo_compute_polynomial_coeffs(Array[GcpPoint]) -> (Array[Double], Array[Double])
 
-pub fn geo_correct(Array[Array[Double]], Array[GcpPoint], Int, Int, ResampleMethod) -> Array[Array[Double]]
+pub fn geo_correct(Array[Array[Double]], Array[GcpPoint], Int32, Int32, ResampleMethod) -> Array[Array[Double]]
 
 pub fn geo_polynomial_transform(Double, Double, Array[Double], Array[Double]) -> (Double, Double)
 
@@ -397,17 +397,17 @@ pub fn global_bundle_adjustment(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn gmm_update(BackgroundModel, @types.Image) -> BackgroundModel
 
-pub fn graph_convolution(GraphData, Array[Double], Int) -> Array[Double]
+pub fn graph_convolution(GraphData, Array[Double], Int32) -> Array[Double]
 
 pub fn graphsage_forward(GraphData, Array[Double], GNNConfig) -> Array[Double]
 
-pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
+pub fn grouped_conv2d(Array[Double], Array[Double], Array[Double], Int32, Int32, Int32, Int32, Int32, Int32) -> Array[Double]
 
-pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int
+pub fn hamming_distance(BinaryDescriptor, BinaryDescriptor) -> Int32
 
 pub fn hdr_plus_apply_ghost_map(@types.Image, @types.Image, GhostMap) -> @types.Image
 
-pub fn hdr_plus_build_params(HdrPlusMode, align_threshold? : Double, ghost_threshold? : Double, num_pyramid_levels? : Int) -> HdrPlusParams
+pub fn hdr_plus_build_params(HdrPlusMode, align_threshold? : Double, ghost_threshold? : Double, num_pyramid_levels? : Int32) -> HdrPlusParams
 
 pub fn hdr_plus_calibrate_response(Array[@types.Image], Array[Double]) -> Array[Double]
 
@@ -423,17 +423,17 @@ pub fn hdr_plus_weighted_merge(Array[@types.Image], Array[Double]) -> @types.Ima
 
 pub fn hyperspectral_abundance_inversion(Array[Double], Array[Array[Double]]) -> Array[Double]
 
-pub fn hyperspectral_build_endmember_result(Array[Array[Double]], Int, Int, Int) -> EndmemberResult
+pub fn hyperspectral_build_endmember_result(Array[Array[Double]], Int32, Int32, Int32) -> EndmemberResult
 
 pub fn hyperspectral_correlation(Array[Double], Array[Double]) -> Double
 
 pub fn hyperspectral_euclidean(Array[Double], Array[Double]) -> Double
 
-pub fn hyperspectral_extract_endmembers(Array[Array[Double]], Int, Int, Int) -> Array[Array[Double]]
+pub fn hyperspectral_extract_endmembers(Array[Array[Double]], Int32, Int32, Int32) -> Array[Array[Double]]
 
-pub fn hyperspectral_match(Array[Double], Array[Array[Double]], SpectralMatchMethod) -> Int
+pub fn hyperspectral_match(Array[Double], Array[Array[Double]], SpectralMatchMethod) -> Int32
 
-pub fn hyperspectral_ppi(Array[Array[Double]], Int, Int) -> Array[Int]
+pub fn hyperspectral_ppi(Array[Array[Double]], Int32, Int32) -> Array[Int32]
 
 pub fn hyperspectral_sam(Array[Double], Array[Double]) -> Double
 
@@ -455,11 +455,11 @@ pub fn init_vins(VinsConfig) -> (VinsState, VinsConfig)
 
 pub fn insar_build_interferogram(Array[Array[Double]], Array[Array[Double]]) -> InsarInterferogram
 
-pub fn insar_coherence_mask(InsarInterferogram, Double) -> Array[Array[Int]]
+pub fn insar_coherence_mask(InsarInterferogram, Double) -> Array[Array[Int32]]
 
 pub fn insar_create_interferogram(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]], Array[Array[Double]]) -> InsarInterferogram
 
-pub fn insar_estimate_coherence(InsarInterferogram, Int) -> Array[Array[Double]]
+pub fn insar_estimate_coherence(InsarInterferogram, Int32) -> Array[Array[Double]]
 
 pub fn insar_filter_interferogram(Array[Array[Double]], Double) -> Array[Array[Double]]
 
@@ -479,9 +479,9 @@ pub fn kalman_predict(KalmanState) -> KalmanState
 
 pub fn keyframe_selection(SlamFrontend, SlamPose, SlamFrontendParams) -> Bool
 
-pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int) -> Array[Array[DMatch]]
+pub fn knn_match_binary(Array[BinaryDescriptor], Array[BinaryDescriptor], Int32) -> Array[Array[DMatch]]
 
-pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int) -> Array[Array[DMatch]]
+pub fn knn_match_float(Array[FloatDescriptor], Array[FloatDescriptor], Int32) -> Array[Array[DMatch]]
 
 pub fn knn_update(BackgroundModel, @types.Image) -> BackgroundModel
 
@@ -489,17 +489,17 @@ pub fn knowledge_distill(Array[Double], Array[Double], Array[Double], Distillati
 
 pub fn layer_norm(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
 
-pub fn lesion_build_cad_result(Array[LesionCandidate], Array[LesionCandidate], Int) -> CADDetectionResult
+pub fn lesion_build_cad_result(Array[LesionCandidate], Array[LesionCandidate], Int32) -> CADDetectionResult
 
-pub fn lesion_compute_sensitivity(Array[LesionCandidate], Array[LesionCandidate], Int) -> (Int, Int, Double)
+pub fn lesion_compute_sensitivity(Array[LesionCandidate], Array[LesionCandidate], Int32) -> (Int32, Int32, Double)
 
-pub fn lesion_detect_candidates(Array[Double], Int, Int, Int, Int, Double) -> Array[LesionCandidate]
+pub fn lesion_detect_candidates(Array[Double], Int32, Int32, Int32, Int32, Double) -> Array[LesionCandidate]
 
-pub fn lesion_extract_features(Array[Double], Int, Int, LesionCandidate) -> Array[Double]
+pub fn lesion_extract_features(Array[Double], Int32, Int32, LesionCandidate) -> Array[Double]
 
 pub fn lesion_nms(Array[LesionCandidate], Double) -> Array[LesionCandidate]
 
-pub fn lesion_reduce_false_positives(Array[LesionCandidate], Array[Double], Int, Int, Double) -> Array[LesionCandidate]
+pub fn lesion_reduce_false_positives(Array[LesionCandidate], Array[Double], Int32, Int32, Double) -> Array[LesionCandidate]
 
 pub fn local_bundle_adjustment(Array[SlamKeyFrame]) -> Array[SlamKeyFrame]
 
@@ -509,33 +509,33 @@ pub fn maml_inner_update(Array[Double], Array[Double], MetaLearningConfig) -> Ar
 
 pub fn maml_meta_update(Array[Double], Array[Array[Double]], MetaLearningConfig) -> Array[Double]
 
-pub fn map_statistics(SlamBackend) -> (Int, Int, Double)
+pub fn map_statistics(SlamBackend) -> (Int32, Int32, Double)
 
 pub fn masked_modeling(Array[Double], Array[Bool], Array[Double], Array[Double]) -> Double
 
-pub fn medreg_affine(Array[Double], Array[Double], Int, Int) -> MedRegResult
+pub fn medreg_affine(Array[Double], Array[Double], Int32, Int32) -> MedRegResult
 
-pub fn medreg_apply_affine(Array[Double], Int, Int, MedAffineTransform) -> Array[Double]
+pub fn medreg_apply_affine(Array[Double], Int32, Int32, MedAffineTransform) -> Array[Double]
 
-pub fn medreg_apply_rigid(Array[Double], Int, Int, MedRigidTransform) -> Array[Double]
+pub fn medreg_apply_rigid(Array[Double], Int32, Int32, MedRigidTransform) -> Array[Double]
 
 pub fn medreg_mse(Array[Double], Array[Double]) -> Double
 
-pub fn medreg_mutual_information(Array[Double], Array[Double], Int) -> Double
+pub fn medreg_mutual_information(Array[Double], Array[Double], Int32) -> Double
 
-pub fn medreg_rigid(Array[Double], Array[Double], Int, Int, Int) -> MedRegResult
+pub fn medreg_rigid(Array[Double], Array[Double], Int32, Int32, Int32) -> MedRegResult
 
-pub fn medviz_cpr_centerline(Array[Double], Int, Int, Int, Array[(Int, Int, Int)]) -> Array[Double]
+pub fn medviz_cpr_centerline(Array[Double], Int32, Int32, Int32, Array[(Int32, Int32, Int32)]) -> Array[Double]
 
-pub fn medviz_depth_shading(Array[Double], Int, Int, Int, Double) -> Array[Double]
+pub fn medviz_depth_shading(Array[Double], Int32, Int32, Int32, Double) -> Array[Double]
 
-pub fn medviz_gradient_shading(Array[Double], Int, Int, Int) -> Array[Double]
+pub fn medviz_gradient_shading(Array[Double], Int32, Int32, Int32) -> Array[Double]
 
-pub fn medviz_mpr_slice(Array[Double], Int, Int, Int, MPROrientation, Int) -> Array[Double]
+pub fn medviz_mpr_slice(Array[Double], Int32, Int32, Int32, MPROrientation, Int32) -> Array[Double]
 
-pub fn medviz_pseudo_color(Array[Double], Int) -> Array[Double]
+pub fn medviz_pseudo_color(Array[Double], Int32) -> Array[Double]
 
-pub fn medviz_volume_render(Array[Double], Int, Int, Int, MedVizConfig) -> Array[Double]
+pub fn medviz_volume_render(Array[Double], Int32, Int32, Int32, MedVizConfig) -> Array[Double]
 
 pub fn medviz_window_level(Array[Double], Double, Double) -> Array[Double]
 
@@ -547,9 +547,9 @@ pub fn mixed_precision_quantize(Array[Double], Double) -> Array[QuantizedTensor]
 
 pub fn moco_forward(Array[Double], Array[Double], Array[Array[Double]], SSLConfig) -> Double
 
-pub fn motion_density(MotionMask, Int, Int) -> Array[Double]
+pub fn motion_density(MotionMask, Int32, Int32) -> Array[Double]
 
-pub fn motion_morphology(MotionMask, Int) -> MotionMask
+pub fn motion_morphology(MotionMask, Int32) -> MotionMask
 
 pub fn motion_optical_flow(FlowField, Double) -> MotionMask
 
@@ -557,29 +557,29 @@ pub fn mri_compute_t1_map(Array[Array[Double]], Array[Double]) -> Array[Double]
 
 pub fn mri_compute_t2_map(Array[Array[Double]], Array[Double]) -> Array[Double]
 
-pub fn mri_correct_bias_field(Array[Double], Array[Double], Int, Int) -> Array[Double]
+pub fn mri_correct_bias_field(Array[Double], Array[Double], Int32, Int32) -> Array[Double]
 
-pub fn mri_correct_ghosting(Array[Double], Int, Int, Double) -> Array[Double]
+pub fn mri_correct_ghosting(Array[Double], Int32, Int32, Double) -> Array[Double]
 
-pub fn mri_image_to_kspace(Array[Double], Int, Int) -> KSpaceData
+pub fn mri_image_to_kspace(Array[Double], Int32, Int32) -> KSpaceData
 
 pub fn mri_kspace_to_image(KSpaceData) -> Array[Double]
 
 pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], AttentionParams) -> Array[Double]
 
-pub fn multispectral_band_arithmetic(Array[Double], Array[Double], Int) -> Array[Double]
+pub fn multispectral_band_arithmetic(Array[Double], Array[Double], Int32) -> Array[Double]
 
 pub fn multispectral_band_ratio(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn multispectral_band_stats(Array[Double]) -> (Double, Double, Double, Double)
 
-pub fn multispectral_classify(MultispecImage, Int, Int) -> Array[Int]
+pub fn multispectral_classify(MultispecImage, Int32, Int32) -> Array[Int32]
 
 pub fn multispectral_normalized_difference(Array[Double], Array[Double]) -> Array[Double]
 
-pub fn multispectral_pca(MultispecImage, Int) -> Array[Array[Double]]
+pub fn multispectral_pca(MultispecImage, Int32) -> Array[Array[Double]]
 
-pub fn nas_search((Array[Double]) -> Double, Int, Int, AutoMLConfig) -> AutoMLResult
+pub fn nas_search((Array[Double]) -> Double, Int32, Int32, AutoMLConfig) -> AutoMLResult
 
 pub fn night_build_params(NightShotMode, align_threshold? : Double, noise_strength? : Double, brightness_boost? : Double, contrast_boost? : Double) -> NightShotParams
 
@@ -605,21 +605,21 @@ pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
 pub fn orb_slam_stats(OrbSlamSystem) -> OrbSlamStats
 
-pub fn organ_atlas_based(Array[Double], Array[Double], Array[Int], Int, Int) -> Array[Int]
+pub fn organ_atlas_based(Array[Double], Array[Double], Array[Int32], Int32, Int32) -> Array[Int32]
 
-pub fn organ_compute_volume(Array[Int]) -> Int
+pub fn organ_compute_volume(Array[Int32]) -> Int32
 
-pub fn organ_dice_coefficient(Array[Int], Array[Int]) -> Double
+pub fn organ_dice_coefficient(Array[Int32], Array[Int32]) -> Double
 
-pub fn organ_level_set(Array[Double], Int, Int, Int, Double) -> Array[Double]
+pub fn organ_level_set(Array[Double], Int32, Int32, Int32, Double) -> Array[Double]
 
-pub fn organ_morph_dilate(Array[Int], Int, Int, Int) -> Array[Int]
+pub fn organ_morph_dilate(Array[Int32], Int32, Int32, Int32) -> Array[Int32]
 
-pub fn organ_morph_erode(Array[Int], Int, Int, Int) -> Array[Int]
+pub fn organ_morph_erode(Array[Int32], Int32, Int32, Int32) -> Array[Int32]
 
-pub fn organ_morph_open(Array[Int], Int, Int, Int) -> Array[Int]
+pub fn organ_morph_open(Array[Int32], Int32, Int32, Int32) -> Array[Int32]
 
-pub fn organ_region_growing(Array[Double], Int, Int, Int, Int, Double) -> Array[Int]
+pub fn organ_region_growing(Array[Double], Int32, Int32, Int32, Int32, Double) -> Array[Int32]
 
 pub fn ortho_build_params(Double, Double, Double, Array[Array[Double]]) -> OrthoParams
 
@@ -629,27 +629,27 @@ pub fn ortho_correct(Array[Array[Double]], OrthoParams) -> Array[Array[Double]]
 
 pub fn ortho_displacement(Double, Double, Double) -> Double
 
-pub fn ortho_mosaic(Array[Array[Array[Double]]], Array[(Int, Int)]) -> Array[Array[Double]]
+pub fn ortho_mosaic(Array[Array[Array[Double]]], Array[(Int32, Int32)]) -> Array[Array[Double]]
 
-pub fn ortho_seamline(Int, Int) -> Array[(Int, Int)]
+pub fn ortho_seamline(Int32, Int32) -> Array[(Int32, Int32)]
 
-pub fn ortho_wallis_dodging(Array[Array[Double]], Int, Double, Double) -> Array[Array[Double]]
+pub fn ortho_wallis_dodging(Array[Array[Double]], Int32, Double, Double) -> Array[Array[Double]]
 
-pub fn parse_dicom_metadata(String, String, String, String, String, Int, Int, Int) -> DicomMetadata
+pub fn parse_dicom_metadata(String, String, String, String, String, Int32, Int32, Int32) -> DicomMetadata
 
-pub fn parse_scene(String, Int, Int, CVAdvancedConfig) -> SceneParsingResult
+pub fn parse_scene(String, Int32, Int32, CVAdvancedConfig) -> SceneParsingResult
 
-pub fn pathology_count_mitosis(Array[Int], Int, Int) -> Int
+pub fn pathology_count_mitosis(Array[Int32], Int32, Int32) -> Int32
 
-pub fn pathology_detect_nuclei(Array[Double], Int, Int, Double) -> Array[Int]
+pub fn pathology_detect_nuclei(Array[Double], Int32, Int32, Double) -> Array[Int32]
 
-pub fn pathology_segment_tissue(Array[Double], Int) -> Array[Int]
+pub fn pathology_segment_tissue(Array[Double], Int32) -> Array[Int32]
 
-pub fn pathology_stain_normalize(Array[Double], Int, Int, PathologyStain) -> Array[Double]
+pub fn pathology_stain_normalize(Array[Double], Int32, Int32, PathologyStain) -> Array[Double]
 
-pub fn pathology_stain_separation(Array[Double], Int, Int) -> StainSeparation
+pub fn pathology_stain_separation(Array[Double], Int32, Int32) -> StainSeparation
 
-pub fn pathology_wsi_extract_tiles(Array[Double], Int, Int, WSIConfig) -> Array[Array[Double]]
+pub fn pathology_wsi_extract_tiles(Array[Double], Int32, Int32, WSIConfig) -> Array[Array[Double]]
 
 pub fn pathology_wsi_stitch_tiles(Array[Array[Double]], WSIConfig) -> Array[Double]
 
@@ -659,11 +659,11 @@ pub fn phase12_is_complete() -> Bool
 
 pub fn phase12_report() -> Phase12Report
 
-pub fn phase12_total_functions() -> Int
+pub fn phase12_total_functions() -> Int32
 
-pub fn phase12_total_tests() -> Int
+pub fn phase12_total_tests() -> Int32
 
-pub fn phase12_total_types() -> Int
+pub fn phase12_total_types() -> Int32
 
 pub fn phase13_capabilities() -> Array[Phase13Capability]
 
@@ -671,11 +671,11 @@ pub fn phase13_is_complete() -> Bool
 
 pub fn phase13_report() -> Phase13Report
 
-pub fn phase13_total_functions() -> Int
+pub fn phase13_total_functions() -> Int32
 
-pub fn phase13_total_tests() -> Int
+pub fn phase13_total_tests() -> Int32
 
-pub fn phase13_total_types() -> Int
+pub fn phase13_total_types() -> Int32
 
 pub fn phase14_capabilities() -> Array[Phase14Capability]
 
@@ -683,13 +683,13 @@ pub fn phase14_is_complete() -> Bool
 
 pub fn phase14_report() -> Phase14Report
 
-pub fn phase14_total_functions() -> Int
+pub fn phase14_total_functions() -> Int32
 
-pub fn phase14_total_tests() -> Int
+pub fn phase14_total_tests() -> Int32
 
-pub fn phase14_total_types() -> Int
+pub fn phase14_total_types() -> Int32
 
-pub fn phase15_build_capability(String, String, String, Int, Int, Int) -> Phase15Capability
+pub fn phase15_build_capability(String, String, String, Int32, Int32, Int32) -> Phase15Capability
 
 pub fn phase15_capabilities() -> Array[Phase15Capability]
 
@@ -697,25 +697,25 @@ pub fn phase15_is_complete() -> Bool
 
 pub fn phase15_report() -> Phase15Report
 
-pub fn phase15_total_functions() -> Int
+pub fn phase15_total_functions() -> Int32
 
-pub fn phase15_total_tests() -> Int
+pub fn phase15_total_tests() -> Int32
 
-pub fn phase15_total_types() -> Int
+pub fn phase15_total_types() -> Int32
 
-pub fn positional_encoding(Int, Int) -> Array[Double]
+pub fn positional_encoding(Int32, Int32) -> Array[Double]
 
 pub fn process_image_vins(VinsState, SlamPose, Double) -> VinsState
 
 pub fn process_imu(VinsState, VinsConfig, ImuData, Double) -> VinsState
 
-pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int, Int) -> SlamFrontend
+pub fn process_keyframe(SlamFrontend, SlamPose, Double, Int32, Int32) -> SlamFrontend
 
-pub fn prototypical_loss(Array[Double], Array[Array[Double]]) -> (Int, Double)
+pub fn prototypical_loss(Array[Double], Array[Array[Double]]) -> (Int32, Double)
 
-pub fn prune_channels(Array[Double], Int, PruningConfig) -> PruningResult
+pub fn prune_channels(Array[Double], Int32, PruningConfig) -> PruningResult
 
-pub fn prune_structured(Array[Double], Int, PruningConfig) -> PruningResult
+pub fn prune_structured(Array[Double], Int32, PruningConfig) -> PruningResult
 
 pub fn prune_unstructured(Array[Double], PruningConfig) -> PruningResult
 
@@ -723,23 +723,23 @@ pub fn quantize_int4(Array[Double], QuantizationConfig) -> QuantizedTensor
 
 pub fn quantize_int8(Array[Double], QuantizationConfig) -> QuantizedTensor
 
-pub fn quantize_per_channel(Array[Double], Int, Int) -> Array[QuantizedTensor]
+pub fn quantize_per_channel(Array[Double], Int32, Int32) -> Array[QuantizedTensor]
 
-pub fn radiomics_compute_icc(Array[Array[Double]], Int) -> Double
+pub fn radiomics_compute_icc(Array[Array[Double]], Int32) -> Double
 
-pub fn radiomics_first_order(Array[Double], Array[Int]) -> Array[RadiomicsFeature]
+pub fn radiomics_first_order(Array[Double], Array[Int32]) -> Array[RadiomicsFeature]
 
-pub fn radiomics_glcm_features(Array[Double], Int, Int, Int) -> Array[RadiomicsFeature]
+pub fn radiomics_glcm_features(Array[Double], Int32, Int32, Int32) -> Array[RadiomicsFeature]
 
 pub fn radiomics_select_features(Array[Array[Double]], Double) -> FeatureSelectionResult
 
-pub fn radiomics_shape_features(Array[Int], Int, Int) -> Array[RadiomicsFeature]
+pub fn radiomics_shape_features(Array[Int32], Int32, Int32) -> Array[RadiomicsFeature]
 
 pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], AutoMLConfig) -> AutoMLResult
 
 pub fn ratio_test(Array[Array[DMatch]], Double) -> Array[DMatch]
 
-pub fn raw_build_params(BayerPattern, WhiteBalanceMethod, wb_r_gain? : Double, wb_g_gain? : Double, wb_b_gain? : Double, black_level? : Int, white_level? : Int) -> RawParams
+pub fn raw_build_params(BayerPattern, WhiteBalanceMethod, wb_r_gain? : Double, wb_g_gain? : Double, wb_b_gain? : Double, black_level? : Int32, white_level? : Int32) -> RawParams
 
 pub fn raw_color_correction(@types.Image, Array[Array[Double]]) -> @types.Image
 
@@ -747,7 +747,7 @@ pub fn raw_demosaic_bilinear(@types.Image, BayerPattern) -> @types.Image
 
 pub fn raw_extract_bayer(@types.Image, BayerPattern) -> @types.Image
 
-pub fn raw_level_correction(@types.Image, Int, Int) -> @types.Image
+pub fn raw_level_correction(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn raw_pipeline(@types.Image, RawParams) -> @types.Image
 
@@ -757,21 +757,21 @@ pub fn raw_white_balance_grayworld(@types.Image) -> @types.Image
 
 pub fn raw_white_balance_manual(@types.Image, Double, Double, Double) -> @types.Image
 
-pub fn recognize_action(String, Int, CVAdvancedConfig) -> ActionRecognitionResult
+pub fn recognize_action(String, Int32, CVAdvancedConfig) -> ActionRecognitionResult
 
 pub fn recon_compute_surface_area(MedMesh3D) -> Double
 
 pub fn recon_compute_volume(MedMesh3D) -> Double
 
-pub fn recon_marching_cubes(Array[Double], Int, Int, Int, Double) -> MedMesh3D
+pub fn recon_marching_cubes(Array[Double], Int32, Int32, Int32, Double) -> MedMesh3D
 
-pub fn recon_mip(Array[Double], Int, Int, Int) -> Array[Double]
+pub fn recon_mip(Array[Double], Int32, Int32, Int32) -> Array[Double]
 
 pub fn recon_simplify_mesh(MedMesh3D, Double) -> MedMesh3D
 
-pub fn recon_surface_extract(Array[Double], Double) -> Array[Int]
+pub fn recon_surface_extract(Array[Double], Double) -> Array[Int32]
 
-pub fn recon_volume_render(Array[Double], Int, Int, Int, Double) -> Array[Double]
+pub fn recon_volume_render(Array[Double], Int32, Int32, Int32, Double) -> Array[Double]
 
 pub fn refine_depth_edges(DepthMap, @types.Image) -> DepthMap
 
@@ -791,7 +791,7 @@ pub fn reset_vins(VinsConfig) -> (VinsState, VinsConfig)
 
 pub fn residual_add(Array[Double], Array[Double]) -> Array[Double]
 
-pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int, Double) -> OrbSlamSystem
+pub fn run_orb_slam(OrbSlamSystem, SlamPose, Int32, Double) -> OrbSlamSystem
 
 pub fn sar_azimuth_compression(Array[Array[Double]], SarParams) -> Array[Array[Double]]
 
@@ -801,13 +801,13 @@ pub fn sar_build_params(Double, Double, Double, Double, Double, Double, Double) 
 
 pub fn sar_csa(Array[Array[Double]], SarParams) -> Array[Array[Double]]
 
-pub fn sar_detect_point_target(Array[Array[Double]]) -> (Int, Int, Double)
+pub fn sar_detect_point_target(Array[Array[Double]]) -> (Int32, Int32, Double)
 
 pub fn sar_focus(Array[Array[Double]], SarParams, SarMode) -> Array[Array[Double]]
 
 pub fn sar_mean_intensity(SarImage) -> Double
 
-pub fn sar_multilook(Array[Array[Double]], Int) -> Array[Array[Double]]
+pub fn sar_multilook(Array[Array[Double]], Int32) -> Array[Array[Double]]
 
 pub fn sar_omega_k(Array[Array[Double]], SarParams) -> Array[Array[Double]]
 
@@ -815,7 +815,7 @@ pub fn sar_range_compression(Array[Array[Double]], Array[Double]) -> Array[Array
 
 pub fn sar_rda(Array[Array[Double]], SarParams) -> Array[Array[Double]]
 
-pub fn sar_simulate_chirp(Int, Double, Double) -> Array[Double]
+pub fn sar_simulate_chirp(Int32, Double, Double) -> Array[Double]
 
 pub fn save_orb_trajectory(OrbSlamSystem) -> String
 
@@ -833,7 +833,7 @@ pub fn simclr_forward(Array[Double], Array[Double], SSLConfig) -> Double
 
 pub fn simulate_lens_blur(@types.Image, DepthMap, BokehParams) -> BokehResult
 
-pub fn smooth_depth_map(DepthMap, Int) -> DepthMap
+pub fn smooth_depth_map(DepthMap, Int32) -> DepthMap
 
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
@@ -841,29 +841,29 @@ pub fn softmax(Array[Double]) -> Array[Double]
 
 pub fn stereo_rectify(@types.Image, @types.Image) -> (@types.Image, @types.Image)
 
-pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Array[Double], Int, Int, Int) -> Array[Double]
+pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Array[Double], Int32, Int32, Int32) -> Array[Double]
 
 pub fn subtract_background(BackgroundModel, @types.Image) -> ForegroundMask
 
 pub fn target_best_detection(Array[TargetResult]) -> TargetResult
 
-pub fn target_build_result(Int, Int, Int, Int, Double, Int) -> TargetResult
+pub fn target_build_result(Int32, Int32, Int32, Int32, Double, Int32) -> TargetResult
 
-pub fn target_cfar(Array[Array[Double]], Int, Int, Double) -> Array[TargetResult]
+pub fn target_cfar(Array[Array[Double]], Int32, Int32, Double) -> Array[TargetResult]
 
 pub fn target_compute_iou(TargetResult, TargetResult) -> Double
 
-pub fn target_count(Array[TargetResult]) -> Int
+pub fn target_count(Array[TargetResult]) -> Int32
 
-pub fn target_detect(Array[Array[Double]], TargetDetMethod, Int, Double) -> Array[TargetResult]
+pub fn target_detect(Array[Array[Double]], TargetDetMethod, Int32, Double) -> Array[TargetResult]
 
 pub fn target_nms(Array[TargetResult], Double) -> Array[TargetResult]
 
-pub fn target_sliding_window(Array[Array[Double]], Int, Double) -> Array[TargetResult]
+pub fn target_sliding_window(Array[Array[Double]], Int32, Double) -> Array[TargetResult]
 
 pub fn target_template_match(Array[Array[Double]], Array[Array[Double]], Double) -> Array[TargetResult]
 
-pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int, SlamFrontendParams) -> (SlamFrontend, Bool)
+pub fn track_keyframe(SlamFrontend, SlamPose, (Double, Double, Double), Int32, SlamFrontendParams) -> (SlamFrontend, Bool)
 
 pub fn track_objects(Array[Track], Array[Track], Double) -> Array[Track]
 
@@ -877,41 +877,41 @@ pub fn transformer_encoder_layer(Array[Double], Array[Double], Array[Double], Ar
 
 pub fn transformer_forward(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], TransformerConfig) -> TransformerDecoder
 
-pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int, Int, Int, Int, Int, Int) -> Array[Double]
+pub fn transpose_conv2d(Array[Double], Array[Double], Array[Double], Int32, Int32, Int32, Int32, Int32, Int32) -> Array[Double]
 
 pub fn triangulate_point(PointCorrespondence, FundamentalMatrix) -> Point3D
 
-pub fn ts_anomaly_detect(TimeSeriesData, Double) -> Array[Int]
+pub fn ts_anomaly_detect(TimeSeriesData, Double) -> Array[Int32]
 
 pub fn ts_build_data(Array[Double]) -> TimeSeriesData
 
-pub fn ts_change_point_detect(TimeSeriesData, Int) -> Array[Int]
+pub fn ts_change_point_detect(TimeSeriesData, Int32) -> Array[Int32]
 
-pub fn ts_forecast(TimeSeriesData, Int) -> Array[Double]
+pub fn ts_forecast(TimeSeriesData, Int32) -> Array[Double]
 
 pub fn ts_linear_trend(TimeSeriesData) -> (Double, Double)
 
 pub fn ts_mean(TimeSeriesData) -> Double
 
-pub fn ts_moving_average(TimeSeriesData, Int) -> Array[Double]
+pub fn ts_moving_average(TimeSeriesData, Int32) -> Array[Double]
 
-pub fn ts_seasonal_decompose(TimeSeriesData, Int) -> (Array[Double], Array[Double], Array[Double])
+pub fn ts_seasonal_decompose(TimeSeriesData, Int32) -> (Array[Double], Array[Double], Array[Double])
 
 pub fn ts_stddev(TimeSeriesData) -> Double
 
 pub fn ultrasound_doppler_shift(Double, Double, Double) -> Double
 
-pub fn ultrasound_elastography(Array[Double], Array[Double], Int, Int, Int) -> ElastographyResult
+pub fn ultrasound_elastography(Array[Double], Array[Double], Int32, Int32, Int32) -> ElastographyResult
 
 pub fn ultrasound_envelope_detection(Array[Double]) -> Array[Double]
 
 pub fn ultrasound_log_compression(Array[Double], Double, Double) -> Array[Double]
 
-pub fn ultrasound_scan_conversion(Array[Double], Int, Int, Double, Int, Int) -> Array[Double]
+pub fn ultrasound_scan_conversion(Array[Double], Int32, Int32, Double, Int32, Int32) -> Array[Double]
 
-pub fn ultrasound_speckle_reduction(Array[Double], Int, Int, Int) -> Array[Double]
+pub fn ultrasound_speckle_reduction(Array[Double], Int32, Int32, Int32) -> Array[Double]
 
-pub fn ultrasound_time_gain_compensation(Array[Double], Int, Int, Double) -> Array[Double]
+pub fn ultrasound_time_gain_compensation(Array[Double], Int32, Int32, Double) -> Array[Double]
 
 pub fn undistort_image(@types.Image, CameraIntrinsics) -> @types.Image
 
@@ -919,7 +919,7 @@ pub fn undistort_point(CameraIntrinsics, Double, Double) -> (Double, Double)
 
 pub fn update_background_model(BackgroundModel, @types.Image) -> BackgroundModel
 
-pub fn update_tracked_object(TrackedObject, Array[Int], Double) -> TrackedObject
+pub fn update_tracked_object(TrackedObject, Array[Int32], Double) -> TrackedObject
 
 pub fn update_tracker(Track, Double, Double, TrackerParams) -> Track
 
@@ -965,7 +965,7 @@ pub fn vins_stats(VinsState, Array[SlamPose]) -> VinsStats
 
 pub fn visual_question_answering(String, String) -> VQAResult
 
-pub fn vq_vae_quantize(Array[Double], Array[Double], Int) -> (Array[Double], Int)
+pub fn vq_vae_quantize(Array[Double], Array[Double], Int32) -> (Array[Double], Int32)
 
 pub fn warp_image(@types.Image, FlowField) -> @types.Image
 
@@ -995,7 +995,7 @@ pub(all) struct ActionRecognitionResult {
   all_scores : Array[Double]
   start_time : Double
   end_time : Double
-  num_frames : Int
+  num_frames : Int32
 }
 
 pub(all) struct AffineMatrix {
@@ -1042,10 +1042,10 @@ pub fn AtmoParams::not_equal(Self, Self) -> Bool
 pub fn AtmoParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AttentionParams {
-  d_model : Int
-  num_heads : Int
-  d_k : Int
-  d_v : Int
+  d_model : Int32
+  num_heads : Int32
+  d_k : Int32
+  d_v : Int32
   scale : Double
 } derive(Eq, @debug.Debug)
 pub fn AttentionParams::equal(Self, Self) -> Bool
@@ -1062,8 +1062,8 @@ pub fn AttentionType::not_equal(Self, Self) -> Bool
 pub fn AttentionType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AutoMLConfig {
-  max_trials : Int
-  budget : Int
+  max_trials : Int32
+  budget : Int32
   automl_type : AutoMLType
   minimize : Bool
 } derive(Eq, @debug.Debug)
@@ -1074,7 +1074,7 @@ pub fn AutoMLConfig::to_repr(Self) -> @debug.Repr
 pub(all) struct AutoMLResult {
   best_params : Array[Double]
   best_score : Double
-  total_trials : Int
+  total_trials : Int32
 } derive(Eq, @debug.Debug)
 pub fn AutoMLResult::equal(Self, Self) -> Bool
 pub fn AutoMLResult::not_equal(Self, Self) -> Bool
@@ -1100,12 +1100,12 @@ pub fn BackgroundMethod::not_equal(Self, Self) -> Bool
 pub fn BackgroundMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct BackgroundModel {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   means : Array[Double]
   variances : Array[Double]
   weights : Array[Double]
-  frame_count : Int
+  frame_count : Int32
   params : BackgroundParams
 } derive(Eq, @debug.Debug)
 pub fn BackgroundModel::equal(Self, Self) -> Bool
@@ -1116,7 +1116,7 @@ pub(all) struct BackgroundParams {
   bg_method : BackgroundMethod
   threshold : Double
   learning_rate : Double
-  history : Int
+  history : Int32
   var_init : Double
 } derive(Eq, @debug.Debug)
 pub fn BackgroundParams::equal(Self, Self) -> Bool
@@ -1165,7 +1165,7 @@ pub fn BokehQuality::to_repr(Self) -> @debug.Repr
 
 pub(all) struct BokehResult {
   image : @types.Image
-  max_blur_radius : Int
+  max_blur_radius : Int32
   blur_map : Array[Double]
 } derive(Eq, @debug.Debug)
 pub fn BokehResult::equal(Self, Self) -> Bool
@@ -1174,8 +1174,8 @@ pub fn BokehResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CADDetectionResult {
   candidates : Array[LesionCandidate]
-  num_true_positives : Int
-  num_false_positives : Int
+  num_true_positives : Int32
+  num_false_positives : Int32
   sensitivity : Double
 } derive(Eq, @debug.Debug)
 pub fn CADDetectionResult::equal(Self, Self) -> Bool
@@ -1183,9 +1183,9 @@ pub fn CADDetectionResult::not_equal(Self, Self) -> Bool
 pub fn CADDetectionResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CTConfig {
-  image_size : Int
-  num_angles : Int
-  detector_count : Int
+  image_size : Int32
+  num_angles : Int32
+  detector_count : Int32
   recon_method : ReconstructionMethod
 } derive(Eq, @debug.Debug)
 pub fn CTConfig::equal(Self, Self) -> Bool
@@ -1194,7 +1194,7 @@ pub fn CTConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CTProjection {
   angles : Array[Double]
-  detector_count : Int
+  detector_count : Int32
   projection_data : Array[Double]
 } derive(Eq, @debug.Debug)
 pub fn CTProjection::equal(Self, Self) -> Bool
@@ -1205,13 +1205,13 @@ pub(all) struct CVAdvancedConfig {
   task_type : CVAdvancedTaskType
   tracking_algorithm : TrackingAlgorithm
   action_algorithm : ActionRecognitionAlgorithm
-  tracking_window_size : Int
+  tracking_window_size : Int32
   confidence_threshold : Double
   iou_threshold : Double
-  max_age : Int
-  min_hits : Int
-  num_actions : Int
-  num_scene_classes : Int
+  max_age : Int32
+  min_hits : Int32
+  num_actions : Int32
+  num_scene_classes : Int32
   use_temporal : Bool
   use_attention : Bool
 }
@@ -1267,10 +1267,10 @@ pub fn ChangeMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ChangeResult {
   change_map : Array[Array[Double]]
-  binary_map : Array[Array[Int]]
+  binary_map : Array[Array[Int32]]
   threshold : Double
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn ChangeResult::equal(Self, Self) -> Bool
 pub fn ChangeResult::not_equal(Self, Self) -> Bool
@@ -1278,8 +1278,8 @@ pub fn ChangeResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ChessboardCorners {
   corners : Array[(Double, Double)]
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
 } derive(Eq, @debug.Debug)
 pub fn ChessboardCorners::equal(Self, Self) -> Bool
 pub fn ChessboardCorners::not_equal(Self, Self) -> Bool
@@ -1296,10 +1296,10 @@ pub fn ClassMethod::not_equal(Self, Self) -> Bool
 pub fn ClassMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ClassificationResult {
-  class_map : Array[Array[Int]]
-  num_classes : Int
-  width : Int
-  height : Int
+  class_map : Array[Array[Int32]]
+  num_classes : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn ClassificationResult::equal(Self, Self) -> Bool
 pub fn ClassificationResult::not_equal(Self, Self) -> Bool
@@ -1307,7 +1307,7 @@ pub fn ClassificationResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ClientUpdate {
   params : Array[Double]
-  num_samples : Int
+  num_samples : Int32
   loss : Double
 } derive(Eq, @debug.Debug)
 pub fn ClientUpdate::equal(Self, Self) -> Bool
@@ -1324,44 +1324,44 @@ pub fn CloudDetectMethod::not_equal(Self, Self) -> Bool
 pub fn CloudDetectMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CloudResult {
-  cloud_mask : Array[Array[Int]]
-  shadow_mask : Array[Array[Int]]
+  cloud_mask : Array[Array[Int32]]
+  shadow_mask : Array[Array[Int32]]
   cloud_coverage : Double
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn CloudResult::equal(Self, Self) -> Bool
 pub fn CloudResult::not_equal(Self, Self) -> Bool
 pub fn CloudResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Conv1DParams {
-  in_channels : Int
-  out_channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
-  dilation : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
+  dilation : Int32
 } derive(Eq, @debug.Debug)
 pub fn Conv1DParams::equal(Self, Self) -> Bool
 pub fn Conv1DParams::not_equal(Self, Self) -> Bool
 pub fn Conv1DParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Conv3DParams {
-  in_channels : Int
-  out_channels : Int
-  kernel_d : Int
-  kernel_h : Int
-  kernel_w : Int
-  stride : Int
-  padding : Int
+  in_channels : Int32
+  out_channels : Int32
+  kernel_d : Int32
+  kernel_h : Int32
+  kernel_w : Int32
+  stride : Int32
+  padding : Int32
 } derive(Eq, @debug.Debug)
 pub fn Conv3DParams::equal(Self, Self) -> Bool
 pub fn Conv3DParams::not_equal(Self, Self) -> Bool
 pub fn Conv3DParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DMatch {
-  query_idx : Int
-  train_idx : Int
+  query_idx : Int32
+  train_idx : Int32
   distance : Double
 } derive(Eq, @debug.Debug)
 pub fn DMatch::equal(Self, Self) -> Bool
@@ -1398,8 +1398,8 @@ pub fn DepthEstimationParams::not_equal(Self, Self) -> Bool
 pub fn DepthEstimationParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DepthMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   depths : Array[Double]
   valid : Array[Bool]
 } derive(Eq, @debug.Debug)
@@ -1418,7 +1418,7 @@ pub fn DepthOfFieldRange::not_equal(Self, Self) -> Bool
 pub fn DepthOfFieldRange::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DepthPostProcessParams {
-  smooth_radius : Int
+  smooth_radius : Int32
   fill_holes : Bool
   normalize : Bool
   edge_refine : Bool
@@ -1430,11 +1430,11 @@ pub fn DepthPostProcessParams::not_equal(Self, Self) -> Bool
 pub fn DepthPostProcessParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DepthwiseConvParams {
-  channels : Int
-  kernel_size : Int
-  stride : Int
-  padding : Int
-  depth_multiplier : Int
+  channels : Int32
+  kernel_size : Int32
+  stride : Int32
+  padding : Int32
+  depth_multiplier : Int32
 } derive(Eq, @debug.Debug)
 pub fn DepthwiseConvParams::equal(Self, Self) -> Bool
 pub fn DepthwiseConvParams::not_equal(Self, Self) -> Bool
@@ -1443,7 +1443,7 @@ pub fn DepthwiseConvParams::to_repr(Self) -> @debug.Repr
 pub(all) struct DicomImage {
   metadata : DicomMetadata
   pixel_data : Array[Double]
-  num_frames : Int
+  num_frames : Int32
 } derive(Eq, @debug.Debug)
 pub fn DicomImage::equal(Self, Self) -> Bool
 pub fn DicomImage::not_equal(Self, Self) -> Bool
@@ -1455,9 +1455,9 @@ pub(all) struct DicomMetadata {
   series_id : String
   instance_id : String
   modality : String
-  rows : Int
-  cols : Int
-  bits_allocated : Int
+  rows : Int32
+  cols : Int32
+  bits_allocated : Int32
   window_center : Double
   window_width : Double
 } derive(Eq, @debug.Debug)
@@ -1499,7 +1499,7 @@ pub fn DicomQueryLevel::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DicomQueryResult {
   found : Bool
-  num_results : Int
+  num_results : Int32
   study_uids : Array[String]
   series_uids : Array[String]
   error_message : String
@@ -1509,8 +1509,8 @@ pub fn DicomQueryResult::not_equal(Self, Self) -> Bool
 pub fn DicomQueryResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DicomTag {
-  group : Int
-  element : Int
+  group : Int32
+  element : Int32
   vr : DicomVR
   value : String
 } derive(Eq, @debug.Debug)
@@ -1538,7 +1538,7 @@ pub fn DicomVR::not_equal(Self, Self) -> Bool
 pub fn DicomVR::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DiffusionConfig {
-  num_steps : Int
+  num_steps : Int32
   beta_start : Double
   beta_end : Double
   schedule_type : ScheduleType
@@ -1549,7 +1549,7 @@ pub fn DiffusionConfig::not_equal(Self, Self) -> Bool
 pub fn DiffusionConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DiffusionState {
-  current_step : Int
+  current_step : Int32
   x_t : Array[Double]
   noise : Array[Double]
 } derive(Eq, @debug.Debug)
@@ -1568,8 +1568,8 @@ pub fn DiffusionType::not_equal(Self, Self) -> Bool
 pub fn DiffusionType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct DisparityMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   disparities : Array[Double]
   valid : Array[Bool]
 } derive(Eq, @debug.Debug)
@@ -1621,8 +1621,8 @@ pub fn DoseMetrics::to_repr(Self) -> @debug.Repr
 pub(all) struct ElastographyResult {
   strain : Array[Double]
   elasticity : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn ElastographyResult::equal(Self, Self) -> Bool
 pub fn ElastographyResult::not_equal(Self, Self) -> Bool
@@ -1631,7 +1631,7 @@ pub fn ElastographyResult::to_repr(Self) -> @debug.Repr
 pub(all) struct EndmemberResult {
   endmembers : Array[Array[Double]]
   abundance_maps : Array[Array[Double]]
-  num_endmembers : Int
+  num_endmembers : Int32
 } derive(Eq, @debug.Debug)
 pub fn EndmemberResult::equal(Self, Self) -> Bool
 pub fn EndmemberResult::not_equal(Self, Self) -> Bool
@@ -1665,25 +1665,25 @@ pub(all) struct FMRIActivation {
   activation : Array[Double]
   t_values : Array[Double]
   p_values : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn FMRIActivation::equal(Self, Self) -> Bool
 pub fn FMRIActivation::not_equal(Self, Self) -> Bool
 pub fn FMRIActivation::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FeatureSelectionResult {
-  selected_features : Array[Int]
+  selected_features : Array[Int32]
   scores : Array[Double]
-  num_selected : Int
+  num_selected : Int32
 } derive(Eq, @debug.Debug)
 pub fn FeatureSelectionResult::equal(Self, Self) -> Bool
 pub fn FeatureSelectionResult::not_equal(Self, Self) -> Bool
 pub fn FeatureSelectionResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FederatedConfig {
-  num_clients : Int
-  num_rounds : Int
+  num_clients : Int32
+  num_rounds : Int32
   client_fraction : Double
   prox_mu : Double
   dp_epsilon : Double
@@ -1695,7 +1695,7 @@ pub fn FederatedConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FederatedState {
   global_params : Array[Double]
-  round : Int
+  round : Int32
   converged : Bool
 } derive(Eq, @debug.Debug)
 pub fn FederatedState::equal(Self, Self) -> Bool
@@ -1721,8 +1721,8 @@ pub fn FloatDescriptor::not_equal(Self, Self) -> Bool
 pub fn FloatDescriptor::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FlowField {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   u : Array[Double]
   v : Array[Double]
 } derive(Eq, @debug.Debug)
@@ -1731,8 +1731,8 @@ pub fn FlowField::not_equal(Self, Self) -> Bool
 pub fn FlowField::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FlowParams {
-  window_size : Int
-  max_iterations : Int
+  window_size : Int32
+  max_iterations : Int32
   epsilon : Double
   alpha : Double
 } derive(Eq, @debug.Debug)
@@ -1741,8 +1741,8 @@ pub fn FlowParams::not_equal(Self, Self) -> Bool
 pub fn FlowParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ForegroundMask {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
 } derive(Eq, @debug.Debug)
 pub fn ForegroundMask::equal(Self, Self) -> Bool
@@ -1786,9 +1786,9 @@ pub fn FusionMethod::not_equal(Self, Self) -> Bool
 pub fn FusionMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GANConfig {
-  latent_dim : Int
-  img_channels : Int
-  img_size : Int
+  latent_dim : Int32
+  img_channels : Int32
+  img_size : Int32
   learning_rate : Double
   lambda_gp : Double
 } derive(Eq, @debug.Debug)
@@ -1799,7 +1799,7 @@ pub fn GANConfig::to_repr(Self) -> @debug.Repr
 pub(all) struct GANState {
   generator_loss : Double
   discriminator_loss : Double
-  iteration : Int
+  iteration : Int32
   converged : Bool
 } derive(Eq, @debug.Debug)
 pub fn GANState::equal(Self, Self) -> Bool
@@ -1817,8 +1817,8 @@ pub fn GANType::not_equal(Self, Self) -> Bool
 pub fn GANType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GNNConfig {
-  hidden_dim : Int
-  num_layers : Int
+  hidden_dim : Int32
+  num_layers : Int32
   dropout : Double
   gnn_type : GNNType
 } derive(Eq, @debug.Debug)
@@ -1864,8 +1864,8 @@ pub fn GeoCorrectMethod::not_equal(Self, Self) -> Bool
 pub fn GeoCorrectMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GhostMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
 } derive(Eq, @debug.Debug)
 pub fn GhostMap::equal(Self, Self) -> Bool
@@ -1873,10 +1873,10 @@ pub fn GhostMap::not_equal(Self, Self) -> Bool
 pub fn GhostMap::to_repr(Self) -> @debug.Repr
 
 pub(all) struct GraphData {
-  num_nodes : Int
+  num_nodes : Int32
   adj_matrix : Array[Double]
   node_features : Array[Double]
-  feature_dim : Int
+  feature_dim : Int32
 } derive(Eq, @debug.Debug)
 pub fn GraphData::equal(Self, Self) -> Bool
 pub fn GraphData::not_equal(Self, Self) -> Bool
@@ -1895,7 +1895,7 @@ pub(all) struct HdrPlusParams {
   mode : HdrPlusMode
   align_threshold : Double
   ghost_threshold : Double
-  num_pyramid_levels : Int
+  num_pyramid_levels : Int32
 } derive(Eq, @debug.Debug)
 pub fn HdrPlusParams::equal(Self, Self) -> Bool
 pub fn HdrPlusParams::not_equal(Self, Self) -> Bool
@@ -1928,8 +1928,8 @@ pub fn ImuData::to_repr(Self) -> @debug.Repr
 pub(all) struct InsarInterferogram {
   phase : Array[Array[Double]]
   coherence : Array[Array[Double]]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn InsarInterferogram::equal(Self, Self) -> Bool
 pub fn InsarInterferogram::not_equal(Self, Self) -> Bool
@@ -1938,8 +1938,8 @@ pub fn InsarInterferogram::to_repr(Self) -> @debug.Repr
 pub(all) struct KSpaceData {
   data_real : Array[Double]
   data_imag : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn KSpaceData::equal(Self, Self) -> Bool
 pub fn KSpaceData::not_equal(Self, Self) -> Bool
@@ -1960,21 +1960,21 @@ pub fn KalmanState::not_equal(Self, Self) -> Bool
 pub fn KalmanState::to_repr(Self) -> @debug.Repr
 
 pub(all) struct KeyPoint {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   response : Double
-  size : Int
+  size : Int32
   angle : Double
-  octave : Int
+  octave : Int32
 } derive(Eq, @debug.Debug)
 pub fn KeyPoint::equal(Self, Self) -> Bool
 pub fn KeyPoint::not_equal(Self, Self) -> Bool
 pub fn KeyPoint::to_repr(Self) -> @debug.Repr
 
 pub(all) struct LesionCandidate {
-  x : Int
-  y : Int
-  radius : Int
+  x : Int32
+  y : Int32
+  radius : Int32
   score : Double
   lesion_type : LesionType
 } derive(Eq, @debug.Debug)
@@ -1995,8 +1995,8 @@ pub fn LesionType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct LoopClosingResult {
   loop_found : Bool
-  loop_kf1 : Int
-  loop_kf2 : Int
+  loop_kf1 : Int32
+  loop_kf2 : Int32
   correction : SlamPose
 } derive(Eq, @debug.Debug)
 pub fn LoopClosingResult::equal(Self, Self) -> Bool
@@ -2075,7 +2075,7 @@ pub(all) struct MedRegResult {
   rigid : MedRigidTransform
   affine : MedAffineTransform
   final_error : Double
-  iterations : Int
+  iterations : Int32
 } derive(Eq, @debug.Debug)
 pub fn MedRegResult::equal(Self, Self) -> Bool
 pub fn MedRegResult::not_equal(Self, Self) -> Bool
@@ -2134,9 +2134,9 @@ pub fn MedVizMode::to_repr(Self) -> @debug.Repr
 pub(all) struct MetaLearningConfig {
   inner_lr : Double
   meta_lr : Double
-  num_inner_steps : Int
-  num_support : Int
-  num_query : Int
+  num_inner_steps : Int32
+  num_support : Int32
+  num_query : Int32
   ml_type : MetaLearningType
 } derive(Eq, @debug.Debug)
 pub fn MetaLearningConfig::equal(Self, Self) -> Bool
@@ -2174,8 +2174,8 @@ pub fn MonocularDepthMethod::not_equal(Self, Self) -> Bool
 pub fn MonocularDepthMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MotionMask {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
   intensity : Array[Double]
 } derive(Eq, @debug.Debug)
@@ -2185,20 +2185,20 @@ pub fn MotionMask::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MotionParams {
   threshold : Double
-  min_area : Int
-  blur_size : Int
-  dilate_iter : Int
+  min_area : Int32
+  blur_size : Int32
+  dilate_iter : Int32
 } derive(Eq, @debug.Debug)
 pub fn MotionParams::equal(Self, Self) -> Bool
 pub fn MotionParams::not_equal(Self, Self) -> Bool
 pub fn MotionParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MotionRegion {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  area : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  area : Int32
   intensity : Double
 } derive(Eq, @debug.Debug)
 pub fn MotionRegion::equal(Self, Self) -> Bool
@@ -2207,9 +2207,9 @@ pub fn MotionRegion::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MultispecImage {
   bands : Array[Array[Double]]
-  width : Int
-  height : Int
-  num_bands : Int
+  width : Int32
+  height : Int32
+  num_bands : Int32
 } derive(Eq, @debug.Debug)
 pub fn MultispecImage::equal(Self, Self) -> Bool
 pub fn MultispecImage::not_equal(Self, Self) -> Bool
@@ -2250,10 +2250,10 @@ pub fn NightShotParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OrbSlamConfig {
   mode : OrbSlamMode
-  vocab_size : Int
-  n_features : Int
-  scale_levels : Int
-  init_threshold : Int
+  vocab_size : Int32
+  n_features : Int32
+  scale_levels : Int32
+  init_threshold : Int32
 } derive(Eq, @debug.Debug)
 pub fn OrbSlamConfig::equal(Self, Self) -> Bool
 pub fn OrbSlamConfig::not_equal(Self, Self) -> Bool
@@ -2269,9 +2269,9 @@ pub fn OrbSlamMode::not_equal(Self, Self) -> Bool
 pub fn OrbSlamMode::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OrbSlamStats {
-  total_frames : Int
-  total_keyframes : Int
-  total_map_points : Int
+  total_frames : Int32
+  total_keyframes : Int32
+  total_map_points : Int32
   trajectory_length : Double
   fps : Double
 } derive(Eq, @debug.Debug)
@@ -2285,7 +2285,7 @@ pub(all) struct OrbSlamSystem {
   backend : SlamBackend
   trajectory : Array[SlamPose]
   initialized : Bool
-  frame_count : Int
+  frame_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn OrbSlamSystem::equal(Self, Self) -> Bool
 pub fn OrbSlamSystem::not_equal(Self, Self) -> Bool
@@ -2303,12 +2303,12 @@ pub fn OrganSegMethod::not_equal(Self, Self) -> Bool
 pub fn OrganSegMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OrganSegResult {
-  mask : Array[Int]
+  mask : Array[Int32]
   organ : OrganType
   seg_method : OrganSegMethod
-  volume : Int
-  width : Int
-  height : Int
+  volume : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn OrganSegResult::equal(Self, Self) -> Bool
 pub fn OrganSegResult::not_equal(Self, Self) -> Bool
@@ -2340,8 +2340,8 @@ pub fn OrthoParams::to_repr(Self) -> @debug.Repr
 pub(all) struct PACSConfig {
   ae_title : String
   host : String
-  port : Int
-  timeout : Int
+  port : Int32
+  timeout : Int32
 } derive(Eq, @debug.Debug)
 pub fn PACSConfig::equal(Self, Self) -> Bool
 pub fn PACSConfig::not_equal(Self, Self) -> Bool
@@ -2371,19 +2371,19 @@ pub fn PathologyStain::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase12Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
 } derive(Eq, @debug.Debug)
 pub fn Phase12Capability::equal(Self, Self) -> Bool
 pub fn Phase12Capability::not_equal(Self, Self) -> Bool
 pub fn Phase12Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase12Report {
-  total_versions : Int
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_versions : Int32
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   capabilities : Array[Phase12Capability]
   is_complete : Bool
 } derive(Eq, @debug.Debug)
@@ -2394,9 +2394,9 @@ pub fn Phase12Report::to_repr(Self) -> @debug.Repr
 pub(all) struct Phase13Capability {
   name : String
   version : String
-  types_count : Int
-  functions_count : Int
-  tests_count : Int
+  types_count : Int32
+  functions_count : Int32
+  tests_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn Phase13Capability::equal(Self, Self) -> Bool
 pub fn Phase13Capability::not_equal(Self, Self) -> Bool
@@ -2404,9 +2404,9 @@ pub fn Phase13Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase13Report {
   capabilities : Array[Phase13Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   is_complete : Bool
 } derive(Eq, @debug.Debug)
 pub fn Phase13Report::equal(Self, Self) -> Bool
@@ -2417,9 +2417,9 @@ pub(all) struct Phase14Capability {
   version : String
   module_name : String
   description : String
-  num_types : Int
-  num_functions : Int
-  num_tests : Int
+  num_types : Int32
+  num_functions : Int32
+  num_tests : Int32
 } derive(Eq, @debug.Debug)
 pub fn Phase14Capability::equal(Self, Self) -> Bool
 pub fn Phase14Capability::not_equal(Self, Self) -> Bool
@@ -2427,10 +2427,10 @@ pub fn Phase14Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase14Report {
   capabilities : Array[Phase14Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
-  total_versions : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  total_versions : Int32
   is_complete : Bool
 } derive(Eq, @debug.Debug)
 pub fn Phase14Report::equal(Self, Self) -> Bool
@@ -2441,9 +2441,9 @@ pub(all) struct Phase15Capability {
   version : String
   name : String
   description : String
-  num_types : Int
-  num_functions : Int
-  num_tests : Int
+  num_types : Int32
+  num_functions : Int32
+  num_tests : Int32
 } derive(Eq, @debug.Debug)
 pub fn Phase15Capability::equal(Self, Self) -> Bool
 pub fn Phase15Capability::not_equal(Self, Self) -> Bool
@@ -2451,10 +2451,10 @@ pub fn Phase15Capability::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Phase15Report {
   capabilities : Array[Phase15Capability]
-  total_versions : Int
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_versions : Int32
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   is_complete : Bool
 } derive(Eq, @debug.Debug)
 pub fn Phase15Report::equal(Self, Self) -> Bool
@@ -2484,7 +2484,7 @@ pub(all) struct PruningConfig {
   sparsity : Double
   pruning_type : PruningType
   threshold : Double
-  min_channels : Int
+  min_channels : Int32
 } derive(Eq, @debug.Debug)
 pub fn PruningConfig::equal(Self, Self) -> Bool
 pub fn PruningConfig::not_equal(Self, Self) -> Bool
@@ -2492,10 +2492,10 @@ pub fn PruningConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PruningResult {
   mask : Array[Bool]
-  pruned_indices : Array[Int]
+  pruned_indices : Array[Int32]
   sparsity_achieved : Double
-  original_size : Int
-  pruned_size : Int
+  original_size : Int32
+  pruned_size : Int32
 } derive(Eq, @debug.Debug)
 pub fn PruningResult::equal(Self, Self) -> Bool
 pub fn PruningResult::not_equal(Self, Self) -> Bool
@@ -2512,7 +2512,7 @@ pub fn PruningType::not_equal(Self, Self) -> Bool
 pub fn PruningType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct QuantizationConfig {
-  bits : Int
+  bits : Int32
   per_channel : Bool
   symmetric : Bool
   calibration_min : Double
@@ -2533,10 +2533,10 @@ pub fn QuantizationType::not_equal(Self, Self) -> Bool
 pub fn QuantizationType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct QuantizedTensor {
-  data : Array[Int]
+  data : Array[Int32]
   scale : Double
-  zero_point : Int
-  bits : Int
+  zero_point : Int32
+  bits : Int32
 } derive(Eq, @debug.Debug)
 pub fn QuantizedTensor::equal(Self, Self) -> Bool
 pub fn QuantizedTensor::not_equal(Self, Self) -> Bool
@@ -2569,8 +2569,8 @@ pub(all) struct RawParams {
   wb_r_gain : Double
   wb_g_gain : Double
   wb_b_gain : Double
-  black_level : Int
-  white_level : Int
+  black_level : Int32
+  white_level : Int32
 } derive(Eq, @debug.Debug)
 pub fn RawParams::equal(Self, Self) -> Bool
 pub fn RawParams::not_equal(Self, Self) -> Bool
@@ -2597,9 +2597,9 @@ pub fn RegistrationMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RegistrationParams {
   reg_method : RegistrationMethod
-  max_iterations : Int
+  max_iterations : Int32
   epsilon : Double
-  warp_type : Int
+  warp_type : Int32
 } derive(Eq, @debug.Debug)
 pub fn RegistrationParams::equal(Self, Self) -> Bool
 pub fn RegistrationParams::not_equal(Self, Self) -> Bool
@@ -2609,7 +2609,7 @@ pub(all) struct RegistrationResult {
   warp : AffineMatrix
   success : Bool
   error : Double
-  iterations : Int
+  iterations : Int32
 } derive(Eq, @debug.Debug)
 pub fn RegistrationResult::equal(Self, Self) -> Bool
 pub fn RegistrationResult::not_equal(Self, Self) -> Bool
@@ -2642,8 +2642,8 @@ pub fn RpcModel::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SSLConfig {
   temperature : Double
-  projection_dim : Int
-  num_negatives : Int
+  projection_dim : Int32
+  num_negatives : Int32
   ssl_type : SSLType
 } derive(Eq, @debug.Debug)
 pub fn SSLConfig::equal(Self, Self) -> Bool
@@ -2672,8 +2672,8 @@ pub fn SSLType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SarImage {
   data : Array[Array[Double]]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   params : SarParams
 } derive(Eq, @debug.Debug)
 pub fn SarImage::equal(Self, Self) -> Bool
@@ -2707,11 +2707,11 @@ pub(all) struct SceneParsingResult {
   image_id : String
   scene_type : String
   confidence : Double
-  semantic_map : Array[Array[Int]]
-  num_classes : Int
+  semantic_map : Array[Array[Int32]]
+  num_classes : Int32
   class_distribution : Array[Double]
   objects : Array[String]
-  num_objects : Int
+  num_objects : Int32
 }
 
 pub(all) enum ScheduleType {
@@ -2734,10 +2734,10 @@ pub fn SlamBackend::not_equal(Self, Self) -> Bool
 pub fn SlamBackend::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamBackendParams {
-  min_observations : Int
+  min_observations : Int32
   max_reproj_error : Double
   loop_threshold : Double
-  ba_iterations : Int
+  ba_iterations : Int32
 } derive(Eq, @debug.Debug)
 pub fn SlamBackendParams::equal(Self, Self) -> Bool
 pub fn SlamBackendParams::not_equal(Self, Self) -> Bool
@@ -2746,39 +2746,39 @@ pub fn SlamBackendParams::to_repr(Self) -> @debug.Repr
 pub(all) struct SlamFrontend {
   keyframes : Array[SlamKeyFrame]
   current_pose : SlamPose
-  tracking_status : Int
-  lost_count : Int
+  tracking_status : Int32
+  lost_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn SlamFrontend::equal(Self, Self) -> Bool
 pub fn SlamFrontend::not_equal(Self, Self) -> Bool
 pub fn SlamFrontend::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamFrontendParams {
-  min_features : Int
-  max_features : Int
+  min_features : Int32
+  max_features : Int32
   keyframe_distance : Double
   keyframe_angle : Double
-  lost_threshold : Int
+  lost_threshold : Int32
 } derive(Eq, @debug.Debug)
 pub fn SlamFrontendParams::equal(Self, Self) -> Bool
 pub fn SlamFrontendParams::not_equal(Self, Self) -> Bool
 pub fn SlamFrontendParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamKeyFrame {
-  id : Int
+  id : Int32
   pose : SlamPose
   timestamp : Double
-  feature_count : Int
-  matched_count : Int
+  feature_count : Int32
+  matched_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn SlamKeyFrame::equal(Self, Self) -> Bool
 pub fn SlamKeyFrame::not_equal(Self, Self) -> Bool
 pub fn SlamKeyFrame::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlamMapPoint {
-  id : Int
+  id : Int32
   position : Point3D
-  observations : Int
+  observations : Int32
   quality : Double
 } derive(Eq, @debug.Debug)
 pub fn SlamMapPoint::equal(Self, Self) -> Bool
@@ -2811,16 +2811,16 @@ pub fn SpectralMatchMethod::to_repr(Self) -> @debug.Repr
 pub(all) struct StainSeparation {
   stain1 : Array[Double]
   stain2 : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn StainSeparation::equal(Self, Self) -> Bool
 pub fn StainSeparation::not_equal(Self, Self) -> Bool
 pub fn StainSeparation::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StereoParams {
-  max_disparity : Int
-  block_size : Int
+  max_disparity : Int32
+  block_size : Int32
   threshold : Double
   baseline : Double
 } derive(Eq, @debug.Debug)
@@ -2838,12 +2838,12 @@ pub fn TargetDetMethod::not_equal(Self, Self) -> Bool
 pub fn TargetDetMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TargetResult {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   confidence : Double
-  class_id : Int
+  class_id : Int32
 } derive(Eq, @debug.Debug)
 pub fn TargetResult::equal(Self, Self) -> Bool
 pub fn TargetResult::not_equal(Self, Self) -> Bool
@@ -2851,7 +2851,7 @@ pub fn TargetResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TimeSeriesData {
   values : Array[Double]
-  num_points : Int
+  num_points : Int32
 } derive(Eq, @debug.Debug)
 pub fn TimeSeriesData::equal(Self, Self) -> Bool
 pub fn TimeSeriesData::not_equal(Self, Self) -> Bool
@@ -2862,7 +2862,7 @@ pub(all) struct Track {
   y : Double
   width : Double
   height : Double
-  id : Int
+  id : Int32
   score : Double
 } derive(Eq, @debug.Debug)
 pub fn Track::equal(Self, Self) -> Bool
@@ -2870,14 +2870,14 @@ pub fn Track::not_equal(Self, Self) -> Bool
 pub fn Track::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TrackedObject {
-  object_id : Int
-  bounding_box : Array[Int]
+  object_id : Int32
+  bounding_box : Array[Int32]
   class_label : String
   confidence : Double
   velocity : Array[Double]
-  trajectory : Array[Array[Int]]
-  age : Int
-  hits : Int
+  trajectory : Array[Array[Int32]]
+  age : Int32
+  hits : Int32
   is_active : Bool
 }
 
@@ -2894,7 +2894,7 @@ pub(all) struct TrackerParams {
   kind : TrackerKind
   learning_rate : Double
   sigma : Double
-  max_gap : Int
+  max_gap : Int32
 } derive(Eq, @debug.Debug)
 pub fn TrackerParams::equal(Self, Self) -> Bool
 pub fn TrackerParams::not_equal(Self, Self) -> Bool
@@ -2915,7 +2915,7 @@ pub fn TrackingAlgorithm::equal(Self, Self) -> Bool
 pub fn TrackingAlgorithm::not_equal(Self, Self) -> Bool
 
 pub(all) struct TrainingSample {
-  class_id : Int
+  class_id : Int32
   features : Array[Double]
 } derive(Eq, @debug.Debug)
 pub fn TrainingSample::equal(Self, Self) -> Bool
@@ -2923,11 +2923,11 @@ pub fn TrainingSample::not_equal(Self, Self) -> Bool
 pub fn TrainingSample::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TransformerConfig {
-  d_model : Int
-  num_heads : Int
-  d_ff : Int
-  num_encoder_layers : Int
-  num_decoder_layers : Int
+  d_model : Int32
+  num_heads : Int32
+  d_ff : Int32
+  num_encoder_layers : Int32
+  num_decoder_layers : Int32
   dropout : Double
   scale : Double
 } derive(Eq, @debug.Debug)
@@ -2965,7 +2965,7 @@ pub fn TransformerLayerKind::to_repr(Self) -> @debug.Repr
 pub(all) struct TrialResult {
   params : Array[Double]
   score : Double
-  trial_id : Int
+  trial_id : Int32
 } derive(Eq, @debug.Debug)
 pub fn TrialResult::equal(Self, Self) -> Bool
 pub fn TrialResult::not_equal(Self, Self) -> Bool
@@ -3001,8 +3001,8 @@ pub fn UnwrapMethod::not_equal(Self, Self) -> Bool
 pub fn UnwrapMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VAEConfig {
-  latent_dim : Int
-  input_dim : Int
+  latent_dim : Int32
+  input_dim : Int32
   beta : Double
   learning_rate : Double
   vae_type : VAEType
@@ -3039,7 +3039,7 @@ pub(all) struct VQAResult {
   confidence : Double
   answer_type : String
   reasoning_steps : Array[String]
-  num_steps : Int
+  num_steps : Int32
 }
 
 pub(all) struct VinsConfig {
@@ -3047,7 +3047,7 @@ pub(all) struct VinsConfig {
   imu_freq : Double
   cam_freq : Double
   init_period : Double
-  max_iterations : Int
+  max_iterations : Int32
 } derive(Eq, @debug.Debug)
 pub fn VinsConfig::equal(Self, Self) -> Bool
 pub fn VinsConfig::not_equal(Self, Self) -> Bool
@@ -3059,16 +3059,16 @@ pub(all) struct VinsState {
   ba : (Double, Double, Double)
   bg : (Double, Double, Double)
   initialized : Bool
-  imu_count : Int
-  frame_count : Int
+  imu_count : Int32
+  frame_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn VinsState::equal(Self, Self) -> Bool
 pub fn VinsState::not_equal(Self, Self) -> Bool
 pub fn VinsState::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VinsStats {
-  total_imu : Int
-  total_frames : Int
+  total_imu : Int32
+  total_frames : Int32
   trajectory_length : Double
   avg_velocity : Double
   initialized : Bool
@@ -3078,11 +3078,11 @@ pub fn VinsStats::not_equal(Self, Self) -> Bool
 pub fn VinsStats::to_repr(Self) -> @debug.Repr
 
 pub(all) struct WSIConfig {
-  tile_size : Int
-  overlap : Int
-  levels : Int
-  width : Int
-  height : Int
+  tile_size : Int32
+  overlap : Int32
+  levels : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 pub fn WSIConfig::equal(Self, Self) -> Bool
 pub fn WSIConfig::not_equal(Self, Self) -> Bool

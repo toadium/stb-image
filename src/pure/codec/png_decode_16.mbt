@@ -9,7 +9,7 @@
 /// req_channels: 0/None=原色, 1=灰度, 2=灰度+alpha, 3=RGB, 4=RGBA
 pub fn decode_png_16_pure(
   data : Bytes,
-  req_channels? : Int? = None,
+  req_channels~ : Int32? = None,
 ) -> @types.Image16 raise @types.LoadError {
   match req_channels {
     Some(n) =>
@@ -28,7 +28,7 @@ pub fn decode_png_16_pure(
   let mut bit_depth = 0
   let mut color_type = 0
   let mut interlace = 0
-  let palette : Array[(Int, Int, Int)] = []
+  let palette : Array[(Int32, Int32, Int32)] = []
   let idat_data : Array[Byte] = []
   let mut found_ihdr = false
   let mut found_iend = false
@@ -140,7 +140,7 @@ pub fn decode_png_16_pure(
     None => ch
   }
   // 先提取原生 16-bit samples
-  let samples16 : Array[Int] = Array::make(pixel_count * ch, 0)
+  let samples16 : Array[Int32] = Array::make(pixel_count * ch, 0)
   if bit_depth == 16 {
     // big-endian → native int
     for i in 0..<(pixel_count * ch) {

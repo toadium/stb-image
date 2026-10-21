@@ -22,9 +22,9 @@ pub extend OpCombo with Eq::{not_equal, equal}
 /// 组合覆盖报告。
 /// Combo coverage report.
 pub(all) struct ComboCoverageReport {
-  total_combos : Int
-  generated_tests : Int
-  coverage_pct : Int
+  total_combos : Int32
+  generated_tests : Int32
+  coverage_pct : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -100,7 +100,7 @@ pub fn combo_coverage_report() -> ComboCoverageReport {
 ///|
 /// 统计独特算子对（去重 first_tag+second_tag）。
 /// Count unique op pairs.
-pub fn unique_combo_count() -> Int {
+pub fn unique_combo_count() -> Int32 {
   let combos = gen_all_combos()
   let tags : Array[String] = []
   for c in combos {

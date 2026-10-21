@@ -1,10 +1,10 @@
 // v192a barcode 增强测试：配置变体 + 边值 + 条码图案 + Reed-Solomon + 属性
 
 ///|
-fn bc_make_image(w : Int, h : Int, channels : Int) -> @types.Image {
+fn bc_make_image(w : Int32, h : Int32, channels : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * channels) {
-    let v : Int = i % 256
+    let v : Int32 = i % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -16,7 +16,11 @@ fn bc_make_image(w : Int, h : Int, channels : Int) -> @types.Image {
 }
 
 ///|
-fn bc_make_stripe_image(w : Int, h : Int, bar_width : Int) -> @types.Image {
+fn bc_make_stripe_image(
+  w : Int32,
+  h : Int32,
+  bar_width : Int32,
+) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<h {
     for x in 0..<w {
@@ -34,7 +38,7 @@ fn bc_make_stripe_image(w : Int, h : Int, bar_width : Int) -> @types.Image {
 }
 
 ///|
-fn bc_make_qr_like_image(size : Int) -> @types.Image {
+fn bc_make_qr_like_image(size : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<size {
     for x in 0..<size {
@@ -292,7 +296,7 @@ test "reed_solomon_decode: 无错误数据" {
 
 ///|
 test "reed_solomon_decode: 空数据" {
-  let data : Array[Int] = []
+  let data : Array[Int32] = []
   let (decoded, corrected) = @barcode.reed_solomon_decode(data, 0)
   assert_eq(decoded.length(), 0)
   assert_eq(corrected, 0)

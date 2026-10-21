@@ -7,8 +7,8 @@
 /// 运动掩码。
 /// Motion mask.
 pub(all) struct MotionMask {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
   intensity : Array[Double]
 } derive(Eq, @debug.Debug)
@@ -24,9 +24,9 @@ pub extend MotionMask with Eq::{not_equal, equal}
 /// Motion detection parameters.
 pub(all) struct MotionParams {
   threshold : Double
-  min_area : Int
-  blur_size : Int
-  dilate_iter : Int
+  min_area : Int32
+  blur_size : Int32
+  dilate_iter : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -39,11 +39,11 @@ pub extend MotionParams with Eq::{not_equal, equal}
 /// 运动区域。
 /// Motion region.
 pub(all) struct MotionRegion {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  area : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  area : Int32
   intensity : Double
 } derive(Eq, @debug.Debug)
 
@@ -130,7 +130,7 @@ pub fn compute_motion_energy(motion : MotionMask) -> Double {
 ///|
 /// 运动掩码形态学清理。
 /// Motion mask morphology cleanup.
-pub fn motion_morphology(motion : MotionMask, iter_count : Int) -> MotionMask {
+pub fn motion_morphology(motion : MotionMask, iter_count : Int32) -> MotionMask {
   let w = motion.width
   let h = motion.height
   let mut current = motion.mask
@@ -179,8 +179,8 @@ pub fn motion_optical_flow(flow : FlowField, threshold : Double) -> MotionMask {
 /// Compute motion density in regions.
 pub fn motion_density(
   motion : MotionMask,
-  grid_cols : Int,
-  grid_rows : Int,
+  grid_cols : Int32,
+  grid_rows : Int32,
 ) -> Array[Double] {
   let w = motion.width
   let h = motion.height
@@ -239,7 +239,7 @@ pub fn extract_motion_regions(
         let mut max_x = x
         let mut min_y = y
         let mut max_y = y
-        let stack : Array[(Int, Int)] = [(x, y)]
+        let stack : Array[(Int32, Int32)] = [(x, y)]
         while stack.length() > 0 {
           let (cx, cy) = stack[stack.length() - 1]
           let _ = stack.remove(stack.length() - 1)

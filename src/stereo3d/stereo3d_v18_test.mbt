@@ -2,7 +2,7 @@
 // 点云处理、立体匹配、深度图、ICP配准、法向量估计
 
 ///|
-fn make_depth_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_depth_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_depth_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_stereo_pair(w : Int, h : Int) -> (@types.Image, @types.Image) {
+fn make_stereo_pair(w : Int32, h : Int32) -> (@types.Image, @types.Image) {
   let left_arr : Array[Byte] = []
   let right_arr : Array[Byte] = []
   for y in 0..<h {
@@ -40,7 +40,7 @@ fn make_stereo_pair(w : Int, h : Int) -> (@types.Image, @types.Image) {
 }
 
 ///|
-fn make_simple_depth_map(w : Int, h : Int) -> @stereo3d.DepthMap3d {
+fn make_simple_depth_map(w : Int32, h : Int32) -> @stereo3d.DepthMap3d {
   let depths : Array[Double] = []
   for i in 0..<(w * h) {
     depths.push(1.0 + (i % 10).to_double() * 0.5)
@@ -56,7 +56,7 @@ fn make_simple_depth_map(w : Int, h : Int) -> @stereo3d.DepthMap3d {
 }
 
 ///|
-fn make_simple_point_cloud(n : Int) -> @stereo3d.PointCloud3D {
+fn make_simple_point_cloud(n : Int32) -> @stereo3d.PointCloud3D {
   let points : Array[@stereo3d.Point3d] = []
   for i in 0..<n {
     points.push(@stereo3d.Point3d::{

@@ -40,9 +40,9 @@ pub extend RadiomicsFeature with Eq::{not_equal, equal}
 /// 特征选择结果。
 /// Feature selection result.
 pub(all) struct FeatureSelectionResult {
-  selected_features : Array[Int]
+  selected_features : Array[Int32]
   scores : Array[Double]
-  num_selected : Int
+  num_selected : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -56,7 +56,7 @@ pub extend FeatureSelectionResult with Eq::{not_equal, equal}
 /// First-order statistics feature extraction.
 pub fn radiomics_first_order(
   image : Array[Double],
-  mask : Array[Int],
+  mask : Array[Int32],
 ) -> Array[RadiomicsFeature] {
   let result : Array[RadiomicsFeature] = []
   let values : Array[Double] = []
@@ -141,9 +141,9 @@ pub fn radiomics_first_order(
 /// 形状特征提取。
 /// Shape feature extraction.
 pub fn radiomics_shape_features(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
 ) -> Array[RadiomicsFeature] {
   let result : Array[RadiomicsFeature] = []
   let mut volume = 0
@@ -201,14 +201,14 @@ pub fn radiomics_shape_features(
 /// GLCM texture features.
 pub fn radiomics_glcm_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  num_levels : Int,
+  width : Int32,
+  height : Int32,
+  num_levels : Int32,
 ) -> Array[RadiomicsFeature] {
   let result : Array[RadiomicsFeature] = []
-  let glcm : Array[Array[Int]] = []
+  let glcm : Array[Array[Int32]] = []
   for _ in 0..<num_levels {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in 0..<num_levels {
       row.push(0)
     }
@@ -298,7 +298,7 @@ pub fn radiomics_select_features(
   } else {
     0
   }
-  let selected : Array[Int] = []
+  let selected : Array[Int32] = []
   let scores : Array[Double] = []
   for f in 0..<num_features {
     let mut sum = 0.0
@@ -335,7 +335,7 @@ pub fn radiomics_select_features(
 /// Feature stability assessment (ICC).
 pub fn radiomics_compute_icc(
   features : Array[Array[Double]],
-  feature_idx : Int,
+  feature_idx : Int32,
 ) -> Double {
   let num_subjects = features.length()
   if num_subjects < 2 {

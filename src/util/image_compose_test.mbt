@@ -1,7 +1,7 @@
 // image_compose 测试：hstack / vstack / tile / transpose
 
 ///|
-fn mk(w : Int, h : Int, ch : Int, v : Byte) -> @types.Image {
+fn mk(w : Int32, h : Int32, ch : Int32, v : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

@@ -4,14 +4,14 @@
 ///|
 /// 双线性插值采样。在 (x, y) 处采样通道 c 的值。
 fn sample_bilinear(
-  data : Array[Int],
-  w : Int,
-  h : Int,
-  ch : Int,
-  c : Int,
+  data : Array[Int32],
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  c : Int32,
   x : Float,
   y : Float,
-) -> Int {
+) -> Int32 {
   let x0 = x.to_int()
   let y0 = y.to_int()
   let w_minus_1 = w - 1
@@ -40,14 +40,14 @@ fn sample_bilinear(
 pub fn warp_affine(
   img : @types.Image,
   matrix : (Float, Float, Float, Float, Float, Float),
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image {
   let (a, b, c, d, e, f) = matrix
   let ch = img.channels
   let w = img.width
   let h = img.height
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -89,7 +89,7 @@ pub fn rotate(img : @types.Image, angle_degrees : Float) -> @types.Image {
   // 即 matrix = (cos, sin, cx-cos*cx-sin*cy, -sin, cos, cy+sin*cx-cos*cy)
   let tx = cx - cos_a * cx - sin_a * cy
   let ty = cy + sin_a * cx - cos_a * cy
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }

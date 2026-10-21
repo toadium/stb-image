@@ -28,9 +28,9 @@ pub fn decrypt_image_logistic(@types.Image, key? : Double, mu? : Double) -> @typ
 
 pub fn decrypt_image_xor(@types.Image, String) -> @types.Image raise @types.LoadError
 
-pub fn embed_visible_watermark(@types.Image, String, Int, Int, Double) -> @types.Image raise @types.LoadError
+pub fn embed_visible_watermark(@types.Image, String, Int32, Int32, Double) -> @types.Image raise @types.LoadError
 
-pub fn embed_watermark_lsb(@types.Image, Array[Byte], Int) -> (@types.Image, WatermarkInfo) raise @types.LoadError
+pub fn embed_watermark_lsb(@types.Image, Array[Byte], Int32) -> (@types.Image, WatermarkInfo) raise @types.LoadError
 
 pub fn encrypt_image_logistic(@types.Image, key? : Double, mu? : Double) -> @types.Image raise @types.LoadError
 
@@ -44,9 +44,9 @@ pub fn evaluate_encryption_quality(@types.Image, @types.Image) -> EncryptionQual
 
 pub fn evaluate_image_encryption_quality(@types.Image, @types.Image) -> ImageEncryptionQuality raise @types.LoadError
 
-pub fn extract_watermark_lsb(@types.Image, Int, Int) -> WatermarkExtractionResult raise @types.LoadError
+pub fn extract_watermark_lsb(@types.Image, Int32, Int32) -> WatermarkExtractionResult raise @types.LoadError
 
-pub fn generate_chaotic_sequence_enc(ChaoticParams, Int) -> Array[Double]
+pub fn generate_chaotic_sequence_enc(ChaoticParams, Int32) -> Array[Double]
 
 pub fn histogram_entropy(@types.Image) -> Double raise @types.LoadError
 
@@ -60,9 +60,9 @@ pub fn xor_encrypt(@types.Image, Array[Byte]) -> EncryptionResult raise @types.L
 
 // Types and methods
 pub(all) struct ArnoldParams {
-  iterations : Int
-  a : Int
-  b : Int
+  iterations : Int32
+  a : Int32
+  b : Int32
 }
 
 pub(all) struct ChaoticParams {
@@ -72,7 +72,7 @@ pub(all) struct ChaoticParams {
   a : Double
   b : Double
   c : Double
-  iterations : Int
+  iterations : Int32
 }
 
 pub(all) enum EncryptionAlgorithm {
@@ -91,7 +91,7 @@ pub(all) struct EncryptionConfig {
   method_type : String
   key : Double
   mu : Double
-  iterations : Int
+  iterations : Int32
 }
 
 pub(all) struct EncryptionQuality {
@@ -105,14 +105,14 @@ pub(all) struct EncryptionQuality {
 
 pub(all) struct EncryptionResult {
   encrypted_data : Array[Byte]
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   algorithm : EncryptionAlgorithm
   key_hash : String
   encryption_time_ms : Double
-  file_size_original : Int
-  file_size_encrypted : Int
+  file_size_original : Int32
+  file_size_encrypted : Int32
 }
 
 pub(all) struct ImageEncryptionQuality {
@@ -128,8 +128,8 @@ pub(all) struct ImageEncryptionQuality {
 
 pub(all) struct WatermarkExtractionResult {
   watermark_data : Array[Byte]
-  watermark_width : Int
-  watermark_height : Int
+  watermark_width : Int32
+  watermark_height : Int32
   similarity : Double
   extracted : Bool
   extraction_time_ms : Double
@@ -138,8 +138,8 @@ pub(all) struct WatermarkExtractionResult {
 pub(all) struct WatermarkInfo {
   watermark_type : WatermarkType
   watermark_data : Array[Byte]
-  watermark_width : Int
-  watermark_height : Int
+  watermark_width : Int32
+  watermark_height : Int32
   strength : Double
   embedded : Bool
   embedding_position : String

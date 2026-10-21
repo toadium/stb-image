@@ -6,7 +6,7 @@
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn bilateral_filter(
   img : @types.Image,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
 ) -> @types.Image raise @types.LoadError {
@@ -237,10 +237,10 @@ pub fn bilateral_filter(
 /// downsample 为降采样倍数（1=不降采样，2=降采样到 1/2）。
 pub fn bilateral_filter_fast(
   img : @types.Image,
-  radius : Int,
+  radius : Int32,
   sigma_space : Float,
   sigma_color : Float,
-  downsample : Int,
+  downsample : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -317,7 +317,7 @@ pub fn bilateral_filter_fast(
 }
 
 ///|
-fn crop_bilateral(img : @types.Image, w : Int, h : Int) -> @types.Image {
+fn crop_bilateral(img : @types.Image, w : Int32, h : Int32) -> @types.Image {
   let ch = img.channels
   let out : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for y in 0..<h {

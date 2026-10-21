@@ -36,7 +36,7 @@ pub fn super_resolution_bicubic(@types.Image, Double) -> @types.Image
 
 pub fn super_resolution_edge_preserving(@types.Image, Double, edge_threshold? : Double, sharpen_amount? : Double) -> @types.Image
 
-pub fn super_resolution_lanczos(@types.Image, Double, a? : Int) -> @types.Image
+pub fn super_resolution_lanczos(@types.Image, Double, a? : Int32) -> @types.Image
 
 pub fn super_resolution_report_to_string(SuperResolutionResult, ImageQualityMetrics) -> String
 
@@ -58,7 +58,7 @@ pub(all) struct EnhancementConfig {
   gamma : Double
   use_clahe : Bool
   clahe_clip_limit : Double
-  clahe_tile_size : Int
+  clahe_tile_size : Int32
 }
 
 pub(all) struct ImageQualityMetrics {
@@ -96,17 +96,17 @@ pub fn SuperResolutionAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct SuperResolutionConfig {
   scale : Double
   method_type : String
-  lanczos_a : Int
+  lanczos_a : Int32
   edge_threshold : Double
   sharpen_amount : Double
 }
 
 pub(all) struct SuperResolutionResult {
   image : @types.Image
-  original_width : Int
-  original_height : Int
-  output_width : Int
-  output_height : Int
+  original_width : Int32
+  original_height : Int32
+  output_width : Int32
+  output_height : Int32
   scale_factor : Double
   algorithm : SuperResolutionAlgorithm
   processing_time_ms : Double

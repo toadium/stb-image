@@ -85,7 +85,7 @@ test "glcm_features 常量图" {
 
 ///|
 test "glcm_features 空矩阵" {
-  let glcm : Array[Array[Int]] = []
+  let glcm : Array[Array[Int32]] = []
   let features = @feature.glcm_features(glcm)
   assert_eq(features.contrast, 0.0F)
   assert_eq(features.energy, 0.0F)

@@ -1,0 +1,171 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-advanced/security_surveillance_advanced"
+
+// Values
+pub fn analyze_behavior(DetectedPerson, SecuritySurveillanceConfig) -> BehaviorAnalysisResult
+
+pub fn analyze_crowd(Array[DetectedPerson], Int32, Int32, SecuritySurveillanceConfig) -> CrowdAnalysisResult
+
+pub fn create_default_security_config() -> SecuritySurveillanceConfig
+
+pub fn detect_intrusion(Array[DetectedPerson], Array[Int32], SecuritySurveillanceConfig) -> Array[IntrusionEvent]
+
+pub fn detect_people(Array[Double], Int32, Int32, SecuritySurveillanceConfig) -> Array[DetectedPerson]
+
+pub fn recognize_license_plate(Array[Double], Int32, Int32, SecuritySurveillanceConfig) -> LicensePlateResult
+
+pub fn security_surveillance_report_to_string(SecuritySurveillanceTaskType, SecuritySurveillanceConfig, String) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum AlertLevel {
+  Info
+  Warning
+  Critical
+  Emergency
+  Unknown
+} derive(Eq)
+pub fn AlertLevel::equal(Self, Self) -> Bool
+pub fn AlertLevel::not_equal(Self, Self) -> Bool
+
+pub(all) struct AnomalyEvent {
+  event_id : Int32
+  event_type : String
+  description : String
+  timestamp : Double
+  location : Array[Double]
+  confidence : Double
+  alert_level : AlertLevel
+  affected_people : Array[Int32]
+  num_affected_people : Int32
+  is_verified : Bool
+  video_clip_url : String
+}
+
+pub(all) struct BehaviorAnalysisResult {
+  person_id : Int32
+  behavior_type : BehaviorType
+  confidence : Double
+  timestamp : Double
+  duration : Double
+  location : Array[Double]
+  is_suspicious : Bool
+  risk_score : Double
+}
+
+pub(all) enum BehaviorType {
+  Walking
+  Running
+  Falling
+  Fighting
+  Aggressive
+  Suspicious
+  Crowding
+  Panic
+  Unknown
+} derive(Eq)
+pub fn BehaviorType::equal(Self, Self) -> Bool
+pub fn BehaviorType::not_equal(Self, Self) -> Bool
+
+pub(all) struct CrowdAnalysisResult {
+  num_people : Int32
+  density : Double
+  density_map : Array[Array[Double]]
+  crowd_direction : Array[Double]
+  crowd_speed : Double
+  is_overcrowded : Bool
+  panic_level : Double
+  hotspots : Array[Array[Double]]
+  num_hotspots : Int32
+}
+
+pub(all) struct DetectedPerson {
+  person_id : Int32
+  bounding_box : Array[Int32]
+  confidence : Double
+  face_embedding : Array[Double]
+  body_embedding : Array[Double]
+  velocity : Array[Double]
+  trajectory : Array[Array[Int32]]
+  age_estimate : Int32
+  gender_estimate : String
+  is_known : Bool
+  identity : String
+}
+
+pub(all) struct IntrusionEvent {
+  event_id : Int32
+  intrusion_type : IntrusionType
+  timestamp : Double
+  location : Array[Double]
+  bounding_box : Array[Int32]
+  confidence : Double
+  alert_level : AlertLevel
+  person_id : Int32
+  is_acknowledged : Bool
+  video_clip_start : Double
+  video_clip_end : Double
+}
+
+pub(all) enum IntrusionType {
+  PerimeterBreach
+  AreaEntry
+  LineCrossing
+  Loitering
+  ObjectLeft
+  ObjectRemoved
+  Unknown
+} derive(Eq)
+pub fn IntrusionType::equal(Self, Self) -> Bool
+pub fn IntrusionType::not_equal(Self, Self) -> Bool
+
+pub(all) struct LicensePlateResult {
+  plate_number : String
+  confidence : Double
+  bounding_box : Array[Int32]
+  vehicle_type : String
+  vehicle_color : String
+  plate_color : String
+  plate_type : String
+  timestamp : Double
+  is_valid : Bool
+}
+
+pub(all) struct SecuritySurveillanceConfig {
+  task_type : SecuritySurveillanceTaskType
+  detection_threshold : Double
+  recognition_threshold : Double
+  alert_threshold : Double
+  intrusion_zones : Array[Array[Int32]]
+  tripwires : Array[Array[Int32]]
+  loitering_time : Double
+  min_person_size : Int32
+  max_person_size : Int32
+  use_face_recognition : Bool
+  use_behavior_analysis : Bool
+  use_crowd_analysis : Bool
+  use_license_plate : Bool
+  alert_cooldown : Double
+  auto_alert : Bool
+  recording_on_alert : Bool
+  num_cameras : Int32
+  fps : Int32
+}
+
+pub(all) enum SecuritySurveillanceTaskType {
+  IntrusionDetection
+  FaceRecognition
+  BehaviorAnalysis
+  CrowdAnalysis
+  LicensePlateRecognition
+  AnomalyEventDetection
+  ObjectTracking
+  Unknown
+} derive(Eq)
+pub fn SecuritySurveillanceTaskType::equal(Self, Self) -> Bool
+pub fn SecuritySurveillanceTaskType::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits

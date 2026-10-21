@@ -2,7 +2,7 @@
 // 覆盖：crop_f越界、resize_cover目标尺寸、pyramid无效通道/图像太小、seam_carving_16f参数越界、multi_band_blend_16f尺寸不匹配
 
 ///|
-fn tr_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn tr_mk_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -16,7 +16,7 @@ fn tr_mk_img(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn tr_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn tr_mk_img16(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -31,7 +31,7 @@ fn tr_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn tr_mk_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn tr_mk_imgf(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()

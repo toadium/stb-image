@@ -3,24 +3,24 @@
 ///|
 /// 分割标签图
 pub(all) struct SegmentLabelImage {
-  width : Int
-  height : Int
-  labels : Array[Int] // 每个像素的标签（0=背景，1..N=区域）
-  num_regions : Int
+  width : Int32
+  height : Int32
+  labels : Array[Int32] // 每个像素的标签（0=背景，1..N=区域）
+  num_regions : Int32
 }
 
 ///|
 /// 分割区域信息
 pub struct SegmentRegion {
-  label : Int // 标签号
-  area : Int // 像素数
-  mean_r : Int // 平均颜色 R
-  mean_g : Int // 平均颜色 G
-  mean_b : Int // 平均颜色 B
-  bbox_x : Int
-  bbox_y : Int
-  bbox_w : Int
-  bbox_h : Int
+  label : Int32 // 标签号
+  area : Int32 // 像素数
+  mean_r : Int32 // 平均颜色 R
+  mean_g : Int32 // 平均颜色 G
+  mean_b : Int32 // 平均颜色 B
+  bbox_x : Int32
+  bbox_y : Int32
+  bbox_w : Int32
+  bbox_h : Int32
 }
 
 ///|
@@ -28,8 +28,8 @@ pub struct SegmentRegion {
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn kmeans_segment(
   img : @types.Image,
-  k : Int,
-  max_iters? : Int = 20,
+  k : Int32,
+  max_iters~ : Int32 = 20,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
@@ -50,10 +50,10 @@ pub fn kmeans_segment(
     )
   }
   // 初始化聚类中心
-  let centroids_r : Array[Int] = Array::make(k, 0)
-  let centroids_g : Array[Int] = Array::make(k, 0)
-  let centroids_b : Array[Int] = Array::make(k, 0)
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let centroids_r : Array[Int32] = Array::make(k, 0)
+  let centroids_g : Array[Int32] = Array::make(k, 0)
+  let centroids_b : Array[Int32] = Array::make(k, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -64,7 +64,7 @@ pub fn kmeans_segment(
     centroids_g[i] = data_int[idx * ch + 1]
     centroids_b[i] = data_int[idx * ch + 2]
   }
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let iters = if max_iters < 1 { 20 } else { max_iters }
   for _ in 0..<iters {
     let mut changed = false
@@ -103,10 +103,10 @@ pub fn kmeans_segment(
     if !changed {
       break
     }
-    let sum_r : Array[Int] = Array::make(k, 0)
-    let sum_g : Array[Int] = Array::make(k, 0)
-    let sum_b : Array[Int] = Array::make(k, 0)
-    let cnt : Array[Int] = Array::make(k, 0)
+    let sum_r : Array[Int32] = Array::make(k, 0)
+    let sum_g : Array[Int32] = Array::make(k, 0)
+    let sum_b : Array[Int32] = Array::make(k, 0)
+    let cnt : Array[Int32] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
       sum_r[label] += data_int[i * ch]
@@ -132,8 +132,8 @@ pub fn kmeans_segment(
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn region_growing_segment(
   img : @types.Image,
-  seeds : Array[(Int, Int)],
-  threshold? : Int = 30,
+  seeds : Array[(Int32, Int32)],
+  threshold~ : Int32 = 30,
 ) -> (SegmentLabelImage, Array[SegmentRegion]) raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -144,9 +144,9 @@ pub fn region_growing_segment(
   let w = img.width
   let h = img.height
   let n = w * h
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let regions : Array[SegmentRegion] = []
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -165,7 +165,7 @@ pub fn region_growing_segment(
     let seed_g = data_int[seed_idx * ch + 1]
     let seed_b = data_int[seed_idx * ch + 2]
     // BFS 区域生长
-    let stack : Array[Int] = [seed_idx]
+    let stack : Array[Int32] = [seed_idx]
     labels[seed_idx] = current_label
     let mut area = 0
     let mut sum_r = 0
@@ -255,10 +255,10 @@ pub fn region_growing_segment(
 /// 适用于 RGB/RGBA 图像（channels=3/4）。
 pub fn flood_fill(
   img : @types.Image,
-  seed_x : Int,
-  seed_y : Int,
+  seed_x : Int32,
+  seed_y : Int32,
   fill_color : Array[Byte],
-  threshold? : Int = 0,
+  threshold~ : Int32 = 0,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("flood_fill 需要 RGB/RGBA 图像")
@@ -274,7 +274,7 @@ pub fn flood_fill(
   for i in 0..<(n * ch) {
     out[i] = img.data[i]
   }
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -283,7 +283,7 @@ pub fn flood_fill(
   let seed_g = data_int[seed_idx * ch + 1]
   let seed_b = data_int[seed_idx * ch + 2]
   let visited : Array[Bool] = Array::make(n, false)
-  let stack : Array[Int] = [seed_idx]
+  let stack : Array[Int32] = [seed_idx]
   visited[seed_idx] = true
   let fill_ch = if ch >= 3 { 3 } else { 1 }
   while stack.length() > 0 {
@@ -355,13 +355,13 @@ pub fn segment_to_color(
 
 ///|
 fn color_dist_sq(
-  r1 : Int,
-  g1 : Int,
-  b1 : Int,
-  r2 : Int,
-  g2 : Int,
-  b2 : Int,
-) -> Int {
+  r1 : Int32,
+  g1 : Int32,
+  b1 : Int32,
+  r2 : Int32,
+  g2 : Int32,
+  b2 : Int32,
+) -> Int32 {
   let dr = r1 - r2
   let dg = g1 - g2
   let db = b1 - b2
@@ -370,21 +370,21 @@ fn color_dist_sq(
 
 ///|
 fn compute_regions(
-  data_int : Array[Int],
-  labels : Array[Int],
-  w : Int,
-  h : Int,
-  ch : Int,
-  k : Int,
+  data_int : Array[Int32],
+  labels : Array[Int32],
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  k : Int32,
 ) -> Array[SegmentRegion] {
-  let sum_r : Array[Int] = Array::make(k, 0)
-  let sum_g : Array[Int] = Array::make(k, 0)
-  let sum_b : Array[Int] = Array::make(k, 0)
-  let cnt : Array[Int] = Array::make(k, 0)
-  let min_x : Array[Int] = Array::make(k, w)
-  let min_y : Array[Int] = Array::make(k, h)
-  let max_x : Array[Int] = Array::make(k, 0)
-  let max_y : Array[Int] = Array::make(k, 0)
+  let sum_r : Array[Int32] = Array::make(k, 0)
+  let sum_g : Array[Int32] = Array::make(k, 0)
+  let sum_b : Array[Int32] = Array::make(k, 0)
+  let cnt : Array[Int32] = Array::make(k, 0)
+  let min_x : Array[Int32] = Array::make(k, w)
+  let min_y : Array[Int32] = Array::make(k, h)
+  let max_x : Array[Int32] = Array::make(k, 0)
+  let max_y : Array[Int32] = Array::make(k, 0)
   for y in 0..<h {
     for x in 0..<w {
       let idx = y * w + x

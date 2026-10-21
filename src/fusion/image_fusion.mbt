@@ -6,7 +6,7 @@
 pub(all) struct FusionConfig {
   method_type : String // "alpha" / "multifocus" / "exposure" / "laplacian"
   alpha : Double // Alpha 融合的权重（0-1）
-  pyramid_levels : Int // 拉普拉斯金字塔层数
+  pyramid_levels : Int32 // 拉普拉斯金字塔层数
 }
 
 ///|
@@ -21,7 +21,7 @@ pub fn fusion_default_config() -> FusionConfig {
 pub fn fuse_alpha(
   img1 : @types.Image,
   img2 : @types.Image,
-  alpha? : Double = 0.5,
+  alpha~ : Double = 0.5,
 ) -> @types.Image {
   let a = alpha
   if img1.width != img2.width || img1.height != img2.height {
@@ -63,7 +63,7 @@ pub fn fuse_alpha(
 
 ///|
 /// 计算图像的清晰度（拉普拉斯方差）
-fn compute_sharpness(img : @types.Image, x : Int, y : Int) -> Double {
+fn compute_sharpness(img : @types.Image, x : Int32, y : Int32) -> Double {
   let w = img.width
   let h = img.height
   let channels = img.channels
@@ -71,7 +71,7 @@ fn compute_sharpness(img : @types.Image, x : Int, y : Int) -> Double {
     return 0.0
   }
   let _ = (y * w + x) * channels
-  let gray = (px : Int, py : Int) => {
+  let gray = (px : Int32, py : Int32) => {
     let i = (py * w + px) * channels
     let r = img.data[i].to_double()
     let g = if channels >= 2 { img.data[i + 1].to_double() } else { r }

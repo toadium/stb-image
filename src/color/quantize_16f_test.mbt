@@ -1,7 +1,12 @@
 // 色彩量化 16-bit/float 变体测试
 
 ///|
-fn make_img16_q(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_q(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let n = w * h * ch
   let data : Array[Byte] = Array::make(n * 2, b'\x00')
   for i in 0..<n {
@@ -17,7 +22,7 @@ fn make_img16_q(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_q(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_q(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let n = w * h * ch
   let data : Array[Byte] = Array::make(n * 4, b'\x00')
   for i in 0..<n {

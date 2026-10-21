@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn sdo_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn sdo_make_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn sdo_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn sdo_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
+fn sdo_make_img_mismatch(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -41,10 +41,10 @@ fn sdo_make_config(
 
 ///|
 fn sdo_make_text_block(
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
   text : String,
 ) -> @ocr.TextBlock {
   @ocr.TextBlock::{

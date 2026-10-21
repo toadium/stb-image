@@ -25,7 +25,7 @@ pub extend FusionAlgorithm with Eq::{not_equal, equal}
 pub(all) struct FusionResult {
   image : @types.Image
   algorithm : FusionAlgorithm
-  num_images : Int
+  num_images : Int32
   processing_time_ms : Double
   fusion_quality : Double
 }
@@ -35,7 +35,7 @@ pub(all) struct FusionResult {
 pub(all) struct FusionConfig {
   algorithm : FusionAlgorithm
   weights : Array[Double]
-  pyramid_levels : Int
+  pyramid_levels : Int32
   use_color_preservation : Bool
 }
 
@@ -70,7 +70,7 @@ pub(all) struct RegistrationResult {
 /// 配准配置
 pub(all) struct RegistrationConfig {
   algorithm : RegistrationAlgorithm
-  max_iterations : Int
+  max_iterations : Int32
   tolerance : Double
   use_multiscale : Bool
 }
@@ -239,7 +239,10 @@ pub fn fuse_simple_mean(images : Array[@types.Image]) -> @types.Image {
 
 ///|
 /// 高斯模糊（用于金字塔）
-pub fn gaussian_blur_fe(img : @types.Image, kernel_size : Int) -> @types.Image {
+pub fn gaussian_blur_fe(
+  img : @types.Image,
+  kernel_size : Int32,
+) -> @types.Image {
   let w = img.width
   let h = img.height
   let _ = w * h
@@ -395,7 +398,7 @@ pub fn upsample_fe(img : @types.Image) -> @types.Image {
 /// 拉普拉斯金字塔融合（简化版）
 pub fn fuse_laplacian_pyramid(
   images : Array[@types.Image],
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image {
   ignore(levels)
   if images.length() < 2 {
@@ -519,8 +522,8 @@ pub fn register_images(
 /// 应用变换（平移）
 pub fn apply_translation(
   img : @types.Image,
-  dx : Int,
-  dy : Int,
+  dx : Int32,
+  dy : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height

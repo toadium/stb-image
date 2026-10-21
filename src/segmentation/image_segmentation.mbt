@@ -4,80 +4,80 @@
 ///|
 /// 分割标签
 pub(all) struct SegmentationLabel {
-  id : Int
+  id : Int32
   name : String
-  color : (Int, Int, Int)
-  pixel_count : Int
+  color : (Int32, Int32, Int32)
+  pixel_count : Int32
 }
 
 ///|
 /// 语义分割结果
 pub(all) struct SemanticSegmentationResult {
-  width : Int
-  height : Int
-  labels : Array[Int] // 每个像素的标签 ID
+  width : Int32
+  height : Int32
+  labels : Array[Int32] // 每个像素的标签 ID
   label_info : Array[SegmentationLabel]
-  num_classes : Int
+  num_classes : Int32
   inference_time_ms : Double
 }
 
 ///|
 /// 实例分割结果
 pub(all) struct InstanceSegmentationResult {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   masks : Array[Array[Bool]] // 每个实例的掩码
-  boxes : Array[(Int, Int, Int, Int)] // 每个实例的边界框 (x, y, w, h)
-  class_ids : Array[Int]
+  boxes : Array[(Int32, Int32, Int32, Int32)] // 每个实例的边界框 (x, y, w, h)
+  class_ids : Array[Int32]
   class_names : Array[String]
   confidences : Array[Double]
-  num_instances : Int
+  num_instances : Int32
 }
 
 ///|
 /// 超像素
 pub(all) struct Superpixel {
-  id : Int
+  id : Int32
   center_x : Double
   center_y : Double
-  size : Int
+  size : Int32
   mean_color : Double
-  label : Int
+  label : Int32
 }
 
 ///|
 /// 超像素分割结果
 pub(all) struct SuperpixelResult {
-  width : Int
-  height : Int
-  labels : Array[Int] // 每个像素的超像素 ID
+  width : Int32
+  height : Int32
+  labels : Array[Int32] // 每个像素的超像素 ID
   superpixels : Array[Superpixel]
-  num_superpixels : Int
+  num_superpixels : Int32
 }
 
 ///|
 /// 分水岭分割配置
 pub(all) struct WatershedConfig {
-  min_region_size : Int
-  max_regions : Int
+  min_region_size : Int32
+  max_regions : Int32
   use_markers : Bool
-  connectivity : Int // 4 或 8
+  connectivity : Int32 // 4 或 8
 }
 
 ///|
 /// K-Means 分割配置
 pub(all) struct KMeansConfig {
-  num_clusters : Int
-  max_iterations : Int
+  num_clusters : Int32
+  max_iterations : Int32
   tolerance : Double
   use_color_space : Bool
-  random_seed : Int
+  random_seed : Int32
 }
 
 ///|
 /// GrabCut 配置
 pub(all) struct GrabCutConfig {
-  num_iterations : Int
+  num_iterations : Int32
   gamma : Double
   use_gmm : Bool
 }
@@ -90,9 +90,9 @@ pub(all) struct SegmentationMetrics {
   mean_accuracy : Double
   frequency_weighted_iou : Double
   dice_coefficient : Double
-  true_positives : Int
-  false_positives : Int
-  false_negatives : Int
+  true_positives : Int32
+  false_positives : Int32
+  false_negatives : Int32
 }
 
 ///|
@@ -149,7 +149,7 @@ pub fn threshold_segmentation(
   }
   let w = img.width
   let h = img.height
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   let mut fg_count = 0
   let mut bg_count = 0
 
@@ -215,7 +215,7 @@ pub fn otsu_threshold_value(
   }
   let w = img.width
   let h = img.height
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -294,7 +294,7 @@ pub fn kmeans_segmentation(
     centers.push(i.to_double() * 255.0 / k.to_double() + 128.0 / k.to_double())
   }
 
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for _ in 0..<total {
     labels.push(0)
   }
@@ -318,7 +318,7 @@ pub fn kmeans_segmentation(
 
     // 更新聚类中心
     let sums : Array[Double] = []
-    let counts : Array[Int] = []
+    let counts : Array[Int32] = []
     for _ in 0..<k {
       sums.push(0.0)
       counts.push(0)
@@ -337,7 +337,7 @@ pub fn kmeans_segmentation(
   }
 
   // 统计每个类别的像素数
-  let pixel_counts : Array[Int] = []
+  let pixel_counts : Array[Int32] = []
   for _ in 0..<k {
     pixel_counts.push(0)
   }
@@ -381,7 +381,7 @@ pub fn kmeans_segmentation(
 /// 超像素分割（简化版 SLIC）
 pub fn superpixel_segmentation(
   img : @types.Image,
-  num_superpixels : Int,
+  num_superpixels : Int32,
 ) -> SuperpixelResult raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -406,7 +406,7 @@ pub fn superpixel_segmentation(
   let step = (total.to_double() / num_superpixels.to_double()).sqrt().to_int()
   let _ = w / step * (h / step)
 
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for _ in 0..<total {
     labels.push(-1)
   }
@@ -525,7 +525,7 @@ pub fn watershed_segmentation(
   let total = w * h
 
   // 简化版：基于梯度的区域生长
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for _ in 0..<total {
     labels.push(-1)
   }
@@ -550,8 +550,8 @@ pub fn watershed_segmentation(
       }
       if is_min && labels[idx] == -1 {
         // 区域生长
-        let queue_x : Array[Int] = [x]
-        let queue_y : Array[Int] = [y]
+        let queue_x : Array[Int32] = [x]
+        let queue_y : Array[Int32] = [y]
         labels[idx] = region_id
         let mut queue_idx = 0
         while queue_idx < queue_x.length() {
@@ -599,7 +599,7 @@ pub fn watershed_segmentation(
   }
 
   // 统计
-  let pixel_counts : Array[Int] = []
+  let pixel_counts : Array[Int32] = []
   for _ in 0..<(region_id + 1) {
     pixel_counts.push(0)
   }
@@ -636,10 +636,10 @@ pub fn watershed_segmentation(
 /// GrabCut 前景提取（简化版）
 pub fn grabcut_segmentation(
   img : @types.Image,
-  rect_x : Int,
-  rect_y : Int,
-  rect_w : Int,
-  rect_h : Int,
+  rect_x : Int32,
+  rect_y : Int32,
+  rect_w : Int32,
+  rect_h : Int32,
   config : GrabCutConfig,
 ) -> SemanticSegmentationResult raise @types.LoadError {
   // 输入验证
@@ -662,7 +662,7 @@ pub fn grabcut_segmentation(
   let w = img.width
   let h = img.height
   let total = w * h
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
 
   // 初始化：矩形内为可能前景，外为背景
   for y in 0..<h {
@@ -758,9 +758,9 @@ pub fn grabcut_segmentation(
 ///|
 /// 计算分割评估指标
 pub fn calculate_segmentation_metrics(
-  prediction : Array[Int],
-  ground_truth : Array[Int],
-  num_classes : Int,
+  prediction : Array[Int32],
+  ground_truth : Array[Int32],
+  num_classes : Int32,
 ) -> SegmentationMetrics {
   ignore(num_classes)
   let total = prediction.length()

@@ -2,18 +2,18 @@
 // 支持 Image16 / ImageF 两种类型
 
 ///|
-fn read_u16_le_c(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_c(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_c(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_c(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn write_f32_le(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -25,7 +25,7 @@ fn write_f32_le(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 /// 16-bit 亮度调整。delta ∈ [-65535, 65535]
 pub fn adjust_brightness_16(
   img : @types.Image16,
-  delta : Int,
+  delta : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

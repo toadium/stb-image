@@ -129,9 +129,9 @@ let corrupt_truncated_png : Bytes = Bytes::from_array([
 
 ///|
 fn make_rgb_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -144,9 +144,9 @@ fn make_rgb_image(
 
 ///|
 fn make_gray_image(
-  width : Int,
-  height : Int,
-  values : Array[Int],
+  width : Int32,
+  height : Int32,
+  values : Array[Int32],
 ) -> @types.Image {
   @types.Image::{
     width,
@@ -157,7 +157,7 @@ fn make_gray_image(
 }
 
 ///|
-fn make_gradient_image(width : Int, height : Int) -> @types.Image {
+fn make_gradient_image(width : Int32, height : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<height {
     for x in 0..<width {

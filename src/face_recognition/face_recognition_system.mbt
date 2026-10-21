@@ -56,8 +56,8 @@ pub(all) struct FaceDetectionResult {
   bounding_box : Array[Double]
   confidence : Double
   landmarks : Array[Array[Double]]
-  num_landmarks : Int
-  face_id : Int
+  num_landmarks : Int32
+  face_id : Int32
   is_frontal : Bool
   yaw : Double
   pitch : Double
@@ -68,7 +68,7 @@ pub(all) struct FaceDetectionResult {
 /// 人脸特征向量
 pub(all) struct FaceFeature {
   vector : Array[Double]
-  dimension : Int
+  dimension : Int32
   norm : Double
   is_normalized : Bool
 }
@@ -76,12 +76,12 @@ pub(all) struct FaceFeature {
 ///|
 /// 人脸识别结果
 pub(all) struct FaceRecognitionResult {
-  face_id : Int
+  face_id : Int32
   identity : String
   confidence : Double
   similarity : Double
   is_known : Bool
-  matched_face_id : Int
+  matched_face_id : Int32
   bounding_box : Array[Double]
 }
 
@@ -91,7 +91,7 @@ pub(all) struct ExpressionRecognitionResult {
   expression : ExpressionType
   confidence : Double
   probabilities : Array[Double]
-  num_classes : Int
+  num_classes : Int32
   dominant_expression : String
 }
 
@@ -123,7 +123,7 @@ pub(all) struct FaceAttributeAnalysis {
 pub(all) struct FaceDatabase {
   faces : Array[FaceFeature]
   identities : Array[String]
-  num_faces : Int
+  num_faces : Int32
   threshold : Double
   algorithm : FaceRecognitionAlgorithm
 }
@@ -135,11 +135,11 @@ pub(all) struct FaceRecognitionConfig {
   recognition_algorithm : FaceRecognitionAlgorithm
   detection_threshold : Double
   recognition_threshold : Double
-  min_face_size : Int
-  max_num_faces : Int
+  min_face_size : Int32
+  max_num_faces : Int32
   use_landmarks : Bool
   use_alignment : Bool
-  feature_dimension : Int
+  feature_dimension : Int32
 }
 
 ///|

@@ -6,9 +6,9 @@
 /// VP8 Bool 编码器（算术编码）
 priv struct Vp8BoolEncoder {
   output : Array[Byte]
-  mut low : Int
-  mut count : Int
-  mut range : Int
+  mut low : Int32
+  mut count : Int32
+  mut range : Int32
 }
 
 ///|
@@ -20,8 +20,8 @@ fn Vp8BoolEncoder::new() -> Vp8BoolEncoder {
 /// 编码一个 bool 值
 fn Vp8BoolEncoder::encode_bool(
   self : Vp8BoolEncoder,
-  bit : Int,
-  probability : Int,
+  bit : Int32,
+  probability : Int32,
 ) -> Unit {
   let split = 1 + (((self.range - 1) * probability) >> 8)
   if bit != 0 {
@@ -49,7 +49,7 @@ fn Vp8BoolEncoder::shift(self : Vp8BoolEncoder) -> Unit {
 
 ///|
 /// 编码固定概率的 bool (50%)
-fn Vp8BoolEncoder::encode_bit(self : Vp8BoolEncoder, bit : Int) -> Unit {
+fn Vp8BoolEncoder::encode_bit(self : Vp8BoolEncoder, bit : Int32) -> Unit {
   self.encode_bool(bit, 128)
 }
 
@@ -57,8 +57,8 @@ fn Vp8BoolEncoder::encode_bit(self : Vp8BoolEncoder, bit : Int) -> Unit {
 /// 编码无符号整数 (n bits, MSB first)
 fn Vp8BoolEncoder::encode_uint(
   self : Vp8BoolEncoder,
-  value : Int,
-  n : Int,
+  value : Int32,
+  n : Int32,
 ) -> Unit {
   for i in 0..<n {
     let bit = (value >> (n - 1 - i)) & 1
@@ -79,13 +79,15 @@ fn Vp8BoolEncoder::finish(self : Vp8BoolEncoder) -> Bytes {
 
 ///|
 /// RGB → YUV420 转换
-fn rgb_to_yuv420(img : @types.Image) -> (Array[Int], Array[Int], Array[Int]) {
+fn rgb_to_yuv420(
+  img : @types.Image,
+) -> (Array[Int32], Array[Int32], Array[Int32]) {
   let w = img.width
   let h = img.height
   let ch = img.channels
-  let y_plane : Array[Int] = Array::make(w * h, 0)
-  let u_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
-  let v_plane : Array[Int] = Array::make(w / 2 * (h / 2), 128)
+  let y_plane : Array[Int32] = Array::make(w * h, 0)
+  let u_plane : Array[Int32] = Array::make(w / 2 * (h / 2), 128)
+  let v_plane : Array[Int32] = Array::make(w / 2 * (h / 2), 128)
 
   for y in 0..<h {
     for x in 0..<w {
@@ -116,7 +118,7 @@ fn rgb_to_yuv420(img : @types.Image) -> (Array[Int], Array[Int], Array[Int]) {
 ///|
 /// VP8 4x4 DCT（正向变换）
 /// 使用 VP8 特定的变换矩阵（c=85627, c*sqrt(2)=121095）
-fn vp8_fdct_4x4(block : Array[Int]) -> Array[Int] {
+fn vp8_fdct_4x4(block : Array[Int32]) -> Array[Int32] {
   let result = Array::make(16, 0)
   // 行变换（一维 FDCT）
   for i in 0..<4 {
@@ -158,7 +160,7 @@ fn vp8_fdct_4x4(block : Array[Int]) -> Array[Int] {
 
 ///|
 /// VP8 16x16 WHT（正向 Walsh-Hadamard 变换，用于 DC 系数）
-fn vp8_fwht_4x4(block : Array[Int]) -> Array[Int] {
+fn vp8_fwht_4x4(block : Array[Int32]) -> Array[Int32] {
   let result = Array::make(16, 0)
   // 行变换
   for i in 0..<4 {
@@ -202,22 +204,22 @@ fn vp8_fwht_4x4(block : Array[Int]) -> Array[Int] {
 ///|
 /// VP8 量化参数
 priv struct Vp8EncQuantParams {
-  y_ac : Int
-  _y_dc : Int
-  _uv_ac : Int
-  _uv_dc : Int
+  y_ac : Int32
+  _y_dc : Int32
+  _uv_ac : Int32
+  _uv_dc : Int32
 }
 
 ///|
 /// 根据 quality 计算量化参数
-fn vp8_calc_quant_params(quality : Int) -> Vp8EncQuantParams {
+fn vp8_calc_quant_params(quality : Int32) -> Vp8EncQuantParams {
   let q = ((100 - quality).clamp(min=1, max=99) * 63 / 100).clamp(min=1, max=63)
   Vp8EncQuantParams::{ y_ac: q, _y_dc: q, _uv_ac: q, _uv_dc: q, }
 }
 
 ///|
 /// 量化 4x4 块
-fn vp8_quantize_4x4(coeffs : Array[Int], quant : Int) -> Array[Int] {
+fn vp8_quantize_4x4(coeffs : Array[Int32], quant : Int32) -> Array[Int32] {
   let result = Array::make(16, 0)
   for i in 0..<16 {
     let c = coeffs[i]
@@ -235,12 +237,12 @@ fn vp8_quantize_4x4(coeffs : Array[Int], quant : Int) -> Array[Int] {
 ///|
 /// I16x16 DC 预测（编码器端）
 fn vp8_predict_i16x16_dc(
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   let pred = Array::make(256, 128)
   let mut sum = 0
   let mut count = 0
@@ -274,16 +276,16 @@ fn vp8_predict_i16x16_dc(
 ///|
 /// I16x16 TrueMotion 预测（编码器端）
 fn vp8_predict_i16x16_tm(
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   let pred = Array::make(256, 128)
   // 获取上方像素、左方像素、左上方像素
-  let above : Array[Int] = Array::make(16, 128)
-  let left : Array[Int] = Array::make(16, 128)
+  let above : Array[Int32] = Array::make(16, 128)
+  let left : Array[Int32] = Array::make(16, 128)
   let mut above_left = 128
   if mb_y > 0 {
     for x in 0..<16 {
@@ -323,12 +325,12 @@ fn vp8_predict_i16x16_tm(
 ///|
 /// I16x16 水平预测（编码器端）
 fn vp8_predict_i16x16_h(
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   let pred = Array::make(256, 128)
   if mb_x > 0 {
     for y in 0..<16 {
@@ -347,12 +349,12 @@ fn vp8_predict_i16x16_h(
 ///|
 /// I16x16 垂直预测（编码器端）
 fn vp8_predict_i16x16_v(
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   ignore(height)
   let pred = Array::make(256, 128)
   if mb_y > 0 {
@@ -381,11 +383,11 @@ priv enum Vp8I16x16PredMode {
 ///|
 /// 选择最佳 I16x16 预测模式（基于 SAD 代价）
 fn vp8_select_i16x16_mode(
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Vp8I16x16PredMode {
   // 计算每种预测模式的 SAD（Sum of Absolute Differences）
   let modes = [
@@ -432,12 +434,12 @@ fn vp8_select_i16x16_mode(
 /// 根据预测模式获取预测像素
 fn vp8_get_i16x16_prediction(
   mode : Vp8I16x16PredMode,
-  y_plane : Array[Int],
-  mb_x : Int,
-  mb_y : Int,
-  width : Int,
-  height : Int,
-) -> Array[Int] {
+  y_plane : Array[Int32],
+  mb_x : Int32,
+  mb_y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
   match mode {
     Vp8I16x16PredMode::I16x16DcPred =>
       vp8_predict_i16x16_dc(y_plane, mb_x, mb_y, width, height)
@@ -456,7 +458,7 @@ fn vp8_get_i16x16_prediction(
 /// 编码一个 4x4 块的系数（简化版，使用固定概率）
 fn vp8_encode_block_tokens(
   enc : Vp8BoolEncoder,
-  coeffs : Array[Int],
+  coeffs : Array[Int32],
   is_dc : Bool,
 ) -> Unit {
   ignore(is_dc)
@@ -528,28 +530,28 @@ fn vp8_encode_block_tokens(
 priv struct Vp8EncSegmentParams {
   segmentation_enabled : Bool
   // 每个 segment 的量化器增量（4 个 segment）
-  quantizer_delta : Array[Int]
+  quantizer_delta : Array[Int32]
   // 每个 segment 的滤波级别增量（4 个 segment）
-  _filter_level_delta : Array[Int]
+  _filter_level_delta : Array[Int32]
   // 每个宏块的 segment ID
-  segment_id_map : Array[Int]
+  segment_id_map : Array[Int32]
 }
 
 ///|
 /// 创建 Segment 参数（基于图像复杂度自动分配 segment）
 fn vp8_enc_segment_params_new(
-  y_plane : Array[Int],
-  width : Int,
-  height : Int,
-  base_quant : Int,
+  y_plane : Array[Int32],
+  width : Int32,
+  height : Int32,
+  base_quant : Int32,
 ) -> Vp8EncSegmentParams {
   ignore(base_quant)
   let mb_w = (width + 15) / 16
   let mb_h = (height + 15) / 16
   let total_mbs = mb_w * mb_h
-  let segment_id_map : Array[Int] = Array::make(total_mbs, 0)
+  let segment_id_map : Array[Int32] = Array::make(total_mbs, 0)
   // 计算每个宏块的复杂度（方差）
-  let complexities : Array[Int] = Array::make(total_mbs, 0)
+  let complexities : Array[Int32] = Array::make(total_mbs, 0)
   for mb_y in 0..<mb_h {
     for mb_x in 0..<mb_w {
       let mut sum = 0
@@ -601,11 +603,11 @@ fn vp8_enc_segment_params_new(
 /// 获取指定宏块的量化参数（考虑 segment）
 fn vp8_enc_get_mb_quant(
   segment : Vp8EncSegmentParams,
-  mb_x : Int,
-  mb_y : Int,
-  mb_w : Int,
-  base_quant : Int,
-) -> Int {
+  mb_x : Int32,
+  mb_y : Int32,
+  mb_w : Int32,
+  base_quant : Int32,
+) -> Int32 {
   if !segment.segmentation_enabled {
     return base_quant
   }
@@ -623,10 +625,10 @@ fn vp8_enc_get_mb_quant(
 ///|
 /// 编码器端环路滤波（简化版，对重建的 Y 平面进行宏块边界滤波）
 fn vp8_encoder_loop_filter(
-  y_plane : Array[Int],
-  width : Int,
-  height : Int,
-  filter_level : Int,
+  y_plane : Array[Int32],
+  width : Int32,
+  height : Int32,
+  filter_level : Int32,
 ) -> Unit {
   if filter_level == 0 {
     return
@@ -687,25 +689,25 @@ fn vp8_encoder_loop_filter(
 /// 编码器端自适应概率模型（简化版）
 priv struct Vp8EncAdaptiveProbs {
   // 系数 token 概率（按位置 0-15，每个位置有 4 个 token 概率）
-  token_probs : Array[Int] // 16 * 4 = 64 个概率
+  token_probs : Array[Int32] // 16 * 4 = 64 个概率
   // 预测模式概率
-  pred_mode_probs : Array[Int] // 4 个预测模式概率
+  pred_mode_probs : Array[Int32] // 4 个预测模式概率
   // 统计计数器（用于概率更新）
-  token_counts : Array[Int] // 16 * 4 = 64 个计数器
-  pred_mode_counts : Array[Int] // 4 个计数器
+  token_counts : Array[Int32] // 16 * 4 = 64 个计数器
+  pred_mode_counts : Array[Int32] // 4 个计数器
   // 更新间隔
-  update_interval : Int
-  mut blocks_since_update : Int
+  update_interval : Int32
+  mut blocks_since_update : Int32
 }
 
 ///|
 /// 创建自适应概率模型（初始概率）
 fn vp8_enc_adaptive_probs_new() -> Vp8EncAdaptiveProbs {
   // 初始概率：均匀分布
-  let token_probs : Array[Int] = Array::make(64, 128)
-  let pred_mode_probs : Array[Int] = [128, 128, 128, 128]
-  let token_counts : Array[Int] = Array::make(64, 0)
-  let pred_mode_counts : Array[Int] = [0, 0, 0, 0]
+  let token_probs : Array[Int32] = Array::make(64, 128)
+  let pred_mode_probs : Array[Int32] = [128, 128, 128, 128]
+  let token_counts : Array[Int32] = Array::make(64, 0)
+  let pred_mode_counts : Array[Int32] = [0, 0, 0, 0]
   Vp8EncAdaptiveProbs::{
     token_probs,
     pred_mode_probs,
@@ -751,8 +753,8 @@ fn vp8_enc_adaptive_probs_update(probs : Vp8EncAdaptiveProbs) -> Unit {
 /// 记录 token 统计
 fn _vp8_enc_adaptive_probs_record_token(
   probs : Vp8EncAdaptiveProbs,
-  pos : Int,
-  token_type : Int,
+  pos : Int32,
+  token_type : Int32,
 ) -> Unit {
   if pos >= 0 && pos < 16 && token_type >= 0 && token_type < 4 {
     probs.token_counts[pos * 4 + token_type] += 1
@@ -763,7 +765,7 @@ fn _vp8_enc_adaptive_probs_record_token(
 /// 记录预测模式统计
 fn vp8_enc_adaptive_probs_record_mode(
   probs : Vp8EncAdaptiveProbs,
-  mode : Int,
+  mode : Int32,
 ) -> Unit {
   if mode >= 0 && mode < 4 {
     probs.pred_mode_counts[mode] += 1
@@ -775,9 +777,9 @@ fn vp8_enc_adaptive_probs_record_mode(
 ///|
 /// 构建 VP8 frame header (key frame)
 fn vp8_build_frame_header(
-  width : Int,
-  height : Int,
-  first_part_size : Int,
+  width : Int32,
+  height : Int32,
+  first_part_size : Int32,
 ) -> Bytes {
   let result : Array[Byte] = []
   // 3 bytes: frame tag
@@ -801,8 +803,8 @@ fn vp8_build_frame_header(
 ///|
 /// 构建 WebP RIFF 容器
 fn vp8_build_webp_container(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   vp8_data : Bytes,
 ) -> Bytes {
   let result : Array[Byte] = []
@@ -867,7 +869,7 @@ fn vp8_build_webp_container(
 /// quality: 1-100 (越高越好质量，文件越大)
 pub fn encode_webp_lossy_full(
   img : @types.Image,
-  quality? : Int = 75,
+  quality~ : Int32 = 75,
 ) -> Bytes raise @types.LoadError {
   let w = img.width
   let h = img.height
@@ -894,7 +896,7 @@ pub fn encode_webp_lossy_full(
   // Segment 参数（基于图像复杂度自动分配）
   let segment = vp8_enc_segment_params_new(y_plane, w, h, quant.y_ac)
   // 重建的 Y 平面（用于环路滤波和后续预测）
-  let recon_y : Array[Int] = Array::make(w * h, 128)
+  let recon_y : Array[Int32] = Array::make(w * h, 128)
   for i in 0..<(w * h) {
     recon_y[i] = y_plane[i]
   }
@@ -918,7 +920,7 @@ pub fn encode_webp_lossy_full(
       let pred = vp8_get_i16x16_prediction(pred_mode, recon_y, mb_x, mb_y, w, h)
 
       // 计算残差
-      let residual : Array[Int] = Array::make(256, 0)
+      let residual : Array[Int32] = Array::make(256, 0)
       for y in 0..<16 {
         for x in 0..<16 {
           let px = mb_x * 16 + x
@@ -930,7 +932,7 @@ pub fn encode_webp_lossy_full(
       }
 
       // 提取 16 个 4x4 子块的 DC 系数
-      let dc_block : Array[Int] = Array::make(16, 0)
+      let dc_block : Array[Int32] = Array::make(16, 0)
       for sub_y in 0..<4 {
         for sub_x in 0..<4 {
           let mut sum = 0
@@ -957,7 +959,7 @@ pub fn encode_webp_lossy_full(
       for sub_y in 0..<4 {
         for sub_x in 0..<4 {
           // 提取 4x4 子块
-          let block : Array[Int] = Array::make(16, 0)
+          let block : Array[Int32] = Array::make(16, 0)
           for y in 0..<4 {
             for x in 0..<4 {
               block[y * 4 + x] = residual[(sub_y * 4 + y) * 16 + (sub_x * 4 + x)]

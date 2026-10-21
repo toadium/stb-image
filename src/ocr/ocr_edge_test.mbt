@@ -23,7 +23,7 @@ fn ocr_make_zero_h() -> @types.Image {
 }
 
 ///|
-fn ocr_make_rgb(w : Int, h : Int) -> @types.Image {
+fn ocr_make_rgb(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -43,7 +43,7 @@ fn ocr_make_mismatch() -> @types.Image {
 }
 
 ///|
-fn ocr_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn ocr_make_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -53,7 +53,7 @@ fn ocr_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn ocr_make_checkerboard(w : Int, h : Int) -> @types.Image {
+fn ocr_make_checkerboard(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

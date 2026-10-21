@@ -6,8 +6,8 @@
 pub(all) struct ImageFeature {
   image_id : String
   features : Array[Double] // 特征向量
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 }
 
 ///|
@@ -15,7 +15,7 @@ pub(all) struct ImageFeature {
 pub(all) struct SearchResult {
   image_id : String
   similarity : Double
-  rank : Int
+  rank : Int32
 }
 
 ///|
@@ -35,7 +35,7 @@ pub fn image_database_new() -> ImageDatabase {
 /// 计算颜色直方图特征（简化版）
 fn compute_color_histogram(
   img : @types.Image,
-  bins? : Int = 16,
+  bins~ : Int32 = 16,
 ) -> Array[Double] {
   let num_bins = bins
   let w = img.width
@@ -200,8 +200,8 @@ pub fn database_remove_image(
 pub fn search_similar_images(
   db : ImageDatabase,
   query : ImageFeature,
-  top_k? : Int = 5,
-  method_type? : String = "cosine",
+  top_k~ : Int32 = 5,
+  method_type~ : String = "cosine",
 ) -> Array[SearchResult] {
   let k = top_k
   let search_method = method_type
@@ -247,7 +247,7 @@ pub fn search_similar_images(
 pub fn image_similarity(
   img1 : @types.Image,
   img2 : @types.Image,
-  method_type? : String = "cosine",
+  method_type~ : String = "cosine",
 ) -> Double {
   let f1 = extract_image_features(img1, "query")
   let f2 = extract_image_features(img2, "target")
@@ -278,6 +278,6 @@ pub fn batch_extract_features(
 
 ///|
 /// 获取数据库大小
-pub fn database_size(db : ImageDatabase) -> Int {
+pub fn database_size(db : ImageDatabase) -> Int32 {
   db.features.length()
 }

@@ -88,25 +88,25 @@ pub extend SoilType with Eq::{not_equal, equal}
 ///|
 /// 作物检测结果
 pub(all) struct CropDetectionResult {
-  crop_id : Int
+  crop_id : Int32
   crop_type : CropType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   confidence : Double
   growth_stage : String
   health_status : String
   height_cm : Double
-  leaf_count : Int
+  leaf_count : Int32
   canopy_coverage : Double
 }
 
 ///|
 /// 病害检测结果
 pub(all) struct DiseaseDetectionResult {
-  disease_id : Int
+  disease_id : Int32
   disease_type : DiseaseType
   severity : Double
   confidence : Double
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   affected_area_ratio : Double
   spread_direction : String
   recommendation : String
@@ -116,11 +116,11 @@ pub(all) struct DiseaseDetectionResult {
 ///|
 /// 虫害检测结果
 pub(all) struct PestDetectionResult {
-  pest_id : Int
+  pest_id : Int32
   pest_type : PestType
-  count : Int
+  count : Int32
   confidence : Double
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   infestation_level : Double
   damage_severity : Double
   recommendation : String
@@ -137,7 +137,7 @@ pub(all) struct YieldPredictionResult {
   current_growth_stage : String
   expected_harvest_date : String
   factors_analysis : Array[String]
-  num_factors : Int
+  num_factors : Int32
   historical_comparison : Double
 }
 
@@ -159,9 +159,9 @@ pub(all) struct SoilAnalysisResult {
 ///|
 /// 杂草检测结果
 pub(all) struct WeedDetectionResult {
-  weed_id : Int
+  weed_id : Int32
   weed_type : String
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   confidence : Double
   density : Double
   coverage_ratio : Double
@@ -183,7 +183,7 @@ pub(all) struct GrowthMonitoringResult {
   health_index : Double
   stress_level : Double
   growth_stage : String
-  days_to_harvest : Int
+  days_to_harvest : Int32
 }
 
 ///|
@@ -200,7 +200,7 @@ pub(all) struct AgricultureVisionConfig {
   use_thermal : Bool
   use_ndvi : Bool
   drone_altitude : Double
-  camera_resolution : Array[Int]
+  camera_resolution : Array[Int32]
   gps_accuracy : Double
   auto_recommendation : Bool
   irrigation_control : Bool
@@ -234,8 +234,8 @@ pub fn create_default_agriculture_config() -> AgricultureVisionConfig {
 /// 检测作物（简化版）
 pub fn detect_crops(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : AgricultureVisionConfig,
 ) -> Array[CropDetectionResult] {
   ignore(image)
@@ -256,7 +256,7 @@ pub fn detect_crops(
     state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let confidence = (state % 1000).to_double() / 1000.0 * 0.3 + 0.7
 
-    let bbox : Array[Int] = []
+    let bbox : Array[Int32] = []
     bbox.push(x)
     bbox.push(y)
     bbox.push(x + w)
@@ -283,8 +283,8 @@ pub fn detect_crops(
 /// 检测病害（简化版）
 pub fn detect_diseases(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : AgricultureVisionConfig,
 ) -> Array[DiseaseDetectionResult] {
   ignore(image)
@@ -319,7 +319,7 @@ pub fn detect_diseases(
     state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let severity = (state % 1000).to_double() / 1000.0
 
-    let bbox : Array[Int] = []
+    let bbox : Array[Int32] = []
     bbox.push(x)
     bbox.push(y)
     bbox.push(x + w)
@@ -351,8 +351,8 @@ pub fn detect_diseases(
 /// 检测虫害（简化版）
 pub fn detect_pests(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : AgricultureVisionConfig,
 ) -> Array[PestDetectionResult] {
   ignore(height)

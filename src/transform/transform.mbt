@@ -5,10 +5,10 @@
 /// 裁剪 8-bit Image 的指定区域
 pub fn crop(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> @types.Image raise @types.LoadError {
   if x < 0 ||
     y < 0 ||
@@ -162,10 +162,10 @@ pub fn flip_vertical(img : @types.Image) -> @types.Image {
 /// 裁剪 16-bit Image16
 pub fn crop_16(
   img : @types.Image16,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   if x < 0 ||
     y < 0 ||
@@ -196,10 +196,10 @@ pub fn crop_16(
 /// 裁剪 float ImageF
 pub fn crop_f(
   img : @types.ImageF,
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   if x < 0 ||
     y < 0 ||

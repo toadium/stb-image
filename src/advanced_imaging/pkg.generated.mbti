@@ -12,19 +12,19 @@ pub fn analyze_polarization(@types.Image, @types.Image, @types.Image, @types.Ima
 
 pub fn create_default_advanced_imaging_config(ImagingModality) -> AdvancedImagingConfig
 
-pub fn generate_hyperspectral_cube(@types.Image, Int, Double, Double) -> HyperspectralData
+pub fn generate_hyperspectral_cube(@types.Image, Int32, Double, Double) -> HyperspectralData
 
 pub fn infrared_pseudocolor(@types.Image, InfraredImagingType) -> @types.Image
 
-pub fn mri_synthesize(Int, Int, Double) -> MRIData
+pub fn mri_synthesize(Int32, Int32, Double) -> MRIData
 
-pub fn pet_synthesize(Int, Int, String) -> PETData
+pub fn pet_synthesize(Int32, Int32, String) -> PETData
 
-pub fn quantum_ghost_imaging(Int, Int, Int, QuantumImagingAlgorithm) -> @types.Image
+pub fn quantum_ghost_imaging(Int32, Int32, Int32, QuantumImagingAlgorithm) -> @types.Image
 
 pub fn thermal_to_temperature(@types.Image, Double, Double, Double) -> ThermalData
 
-pub fn ultrasound_synthesize(Int, Int, Double, Double) -> UltrasoundData
+pub fn ultrasound_synthesize(Int32, Int32, Double, Double) -> UltrasoundData
 
 pub fn xray_enhance(@types.Image, Double) -> XRayData
 
@@ -33,9 +33,9 @@ pub fn xray_enhance(@types.Image, Double) -> XRayData
 // Types and methods
 pub(all) struct AdvancedImagingConfig {
   modality : ImagingModality
-  image_width : Int
-  image_height : Int
-  num_slices : Int
+  image_width : Int32
+  image_height : Int32
+  num_slices : Int32
   use_noise_reduction : Bool
   use_enhancement : Bool
   calibration_factor : Double
@@ -43,11 +43,11 @@ pub(all) struct AdvancedImagingConfig {
 
 pub(all) struct HyperspectralData {
   image_cube : Array[@types.Image]
-  num_bands : Int
+  num_bands : Int32
   wavelengths : Array[Double]
   spectral_resolution : Double
-  spatial_width : Int
-  spatial_height : Int
+  spatial_width : Int32
+  spatial_height : Int32
 }
 
 pub(all) enum ImagingModality {
@@ -102,7 +102,7 @@ pub(all) struct PolarizationData {
   degree_of_polarization : @types.Image
   angle_of_polarization : @types.Image
   stokes_parameters : Array[@types.Image]
-  num_stokes : Int
+  num_stokes : Int32
 }
 
 pub(all) enum QuantumImagingAlgorithm {

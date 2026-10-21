@@ -38,12 +38,12 @@ pub(all) struct DenoiseResult {
 pub(all) struct DenoiseConfig {
   algorithm : DenoiseAlgorithm
   strength : Double
-  kernel_size : Int
+  kernel_size : Int32
   sigma_color : Double
   sigma_space : Double
-  search_window : Int
-  patch_size : Int
-  iterations : Int
+  search_window : Int32
+  patch_size : Int32
+  iterations : Int32
 }
 
 ///|
@@ -112,7 +112,7 @@ pub fn create_default_denoise_config() -> DenoiseConfig {
 /// 均值滤波
 pub fn mean_filter_denoise(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -184,7 +184,7 @@ pub fn mean_filter_denoise(
 /// 中值滤波
 pub fn median_filter_denoise(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -216,7 +216,7 @@ pub fn median_filter_denoise(
 
   for y in 0..<h {
     for x in 0..<w {
-      let neighbors : Array[Int] = []
+      let neighbors : Array[Int32] = []
       for dy in -radius..<(radius + 1) {
         for dx in -radius..<(radius + 1) {
           let nx = x + dx
@@ -253,7 +253,7 @@ pub fn median_filter_denoise(
 /// 高斯滤波
 pub fn gaussian_filter_denoise(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
   sigma : Double,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
@@ -342,7 +342,7 @@ pub fn gaussian_filter_denoise(
 /// 双边滤波（保边降噪）
 pub fn bilateral_filter_denoise(
   img : @types.Image,
-  kernel_size : Int,
+  kernel_size : Int32,
   sigma_color : Double,
   sigma_space : Double,
 ) -> @types.Image raise @types.LoadError {
@@ -496,7 +496,7 @@ pub fn histogram_equalization_enhance(
   let total = w * h
 
   // 计算直方图
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -609,7 +609,7 @@ pub fn gamma_correction_enhance(
 pub fn unsharp_mask_enhance(
   img : @types.Image,
   amount : Double,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

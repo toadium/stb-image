@@ -12,20 +12,20 @@ pub fn create_default_explainable_ai_config() -> ExplainableAIConfig
 
 pub fn explainable_ai_report_to_string(FeatureImportanceResult, SaliencyMapResult, ModelPerformanceMetrics) -> String
 
-pub fn generate_confusion_matrix(Array[Int], Array[Int], Int, Array[String]) -> ConfusionMatrix
+pub fn generate_confusion_matrix(Array[Int32], Array[Int32], Int32, Array[String]) -> ConfusionMatrix
 
-pub fn generate_roc_curve(Array[Double], Array[Int], Int) -> ROCCurveData
+pub fn generate_roc_curve(Array[Double], Array[Int32], Int32) -> ROCCurveData
 
 pub fn generate_saliency_map(@types.Image, ExplainableAIConfig) -> SaliencyMapResult raise @types.LoadError
 
-pub fn visualize_feature_maps(@types.Image, Int, String) -> FeatureMapVisualization raise @types.LoadError
+pub fn visualize_feature_maps(@types.Image, Int32, String) -> FeatureMapVisualization raise @types.LoadError
 
 // Errors
 
 // Types and methods
 pub(all) struct ConfusionMatrix {
-  matrix : Array[Array[Int]]
-  num_classes : Int
+  matrix : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   accuracy : Double
   precision : Array[Double]
@@ -35,9 +35,9 @@ pub(all) struct ConfusionMatrix {
 
 pub(all) struct EmbeddingVisualization {
   points : Array[Array[Double]]
-  labels : Array[Int]
-  num_points : Int
-  dimensions : Int
+  labels : Array[Int32]
+  num_points : Int32
+  dimensions : Int32
   method_type : String
   perplexity : Double
 }
@@ -59,10 +59,10 @@ pub fn ExplainabilityMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct ExplainableAIConfig {
   method_type : ExplainabilityMethod
-  num_samples : Int
-  num_features : Int
+  num_samples : Int32
+  num_features : Int32
   perturbation_scale : Double
-  target_class : Int
+  target_class : Int32
   use_smoothing : Bool
   smoothing_sigma : Double
   normalize : Bool
@@ -71,7 +71,7 @@ pub(all) struct ExplainableAIConfig {
 pub(all) struct FeatureImportanceResult {
   feature_names : Array[String]
   importance_scores : Array[Double]
-  num_features : Int
+  num_features : Int32
   method_type : ExplainabilityMethod
   top_features : Array[String]
   top_scores : Array[Double]
@@ -79,10 +79,10 @@ pub(all) struct FeatureImportanceResult {
 
 pub(all) struct FeatureMapVisualization {
   feature_maps : Array[@types.Image]
-  num_maps : Int
+  num_maps : Int32
   layer_name : String
-  map_size : Int
-  num_channels : Int
+  map_size : Int32
+  num_channels : Int32
 }
 
 pub(all) struct ModelPerformanceMetrics {
@@ -96,8 +96,8 @@ pub(all) struct ModelPerformanceMetrics {
   inference_time_ms : Double
   memory_mb : Double
   model_size_mb : Double
-  num_parameters : Int
-  flops : Int
+  num_parameters : Int32
+  flops : Int32
 }
 
 pub(all) enum ModelVisualizationType {
@@ -120,7 +120,7 @@ pub(all) struct ROCCurveData {
   tpr : Array[Double]
   thresholds : Array[Double]
   auc : Double
-  num_points : Int
+  num_points : Int32
 }
 
 pub(all) struct SaliencyMapResult {
@@ -128,7 +128,7 @@ pub(all) struct SaliencyMapResult {
   method_type : ExplainabilityMethod
   target_class : String
   confidence : Double
-  num_iterations : Int
+  num_iterations : Int32
 }
 
 // Type aliases

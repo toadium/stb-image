@@ -1,7 +1,7 @@
 // v21.0.0 图像加密与水印增强测试 - watermark 模块
 
 ///|
-fn make_wm_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_wm_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

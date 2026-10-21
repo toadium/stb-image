@@ -1,7 +1,7 @@
 // stitch 功能测试：invert_homography 奇异 / detect_features_simple 角点 / match_features 多描述子 / estimate_homography_ransac
 
 ///|
-fn make_corner_img(w : Int, h : Int) -> @types.Image {
+fn make_corner_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\xFF')
   let cx = w / 2
   let cy = h / 2
@@ -19,7 +19,7 @@ fn make_corner_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_checkerboard_img(w : Int, h : Int) -> @types.Image {
+fn make_checkerboard_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -41,7 +41,7 @@ fn make_checkerboard_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_edge_img(w : Int, h : Int) -> @types.Image {
+fn make_edge_img(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {

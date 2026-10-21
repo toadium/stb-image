@@ -23,10 +23,10 @@ pub extend GNNType with Eq::{not_equal, equal}
 /// 图数据。
 /// Graph data.
 pub(all) struct GraphData {
-  num_nodes : Int
+  num_nodes : Int32
   adj_matrix : Array[Double]
   node_features : Array[Double]
-  feature_dim : Int
+  feature_dim : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -39,8 +39,8 @@ pub extend GraphData with Eq::{not_equal, equal}
 /// GNN 配置。
 /// GNN configuration.
 pub(all) struct GNNConfig {
-  hidden_dim : Int
-  num_layers : Int
+  hidden_dim : Int32
+  num_layers : Int32
   dropout : Double
   gnn_type : GNNType
 } derive(Eq, @debug.Debug)
@@ -71,7 +71,7 @@ pub extend GNNResult with Eq::{not_equal, equal}
 pub fn graph_convolution(
   graph : GraphData,
   weight : Array[Double],
-  out_dim : Int,
+  out_dim : Int32,
 ) -> Array[Double] {
   let n = graph.num_nodes
   let in_dim = graph.feature_dim
@@ -145,7 +145,7 @@ pub fn gcn_forward(
 /// Neighbor aggregation.
 pub fn aggregate_neighbors(
   graph : GraphData,
-  node_idx : Int,
+  node_idx : Int32,
   agg_type : GNNType,
 ) -> Array[Double] {
   let result : Array[Double] = []

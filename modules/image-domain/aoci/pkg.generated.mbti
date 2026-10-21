@@ -1,0 +1,107 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-domain/aoci"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn build_dependency_graph(SymbolIndex) -> Array[(String, Array[String])]
+
+pub fn build_from_mbti(String, String) -> SymbolIndex
+
+pub fn build_index(Array[SymbolCoord]) -> SymbolIndex
+
+pub fn build_symbol(pkg~ : String, name~ : String, kind~ : SymbolKind, signature? : String, doc? : String, keywords? : Array[String]) -> SymbolCoord
+
+pub fn route(SymbolIndex, String) -> Array[SymbolCoord]
+
+pub fn route_by_kind(SymbolIndex, SymbolKind) -> Array[SymbolCoord]
+
+pub fn route_by_package(SymbolIndex, String) -> Array[SymbolCoord]
+
+pub fn route_top_k(SymbolIndex, String, Int32) -> Array[SymbolCoord]
+
+pub fn verify_all(SymbolIndex, budget? : ContextBudget) -> VerifyResult
+
+pub fn verify_budget(SymbolIndex, ContextBudget) -> VerifyResult
+
+pub fn verify_consistency(SymbolIndex) -> VerifyResult
+
+pub fn verify_dependencies(SymbolIndex, Array[(String, Array[String])]) -> VerifyResult
+
+pub fn verify_keyword_coverage(SymbolIndex) -> VerifyResult
+
+// Errors
+
+// Types and methods
+pub(all) struct ContextBudget {
+  total_quota : Int32
+  used : Int32
+  partition : Array[(String, Int32)]
+} derive(Eq, @debug.Debug)
+pub fn ContextBudget::add_partition(Self, String, Int32) -> Self
+pub fn ContextBudget::allocate(Self, Array[SymbolCoord]) -> Array[SymbolCoord]
+pub fn ContextBudget::allocate_with_priority(Self, Array[(SymbolCoord, Int32)]) -> Array[SymbolCoord]
+pub fn ContextBudget::equal(Self, Self) -> Bool
+pub fn ContextBudget::is_exhausted(Self) -> Bool
+pub fn ContextBudget::make(Int32) -> Self
+pub fn ContextBudget::not_equal(Self, Self) -> Bool
+pub fn ContextBudget::remaining(Self) -> Int32
+pub fn ContextBudget::to_repr(Self) -> @debug.Repr
+pub fn ContextBudget::usage_report(Self) -> String
+
+pub(all) struct SymbolCoord {
+  pkg : String
+  name : String
+  kind : SymbolKind
+  signature : String
+  doc : String
+  keywords : Array[String]
+} derive(Eq, @debug.Debug)
+pub fn SymbolCoord::equal(Self, Self) -> Bool
+pub fn SymbolCoord::estimated_tokens(Self) -> Int32
+pub fn SymbolCoord::full_name(Self) -> String
+pub fn SymbolCoord::has_keyword(Self, String) -> Bool
+pub fn SymbolCoord::make(pkg~ : String, name~ : String, kind~ : SymbolKind, signature? : String, doc? : String, keywords? : Array[String]) -> Self
+pub fn SymbolCoord::not_equal(Self, Self) -> Bool
+pub fn SymbolCoord::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SymbolIndex {
+  symbols : Array[SymbolCoord]
+  keyword_map : Array[(String, Array[Int32])]
+} derive(Eq, @debug.Debug)
+pub fn SymbolIndex::equal(Self, Self) -> Bool
+pub fn SymbolIndex::find_by_keyword(Self, String) -> Array[SymbolCoord]
+pub fn SymbolIndex::find_by_kind(Self, SymbolKind) -> Array[SymbolCoord]
+pub fn SymbolIndex::find_by_name(Self, String) -> Array[SymbolCoord]
+pub fn SymbolIndex::find_by_package(Self, String) -> Array[SymbolCoord]
+pub fn SymbolIndex::get(Self, Int32) -> SymbolCoord raise Failure
+pub fn SymbolIndex::make(Array[SymbolCoord]) -> Self
+pub fn SymbolIndex::not_equal(Self, Self) -> Bool
+pub fn SymbolIndex::size(Self) -> Int32
+pub fn SymbolIndex::to_repr(Self) -> @debug.Repr
+pub fn SymbolIndex::total_tokens(Self) -> Int32
+
+pub(all) enum SymbolKind {
+  Function
+  Method
+  Type
+  TypeAlias
+  Enum
+  Struct
+} derive(Eq, @debug.Debug)
+pub fn SymbolKind::equal(Self, Self) -> Bool
+pub fn SymbolKind::not_equal(Self, Self) -> Bool
+pub fn SymbolKind::to_repr(Self) -> @debug.Repr
+pub fn SymbolKind::to_string(Self) -> String
+
+pub(all) struct VerifyResult {
+  is_valid : Bool
+  issues : Array[String]
+}
+pub fn VerifyResult::make(is_valid~ : Bool, issues? : Array[String]) -> Self
+
+// Type aliases
+
+// Traits

@@ -86,11 +86,11 @@ pub extend HomomorphicEncryptionType with Eq::{not_equal, equal}
 ///|
 /// 联邦学习客户端
 pub(all) struct FederatedClient {
-  client_id : Int
-  data_size : Int
-  local_epochs : Int
+  client_id : Int32
+  data_size : Int32
+  local_epochs : Int32
   learning_rate : Double
-  batch_size : Int
+  batch_size : Int32
   participation_rate : Double
   is_active : Bool
 }
@@ -99,12 +99,12 @@ pub(all) struct FederatedClient {
 /// 联邦学习配置
 pub(all) struct FederatedLearningConfig {
   algorithm : FederatedLearningAlgorithm
-  num_clients : Int
-  num_rounds : Int
+  num_clients : Int32
+  num_rounds : Int32
   client_fraction : Double
-  local_epochs : Int
+  local_epochs : Int32
   learning_rate : Double
-  batch_size : Int
+  batch_size : Int32
   mu_proximal : Double
   use_differential_privacy : Bool
   dp_epsilon : Double
@@ -125,7 +125,7 @@ pub(all) struct DifferentialPrivacyConfig {
   clipping_norm : Double
   use_noise_multiplier : Bool
   noise_multiplier : Double
-  num_samples : Int
+  num_samples : Int32
   sampling_rate : Double
 }
 
@@ -133,10 +133,10 @@ pub(all) struct DifferentialPrivacyConfig {
 /// 同态加密配置
 pub(all) struct HomomorphicEncryptionConfig {
   encryption_type : HomomorphicEncryptionType
-  key_size : Int
-  polynomial_degree : Int
-  plaintext_modulus : Int
-  coefficient_modulus : Array[Int]
+  key_size : Int32
+  polynomial_degree : Int32
+  plaintext_modulus : Int32
+  coefficient_modulus : Array[Int32]
   scale : Double
   use_batching : Bool
   use_relin : Bool
@@ -145,26 +145,26 @@ pub(all) struct HomomorphicEncryptionConfig {
 ///|
 /// 安全多方计算配置
 pub(all) struct SecureMPCConfig {
-  num_parties : Int
+  num_parties : Int32
   protocol : String
-  threshold : Int
+  threshold : Int32
   use_secret_sharing : Bool
   secret_sharing_type : String
   use_garbled_circuits : Bool
   use_oblivious_transfer : Bool
-  communication_rounds : Int
+  communication_rounds : Int32
 }
 
 ///|
 /// 联邦学习训练结果
 pub(all) struct FederatedTrainingResult {
-  num_rounds_completed : Int
+  num_rounds_completed : Int32
   final_accuracy : Double
   final_loss : Double
-  num_clients_participated : Int
+  num_clients_participated : Int32
   communication_cost_mb : Double
   training_time_s : Double
-  convergence_round : Int
+  convergence_round : Int32
   privacy_budget_used : Double
 }
 
@@ -184,10 +184,10 @@ pub(all) struct PrivacyProtectionResult {
 ///|
 /// 加密数据
 pub(all) struct EncryptedData {
-  ciphertext : Array[Int]
+  ciphertext : Array[Int32]
   encryption_type : HomomorphicEncryptionType
-  key_id : Int
-  size_bytes : Int
+  key_id : Int32
+  size_bytes : Int32
   is_encrypted : Bool
 }
 
@@ -262,8 +262,8 @@ pub fn create_default_mpc_config() -> SecureMPCConfig {
 ///|
 /// 创建联邦学习客户端
 pub fn create_federated_clients(
-  num_clients : Int,
-  total_data_size : Int,
+  num_clients : Int32,
+  total_data_size : Int32,
   config : FederatedLearningConfig,
 ) -> Array[FederatedClient] {
   let clients : Array[FederatedClient] = []
@@ -366,7 +366,7 @@ pub fn encrypt_data(
   plaintext : Array[Double],
   config : HomomorphicEncryptionConfig,
 ) -> EncryptedData {
-  let ciphertext : Array[Int] = []
+  let ciphertext : Array[Int32] = []
 
   for value in plaintext {
     // 简化的加密：缩放+取模
@@ -408,7 +408,7 @@ pub fn encrypted_add(
   b : EncryptedData,
   config : HomomorphicEncryptionConfig,
 ) -> EncryptedData {
-  let result : Array[Int] = []
+  let result : Array[Int32] = []
   let length = if a.ciphertext.length() < b.ciphertext.length() {
     a.ciphertext.length()
   } else {

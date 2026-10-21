@@ -10,7 +10,7 @@
 ///|
 /// 处理操作类型
 pub(all) enum Operation {
-  Resize(Int, Int)
+  Resize(Int32, Int32)
   Rotate(Double)
   FlipH
   FlipV
@@ -28,7 +28,7 @@ pub(all) enum Operation {
 pub struct ProcessResult {
   success : Bool
   message : String
-  output_size : Int
+  output_size : Int32
 }
 
 ///|
@@ -61,7 +61,7 @@ pub fn pipeline_add_all(p : Pipeline, ops : Array[Operation]) -> Pipeline {
 
 ///|
 /// 获取流水线中的操作数量
-pub fn pipeline_len(p : Pipeline) -> Int {
+pub fn pipeline_len(p : Pipeline) -> Int32 {
   p.operations.length()
 }
 
@@ -129,9 +129,9 @@ pub fn batch_task(
 ///|
 /// 批处理结果
 pub struct BatchResult {
-  total : Int
-  succeeded : Int
-  failed : Int
+  total : Int32
+  succeeded : Int32
+  failed : Int32
   results : Array[ProcessResult]
 }
 
@@ -176,7 +176,7 @@ pub fn batch_summary(result : BatchResult) -> String {
 /// CLI 命令
 pub(all) enum CliCommand {
   Convert(String, String)
-  Resize(String, String, Int, Int)
+  Resize(String, String, Int32, Int32)
   Rotate(String, String, Double)
   Batch(String, String, String)
   Info(String)
@@ -256,7 +256,7 @@ pub fn cli_help() -> String {
 
 ///|
 /// 简单的字符串转整数
-fn parse_int(s : String) -> Int {
+fn parse_int(s : String) -> Int32 {
   let mut result = 0
   let mut sign = 1
   let mut i = 0

@@ -28,7 +28,7 @@ pub fn lbp(img : @types.Image) -> @types.Image raise @types.LoadError {
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   // 预计算像素 Int 数组
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -150,7 +150,7 @@ pub fn lbp_uniform(img : @types.Image) -> @types.Image raise @types.LoadError {
   // 预计算均匀模式映射表
   let uniform_map = build_uniform_map()
   // 预计算像素 Int 数组
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -239,14 +239,14 @@ pub fn lbp_uniform(img : @types.Image) -> @types.Image raise @types.LoadError {
 
 ///|
 fn get_pixel_safe(
-  src : Array[Int],
-  x : Int,
-  y : Int,
-  c : Int,
-  ch : Int,
-  w : Int,
-  h : Int,
-) -> Int {
+  src : Array[Int32],
+  x : Int32,
+  y : Int32,
+  c : Int32,
+  ch : Int32,
+  w : Int32,
+  h : Int32,
+) -> Int32 {
   if x < 0 || x >= w || y < 0 || y >= h {
     return 0
   }
@@ -254,8 +254,8 @@ fn get_pixel_safe(
 }
 
 ///|
-fn build_uniform_map() -> Array[Int] {
-  let map : Array[Int] = Array::make(256, 59)
+fn build_uniform_map() -> Array[Int32] {
+  let map : Array[Int32] = Array::make(256, 59)
   let mut label = 0
   for v in 0..<256 {
     if count_transitions(v) <= 2 {
@@ -267,7 +267,7 @@ fn build_uniform_map() -> Array[Int] {
 }
 
 ///|
-fn count_transitions(v : Int) -> Int {
+fn count_transitions(v : Int32) -> Int32 {
   let mut count = 0
   for i in 0..<8 {
     let bit_i = (v >> i) & 1

@@ -6,8 +6,8 @@
 /// 标量场：2D 标量场，data 为行主序 Float 数组，长度 = width * height。
 /// Scalar field: 2D scalar field, data is row-major Float array, length = width * height.
 pub(all) struct ScalarField {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
 
@@ -21,8 +21,8 @@ pub extend ScalarField with Eq::{not_equal, equal}
 /// 创建标量场，数据长度必须等于 width * height。
 /// Create a scalar field; data length must equal width * height.
 pub fn ScalarField::make(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   data : Array[Float],
 ) -> ScalarField raise @types.LoadError {
   if width <= 0 || height <= 0 {
@@ -42,8 +42,8 @@ pub fn ScalarField::make(
 /// 创建全零标量场。
 /// Create an all-zero scalar field.
 pub fn ScalarField::zeros(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> ScalarField raise @types.LoadError {
   if width <= 0 || height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -57,8 +57,8 @@ pub fn ScalarField::zeros(
 /// 创建常量标量场（所有点值相同）。
 /// Create a constant scalar field (all points share the same value).
 pub fn ScalarField::constant(
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   value : Float,
 ) -> ScalarField raise @types.LoadError {
   if width <= 0 || height <= 0 {
@@ -72,7 +72,7 @@ pub fn ScalarField::constant(
 ///|
 /// 求值：获取点 (x, y) 处的场值，边界外返回 0。
 /// Evaluate the field at (x, y); returns 0 for out-of-bounds.
-pub fn ScalarField::evaluate(self : ScalarField, x : Int, y : Int) -> Float {
+pub fn ScalarField::evaluate(self : ScalarField, x : Int32, y : Int32) -> Float {
   if x < 0 || x >= self.width || y < 0 || y >= self.height {
     return 0.0F
   }
@@ -84,8 +84,8 @@ pub fn ScalarField::evaluate(self : ScalarField, x : Int, y : Int) -> Float {
 /// Evaluate with clamped boundary: out-of-bounds takes nearest edge value.
 pub fn ScalarField::evaluate_clamped(
   self : ScalarField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> Float {
   let cx = x.clamp(min=0, max=self.width - 1)
   let cy = y.clamp(min=0, max=self.height - 1)
@@ -97,8 +97,8 @@ pub fn ScalarField::evaluate_clamped(
 /// Set the value at (x, y); out-of-bounds is ignored.
 pub fn ScalarField::set(
   self : ScalarField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   value : Float,
 ) -> Unit {
   if x < 0 || x >= self.width || y < 0 || y >= self.height {
@@ -110,7 +110,7 @@ pub fn ScalarField::set(
 ///|
 /// 场的像素总数。
 /// Total number of points in the field.
-pub fn ScalarField::size(self : ScalarField) -> Int {
+pub fn ScalarField::size(self : ScalarField) -> Int32 {
   self.width * self.height
 }
 

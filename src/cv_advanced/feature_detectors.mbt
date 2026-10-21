@@ -7,12 +7,12 @@
 /// 特征点。
 /// Key point.
 pub(all) struct KeyPoint {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
   response : Double
-  size : Int
+  size : Int32
   angle : Double
-  octave : Int
+  octave : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -51,7 +51,7 @@ pub extend FloatDescriptor with Eq::{not_equal, equal}
 
 ///|
 /// FAST 角点检测的 16 像素圆环偏移量。
-fn fast_ring_offsets() -> Array[(Int, Int)] {
+fn fast_ring_offsets() -> Array[(Int32, Int32)] {
   [
     (0, -3),
     (1, -3),
@@ -74,7 +74,7 @@ fn fast_ring_offsets() -> Array[(Int, Int)] {
 
 ///|
 /// 获取图像像素值（灰度，取第一个通道）。
-fn get_pixel(img : @types.Image, x : Int, y : Int) -> Int {
+fn get_pixel(img : @types.Image, x : Int32, y : Int32) -> Int32 {
   let w = img.width
   let h = img.height
   if x < 0 || x >= w || y < 0 || y >= h {
@@ -89,7 +89,7 @@ fn get_pixel(img : @types.Image, x : Int, y : Int) -> Int {
 /// FAST corner detection (FAST-9).
 pub fn detect_fast_corners(
   img : @types.Image,
-  threshold : Int,
+  threshold : Int32,
 ) -> Array[KeyPoint] {
   let w = img.width
   let h = img.height
@@ -186,8 +186,8 @@ pub fn compute_brief_descriptors(
 
 ///|
 /// BRIEF 采样点对（256 对）。
-fn brief_sample_pairs() -> Array[(Int, Int, Int, Int)] {
-  let pairs : Array[(Int, Int, Int, Int)] = []
+fn brief_sample_pairs() -> Array[(Int32, Int32, Int32, Int32)] {
+  let pairs : Array[(Int32, Int32, Int32, Int32)] = []
   let pattern = [
     (0, 0),
     (1, 0),
@@ -239,7 +239,11 @@ fn brief_sample_pairs() -> Array[(Int, Int, Int, Int)] {
 
 ///|
 /// Sobel 梯度计算。
-fn sobel_gradients(img : @types.Image, x : Int, y : Int) -> (Double, Double) {
+fn sobel_gradients(
+  img : @types.Image,
+  x : Int32,
+  y : Int32,
+) -> (Double, Double) {
   let gx = (get_pixel(img, x + 1, y - 1) +
   2 * get_pixel(img, x + 1, y) +
   get_pixel(img, x + 1, y + 1) -
@@ -393,7 +397,7 @@ pub fn compute_akaze_descriptors(
 ///|
 /// 汉明距离（BRIEF 描述子匹配）。
 /// Hamming distance (BRIEF descriptor matching).
-pub fn hamming_distance(d1 : BinaryDescriptor, d2 : BinaryDescriptor) -> Int {
+pub fn hamming_distance(d1 : BinaryDescriptor, d2 : BinaryDescriptor) -> Int32 {
   let mut dist = 0
   let len = if d1.bits.length() < d2.bits.length() {
     d1.bits.length()

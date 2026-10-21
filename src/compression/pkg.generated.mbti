@@ -6,11 +6,11 @@ import {
 }
 
 // Values
-pub fn calculate_bits_per_pixel(Int, Int, Int) -> Double
+pub fn calculate_bits_per_pixel(Int32, Int32, Int32) -> Double
 
-pub fn calculate_compression_quality(@types.Image, @types.Image, Int, Int) -> CompressionQualityMetrics raise @types.LoadError
+pub fn calculate_compression_quality(@types.Image, @types.Image, Int32, Int32) -> CompressionQualityMetrics raise @types.LoadError
 
-pub fn calculate_compression_ratio(Int, Int) -> Double
+pub fn calculate_compression_ratio(Int32, Int32) -> Double
 
 pub fn calculate_image_entropy(@types.Image) -> Double raise @types.LoadError
 
@@ -28,7 +28,7 @@ pub fn create_default_compression_config() -> CompressionConfig
 
 pub fn predictive_encode(@types.Image) -> Bytes raise @types.LoadError
 
-pub fn quantize_image(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn quantize_image(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
 pub fn run_length_decode(Bytes) -> Bytes
 
@@ -56,11 +56,11 @@ pub fn CompressionAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct CompressionConfig {
   algorithm : CompressionAlgorithm
   quality : Double
-  quantization_level : Int
+  quantization_level : Int32
   use_dct : Bool
   use_prediction : Bool
   use_entropy_coding : Bool
-  block_size : Int
+  block_size : Int32
 }
 
 pub(all) struct CompressionQualityMetrics {
@@ -75,8 +75,8 @@ pub(all) struct CompressionQualityMetrics {
 
 pub(all) struct CompressionResult {
   compressed_data : Bytes
-  original_size : Int
-  compressed_size : Int
+  original_size : Int32
+  compressed_size : Int32
   compression_ratio : Double
   bits_per_pixel : Double
   algorithm : CompressionAlgorithm
@@ -86,16 +86,16 @@ pub(all) struct CompressionResult {
 
 pub(all) struct DCTBlock {
   coefficients : Array[Double]
-  block_size : Int
-  width : Int
-  height : Int
+  block_size : Int32
+  width : Int32
+  height : Int32
 }
 
 pub(all) struct HuffmanTable {
-  symbols : Array[Int]
-  codes : Array[Int]
-  code_lengths : Array[Int]
-  num_symbols : Int
+  symbols : Array[Int32]
+  codes : Array[Int32]
+  code_lengths : Array[Int32]
+  num_symbols : Int32
 }
 
 pub(all) enum QuantizationTableType {

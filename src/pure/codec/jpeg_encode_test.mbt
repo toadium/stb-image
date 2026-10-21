@@ -4,9 +4,9 @@
 
 ///|
 fn je_make_rgb_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -19,9 +19,9 @@ fn je_make_rgb_image(
 
 ///|
 fn je_make_gray_image(
-  width : Int,
-  height : Int,
-  pixels : Array[Int],
+  width : Int32,
+  height : Int32,
+  pixels : Array[Int32],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -174,7 +174,7 @@ test "encode_jpeg_pure: 8x8 RGB roundtrip" {
 ///|
 test "encode_jpeg_pure: 16x16 RGB roundtrip" {
   // 16x16 渐变图像
-  let pixels : Array[(Int, Int, Int)] = []
+  let pixels : Array[(Int32, Int32, Int32)] = []
   for y in 0..<16 {
     for x in 0..<16 {
       pixels.push((x * 8, y * 8, 128))

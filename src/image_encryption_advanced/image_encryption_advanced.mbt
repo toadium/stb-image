@@ -83,10 +83,10 @@ pub extend SteganographyType with Eq::{not_equal, equal}
 /// 加密结果
 pub(all) struct EncryptionResult {
   encrypted_data : Array[Byte]
-  encrypted_size_bytes : Int
-  original_size_bytes : Int
+  encrypted_size_bytes : Int32
+  original_size_bytes : Int32
   encryption_algorithm : EncryptionAlgorithmType
-  key_size : Int
+  key_size : Int32
   iv : Array[Byte]
   salt : Array[Byte]
   encryption_time_ms : Double
@@ -100,9 +100,9 @@ pub(all) struct EncryptionResult {
 /// 解密结果
 pub(all) struct DecryptionResult {
   decrypted_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   decryption_time_ms : Double
   encryption_algorithm : EncryptionAlgorithmType
   psnr : Double
@@ -114,12 +114,12 @@ pub(all) struct DecryptionResult {
 /// 混沌加密结果
 pub(all) struct ChaoticEncryptionResult {
   encrypted_data : Array[Byte]
-  encrypted_size_bytes : Int
-  original_size_bytes : Int
+  encrypted_size_bytes : Int32
+  original_size_bytes : Int32
   chaotic_system : ChaoticSystemType
   initial_condition : Array[Double]
   control_parameters : Array[Double]
-  num_iterations : Int
+  num_iterations : Int32
   key_space_size : Double
   encryption_time_ms : Double
   entropy : Double
@@ -132,11 +132,11 @@ pub(all) struct ChaoticEncryptionResult {
 /// DNA加密结果
 pub(all) struct DNAEncryptionResult {
   encrypted_data : Array[Byte]
-  encrypted_size_bytes : Int
-  original_size_bytes : Int
+  encrypted_size_bytes : Int32
+  original_size_bytes : Int32
   dna_encoding : DNAEncodingType
   dna_sequences : Array[String]
-  num_sequences : Int
+  num_sequences : Int32
   key : Array[Byte]
   encryption_time_ms : Double
   entropy : Double
@@ -147,13 +147,13 @@ pub(all) struct DNAEncryptionResult {
 /// 隐写术结果
 pub(all) struct SteganographyResult {
   stego_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   hidden_data : Array[Byte]
-  hidden_data_size_bytes : Int
+  hidden_data_size_bytes : Int32
   steganography_type : SteganographyType
-  capacity_bits : Int
+  capacity_bits : Int32
   embedding_rate : Double
   psnr : Double
   ssim : Double
@@ -164,18 +164,18 @@ pub(all) struct SteganographyResult {
 /// 数字水印结果
 pub(all) struct DigitalWatermarkResult {
   watermarked_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   watermark_data : Array[Byte]
-  watermark_size_bytes : Int
+  watermark_size_bytes : Int32
   watermark_strength : Double
   embedding_domain : String
   psnr : Double
   ssim : Double
   robustness_score : Double
   imperceptibility_score : Double
-  capacity_bits : Int
+  capacity_bits : Int32
 }
 
 ///|
@@ -183,13 +183,13 @@ pub(all) struct DigitalWatermarkResult {
 pub(all) struct ImageEncryptionConfig {
   task_type : ImageEncryptionTaskType
   encryption_algorithm : EncryptionAlgorithmType
-  key_size : Int
-  iv_size : Int
-  salt_size : Int
+  key_size : Int32
+  iv_size : Int32
+  salt_size : Int32
   chaotic_system : ChaoticSystemType
   initial_condition : Array[Double]
   control_parameters : Array[Double]
-  num_chaotic_iterations : Int
+  num_chaotic_iterations : Int32
   dna_encoding : DNAEncodingType
   steganography_type : SteganographyType
   watermark_strength : Double
@@ -240,7 +240,7 @@ fn xor_encrypt(data : Array[Byte], key : Array[Byte]) -> Array[Byte] {
 ///|
 /// 计算熵
 fn calculate_entropy(data : Array[Byte]) -> Double {
-  let counts : Array[Int] = []
+  let counts : Array[Int32] = []
   for _ in 0..<256 {
     counts.push(0)
   }
@@ -281,8 +281,8 @@ fn log_approx_enc(x : Double) -> Double {
 /// 图像加密（简化版）
 pub fn encrypt_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   key : Array[Byte],
   config : ImageEncryptionConfig,
 ) -> EncryptionResult {
@@ -336,8 +336,8 @@ pub fn encrypt_image(
 /// 图像解密（简化版）
 pub fn decrypt_image(
   encrypted_data : Array[Byte],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   key : Array[Byte],
   config : ImageEncryptionConfig,
 ) -> DecryptionResult {
@@ -365,8 +365,8 @@ pub fn decrypt_image(
 /// 混沌加密（简化版）
 pub fn chaotic_encrypt(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageEncryptionConfig,
 ) -> ChaoticEncryptionResult {
   ignore(height)
@@ -428,8 +428,8 @@ pub fn chaotic_encrypt(
 /// 隐写术嵌入（简化版）
 pub fn embed_steganography(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   hidden_data : Array[Byte],
   config : ImageEncryptionConfig,
 ) -> SteganographyResult {
@@ -481,8 +481,8 @@ pub fn embed_steganography(
 /// 数字水印嵌入（简化版）
 pub fn embed_watermark(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   watermark : Array[Byte],
   config : ImageEncryptionConfig,
 ) -> DigitalWatermarkResult {

@@ -9,15 +9,15 @@
 ///|
 /// ICNS chunk 信息
 priv struct IcnsChunk {
-  data_offset : Int
-  data_size : Int
-  icon_size : Int // 像素边长，0 表示非图标数据
+  data_offset : Int32
+  data_size : Int32
+  icon_size : Int32 // 像素边长，0 表示非图标数据
   is_png : Bool
 }
 
 ///|
 /// 从 4 字节构造 type code 字符串
-fn icns_type_to_string(data : Bytes, offset : Int) -> String {
+fn icns_type_to_string(data : Bytes, offset : Int32) -> String {
   let buf : Array[Byte] = [
     data[offset],
     data[offset + 1],
@@ -31,7 +31,7 @@ fn icns_type_to_string(data : Bytes, offset : Int) -> String {
 
 ///|
 /// 根据 type code 获取图标像素边长和是否 PNG
-fn icns_icon_info(type_code : String) -> (Int, Bool) {
+fn icns_icon_info(type_code : String) -> (Int32, Bool) {
   match type_code {
     "ic07" => (128, true) // 128x128 PNG
     "ic08" => (256, true) // 256x256 PNG
@@ -55,7 +55,7 @@ fn icns_icon_info(type_code : String) -> (Int, Bool) {
 
 ///|
 /// 根据像素边长选择最佳 type code（PNG 类型）
-fn icns_size_to_type(size : Int) -> String {
+fn icns_size_to_type(size : Int32) -> String {
   match size {
     16 => "ic11"
     32 => "ic12"
@@ -108,8 +108,8 @@ fn parse_icns(data : Bytes) -> Array[IcnsChunk] raise @types.LoadError {
 /// 解码 ARGB 原始数据为 Image（BGRA → RGBA）
 fn decode_icns_argb(
   data : Bytes,
-  offset : Int,
-  size : Int,
+  offset : Int32,
+  size : Int32,
 ) -> @types.Image raise @types.LoadError {
   let len = data.length()
   let pixel_count = size * size

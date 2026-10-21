@@ -15,8 +15,8 @@ pub(all) struct IptcInfo {
   caption_writer : String
   date_created : String
   category : String
-  urgency : Int
-  raw_records : Array[(Int, Int, String)]
+  urgency : Int32
+  raw_records : Array[(Int32, Int32, String)]
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -33,7 +33,7 @@ fn iptc_photoshop_header() -> String {
 
 ///|
 /// 从字节提取 ASCII 字符串
-fn iptc_extract_string(data : Bytes, start : Int, max_len : Int) -> String {
+fn iptc_extract_string(data : Bytes, start : Int32, max_len : Int32) -> String {
   let chars : Array[Byte] = []
   let len = data.length()
   for i in 0..<max_len {
@@ -117,7 +117,7 @@ pub fn read_iptc_from_bytes(data : Bytes) -> IptcInfo? {
   let mut date_created = ""
   let mut category = ""
   let mut urgency = 0
-  let raw_records : Array[(Int, Int, String)] = []
+  let raw_records : Array[(Int32, Int32, String)] = []
   let mut rpos = iptc_start
   let rend = iptc_start + iptc_len
   while rpos + 5 <= rend {
@@ -173,7 +173,7 @@ pub fn read_iptc_from_bytes(data : Bytes) -> IptcInfo? {
 
 ///|
 /// 简单整数解析（IPTC urgency 0-8）
-fn xmp_iptc_parse_urgency(s : String) -> Int? {
+fn xmp_iptc_parse_urgency(s : String) -> Int32? {
   if s.length() == 0 {
     return None
   }
@@ -189,7 +189,7 @@ fn xmp_iptc_parse_urgency(s : String) -> Int? {
 
 ///|
 /// 构造 IPTC 记录字节
-fn iptc_build_record(record : Int, dataset : Int, value : String) -> Bytes {
+fn iptc_build_record(record : Int32, dataset : Int32, value : String) -> Bytes {
   let out : Array[Byte] = []
   out.push(0x1C)
   out.push(record.to_byte())

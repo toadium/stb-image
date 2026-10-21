@@ -17,9 +17,9 @@ fn lb_push_str(arr : Array[Byte], s : String) -> Unit {
 
 ///|
 fn lb_make_rgb_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -88,13 +88,13 @@ fn lb_make_1x1_rgb_pnm() -> Bytes {
 }
 
 ///|
-fn lb_push_be16(arr : Array[Byte], v : Int) -> Unit {
+fn lb_push_be16(arr : Array[Byte], v : Int32) -> Unit {
   arr.push(((v >> 8) & 0xFF).to_byte())
   arr.push((v & 0xFF).to_byte())
 }
 
 ///|
-fn lb_push_be32(arr : Array[Byte], v : Int) -> Unit {
+fn lb_push_be32(arr : Array[Byte], v : Int32) -> Unit {
   arr.push(((v >> 24) & 0xFF).to_byte())
   arr.push(((v >> 16) & 0xFF).to_byte())
   arr.push(((v >> 8) & 0xFF).to_byte())
@@ -145,12 +145,12 @@ fn lb_make_1x1_rgb_psd() -> Bytes {
 
 ///|
 /// LZW 编码辅助（用于 GIF 测试，与 gif_encode.mbt 逻辑一致）
-fn lb_lzw_encode(indices : Array[Int], min_code_size : Int) -> Array[Byte] {
+fn lb_lzw_encode(indices : Array[Int32], min_code_size : Int32) -> Array[Byte] {
   let clear_code = 1 << min_code_size
   let end_code = clear_code + 1
   let code_width = Ref(min_code_size + 1)
   let max_code = Ref((1 << code_width.val) - 1)
-  let code_table : Array[(Int, Int)] = []
+  let code_table : Array[(Int32, Int32)] = []
   for i in 0..<clear_code {
     code_table.push((-1, i))
   }
@@ -160,7 +160,7 @@ fn lb_lzw_encode(indices : Array[Int], min_code_size : Int) -> Array[Byte] {
   let bit_buffer = Ref(0)
   let bit_count = Ref(0)
   let output : Array[Byte] = []
-  fn emit(code : Int) -> Unit {
+  fn emit(code : Int32) -> Unit {
     bit_buffer.val = bit_buffer.val | (code << bit_count.val)
     bit_count.val += code_width.val
     while bit_count.val >= 8 {

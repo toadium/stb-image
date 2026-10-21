@@ -78,13 +78,13 @@ pub extend IndexStructureType with Eq::{not_equal, equal}
 /// 检索结果
 pub(all) struct RetrievalResult {
   query_image : Array[Double]
-  query_width : Int
-  query_height : Int
+  query_width : Int32
+  query_height : Int32
   retrieved_images : Array[Array[Double]]
-  retrieved_indices : Array[Int]
+  retrieved_indices : Array[Int32]
   retrieved_scores : Array[Double]
-  num_results : Int
-  total_candidates : Int
+  num_results : Int32
+  total_candidates : Int32
   retrieval_time_ms : Double
   feature_extraction_time_ms : Double
   similarity_search_time_ms : Double
@@ -97,14 +97,14 @@ pub(all) struct RetrievalResult {
 /// 特征提取结果
 pub(all) struct FeatureExtractionResult {
   features : Array[Double]
-  feature_dimension : Int
+  feature_dimension : Int32
   feature_type : FeatureDescriptorType
-  num_keypoints : Int
+  num_keypoints : Int32
   keypoints : Array[Array[Double]]
   descriptors : Array[Array[Double]]
   extraction_time_ms : Double
-  image_width : Int
-  image_height : Int
+  image_width : Int32
+  image_height : Int32
 }
 
 ///|
@@ -112,7 +112,7 @@ pub(all) struct FeatureExtractionResult {
 pub(all) struct SimilarityResult {
   similarity_scores : Array[Double]
   similarity_metric : SimilarityMetricType
-  num_pairs : Int
+  num_pairs : Int32
   average_similarity : Double
   max_similarity : Double
   min_similarity : Double
@@ -123,15 +123,15 @@ pub(all) struct SimilarityResult {
 /// 索引构建结果
 pub(all) struct IndexConstructionResult {
   index_type : IndexStructureType
-  num_vectors : Int
-  vector_dimension : Int
-  index_size_bytes : Int
+  num_vectors : Int32
+  vector_dimension : Int32
+  index_size_bytes : Int32
   construction_time_ms : Double
   query_time_ms : Double
   recall_at_1 : Double
   recall_at_10 : Double
   is_approximate : Bool
-  num_trees : Int
+  num_trees : Int32
 }
 
 ///|
@@ -140,7 +140,7 @@ pub(all) struct QueryExpansionResult {
   expanded_query : Array[Double]
   original_query : Array[Double]
   expansion_method : String
-  num_expansion_terms : Int
+  num_expansion_terms : Int32
   expansion_weight : Double
   retrieval_improvement : Double
   expansion_time_ms : Double
@@ -151,10 +151,10 @@ pub(all) struct QueryExpansionResult {
 pub(all) struct RelevanceFeedbackResult {
   updated_query : Array[Double]
   original_query : Array[Double]
-  relevant_images : Array[Int]
-  irrelevant_images : Array[Int]
+  relevant_images : Array[Int32]
+  irrelevant_images : Array[Int32]
   feedback_method : String
-  num_iterations : Int
+  num_iterations : Int32
   precision_improvement : Double
   recall_improvement : Double
   feedback_time_ms : Double
@@ -167,10 +167,10 @@ pub(all) struct ImageRetrievalConfig {
   feature_type : FeatureDescriptorType
   similarity_metric : SimilarityMetricType
   index_type : IndexStructureType
-  num_results : Int
-  feature_dimension : Int
+  num_results : Int32
+  feature_dimension : Int32
   use_pca : Bool
-  pca_dimension : Int
+  pca_dimension : Int32
   use_normalization : Bool
   use_query_expansion : Bool
   expansion_method : String
@@ -178,7 +178,7 @@ pub(all) struct ImageRetrievalConfig {
   feedback_method : String
   use_gpu : Bool
   use_multithreading : Bool
-  num_threads : Int
+  num_threads : Int32
 }
 
 ///|
@@ -208,7 +208,7 @@ pub fn create_default_retrieval_config() -> ImageRetrievalConfig {
 /// 简化的颜色直方图特征提取
 fn extract_color_histogram(
   image : Array[Double],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Array[Double] {
   let histogram : Array[Double] = []
   for _ in 0..<num_bins {
@@ -290,8 +290,8 @@ fn cosine_similarity(v1 : Array[Double], v2 : Array[Double]) -> Double {
 /// 特征提取（简化版）
 pub fn extract_features(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRetrievalConfig,
 ) -> FeatureExtractionResult {
   let features = extract_color_histogram(image, config.feature_dimension)
@@ -344,8 +344,8 @@ pub fn calculate_similarity(
 /// 图像检索（简化版）
 pub fn retrieve_images(
   query_image : Array[Double],
-  query_width : Int,
-  query_height : Int,
+  query_width : Int32,
+  query_height : Int32,
   database_images : Array[Array[Double]],
   config : ImageRetrievalConfig,
 ) -> RetrievalResult {
@@ -355,7 +355,7 @@ pub fn retrieve_images(
   )
 
   let scores : Array[Double] = []
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
 
   for i in 0..<database_images.length() {
     let db_features = extract_color_histogram(
@@ -392,7 +392,7 @@ pub fn retrieve_images(
   }
 
   let retrieved_images : Array[Array[Double]] = []
-  let retrieved_indices : Array[Int] = []
+  let retrieved_indices : Array[Int32] = []
   let retrieved_scores : Array[Double] = []
 
   for i in 0..<num_results {
@@ -477,8 +477,8 @@ pub fn expand_query(
 /// 相关反馈（简化版）
 pub fn relevance_feedback(
   original_query : Array[Double],
-  relevant_indices : Array[Int],
-  irrelevant_indices : Array[Int],
+  relevant_indices : Array[Int32],
+  irrelevant_indices : Array[Int32],
   database_features : Array[Array[Double]],
   config : ImageRetrievalConfig,
 ) -> RelevanceFeedbackResult {

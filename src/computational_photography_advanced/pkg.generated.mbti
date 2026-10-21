@@ -6,17 +6,17 @@ pub fn computational_photography_report_to_string(ComputationalPhotographyTaskTy
 
 pub fn create_default_computational_photography_config() -> ComputationalPhotographyConfig
 
-pub fn create_hdr_image(Array[Array[Double]], Array[Double], Int, Int, ComputationalPhotographyConfig) -> HDRImage
+pub fn create_hdr_image(Array[Array[Double]], Array[Double], Int32, Int32, ComputationalPhotographyConfig) -> HDRImage
 
-pub fn deblur_image(Array[Double], Int, Int, ComputationalPhotographyConfig) -> DeblurringResult
+pub fn deblur_image(Array[Double], Int32, Int32, ComputationalPhotographyConfig) -> DeblurringResult
 
-pub fn dehaze_image(Array[Double], Int, Int, ComputationalPhotographyConfig) -> DehazingResult
+pub fn dehaze_image(Array[Double], Int32, Int32, ComputationalPhotographyConfig) -> DehazingResult
 
-pub fn focus_stack(Array[Array[Double]], Int, Int, ComputationalPhotographyConfig) -> FocusStackingResult
+pub fn focus_stack(Array[Array[Double]], Int32, Int32, ComputationalPhotographyConfig) -> FocusStackingResult
 
-pub fn multi_frame_denoise(Array[Array[Double]], Int, Int, ComputationalPhotographyConfig) -> MultiFrameDenoisingResult
+pub fn multi_frame_denoise(Array[Array[Double]], Int32, Int32, ComputationalPhotographyConfig) -> MultiFrameDenoisingResult
 
-pub fn stitch_panorama(Array[Array[Double]], Int, Int, ComputationalPhotographyConfig) -> PanoramaImage
+pub fn stitch_panorama(Array[Array[Double]], Int32, Int32, ComputationalPhotographyConfig) -> PanoramaImage
 
 pub fn tone_map_hdr(HDRImage, ComputationalPhotographyConfig) -> Array[Double]
 
@@ -25,9 +25,9 @@ pub fn tone_map_hdr(HDRImage, ComputationalPhotographyConfig) -> Array[Double]
 // Types and methods
 pub(all) struct ColorManagementResult {
   corrected_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   input_color_space : String
   output_color_space : String
   white_balance_temperature : Double
@@ -62,15 +62,15 @@ pub(all) struct ComputationalPhotographyConfig {
 
 pub(all) struct ComputationalPhotographySRResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
   ssim : Double
-  num_input_frames : Int
+  num_input_frames : Int32
 }
 
 pub(all) enum ComputationalPhotographyTaskType {
@@ -99,15 +99,15 @@ pub fn DeblurringMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   deblurring_method : DeblurringMethod
-  kernel_size : Int
+  kernel_size : Int32
   kernel_estimate : Array[Array[Double]]
   psnr_improvement : Double
   ssim_improvement : Double
-  iterations : Int
+  iterations : Int32
   is_blind : Bool
 }
 
@@ -123,9 +123,9 @@ pub fn DehazingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct DehazingResult {
   dehazed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   dehazing_method : DehazingMethod
   transmission_map : Array[Double]
   atmospheric_light : Array[Double]
@@ -136,11 +136,11 @@ pub(all) struct DehazingResult {
 
 pub(all) struct FocusStackingResult {
   focused_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_images : Int
-  focus_map : Array[Array[Int]]
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_images : Int32
+  focus_map : Array[Array[Int32]]
   sharpness_map : Array[Array[Double]]
   stacking_method : String
   depth_estimation : Array[Double]
@@ -148,13 +148,13 @@ pub(all) struct FocusStackingResult {
 
 pub(all) struct HDRImage {
   hdr_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   min_luminance : Double
   max_luminance : Double
   exposure_values : Array[Double]
-  num_exposures : Int
+  num_exposures : Int32
   tone_mapped : Bool
 }
 
@@ -172,10 +172,10 @@ pub fn HDRToneMappingMethod::not_equal(Self, Self) -> Bool
 
 pub(all) struct MultiFrameDenoisingResult {
   denoised_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_frames : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_frames : Int32
   noise_reduction_db : Double
   detail_preservation : Double
   denoising_method : String
@@ -184,15 +184,15 @@ pub(all) struct MultiFrameDenoisingResult {
 
 pub(all) struct PanoramaImage {
   panorama_data : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
-  num_input_images : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
+  num_input_images : Int32
   stitching_method : PanoramaStitchingMethod
   focal_length : Double
   projection_type : String
   blending_method : String
-  seam_line : Array[Array[Int]]
+  seam_line : Array[Array[Int32]]
 }
 
 pub(all) enum PanoramaStitchingMethod {

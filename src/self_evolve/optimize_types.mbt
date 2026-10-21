@@ -21,10 +21,10 @@ pub extend OptimizationKind with Eq::{not_equal, equal}
 /// Optimization suggestion.
 pub(all) struct OptimizationSuggestion {
   kind : OptimizationKind
-  op_indices : Array[Int]
+  op_indices : Array[Int32]
   description : String
-  before_count : Int
-  after_count : Int
+  before_count : Int32
+  after_count : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -37,8 +37,8 @@ pub extend OptimizationSuggestion with Eq::{not_equal, equal}
 /// 优化报告。
 /// Optimization report.
 pub(all) struct OptimizationReport {
-  original_length : Int
-  optimized_length : Int
+  original_length : Int32
+  optimized_length : Int32
   suggestions : Array[OptimizationSuggestion]
   optimized_pipeline : @imgir.IRPipeline
 } derive(Eq, @debug.Debug)
@@ -59,6 +59,6 @@ pub fn OptimizationReport::is_reduced(self : OptimizationReport) -> Bool {
 ///|
 /// 减少的算子数。
 /// Number of ops removed.
-pub fn OptimizationReport::reduction(self : OptimizationReport) -> Int {
+pub fn OptimizationReport::reduction(self : OptimizationReport) -> Int32 {
   self.original_length - self.optimized_length
 }

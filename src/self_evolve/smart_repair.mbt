@@ -24,9 +24,9 @@ pub extend RepairStrategy with Eq::{not_equal, equal}
 pub(all) struct StrategyRepairResult {
   strategy : RepairStrategy
   op_tag : String
-  degs_before : Int
-  degs_after : Int
-  quality_score : Int
+  degs_before : Int32
+  degs_after : Int32
+  quality_score : Int32
   repair_desc : String
 } derive(Eq, @debug.Debug)
 
@@ -62,7 +62,7 @@ fn repair_op_conservative(op : @imgir.IROp) -> @imgir.IROp {
 // 质量评分：修复后退化越少分越高（0-100）
 
 ///|
-fn quality_score(op : @imgir.IROp) -> Int {
+fn quality_score(op : @imgir.IROp) -> Int32 {
   let degs = detect_degradation(op)
   let score = 100 - degs.length() * 20
   if score < 0 {

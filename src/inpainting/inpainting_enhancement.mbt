@@ -21,18 +21,18 @@ pub(all) struct InpaintingResult {
   image : @types.Image
   mask : @types.Image
   algorithm : InpaintingAlgorithm
-  inpainted_pixels : Int
-  total_mask_pixels : Int
+  inpainted_pixels : Int32
+  total_mask_pixels : Int32
   processing_time_ms : Double
-  iterations : Int
+  iterations : Int32
 }
 
 ///|
 /// 修复配置
 pub(all) struct InpaintingConfig {
   algorithm : InpaintingAlgorithm
-  radius : Int
-  iterations : Int
+  radius : Int32
+  iterations : Int32
   use_edge_preservation : Bool
   tolerance : Double
 }
@@ -79,7 +79,7 @@ pub extend DerainAlgorithm with Eq::{not_equal, equal}
 pub(all) struct DerainResult {
   image : @types.Image
   algorithm : DerainAlgorithm
-  rain_streaks_removed : Int
+  rain_streaks_removed : Int32
   processing_time_ms : Double
 }
 
@@ -98,12 +98,12 @@ pub fn create_default_inpainting_config() -> InpaintingConfig {
 ///|
 /// 创建修复掩膜（矩形区域）
 pub fn create_rect_mask(
-  width : Int,
-  height : Int,
-  x : Int,
-  y : Int,
-  rect_width : Int,
-  rect_height : Int,
+  width : Int32,
+  height : Int32,
+  x : Int32,
+  y : Int32,
+  rect_width : Int32,
+  rect_height : Int32,
 ) -> @types.Image {
   let total = width * height
   let mask_data : Array[Byte] = []
@@ -134,7 +134,7 @@ pub fn create_rect_mask(
 pub fn inpaint_simple(
   img : @types.Image,
   mask : @types.Image,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -199,7 +199,7 @@ pub fn inpaint_simple(
 pub fn inpaint_diffusion(
   img : @types.Image,
   mask : @types.Image,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -414,7 +414,7 @@ pub fn dehaze_dark_channel(
 pub fn dehaze_clahe(
   img : @types.Image,
   clip_limit : Double,
-  tile_size : Int,
+  tile_size : Int32,
 ) -> @types.Image {
   ignore(tile_size)
   ignore(clip_limit)
@@ -423,7 +423,7 @@ pub fn dehaze_clahe(
   let total = w * h
 
   // 简化：全局直方图均衡化
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -499,7 +499,7 @@ pub fn derain_morphological(img : @types.Image) -> DerainResult {
   for y in 0..<h {
     for x in 0..<w {
       // 3x3 中值滤波
-      let neighbors : Array[Int] = []
+      let neighbors : Array[Int32] = []
       for dy in -1..<2 {
         for dx in -1..<2 {
           let nx = x + dx

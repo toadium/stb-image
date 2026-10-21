@@ -14,7 +14,7 @@ pub(all) struct CorrectionResult {
 ///|
 /// 纠错条目
 pub(all) struct CorrectionEntry {
-  position : Int
+  position : Int32
   original_char : String
   corrected_char : String
   reason : String
@@ -34,7 +34,7 @@ pub(all) struct SimilarCharMapping {
 pub(all) struct CommonErrorPattern {
   pattern : String
   correction : String
-  frequency : Int
+  frequency : Int32
   context_before : String
   context_after : String
 }
@@ -43,7 +43,7 @@ pub(all) struct CommonErrorPattern {
 /// 词典条目
 pub(all) struct DictionaryEntry {
   word : String
-  frequency : Int
+  frequency : Int32
   category : String
 }
 
@@ -53,8 +53,8 @@ pub(all) struct LanguageModelState {
   dictionary : Array[DictionaryEntry]
   common_errors : Array[CommonErrorPattern]
   similar_chars : Array[SimilarCharMapping]
-  total_words : Int
-  total_corrections : Int
+  total_words : Int32
+  total_corrections : Int32
 }
 
 ///|
@@ -468,7 +468,7 @@ pub fn correct_common_patterns(text : String) -> CorrectionResult {
 /// 完整的后处理纠错流水线
 pub fn full_postprocess_correction(
   text : String,
-  context_type? : String = "mixed",
+  context_type~ : String = "mixed",
 ) -> CorrectionResult raise @types.LoadError {
   // 输入验证
   if context_type != "number" &&
@@ -520,7 +520,7 @@ pub fn full_postprocess_correction(
 /// 批量文本纠错
 pub fn batch_correct_texts(
   texts : Array[String],
-  context_type? : String = "mixed",
+  context_type~ : String = "mixed",
 ) -> Array[CorrectionResult] raise @types.LoadError {
   // 输入验证
   if texts.length() == 0 {

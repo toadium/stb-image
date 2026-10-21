@@ -30,11 +30,11 @@ pub fn freq_filter(@types.Image, FreqFilterType, Float, band_width? : Float) -> 
 
 pub fn freq_filter_gaussian(@types.Image, FreqFilterType, Float, band_width? : Float) -> @types.Image raise @types.LoadError
 
-pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image raise @types.LoadError
+pub fn haar_denoise(@types.Image, threshold? : Float, soft? : Bool, levels? : Int32) -> @types.Image raise @types.LoadError
 
-pub fn haar_denoise_16(@types.Image16, threshold? : Float, soft? : Bool, levels? : Int) -> @types.Image16 raise @types.LoadError
+pub fn haar_denoise_16(@types.Image16, threshold? : Float, soft? : Bool, levels? : Int32) -> @types.Image16 raise @types.LoadError
 
-pub fn haar_denoise_f(@types.ImageF, threshold? : Float, soft? : Bool, levels? : Int) -> @types.ImageF raise @types.LoadError
+pub fn haar_denoise_f(@types.ImageF, threshold? : Float, soft? : Bool, levels? : Int32) -> @types.ImageF raise @types.LoadError
 
 pub fn haar_inverse_transform_2d(HaarWaveletResult) -> @types.Image
 
@@ -44,11 +44,11 @@ pub fn haar_inverse_transform_2d_f(HaarWaveletResult) -> @types.ImageF
 
 pub fn haar_transform_1d(Array[Float]) -> Array[Float]
 
-pub fn haar_transform_2d(@types.Image, levels? : Int) -> HaarWaveletResult raise @types.LoadError
+pub fn haar_transform_2d(@types.Image, levels? : Int32) -> HaarWaveletResult raise @types.LoadError
 
-pub fn haar_transform_2d_16(@types.Image16, levels? : Int) -> HaarWaveletResult raise @types.LoadError
+pub fn haar_transform_2d_16(@types.Image16, levels? : Int32) -> HaarWaveletResult raise @types.LoadError
 
-pub fn haar_transform_2d_f(@types.ImageF, levels? : Int) -> HaarWaveletResult raise @types.LoadError
+pub fn haar_transform_2d_f(@types.ImageF, levels? : Int32) -> HaarWaveletResult raise @types.LoadError
 
 pub fn idct_2d(Array[Array[Double]]) -> @types.Image
 
@@ -73,8 +73,8 @@ pub struct Complex {
 }
 
 pub struct FFTResult {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Complex]
 }
 
@@ -86,9 +86,9 @@ pub(all) enum FreqFilterType {
 }
 
 pub struct HaarWaveletResult {
-  width : Int
-  height : Int
-  levels : Int
+  width : Int32
+  height : Int32
+  levels : Int32
   coefficients : Array[Float]
 }
 

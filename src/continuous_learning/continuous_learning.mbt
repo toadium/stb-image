@@ -63,10 +63,10 @@ pub extend IncrementalLearningScenario with Eq::{not_equal, equal}
 ///|
 /// 学习任务
 pub(all) struct LearningTask {
-  task_id : Int
+  task_id : Int32
   task_name : String
-  num_classes : Int
-  num_samples : Int
+  num_classes : Int32
+  num_samples : Int32
   data_distribution : Array[Double]
   difficulty : Double
   is_completed : Bool
@@ -79,13 +79,13 @@ pub(all) struct ContinualLearningConfig {
   regularization_method : RegularizationMethod
   replay_method : ReplayMethod
   scenario : IncrementalLearningScenario
-  num_tasks : Int
+  num_tasks : Int32
   ewc_lambda : Double
-  memory_size : Int
+  memory_size : Int32
   replay_ratio : Double
   learning_rate : Double
-  batch_size : Int
-  num_epochs : Int
+  batch_size : Int32
+  num_epochs : Int32
   use_knowledge_distillation : Bool
   distillation_temperature : Double
   distillation_alpha : Double
@@ -99,7 +99,7 @@ pub(all) struct EWCConfig {
   lambda : Double
   fisher_information : Array[Double]
   optimal_params : Array[Double]
-  num_params : Int
+  num_params : Int32
   online : Bool
   gamma : Double
 }
@@ -107,11 +107,11 @@ pub(all) struct EWCConfig {
 ///|
 /// 记忆缓冲区
 pub(all) struct MemoryBuffer {
-  buffer_size : Int
-  current_size : Int
+  buffer_size : Int32
+  current_size : Int32
   samples : Array[Array[Double]]
-  labels : Array[Int]
-  task_ids : Array[Int]
+  labels : Array[Int32]
+  task_ids : Array[Int32]
   sampling_strategy : String
 }
 
@@ -125,7 +125,7 @@ pub(all) struct ContinualLearningMetrics {
   forgetting_measure : Double
   learning_accuracy : Array[Double]
   task_accuracies : Array[Double]
-  num_tasks_completed : Int
+  num_tasks_completed : Int32
   memory_usage_mb : Double
   training_time_s : Double
 }
@@ -138,7 +138,7 @@ pub(all) struct KnowledgeDistillationConfigCL {
   beta : Double
   use_hint_loss : Bool
   use_attention_transfer : Bool
-  teacher_task_ids : Array[Int]
+  teacher_task_ids : Array[Int32]
 }
 
 ///|
@@ -166,7 +166,7 @@ pub fn create_default_continual_config() -> ContinualLearningConfig {
 
 ///|
 /// 创建默认EWC配置
-pub fn create_default_ewc_config(num_params : Int) -> EWCConfig {
+pub fn create_default_ewc_config(num_params : Int32) -> EWCConfig {
   let fisher : Array[Double] = []
   let optimal : Array[Double] = []
   for _ in 0..<num_params {
@@ -187,12 +187,12 @@ pub fn create_default_ewc_config(num_params : Int) -> EWCConfig {
 ///|
 /// 创建记忆缓冲区
 pub fn create_memory_buffer(
-  buffer_size : Int,
+  buffer_size : Int32,
   sampling_strategy : String,
 ) -> MemoryBuffer {
   let samples : Array[Array[Double]] = []
-  let labels : Array[Int] = []
-  let task_ids : Array[Int] = []
+  let labels : Array[Int32] = []
+  let task_ids : Array[Int32] = []
 
   MemoryBuffer::{
     buffer_size,
@@ -207,9 +207,9 @@ pub fn create_memory_buffer(
 ///|
 /// 创建学习任务序列
 pub fn create_task_sequence(
-  num_tasks : Int,
-  classes_per_task : Int,
-  samples_per_task : Int,
+  num_tasks : Int32,
+  classes_per_task : Int32,
+  samples_per_task : Int32,
 ) -> Array[LearningTask] {
   let tasks : Array[LearningTask] = []
 
@@ -292,11 +292,11 @@ pub fn update_fisher_information(
 /// 从记忆缓冲区采样（简化版）
 pub fn sample_from_memory(
   buffer : MemoryBuffer,
-  num_samples : Int,
-) -> (Array[Array[Double]], Array[Int], Array[Int]) {
+  num_samples : Int32,
+) -> (Array[Array[Double]], Array[Int32], Array[Int32]) {
   let sampled_samples : Array[Array[Double]] = []
-  let sampled_labels : Array[Int] = []
-  let sampled_task_ids : Array[Int] = []
+  let sampled_labels : Array[Int32] = []
+  let sampled_task_ids : Array[Int32] = []
 
   let actual_samples = if num_samples < buffer.current_size {
     num_samples
@@ -320,8 +320,8 @@ pub fn sample_from_memory(
 pub fn add_to_memory(
   buffer : MemoryBuffer,
   sample : Array[Double],
-  label : Int,
-  task_id : Int,
+  label : Int32,
+  task_id : Int32,
 ) -> MemoryBuffer {
   if buffer.current_size < buffer.buffer_size {
     let new_samples = buffer.samples

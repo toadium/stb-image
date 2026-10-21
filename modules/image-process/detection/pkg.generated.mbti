@@ -1,0 +1,140 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-process/detection"
+
+import {
+  "walkzzz/image-core/types",
+}
+
+// Values
+pub fn bbox_iou(BoundingBox, BoundingBox) -> Double raise @types.LoadError
+
+pub fn bbox_new(Int32, Int32, Int32, Int32, score? : Double, class_id? : Int32) -> BoundingBox raise @types.LoadError
+
+pub fn calculate_detection_metrics(Array[YoloBoundingBox], Array[YoloBoundingBox], Double) -> YoloDetectionMetrics raise @types.LoadError
+
+pub fn calculate_iou(YoloBoundingBox, YoloBoundingBox) -> Double raise @types.LoadError
+
+pub fn create_default_yolo_config() -> YoloConfig
+
+pub fn detect_objects_simple(@types.Image, YoloConfig) -> YoloDetectionResult raise @types.LoadError
+
+pub fn detection_report_to_string(YoloDetectionResult, YoloDetectionMetrics) -> String
+
+pub fn draw_detections(@types.Image, Array[BoundingBox]) -> @types.Image raise @types.LoadError
+
+pub fn initialize_object_tracking(YoloDetectionResult) -> Array[YoloTrackedObject] raise @types.LoadError
+
+pub fn nms(Array[BoundingBox], iou_threshold? : Double) -> Array[BoundingBox] raise @types.LoadError
+
+pub fn non_max_suppression(Array[YoloBoundingBox], Double, Int32) -> Array[YoloBoundingBox] raise @types.LoadError
+
+pub fn refine_bounding_box(YoloBoundingBox, Double, Double, Double, Double) -> YoloBoundingBox raise @types.LoadError
+
+pub fn update_object_tracking(Array[YoloTrackedObject], YoloDetectionResult, Int32) -> Array[YoloTrackedObject] raise @types.LoadError
+
+// Errors
+
+// Types and methods
+pub(all) struct AnchorBox {
+  width : Double
+  height : Double
+  stride : Int32
+}
+
+pub(all) struct BoundingBox {
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  score : Double
+  class_id : Int32
+}
+
+pub(all) enum ObjectClass {
+  Person
+  Car
+  Bus
+  Truck
+  Motorcycle
+  Bicycle
+  Dog
+  Cat
+  Bird
+  Chair
+  Table
+  Bottle
+  Cup
+  Phone
+  Laptop
+  Tv
+  Book
+  Unknown
+} derive(Eq)
+pub fn ObjectClass::equal(Self, Self) -> Bool
+pub fn ObjectClass::not_equal(Self, Self) -> Bool
+
+pub(all) struct YoloBoundingBox {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+  confidence : Double
+  class_id : Int32
+  class_name : String
+}
+
+pub(all) struct YoloConfig {
+  model_version : String
+  input_size : Int32
+  num_classes : Int32
+  confidence_threshold : Double
+  iou_threshold : Double
+  max_detections : Int32
+  anchors : Array[(Double, Double)]
+  strides : Array[Int32]
+}
+
+pub(all) struct YoloDetectionMetrics {
+  precision : Double
+  recall : Double
+  f1_score : Double
+  mAP : Double
+  mAP50 : Double
+  mAP50_95 : Double
+  true_positives : Int32
+  false_positives : Int32
+  false_negatives : Int32
+}
+
+pub(all) struct YoloDetectionResult {
+  boxes : Array[YoloBoundingBox]
+  num_detections : Int32
+  inference_time_ms : Double
+  input_width : Int32
+  input_height : Int32
+}
+
+pub(all) struct YoloTrackedObject {
+  id : Int32
+  class_id : Int32
+  class_name : String
+  bbox : YoloBoundingBox
+  age : Int32
+  visible_count : Int32
+  invisible_count : Int32
+  velocity_x : Double
+  velocity_y : Double
+  trajectory : Array[(Double, Double)]
+  color : (Int32, Int32, Int32)
+}
+
+pub(all) struct YoloTrackingResult {
+  objects : Array[YoloTrackedObject]
+  num_objects : Int32
+  frame_index : Int32
+  tracking_time_ms : Double
+}
+
+// Type aliases
+
+// Traits

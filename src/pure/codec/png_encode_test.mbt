@@ -4,10 +4,10 @@
 
 ///|
 fn pe_make_image(
-  width : Int,
-  height : Int,
-  channels : Int,
-  pixels : Array[Int],
+  width : Int32,
+  height : Int32,
+  channels : Int32,
+  pixels : Array[Int32],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -151,7 +151,7 @@ test "encode_png_pure: 3-channel from 5-channel input" {
 
 ///|
 test "encode_png_pure: 8x8 RGB roundtrip" {
-  let pixels : Array[Int] = []
+  let pixels : Array[Int32] = []
   for i in 0..<192 {
     pixels.push(i * 37 % 256)
   }

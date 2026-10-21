@@ -4,9 +4,9 @@
 ///|
 /// 投影结果结构体
 pub(all) struct ProjectionResult {
-  projection : Array[Int]
-  peaks : Array[Int]
-  valleys : Array[Int]
+  projection : Array[Int32]
+  peaks : Array[Int32]
+  valleys : Array[Int32]
   mean : Double
   stddev : Double
 }
@@ -40,7 +40,7 @@ pub fn horizontal_projection(
   let w = img.width
   let h = img.height
   let data = img.data
-  let projection : Array[Int] = Array::make(h, 0)
+  let projection : Array[Int32] = Array::make(h, 0)
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() > 128 {
@@ -80,7 +80,7 @@ pub fn vertical_projection(
   let w = img.width
   let h = img.height
   let data = img.data
-  let projection : Array[Int] = Array::make(w, 0)
+  let projection : Array[Int32] = Array::make(w, 0)
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() > 128 {
@@ -93,7 +93,7 @@ pub fn vertical_projection(
 
 ///|
 /// 分析投影（找峰值、谷值、均值、标准差）
-fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
+fn analyze_projection(projection : Array[Int32]) -> ProjectionResult {
   let n = projection.length()
   // 计算均值和标准差
   let mut sum = 0
@@ -110,7 +110,7 @@ fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
   }
   let stddev = if variance > 0.0 { variance.sqrt() } else { 0.0 }
   // 找峰值（局部最大值）
-  let peaks : Array[Int] = []
+  let peaks : Array[Int32] = []
   for i in 1..<(n - 1) {
     if projection[i] > projection[i - 1] &&
       projection[i] >= projection[i + 1] &&
@@ -119,7 +119,7 @@ fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
     }
   }
   // 找谷值（局部最小值）
-  let valleys : Array[Int] = []
+  let valleys : Array[Int32] = []
   for i in 1..<(n - 1) {
     if projection[i] < projection[i - 1] &&
       projection[i] <= projection[i + 1] &&
@@ -133,22 +133,22 @@ fn analyze_projection(projection : Array[Int]) -> ProjectionResult {
 ///|
 /// 文本行结构体
 pub(all) struct TextLineInfo {
-  y_start : Int
-  y_end : Int
-  height : Int
-  x_start : Int
-  x_end : Int
-  width : Int
-  pixel_count : Int
-  baseline : Int
+  y_start : Int32
+  y_end : Int32
+  height : Int32
+  x_start : Int32
+  x_end : Int32
+  width : Int32
+  pixel_count : Int32
+  baseline : Int32
 }
 
 ///|
 /// 检测文本行（基于水平投影）
 pub fn detect_text_lines_projection(
   img : @types.Image,
-  min_height? : Int = 5,
-  max_gap? : Int = 3,
+  min_height~ : Int32 = 5,
+  max_gap~ : Int32 = 3,
 ) -> Array[TextLineInfo] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -185,7 +185,7 @@ pub fn detect_text_lines_projection(
   let h = img.height
   let data = img.data
   // 水平投影
-  let projection : Array[Int] = Array::make(h, 0)
+  let projection : Array[Int32] = Array::make(h, 0)
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() > 128 {
@@ -294,13 +294,13 @@ pub fn detect_text_lines_projection(
 ///|
 /// 字符分割结构体
 pub(all) struct CharSegment {
-  x_start : Int
-  x_end : Int
-  width : Int
-  y_start : Int
-  y_end : Int
-  height : Int
-  pixel_count : Int
+  x_start : Int32
+  x_end : Int32
+  width : Int32
+  y_start : Int32
+  y_end : Int32
+  height : Int32
+  pixel_count : Int32
 }
 
 ///|
@@ -308,8 +308,8 @@ pub(all) struct CharSegment {
 pub fn segment_chars_projection(
   img : @types.Image,
   line : TextLineInfo,
-  min_width? : Int = 2,
-  max_gap? : Int = 2,
+  min_width~ : Int32 = 2,
+  max_gap~ : Int32 = 2,
 ) -> Array[CharSegment] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -354,7 +354,7 @@ pub fn segment_chars_projection(
   let x_start = line.x_start
   let x_end = line.x_end
   // 垂直投影（只在文本行范围内）
-  let projection : Array[Int] = Array::make(w, 0)
+  let projection : Array[Int32] = Array::make(w, 0)
   for x in x_start..<(x_end + 1) {
     for y in y_start..<(y_end + 1) {
       if data[y * w + x].to_int() > 128 {
@@ -452,7 +452,7 @@ pub fn segment_chars_projection(
 pub fn extract_text_line_image(
   img : @types.Image,
   line : TextLineInfo,
-  padding? : Int = 2,
+  padding~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -518,8 +518,8 @@ pub fn extract_text_line_image(
 pub fn extract_char_image(
   img : @types.Image,
   char : CharSegment,
-  target_size? : Int = 32,
-  padding? : Int = 2,
+  target_size~ : Int32 = 32,
+  padding~ : Int32 = 2,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -600,7 +600,7 @@ pub fn extract_char_image(
 
 ///|
 /// 辅助函数：最小值
-fn _min_proj(a : Int, b : Int) -> Int {
+fn _min_proj(a : Int32, b : Int32) -> Int32 {
   if a < b {
     a
   } else {
@@ -610,7 +610,7 @@ fn _min_proj(a : Int, b : Int) -> Int {
 
 ///|
 /// 辅助函数：最大值
-fn _max_proj(a : Int, b : Int) -> Int {
+fn _max_proj(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

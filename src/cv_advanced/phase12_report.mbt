@@ -9,9 +9,9 @@
 pub(all) struct Phase12Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -24,10 +24,10 @@ pub extend Phase12Capability with Eq::{not_equal, equal}
 /// Phase 12 综合报告。
 /// Phase 12 summary report.
 pub(all) struct Phase12Report {
-  total_versions : Int
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_versions : Int32
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   capabilities : Array[Phase12Capability]
   is_complete : Bool
 } derive(Eq, @debug.Debug)
@@ -99,7 +99,7 @@ pub fn phase12_capabilities() -> Array[Phase12Capability] {
 ///|
 /// Phase 12 总类型数。
 /// Phase 12 total types.
-pub fn phase12_total_types() -> Int {
+pub fn phase12_total_types() -> Int32 {
   let caps = phase12_capabilities()
   let mut total = 0
   for c in caps {
@@ -111,7 +111,7 @@ pub fn phase12_total_types() -> Int {
 ///|
 /// Phase 12 总函数数。
 /// Phase 12 total functions.
-pub fn phase12_total_functions() -> Int {
+pub fn phase12_total_functions() -> Int32 {
   let caps = phase12_capabilities()
   let mut total = 0
   for c in caps {
@@ -123,7 +123,7 @@ pub fn phase12_total_functions() -> Int {
 ///|
 /// Phase 12 总测试数。
 /// Phase 12 total tests.
-pub fn phase12_total_tests() -> Int {
+pub fn phase12_total_tests() -> Int32 {
   let caps = phase12_capabilities()
   let mut total = 0
   for c in caps {

@@ -6,9 +6,9 @@
 
 ///|
 fn ge_make_rgb_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -21,9 +21,9 @@ fn ge_make_rgb_image(
 
 ///|
 fn ge_make_rgba_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {

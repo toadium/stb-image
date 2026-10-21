@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn tr_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn tr_make_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn tr_make_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn tr_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
+fn tr_make_img_mismatch(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -23,7 +23,7 @@ fn tr_make_img_mismatch(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn tr_make_hline(y : Int, x1 : Int, x2 : Int) -> @ocr.TableLine {
+fn tr_make_hline(y : Int32, x1 : Int32, x2 : Int32) -> @ocr.TableLine {
   @ocr.TableLine::{
     x1,
     y1: y,
@@ -35,7 +35,7 @@ fn tr_make_hline(y : Int, x1 : Int, x2 : Int) -> @ocr.TableLine {
 }
 
 ///|
-fn tr_make_vline(x : Int, y1 : Int, y2 : Int) -> @ocr.TableLine {
+fn tr_make_vline(x : Int32, y1 : Int32, y2 : Int32) -> @ocr.TableLine {
   @ocr.TableLine::{
     x1: x,
     y1,
@@ -48,12 +48,12 @@ fn tr_make_vline(x : Int, y1 : Int, y2 : Int) -> @ocr.TableLine {
 
 ///|
 fn tr_make_cell(
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
-  row : Int,
-  col : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
+  row : Int32,
+  col : Int32,
 ) -> @ocr.TableCell {
   @ocr.TableCell::{
     x,
@@ -68,7 +68,7 @@ fn tr_make_cell(
 }
 
 ///|
-fn tr_make_structure(rows : Int, cols : Int) -> @ocr.TableStructure {
+fn tr_make_structure(rows : Int32, cols : Int32) -> @ocr.TableStructure {
   @ocr.TableStructure::{
     rows,
     cols,

@@ -26,7 +26,7 @@ pub extend SuggestionKind with Eq::{not_equal, equal}
 pub(all) struct PipelineOptSuggestion {
   pipeline_desc : String
   suggestion_kind : SuggestionKind
-  estimated_benefit : Int
+  estimated_benefit : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -41,8 +41,8 @@ pub extend PipelineOptSuggestion with Eq::{not_equal, equal}
 /// Pipeline optimization report.
 pub(all) struct PipelineOptReport {
   suggestions : Array[PipelineOptSuggestion]
-  total : Int
-  best_benefit : Int
+  total : Int32
+  best_benefit : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -72,7 +72,7 @@ pub fn find_redundant_ops(pipeline : @imgir.IRPipeline) -> Array[String] {
 ///|
 /// 估算管道优化收益（0-100）。
 /// Estimate pipeline optimization benefit (0-100).
-pub fn estimate_benefit(pipeline : @imgir.IRPipeline) -> Int {
+pub fn estimate_benefit(pipeline : @imgir.IRPipeline) -> Int32 {
   let ops = pipeline.ops
   let n = ops.length()
   let redundant = find_redundant_ops(pipeline)

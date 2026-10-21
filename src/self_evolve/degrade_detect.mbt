@@ -191,7 +191,7 @@ pub fn filter_by_severity(
 /// Count degradations by kind.
 pub fn count_by_kind(
   cases : Array[DegradationCase],
-) -> Array[(DegradationKind, Int)] {
+) -> Array[(DegradationKind, Int32)] {
   let kinds = [
     DivisionByZero,
     SingularMatrix,
@@ -200,7 +200,7 @@ pub fn count_by_kind(
     NaNValue,
     InfValue,
   ]
-  let result : Array[(DegradationKind, Int)] = []
+  let result : Array[(DegradationKind, Int32)] = []
   for k in kinds {
     let mut count = 0
     for c in cases {

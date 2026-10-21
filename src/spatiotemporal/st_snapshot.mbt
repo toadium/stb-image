@@ -58,7 +58,7 @@ pub fn st_subclip(
 /// Extract a specific frame by index.
 pub fn st_extract_frame(
   timage : TImage,
-  index : Int,
+  index : Int32,
 ) -> @types.Image raise @types.LoadError {
   if index < 0 || index >= timage.frames.length() {
     raise @types.LoadError::DecodeFailed("st_extract_frame: 索引越界")

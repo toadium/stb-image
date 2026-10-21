@@ -100,6 +100,6 @@ pub fn optimize_all(pipeline : @imgir.IRPipeline) -> OptimizationReport {
 ///|
 /// 计算优化后的算子数（不实际构建管道）。
 /// Count ops after optimization (without building pipeline).
-pub fn optimized_op_count(pipeline : @imgir.IRPipeline) -> Int {
+pub fn optimized_op_count(pipeline : @imgir.IRPipeline) -> Int32 {
   optimize_pipeline(pipeline).length()
 }

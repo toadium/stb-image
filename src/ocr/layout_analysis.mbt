@@ -4,10 +4,10 @@
 ///|
 /// 文本区域结构体
 pub(all) struct TextRegion {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   region_type : TextRegionType
 }
 
@@ -26,10 +26,10 @@ pub extend TextRegionType with Eq::{not_equal, equal}
 ///|
 /// 文本行结构体
 pub(all) struct TextLine {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
@@ -67,7 +67,7 @@ pub fn detect_text_regions(
     binary[i] = data[i].to_int() < 128
   }
   // 水平投影（检测文本行）
-  let horizontal_proj : Array[Int] = Array::make(h, 0)
+  let horizontal_proj : Array[Int32] = Array::make(h, 0)
   for y in 0..<h {
     for x in 0..<w {
       if binary[y * w + x] {
@@ -161,7 +161,7 @@ pub fn segment_page(
         let mut min_y = y
         let mut max_y = y
         let mut count = 0
-        let queue : Array[(Int, Int)] = [(x, y)]
+        let queue : Array[(Int32, Int32)] = [(x, y)]
         visited[y * w + x] = true
         let mut queue_idx = 0
         while queue_idx < queue.length() {
@@ -225,7 +225,7 @@ pub fn segment_page(
 /// 返回栏数和每栏的 x 范围
 pub fn detect_columns(
   img : @types.Image,
-) -> (Int, Array[(Int, Int)]) raise @types.LoadError {
+) -> (Int32, Array[(Int32, Int32)]) raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -250,7 +250,7 @@ pub fn detect_columns(
   let h = img.height
   let data = img.data
   // 垂直投影
-  let vertical_proj : Array[Int] = Array::make(w, 0)
+  let vertical_proj : Array[Int32] = Array::make(w, 0)
   for y in 0..<h {
     for x in 0..<w {
       if data[y * w + x].to_int() < 128 {
@@ -260,7 +260,7 @@ pub fn detect_columns(
   }
   // 找空白列（栏间距）
   let threshold = h / 50 // 空白列阈值
-  let gaps : Array[(Int, Int)] = []
+  let gaps : Array[(Int32, Int32)] = []
   let mut in_gap = false
   let mut gap_start = 0
   for x in 0..<w {
@@ -277,7 +277,7 @@ pub fn detect_columns(
   }
   // 根据间隙计算栏数和范围
   let num_columns = gaps.length() + 1
-  let columns : Array[(Int, Int)] = []
+  let columns : Array[(Int32, Int32)] = []
   let mut prev_end = 0
   for i in 0..<gaps.length() {
     let (start, end) = gaps[i]
@@ -338,10 +338,10 @@ pub fn extract_text_lines(
 /// 裁剪图像区域
 fn crop_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
 ) -> @types.Image? {
   let w = img.width
   let h = img.height
@@ -372,7 +372,7 @@ fn crop_region(
 /// 灰度化 -> 去噪 -> 倾斜校正 -> 二值化 -> 输出
 pub fn ocr_preprocess(
   img : @types.Image,
-  binarization_method? : String = "sauvola",
+  binarization_method~ : String = "sauvola",
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

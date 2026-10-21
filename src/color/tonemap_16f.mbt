@@ -2,7 +2,7 @@
 // Gamma + Reinhard，返回 Image16/ImageF
 
 ///|
-fn read_float_le_tm(data : Bytes, offset : Int) -> Float {
+fn read_float_le_tm(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -12,7 +12,7 @@ fn read_float_le_tm(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_float_le_tm(data : Array[Byte], offset : Int, v : Float) -> Unit {
+fn write_float_le_tm(data : Array[Byte], offset : Int32, v : Float) -> Unit {
   let bits = v.reinterpret_as_int()
   data[offset] = (bits & 0xFF).to_byte()
   data[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -21,7 +21,7 @@ fn write_float_le_tm(data : Array[Byte], offset : Int, v : Float) -> Unit {
 }
 
 ///|
-fn write_u16_le_tm(data : Array[Byte], offset : Int, v : Int) -> Unit {
+fn write_u16_le_tm(data : Array[Byte], offset : Int32, v : Int32) -> Unit {
   data[offset] = (v & 0xFF).to_byte()
   data[offset + 1] = ((v >> 8) & 0xFF).to_byte()
 }
@@ -120,7 +120,7 @@ pub fn gamma_tonemap_f(
 /// 公式：L_out = L_scaled / (1 + L_scaled)，其中 L_scaled = key * L / L_avg。
 pub fn reinhard_tonemap_f(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {
@@ -272,7 +272,7 @@ pub fn gamma_tonemap_16(
 /// 输入 ImageF，输出 Image16（0-65535）。
 pub fn reinhard_tonemap_16(
   imgf : @types.ImageF,
-  key? : Float = 0.18F,
+  key~ : Float = 0.18F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if imgf.width <= 0 || imgf.height <= 0 {

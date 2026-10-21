@@ -14,7 +14,7 @@ pub fn pyr_down(img : @types.Image) -> @types.Image raise @types.LoadError {
   if new_w == 0 || new_h == 0 {
     raise @types.LoadError::DecodeFailed("图像太小，无法下采样")
   }
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -57,13 +57,13 @@ pub fn pyr_up(img : @types.Image) -> @types.Image raise @types.LoadError {
   let h = img.height
   let new_w = w * 2
   let new_h = h * 2
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = img.data[i].to_int()
   }
   // 预计算 x 方向插值参数
-  let x0_arr : Array[Int] = Array::make(new_w, 0)
-  let x1_arr : Array[Int] = Array::make(new_w, 0)
+  let x0_arr : Array[Int32] = Array::make(new_w, 0)
+  let x1_arr : Array[Int32] = Array::make(new_w, 0)
   let wx_arr : Array[Float] = Array::make(new_w, 0.0F)
   for x in 0..<new_w {
     let fx = (Float::from_int(x) - 0.5F) / 2.0F
@@ -73,8 +73,8 @@ pub fn pyr_up(img : @types.Image) -> @types.Image raise @types.LoadError {
     wx_arr[x] = fx - Float::from_int(x0)
   }
   // 预计算 y 方向插值参数
-  let y0_arr : Array[Int] = Array::make(new_h, 0)
-  let y1_arr : Array[Int] = Array::make(new_h, 0)
+  let y0_arr : Array[Int32] = Array::make(new_h, 0)
+  let y1_arr : Array[Int32] = Array::make(new_h, 0)
   let wy_arr : Array[Float] = Array::make(new_h, 0.0F)
   for y in 0..<new_h {
     let fy = (Float::from_int(y) - 0.5F) / 2.0F
@@ -127,7 +127,7 @@ pub fn pyr_up(img : @types.Image) -> @types.Image raise @types.LoadError {
 /// 构建高斯金字塔。返回各级图像（从原图到最小级），levels 为最大层数（0=自动到 1x1）。
 pub fn build_gaussian_pyramid(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.Image] raise @types.LoadError {
   let result : Array[@types.Image] = [img]
   let mut current = img
@@ -147,7 +147,7 @@ pub fn build_gaussian_pyramid(
 /// 最后一层为高斯金字塔的最小级（不加差）。
 pub fn build_laplacian_pyramid(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.Image] raise @types.LoadError {
   let gaussian = build_gaussian_pyramid(img, levels)
   let result : Array[@types.Image] = []
@@ -165,13 +165,13 @@ fn laplacian_diff(a : @types.Image, b : @types.Image) -> @types.Image {
   let ch = a.channels
   let w = a.width
   let h = a.height
-  let a_int : Array[Int] = Array::make(w * h * ch, 0)
+  let a_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     a_int[i] = a.data[i].to_int()
   }
   let bw = b.width
   let bh = b.height
-  let b_int : Array[Int] = Array::make(bw * bh * ch, 0)
+  let b_int : Array[Int32] = Array::make(bw * bh * ch, 0)
   for i in 0..<(bw * bh * ch) {
     b_int[i] = b.data[i].to_int()
   }

@@ -24,7 +24,7 @@ pub extend ScheduleStatus with Eq::{not_equal, equal}
 /// Evolution schedule plan.
 pub(all) struct EvolutionSchedule {
   schedule_id : String
-  ops_count : Int
+  ops_count : Int32
   status : ScheduleStatus
   description : String
 } derive(Eq, @debug.Debug)
@@ -40,9 +40,9 @@ pub extend EvolutionSchedule with Eq::{not_equal, equal}
 /// Schedule execution result.
 pub(all) struct ScheduleResult {
   schedule : EvolutionSchedule
-  evolved_count : Int
-  fixed_count : Int
-  remaining_count : Int
+  evolved_count : Int32
+  fixed_count : Int32
+  remaining_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

@@ -23,9 +23,9 @@ pub extend GANType with Eq::{not_equal, equal}
 /// GAN 配置。
 /// GAN configuration.
 pub(all) struct GANConfig {
-  latent_dim : Int
-  img_channels : Int
-  img_size : Int
+  latent_dim : Int32
+  img_channels : Int32
+  img_size : Int32
   learning_rate : Double
   lambda_gp : Double
 } derive(Eq, @debug.Debug)
@@ -42,7 +42,7 @@ pub extend GANConfig with Eq::{not_equal, equal}
 pub(all) struct GANState {
   generator_loss : Double
   discriminator_loss : Double
-  iteration : Int
+  iteration : Int32
   converged : Bool
 } derive(Eq, @debug.Debug)
 
@@ -144,9 +144,9 @@ pub fn stylegan_modulated_conv(
   weight : Array[Double],
   style : Array[Double],
   bias : Array[Double],
-  in_channels : Int,
-  out_channels : Int,
-  kernel_size : Int,
+  in_channels : Int32,
+  out_channels : Int32,
+  kernel_size : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let spatial = input.length() / in_channels
@@ -176,7 +176,7 @@ pub fn stylegan_modulated_conv(
 pub fn gan_generate_samples(
   weights : Array[Double],
   config : GANConfig,
-  num_samples : Int,
+  num_samples : Int32,
 ) -> Array[Array[Double]] {
   let result : Array[Array[Double]] = []
   for s in 0..<num_samples {

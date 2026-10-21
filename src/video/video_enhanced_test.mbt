@@ -1,10 +1,10 @@
 // v192c video 增强测试：多帧序列 + 跟踪 + 动作识别 + 编辑
 
 ///|
-fn vid_make_img(w : Int, h : Int, ch : Int, seed : Int) -> @types.Image {
+fn vid_make_img(w : Int32, h : Int32, ch : Int32, seed : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * ch) {
-    let v : Int = (i * 37 + seed * 13) % 256
+    let v : Int32 = (i * 37 + seed * 13) % 256
     data.push(v.to_byte())
   }
   @types.Image::{
@@ -16,7 +16,7 @@ fn vid_make_img(w : Int, h : Int, ch : Int, seed : Int) -> @types.Image {
 }
 
 ///|
-fn vid_make_frames(n : Int, w : Int, h : Int) -> Array[@types.Image] {
+fn vid_make_frames(n : Int32, w : Int32, h : Int32) -> Array[@types.Image] {
   let frames : Array[@types.Image] = []
   for i in 0..<n {
     frames.push(vid_make_img(w, h, 3, i))

@@ -25,7 +25,7 @@ pub extend SpectralMatchMethod with Eq::{not_equal, equal}
 pub(all) struct EndmemberResult {
   endmembers : Array[Array[Double]]
   abundance_maps : Array[Array[Double]]
-  num_endmembers : Int
+  num_endmembers : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -132,11 +132,11 @@ pub fn hyperspectral_correlation(
 /// Pixel Purity Index (simplified N-FINDR).
 pub fn hyperspectral_ppi(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_iterations : Int,
-) -> Array[Int] {
+  num_bands : Int32,
+  num_iterations : Int32,
+) -> Array[Int32] {
   let num_pixels = data.length()
-  let scores : Array[Int] = []
+  let scores : Array[Int32] = []
   for _ in 0..<num_pixels {
     scores.push(0)
   }
@@ -175,12 +175,12 @@ pub fn hyperspectral_ppi(
 /// Endmember extraction (PPI-based).
 pub fn hyperspectral_extract_endmembers(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_endmembers : Int,
-  num_iterations : Int,
+  num_bands : Int32,
+  num_endmembers : Int32,
+  num_iterations : Int32,
 ) -> Array[Array[Double]] {
   let scores = hyperspectral_ppi(data, num_bands, num_iterations)
-  let candidates : Array[(Int, Int)] = []
+  let candidates : Array[(Int32, Int32)] = []
   for i in 0..<scores.length() {
     candidates.push((i, scores[i]))
   }
@@ -243,7 +243,7 @@ pub fn hyperspectral_match(
   pixel_spectrum : Array[Double],
   reference_spectra : Array[Array[Double]],
   match_method : SpectralMatchMethod,
-) -> Int {
+) -> Int32 {
   let mut best_idx = 0
   let mut best_score = 1.7976931348623157e308
   for i in 0..<reference_spectra.length() {
@@ -275,9 +275,9 @@ pub fn hyperspectral_match(
 /// Build complete endmember extraction result.
 pub fn hyperspectral_build_endmember_result(
   data : Array[Array[Double]],
-  num_bands : Int,
-  num_endmembers : Int,
-  num_iterations : Int,
+  num_bands : Int32,
+  num_endmembers : Int32,
+  num_iterations : Int32,
 ) -> EndmemberResult {
   let endmembers = hyperspectral_extract_endmembers(
     data, num_bands, num_endmembers, num_iterations,

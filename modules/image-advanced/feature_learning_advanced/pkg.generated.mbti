@@ -1,0 +1,236 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-advanced/feature_learning_advanced"
+
+// Values
+pub fn create_default_feature_learning_config() -> FeatureLearningConfig
+
+pub fn extract_features_fl(Array[Array[Double]], Array[Int32], Array[Int32], FeatureLearningConfig) -> FeatureExtractionResult
+
+pub fn feature_learning_report_to_string(FeatureLearningTaskType, FeatureLearningConfig, String) -> String
+
+pub fn fuse_features_fl(Array[Array[Array[Double]]], FeatureLearningConfig) -> FeatureFusionResult
+
+pub fn learn_features(Array[Array[Double]], FeatureLearningConfig) -> FeatureLearningResult
+
+pub fn select_features_fl(Array[Array[Double]], Int32, FeatureLearningConfig) -> FeatureSelectionResult
+
+pub fn transform_features_fl(Array[Array[Double]], FeatureLearningConfig) -> FeatureTransformationResult
+
+// Errors
+
+// Types and methods
+pub(all) struct ContrastiveLearningResult {
+  learned_representations : Array[Array[Double]]
+  num_samples : Int32
+  representation_dimension : Int32
+  training_loss : Double
+  validation_loss : Double
+  num_epochs : Int32
+  temperature : Double
+  batch_size : Int32
+  learning_rate : Double
+  learning_time_ms : Double
+  positive_pairs : Int32
+  negative_pairs : Int32
+}
+
+pub(all) enum FeatureExtractionMethodType {
+  Handcrafted
+  DeepLearning
+  CNN
+  ResNet
+  VGG
+  Inception
+  EfficientNet
+  VisionTransformer
+  Autoencoder
+  PCA
+  LDA
+  Unknown
+} derive(Eq)
+pub fn FeatureExtractionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureExtractionMethodType::not_equal(Self, Self) -> Bool
+
+pub(all) struct FeatureExtractionResult {
+  features : Array[Array[Double]]
+  num_samples : Int32
+  feature_dimension : Int32
+  extraction_method : FeatureExtractionMethodType
+  extraction_time_ms : Double
+  feature_statistics : Array[Array[Double]]
+  num_layers : Int32
+  layer_names : Array[String]
+}
+
+pub(all) enum FeatureFusionMethodType {
+  Concatenation
+  Addition
+  Multiplication
+  WeightedSum
+  Attention
+  GatedFusion
+  BilinearPooling
+  CompactBilinearPooling
+  Unknown
+} derive(Eq)
+pub fn FeatureFusionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureFusionMethodType::not_equal(Self, Self) -> Bool
+
+pub(all) struct FeatureFusionResult {
+  fused_features : Array[Array[Double]]
+  num_samples : Int32
+  fused_dimension : Int32
+  input_dimensions : Array[Int32]
+  fusion_method : FeatureFusionMethodType
+  fusion_weights : Array[Double]
+  fusion_time_ms : Double
+  attention_weights : Array[Array[Double]]
+}
+
+pub(all) struct FeatureLearningConfig {
+  task_type : FeatureLearningTaskType
+  extraction_method : FeatureExtractionMethodType
+  selection_method : FeatureSelectionMethodType
+  transformation_method : FeatureTransformationMethodType
+  fusion_method : FeatureFusionMethodType
+  metric_method : MetricLearningMethodType
+  num_features : Int32
+  learning_rate : Double
+  num_epochs : Int32
+  batch_size : Int32
+  margin : Double
+  temperature : Double
+  regularization : Double
+  dropout_rate : Double
+  use_pretrained : Bool
+  pretrained_model : String
+  use_augmentation : Bool
+  use_gpu : Bool
+  random_state : Int32
+}
+
+pub(all) struct FeatureLearningResult {
+  learned_features : Array[Array[Double]]
+  num_samples : Int32
+  original_dimension : Int32
+  learned_dimension : Int32
+  feature_importance : Array[Double]
+  selected_features : Array[Int32]
+  reconstruction_error : Double
+  training_loss : Double
+  validation_loss : Double
+  training_accuracy : Double
+  validation_accuracy : Double
+  learning_time_ms : Double
+  num_epochs : Int32
+  converged : Bool
+}
+
+pub(all) enum FeatureLearningTaskType {
+  FeatureExtraction
+  FeatureSelection
+  FeatureTransformation
+  FeatureFusion
+  MetricLearning
+  ContrastiveLearning
+  SelfSupervisedLearning
+  RepresentationLearning
+  TransferLearning
+  Unknown
+} derive(Eq)
+pub fn FeatureLearningTaskType::equal(Self, Self) -> Bool
+pub fn FeatureLearningTaskType::not_equal(Self, Self) -> Bool
+
+pub(all) enum FeatureSelectionMethodType {
+  Filter
+  Wrapper
+  Embedded
+  VarianceThreshold
+  SelectKBest
+  SelectPercentile
+  RFE
+  L1Regularization
+  TreeBased
+  MutualInformation
+  Unknown
+} derive(Eq)
+pub fn FeatureSelectionMethodType::equal(Self, Self) -> Bool
+pub fn FeatureSelectionMethodType::not_equal(Self, Self) -> Bool
+
+pub(all) struct FeatureSelectionResult {
+  selected_features : Array[Int32]
+  num_selected : Int32
+  original_num_features : Int32
+  feature_scores : Array[Double]
+  feature_ranking : Array[Int32]
+  selection_method : FeatureSelectionMethodType
+  threshold : Double
+  selection_time_ms : Double
+  selected_data : Array[Array[Double]]
+}
+
+pub(all) enum FeatureTransformationMethodType {
+  Standardization
+  Normalization
+  Scaling
+  LogTransform
+  PowerTransform
+  QuantileTransform
+  Binning
+  OneHotEncoding
+  PCA
+  LDA
+  NMF
+  ICA
+  Unknown
+} derive(Eq)
+pub fn FeatureTransformationMethodType::equal(Self, Self) -> Bool
+pub fn FeatureTransformationMethodType::not_equal(Self, Self) -> Bool
+
+pub(all) struct FeatureTransformationResult {
+  transformed_features : Array[Array[Double]]
+  num_samples : Int32
+  original_dimension : Int32
+  transformed_dimension : Int32
+  transformation_method : FeatureTransformationMethodType
+  transformation_parameters : Array[Double]
+  transformation_time_ms : Double
+  mean : Array[Double]
+  std : Array[Double]
+  min_values : Array[Double]
+  max_values : Array[Double]
+}
+
+pub(all) enum MetricLearningMethodType {
+  ContrastiveLoss
+  TripletLoss
+  QuadrupletLoss
+  NPairLoss
+  LiftedStructured
+  ProxyNCA
+  ProxyAnchor
+  CircleLoss
+  ArcFace
+  CosFace
+  Unknown
+} derive(Eq)
+pub fn MetricLearningMethodType::equal(Self, Self) -> Bool
+pub fn MetricLearningMethodType::not_equal(Self, Self) -> Bool
+
+pub(all) struct MetricLearningResult {
+  learned_metric : Array[Array[Double]]
+  num_samples : Int32
+  feature_dimension : Int32
+  metric_method : MetricLearningMethodType
+  training_loss : Double
+  validation_loss : Double
+  num_epochs : Int32
+  learning_rate : Double
+  margin : Double
+  embedding_dimension : Int32
+  learning_time_ms : Double
+}
+
+// Type aliases
+
+// Traits

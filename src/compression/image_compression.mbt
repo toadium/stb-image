@@ -24,8 +24,8 @@ pub extend CompressionAlgorithm with Eq::{not_equal, equal}
 /// 压缩结果
 pub(all) struct CompressionResult {
   compressed_data : Bytes
-  original_size : Int
-  compressed_size : Int
+  original_size : Int32
+  compressed_size : Int32
   compression_ratio : Double
   bits_per_pixel : Double
   algorithm : CompressionAlgorithm
@@ -38,11 +38,11 @@ pub(all) struct CompressionResult {
 pub(all) struct CompressionConfig {
   algorithm : CompressionAlgorithm
   quality : Double
-  quantization_level : Int
+  quantization_level : Int32
   use_dct : Bool
   use_prediction : Bool
   use_entropy_coding : Bool
-  block_size : Int
+  block_size : Int32
 }
 
 ///|
@@ -73,18 +73,18 @@ pub extend QuantizationTableType with Eq::{not_equal, equal}
 /// DCT 系数块
 pub(all) struct DCTBlock {
   coefficients : Array[Double]
-  block_size : Int
-  width : Int
-  height : Int
+  block_size : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
 /// 霍夫曼编码表
 pub(all) struct HuffmanTable {
-  symbols : Array[Int]
-  codes : Array[Int]
-  code_lengths : Array[Int]
-  num_symbols : Int
+  symbols : Array[Int32]
+  codes : Array[Int32]
+  code_lengths : Array[Int32]
+  num_symbols : Int32
 }
 
 ///|
@@ -171,7 +171,7 @@ pub fn calculate_image_entropy(
   let h = img.height
   let total = w * h
 
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }
@@ -195,7 +195,7 @@ pub fn calculate_image_entropy(
 /// 量化（均匀量化）
 pub fn quantize_image(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -298,8 +298,8 @@ pub fn predictive_encode(img : @types.Image) -> Bytes raise @types.LoadError {
 ///|
 /// 计算压缩比
 pub fn calculate_compression_ratio(
-  original_size : Int,
-  compressed_size : Int,
+  original_size : Int32,
+  compressed_size : Int32,
 ) -> Double {
   if compressed_size > 0 {
     original_size.to_double() / compressed_size.to_double()
@@ -311,9 +311,9 @@ pub fn calculate_compression_ratio(
 ///|
 /// 计算每像素位数
 pub fn calculate_bits_per_pixel(
-  compressed_size : Int,
-  width : Int,
-  height : Int,
+  compressed_size : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Double {
   let total_pixels = width * height
   if total_pixels > 0 {
@@ -328,8 +328,8 @@ pub fn calculate_bits_per_pixel(
 pub fn calculate_compression_quality(
   original : @types.Image,
   compressed : @types.Image,
-  original_size : Int,
-  compressed_size : Int,
+  original_size : Int32,
+  compressed_size : Int32,
 ) -> CompressionQualityMetrics raise @types.LoadError {
   // 输入验证
   if original.width <= 0 || original.height <= 0 {

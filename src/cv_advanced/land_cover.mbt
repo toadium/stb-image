@@ -23,7 +23,7 @@ pub extend ClassMethod with Eq::{not_equal, equal}
 /// 训练样本。
 /// Training sample.
 pub(all) struct TrainingSample {
-  class_id : Int
+  class_id : Int32
   features : Array[Double]
 } derive(Eq, @debug.Debug)
 
@@ -37,10 +37,10 @@ pub extend TrainingSample with Eq::{not_equal, equal}
 /// 分类结果。
 /// Classification result.
 pub(all) struct ClassificationResult {
-  class_map : Array[Array[Int]]
-  num_classes : Int
-  width : Int
-  height : Int
+  class_map : Array[Array[Int32]]
+  num_classes : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -54,7 +54,7 @@ pub extend ClassificationResult with Eq::{not_equal, equal}
 /// Compute class mean vectors.
 pub fn classify_compute_class_means(
   samples : Array[TrainingSample],
-  num_classes : Int,
+  num_classes : Int32,
 ) -> Array[Array[Double]] {
   let num_features = if samples.length() > 0 {
     samples[0].features.length()
@@ -91,7 +91,7 @@ pub fn classify_compute_class_means(
 pub fn classify_min_distance(
   pixel_features : Array[Array[Array[Double]]],
   class_means : Array[Array[Double]],
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let height = pixel_features.length()
   if height == 0 {
     return []
@@ -130,7 +130,7 @@ pub fn classify_max_likelihood(
   pixel_features : Array[Array[Array[Double]]],
   class_means : Array[Array[Double]],
   class_variances : Array[Array[Double]],
-) -> Array[Array[Int]] {
+) -> Array[Array[Int32]] {
   let height = pixel_features.length()
   if height == 0 {
     return []
@@ -171,9 +171,9 @@ pub fn classify_max_likelihood(
 /// K-means unsupervised classification.
 pub fn classify_kmeans(
   pixel_features : Array[Array[Array[Double]]],
-  num_classes : Int,
-  max_iterations : Int,
-) -> (Array[Array[Int]], Array[Array[Double]]) {
+  num_classes : Int32,
+  max_iterations : Int32,
+) -> (Array[Array[Int32]], Array[Array[Double]]) {
   let height = pixel_features.length()
   if height == 0 || num_classes <= 0 {
     return ([], [])
@@ -248,10 +248,10 @@ pub fn classify_kmeans(
 /// ISODATA unsupervised classification (simplified).
 pub fn classify_isodata(
   pixel_features : Array[Array[Array[Double]]],
-  num_classes : Int,
-  max_iterations : Int,
-  min_samples : Int,
-) -> Array[Array[Int]] {
+  num_classes : Int32,
+  max_iterations : Int32,
+  min_samples : Int32,
+) -> Array[Array[Int32]] {
   let (class_map, _) = classify_kmeans(
     pixel_features, num_classes, max_iterations,
   )
@@ -282,10 +282,10 @@ pub fn classify_isodata(
 /// 构建混淆矩阵。
 /// Build confusion matrix.
 pub fn classify_confusion_matrix(
-  predicted : Array[Array[Int]],
-  ground_truth : Array[Array[Int]],
-  num_classes : Int,
-) -> Array[Array[Int]] {
+  predicted : Array[Array[Int32]],
+  ground_truth : Array[Array[Int32]],
+  num_classes : Int32,
+) -> Array[Array[Int32]] {
   let matrix = Array::make(num_classes, [])
   for i in 0..<num_classes {
     matrix[i] = Array::make(num_classes, 0)
@@ -306,7 +306,7 @@ pub fn classify_confusion_matrix(
 ///|
 /// 计算 Kappa 系数。
 /// Compute Kappa coefficient.
-pub fn classify_kappa(confusion_matrix : Array[Array[Int]]) -> Double {
+pub fn classify_kappa(confusion_matrix : Array[Array[Int32]]) -> Double {
   let n = confusion_matrix.length()
   if n == 0 {
     return 0.0
@@ -346,7 +346,7 @@ pub fn classify_kappa(confusion_matrix : Array[Array[Int]]) -> Double {
 /// 计算总体精度。
 /// Compute overall accuracy.
 pub fn classify_overall_accuracy(
-  confusion_matrix : Array[Array[Int]],
+  confusion_matrix : Array[Array[Int32]],
 ) -> Double {
   let n = confusion_matrix.length()
   if n == 0 {
@@ -374,8 +374,8 @@ pub fn classify_overall_accuracy(
 /// 构建分类结果。
 /// Build classification result.
 pub fn classify_build_result(
-  class_map : Array[Array[Int]],
-  num_classes : Int,
+  class_map : Array[Array[Int32]],
+  num_classes : Int32,
 ) -> ClassificationResult {
   let height = class_map.length()
   let width = if height > 0 { class_map[0].length() } else { 0 }
@@ -386,7 +386,7 @@ pub fn classify_build_result(
 /// 构建训练样本。
 /// Build training sample.
 pub fn classify_build_sample(
-  class_id : Int,
+  class_id : Int32,
   features : Array[Double],
 ) -> TrainingSample {
   { class_id, features, }

@@ -5,9 +5,9 @@
 /// 视频帧序列
 pub(all) struct VideoFrames {
   frames : Array[@types.Image]
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
   fps : Double
 }
 
@@ -15,7 +15,7 @@ pub(all) struct VideoFrames {
 /// 创建视频帧序列
 pub fn video_frames_new(
   frames : Array[@types.Image],
-  fps? : Double = 30.0,
+  fps~ : Double = 30.0,
 ) -> VideoFrames {
   if frames.length() == 0 {
     return VideoFrames::{ frames: [], width: 0, height: 0, channels: 1, fps, }
@@ -32,13 +32,13 @@ pub fn video_frames_new(
 
 ///|
 /// 获取帧数
-pub fn video_frame_count(video : VideoFrames) -> Int {
+pub fn video_frame_count(video : VideoFrames) -> Int32 {
   video.frames.length()
 }
 
 ///|
 /// 获取指定帧
-pub fn video_get_frame(video : VideoFrames, index : Int) -> @types.Image? {
+pub fn video_get_frame(video : VideoFrames, index : Int32) -> @types.Image? {
   if index >= 0 && index < video.frames.length() {
     Some(video.frames[index])
   } else {
@@ -52,7 +52,7 @@ pub fn video_get_frame(video : VideoFrames, index : Int) -> @types.Image? {
 pub fn interpolate_frames(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  num_frames? : Int = 1,
+  num_frames~ : Int32 = 1,
 ) -> Array[@types.Image] {
   let n = num_frames
   if frame1.width != frame2.width || frame1.height != frame2.height {
@@ -94,7 +94,7 @@ pub fn interpolate_frames(
 /// 视频淡入效果
 pub fn video_fade_in(
   video : VideoFrames,
-  duration_frames? : Int = 30,
+  duration_frames~ : Int32 = 30,
 ) -> VideoFrames {
   let duration = duration_frames
   let frames = video.frames
@@ -139,7 +139,7 @@ pub fn video_fade_in(
 /// 视频淡出效果
 pub fn video_fade_out(
   video : VideoFrames,
-  duration_frames? : Int = 30,
+  duration_frames~ : Int32 = 30,
 ) -> VideoFrames {
   let duration = duration_frames
   let frames = video.frames
@@ -183,7 +183,7 @@ pub fn video_fade_out(
 
 ///|
 /// 视频抽帧（按间隔抽取帧）
-pub fn video_sample(video : VideoFrames, interval? : Int = 2) -> VideoFrames {
+pub fn video_sample(video : VideoFrames, interval~ : Int32 = 2) -> VideoFrames {
   let step = interval
   let frames = video.frames
   let result : Array[@types.Image] = []
@@ -244,7 +244,7 @@ pub fn video_concat(video1 : VideoFrames, video2 : VideoFrames) -> VideoFrames {
 /// 实际 GIF 编码需要额外的库支持
 pub fn create_animation(
   frames : Array[@types.Image],
-  fps? : Double = 10.0,
+  fps~ : Double = 10.0,
 ) -> VideoFrames {
   video_frames_new(frames, fps~)
 }

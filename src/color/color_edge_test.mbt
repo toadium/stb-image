@@ -23,7 +23,7 @@ fn col_make_mismatch() -> @types.Image {
 }
 
 ///|
-fn col_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn col_make_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -33,7 +33,7 @@ fn col_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn col_make_rgb(w : Int, h : Int, v : Int) -> @types.Image {
+fn col_make_rgb(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -43,7 +43,7 @@ fn col_make_rgb(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn col_make_rgba(w : Int, h : Int, v : Int) -> @types.Image {
+fn col_make_rgba(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -53,7 +53,7 @@ fn col_make_rgba(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn col_make_imagef(w : Int, h : Int, v : Float) -> @types.ImageF {
+fn col_make_imagef(w : Int32, h : Int32, v : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * 3 * 4, b'\x00')
   let bytes = Float::to_le_bytes(v)
   for i in 0..<(w * h * 3) {

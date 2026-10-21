@@ -4,7 +4,11 @@
 // 规范: https://qoiformat.org/qoi-specification.pdf
 
 ///|
-fn make_qoi_header(width : Int, height : Int, channels : Int) -> Array[Byte] {
+fn make_qoi_header(
+  width : Int32,
+  height : Int32,
+  channels : Int32,
+) -> Array[Byte] {
   let out : Array[Byte] = []
   // magic "qoif"
   out.push(b'\x71')

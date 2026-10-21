@@ -7,7 +7,7 @@
 /// 仅处理灰度图（channels=1）或 RGB 图（channels=3/4），alpha 通道不变。
 pub fn clahe(
   img : @types.Image,
-  tile_size : Int,
+  tile_size : Int32,
   clip_limit : Float,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
@@ -56,16 +56,16 @@ pub fn clahe(
 fn clahe_channel(
   img : @types.Image,
   out : Array[Byte],
-  channel : Int,
-  ch : Int,
-  tile_size : Int,
+  channel : Int32,
+  ch : Int32,
+  tile_size : Int32,
   clip_limit : Float,
 ) -> Unit {
   let w = img.width
   let h = img.height
   let n = w * h
   // 预计算 to_int 数组
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -73,11 +73,11 @@ fn clahe_channel(
   let ntx = (w + tile_size - 1) / tile_size
   let nty = (h + tile_size - 1) / tile_size
   let n_tiles = ntx * nty
-  let luts : Array[Array[Int]] = Array::make(n_tiles, Array::make(256, 0))
+  let luts : Array[Array[Int32]] = Array::make(n_tiles, Array::make(256, 0))
   // 计算每块的直方图和 LUT
   for ty in 0..<nty {
     for tx in 0..<ntx {
-      let hist : Array[Int] = Array::make(256, 0)
+      let hist : Array[Int32] = Array::make(256, 0)
       let x0 = tx * tile_size
       let y0 = ty * tile_size
       let x1 = if x0 + tile_size < w { x0 + tile_size } else { w }
@@ -124,7 +124,7 @@ fn clahe_channel(
   }
   // 预计算 tile 坐标和权重
   let inv_tile_size = 1.0F / Float::from_int(tile_size)
-  let tx_arr : Array[Int] = Array::make(w, 0)
+  let tx_arr : Array[Int32] = Array::make(w, 0)
   let wx_arr : Array[Float] = Array::make(w, 0.0F)
   for x in 0..<w {
     let fx = Float::from_int(x) * inv_tile_size - 0.5F
@@ -132,7 +132,7 @@ fn clahe_channel(
     tx_arr[x] = t
     wx_arr[x] = fx - Float::from_int(t)
   }
-  let ty_arr : Array[Int] = Array::make(h, 0)
+  let ty_arr : Array[Int32] = Array::make(h, 0)
   let wy_arr : Array[Float] = Array::make(h, 0.0F)
   for y in 0..<h {
     let fy = Float::from_int(y) * inv_tile_size - 0.5F
@@ -169,7 +169,7 @@ fn clahe_channel(
 }
 
 ///|
-fn tile_clamp(tx : Int, ty : Int, ntx : Int, nty : Int) -> Int {
+fn tile_clamp(tx : Int32, ty : Int32, ntx : Int32, nty : Int32) -> Int32 {
   let cx = if tx < 0 { 0 } else if tx >= ntx { ntx - 1 } else { tx }
   let cy = if ty < 0 { 0 } else if ty >= nty { nty - 1 } else { ty }
   cy * ntx + cx

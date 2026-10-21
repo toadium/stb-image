@@ -1,7 +1,12 @@
 // 图像分割 16-bit/float 变体测试
 
 ///|
-fn make_img16_seg(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_seg(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +21,12 @@ fn make_img16_seg(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_seg(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_seg(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -38,7 +48,7 @@ fn make_imgf_seg(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "watershed_16: basic segmentation" {
   let img = make_img16_seg(8, 8, 1, 30000)
-  let markers : Array[Int] = Array::make(64, 0)
+  let markers : Array[Int32] = Array::make(64, 0)
   markers[0] = 1
   markers[63] = 2
   let result = @segment.watershed_16(img, markers)
@@ -51,7 +61,7 @@ test "watershed_16: basic segmentation" {
 ///|
 test "watershed_f: basic segmentation" {
   let img = make_imgf_seg(8, 8, 1, 0.5F)
-  let markers : Array[Int] = Array::make(64, 0)
+  let markers : Array[Int32] = Array::make(64, 0)
   markers[0] = 1
   markers[63] = 2
   let result = @segment.watershed_f(img, markers)

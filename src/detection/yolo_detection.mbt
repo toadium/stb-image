@@ -9,7 +9,7 @@ pub(all) struct YoloBoundingBox {
   width : Double
   height : Double
   confidence : Double
-  class_id : Int
+  class_id : Int32
   class_name : String
 }
 
@@ -17,23 +17,23 @@ pub(all) struct YoloBoundingBox {
 /// 检测结果
 pub(all) struct YoloDetectionResult {
   boxes : Array[YoloBoundingBox]
-  num_detections : Int
+  num_detections : Int32
   inference_time_ms : Double
-  input_width : Int
-  input_height : Int
+  input_width : Int32
+  input_height : Int32
 }
 
 ///|
 /// YOLO 配置
 pub(all) struct YoloConfig {
   model_version : String // "yolov3" / "yolov4" / "yolov5" / "yolov8"
-  input_size : Int
-  num_classes : Int
+  input_size : Int32
+  num_classes : Int32
   confidence_threshold : Double
   iou_threshold : Double
-  max_detections : Int
+  max_detections : Int32
   anchors : Array[(Double, Double)]
-  strides : Array[Int]
+  strides : Array[Int32]
 }
 
 ///|
@@ -41,7 +41,7 @@ pub(all) struct YoloConfig {
 pub(all) struct AnchorBox {
   width : Double
   height : Double
-  stride : Int
+  stride : Int32
 }
 
 ///|
@@ -73,25 +73,25 @@ pub extend ObjectClass with Eq::{not_equal, equal}
 ///|
 /// 跟踪目标
 pub(all) struct YoloTrackedObject {
-  id : Int
-  class_id : Int
+  id : Int32
+  class_id : Int32
   class_name : String
   bbox : YoloBoundingBox
-  age : Int
-  visible_count : Int
-  invisible_count : Int
+  age : Int32
+  visible_count : Int32
+  invisible_count : Int32
   velocity_x : Double
   velocity_y : Double
   trajectory : Array[(Double, Double)]
-  color : (Int, Int, Int)
+  color : (Int32, Int32, Int32)
 }
 
 ///|
 /// 跟踪结果
 pub(all) struct YoloTrackingResult {
   objects : Array[YoloTrackedObject]
-  num_objects : Int
-  frame_index : Int
+  num_objects : Int32
+  frame_index : Int32
   tracking_time_ms : Double
 }
 
@@ -104,9 +104,9 @@ pub(all) struct YoloDetectionMetrics {
   mAP : Double // mean Average Precision
   mAP50 : Double
   mAP50_95 : Double
-  true_positives : Int
-  false_positives : Int
-  false_negatives : Int
+  true_positives : Int32
+  false_positives : Int32
+  false_negatives : Int32
 }
 
 ///|
@@ -123,7 +123,7 @@ pub fn create_default_yolo_config() -> YoloConfig {
     (156.0, 198.0),
     (373.0, 326.0),
   ]
-  let strides : Array[Int] = [8, 16, 32]
+  let strides : Array[Int32] = [8, 16, 32]
   YoloConfig::{
     model_version: "yolov8",
     input_size: 640,
@@ -197,7 +197,7 @@ pub fn calculate_iou(
 pub fn non_max_suppression(
   boxes : Array[YoloBoundingBox],
   iou_threshold : Double,
-  max_detections : Int,
+  max_detections : Int32,
 ) -> Array[YoloBoundingBox] raise @types.LoadError {
   // 输入验证
   if boxes.length() == 0 {
@@ -462,7 +462,7 @@ pub fn initialize_object_tracking(
 pub fn update_object_tracking(
   tracked_objects : Array[YoloTrackedObject],
   detection : YoloDetectionResult,
-  max_age : Int,
+  max_age : Int32,
 ) -> Array[YoloTrackedObject] raise @types.LoadError {
   // 输入验证
   if tracked_objects.length() == 0 {

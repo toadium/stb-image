@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn cce_make_img(w : Int, h : Int, val : Int) -> @types.Image {
+fn cce_make_img(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -130,7 +130,7 @@ test "structure_based_filter: empty db returns empty" {
 
 ///|
 test "structure_based_filter: medium density" {
-  let data : Array[Int] = []
+  let data : Array[Int32] = []
   for i in 0..<256 {
     if i % 3 == 0 {
       data.push(255)

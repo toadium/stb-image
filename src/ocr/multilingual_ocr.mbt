@@ -22,7 +22,7 @@ pub(all) struct MultilingualOcrConfig {
   enable_english : Bool
   enable_digits : Bool
   enable_punctuation : Bool
-  target_size : Int
+  target_size : Int32
   distance_metric : String
   auto_language_detection : Bool
 }
@@ -415,12 +415,12 @@ pub fn recognize_multilingual(
 fn segment_multilingual_chars(
   img : @types.Image,
   _cfg : MultilingualOcrConfig,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
   // 简单连通域标记
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -443,11 +443,11 @@ fn segment_multilingual_chars(
     }
   }
   // 计算边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -469,7 +469,7 @@ fn segment_multilingual_chars(
     }
   }
   // 过滤（多语言更宽松）
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -484,11 +484,11 @@ fn segment_multilingual_chars(
 /// 提取多语言字符区域
 fn extract_multilingual_char_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -526,7 +526,7 @@ fn extract_multilingual_char_region(
 /// 提取多语言字符特征
 fn extract_multilingual_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height

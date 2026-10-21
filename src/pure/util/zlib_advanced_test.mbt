@@ -194,7 +194,7 @@ test "zlib: zlib_inflate dynamic Huffman repeating pattern" {
 ///|
 test "zlib: zlib_inflate multiple PNG roundtrips exercise dynamic Huffman" {
   // Multiple images with different sizes exercise different Huffman trees
-  fn make_img(w : Int, h : Int, v : Byte) -> @types.Image {
+  fn make_img(w : Int32, h : Int32, v : Byte) -> @types.Image {
     let data : Array[Byte] = []
     for _ in 0..<(w * h * 3) {
       data.push(v)

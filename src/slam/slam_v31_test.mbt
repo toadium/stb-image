@@ -1,7 +1,7 @@
 // v31.0.0 SLAM 同时定位与地图构建测试 — slam 模块 9 函数
 
 ///|
-fn create_solid_slam(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_slam(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())
@@ -15,7 +15,7 @@ fn create_solid_slam(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_slam(w : Int, h : Int) -> @types.Image {
+fn create_gradient_slam(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

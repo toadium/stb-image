@@ -3,7 +3,7 @@
 // 通过解析各格式头部获取 width/height/channels，不加载像素数据
 
 ///|
-fn info_read_u32_be(data : Bytes, offset : Int) -> Int {
+fn info_read_u32_be(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() * 16777216 +
   data[offset + 1].to_int() * 65536 +
   data[offset + 2].to_int() * 256 +
@@ -11,7 +11,7 @@ fn info_read_u32_be(data : Bytes, offset : Int) -> Int {
 }
 
 ///|
-fn info_read_u32_le(data : Bytes, offset : Int) -> Int {
+fn info_read_u32_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() +
   data[offset + 1].to_int() * 256 +
   data[offset + 2].to_int() * 65536 +
@@ -19,12 +19,12 @@ fn info_read_u32_le(data : Bytes, offset : Int) -> Int {
 }
 
 ///|
-fn info_read_u16_be(data : Bytes, offset : Int) -> Int {
+fn info_read_u16_be(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() * 256 + data[offset + 1].to_int()
 }
 
 ///|
-fn info_read_u16_le(data : Bytes, offset : Int) -> Int {
+fn info_read_u16_le(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
@@ -182,7 +182,7 @@ fn info_pnm(data : Bytes) -> @types.ImageInfo? {
   // 解析 ASCII header: P5/P6 + whitespace + width + whitespace + height + whitespace + maxval
   let mut pos = 2
   // 跳过空白和注释
-  fn skip_ws_comments(data : Bytes, pos : Int, len : Int) -> Int {
+  fn skip_ws_comments(data : Bytes, pos : Int32, len : Int32) -> Int32 {
     let mut p = pos
     while p < len {
       let b = data[p].to_int()
@@ -200,7 +200,7 @@ fn info_pnm(data : Bytes) -> @types.ImageInfo? {
     }
     p
   }
-  fn read_ascii_int(data : Bytes, pos : Int, len : Int) -> (Int, Int)? {
+  fn read_ascii_int(data : Bytes, pos : Int32, len : Int32) -> (Int32, Int32)? {
     let mut p = pos
     let mut val = 0
     let mut has_digit = false

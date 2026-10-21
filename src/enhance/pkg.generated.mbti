@@ -6,29 +6,29 @@ import {
 }
 
 // Values
-pub fn create_rect_mask(Int, Int, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
+pub fn create_rect_mask(Int32, Int32, Int32, Int32, Int32, Int32) -> @types.Image raise @types.LoadError
 
-pub fn dark_channel(@types.Image, patch_size? : Int) -> @types.Image raise @types.LoadError
+pub fn dark_channel(@types.Image, patch_size? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn dehaze_advanced(@types.Image, config? : DehazeConfig) -> @types.Image raise @types.LoadError
 
 pub fn dehaze_default_config() -> DehazeConfig
 
-pub fn dehaze_recover(@types.Image, @types.Image, Array[Int], t_min? : Double) -> @types.Image raise @types.LoadError
+pub fn dehaze_recover(@types.Image, @types.Image, Array[Int32], t_min? : Double) -> @types.Image raise @types.LoadError
 
 pub fn denoise(@types.Image, String) -> @types.Image raise @types.LoadError
 
-pub fn denoise_bilateral(@types.Image, diameter? : Int, sigma_color? : Double, sigma_space? : Double) -> @types.Image raise @types.LoadError
+pub fn denoise_bilateral(@types.Image, diameter? : Int32, sigma_color? : Double, sigma_space? : Double) -> @types.Image raise @types.LoadError
 
-pub fn denoise_median(@types.Image, kernel_size? : Int) -> @types.Image raise @types.LoadError
+pub fn denoise_median(@types.Image, kernel_size? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn denoise_nlm(@types.Image, config? : NlmConfig) -> @types.Image raise @types.LoadError
 
-pub fn estimate_atmospheric_light(@types.Image, @types.Image, top_percent? : Int) -> Array[Int] raise @types.LoadError
+pub fn estimate_atmospheric_light(@types.Image, @types.Image, top_percent? : Int32) -> Array[Int32] raise @types.LoadError
 
-pub fn estimate_transmission(@types.Image, Array[Int], omega? : Double, patch_size? : Int) -> @types.Image raise @types.LoadError
+pub fn estimate_transmission(@types.Image, Array[Int32], omega? : Double, patch_size? : Int32) -> @types.Image raise @types.LoadError
 
-pub fn guided_filter_image(@types.Image, @types.Image, radius? : Int, eps? : Double) -> @types.Image raise @types.LoadError
+pub fn guided_filter_image(@types.Image, @types.Image, radius? : Int32, eps? : Double) -> @types.Image raise @types.LoadError
 
 pub fn hdr_default_config() -> HdrConfig
 
@@ -38,15 +38,15 @@ pub fn hdr_fusion_weighted(Array[@types.Image]) -> @types.Image raise @types.Loa
 
 pub fn hdr_process(Array[@types.Image], config? : HdrConfig) -> @types.Image raise @types.LoadError
 
-pub fn inpaint_advanced(@types.Image, @types.Image, radius? : Int) -> @types.Image raise @types.LoadError
+pub fn inpaint_advanced(@types.Image, @types.Image, radius? : Int32) -> @types.Image raise @types.LoadError
 
 pub fn inpaint_default_config() -> InpaintConfig
 
 pub fn nlm_default_config() -> NlmConfig
 
-pub fn remove_small_objects(@types.Image, max_size? : Int) -> @types.Image raise @types.LoadError
+pub fn remove_small_objects(@types.Image, max_size? : Int32) -> @types.Image raise @types.LoadError
 
-pub fn remove_watermark(@types.Image, Int, Int, Int, Int) -> @types.Image raise @types.LoadError
+pub fn remove_watermark(@types.Image, Int32, Int32, Int32, Int32) -> @types.Image raise @types.LoadError
 
 pub fn tone_mapping_gamma(@types.Image, gamma? : Double) -> @types.Image raise @types.LoadError
 
@@ -58,12 +58,12 @@ pub fn tone_mapping_sigmoid(@types.Image, strength? : Double) -> @types.Image ra
 
 // Types and methods
 pub(all) struct DehazeConfig {
-  patch_size : Int
+  patch_size : Int32
   omega : Double
   t_min : Double
-  guided_radius : Int
+  guided_radius : Int32
   guided_eps : Double
-  max_atmospheric : Int
+  max_atmospheric : Int32
 }
 
 pub(all) struct HdrConfig {
@@ -75,14 +75,14 @@ pub(all) struct HdrConfig {
 }
 
 pub(all) struct InpaintConfig {
-  radius : Int
+  radius : Int32
   method_type : String
-  max_iterations : Int
+  max_iterations : Int32
 }
 
 pub(all) struct NlmConfig {
-  search_window : Int
-  patch_size : Int
+  search_window : Int32
+  patch_size : Int32
   h : Double
   sigma : Double
 }

@@ -8,8 +8,8 @@
 
 ///|
 fn v266_fake_constant(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   val : Float,
 ) -> @fieldimg.ScalarField raise @types.LoadError {
   @fieldimg.ScalarField::constant(w, h, val)
@@ -17,8 +17,8 @@ fn v266_fake_constant(
 
 ///|
 fn v266_fake_linear(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> @fieldimg.ScalarField raise @types.LoadError {
   let data : Array[Float] = []
   for y in 0..<h {
@@ -31,8 +31,8 @@ fn v266_fake_linear(
 
 ///|
 fn v266_fake_quadratic(
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> @fieldimg.ScalarField raise @types.LoadError {
   let data : Array[Float] = []
   for y in 0..<h {
@@ -46,7 +46,7 @@ fn v266_fake_quadratic(
 }
 
 ///|
-fn v266_lcg(seed : Int) -> () -> Int {
+fn v266_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -56,9 +56,9 @@ fn v266_lcg(seed : Int) -> () -> Int {
 
 ///|
 fn v266_fake_random_scalar(
-  seed : Int,
-  w : Int,
-  h : Int,
+  seed : Int32,
+  w : Int32,
+  h : Int32,
 ) -> @fieldimg.ScalarField raise @types.LoadError {
   let rng = v266_lcg(seed)
   let data : Array[Float] = []
@@ -70,10 +70,10 @@ fn v266_fake_random_scalar(
 
 ///|
 fn v266_fake_random_vector(
-  seed : Int,
-  w : Int,
-  h : Int,
-  dim : Int,
+  seed : Int32,
+  w : Int32,
+  h : Int32,
+  dim : Int32,
 ) -> @fieldimg.VectorField raise @types.LoadError {
   let rng = v266_lcg(seed)
   let data : Array[Float] = []
@@ -84,7 +84,7 @@ fn v266_fake_random_vector(
 }
 
 ///|
-fn v266_fake_gray_image(w : Int, h : Int, val : Int) -> @types.Image {
+fn v266_fake_gray_image(w : Int32, h : Int32, val : Int32) -> @types.Image {
   {
     width: w,
     height: h,
@@ -95,11 +95,11 @@ fn v266_fake_gray_image(w : Int, h : Int, val : Int) -> @types.Image {
 
 ///|
 fn v266_fake_rgb_image(
-  w : Int,
-  h : Int,
-  r : Int,
-  g : Int,
-  b : Int,
+  w : Int32,
+  h : Int32,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {

@@ -1,7 +1,7 @@
 // v189.0.0 encryption 模块增强测试：边值/往返/属性/错误路径
 
 ///|
-fn make_enc_img2(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_enc_img2(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -11,7 +11,7 @@ fn make_enc_img2(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_img2(w : Int, h : Int) -> @types.Image {
+fn make_varied_img2(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

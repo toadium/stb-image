@@ -11,10 +11,10 @@
 ///|
 /// JPEG-XL 图像信息
 pub struct JpegXlInfo {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
   is_lossless : Bool
 }

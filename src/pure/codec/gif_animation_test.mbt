@@ -3,9 +3,9 @@
 
 ///|
 fn ga_make_rgb(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -158,7 +158,7 @@ test "decode_gif_animation_pure: empty data raises" {
 ///|
 test "encode_gif_animation_pure: larger image triggers LZW growth" {
   // 16x16 渐变图像，触发 LZW code_size 增长
-  let pixels : Array[(Int, Int, Int)] = []
+  let pixels : Array[(Int32, Int32, Int32)] = []
   for y in 0..<16 {
     for x in 0..<16 {
       pixels.push((x * 16, y * 16, (x + y) * 8))

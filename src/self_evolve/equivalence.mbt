@@ -24,8 +24,8 @@ pub extend EquivalenceCheck with Eq::{not_equal, equal}
 /// Equivalence verification report.
 pub(all) struct EquivalenceReport {
   checks : Array[EquivalenceCheck]
-  total_equivalent : Int
-  total_not_equivalent : Int
+  total_equivalent : Int32
+  total_not_equivalent : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

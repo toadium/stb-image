@@ -7,8 +7,8 @@
 pub(all) struct SiftKeyPoint {
   x : Float
   y : Float
-  octave : Int
-  layer : Int
+  octave : Int32
+  layer : Int32
   sigma : Float
   response : Float
   angle : Float
@@ -27,8 +27,8 @@ pub(all) struct SiftDescriptor {
 /// max_features 控制最大特征数，contrast_threshold 为对比度阈值。
 pub fn sift_detect(
   img : @types.Image,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -163,14 +163,14 @@ pub fn sift_detect(
 ///|
 fn build_gaussian_pyramid_sift(
   gray : Array[Float],
-  w : Int,
-  h : Int,
-  n_layers : Int,
+  w : Int32,
+  h : Int32,
+  n_layers : Int32,
   sigma0 : Float,
-) -> Array[(Array[Array[Float]], Int, Int)] {
+) -> Array[(Array[Array[Float]], Int32, Int32)] {
   let n_levels = n_layers + 3
   let n_octaves = compute_n_octaves(w, h)
-  let pyramid : Array[(Array[Array[Float]], Int, Int)] = []
+  let pyramid : Array[(Array[Array[Float]], Int32, Int32)] = []
   let mut cur_gray = gray
   let mut cur_w = w
   let mut cur_h = h
@@ -229,7 +229,7 @@ fn build_gaussian_pyramid_sift(
 }
 
 ///|
-fn compute_n_octaves(w : Int, h : Int) -> Int {
+fn compute_n_octaves(w : Int32, h : Int32) -> Int32 {
   let min_dim = if w < h { w } else { h }
   let mut n = 0
   let mut d = min_dim
@@ -246,9 +246,9 @@ fn compute_n_octaves(w : Int, h : Int) -> Int {
 
 ///|
 fn build_dog_pyramid(
-  pyramid : Array[(Array[Array[Float]], Int, Int)],
-) -> Array[(Array[Array[Float]], Int, Int)] {
-  let result : Array[(Array[Array[Float]], Int, Int)] = []
+  pyramid : Array[(Array[Array[Float]], Int32, Int32)],
+) -> Array[(Array[Array[Float]], Int32, Int32)] {
+  let result : Array[(Array[Array[Float]], Int32, Int32)] = []
   for oct in 0..<pyramid.length() {
     let (levels, w, h) = pyramid[oct]
     let dog_levels : Array[Array[Float]] = []
@@ -271,9 +271,9 @@ fn is_extremum(
   prev_dog : Array[Float],
   curr_dog : Array[Float],
   next_dog : Array[Float],
-  x : Int,
-  y : Int,
-  w : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
 ) -> Bool {
   let val = curr_dog[y * w + x]
   let is_max = val > 0.0F
@@ -307,7 +307,7 @@ fn is_extremum(
 }
 
 ///|
-fn edge_response(dog : Array[Float], x : Int, y : Int, w : Int) -> Float {
+fn edge_response(dog : Array[Float], x : Int32, y : Int32, w : Int32) -> Float {
   let dxx = dog[y * w + x + 1] - 2.0F * dog[y * w + x] + dog[y * w + x - 1]
   let dyy = dog[(y + 1) * w + x] - 2.0F * dog[y * w + x] + dog[(y - 1) * w + x]
   let dxy = (
@@ -328,8 +328,8 @@ fn edge_response(dog : Array[Float], x : Int, y : Int, w : Int) -> Float {
 ///|
 fn compute_orientation_sift(
   gray : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   cx : Float,
   cy : Float,
   sigma : Float,
@@ -397,8 +397,8 @@ fn compute_orientation_sift(
 ///|
 fn compute_sift_descriptor(
   gray : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   cx : Float,
   cy : Float,
   angle : Float,
@@ -486,7 +486,7 @@ fn compute_sift_descriptor(
 // ==================== 辅助函数 ====================
 
 ///|
-fn to_gray_sift(img : @types.Image) -> (Array[Float], Int, Int) {
+fn to_gray_sift(img : @types.Image) -> (Array[Float], Int32, Int32) {
   let w = img.width
   let h = img.height
   let ch = img.channels
@@ -508,8 +508,8 @@ fn to_gray_sift(img : @types.Image) -> (Array[Float], Int, Int) {
 ///|
 fn gaussian_blur_float(
   gray : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
   sigma : Float,
 ) -> Array[Float] {
   if sigma < 0.1F {
@@ -564,9 +564,9 @@ fn gaussian_blur_float(
 ///|
 fn downsample(
   gray : Array[Float],
-  w : Int,
-  h : Int,
-) -> (Array[Float], Int, Int) {
+  w : Int32,
+  h : Int32,
+) -> (Array[Float], Int32, Int32) {
   let nw = w / 2
   let nh = h / 2
   if nw < 1 || nh < 1 {

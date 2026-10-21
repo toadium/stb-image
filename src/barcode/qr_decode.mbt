@@ -5,17 +5,17 @@
 /// QR Code 解码结果
 pub(all) struct QrDecodeResult {
   data : String
-  version : Int
+  version : Int32
   error_correction_level : String // "L" / "M" / "Q" / "H"
-  mask_pattern : Int
+  mask_pattern : Int32
   confidence : Double
-  corrected_errors : Int
+  corrected_errors : Int32
 }
 
 ///|
 /// QR Code 格式信息（15位）
 /// 高2位：纠错级别，低3位：掩码模式
-let qr_format_info_table : Array[(Int, Int, Int)] = [
+let qr_format_info_table : Array[(Int32, Int32, Int32)] = [
   // (format_bits, ec_level, mask_pattern)
   (0x5412, 0, 0),
   (0x5125, 0, 1),
@@ -154,15 +154,15 @@ fn detect_qr_finder_patterns_full(
 /// 采样 QR Code 模块
 fn sample_qr_modules(
   data : Bytes,
-  img_w : Int,
-  img_h : Int,
-  roi_x : Int,
-  roi_y : Int,
-  roi_w : Int,
-  roi_h : Int,
-  qr_size : Int,
-) -> Array[Int] {
-  let modules : Array[Int] = []
+  img_w : Int32,
+  img_h : Int32,
+  roi_x : Int32,
+  roi_y : Int32,
+  roi_w : Int32,
+  roi_h : Int32,
+  qr_size : Int32,
+) -> Array[Int32] {
+  let modules : Array[Int32] = []
   let cell_w = roi_w.to_double() / qr_size.to_double()
   let cell_h = roi_h.to_double() / qr_size.to_double()
   for row in 0..<qr_size {
@@ -194,7 +194,7 @@ fn sample_qr_modules(
 
 ///|
 /// 读取 QR Code 格式信息
-fn read_qr_format_info(modules : Array[Int], qr_size : Int) -> Int {
+fn read_qr_format_info(modules : Array[Int32], qr_size : Int32) -> Int32 {
   // 格式信息存储在两个位置：
   // 1. 左上角定位图案周围（15位）
   // 2. 右上角和左下角（15位）
@@ -244,7 +244,7 @@ fn read_qr_format_info(modules : Array[Int], qr_size : Int) -> Int {
 
 ///|
 /// 计算汉明距离
-fn hamming_distance(a : Int, b : Int) -> Int {
+fn hamming_distance(a : Int32, b : Int32) -> Int32 {
   let xor = a ^ b
   let mut count = 0
   let mut x = xor
@@ -257,7 +257,7 @@ fn hamming_distance(a : Int, b : Int) -> Int {
 
 ///|
 /// 解码格式信息
-fn decode_format_info(format_bits : Int) -> (Int, Int) {
+fn decode_format_info(format_bits : Int32) -> (Int32, Int32) {
   for _tup1 in qr_format_info_table {
     let (bits, ec, mask) = _tup1
     if bits == format_bits {
@@ -270,10 +270,10 @@ fn decode_format_info(format_bits : Int) -> (Int, Int) {
 ///|
 /// 应用 QR Code 掩码
 fn apply_qr_mask(
-  modules : Array[Int],
-  qr_size : Int,
-  mask_pattern : Int,
-) -> Array[Int] {
+  modules : Array[Int32],
+  qr_size : Int32,
+  mask_pattern : Int32,
+) -> Array[Int32] {
   let result = modules.copy()
   for row in 0..<qr_size {
     for col in 0..<qr_size {
@@ -302,7 +302,7 @@ fn apply_qr_mask(
 
 ///|
 /// 判断是否是功能模块
-fn is_function_module(row : Int, col : Int, qr_size : Int) -> Bool {
+fn is_function_module(row : Int32, col : Int32, qr_size : Int32) -> Bool {
   // 左上角定位图案（8x8）
   if row < 9 && col < 9 {
     return true
@@ -329,12 +329,12 @@ fn is_function_module(row : Int, col : Int, qr_size : Int) -> Bool {
 ///|
 /// 提取 QR Code 数据位（zigzag 顺序）
 fn extract_qr_data_bits(
-  modules : Array[Int],
-  qr_size : Int,
-  version : Int,
-) -> Array[Int] {
+  modules : Array[Int32],
+  qr_size : Int32,
+  version : Int32,
+) -> Array[Int32] {
   ignore(version)
-  let bits : Array[Int] = []
+  let bits : Array[Int32] = []
   let mut col = qr_size - 1
   let mut going_up = true
   while col > 0 {
@@ -375,7 +375,7 @@ fn extract_qr_data_bits(
 
 ///|
 /// 解码 QR Code 数据
-fn decode_qr_data(bits : Array[Int], version : Int) -> (String, Int) {
+fn decode_qr_data(bits : Array[Int32], version : Int32) -> (String, Int32) {
   ignore(version)
   if bits.length() < 4 {
     return ("", 0)
@@ -504,9 +504,9 @@ fn decode_qr_data(bits : Array[Int], version : Int) -> (String, Int) {
 ///|
 /// Reed-Solomon 纠错（简化版 GF(256)）
 pub fn reed_solomon_decode(
-  data : Array[Int],
-  ec_bytes : Int,
-) -> (Array[Int], Int) {
+  data : Array[Int32],
+  ec_bytes : Int32,
+) -> (Array[Int32], Int32) {
   ignore(ec_bytes)
   // 简化版：不做实际纠错，只返回原始数据
   // 完整的 RS 解码需要 GF(256) 运算和 Berlekamp-Massey 算法

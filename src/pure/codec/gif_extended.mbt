@@ -1,16 +1,16 @@
 ///|
 /// GIF 扩展信息（包含版本、全局颜色表、动画标志等）
 pub struct GifInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   version : String
   has_global_color_table : Bool
-  global_color_table_size : Int
-  color_resolution : Int
+  global_color_table_size : Int32
+  color_resolution : Int32
   is_sorted : Bool
-  background_color_index : Int
-  pixel_aspect_ratio : Int
-  num_channels : Int
+  background_color_index : Int32
+  pixel_aspect_ratio : Int32
+  num_channels : Int32
   has_alpha : Bool
 }
 

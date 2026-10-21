@@ -5,22 +5,22 @@
 /// JPEG 位写入器
 priv struct JpegBitWriter {
   out : Array[Byte]
-  mut bit_buf : Int
-  mut bit_cnt : Int
+  mut bit_buf : Int32
+  mut bit_cnt : Int32
 }
 
 ///|
 /// Huffman 编码表
 priv struct JpegHuffmanEncoder {
-  codes : Array[Int]
-  lengths : Array[Int]
+  codes : Array[Int32]
+  lengths : Array[Int32]
 }
 
 ///|
 /// 构建 Huffman 编码表
 fn build_huffman_encoder(
-  bits : Array[Int],
-  values : Array[Int],
+  bits : Array[Int32],
+  values : Array[Int32],
 ) -> JpegHuffmanEncoder {
   let codes = Array::make(256, 0)
   let lengths = Array::make(256, 0)
@@ -41,7 +41,7 @@ fn build_huffman_encoder(
 
 ///|
 /// 写入位
-fn jpeg_write_bits(w : JpegBitWriter, code : Int, length : Int) -> Unit {
+fn jpeg_write_bits(w : JpegBitWriter, code : Int32, length : Int32) -> Unit {
   for i in 0..<length {
     let bit = (code >> (length - 1 - i)) & 1
     w.bit_buf = (w.bit_buf << 1) | bit
@@ -75,7 +75,7 @@ fn jpeg_flush_bits(w : JpegBitWriter) -> Unit {
 
 ///|
 /// 标准亮度量化表
-fn std_quant_luminance() -> Array[Int] {
+fn std_quant_luminance() -> Array[Int32] {
   [
     16, 11, 10, 16, 24, 40, 51, 61, 12, 12, 14, 19, 26, 58, 60, 55, 14, 13, 16, 24,
     40, 57, 69, 56, 14, 17, 22, 29, 51, 87, 80, 62, 18, 22, 37, 56, 68, 109, 103,
@@ -86,7 +86,7 @@ fn std_quant_luminance() -> Array[Int] {
 
 ///|
 /// 标准色度量化表
-fn std_quant_chrominance() -> Array[Int] {
+fn std_quant_chrominance() -> Array[Int32] {
   [
     17, 18, 24, 47, 99, 99, 99, 99, 18, 21, 26, 66, 99, 99, 99, 99, 24, 26, 56, 99,
     99, 99, 99, 99, 47, 66, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
@@ -97,37 +97,37 @@ fn std_quant_chrominance() -> Array[Int] {
 
 ///|
 /// 标准 DC 亮度 Huffman bits
-fn std_dc_lum_bits() -> Array[Int] {
+fn std_dc_lum_bits() -> Array[Int32] {
   [0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 }
 
 ///|
 /// 标准 DC 亮度 Huffman values
-fn std_dc_lum_vals() -> Array[Int] {
+fn std_dc_lum_vals() -> Array[Int32] {
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 }
 
 ///|
 /// 标准 DC 色度 Huffman bits
-fn std_dc_chr_bits() -> Array[Int] {
+fn std_dc_chr_bits() -> Array[Int32] {
   [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
 }
 
 ///|
 /// 标准 DC 色度 Huffman values
-fn std_dc_chr_vals() -> Array[Int] {
+fn std_dc_chr_vals() -> Array[Int32] {
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 }
 
 ///|
 /// 标准 AC 亮度 Huffman bits
-fn std_ac_lum_bits() -> Array[Int] {
+fn std_ac_lum_bits() -> Array[Int32] {
   [0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7D]
 }
 
 ///|
 /// 标准 AC 亮度 Huffman values
-fn std_ac_lum_vals() -> Array[Int] {
+fn std_ac_lum_vals() -> Array[Int32] {
   [
     0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13,
     0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 0x42,
@@ -147,13 +147,13 @@ fn std_ac_lum_vals() -> Array[Int] {
 
 ///|
 /// 标准 AC 色度 Huffman bits
-fn std_ac_chr_bits() -> Array[Int] {
+fn std_ac_chr_bits() -> Array[Int32] {
   [0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77]
 }
 
 ///|
 /// 标准 AC 色度 Huffman values
-fn std_ac_chr_vals() -> Array[Int] {
+fn std_ac_chr_vals() -> Array[Int32] {
   [
     0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12, 0x41, 0x51,
     0x07, 0x61, 0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91, 0xA1, 0xB1,
@@ -190,7 +190,7 @@ fn jpeg_cos_table() -> Array[Float] {
 
 ///|
 /// 8x8 正向 DCT
-fn fdct_8x8(block : Array[Int]) -> Array[Int] {
+fn fdct_8x8(block : Array[Int32]) -> Array[Int32] {
   let cos_table = jpeg_cos_table()
   let out = Array::make(64, 0)
   for u in 0..<8 {
@@ -218,7 +218,7 @@ fn fdct_8x8(block : Array[Int]) -> Array[Int] {
 
 ///|
 /// RGB → YCbCr
-fn rgb_to_ycbcr(r : Int, g : Int, b : Int) -> (Int, Int, Int) {
+fn rgb_to_ycbcr(r : Int32, g : Int32, b : Int32) -> (Int32, Int32, Int32) {
   let rf = Float::from_int(r)
   let gf = Float::from_int(g)
   let bf = Float::from_int(b)
@@ -234,7 +234,7 @@ fn rgb_to_ycbcr(r : Int, g : Int, b : Int) -> (Int, Int, Int) {
 
 ///|
 /// JPEG category（值所需的位数）
-fn jpeg_category(val : Int) -> Int {
+fn jpeg_category(val : Int32) -> Int32 {
   if val == 0 {
     0
   } else {
@@ -250,7 +250,7 @@ fn jpeg_category(val : Int) -> Int {
 
 ///|
 /// JPEG 值位数编码
-fn jpeg_value_bits(val : Int, category : Int) -> Int {
+fn jpeg_value_bits(val : Int32, category : Int32) -> Int32 {
   if val < 0 {
     val + (1 << category) - 1
   } else {
@@ -260,7 +260,7 @@ fn jpeg_value_bits(val : Int, category : Int) -> Int {
 
 ///|
 /// Zigzag 顺序
-fn jpeg_zigzag() -> Array[Int] {
+fn jpeg_zigzag() -> Array[Int32] {
   [
     0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40, 48,
     41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36, 29, 22,
@@ -273,12 +273,12 @@ fn jpeg_zigzag() -> Array[Int] {
 /// 编码一个 8x8 块
 fn jpeg_encode_block(
   w : JpegBitWriter,
-  block : Array[Int],
+  block : Array[Int32],
   dc_enc : JpegHuffmanEncoder,
   ac_enc : JpegHuffmanEncoder,
-  prev_dc : Ref[Int],
-  quant : Array[Int],
-  zz : Array[Int],
+  prev_dc : Ref[Int32],
+  quant : Array[Int32],
+  zz : Array[Int32],
 ) -> Unit {
   let shifted = Array::make(64, 0)
   for i in 0..<64 {

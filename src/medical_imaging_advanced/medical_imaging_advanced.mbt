@@ -76,8 +76,8 @@ pub extend LesionType with Eq::{not_equal, equal}
 ///|
 /// 分割结果
 pub(all) struct SegmentationResult {
-  segmentation_map : Array[Array[Int]]
-  num_classes : Int
+  segmentation_map : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   confidence_map : Array[Array[Double]]
   dice_scores : Array[Double]
@@ -90,9 +90,9 @@ pub(all) struct SegmentationResult {
 ///|
 /// 检测到的病灶
 pub(all) struct DetectedLesion {
-  lesion_id : Int
+  lesion_id : Int32
   lesion_type : LesionType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   segmentation_mask : Array[Array[Bool]]
   confidence : Double
   severity : Double
@@ -111,7 +111,7 @@ pub(all) struct OrganSegmentationResult {
   volume : Double
   surface_area : Double
   centroid : Array[Double]
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   dice_score : Double
   is_normal_size : Bool
   size_deviation : Double
@@ -124,7 +124,7 @@ pub(all) struct RadiomicsFeatures {
   shape_features : Array[Double]
   texture_features : Array[Double]
   wavelet_features : Array[Double]
-  num_features : Int
+  num_features : Int32
   feature_names : Array[String]
   feature_values : Array[Double]
 }
@@ -140,17 +140,17 @@ pub(all) struct RegistrationResult {
   registration_time_s : Double
   registration_method : String
   is_converged : Bool
-  num_iterations : Int
+  num_iterations : Int32
 }
 
 ///|
 /// 三维重建结果
 pub(all) struct Reconstruction3DResult {
   vertices : Array[Array[Double]]
-  faces : Array[Array[Int]]
+  faces : Array[Array[Int32]]
   normals : Array[Array[Double]]
-  num_vertices : Int
-  num_faces : Int
+  num_vertices : Int32
+  num_faces : Int32
   volume : Double
   surface_area : Double
   reconstruction_method : String
@@ -186,7 +186,7 @@ pub(all) struct MedicalImagingConfig {
   pretrained_model : String
   use_3d : Bool
   slice_thickness : Double
-  num_slices : Int
+  num_slices : Int32
   use_augmentation : Bool
 }
 
@@ -216,19 +216,19 @@ pub fn create_default_medical_config() -> MedicalImagingConfig {
 /// 医学图像分割（简化版）
 pub fn segment_medical_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : MedicalImagingConfig,
 ) -> SegmentationResult {
   ignore(config)
   ignore(image)
-  let segmentation_map : Array[Array[Int]] = []
+  let segmentation_map : Array[Array[Int32]] = []
   let confidence_map : Array[Array[Double]] = []
   let class_names = ["background", "organ", "lesion", "other"]
 
   let mut state = 42
   for _ in 0..<height {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     let conf_row : Array[Double] = []
     for _ in 0..<width {
       state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
@@ -266,8 +266,8 @@ pub fn segment_medical_image(
 /// 检测病灶（简化版）
 pub fn detect_lesions(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : MedicalImagingConfig,
 ) -> Array[DetectedLesion] {
   ignore(image)
@@ -300,7 +300,7 @@ pub fn detect_lesions(
     state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
     let malignancy_risk = (state % 1000).to_double() / 1000.0
 
-    let bbox : Array[Int] = []
+    let bbox : Array[Int32] = []
     bbox.push(x)
     bbox.push(y)
     bbox.push(x + w)
@@ -336,8 +336,8 @@ pub fn detect_lesions(
 /// 分割器官（简化版）
 pub fn segment_organ(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   organ_type : OrganType,
   config : MedicalImagingConfig,
 ) -> OrganSegmentationResult {
@@ -460,8 +460,8 @@ pub fn extract_radiomics_features(
 pub fn register_medical_images(
   fixed_image : Array[Double],
   moving_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : MedicalImagingConfig,
 ) -> RegistrationResult {
   ignore(config)

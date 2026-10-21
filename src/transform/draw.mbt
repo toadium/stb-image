@@ -6,8 +6,8 @@
 pub fn draw_copy(
   dst : @types.Image,
   src : @types.Image,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> @types.Image raise @types.LoadError {
   if dst.channels != src.channels {
     raise @types.LoadError::DecodeFailed(
@@ -47,8 +47,8 @@ pub fn draw_copy(
 pub fn draw_over(
   dst : @types.Image,
   src : @types.Image,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> @types.Image raise @types.LoadError {
   if dst.channels != 4 || src.channels != 4 {
     raise @types.LoadError::DecodeFailed(
@@ -63,7 +63,7 @@ pub fn draw_over(
     out.push(dst.data[i])
   }
   let src_n = src.width * src.height
-  let src_int : Array[Int] = Array::make(src_n * 4, 0)
+  let src_int : Array[Int32] = Array::make(src_n * 4, 0)
   for i in 0..<(src_n * 4) {
     src_int[i] = src.data[i].to_int()
   }
@@ -101,11 +101,11 @@ pub fn draw_over(
 ///|
 fn put_pixel(
   out : Array[Byte],
-  w : Int,
-  h : Int,
-  ch : Int,
-  x : Int,
-  y : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  x : Int32,
+  y : Int32,
   color : Array[Byte],
 ) -> Unit {
   if x < 0 || x >= w || y < 0 || y >= h {
@@ -123,12 +123,12 @@ fn put_pixel(
 /// 画线段（Bresenham 算法）。color 为颜色数组（如 [R,G,B]）。thickness 为线宽（默认 1）。
 pub fn draw_line(
   img : @types.Image,
-  x1 : Int,
-  y1 : Int,
-  x2 : Int,
-  y2 : Int,
+  x1 : Int32,
+  y1 : Int32,
+  x2 : Int32,
+  y2 : Int32,
   color : Array[Byte],
-  thickness? : Int = 1,
+  thickness~ : Int32 = 1,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -176,13 +176,13 @@ pub fn draw_line(
 /// 画矩形。color 为颜色数组。thickness 为线宽（默认 1）。fill 为是否填充（默认 false）。
 pub fn draw_rectangle(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  rw : Int,
-  rh : Int,
+  x : Int32,
+  y : Int32,
+  rw : Int32,
+  rh : Int32,
   color : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -245,12 +245,12 @@ pub fn draw_rectangle(
 /// 画圆（中点画圆算法）。color 为颜色数组。thickness 为线宽（默认 1）。fill 为是否填充（默认 false）。
 pub fn draw_circle(
   img : @types.Image,
-  cx : Int,
-  cy : Int,
-  r : Int,
+  cx : Int32,
+  cy : Int32,
+  r : Int32,
   color : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -303,10 +303,10 @@ pub fn draw_circle(
 /// 画多边形。points 为顶点数组 [(x1,y1), (x2,y2), ...]。color 为颜色数组。thickness 为线宽（默认 1）。fill 为是否填充（默认 false）。
 pub fn draw_polygon(
   img : @types.Image,
-  points : Array[(Int, Int)],
+  points : Array[(Int32, Int32)],
   color : Array[Byte],
-  thickness? : Int = 1,
-  fill? : Bool = false,
+  thickness~ : Int32 = 1,
+  fill~ : Bool = false,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -355,7 +355,7 @@ pub fn draw_polygon(
     }
     for y in y_min..<=y_max {
       // 求交点
-      let xs : Array[Int] = []
+      let xs : Array[Int32] = []
       for i in 0..<n {
         let (x1, y1) = points[i]
         let (x2, y2) = points[(i + 1) % n]

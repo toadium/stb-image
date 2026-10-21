@@ -33,7 +33,7 @@ pub fn edge_detect_sobel(
   let ch = img.channels
   let n = w * h
   // 先转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch == 1 {
       gray[i] = img.data[i].to_int()
@@ -140,7 +140,7 @@ pub fn edge_detect_laplacian(
   let n = w * h
   let out : Array[Byte] = Array::make(n, b'\x00')
   // 预计算灰度 Int 数组
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch >= 3 {
       let r = img.data[i * ch].to_int()
@@ -229,7 +229,7 @@ pub fn edge_detect_prewitt(
   let n = w * h
   let out : Array[Byte] = Array::make(n, b'\x00')
   // 预计算灰度 Int 数组
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch >= 3 {
       let r = img.data[i * ch].to_int()

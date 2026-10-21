@@ -3,7 +3,7 @@
 
 ///|
 /// 辅助函数：限制字节范围
-fn clamp_byte_doc(v : Int) -> Byte {
+fn clamp_byte_doc(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -85,7 +85,7 @@ fn contrast_stretch_doc(img : @types.Image) -> @types.Image {
   let n = img.width * img.height
   let data = img.data
   // 计算最小和最大值（忽略 1% 极值）
-  let histogram : Array[Int] = Array::make(256, 0)
+  let histogram : Array[Int32] = Array::make(256, 0)
   for i in 0..<n {
     histogram[data[i].to_int()] += 1
   }
@@ -126,7 +126,7 @@ fn contrast_stretch_doc(img : @types.Image) -> @types.Image {
 
 ///|
 /// 中值去噪（文档专用，3x3 窗口）
-fn median_denoise_doc(img : @types.Image, size : Int) -> @types.Image {
+fn median_denoise_doc(img : @types.Image, size : Int32) -> @types.Image {
   let w = img.width
   let h = img.height
   let radius = size / 2
@@ -134,7 +134,7 @@ fn median_denoise_doc(img : @types.Image, size : Int) -> @types.Image {
   let out : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
-      let values : Array[Int] = []
+      let values : Array[Int32] = []
       for dy in -radius..<(radius + 1) {
         for dx in -radius..<(radius + 1) {
           let nx = x + dx
@@ -208,7 +208,7 @@ fn sharpen_doc(img : @types.Image, amount : Double) -> @types.Image {
 /// 通过估计背景光照并去除，实现阴影去除
 pub fn shadow_removal(
   img : @types.Image,
-  kernel_size? : Int = 51,
+  kernel_size~ : Int32 = 51,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -240,7 +240,7 @@ pub fn shadow_removal(
   let data = img.data
   // 估计背景（大核均值模糊）
   let radius = kernel_size / 2
-  let background : Array[Int] = Array::make(w * h, 0)
+  let background : Array[Int32] = Array::make(w * h, 0)
   for y in 0..<h {
     for x in 0..<w {
       let mut sum = 0
@@ -279,7 +279,7 @@ pub fn shadow_removal(
 /// 适用于背景不均匀的文档图像
 pub fn background_normalization(
   img : @types.Image,
-  kernel_size? : Int = 31,
+  kernel_size~ : Int32 = 31,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -311,10 +311,10 @@ pub fn background_normalization(
   let data = img.data
   // 估计背景（大核中值模糊）
   let radius = kernel_size / 2
-  let background : Array[Int] = Array::make(w * h, 0)
+  let background : Array[Int32] = Array::make(w * h, 0)
   for y in 0..<h {
     for x in 0..<w {
-      let values : Array[Int] = []
+      let values : Array[Int32] = []
       for dy in -radius..<(radius + 1) {
         for dx in -radius..<(radius + 1) {
           let nx = x + dx

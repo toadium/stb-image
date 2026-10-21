@@ -2,7 +2,7 @@
 // 覆盖 forensics_enhanced.mbt 的 10 个公开函数
 
 ///|
-fn create_solid_image_fe(w : Int, h : Int, value : Int) -> @types.Image {
+fn create_solid_image_fe(w : Int32, h : Int32, value : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(value.to_byte())
@@ -16,7 +16,7 @@ fn create_solid_image_fe(w : Int, h : Int, value : Int) -> @types.Image {
 }
 
 ///|
-fn create_noise_image_fe(w : Int, h : Int) -> @types.Image {
+fn create_noise_image_fe(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   let mut state = 12345
   for _ in 0..<(w * h) {
@@ -32,7 +32,7 @@ fn create_noise_image_fe(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_image_fe(w : Int, h : Int) -> @types.Image {
+fn create_gradient_image_fe(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<h {
     for x in 0..<w {
@@ -49,7 +49,7 @@ fn create_gradient_image_fe(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn create_checkerboard_fe(w : Int, h : Int, block : Int) -> @types.Image {
+fn create_checkerboard_fe(w : Int32, h : Int32, block : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

@@ -1,10 +1,10 @@
 // v192c remote_sensing 增强测试：多波段 + 边值 + 属性
 
 ///|
-fn rs_make_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs_make_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * ch) {
-    let v : Int = (i * 31 + 17) % 256
+    let v : Int32 = (i * 31 + 17) % 256
     data.push(v.to_byte())
   }
   @types.Image::{

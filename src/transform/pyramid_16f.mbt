@@ -2,7 +2,7 @@
 // pyr_down / pyr_up
 
 ///|
-fn clamp_i_p(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_i_p(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -13,18 +13,18 @@ fn clamp_i_p(v : Int, lo : Int, hi : Int) -> Int {
 }
 
 ///|
-fn read_u16_p(data : Bytes, offset : Int) -> Int {
+fn read_u16_p(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() | (data[offset + 1].to_int() << 8)
 }
 
 ///|
-fn write_u16_p(data : Array[Byte], offset : Int, v : Int) -> Unit {
+fn write_u16_p(data : Array[Byte], offset : Int32, v : Int32) -> Unit {
   data[offset] = (v & 0xFF).to_byte()
   data[offset + 1] = ((v >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_f32_p(data : Bytes, offset : Int) -> Float {
+fn read_f32_p(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -34,7 +34,7 @@ fn read_f32_p(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_p(data : Array[Byte], offset : Int, v : Float) -> Unit {
+fn write_f32_p(data : Array[Byte], offset : Int32, v : Float) -> Unit {
   let bits = v.reinterpret_as_int()
   data[offset] = (bits & 0xFF).to_byte()
   data[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -60,7 +60,7 @@ pub fn pyr_down_16(
   if new_w == 0 || new_h == 0 {
     raise @types.LoadError::DecodeFailed("图像太小，无法下采样")
   }
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = read_u16_p(img.data, i * 2)
   }
@@ -157,12 +157,12 @@ pub fn pyr_up_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError 
   let h = img.height
   let new_w = w * 2
   let new_h = h * 2
-  let data_int : Array[Int] = Array::make(w * h * ch, 0)
+  let data_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     data_int[i] = read_u16_p(img.data, i * 2)
   }
-  let x0_arr : Array[Int] = Array::make(new_w, 0)
-  let x1_arr : Array[Int] = Array::make(new_w, 0)
+  let x0_arr : Array[Int32] = Array::make(new_w, 0)
+  let x1_arr : Array[Int32] = Array::make(new_w, 0)
   let wx_arr : Array[Float] = Array::make(new_w, 0.0F)
   for x in 0..<new_w {
     let fx = (Float::from_int(x) - 0.5F) / 2.0F
@@ -171,8 +171,8 @@ pub fn pyr_up_16(img : @types.Image16) -> @types.Image16 raise @types.LoadError 
     x1_arr[x] = clamp_i_p(x0 + 1, 0, w - 1)
     wx_arr[x] = fx - Float::from_int(x0)
   }
-  let y0_arr : Array[Int] = Array::make(new_h, 0)
-  let y1_arr : Array[Int] = Array::make(new_h, 0)
+  let y0_arr : Array[Int32] = Array::make(new_h, 0)
+  let y1_arr : Array[Int32] = Array::make(new_h, 0)
   let wy_arr : Array[Float] = Array::make(new_h, 0.0F)
   for y in 0..<new_h {
     let fy = (Float::from_int(y) - 0.5F) / 2.0F
@@ -238,8 +238,8 @@ pub fn pyr_up_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
   for i in 0..<(w * h * ch) {
     data_f[i] = read_f32_p(img.data, i * 4)
   }
-  let x0_arr : Array[Int] = Array::make(new_w, 0)
-  let x1_arr : Array[Int] = Array::make(new_w, 0)
+  let x0_arr : Array[Int32] = Array::make(new_w, 0)
+  let x1_arr : Array[Int32] = Array::make(new_w, 0)
   let wx_arr : Array[Float] = Array::make(new_w, 0.0F)
   for x in 0..<new_w {
     let fx = (Float::from_int(x) - 0.5F) / 2.0F
@@ -248,8 +248,8 @@ pub fn pyr_up_f(img : @types.ImageF) -> @types.ImageF raise @types.LoadError {
     x1_arr[x] = clamp_i_p(x0 + 1, 0, w - 1)
     wx_arr[x] = fx - Float::from_int(x0)
   }
-  let y0_arr : Array[Int] = Array::make(new_h, 0)
-  let y1_arr : Array[Int] = Array::make(new_h, 0)
+  let y0_arr : Array[Int32] = Array::make(new_h, 0)
+  let y1_arr : Array[Int32] = Array::make(new_h, 0)
   let wy_arr : Array[Float] = Array::make(new_h, 0.0F)
   for y in 0..<new_h {
     let fy = (Float::from_int(y) - 0.5F) / 2.0F
@@ -298,13 +298,13 @@ fn laplacian_diff_p16(a : @types.Image16, b : @types.Image16) -> @types.Image16 
   let ch = a.channels
   let w = a.width
   let h = a.height
-  let a_int : Array[Int] = Array::make(w * h * ch, 0)
+  let a_int : Array[Int32] = Array::make(w * h * ch, 0)
   for i in 0..<(w * h * ch) {
     a_int[i] = read_u16_p(a.data, i * 2)
   }
   let bw = b.width
   let bh = b.height
-  let b_int : Array[Int] = Array::make(bw * bh * ch, 0)
+  let b_int : Array[Int32] = Array::make(bw * bh * ch, 0)
   for i in 0..<(bw * bh * ch) {
     b_int[i] = read_u16_p(b.data, i * 2)
   }
@@ -380,7 +380,7 @@ fn laplacian_diff_pf(a : @types.ImageF, b : @types.ImageF) -> @types.ImageF {
 /// 构建高斯金字塔 16-bit 版本。
 pub fn build_gaussian_pyramid_16(
   img : @types.Image16,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.Image16] raise @types.LoadError {
   let result : Array[@types.Image16] = [img]
   let mut current = img
@@ -401,7 +401,7 @@ pub fn build_gaussian_pyramid_16(
 /// 构建高斯金字塔 float 版本。
 pub fn build_gaussian_pyramid_f(
   img : @types.ImageF,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.ImageF] raise @types.LoadError {
   let result : Array[@types.ImageF] = [img]
   let mut current = img
@@ -422,7 +422,7 @@ pub fn build_gaussian_pyramid_f(
 /// 构建拉普拉斯金字塔 16-bit 版本。
 pub fn build_laplacian_pyramid_16(
   img : @types.Image16,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.Image16] raise @types.LoadError {
   let gaussian = build_gaussian_pyramid_16(img, levels)
   let result : Array[@types.Image16] = []
@@ -441,7 +441,7 @@ pub fn build_laplacian_pyramid_16(
 /// 构建拉普拉斯金字塔 float 版本。
 pub fn build_laplacian_pyramid_float(
   img : @types.ImageF,
-  levels : Int,
+  levels : Int32,
 ) -> Array[@types.ImageF] raise @types.LoadError {
   let gaussian = build_gaussian_pyramid_f(img, levels)
   let result : Array[@types.ImageF] = []

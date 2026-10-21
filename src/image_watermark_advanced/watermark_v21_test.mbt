@@ -1,7 +1,7 @@
 // v21.0.0 图像加密与水印增强测试 - image_watermark_advanced 模块
 
 ///|
-fn make_wm_data(n : Int) -> Array[Double] {
+fn make_wm_data(n : Int32) -> Array[Double] {
   let arr : Array[Double] = []
   for i in 0..<n {
     arr.push((i % 256).to_double())

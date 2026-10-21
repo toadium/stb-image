@@ -89,11 +89,11 @@ pub extend SpeechEmotionType with Eq::{not_equal, equal}
 /// 音频数据
 pub(all) struct AudioData {
   samples : Array[Double]
-  sample_rate : Int
-  num_channels : Int
-  num_samples : Int
+  sample_rate : Int32
+  num_channels : Int32
+  num_samples : Int32
   duration_s : Double
-  bit_depth : Int
+  bit_depth : Int32
   is_mono : Bool
 }
 
@@ -102,11 +102,11 @@ pub(all) struct AudioData {
 pub(all) struct AudioFeatures {
   feature_type : AudioFeatureType
   features : Array[Array[Double]]
-  num_frames : Int
-  feature_dim : Int
-  sample_rate : Int
-  frame_length : Int
-  hop_length : Int
+  num_frames : Int32
+  feature_dim : Int32
+  sample_rate : Int32
+  frame_length : Int32
+  hop_length : Int32
 }
 
 ///|
@@ -117,7 +117,7 @@ pub(all) struct SpeechRecognitionResult {
   confidence : Double
   word_timestamps : Array[Double]
   words : Array[String]
-  num_words : Int
+  num_words : Int32
   model_type : ASRModelType
   language : String
   wer : Double
@@ -131,9 +131,9 @@ pub(all) struct SpeakerIdentificationResult {
   confidence : Double
   all_speakers : Array[String]
   all_scores : Array[Double]
-  num_speakers : Int
+  num_speakers : Int32
   embedding : Array[Double]
-  embedding_dim : Int
+  embedding_dim : Int32
 }
 
 ///|
@@ -157,7 +157,7 @@ pub(all) struct AudioClassificationResult {
   confidence : Double
   all_classes : Array[String]
   all_scores : Array[Double]
-  num_classes : Int
+  num_classes : Int32
 }
 
 ///|
@@ -171,7 +171,7 @@ pub(all) struct MusicIRResult {
   genre : String
   mood : String
   instruments : Array[String]
-  num_instruments : Int
+  num_instruments : Int32
   danceability : Double
   energy : Double
   valence : Double
@@ -182,7 +182,7 @@ pub(all) struct MusicIRResult {
 pub(all) struct VADResult {
   audio : AudioData
   speech_segments : Array[Array[Double]]
-  num_segments : Int
+  num_segments : Int32
   speech_duration : Double
   silence_duration : Double
   speech_ratio : Double
@@ -195,12 +195,12 @@ pub(all) struct AudioConfig {
   task_type : AudioTaskType
   asr_model : ASRModelType
   feature_type : AudioFeatureType
-  sample_rate : Int
-  frame_length : Int
-  hop_length : Int
-  n_mfcc : Int
-  n_mels : Int
-  n_fft : Int
+  sample_rate : Int32
+  frame_length : Int32
+  hop_length : Int32
+  n_mfcc : Int32
+  n_mels : Int32
+  n_fft : Int32
   use_pre_emphasis : Bool
   pre_emphasis_coeff : Double
   use_vad : Bool
@@ -231,8 +231,8 @@ pub fn create_default_audio_config() -> AudioConfig {
 /// 创建音频数据
 pub fn create_audio_data(
   samples : Array[Double],
-  sample_rate : Int,
-  num_channels : Int,
+  sample_rate : Int32,
+  num_channels : Int32,
 ) -> AudioData {
   let num_samples = samples.length()
   let duration_s = num_samples.to_double() / sample_rate.to_double()
@@ -253,7 +253,7 @@ pub fn create_audio_data(
 pub fn generate_sine_wave(
   frequency : Double,
   duration_s : Double,
-  sample_rate : Int,
+  sample_rate : Int32,
   amplitude : Double,
 ) -> AudioData {
   let num_samples = (duration_s * sample_rate.to_double()).to_int()

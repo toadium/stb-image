@@ -68,16 +68,16 @@ pub extend WeatherType with Eq::{not_equal, equal}
 /// 翻译结果
 pub(all) struct ImageTranslationResult {
   translated_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   source_domain : String
   target_domain : String
   translation_model : TranslationModelType
   translation_strength : Double
   content_preservation : Double
   style_similarity : Double
-  num_iterations : Int
+  num_iterations : Int32
   translation_time_ms : Double
   quality_score : Double
 }
@@ -86,16 +86,16 @@ pub(all) struct ImageTranslationResult {
 /// 风格迁移结果
 pub(all) struct AdvancedStyleTransferResult {
   stylized_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   content_image : Array[Double]
   style_image : Array[Double]
   style_strength : Double
   content_strength : Double
   total_variation_weight : Double
   transfer_method : TranslationModelType
-  num_iterations : Int
+  num_iterations : Int32
   content_loss : Double
   style_loss : Double
   total_loss : Double
@@ -106,9 +106,9 @@ pub(all) struct AdvancedStyleTransferResult {
 /// 域适应结果
 pub(all) struct DomainAdaptationResult {
   adapted_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   source_domain : String
   target_domain : String
   adaptation_method : TranslationModelType
@@ -123,9 +123,9 @@ pub(all) struct DomainAdaptationResult {
 /// 季节转换结果
 pub(all) struct SeasonTransferResult {
   translated_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   source_season : SeasonType
   target_season : SeasonType
   translation_strength : Double
@@ -140,9 +140,9 @@ pub(all) struct SeasonTransferResult {
 /// 天气转换结果
 pub(all) struct WeatherTransferResult {
   translated_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   source_weather : WeatherType
   target_weather : WeatherType
   translation_strength : Double
@@ -158,15 +158,15 @@ pub(all) struct WeatherTransferResult {
 /// 昼夜转换结果
 pub(all) struct DayNightTransferResult {
   translated_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   is_night : Bool
   translation_strength : Double
   brightness_reduction : Double
   color_temperature_shift : Double
   light_source_added : Bool
-  num_light_sources : Int
+  num_light_sources : Int32
   content_preservation : Double
   translation_time_ms : Double
   realism_score : Double
@@ -176,9 +176,9 @@ pub(all) struct DayNightTransferResult {
 /// 素描到照片结果
 pub(all) struct SketchToPhotoResult {
   photo_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   sketch_image : Array[Double]
   colorization : Bool
   texture_synthesis : Bool
@@ -192,9 +192,9 @@ pub(all) struct SketchToPhotoResult {
 /// 地图到卫星图结果
 pub(all) struct MapToSatelliteResult {
   satellite_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   map_image : Array[Double]
   translation_method : TranslationModelType
   building_detection : Bool
@@ -217,7 +217,7 @@ pub(all) struct ImageTranslationConfig {
   content_weight : Double
   style_weight : Double
   total_variation_weight : Double
-  num_iterations : Int
+  num_iterations : Int32
   learning_rate : Double
   source_season : SeasonType
   target_season : SeasonType
@@ -262,8 +262,8 @@ pub fn create_default_translation_config() -> ImageTranslationConfig {
 /// 简化的图像翻译
 pub fn translate_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageTranslationConfig,
 ) -> ImageTranslationResult {
   let translated : Array[Double] = []
@@ -305,8 +305,8 @@ pub fn translate_image(
 pub fn advanced_style_transfer(
   content_image : Array[Double],
   style_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageTranslationConfig,
 ) -> AdvancedStyleTransferResult {
   let stylized : Array[Double] = []
@@ -357,8 +357,8 @@ pub fn advanced_style_transfer(
 /// 季节转换（简化版）
 pub fn transfer_season(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageTranslationConfig,
 ) -> SeasonTransferResult {
   let translated : Array[Double] = []
@@ -416,8 +416,8 @@ pub fn transfer_season(
 /// 天气转换（简化版）
 pub fn transfer_weather(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageTranslationConfig,
 ) -> WeatherTransferResult {
   let translated : Array[Double] = []
@@ -471,8 +471,8 @@ pub fn transfer_weather(
 /// 昼夜转换（简化版）
 pub fn transfer_day_night(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageTranslationConfig,
 ) -> DayNightTransferResult {
   let translated : Array[Double] = []

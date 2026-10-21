@@ -18,14 +18,14 @@ pub extend ScanQualityLevel with Eq::{not_equal, equal}
 /// 自适应预处理配置
 pub(all) struct AdaptivePreprocessConfig {
   quality_level : ScanQualityLevel
-  denoise_strength : Int // 去噪强度 0-5
+  denoise_strength : Int32 // 去噪强度 0-5
   contrast_enhance : Double // 对比度增强倍数 1.0-3.0
   binarization_method : String // "otsu" / "adaptive" / "sauvola"
   deskew_enabled : Bool // 是否启用倾斜校正
   sharpen_enabled : Bool // 是否启用锐化
   morph_open_enabled : Bool // 是否启用形态学开运算
   morph_close_enabled : Bool // 是否启用形态学闭运算
-  recommended_dpi : Int // 推荐 DPI
+  recommended_dpi : Int32 // 推荐 DPI
 }
 
 ///|
@@ -74,10 +74,10 @@ pub extend ComplexLayoutType with Eq::{not_equal, equal}
 /// 复杂版面分析结果
 pub(all) struct ComplexLayoutAnalysis {
   layout_type : ComplexLayoutType
-  num_columns : Int
+  num_columns : Int32
   has_floating_elements : Bool
   has_cross_page_elements : Bool
-  column_boundaries : Array[Int]
+  column_boundaries : Array[Int32]
   reading_order_strategy : String
   confidence : Double
 }
@@ -469,8 +469,8 @@ pub fn detect_distortions(
 /// 分析复杂版面
 pub fn analyze_complex_layout(
   text_blocks : Array[TextBlock],
-  page_width : Int,
-  page_height : Int,
+  page_width : Int32,
+  page_height : Int32,
 ) -> ComplexLayoutAnalysis {
   ignore(page_height)
   if text_blocks.length() == 0 {
@@ -534,7 +534,7 @@ pub fn analyze_complex_layout(
     _ => "default"
   }
 
-  let boundaries : Array[Int] = []
+  let boundaries : Array[Int32] = []
   boundaries.push(0)
   if num_columns >= 2 {
     boundaries.push(page_width / 2 - 20)

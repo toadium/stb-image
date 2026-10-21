@@ -78,7 +78,7 @@ pub(all) struct TextClassificationResult {
   all_classes : Array[String]
   all_scores : Array[Double]
   model_type : TextClassificationModel
-  num_classes : Int
+  num_classes : Int32
 }
 
 ///|
@@ -87,9 +87,9 @@ pub(all) struct NERResult {
   text : String
   entities : Array[String]
   entity_types : Array[NEREntityType]
-  entity_spans : Array[Array[Int]]
+  entity_spans : Array[Array[Int32]]
   confidences : Array[Double]
-  num_entities : Int
+  num_entities : Int32
 }
 
 ///|
@@ -111,8 +111,8 @@ pub(all) struct TextSummarizationResult {
   original_text : String
   summary : String
   compression_ratio : Double
-  original_length : Int
-  summary_length : Int
+  original_length : Int32
+  summary_length : Int32
   method_type : String
   rouge_score : Double
 }
@@ -136,8 +136,8 @@ pub(all) struct QuestionAnsweringResult {
   context : String
   answer : String
   confidence : Double
-  answer_start : Int
-  answer_end : Int
+  answer_start : Int32
+  answer_end : Int32
   method_type : String
 }
 
@@ -146,10 +146,10 @@ pub(all) struct QuestionAnsweringResult {
 pub(all) struct TextEmbedding {
   text : String
   embedding : Array[Double]
-  embedding_dim : Int
+  embedding_dim : Int32
   model_type : String
-  token_ids : Array[Int]
-  num_tokens : Int
+  token_ids : Array[Int32]
+  num_tokens : Int32
 }
 
 ///|
@@ -157,16 +157,16 @@ pub(all) struct TextEmbedding {
 pub(all) struct NLPConfig {
   task_type : NLPTaskType
   classification_model : TextClassificationModel
-  max_length : Int
-  batch_size : Int
+  max_length : Int32
+  batch_size : Int32
   learning_rate : Double
-  num_epochs : Int
+  num_epochs : Int32
   use_pretrained : Bool
   pretrained_model : String
   temperature : Double
   top_p : Double
-  top_k : Int
-  num_beams : Int
+  top_k : Int32
+  num_beams : Int32
 }
 
 ///|
@@ -277,7 +277,7 @@ pub fn classify_text(
 pub fn recognize_entities(text : String) -> NERResult {
   let entities : Array[String] = []
   let entity_types : Array[NEREntityType] = []
-  let entity_spans : Array[Array[Int]] = []
+  let entity_spans : Array[Array[Int32]] = []
   let confidences : Array[Double] = []
 
   let tokens = tokenize(text)
@@ -314,7 +314,7 @@ pub fn recognize_entities(text : String) -> NERResult {
     if is_entity {
       entities.push(token)
       entity_types.push(entity_type)
-      let span : Array[Int] = []
+      let span : Array[Int32] = []
       span.push(start)
       span.push(end)
       entity_spans.push(span)
@@ -413,7 +413,7 @@ pub fn analyze_sentiment(text : String) -> SentimentAnalysisResult {
 /// 文本摘要（简化版：提取式摘要）
 pub fn summarize_text(
   text : String,
-  max_sentences : Int,
+  max_sentences : Int32,
 ) -> TextSummarizationResult {
   // 简化的句子分割：按句号分割
   let sentences : Array[String] = []
@@ -465,10 +465,10 @@ pub fn summarize_text(
 
 ///|
 /// 生成文本嵌入（简化版）
-pub fn embed_text(text : String, embedding_dim : Int) -> TextEmbedding {
+pub fn embed_text(text : String, embedding_dim : Int32) -> TextEmbedding {
   let tokens = tokenize(text)
   let embedding : Array[Double] = []
-  let token_ids : Array[Int] = []
+  let token_ids : Array[Int32] = []
 
   let mut state = 42
   for _ in 0..<embedding_dim {

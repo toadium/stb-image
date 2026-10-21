@@ -25,7 +25,7 @@ pub extend QualityDimension with Eq::{not_equal, equal}
 /// Single dimension quality score.
 pub(all) struct QualityScore {
   dimension : QualityDimension
-  score : Int
+  score : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -57,7 +57,7 @@ pub extend QualityGrade with Eq::{not_equal, equal}
 /// Quality evaluation report.
 pub(all) struct QualityReport {
   scores : Array[QualityScore]
-  overall_score : Int
+  overall_score : Int32
   grade : QualityGrade
   summary : String
 } derive(Eq, @debug.Debug)
@@ -70,7 +70,7 @@ pub extend QualityReport with Eq::{not_equal, equal}
 
 ///|
 /// 将分数映射到等级（内部辅助）。
-fn score_to_grade(score : Int) -> QualityGrade {
+fn score_to_grade(score : Int32) -> QualityGrade {
   if score >= 90 {
     GradeA
   } else if score >= 80 {
@@ -199,6 +199,6 @@ pub fn QualityReport::is_passing(self : QualityReport) -> Bool {
 ///|
 /// 质量评估报告维度数。
 /// Dimension count.
-pub fn QualityReport::dimension_count(self : QualityReport) -> Int {
+pub fn QualityReport::dimension_count(self : QualityReport) -> Int32 {
   self.scores.length()
 }

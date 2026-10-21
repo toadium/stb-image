@@ -2,17 +2,17 @@
 package "walkzzz/image/src/remote_sensing_advanced"
 
 // Values
-pub fn calculate_ndvi(Array[Double], Array[Double], Int) -> Array[Double]
+pub fn calculate_ndvi(Array[Double], Array[Double], Int32) -> Array[Double]
 
-pub fn calculate_ndwi(Array[Double], Array[Double], Int) -> Array[Double]
+pub fn calculate_ndwi(Array[Double], Array[Double], Int32) -> Array[Double]
 
-pub fn classify_land_cover(Array[Double], Int, Int, RemoteSensingConfig) -> LandCoverClassificationResult
+pub fn classify_land_cover(Array[Double], Int32, Int32, RemoteSensingConfig) -> LandCoverClassificationResult
 
 pub fn create_default_remote_sensing_config() -> RemoteSensingConfig
 
-pub fn detect_changes(Array[Double], Array[Double], Int, Int, RemoteSensingConfig) -> ChangeDetectionResult
+pub fn detect_changes(Array[Double], Array[Double], Int32, Int32, RemoteSensingConfig) -> ChangeDetectionResult
 
-pub fn detect_remote_sensing_objects(Array[Double], Int, Int, RemoteSensingConfig) -> Array[DetectedRemoteSensingObject]
+pub fn detect_remote_sensing_objects(Array[Double], Int32, Int32, RemoteSensingConfig) -> Array[DetectedRemoteSensingObject]
 
 pub fn remote_sensing_report_to_string(RemoteSensingTaskType, RemoteSensingConfig, String) -> String
 
@@ -21,8 +21,8 @@ pub fn remote_sensing_report_to_string(RemoteSensingTaskType, RemoteSensingConfi
 // Types and methods
 pub(all) struct ChangeDetectionResult {
   change_map : Array[Array[Bool]]
-  change_mask : Array[Array[Int]]
-  num_change_regions : Int
+  change_mask : Array[Array[Int32]]
+  num_change_regions : Int32
   total_change_area : Double
   change_types : Array[ChangeType]
   change_areas : Array[Double]
@@ -47,7 +47,7 @@ pub fn ChangeType::equal(Self, Self) -> Bool
 pub fn ChangeType::not_equal(Self, Self) -> Bool
 
 pub(all) struct DetectedRemoteSensingObject {
-  object_id : Int
+  object_id : Int32
   object_type : RemoteSensingObjectType
   bounding_box : Array[Double]
   polygon : Array[Array[Double]]
@@ -59,13 +59,13 @@ pub(all) struct DetectedRemoteSensingObject {
 }
 
 pub(all) struct LandCoverClassificationResult {
-  classification_map : Array[Array[Int]]
-  num_classes : Int
+  classification_map : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   class_distribution : Array[Double]
   overall_accuracy : Double
   kappa_coefficient : Double
-  confusion_matrix : Array[Array[Int]]
+  confusion_matrix : Array[Array[Int32]]
   confidence_map : Array[Array[Double]]
 }
 
@@ -88,10 +88,10 @@ pub fn LandCoverType::not_equal(Self, Self) -> Bool
 pub(all) struct RemoteSensingConfig {
   task_type : RemoteSensingTaskType
   image_type : RemoteSensingImageType
-  num_bands : Int
+  num_bands : Int32
   spatial_resolution : Double
   spectral_resolution : Double
-  temporal_resolution_days : Int
+  temporal_resolution_days : Int32
   projection : String
   datum : String
   classification_method : String
@@ -107,9 +107,9 @@ pub(all) struct RemoteSensingConfig {
 
 pub(all) struct RemoteSensingFusionResult {
   fused_image : Array[Double]
-  width : Int
-  height : Int
-  num_bands : Int
+  width : Int32
+  height : Int32
+  num_bands : Int32
   fusion_method : String
   spectral_angle_mapper : Double
   erreur_relative_globale : Double
@@ -149,10 +149,10 @@ pub fn RemoteSensingObjectType::not_equal(Self, Self) -> Bool
 
 pub(all) struct RemoteSensingSuperResolutionResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
@@ -174,12 +174,12 @@ pub fn RemoteSensingTaskType::equal(Self, Self) -> Bool
 pub fn RemoteSensingTaskType::not_equal(Self, Self) -> Bool
 
 pub(all) struct TimeSeriesAnalysisResult {
-  num_timestamps : Int
-  time_interval_days : Int
+  num_timestamps : Int32
+  time_interval_days : Int32
   trend_map : Array[Array[Double]]
   seasonal_map : Array[Array[Double]]
   anomaly_map : Array[Array[Bool]]
-  breakpoints : Array[Array[Int]]
+  breakpoints : Array[Array[Int32]]
   ndvi_trend : Double
   vegetation_change_rate : Double
   phenology_metrics : Array[Double]

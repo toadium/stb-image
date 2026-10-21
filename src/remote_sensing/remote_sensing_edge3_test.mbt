@@ -1,7 +1,7 @@
 // remote_sensing 第三轮错误路径测试：第二/三参数错误 + 尺寸不匹配
 
 ///|
-fn rs3_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs3_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i] = ((i * 137 + 42) % 256).to_byte()
@@ -15,7 +15,7 @@ fn rs3_img(w : Int, h : Int, ch : Int) -> @types.Image {
 }
 
 ///|
-fn rs3_bad(w : Int, h : Int, ch : Int) -> @types.Image {
+fn rs3_bad(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{ width: w, height: h, channels: ch, data: b"\x00\x01\x02", }
 }
 

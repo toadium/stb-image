@@ -1,15 +1,15 @@
 ///|
 /// JPEG 扩展信息（包含精度、分量数、渐进标志等）
 pub struct JpegInfoExtended {
-  width : Int
-  height : Int
-  precision : Int
-  num_components : Int
+  width : Int32
+  height : Int32
+  precision : Int32
+  num_components : Int32
   is_grayscale : Bool
   is_progressive : Bool
-  sof_marker : Int
+  sof_marker : Int32
   sof_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
 }
 
@@ -26,7 +26,7 @@ pub fn is_jpeg_format(data : Bytes) -> Bool {
 }
 
 ///|
-fn jpeg_sof_name(marker : Int) -> String {
+fn jpeg_sof_name(marker : Int32) -> String {
   match marker {
     0xC0 => "Baseline DCT"
     0xC1 => "Extended sequential DCT"
@@ -43,7 +43,7 @@ fn jpeg_sof_name(marker : Int) -> String {
 }
 
 ///|
-fn jpeg_is_sof_marker(marker : Int) -> Bool {
+fn jpeg_is_sof_marker(marker : Int32) -> Bool {
   marker == 0xC0 ||
   marker == 0xC1 ||
   marker == 0xC2 ||

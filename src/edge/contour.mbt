@@ -3,8 +3,8 @@
 ///|
 /// 轮廓点
 pub(all) struct ContourPoint {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
 }
 
 ///|
@@ -72,10 +72,10 @@ pub fn find_contours(
 fn trace_boundary(
   binary : Array[Bool],
   visited : Array[Bool],
-  start_x : Int,
-  start_y : Int,
-  w : Int,
-  h : Int,
+  start_x : Int32,
+  start_y : Int32,
+  w : Int32,
+  h : Int32,
   is_outer : Bool,
 ) -> Contour {
   let points : Array[ContourPoint] = []

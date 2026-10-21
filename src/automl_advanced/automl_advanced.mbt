@@ -92,14 +92,14 @@ pub extend ModelSelectionStrategyType with Eq::{not_equal, equal}
 pub(all) struct AutoMLResult {
   best_model_type : String
   best_hyperparameters : Array[Double]
-  best_architecture : Array[Int]
-  best_features : Array[Int]
+  best_architecture : Array[Int32]
+  best_features : Array[Int32]
   best_validation_score : Double
   best_test_score : Double
-  num_trials : Int
-  num_models_evaluated : Int
+  num_trials : Int32
+  num_models_evaluated : Int32
   total_time_ms : Double
-  search_space_size : Int
+  search_space_size : Int32
   convergence_curve : Array[Double]
   best_pipeline : Array[String]
   automl_task_type : AutoMLTaskType
@@ -110,11 +110,11 @@ pub(all) struct AutoMLResult {
 pub(all) struct HPOResult {
   best_hyperparameters : Array[Double]
   best_score : Double
-  num_trials : Int
-  num_evaluations : Int
-  search_space_dimensions : Int
+  num_trials : Int32
+  num_evaluations : Int32
+  search_space_dimensions : Int32
   convergence_curve : Array[Double]
-  best_trial_id : Int
+  best_trial_id : Int32
   total_time_ms : Double
   hpo_algorithm : HPOAlgorithmType
   early_stopped : Bool
@@ -123,27 +123,27 @@ pub(all) struct HPOResult {
 ///|
 /// 神经架构搜索结果
 pub(all) struct NASResult {
-  best_architecture : Array[Int]
+  best_architecture : Array[Int32]
   best_accuracy : Double
-  num_architectures_evaluated : Int
+  num_architectures_evaluated : Int32
   search_time_ms : Double
-  num_layers : Int
-  num_operations : Int
+  num_layers : Int32
+  num_operations : Int32
   architecture_description : String
   nas_algorithm : NASAlgorithmType
-  params_count : Int
-  flops_count : Int
+  params_count : Int32
+  flops_count : Int32
   convergence_curve : Array[Double]
 }
 
 ///|
 /// 特征工程结果
 pub(all) struct FeatureEngineeringResult {
-  selected_features : Array[Int]
+  selected_features : Array[Int32]
   extracted_features : Array[Array[Double]]
-  num_original_features : Int
-  num_selected_features : Int
-  num_extracted_features : Int
+  num_original_features : Int32
+  num_selected_features : Int32
+  num_extracted_features : Int32
   feature_importance : Array[Double]
   feature_scores : Array[Double]
   improvement_score : Double
@@ -157,7 +157,7 @@ pub(all) struct ModelSelectionResult {
   best_model : String
   model_scores : Array[Double]
   model_names : Array[String]
-  num_models_evaluated : Int
+  num_models_evaluated : Int32
   best_score : Double
   ensemble_score : Double
   cross_validation_scores : Array[Double]
@@ -173,19 +173,19 @@ pub(all) struct AutoMLConfig {
   nas_algorithm : NASAlgorithmType
   feature_engineering_method : FeatureEngineeringMethodType
   model_selection_strategy : ModelSelectionStrategyType
-  max_trials : Int
+  max_trials : Int32
   max_time_ms : Double
-  num_cv_folds : Int
-  search_space_size : Int
-  population_size : Int
+  num_cv_folds : Int32
+  search_space_size : Int32
+  population_size : Int32
   mutation_rate : Double
   crossover_rate : Double
   learning_rate : Double
   use_early_stopping : Bool
-  early_stopping_patience : Int
+  early_stopping_patience : Int32
   use_parallel : Bool
-  num_workers : Int
-  random_state : Int
+  num_workers : Int32
+  random_state : Int32
 }
 
 ///|
@@ -216,9 +216,9 @@ pub fn create_default_automl_config() -> AutoMLConfig {
 ///|
 /// 简化的超参数采样
 fn sample_hyperparameters(
-  num_params : Int,
-  state : Int,
-) -> (Array[Double], Int) {
+  num_params : Int32,
+  state : Int32,
+) -> (Array[Double], Int32) {
   let params : Array[Double] = []
   let mut current_state = state
   for _ in 0..<num_params {
@@ -233,7 +233,7 @@ fn sample_hyperparameters(
 ///|
 /// 超参数优化
 pub fn optimize_hyperparameters(
-  num_hyperparams : Int,
+  num_hyperparams : Int32,
   config : AutoMLConfig,
 ) -> HPOResult {
   let mut best_params : Array[Double] = []
@@ -271,11 +271,11 @@ pub fn optimize_hyperparameters(
 ///|
 /// 神经架构搜索
 pub fn neural_architecture_search(
-  num_layers : Int,
-  num_operations : Int,
+  num_layers : Int32,
+  num_operations : Int32,
   config : AutoMLConfig,
 ) -> NASResult {
-  let architecture : Array[Int] = []
+  let architecture : Array[Int32] = []
   let mut state = config.random_state
 
   for _ in 0..<num_layers {
@@ -306,10 +306,10 @@ pub fn neural_architecture_search(
 ///|
 /// 特征工程自动化
 pub fn automated_feature_engineering(
-  num_features : Int,
+  num_features : Int32,
   config : AutoMLConfig,
 ) -> FeatureEngineeringResult {
-  let selected : Array[Int] = []
+  let selected : Array[Int32] = []
   let importance : Array[Double] = []
   let scores : Array[Double] = []
 
@@ -384,7 +384,7 @@ pub fn automated_model_selection(
 
 ///|
 /// AutoML（统一接口）
-pub fn automl(num_hyperparams : Int, config : AutoMLConfig) -> AutoMLResult {
+pub fn automl(num_hyperparams : Int32, config : AutoMLConfig) -> AutoMLResult {
   let hpo_result = optimize_hyperparameters(num_hyperparams, config)
 
   AutoMLResult::{

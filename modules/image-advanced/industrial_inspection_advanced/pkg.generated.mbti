@@ -1,0 +1,143 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-advanced/industrial_inspection_advanced"
+
+// Values
+pub fn create_default_industrial_config() -> IndustrialInspectionConfig
+
+pub fn detect_anomalies(Array[Double], Array[Double], Int32, Int32, IndustrialInspectionConfig) -> AnomalyDetectionResult
+
+pub fn detect_defects(Array[Double], Int32, Int32, IndustrialInspectionConfig) -> Array[DetectedDefect]
+
+pub fn evaluate_surface_quality(Array[Double], Int32, Int32, Array[DetectedDefect], IndustrialInspectionConfig) -> SurfaceQualityResult
+
+pub fn industrial_inspection_report_to_string(IndustrialInspectionTaskType, IndustrialInspectionConfig, String) -> String
+
+pub fn measure_dimensions(Array[Double], Int32, Int32, Double, IndustrialInspectionConfig) -> Array[DimensionalMeasurementResult]
+
+// Errors
+
+// Types and methods
+pub(all) struct AnomalyDetectionResult {
+  is_anomaly : Bool
+  anomaly_score : Double
+  threshold : Double
+  anomaly_map : Array[Array[Double]]
+  anomaly_regions : Array[Array[Int32]]
+  num_anomaly_regions : Int32
+  confidence : Double
+  reconstruction_error : Double
+}
+
+pub(all) enum DefectType {
+  Scratch
+  Dent
+  Crack
+  Stain
+  Rust
+  Bubble
+  Wrinkle
+  Discoloration
+  MissingPart
+  Misalignment
+  Unknown
+} derive(Eq)
+pub fn DefectType::equal(Self, Self) -> Bool
+pub fn DefectType::not_equal(Self, Self) -> Bool
+
+pub(all) struct DetectedDefect {
+  defect_id : Int32
+  defect_type : DefectType
+  bounding_box : Array[Int32]
+  segmentation_mask : Array[Array[Bool]]
+  confidence : Double
+  severity : Double
+  area : Double
+  perimeter : Double
+  position : Array[Double]
+  is_critical : Bool
+}
+
+pub(all) struct DimensionalMeasurementResult {
+  measurement_name : String
+  measured_value : Double
+  nominal_value : Double
+  tolerance_upper : Double
+  tolerance_lower : Double
+  deviation : Double
+  is_within_tolerance : Bool
+  unit : String
+  measurement_method : String
+  uncertainty : Double
+}
+
+pub(all) struct IndustrialInspectionConfig {
+  task_type : IndustrialInspectionTaskType
+  defect_types : Array[DefectType]
+  detection_threshold : Double
+  segmentation_threshold : Double
+  severity_threshold : Double
+  measurement_unit : String
+  tolerance_default : Double
+  surface_quality_threshold : Double
+  anomaly_threshold : Double
+  use_ai_detection : Bool
+  use_traditional_vision : Bool
+  use_hybrid : Bool
+  camera_resolution : Array[Int32]
+  lighting_type : String
+  inspection_speed : Double
+  reject_on_critical : Bool
+  auto_calibration : Bool
+}
+
+pub(all) enum IndustrialInspectionTaskType {
+  DefectDetection
+  DimensionalMeasurement
+  SurfaceQualityInspection
+  ProductClassification
+  IndustrialOCR
+  AnomalyDetection
+  AssemblyVerification
+  Unknown
+} derive(Eq)
+pub fn IndustrialInspectionTaskType::equal(Self, Self) -> Bool
+pub fn IndustrialInspectionTaskType::not_equal(Self, Self) -> Bool
+
+pub(all) struct ProductClassificationResult {
+  product_id : String
+  predicted_class : String
+  confidence : Double
+  all_classes : Array[String]
+  all_scores : Array[Double]
+  is_accepted : Bool
+  rejection_reason : String
+  inspection_time_ms : Double
+}
+
+pub(all) enum SurfaceQualityGrade {
+  Excellent
+  Good
+  Acceptable
+  Poor
+  Reject
+  Unknown
+} derive(Eq)
+pub fn SurfaceQualityGrade::equal(Self, Self) -> Bool
+pub fn SurfaceQualityGrade::not_equal(Self, Self) -> Bool
+
+pub(all) struct SurfaceQualityResult {
+  overall_grade : SurfaceQualityGrade
+  overall_score : Double
+  roughness : Double
+  waviness : Double
+  flatness : Double
+  glossiness : Double
+  color_uniformity : Double
+  defect_density : Double
+  num_defects : Int32
+  critical_defects : Int32
+}
+
+// Type aliases
+
+// Traits

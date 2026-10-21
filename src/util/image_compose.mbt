@@ -73,8 +73,8 @@ pub fn vstack(
 /// 平铺图像。将 img 在 x 方向重复 cols 次，y 方向重复 rows 次。
 pub fn tile(
   img : @types.Image,
-  cols : Int,
-  rows : Int,
+  cols : Int32,
+  rows : Int32,
 ) -> @types.Image raise @types.LoadError {
   if cols <= 0 || rows <= 0 {
     raise @types.LoadError::DecodeFailed("tile cols/rows 必须为正数")

@@ -4,9 +4,9 @@
 ///|
 /// 流式解码信息
 pub(all) struct StreamInfo {
-  width : Int
-  height : Int
-  channels : Int
+  width : Int32
+  height : Int32
+  channels : Int32
 }
 
 ///|
@@ -15,7 +15,7 @@ pub(all) struct StreamInfo {
 /// 行数据为 w*channels 个字节，按 RGB/RGBA 顺序排列。
 pub fn decode_stream(
   data : Bytes,
-  on_row : (Int, Array[Byte]) -> Unit,
+  on_row : (Int32, Array[Byte]) -> Unit,
 ) -> StreamInfo raise @types.LoadError {
   let img = load_from_bytes_auto(data)
   let w = img.width
@@ -39,8 +39,8 @@ pub fn decode_stream(
 /// 适用于分块处理大图，减少回调开销。
 pub fn decode_stream_chunked(
   data : Bytes,
-  chunk_height : Int,
-  on_chunk : (Int, @types.Image) -> Unit,
+  chunk_height : Int32,
+  on_chunk : (Int32, @types.Image) -> Unit,
 ) -> StreamInfo raise @types.LoadError {
   let img = load_from_bytes_auto(data)
   let w = img.width
@@ -76,8 +76,8 @@ pub fn decode_stream_chunked(
 /// 流式解码（带 req_channels）：指定输出通道数。
 pub fn decode_stream_channels(
   data : Bytes,
-  req_channels : Int,
-  on_row : (Int, Array[Byte]) -> Unit,
+  req_channels : Int32,
+  on_row : (Int32, Array[Byte]) -> Unit,
 ) -> StreamInfo raise @types.LoadError {
   let img = load_from_bytes_auto(data, req_channels=Some(req_channels))
   let w = img.width

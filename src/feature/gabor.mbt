@@ -9,12 +9,12 @@
 /// lambda 为波长，gamma 为空间纵横比（默认 0.5），phi 为相位偏移（默认 0）。
 pub fn gabor_filter(
   img : @types.Image,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
   theta : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -180,11 +180,11 @@ pub fn gabor_filter(
 /// num_orientations 为方向数（默认 4，即 0°/45°/90°/135°）。
 pub fn gabor_filter_bank(
   img : @types.Image,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -266,12 +266,12 @@ pub fn gabor_filter_bank(
 ///|
 /// 生成 Gabor 核（返回核矩阵，用于可视化或调试）。
 pub fn gabor_kernel(
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
   theta : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> Array[Array[Float]] raise @types.LoadError {
   // 参数验证
   if ksize < 3 || ksize > 31 || ksize % 2 == 0 {

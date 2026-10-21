@@ -2,18 +2,18 @@
 // 支持 Image16 / ImageF 两种类型
 
 ///|
-fn read_u16_le_e(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_e(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_e(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_e(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_f32_le_e(data : Bytes, offset : Int) -> Float {
+fn read_f32_le_e(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -23,7 +23,7 @@ fn read_f32_le_e(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_e(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_e(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -64,7 +64,7 @@ pub fn edge_detect_sobel_16(
   let n = w * h
   let bpp = ch * 2
   // 先转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch == 1 {
       gray[i] = read_u16_le_e(img.data, i * bpp)
@@ -275,7 +275,7 @@ pub fn edge_detect_laplacian_16(
   let n = w * h
   let bpp = ch * 2
   // 先转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch == 1 {
       gray[i] = read_u16_le_e(img.data, i * bpp)
@@ -456,7 +456,7 @@ pub fn edge_detect_prewitt_16(
   let n = w * h
   let bpp = ch * 2
   // 先转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch == 1 {
       gray[i] = read_u16_le_e(img.data, i * bpp)

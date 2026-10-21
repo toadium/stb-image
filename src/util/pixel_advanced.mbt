@@ -1,7 +1,7 @@
 // 高级像素操作（纯 MoonBit）：pixelate / replace_color / swap_channels
 
 ///|
-fn clamp_b(v : Int) -> Byte {
+fn clamp_b(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -15,7 +15,7 @@ fn clamp_b(v : Int) -> Byte {
 /// 马赛克/像素化效果。将图像分成 block_size × block_size 的块，每块取左上角像素值。
 pub fn pixelate(
   img : @types.Image,
-  block_size : Int,
+  block_size : Int32,
 ) -> @types.Image raise @types.LoadError {
   if block_size <= 0 {
     raise @types.LoadError::DecodeFailed("block_size 必须为正数")
@@ -50,7 +50,7 @@ pub fn replace_color(
   img : @types.Image,
   old_color : Array[Byte],
   new_color : Array[Byte],
-  tolerance : Int,
+  tolerance : Int32,
 ) -> @types.Image raise @types.LoadError {
   let ch = img.channels
   if old_color.length() < ch || new_color.length() < ch {
@@ -83,8 +83,8 @@ pub fn replace_color(
 /// 交换两个通道。例如 swap_channels(img, 0, 2) 交换 R 和 B。
 pub fn swap_channels(
   img : @types.Image,
-  ch1 : Int,
-  ch2 : Int,
+  ch1 : Int32,
+  ch2 : Int32,
 ) -> @types.Image raise @types.LoadError {
   if ch1 < 0 || ch1 >= img.channels || ch2 < 0 || ch2 >= img.channels {
     raise @types.LoadError::DecodeFailed("通道索引越界")
@@ -115,10 +115,10 @@ pub fn swap_channels(
 ///|
 fn check_color_match(
   data : Bytes,
-  off : Int,
-  ch : Int,
+  off : Int32,
+  ch : Int32,
   target : Array[Byte],
-  tolerance : Int,
+  tolerance : Int32,
 ) -> Bool {
   for c in 0..<ch {
     let diff = (data[off + c].to_int() - target[c].to_int()).abs()

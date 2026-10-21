@@ -15,7 +15,7 @@ pub extend Code128Charset with Eq::{not_equal, equal}
 ///|
 /// Code128 编码表（107个码字）
 /// 每个码字对应 11 位的条空模式（3条3空，宽度1-4）
-let code128_patterns : Array[Array[Int]] = [
+let code128_patterns : Array[Array[Int32]] = [
   [2, 1, 2, 2, 2, 2], // 0
   [2, 2, 2, 1, 2, 2], // 1
   [2, 2, 2, 2, 2, 1], // 2
@@ -128,7 +128,7 @@ let code128_patterns : Array[Array[Int]] = [
 
 ///|
 /// Code128 字符集 A 的字符映射（0-95）
-fn code128_char_a(code : Int) -> String {
+fn code128_char_a(code : Int32) -> String {
   if code >= 0 && code <= 95 {
     if code < 64 {
       (code + 32).to_char().map(c => c.to_string()).unwrap_or("")
@@ -143,7 +143,7 @@ fn code128_char_a(code : Int) -> String {
 
 ///|
 /// Code128 字符集 B 的字符映射（0-95）
-fn code128_char_b(code : Int) -> String {
+fn code128_char_b(code : Int32) -> String {
   if code >= 0 && code <= 95 {
     (code + 32).to_char().map(c => c.to_string()).unwrap_or("")
   } else {
@@ -178,7 +178,7 @@ pub fn decode_code128(
   let data = img.data
   // 在中间扫描线尝试解码
   let y = h / 2
-  let scan_line : Array[Int] = []
+  let scan_line : Array[Int32] = []
   for x in 0..<w {
     scan_line.push(if data[y * w + x].to_int() < 128 { 1 } else { 0 })
   }
@@ -215,7 +215,7 @@ pub fn decode_code128(
   }
   // 解码数据码字
   let mut pos = start_idx + 11 // 起始符占 11 个模块
-  let codes : Array[Int] = []
+  let codes : Array[Int32] = []
   let mut checksum = start_code
   let mut code_count = 0
   while pos < w - 13 {
@@ -282,9 +282,9 @@ pub fn decode_code128(
 ///|
 /// 匹配条空模式
 fn match_bar_pattern(
-  scan_line : Array[Int],
-  start : Int,
-  pattern : Array[Int],
+  scan_line : Array[Int32],
+  start : Int32,
+  pattern : Array[Int32],
 ) -> Bool {
   let mut pos = start
   let mut is_bar = true
@@ -306,7 +306,10 @@ fn match_bar_pattern(
 
 ///|
 /// 匹配 Code128 码字
-fn match_code128_symbol(scan_line : Array[Int], start : Int) -> (Int, Int) {
+fn match_code128_symbol(
+  scan_line : Array[Int32],
+  start : Int32,
+) -> (Int32, Int32) {
   // 尝试匹配所有 108 个码字
   for code in 0..<108 {
     let pattern = code128_patterns[code]
@@ -375,7 +378,7 @@ let code39_chars : Array[String] = [
 
 ///|
 /// Code39 条空模式（9个元素：5条4空，3宽6窄）
-let code39_patterns : Array[Array[Int]] = [
+let code39_patterns : Array[Array[Int32]] = [
   [1, 1, 1, 2, 2, 1, 2, 1, 1], // 0
   [2, 1, 1, 2, 1, 1, 1, 1, 2], // 1
   [1, 1, 2, 2, 1, 1, 1, 1, 2], // 2
@@ -423,7 +426,7 @@ let code39_patterns : Array[Array[Int]] = [
 
 ///|
 /// Code39 起始/终止符模式（*）
-let code39_start_pattern : Array[Int] = [1, 2, 1, 1, 2, 1, 2, 1, 1]
+let code39_start_pattern : Array[Int32] = [1, 2, 1, 1, 2, 1, 2, 1, 1]
 
 ///|
 /// 识别 Code39 条形码
@@ -449,7 +452,7 @@ pub fn decode_code39(
   let h = img.height
   let data = img.data
   let y = h / 2
-  let scan_line : Array[Int] = []
+  let scan_line : Array[Int32] = []
   for x in 0..<w {
     scan_line.push(if data[y * w + x].to_int() < 128 { 1 } else { 0 })
   }

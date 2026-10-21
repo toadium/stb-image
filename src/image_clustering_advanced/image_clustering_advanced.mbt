@@ -76,29 +76,29 @@ pub extend LinkageType with Eq::{not_equal, equal}
 ///|
 /// 聚类结果
 pub(all) struct ClusteringResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   cluster_centers : Array[Array[Double]]
-  cluster_sizes : Array[Int]
+  cluster_sizes : Array[Int32]
   inertia : Double
   silhouette_score : Double
   davies_bouldin_index : Double
   calinski_harabasz_index : Double
   clustering_time_ms : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
 }
 
 ///|
 /// K-Means结果
 pub(all) struct KMeansResult {
-  labels : Array[Int]
+  labels : Array[Int32]
   cluster_centers : Array[Array[Double]]
-  num_clusters : Int
-  num_samples : Int
+  num_clusters : Int32
+  num_samples : Int32
   inertia : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
   initial_centroids : Array[Array[Double]]
@@ -108,27 +108,27 @@ pub(all) struct KMeansResult {
 ///|
 /// DBSCAN结果
 pub(all) struct DBSCANResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_noise_points : Int
-  num_core_points : Int
-  num_border_points : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_noise_points : Int32
+  num_core_points : Int32
+  num_border_points : Int32
   eps : Double
-  min_samples : Int
-  cluster_sizes : Array[Int]
+  min_samples : Int32
+  cluster_sizes : Array[Int32]
   clustering_time_ms : Double
 }
 
 ///|
 /// 层次聚类结果
 pub(all) struct HierarchicalClusteringResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   linkage_type : LinkageType
   dendrogram : Array[Array[Double]]
-  merge_history : Array[Array[Int]]
-  cluster_sizes : Array[Int]
+  merge_history : Array[Array[Int32]]
+  cluster_sizes : Array[Int32]
   cophenetic_correlation : Double
   clustering_time_ms : Double
 }
@@ -136,9 +136,9 @@ pub(all) struct HierarchicalClusteringResult {
 ///|
 /// GMM结果
 pub(all) struct GMMResult {
-  labels : Array[Int]
-  num_components : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_components : Int32
+  num_samples : Int32
   means : Array[Array[Double]]
   covariances : Array[Array[Array[Double]]]
   weights : Array[Double]
@@ -146,7 +146,7 @@ pub(all) struct GMMResult {
   log_likelihood : Double
   bic : Double
   aic : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
 }
@@ -154,14 +154,14 @@ pub(all) struct GMMResult {
 ///|
 /// 模糊C均值结果
 pub(all) struct FuzzyCMeansResult {
-  labels : Array[Int]
-  num_clusters : Int
-  num_samples : Int
+  labels : Array[Int32]
+  num_clusters : Int32
+  num_samples : Int32
   cluster_centers : Array[Array[Double]]
   membership_matrix : Array[Array[Double]]
   fuzziness_parameter : Double
   objective_function : Double
-  num_iterations : Int
+  num_iterations : Int32
   converged : Bool
   clustering_time_ms : Double
 }
@@ -186,20 +186,20 @@ pub(all) struct ClusteringEvaluationResult {
 pub(all) struct ImageClusteringConfig {
   task_type : ImageClusteringTaskType
   algorithm_type : ClusteringAlgorithmType
-  num_clusters : Int
+  num_clusters : Int32
   distance_metric : DistanceMetricType
-  max_iterations : Int
+  max_iterations : Int32
   tolerance : Double
-  random_seed : Int
+  random_seed : Int32
   eps : Double
-  min_samples : Int
+  min_samples : Int32
   linkage_type : LinkageType
   fuzziness_parameter : Double
   covariance_type : String
   use_feature_extraction : Bool
   feature_extraction_method : String
   use_pca : Bool
-  pca_dimension : Int
+  pca_dimension : Int32
   use_normalization : Bool
   use_gpu : Bool
 }
@@ -256,11 +256,11 @@ fn euclidean_distance_cl(v1 : Array[Double], v2 : Array[Double]) -> Double {
 /// 简化的K-Means聚类
 pub fn kmeans_clustering(
   data : Array[Array[Double]],
-  num_clusters : Int,
+  num_clusters : Int32,
   config : ImageClusteringConfig,
 ) -> KMeansResult {
   let num_samples = data.length()
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for _ in 0..<num_samples {
     labels.push(0)
   }
@@ -362,12 +362,12 @@ pub fn kmeans_clustering(
 pub fn dbscan_clustering(
   data : Array[Array[Double]],
   eps : Double,
-  min_samples : Int,
+  min_samples : Int32,
   config : ImageClusteringConfig,
 ) -> DBSCANResult {
   ignore(config)
   let num_samples = data.length()
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for _ in 0..<num_samples {
     labels.push(-1) // -1表示噪声
   }
@@ -382,7 +382,7 @@ pub fn dbscan_clustering(
     }
 
     // 找邻居
-    let neighbors : Array[Int] = []
+    let neighbors : Array[Int32] = []
     for j in 0..<num_samples {
       let dist = euclidean_distance_cl(data[i], data[j])
       if dist <= eps {
@@ -436,7 +436,7 @@ pub fn dbscan_clustering(
     count
   }
 
-  let cluster_sizes : Array[Int] = []
+  let cluster_sizes : Array[Int32] = []
   for c in 0..<cluster_id {
     let mut size = 0
     for l in labels {
@@ -464,18 +464,18 @@ pub fn dbscan_clustering(
 /// 简化的层次聚类
 pub fn hierarchical_clustering(
   data : Array[Array[Double]],
-  num_clusters : Int,
+  num_clusters : Int32,
   config : ImageClusteringConfig,
 ) -> HierarchicalClusteringResult {
   let num_samples = data.length()
-  let labels : Array[Int] = []
+  let labels : Array[Int32] = []
   for i in 0..<num_samples {
     labels.push(i)
   }
 
   // 简化的层次聚类：逐步合并最近的簇
   let mut current_clusters = num_samples
-  let merge_history : Array[Array[Int]] = []
+  let merge_history : Array[Array[Int32]] = []
 
   while current_clusters > num_clusters {
     let mut min_dist = 1000000000000000000.0
@@ -496,7 +496,7 @@ pub fn hierarchical_clustering(
     }
 
     // 合并
-    let merge_pair : Array[Int] = []
+    let merge_pair : Array[Int32] = []
     merge_pair.push(merge_i)
     merge_pair.push(merge_j)
     merge_history.push(merge_pair)
@@ -510,7 +510,7 @@ pub fn hierarchical_clustering(
   }
 
   // 重新标记簇
-  let unique_labels : Array[Int] = []
+  let unique_labels : Array[Int32] = []
   for l in labels {
     let mut found = false
     for u in unique_labels {
@@ -531,7 +531,7 @@ pub fn hierarchical_clustering(
     }
   }
 
-  let cluster_sizes : Array[Int] = []
+  let cluster_sizes : Array[Int32] = []
   for c in 0..<num_clusters {
     let mut size = 0
     for l in labels {
@@ -569,7 +569,7 @@ pub fn hierarchical_clustering(
 /// 计算轮廓系数（简化版）
 pub fn calculate_silhouette_score(
   data : Array[Array[Double]],
-  labels : Array[Int],
+  labels : Array[Int32],
 ) -> Double {
   let num_samples = data.length()
   if num_samples == 0 {
@@ -591,7 +591,7 @@ pub fn calculate_silhouette_score(
 
     // b: 到最近其他簇的平均距离
     let mut b = 1000000000000000000.0
-    let unique_labels : Array[Int] = []
+    let unique_labels : Array[Int32] = []
     for l in labels {
       let mut found = false
       for u in unique_labels {
@@ -659,7 +659,7 @@ pub fn cluster_images(
   let kmeans_result = kmeans_clustering(features, config.num_clusters, config)
   let silhouette = calculate_silhouette_score(features, kmeans_result.labels)
 
-  let cluster_sizes : Array[Int] = []
+  let cluster_sizes : Array[Int32] = []
   for c in 0..<config.num_clusters {
     let mut size = 0
     for l in kmeans_result.labels {

@@ -23,7 +23,7 @@ pub extend MonocularDepthMethod with Eq::{not_equal, equal}
 /// 深度图后处理参数。
 /// Depth map post-processing parameters.
 pub(all) struct DepthPostProcessParams {
-  smooth_radius : Int // 平滑半径
+  smooth_radius : Int32 // 平滑半径
   fill_holes : Bool // 是否填充空洞
   normalize : Bool // 是否归一化到 [0,1]
   edge_refine : Bool // 是否边缘细化
@@ -77,8 +77,8 @@ pub extend DepthOfFieldRange with Eq::{not_equal, equal}
 pub fn estimate_depth_from_focus(
   sharpness_maps : Array[Array[Double]],
   focus_positions : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
 ) -> DepthMap {
   let n = sharpness_maps.length()
   let depths : Array[Double] = []
@@ -118,8 +118,8 @@ pub fn estimate_depth_from_focus(
 /// 模糊圆直径越大，离焦平面越远。
 pub fn estimate_depth_from_defocus(
   blur_map : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   focal_length : Double,
   aperture : Double,
   focus_distance : Double,
@@ -166,8 +166,8 @@ pub fn estimate_depth_from_defocus(
 pub fn estimate_depth_relative_blur(
   near_image : Array[Double],
   far_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   near_focus : Double,
   far_focus : Double,
 ) -> DepthMap {
@@ -202,7 +202,7 @@ pub fn estimate_depth_relative_blur(
 ///|
 /// 深度图平滑（简化双边滤波）。
 /// Smooth depth map (simplified bilateral filter).
-pub fn smooth_depth_map(depth : DepthMap, radius : Int) -> DepthMap {
+pub fn smooth_depth_map(depth : DepthMap, radius : Int32) -> DepthMap {
   if radius <= 0 {
     return depth
   }

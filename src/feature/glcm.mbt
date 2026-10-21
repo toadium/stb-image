@@ -19,10 +19,10 @@ pub struct GlcmFeatures {
 /// levels 为量化级别数（默认 256，可降采样以加速）。
 pub fn compute_glcm(
   img : @types.Image,
-  dx : Int,
-  dy : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  dx : Int32,
+  dy : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -58,9 +58,9 @@ pub fn compute_glcm(
     return []
   }
   // 转灰度并量化
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -80,7 +80,7 @@ pub fn compute_glcm(
     }
   }
   // 构建 GLCM
-  let glcm : Array[Array[Int]] = Array::make(levels, [])
+  let glcm : Array[Array[Int32]] = Array::make(levels, [])
   for i in 0..<levels {
     glcm[i] = Array::make(levels, 0)
   }
@@ -100,7 +100,7 @@ pub fn compute_glcm(
 
 ///|
 /// 从 GLCM 计算纹理特征。
-pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
+pub fn glcm_features(glcm : Array[Array[Int32]]) -> GlcmFeatures {
   let levels = glcm.length()
   if levels == 0 {
     return GlcmFeatures::{
@@ -195,7 +195,7 @@ pub fn glcm_features(glcm : Array[Array[Int]]) -> GlcmFeatures {
 /// 返回 4 个方向的纹理特征数组。
 pub fn glcm_features_multi_direction(
   img : @types.Image,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

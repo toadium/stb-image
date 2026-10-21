@@ -8,13 +8,13 @@ pub fn domain_adaptation(Array[Array[Double]], TransferLearningConfig) -> Domain
 
 pub fn few_shot_learning(Array[Array[Double]], Array[Array[Double]], TransferLearningConfig) -> FewShotLearningResult
 
-pub fn fine_tune_model(Array[Array[Double]], Int, TransferLearningConfig) -> FineTuningResult
+pub fn fine_tune_model(Array[Array[Double]], Int32, TransferLearningConfig) -> FineTuningResult
 
-pub fn knowledge_distillation(Array[Array[Double]], Int, Int, TransferLearningConfig) -> KnowledgeDistillationResult
+pub fn knowledge_distillation(Array[Array[Double]], Int32, Int32, TransferLearningConfig) -> KnowledgeDistillationResult
 
-pub fn load_pretrained_model(PretrainedModelType, Int, Int) -> PretrainingResult
+pub fn load_pretrained_model(PretrainedModelType, Int32, Int32) -> PretrainingResult
 
-pub fn multi_task_learning(Int, Int, Int, TransferLearningConfig) -> MultiTaskLearningResult
+pub fn multi_task_learning(Int32, Int32, Int32, TransferLearningConfig) -> MultiTaskLearningResult
 
 pub fn transfer_learning(Array[Array[Double]], Array[Array[Double]], TransferLearningConfig) -> TransferLearningResult
 
@@ -47,13 +47,13 @@ pub(all) struct DomainAdaptationResult {
   target_loss : Double
   domain_gap : Double
   adaptation_method : DomainAdaptationMethodType
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   adaptation_time_ms : Double
   source_domain : String
   target_domain : String
-  num_source_samples : Int
-  num_target_samples : Int
+  num_source_samples : Int32
+  num_target_samples : Int32
 }
 
 pub(all) enum FewShotLearningMethodType {
@@ -74,32 +74,32 @@ pub fn FewShotLearningMethodType::not_equal(Self, Self) -> Bool
 
 pub(all) struct FewShotLearningResult {
   learned_representations : Array[Array[Double]]
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   training_accuracy : Double
   validation_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
   few_shot_method : FewShotLearningMethodType
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
-  num_classes : Int
-  num_support_samples : Int
+  num_classes : Int32
+  num_support_samples : Int32
 }
 
 pub(all) struct FineTuningResult {
   fine_tuned_weights : Array[Array[Double]]
-  num_layers : Int
-  num_frozen_layers : Int
-  num_trainable_layers : Int
+  num_layers : Int32
+  num_frozen_layers : Int32
+  num_trainable_layers : Int32
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   test_accuracy : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   fine_tuning_time_ms : Double
   fine_tuning_strategy : FineTuningStrategyType
@@ -135,7 +135,7 @@ pub(all) struct KnowledgeDistillationResult {
   total_loss : Double
   temperature : Double
   alpha : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   distillation_time_ms : Double
   model_compression_ratio : Double
@@ -159,14 +159,14 @@ pub fn MultiTaskLearningMethodType::not_equal(Self, Self) -> Bool
 pub(all) struct MultiTaskLearningResult {
   shared_weights : Array[Array[Double]]
   task_specific_weights : Array[Array[Array[Double]]]
-  num_tasks : Int
+  num_tasks : Int32
   task_names : Array[String]
   task_accuracies : Array[Double]
   task_losses : Array[Double]
   average_accuracy : Double
   average_loss : Double
   multi_task_method : MultiTaskLearningMethodType
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   learning_time_ms : Double
   negative_transfer : Bool
@@ -190,16 +190,16 @@ pub fn PretrainedModelType::not_equal(Self, Self) -> Bool
 
 pub(all) struct PretrainingResult {
   pretrained_weights : Array[Array[Double]]
-  num_layers : Int
-  num_parameters : Int
+  num_layers : Int32
+  num_parameters : Int32
   pretraining_loss : Double
   pretraining_accuracy : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   learning_rate : Double
   pretraining_time_ms : Double
   model_architecture : String
-  dataset_size : Int
+  dataset_size : Int32
   pretrained_model_type : PretrainedModelType
 }
 
@@ -210,29 +210,29 @@ pub(all) struct TransferLearningConfig {
   domain_adaptation_method : DomainAdaptationMethodType
   multi_task_method : MultiTaskLearningMethodType
   few_shot_method : FewShotLearningMethodType
-  num_frozen_layers : Int
+  num_frozen_layers : Int32
   learning_rate : Double
   discriminative_learning_rates : Array[Double]
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   temperature : Double
   alpha : Double
-  num_way : Int
-  num_shot : Int
-  num_query : Int
-  num_episodes : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
+  num_episodes : Int32
   use_pretrained : Bool
   pretrained_model_path : String
   use_data_augmentation : Bool
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 pub(all) struct TransferLearningResult {
   transferred_model_weights : Array[Array[Double]]
-  num_layers : Int
-  num_frozen_layers : Int
-  num_trainable_layers : Int
+  num_layers : Int32
+  num_frozen_layers : Int32
+  num_trainable_layers : Int32
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
@@ -242,7 +242,7 @@ pub(all) struct TransferLearningResult {
   target_accuracy : Double
   transfer_gain : Double
   learning_time_ms : Double
-  num_epochs : Int
+  num_epochs : Int32
   converged : Bool
 }
 

@@ -8,8 +8,8 @@
 /// CI gate result.
 pub(all) struct CIGateResult {
   passed : Bool
-  total_checks : Int
-  failed_checks : Int
+  total_checks : Int32
+  failed_checks : Int32
   gate_summary : String
 } derive(Eq, @debug.Debug)
 
@@ -87,7 +87,7 @@ pub fn ci_regression_all_pass() -> Bool {
 ///|
 /// CI 门禁通过率（0-100）。
 /// CI gate pass rate (0-100).
-pub fn CIGateResult::pass_rate(self : CIGateResult) -> Int {
+pub fn CIGateResult::pass_rate(self : CIGateResult) -> Int32 {
   if self.total_checks == 0 {
     100
   } else {

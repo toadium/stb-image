@@ -4,12 +4,12 @@
 ///|
 /// 表格线结构体
 pub(all) struct TableLine {
-  x1 : Int
-  y1 : Int
-  x2 : Int
-  y2 : Int
+  x1 : Int32
+  y1 : Int32
+  x2 : Int32
+  y2 : Int32
   line_type : TableLineType
-  thickness : Int
+  thickness : Int32
 }
 
 ///|
@@ -25,33 +25,33 @@ pub extend TableLineType with Eq::{not_equal, equal}
 ///|
 /// 单元格结构体
 pub(all) struct TableCell {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  row : Int
-  col : Int
-  row_span : Int
-  col_span : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  row : Int32
+  col : Int32
+  row_span : Int32
+  col_span : Int32
 }
 
 ///|
 /// 表格结构结构体
 pub(all) struct TableStructure {
-  rows : Int
-  cols : Int
+  rows : Int32
+  cols : Int32
   cells : Array[TableCell]
   horizontal_lines : Array[TableLine]
   vertical_lines : Array[TableLine]
-  bounding_box : (Int, Int, Int, Int)
+  bounding_box : (Int32, Int32, Int32, Int32)
 }
 
 ///|
 /// 检测水平表格线
 pub fn detect_horizontal_lines(
   img : @types.Image,
-  min_length? : Int = 20,
-  max_gap? : Int = 2,
+  min_length~ : Int32 = 20,
+  max_gap~ : Int32 = 2,
 ) -> Array[TableLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -129,8 +129,8 @@ pub fn detect_horizontal_lines(
 /// 检测垂直表格线
 pub fn detect_vertical_lines(
   img : @types.Image,
-  min_length? : Int = 20,
-  max_gap? : Int = 2,
+  min_length~ : Int32 = 20,
+  max_gap~ : Int32 = 2,
 ) -> Array[TableLine] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -207,7 +207,7 @@ pub fn detect_vertical_lines(
 /// 合并相邻的水平线
 fn merge_horizontal_lines(
   lines : Array[TableLine],
-  max_y_diff : Int,
+  max_y_diff : Int32,
 ) -> Array[TableLine] {
   if lines.length() == 0 {
     return lines
@@ -243,7 +243,7 @@ fn merge_horizontal_lines(
 /// 合并相邻的垂直线
 fn merge_vertical_lines(
   lines : Array[TableLine],
-  max_x_diff : Int,
+  max_x_diff : Int32,
 ) -> Array[TableLine] {
   if lines.length() == 0 {
     return lines
@@ -301,7 +301,7 @@ pub fn analyze_table_structure(
     }
   }
   // 提取水平线的y坐标（按y排序）
-  let h_ys : Array[Int] = []
+  let h_ys : Array[Int32] = []
   for line in horizontal_lines {
     h_ys.push(line.y1)
   }
@@ -316,7 +316,7 @@ pub fn analyze_table_structure(
     }
   }
   // 提取垂直线的x坐标（按x排序）
-  let v_xs : Array[Int] = []
+  let v_xs : Array[Int32] = []
   for line in vertical_lines {
     v_xs.push(line.x1)
   }
@@ -372,7 +372,7 @@ pub fn analyze_table_structure(
 /// 完整表格识别流水线
 pub fn recognize_table(
   img : @types.Image,
-  min_line_length? : Int = 20,
+  min_line_length~ : Int32 = 20,
 ) -> TableStructure raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -414,7 +414,7 @@ pub fn recognize_table(
 pub fn extract_cell_image(
   img : @types.Image,
   cell : TableCell,
-  padding? : Int = 1,
+  padding~ : Int32 = 1,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -480,7 +480,7 @@ pub fn extract_cell_image(
 pub fn extract_all_cells(
   img : @types.Image,
   structure : TableStructure,
-  padding? : Int = 1,
+  padding~ : Int32 = 1,
 ) -> Array[@types.Image] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -543,7 +543,7 @@ fn to_grayscale_table(img : @types.Image) -> @types.Image {
 
 ///|
 /// 辅助函数：最小值
-fn min_table(a : Int, b : Int) -> Int {
+fn min_table(a : Int32, b : Int32) -> Int32 {
   if a < b {
     a
   } else {
@@ -553,7 +553,7 @@ fn min_table(a : Int, b : Int) -> Int {
 
 ///|
 /// 辅助函数：最大值
-fn max_table(a : Int, b : Int) -> Int {
+fn max_table(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

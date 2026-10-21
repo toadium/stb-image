@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn oae_make_img(w : Int, h : Int, val : Int) -> @types.Image {
+fn oae_make_img(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -601,7 +601,7 @@ test "recognize_ocr_enhanced: with custom config (no knn)" {
 ///|
 test "recognize_ocr_enhanced: RGB image with text-like pattern" {
   try {
-    let data : Array[Int] = Array::make(32 * 32 * 3, 255)
+    let data : Array[Int32] = Array::make(32 * 32 * 3, 255)
     for y in 5..<27 {
       for x in 5..<12 {
         data[(y * 32 + x) * 3] = 0

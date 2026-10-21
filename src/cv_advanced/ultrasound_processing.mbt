@@ -41,8 +41,8 @@ pub extend UltrasoundConfig with Eq::{not_equal, equal}
 pub(all) struct ElastographyResult {
   strain : Array[Double]
   elasticity : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -56,9 +56,9 @@ pub extend ElastographyResult with Eq::{not_equal, equal}
 /// Speckle noise reduction (Lee filter).
 pub fn ultrasound_speckle_reduction(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  window_size : Int,
+  width : Int32,
+  height : Int32,
+  window_size : Int32,
 ) -> Array[Double] {
   let n = width * height
   let result : Array[Double] = []
@@ -167,11 +167,11 @@ pub fn ultrasound_log_compression(
 /// Scan conversion (polar to Cartesian).
 pub fn ultrasound_scan_conversion(
   polar_data : Array[Double],
-  num_lines : Int,
-  num_samples : Int,
+  num_lines : Int32,
+  num_samples : Int32,
   max_depth : Double,
-  output_width : Int,
-  output_height : Int,
+  output_width : Int32,
+  output_height : Int32,
 ) -> Array[Double] {
   let result : Array[Double] = []
   let cx = output_width / 2
@@ -213,9 +213,9 @@ pub fn ultrasound_scan_conversion(
 pub fn ultrasound_elastography(
   pre_image : Array[Double],
   post_image : Array[Double],
-  width : Int,
-  height : Int,
-  window_size : Int,
+  width : Int32,
+  height : Int32,
+  window_size : Int32,
 ) -> ElastographyResult {
   let strain : Array[Double] = []
   let elasticity : Array[Double] = []
@@ -277,8 +277,8 @@ pub fn ultrasound_doppler_shift(
 /// Time gain compensation.
 pub fn ultrasound_time_gain_compensation(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   attenuation : Double,
 ) -> Array[Double] {
   let result : Array[Double] = []

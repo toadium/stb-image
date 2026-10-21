@@ -2,10 +2,10 @@
 
 ///|
 fn make_line(
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
   text : String,
 ) -> @ocr.TextLineAttributes {
   @ocr.TextLineAttributes::{

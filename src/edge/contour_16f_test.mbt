@@ -64,7 +64,7 @@ test "draw_contours_16 basic" {
     data: Bytes::from_array(data),
   }
   let contours : Array[@edge.Contour] = []
-  let color : Array[Int] = [65535, 0, 0]
+  let color : Array[Int32] = [65535, 0, 0]
   let out = @edge.draw_contours_16(img, contours, color)
   assert_eq(out.width, w)
   assert_eq(out.height, h)

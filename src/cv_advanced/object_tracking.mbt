@@ -26,7 +26,7 @@ pub(all) struct Track {
   y : Double
   width : Double
   height : Double
-  id : Int
+  id : Int32
   score : Double
 } derive(Eq, @debug.Debug)
 
@@ -43,7 +43,7 @@ pub(all) struct TrackerParams {
   kind : TrackerKind
   learning_rate : Double
   sigma : Double
-  max_gap : Int
+  max_gap : Int32
 } derive(Eq, @debug.Debug)
 
 ///|

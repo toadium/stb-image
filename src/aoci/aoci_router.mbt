@@ -4,7 +4,7 @@
 ///|
 pub fn route(index : SymbolIndex, query : String) -> Array[SymbolCoord] {
   let query_keywords = split_query(query)
-  let scored : Array[(SymbolCoord, Int)] = []
+  let scored : Array[(SymbolCoord, Int32)] = []
   for sym in index.symbols {
     let score = score_symbol(sym, query_keywords)
     if score > 0 {
@@ -18,7 +18,7 @@ pub fn route(index : SymbolIndex, query : String) -> Array[SymbolCoord] {
 pub fn route_top_k(
   index : SymbolIndex,
   query : String,
-  k : Int,
+  k : Int32,
 ) -> Array[SymbolCoord] {
   let results = route(index, query)
   let top : Array[SymbolCoord] = []
@@ -59,7 +59,7 @@ fn split_query(query : String) -> Array[String] {
 }
 
 ///|
-fn score_symbol(sym : SymbolCoord, query_keywords : Array[String]) -> Int {
+fn score_symbol(sym : SymbolCoord, query_keywords : Array[String]) -> Int32 {
   let mut score = 0
   let name_lower = sym.name.to_lower()
   for qkw in query_keywords {
@@ -82,7 +82,7 @@ fn score_symbol(sym : SymbolCoord, query_keywords : Array[String]) -> Int {
 }
 
 ///|
-fn sort_by_score(scored : Array[(SymbolCoord, Int)]) -> Array[SymbolCoord] {
+fn sort_by_score(scored : Array[(SymbolCoord, Int32)]) -> Array[SymbolCoord] {
   let arr = scored
   let n = arr.length()
   for i in 0..<n {

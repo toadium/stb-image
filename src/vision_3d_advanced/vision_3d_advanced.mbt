@@ -50,9 +50,9 @@ pub(all) struct Point3D {
 /// 点云
 pub(all) struct PointCloud {
   points : Array[Point3D]
-  num_points : Int
-  width : Int
-  height : Int
+  num_points : Int32
+  width : Int32
+  height : Int32
   is_organized : Bool
   point_cloud_type : PointCloudType
   coordinate_system : String
@@ -63,11 +63,11 @@ pub(all) struct PointCloud {
 /// 深度图
 pub(all) struct DepthMap {
   depth_data : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   min_depth : Double
   max_depth : Double
-  invalid_pixels : Int
+  invalid_pixels : Int32
   confidence_map : Array[Double]
   camera_params : Array[Double]
 }
@@ -77,12 +77,12 @@ pub(all) struct DepthMap {
 pub(all) struct StereoMatchingResult {
   disparity_map : Array[Double]
   depth_map : Array[Double]
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   min_disparity : Double
   max_disparity : Double
   matching_method : String
-  num_invalid_pixels : Int
+  num_invalid_pixels : Int32
   confidence_map : Array[Double]
   baseline : Double
   focal_length : Double
@@ -93,10 +93,10 @@ pub(all) struct StereoMatchingResult {
 pub(all) struct Reconstruction3DResult {
   point_cloud : PointCloud
   mesh_vertices : Array[Array[Double]]
-  mesh_faces : Array[Array[Int]]
+  mesh_faces : Array[Array[Int32]]
   mesh_normals : Array[Array[Double]]
-  num_vertices : Int
-  num_faces : Int
+  num_vertices : Int32
+  num_faces : Int32
   volume : Double
   surface_area : Double
   reconstruction_method : String
@@ -114,8 +114,8 @@ pub(all) struct PoseEstimationResult {
   euler_angles : Array[Double]
   confidence : Double
   reprojection_error : Double
-  num_inliers : Int
-  num_correspondences : Int
+  num_inliers : Int32
+  num_correspondences : Int32
   pose_method : String
 }
 
@@ -125,12 +125,12 @@ pub(all) struct SLAMResult {
   trajectory : Array[Array[Double]]
   point_cloud : PointCloud
   keyframes : Array[Array[Double]]
-  num_keyframes : Int
-  num_landmarks : Int
+  num_keyframes : Int32
+  num_landmarks : Int32
   tracking_state : String
   localization_accuracy : Double
   mapping_accuracy : Double
-  loop_closures : Int
+  loop_closures : Int32
   is_lost : Bool
 }
 
@@ -145,7 +145,7 @@ pub(all) struct Vision3DConfig {
   principal_point_y : Double
   min_depth : Double
   max_depth : Double
-  disparity_range : Int
+  disparity_range : Int32
   matching_method : String
   reconstruction_method : String
   voxel_size : Double
@@ -187,8 +187,8 @@ pub fn create_default_vision_3d_config() -> Vision3DConfig {
 pub fn stereo_match(
   left_image : Array[Double],
   right_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : Vision3DConfig,
 ) -> StereoMatchingResult {
   ignore(right_image)
@@ -236,8 +236,8 @@ pub fn stereo_match(
 /// 估计深度（简化版）
 pub fn estimate_depth(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : Vision3DConfig,
 ) -> DepthMap {
   ignore(image)
@@ -286,7 +286,7 @@ pub fn reconstruct_3d(
   ignore(images)
   let points : Array[Point3D] = []
   let vertices : Array[Array[Double]] = []
-  let faces : Array[Array[Int]] = []
+  let faces : Array[Array[Int32]] = []
   let normals : Array[Array[Double]] = []
 
   let mut state = 42
@@ -336,7 +336,7 @@ pub fn reconstruct_3d(
 
   // 简化的网格面
   for i in 0..<(num_points / 3) {
-    let face : Array[Int] = []
+    let face : Array[Int32] = []
     face.push(i * 3)
     face.push(i * 3 + 1)
     face.push(i * 3 + 2)

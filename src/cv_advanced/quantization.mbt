@@ -23,7 +23,7 @@ pub extend QuantizationType with Eq::{not_equal, equal}
 /// 量化配置。
 /// Quantization configuration.
 pub(all) struct QuantizationConfig {
-  bits : Int
+  bits : Int32
   per_channel : Bool
   symmetric : Bool
   calibration_min : Double
@@ -40,10 +40,10 @@ pub extend QuantizationConfig with Eq::{not_equal, equal}
 /// 量化张量。
 /// Quantized tensor.
 pub(all) struct QuantizedTensor {
-  data : Array[Int]
+  data : Array[Int32]
   scale : Double
-  zero_point : Int
-  bits : Int
+  zero_point : Int32
+  bits : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -58,8 +58,8 @@ pub extend QuantizedTensor with Eq::{not_equal, equal}
 pub fn compute_quant_params(
   min_val : Double,
   max_val : Double,
-  bits : Int,
-) -> (Double, Int) {
+  bits : Int32,
+) -> (Double, Int32) {
   let q_min = if bits == 4 { -8 } else if bits == 8 { -128 } else { -32768 }
   let q_max = if bits == 4 { 7 } else if bits == 8 { 127 } else { 32767 }
   let range = max_val - min_val
@@ -99,7 +99,7 @@ pub fn quantize_int8(
     }
   }
   let (scale, zero_point) = compute_quant_params(min_val, max_val, 8)
-  let quantized : Array[Int] = []
+  let quantized : Array[Int32] = []
   for v in input {
     let q = (v / scale).round().to_int() + zero_point
     let clamped = if q < -128 { -128 } else if q > 127 { 127 } else { q }
@@ -128,7 +128,7 @@ pub fn quantize_int4(
     }
   }
   let (scale, zero_point) = compute_quant_params(min_val, max_val, 4)
-  let quantized : Array[Int] = []
+  let quantized : Array[Int32] = []
   for v in input {
     let q = (v / scale).round().to_int() + zero_point
     let clamped = if q < -8 { -8 } else if q > 7 { 7 } else { q }
@@ -154,8 +154,8 @@ pub fn dequantize(tensor : QuantizedTensor) -> Array[Double] {
 /// Per-channel quantization.
 pub fn quantize_per_channel(
   input : Array[Double],
-  num_channels : Int,
-  bits : Int,
+  num_channels : Int32,
+  bits : Int32,
 ) -> Array[QuantizedTensor] {
   let result : Array[QuantizedTensor] = []
   let per_channel = input.length() / num_channels
@@ -180,7 +180,7 @@ pub fn quantize_per_channel(
     let (scale, zero_point) = compute_quant_params(min_val, max_val, bits)
     let q_min = if bits == 4 { -8 } else { -128 }
     let q_max = if bits == 4 { 7 } else { 127 }
-    let quantized : Array[Int] = []
+    let quantized : Array[Int32] = []
     for v in channel_data {
       let q = (v / scale).round().to_int() + zero_point
       let clamped = if q < q_min {

@@ -21,9 +21,9 @@ pub extend MedicalImageType with Eq::{not_equal, equal}
 ///|
 /// 医学图像
 pub(all) struct MedicalImage {
-  width : Int
-  height : Int
-  slices : Int
+  width : Int32
+  height : Int32
+  slices : Int32
   data : Array[Double]
   image_type : MedicalImageType
   pixel_spacing_x : Double
@@ -36,13 +36,13 @@ pub(all) struct MedicalImage {
 ///|
 /// 感兴趣区域（ROI）
 pub(all) struct RegionOfInterest {
-  id : Int
+  id : Int32
   name : String
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  slice : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  slice : Int32
   volume : Double
   mean_intensity : Double
   std_intensity : Double
@@ -52,7 +52,7 @@ pub(all) struct RegionOfInterest {
 ///|
 /// 病灶
 pub(all) struct Lesion {
-  id : Int
+  id : Int32
   lesion_type : String
   x : Double
   y : Double
@@ -64,7 +64,7 @@ pub(all) struct Lesion {
   shape : String // "round" / "oval" / "irregular"
   density : String // "solid" / "cystic" / "mixed" / "calcified"
   confidence : Double
-  birads_category : Int // BI-RADS 1-6
+  birads_category : Int32 // BI-RADS 1-6
 }
 
 ///|
@@ -72,7 +72,7 @@ pub(all) struct Lesion {
 pub(all) struct MedicalRegistrationResult {
   transformation : Array[Double] // 4x4 变换矩阵
   similarity : Double
-  iterations : Int
+  iterations : Int32
   converged : Bool
   registration_type : String // "rigid" / "affine" / "deformable"
 }
@@ -83,7 +83,7 @@ pub(all) struct MedicalSegmentationConfig {
   method_type : String // "threshold" / "region_growing" / "level_set" / "watershed"
   lower_threshold : Double
   upper_threshold : Double
-  seed_points : Array[(Int, Int, Int)]
+  seed_points : Array[(Int32, Int32, Int32)]
   smoothness : Double
   curvature_weight : Double
 }
@@ -198,9 +198,9 @@ pub fn medical_threshold_segmentation(
 /// 区域生长分割
 pub fn region_growing_segmentation(
   image : MedicalImage,
-  seed_x : Int,
-  seed_y : Int,
-  seed_z : Int,
+  seed_x : Int32,
+  seed_y : Int32,
+  seed_z : Int32,
   threshold : Double,
 ) -> Array[Bool] {
   let w = image.width
@@ -218,9 +218,9 @@ pub fn region_growing_segmentation(
   }
 
   let seed_value = image.data[seed_idx]
-  let queue_x : Array[Int] = [seed_x]
-  let queue_y : Array[Int] = [seed_y]
-  let queue_z : Array[Int] = [seed_z]
+  let queue_x : Array[Int32] = [seed_x]
+  let queue_y : Array[Int32] = [seed_y]
+  let queue_z : Array[Int32] = [seed_z]
   mask[seed_idx] = true
   let mut queue_idx = 0
 
@@ -267,7 +267,7 @@ pub fn region_growing_segmentation(
 pub fn calculate_roi_stats(
   image : MedicalImage,
   mask : Array[Bool],
-) -> (Double, Double, Int) {
+) -> (Double, Double, Int32) {
   let mut sum = 0.0
   let mut sum_sq = 0.0
   let mut count = 0
@@ -378,7 +378,7 @@ pub fn detect_lesions_simple(
 pub fn medical_image_registration(
   fixed : MedicalImage,
   moving : MedicalImage,
-  max_iterations : Int,
+  max_iterations : Int32,
 ) -> MedicalRegistrationResult {
   let transformation : Array[Double] = [
     1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,

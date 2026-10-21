@@ -163,10 +163,10 @@ test "decode_tiff_pure: PackBits 1x1 灰度 roundtrip" {
   let pixel_offset = 8 + 2 + 9 * 12 + 4
   fn write_le_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -220,10 +220,10 @@ test "decode_tiff_pure: LZW 1x1 灰度 roundtrip" {
   let pixel_offset = 8 + 2 + 9 * 12 + 4
   fn write_le_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -285,10 +285,10 @@ test "decode_tiff_pure: PackBits 2x1 灰度 roundtrip" {
   let pixel_offset = 8 + 2 + 9 * 12 + 4
   fn write_le_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -344,10 +344,10 @@ test "decode_tiff_pure: PackBits RGB 1x1 roundtrip" {
   let pixel_offset = 8 + 2 + 9 * 12 + 4
   fn write_le_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) -> Unit {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -603,10 +603,10 @@ test "decode_tiff_pure: 不支持的压缩类型 raises" {
   out.push(b'\x00') // IFD count = 5
   fn write_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -654,10 +654,10 @@ test "decode_tiff_pure: 16-bit 样本 raises" {
   out.push(b'\x00') // IFD count = 5
   fn write_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -706,10 +706,10 @@ test "decode_tiff_pure: 尺寸为零 raises" {
   out.push(b'\x00') // IFD count = 5
   fn write_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -757,10 +757,10 @@ test "decode_tiff_pure: 2 samples per pixel raises" {
   out.push(b'\x00') // IFD count = 6
   fn write_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())
@@ -810,10 +810,10 @@ test "decode_tiff_pure: 不支持的 PhotometricInterpretation raises" {
   out.push(b'\x00') // IFD count = 6
   fn write_entry(
     out : Array[Byte],
-    tag : Int,
-    type_id : Int,
-    count : Int,
-    value : Int,
+    tag : Int32,
+    type_id : Int32,
+    count : Int32,
+    value : Int32,
   ) {
     out.push((tag & 0xFF).to_byte())
     out.push(((tag >> 8) & 0xFF).to_byte())

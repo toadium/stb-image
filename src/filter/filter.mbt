@@ -2,7 +2,7 @@
 // box_blur / gaussian_blur / sharpen / convolve
 
 ///|
-fn clamp_coord(v : Int, max : Int) -> Int {
+fn clamp_coord(v : Int32, max : Int32) -> Int32 {
   if v < 0 {
     0
   } else if v >= max {
@@ -13,7 +13,7 @@ fn clamp_coord(v : Int, max : Int) -> Int {
 }
 
 ///|
-fn clamp_b(v : Int) -> Byte {
+fn clamp_b(v : Int32) -> Byte {
   if v < 0 {
     b'\x00'
   } else if v > 255 {
@@ -24,7 +24,7 @@ fn clamp_b(v : Int) -> Byte {
 }
 
 ///|
-fn clamp_int(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -39,7 +39,7 @@ fn clamp_int(v : Int, lo : Int, hi : Int) -> Int {
 /// 使用可分离滑动窗口，O(n) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn box_blur(
   img : @types.Image,
-  radius : Int,
+  radius : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -72,7 +72,7 @@ pub fn box_blur(
   let n = w * h
   let win_size = 2 * radius + 1
   // 水平模糊：img -> temp
-  let temp : Array[Int] = Array::make(n * color_ch, 0)
+  let temp : Array[Int32] = Array::make(n * color_ch, 0)
   for y in 0..<h {
     for c in 0..<color_ch {
       let mut sum = 0
@@ -128,7 +128,7 @@ pub fn box_blur(
 /// 使用可分离高斯核，O(n*radius) 复杂度。仅模糊颜色通道，alpha 不变。
 pub fn gaussian_blur(
   img : @types.Image,
-  radius : Int,
+  radius : Int32,
   sigma : Float,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
@@ -316,7 +316,7 @@ pub fn sharpen(
   let center = 1.0F + 4.0F * amount
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   // 预计算像素 Int 数组
-  let px : Array[Int] = Array::make(n * ch, 0)
+  let px : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     px[i] = img.data[i].to_int()
   }
@@ -382,7 +382,7 @@ pub fn sharpen(
 /// 对每个像素，取 ksize×ksize 邻域的中值。仅滤波颜色通道，alpha 不变。
 pub fn median_blur(
   img : @types.Image,
-  ksize : Int,
+  ksize : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -420,7 +420,7 @@ pub fn median_blur(
   let color_ch = if ch >= 3 { 3 } else { ch }
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
-  let buf : Array[Int] = Array::make(ksize * ksize, 0)
+  let buf : Array[Int32] = Array::make(ksize * ksize, 0)
   for y in 0..<h {
     for x in 0..<w {
       for c in 0..<color_ch {

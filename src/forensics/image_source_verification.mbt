@@ -320,7 +320,7 @@ pub fn analyze_color_distribution(
   let total = w * h
 
   // 颜色直方图平滑度
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<64 {
     histogram.push(0)
   }

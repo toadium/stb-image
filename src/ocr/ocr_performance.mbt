@@ -3,8 +3,8 @@
 
 ///|
 /// 预计算灰度查找表（0-255 映射）
-pub fn build_grayscale_lut() -> Array[Int] {
-  let lut : Array[Int] = Array::make(256, 0)
+pub fn build_grayscale_lut() -> Array[Int32] {
+  let lut : Array[Int32] = Array::make(256, 0)
   for i in 0..<256 {
     lut[i] = i
   }
@@ -13,8 +13,8 @@ pub fn build_grayscale_lut() -> Array[Int] {
 
 ///|
 /// 预计算二值化查找表
-pub fn build_threshold_lut(threshold : Int) -> Array[Int] {
-  let lut : Array[Int] = Array::make(256, 0)
+pub fn build_threshold_lut(threshold : Int32) -> Array[Int32] {
+  let lut : Array[Int32] = Array::make(256, 0)
   for i in 0..<256 {
     lut[i] = if i >= threshold { 255 } else { 0 }
   }
@@ -25,7 +25,7 @@ pub fn build_threshold_lut(threshold : Int) -> Array[Int] {
 /// 使用查找表快速二值化
 pub fn fast_threshold_lut(
   img : @types.Image,
-  lut : Array[Int],
+  lut : Array[Int32],
 ) -> @types.Image raise @types.LoadError {
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -58,7 +58,7 @@ pub fn fast_threshold_lut(
 /// 缓存友好的水平投影计算（按行连续访问）
 pub fn cache_friendly_horizontal_projection(
   img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
       "cache_friendly_horizontal_projection: 图像尺寸必须大于0",
@@ -75,7 +75,7 @@ pub fn cache_friendly_horizontal_projection(
       "cache_friendly_horizontal_projection: 数据大小不匹配",
     )
   }
-  let projections : Array[Int] = Array::make(img.height, 0)
+  let projections : Array[Int32] = Array::make(img.height, 0)
   for y in 0..<img.height {
     let mut sum = 0
     let row_offset = y * img.width * img.channels
@@ -91,7 +91,7 @@ pub fn cache_friendly_horizontal_projection(
 /// 缓存友好的垂直投影计算（转置后按行访问）
 pub fn cache_friendly_vertical_projection(
   img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
       "cache_friendly_vertical_projection: 图像尺寸必须大于0",
@@ -108,7 +108,7 @@ pub fn cache_friendly_vertical_projection(
       "cache_friendly_vertical_projection: 数据大小不匹配",
     )
   }
-  let projections : Array[Int] = Array::make(img.width, 0)
+  let projections : Array[Int32] = Array::make(img.width, 0)
   for x in 0..<img.width {
     let mut sum = 0
     for y in 0..<img.height {
@@ -121,7 +121,7 @@ pub fn cache_friendly_vertical_projection(
 
 ///|
 /// 循环展开的像素求和（每次处理4个像素）
-pub fn unrolled_pixel_sum(img : @types.Image) -> Int raise @types.LoadError {
+pub fn unrolled_pixel_sum(img : @types.Image) -> Int32 raise @types.LoadError {
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
       "unrolled_pixel_sum: 图像尺寸必须大于0",
@@ -158,7 +158,7 @@ pub fn unrolled_pixel_sum(img : @types.Image) -> Int raise @types.LoadError {
 /// 快速连通域标记（两遍扫描法优化版）
 pub fn fast_connected_components(
   binary_img : @types.Image,
-) -> Array[Int] raise @types.LoadError {
+) -> Array[Int32] raise @types.LoadError {
   if binary_img.width <= 0 || binary_img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
       "fast_connected_components: 图像尺寸必须大于0",
@@ -177,7 +177,7 @@ pub fn fast_connected_components(
       "fast_connected_components: 数据大小不匹配",
     )
   }
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut current_label = 0
   for y in 0..<h {
     for x in 0..<w {
@@ -196,7 +196,7 @@ pub fn fast_connected_components(
 /// 预计算高斯核查找表
 pub fn build_gaussian_kernel_lut(
   sigma : Double,
-  radius : Int,
+  radius : Int32,
 ) -> Array[Double] raise @types.LoadError {
   if sigma <= 0.0 {
     raise @types.LoadError::DecodeFailed(
@@ -308,7 +308,7 @@ pub fn batch_recognize_chars(
 /// OCR 流水线性能统计
 pub fn ocr_pipeline_stats(
   img : @types.Image,
-) -> (Int, Int, Double) raise @types.LoadError {
+) -> (Int32, Int32, Double) raise @types.LoadError {
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
       "ocr_pipeline_stats: 图像尺寸必须大于0",

@@ -5,9 +5,9 @@
 
 ///|
 fn qe_make_rgb_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -20,9 +20,9 @@ fn qe_make_rgb_image(
 
 ///|
 fn qe_make_rgba_image(
-  width : Int,
-  height : Int,
-  pixels : Array[(Int, Int, Int, Int)],
+  width : Int32,
+  height : Int32,
+  pixels : Array[(Int32, Int32, Int32, Int32)],
 ) -> @types.Image {
   let data : Array[Byte] = []
   for p in pixels {
@@ -36,7 +36,7 @@ fn qe_make_rgba_image(
 
 ///|
 // 检查像素编码区域（跳过 14 字节 header 和 8 字节 padding）是否含 [lo, hi] 范围字节
-fn qe_has_byte_in_range(out : Bytes, lo : Int, hi : Int) -> Bool {
+fn qe_has_byte_in_range(out : Bytes, lo : Int32, hi : Int32) -> Bool {
   let len = out.length()
   let end = len - 8
   let mut found = false
@@ -50,7 +50,7 @@ fn qe_has_byte_in_range(out : Bytes, lo : Int, hi : Int) -> Bool {
 }
 
 ///|
-fn qe_has_byte(out : Bytes, target : Int) -> Bool {
+fn qe_has_byte(out : Bytes, target : Int32) -> Bool {
   let len = out.length()
   let mut found = false
   for i in 0..<len {

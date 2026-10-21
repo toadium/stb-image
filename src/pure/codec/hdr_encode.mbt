@@ -6,7 +6,7 @@
 /// RLE 编码单个通道扫描线
 fn rle_encode_scanline_channel(
   channel_data : Array[Byte],
-  scanline_len : Int,
+  scanline_len : Int32,
 ) -> Array[Byte] {
   let out : Array[Byte] = []
   let mut pos = 0

@@ -26,7 +26,7 @@ test "example_25: image inpainting (watermark removal)" {
 test "example_26: Lucas-Kanade optical flow" {
   let frame1 = make_gradient_image(8, 8)
   let frame2 = make_gradient_image(8, 8)
-  let points : Array[(Int, Int)] = [(3, 3), (4, 4), (5, 5)]
+  let points : Array[(Int32, Int32)] = [(3, 3), (4, 4), (5, 5)]
   let flow = @img.lucas_kanade(frame1, frame2, points, window_size=5)
   assert_eq(flow.length(), points.length())
   for f in flow {

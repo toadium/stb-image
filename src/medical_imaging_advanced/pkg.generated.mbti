@@ -4,25 +4,25 @@ package "walkzzz/image/src/medical_imaging_advanced"
 // Values
 pub fn create_default_medical_config() -> MedicalImagingConfig
 
-pub fn detect_lesions(Array[Double], Int, Int, MedicalImagingConfig) -> Array[DetectedLesion]
+pub fn detect_lesions(Array[Double], Int32, Int32, MedicalImagingConfig) -> Array[DetectedLesion]
 
 pub fn extract_radiomics_features(Array[Double], Array[Array[Bool]], MedicalImagingConfig) -> RadiomicsFeatures
 
 pub fn medical_imaging_report_to_string(MedicalImagingTaskType, MedicalImagingConfig, String) -> String
 
-pub fn register_medical_images(Array[Double], Array[Double], Int, Int, MedicalImagingConfig) -> RegistrationResult
+pub fn register_medical_images(Array[Double], Array[Double], Int32, Int32, MedicalImagingConfig) -> RegistrationResult
 
-pub fn segment_medical_image(Array[Double], Int, Int, MedicalImagingConfig) -> SegmentationResult
+pub fn segment_medical_image(Array[Double], Int32, Int32, MedicalImagingConfig) -> SegmentationResult
 
-pub fn segment_organ(Array[Double], Int, Int, OrganType, MedicalImagingConfig) -> OrganSegmentationResult
+pub fn segment_organ(Array[Double], Int32, Int32, OrganType, MedicalImagingConfig) -> OrganSegmentationResult
 
 // Errors
 
 // Types and methods
 pub(all) struct DetectedLesion {
-  lesion_id : Int
+  lesion_id : Int32
   lesion_type : LesionType
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   segmentation_mask : Array[Array[Bool]]
   confidence : Double
   severity : Double
@@ -88,7 +88,7 @@ pub(all) struct MedicalImagingConfig {
   pretrained_model : String
   use_3d : Bool
   slice_thickness : Double
-  num_slices : Int
+  num_slices : Int32
   use_augmentation : Bool
 }
 
@@ -111,7 +111,7 @@ pub(all) struct OrganSegmentationResult {
   volume : Double
   surface_area : Double
   centroid : Array[Double]
-  bounding_box : Array[Int]
+  bounding_box : Array[Int32]
   dice_score : Double
   is_normal_size : Bool
   size_deviation : Double
@@ -139,17 +139,17 @@ pub(all) struct RadiomicsFeatures {
   shape_features : Array[Double]
   texture_features : Array[Double]
   wavelet_features : Array[Double]
-  num_features : Int
+  num_features : Int32
   feature_names : Array[String]
   feature_values : Array[Double]
 }
 
 pub(all) struct Reconstruction3DResult {
   vertices : Array[Array[Double]]
-  faces : Array[Array[Int]]
+  faces : Array[Array[Int32]]
   normals : Array[Array[Double]]
-  num_vertices : Int
-  num_faces : Int
+  num_vertices : Int32
+  num_faces : Int32
   volume : Double
   surface_area : Double
   reconstruction_method : String
@@ -165,12 +165,12 @@ pub(all) struct RegistrationResult {
   registration_time_s : Double
   registration_method : String
   is_converged : Bool
-  num_iterations : Int
+  num_iterations : Int32
 }
 
 pub(all) struct SegmentationResult {
-  segmentation_map : Array[Array[Int]]
-  num_classes : Int
+  segmentation_map : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   confidence_map : Array[Array[Double]]
   dice_scores : Array[Double]

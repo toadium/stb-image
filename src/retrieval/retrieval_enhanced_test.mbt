@@ -1,10 +1,10 @@
 // v192b retrieval 增强测试：边值 + 属性 + 枚举 + 数据库序列
 
 ///|
-fn ret_make_img(w : Int, h : Int, ch : Int) -> @types.Image {
+fn ret_make_img(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for i in 0..<(w * h * ch) {
-    let v : Int = i * 37 % 256
+    let v : Int32 = i * 37 % 256
     data.push(v.to_byte())
   }
   @types.Image::{

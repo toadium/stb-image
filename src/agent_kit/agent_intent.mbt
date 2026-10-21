@@ -8,7 +8,7 @@ pub(all) enum Intent {
   Blur
   Sharpen
   Grayscale
-  Resize(Int, Int)
+  Resize(Int32, Int32)
   Rotate
   FlipH
   FlipV

@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn cs_make_img(w : Int, h : Int, val : Int) -> @types.Image {
+fn cs_make_img(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn cs_make_img(w : Int, h : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn cs_make_img_data(w : Int, h : Int, data : Array[Int]) -> @types.Image {
+fn cs_make_img_data(w : Int32, h : Int32, data : Array[Int32]) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -483,7 +483,7 @@ test "complete_char_segmentation: custom char width bounds" {
 ///|
 test "complete_char_segmentation: two char pattern" {
   try {
-    let data : Array[Int] = Array::make(64 * 16, 0)
+    let data : Array[Int32] = Array::make(64 * 16, 0)
     for y in 2..<14 {
       for x in 4..<16 {
         data[y * 64 + x] = 255

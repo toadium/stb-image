@@ -52,8 +52,8 @@ pub(all) struct RegistrationResultAdvanced {
   mutual_information : Double
   rmse : Double
   processing_time_ms : Double
-  num_feature_points : Int
-  num_inliers : Int
+  num_feature_points : Int32
+  num_inliers : Int32
 }
 
 ///|
@@ -61,10 +61,10 @@ pub(all) struct RegistrationResultAdvanced {
 pub(all) struct RegistrationConfigAdvanced {
   algorithm : RegistrationAlgorithm
   transform_type : TransformType
-  max_iterations : Int
+  max_iterations : Int32
   convergence_threshold : Double
-  pyramid_levels : Int
-  search_radius : Int
+  pyramid_levels : Int32
+  search_radius : Int32
   use_multiresolution : Bool
   use_robust_estimation : Bool
 }
@@ -94,8 +94,8 @@ pub(all) struct FeatureMatch {
 pub(all) struct TransformMatrix {
   matrix : Array[Double]
   transform_type : TransformType
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
 }
 
 ///|
@@ -201,8 +201,8 @@ pub fn phase_correlation_registration(
 /// 应用平移变换
 pub fn apply_translation(
   img : @types.Image,
-  dx : Int,
-  dy : Int,
+  dx : Int32,
+  dy : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -280,7 +280,7 @@ pub fn calculate_mutual_information(
   let bins = 64
 
   // 联合直方图
-  let joint_hist : Array[Int] = []
+  let joint_hist : Array[Int32] = []
   for _ in 0..<(bins * bins) {
     joint_hist.push(0)
   }

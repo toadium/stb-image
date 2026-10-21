@@ -4,23 +4,23 @@
 ///|
 /// 检测框
 pub(all) struct BoundingBox {
-  x : Int // 左上角 x
-  y : Int // 左上角 y
-  width : Int // 宽度
-  height : Int // 高度
+  x : Int32 // 左上角 x
+  y : Int32 // 左上角 y
+  width : Int32 // 宽度
+  height : Int32 // 高度
   score : Double // 置信度
-  class_id : Int // 类别 ID
+  class_id : Int32 // 类别 ID
 }
 
 ///|
 /// 创建检测框
 pub fn bbox_new(
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  score? : Double = 0.0,
-  class_id? : Int = 0,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  score~ : Double = 0.0,
+  class_id~ : Int32 = 0,
 ) -> BoundingBox raise @types.LoadError {
   // 输入验证
   if width <= 0 {
@@ -80,7 +80,7 @@ pub fn bbox_iou(
 /// NMS 非极大值抑制
 pub fn nms(
   boxes : Array[BoundingBox],
-  iou_threshold? : Double = 0.5,
+  iou_threshold~ : Double = 0.5,
 ) -> Array[BoundingBox] raise @types.LoadError {
   // 输入验证
   if boxes.length() == 0 {

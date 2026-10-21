@@ -6,9 +6,9 @@
 /// 矢量场：2D 矢量场，data 为行主序 Float 数组，长度 = width * height * dim。
 /// Vector field: 2D vector field, data is row-major, length = width * height * dim.
 pub(all) struct VectorField {
-  width : Int
-  height : Int
-  dim : Int
+  width : Int32
+  height : Int32
+  dim : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
 
@@ -22,9 +22,9 @@ pub extend VectorField with Eq::{not_equal, equal}
 /// 创建矢量场，数据长度必须等于 width * height * dim。
 /// Create a vector field; data length must equal width * height * dim.
 pub fn VectorField::make(
-  width : Int,
-  height : Int,
-  dim : Int,
+  width : Int32,
+  height : Int32,
+  dim : Int32,
   data : Array[Float],
 ) -> VectorField raise @types.LoadError {
   if width <= 0 || height <= 0 || dim <= 0 {
@@ -44,9 +44,9 @@ pub fn VectorField::make(
 /// 创建全零矢量场。
 /// Create an all-zero vector field.
 pub fn VectorField::zeros(
-  width : Int,
-  height : Int,
-  dim : Int,
+  width : Int32,
+  height : Int32,
+  dim : Int32,
 ) -> VectorField raise @types.LoadError {
   if width <= 0 || height <= 0 || dim <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -61,8 +61,8 @@ pub fn VectorField::zeros(
 /// Evaluate the vector at (x, y); returns zero vector for out-of-bounds.
 pub fn VectorField::evaluate(
   self : VectorField,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
 ) -> Array[Float] {
   if x < 0 || x >= self.width || y < 0 || y >= self.height {
     return Array::make(self.dim, 0.0F)
@@ -80,9 +80,9 @@ pub fn VectorField::evaluate(
 /// Evaluate a single component k at (x, y); returns 0 for out-of-bounds.
 pub fn VectorField::evaluate_component(
   self : VectorField,
-  x : Int,
-  y : Int,
-  k : Int,
+  x : Int32,
+  y : Int32,
+  k : Int32,
 ) -> Float {
   if x < 0 ||
     x >= self.width ||
@@ -100,9 +100,9 @@ pub fn VectorField::evaluate_component(
 /// Evaluate a single component with clamped boundary.
 pub fn VectorField::evaluate_component_clamped(
   self : VectorField,
-  x : Int,
-  y : Int,
-  k : Int,
+  x : Int32,
+  y : Int32,
+  k : Int32,
 ) -> Float {
   let cx = x.clamp(min=0, max=self.width - 1)
   let cy = y.clamp(min=0, max=self.height - 1)
@@ -115,9 +115,9 @@ pub fn VectorField::evaluate_component_clamped(
 /// Set component k at (x, y); out-of-bounds is ignored.
 pub fn VectorField::set_component(
   self : VectorField,
-  x : Int,
-  y : Int,
-  k : Int,
+  x : Int32,
+  y : Int32,
+  k : Int32,
   value : Float,
 ) -> Unit {
   if x < 0 ||

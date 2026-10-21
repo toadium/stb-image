@@ -3,18 +3,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_gabor(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_gabor(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_gabor(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_gabor(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_gabor(data : Bytes, offset : Int) -> Float {
+fn read_float_le_gabor(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -24,7 +24,7 @@ fn read_float_le_gabor(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_gabor(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_gabor(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -33,7 +33,7 @@ fn write_f32_le_gabor(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_gabor(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_gabor(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -122,12 +122,12 @@ fn img8_to_imgf_gabor(img : @types.Image) -> @types.ImageF {
 /// 16-bit Gabor 滤波。
 pub fn gabor_filter_16(
   img : @types.Image16,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
   theta : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -169,12 +169,12 @@ pub fn gabor_filter_16(
 /// float Gabor 滤波。
 pub fn gabor_filter_f(
   img : @types.ImageF,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
   theta : Float,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
-  phi? : Float = 0.0F,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
+  phi~ : Float = 0.0F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -216,11 +216,11 @@ pub fn gabor_filter_f(
 /// 16-bit Gabor 滤波器组。
 pub fn gabor_filter_bank_16(
   img : @types.Image16,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -276,11 +276,11 @@ pub fn gabor_filter_bank_16(
 /// float Gabor 滤波器组。
 pub fn gabor_filter_bank_f(
   img : @types.ImageF,
-  ksize : Int,
+  ksize : Int32,
   sigma : Float,
-  num_orientations? : Int = 4,
-  lambda? : Float = 10.0F,
-  gamma? : Float = 0.5F,
+  num_orientations~ : Int32 = 4,
+  lambda~ : Float = 10.0F,
+  gamma~ : Float = 0.5F,
 ) -> @types.ImageF raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -337,7 +337,7 @@ pub fn gabor_filter_bank_f(
 pub fn template_match_16(
   img : @types.Image16,
   template : @types.Image16,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -399,7 +399,7 @@ pub fn template_match_16(
 pub fn template_match_f(
   img : @types.ImageF,
   template : @types.ImageF,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -461,7 +461,7 @@ pub fn template_match_f(
 pub fn template_match_best_16(
   img : @types.Image16,
   template : @types.Image16,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> TemplateMatchResult? raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -523,7 +523,7 @@ pub fn template_match_best_16(
 pub fn template_match_best_f(
   img : @types.ImageF,
   template : @types.ImageF,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> TemplateMatchResult? raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

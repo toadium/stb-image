@@ -38,8 +38,8 @@ pub extend CoverageGap with Eq::{not_equal, equal}
 /// Coverage gap report.
 pub(all) struct CoverageGapReport {
   gaps : Array[CoverageGap]
-  total_gaps : Int
-  untested_count : Int
+  total_gaps : Int32
+  untested_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -52,7 +52,7 @@ pub extend CoverageGapReport with Eq::{not_equal, equal}
 ///|
 /// 计算单算子覆盖百分比。
 /// Calculate coverage percentage for a single op.
-pub fn coverage_percentage(op : @imgir.IROp) -> Int {
+pub fn coverage_percentage(op : @imgir.IROp) -> Int32 {
   let degs = detect_degradation(op)
   let tests = evolve_test_suite([op])
   let base_coverage = if tests.length() >= 4 {

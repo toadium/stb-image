@@ -43,12 +43,12 @@ pub extend OrganSegMethod with Eq::{not_equal, equal}
 /// 分割结果。
 /// Segmentation result.
 pub(all) struct OrganSegResult {
-  mask : Array[Int]
+  mask : Array[Int32]
   organ : OrganType
   seg_method : OrganSegMethod
-  volume : Int
-  width : Int
-  height : Int
+  volume : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -62,14 +62,14 @@ pub extend OrganSegResult with Eq::{not_equal, equal}
 /// Region growing segmentation.
 pub fn organ_region_growing(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  seed_x : Int,
-  seed_y : Int,
+  width : Int32,
+  height : Int32,
+  seed_x : Int32,
+  seed_y : Int32,
   threshold : Double,
-) -> Array[Int] {
+) -> Array[Int32] {
   let n = width * height
-  let mask : Array[Int] = []
+  let mask : Array[Int32] = []
   for _ in 0..<n {
     mask.push(0)
   }
@@ -79,7 +79,7 @@ pub fn organ_region_growing(
   }
   let seed_val = if seed_idx < image.length() { image[seed_idx] } else { 0.0 }
   mask[seed_idx] = 1
-  let queue : Array[Int] = []
+  let queue : Array[Int32] = []
   queue.push(seed_idx)
   let mut head = 0
   while head < queue.length() {
@@ -114,9 +114,9 @@ pub fn organ_region_growing(
 /// Level set segmentation (simplified).
 pub fn organ_level_set(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  iterations : Int,
+  width : Int32,
+  height : Int32,
+  iterations : Int32,
   curvature_weight : Double,
 ) -> Array[Double] {
   let n = width * height
@@ -162,11 +162,11 @@ pub fn organ_level_set(
 pub fn organ_atlas_based(
   image : Array[Double],
   atlas : Array[Double],
-  atlas_mask : Array[Int],
-  width : Int,
-  height : Int,
-) -> Array[Int] {
-  let result : Array[Int] = []
+  atlas_mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+) -> Array[Int32] {
+  let result : Array[Int32] = []
   let n = width * height
   for i in 0..<n {
     let img_val = if i < image.length() { image[i] } else { 0.0 }
@@ -185,7 +185,7 @@ pub fn organ_atlas_based(
 ///|
 /// 计算分割体积。
 /// Compute segmentation volume.
-pub fn organ_compute_volume(mask : Array[Int]) -> Int {
+pub fn organ_compute_volume(mask : Array[Int32]) -> Int32 {
   let mut volume = 0
   for i in 0..<mask.length() {
     if mask[i] > 0 {
@@ -198,7 +198,10 @@ pub fn organ_compute_volume(mask : Array[Int]) -> Int {
 ///|
 /// 计算戴斯系数。
 /// Compute Dice coefficient.
-pub fn organ_dice_coefficient(mask1 : Array[Int], mask2 : Array[Int]) -> Double {
+pub fn organ_dice_coefficient(
+  mask1 : Array[Int32],
+  mask2 : Array[Int32],
+) -> Double {
   let mut intersection = 0.0
   let mut sum1 = 0.0
   let mut sum2 = 0.0
@@ -228,11 +231,11 @@ pub fn organ_dice_coefficient(mask1 : Array[Int], mask2 : Array[Int]) -> Double 
 /// 形态学开运算。
 /// Morphological opening.
 pub fn organ_morph_open(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
   let eroded = organ_morph_erode(mask, width, height, radius)
   organ_morph_dilate(eroded, width, height, radius)
 }
@@ -241,12 +244,12 @@ pub fn organ_morph_open(
 /// 形态学腐蚀。
 /// Morphological erosion.
 pub fn organ_morph_erode(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
-  let result : Array[Int] = []
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
+  let result : Array[Int32] = []
   for y in 0..<height {
     for x in 0..<width {
       let mut all_set = true
@@ -274,12 +277,12 @@ pub fn organ_morph_erode(
 /// 形态学膨胀。
 /// Morphological dilation.
 pub fn organ_morph_dilate(
-  mask : Array[Int],
-  width : Int,
-  height : Int,
-  radius : Int,
-) -> Array[Int] {
-  let result : Array[Int] = []
+  mask : Array[Int32],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Int32] {
+  let result : Array[Int32] = []
   for y in 0..<height {
     for x in 0..<width {
       let mut any_set = false

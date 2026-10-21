@@ -6,7 +6,7 @@
 // QOI 哈希函数: (r*3 + g*5 + b*7 + a*11) % 64
 
 ///|
-fn qoi_hash(r : Int, g : Int, b : Int, a : Int) -> Int {
+fn qoi_hash(r : Int32, g : Int32, b : Int32, a : Int32) -> Int32 {
   (r * 3 + g * 5 + b * 7 + a * 11) % 64
 }
 
@@ -40,10 +40,10 @@ pub fn decode_qoi_pure(data : Bytes) -> @types.Image raise @types.LoadError {
   @types.check_dims(width, height, out_channels)
   let pixel_count = width * height
   let pixels : Array[Byte] = Array::make(pixel_count * out_channels, b'\x00')
-  let index_r : Array[Int] = Array::make(64, 0)
-  let index_g : Array[Int] = Array::make(64, 0)
-  let index_b : Array[Int] = Array::make(64, 0)
-  let index_a : Array[Int] = Array::make(64, 0)
+  let index_r : Array[Int32] = Array::make(64, 0)
+  let index_g : Array[Int32] = Array::make(64, 0)
+  let index_b : Array[Int32] = Array::make(64, 0)
+  let index_a : Array[Int32] = Array::make(64, 0)
   let px_r = Ref(0)
   let px_g = Ref(0)
   let px_b = Ref(0)

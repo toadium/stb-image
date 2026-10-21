@@ -7,9 +7,9 @@
 pub(all) struct Phase4Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -24,9 +24,9 @@ pub extend Phase4Capability with Eq::{not_equal, equal}
 /// Phase 4 aggregate report.
 pub(all) struct Phase4Report {
   capabilities : Array[Phase4Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 
@@ -95,7 +95,7 @@ pub fn phase4_capabilities() -> Array[Phase4Capability] {
 ///|
 /// Phase 4 总类型数。
 /// Phase 4 total types.
-pub fn phase4_total_types() -> Int {
+pub fn phase4_total_types() -> Int32 {
   let mut sum = 0
   for c in phase4_capabilities() {
     sum = sum + c.types
@@ -106,7 +106,7 @@ pub fn phase4_total_types() -> Int {
 ///|
 /// Phase 4 总函数数。
 /// Phase 4 total functions.
-pub fn phase4_total_functions() -> Int {
+pub fn phase4_total_functions() -> Int32 {
   let mut sum = 0
   for c in phase4_capabilities() {
     sum = sum + c.functions
@@ -117,7 +117,7 @@ pub fn phase4_total_functions() -> Int {
 ///|
 /// Phase 4 总测试数。
 /// Phase 4 total tests.
-pub fn phase4_total_tests() -> Int {
+pub fn phase4_total_tests() -> Int32 {
   let mut sum = 0
   for c in phase4_capabilities() {
     sum = sum + c.tests

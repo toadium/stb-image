@@ -19,11 +19,11 @@ pub fn field_divergence(VectorField) -> ScalarField raise @types.LoadError
 
 pub fn field_gradient(ScalarField) -> VectorField raise @types.LoadError
 
-pub fn field_histogram(ScalarField, Float, Float, Int) -> Array[Int] raise @types.LoadError
+pub fn field_histogram(ScalarField, Float, Float, Int32) -> Array[Int32] raise @types.LoadError
 
 pub fn field_integrate(ScalarField) -> Float
 
-pub fn field_integrate_region(ScalarField, Int, Int, Int, Int) -> Float
+pub fn field_integrate_region(ScalarField, Int32, Int32, Int32, Int32) -> Float
 
 pub fn field_isosurface(ScalarField, Float, Float) -> ScalarField raise @types.LoadError
 
@@ -53,57 +53,57 @@ pub fn vector_field_to_image(VectorField) -> @types.Image
 
 // Types and methods
 pub(all) struct ScalarField {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
-pub fn ScalarField::constant(Int, Int, Float) -> Self raise @types.LoadError
+pub fn ScalarField::constant(Int32, Int32, Float) -> Self raise @types.LoadError
 pub fn ScalarField::equal(Self, Self) -> Bool
-pub fn ScalarField::evaluate(Self, Int, Int) -> Float
-pub fn ScalarField::evaluate_clamped(Self, Int, Int) -> Float
-pub fn ScalarField::make(Int, Int, Array[Float]) -> Self raise @types.LoadError
+pub fn ScalarField::evaluate(Self, Int32, Int32) -> Float
+pub fn ScalarField::evaluate_clamped(Self, Int32, Int32) -> Float
+pub fn ScalarField::make(Int32, Int32, Array[Float]) -> Self raise @types.LoadError
 pub fn ScalarField::max_value(Self) -> Float
 pub fn ScalarField::min_value(Self) -> Float
 pub fn ScalarField::not_equal(Self, Self) -> Bool
-pub fn ScalarField::set(Self, Int, Int, Float) -> Unit
-pub fn ScalarField::size(Self) -> Int
+pub fn ScalarField::set(Self, Int32, Int32, Float) -> Unit
+pub fn ScalarField::size(Self) -> Int32
 pub fn ScalarField::to_repr(Self) -> @debug.Repr
-pub fn ScalarField::zeros(Int, Int) -> Self raise @types.LoadError
+pub fn ScalarField::zeros(Int32, Int32) -> Self raise @types.LoadError
 
 pub(all) struct TensorField {
-  width : Int
-  height : Int
-  rows : Int
-  cols : Int
+  width : Int32
+  height : Int32
+  rows : Int32
+  cols : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
 pub fn TensorField::eigenvalues_2x2(Self) -> VectorField raise @types.LoadError
 pub fn TensorField::equal(Self, Self) -> Bool
-pub fn TensorField::evaluate(Self, Int, Int, Int, Int) -> Float
-pub fn TensorField::evaluate_clamped(Self, Int, Int, Int, Int) -> Float
-pub fn TensorField::make(Int, Int, Int, Int, Array[Float]) -> Self raise @types.LoadError
+pub fn TensorField::evaluate(Self, Int32, Int32, Int32, Int32) -> Float
+pub fn TensorField::evaluate_clamped(Self, Int32, Int32, Int32, Int32) -> Float
+pub fn TensorField::make(Int32, Int32, Int32, Int32, Array[Float]) -> Self raise @types.LoadError
 pub fn TensorField::not_equal(Self, Self) -> Bool
-pub fn TensorField::set(Self, Int, Int, Int, Int, Float) -> Unit
+pub fn TensorField::set(Self, Int32, Int32, Int32, Int32, Float) -> Unit
 pub fn TensorField::structure_tensor(VectorField) -> Self raise @types.LoadError
 pub fn TensorField::to_repr(Self) -> @debug.Repr
-pub fn TensorField::zeros(Int, Int, Int, Int) -> Self raise @types.LoadError
+pub fn TensorField::zeros(Int32, Int32, Int32, Int32) -> Self raise @types.LoadError
 
 pub(all) struct VectorField {
-  width : Int
-  height : Int
-  dim : Int
+  width : Int32
+  height : Int32
+  dim : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
 pub fn VectorField::equal(Self, Self) -> Bool
-pub fn VectorField::evaluate(Self, Int, Int) -> Array[Float]
-pub fn VectorField::evaluate_component(Self, Int, Int, Int) -> Float
-pub fn VectorField::evaluate_component_clamped(Self, Int, Int, Int) -> Float
+pub fn VectorField::evaluate(Self, Int32, Int32) -> Array[Float]
+pub fn VectorField::evaluate_component(Self, Int32, Int32, Int32) -> Float
+pub fn VectorField::evaluate_component_clamped(Self, Int32, Int32, Int32) -> Float
 pub fn VectorField::magnitude(Self) -> ScalarField raise @types.LoadError
-pub fn VectorField::make(Int, Int, Int, Array[Float]) -> Self raise @types.LoadError
+pub fn VectorField::make(Int32, Int32, Int32, Array[Float]) -> Self raise @types.LoadError
 pub fn VectorField::not_equal(Self, Self) -> Bool
-pub fn VectorField::set_component(Self, Int, Int, Int, Float) -> Unit
+pub fn VectorField::set_component(Self, Int32, Int32, Int32, Float) -> Unit
 pub fn VectorField::to_repr(Self) -> @debug.Repr
-pub fn VectorField::zeros(Int, Int, Int) -> Self raise @types.LoadError
+pub fn VectorField::zeros(Int32, Int32, Int32) -> Self raise @types.LoadError
 
 // Type aliases
 

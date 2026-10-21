@@ -56,7 +56,10 @@ test "segment_by_connected_components: 基本分割" {
 ///|
 test "merge_small_segments: 基本合并" {
   try {
-    let segments : Array[(Int, Int, Int, Int)] = [(0, 0, 2, 8), (3, 0, 2, 8)]
+    let segments : Array[(Int32, Int32, Int32, Int32)] = [
+      (0, 0, 2, 8),
+      (3, 0, 2, 8),
+    ]
     let merged = @ocr.merge_small_segments(segments, 3, 5)
     assert_true(merged.length() >= 0)
   } catch {
@@ -67,7 +70,10 @@ test "merge_small_segments: 基本合并" {
 ///|
 test "filter_noise_segments: 基本过滤" {
   try {
-    let segments : Array[(Int, Int, Int, Int)] = [(0, 0, 2, 2), (3, 0, 4, 8)]
+    let segments : Array[(Int32, Int32, Int32, Int32)] = [
+      (0, 0, 2, 2),
+      (3, 0, 4, 8),
+    ]
     let filtered = @ocr.filter_noise_segments(segments, 8, 8)
     assert_true(filtered.length() >= 0)
   } catch {

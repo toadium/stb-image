@@ -38,19 +38,19 @@ pub(all) struct UIDetectionResult {
   has_window_border : Bool
   has_toolbar : Bool
   has_button_like_elements : Bool
-  ui_element_count : Int
+  ui_element_count : Int32
   ui_area_ratio : Double
-  horizontal_line_count : Int
-  vertical_line_count : Int
+  horizontal_line_count : Int32
+  vertical_line_count : Int32
   ui_indicator : Double
 }
 
 ///|
 /// 文字检测结果
 pub(all) struct TextDetectionResult {
-  text_area_count : Int
+  text_area_count : Int32
   text_area_ratio : Double
-  dense_edge_region_count : Int
+  dense_edge_region_count : Int32
   small_edge_density : Double
   text_like_region_ratio : Double
   text_indicator : Double
@@ -62,8 +62,8 @@ pub(all) struct GeometryAnalysisResult {
   horizontal_edge_ratio : Double
   vertical_edge_ratio : Double
   diagonal_edge_ratio : Double
-  rectangle_like_region_count : Int
-  straight_line_count : Int
+  rectangle_like_region_count : Int32
+  straight_line_count : Int32
   geometry_regularity : Double
   geometry_indicator : Double
 }
@@ -71,11 +71,11 @@ pub(all) struct GeometryAnalysisResult {
 ///|
 /// 颜色量化结果
 pub(all) struct ColorQuantizationResult {
-  unique_color_count : Int
+  unique_color_count : Int32
   color_quantization_level : Double
   top_color_ratio : Double
   top_10_color_ratio : Double
-  color_palette_size : Int
+  color_palette_size : Int32
   color_quantization_indicator : Double
 }
 
@@ -471,7 +471,7 @@ pub fn analyze_color_quantization(
   let total = w * h
 
   // 统计唯一颜色数量（量化到 64 级）
-  let color_histogram : Array[Int] = []
+  let color_histogram : Array[Int32] = []
   for _ in 0..<64 {
     color_histogram.push(0)
   }
@@ -488,7 +488,7 @@ pub fn analyze_color_quantization(
   }
 
   // 顶部颜色比例
-  let sorted_colors : Array[Int] = []
+  let sorted_colors : Array[Int32] = []
   for i in 0..<64 {
     sorted_colors.push(color_histogram[i])
   }
@@ -676,7 +676,7 @@ pub fn analyze_pixel_distribution(
   let total = w * h
 
   // 计算像素值分布的熵
-  let histogram : Array[Int] = []
+  let histogram : Array[Int32] = []
   for _ in 0..<256 {
     histogram.push(0)
   }

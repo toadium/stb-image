@@ -1,31 +1,31 @@
 ///|
 /// AVIF 扩展信息（包含色彩空间、旋转、编码配置等）
 pub struct AvifInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  num_channels : Int32
   has_alpha : Bool
-  rotation : Int
-  mirror : Int
+  rotation : Int32
+  mirror : Int32
   color_type : String
-  color_primaries : Int
-  transfer_characteristics : Int
-  matrix_coefficients : Int
+  color_primaries : Int32
+  transfer_characteristics : Int32
+  matrix_coefficients : Int32
   full_range : Bool
-  av1_profile : Int
-  av1_level : Int
-  av1_tier : Int
+  av1_profile : Int32
+  av1_level : Int32
+  av1_tier : Int32
   av1_monochrome : Bool
 }
 
 ///|
-fn read_4cc(data : Bytes, offset : Int) -> String {
+fn read_4cc(data : Bytes, offset : Int32) -> String {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
   let b3 = data[offset + 3].to_int()
-  let s : Array[Int] = [b0, b1, b2, b3]
+  let s : Array[Int32] = [b0, b1, b2, b3]
   let buf : Array[String] = []
   for c in s {
     match c.to_char() {
@@ -37,7 +37,7 @@ fn read_4cc(data : Bytes, offset : Int) -> String {
 }
 
 ///|
-fn box_type_str(data : Bytes, offset : Int) -> String {
+fn box_type_str(data : Bytes, offset : Int32) -> String {
   read_4cc(data, offset + 4)
 }
 
@@ -144,9 +144,9 @@ pub fn avif_info_extended(
 /// 递归扫描 ISOBMFF box 结构
 fn scan_boxes(
   data : Bytes,
-  start : Int,
-  end : Int,
-  callback : (Int, Int, String) -> Unit,
+  start : Int32,
+  end : Int32,
+  callback : (Int32, Int32, String) -> Unit,
 ) -> Unit {
   let mut offset = start
   while offset + 8 <= end {

@@ -13,7 +13,7 @@ fn oe2_zero_w() -> @types.Image {
 }
 
 ///|
-fn oe2_rgb(w : Int, h : Int) -> @types.Image {
+fn oe2_rgb(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -33,7 +33,7 @@ fn oe2_mismatch() -> @types.Image {
 }
 
 ///|
-fn oe2_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn oe2_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

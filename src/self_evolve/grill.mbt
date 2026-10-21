@@ -100,7 +100,7 @@ fn is_numeric_kind(k : DegradationKind) -> Bool {
 // 统计数值类退化数
 
 ///|
-fn count_numeric_degradations(degs : Array[DegradationCase]) -> Int {
+fn count_numeric_degradations(degs : Array[DegradationCase]) -> Int32 {
   let mut count = 0
   for d in degs {
     if is_numeric_kind(d.kind) {
@@ -113,7 +113,7 @@ fn count_numeric_degradations(degs : Array[DegradationCase]) -> Int {
 // 统计除零退化数（退化几何）
 
 ///|
-fn count_divzero_degradations(degs : Array[DegradationCase]) -> Int {
+fn count_divzero_degradations(degs : Array[DegradationCase]) -> Int32 {
   let mut count = 0
   for d in degs {
     if d.kind == DivisionByZero {
@@ -126,7 +126,7 @@ fn count_divzero_degradations(degs : Array[DegradationCase]) -> Int {
 // 统计场间断违规数（FieldClamp lo>hi / FieldMask 极端阈值）
 
 ///|
-fn count_field_discontinuity(ops : Array[@imgir.IROp]) -> Int {
+fn count_field_discontinuity(ops : Array[@imgir.IROp]) -> Int32 {
   let mut count = 0
   for op in ops {
     match op {
@@ -144,7 +144,7 @@ fn count_field_discontinuity(ops : Array[@imgir.IROp]) -> Int {
 // 统计时空拓扑违规数（STSnapshot/STInterpolate t 越界 [0,1]）
 
 ///|
-fn count_spatiotemporal_violation(ops : Array[@imgir.IROp]) -> Int {
+fn count_spatiotemporal_violation(ops : Array[@imgir.IROp]) -> Int32 {
   let mut count = 0
   for op in ops {
     match op {
@@ -261,7 +261,7 @@ pub fn GrillReport::all_passed(self : GrillReport) -> Bool {
 ///|
 /// 失败规则数。
 /// Number of failed rules.
-pub fn GrillReport::failed_count(self : GrillReport) -> Int {
+pub fn GrillReport::failed_count(self : GrillReport) -> Int32 {
   let mut count = 0
   for r in self.results {
     if !r.passed {
@@ -274,6 +274,6 @@ pub fn GrillReport::failed_count(self : GrillReport) -> Int {
 ///|
 /// 通过规则数。
 /// Number of passed rules.
-pub fn GrillReport::passed_count(self : GrillReport) -> Int {
+pub fn GrillReport::passed_count(self : GrillReport) -> Int32 {
   self.results.length() - self.failed_count()
 }

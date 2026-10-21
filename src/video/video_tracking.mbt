@@ -13,8 +13,8 @@ pub(all) struct OpticalFlowVector {
 ///|
 /// 光流场
 pub(all) struct OpticalFlowField {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   vectors : Array[OpticalFlowVector]
   average_magnitude : Double
   max_magnitude : Double
@@ -24,31 +24,31 @@ pub(all) struct OpticalFlowField {
 ///|
 /// 跟踪目标
 pub(all) struct TrackedObject {
-  id : Int
+  id : Int32
   label : String
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   center_x : Double
   center_y : Double
   velocity_x : Double
   velocity_y : Double
   confidence : Double
-  age : Int
-  visible_count : Int
-  invisible_count : Int
+  age : Int32
+  visible_count : Int32
+  invisible_count : Int32
   color_histogram : Array[Double]
-  trajectory : Array[(Int, Int)]
+  trajectory : Array[(Int32, Int32)]
 }
 
 ///|
 /// 跟踪结果
 pub(all) struct TrackingResult {
-  frame_index : Int
+  frame_index : Int32
   objects : Array[TrackedObject]
   tracking_time_ms : Double
-  num_objects : Int
+  num_objects : Int32
 }
 
 ///|
@@ -77,18 +77,18 @@ pub extend ActionType with Eq::{not_equal, equal}
 pub(all) struct ActionRecognitionResult {
   action_type : ActionType
   confidence : Double
-  start_frame : Int
-  end_frame : Int
-  duration_frames : Int
+  start_frame : Int32
+  end_frame : Int32
+  duration_frames : Int32
   motion_energy : Double
   direction : Double
-  key_points : Array[(Int, Int)]
+  key_points : Array[(Int32, Int32)]
 }
 
 ///|
 /// 视频稳定配置
 pub(all) struct VideoStabilizationConfig {
-  smoothing_radius : Int
+  smoothing_radius : Int32
   max_correction : Double
   crop_ratio : Double
   enable_rotation_correction : Bool
@@ -111,7 +111,7 @@ pub extend KeyframeType with Eq::{not_equal, equal}
 ///|
 /// 关键帧
 pub(all) struct Keyframe {
-  frame_index : Int
+  frame_index : Int32
   timestamp_ms : Double
   keyframe_type : KeyframeType
   score : Double
@@ -121,13 +121,13 @@ pub(all) struct Keyframe {
 ///|
 /// 视频摘要
 pub(all) struct VideoSummary {
-  total_frames : Int
+  total_frames : Int32
   duration_ms : Double
   keyframes : Array[Keyframe]
-  num_keyframes : Int
+  num_keyframes : Int32
   average_motion : Double
-  motion_peaks : Array[Int]
-  scene_changes : Array[Int]
+  motion_peaks : Array[Int32]
+  scene_changes : Array[Int32]
   summary_text : String
 }
 
@@ -148,7 +148,7 @@ pub fn create_default_stabilization_config() -> VideoStabilizationConfig {
 pub fn compute_frame_difference(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  threshold? : Double = 30.0,
+  threshold~ : Double = 30.0,
 ) -> Double {
   let w = frame1.width
   let h = frame1.height
@@ -179,8 +179,8 @@ pub fn compute_frame_difference(
 pub fn compute_optical_flow(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  block_size? : Int = 8,
-  search_range? : Int = 4,
+  block_size~ : Int32 = 8,
+  search_range~ : Int32 = 4,
 ) -> OpticalFlowField {
   let w = frame1.width
   let h = frame1.height
@@ -282,10 +282,10 @@ pub fn compute_optical_flow(
 /// 目标跟踪初始化
 pub fn initialize_tracking(
   first_frame : @types.Image,
-  roi_x : Int,
-  roi_y : Int,
-  roi_width : Int,
-  roi_height : Int,
+  roi_x : Int32,
+  roi_y : Int32,
+  roi_width : Int32,
+  roi_height : Int32,
   label : String,
 ) -> TrackedObject {
   // 计算颜色直方图
@@ -318,7 +318,7 @@ pub fn initialize_tracking(
     }
   }
 
-  let trajectory : Array[(Int, Int)] = [
+  let trajectory : Array[(Int32, Int32)] = [
     (roi_x + roi_width / 2, roi_y + roi_height / 2),
   ]
 
@@ -420,7 +420,7 @@ pub fn update_tracking(
   new_trajectory.push((best_x + obj.width / 2, best_y + obj.height / 2))
   if new_trajectory.length() > 100 {
     // 保留最近 100 个点
-    let trimmed : Array[(Int, Int)] = []
+    let trimmed : Array[(Int32, Int32)] = []
     for i in (new_trajectory.length() - 100)..<new_trajectory.length() {
       trimmed.push(new_trajectory[i])
     }
@@ -451,8 +451,8 @@ pub fn update_tracking(
 /// 动作识别（基于运动特征）
 pub fn recognize_action(
   frames : Array[@types.Image],
-  start_frame : Int,
-  end_frame : Int,
+  start_frame : Int32,
+  end_frame : Int32,
 ) -> ActionRecognitionResult {
   if frames.length() < 2 || end_frame <= start_frame {
     return ActionRecognitionResult::{
@@ -521,7 +521,7 @@ pub fn recognize_action(
     (ActionType::Unknown, 0.3)
   }
 
-  let key_points : Array[(Int, Int)] = []
+  let key_points : Array[(Int32, Int32)] = []
 
   ActionRecognitionResult::{
     action_type,
@@ -540,7 +540,7 @@ pub fn recognize_action(
 pub fn detect_scene_change(
   frame1 : @types.Image,
   frame2 : @types.Image,
-  threshold? : Double = 0.3,
+  threshold~ : Double = 0.3,
 ) -> (Bool, Double) {
   let w = frame1.width
   let h = frame1.height
@@ -566,7 +566,7 @@ pub fn detect_scene_change(
 pub fn extract_keyframes(
   frames : Array[@types.Image],
   fps : Double,
-  method_type? : String = "auto",
+  method_type~ : String = "auto",
 ) -> Array[Keyframe] {
   ignore(method_type)
   let keyframes : Array[Keyframe] = []
@@ -646,8 +646,8 @@ pub fn generate_video_summary(
   let keyframes = extract_keyframes(frames, fps)
 
   // 计算运动能量序列
-  let motion_peaks : Array[Int] = []
-  let scene_changes : Array[Int] = []
+  let motion_peaks : Array[Int32] = []
+  let scene_changes : Array[Int32] = []
   let mut total_motion = 0.0
   let mut motion_count = 0
 

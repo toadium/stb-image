@@ -1,17 +1,17 @@
 ///|
 /// PSD 扩展信息（包含通道数、位深、颜色模式、压缩方式等）
 pub struct PsdInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  channel_count : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  channel_count : Int32
+  num_channels : Int32
   has_alpha : Bool
-  color_mode : Int
+  color_mode : Int32
   color_mode_name : String
-  compression : Int
+  compression : Int32
   compression_name : String
-  version : Int
+  version : Int32
 }
 
 ///|
@@ -29,7 +29,7 @@ pub fn is_psd_format(data : Bytes) -> Bool {
 }
 
 ///|
-fn psd_color_mode_name(m : Int) -> String {
+fn psd_color_mode_name(m : Int32) -> String {
   match m {
     0 => "Bitmap"
     1 => "Grayscale"
@@ -44,7 +44,7 @@ fn psd_color_mode_name(m : Int) -> String {
 }
 
 ///|
-fn psd_compression_name(c : Int) -> String {
+fn psd_compression_name(c : Int32) -> String {
   match c {
     0 => "Raw"
     1 => "RLE"

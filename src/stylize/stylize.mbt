@@ -4,11 +4,11 @@
 ///|
 /// 风格化配置
 pub(all) struct StylizeConfig {
-  oil_paint_radius : Int // 油画效果半径
-  oil_paint_intensity : Int // 油画色阶数
+  oil_paint_radius : Int32 // 油画效果半径
+  oil_paint_intensity : Int32 // 油画色阶数
   sketch_blend : Double // 素描混合比例
-  watercolor_blur : Int // 水彩模糊半径
-  cartoon_levels : Int // 卡通色阶数
+  watercolor_blur : Int32 // 水彩模糊半径
+  cartoon_levels : Int32 // 卡通色阶数
   cartoon_edge_threshold : Double // 卡通边缘阈值
 }
 
@@ -30,8 +30,8 @@ pub fn stylize_default_config() -> StylizeConfig {
 /// 基于颜色直方图的油画效果：在邻域内取出现频率最高的颜色
 pub fn oil_paint(
   img : @types.Image,
-  radius? : Int = 3,
-  intensity? : Int = 20,
+  radius~ : Int32 = 3,
+  intensity~ : Int32 = 20,
 ) -> @types.Image {
   let r = radius
   let levels = intensity
@@ -43,10 +43,10 @@ pub fn oil_paint(
   for y in 0..<h {
     for x in 0..<w {
       // 统计邻域内各颜色的出现频率
-      let bins : Array[Int] = Array::make(levels * levels * levels, 0)
-      let bin_r : Array[Int] = Array::make(levels * levels * levels, 0)
-      let bin_g : Array[Int] = Array::make(levels * levels * levels, 0)
-      let bin_b : Array[Int] = Array::make(levels * levels * levels, 0)
+      let bins : Array[Int32] = Array::make(levels * levels * levels, 0)
+      let bin_r : Array[Int32] = Array::make(levels * levels * levels, 0)
+      let bin_g : Array[Int32] = Array::make(levels * levels * levels, 0)
+      let bin_b : Array[Int32] = Array::make(levels * levels * levels, 0)
       for dy in -r..<(r + 1) {
         for dx in -r..<(r + 1) {
           let nx = x + dx
@@ -108,7 +108,7 @@ pub fn oil_paint(
 ///|
 /// 素描效果
 /// 基于灰度反色 + 颜色减淡混合的铅笔素描效果
-pub fn sketch(img : @types.Image, blend? : Double = 0.7) -> @types.Image {
+pub fn sketch(img : @types.Image, blend~ : Double = 0.7) -> @types.Image {
   let b = blend
   let w = img.width
   let h = img.height
@@ -169,9 +169,9 @@ pub fn sketch(img : @types.Image, blend? : Double = 0.7) -> @types.Image {
 /// 简单均值模糊
 fn simple_blur(
   input : Array[Byte],
-  w : Int,
-  h : Int,
-  radius : Int,
+  w : Int32,
+  h : Int32,
+  radius : Int32,
 ) -> Array[Byte] {
   let output : Array[Byte] = []
   for y in 0..<h {
@@ -203,7 +203,7 @@ fn simple_blur(
 ///|
 /// 水彩效果
 /// 基于模糊 + 颜色量化 + 边缘增强的水彩效果
-pub fn watercolor(img : @types.Image, blur_radius? : Int = 5) -> @types.Image {
+pub fn watercolor(img : @types.Image, blur_radius~ : Int32 = 5) -> @types.Image {
   let radius = blur_radius
   let w = img.width
   let h = img.height
@@ -244,8 +244,8 @@ pub fn watercolor(img : @types.Image, blur_radius? : Int = 5) -> @types.Image {
 /// 基于颜色量化 + 边缘检测的卡通效果
 pub fn cartoon(
   img : @types.Image,
-  levels? : Int = 8,
-  edge_threshold? : Double = 30.0,
+  levels~ : Int32 = 8,
+  edge_threshold~ : Double = 30.0,
 ) -> @types.Image {
   let lv = levels
   let et = edge_threshold

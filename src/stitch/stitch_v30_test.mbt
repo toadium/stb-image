@@ -1,7 +1,7 @@
 // v30.0.0 高级图像配准算法测试 — stitch 模块 8 函数
 
 ///|
-fn create_solid_st(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_st(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())
@@ -15,7 +15,7 @@ fn create_solid_st(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_st(w : Int, h : Int) -> @types.Image {
+fn create_gradient_st(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

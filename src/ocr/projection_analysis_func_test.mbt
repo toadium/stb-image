@@ -3,7 +3,7 @@
 // ===== 辅助函数 =====
 
 ///|
-fn proj_make_img(w : Int, h : Int, data : Array[Int]) -> @types.Image {
+fn proj_make_img(w : Int32, h : Int32, data : Array[Int32]) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -13,7 +13,7 @@ fn proj_make_img(w : Int, h : Int, data : Array[Int]) -> @types.Image {
 }
 
 ///|
-fn proj_uniform(w : Int, h : Int, val : Int) -> @types.Image {
+fn proj_uniform(w : Int32, h : Int32, val : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -24,10 +24,10 @@ fn proj_uniform(w : Int, h : Int, val : Int) -> @types.Image {
 
 ///|
 fn proj_make_text_line(
-  y_start : Int,
-  y_end : Int,
-  x_start : Int,
-  x_end : Int,
+  y_start : Int32,
+  y_end : Int32,
+  x_start : Int32,
+  x_end : Int32,
 ) -> @ocr.TextLineInfo {
   @ocr.TextLineInfo::{
     y_start,
@@ -43,10 +43,10 @@ fn proj_make_text_line(
 
 ///|
 fn proj_make_char_segment(
-  x_start : Int,
-  x_end : Int,
-  y_start : Int,
-  y_end : Int,
+  x_start : Int32,
+  x_end : Int32,
+  y_start : Int32,
+  y_end : Int32,
 ) -> @ocr.CharSegment {
   @ocr.CharSegment::{
     x_start,
@@ -138,7 +138,7 @@ test "horizontal_projection: all black returns full projection" {
 ///|
 test "horizontal_projection: alternating rows produce peaks and valleys" {
   try {
-    let data : Array[Int] = []
+    let data : Array[Int32] = []
     for y in 0..<8 {
       for _ in 0..<8 {
         if y % 2 == 0 {
@@ -312,7 +312,7 @@ test "detect_text_lines_projection: all white returns no lines" {
 ///|
 test "detect_text_lines_projection: single text row detected" {
   try {
-    let data : Array[Int] = Array::make(16 * 16, 0)
+    let data : Array[Int32] = Array::make(16 * 16, 0)
     for x in 0..<16 {
       data[5 * 16 + x] = 255
       data[6 * 16 + x] = 255
@@ -335,7 +335,7 @@ test "detect_text_lines_projection: single text row detected" {
 ///|
 test "detect_text_lines_projection: two text rows with gap" {
   try {
-    let data : Array[Int] = Array::make(20 * 20, 0)
+    let data : Array[Int32] = Array::make(20 * 20, 0)
     for x in 0..<20 {
       for y in [2, 3, 4, 5] {
         data[y * 20 + x] = 255
@@ -474,7 +474,7 @@ test "segment_chars_projection: all white returns no chars" {
 ///|
 test "segment_chars_projection: two chars with gap" {
   try {
-    let data : Array[Int] = Array::make(16 * 8, 0)
+    let data : Array[Int32] = Array::make(16 * 8, 0)
     for y in 0..<8 {
       for x in 1..<5 {
         data[y * 16 + x] = 255

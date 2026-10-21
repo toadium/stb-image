@@ -6,8 +6,8 @@
 /// Evolution cycle report.
 pub(all) struct EvolveCycleReport {
   pipeline_desc : String
-  original_op_count : Int
-  optimized_op_count : Int
+  original_op_count : Int32
+  optimized_op_count : Int32
   generated_tests : Array[TestCase]
   found_degradations : Array[DegradationCase]
   optimization_report : OptimizationReport
@@ -91,7 +91,7 @@ pub fn EvolveCycleReport::has_degradation_risk(
 ///|
 /// 闭环安全度（0-100，越高越安全）。
 /// Cycle safety score (0-100, higher is safer).
-pub fn EvolveCycleReport::safety_score(self : EvolveCycleReport) -> Int {
+pub fn EvolveCycleReport::safety_score(self : EvolveCycleReport) -> Int32 {
   let deg_penalty = self.found_degradations.length() * 10
 
   let mut severe_count = 0

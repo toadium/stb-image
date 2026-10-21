@@ -50,9 +50,9 @@ pub fn SymbolCoord::make(
   pkg~ : String,
   name~ : String,
   kind~ : SymbolKind,
-  signature? : String = "",
-  doc? : String = "",
-  keywords? : Array[String] = [],
+  signature~ : String = "",
+  doc~ : String = "",
+  keywords~ : Array[String] = [],
 ) -> SymbolCoord {
   { pkg, name, kind, signature, doc, keywords, }
 }
@@ -73,7 +73,7 @@ pub fn SymbolCoord::has_keyword(self : SymbolCoord, keyword : String) -> Bool {
 }
 
 ///|
-pub fn SymbolCoord::estimated_tokens(self : SymbolCoord) -> Int {
+pub fn SymbolCoord::estimated_tokens(self : SymbolCoord) -> Int32 {
   let name_tokens = self.name.length() / 4 + 1
   let sig_tokens = self.signature.length() / 4 + 1
   let doc_tokens = self.doc.length() / 4 + 1

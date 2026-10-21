@@ -4,9 +4,9 @@
 
 ///|
 fn cc_make_image(
-  width : Int,
-  height : Int,
-  channels : Int,
+  width : Int32,
+  height : Int32,
+  channels : Int32,
   data : Array[Byte],
 ) -> @types.Image {
   @types.Image::{ width, height, channels, data: Bytes::from_array(data), }

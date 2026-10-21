@@ -58,11 +58,11 @@ pub(all) struct ModelCompressionResult {
   original_size_mb : Double
   compressed_size_mb : Double
   compression_ratio : Double
-  original_parameters : Int
-  compressed_parameters : Int
+  original_parameters : Int32
+  compressed_parameters : Int32
   parameter_reduction : Double
-  original_flops : Int
-  compressed_flops : Int
+  original_flops : Int32
+  compressed_flops : Int32
   flops_reduction : Double
   accuracy_drop : Double
   method_type : ModelCompressionMethod
@@ -72,10 +72,10 @@ pub(all) struct ModelCompressionResult {
 /// 量化配置
 pub(all) struct QuantizationConfig {
   quantization_type : QuantizationType
-  num_bits : Int
+  num_bits : Int32
   symmetric : Bool
   per_channel : Bool
-  calibration_samples : Int
+  calibration_samples : Int32
   use_quant_aware_training : Bool
   activation_quantization : Bool
   weight_quantization : Bool
@@ -90,8 +90,8 @@ pub(all) struct PruningConfig {
   structured : Bool
   global_pruning : Bool
   iterative_pruning : Bool
-  num_iterations : Int
-  fine_tune_epochs : Int
+  num_iterations : Int32
+  fine_tune_epochs : Int32
 }
 
 ///|
@@ -103,16 +103,16 @@ pub(all) struct KnowledgeDistillationConfig {
   use_hint_loss : Bool
   use_attention_transfer : Bool
   use_feature_distillation : Bool
-  teacher_layers : Array[Int]
-  student_layers : Array[Int]
+  teacher_layers : Array[Int32]
+  student_layers : Array[Int32]
 }
 
 ///|
 /// 低秩分解配置
 pub(all) struct LowRankConfig {
   rank_ratio : Double
-  min_rank : Int
-  max_rank : Int
+  min_rank : Int32
+  max_rank : Int32
   use_svd : Bool
   use_cp_decomposition : Bool
   use_tucker_decomposition : Bool
@@ -130,7 +130,7 @@ pub(all) struct ModelOptimizationConfig {
   use_constant_folding : Bool
   use_dead_code_elimination : Bool
   target_device : String
-  optimization_level : Int
+  optimization_level : Int32
 }
 
 ///|
@@ -156,10 +156,10 @@ pub(all) struct DeploymentConfig {
   target : DeploymentTarget
   optimize_for_inference : Bool
   use_dynamic_shapes : Bool
-  batch_size : Int
-  input_shape : Array[Int]
+  batch_size : Int32
+  input_shape : Array[Int32]
   output_names : Array[String]
-  opset_version : Int
+  opset_version : Int32
   use_half_precision : Bool
 }
 
@@ -270,8 +270,8 @@ pub fn create_default_deployment_config() -> DeploymentConfig {
 /// 量化模型（简化版）
 pub fn quantize_model(
   original_size_mb : Double,
-  original_parameters : Int,
-  original_flops : Int,
+  original_parameters : Int32,
+  original_flops : Int32,
   config : QuantizationConfig,
 ) -> ModelCompressionResult {
   let compression_factor = match config.quantization_type {
@@ -314,8 +314,8 @@ pub fn quantize_model(
 /// 剪枝模型（简化版）
 pub fn prune_model(
   original_size_mb : Double,
-  original_parameters : Int,
-  original_flops : Int,
+  original_parameters : Int32,
+  original_flops : Int32,
   config : PruningConfig,
 ) -> ModelCompressionResult {
   let pruning_ratio = config.pruning_ratio
@@ -346,8 +346,8 @@ pub fn prune_model(
 pub fn knowledge_distillation(
   teacher_size_mb : Double,
   student_size_mb : Double,
-  teacher_parameters : Int,
-  student_parameters : Int,
+  teacher_parameters : Int32,
+  student_parameters : Int32,
   config : KnowledgeDistillationConfig,
 ) -> ModelCompressionResult {
   let compression_ratio = teacher_size_mb / student_size_mb
@@ -374,8 +374,8 @@ pub fn knowledge_distillation(
 /// 低秩分解（简化版）
 pub fn low_rank_factorization(
   original_size_mb : Double,
-  original_parameters : Int,
-  original_flops : Int,
+  original_parameters : Int32,
+  original_flops : Int32,
   config : LowRankConfig,
 ) -> ModelCompressionResult {
   let rank_ratio = config.rank_ratio

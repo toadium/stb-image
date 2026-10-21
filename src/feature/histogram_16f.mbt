@@ -4,18 +4,18 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_h(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_h(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn write_u16_le_h(buf : Array[Byte], offset : Int, val : Int) -> Unit {
+fn write_u16_le_h(buf : Array[Byte], offset : Int32, val : Int32) -> Unit {
   buf[offset] = (val & 0xFF).to_byte()
   buf[offset + 1] = ((val >> 8) & 0xFF).to_byte()
 }
 
 ///|
-fn read_float_le_h(data : Bytes, offset : Int) -> Float {
+fn read_float_le_h(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -25,7 +25,7 @@ fn read_float_le_h(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn write_f32_le_h(buf : Array[Byte], offset : Int, val : Float) -> Unit {
+fn write_f32_le_h(buf : Array[Byte], offset : Int32, val : Float) -> Unit {
   let bits = val.reinterpret_as_int()
   buf[offset] = (bits & 0xFF).to_byte()
   buf[offset + 1] = ((bits >> 8) & 0xFF).to_byte()
@@ -34,7 +34,7 @@ fn write_f32_le_h(buf : Array[Byte], offset : Int, val : Float) -> Unit {
 }
 
 ///|
-fn clamp_int_h(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_h(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -59,7 +59,9 @@ fn clamp_float_h(v : Float, lo : Float, hi : Float) -> Float {
 
 ///|
 /// 16-bit 直方图。返回 65536 个 bin 的计数数组。彩色图像先转灰度（BT.601）。
-pub fn histogram_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
+pub fn histogram_16(
+  img : @types.Image16,
+) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -81,7 +83,7 @@ pub fn histogram_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
     )
   }
 
-  let hist : Array[Int] = Array::make(65536, 0)
+  let hist : Array[Int32] = Array::make(65536, 0)
   let n = img.width * img.height
   let ch = img.channels
   for i in 0..<n {
@@ -100,7 +102,7 @@ pub fn histogram_16(img : @types.Image16) -> Array[Int] raise @types.LoadError {
 
 ///|
 /// float 直方图。将值归一化到 [0,1] 后分 256 个 bin。彩色图像先转灰度。
-pub fn histogram_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
+pub fn histogram_f(img : @types.ImageF) -> Array[Int32] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -122,7 +124,7 @@ pub fn histogram_f(img : @types.ImageF) -> Array[Int] raise @types.LoadError {
     )
   }
 
-  let hist : Array[Int] = Array::make(256, 0)
+  let hist : Array[Int32] = Array::make(256, 0)
   let n = img.width * img.height
   let ch = img.channels
   for i in 0..<n {
@@ -158,7 +160,7 @@ pub fn histogram_equalize_16(
   let ch = img.channels
   let bpp = ch * 2
   // 计算 CDF
-  let cdf : Array[Int] = Array::make(65536, 0)
+  let cdf : Array[Int32] = Array::make(65536, 0)
   let mut cum = 0
   for i in 0..<65536 {
     cum += hist[i]
@@ -176,7 +178,7 @@ pub fn histogram_equalize_16(
     return img
   }
   // 计算映射 LUT
-  let lut : Array[Int] = Array::make(65536, 0)
+  let lut : Array[Int32] = Array::make(65536, 0)
   for i in 0..<65536 {
     let mapped = (cdf[i] - cdf_min) * 65535 / denom
     lut[i] = clamp_int_h(mapped, 0, 65535)
@@ -184,7 +186,7 @@ pub fn histogram_equalize_16(
   // 应用 LUT
   let color_ch = if ch >= 3 { 3 } else { ch }
   let n_total = n * ch
-  let src : Array[Int] = Array::make(n_total, 0)
+  let src : Array[Int32] = Array::make(n_total, 0)
   for i in 0..<n_total {
     src[i] = read_u16_le_h(img.data, i * 2)
   }
@@ -216,7 +218,7 @@ pub fn histogram_equalize_f(
   let n = img.width * img.height
   let ch = img.channels
   let bpp = ch * 4
-  let cdf : Array[Int] = Array::make(256, 0)
+  let cdf : Array[Int32] = Array::make(256, 0)
   let mut cum = 0
   for i in 0..<256 {
     cum += hist[i]
@@ -305,7 +307,7 @@ pub fn histogram_normalize_16(
   let n = img.width * img.height
   let bpp = ch * 2
   let n_total = n * ch
-  let src : Array[Int] = Array::make(n_total, 0)
+  let src : Array[Int32] = Array::make(n_total, 0)
   for i in 0..<n_total {
     src[i] = read_u16_le_h(img.data, i * 2)
   }
@@ -481,8 +483,8 @@ pub fn histogram_matching_16(
   let ref_ch = reference.channels
   let ref_color_ch = if ref_ch >= 3 { 3 } else { ref_ch }
   for c in 0..<color_ch {
-    let hist_in : Array[Int] = Array::make(65536, 0)
-    let hist_ref : Array[Int] = Array::make(65536, 0)
+    let hist_in : Array[Int32] = Array::make(65536, 0)
+    let hist_ref : Array[Int32] = Array::make(65536, 0)
     for i in 0..<n {
       hist_in[read_u16_le_h(img.data, i * bpp + c * 2)] += 1
     }
@@ -501,7 +503,7 @@ pub fn histogram_matching_16(
       cum_ref += hist_ref[i]
       cdf_ref[i] = Float::from_int(cum_ref) / Float::from_int(n_ref)
     }
-    let lut : Array[Int] = Array::make(65536, 0)
+    let lut : Array[Int32] = Array::make(65536, 0)
     for i in 0..<65536 {
       let target = cdf_in[i]
       let mut best_j = 0
@@ -593,8 +595,8 @@ pub fn histogram_matching_f(
   let ref_ch = reference.channels
   let ref_color_ch = if ref_ch >= 3 { 3 } else { ref_ch }
   for c in 0..<color_ch {
-    let hist_in : Array[Int] = Array::make(256, 0)
-    let hist_ref : Array[Int] = Array::make(256, 0)
+    let hist_in : Array[Int32] = Array::make(256, 0)
+    let hist_ref : Array[Int32] = Array::make(256, 0)
     for i in 0..<n {
       let v = read_float_le_h(img.data, i * bpp + c * 4)
       let bin = if v < 0.0F {
@@ -629,7 +631,7 @@ pub fn histogram_matching_f(
       cum_ref += hist_ref[i]
       cdf_ref[i] = Float::from_int(cum_ref) / Float::from_int(n_ref)
     }
-    let lut : Array[Int] = Array::make(256, 0)
+    let lut : Array[Int32] = Array::make(256, 0)
     for i in 0..<256 {
       let target = cdf_in[i]
       let mut best_j = 0

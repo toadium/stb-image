@@ -2,7 +2,7 @@
 // 覆盖 compression/image_compression.mbt 的 14 个公开函数
 
 ///|
-fn create_solid_img_c(w : Int, h : Int, value : Int) -> @types.Image {
+fn create_solid_img_c(w : Int32, h : Int32, value : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(value.to_byte())
@@ -16,7 +16,7 @@ fn create_solid_img_c(w : Int, h : Int, value : Int) -> @types.Image {
 }
 
 ///|
-fn create_gradient_img_c(w : Int, h : Int) -> @types.Image {
+fn create_gradient_img_c(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<h {
     for x in 0..<w {
@@ -33,7 +33,7 @@ fn create_gradient_img_c(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn create_noise_img_c(w : Int, h : Int) -> @types.Image {
+fn create_noise_img_c(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   let mut state = 42
   for _ in 0..<(w * h) {

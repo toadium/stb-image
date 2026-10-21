@@ -166,7 +166,7 @@ pub fn premultiply_alpha(
     )
   }
   let pixel_count = img.width * img.height
-  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  let data_int : Array[Int32] = Array::make(pixel_count * 4, 0)
   for i in 0..<(pixel_count * 4) {
     data_int[i] = img.data[i].to_int()
   }
@@ -216,7 +216,7 @@ pub fn unpremultiply_alpha(
     )
   }
   let pixel_count = img.width * img.height
-  let data_int : Array[Int] = Array::make(pixel_count * 4, 0)
+  let data_int : Array[Int32] = Array::make(pixel_count * 4, 0)
   for i in 0..<(pixel_count * 4) {
     data_int[i] = img.data[i].to_int()
   }
@@ -249,10 +249,10 @@ pub fn unpremultiply_alpha(
 ///|
 /// RGB → YCbCr（ITU-R BT.601）。返回 (Y, Cb, Cr)，范围 0-255。
 pub fn rgb_to_ycbcr(
-  r : Int,
-  g : Int,
-  b : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  r : Int32,
+  g : Int32,
+  b : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
     raise @types.LoadError::DecodeFailed(
@@ -268,10 +268,10 @@ pub fn rgb_to_ycbcr(
 ///|
 /// YCbCr → RGB（ITU-R BT.601）。输入范围 0-255。
 pub fn ycbcr_to_rgb(
-  y : Int,
-  cb : Int,
-  cr : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  y : Int32,
+  cb : Int32,
+  cr : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if y < 0 || y > 255 || cb < 0 || cb > 255 || cr < 0 || cr > 255 {
     raise @types.LoadError::DecodeFailed(
@@ -289,9 +289,9 @@ pub fn ycbcr_to_rgb(
 ///|
 /// RGB → XYZ（sRGB, D65 白点）。返回 (X, Y, Z)，范围 0.0-1.0。
 pub fn rgb_to_xyz(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
@@ -299,7 +299,7 @@ pub fn rgb_to_xyz(
       "rgb_to_xyz: r,g,b必须在[0,255]范围内",
     )
   }
-  fn linearize(c : Int) -> Float {
+  fn linearize(c : Int32) -> Float {
     let cf = Float::from_int(c) / 255.0F
     if cf <= 0.04045F {
       cf / 12.92F
@@ -322,7 +322,7 @@ pub fn xyz_to_rgb(
   x : Float,
   y : Float,
   z : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if x < 0.0F || x > 1.0F || y < 0.0F || y > 1.0F || z < 0.0F || z > 1.0F {
     raise @types.LoadError::DecodeFailed(
@@ -332,7 +332,7 @@ pub fn xyz_to_rgb(
   let rl = 3.2406F * x - 1.5372F * y - 0.4986F * z
   let gl = -0.9689F * x + 1.8758F * y + 0.0415F * z
   let bl = 0.0557F * x - 0.2040F * y + 1.0570F * z
-  fn srgb(c : Float) -> Int {
+  fn srgb(c : Float) -> Int32 {
     let v = if c <= 0.0031308F {
       12.92F * c
     } else {
@@ -346,9 +346,9 @@ pub fn xyz_to_rgb(
 ///|
 /// RGB → Lab（CIELAB, D65 白点）。返回 (L, a, b)，L 范围 0-100，a/b 范围 -128-127。
 pub fn rgb_to_lab(
-  r : Int,
-  g : Int,
-  b : Int,
+  r : Int32,
+  g : Int32,
+  b : Int32,
 ) -> (Float, Float, Float) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
@@ -382,7 +382,7 @@ pub fn lab_to_rgb(
   l : Float,
   a : Float,
   b : Float,
-) -> (Int, Int, Int) raise @types.LoadError {
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if l < 0.0F || l > 100.0F {
     raise @types.LoadError::DecodeFailed(
@@ -411,10 +411,10 @@ pub fn lab_to_rgb(
 ///|
 /// RGB → CMYK。返回 (C, M, Y, K)，范围 0-255。
 pub fn rgb_to_cmyk(
-  r : Int,
-  g : Int,
-  b : Int,
-) -> (Int, Int, Int, Int) raise @types.LoadError {
+  r : Int32,
+  g : Int32,
+  b : Int32,
+) -> (Int32, Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
     raise @types.LoadError::DecodeFailed(
@@ -436,11 +436,11 @@ pub fn rgb_to_cmyk(
 ///|
 /// CMYK → RGB。输入范围 0-255。
 pub fn cmyk_to_rgb(
-  c : Int,
-  m : Int,
-  y : Int,
-  k : Int,
-) -> (Int, Int, Int) raise @types.LoadError {
+  c : Int32,
+  m : Int32,
+  y : Int32,
+  k : Int32,
+) -> (Int32, Int32, Int32) raise @types.LoadError {
   // 输入验证
   if c < 0 ||
     c > 255 ||

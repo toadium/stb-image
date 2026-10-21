@@ -85,7 +85,7 @@ pub fn convex_hull(points : Array[ContourPoint]) -> Array[ContourPoint] {
 pub fn approx_poly_dp(
   points : Array[ContourPoint],
   epsilon : Float,
-  closed? : Bool = true,
+  closed~ : Bool = true,
 ) -> Array[ContourPoint] raise @types.LoadError {
   // 参数验证
   if epsilon < 0.0F {
@@ -125,8 +125,8 @@ pub fn approx_poly_dp(
 ///|
 fn approx_dp_recursive(
   points : Array[ContourPoint],
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   epsilon : Float,
   keep : Array[Bool],
 ) -> Unit {

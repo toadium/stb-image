@@ -41,8 +41,8 @@ pub extend Recommendation with Eq::{not_equal, equal}
 /// Recommendation report.
 pub(all) struct RecommendationReport {
   recommendations : Array[Recommendation]
-  total : Int
-  high_priority_count : Int
+  total : Int32
+  high_priority_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

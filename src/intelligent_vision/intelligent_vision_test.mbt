@@ -1,5 +1,5 @@
 ///|
-fn create_test_image_iv(w : Int, h : Int, value : Byte) -> @types.Image {
+fn create_test_image_iv(w : Int32, h : Int32, value : Byte) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(value)
@@ -13,7 +13,7 @@ fn create_test_image_iv(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn create_gradient_image_iv(w : Int, h : Int) -> @types.Image {
+fn create_gradient_image_iv(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for y in 0..<h {
     for x in 0..<w {

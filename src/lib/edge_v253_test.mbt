@@ -162,7 +162,7 @@ test "v253 get_image_summary: empty bytes raises" {
 }
 
 ///|
-fn v253_make_img(w : Int, h : Int, ch : Int, v : Int) -> @types.Image {
+fn v253_make_img(w : Int32, h : Int32, ch : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h * ch) {
     data.push(v.to_byte())

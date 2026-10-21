@@ -3,7 +3,7 @@
 
 ///|
 /// 伪随机数生成器（LCG）
-fn v261_lcg(seed : Int) -> () -> Int {
+fn v261_lcg(seed : Int32) -> () -> Int32 {
   let mut state = seed
   () => {
     state = (state * 1103515245 + 12345) & 0x7FFFFFFF
@@ -13,7 +13,7 @@ fn v261_lcg(seed : Int) -> () -> Int {
 
 ///|
 /// 生成伪随机字节数组
-fn v261_random_bytes(seed : Int, len : Int) -> Bytes {
+fn v261_random_bytes(seed : Int32, len : Int32) -> Bytes {
   let rng = v261_lcg(seed)
   let out : Array[Byte] = []
   for _ in 0..<len {
@@ -24,7 +24,7 @@ fn v261_random_bytes(seed : Int, len : Int) -> Bytes {
 
 ///|
 /// 截断数据到指定长度
-fn v261_truncate(data : Bytes, len : Int) -> Bytes {
+fn v261_truncate(data : Bytes, len : Int32) -> Bytes {
   let actual = if len < data.length() { len } else { data.length() }
   let out : Array[Byte] = []
   for i in 0..<actual {
@@ -35,7 +35,7 @@ fn v261_truncate(data : Bytes, len : Int) -> Bytes {
 
 ///|
 /// 在指定位置翻转一个字节
-fn v261_flip_byte(data : Bytes, pos : Int) -> Bytes {
+fn v261_flip_byte(data : Bytes, pos : Int32) -> Bytes {
   if pos >= data.length() {
     return data
   }

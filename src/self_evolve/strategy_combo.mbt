@@ -26,7 +26,7 @@ pub extend StrategyKind with Eq::{not_equal, equal}
 pub(all) struct StrategyCombo {
   strategies : Array[StrategyKind]
   op_tag : String
-  estimated_time : Int
+  estimated_time : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -41,8 +41,8 @@ pub extend StrategyCombo with Eq::{not_equal, equal}
 /// Strategy combination report.
 pub(all) struct ComboReport {
   combos : Array[StrategyCombo]
-  total : Int
-  parallel_count : Int
+  total : Int32
+  parallel_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 

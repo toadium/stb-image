@@ -16,7 +16,7 @@ pub fn freq_filter(
   img : @types.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
-  band_width? : Float = 0.0F,
+  band_width~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed("freq_filter 仅支持 channels=1/3/4")
@@ -117,7 +117,7 @@ pub fn freq_filter_gaussian(
   img : @types.Image,
   filter_type : FreqFilterType,
   cutoff : Float,
-  band_width? : Float = 0.0F,
+  band_width~ : Float = 0.0F,
 ) -> @types.Image raise @types.LoadError {
   if img.channels != 1 && img.channels != 3 && img.channels != 4 {
     raise @types.LoadError::DecodeFailed(

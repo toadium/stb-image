@@ -7,8 +7,8 @@
 /// low_threshold 和 high_threshold 为双阈值（low 应 < high）。
 pub fn canny_edge(
   img : @types.Image,
-  low_threshold? : Int = 50,
-  high_threshold? : Int = 100,
+  low_threshold~ : Int32 = 50,
+  high_threshold~ : Int32 = 100,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -48,7 +48,7 @@ pub fn canny_edge(
     return img
   }
   // 转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   let ch = img.channels
   for i in 0..<n {
     if ch == 1 {
@@ -63,8 +63,8 @@ pub fn canny_edge(
   // 1. 高斯模糊 (sigma=1.0, 5x5 核)
   let blurred = canny_gaussian_blur(gray, w, h)
   // 2. Sobel 梯度
-  let gradient : Array[Int] = Array::make(n, 0)
-  let direction : Array[Int] = Array::make(n, 0) // 0=0°, 1=45°, 2=90°, 3=135°
+  let gradient : Array[Int32] = Array::make(n, 0)
+  let direction : Array[Int32] = Array::make(n, 0) // 0=0°, 1=45°, 2=90°, 3=135°
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -102,7 +102,7 @@ pub fn canny_edge(
     }
   }
   // 3. 非极大值抑制
-  let nms : Array[Int] = Array::make(n, 0)
+  let nms : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -134,7 +134,7 @@ pub fn canny_edge(
     }
   }
   // 滞后连接：弱边缘如果与强边缘连通则保留
-  let stack : Array[Int] = []
+  let stack : Array[Int32] = []
   for i in 0..<n {
     if strong[i] {
       out[i] = b'\xFF'
@@ -174,11 +174,15 @@ pub fn canny_edge(
 
 ///|
 /// 5x5 高斯模糊（sigma=1.0），分离内部/边界区域以消除热点 clamp 调用
-fn canny_gaussian_blur(gray : Array[Int], w : Int, h : Int) -> Array[Int] {
+fn canny_gaussian_blur(
+  gray : Array[Int32],
+  w : Int32,
+  h : Int32,
+) -> Array[Int32] {
   let n = w * h
-  let out : Array[Int] = Array::make(n, 0)
+  let out : Array[Int32] = Array::make(n, 0)
   // 5x5 高斯核 (sigma=1.0)
-  let kernel : Array[Int] = [
+  let kernel : Array[Int32] = [
     2, 4, 5, 4, 2, 4, 9, 12, 9, 4, 5, 12, 15, 12, 5, 4, 9, 12, 9, 4, 2, 4, 5, 4,
     2,
   ]

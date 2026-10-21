@@ -3,12 +3,12 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_of(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_of(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_float_le_of(data : Bytes, offset : Int) -> Float {
+fn read_float_le_of(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -18,7 +18,7 @@ fn read_float_le_of(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn clamp_int_of(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_of(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -72,9 +72,9 @@ fn imgf_to_img8_of(img : @types.ImageF) -> @types.Image {
 pub fn lucas_kanade_16(
   prev : @types.Image16,
   next : @types.Image16,
-  points : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  points : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[FlowResult] raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -148,9 +148,9 @@ pub fn lucas_kanade_16(
 pub fn lucas_kanade_f(
   prev : @types.ImageF,
   next : @types.ImageF,
-  points : Array[(Int, Int)],
-  window_size? : Int = 15,
-  max_iter? : Int = 20,
+  points : Array[(Int32, Int32)],
+  window_size~ : Int32 = 15,
+  max_iter~ : Int32 = 20,
 ) -> Array[FlowResult] raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -224,8 +224,8 @@ pub fn lucas_kanade_f(
 pub fn horn_schunck_16(
   prev : @types.Image16,
   next : @types.Image16,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -292,8 +292,8 @@ pub fn horn_schunck_16(
 pub fn horn_schunck_f(
   prev : @types.ImageF,
   next : @types.ImageF,
-  alpha? : Float = 1.0F,
-  iterations? : Int = 100,
+  alpha~ : Float = 1.0F,
+  iterations~ : Int32 = 100,
 ) -> (Array[Float], Array[Float]) raise @types.LoadError {
   // 输入验证
   if prev.width <= 0 || prev.height <= 0 {
@@ -359,10 +359,10 @@ pub fn horn_schunck_f(
 /// 16-bit 灰度共生矩阵。
 pub fn compute_glcm_16(
   img : @types.Image16,
-  dx : Int,
-  dy : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  dx : Int32,
+  dy : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -397,10 +397,10 @@ pub fn compute_glcm_16(
 /// float 灰度共生矩阵。
 pub fn compute_glcm_f(
   img : @types.ImageF,
-  dx : Int,
-  dy : Int,
-  levels? : Int = 256,
-) -> Array[Array[Int]] raise @types.LoadError {
+  dx : Int32,
+  dy : Int32,
+  levels~ : Int32 = 256,
+) -> Array[Array[Int32]] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -435,7 +435,7 @@ pub fn compute_glcm_f(
 /// 16-bit 多方向 GLCM 特征。
 pub fn glcm_features_multi_direction_16(
   img : @types.Image16,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -473,7 +473,7 @@ pub fn glcm_features_multi_direction_16(
 /// float 多方向 GLCM 特征。
 pub fn glcm_features_multi_direction_f(
   img : @types.ImageF,
-  levels? : Int = 256,
+  levels~ : Int32 = 256,
 ) -> Array[GlcmFeatures] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

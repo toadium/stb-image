@@ -86,7 +86,7 @@ pub fn compute_energy_f(img : @types.ImageF) -> Array[Double] {
 /// 移除垂直 seam 16-bit 版本
 pub fn remove_vertical_seam_16(
   img : @types.Image16,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -132,7 +132,7 @@ pub fn remove_vertical_seam_16(
 /// 移除垂直 seam float 版本
 pub fn remove_vertical_seam_f(
   img : @types.ImageF,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -176,7 +176,7 @@ pub fn remove_vertical_seam_f(
 /// 移除水平 seam 16-bit 版本
 pub fn remove_horizontal_seam_16(
   img : @types.Image16,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -217,7 +217,7 @@ pub fn remove_horizontal_seam_16(
 /// 移除水平 seam float 版本
 pub fn remove_horizontal_seam_f(
   img : @types.ImageF,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -259,7 +259,7 @@ pub fn remove_horizontal_seam_f(
 /// 插入垂直 seam 16-bit 版本
 fn insert_vertical_seam_16(
   img : @types.Image16,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -316,7 +316,7 @@ fn insert_vertical_seam_16(
 /// 插入垂直 seam float 版本
 fn insert_vertical_seam_f(
   img : @types.ImageF,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -369,7 +369,7 @@ fn insert_vertical_seam_f(
 /// 插入水平 seam 16-bit 版本
 fn insert_horizontal_seam_16(
   img : @types.Image16,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.Image16 {
   let w = img.width
   let h = img.height
@@ -421,7 +421,7 @@ fn insert_horizontal_seam_16(
 /// 插入水平 seam float 版本
 fn insert_horizontal_seam_f(
   img : @types.ImageF,
-  seam : Array[Int],
+  seam : Array[Int32],
 ) -> @types.ImageF {
   let w = img.width
   let h = img.height
@@ -472,8 +472,8 @@ fn insert_horizontal_seam_f(
 /// 内容感知缩放 16-bit 版本
 pub fn seam_carve_resize_16(
   img : @types.Image16,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image16 raise @types.LoadError {
   if new_w <= 0 || new_h <= 0 {
     raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")
@@ -509,8 +509,8 @@ pub fn seam_carve_resize_16(
 /// 内容感知缩放 float 版本
 pub fn seam_carve_resize_f(
   img : @types.ImageF,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.ImageF raise @types.LoadError {
   if new_w <= 0 || new_h <= 0 {
     raise @types.LoadError::DecodeFailed("目标尺寸必须为正数")

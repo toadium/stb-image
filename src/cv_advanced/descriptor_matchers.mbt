@@ -7,8 +7,8 @@
 /// 单个匹配结果。
 /// Single match result.
 pub(all) struct DMatch {
-  query_idx : Int
-  train_idx : Int
+  query_idx : Int32
+  train_idx : Int32
   distance : Double
 } derive(Eq, @debug.Debug)
 
@@ -89,7 +89,7 @@ pub fn bf_match_float(
 pub fn knn_match_binary(
   query : Array[BinaryDescriptor],
   train : Array[BinaryDescriptor],
-  k : Int,
+  k : Int32,
 ) -> Array[Array[DMatch]] {
   let result : Array[Array[DMatch]] = []
   for i in 0..<query.length() {
@@ -115,7 +115,7 @@ pub fn knn_match_binary(
 pub fn knn_match_float(
   query : Array[FloatDescriptor],
   train : Array[FloatDescriptor],
-  k : Int,
+  k : Int32,
 ) -> Array[Array[DMatch]] {
   let result : Array[Array[DMatch]] = []
   for i in 0..<query.length() {

@@ -10,7 +10,7 @@ pub fn erode(img : @types.Image) -> @types.Image {
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   // 预计算像素 Int 数组，避免内层循环重复类型转换
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -90,7 +90,7 @@ pub fn dilate(img : @types.Image) -> @types.Image {
   let n = w * h
   let out : Array[Byte] = Array::make(n * ch, b'\x00')
   // 预计算像素 Int 数组
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -232,7 +232,7 @@ pub fn morph_blackhat(img : @types.Image) -> @types.Image {
 }
 
 ///|
-fn clamp_i(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_i(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -245,14 +245,14 @@ fn clamp_i(v : Int, lo : Int, hi : Int) -> Int {
 ///|
 /// 结构元素（核）。二维布尔数组，true 表示该位置属于结构元素。
 pub(all) struct StructuringElement {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   data : Array[Bool] // height * width
 }
 
 ///|
 /// 创建矩形结构元素（全为 true）。
-pub fn se_rect(width : Int, height : Int) -> StructuringElement {
+pub fn se_rect(width : Int32, height : Int32) -> StructuringElement {
   StructuringElement::{
     width,
     height,
@@ -262,7 +262,7 @@ pub fn se_rect(width : Int, height : Int) -> StructuringElement {
 
 ///|
 /// 创建十字形结构元素（中心行+中心列）。
-pub fn se_cross(size : Int) -> StructuringElement {
+pub fn se_cross(size : Int32) -> StructuringElement {
   let data : Array[Bool] = Array::make(size * size, false)
   let cx = size / 2
   for i in 0..<size {
@@ -275,7 +275,7 @@ pub fn se_cross(size : Int) -> StructuringElement {
 ///|
 /// 创建椭圆形结构元素。对于 size×size 的核，包含所有满足
 /// (dx/rx)² + (dy/ry)² ≤ 1 的位置。
-pub fn se_ellipse(size : Int) -> StructuringElement {
+pub fn se_ellipse(size : Int32) -> StructuringElement {
   let data : Array[Bool] = Array::make(size * size, false)
   let cx = (size - 1) / 2
   let cy = (size - 1) / 2
@@ -303,7 +303,7 @@ pub fn erode_custom(
   let w = img.width
   let h = img.height
   let n = w * h
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }
@@ -348,7 +348,7 @@ pub fn dilate_custom(
   let w = img.width
   let h = img.height
   let n = w * h
-  let src : Array[Int] = Array::make(n * ch, 0)
+  let src : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     src[i] = img.data[i].to_int()
   }

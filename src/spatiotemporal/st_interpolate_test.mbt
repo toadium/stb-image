@@ -1,7 +1,7 @@
 // 帧间插值 + 时序快照测试。
 
 ///|
-fn make_img(value : Int) -> @types.Image {
+fn make_img(value : Int32) -> @types.Image {
   {
     width: 1,
     height: 1,

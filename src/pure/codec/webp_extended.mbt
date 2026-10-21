@@ -1,15 +1,15 @@
 ///|
 /// WebP 扩展信息（包含格式类型、alpha、动画、元数据标志等）
 pub struct WebpInfoExtended {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   format : String
   has_alpha : Bool
   has_animation : Bool
   has_icc_profile : Bool
   has_exif : Bool
   has_xmp : Bool
-  num_channels : Int
+  num_channels : Int32
 }
 
 ///|

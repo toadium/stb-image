@@ -1,0 +1,10 @@
+import {
+  "walkzzz/image-core/types",
+  "walkzzz/image-domain/fieldimg",
+  "walkzzz/image-vision/spatiotemporal",
+  "walkzzz/image-process/transform",
+  "walkzzz/image-process/color",
+  "walkzzz/image-process/filter",
+  "walkzzz/image-codec/util" @pure_util,
+  "moonbitlang/core/debug",
+}

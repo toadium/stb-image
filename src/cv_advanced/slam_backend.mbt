@@ -7,9 +7,9 @@
 /// SLAM 地图点。
 /// SLAM map point.
 pub(all) struct SlamMapPoint {
-  id : Int
+  id : Int32
   position : Point3D
-  observations : Int
+  observations : Int32
   quality : Double
 } derive(Eq, @debug.Debug)
 
@@ -40,8 +40,8 @@ pub extend SlamBackend with Eq::{not_equal, equal}
 /// Loop closing result.
 pub(all) struct LoopClosingResult {
   loop_found : Bool
-  loop_kf1 : Int
-  loop_kf2 : Int
+  loop_kf1 : Int32
+  loop_kf2 : Int32
   correction : SlamPose
 } derive(Eq, @debug.Debug)
 
@@ -55,10 +55,10 @@ pub extend LoopClosingResult with Eq::{not_equal, equal}
 /// SLAM 后端参数。
 /// SLAM backend parameters.
 pub(all) struct SlamBackendParams {
-  min_observations : Int
+  min_observations : Int32
   max_reproj_error : Double
   loop_threshold : Double
-  ba_iterations : Int
+  ba_iterations : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -80,7 +80,7 @@ pub fn init_slam_backend() -> SlamBackend {
 pub fn add_map_point(
   backend : SlamBackend,
   position : Point3D,
-  observations : Int,
+  observations : Int32,
   quality : Double,
 ) -> SlamBackend {
   let id = backend.map_points.length()
@@ -218,7 +218,7 @@ pub fn optimize_map(
 ///|
 /// 计算地图统计信息。
 /// Compute map statistics.
-pub fn map_statistics(backend : SlamBackend) -> (Int, Int, Double) {
+pub fn map_statistics(backend : SlamBackend) -> (Int32, Int32, Double) {
   let n_points = backend.map_points.length()
   let n_kfs = backend.keyframes.length()
   let mut total_quality = 0.0

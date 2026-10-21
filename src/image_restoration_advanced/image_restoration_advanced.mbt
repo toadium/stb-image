@@ -81,9 +81,9 @@ pub extend BlurType with Eq::{not_equal, equal}
 /// 去噪结果
 pub(all) struct DenoisingResult {
   denoised_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   noisy_image : Array[Double]
   denoising_method : DenoisingMethod
   noise_type : NoiseType
@@ -99,18 +99,18 @@ pub(all) struct DenoisingResult {
 /// 去模糊结果
 pub(all) struct DeblurringResult {
   deblurred_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   blurry_image : Array[Double]
   deblurring_method : DeblurringMethod
   blur_type : BlurType
-  kernel_size : Int
+  kernel_size : Int32
   kernel_estimate : Array[Array[Double]]
   psnr : Double
   ssim : Double
   sharpness_improvement : Double
-  iterations : Int
+  iterations : Int32
   processing_time_ms : Double
 }
 
@@ -118,10 +118,10 @@ pub(all) struct DeblurringResult {
 /// 超分辨率结果
 pub(all) struct RestorationSRResult {
   sr_image : Array[Double]
-  original_width : Int
-  original_height : Int
-  sr_width : Int
-  sr_height : Int
+  original_width : Int32
+  original_height : Int32
+  sr_width : Int32
+  sr_height : Int32
   scale_factor : Double
   sr_method : String
   psnr : Double
@@ -133,9 +133,9 @@ pub(all) struct RestorationSRResult {
 /// 去雾结果
 pub(all) struct DehazingResult {
   dehazed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   hazy_image : Array[Double]
   transmission_map : Array[Double]
   atmospheric_light : Array[Double]
@@ -149,11 +149,11 @@ pub(all) struct DehazingResult {
 /// 去雨结果
 pub(all) struct DerainingResult {
   derained_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   rainy_image : Array[Double]
-  rain_streaks_removed : Int
+  rain_streaks_removed : Int32
   rain_density : Double
   detail_preservation : Double
   processing_time_ms : Double
@@ -163,11 +163,11 @@ pub(all) struct DerainingResult {
 /// 去雪结果
 pub(all) struct DesnowingResult {
   desnowed_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   snowy_image : Array[Double]
-  snowflakes_removed : Int
+  snowflakes_removed : Int32
   snow_density : Double
   visibility_improvement : Double
   processing_time_ms : Double
@@ -177,12 +177,12 @@ pub(all) struct DesnowingResult {
 /// 去遮挡结果
 pub(all) struct DeocclusionResult {
   deoccluded_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   occluded_image : Array[Double]
   occlusion_mask : Array[Bool]
-  num_occluded_pixels : Int
+  num_occluded_pixels : Int32
   inpainting_method : String
   consistency_score : Double
   processing_time_ms : Double
@@ -192,12 +192,12 @@ pub(all) struct DeocclusionResult {
 /// 划痕修复结果
 pub(all) struct ScratchRemovalResult {
   repaired_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   scratched_image : Array[Double]
   scratch_mask : Array[Bool]
-  num_scratches : Int
+  num_scratches : Int32
   total_scratch_length : Double
   repair_method : String
   processing_time_ms : Double
@@ -208,9 +208,9 @@ pub(all) struct ScratchRemovalResult {
 /// 老照片修复结果
 pub(all) struct OldPhotoRestorationResult {
   restored_image : Array[Double]
-  width : Int
-  height : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  num_channels : Int32
   old_photo : Array[Double]
   scratch_removal : Bool
   noise_reduction : Double
@@ -231,7 +231,7 @@ pub(all) struct ImageRestorationConfig {
   noise_type : NoiseType
   blur_type : BlurType
   noise_level : Double
-  kernel_size : Int
+  kernel_size : Int32
   scale_factor : Double
   sr_method : String
   use_gpu : Bool
@@ -272,8 +272,8 @@ pub fn create_default_restoration_config() -> ImageRestorationConfig {
 /// 图像去噪（简化版）
 pub fn denoise_image(
   noisy_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRestorationConfig,
 ) -> DenoisingResult {
   let denoised : Array[Double] = []
@@ -326,8 +326,8 @@ pub fn denoise_image(
 /// 图像去模糊（简化版）
 pub fn deblur_image(
   blurry_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRestorationConfig,
 ) -> DeblurringResult {
   let deblurred : Array[Double] = []
@@ -411,8 +411,8 @@ pub fn deblur_image(
 /// 超分辨率（简化版）
 pub fn super_resolution(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRestorationConfig,
 ) -> RestorationSRResult {
   let sr : Array[Double] = []
@@ -468,8 +468,8 @@ pub fn super_resolution(
 /// 去雾（简化版）
 pub fn dehaze_image(
   hazy_image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRestorationConfig,
 ) -> DehazingResult {
   ignore(config)
@@ -519,8 +519,8 @@ pub fn dehaze_image(
 /// 老照片修复（简化版）
 pub fn restore_old_photo(
   old_photo : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageRestorationConfig,
 ) -> OldPhotoRestorationResult {
   let restored : Array[Double] = []

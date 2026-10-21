@@ -5,16 +5,16 @@
 // 标签常量
 
 ///|
-let gc_bgd : Int = 0 // 确定背景
+let gc_bgd : Int32 = 0 // 确定背景
 
 ///|
-let gc_fgd : Int = 1 // 确定前景
+let gc_fgd : Int32 = 1 // 确定前景
 
 ///|
-let gc_pr_bgd : Int = 2 // 可能背景
+let gc_pr_bgd : Int32 = 2 // 可能背景
 
 ///|
-let gc_pr_fgd : Int = 3 // 可能前景
+let gc_pr_fgd : Int32 = 3 // 可能前景
 
 ///|
 /// grabCut 交互式前景提取。
@@ -23,11 +23,11 @@ let gc_pr_fgd : Int = 3 // 可能前景
 /// iterations 控制 GMM 拟合 + ICM 优化的迭代次数。
 pub fn grab_cut(
   img : @types.Image,
-  rect_x : Int,
-  rect_y : Int,
-  rect_w : Int,
-  rect_h : Int,
-  iterations? : Int = 5,
+  rect_x : Int32,
+  rect_y : Int32,
+  rect_w : Int32,
+  rect_h : Int32,
+  iterations~ : Int32 = 5,
 ) -> @types.Image raise @types.LoadError {
   if img.width < 2 || img.height < 2 {
     raise @types.LoadError::DecodeFailed("grabCut 需要至少 2x2 图像")
@@ -49,7 +49,7 @@ pub fn grab_cut(
     b_arr[i] = Float::from_int(img.data[i * ch + 2].to_int())
   }
   // 初始化 mask
-  let mask : Array[Int] = Array::make(n, gc_bgd)
+  let mask : Array[Int32] = Array::make(n, gc_bgd)
   let rx2 = (rect_x + rect_w).clamp(min=0, max=w)
   let ry2 = (rect_y + rect_h).clamp(min=0, max=h)
   let rx1 = rect_x.clamp(min=0, max=w)
@@ -67,8 +67,8 @@ pub fn grab_cut(
   // 迭代优化
   for _ in 0..<iters {
     // 收集前景和背景像素索引
-    let fg_pixels : Array[Int] = []
-    let bg_pixels : Array[Int] = []
+    let fg_pixels : Array[Int32] = []
+    let bg_pixels : Array[Int32] = []
     for i in 0..<n {
       if mask[i] == gc_fgd || mask[i] == gc_pr_fgd {
         fg_pixels.push(i)
@@ -149,8 +149,8 @@ fn fit_gmm(
   r_arr : Array[Float],
   g_arr : Array[Float],
   b_arr : Array[Float],
-  pixels : Array[Int],
-  k : Int,
+  pixels : Array[Int32],
+  k : Int32,
 ) -> (Array[(Float, Float, Float)], Array[(Float, Float, Float)]) {
   let n = pixels.length()
   if n == 0 {
@@ -168,7 +168,7 @@ fn fit_gmm(
     means_g[i] = g_arr[idx]
     means_b[i] = b_arr[idx]
   }
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   // K-means 迭代
   for _ in 0..<10 {
     let mut changed = false
@@ -205,7 +205,7 @@ fn fit_gmm(
     let sum_r : Array[Float] = Array::make(actual_k, 0.0F)
     let sum_g : Array[Float] = Array::make(actual_k, 0.0F)
     let sum_b : Array[Float] = Array::make(actual_k, 0.0F)
-    let cnt : Array[Int] = Array::make(actual_k, 0)
+    let cnt : Array[Int32] = Array::make(actual_k, 0)
     for i in 0..<n {
       let idx = pixels[i]
       let lbl = labels[i]
@@ -227,7 +227,7 @@ fn fit_gmm(
   let vars_r : Array[Float] = Array::make(actual_k, 1.0F)
   let vars_g : Array[Float] = Array::make(actual_k, 1.0F)
   let vars_b : Array[Float] = Array::make(actual_k, 1.0F)
-  let cnt : Array[Int] = Array::make(actual_k, 0)
+  let cnt : Array[Int32] = Array::make(actual_k, 0)
   for i in 0..<n {
     let idx = pixels[i]
     let lbl = labels[i]
@@ -292,15 +292,15 @@ fn gmm_distance(
 
 ///|
 fn smooth_term(
-  mask : Array[Int],
+  mask : Array[Int32],
   r_arr : Array[Float],
   g_arr : Array[Float],
   b_arr : Array[Float],
-  x : Int,
-  y : Int,
-  w : Int,
-  h : Int,
-  label : Int,
+  x : Int32,
+  y : Int32,
+  w : Int32,
+  h : Int32,
+  label : Int32,
   gamma : Float,
   two_sigma_sq : Float,
 ) -> Float {
@@ -341,8 +341,8 @@ fn compute_sigma(
   r_arr : Array[Float],
   g_arr : Array[Float],
   b_arr : Array[Float],
-  w : Int,
-  h : Int,
+  w : Int32,
+  h : Int32,
 ) -> Float {
   let mut sum = 0.0F
   let mut count = 0

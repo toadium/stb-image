@@ -25,9 +25,9 @@ pub extend MetaLearningType with Eq::{not_equal, equal}
 pub(all) struct MetaLearningConfig {
   inner_lr : Double
   meta_lr : Double
-  num_inner_steps : Int
-  num_support : Int
-  num_query : Int
+  num_inner_steps : Int32
+  num_support : Int32
+  num_query : Int32
   ml_type : MetaLearningType
 } derive(Eq, @debug.Debug)
 
@@ -130,8 +130,8 @@ pub fn reptile_update(
 /// Compute prototypes.
 pub fn compute_prototypes(
   support_features : Array[Array[Double]],
-  support_labels : Array[Int],
-  num_classes : Int,
+  support_labels : Array[Int32],
+  num_classes : Int32,
 ) -> Array[Array[Double]] {
   let prototypes : Array[Array[Double]] = []
   let feature_dim = if support_features.length() > 0 {
@@ -165,7 +165,7 @@ pub fn compute_prototypes(
 pub fn prototypical_loss(
   query_features : Array[Double],
   prototypes : Array[Array[Double]],
-) -> (Int, Double) {
+) -> (Int32, Double) {
   let mut best_class = 0
   let mut best_dist = 1.7976931348623157e308
   for c in 0..<prototypes.length() {

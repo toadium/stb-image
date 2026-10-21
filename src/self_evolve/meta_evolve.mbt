@@ -26,8 +26,8 @@ pub extend MetaStrategy with Eq::{not_equal, equal}
 pub(all) struct MetaAction {
   strategy : MetaStrategy
   target_param : String
-  current_value : Int
-  new_value : Int
+  current_value : Int32
+  new_value : Int32
   rationale : String
 } derive(Eq, @debug.Debug)
 
@@ -42,8 +42,8 @@ pub extend MetaAction with Eq::{not_equal, equal}
 /// Meta evolution report.
 pub(all) struct MetaReport {
   actions : Array[MetaAction]
-  total_strategies : Int
-  applied_count : Int
+  total_strategies : Int32
+  applied_count : Int32
   summary : String
 } derive(Eq, @debug.Debug)
 
@@ -176,6 +176,6 @@ pub fn MetaReport::has_changes(self : MetaReport) -> Bool {
 ///|
 /// 元演化报告策略数。
 /// Strategy count.
-pub fn MetaReport::strategy_count(self : MetaReport) -> Int {
+pub fn MetaReport::strategy_count(self : MetaReport) -> Int32 {
   self.total_strategies
 }

@@ -1,5 +1,5 @@
 ///|
-fn make_solid_gray_8x8(v : Int) -> @types.Image {
+fn make_solid_gray_8x8(v : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(64, v.to_byte())
   @types.Image::{
     width: 8,

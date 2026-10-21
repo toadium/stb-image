@@ -1,7 +1,7 @@
 // v13.2.0 手写体识别测试
 
 ///|
-fn make_test_img(w : Int, h : Int) -> @types.Image {
+fn make_test_img(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

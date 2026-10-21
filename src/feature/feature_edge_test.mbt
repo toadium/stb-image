@@ -23,7 +23,7 @@ fn feat_make_mismatch() -> @types.Image {
 }
 
 ///|
-fn feat_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
+fn feat_make_uniform(w : Int32, h : Int32, v : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -33,7 +33,7 @@ fn feat_make_uniform(w : Int, h : Int, v : Int) -> @types.Image {
 }
 
 ///|
-fn feat_make_rgb(w : Int, h : Int) -> @types.Image {
+fn feat_make_rgb(w : Int32, h : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -43,7 +43,7 @@ fn feat_make_rgb(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn feat_make_checkerboard(w : Int, h : Int) -> @types.Image {
+fn feat_make_checkerboard(w : Int32, h : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -976,14 +976,14 @@ test "feat_edge: gabor_filter_bank 全黑" {
 
 ///|
 test "feat_edge: glcm_features 零矩阵" {
-  let glcm : Array[Array[Int]] = Array::make(4, Array::make(4, 0))
+  let glcm : Array[Array[Int32]] = Array::make(4, Array::make(4, 0))
   let features = @feature.glcm_features(glcm)
   assert_true(features.contrast >= 0.0)
 }
 
 ///|
 test "feat_edge: glcm_features 单元素" {
-  let glcm : Array[Array[Int]] = [
+  let glcm : Array[Array[Int32]] = [
     [1, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],

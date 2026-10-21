@@ -1,7 +1,7 @@
 // v15.0.0 HDR 与全景拼接测试
 
 ///|
-fn make_hdr_img(w : Int, h : Int, val : Byte) -> @types.Image {
+fn make_hdr_img(w : Int32, h : Int32, val : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

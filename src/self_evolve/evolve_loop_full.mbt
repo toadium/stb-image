@@ -41,7 +41,7 @@ pub extend LoopStep with Eq::{not_equal, equal}
 /// Loop execution result.
 pub(all) struct LoopResult {
   steps : Array[LoopStep]
-  total_phases : Int
+  total_phases : Int32
   success : Bool
   summary : String
 } derive(Eq, @debug.Debug)

@@ -7,9 +7,9 @@
 pub(all) struct Phase8Capability {
   version : String
   name : String
-  types : Int
-  functions : Int
-  tests : Int
+  types : Int32
+  functions : Int32
+  tests : Int32
   description : String
 } derive(Eq, @debug.Debug)
 
@@ -24,9 +24,9 @@ pub extend Phase8Capability with Eq::{not_equal, equal}
 /// Phase 8 aggregate report.
 pub(all) struct Phase8Report {
   capabilities : Array[Phase8Capability]
-  total_types : Int
-  total_functions : Int
-  total_tests : Int
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
   phase_summary : String
 } derive(Eq, @debug.Debug)
 
@@ -78,7 +78,7 @@ pub fn phase8_capabilities() -> Array[Phase8Capability] {
 
 ///|
 /// Phase 8 总类型数。
-pub fn phase8_total_types() -> Int {
+pub fn phase8_total_types() -> Int32 {
   let mut sum = 0
   for c in phase8_capabilities() {
     sum = sum + c.types
@@ -88,7 +88,7 @@ pub fn phase8_total_types() -> Int {
 
 ///|
 /// Phase 8 总函数数。
-pub fn phase8_total_functions() -> Int {
+pub fn phase8_total_functions() -> Int32 {
   let mut sum = 0
   for c in phase8_capabilities() {
     sum = sum + c.functions
@@ -98,7 +98,7 @@ pub fn phase8_total_functions() -> Int {
 
 ///|
 /// Phase 8 总测试数。
-pub fn phase8_total_tests() -> Int {
+pub fn phase8_total_tests() -> Int32 {
   let mut sum = 0
   for c in phase8_capabilities() {
     sum = sum + c.tests

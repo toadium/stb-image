@@ -1,7 +1,7 @@
 // filter 16-bit/float 变体测试
 
 ///|
-fn make_image16_f(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn make_image16_f(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -22,7 +22,7 @@ fn make_image16_f(w : Int, h : Int, ch : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imagef_f(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn make_imagef_f(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for y in 0..<h {
     for x in 0..<w {
@@ -47,10 +47,10 @@ fn make_imagef_f(w : Int, h : Int, ch : Int) -> @types.ImageF {
 
 ///|
 fn make_uniform_image16(
-  w : Int,
-  h : Int,
-  ch : Int,
-  val : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
 ) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
@@ -67,9 +67,9 @@ fn make_uniform_image16(
 
 ///|
 fn make_uniform_imagef(
-  w : Int,
-  h : Int,
-  ch : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
   val : Float,
 ) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
@@ -89,12 +89,12 @@ fn make_uniform_imagef(
 }
 
 ///|
-fn read_u16_le_ft(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_ft(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_f32_le_ft(data : Bytes, offset : Int) -> Float {
+fn read_f32_le_ft(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()

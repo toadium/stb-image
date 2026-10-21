@@ -1,7 +1,7 @@
 // feature_advanced_16f 错误路径测试
 
 ///|
-fn make_i16_fa(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_i16_fa(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +16,7 @@ fn make_i16_fa(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_if_fa(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_if_fa(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -34,7 +34,7 @@ fn make_if_fa(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn make_i16_bad_data(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn make_i16_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   @types.Image16::{
     width: w,
     height: h,
@@ -44,7 +44,7 @@ fn make_i16_bad_data(w : Int, h : Int, ch : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_if_bad_data(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn make_if_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   @types.ImageF::{
     width: w,
     height: h,

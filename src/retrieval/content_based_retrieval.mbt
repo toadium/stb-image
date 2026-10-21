@@ -27,11 +27,11 @@ pub extend FeatureType with Eq::{not_equal, equal}
 pub(all) struct CBIRImageFeature {
   feature_type : FeatureType
   feature_vector : Array[Double]
-  feature_length : Int
+  feature_length : Int32
   image_id : String
   image_path : String
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   extraction_time_ms : Double
 }
 
@@ -42,26 +42,26 @@ pub(all) struct CBIRRetrievalResult {
   image_path : String
   similarity : Double
   distance : Double
-  rank : Int
-  width : Int
-  height : Int
+  rank : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
 /// 检索结果列表
 pub(all) struct CBIRRetrievalResultList {
   results : Array[CBIRRetrievalResult]
-  num_results : Int
+  num_results : Int32
   query_image_id : String
   retrieval_time_ms : Double
-  total_images_in_index : Int
+  total_images_in_index : Int32
 }
 
 ///|
 /// 图像索引
 pub(all) struct CBIRImageIndex {
   features : Array[CBIRImageFeature]
-  num_images : Int
+  num_images : Int32
   index_type : String
   built : Bool
   build_time_ms : Double
@@ -88,7 +88,7 @@ pub extend SimilarityMetric with Eq::{not_equal, equal}
 ///|
 /// 颜色直方图配置
 pub(all) struct ColorHistogramConfig {
-  num_bins : Int
+  num_bins : Int32
   color_space : String // "RGB" / "HSV" / "Gray"
   normalize : Bool
   cumulative : Bool
@@ -97,8 +97,8 @@ pub(all) struct ColorHistogramConfig {
 ///|
 /// LBP 特征配置
 pub(all) struct LBPConfig {
-  radius : Int
-  num_points : Int
+  radius : Int32
+  num_points : Int32
   uniform : Bool
   rotation_invariant : Bool
 }
@@ -106,17 +106,17 @@ pub(all) struct LBPConfig {
 ///|
 /// HOG 特征配置
 pub(all) struct HOGConfig {
-  cell_size : Int
-  block_size : Int
-  num_bins : Int
+  cell_size : Int32
+  block_size : Int32
+  num_bins : Int32
   normalize : Bool
 }
 
 ///|
 /// Gabor 特征配置
 pub(all) struct GaborConfig {
-  num_scales : Int
-  num_orientations : Int
+  num_scales : Int32
+  num_orientations : Int32
   wavelength : Double
   aspect_ratio : Double
 }
@@ -467,7 +467,7 @@ pub fn add_to_index(
 pub fn retrieve_images(
   query_feature : CBIRImageFeature,
   index : CBIRImageIndex,
-  num_results : Int,
+  num_results : Int32,
   metric : SimilarityMetric,
 ) -> CBIRRetrievalResultList {
   let similarities : Array[Double] = []
@@ -481,7 +481,7 @@ pub fn retrieve_images(
   }
 
   // 按相似度排序（冒泡排序，降序）
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for i in 0..<index.num_images {
     indices.push(i)
   }

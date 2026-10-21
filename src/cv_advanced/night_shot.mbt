@@ -32,10 +32,10 @@ pub extend NightShotParams with Eq::{not_equal, equal}
 /// 构建夜景合成参数
 pub fn night_build_params(
   mode : NightShotMode,
-  align_threshold? : Double = 3.0,
-  noise_strength? : Double = 0.5,
-  brightness_boost? : Double = 1.5,
-  contrast_boost? : Double = 1.2,
+  align_threshold~ : Double = 3.0,
+  noise_strength~ : Double = 0.5,
+  brightness_boost~ : Double = 1.5,
+  contrast_boost~ : Double = 1.2,
 ) -> NightShotParams {
   NightShotParams::{
     mode,
@@ -299,7 +299,7 @@ pub fn night_estimate_noise(img : @types.Image) -> Double {
 }
 
 ///|
-fn clamp_d2(v : Int) -> Int {
+fn clamp_d2(v : Int32) -> Int32 {
   if v > 255 {
     255
   } else if v < 0 {

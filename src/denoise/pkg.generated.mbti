@@ -6,7 +6,7 @@ import {
 }
 
 // Values
-pub fn bilateral_filter_denoise(@types.Image, Int, Double, Double) -> @types.Image raise @types.LoadError
+pub fn bilateral_filter_denoise(@types.Image, Int32, Double, Double) -> @types.Image raise @types.LoadError
 
 pub fn calculate_brightness(@types.Image) -> Double raise @types.LoadError
 
@@ -28,15 +28,15 @@ pub fn enhance_image_advanced(@types.Image, EnhancementAlgorithm) -> Enhancement
 
 pub fn gamma_correction_enhance(@types.Image, Double) -> @types.Image raise @types.LoadError
 
-pub fn gaussian_filter_denoise(@types.Image, Int, Double) -> @types.Image raise @types.LoadError
+pub fn gaussian_filter_denoise(@types.Image, Int32, Double) -> @types.Image raise @types.LoadError
 
 pub fn histogram_equalization_enhance(@types.Image) -> @types.Image raise @types.LoadError
 
-pub fn mean_filter_denoise(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn mean_filter_denoise(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
-pub fn median_filter_denoise(@types.Image, Int) -> @types.Image raise @types.LoadError
+pub fn median_filter_denoise(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
-pub fn unsharp_mask_enhance(@types.Image, Double, Int) -> @types.Image raise @types.LoadError
+pub fn unsharp_mask_enhance(@types.Image, Double, Int32) -> @types.Image raise @types.LoadError
 
 // Errors
 
@@ -60,12 +60,12 @@ pub fn DenoiseAlgorithm::not_equal(Self, Self) -> Bool
 pub(all) struct DenoiseConfig {
   algorithm : DenoiseAlgorithm
   strength : Double
-  kernel_size : Int
+  kernel_size : Int32
   sigma_color : Double
   sigma_space : Double
-  search_window : Int
-  patch_size : Int
-  iterations : Int
+  search_window : Int32
+  patch_size : Int32
+  iterations : Int32
 }
 
 pub(all) struct DenoiseResult {

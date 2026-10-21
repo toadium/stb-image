@@ -16,8 +16,8 @@ pub(all) enum TemplateMatchMethod {
 ///|
 /// 模板匹配结果
 pub(all) struct TemplateMatchResult {
-  x : Int // 匹配位置 x
-  y : Int // 匹配位置 y
+  x : Int32 // 匹配位置 x
+  y : Int32 // 匹配位置 y
   score : Float // 匹配分数（语义依方法而定）
 }
 
@@ -29,7 +29,7 @@ pub(all) struct TemplateMatchResult {
 pub fn template_match(
   img : @types.Image,
   template : @types.Image,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> Array[TemplateMatchResult] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -118,7 +118,7 @@ pub fn template_match(
 pub fn template_match_best(
   img : @types.Image,
   template : @types.Image,
-  match_method? : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
+  match_method~ : TemplateMatchMethod = TemplateMatchMethod::CCoeffNormed,
 ) -> TemplateMatchResult? raise @types.LoadError {
   let results = template_match(img, template, match_method~)
   if results.length() == 0 {
@@ -148,13 +148,13 @@ pub fn template_match_best(
 
 ///|
 fn compute_sqdiff(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
 ) -> Float {
   let mut sum = 0.0F
   for ty in 0..<th {
@@ -170,13 +170,13 @@ fn compute_sqdiff(
 
 ///|
 fn compute_ccorr(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
 ) -> Float {
   let mut sum = 0.0F
   for ty in 0..<th {
@@ -189,13 +189,13 @@ fn compute_ccorr(
 
 ///|
 fn compute_ccoeff(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
   tpl_mean : Float,
 ) -> Float {
   let n = tw * th
@@ -215,13 +215,13 @@ fn compute_ccoeff(
 
 ///|
 fn compute_sqdiff_normed(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
   tpl_sq_sum : Float,
 ) -> Float {
   let mut sq_diff = 0.0F
@@ -244,13 +244,13 @@ fn compute_sqdiff_normed(
 
 ///|
 fn compute_ccorr_normed(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
   tpl_sq_sum : Float,
 ) -> Float {
   let mut cross = 0.0F
@@ -272,13 +272,13 @@ fn compute_ccorr_normed(
 
 ///|
 fn compute_ccoeff_normed(
-  img : Array[Int],
-  w : Int,
-  tpl : Array[Int],
-  tw : Int,
-  th : Int,
-  ox : Int,
-  oy : Int,
+  img : Array[Int32],
+  w : Int32,
+  tpl : Array[Int32],
+  tw : Int32,
+  th : Int32,
+  ox : Int32,
+  oy : Int32,
   tpl_mean : Float,
   tpl_var_sum : Float,
 ) -> Float {
@@ -310,12 +310,12 @@ fn compute_ccoeff_normed(
 // ==================== 辅助函数 ====================
 
 ///|
-fn to_gray_tm(img : @types.Image) -> (Array[Int], Int) {
+fn to_gray_tm(img : @types.Image) -> (Array[Int32], Int32) {
   let w = img.width
   let h = img.height
   let ch = img.channels
   let n = w * h
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     if ch >= 3 {
       let r = img.data[i * ch].to_int()
@@ -330,7 +330,7 @@ fn to_gray_tm(img : @types.Image) -> (Array[Int], Int) {
 }
 
 ///|
-fn array_sum(arr : Array[Int]) -> Int {
+fn array_sum(arr : Array[Int32]) -> Int32 {
   let mut s = 0
   for v in arr {
     s += v
@@ -339,7 +339,7 @@ fn array_sum(arr : Array[Int]) -> Int {
 }
 
 ///|
-fn array_sq_sum(arr : Array[Int]) -> Float {
+fn array_sq_sum(arr : Array[Int32]) -> Float {
   let mut s = 0.0F
   for v in arr {
     let f = Float::from_int(v)

@@ -7,11 +7,11 @@ pub(all) struct ImageValidationResult {
   is_valid : Bool
   errors : Array[String]
   warnings : Array[String]
-  width : Int
-  height : Int
-  channels : Int
-  data_size : Int
-  expected_data_size : Int
+  width : Int32
+  height : Int32
+  channels : Int32
+  data_size : Int32
+  expected_data_size : Int32
 }
 
 ///|
@@ -90,7 +90,7 @@ pub fn validate_image_or_raise(
 /// 验证图像通道数
 pub fn validate_channels(
   img : @types.Image,
-  expected_channels : Array[Int],
+  expected_channels : Array[Int32],
 ) -> Bool {
   for ch in expected_channels {
     if img.channels == ch {
@@ -104,7 +104,7 @@ pub fn validate_channels(
 /// 验证图像通道数并在无效时抛出错误
 pub fn validate_channels_or_raise(
   img : @types.Image,
-  expected_channels : Array[Int],
+  expected_channels : Array[Int32],
   function_name : String,
 ) -> Unit raise @types.LoadError {
   if !validate_channels(img, expected_channels) {
@@ -166,9 +166,9 @@ pub fn validate_range_or_raise(
 ///|
 /// 验证整数参数范围
 pub fn validate_int_range(
-  value : Int,
-  min : Int,
-  max : Int,
+  value : Int32,
+  min : Int32,
+  max : Int32,
   param_name : String,
 ) -> Result[Unit, String] {
   if value < min || value > max {
@@ -189,9 +189,9 @@ pub fn validate_int_range(
 ///|
 /// 验证整数参数范围并在无效时抛出错误
 pub fn validate_int_range_or_raise(
-  value : Int,
-  min : Int,
-  max : Int,
+  value : Int32,
+  min : Int32,
+  max : Int32,
   param_name : String,
 ) -> Unit raise @types.LoadError {
   let result = validate_int_range(value, min, max, param_name)
@@ -203,7 +203,7 @@ pub fn validate_int_range_or_raise(
 
 ///|
 /// 安全的像素值钳制
-pub fn clamp_pixel_value(value : Int) -> Int {
+pub fn clamp_pixel_value(value : Int32) -> Int32 {
   if value < 0 {
     0
   } else if value > 255 {
@@ -227,13 +227,18 @@ pub fn clamp_pixel_value_double(value : Double) -> Double {
 
 ///|
 /// 安全的索引检查
-pub fn is_valid_index(index : Int, length : Int) -> Bool {
+pub fn is_valid_index(index : Int32, length : Int32) -> Bool {
   index >= 0 && index < length
 }
 
 ///|
 /// 安全的2D索引检查
-pub fn is_valid_2d_index(x : Int, y : Int, width : Int, height : Int) -> Bool {
+pub fn is_valid_2d_index(
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+) -> Bool {
   x >= 0 && x < width && y >= 0 && y < height
 }
 
@@ -260,12 +265,12 @@ pub fn create_performance_timer(operation_name : String) -> PerformanceTimer {
 ///|
 /// 内存使用统计
 pub(all) struct MemoryUsageStats {
-  allocated_bytes : Int
-  freed_bytes : Int
-  current_usage_bytes : Int
-  peak_usage_bytes : Int
-  allocation_count : Int
-  free_count : Int
+  allocated_bytes : Int32
+  freed_bytes : Int32
+  current_usage_bytes : Int32
+  peak_usage_bytes : Int32
+  allocation_count : Int32
+  free_count : Int32
 }
 
 ///|
@@ -326,7 +331,7 @@ pub fn create_production_error(
 ///|
 /// 重试配置
 pub(all) struct RetryConfig {
-  max_retries : Int
+  max_retries : Int32
   initial_delay_ms : Double
   max_delay_ms : Double
   backoff_factor : Double
@@ -349,7 +354,7 @@ pub fn create_default_retry_config() -> RetryConfig {
 
 ///|
 /// 计算重试延迟
-pub fn calculate_retry_delay(config : RetryConfig, attempt : Int) -> Double {
+pub fn calculate_retry_delay(config : RetryConfig, attempt : Int32) -> Double {
   let mut factor = 1.0
   for _ in 0..<attempt {
     factor = factor * config.backoff_factor

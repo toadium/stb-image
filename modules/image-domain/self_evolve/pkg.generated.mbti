@@ -1,0 +1,1523 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image-domain/self_evolve"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image-domain/imgir",
+}
+
+// Values
+pub fn adaptive_strategy(@imgir.IROp) -> AdaptiveStrategy
+
+pub fn adaptive_strategy_all() -> AdaptiveReport
+
+pub fn all_ops() -> Array[@imgir.IROp]
+
+pub fn analyze_coverage_gaps() -> CoverageGapReport
+
+pub fn analyze_pipeline_root_cause(@imgir.IRPipeline) -> RootCauseReport
+
+pub fn analyze_propagation(@imgir.IRPipeline) -> PropagationReport
+
+pub fn analyze_propagation_all() -> PropagationReport
+
+pub fn analyze_root_cause(@imgir.IROp) -> Array[RootCause]
+
+pub fn analyze_root_cause_all() -> RootCauseReport
+
+pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
+
+pub fn best_repair(@imgir.IROp) -> StrategyRepairResult
+
+pub fn best_repair_all() -> Array[StrategyRepairResult]
+
+pub fn build_knowledge_graph() -> KnowledgeGraph
+
+pub fn build_knowledge_graph_for_op(@imgir.IROp) -> KnowledgeGraph
+
+pub fn build_module_deps() -> Array[ModuleDep]
+
+pub fn can_merge(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn check_equivalence(@imgir.IRPipeline, @imgir.IRPipeline) -> EquivalenceCheck
+
+pub fn check_equivalence_all() -> EquivalenceReport
+
+pub fn check_inverse_pair(@imgir.IROp, @imgir.IROp) -> Bool
+
+pub fn check_regression(PerfBaseline, PerfBaseline) -> PerfRegression
+
+pub fn ci_gate_all() -> Array[CIGateResult]
+
+pub fn ci_gate_check(@imgir.IRPipeline) -> CIGateResult
+
+pub fn ci_regression_all_pass() -> Bool
+
+pub fn ci_regression_gate(@imgir.IRPipeline) -> Bool
+
+pub fn co_evolve_all() -> CoEvolveReport
+
+pub fn co_evolve_op(@imgir.IROp) -> CoEvolveReport
+
+pub fn combine_all_strategies() -> ComboReport
+
+pub fn combine_strategies(@imgir.IROp) -> StrategyCombo
+
+pub fn combo_coverage_report() -> ComboCoverageReport
+
+pub fn compare_pipelines(@imgir.IRPipeline, @imgir.IRPipeline) -> PerfRegression
+
+pub fn compare_snapshots(HistoryEntry, HistoryEntry) -> String
+
+pub fn count_by_category(Array[TestCase]) -> Array[(TestCategory, Int32)]
+
+pub fn count_by_kind(Array[DegradationCase]) -> Array[(DegradationKind, Int32)]
+
+pub fn coverage_percentage(@imgir.IROp) -> Int32
+
+pub fn create_schedule(Array[@imgir.IROp]) -> EvolutionSchedule
+
+pub fn decide_all() -> DecisionReport
+
+pub fn decide_op(@imgir.IROp) -> AutoDecision
+
+pub fn detect_degradation(@imgir.IROp) -> Array[DegradationCase]
+
+pub fn detect_regressions() -> RegressionReport
+
+pub fn equivalence_class(@imgir.IROp) -> Array[String]
+
+pub fn estimate_benefit(@imgir.IRPipeline) -> Int32
+
+pub fn estimate_op_cost(@imgir.IROp) -> OpCost
+
+pub fn estimate_pipeline_cost(@imgir.IRPipeline) -> PerfBaseline
+
+pub fn eval_quality_all() -> QualityReport
+
+pub fn eval_quality_op(@imgir.IROp) -> QualityReport
+
+pub fn evolve(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn evolve_all() -> EvolveReport
+
+pub fn evolve_cycle_all() -> Array[EvolveCycleReport]
+
+pub fn evolve_degradation_scan(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn evolve_full_cycle(@imgir.IRPipeline) -> EvolveCycleReport
+
+pub fn evolve_test_suite(Array[@imgir.IROp]) -> Array[TestCase]
+
+pub fn evolve_tests_only(Array[@imgir.IROp]) -> EvolveReport
+
+pub fn exec_optimize(@imgir.IRPipeline) -> OptimizeExecResult
+
+pub fn exec_optimize_all() -> Array[OptimizeExecResult]
+
+pub fn filter_by_kind(Array[RootCause], DegradationKind) -> Array[RootCause]
+
+pub fn filter_by_severity(Array[DegradationCase], Severity) -> Array[DegradationCase]
+
+pub fn find_redundant_ops(@imgir.IRPipeline) -> Array[String]
+
+pub fn find_under_tested_ops() -> Array[String]
+
+pub fn find_untested_ops() -> Array[String]
+
+pub fn gen_all_combos() -> Array[OpCombo]
+
+pub fn gen_boundary_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_combo_tests() -> Array[TestCase]
+
+pub fn gen_edge_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_executable_suite(Array[TestCase]) -> Array[ExecutableTest]
+
+pub fn gen_executable_test(TestCase) -> ExecutableTest
+
+pub fn gen_normal_tests(@imgir.IROp) -> Array[TestCase]
+
+pub fn gen_test_file_content(Array[ExecutableTest]) -> String
+
+pub fn gen_test_file_for_all() -> Array[ExecutableTestFile]
+
+pub fn gen_test_file_for_op(@imgir.IROp) -> ExecutableTestFile
+
+pub fn gen_test_for_op(@imgir.IROp) -> Array[TestCase]
+
+pub fn grill_rule_desc(GrillRule) -> String
+
+pub fn grill_rules() -> Array[GrillRule]
+
+pub fn has_propagation_risk(@imgir.IRPipeline) -> Bool
+
+pub fn has_regression(String) -> Bool
+
+pub fn high_priority_ops() -> Array[String]
+
+pub fn history_log() -> HistoryLog
+
+pub fn is_identity_op(@imgir.IROp) -> Bool
+
+pub fn merge_ops(@imgir.IROp, @imgir.IROp) -> @imgir.IROp
+
+pub fn meta_evolve_all() -> MetaReport
+
+pub fn meta_evolve_op(@imgir.IROp) -> MetaReport
+
+pub fn optimize_all(@imgir.IRPipeline) -> OptimizationReport
+
+pub fn optimize_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn optimize_verified(@imgir.IRPipeline) -> Bool
+
+pub fn optimized_op_count(@imgir.IRPipeline) -> Int32
+
+pub fn perf_optimize_check(@imgir.IRPipeline) -> PerfRegression
+
+pub fn phase10_capabilities() -> Array[Phase10Capability]
+
+pub fn phase10_is_complete() -> Bool
+
+pub fn phase10_report() -> Phase10Report
+
+pub fn phase10_total_functions() -> Int32
+
+pub fn phase10_total_tests() -> Int32
+
+pub fn phase10_total_types() -> Int32
+
+pub fn phase11_capabilities() -> Array[Phase11Capability]
+
+pub fn phase11_is_complete() -> Bool
+
+pub fn phase11_report() -> Phase11Report
+
+pub fn phase11_total_functions() -> Int32
+
+pub fn phase11_total_tests() -> Int32
+
+pub fn phase11_total_types() -> Int32
+
+pub fn phase4_capabilities() -> Array[Phase4Capability]
+
+pub fn phase4_is_complete() -> Bool
+
+pub fn phase4_report() -> Phase4Report
+
+pub fn phase4_total_functions() -> Int32
+
+pub fn phase4_total_tests() -> Int32
+
+pub fn phase4_total_types() -> Int32
+
+pub fn phase5_capabilities() -> Array[Phase5Capability]
+
+pub fn phase5_is_complete() -> Bool
+
+pub fn phase5_report() -> Phase5Report
+
+pub fn phase5_total_functions() -> Int32
+
+pub fn phase5_total_tests() -> Int32
+
+pub fn phase5_total_types() -> Int32
+
+pub fn phase6_capabilities() -> Array[Phase6Capability]
+
+pub fn phase6_is_complete() -> Bool
+
+pub fn phase6_report() -> Phase6Report
+
+pub fn phase6_total_functions() -> Int32
+
+pub fn phase6_total_tests() -> Int32
+
+pub fn phase6_total_types() -> Int32
+
+pub fn phase7_capabilities() -> Array[Phase7Capability]
+
+pub fn phase7_is_complete() -> Bool
+
+pub fn phase7_report() -> Phase7Report
+
+pub fn phase7_total_functions() -> Int32
+
+pub fn phase7_total_tests() -> Int32
+
+pub fn phase7_total_types() -> Int32
+
+pub fn phase8_capabilities() -> Array[Phase8Capability]
+
+pub fn phase8_is_complete() -> Bool
+
+pub fn phase8_report() -> Phase8Report
+
+pub fn phase8_total_functions() -> Int32
+
+pub fn phase8_total_tests() -> Int32
+
+pub fn phase8_total_types() -> Int32
+
+pub fn phase9_capabilities() -> Array[Phase9Capability]
+
+pub fn phase9_is_complete() -> Bool
+
+pub fn phase9_report() -> Phase9Report
+
+pub fn phase9_total_functions() -> Int32
+
+pub fn phase9_total_tests() -> Int32
+
+pub fn phase9_total_types() -> Int32
+
+pub fn predict_all() -> PredictionReport
+
+pub fn predict_op(@imgir.IROp) -> EvolutionPrediction
+
+pub fn priority_from_coverage(Int32) -> TestPriority
+
+pub fn propagation_chain(@imgir.IRPipeline) -> Array[PropagationStep]
+
+pub fn recommend_all() -> RecommendationReport
+
+pub fn recommend_for_pipeline(@imgir.IRPipeline) -> RecommendationReport
+
+pub fn recommend_next(@imgir.IROp) -> Recommendation
+
+pub fn record_snapshot(@imgir.IRPipeline, String) -> HistoryEntry
+
+pub fn repair_all() -> Array[RepairReport]
+
+pub fn repair_op(@imgir.IROp) -> @imgir.IROp
+
+pub fn repair_op_strategy(@imgir.IROp, RepairStrategy) -> @imgir.IROp
+
+pub fn repair_pipeline(@imgir.IRPipeline) -> @imgir.IRPipeline
+
+pub fn repair_report(@imgir.IRPipeline) -> RepairReport
+
+pub fn repair_with_strategies(@imgir.IROp) -> Array[StrategyRepairResult]
+
+pub fn rollback_to(String) -> HistoryEntry?
+
+pub fn rotate90_power_is_identity(Int32) -> Bool
+
+pub fn run_evolve_loop(@imgir.IROp) -> LoopResult
+
+pub fn run_evolve_loop_all() -> LoopResult
+
+pub fn run_full_evolution() -> ScheduleResult
+
+pub fn run_grill_all() -> GrillReport
+
+pub fn run_grill_check(@imgir.IRPipeline) -> GrillReport
+
+pub fn run_schedule(EvolutionSchedule) -> ScheduleResult
+
+pub fn run_summary(Array[TestRunResult]) -> RunSummary
+
+pub fn run_test_case(TestCase) -> TestRunResult
+
+pub fn run_test_suite(Array[TestCase]) -> Array[TestRunResult]
+
+pub fn run_tests_for_all() -> Array[TestRunResult]
+
+pub fn run_tests_for_op(@imgir.IROp) -> Array[TestRunResult]
+
+pub fn scan_degradations(Array[@imgir.IROp]) -> Array[DegradationCase]
+
+pub fn score_all_ops() -> SmartPriorityReport
+
+pub fn score_op(@imgir.IROp) -> SmartScore
+
+pub fn suggest_optimization(@imgir.IRPipeline) -> PipelineOptReport
+
+pub fn suggest_optimizations(@imgir.IRPipeline) -> Array[OptimizationSuggestion]
+
+pub fn suggest_test_count(Int32) -> Int32
+
+pub fn tune_all_params() -> TuneReport
+
+pub fn tune_params(@imgir.IROp) -> Array[TunedParam]
+
+pub fn unique_combo_count() -> Int32
+
+pub fn visualize_propagation(@imgir.IRPipeline, VizFormat) -> PropagationViz
+
+pub fn visualize_propagation_ascii(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_mermaid(@imgir.IRPipeline) -> String
+
+pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct AdaptiveReport {
+  strategies : Array[AdaptiveStrategy]
+  total_prioritized : Int32
+  high_priority_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn AdaptiveReport::equal(Self, Self) -> Bool
+pub fn AdaptiveReport::is_well_covered(Self) -> Bool
+pub fn AdaptiveReport::not_equal(Self, Self) -> Bool
+pub fn AdaptiveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AdaptiveStrategy {
+  op_tag : String
+  current_coverage : Int32
+  priority : TestPriority
+  suggested_tests : Int32
+} derive(Eq, @debug.Debug)
+pub fn AdaptiveStrategy::equal(Self, Self) -> Bool
+pub fn AdaptiveStrategy::not_equal(Self, Self) -> Bool
+pub fn AdaptiveStrategy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AutoDecision {
+  op_tag : String
+  action : DecisionAction
+  confidence : Int32
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn AutoDecision::equal(Self, Self) -> Bool
+pub fn AutoDecision::not_equal(Self, Self) -> Bool
+pub fn AutoDecision::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CIGateResult {
+  passed : Bool
+  total_checks : Int32
+  failed_checks : Int32
+  gate_summary : String
+} derive(Eq, @debug.Debug)
+pub fn CIGateResult::equal(Self, Self) -> Bool
+pub fn CIGateResult::is_green(Self) -> Bool
+pub fn CIGateResult::not_equal(Self, Self) -> Bool
+pub fn CIGateResult::pass_rate(Self) -> Int32
+pub fn CIGateResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoEvolveAction {
+  action_kind : CoEvolveActionKind
+  source_module : String
+  target_module : String
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveAction::equal(Self, Self) -> Bool
+pub fn CoEvolveAction::not_equal(Self, Self) -> Bool
+pub fn CoEvolveAction::to_repr(Self) -> @debug.Repr
+
+pub(all) enum CoEvolveActionKind {
+  SyncEvolve
+  CascadeEvolve
+  IndependentEvolve
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveActionKind::equal(Self, Self) -> Bool
+pub fn CoEvolveActionKind::not_equal(Self, Self) -> Bool
+pub fn CoEvolveActionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoEvolveReport {
+  actions : Array[CoEvolveAction]
+  total_modules : Int32
+  sync_count : Int32
+  cascade_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn CoEvolveReport::equal(Self, Self) -> Bool
+pub fn CoEvolveReport::has_cascade(Self) -> Bool
+pub fn CoEvolveReport::not_equal(Self, Self) -> Bool
+pub fn CoEvolveReport::to_repr(Self) -> @debug.Repr
+pub fn CoEvolveReport::total_actions(Self) -> Int32
+
+pub(all) struct ComboCoverageReport {
+  total_combos : Int32
+  generated_tests : Int32
+  coverage_pct : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ComboCoverageReport::equal(Self, Self) -> Bool
+pub fn ComboCoverageReport::not_equal(Self, Self) -> Bool
+pub fn ComboCoverageReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ComboReport {
+  combos : Array[StrategyCombo]
+  total : Int32
+  parallel_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ComboReport::equal(Self, Self) -> Bool
+pub fn ComboReport::has_parallel(Self) -> Bool
+pub fn ComboReport::not_equal(Self, Self) -> Bool
+pub fn ComboReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoverageGap {
+  op_tag : String
+  gap_kind : GapKind
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn CoverageGap::equal(Self, Self) -> Bool
+pub fn CoverageGap::not_equal(Self, Self) -> Bool
+pub fn CoverageGap::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CoverageGapReport {
+  gaps : Array[CoverageGap]
+  total_gaps : Int32
+  untested_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn CoverageGapReport::equal(Self, Self) -> Bool
+pub fn CoverageGapReport::has_gaps(Self) -> Bool
+pub fn CoverageGapReport::not_equal(Self, Self) -> Bool
+pub fn CoverageGapReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DecisionAction {
+  EvolveNow
+  DeferEvolution
+  SkipEvolution
+  EscalateToManual
+} derive(Eq, @debug.Debug)
+pub fn DecisionAction::equal(Self, Self) -> Bool
+pub fn DecisionAction::not_equal(Self, Self) -> Bool
+pub fn DecisionAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DecisionReport {
+  decisions : Array[AutoDecision]
+  total : Int32
+  auto_count : Int32
+  deferred_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn DecisionReport::can_auto_run(Self) -> Bool
+pub fn DecisionReport::equal(Self, Self) -> Bool
+pub fn DecisionReport::not_equal(Self, Self) -> Bool
+pub fn DecisionReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DegradationCase {
+  kind : DegradationKind
+  op_tag : String
+  description : String
+  severity : Severity
+} derive(Eq, @debug.Debug)
+pub fn DegradationCase::equal(Self, Self) -> Bool
+pub fn DegradationCase::not_equal(Self, Self) -> Bool
+pub fn DegradationCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DegradationKind {
+  DivisionByZero
+  SingularMatrix
+  FieldDiscontinuity
+  Overflow
+  NaNValue
+  InfValue
+} derive(Eq, @debug.Debug)
+pub fn DegradationKind::equal(Self, Self) -> Bool
+pub fn DegradationKind::not_equal(Self, Self) -> Bool
+pub fn DegradationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EquivalenceCheck {
+  pipeline_a_desc : String
+  pipeline_b_desc : String
+  is_equivalent : Bool
+  reason : String
+} derive(Eq, @debug.Debug)
+pub fn EquivalenceCheck::equal(Self, Self) -> Bool
+pub fn EquivalenceCheck::not_equal(Self, Self) -> Bool
+pub fn EquivalenceCheck::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EquivalenceReport {
+  checks : Array[EquivalenceCheck]
+  total_equivalent : Int32
+  total_not_equivalent : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn EquivalenceReport::all_equivalent(Self) -> Bool
+pub fn EquivalenceReport::equal(Self, Self) -> Bool
+pub fn EquivalenceReport::not_equal(Self, Self) -> Bool
+pub fn EquivalenceReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolutionPrediction {
+  op_tag : String
+  kind : PredictionKind
+  confidence : Int32
+  predicted_value : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn EvolutionPrediction::equal(Self, Self) -> Bool
+pub fn EvolutionPrediction::not_equal(Self, Self) -> Bool
+pub fn EvolutionPrediction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolutionSchedule {
+  schedule_id : String
+  ops_count : Int32
+  status : ScheduleStatus
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn EvolutionSchedule::equal(Self, Self) -> Bool
+pub fn EvolutionSchedule::not_equal(Self, Self) -> Bool
+pub fn EvolutionSchedule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolveCycleReport {
+  pipeline_desc : String
+  original_op_count : Int32
+  optimized_op_count : Int32
+  generated_tests : Array[TestCase]
+  found_degradations : Array[DegradationCase]
+  optimization_report : OptimizationReport
+  perf_regression : PerfRegression
+  cycle_summary : String
+} derive(Eq, @debug.Debug)
+pub fn EvolveCycleReport::equal(Self, Self) -> Bool
+pub fn EvolveCycleReport::has_degradation_risk(Self) -> Bool
+pub fn EvolveCycleReport::is_improved(Self) -> Bool
+pub fn EvolveCycleReport::not_equal(Self, Self) -> Bool
+pub fn EvolveCycleReport::safety_score(Self) -> Int32
+pub fn EvolveCycleReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EvolveReport {
+  generated_tests : Array[TestCase]
+  found_degradations : Array[DegradationCase]
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn EvolveReport::degradation_count(Self) -> Int32
+pub fn EvolveReport::equal(Self, Self) -> Bool
+pub fn EvolveReport::not_equal(Self, Self) -> Bool
+pub fn EvolveReport::severe_count(Self) -> Int32
+pub fn EvolveReport::test_count(Self) -> Int32
+pub fn EvolveReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExecutableTest {
+  test_name : String
+  code : String
+} derive(Eq, @debug.Debug)
+pub fn ExecutableTest::equal(Self, Self) -> Bool
+pub fn ExecutableTest::not_equal(Self, Self) -> Bool
+pub fn ExecutableTest::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExecutableTestFile {
+  file_header : String
+  tests : Array[ExecutableTest]
+  file_content : String
+} derive(Eq, @debug.Debug)
+pub fn ExecutableTestFile::equal(Self, Self) -> Bool
+pub fn ExecutableTestFile::is_non_empty(Self) -> Bool
+pub fn ExecutableTestFile::not_equal(Self, Self) -> Bool
+pub fn ExecutableTestFile::test_count(Self) -> Int32
+pub fn ExecutableTestFile::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GapKind {
+  UntestedOp
+  UnderTestedOp
+  NoDegradationTest
+} derive(Eq, @debug.Debug)
+pub fn GapKind::equal(Self, Self) -> Bool
+pub fn GapKind::not_equal(Self, Self) -> Bool
+pub fn GapKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GrillReport {
+  results : Array[GrillResult]
+  target_desc : String
+} derive(Eq, @debug.Debug)
+pub fn GrillReport::all_passed(Self) -> Bool
+pub fn GrillReport::equal(Self, Self) -> Bool
+pub fn GrillReport::failed_count(Self) -> Int32
+pub fn GrillReport::not_equal(Self, Self) -> Bool
+pub fn GrillReport::passed_count(Self) -> Int32
+pub fn GrillReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GrillResult {
+  rule : GrillRule
+  target : String
+  passed : Bool
+  reason : String
+} derive(Eq, @debug.Debug)
+pub fn GrillResult::equal(Self, Self) -> Bool
+pub fn GrillResult::not_equal(Self, Self) -> Bool
+pub fn GrillResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GrillRule {
+  NumericRobustness
+  DegenerateGeometry
+  FieldDiscontinuityRule
+  SpatiotemporalTopology
+  MultiTargetCompat
+} derive(Eq, @debug.Debug)
+pub fn GrillRule::equal(Self, Self) -> Bool
+pub fn GrillRule::not_equal(Self, Self) -> Bool
+pub fn GrillRule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct HistoryEntry {
+  version : String
+  op_count : Int32
+  degradation_count : Int32
+  test_count : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn HistoryEntry::equal(Self, Self) -> Bool
+pub fn HistoryEntry::not_equal(Self, Self) -> Bool
+pub fn HistoryEntry::to_repr(Self) -> @debug.Repr
+
+pub(all) struct HistoryLog {
+  entries : Array[HistoryEntry]
+  total_snapshots : Int32
+  latest_version : String
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn HistoryLog::equal(Self, Self) -> Bool
+pub fn HistoryLog::is_empty(Self) -> Bool
+pub fn HistoryLog::not_equal(Self, Self) -> Bool
+pub fn HistoryLog::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeEdge {
+  source : String
+  target : String
+  kind : KnowledgeEdgeKind
+  weight : Int32
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeEdge::equal(Self, Self) -> Bool
+pub fn KnowledgeEdge::not_equal(Self, Self) -> Bool
+pub fn KnowledgeEdge::to_repr(Self) -> @debug.Repr
+
+pub(all) enum KnowledgeEdgeKind {
+  Causes
+  Fixes
+  Prevents
+  Depends
+  Equivalent
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeEdgeKind::equal(Self, Self) -> Bool
+pub fn KnowledgeEdgeKind::not_equal(Self, Self) -> Bool
+pub fn KnowledgeEdgeKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeGraph {
+  nodes : Array[KnowledgeNode]
+  edges : Array[KnowledgeEdge]
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeGraph::edge_count(Self) -> Int32
+pub fn KnowledgeGraph::equal(Self, Self) -> Bool
+pub fn KnowledgeGraph::find_degradations(Self, String) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::find_fixes(Self, String) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::find_nodes_by_kind(Self, KnowledgeNodeKind) -> Array[KnowledgeNode]
+pub fn KnowledgeGraph::is_non_empty(Self) -> Bool
+pub fn KnowledgeGraph::node_count(Self) -> Int32
+pub fn KnowledgeGraph::not_equal(Self, Self) -> Bool
+pub fn KnowledgeGraph::to_repr(Self) -> @debug.Repr
+
+pub(all) struct KnowledgeNode {
+  id : String
+  kind : KnowledgeNodeKind
+  label : String
+  confidence : Int32
+  occurrence : Int32
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeNode::equal(Self, Self) -> Bool
+pub fn KnowledgeNode::not_equal(Self, Self) -> Bool
+pub fn KnowledgeNode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum KnowledgeNodeKind {
+  OpNode
+  DegradationNode
+  FixNode
+  TestNode
+  PerfNode
+} derive(Eq, @debug.Debug)
+pub fn KnowledgeNodeKind::equal(Self, Self) -> Bool
+pub fn KnowledgeNodeKind::not_equal(Self, Self) -> Bool
+pub fn KnowledgeNodeKind::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LoopPhase {
+  Predict
+  Decide
+  Strategize
+  Tune
+  Execute
+  Verify
+  Done
+} derive(Eq, @debug.Debug)
+pub fn LoopPhase::equal(Self, Self) -> Bool
+pub fn LoopPhase::not_equal(Self, Self) -> Bool
+pub fn LoopPhase::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LoopResult {
+  steps : Array[LoopStep]
+  total_phases : Int32
+  success : Bool
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn LoopResult::equal(Self, Self) -> Bool
+pub fn LoopResult::is_complete(Self) -> Bool
+pub fn LoopResult::not_equal(Self, Self) -> Bool
+pub fn LoopResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LoopStep {
+  phase : LoopPhase
+  result_desc : String
+} derive(Eq, @debug.Debug)
+pub fn LoopStep::equal(Self, Self) -> Bool
+pub fn LoopStep::not_equal(Self, Self) -> Bool
+pub fn LoopStep::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaAction {
+  strategy : MetaStrategy
+  target_param : String
+  current_value : Int32
+  new_value : Int32
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn MetaAction::equal(Self, Self) -> Bool
+pub fn MetaAction::not_equal(Self, Self) -> Bool
+pub fn MetaAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MetaReport {
+  actions : Array[MetaAction]
+  total_strategies : Int32
+  applied_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn MetaReport::equal(Self, Self) -> Bool
+pub fn MetaReport::has_changes(Self) -> Bool
+pub fn MetaReport::not_equal(Self, Self) -> Bool
+pub fn MetaReport::strategy_count(Self) -> Int32
+pub fn MetaReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MetaStrategy {
+  TightenThresholds
+  LoosenThresholds
+  AddTestCategory
+  RemoveRedundancy
+  IncreaseCoverage
+} derive(Eq, @debug.Debug)
+pub fn MetaStrategy::equal(Self, Self) -> Bool
+pub fn MetaStrategy::not_equal(Self, Self) -> Bool
+pub fn MetaStrategy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ModuleDep {
+  source : String
+  target : String
+  kind : ModuleDepKind
+} derive(Eq, @debug.Debug)
+pub fn ModuleDep::equal(Self, Self) -> Bool
+pub fn ModuleDep::not_equal(Self, Self) -> Bool
+pub fn ModuleDep::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ModuleDepKind {
+  Uses
+  Extends
+  Composes
+} derive(Eq, @debug.Debug)
+pub fn ModuleDepKind::equal(Self, Self) -> Bool
+pub fn ModuleDepKind::not_equal(Self, Self) -> Bool
+pub fn ModuleDepKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OpCombo {
+  first_tag : String
+  second_tag : String
+  combo_desc : String
+} derive(Eq, @debug.Debug)
+pub fn OpCombo::equal(Self, Self) -> Bool
+pub fn OpCombo::not_equal(Self, Self) -> Bool
+pub fn OpCombo::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OpCost {
+  op_tag : String
+  time_complexity : String
+  estimated_cost : Int32
+} derive(Eq, @debug.Debug)
+pub fn OpCost::equal(Self, Self) -> Bool
+pub fn OpCost::not_equal(Self, Self) -> Bool
+pub fn OpCost::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OptimizationKind {
+  RemoveRedundant
+  RemoveIdentity
+  MergeAdjacent
+} derive(Eq, @debug.Debug)
+pub fn OptimizationKind::equal(Self, Self) -> Bool
+pub fn OptimizationKind::not_equal(Self, Self) -> Bool
+pub fn OptimizationKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizationReport {
+  original_length : Int32
+  optimized_length : Int32
+  suggestions : Array[OptimizationSuggestion]
+  optimized_pipeline : @imgir.IRPipeline
+} derive(Eq, @debug.Debug)
+pub fn OptimizationReport::equal(Self, Self) -> Bool
+pub fn OptimizationReport::is_reduced(Self) -> Bool
+pub fn OptimizationReport::not_equal(Self, Self) -> Bool
+pub fn OptimizationReport::reduction(Self) -> Int32
+pub fn OptimizationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizationSuggestion {
+  kind : OptimizationKind
+  op_indices : Array[Int32]
+  description : String
+  before_count : Int32
+  after_count : Int32
+} derive(Eq, @debug.Debug)
+pub fn OptimizationSuggestion::equal(Self, Self) -> Bool
+pub fn OptimizationSuggestion::not_equal(Self, Self) -> Bool
+pub fn OptimizationSuggestion::to_repr(Self) -> @debug.Repr
+
+pub(all) struct OptimizeExecResult {
+  original_length : Int32
+  optimized_length : Int32
+  ops_reduced : Int32
+  original_cost : Int32
+  optimized_cost : Int32
+  cost_reduced : Int32
+  is_improved : Bool
+  optimized_pipeline_desc : String
+} derive(Eq, @debug.Debug)
+pub fn OptimizeExecResult::efficiency_pct(Self) -> Int32
+pub fn OptimizeExecResult::equal(Self, Self) -> Bool
+pub fn OptimizeExecResult::is_significant(Self) -> Bool
+pub fn OptimizeExecResult::not_equal(Self, Self) -> Bool
+pub fn OptimizeExecResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ParamKind {
+  Threshold
+  Weight
+  StepSize
+  MaxIter
+} derive(Eq, @debug.Debug)
+pub fn ParamKind::equal(Self, Self) -> Bool
+pub fn ParamKind::not_equal(Self, Self) -> Bool
+pub fn ParamKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PerfBaseline {
+  pipeline_desc : String
+  total_cost : Int32
+  op_count : Int32
+  op_costs : Array[OpCost]
+} derive(Eq, @debug.Debug)
+pub fn PerfBaseline::equal(Self, Self) -> Bool
+pub fn PerfBaseline::not_equal(Self, Self) -> Bool
+pub fn PerfBaseline::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PerfRegression {
+  original_cost : Int32
+  optimized_cost : Int32
+  delta : Int32
+  is_regression : Bool
+} derive(Eq, @debug.Debug)
+pub fn PerfRegression::equal(Self, Self) -> Bool
+pub fn PerfRegression::improvement_pct(Self) -> Int32
+pub fn PerfRegression::is_improvement(Self) -> Bool
+pub fn PerfRegression::not_equal(Self, Self) -> Bool
+pub fn PerfRegression::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase10Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase10Capability::equal(Self, Self) -> Bool
+pub fn Phase10Capability::not_equal(Self, Self) -> Bool
+pub fn Phase10Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase10Report {
+  capabilities : Array[Phase10Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase10Report::equal(Self, Self) -> Bool
+pub fn Phase10Report::not_equal(Self, Self) -> Bool
+pub fn Phase10Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase11Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase11Capability::equal(Self, Self) -> Bool
+pub fn Phase11Capability::not_equal(Self, Self) -> Bool
+pub fn Phase11Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase11Report {
+  capabilities : Array[Phase11Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase11Report::equal(Self, Self) -> Bool
+pub fn Phase11Report::not_equal(Self, Self) -> Bool
+pub fn Phase11Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase4Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase4Capability::equal(Self, Self) -> Bool
+pub fn Phase4Capability::not_equal(Self, Self) -> Bool
+pub fn Phase4Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase4Report {
+  capabilities : Array[Phase4Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase4Report::equal(Self, Self) -> Bool
+pub fn Phase4Report::not_equal(Self, Self) -> Bool
+pub fn Phase4Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase5Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase5Capability::equal(Self, Self) -> Bool
+pub fn Phase5Capability::not_equal(Self, Self) -> Bool
+pub fn Phase5Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase5Report {
+  capabilities : Array[Phase5Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase5Report::equal(Self, Self) -> Bool
+pub fn Phase5Report::not_equal(Self, Self) -> Bool
+pub fn Phase5Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase6Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase6Capability::equal(Self, Self) -> Bool
+pub fn Phase6Capability::not_equal(Self, Self) -> Bool
+pub fn Phase6Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase6Report {
+  capabilities : Array[Phase6Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase6Report::equal(Self, Self) -> Bool
+pub fn Phase6Report::not_equal(Self, Self) -> Bool
+pub fn Phase6Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase7Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase7Capability::equal(Self, Self) -> Bool
+pub fn Phase7Capability::not_equal(Self, Self) -> Bool
+pub fn Phase7Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase7Report {
+  capabilities : Array[Phase7Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase7Report::equal(Self, Self) -> Bool
+pub fn Phase7Report::not_equal(Self, Self) -> Bool
+pub fn Phase7Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase8Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase8Capability::equal(Self, Self) -> Bool
+pub fn Phase8Capability::not_equal(Self, Self) -> Bool
+pub fn Phase8Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase8Report {
+  capabilities : Array[Phase8Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase8Report::equal(Self, Self) -> Bool
+pub fn Phase8Report::not_equal(Self, Self) -> Bool
+pub fn Phase8Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase9Capability {
+  version : String
+  name : String
+  types : Int32
+  functions : Int32
+  tests : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn Phase9Capability::equal(Self, Self) -> Bool
+pub fn Phase9Capability::not_equal(Self, Self) -> Bool
+pub fn Phase9Capability::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Phase9Report {
+  capabilities : Array[Phase9Capability]
+  total_types : Int32
+  total_functions : Int32
+  total_tests : Int32
+  phase_summary : String
+} derive(Eq, @debug.Debug)
+pub fn Phase9Report::equal(Self, Self) -> Bool
+pub fn Phase9Report::not_equal(Self, Self) -> Bool
+pub fn Phase9Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PipelineOptReport {
+  suggestions : Array[PipelineOptSuggestion]
+  total : Int32
+  best_benefit : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn PipelineOptReport::equal(Self, Self) -> Bool
+pub fn PipelineOptReport::has_suggestions(Self) -> Bool
+pub fn PipelineOptReport::not_equal(Self, Self) -> Bool
+pub fn PipelineOptReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PipelineOptSuggestion {
+  pipeline_desc : String
+  suggestion_kind : SuggestionKind
+  estimated_benefit : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn PipelineOptSuggestion::equal(Self, Self) -> Bool
+pub fn PipelineOptSuggestion::not_equal(Self, Self) -> Bool
+pub fn PipelineOptSuggestion::to_repr(Self) -> @debug.Repr
+
+pub(all) enum PredictionKind {
+  DegradationLikely
+  TestGrowthExpected
+  StableOp
+  HighRisk
+} derive(Eq, @debug.Debug)
+pub fn PredictionKind::equal(Self, Self) -> Bool
+pub fn PredictionKind::not_equal(Self, Self) -> Bool
+pub fn PredictionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PredictionReport {
+  predictions : Array[EvolutionPrediction]
+  total : Int32
+  high_risk_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn PredictionReport::equal(Self, Self) -> Bool
+pub fn PredictionReport::has_high_risk(Self) -> Bool
+pub fn PredictionReport::not_equal(Self, Self) -> Bool
+pub fn PredictionReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PropagationReport {
+  steps : Array[PropagationStep]
+  total_propagations : Int32
+  chain_length : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn PropagationReport::equal(Self, Self) -> Bool
+pub fn PropagationReport::is_safe(Self) -> Bool
+pub fn PropagationReport::not_equal(Self, Self) -> Bool
+pub fn PropagationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PropagationStep {
+  from_op_tag : String
+  to_op_tag : String
+  degradation_kind : DegradationKind
+  propagation_desc : String
+} derive(Eq, @debug.Debug)
+pub fn PropagationStep::equal(Self, Self) -> Bool
+pub fn PropagationStep::not_equal(Self, Self) -> Bool
+pub fn PropagationStep::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PropagationViz {
+  format : VizFormat
+  content : String
+  node_count : Int32
+  edge_count : Int32
+} derive(Eq, @debug.Debug)
+pub fn PropagationViz::equal(Self, Self) -> Bool
+pub fn PropagationViz::is_valid(Self) -> Bool
+pub fn PropagationViz::not_equal(Self, Self) -> Bool
+pub fn PropagationViz::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QualityDimension {
+  TestCoverage
+  DegradationRate
+  PerformanceGain
+  CodeStability
+  ApiCompatibility
+} derive(Eq, @debug.Debug)
+pub fn QualityDimension::equal(Self, Self) -> Bool
+pub fn QualityDimension::not_equal(Self, Self) -> Bool
+pub fn QualityDimension::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QualityGrade {
+  GradeA
+  GradeB
+  GradeC
+  GradeD
+  GradeF
+} derive(Eq, @debug.Debug)
+pub fn QualityGrade::equal(Self, Self) -> Bool
+pub fn QualityGrade::not_equal(Self, Self) -> Bool
+pub fn QualityGrade::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QualityReport {
+  scores : Array[QualityScore]
+  overall_score : Int32
+  grade : QualityGrade
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn QualityReport::dimension_count(Self) -> Int32
+pub fn QualityReport::equal(Self, Self) -> Bool
+pub fn QualityReport::is_passing(Self) -> Bool
+pub fn QualityReport::not_equal(Self, Self) -> Bool
+pub fn QualityReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QualityScore {
+  dimension : QualityDimension
+  score : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn QualityScore::equal(Self, Self) -> Bool
+pub fn QualityScore::not_equal(Self, Self) -> Bool
+pub fn QualityScore::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RecommendAction {
+  AddTests
+  FixDegradation
+  AddPropagationTest
+  OptimizePipeline
+  NoActionNeeded
+} derive(Eq, @debug.Debug)
+pub fn RecommendAction::equal(Self, Self) -> Bool
+pub fn RecommendAction::not_equal(Self, Self) -> Bool
+pub fn RecommendAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Recommendation {
+  action : RecommendAction
+  target_op : String
+  priority : TestPriority
+  reason : String
+} derive(Eq, @debug.Debug)
+pub fn Recommendation::equal(Self, Self) -> Bool
+pub fn Recommendation::not_equal(Self, Self) -> Bool
+pub fn Recommendation::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RecommendationReport {
+  recommendations : Array[Recommendation]
+  total : Int32
+  high_priority_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RecommendationReport::equal(Self, Self) -> Bool
+pub fn RecommendationReport::has_urgent(Self) -> Bool
+pub fn RecommendationReport::not_equal(Self, Self) -> Bool
+pub fn RecommendationReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegressionCase {
+  from_version : String
+  to_version : String
+  kind : RegressionKind
+  delta : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn RegressionCase::equal(Self, Self) -> Bool
+pub fn RegressionCase::not_equal(Self, Self) -> Bool
+pub fn RegressionCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RegressionKind {
+  DegradationIncrease
+  TestDecrease
+  OpCountChange
+  NoRegression
+} derive(Eq, @debug.Debug)
+pub fn RegressionKind::equal(Self, Self) -> Bool
+pub fn RegressionKind::not_equal(Self, Self) -> Bool
+pub fn RegressionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RegressionReport {
+  cases : Array[RegressionCase]
+  total_regressions : Int32
+  total_improvements : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RegressionReport::equal(Self, Self) -> Bool
+pub fn RegressionReport::is_clean(Self) -> Bool
+pub fn RegressionReport::not_equal(Self, Self) -> Bool
+pub fn RegressionReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RepairAction {
+  op_tag : String
+  repaired_op_tag : String
+  repair_desc : String
+} derive(Eq, @debug.Debug)
+pub fn RepairAction::equal(Self, Self) -> Bool
+pub fn RepairAction::not_equal(Self, Self) -> Bool
+pub fn RepairAction::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RepairReport {
+  original_op_count : Int32
+  repaired_op_count : Int32
+  repairs : Array[RepairAction]
+  remaining_degradations : Array[DegradationCase]
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RepairReport::equal(Self, Self) -> Bool
+pub fn RepairReport::is_fully_repaired(Self) -> Bool
+pub fn RepairReport::not_equal(Self, Self) -> Bool
+pub fn RepairReport::repair_count(Self) -> Int32
+pub fn RepairReport::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RepairStrategy {
+  Conservative
+  Aggressive
+  Optimal
+} derive(Eq, @debug.Debug)
+pub fn RepairStrategy::equal(Self, Self) -> Bool
+pub fn RepairStrategy::not_equal(Self, Self) -> Bool
+pub fn RepairStrategy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RootCause {
+  op_tag : String
+  degradation_kind : DegradationKind
+  root_param : String
+  cause_desc : String
+  fix_suggestion : String
+} derive(Eq, @debug.Debug)
+pub fn RootCause::equal(Self, Self) -> Bool
+pub fn RootCause::not_equal(Self, Self) -> Bool
+pub fn RootCause::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RootCauseReport {
+  causes : Array[RootCause]
+  total : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RootCauseReport::equal(Self, Self) -> Bool
+pub fn RootCauseReport::is_clean(Self) -> Bool
+pub fn RootCauseReport::not_equal(Self, Self) -> Bool
+pub fn RootCauseReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RunSummary {
+  total : Int32
+  passed : Int32
+  failed : Int32
+  pass_rate_pct : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn RunSummary::all_passed(Self) -> Bool
+pub fn RunSummary::equal(Self, Self) -> Bool
+pub fn RunSummary::not_equal(Self, Self) -> Bool
+pub fn RunSummary::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ScheduleResult {
+  schedule : EvolutionSchedule
+  evolved_count : Int32
+  fixed_count : Int32
+  remaining_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn ScheduleResult::equal(Self, Self) -> Bool
+pub fn ScheduleResult::is_successful(Self) -> Bool
+pub fn ScheduleResult::not_equal(Self, Self) -> Bool
+pub fn ScheduleResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ScheduleStatus {
+  Pending
+  Running
+  Completed
+  Failed
+} derive(Eq, @debug.Debug)
+pub fn ScheduleStatus::equal(Self, Self) -> Bool
+pub fn ScheduleStatus::not_equal(Self, Self) -> Bool
+pub fn ScheduleStatus::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ScoreFactor {
+  DegradationRisk
+  CoverageGap
+  HistoryWeight
+  PropagationRisk
+} derive(Eq, @debug.Debug)
+pub fn ScoreFactor::equal(Self, Self) -> Bool
+pub fn ScoreFactor::not_equal(Self, Self) -> Bool
+pub fn ScoreFactor::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Warning
+  Critical
+  Fatal
+} derive(Eq, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SmartPriorityReport {
+  scores : Array[SmartScore]
+  total_ops : Int32
+  high_priority_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn SmartPriorityReport::equal(Self, Self) -> Bool
+pub fn SmartPriorityReport::not_equal(Self, Self) -> Bool
+pub fn SmartPriorityReport::to_repr(Self) -> @debug.Repr
+pub fn SmartPriorityReport::top_priority(Self, Int32) -> Array[SmartScore]
+
+pub(all) struct SmartScore {
+  op_tag : String
+  score : Int32
+  factors : Array[ScoreFactor]
+  recommendation : String
+} derive(Eq, @debug.Debug)
+pub fn SmartScore::equal(Self, Self) -> Bool
+pub fn SmartScore::not_equal(Self, Self) -> Bool
+pub fn SmartScore::to_repr(Self) -> @debug.Repr
+
+pub(all) struct StrategyCombo {
+  strategies : Array[StrategyKind]
+  op_tag : String
+  estimated_time : Int32
+  description : String
+} derive(Eq, @debug.Debug)
+pub fn StrategyCombo::equal(Self, Self) -> Bool
+pub fn StrategyCombo::not_equal(Self, Self) -> Bool
+pub fn StrategyCombo::to_repr(Self) -> @debug.Repr
+
+pub(all) enum StrategyKind {
+  FixFirst
+  TestFirst
+  OptimizeFirst
+  ParallelFix
+  SequentialFix
+} derive(Eq, @debug.Debug)
+pub fn StrategyKind::equal(Self, Self) -> Bool
+pub fn StrategyKind::not_equal(Self, Self) -> Bool
+pub fn StrategyKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct StrategyRepairResult {
+  strategy : RepairStrategy
+  op_tag : String
+  degs_before : Int32
+  degs_after : Int32
+  quality_score : Int32
+  repair_desc : String
+} derive(Eq, @debug.Debug)
+pub fn StrategyRepairResult::equal(Self, Self) -> Bool
+pub fn StrategyRepairResult::is_complete(Self) -> Bool
+pub fn StrategyRepairResult::is_improvement(Self) -> Bool
+pub fn StrategyRepairResult::not_equal(Self, Self) -> Bool
+pub fn StrategyRepairResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SuggestionKind {
+  RemoveRedundant
+  ReorderOps
+  MergeAdjacent
+  SplitPipeline
+  NoOptimization
+} derive(Eq, @debug.Debug)
+pub fn SuggestionKind::equal(Self, Self) -> Bool
+pub fn SuggestionKind::not_equal(Self, Self) -> Bool
+pub fn SuggestionKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TestCase {
+  name : String
+  op_tag : String
+  category : TestCategory
+  description : String
+  input_spec : String
+  expected_behavior : String
+} derive(Eq, @debug.Debug)
+pub fn TestCase::equal(Self, Self) -> Bool
+pub fn TestCase::not_equal(Self, Self) -> Bool
+pub fn TestCase::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TestCategory {
+  Boundary
+  Normal
+  EdgeCase
+  Degradation
+} derive(Eq, @debug.Debug)
+pub fn TestCategory::equal(Self, Self) -> Bool
+pub fn TestCategory::not_equal(Self, Self) -> Bool
+pub fn TestCategory::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TestPriority {
+  HighPriority
+  MediumPriority
+  LowPriority
+} derive(Eq, @debug.Debug)
+pub fn TestPriority::equal(Self, Self) -> Bool
+pub fn TestPriority::not_equal(Self, Self) -> Bool
+pub fn TestPriority::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TestRunResult {
+  test_name : String
+  passed : Bool
+  actual_behavior : String
+  expected_behavior : String
+  category : TestCategory
+} derive(Eq, @debug.Debug)
+pub fn TestRunResult::equal(Self, Self) -> Bool
+pub fn TestRunResult::not_equal(Self, Self) -> Bool
+pub fn TestRunResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TuneReport {
+  params : Array[TunedParam]
+  total : Int32
+  adjusted_count : Int32
+  summary : String
+} derive(Eq, @debug.Debug)
+pub fn TuneReport::equal(Self, Self) -> Bool
+pub fn TuneReport::has_adjustments(Self) -> Bool
+pub fn TuneReport::not_equal(Self, Self) -> Bool
+pub fn TuneReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TunedParam {
+  param_kind : ParamKind
+  old_value : Int32
+  new_value : Int32
+  adjustment : Int32
+  rationale : String
+} derive(Eq, @debug.Debug)
+pub fn TunedParam::equal(Self, Self) -> Bool
+pub fn TunedParam::not_equal(Self, Self) -> Bool
+pub fn TunedParam::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VizFormat {
+  AsciiViz
+  MermaidViz
+  TextViz
+} derive(Eq, @debug.Debug)
+pub fn VizFormat::equal(Self, Self) -> Bool
+pub fn VizFormat::not_equal(Self, Self) -> Bool
+pub fn VizFormat::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

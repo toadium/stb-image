@@ -2,7 +2,7 @@
 // 覆盖：retinex_16f/tonemap_16f/dehaze_16f/quantize_16f 的无效通道/数据不匹配/参数越界
 
 ///|
-fn cl_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn cl_mk_img16(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -17,7 +17,7 @@ fn cl_mk_img16(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn cl_mk_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn cl_mk_imgf(w : Int32, h : Int32, ch : Int32, val : Float) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -35,12 +35,12 @@ fn cl_mk_imgf(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 }
 
 ///|
-fn cl_mk_bad16(w : Int, h : Int, ch : Int) -> @types.Image16 {
+fn cl_mk_bad16(w : Int32, h : Int32, ch : Int32) -> @types.Image16 {
   @types.Image16::{ width: w, height: h, channels: ch, data: b"\x00\x01", }
 }
 
 ///|
-fn cl_mk_badf(w : Int, h : Int, ch : Int) -> @types.ImageF {
+fn cl_mk_badf(w : Int32, h : Int32, ch : Int32) -> @types.ImageF {
   @types.ImageF::{
     width: w,
     height: h,

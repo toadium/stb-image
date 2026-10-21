@@ -2,7 +2,7 @@
 // XOR/混沌/Arnold加密、LSB/可见水印、熵/相关性/PSNR/NPCR/UACI评估
 
 ///|
-fn make_enc_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_enc_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_enc_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())

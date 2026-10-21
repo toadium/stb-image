@@ -53,12 +53,12 @@ pub extend ModalityType with Eq::{not_equal, equal}
 /// 多模态数据
 pub(all) struct MultimodalData {
   modalities : Array[ModalityType]
-  num_modalities : Int
+  num_modalities : Int32
   image_features : Array[Double]
   text_features : Array[Double]
   audio_features : Array[Double]
   video_features : Array[Double]
-  feature_dim : Int
+  feature_dim : Int32
   sample_id : String
 }
 
@@ -67,8 +67,8 @@ pub(all) struct MultimodalData {
 pub(all) struct MultimodalFusionResult {
   fused_features : Array[Double]
   fusion_strategy : FusionStrategy
-  num_modalities : Int
-  feature_dim : Int
+  num_modalities : Int32
+  feature_dim : Int32
   modality_weights : Array[Double]
   confidence : Double
 }
@@ -81,7 +81,7 @@ pub(all) struct CrossModalRetrievalResult {
   query_id : String
   retrieved_ids : Array[String]
   retrieved_scores : Array[Double]
-  num_retrieved : Int
+  num_retrieved : Int32
   similarity_metric : String
   recall_at_k : Double
 }
@@ -103,12 +103,12 @@ pub(all) struct ImageTextGenerationResult {
 pub(all) struct VideoUnderstandingResult {
   video_id : String
   video_description : String
-  keyframes : Array[Int]
-  num_keyframes : Int
+  keyframes : Array[Int32]
+  num_keyframes : Int32
   actions : Array[String]
-  num_actions : Int
-  scene_changes : Array[Int]
-  num_scene_changes : Int
+  num_actions : Int32
+  scene_changes : Array[Int32]
+  num_scene_changes : Int32
   duration_s : Double
 }
 
@@ -122,7 +122,7 @@ pub(all) struct AudioVisualResult {
   sync_score : Double
   audio_visual_alignment : Double
   event_detections : Array[String]
-  num_events : Int
+  num_events : Int32
 }
 
 ///|
@@ -131,10 +131,10 @@ pub(all) struct MultimodalConfig {
   task_type : MultimodalTaskType
   fusion_strategy : FusionStrategy
   modalities : Array[ModalityType]
-  feature_dim : Int
-  hidden_dim : Int
-  num_attention_heads : Int
-  num_fusion_layers : Int
+  feature_dim : Int32
+  hidden_dim : Int32
+  num_attention_heads : Int32
+  num_fusion_layers : Int32
   dropout_rate : Double
   temperature : Double
   similarity_metric : String
@@ -167,7 +167,7 @@ pub fn create_default_multimodal_config() -> MultimodalConfig {
 /// 创建多模态数据
 pub fn create_multimodal_data(
   sample_id : String,
-  feature_dim : Int,
+  feature_dim : Int32,
   modalities : Array[ModalityType],
 ) -> MultimodalData {
   let image_features : Array[Double] = []
@@ -302,7 +302,7 @@ pub fn cross_modal_retrieval(
   database : Array[MultimodalData],
   query_modality : ModalityType,
   target_modality : ModalityType,
-  top_k : Int,
+  top_k : Int32,
 ) -> CrossModalRetrievalResult {
   let retrieved_ids : Array[String] = []
   let retrieved_scores : Array[Double] = []

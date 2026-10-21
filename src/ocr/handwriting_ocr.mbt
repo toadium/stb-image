@@ -4,11 +4,11 @@
 ///|
 /// 手写体识别配置
 pub(all) struct HandwritingOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  min_char_height : Int
-  max_char_height : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  min_char_height : Int32
+  max_char_height : Int32
+  target_size : Int32
   distance_metric : String
   flexibility : Double // 0.0-1.0，越高越灵活
   use_slant_correction : Bool
@@ -32,7 +32,7 @@ pub fn handwriting_ocr_default_config() -> HandwritingOcrConfig {
 ///|
 /// 生成手写体数字模板（更灵活的形状）
 pub fn generate_handwriting_templates(
-  char_set? : String = "digits",
+  char_set~ : String = "digits",
 ) -> Array[(String, Array[Double])] {
   let templates : Array[(String, Array[Double])] = []
   let chars = if char_set == "digits+letters" {
@@ -59,7 +59,7 @@ pub fn generate_handwriting_templates(
 /// 生成手写体字符模板（带变体）
 fn generate_handwriting_char_template(
   char : String,
-  variant : Int,
+  variant : Int32,
 ) -> Array[Double] {
   let size = 16
   let features : Array[Double] = Array::make(size * size, 0.0)
@@ -96,7 +96,7 @@ fn generate_handwriting_char_template(
 /// 倾斜校正（手写体专用）
 pub fn correct_slant(
   img : @types.Image,
-  max_slant? : Double = 15.0,
+  max_slant~ : Double = 15.0,
 ) -> @types.Image raise @types.LoadError {
   ignore(max_slant)
   // 输入验证
@@ -144,7 +144,7 @@ fn estimate_slant_angle(img : @types.Image) -> Double {
     let cos_a = @math.cos(angle_rad)
     let sin_a = @math.sin(angle_rad)
     // 计算旋转后的垂直投影方差
-    let projection : Array[Int] = Array::make(w, 0)
+    let projection : Array[Int32] = Array::make(w, 0)
     for y in 0..<h {
       for x in 0..<w {
         if data[y * w + x].to_int() > 128 {
@@ -180,12 +180,12 @@ fn estimate_slant_angle(img : @types.Image) -> Double {
 fn segment_handwriting_chars(
   img : @types.Image,
   cfg : HandwritingOcrConfig,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
   // 简单连通域标记
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -208,11 +208,11 @@ fn segment_handwriting_chars(
     }
   }
   // 计算边界框
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -234,7 +234,7 @@ fn segment_handwriting_chars(
     }
   }
   // 过滤（手写体更宽松）
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -358,11 +358,11 @@ pub fn recognize_handwriting(
 /// 提取手写体字符区域
 fn extract_handwriting_char_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -400,7 +400,7 @@ fn extract_handwriting_char_region(
 /// 提取手写体字符特征
 fn extract_handwriting_char_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height

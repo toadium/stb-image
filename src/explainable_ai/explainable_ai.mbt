@@ -42,7 +42,7 @@ pub extend ModelVisualizationType with Eq::{not_equal, equal}
 pub(all) struct FeatureImportanceResult {
   feature_names : Array[String]
   importance_scores : Array[Double]
-  num_features : Int
+  num_features : Int32
   method_type : ExplainabilityMethod
   top_features : Array[String]
   top_scores : Array[Double]
@@ -55,14 +55,14 @@ pub(all) struct SaliencyMapResult {
   method_type : ExplainabilityMethod
   target_class : String
   confidence : Double
-  num_iterations : Int
+  num_iterations : Int32
 }
 
 ///|
 /// 混淆矩阵
 pub(all) struct ConfusionMatrix {
-  matrix : Array[Array[Int]]
-  num_classes : Int
+  matrix : Array[Array[Int32]]
+  num_classes : Int32
   class_names : Array[String]
   accuracy : Double
   precision : Array[Double]
@@ -77,7 +77,7 @@ pub(all) struct ROCCurveData {
   tpr : Array[Double]
   thresholds : Array[Double]
   auc : Double
-  num_points : Int
+  num_points : Int32
 }
 
 ///|
@@ -93,27 +93,27 @@ pub(all) struct ModelPerformanceMetrics {
   inference_time_ms : Double
   memory_mb : Double
   model_size_mb : Double
-  num_parameters : Int
-  flops : Int
+  num_parameters : Int32
+  flops : Int32
 }
 
 ///|
 /// 特征图可视化结果
 pub(all) struct FeatureMapVisualization {
   feature_maps : Array[@types.Image]
-  num_maps : Int
+  num_maps : Int32
   layer_name : String
-  map_size : Int
-  num_channels : Int
+  map_size : Int32
+  num_channels : Int32
 }
 
 ///|
 /// 嵌入可视化结果
 pub(all) struct EmbeddingVisualization {
   points : Array[Array[Double]]
-  labels : Array[Int]
-  num_points : Int
-  dimensions : Int
+  labels : Array[Int32]
+  num_points : Int32
+  dimensions : Int32
   method_type : String
   perplexity : Double
 }
@@ -122,10 +122,10 @@ pub(all) struct EmbeddingVisualization {
 /// 可解释AI配置
 pub(all) struct ExplainableAIConfig {
   method_type : ExplainabilityMethod
-  num_samples : Int
-  num_features : Int
+  num_samples : Int32
+  num_features : Int32
   perturbation_scale : Double
-  target_class : Int
+  target_class : Int32
   use_smoothing : Bool
   smoothing_sigma : Double
   normalize : Bool
@@ -209,7 +209,7 @@ pub fn compute_feature_importance(
   // 排序获取Top特征
   let top_features : Array[String] = []
   let top_scores : Array[Double] = []
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for i in 0..<num_regions {
     indices.push(i)
   }
@@ -316,14 +316,14 @@ pub fn generate_saliency_map(
 ///|
 /// 生成混淆矩阵（简化版）
 pub fn generate_confusion_matrix(
-  predictions : Array[Int],
-  ground_truth : Array[Int],
-  num_classes : Int,
+  predictions : Array[Int32],
+  ground_truth : Array[Int32],
+  num_classes : Int32,
   class_names : Array[String],
 ) -> ConfusionMatrix {
-  let matrix : Array[Array[Int]] = []
+  let matrix : Array[Array[Int32]] = []
   for _ in 0..<num_classes {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in 0..<num_classes {
       row.push(0)
     }
@@ -405,8 +405,8 @@ pub fn generate_confusion_matrix(
 /// 生成ROC曲线数据（简化版）
 pub fn generate_roc_curve(
   scores : Array[Double],
-  labels : Array[Int],
-  num_thresholds : Int,
+  labels : Array[Int32],
+  num_thresholds : Int32,
 ) -> ROCCurveData {
   let fpr : Array[Double] = []
   let tpr : Array[Double] = []
@@ -479,7 +479,7 @@ pub fn generate_roc_curve(
 /// 可视化特征图（简化版）
 pub fn visualize_feature_maps(
   image : @types.Image,
-  num_maps : Int,
+  num_maps : Int32,
   layer_name : String,
 ) -> FeatureMapVisualization raise @types.LoadError {
   // 输入验证

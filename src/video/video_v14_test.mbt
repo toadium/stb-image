@@ -1,7 +1,7 @@
 // v14.0.0 视频目标跟踪与动作识别测试
 
 ///|
-fn make_frame(w : Int, h : Int, val : Byte) -> @types.Image {
+fn make_frame(w : Int32, h : Int32, val : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

@@ -3,7 +3,7 @@
 fn assert_image_approx(
   actual : @types.Image,
   expected : @types.Image,
-  tolerance : Int,
+  tolerance : Int32,
 ) -> Unit raise {
   assert_eq(actual.width, expected.width)
   assert_eq(actual.height, expected.height)

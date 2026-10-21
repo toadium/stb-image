@@ -10,8 +10,8 @@ pub(all) struct OcrAccuracyEnhancedConfig {
   use_weighted_knn : Bool
   use_confidence_calibration : Bool
   use_multi_scale : Bool
-  knn_k : Int
-  scales : Array[Int] // 多尺度识别的尺寸列表
+  knn_k : Int32
+  scales : Array[Int32] // 多尺度识别的尺寸列表
 }
 
 ///|
@@ -33,7 +33,7 @@ pub fn ocr_accuracy_enhanced_default_config() -> OcrAccuracyEnhancedConfig {
 /// 提取 Zernike 矩特征（旋转不变性，前6阶）
 pub fn extract_zernike_moments(
   char_img : @types.Image,
-  max_order? : Int = 4,
+  max_order~ : Int32 = 4,
 ) -> Array[Double] raise @types.LoadError {
   // 输入验证
   if char_img.width <= 0 || char_img.height <= 0 {
@@ -129,7 +129,7 @@ pub fn extract_zernike_moments(
 
 ///|
 /// 计算阶乘
-fn factorial(n : Int) -> Double {
+fn factorial(n : Int32) -> Double {
   let mut result = 1.0
   for i in 1..<(n + 1) {
     result *= i.to_double()
@@ -141,8 +141,8 @@ fn factorial(n : Int) -> Double {
 /// 提取 Gabor 特征（多方向多频率）
 pub fn extract_gabor_ocr_features(
   char_img : @types.Image,
-  num_orientations? : Int = 4,
-  num_frequencies? : Int = 2,
+  num_orientations~ : Int32 = 4,
+  num_frequencies~ : Int32 = 2,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height
@@ -247,8 +247,8 @@ pub fn extract_directional_features(char_img : @types.Image) -> Array[Double] {
 pub fn weighted_knn_classify(
   features : Array[Double],
   training_data : Array[(String, Array[Double])],
-  k? : Int = 5,
-  distance_metric? : String = "euclidean",
+  k~ : Int32 = 5,
+  distance_metric~ : String = "euclidean",
 ) -> (String, Double, Array[(String, Double)]) {
   // 计算所有训练样本的距离
   let distances : Array[(String, Double)] = []
@@ -391,8 +391,8 @@ pub fn calibrate_confidence_enhanced(
 pub fn multi_scale_recognize(
   char_img : @types.Image,
   templates : Array[(String, Array[Double])],
-  scales : Array[Int],
-  distance_metric? : String = "euclidean",
+  scales : Array[Int32],
+  distance_metric~ : String = "euclidean",
 ) -> (String, Double) {
   let _ = char_img.width
   let _ = char_img.height
@@ -453,8 +453,8 @@ pub fn multi_scale_recognize(
 /// 缩放字符图像
 fn resize_char_image(
   img : @types.Image,
-  new_w : Int,
-  new_h : Int,
+  new_w : Int32,
+  new_h : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -481,7 +481,7 @@ fn resize_char_image(
 /// 提取网格特征
 fn extract_grid_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height
@@ -696,11 +696,11 @@ pub fn recognize_ocr_enhanced(
 /// 字符分割（增强版用）
 fn segment_chars_for_enhanced(
   img : @types.Image,
-) -> Array[(Int, Int, Int, Int)] {
+) -> Array[(Int32, Int32, Int32, Int32)] {
   let w = img.width
   let h = img.height
   let data = img.data
-  let labels : Array[Int] = Array::make(w * h, 0)
+  let labels : Array[Int32] = Array::make(w * h, 0)
   let mut next_label = 1
   for y in 0..<h {
     for x in 0..<w {
@@ -722,11 +722,11 @@ fn segment_chars_for_enhanced(
       }
     }
   }
-  let min_x : Array[Int] = Array::make(next_label, w)
-  let max_x : Array[Int] = Array::make(next_label, 0)
-  let min_y : Array[Int] = Array::make(next_label, h)
-  let max_y : Array[Int] = Array::make(next_label, 0)
-  let area : Array[Int] = Array::make(next_label, 0)
+  let min_x : Array[Int32] = Array::make(next_label, w)
+  let max_x : Array[Int32] = Array::make(next_label, 0)
+  let min_y : Array[Int32] = Array::make(next_label, h)
+  let max_y : Array[Int32] = Array::make(next_label, 0)
+  let area : Array[Int32] = Array::make(next_label, 0)
   for y in 0..<h {
     for x in 0..<w {
       let label = labels[y * w + x]
@@ -747,7 +747,7 @@ fn segment_chars_for_enhanced(
       }
     }
   }
-  let regions : Array[(Int, Int, Int, Int)] = []
+  let regions : Array[(Int32, Int32, Int32, Int32)] = []
   for label in 1..<next_label {
     let rw = max_x[label] - min_x[label] + 1
     let rh = max_y[label] - min_y[label] + 1
@@ -762,11 +762,11 @@ fn segment_chars_for_enhanced(
 /// 提取字符区域（增强版用）
 fn extract_char_region_for_enhanced(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height

@@ -3,7 +3,7 @@
 
 ///|
 /// 简易字符串转整数
-fn parse_int_str(s : String) -> Int {
+fn parse_int_str(s : String) -> Int32 {
   let mut result = 0
   let mut sign = 1
   let start = if s.length() > 0 && s[0] == '-' {
@@ -43,28 +43,28 @@ pub(all) struct CliConfig {
   enable_multilingual : Bool
   enable_document_analysis : Bool
   verbose : Bool
-  batch_size : Int
+  batch_size : Int32
 }
 
 ///|
 /// API Server 配置
 pub(all) struct ApiServerConfig {
   host : String
-  port : Int
-  max_concurrent_requests : Int
-  request_timeout_ms : Int
-  max_image_size_mb : Int
+  port : Int32
+  max_concurrent_requests : Int32
+  request_timeout_ms : Int32
+  max_image_size_mb : Int32
   enable_cors : Bool
   auth_token : String
-  rate_limit_per_minute : Int
+  rate_limit_per_minute : Int32
 }
 
 ///|
 /// Docker 配置
 pub(all) struct DockerConfig {
   base_image : String
-  app_port : Int
-  memory_limit_mb : Int
+  app_port : Int32
+  memory_limit_mb : Int32
   cpu_limit : Double
   enable_gpu : Bool
   environment : DeploymentEnvironment
@@ -78,9 +78,9 @@ pub(all) struct ModelPackageConfig {
   version : String
   model_path : String
   labels_path : String
-  input_width : Int
-  input_height : Int
-  num_classes : Int
+  input_width : Int32
+  input_height : Int32
+  num_classes : Int32
   compression : String
 }
 

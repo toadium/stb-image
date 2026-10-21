@@ -22,12 +22,12 @@ pub extend TargetDetMethod with Eq::{not_equal, equal}
 /// 检测结果。
 /// Detection result.
 pub(all) struct TargetResult {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
   confidence : Double
-  class_id : Int
+  class_id : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -40,12 +40,12 @@ pub extend TargetResult with Eq::{not_equal, equal}
 /// 构建检测结果。
 /// Build detection result.
 pub fn target_build_result(
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
   confidence : Double,
-  class_id : Int,
+  class_id : Int32,
 ) -> TargetResult {
   { x, y, width, height, confidence, class_id, }
 }
@@ -55,7 +55,7 @@ pub fn target_build_result(
 /// Sliding window detection.
 pub fn target_sliding_window(
   image : Array[Array[Double]],
-  window_size : Int,
+  window_size : Int32,
   threshold : Double,
 ) -> Array[TargetResult] {
   let height = image.length()
@@ -95,8 +95,8 @@ pub fn target_sliding_window(
 /// CFAR (Constant False Alarm Rate) detection.
 pub fn target_cfar(
   image : Array[Array[Double]],
-  guard_size : Int,
-  ref_size : Int,
+  guard_size : Int32,
+  ref_size : Int32,
   threshold_factor : Double,
 ) -> Array[TargetResult] {
   let height = image.length()
@@ -269,7 +269,7 @@ pub fn target_compute_iou(box1 : TargetResult, box2 : TargetResult) -> Double {
 pub fn target_detect(
   image : Array[Array[Double]],
   det_method : TargetDetMethod,
-  window_size : Int,
+  window_size : Int32,
   threshold : Double,
 ) -> Array[TargetResult] {
   match det_method {
@@ -288,7 +288,7 @@ pub fn target_detect(
 ///|
 /// 统计检测结果数量。
 /// Count detection results.
-pub fn target_count(detections : Array[TargetResult]) -> Int {
+pub fn target_count(detections : Array[TargetResult]) -> Int32 {
   detections.length()
 }
 

@@ -8,9 +8,9 @@
 /// t0 为透射率下限（默认 0.1）。
 pub fn dehaze(
   img : @types.Image,
-  patch_size? : Int = 7,
-  omega? : Float = 0.95F,
-  t0? : Float = 0.1F,
+  patch_size~ : Int32 = 7,
+  omega~ : Float = 0.95F,
+  t0~ : Float = 0.1F,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
@@ -84,14 +84,14 @@ pub fn dehaze(
 /// 计算暗通道
 fn compute_dark_channel(
   img : @types.Image,
-  w : Int,
-  h : Int,
-  ch : Int,
-  patch_size : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  patch_size : Int32,
 ) -> Array[Float] {
   let n = w * h
   // 先计算每个像素的最小通道值
-  let min_channel : Array[Int] = Array::make(n, 255)
+  let min_channel : Array[Int32] = Array::make(n, 255)
   for i in 0..<n {
     let r = img.data[i * ch].to_int()
     let g = img.data[i * ch + 1].to_int()
@@ -144,15 +144,15 @@ fn compute_dark_channel(
 fn estimate_atmospheric_light(
   img : @types.Image,
   dark_channel : Array[Float],
-  w : Int,
-  h : Int,
-  ch : Int,
-) -> Array[Int] {
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+) -> Array[Int32] {
   let n = w * h
   // 取暗通道中最亮的 0.1% 像素
   let num_pixels = (n / 1000).max(1)
   // 收集暗通道值和索引
-  let pairs : Array[(Float, Int)] = []
+  let pairs : Array[(Float, Int32)] = []
   for i in 0..<n {
     pairs.push((dark_channel[i], i))
   }
@@ -185,8 +185,8 @@ fn estimate_atmospheric_light(
 pub fn guided_filter(
   img : @types.Image,
   input : Array[Float],
-  radius? : Int = 20,
-  eps? : Float = 0.001F,
+  radius~ : Int32 = 20,
+  eps~ : Float = 0.001F,
 ) -> Array[Float] raise @types.LoadError {
   // 输入验证
   if img.width < 0 || img.height < 0 {
@@ -280,9 +280,9 @@ pub fn guided_filter(
 /// 盒式滤波（均值滤波），分离内部/边界区域以消除热点 clamp 调用
 fn box_filter(
   data : Array[Float],
-  w : Int,
-  h : Int,
-  radius : Int,
+  w : Int32,
+  h : Int32,
+  radius : Int32,
 ) -> Array[Float] {
   let n = w * h
   let out : Array[Float] = Array::make(n, 0.0F)

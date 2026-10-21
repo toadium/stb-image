@@ -35,8 +35,8 @@ pub(all) struct RawParams {
   wb_r_gain : Double
   wb_g_gain : Double
   wb_b_gain : Double
-  black_level : Int
-  white_level : Int
+  black_level : Int32
+  white_level : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -50,11 +50,11 @@ pub extend RawParams with Eq::{not_equal, equal}
 pub fn raw_build_params(
   pattern : BayerPattern,
   wb_method : WhiteBalanceMethod,
-  wb_r_gain? : Double = 1.0,
-  wb_g_gain? : Double = 1.0,
-  wb_b_gain? : Double = 1.0,
-  black_level? : Int = 0,
-  white_level? : Int = 65535,
+  wb_r_gain~ : Double = 1.0,
+  wb_g_gain~ : Double = 1.0,
+  wb_b_gain~ : Double = 1.0,
+  black_level~ : Int32 = 0,
+  white_level~ : Int32 = 65535,
 ) -> RawParams {
   RawParams::{
     pattern,
@@ -69,7 +69,7 @@ pub fn raw_build_params(
 
 ///|
 /// 获取 Bayer 模式下指定位置的通道索引（0=R, 1=G, 2=B）
-pub fn bayer_channel_at(pattern : BayerPattern, x : Int, y : Int) -> Int {
+pub fn bayer_channel_at(pattern : BayerPattern, x : Int32, y : Int32) -> Int32 {
   let row = y % 2
   let col = x % 2
   match pattern {
@@ -161,13 +161,13 @@ pub fn raw_demosaic_bilinear(
 ///|
 fn bilinear_interp(
   raw : @types.Image,
-  x : Int,
-  y : Int,
+  x : Int32,
+  y : Int32,
   pattern : BayerPattern,
-  target_ch : Int,
-  w : Int,
-  h : Int,
-) -> Int {
+  target_ch : Int32,
+  w : Int32,
+  h : Int32,
+) -> Int32 {
   let mut sum = 0
   let mut count = 0
   for dy in [-1, 0, 1] {
@@ -191,7 +191,7 @@ fn bilinear_interp(
 }
 
 ///|
-fn clamp_u8(v : Int) -> Int {
+fn clamp_u8(v : Int32) -> Int32 {
   if v > 255 {
     255
   } else if v < 0 {
@@ -356,8 +356,8 @@ pub fn raw_color_correction(
 /// 黑白电平校正：将像素值从 [black, white] 范围映射到 [0, 255]
 pub fn raw_level_correction(
   img : @types.Image,
-  black_level : Int,
-  white_level : Int,
+  black_level : Int32,
+  white_level : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height

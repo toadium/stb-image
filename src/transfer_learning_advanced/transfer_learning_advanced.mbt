@@ -117,9 +117,9 @@ pub extend FewShotLearningMethodType with Eq::{not_equal, equal}
 /// 迁移学习结果
 pub(all) struct TransferLearningResult {
   transferred_model_weights : Array[Array[Double]]
-  num_layers : Int
-  num_frozen_layers : Int
-  num_trainable_layers : Int
+  num_layers : Int32
+  num_frozen_layers : Int32
+  num_trainable_layers : Int32
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
@@ -129,7 +129,7 @@ pub(all) struct TransferLearningResult {
   target_accuracy : Double
   transfer_gain : Double
   learning_time_ms : Double
-  num_epochs : Int
+  num_epochs : Int32
   converged : Bool
 }
 
@@ -137,16 +137,16 @@ pub(all) struct TransferLearningResult {
 /// 预训练结果
 pub(all) struct PretrainingResult {
   pretrained_weights : Array[Array[Double]]
-  num_layers : Int
-  num_parameters : Int
+  num_layers : Int32
+  num_parameters : Int32
   pretraining_loss : Double
   pretraining_accuracy : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   learning_rate : Double
   pretraining_time_ms : Double
   model_architecture : String
-  dataset_size : Int
+  dataset_size : Int32
   pretrained_model_type : PretrainedModelType
 }
 
@@ -154,15 +154,15 @@ pub(all) struct PretrainingResult {
 /// 微调结果
 pub(all) struct FineTuningResult {
   fine_tuned_weights : Array[Array[Double]]
-  num_layers : Int
-  num_frozen_layers : Int
-  num_trainable_layers : Int
+  num_layers : Int32
+  num_frozen_layers : Int32
+  num_trainable_layers : Int32
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   test_accuracy : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   fine_tuning_time_ms : Double
   fine_tuning_strategy : FineTuningStrategyType
@@ -182,13 +182,13 @@ pub(all) struct DomainAdaptationResult {
   target_loss : Double
   domain_gap : Double
   adaptation_method : DomainAdaptationMethodType
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   adaptation_time_ms : Double
   source_domain : String
   target_domain : String
-  num_source_samples : Int
-  num_target_samples : Int
+  num_source_samples : Int32
+  num_target_samples : Int32
 }
 
 ///|
@@ -196,14 +196,14 @@ pub(all) struct DomainAdaptationResult {
 pub(all) struct MultiTaskLearningResult {
   shared_weights : Array[Array[Double]]
   task_specific_weights : Array[Array[Array[Double]]]
-  num_tasks : Int
+  num_tasks : Int32
   task_names : Array[String]
   task_accuracies : Array[Double]
   task_losses : Array[Double]
   average_accuracy : Double
   average_loss : Double
   multi_task_method : MultiTaskLearningMethodType
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   learning_time_ms : Double
   negative_transfer : Bool
@@ -213,19 +213,19 @@ pub(all) struct MultiTaskLearningResult {
 /// 少样本学习结果
 pub(all) struct FewShotLearningResult {
   learned_representations : Array[Array[Double]]
-  num_way : Int
-  num_shot : Int
-  num_query : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
   training_accuracy : Double
   validation_accuracy : Double
   test_accuracy : Double
   confidence_interval : Double
   few_shot_method : FewShotLearningMethodType
-  num_episodes : Int
+  num_episodes : Int32
   learning_rate : Double
   learning_time_ms : Double
-  num_classes : Int
-  num_support_samples : Int
+  num_classes : Int32
+  num_support_samples : Int32
 }
 
 ///|
@@ -240,7 +240,7 @@ pub(all) struct KnowledgeDistillationResult {
   total_loss : Double
   temperature : Double
   alpha : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   distillation_time_ms : Double
   model_compression_ratio : Double
@@ -256,22 +256,22 @@ pub(all) struct TransferLearningConfig {
   domain_adaptation_method : DomainAdaptationMethodType
   multi_task_method : MultiTaskLearningMethodType
   few_shot_method : FewShotLearningMethodType
-  num_frozen_layers : Int
+  num_frozen_layers : Int32
   learning_rate : Double
   discriminative_learning_rates : Array[Double]
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   temperature : Double
   alpha : Double
-  num_way : Int
-  num_shot : Int
-  num_query : Int
-  num_episodes : Int
+  num_way : Int32
+  num_shot : Int32
+  num_query : Int32
+  num_episodes : Int32
   use_pretrained : Bool
   pretrained_model_path : String
   use_data_augmentation : Bool
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 ///|
@@ -306,8 +306,8 @@ pub fn create_default_transfer_learning_config() -> TransferLearningConfig {
 ///|
 /// 简化的权重初始化（使用预训练权重）
 fn init_pretrained_weights(
-  num_layers : Int,
-  layer_size : Int,
+  num_layers : Int32,
+  layer_size : Int32,
 ) -> Array[Array[Double]] {
   let weights : Array[Array[Double]] = []
   let mut state = 42
@@ -327,8 +327,8 @@ fn init_pretrained_weights(
 /// 预训练模型加载
 pub fn load_pretrained_model(
   model_type : PretrainedModelType,
-  num_layers : Int,
-  layer_size : Int,
+  num_layers : Int32,
+  layer_size : Int32,
 ) -> PretrainingResult {
   let weights = init_pretrained_weights(num_layers, layer_size)
 
@@ -366,7 +366,7 @@ pub fn load_pretrained_model(
 /// 模型微调
 pub fn fine_tune_model(
   pretrained_weights : Array[Array[Double]],
-  num_frozen_layers : Int,
+  num_frozen_layers : Int32,
   config : TransferLearningConfig,
 ) -> FineTuningResult {
   let num_layers = pretrained_weights.length()
@@ -453,9 +453,9 @@ pub fn domain_adaptation(
 ///|
 /// 多任务学习
 pub fn multi_task_learning(
-  num_tasks : Int,
-  num_layers : Int,
-  layer_size : Int,
+  num_tasks : Int32,
+  num_layers : Int32,
+  layer_size : Int32,
   config : TransferLearningConfig,
 ) -> MultiTaskLearningResult {
   let shared_weights = init_pretrained_weights(num_layers, layer_size)
@@ -562,8 +562,8 @@ pub fn few_shot_learning(
 /// 知识蒸馏
 pub fn knowledge_distillation(
   teacher_weights : Array[Array[Double]],
-  student_num_layers : Int,
-  layer_size : Int,
+  student_num_layers : Int32,
+  layer_size : Int32,
   config : TransferLearningConfig,
 ) -> KnowledgeDistillationResult {
   let student_weights = init_pretrained_weights(student_num_layers, layer_size)

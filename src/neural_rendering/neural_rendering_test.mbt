@@ -1,7 +1,7 @@
 // v38.0.0 神经渲染测试 — neural_rendering 模块 12 函数
 
 ///|
-fn create_solid_nr(w : Int, h : Int, v : Int) -> @types.Image {
+fn create_solid_nr(w : Int32, h : Int32, v : Int32) -> @types.Image {
   let data : Array[Byte] = []
   for _ in 0..<(w * h) {
     data.push(v.to_byte())

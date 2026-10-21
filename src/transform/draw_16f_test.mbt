@@ -1,7 +1,12 @@
 // 绘制函数 16-bit/float 变体测试
 
 ///|
-fn make_img16_draw(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
+fn make_img16_draw(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
+) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
     data[i * 2] = (val & 0xFF).to_byte()
@@ -16,7 +21,12 @@ fn make_img16_draw(w : Int, h : Int, ch : Int, val : Int) -> @types.Image16 {
 }
 
 ///|
-fn make_imgf_draw(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
+fn make_imgf_draw(
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Float,
+) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')
   for i in 0..<(w * h * ch) {
     let bits = val.reinterpret_as_int()
@@ -38,7 +48,7 @@ fn make_imgf_draw(w : Int, h : Int, ch : Int, val : Float) -> @types.ImageF {
 ///|
 test "draw_line_16: basic line" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
+  let color : Array[Int32] = [65535]
   let result = @transform.draw_line_16(img, 0, 0, 9, 9, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
@@ -51,7 +61,7 @@ test "draw_line_16: basic line" {
 ///|
 test "draw_rectangle_16: basic rectangle" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
+  let color : Array[Int32] = [65535]
   let result = @transform.draw_rectangle_16(img, 2, 2, 5, 5, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
@@ -63,7 +73,7 @@ test "draw_rectangle_16: basic rectangle" {
 ///|
 test "draw_rectangle_16: filled rectangle" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
+  let color : Array[Int32] = [65535]
   let result = @transform.draw_rectangle_16(img, 2, 2, 5, 5, color, fill=true)
   assert_eq(result.width, 10)
   let _ = img
@@ -74,7 +84,7 @@ test "draw_rectangle_16: filled rectangle" {
 ///|
 test "draw_circle_16: basic circle" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
+  let color : Array[Int32] = [65535]
   let result = @transform.draw_circle_16(img, 5, 5, 3, color)
   assert_eq(result.width, 10)
   assert_eq(result.height, 10)
@@ -86,7 +96,7 @@ test "draw_circle_16: basic circle" {
 ///|
 test "draw_circle_16: filled circle" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
+  let color : Array[Int32] = [65535]
   let result = @transform.draw_circle_16(img, 5, 5, 3, color, fill=true)
   assert_eq(result.width, 10)
   let _ = img
@@ -97,8 +107,8 @@ test "draw_circle_16: filled circle" {
 ///|
 test "draw_polygon_16: basic polygon" {
   let img = make_img16_draw(10, 10, 1, 0)
-  let color : Array[Int] = [65535]
-  let points : Array[(Int, Int)] = [(2, 2), (7, 2), (5, 7)]
+  let color : Array[Int32] = [65535]
+  let points : Array[(Int32, Int32)] = [(2, 2), (7, 2), (5, 7)]
   let result = @transform.draw_polygon_16(img, points, color)
   assert_eq(result.width, 10)
   let _ = img
@@ -110,7 +120,7 @@ test "draw_polygon_16: basic polygon" {
 ///|
 test "draw_line_16: RGB color" {
   let img = make_img16_draw(10, 10, 3, 0)
-  let color : Array[Int] = [65535, 0, 0]
+  let color : Array[Int32] = [65535, 0, 0]
   let result = @transform.draw_line_16(img, 0, 0, 9, 9, color)
   assert_eq(result.channels, 3)
   let _ = img
@@ -159,7 +169,7 @@ test "draw_circle_f: basic circle" {
 test "draw_polygon_f: basic polygon" {
   let img = make_imgf_draw(10, 10, 1, 0.0F)
   let color : Array[Float] = [1.0F]
-  let points : Array[(Int, Int)] = [(2, 2), (7, 2), (5, 7)]
+  let points : Array[(Int32, Int32)] = [(2, 2), (7, 2), (5, 7)]
   let result = @transform.draw_polygon_f(img, points, color)
   assert_eq(result.width, 10)
   let _ = img

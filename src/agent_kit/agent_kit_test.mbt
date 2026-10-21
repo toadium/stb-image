@@ -2,9 +2,9 @@
 
 ///|
 fn ak_test_image(
-  width? : Int = 4,
-  height? : Int = 4,
-  value? : Int = 128,
+  width~ : Int32 = 4,
+  height~ : Int32 = 4,
+  value~ : Int32 = 128,
 ) -> @types.Image {
   {
     width,

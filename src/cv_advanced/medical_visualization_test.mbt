@@ -66,7 +66,7 @@ test "medviz_mpr_slice: 矢状切片" {
 ///|
 test "medviz_cpr_centerline: 基本提取" {
   let volume = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-  let path : Array[(Int, Int, Int)] = []
+  let path : Array[(Int32, Int32, Int32)] = []
   path.push((0, 0, 0))
   path.push((1, 1, 1))
   let result = @cv_advanced.medviz_cpr_centerline(volume, 2, 2, 2, path)

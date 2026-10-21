@@ -2,10 +2,10 @@
 
 ///|
 fn make_uniform_image16_s(
-  w : Int,
-  h : Int,
-  ch : Int,
-  val : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
+  val : Int32,
 ) -> @types.Image16 {
   let data : Array[Byte] = Array::make(w * h * ch * 2, b'\x00')
   for i in 0..<(w * h * ch) {
@@ -22,9 +22,9 @@ fn make_uniform_image16_s(
 
 ///|
 fn make_uniform_imagef_s(
-  w : Int,
-  h : Int,
-  ch : Int,
+  w : Int32,
+  h : Int32,
+  ch : Int32,
   val : Float,
 ) -> @types.ImageF {
   let data : Array[Byte] = Array::make(w * h * ch * 4, b'\x00')

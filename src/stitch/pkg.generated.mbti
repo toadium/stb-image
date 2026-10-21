@@ -8,9 +8,9 @@ import {
 // Values
 pub fn apply_homography(Homography, Double, Double) -> (Double, Double)
 
-pub fn detect_features_simple(@types.Image, max_features? : Int) -> Array[FeaturePoint]
+pub fn detect_features_simple(@types.Image, max_features? : Int32) -> Array[FeaturePoint]
 
-pub fn estimate_homography_ransac(Array[MatchPair], Array[FeaturePoint], Array[FeaturePoint], iterations? : Int, threshold? : Double) -> (Homography?, Array[MatchPair])
+pub fn estimate_homography_ransac(Array[MatchPair], Array[FeaturePoint], Array[FeaturePoint], iterations? : Int32, threshold? : Double) -> (Homography?, Array[MatchPair])
 
 pub fn identity_homography() -> Homography
 
@@ -46,18 +46,18 @@ pub(all) struct Homography {
 }
 
 pub(all) struct MatchPair {
-  query_idx : Int
-  train_idx : Int
+  query_idx : Int32
+  train_idx : Int32
   distance : Double
 }
 
 pub(all) struct StitchConfig {
-  max_features : Int
+  max_features : Int32
   ratio_threshold : Double
-  ransac_iterations : Int
+  ransac_iterations : Int32
   ransac_threshold : Double
-  min_inliers : Int
-  blend_width : Int
+  min_inliers : Int32
+  blend_width : Int32
   use_multi_band : Bool
 }
 

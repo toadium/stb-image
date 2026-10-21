@@ -6,7 +6,7 @@
 /// 仅处理颜色通道，alpha 不变。
 pub fn floyd_steinberg(
   img : @types.Image,
-  levels : Int,
+  levels : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -37,7 +37,7 @@ pub fn floyd_steinberg(
   let h = img.height
   let n = w * h
   // 可变像素缓冲
-  let buf : Array[Int] = Array::make(n * color_ch, 0)
+  let buf : Array[Int32] = Array::make(n * color_ch, 0)
   for i in 0..<n {
     for c in 0..<color_ch {
       buf[i * color_ch + c] = img.data[i * ch + c].to_int()
@@ -97,7 +97,7 @@ pub fn floyd_steinberg(
 /// 算法：递归地沿最大方差通道在中位数处分割颜色空间。
 pub fn median_cut(
   img : @types.Image,
-  num_colors : Int,
+  num_colors : Int32,
 ) -> @types.Image raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -126,9 +126,9 @@ pub fn median_cut(
   let h = img.height
   let n = w * h
   // 收集所有 RGB 像素
-  let pixels : Array[(Int, Int, Int)] = Array::make(n, (0, 0, 0))
+  let pixels : Array[(Int32, Int32, Int32)] = Array::make(n, (0, 0, 0))
   let ch = img.channels
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -139,12 +139,12 @@ pub fn median_cut(
     pixels[i] = (r, g, b)
   }
   // 初始 bucket 包含所有像素索引
-  let initial_bucket : Array[Int] = Array::make(n, 0)
+  let initial_bucket : Array[Int32] = Array::make(n, 0)
   for i in 0..<n {
     initial_bucket[i] = i
   }
   // 递归分割
-  let buckets : Array[Array[Int]] = [initial_bucket]
+  let buckets : Array[Array[Int32]] = [initial_bucket]
   let mut num_buckets = 1
   while num_buckets < num_colors {
     // 找到范围最大的 bucket
@@ -174,8 +174,8 @@ pub fn median_cut(
       va.compare(vb)
     })
     let mid = sorted.length() / 2
-    let left : Array[Int] = Array::make(mid, 0)
-    let right : Array[Int] = Array::make(sorted.length() - mid, 0)
+    let left : Array[Int32] = Array::make(mid, 0)
+    let right : Array[Int32] = Array::make(sorted.length() - mid, 0)
     for i in 0..<mid {
       left[i] = sorted[i]
     }
@@ -187,7 +187,7 @@ pub fn median_cut(
     num_buckets += 1
   }
   // 计算每个 bucket 的平均色作为调色板
-  let palette : Array[(Int, Int, Int)] = Array::make(
+  let palette : Array[(Int32, Int32, Int32)] = Array::make(
     buckets.length(),
     (0, 0, 0),
   )
@@ -227,8 +227,8 @@ pub fn median_cut(
 /// max_iters 控制最大迭代次数（默认 20）。
 pub fn kmeans_quantize(
   img : @types.Image,
-  k : Int,
-  max_iters : Int,
+  k : Int32,
+  max_iters : Int32,
 ) -> @types.Image raise @types.LoadError {
   if k < 1 || k > 256 {
     raise @types.LoadError::DecodeFailed("k 必须在 1..256 之间")
@@ -244,10 +244,10 @@ pub fn kmeans_quantize(
     return img
   }
   // 初始化聚类中心：均匀采样
-  let centroids_r : Array[Int] = Array::make(k, 0)
-  let centroids_g : Array[Int] = Array::make(k, 0)
-  let centroids_b : Array[Int] = Array::make(k, 0)
-  let data_int : Array[Int] = Array::make(n * ch, 0)
+  let centroids_r : Array[Int32] = Array::make(k, 0)
+  let centroids_g : Array[Int32] = Array::make(k, 0)
+  let centroids_b : Array[Int32] = Array::make(k, 0)
+  let data_int : Array[Int32] = Array::make(n * ch, 0)
   for i in 0..<(n * ch) {
     data_int[i] = img.data[i].to_int()
   }
@@ -259,7 +259,7 @@ pub fn kmeans_quantize(
     centroids_b[i] = data_int[idx * ch + 2]
   }
   // 迭代
-  let labels : Array[Int] = Array::make(n, 0)
+  let labels : Array[Int32] = Array::make(n, 0)
   let iters = if max_iters < 1 { 20 } else { max_iters }
   for _ in 0..<iters {
     // 分配每个像素到最近的聚类
@@ -294,10 +294,10 @@ pub fn kmeans_quantize(
     }
 
     // 更新聚类中心
-    let sum_r : Array[Int] = Array::make(k, 0)
-    let sum_g : Array[Int] = Array::make(k, 0)
-    let sum_b : Array[Int] = Array::make(k, 0)
-    let cnt : Array[Int] = Array::make(k, 0)
+    let sum_r : Array[Int32] = Array::make(k, 0)
+    let sum_g : Array[Int32] = Array::make(k, 0)
+    let sum_b : Array[Int32] = Array::make(k, 0)
+    let cnt : Array[Int32] = Array::make(k, 0)
     for i in 0..<n {
       let label = labels[i]
       sum_r[label] += data_int[i * ch]
@@ -333,7 +333,7 @@ pub fn kmeans_quantize(
 }
 
 ///|
-fn channel_value(pixel : (Int, Int, Int), ch : Int) -> Int {
+fn channel_value(pixel : (Int32, Int32, Int32), ch : Int32) -> Int32 {
   match ch {
     0 => pixel.0
     1 => pixel.1
@@ -343,9 +343,9 @@ fn channel_value(pixel : (Int, Int, Int), ch : Int) -> Int {
 
 ///|
 fn bucket_max_range(
-  pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int],
-) -> (Int, Int) {
+  pixels : Array[(Int32, Int32, Int32)],
+  bucket : Array[Int32],
+) -> (Int32, Int32) {
   let mut min_r = 255
   let mut max_r = 0
   let mut min_g = 255
@@ -387,9 +387,9 @@ fn bucket_max_range(
 
 ///|
 fn bucket_average(
-  pixels : Array[(Int, Int, Int)],
-  bucket : Array[Int],
-) -> (Int, Int, Int) {
+  pixels : Array[(Int32, Int32, Int32)],
+  bucket : Array[Int32],
+) -> (Int32, Int32, Int32) {
   let mut sum_r = 0
   let mut sum_g = 0
   let mut sum_b = 0
@@ -408,7 +408,14 @@ fn bucket_average(
 }
 
 ///|
-fn dist_sq(r1 : Int, g1 : Int, b1 : Int, r2 : Int, g2 : Int, b2 : Int) -> Int {
+fn dist_sq(
+  r1 : Int32,
+  g1 : Int32,
+  b1 : Int32,
+  r2 : Int32,
+  g2 : Int32,
+  b2 : Int32,
+) -> Int32 {
   let dr = r1 - r2
   let dg = g1 - g2
   let db = b1 - b2

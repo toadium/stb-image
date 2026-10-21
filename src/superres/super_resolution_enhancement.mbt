@@ -21,10 +21,10 @@ pub extend SuperResolutionAlgorithm with Eq::{not_equal, equal}
 /// 超分辨率结果
 pub(all) struct SuperResolutionResult {
   image : @types.Image
-  original_width : Int
-  original_height : Int
-  output_width : Int
-  output_height : Int
+  original_width : Int32
+  original_height : Int32
+  output_width : Int32
+  output_height : Int32
   scale_factor : Double
   algorithm : SuperResolutionAlgorithm
   processing_time_ms : Double
@@ -66,7 +66,7 @@ pub(all) struct EnhancementConfig {
   gamma : Double
   use_clahe : Bool
   clahe_clip_limit : Double
-  clahe_tile_size : Int
+  clahe_tile_size : Int32
 }
 
 ///|

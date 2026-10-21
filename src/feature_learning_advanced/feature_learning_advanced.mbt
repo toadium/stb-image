@@ -119,18 +119,18 @@ pub extend MetricLearningMethodType with Eq::{not_equal, equal}
 /// 特征学习结果
 pub(all) struct FeatureLearningResult {
   learned_features : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  learned_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  learned_dimension : Int32
   feature_importance : Array[Double]
-  selected_features : Array[Int]
+  selected_features : Array[Int32]
   reconstruction_error : Double
   training_loss : Double
   validation_loss : Double
   training_accuracy : Double
   validation_accuracy : Double
   learning_time_ms : Double
-  num_epochs : Int
+  num_epochs : Int32
   converged : Bool
 }
 
@@ -138,23 +138,23 @@ pub(all) struct FeatureLearningResult {
 /// 特征提取结果
 pub(all) struct FeatureExtractionResult {
   features : Array[Array[Double]]
-  num_samples : Int
-  feature_dimension : Int
+  num_samples : Int32
+  feature_dimension : Int32
   extraction_method : FeatureExtractionMethodType
   extraction_time_ms : Double
   feature_statistics : Array[Array[Double]]
-  num_layers : Int
+  num_layers : Int32
   layer_names : Array[String]
 }
 
 ///|
 /// 特征选择结果
 pub(all) struct FeatureSelectionResult {
-  selected_features : Array[Int]
-  num_selected : Int
-  original_num_features : Int
+  selected_features : Array[Int32]
+  num_selected : Int32
+  original_num_features : Int32
   feature_scores : Array[Double]
-  feature_ranking : Array[Int]
+  feature_ranking : Array[Int32]
   selection_method : FeatureSelectionMethodType
   threshold : Double
   selection_time_ms : Double
@@ -165,9 +165,9 @@ pub(all) struct FeatureSelectionResult {
 /// 特征变换结果
 pub(all) struct FeatureTransformationResult {
   transformed_features : Array[Array[Double]]
-  num_samples : Int
-  original_dimension : Int
-  transformed_dimension : Int
+  num_samples : Int32
+  original_dimension : Int32
+  transformed_dimension : Int32
   transformation_method : FeatureTransformationMethodType
   transformation_parameters : Array[Double]
   transformation_time_ms : Double
@@ -181,9 +181,9 @@ pub(all) struct FeatureTransformationResult {
 /// 特征融合结果
 pub(all) struct FeatureFusionResult {
   fused_features : Array[Array[Double]]
-  num_samples : Int
-  fused_dimension : Int
-  input_dimensions : Array[Int]
+  num_samples : Int32
+  fused_dimension : Int32
+  input_dimensions : Array[Int32]
   fusion_method : FeatureFusionMethodType
   fusion_weights : Array[Double]
   fusion_time_ms : Double
@@ -194,15 +194,15 @@ pub(all) struct FeatureFusionResult {
 /// 度量学习结果
 pub(all) struct MetricLearningResult {
   learned_metric : Array[Array[Double]]
-  num_samples : Int
-  feature_dimension : Int
+  num_samples : Int32
+  feature_dimension : Int32
   metric_method : MetricLearningMethodType
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   learning_rate : Double
   margin : Double
-  embedding_dimension : Int
+  embedding_dimension : Int32
   learning_time_ms : Double
 }
 
@@ -210,17 +210,17 @@ pub(all) struct MetricLearningResult {
 /// 对比学习结果
 pub(all) struct ContrastiveLearningResult {
   learned_representations : Array[Array[Double]]
-  num_samples : Int
-  representation_dimension : Int
+  num_samples : Int32
+  representation_dimension : Int32
   training_loss : Double
   validation_loss : Double
-  num_epochs : Int
+  num_epochs : Int32
   temperature : Double
-  batch_size : Int
+  batch_size : Int32
   learning_rate : Double
   learning_time_ms : Double
-  positive_pairs : Int
-  negative_pairs : Int
+  positive_pairs : Int32
+  negative_pairs : Int32
 }
 
 ///|
@@ -232,10 +232,10 @@ pub(all) struct FeatureLearningConfig {
   transformation_method : FeatureTransformationMethodType
   fusion_method : FeatureFusionMethodType
   metric_method : MetricLearningMethodType
-  num_features : Int
+  num_features : Int32
   learning_rate : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   margin : Double
   temperature : Double
   regularization : Double
@@ -244,7 +244,7 @@ pub(all) struct FeatureLearningConfig {
   pretrained_model : String
   use_augmentation : Bool
   use_gpu : Bool
-  random_state : Int
+  random_state : Int32
 }
 
 ///|
@@ -277,8 +277,8 @@ pub fn create_default_feature_learning_config() -> FeatureLearningConfig {
 /// 简化的特征提取（使用统计特征）
 fn extract_statistical_features(
   image : Array[Double],
-  _width : Int,
-  _height : Int,
+  _width : Int32,
+  _height : Int32,
 ) -> Array[Double] {
   let features : Array[Double] = []
 
@@ -439,8 +439,8 @@ fn log_approx_fl(x : Double) -> Double {
 /// 特征提取
 pub fn extract_features_fl(
   images : Array[Array[Double]],
-  widths : Array[Int],
-  heights : Array[Int],
+  widths : Array[Int32],
+  heights : Array[Int32],
   config : FeatureLearningConfig,
 ) -> FeatureExtractionResult {
   let features : Array[Array[Double]] = []
@@ -506,7 +506,7 @@ pub fn extract_features_fl(
 /// 特征选择（基于方差）
 pub fn select_features_fl(
   data : Array[Array[Double]],
-  num_select : Int,
+  num_select : Int32,
   config : FeatureLearningConfig,
 ) -> FeatureSelectionResult {
   let num_samples = data.length()
@@ -539,7 +539,7 @@ pub fn select_features_fl(
   }
 
   // 排序
-  let ranking : Array[Int] = []
+  let ranking : Array[Int32] = []
   for f in 0..<num_features {
     ranking.push(f)
   }
@@ -554,7 +554,7 @@ pub fn select_features_fl(
   }
 
   // 选择前num_select个
-  let selected : Array[Int] = []
+  let selected : Array[Int32] = []
   let k = if num_select < num_features { num_select } else { num_features }
   for i in 0..<k {
     selected.push(ranking[i])
@@ -684,7 +684,7 @@ pub fn fuse_features_fl(
   } else {
     0
   }
-  let input_dims : Array[Int] = []
+  let input_dims : Array[Int32] = []
   for feats in features_list {
     if feats.length() > 0 {
       input_dims.push(feats[0].length())
@@ -757,7 +757,7 @@ pub fn learn_features(
     importance.push(1.0 / (d + 1).to_double())
   }
 
-  let selected : Array[Int] = []
+  let selected : Array[Int32] = []
   let k = if config.num_features < original_dim {
     config.num_features
   } else {

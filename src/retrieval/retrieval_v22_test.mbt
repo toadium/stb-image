@@ -2,7 +2,7 @@
 // 基于特征的图像检索、CBIR、颜色直方图/LBP/HOG 特征、相似度度量
 
 ///|
-fn make_retrieval_img(w : Int, h : Int, value : Byte) -> @types.Image {
+fn make_retrieval_img(w : Int32, h : Int32, value : Byte) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,
@@ -12,7 +12,7 @@ fn make_retrieval_img(w : Int, h : Int, value : Byte) -> @types.Image {
 }
 
 ///|
-fn make_varied_retrieval_img(w : Int, h : Int) -> @types.Image {
+fn make_varied_retrieval_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i % 256).to_byte())
@@ -26,7 +26,7 @@ fn make_varied_retrieval_img(w : Int, h : Int) -> @types.Image {
 }
 
 ///|
-fn make_rgb_retrieval_img(w : Int, h : Int) -> @types.Image {
+fn make_rgb_retrieval_img(w : Int32, h : Int32) -> @types.Image {
   let arr : Array[Byte] = []
   for i in 0..<(w * h) {
     arr.push((i * 3 % 256).to_byte())

@@ -14,20 +14,20 @@ pub(all) struct OcrResult {
 pub(all) struct OcrCharResult {
   char : String
   confidence : Double
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 }
 
 ///|
 /// 数字 OCR 配置
 pub(all) struct DigitOcrConfig {
-  min_char_width : Int
-  max_char_width : Int
-  target_size : Int
+  min_char_width : Int32
+  max_char_width : Int32
+  target_size : Int32
   use_knn : Bool
-  k : Int
+  k : Int32
   distance_metric : String
 }
 
@@ -59,7 +59,7 @@ pub fn generate_digit_templates() -> Array[(String, Array[Double])] {
 
 ///|
 /// 生成单个数字的模板特征
-fn generate_single_digit_template(digit : Int) -> Array[Double] {
+fn generate_single_digit_template(digit : Int32) -> Array[Double] {
   // 使用 8x8 网格特征作为模板
   let size = 8
   let features : Array[Double] = Array::make(size * size, 0.0)
@@ -150,11 +150,11 @@ fn generate_single_digit_template(digit : Int) -> Array[Double] {
 /// 设置7段显示的一段
 fn set_segment(
   features : Array[Double],
-  size : Int,
-  row : Int,
-  col : Int,
-  width : Int,
-  height : Int,
+  size : Int32,
+  row : Int32,
+  col : Int32,
+  width : Int32,
+  height : Int32,
 ) -> Unit {
   for r in 0..<height {
     for c in 0..<width {
@@ -270,11 +270,11 @@ pub fn recognize_digits(
 /// 提取字符区域并缩放到目标尺寸
 fn extract_char_region(
   img : @types.Image,
-  x : Int,
-  y : Int,
-  width : Int,
-  height : Int,
-  target_size : Int,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  target_size : Int32,
 ) -> @types.Image {
   let w = img.width
   let h = img.height
@@ -325,7 +325,7 @@ fn extract_char_region(
 /// 提取字符特征（网格特征）
 fn extract_char_features(
   char_img : @types.Image,
-  grid_size : Int,
+  grid_size : Int32,
 ) -> Array[Double] {
   let w = char_img.width
   let h = char_img.height
@@ -430,7 +430,7 @@ fn cosine_distance_local(a : Array[Double], b : Array[Double]) -> Double {
 
 ///|
 /// 辅助函数：最大值
-fn _max_ocr(a : Int, b : Int) -> Int {
+fn _max_ocr(a : Int32, b : Int32) -> Int32 {
   if a > b {
     a
   } else {

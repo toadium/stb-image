@@ -6,10 +6,10 @@
 /// 张量场：2D 张量场，data 为行主序，长度 = width * height * rows * cols。
 /// Tensor field: 2D tensor field, row-major, length = width * height * rows * cols.
 pub(all) struct TensorField {
-  width : Int
-  height : Int
-  rows : Int
-  cols : Int
+  width : Int32
+  height : Int32
+  rows : Int32
+  cols : Int32
   data : Array[Float]
 } derive(Eq, @debug.Debug)
 
@@ -23,10 +23,10 @@ pub extend TensorField with Eq::{not_equal, equal}
 /// 创建张量场，数据长度必须等于 width * height * rows * cols。
 /// Create a tensor field; data length must equal width * height * rows * cols.
 pub fn TensorField::make(
-  width : Int,
-  height : Int,
-  rows : Int,
-  cols : Int,
+  width : Int32,
+  height : Int32,
+  rows : Int32,
+  cols : Int32,
   data : Array[Float],
 ) -> TensorField raise @types.LoadError {
   if width <= 0 || height <= 0 || rows <= 0 || cols <= 0 {
@@ -46,10 +46,10 @@ pub fn TensorField::make(
 /// 创建全零张量场。
 /// Create an all-zero tensor field.
 pub fn TensorField::zeros(
-  width : Int,
-  height : Int,
-  rows : Int,
-  cols : Int,
+  width : Int32,
+  height : Int32,
+  rows : Int32,
+  cols : Int32,
 ) -> TensorField raise @types.LoadError {
   if width <= 0 || height <= 0 || rows <= 0 || cols <= 0 {
     raise @types.LoadError::DecodeFailed(
@@ -70,10 +70,10 @@ pub fn TensorField::zeros(
 /// Evaluate element (r, c) at (x, y); returns 0 for out-of-bounds.
 pub fn TensorField::evaluate(
   self : TensorField,
-  x : Int,
-  y : Int,
-  r : Int,
-  c : Int,
+  x : Int32,
+  y : Int32,
+  r : Int32,
+  c : Int32,
 ) -> Float {
   if x < 0 ||
     x >= self.width ||
@@ -93,10 +93,10 @@ pub fn TensorField::evaluate(
 /// Evaluate element with clamped boundary.
 pub fn TensorField::evaluate_clamped(
   self : TensorField,
-  x : Int,
-  y : Int,
-  r : Int,
-  c : Int,
+  x : Int32,
+  y : Int32,
+  r : Int32,
+  c : Int32,
 ) -> Float {
   let cx = x.clamp(min=0, max=self.width - 1)
   let cy = y.clamp(min=0, max=self.height - 1)
@@ -110,10 +110,10 @@ pub fn TensorField::evaluate_clamped(
 /// Set element (r, c) at (x, y); out-of-bounds is ignored.
 pub fn TensorField::set(
   self : TensorField,
-  x : Int,
-  y : Int,
-  r : Int,
-  c : Int,
+  x : Int32,
+  y : Int32,
+  r : Int32,
+  c : Int32,
   value : Float,
 ) -> Unit {
   if x < 0 ||

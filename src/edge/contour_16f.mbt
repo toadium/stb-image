@@ -109,10 +109,10 @@ pub fn find_contours_f(
 fn trace_boundary_16f(
   binary : Array[Bool],
   visited : Array[Bool],
-  start_x : Int,
-  start_y : Int,
-  w : Int,
-  h : Int,
+  start_x : Int32,
+  start_y : Int32,
+  w : Int32,
+  h : Int32,
   is_outer : Bool,
 ) -> Contour {
   let points : Array[ContourPoint] = []
@@ -166,7 +166,7 @@ fn trace_boundary_16f(
 pub fn draw_contours_16(
   img : @types.Image16,
   contours : Array[Contour],
-  color : Array[Int],
+  color : Array[Int32],
 ) -> @types.Image16 raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

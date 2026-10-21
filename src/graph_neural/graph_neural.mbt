@@ -56,19 +56,19 @@ pub extend RelationType with Eq::{not_equal, equal}
 ///|
 /// 图节点
 pub(all) struct GraphNode {
-  node_id : Int
+  node_id : Int32
   features : Array[Double]
-  label : Int
-  num_features : Int
-  degree : Int
+  label : Int32
+  num_features : Int32
+  degree : Int32
   is_visited : Bool
 }
 
 ///|
 /// 图边
 pub(all) struct GraphEdge {
-  source_id : Int
-  target_id : Int
+  source_id : Int32
+  target_id : Int32
   weight : Double
   relation_type : RelationType
   features : Array[Double]
@@ -79,8 +79,8 @@ pub(all) struct GraphEdge {
 pub(all) struct GraphData {
   nodes : Array[GraphNode]
   edges : Array[GraphEdge]
-  num_nodes : Int
-  num_edges : Int
+  num_nodes : Int32
+  num_edges : Int32
   adjacency_matrix : Array[Array[Double]]
   is_directed : Bool
   is_weighted : Bool
@@ -90,12 +90,12 @@ pub(all) struct GraphData {
 /// GNN配置
 pub(all) struct GNNConfig {
   layer_type : GNNLayerType
-  num_layers : Int
-  hidden_dim : Int
-  output_dim : Int
+  num_layers : Int32
+  hidden_dim : Int32
+  output_dim : Int32
   dropout_rate : Double
   learning_rate : Double
-  num_heads : Int
+  num_heads : Int32
   aggregation : String
   use_residual : Bool
   use_batch_norm : Bool
@@ -105,12 +105,12 @@ pub(all) struct GNNConfig {
 ///|
 /// 关系推理配置
 pub(all) struct RelationReasoningConfig {
-  num_relations : Int
-  embedding_dim : Int
-  num_hops : Int
+  num_relations : Int32
+  embedding_dim : Int32
+  num_hops : Int32
   use_attention : Bool
   use_path_encoding : Bool
-  max_path_length : Int
+  max_path_length : Int32
   reasoning_method : String
   threshold : Double
 }
@@ -119,8 +119,8 @@ pub(all) struct RelationReasoningConfig {
 /// 节点嵌入结果
 pub(all) struct NodeEmbeddingResult {
   embeddings : Array[Array[Double]]
-  num_nodes : Int
-  embedding_dim : Int
+  num_nodes : Int32
+  embedding_dim : Int32
   method_type : String
   training_loss : Double
   training_accuracy : Double
@@ -129,21 +129,21 @@ pub(all) struct NodeEmbeddingResult {
 ///|
 /// 关系预测结果
 pub(all) struct RelationPredictionResult {
-  source_id : Int
-  target_id : Int
+  source_id : Int32
+  target_id : Int32
   predicted_relation : RelationType
   confidence : Double
   all_scores : Array[Double]
-  reasoning_path : Array[Int]
+  reasoning_path : Array[Int32]
 }
 
 ///|
 /// 社区检测结果
 pub(all) struct CommunityDetectionResult {
-  communities : Array[Array[Int]]
-  num_communities : Int
+  communities : Array[Array[Int32]]
+  num_communities : Int32
   modularity : Double
-  community_sizes : Array[Int]
+  community_sizes : Array[Int32]
   method_type : String
 }
 
@@ -183,9 +183,9 @@ pub fn create_default_reasoning_config() -> RelationReasoningConfig {
 ///|
 /// 创建随机图
 pub fn create_random_graph(
-  num_nodes : Int,
-  num_edges : Int,
-  num_features : Int,
+  num_nodes : Int32,
+  num_edges : Int32,
+  num_features : Int32,
   is_directed : Bool,
 ) -> GraphData {
   let nodes : Array[GraphNode] = []
@@ -425,8 +425,8 @@ pub fn graph_attention(
 /// 关系预测（简化版）
 pub fn predict_relation(
   graph : GraphData,
-  source_id : Int,
-  target_id : Int,
+  source_id : Int32,
+  target_id : Int32,
   config : RelationReasoningConfig,
 ) -> RelationPredictionResult {
   ignore(config)
@@ -479,7 +479,7 @@ pub fn predict_relation(
   }
 
   // 简化的推理路径
-  let path : Array[Int] = []
+  let path : Array[Int32] = []
   path.push(source_id)
   path.push(target_id)
 
@@ -497,14 +497,14 @@ pub fn predict_relation(
 /// 社区检测（简化版Louvain）
 pub fn detect_communities(
   graph : GraphData,
-  num_communities : Int,
+  num_communities : Int32,
 ) -> CommunityDetectionResult {
-  let communities : Array[Array[Int]] = []
-  let community_sizes : Array[Int] = []
+  let communities : Array[Array[Int32]] = []
+  let community_sizes : Array[Int32] = []
 
   // 简化的社区分配：基于节点度
   for _ in 0..<num_communities {
-    let community : Array[Int] = []
+    let community : Array[Int32] = []
     communities.push(community)
     community_sizes.push(0)
   }

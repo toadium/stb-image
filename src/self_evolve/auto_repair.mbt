@@ -22,8 +22,8 @@ pub extend RepairAction with Eq::{not_equal, equal}
 /// 修复报告。
 /// Repair report.
 pub(all) struct RepairReport {
-  original_op_count : Int
-  repaired_op_count : Int
+  original_op_count : Int32
+  repaired_op_count : Int32
   repairs : Array[RepairAction]
   remaining_degradations : Array[DegradationCase]
   summary : String
@@ -157,6 +157,6 @@ pub fn RepairReport::is_fully_repaired(self : RepairReport) -> Bool {
 ///|
 /// 修复动作数。
 /// Number of repair actions.
-pub fn RepairReport::repair_count(self : RepairReport) -> Int {
+pub fn RepairReport::repair_count(self : RepairReport) -> Int32 {
   self.repairs.length()
 }

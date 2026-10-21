@@ -1,20 +1,20 @@
 ///|
 /// APNG 扩展信息（包含帧数、播放次数、动画标志等）
 pub struct ApngInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  color_type : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  color_type : Int32
   color_type_name : String
-  num_channels : Int
+  num_channels : Int32
   has_alpha : Bool
-  num_frames : Int
-  num_plays : Int
+  num_frames : Int32
+  num_plays : Int32
   is_animated : Bool
 }
 
 ///|
-fn apng_color_type_name(ct : Int) -> String {
+fn apng_color_type_name(ct : Int32) -> String {
   match ct {
     0 => "Grayscale"
     2 => "RGB"
@@ -26,7 +26,7 @@ fn apng_color_type_name(ct : Int) -> String {
 }
 
 ///|
-fn apng_channels_count(ct : Int) -> Int {
+fn apng_channels_count(ct : Int32) -> Int32 {
   match ct {
     0 => 1
     2 => 3

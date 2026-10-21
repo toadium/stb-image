@@ -14,7 +14,7 @@ pub(all) struct XmpInfo {
   create_date : String
   modify_date : String
   software : String
-  rating : Int
+  rating : Int32
   raw_xml : String
 } derive(Eq, @debug.Debug)
 
@@ -32,7 +32,7 @@ fn xmp_namespace_uri() -> String {
 
 ///|
 /// 从字节中提取 ASCII 字符串（到 \0 或指定长度）
-fn xmp_extract_string(data : Bytes, start : Int, max_len : Int) -> String {
+fn xmp_extract_string(data : Bytes, start : Int32, max_len : Int32) -> String {
   let chars : Array[Byte] = []
   let len = data.length()
   for i in 0..<max_len {
@@ -52,7 +52,7 @@ fn xmp_extract_string(data : Bytes, start : Int, max_len : Int) -> String {
 
 ///|
 /// 在字符串中查找子串，返回起始位置或 -1
-fn xmp_str_find(haystack : String, needle : String) -> Int {
+fn xmp_str_find(haystack : String, needle : String) -> Int32 {
   let h = haystack.to_array()
   let n = needle.to_array()
   let hlen = h.length()
@@ -115,7 +115,7 @@ fn xmp_extract_attr(xml : String, tag : String, attr : String) -> String {
 
 ///|
 /// 简单整数解析（支持正负号）
-fn xmp_parse_int(s : String) -> Int? {
+fn xmp_parse_int(s : String) -> Int32? {
   if s.length() == 0 {
     return None
   }

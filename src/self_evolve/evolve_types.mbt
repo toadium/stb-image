@@ -102,21 +102,21 @@ pub extend EvolveReport with Eq::{not_equal, equal}
 ///|
 /// 测试用例数量。
 /// Number of test cases.
-pub fn EvolveReport::test_count(self : EvolveReport) -> Int {
+pub fn EvolveReport::test_count(self : EvolveReport) -> Int32 {
   self.generated_tests.length()
 }
 
 ///|
 /// 退化场景数量。
 /// Number of degradation cases.
-pub fn EvolveReport::degradation_count(self : EvolveReport) -> Int {
+pub fn EvolveReport::degradation_count(self : EvolveReport) -> Int32 {
   self.found_degradations.length()
 }
 
 ///|
 /// 严重退化数量（Critical + Fatal）。
 /// Number of severe degradations.
-pub fn EvolveReport::severe_count(self : EvolveReport) -> Int {
+pub fn EvolveReport::severe_count(self : EvolveReport) -> Int32 {
   let mut count = 0
   for d in self.found_degradations {
     match d.severity {

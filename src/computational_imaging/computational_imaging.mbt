@@ -48,21 +48,21 @@ pub extend HologramType with Eq::{not_equal, equal}
 ///|
 /// 光场相机参数
 pub(all) struct LightFieldCameraParams {
-  num_views_x : Int
-  num_views_y : Int
+  num_views_x : Int32
+  num_views_y : Int32
   micro_lens_pitch : Double
   focal_length : Double
   sensor_pitch : Double
-  num_aperture_samples : Int
+  num_aperture_samples : Int32
 }
 
 ///|
 /// 光场数据
 pub(all) struct LightFieldData {
   views : Array[@types.Image]
-  num_views_x : Int
-  num_views_y : Int
-  total_views : Int
+  num_views_x : Int32
+  num_views_y : Int32
+  total_views : Int32
   representation : LightFieldRepresentation
 }
 
@@ -81,8 +81,8 @@ pub(all) struct Hologram {
 /// CT 投影数据
 pub(all) struct CTProjectionData {
   projections : Array[@types.Image]
-  num_angles : Int
-  num_detectors : Int
+  num_angles : Int32
+  num_detectors : Int32
   angular_range : Double
   source_distance : Double
   detector_distance : Double
@@ -91,7 +91,7 @@ pub(all) struct CTProjectionData {
 ///|
 /// 相位恢复配置
 pub(all) struct PhaseRetrievalConfig {
-  num_iterations : Int
+  num_iterations : Int32
   algorithm : String
   support_threshold : Double
   use_hybrid_input_output : Bool
@@ -102,9 +102,9 @@ pub(all) struct PhaseRetrievalConfig {
 /// 编码孔径模式
 pub(all) struct CodedAperturePattern {
   pattern : @types.Image
-  pattern_size : Int
+  pattern_size : Int32
   code_type : String
-  num_elements : Int
+  num_elements : Int32
 }
 
 ///|
@@ -113,7 +113,7 @@ pub(all) struct RefocusResult {
   image : @types.Image
   focus_depth : Double
   aperture_size : Double
-  num_views_used : Int
+  num_views_used : Int32
 }
 
 ///|
@@ -121,7 +121,7 @@ pub(all) struct RefocusResult {
 pub(all) struct ViewSynthesisResult {
   image : @types.Image
   view_position : Array[Double]
-  num_source_views : Int
+  num_source_views : Int32
   interpolation_method : String
 }
 
@@ -130,7 +130,7 @@ pub(all) struct ViewSynthesisResult {
 pub(all) struct ImagingReconstructionResult {
   image : @types.Image
   algorithm : ComputationalImagingAlgorithm
-  num_iterations : Int
+  num_iterations : Int32
   convergence_error : Double
   reconstruction_time_ms : Double
   psnr : Double
@@ -164,7 +164,7 @@ pub fn create_default_phase_config() -> PhaseRetrievalConfig {
 
 ///|
 /// 创建默认编码孔径模式
-pub fn create_default_coded_aperture(size : Int) -> CodedAperturePattern {
+pub fn create_default_coded_aperture(size : Int32) -> CodedAperturePattern {
   let total = size * size
   let out : Array[Byte] = []
   let mut state = 42
@@ -515,7 +515,7 @@ pub fn reconstruct_hologram(hologram : Hologram) -> ImagingReconstructionResult 
 /// CT 滤波反投影重建（简化版）
 pub fn ct_reconstruct_fbp(
   projections : CTProjectionData,
-  output_size : Int,
+  output_size : Int32,
 ) -> ImagingReconstructionResult {
   let total = output_size * output_size
   let out : Array[Byte] = []

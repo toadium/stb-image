@@ -18,7 +18,7 @@ pub(all) struct HdrPlusParams {
   mode : HdrPlusMode
   align_threshold : Double
   ghost_threshold : Double
-  num_pyramid_levels : Int
+  num_pyramid_levels : Int32
 } derive(Eq, @debug.Debug)
 
 ///|
@@ -31,9 +31,9 @@ pub extend HdrPlusParams with Eq::{not_equal, equal}
 /// 构建 HDR+ 参数
 pub fn hdr_plus_build_params(
   mode : HdrPlusMode,
-  align_threshold? : Double = 2.0,
-  ghost_threshold? : Double = 0.3,
-  num_pyramid_levels? : Int = 5,
+  align_threshold~ : Double = 2.0,
+  ghost_threshold~ : Double = 0.3,
+  num_pyramid_levels~ : Int32 = 5,
 ) -> HdrPlusParams {
   HdrPlusParams::{ mode, align_threshold, ghost_threshold, num_pyramid_levels, }
 }
@@ -41,8 +41,8 @@ pub fn hdr_plus_build_params(
 ///|
 /// 鬼影检测结果
 pub(all) struct GhostMap {
-  width : Int
-  height : Int
+  width : Int32
+  height : Int32
   mask : Array[Bool]
 } derive(Eq, @debug.Debug)
 
@@ -320,7 +320,7 @@ pub fn hdr_plus_estimate_exposure(img : @types.Image) -> Double {
 }
 
 ///|
-fn clamp_d(v : Double) -> Int {
+fn clamp_d(v : Double) -> Int32 {
   if v > 255.0 {
     255
   } else if v < 0.0 {

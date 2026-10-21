@@ -20,7 +20,7 @@ pub fn detect_objects_iv(@types.Image, IntelligentVisionConfig) -> Array[Detecti
 
 pub fn detect_stars(@types.Image, IntelligentVisionConfig) -> StarDetectionResult
 
-pub fn intelligent_vision_report_to_string(String, Int, Double, IntelligentVisionConfig) -> String
+pub fn intelligent_vision_report_to_string(String, Int32, Double, IntelligentVisionConfig) -> String
 
 pub fn recognize_traffic_signs(@types.Image, IntelligentVisionConfig) -> Array[TrafficSignResult]
 
@@ -75,7 +75,7 @@ pub(all) struct CropDetectionResult {
   confidence : Double
   bounding_box : Array[Double]
   growth_stage : String
-  num_crops : Int
+  num_crops : Int32
 }
 
 pub(all) struct DefectDetectionResult {
@@ -84,15 +84,15 @@ pub(all) struct DefectDetectionResult {
   confidence : Double
   bounding_box : Array[Double]
   defect_area : Double
-  num_defects : Int
+  num_defects : Int32
 }
 
 pub(all) struct DetectionResultIV {
   class_name : String
   confidence : Double
   bounding_box : Array[Double]
-  class_id : Int
-  num_detections : Int
+  class_id : Int32
+  num_detections : Int32
 }
 
 pub(all) enum IndustrialInspectionTask {
@@ -112,8 +112,8 @@ pub fn IndustrialInspectionTask::not_equal(Self, Self) -> Bool
 pub(all) struct IntelligentVisionConfig {
   confidence_threshold : Double
   nms_threshold : Double
-  max_detections : Int
-  input_size : Int
+  max_detections : Int32
+  input_size : Int32
   use_gpu : Bool
   model_type : String
 }
@@ -124,12 +124,12 @@ pub(all) struct IntrusionDetectionResult {
   intrusion_region : Array[Double]
   object_type : String
   timestamp : Double
-  num_intrusions : Int
+  num_intrusions : Int32
 }
 
 pub(all) struct LaneDetectionResult {
   lanes : Array[Array[Array[Double]]]
-  num_lanes : Int
+  num_lanes : Int32
   lane_type : String
   confidence : Double
   curvature : Double
@@ -165,7 +165,7 @@ pub fn SecurityMonitoringTask::not_equal(Self, Self) -> Bool
 
 pub(all) struct StarDetectionResult {
   stars : Array[Array[Double]]
-  num_stars : Int
+  num_stars : Int32
   magnitudes : Array[Double]
   brightest_star : Array[Double]
   sky_background : Double
@@ -176,7 +176,7 @@ pub(all) struct TrafficSignResult {
   sign_value : String
   confidence : Double
   bounding_box : Array[Double]
-  num_signs : Int
+  num_signs : Int32
 }
 
 // Type aliases

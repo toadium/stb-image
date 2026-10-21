@@ -1,7 +1,7 @@
 // v208 barcode 模块补充错误路径测试
 
 ///|
-fn bc3_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
+fn bc3_mk_img(w : Int32, h : Int32, ch : Int32, val : Int32) -> @types.Image {
   let data : Array[Byte] = Array::make(w * h * ch, (val & 0xFF).to_byte())
   @types.Image::{
     width: w,
@@ -12,7 +12,7 @@ fn bc3_mk_img(w : Int, h : Int, ch : Int, val : Int) -> @types.Image {
 }
 
 ///|
-fn bc3_mk_bad_data(w : Int, h : Int, ch : Int) -> @types.Image {
+fn bc3_mk_bad_data(w : Int32, h : Int32, ch : Int32) -> @types.Image {
   @types.Image::{
     width: w,
     height: h,

@@ -4,10 +4,10 @@
 ///|
 /// 检测到的圆
 pub(all) struct Circle {
-  x : Int
-  y : Int
-  radius : Int
-  votes : Int
+  x : Int32
+  y : Int32
+  radius : Int32
+  votes : Int32
 }
 
 ///|
@@ -16,12 +16,12 @@ pub(all) struct Circle {
 /// param1 为 Canny 高阈值，param2 为圆心投票阈值。
 pub fn hough_circles(
   img : @types.Image,
-  dp? : Int = 1,
-  min_dist? : Int = 10,
-  param1? : Int = 100,
-  param2? : Int = 30,
-  min_radius? : Int = 0,
-  max_radius? : Int = 0,
+  dp~ : Int32 = 1,
+  min_dist~ : Int32 = 10,
+  param1~ : Int32 = 100,
+  param2~ : Int32 = 30,
+  min_radius~ : Int32 = 0,
+  max_radius~ : Int32 = 0,
 ) -> Array[Circle] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -69,7 +69,7 @@ pub fn hough_circles(
   }
   ignore(dp)
   // 转灰度
-  let gray : Array[Int] = Array::make(n, 0)
+  let gray : Array[Int32] = Array::make(n, 0)
   let ch = img.channels
   for i in 0..<n {
     gray[i] = if ch == 1 {
@@ -82,8 +82,8 @@ pub fn hough_circles(
     }
   }
   // Sobel 梯度
-  let gx : Array[Int] = Array::make(n, 0)
-  let gy : Array[Int] = Array::make(n, 0)
+  let gx : Array[Int32] = Array::make(n, 0)
+  let gy : Array[Int32] = Array::make(n, 0)
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {
       let idx = y * w + x
@@ -111,7 +111,7 @@ pub fn hough_circles(
   let acc_w = w
   let acc_h = h
   let num_r = r_max - r_min + 1
-  let acc : Array[Int] = Array::make(acc_w * acc_h * num_r, 0)
+  let acc : Array[Int32] = Array::make(acc_w * acc_h * num_r, 0)
   // 对每个边缘点投票
   for y in 1..<(h - 1) {
     for x in 1..<(w - 1) {

@@ -4,11 +4,11 @@
 ///|
 /// 简单 LCG 伪随机数生成器状态
 priv struct LCG {
-  mut state : UInt
+  mut state : UInt32
 }
 
 ///|
-fn lcg_next(rng : LCG) -> UInt {
+fn lcg_next(rng : LCG) -> UInt32 {
   rng.state = rng.state * 1103515245U + 12345U
   rng.state
 }
@@ -39,7 +39,7 @@ fn lcg_gaussian(rng : LCG) -> Float {
 pub fn add_noise_gaussian(
   img : @types.Image,
   sigma : Float,
-  seed : UInt,
+  seed : UInt32,
 ) -> @types.Image {
   let rng = LCG::{ state: seed, }
   let n = img.width * img.height
@@ -70,7 +70,7 @@ pub fn add_noise_gaussian(
 pub fn add_noise_salt_pepper(
   img : @types.Image,
   prob : Float,
-  seed : UInt,
+  seed : UInt32,
 ) -> @types.Image {
   let rng = LCG::{ state: seed, }
   let n = img.width * img.height

@@ -6,7 +6,7 @@
 // 3-3-2 量化: R 8 levels, G 8 levels, B 4 levels = 256 colors
 
 ///|
-fn quantize_332(r : Int, g : Int, b : Int) -> Int {
+fn quantize_332(r : Int32, g : Int32, b : Int32) -> Int32 {
   let r_level = (r >> 5) & 0x07
   let g_level = (g >> 5) & 0x07
   let b_level = (b >> 6) & 0x03
@@ -33,10 +33,10 @@ fn build_332_palette() -> Array[Byte] {
 // 返回压缩后的字节数组（包含 sub-block 包装）
 
 ///|
-fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
+fn lzw_compress(indices : Array[Int32], min_code_size : Int32) -> Bytes {
   let clear_code = 1 << min_code_size
   let end_code = clear_code + 1
-  let code_table : Array[(Int, Int)] = [] // (prefix_code, pixel_value) pairs
+  let code_table : Array[(Int32, Int32)] = [] // (prefix_code, pixel_value) pairs
   // 初始化 code table
   for i in 0..<clear_code {
     code_table.push((-1, i))
@@ -50,7 +50,7 @@ fn lzw_compress(indices : Array[Int], min_code_size : Int) -> Bytes {
   let bit_buffer = Ref(0)
   let bit_count = Ref(0)
   let output : Array[Byte] = []
-  fn emit_code(code : Int) -> Unit {
+  fn emit_code(code : Int32) -> Unit {
     bit_buffer.val = bit_buffer.val | (code << bit_count.val)
     bit_count.val += code_size.val
     while bit_count.val >= 8 {
@@ -146,7 +146,7 @@ pub fn encode_gif_pure(img : @types.Image) -> Bytes raise @types.LoadError {
     out.push(palette[i])
   }
   // 量化像素
-  let indices : Array[Int] = Array::make(img.width * img.height, 0)
+  let indices : Array[Int32] = Array::make(img.width * img.height, 0)
   for y in 0..<img.height {
     for x in 0..<img.width {
       let idx = y * img.width + x
@@ -259,7 +259,7 @@ pub fn encode_gif_animation_pure(
     out.push(b'\x00') // transparent color index
     out.push(b'\x00') // Block Terminator
     // 量化像素
-    let indices : Array[Int] = Array::make(frame.width * frame.height, 0)
+    let indices : Array[Int32] = Array::make(frame.width * frame.height, 0)
     for y in 0..<frame.height {
       for x in 0..<frame.width {
         let idx = y * frame.width + x

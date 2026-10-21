@@ -1,18 +1,18 @@
 ///|
 /// TIFF 扩展信息（包含压缩方式、光度解释、方向、分辨率等）
 pub struct TiffInfoExtended {
-  width : Int
-  height : Int
-  bit_depth : Int
-  samples_per_pixel : Int
-  num_channels : Int
+  width : Int32
+  height : Int32
+  bit_depth : Int32
+  samples_per_pixel : Int32
+  num_channels : Int32
   has_alpha : Bool
-  compression : Int
+  compression : Int32
   compression_name : String
-  photometric : Int
+  photometric : Int32
   photometric_name : String
-  orientation : Int
-  resolution_unit : Int
+  orientation : Int32
+  resolution_unit : Int32
   is_little_endian : Bool
 }
 
@@ -38,7 +38,7 @@ pub fn is_tiff_format(data : Bytes) -> Bool {
 }
 
 ///|
-fn tiff_compression_name(c : Int) -> String {
+fn tiff_compression_name(c : Int32) -> String {
   match c {
     1 => "none"
     2 => "CCITT RLE"
@@ -53,7 +53,7 @@ fn tiff_compression_name(c : Int) -> String {
 }
 
 ///|
-fn tiff_photometric_name(p : Int) -> String {
+fn tiff_photometric_name(p : Int32) -> String {
   match p {
     0 => "WhiteIsZero"
     1 => "BlackIsZero"

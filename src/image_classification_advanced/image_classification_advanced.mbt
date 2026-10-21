@@ -79,12 +79,12 @@ pub extend EnsembleMethodType with Eq::{not_equal, equal}
 ///|
 /// 分类结果
 pub(all) struct ClassificationResult {
-  predicted_class : Int
+  predicted_class : Int32
   predicted_label : String
   class_probabilities : Array[Double]
-  num_classes : Int
+  num_classes : Int32
   confidence : Double
-  top_k_predictions : Array[Int]
+  top_k_predictions : Array[Int32]
   top_k_confidences : Array[Double]
   classification_time_ms : Double
   feature_extraction_time_ms : Double
@@ -96,7 +96,7 @@ pub(all) struct ClassificationResult {
 /// 训练结果
 pub(all) struct TrainingResult {
   classifier_type : ClassifierType
-  num_epochs : Int
+  num_epochs : Int32
   final_loss : Double
   final_accuracy : Double
   training_accuracy : Double
@@ -105,19 +105,19 @@ pub(all) struct TrainingResult {
   precision : Double
   recall : Double
   f1_score : Double
-  confusion_matrix : Array[Array[Int]]
+  confusion_matrix : Array[Array[Int32]]
   training_time_ms : Double
-  model_size_bytes : Int
-  num_parameters : Int
+  model_size_bytes : Int32
+  num_parameters : Int32
 }
 
 ///|
 /// 多标签分类结果
 pub(all) struct MultiLabelClassificationResult {
-  predicted_labels : Array[Int]
+  predicted_labels : Array[Int32]
   predicted_label_names : Array[String]
   label_probabilities : Array[Double]
-  num_labels : Int
+  num_labels : Int32
   threshold : Double
   confidence_scores : Array[Double]
   classification_time_ms : Double
@@ -130,12 +130,12 @@ pub(all) struct MultiLabelClassificationResult {
 ///|
 /// 细粒度分类结果
 pub(all) struct FineGrainedClassificationResult {
-  predicted_subclass : Int
+  predicted_subclass : Int32
   predicted_subclass_name : String
-  coarse_class : Int
+  coarse_class : Int32
   coarse_class_name : String
   subclass_probabilities : Array[Double]
-  num_subclasses : Int
+  num_subclasses : Int32
   confidence : Double
   part_detection_results : Array[Array[Double]]
   classification_time_ms : Double
@@ -145,12 +145,12 @@ pub(all) struct FineGrainedClassificationResult {
 ///|
 /// 集成分类结果
 pub(all) struct EnsembleClassificationResult {
-  final_prediction : Int
+  final_prediction : Int32
   final_label : String
   final_confidence : Double
-  individual_predictions : Array[Int]
+  individual_predictions : Array[Int32]
   individual_confidences : Array[Double]
-  num_classifiers : Int
+  num_classifiers : Int32
   ensemble_method : EnsembleMethodType
   classification_time_ms : Double
   diversity_score : Double
@@ -162,22 +162,22 @@ pub(all) struct ImageClassificationConfig {
   task_type : ImageClassificationTaskType
   classifier_type : ClassifierType
   feature_extraction_method : FeatureExtractionMethod
-  num_classes : Int
+  num_classes : Int32
   use_transfer_learning : Bool
   pretrained_model : String
   use_data_augmentation : Bool
   augmentation_methods : Array[String]
   use_ensemble : Bool
   ensemble_method : EnsembleMethodType
-  num_classifiers : Int
+  num_classifiers : Int32
   learning_rate : Double
-  num_epochs : Int
-  batch_size : Int
+  num_epochs : Int32
+  batch_size : Int32
   dropout_rate : Double
   weight_decay : Double
   use_gpu : Bool
   use_multithreading : Bool
-  num_threads : Int
+  num_threads : Int32
 }
 
 ///|
@@ -210,7 +210,7 @@ pub fn create_default_classification_config() -> ImageClassificationConfig {
 /// 简化的颜色直方图特征
 fn extract_simple_features(
   image : Array[Double],
-  num_bins : Int,
+  num_bins : Int32,
 ) -> Array[Double] {
   let features : Array[Double] = []
   for _ in 0..<num_bins {
@@ -286,8 +286,8 @@ fn softmax(logits : Array[Double]) -> Array[Double] {
 /// 图像分类（简化版）
 pub fn classify_image(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageClassificationConfig,
 ) -> ClassificationResult {
   ignore(height)
@@ -315,9 +315,9 @@ pub fn classify_image(
     }
   }
 
-  let top_k : Array[Int] = []
+  let top_k : Array[Int32] = []
   let top_k_conf : Array[Double] = []
-  let indices : Array[Int] = []
+  let indices : Array[Int32] = []
   for i in 0..<probabilities.length() {
     indices.push(i)
   }
@@ -367,9 +367,9 @@ pub fn classify_image(
 /// 多标签分类（简化版）
 pub fn classify_multi_label(
   image : Array[Double],
-  width : Int,
-  height : Int,
-  num_labels : Int,
+  width : Int32,
+  height : Int32,
+  num_labels : Int32,
   threshold : Double,
   config : ImageClassificationConfig,
 ) -> MultiLabelClassificationResult {
@@ -379,7 +379,7 @@ pub fn classify_multi_label(
   let features = extract_simple_features(image, num_labels)
 
   let probabilities : Array[Double] = []
-  let predicted : Array[Int] = []
+  let predicted : Array[Int32] = []
   let label_names : Array[String] = []
 
   for i in 0..<num_labels {
@@ -417,11 +417,11 @@ pub fn classify_multi_label(
 /// 集成分类（简化版）
 pub fn classify_ensemble(
   image : Array[Double],
-  width : Int,
-  height : Int,
+  width : Int32,
+  height : Int32,
   config : ImageClassificationConfig,
 ) -> EnsembleClassificationResult {
-  let individual_preds : Array[Int] = []
+  let individual_preds : Array[Int32] = []
   let individual_confs : Array[Double] = []
 
   for _ in 0..<config.num_classifiers {
@@ -431,7 +431,7 @@ pub fn classify_ensemble(
   }
 
   // 投票
-  let votes : Array[Int] = []
+  let votes : Array[Int32] = []
   for _ in 0..<config.num_classes {
     votes.push(0)
   }
@@ -473,13 +473,13 @@ pub fn classify_ensemble(
 /// 训练分类器（简化版）
 pub fn train_classifier(
   training_images : Array[Array[Double]],
-  training_labels : Array[Int],
+  training_labels : Array[Int32],
   config : ImageClassificationConfig,
 ) -> TrainingResult {
   let num_samples = training_images.length()
-  let confusion : Array[Array[Int]] = []
+  let confusion : Array[Array[Int32]] = []
   for _ in 0..<config.num_classes {
-    let row : Array[Int] = []
+    let row : Array[Int32] = []
     for _ in 0..<config.num_classes {
       row.push(0)
     }

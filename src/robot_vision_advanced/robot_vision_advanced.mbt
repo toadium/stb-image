@@ -65,7 +65,7 @@ pub(all) struct ObjectPose {
   position : Array[Double]
   orientation : Array[Double]
   confidence : Double
-  object_id : Int
+  object_id : Int32
   coordinate_frame : String
 }
 
@@ -91,7 +91,7 @@ pub(all) struct JointState {
   joint_positions : Array[Double]
   joint_velocities : Array[Double]
   joint_efforts : Array[Double]
-  num_joints : Int
+  num_joints : Int32
   timestamp : Double
 }
 
@@ -122,7 +122,7 @@ pub(all) struct TrajectoryPoint {
 /// 规划轨迹
 pub(all) struct RobotTrajectory {
   points : Array[TrajectoryPoint]
-  num_points : Int
+  num_points : Int32
   duration : Double
   is_collision_free : Bool
   is_singularity_free : Bool
@@ -134,11 +134,11 @@ pub(all) struct RobotTrajectory {
 /// 点云数据
 pub(all) struct PointCloudData {
   points : Array[Array[Double]]
-  colors : Array[Array[Int]]
+  colors : Array[Array[Int32]]
   normals : Array[Array[Double]]
-  num_points : Int
-  width : Int
-  height : Int
+  num_points : Int32
+  width : Int32
+  height : Int32
   is_dense : Bool
   coordinate_frame : String
 }
@@ -147,11 +147,11 @@ pub(all) struct PointCloudData {
 /// 网格数据
 pub(all) struct MeshData {
   vertices : Array[Array[Double]]
-  faces : Array[Array[Int]]
+  faces : Array[Array[Int32]]
   normals : Array[Array[Double]]
   uv_coords : Array[Array[Double]]
-  num_vertices : Int
-  num_faces : Int
+  num_vertices : Int32
+  num_faces : Int32
   volume : Double
   surface_area : Double
 }
@@ -163,12 +163,12 @@ pub(all) struct RobotVisionConfig {
   robot_type : RobotType
   visual_servoing_type : VisualServoingType
   grasp_type : GraspType
-  num_joints : Int
+  num_joints : Int32
   end_effector_type : String
   camera_intrinsics : Array[Double]
   camera_extrinsics : Array[Double]
   hand_eye_transform : Array[Double]
-  control_frequency : Int
+  control_frequency : Int32
   planning_time_limit : Double
   collision_margin : Double
   singularity_threshold : Double
@@ -207,7 +207,7 @@ pub fn create_default_robot_vision_config() -> RobotVisionConfig {
 ///|
 /// 估计物体位姿（简化版）
 pub fn estimate_object_pose(
-  object_id : Int,
+  object_id : Int32,
   bounding_box : Array[Double],
   depth_image : Array[Double],
   config : RobotVisionConfig,
@@ -355,12 +355,12 @@ pub fn visual_servoing(
 /// 生成点云（简化版）
 pub fn generate_point_cloud(
   depth_image : Array[Double],
-  rgb_image : Array[Array[Int]],
+  rgb_image : Array[Array[Int32]],
   config : RobotVisionConfig,
 ) -> PointCloudData {
   ignore(rgb_image)
   let points : Array[Array[Double]] = []
-  let colors : Array[Array[Int]] = []
+  let colors : Array[Array[Int32]] = []
   let normals : Array[Array[Double]] = []
 
   let fx = config.camera_intrinsics[0]
@@ -391,7 +391,7 @@ pub fn generate_point_cloud(
               points.push(point)
 
               state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
-              let color : Array[Int] = []
+              let color : Array[Int32] = []
               color.push(state % 256)
               state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
               color.push(state % 256)

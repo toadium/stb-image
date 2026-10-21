@@ -4,12 +4,12 @@
 // ========== 辅助函数 ==========
 
 ///|
-fn read_u16_le_feat(data : Bytes, offset : Int) -> Int {
+fn read_u16_le_feat(data : Bytes, offset : Int32) -> Int32 {
   data[offset].to_int() + data[offset + 1].to_int() * 256
 }
 
 ///|
-fn read_float_le_feat(data : Bytes, offset : Int) -> Float {
+fn read_float_le_feat(data : Bytes, offset : Int32) -> Float {
   let b0 = data[offset].to_int()
   let b1 = data[offset + 1].to_int()
   let b2 = data[offset + 2].to_int()
@@ -19,7 +19,7 @@ fn read_float_le_feat(data : Bytes, offset : Int) -> Float {
 }
 
 ///|
-fn clamp_int_feat(v : Int, lo : Int, hi : Int) -> Int {
+fn clamp_int_feat(v : Int32, lo : Int32, hi : Int32) -> Int32 {
   if v < lo {
     lo
   } else if v > hi {
@@ -72,9 +72,9 @@ fn imgf_to_img8_feat(img : @types.ImageF) -> @types.Image {
 /// 16-bit Harris 角点检测。
 pub fn harris_corners_16(
   img : @types.Image16,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -120,9 +120,9 @@ pub fn harris_corners_16(
 /// float Harris 角点检测。
 pub fn harris_corners_f(
   img : @types.ImageF,
-  k? : Float = 0.04F,
-  threshold? : Float = 1000.0F,
-  min_distance? : Int = 5,
+  k~ : Float = 0.04F,
+  threshold~ : Float = 1000.0F,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -168,8 +168,8 @@ pub fn harris_corners_f(
 /// 16-bit SIFT 特征检测。
 pub fn sift_detect_16(
   img : @types.Image16,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -212,8 +212,8 @@ pub fn sift_detect_16(
 /// float SIFT 特征检测。
 pub fn sift_detect_f(
   img : @types.ImageF,
-  max_features? : Int = 500,
-  contrast_threshold? : Float = 0.04F,
+  max_features~ : Int32 = 500,
+  contrast_threshold~ : Float = 0.04F,
 ) -> Array[SiftDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -256,8 +256,8 @@ pub fn sift_detect_f(
 /// 16-bit ORB 特征检测。
 pub fn orb_detect_16(
   img : @types.Image16,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[OrbDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -300,8 +300,8 @@ pub fn orb_detect_16(
 /// float ORB 特征检测。
 pub fn orb_detect_f(
   img : @types.ImageF,
-  max_features? : Int = 500,
-  threshold? : Int = 20,
+  max_features~ : Int32 = 500,
+  threshold~ : Int32 = 20,
 ) -> Array[OrbDescriptor] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -342,9 +342,9 @@ pub fn orb_detect_f(
 /// 16-bit Shi-Tomasi 角点检测。
 pub fn good_features_to_track_16(
   img : @types.Image16,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {
@@ -392,9 +392,9 @@ pub fn good_features_to_track_16(
 /// float Shi-Tomasi 角点检测。
 pub fn good_features_to_track_f(
   img : @types.ImageF,
-  max_corners : Int,
+  max_corners : Int32,
   quality_level : Float,
-  min_distance? : Int = 5,
+  min_distance~ : Int32 = 5,
 ) -> Array[CornerPoint] raise @types.LoadError {
   // 输入验证
   if img.width <= 0 || img.height <= 0 {

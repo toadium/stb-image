@@ -6,8 +6,8 @@
 pub(all) struct TrainingDataset {
   samples : Array[TrainingSample]
   labels : Array[String]
-  num_samples : Int
-  num_classes : Int
+  num_samples : Int32
+  num_classes : Int32
 }
 
 ///|
@@ -16,7 +16,7 @@ pub(all) struct EnsembleConfig {
   use_knn : Bool
   use_template : Bool
   use_svm_like : Bool
-  knn_k : Int
+  knn_k : Int32
   voting_method : String // "majority" / "weighted" / "confidence"
 }
 
@@ -69,8 +69,8 @@ pub fn dataset_add_sample(
 /// 数据集统计信息
 pub fn dataset_stats(
   dataset : TrainingDataset,
-) -> (Int, Int, Array[(String, Int)]) {
-  let class_counts : Array[(String, Int)] = []
+) -> (Int32, Int32, Array[(String, Int32)]) {
+  let class_counts : Array[(String, Int32)] = []
   for label in dataset.labels {
     let mut count = 0
     for sample in dataset.samples {
@@ -87,7 +87,7 @@ pub fn dataset_stats(
 /// 特征增广（添加噪声、缩放、平移）
 pub fn augment_features(
   features : Array[Double],
-  noise_level? : Double = 0.05,
+  noise_level~ : Double = 0.05,
 ) -> Array[Double] {
   let augmented : Array[Double] = []
   for i in 0..<features.length() {
@@ -108,7 +108,7 @@ pub fn augment_features(
 
 ///|
 /// 伪随机数生成（基于索引的确定性随机）
-fn pseudo_random(seed : Int) -> Double {
+fn pseudo_random(seed : Int32) -> Double {
   let x = (seed * 1103515245 + 12345) % 1073741824
   x.to_double() / 1073741824.0
 }

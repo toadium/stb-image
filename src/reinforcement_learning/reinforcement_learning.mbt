@@ -55,14 +55,14 @@ pub extend ReplayBufferType with Eq::{not_equal, equal}
 /// 强化学习环境
 pub(all) struct RLEnvironment {
   env_name : String
-  num_states : Int
-  num_actions : Int
-  state_dim : Int
-  action_dim : Int
+  num_states : Int32
+  num_actions : Int32
+  state_dim : Int32
+  action_dim : Int32
   is_discrete : Bool
-  max_steps : Int
+  max_steps : Int32
   current_state : Array[Double]
-  current_step : Int
+  current_step : Int32
   is_done : Bool
 }
 
@@ -76,17 +76,17 @@ pub(all) struct RLAgent {
   epsilon_decay : Double
   epsilon_min : Double
   q_table : Array[Array[Double]]
-  num_states : Int
-  num_actions : Int
+  num_states : Int32
+  num_actions : Int32
   total_reward : Double
-  episodes_completed : Int
+  episodes_completed : Int32
 }
 
 ///|
 /// 经验元组
 pub(all) struct Experience {
   state : Array[Double]
-  action : Int
+  action : Int32
   reward : Double
   next_state : Array[Double]
   is_done : Bool
@@ -97,10 +97,10 @@ pub(all) struct Experience {
 /// 经验回放缓冲区
 pub(all) struct ReplayBuffer {
   buffer : Array[Experience]
-  buffer_size : Int
-  current_size : Int
+  buffer_size : Int32
+  current_size : Int32
   buffer_type : ReplayBufferType
-  batch_size : Int
+  batch_size : Int32
   alpha : Double
   beta : Double
 }
@@ -111,16 +111,16 @@ pub(all) struct RLConfig {
   algorithm : RLAlgorithm
   exploration_strategy : ExplorationStrategy
   replay_buffer_type : ReplayBufferType
-  num_episodes : Int
-  max_steps_per_episode : Int
+  num_episodes : Int32
+  max_steps_per_episode : Int32
   learning_rate : Double
   gamma : Double
   epsilon_start : Double
   epsilon_end : Double
   epsilon_decay : Double
-  batch_size : Int
-  buffer_size : Int
-  target_update_freq : Int
+  batch_size : Int32
+  buffer_size : Int32
+  target_update_freq : Int32
   use_soft_update : Bool
   tau : Double
   use_dueling : Bool
@@ -136,16 +136,16 @@ pub(all) struct RLConfig {
 /// 训练结果
 pub(all) struct RLTrainingResult {
   algorithm : RLAlgorithm
-  num_episodes : Int
+  num_episodes : Int32
   total_reward : Double
   average_reward : Double
   final_epsilon : Double
-  episodes_to_solve : Int
+  episodes_to_solve : Int32
   reward_history : Array[Double]
   loss_history : Array[Double]
   epsilon_history : Array[Double]
   training_time_s : Double
-  convergence_episode : Int
+  convergence_episode : Int32
 }
 
 ///|
@@ -155,7 +155,7 @@ pub(all) struct PolicyEvaluationResult {
   std_reward : Double
   min_reward : Double
   max_reward : Double
-  num_episodes : Int
+  num_episodes : Int32
   success_rate : Double
   average_steps : Double
 }
@@ -193,12 +193,12 @@ pub fn create_default_rl_config() -> RLConfig {
 /// 创建强化学习环境
 pub fn create_rl_environment(
   env_name : String,
-  num_states : Int,
-  num_actions : Int,
-  state_dim : Int,
-  action_dim : Int,
+  num_states : Int32,
+  num_actions : Int32,
+  state_dim : Int32,
+  action_dim : Int32,
   is_discrete : Bool,
-  max_steps : Int,
+  max_steps : Int32,
 ) -> RLEnvironment {
   let initial_state : Array[Double] = []
   for _ in 0..<state_dim {
@@ -222,8 +222,8 @@ pub fn create_rl_environment(
 ///|
 /// 创建Q-Learning智能体
 pub fn create_q_learning_agent(
-  num_states : Int,
-  num_actions : Int,
+  num_states : Int32,
+  num_actions : Int32,
   learning_rate : Double,
   gamma : Double,
   epsilon : Double,
@@ -255,8 +255,8 @@ pub fn create_q_learning_agent(
 ///|
 /// 创建经验回放缓冲区
 pub fn create_replay_buffer(
-  buffer_size : Int,
-  batch_size : Int,
+  buffer_size : Int32,
+  batch_size : Int32,
   buffer_type : ReplayBufferType,
 ) -> ReplayBuffer {
   let buffer : Array[Experience] = []
@@ -274,7 +274,7 @@ pub fn create_replay_buffer(
 
 ///|
 /// 选择动作（epsilon-greedy）
-pub fn select_action(agent : RLAgent, state_idx : Int) -> Int {
+pub fn select_action(agent : RLAgent, state_idx : Int32) -> Int32 {
   let mut state = 42
   state = ((state * 11035 + 12345).reinterpret_as_uint() % 1000000).reinterpret_as_int()
   let random_val = (state % 1000).to_double() / 1000.0
@@ -304,10 +304,10 @@ pub fn select_action(agent : RLAgent, state_idx : Int) -> Int {
 /// Q-Learning更新
 pub fn q_learning_update(
   agent : RLAgent,
-  state_idx : Int,
-  action : Int,
+  state_idx : Int32,
+  action : Int32,
   reward : Double,
-  next_state_idx : Int,
+  next_state_idx : Int32,
   is_done : Bool,
 ) -> RLAgent {
   let q_table = agent.q_table
@@ -378,7 +378,7 @@ pub fn add_experience(
 /// 从回放缓冲区采样
 pub fn sample_experiences(
   buffer : ReplayBuffer,
-  batch_size : Int,
+  batch_size : Int32,
 ) -> Array[Experience] {
   let sampled : Array[Experience] = []
   let actual_batch = if batch_size < buffer.current_size {
@@ -461,7 +461,7 @@ pub fn simulate_rl_training(
 pub fn evaluate_policy(
   agent : RLAgent,
   env : RLEnvironment,
-  num_episodes : Int,
+  num_episodes : Int32,
 ) -> PolicyEvaluationResult {
   ignore(env)
   ignore(agent)
