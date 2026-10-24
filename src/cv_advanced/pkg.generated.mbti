@@ -221,6 +221,8 @@ pub fn default_exposure_fusion_params(ExposureFusionMethod) -> ExposureFusionPar
 
 pub fn default_flash_removal_params(FlashDetectionMethod) -> FlashRemovalParams
 
+pub fn default_reflection_removal_params(ReflectionRemovalMethod) -> ReflectionRemovalParams
+
 pub fn default_sharpening_params(SharpeningMethod) -> SharpeningParams
 
 pub fn default_tone_mapping_params(ToneMappingMethod) -> ToneMappingParams
@@ -250,6 +252,8 @@ pub fn detect_flash_threshold(@types.Image, Double) -> FlashDetectionResult
 pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, MotionParams) -> (MotionMask, Array[Double])
 
 pub fn detect_motion_frame_diff(@types.Image, @types.Image, MotionParams) -> MotionMask
+
+pub fn detect_reflection(@types.Image, Double) -> ReflectionDetectionResult
 
 pub fn detect_surf_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
@@ -815,6 +819,8 @@ pub fn recon_volume_render(Array[Double], Int32, Int32, Int32, Double) -> Array[
 
 pub fn refine_depth_edges(DepthMap, @types.Image) -> DepthMap
 
+pub fn reflection_removal_pipeline(@types.Image, ReflectionRemovalParams) -> @types.Image
+
 pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> RegistrationResult
 
 pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
@@ -824,6 +830,14 @@ pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
 pub fn remove_flash_multi_frame(Array[@types.Image], FlashRemovalParams) -> Array[@types.Image]
 
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
+
+pub fn remove_reflection_depth_aware(@types.Image, DepthMap, Double, Double) -> @types.Image
+
+pub fn remove_reflection_gradient(@types.Image, Double, Double) -> @types.Image
+
+pub fn remove_reflection_multi_frame(Array[@types.Image], Double, Double) -> @types.Image
+
+pub fn remove_reflection_polarization(Array[@types.Image], Double) -> @types.Image
 
 pub fn reptile_update(Array[Double], Array[Double], MetaLearningConfig) -> Array[Double]
 
@@ -2706,6 +2720,38 @@ pub(all) enum ReconstructionMethod {
 pub fn ReconstructionMethod::equal(Self, Self) -> Bool
 pub fn ReconstructionMethod::not_equal(Self, Self) -> Bool
 pub fn ReconstructionMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ReflectionDetectionResult {
+  reflection_mask : Array[Bool]
+  reflection_ratio : Double
+  confidence : Array[Double]
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn ReflectionDetectionResult::equal(Self, Self) -> Bool
+pub fn ReflectionDetectionResult::not_equal(Self, Self) -> Bool
+pub fn ReflectionDetectionResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ReflectionRemovalMethod {
+  Polarization
+  MultiFrame
+  DepthAware
+  Gradient
+} derive(Eq, @debug.Debug)
+pub fn ReflectionRemovalMethod::equal(Self, Self) -> Bool
+pub fn ReflectionRemovalMethod::not_equal(Self, Self) -> Bool
+pub fn ReflectionRemovalMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ReflectionRemovalParams {
+  rr_method : ReflectionRemovalMethod
+  threshold : Double
+  strength : Double
+  num_polarization_angles : Int32
+  smoothing_radius : Int32
+} derive(Eq, @debug.Debug)
+pub fn ReflectionRemovalParams::equal(Self, Self) -> Bool
+pub fn ReflectionRemovalParams::not_equal(Self, Self) -> Bool
+pub fn ReflectionRemovalParams::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RegistrationMethod {
   ECC

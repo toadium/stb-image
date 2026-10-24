@@ -18600,3 +18600,72 @@ pub fn default_flash_removal_params(
 ) -> FlashRemovalParams {
   @cv_advanced.default_flash_removal_params(detection_method)
 }
+// v389.0.0 反射去除 re-export
+
+///|
+pub type ReflectionRemovalMethod = @cv_advanced.ReflectionRemovalMethod
+
+///|
+pub type ReflectionRemovalParams = @cv_advanced.ReflectionRemovalParams
+
+///|
+pub type ReflectionDetectionResult = @cv_advanced.ReflectionDetectionResult
+
+///|
+pub fn detect_reflection(
+  img : Image,
+  threshold : Double,
+) -> ReflectionDetectionResult {
+  @cv_advanced.detect_reflection(img, threshold)
+}
+
+///|
+pub fn remove_reflection_polarization(
+  polarization_images : Array[Image],
+  strength : Double,
+) -> Image {
+  @cv_advanced.remove_reflection_polarization(polarization_images, strength)
+}
+
+///|
+pub fn remove_reflection_multi_frame(
+  images : Array[Image],
+  threshold : Double,
+  strength : Double,
+) -> Image {
+  @cv_advanced.remove_reflection_multi_frame(images, threshold, strength)
+}
+
+///|
+pub fn remove_reflection_depth_aware(
+  img : Image,
+  depth : @cv_advanced.DepthMap,
+  threshold : Double,
+  strength : Double,
+) -> Image {
+  @cv_advanced.remove_reflection_depth_aware(img, depth, threshold, strength)
+}
+
+///|
+pub fn remove_reflection_gradient(
+  img : Image,
+  threshold : Double,
+  strength : Double,
+) -> Image {
+  @cv_advanced.remove_reflection_gradient(img, threshold, strength)
+}
+
+///|
+pub fn reflection_removal_pipeline(
+  img : Image,
+  params : ReflectionRemovalParams,
+) -> Image {
+  @cv_advanced.reflection_removal_pipeline(img, params)
+}
+
+///|
+pub fn default_reflection_removal_params(
+  rr_method : ReflectionRemovalMethod,
+) -> ReflectionRemovalParams {
+  @cv_advanced.default_reflection_removal_params(rr_method)
+}

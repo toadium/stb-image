@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v389.0.0 — 反射去除
+
+**2026-10-21** — 偏振分离/多帧中值/深度感知/梯度反射检测与去除。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `ReflectionRemovalMethod`(4方法) / `ReflectionRemovalParams` / `ReflectionDetectionResult` |
+| 新增函数 | `detect_reflection` / `remove_reflection_polarization` / `remove_reflection_multi_frame` / `remove_reflection_depth_aware` / `remove_reflection_gradient` / `reflection_removal_pipeline` / `default_reflection_removal_params` |
+| 测试 | 15459×4（+12） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v388.0.0 — 闪光去除
 
 **2026-10-21** — 亮度阈值/局部峰值/梯度突变/多帧差分闪光检测 + 掩模膨胀 + 闪光校正 + 多帧去除流水线。

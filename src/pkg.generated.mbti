@@ -1183,6 +1183,8 @@ pub fn default_exposure_fusion_params(@cv_advanced.ExposureFusionMethod) -> @cv_
 
 pub fn default_flash_removal_params(@cv_advanced.FlashDetectionMethod) -> @cv_advanced.FlashRemovalParams
 
+pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -> @cv_advanced.ReflectionRemovalParams
+
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
 pub fn default_tile_config() -> @performance.TileConfig
@@ -1332,6 +1334,8 @@ pub fn detect_objects_simple(@types.Image, @detection.YoloConfig) -> @detection.
 pub fn detect_paragraphs(Array[@ocr.DocumentBlock], max_line_spacing_ratio? : Double) -> Array[Array[Int32]]
 
 pub fn detect_qr_finder_patterns(@types.Image) -> Array[@barcode.QrFinderPattern] raise @types.LoadError
+
+pub fn detect_reflection(@types.Image, Double) -> @cv_advanced.ReflectionDetectionResult
 
 pub fn detect_regressions() -> @self_evolve.RegressionReport
 
@@ -3671,6 +3675,8 @@ pub fn reed_solomon_decode(Array[Int32], Int32) -> (Array[Int32], Int32)
 
 pub fn refine_depth_edges(@cv_advanced.DepthMap, @types.Image) -> @cv_advanced.DepthMap
 
+pub fn reflection_removal_pipeline(@types.Image, @cv_advanced.ReflectionRemovalParams) -> @types.Image
+
 pub fn region_growing(@types.Image, Array[(Int32, Int32)], threshold? : Double) -> @segment.SegmentationResult
 
 pub fn region_growing_segment(@types.Image, Array[(Int32, Int32)], threshold? : Int32) -> (@segment.SegmentLabelImage, Array[@segment.SegmentRegion]) raise @types.LoadError
@@ -3718,6 +3724,14 @@ pub fn remove_horizontal_seam_16(@types.Image16, Array[Int32]) -> @types.Image16
 pub fn remove_horizontal_seam_f(@types.ImageF, Array[Int32]) -> @types.ImageF
 
 pub fn remove_redundant_points(@cv_advanced.SlamBackend, @cv_advanced.SlamBackendParams) -> @cv_advanced.SlamBackend
+
+pub fn remove_reflection_depth_aware(@types.Image, @cv_advanced.DepthMap, Double, Double) -> @types.Image
+
+pub fn remove_reflection_gradient(@types.Image, Double, Double) -> @types.Image
+
+pub fn remove_reflection_multi_frame(Array[@types.Image], Double, Double) -> @types.Image
+
+pub fn remove_reflection_polarization(Array[@types.Image], Double) -> @types.Image
 
 pub fn remove_small_objects(@types.Image, max_size? : Int32) -> @types.Image raise @types.LoadError
 
@@ -5889,6 +5903,12 @@ pub using @neural_rendering {type ReconstructionAlgorithm as ReconstructionAlgor
 pub using @cv_advanced {type ReconstructionMethod}
 
 pub using @neural_rendering {type ReconstructionResult as ReconstructionResultNR}
+
+pub using @cv_advanced {type ReflectionDetectionResult}
+
+pub using @cv_advanced {type ReflectionRemovalMethod}
+
+pub using @cv_advanced {type ReflectionRemovalParams}
 
 pub using @computational_imaging {type RefocusResult as RefocusResultCI}
 
