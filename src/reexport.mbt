@@ -18515,3 +18515,88 @@ pub fn default_exposure_fusion_params(
 ) -> ExposureFusionParams {
   @cv_advanced.default_exposure_fusion_params(ef_method)
 }
+// v388.0.0 闪光去除 re-export
+
+///|
+pub type FlashDetectionMethod = @cv_advanced.FlashDetectionMethod
+
+///|
+pub type FlashRemovalParams = @cv_advanced.FlashRemovalParams
+
+///|
+pub type FlashDetectionResult = @cv_advanced.FlashDetectionResult
+
+///|
+pub fn detect_flash_threshold(
+  img : Image,
+  threshold : Double,
+) -> FlashDetectionResult {
+  @cv_advanced.detect_flash_threshold(img, threshold)
+}
+
+///|
+pub fn detect_flash_local_peak(
+  img : Image,
+  threshold : Double,
+  radius : Int32,
+) -> FlashDetectionResult {
+  @cv_advanced.detect_flash_local_peak(img, threshold, radius)
+}
+
+///|
+pub fn detect_flash_gradient(
+  img : Image,
+  threshold : Double,
+) -> FlashDetectionResult {
+  @cv_advanced.detect_flash_gradient(img, threshold)
+}
+
+///|
+pub fn detect_flash_multi_frame(
+  images : Array[Image],
+  threshold : Double,
+) -> FlashDetectionResult {
+  @cv_advanced.detect_flash_multi_frame(images, threshold)
+}
+
+///|
+pub fn dilate_flash_mask(
+  mask : Array[Bool],
+  width : Int32,
+  height : Int32,
+  radius : Int32,
+) -> Array[Bool] {
+  @cv_advanced.dilate_flash_mask(mask, width, height, radius)
+}
+
+///|
+pub fn correct_flash(
+  img : Image,
+  flash_mask : Array[Bool],
+  correction_strength : Double,
+) -> Image {
+  @cv_advanced.correct_flash(img, flash_mask, correction_strength)
+}
+
+///|
+pub fn remove_flash_multi_frame(
+  images : Array[Image],
+  params : FlashRemovalParams,
+) -> Array[Image] {
+  @cv_advanced.remove_flash_multi_frame(images, params)
+}
+
+///|
+pub fn flash_removal_pipeline(
+  img : Image,
+  params : FlashRemovalParams,
+) -> Image {
+  @cv_advanced.flash_removal_pipeline(img, params)
+}
+
+///|
+pub fn default_flash_removal_params(
+  detection_method : FlashDetectionMethod,
+) -> FlashRemovalParams {
+  @cv_advanced.default_flash_removal_params(detection_method)
+}

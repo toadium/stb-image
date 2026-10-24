@@ -185,6 +185,8 @@ pub fn conv1d(Array[Double], Array[Double], Array[Double], Conv1DParams) -> Arra
 
 pub fn conv3d(Array[Double], Array[Double], Array[Double], Conv3DParams) -> Array[Double]
 
+pub fn correct_flash(@types.Image, Array[Bool], Double) -> @types.Image
+
 pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn create_default_cv_advanced_config() -> CVAdvancedConfig
@@ -217,6 +219,8 @@ pub fn default_bokeh_params(ApertureShape, BokehQuality) -> BokehParams
 
 pub fn default_exposure_fusion_params(ExposureFusionMethod) -> ExposureFusionParams
 
+pub fn default_flash_removal_params(FlashDetectionMethod) -> FlashRemovalParams
+
 pub fn default_sharpening_params(SharpeningMethod) -> SharpeningParams
 
 pub fn default_tone_mapping_params(ToneMappingMethod) -> ToneMappingParams
@@ -234,6 +238,14 @@ pub fn dequantize(QuantizedTensor) -> Array[Double]
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
 pub fn detect_fast_corners(@types.Image, Int32) -> Array[KeyPoint]
+
+pub fn detect_flash_gradient(@types.Image, Double) -> FlashDetectionResult
+
+pub fn detect_flash_local_peak(@types.Image, Double, Int32) -> FlashDetectionResult
+
+pub fn detect_flash_multi_frame(Array[@types.Image], Double) -> FlashDetectionResult
+
+pub fn detect_flash_threshold(@types.Image, Double) -> FlashDetectionResult
 
 pub fn detect_motion_accumulator(Array[Double], @types.Image, @types.Image, MotionParams) -> (MotionMask, Array[Double])
 
@@ -268,6 +280,8 @@ pub fn dicom_window_level(Double, Double, Double) -> Double
 pub fn diffusion_forward(Array[Double], Array[Double], Double) -> Array[Double]
 
 pub fn diffusion_reverse(Array[Double], Array[Double], Double, Double) -> Array[Double]
+
+pub fn dilate_flash_mask(Array[Bool], Int32, Int32, Int32) -> Array[Bool]
 
 pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int32, Int32, Int32, Int32) -> Array[Double]
 
@@ -338,6 +352,8 @@ pub fn feed_forward(Array[Double], Array[Double], Array[Double], Array[Double], 
 pub fn fill_depth_holes(DepthMap) -> DepthMap
 
 pub fn flann_match_float(Array[FloatDescriptor], Array[FloatDescriptor]) -> Array[DMatch]
+
+pub fn flash_removal_pipeline(@types.Image, FlashRemovalParams) -> @types.Image
 
 pub fn flow_consistency(FlowField, FlowField) -> Double
 
@@ -804,6 +820,8 @@ pub fn register_images(@types.Image, @types.Image, RegistrationParams) -> Regist
 pub fn relation_distill(Array[Double], Array[Double], DistillationConfig) -> DistillationResult
 
 pub fn relocalize(SlamFrontend, SlamKeyFrame) -> SlamFrontend
+
+pub fn remove_flash_multi_frame(Array[@types.Image], FlashRemovalParams) -> Array[@types.Image]
 
 pub fn remove_redundant_points(SlamBackend, SlamBackendParams) -> SlamBackend
 
@@ -1782,6 +1800,38 @@ pub(all) enum FederatedType {
 pub fn FederatedType::equal(Self, Self) -> Bool
 pub fn FederatedType::not_equal(Self, Self) -> Bool
 pub fn FederatedType::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FlashDetectionMethod {
+  Threshold
+  LocalPeak
+  Gradient
+  MultiFrame
+} derive(Eq, @debug.Debug)
+pub fn FlashDetectionMethod::equal(Self, Self) -> Bool
+pub fn FlashDetectionMethod::not_equal(Self, Self) -> Bool
+pub fn FlashDetectionMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FlashDetectionResult {
+  flash_mask : Array[Bool]
+  flash_ratio : Double
+  num_flash_regions : Int32
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn FlashDetectionResult::equal(Self, Self) -> Bool
+pub fn FlashDetectionResult::not_equal(Self, Self) -> Bool
+pub fn FlashDetectionResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FlashRemovalParams {
+  detection_method : FlashDetectionMethod
+  threshold : Double
+  min_flash_size : Int32
+  correction_strength : Double
+  dilation_radius : Int32
+} derive(Eq, @debug.Debug)
+pub fn FlashRemovalParams::equal(Self, Self) -> Bool
+pub fn FlashRemovalParams::not_equal(Self, Self) -> Bool
+pub fn FlashRemovalParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FloatDescriptor {
   values : Array[Double]

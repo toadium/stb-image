@@ -899,6 +899,8 @@ pub fn convolve_f(@types.ImageF, Array[Float], Float, Float) -> @types.ImageF ra
 
 pub fn correct_common_patterns(String) -> @ocr.CorrectionResult
 
+pub fn correct_flash(@types.Image, Array[Bool], Double) -> @types.Image
+
 pub fn correct_similar_chars(String, String) -> @ocr.CorrectionResult raise @types.LoadError
 
 pub fn correct_slant(@types.Image, max_slant? : Double) -> @types.Image raise @types.LoadError
@@ -1179,6 +1181,8 @@ pub fn default_bokeh_params(@cv_advanced.ApertureShape, @cv_advanced.BokehQualit
 
 pub fn default_exposure_fusion_params(@cv_advanced.ExposureFusionMethod) -> @cv_advanced.ExposureFusionParams
 
+pub fn default_flash_removal_params(@cv_advanced.FlashDetectionMethod) -> @cv_advanced.FlashRemovalParams
+
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
 pub fn default_tile_config() -> @performance.TileConfig
@@ -1276,6 +1280,14 @@ pub fn detect_fast_corners(@types.Image, Int32) -> Array[@cv_advanced.KeyPoint]
 pub fn detect_features_simple(@types.Image, max_features? : Int32) -> Array[@stitch.FeaturePoint]
 
 pub fn detect_features_slam_sl(@types.Image, Int32, Double) -> Array[Array[Double]]
+
+pub fn detect_flash_gradient(@types.Image, Double) -> @cv_advanced.FlashDetectionResult
+
+pub fn detect_flash_local_peak(@types.Image, Double, Int32) -> @cv_advanced.FlashDetectionResult
+
+pub fn detect_flash_multi_frame(Array[@types.Image], Double) -> @cv_advanced.FlashDetectionResult
+
+pub fn detect_flash_threshold(@types.Image, Double) -> @cv_advanced.FlashDetectionResult
 
 pub fn detect_format(Bytes) -> @types.ImageFormat
 
@@ -1412,6 +1424,8 @@ pub fn dilate_custom_16(@types.Image16, @segment.StructuringElement) -> @types.I
 pub fn dilate_custom_f(@types.ImageF, @segment.StructuringElement) -> @types.ImageF
 
 pub fn dilate_f(@types.ImageF) -> @types.ImageF
+
+pub fn dilate_flash_mask(Array[Bool], Int32, Int32, Int32) -> Array[Bool]
 
 pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int32, Int32, Int32, Int32) -> Array[Double]
 
@@ -1892,6 +1906,8 @@ pub fn find_untested_ops() -> Array[String]
 pub fn find_vertical_seam(Array[Double], Int32, Int32) -> Array[Int32]
 
 pub fn flann_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.FloatDescriptor]) -> Array[@cv_advanced.DMatch]
+
+pub fn flash_removal_pipeline(@types.Image, @cv_advanced.FlashRemovalParams) -> @types.Image
 
 pub fn flip_horizontal(@types.Image) -> @types.Image
 
@@ -3693,6 +3709,8 @@ pub fn remote_sensing_report_to_string_rs(@remote_sensing.RemoteSensingImage, @r
 
 pub fn remove_background_ig(@types.Image, @image_generation.EditingConfig) -> @image_generation.EditingResult
 
+pub fn remove_flash_multi_frame(Array[@types.Image], @cv_advanced.FlashRemovalParams) -> Array[@types.Image]
+
 pub fn remove_horizontal_seam(@types.Image, Array[Int32]) -> @types.Image
 
 pub fn remove_horizontal_seam_16(@types.Image16, Array[Int32]) -> @types.Image16
@@ -5179,6 +5197,12 @@ pub using @cv_advanced {type FederatedConfig}
 pub using @cv_advanced {type FederatedState}
 
 pub using @cv_advanced {type FederatedType}
+
+pub using @cv_advanced {type FlashDetectionMethod}
+
+pub using @cv_advanced {type FlashDetectionResult}
+
+pub using @cv_advanced {type FlashRemovalParams}
 
 pub using @cv_advanced {type FloatDescriptor}
 

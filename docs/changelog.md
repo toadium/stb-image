@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v388.0.0 — 闪光去除
+
+**2026-10-21** — 亮度阈值/局部峰值/梯度突变/多帧差分闪光检测 + 掩模膨胀 + 闪光校正 + 多帧去除流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `FlashDetectionMethod`(4方法) / `FlashRemovalParams` / `FlashDetectionResult` |
+| 新增函数 | `detect_flash_threshold` / `detect_flash_local_peak` / `detect_flash_gradient` / `detect_flash_multi_frame` / `dilate_flash_mask` / `correct_flash` / `remove_flash_multi_frame` / `flash_removal_pipeline` / `default_flash_removal_params` |
+| 测试 | 15447×4（+13） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v387.0.0 — 曝光融合
 
 **2026-10-21** — Mertens 质量权重/多频段拉普拉斯金字塔/对比度加权/加权平均曝光融合。
