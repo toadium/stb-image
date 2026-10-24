@@ -18448,3 +18448,70 @@ pub fn default_tone_mapping_params(
 pub fn estimate_dynamic_range(img : Image) -> (Double, Double, Double) {
   @cv_advanced.estimate_dynamic_range(img)
 }
+// v387.0.0 曝光融合 re-export
+
+///|
+pub type ExposureFusionMethod = @cv_advanced.ExposureFusionMethod
+
+///|
+pub type ExposureFusionParams = @cv_advanced.ExposureFusionParams
+
+///|
+pub fn compute_mertens_weights(
+  img : Image,
+  params : ExposureFusionParams,
+) -> Array[Double] {
+  @cv_advanced.compute_mertens_weights(img, params)
+}
+
+///|
+pub fn normalize_weights(
+  weight_maps : Array[Array[Double]],
+  num_pixels : Int32,
+) -> Array[Array[Double]] {
+  @cv_advanced.normalize_weights(weight_maps, num_pixels)
+}
+
+///|
+pub fn exposure_fusion_mertens(
+  images : Array[Image],
+  params : ExposureFusionParams,
+) -> Image {
+  @cv_advanced.exposure_fusion_mertens(images, params)
+}
+
+///|
+pub fn exposure_fusion_weighted_average(
+  images : Array[Image],
+  weights : Array[Double],
+) -> Image {
+  @cv_advanced.exposure_fusion_weighted_average(images, weights)
+}
+
+///|
+pub fn exposure_fusion_contrast_weighted(images : Array[Image]) -> Image {
+  @cv_advanced.exposure_fusion_contrast_weighted(images)
+}
+
+///|
+pub fn exposure_fusion_multiband(
+  images : Array[Image],
+  params : ExposureFusionParams,
+) -> Image {
+  @cv_advanced.exposure_fusion_multiband(images, params)
+}
+
+///|
+pub fn exposure_fusion_pipeline(
+  images : Array[Image],
+  params : ExposureFusionParams,
+) -> Image {
+  @cv_advanced.exposure_fusion_pipeline(images, params)
+}
+
+///|
+pub fn default_exposure_fusion_params(
+  ef_method : ExposureFusionMethod,
+) -> ExposureFusionParams {
+  @cv_advanced.default_exposure_fusion_params(ef_method)
+}

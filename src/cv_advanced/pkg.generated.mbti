@@ -157,6 +157,8 @@ pub fn compute_kl_divergence(Array[Double], Array[Double]) -> Double
 
 pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int32, Int32)], FlowParams) -> FlowField
 
+pub fn compute_mertens_weights(@types.Image, ExposureFusionParams) -> Array[Double]
+
 pub fn compute_motion_energy(MotionMask) -> Double
 
 pub fn compute_ncc(@types.Image, @types.Image) -> Double
@@ -212,6 +214,8 @@ pub fn ddim_sample(Array[Double], Array[Double], Double, Double, Double) -> Arra
 pub fn ddpm_sample(Array[Double], Array[Double], Double, Double, Array[Double]) -> Array[Double]
 
 pub fn default_bokeh_params(ApertureShape, BokehQuality) -> BokehParams
+
+pub fn default_exposure_fusion_params(ExposureFusionMethod) -> ExposureFusionParams
 
 pub fn default_sharpening_params(SharpeningMethod) -> SharpeningParams
 
@@ -306,6 +310,16 @@ pub fn estimate_sharpness(@types.Image) -> Double
 pub fn estimate_translation(@types.Image, @types.Image) -> (Double, Double)
 
 pub fn euclidean_distance(FloatDescriptor, FloatDescriptor) -> Double
+
+pub fn exposure_fusion_contrast_weighted(Array[@types.Image]) -> @types.Image
+
+pub fn exposure_fusion_mertens(Array[@types.Image], ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_multiband(Array[@types.Image], ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_pipeline(Array[@types.Image], ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_weighted_average(Array[@types.Image], Array[Double]) -> @types.Image
 
 pub fn extract_dicom_pixels(Array[Int32], Int32, Int32) -> Array[Double]
 
@@ -608,6 +622,8 @@ pub fn night_pipeline(Array[@types.Image], NightShotParams) -> @types.Image
 pub fn night_temporal_denoise(Array[@types.Image]) -> @types.Image
 
 pub fn normalize_depth_map(DepthMap) -> DepthMap
+
+pub fn normalize_weights(Array[Array[Double]], Int32) -> Array[Array[Double]]
 
 pub fn optimize_map(SlamBackend, SlamBackendParams) -> SlamBackend
 
@@ -1694,6 +1710,27 @@ pub(all) struct EssentialMatrix {
 pub fn EssentialMatrix::equal(Self, Self) -> Bool
 pub fn EssentialMatrix::not_equal(Self, Self) -> Bool
 pub fn EssentialMatrix::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ExposureFusionMethod {
+  Mertens
+  Multiband
+  WeightedAverage
+  ContrastWeighted
+} derive(Eq, @debug.Debug)
+pub fn ExposureFusionMethod::equal(Self, Self) -> Bool
+pub fn ExposureFusionMethod::not_equal(Self, Self) -> Bool
+pub fn ExposureFusionMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ExposureFusionParams {
+  ef_method : ExposureFusionMethod
+  contrast_weight : Double
+  saturation_weight : Double
+  exposure_weight : Double
+  pyramid_levels : Int32
+} derive(Eq, @debug.Debug)
+pub fn ExposureFusionParams::equal(Self, Self) -> Bool
+pub fn ExposureFusionParams::not_equal(Self, Self) -> Bool
+pub fn ExposureFusionParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FMRIActivation {
   activation : Array[Double]

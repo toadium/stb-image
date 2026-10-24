@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v387.0.0 — 曝光融合
+
+**2026-10-21** — Mertens 质量权重/多频段拉普拉斯金字塔/对比度加权/加权平均曝光融合。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `ExposureFusionMethod`(4方法) / `ExposureFusionParams` |
+| 新增函数 | `compute_mertens_weights` / `normalize_weights` / `exposure_fusion_mertens` / `exposure_fusion_weighted_average` / `exposure_fusion_contrast_weighted` / `exposure_fusion_multiband` / `exposure_fusion_pipeline` / `default_exposure_fusion_params` |
+| 测试 | 15434×4（+11） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v386.0.0 — 色调映射
 
 **2026-10-21** — Reinhard/Drago/Gamma/对数/局部拉普拉斯/双边滤波色调映射。

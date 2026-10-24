@@ -807,6 +807,8 @@ pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int32, Int32)], @
 
 pub fn compute_mae(@types.Image, @types.Image) -> Double
 
+pub fn compute_mertens_weights(@types.Image, @cv_advanced.ExposureFusionParams) -> Array[Double]
+
 pub fn compute_motion_energy(@cv_advanced.MotionMask) -> Double
 
 pub fn compute_mse(@types.Image, @types.Image) -> Double
@@ -1174,6 +1176,8 @@ pub fn decrypt_image_xor(@types.Image, String) -> @types.Image raise @types.Load
 pub fn default_batch_config() -> @pipeline.BatchConfig
 
 pub fn default_bokeh_params(@cv_advanced.ApertureShape, @cv_advanced.BokehQuality) -> @cv_advanced.BokehParams
+
+pub fn default_exposure_fusion_params(@cv_advanced.ExposureFusionMethod) -> @cv_advanced.ExposureFusionParams
 
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
@@ -1698,6 +1702,16 @@ pub fn exec_test_count(@self_evolve.ExecutableTestFile) -> Int32
 pub fn exec_test_is_non_empty(@self_evolve.ExecutableTestFile) -> Bool
 
 pub fn expand_query_advanced(Array[Double], Array[Array[Double]], @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.QueryExpansionResult
+
+pub fn exposure_fusion_contrast_weighted(Array[@types.Image]) -> @types.Image
+
+pub fn exposure_fusion_mertens(Array[@types.Image], @cv_advanced.ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_multiband(Array[@types.Image], @cv_advanced.ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_pipeline(Array[@types.Image], @cv_advanced.ExposureFusionParams) -> @types.Image
+
+pub fn exposure_fusion_weighted_average(Array[@types.Image], Array[Double]) -> @types.Image
 
 pub fn extract_all_cells(@types.Image, @ocr.TableStructure, padding? : Int32) -> Array[@types.Image] raise @types.LoadError
 
@@ -3118,6 +3132,8 @@ pub fn normalize_handwriting_size(@types.Image, Int32) -> @types.Image raise @ty
 pub fn normalize_image(Array[Double], Double, Double) -> Array[Double] raise @types.LoadError
 
 pub fn normalize_punctuation(String, Array[String]) -> String
+
+pub fn normalize_weights(Array[Array[Double]], Int32) -> Array[Array[Double]]
 
 pub fn normalized_cross_correlation_ra(@types.Image, @types.Image) -> Double
 
@@ -5109,6 +5125,10 @@ pub using @self_evolve {type ExecutableTestFile}
 pub using @meta {type ExifInfo}
 
 pub using @meta {type ExifInfoExtended}
+
+pub using @cv_advanced {type ExposureFusionMethod}
+
+pub using @cv_advanced {type ExposureFusionParams}
 
 pub using @photo_enhance {type ExposureType}
 
