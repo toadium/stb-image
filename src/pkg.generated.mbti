@@ -36,6 +36,7 @@ import {
   "walkzzz/image/src/performance",
   "walkzzz/image/src/photo_enhance",
   "walkzzz/image/src/pipeline",
+  "walkzzz/image/src/point_cloud",
   "walkzzz/image/src/pose_estimation",
   "walkzzz/image/src/pure/codec",
   "walkzzz/image/src/quality",
@@ -775,6 +776,8 @@ pub fn compute_blur_map(@cv_advanced.DepthMap, Double, Double, Double, Double) -
 
 pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
 
+pub fn compute_centroid(@point_cloud.PointCloud3D) -> @point_cloud.Point3DLight
+
 pub fn compute_circle_of_confusion(Double, Double, Double, Double) -> Double
 
 pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
@@ -989,6 +992,8 @@ pub fn create_animation(Array[@types.Image], fps? : Double) -> @video.VideoFrame
 
 pub fn create_batch_tasks(Array[String], String, String) -> Array[@ocr.BatchTask] raise @types.LoadError
 
+pub fn create_cloud(Array[@point_cloud.Point3DLight]) -> @point_cloud.PointCloud3D
+
 pub fn create_data_loader(Array[@ocr.DLTrainingSample], Int32, Bool) -> @ocr.DataLoader raise @types.LoadError
 
 pub fn create_default_action_config_pe() -> @pose_estimation.ActionRecognitionConfig
@@ -1110,6 +1115,8 @@ pub fn create_default_watershed_config() -> @segmentation.WatershedConfig
 pub fn create_default_window_level_medical(String) -> @medical.WindowLevelConfig
 
 pub fn create_default_yolo_config() -> @detection.YoloConfig
+
+pub fn create_empty_cloud() -> @point_cloud.PointCloud3D
 
 pub fn create_exif_segment(@meta.ExifInfo) -> Bytes
 
@@ -1270,6 +1277,8 @@ pub fn default_flicker_config() -> @video.FlickerConfig
 pub fn default_inpaint_config() -> @video.VideoInpaintConfig
 
 pub fn default_interp_config() -> @video.FrameInterpConfig
+
+pub fn default_pointcloud_config() -> @point_cloud.PointCloudConfig
 
 pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -> @cv_advanced.ReflectionRemovalParams
 
@@ -1777,6 +1786,8 @@ pub fn estimate_motion_hex(@types.Image, @types.Image, Int32, Int32, Int32, Int3
 
 pub fn estimate_motion_three_step(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> @video.MotionVector
 
+pub fn estimate_normals(@point_cloud.PointCloud3D, @point_cloud.PointCloudConfig) -> @point_cloud.PointCloud3D
+
 pub fn estimate_normals_3d(@stereo3d.PointCloud3D, Double) -> Array[(Double, Double, Double)]
 
 pub fn estimate_quality(Int32, Int32) -> Double
@@ -1786,6 +1797,8 @@ pub fn estimate_sharpness(@types.Image) -> Double
 pub fn estimate_translation(@types.Image, @types.Image, max_offset? : Int32) -> @registration.RegistrationResult raise @types.LoadError
 
 pub fn estimate_transmission(@types.Image, Array[Int32], omega? : Double, patch_size? : Int32) -> @types.Image raise @types.LoadError
+
+pub fn euclidean_clustering(@point_cloud.PointCloud3D, Double, Int32) -> @point_cloud.ClusterResult
 
 pub fn euclidean_distance(Array[Double], Array[Double]) -> Double raise @types.LoadError
 
@@ -2919,6 +2932,8 @@ pub fn knn_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.F
 
 pub fn knn_predict(@ocr.KnnClassifier, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
 
+pub fn knn_search(@point_cloud.PointCloud3D, @point_cloud.Point3DLight, Int32) -> Array[Int32]
+
 pub fn knn_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.BackgroundModel
 
 pub fn knowledge_distill(Array[Double], Array[Double], Array[Double], @cv_advanced.DistillationConfig) -> @cv_advanced.DistillationResult
@@ -3649,11 +3664,15 @@ pub fn pipeline_opt_report_has_suggestions(@self_evolve.PipelineOptReport) -> Bo
 
 pub fn pixelate(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
+pub fn plane_segmentation(@point_cloud.PointCloud3D, Double, Int32) -> (@point_cloud.Point3DLight, Double, Array[Int32])
+
 pub fn png_info_extended(Bytes) -> @codec.PngInfoExtended raise @types.LoadError
 
 pub fn pnm_info_extended(Bytes) -> @codec.PnmInfoExtended raise @types.LoadError
 
 pub fn point_cloud_new() -> @stereo3d.PointCloud
+
+pub fn pointcloud_pipeline(@point_cloud.PointCloud3D, @point_cloud.PointCloudConfig) -> (@point_cloud.PointCloud3D, @point_cloud.ClusterResult)
 
 pub fn pointcloud_voxel_downsample(@stereo3d.PointCloud, voxel_size? : Double) -> @stereo3d.PointCloud
 
@@ -3756,6 +3775,8 @@ pub fn radiomics_glcm_features(Array[Double], Int32, Int32, Int32) -> Array[@cv_
 pub fn radiomics_select_features(Array[Array[Double]], Double) -> @cv_advanced.FeatureSelectionResult
 
 pub fn radiomics_shape_features(Array[Int32], Int32, Int32) -> Array[@cv_advanced.RadiomicsFeature]
+
+pub fn random_sampling(@point_cloud.PointCloud3D, Double) -> @point_cloud.PointCloud3D
 
 pub fn random_search((Array[Double]) -> Double, Array[(Double, Double)], @cv_advanced.AutoMLConfig) -> @cv_advanced.AutoMLResult
 
@@ -4093,6 +4114,8 @@ pub fn safe_mul3(Int32, Int32, Int32) -> Int32?
 
 pub fn sample_frames(Array[@types.Image], Int32) -> Array[@types.Image]
 
+pub fn sample_pointcloud(@point_cloud.PointCloud3D, @point_cloud.PointCloudConfig) -> @point_cloud.PointCloud3D
+
 pub fn sar_azimuth_compression(Array[Array[Double]], @cv_advanced.SarParams) -> Array[Array[Double]]
 
 pub fn sar_build_image(Array[Array[Double]], @cv_advanced.SarParams) -> @cv_advanced.SarImage
@@ -4200,6 +4223,8 @@ pub fn segment_motion(Array[@types.Image], Double) -> Array[@video.SegmentationR
 pub fn segment_page(@types.Image) -> Array[@ocr.TextRegion] raise @types.LoadError
 
 pub fn segment_paragraphs(Array[@ocr.TextLineAttributes]) -> Array[Array[@ocr.TextLineAttributes]]
+
+pub fn segment_pointcloud(@point_cloud.PointCloud3D, @point_cloud.PointCloudConfig) -> @point_cloud.ClusterResult
 
 pub fn segment_to_color(@segment.SegmentLabelImage) -> @types.Image raise @types.LoadError
 
@@ -4669,6 +4694,8 @@ pub fn undistort_image(@types.Image, @cv_advanced.CameraIntrinsics) -> @types.Im
 
 pub fn undistort_point(@cv_advanced.CameraIntrinsics, Double, Double) -> (Double, Double)
 
+pub fn uniform_sampling(@point_cloud.PointCloud3D, Int32) -> @point_cloud.PointCloud3D
+
 pub fn unique_combo_count() -> Int32
 
 pub fn unpremultiply_alpha(@types.Image) -> @types.Image raise @types.LoadError
@@ -4822,6 +4849,8 @@ pub fn visualize_propagation_text(@imgir.IRPipeline) -> String
 pub fn vlm_report_to_string_vlm(@vlm_multimodal.VisionTextEmbedding, @vlm_multimodal.VisionLanguageModelType) -> String
 
 pub fn voxel_downsample_3d(@stereo3d.PointCloud3D, Double) -> @stereo3d.PointCloud3D
+
+pub fn voxel_grid_sampling(@point_cloud.PointCloud3D, Double) -> @point_cloud.PointCloud3D
 
 pub fn vq_vae_quantize(Array[Double], Array[Double], Int32) -> (Array[Double], Int32)
 
@@ -5960,6 +5989,8 @@ pub using @forensics_enhanced {type NoiseResidualResult}
 
 pub using @denoise {type NoiseType}
 
+pub using @point_cloud {type NormalEstimationMethod}
+
 pub using @ocr {type OCRPageResult}
 
 pub using @detection {type ObjectClass}
@@ -6018,7 +6049,15 @@ pub using @cv_advanced {type OrganType}
 
 pub using @cv_advanced {type OrthoParams}
 
+pub using @point_cloud {type Point3DLight as P3DLight}
+
 pub using @cv_advanced {type PACSConfig}
+
+pub using @point_cloud {type PointCloud3D as PCloud3D}
+
+pub using @point_cloud {type PointCloudConfig as PCloudConfig}
+
+pub using @point_cloud {type ClusterResult as PClusterResult}
 
 pub using @advanced_imaging {type PETData as PETDataAI}
 
@@ -6123,6 +6162,10 @@ pub using @stereo3d {type Point3d}
 pub using @stereo3d {type PointCloud}
 
 pub using @stereo3d {type PointCloud3D}
+
+pub using @point_cloud {type PointCloudSampleMethod}
+
+pub using @point_cloud {type PointCloudSegmentMethod}
 
 pub using @cv_advanced {type PointCorrespondence}
 

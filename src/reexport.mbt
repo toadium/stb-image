@@ -19857,3 +19857,115 @@ pub fn quality_pipeline(
 ) -> Array[VideoQualityResult] {
   @video.quality_pipeline(reference, distorted)
 }
+
+///|
+/// v406.0.0 点云处理（采样/法向/分割）
+
+///|
+pub type PointCloudSampleMethod = @point_cloud.PointCloudSampleMethod
+
+///|
+pub type NormalEstimationMethod = @point_cloud.NormalEstimationMethod
+
+///|
+pub type PointCloudSegmentMethod = @point_cloud.PointCloudSegmentMethod
+
+///|
+pub type P3DLight = @point_cloud.Point3DLight
+
+///|
+pub type PCloud3D = @point_cloud.PointCloud3D
+
+///|
+pub type PCloudConfig = @point_cloud.PointCloudConfig
+
+///|
+pub type PClusterResult = @point_cloud.ClusterResult
+
+///|
+pub fn default_pointcloud_config() -> PCloudConfig {
+  @point_cloud.default_pointcloud_config()
+}
+
+///|
+pub fn create_empty_cloud() -> PCloud3D {
+  @point_cloud.create_empty_cloud()
+}
+
+///|
+pub fn create_cloud(points : Array[P3DLight]) -> PCloud3D {
+  @point_cloud.create_cloud(points)
+}
+
+///|
+pub fn compute_centroid(cloud : PCloud3D) -> P3DLight {
+  @point_cloud.compute_centroid(cloud)
+}
+
+///|
+pub fn random_sampling(cloud : PCloud3D, ratio : Double) -> PCloud3D {
+  @point_cloud.random_sampling(cloud, ratio)
+}
+
+///|
+pub fn uniform_sampling(cloud : PCloud3D, step : Int32) -> PCloud3D {
+  @point_cloud.uniform_sampling(cloud, step)
+}
+
+///|
+pub fn voxel_grid_sampling(cloud : PCloud3D, voxel_size : Double) -> PCloud3D {
+  @point_cloud.voxel_grid_sampling(cloud, voxel_size)
+}
+
+///|
+pub fn sample_pointcloud(cloud : PCloud3D, config : PCloudConfig) -> PCloud3D {
+  @point_cloud.sample_pointcloud(cloud, config)
+}
+
+///|
+pub fn knn_search(
+  cloud : PCloud3D,
+  target : P3DLight,
+  k : Int32,
+) -> Array[Int32] {
+  @point_cloud.knn_search(cloud, target, k)
+}
+
+///|
+pub fn estimate_normals(cloud : PCloud3D, config : PCloudConfig) -> PCloud3D {
+  @point_cloud.estimate_normals(cloud, config)
+}
+
+///|
+pub fn euclidean_clustering(
+  cloud : PCloud3D,
+  tolerance : Double,
+  min_cluster_size : Int32,
+) -> PClusterResult {
+  @point_cloud.euclidean_clustering(cloud, tolerance, min_cluster_size)
+}
+
+///|
+pub fn plane_segmentation(
+  cloud : PCloud3D,
+  threshold : Double,
+  max_iterations : Int32,
+) -> (P3DLight, Double, Array[Int32]) {
+  @point_cloud.plane_segmentation(cloud, threshold, max_iterations)
+}
+
+///|
+pub fn segment_pointcloud(
+  cloud : PCloud3D,
+  config : PCloudConfig,
+) -> PClusterResult {
+  @point_cloud.segment_pointcloud(cloud, config)
+}
+
+///|
+pub fn pointcloud_pipeline(
+  cloud : PCloud3D,
+  config : PCloudConfig,
+) -> (PCloud3D, PClusterResult) {
+  @point_cloud.pointcloud_pipeline(cloud, config)
+}

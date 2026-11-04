@@ -6,6 +6,18 @@
 
 ## Phase 17｜视频处理大扩展（v392 ~ v405）
 
+### v406.0.0 — 点云处理
+
+**2026-11-04** — 随机/均匀/体素网格采样 + KNN法向估计 + 欧式聚类/区域生长/RANSAC平面分割 + 流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增包 | `src/point_cloud` |
+| 新增类型 | `PointCloudSampleMethod`(3) / `NormalEstimationMethod`(2) / `PointCloudSegmentMethod`(3) / `Point3DLight` / `PointCloud3D` / `PointCloudConfig` / `ClusterResult` |
+| 新增函数 | `default_pointcloud_config` / `create_empty_cloud` / `create_cloud` / `compute_centroid` / `random_sampling` / `uniform_sampling` / `voxel_grid_sampling` / `sample_pointcloud` / `knn_search` / `estimate_normals` / `euclidean_clustering` / `plane_segmentation` / `segment_pointcloud` / `pointcloud_pipeline` |
+| 测试 | 15734×4（+23） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v405.0.0 — Phase 17 总结
 
 **2026-11-04** — 视频处理大扩展完成，共 14 个版本（v392-v405）。

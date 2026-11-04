@@ -60,4 +60,5 @@ import {
   "walkzzz/image/src/meta",
   "walkzzz/image/src/util",
   "walkzzz/image/src/cv_advanced",
+  "walkzzz/image/src/point_cloud",
 }

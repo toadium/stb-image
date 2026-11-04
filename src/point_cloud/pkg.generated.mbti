@@ -1,0 +1,106 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/point_cloud"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn compute_centroid(PointCloud3D) -> Point3DLight
+
+pub fn create_cloud(Array[Point3DLight]) -> PointCloud3D
+
+pub fn create_empty_cloud() -> PointCloud3D
+
+pub fn default_pointcloud_config() -> PointCloudConfig
+
+pub fn estimate_normals(PointCloud3D, PointCloudConfig) -> PointCloud3D
+
+pub fn euclidean_clustering(PointCloud3D, Double, Int32) -> ClusterResult
+
+pub fn knn_search(PointCloud3D, Point3DLight, Int32) -> Array[Int32]
+
+pub fn plane_segmentation(PointCloud3D, Double, Int32) -> (Point3DLight, Double, Array[Int32])
+
+pub fn pointcloud_pipeline(PointCloud3D, PointCloudConfig) -> (PointCloud3D, ClusterResult)
+
+pub fn random_sampling(PointCloud3D, Double) -> PointCloud3D
+
+pub fn sample_pointcloud(PointCloud3D, PointCloudConfig) -> PointCloud3D
+
+pub fn segment_pointcloud(PointCloud3D, PointCloudConfig) -> ClusterResult
+
+pub fn uniform_sampling(PointCloud3D, Int32) -> PointCloud3D
+
+pub fn voxel_grid_sampling(PointCloud3D, Double) -> PointCloud3D
+
+// Errors
+
+// Types and methods
+pub(all) struct ClusterResult {
+  clusters : Array[Array[Int32]]
+  cluster_centers : Array[Point3DLight]
+} derive(Eq, @debug.Debug)
+pub fn ClusterResult::equal(Self, Self) -> Bool
+pub fn ClusterResult::not_equal(Self, Self) -> Bool
+pub fn ClusterResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum NormalEstimationMethod {
+  KNN
+  RadiusSearch
+} derive(Eq, @debug.Debug)
+pub fn NormalEstimationMethod::equal(Self, Self) -> Bool
+pub fn NormalEstimationMethod::not_equal(Self, Self) -> Bool
+pub fn NormalEstimationMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Point3DLight {
+  x : Double
+  y : Double
+  z : Double
+} derive(Eq, @debug.Debug)
+pub fn Point3DLight::equal(Self, Self) -> Bool
+pub fn Point3DLight::not_equal(Self, Self) -> Bool
+pub fn Point3DLight::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PointCloud3D {
+  points : Array[Point3DLight]
+  normals : Array[Point3DLight]
+} derive(Eq, @debug.Debug)
+pub fn PointCloud3D::equal(Self, Self) -> Bool
+pub fn PointCloud3D::not_equal(Self, Self) -> Bool
+pub fn PointCloud3D::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PointCloudConfig {
+  sample_method : PointCloudSampleMethod
+  normal_method : NormalEstimationMethod
+  segment_method : PointCloudSegmentMethod
+  knn_k : Int32
+  voxel_size : Double
+  cluster_tolerance : Double
+  min_cluster_size : Int32
+} derive(Eq, @debug.Debug)
+pub fn PointCloudConfig::equal(Self, Self) -> Bool
+pub fn PointCloudConfig::not_equal(Self, Self) -> Bool
+pub fn PointCloudConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum PointCloudSampleMethod {
+  RandomSampling
+  UniformSampling
+  VoxelGridSampling
+} derive(Eq, @debug.Debug)
+pub fn PointCloudSampleMethod::equal(Self, Self) -> Bool
+pub fn PointCloudSampleMethod::not_equal(Self, Self) -> Bool
+pub fn PointCloudSampleMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) enum PointCloudSegmentMethod {
+  EuclideanClustering
+  RegionGrowing
+  PlaneSegmentation
+} derive(Eq, @debug.Debug)
+pub fn PointCloudSegmentMethod::equal(Self, Self) -> Bool
+pub fn PointCloudSegmentMethod::not_equal(Self, Self) -> Bool
+pub fn PointCloudSegmentMethod::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
