@@ -13,6 +13,10 @@ pub fn add_timestamp(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn add_watermark(@types.Image, @types.Image, Int32, Int32, Double) -> @types.Image
 
+pub fn adjust_exposure(@types.Image, TimelapseConfig) -> @types.Image
+
+pub fn adjust_exposure_sequence(Array[@types.Image], TimelapseConfig) -> Array[@types.Image]
+
 pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image]
 
 pub fn apply_motion_blur(@types.Image, Double, Int32) -> @types.Image
@@ -39,11 +43,19 @@ pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, search_range? : Int32) -> OpticalFlowField
 
+pub fn compute_time_compression(Double, Double) -> Double
+
+pub fn compute_timelapse_count(Int32, Int32) -> Int32
+
+pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
+
 pub fn compute_trajectory(Array[@types.Image]) -> Array[TrajectoryPoint]
 
 pub fn create_animation(Array[@types.Image], fps? : Double) -> VideoFrames
 
 pub fn create_default_stabilization_config() -> VideoStabilizationConfig
+
+pub fn create_timelapse(Array[@types.Image], TimelapseConfig) -> Array[@types.Image]
 
 pub fn create_transition_frame(@types.Image, @types.Image, Double, TransitionParams) -> @types.Image
 
@@ -60,6 +72,8 @@ pub fn default_search_config() -> SearchConfig
 pub fn default_slow_motion_config() -> SlowMotionConfig
 
 pub fn default_stabilization_config() -> StabilizationConfig
+
+pub fn default_timelapse_config() -> TimelapseConfig
 
 pub fn default_transcode_params() -> TranscodeParams
 
@@ -129,6 +143,8 @@ pub fn rle_decode(Bytes) -> Array[Int32]
 
 pub fn rle_encode(Array[Int32]) -> Bytes
 
+pub fn sample_frames(Array[@types.Image], Int32) -> Array[@types.Image]
+
 pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn slow_motion_pipeline(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
@@ -142,6 +158,8 @@ pub fn stabilize_frame(@types.Image, TrajectoryPoint, TrajectoryPoint) -> @types
 pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@types.Image]
 
 pub fn stabilize_video_sequence(Array[@types.Image], StabilizationConfig) -> StabilizationResult
+
+pub fn timelapse_pipeline(Array[@types.Image], TimelapseConfig, Double) -> Array[@types.Image]
 
 pub fn transcode_compression_ratio(Int32, Int32) -> Double
 
@@ -234,6 +252,15 @@ pub(all) struct EncodedVideo {
 pub fn EncodedVideo::equal(Self, Self) -> Bool
 pub fn EncodedVideo::not_equal(Self, Self) -> Bool
 pub fn EncodedVideo::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ExposureMode {
+  Linear
+  Logarithmic
+  Gamma
+} derive(Eq, @debug.Debug)
+pub fn ExposureMode::equal(Self, Self) -> Bool
+pub fn ExposureMode::not_equal(Self, Self) -> Bool
+pub fn ExposureMode::to_repr(Self) -> @debug.Repr
 
 pub(all) enum FrameType {
   IFrame
@@ -375,6 +402,17 @@ pub(all) struct SubpixelMotionVector {
 pub fn SubpixelMotionVector::equal(Self, Self) -> Bool
 pub fn SubpixelMotionVector::not_equal(Self, Self) -> Bool
 pub fn SubpixelMotionVector::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TimelapseConfig {
+  sample_interval : Int32
+  exposure_mode : ExposureMode
+  exposure_compensation : Double
+  gamma : Double
+  stabilize : Bool
+} derive(Eq, @debug.Debug)
+pub fn TimelapseConfig::equal(Self, Self) -> Bool
+pub fn TimelapseConfig::not_equal(Self, Self) -> Bool
+pub fn TimelapseConfig::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TrackedObject {
   id : Int32

@@ -19308,3 +19308,75 @@ pub fn compute_interpolated_count(
 ) -> Int32 {
   @video.compute_interpolated_count(frame_count, speed_factor)
 }
+// v398.0.0 时间 lapse re-export
+
+///|
+pub type ExposureMode = @video.ExposureMode
+
+///|
+pub type TimelapseConfig = @video.TimelapseConfig
+
+///|
+pub fn default_timelapse_config() -> TimelapseConfig {
+  @video.default_timelapse_config()
+}
+
+///|
+pub fn sample_frames(frames : Array[Image], interval : Int32) -> Array[Image] {
+  @video.sample_frames(frames, interval)
+}
+
+///|
+pub fn adjust_exposure(img : Image, config : TimelapseConfig) -> Image {
+  @video.adjust_exposure(img, config)
+}
+
+///|
+pub fn adjust_exposure_sequence(
+  frames : Array[Image],
+  config : TimelapseConfig,
+) -> Array[Image] {
+  @video.adjust_exposure_sequence(frames, config)
+}
+
+///|
+pub fn create_timelapse(
+  frames : Array[Image],
+  config : TimelapseConfig,
+) -> Array[Image] {
+  @video.create_timelapse(frames, config)
+}
+
+///|
+pub fn timelapse_pipeline(
+  frames : Array[Image],
+  config : TimelapseConfig,
+  motion_blur_amount : Double,
+) -> Array[Image] {
+  @video.timelapse_pipeline(frames, config, motion_blur_amount)
+}
+
+///|
+pub fn compute_timelapse_count(
+  frame_count : Int32,
+  sample_interval : Int32,
+) -> Int32 {
+  @video.compute_timelapse_count(frame_count, sample_interval)
+}
+
+///|
+pub fn compute_timelapse_duration(
+  frame_count : Int32,
+  sample_interval : Int32,
+  target_fps : Int32,
+) -> Double {
+  @video.compute_timelapse_duration(frame_count, sample_interval, target_fps)
+}
+
+///|
+pub fn compute_time_compression(
+  source_duration : Double,
+  timelapse_duration : Double,
+) -> Double {
+  @video.compute_time_compression(source_duration, timelapse_duration)
+}

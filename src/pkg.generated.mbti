@@ -119,6 +119,10 @@ pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16 raise @types.
 
 pub fn adjust_contrast_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 
+pub fn adjust_exposure(@types.Image, @video.TimelapseConfig) -> @types.Image
+
+pub fn adjust_exposure_sequence(Array[@types.Image], @video.TimelapseConfig) -> Array[@types.Image]
+
 pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image]
 
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image raise @types.LoadError
@@ -887,6 +891,12 @@ pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
 
 pub fn compute_surf_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.FloatDescriptor]
 
+pub fn compute_time_compression(Double, Double) -> Double
+
+pub fn compute_timelapse_count(Int32, Int32) -> Int32
+
+pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
+
 pub fn compute_trajectory(Array[@types.Image]) -> Array[@video.TrajectoryPoint]
 
 pub fn connected_components(@types.Image, Int32) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
@@ -1097,6 +1107,8 @@ pub fn create_rect_mask_ip(Int32, Int32, Int32, Int32, Int32, Int32) -> @types.I
 
 pub fn create_schedule(Array[@imgir.IROp]) -> @self_evolve.EvolutionSchedule
 
+pub fn create_timelapse(Array[@types.Image], @video.TimelapseConfig) -> Array[@types.Image]
+
 pub fn create_training_history(Int32, Double, Double, Double, Double, Double, Double) -> @ocr.DLTrainingHistory
 
 pub fn create_training_sample(@types.Image, Int32, String) -> @ocr.DLTrainingSample raise @types.LoadError
@@ -1240,6 +1252,8 @@ pub fn default_slow_motion_config() -> @video.SlowMotionConfig
 pub fn default_stabilization_config() -> @video.StabilizationConfig
 
 pub fn default_tile_config() -> @performance.TileConfig
+
+pub fn default_timelapse_config() -> @video.TimelapseConfig
 
 pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
 
@@ -4003,6 +4017,8 @@ pub fn safe_mul(Int32, Int32) -> Int32?
 
 pub fn safe_mul3(Int32, Int32, Int32) -> Int32?
 
+pub fn sample_frames(Array[@types.Image], Int32) -> Array[@types.Image]
+
 pub fn sar_azimuth_compression(Array[Array[Double]], @cv_advanced.SarParams) -> Array[Array[Double]]
 
 pub fn sar_build_image(Array[Array[Double]], @cv_advanced.SarParams) -> @cv_advanced.SarImage
@@ -4438,6 +4454,8 @@ pub fn timage_from_static(@types.Image) -> @spatiotemporal.TImage raise @types.L
 pub fn timage_make(Array[@spatiotemporal.TFrame], Float) -> @spatiotemporal.TImage raise @types.LoadError
 
 pub fn timage_total_duration(@spatiotemporal.TImage) -> Float
+
+pub fn timelapse_pipeline(Array[@types.Image], @video.TimelapseConfig, Double) -> Array[@types.Image]
 
 pub fn tinterval_duration(@spatiotemporal.TInterval) -> Float
 
@@ -5305,6 +5323,8 @@ pub using @meta {type ExifInfoExtended}
 pub using @cv_advanced {type ExposureFusionMethod}
 
 pub using @cv_advanced {type ExposureFusionParams}
+
+pub using @video {type ExposureMode}
 
 pub using @photo_enhance {type ExposureType}
 
@@ -6387,6 +6407,8 @@ pub using @codec {type TiffInfoExtended}
 pub using @performance {type TileConfig}
 
 pub using @cv_advanced {type TimeSeriesData}
+
+pub using @video {type TimelapseConfig}
 
 pub using @photo_enhance {type ToneMappingConfig}
 

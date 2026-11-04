@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v398.0.0 — 时间 lapse
+
+**2026-11-04** — 3种曝光模式(线性/对数/伽马) + 帧采样 + 时间 lapse 流水线 + 时间压缩比计算。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `ExposureMode`(3) / `TimelapseConfig` |
+| 新增函数 | `default_timelapse_config` / `sample_frames` / `adjust_exposure` / `adjust_exposure_sequence` / `create_timelapse` / `timelapse_pipeline` / `compute_timelapse_count` / `compute_timelapse_duration` / `compute_time_compression` |
+| 测试 | 15612×4（+19） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v397.0.0 — 慢动作
 
 **2026-11-04** — 3种插帧方法(光流/帧混合/运动补偿) + 3种运动模糊(水平/垂直/径向) + 慢动作流水线。
