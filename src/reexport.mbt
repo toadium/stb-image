@@ -19802,3 +19802,58 @@ pub fn interp_pipeline(
 ) -> Array[Image] {
   @video.interp_pipeline(frames, config)
 }
+
+///|
+/// v404.0.0 视频质量（VMAF/PSNR/SSIM）
+
+///|
+pub type VideoQualityMetric = @video.VideoQualityMetric
+
+///|
+pub type VideoQualityResult = @video.VideoQualityResult
+
+///|
+pub fn video_psnr(reference : Image, distorted : Image) -> Double {
+  @video.compute_psnr(reference, distorted)
+}
+
+///|
+pub fn video_ssim(reference : Image, distorted : Image) -> Double {
+  @video.compute_ssim(reference, distorted)
+}
+
+///|
+pub fn compute_msssim(reference : Image, distorted : Image) -> Double {
+  @video.compute_msssim(reference, distorted)
+}
+
+///|
+pub fn compute_vmaf_score(reference : Image, distorted : Image) -> Double {
+  @video.compute_vmaf_score(reference, distorted)
+}
+
+///|
+pub fn compute_frame_quality(
+  reference : Image,
+  distorted : Image,
+  metric : VideoQualityMetric,
+) -> Double {
+  @video.compute_frame_quality(reference, distorted, metric)
+}
+
+///|
+pub fn compute_video_quality(
+  reference : Array[Image],
+  distorted : Array[Image],
+  metric : VideoQualityMetric,
+) -> VideoQualityResult {
+  @video.compute_video_quality(reference, distorted, metric)
+}
+
+///|
+pub fn quality_pipeline(
+  reference : Array[Image],
+  distorted : Array[Image],
+) -> Array[VideoQualityResult] {
+  @video.quality_pipeline(reference, distorted)
+}

@@ -43,6 +43,8 @@ pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
 
+pub fn compute_frame_quality(@types.Image, @types.Image, VideoQualityMetric) -> Double
+
 pub fn compute_interpolated_count(Int32, Int32) -> Int32
 
 pub fn compute_motion_between_frames(@types.Image, @types.Image) -> MotionEstimateResult
@@ -51,9 +53,15 @@ pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[M
 
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
+pub fn compute_msssim(@types.Image, @types.Image) -> Double
+
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, search_range? : Int32) -> OpticalFlowField
 
+pub fn compute_psnr(@types.Image, @types.Image) -> Double
+
 pub fn compute_sr_quality(Array[@types.Image], Array[@types.Image], Int32) -> Double
+
+pub fn compute_ssim(@types.Image, @types.Image) -> Double
 
 pub fn compute_time_compression(Double, Double) -> Double
 
@@ -64,6 +72,10 @@ pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
 pub fn compute_track_length(Array[MultiTrackedObject]) -> Int32
 
 pub fn compute_trajectory(Array[@types.Image]) -> Array[TrajectoryPoint]
+
+pub fn compute_video_quality(Array[@types.Image], Array[@types.Image], VideoQualityMetric) -> VideoQualityResult
+
+pub fn compute_vmaf_score(@types.Image, @types.Image) -> Double
 
 pub fn count_active_tracks(Array[MultiTrackedObject]) -> Int32
 
@@ -190,6 +202,8 @@ pub fn optical_flow_interpolate(@types.Image, @types.Image, Int32, FrameInterpCo
 pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
 
 pub fn phase_interpolate(@types.Image, @types.Image, Int32, FrameInterpConfig) -> Array[@types.Image]
+
+pub fn quality_pipeline(Array[@types.Image], Array[@types.Image]) -> Array[VideoQualityResult]
 
 pub fn quantize(Array[Int32], Int32) -> Array[Int32]
 
@@ -802,6 +816,27 @@ pub(all) enum VideoInpaintMethod {
 pub fn VideoInpaintMethod::equal(Self, Self) -> Bool
 pub fn VideoInpaintMethod::not_equal(Self, Self) -> Bool
 pub fn VideoInpaintMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VideoQualityMetric {
+  PSNRMetric
+  SSIMMetric
+  VMAFMetric
+} derive(Eq, @debug.Debug)
+pub fn VideoQualityMetric::equal(Self, Self) -> Bool
+pub fn VideoQualityMetric::not_equal(Self, Self) -> Bool
+pub fn VideoQualityMetric::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VideoQualityResult {
+  metric : VideoQualityMetric
+  score : Double
+  per_frame_scores : Array[Double]
+  mean_score : Double
+  min_score : Double
+  max_score : Double
+} derive(Eq, @debug.Debug)
+pub fn VideoQualityResult::equal(Self, Self) -> Bool
+pub fn VideoQualityResult::not_equal(Self, Self) -> Bool
+pub fn VideoQualityResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VideoSRConfig {
   sr_method : VideoSRMethod

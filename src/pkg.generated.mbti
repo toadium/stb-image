@@ -823,6 +823,8 @@ pub fn compute_farneback(@types.Image, @types.Image, @cv_advanced.FlowParams) ->
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
 
+pub fn compute_frame_quality(@types.Image, @types.Image, @video.VideoQualityMetric) -> Double
+
 pub fn compute_fundamental_matrix(Array[@cv_advanced.PointCorrespondence]) -> @cv_advanced.FundamentalMatrix
 
 pub fn compute_glcm(@types.Image, Int32, Int32, levels? : Int32) -> Array[Array[Int32]] raise @types.LoadError
@@ -856,6 +858,8 @@ pub fn compute_motion_field(@types.Image, @types.Image, @video.SearchConfig) -> 
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_mse(@types.Image, @types.Image) -> Double
+
+pub fn compute_msssim(@types.Image, @types.Image) -> Double
 
 pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
@@ -912,6 +916,10 @@ pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
 pub fn compute_track_length(Array[@video.MultiTrackedObject]) -> Int32
 
 pub fn compute_trajectory(Array[@types.Image]) -> Array[@video.TrajectoryPoint]
+
+pub fn compute_video_quality(Array[@types.Image], Array[@types.Image], @video.VideoQualityMetric) -> @video.VideoQualityResult
+
+pub fn compute_vmaf_score(@types.Image, @types.Image) -> Double
 
 pub fn connected_components(@types.Image, Int32) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
@@ -3721,6 +3729,8 @@ pub fn pyr_up_f(@types.ImageF) -> @types.ImageF raise @types.LoadError
 
 pub fn qoi_info_extended(Bytes) -> @codec.QoiInfoExtended raise @types.LoadError
 
+pub fn quality_pipeline(Array[@types.Image], Array[@types.Image]) -> Array[@video.VideoQualityResult]
+
 pub fn quality_report_dimension_count(@self_evolve.QualityReport) -> Int32
 
 pub fn quality_report_is_passing(@self_evolve.QualityReport) -> Bool
@@ -4771,11 +4781,15 @@ pub fn video_inpaint(Array[@types.Image], Array[Bool], @video.VideoInpaintConfig
 
 pub fn video_interpolate_frames(Array[@types.Image], @video.FrameInterpConfig) -> Array[@types.Image]
 
+pub fn video_psnr(@types.Image, @types.Image) -> Double
+
 pub fn video_reverse(@video.VideoFrames) -> @video.VideoFrames
 
 pub fn video_sample(@video.VideoFrames, interval? : Int32) -> @video.VideoFrames
 
 pub fn video_segmentation_pipeline(Array[@types.Image], @video.SegmentationConfig) -> Array[@video.SegmentationResult]
+
+pub fn video_ssim(@types.Image, @types.Image) -> Double
 
 pub fn video_subtract_background(@types.Image, @video.BackgroundModel, Double) -> @video.SegmentationResult
 
@@ -6627,6 +6641,10 @@ pub using @video {type VideoFrames}
 pub using @video {type VideoInpaintConfig}
 
 pub using @video {type VideoInpaintMethod}
+
+pub using @video {type VideoQualityMetric}
+
+pub using @video {type VideoQualityResult}
 
 pub using @video {type VideoSRConfig}
 

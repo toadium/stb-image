@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v404.0.0 — 视频质量
+
+**2026-11-04** — PSNR + SSIM(窗口化) + MS-SSIM(多尺度) + VMAF(简化) + 多度量流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoQualityMetric`(3) / `VideoQualityResult` |
+| 新增函数 | `compute_psnr` / `compute_ssim` / `compute_msssim` / `compute_vmaf_score` / `compute_frame_quality` / `compute_video_quality` / `quality_pipeline` |
+| 测试 | 15711×4（+15） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v403.0.0 — 视频插帧
 
 **2026-11-04** — 线性/光流/相位插帧 + 帧间运动估计 + 帧率转换(升/降) + 插帧流水线。
