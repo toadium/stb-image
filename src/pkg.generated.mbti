@@ -435,6 +435,8 @@ pub fn box_blur_f(@types.ImageF, Int32) -> @types.ImageF raise @types.LoadError
 
 pub fn brightness_value(@types.Image) -> Float
 
+pub fn build_background_model(Array[@types.Image]) -> @video.BackgroundModel?
+
 pub fn build_document_structure_tree(Array[@ocr.DocumentBlock]) -> Array[@ocr.DocumentTreeNode]
 
 pub fn build_enhanced_elements(Array[@ocr.TextLineAttributes], Int32, Int32) -> @ocr.EnhancedDocument raise @types.LoadError
@@ -1245,6 +1247,8 @@ pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -
 
 pub fn default_search_config() -> @video.SearchConfig
 
+pub fn default_segmentation_config() -> @video.SegmentationConfig
+
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
 pub fn default_slow_motion_config() -> @video.SlowMotionConfig
@@ -1852,6 +1856,8 @@ pub fn extract_face_feature_fr(@types.Image, @face_recognition.FaceDetectionResu
 pub fn extract_features(@ocr.DLFeatureExtractor, @types.Image) -> Array[Double]
 
 pub fn extract_features_advanced(Array[Double], Int32, Int32, @image_retrieval_advanced.ImageRetrievalConfig) -> @image_retrieval_advanced.FeatureExtractionResult
+
+pub fn extract_foreground(@types.Image, @video.SegmentationResult) -> @types.Image
 
 pub fn extract_gabor_ocr_features(@types.Image, num_orientations? : Int32, num_frequencies? : Int32) -> Array[Double]
 
@@ -3119,6 +3125,8 @@ pub fn motion_blur_sequence(Array[@types.Image], @video.SlowMotionConfig) -> Arr
 
 pub fn motion_compensation(@types.Image, Array[@video.MotionVector], Int32) -> @types.Image
 
+pub fn motion_consistency(Array[@video.SegmentationResult]) -> Double
+
 pub fn motion_density(@cv_advanced.MotionMask, Int32, Int32) -> Array[Double]
 
 pub fn motion_estimate_and_compensate(@types.Image, @types.Image, @video.SearchConfig) -> @types.Image
@@ -4119,6 +4127,10 @@ pub fn segment_connected_strokes(@types.Image, @ocr.HandwritingRecognitionConfig
 
 pub fn segment_cursive_chars(@types.Image, min_char_width? : Int32, max_char_width? : Int32) -> Array[(Int32, Int32, Int32, Int32)]
 
+pub fn segment_frame_difference(@types.Image, @types.Image, Double) -> @video.SegmentationResult
+
+pub fn segment_motion(Array[@types.Image], Double) -> Array[@video.SegmentationResult]
+
 pub fn segment_page(@types.Image) -> Array[@ocr.TextRegion] raise @types.LoadError
 
 pub fn segment_paragraphs(Array[@ocr.TextLineAttributes]) -> Array[Array[@ocr.TextLineAttributes]]
@@ -4690,6 +4702,12 @@ pub fn video_get_frame(@video.VideoFrames, Int32) -> @types.Image?
 pub fn video_reverse(@video.VideoFrames) -> @video.VideoFrames
 
 pub fn video_sample(@video.VideoFrames, interval? : Int32) -> @video.VideoFrames
+
+pub fn video_segmentation_pipeline(Array[@types.Image], @video.SegmentationConfig) -> Array[@video.SegmentationResult]
+
+pub fn video_subtract_background(@types.Image, @video.BackgroundModel, Double) -> @video.SegmentationResult
+
+pub fn video_update_background_model(@video.BackgroundModel, @types.Image, Double) -> @video.BackgroundModel
 
 pub fn vins_check_initialization(@cv_advanced.VinsState) -> Bool
 
@@ -6498,6 +6516,8 @@ pub using @remote_sensing {type VegetationIndices}
 
 pub using @aoci {type VerifyResult}
 
+pub using @video {type BackgroundModel as VideoBackgroundModel}
+
 pub using @video {type VideoCodecParams}
 
 pub using @video {type VideoFilterParams}
@@ -6507,6 +6527,12 @@ pub using @video {type VideoFilterType}
 pub using @video {type VideoFormat}
 
 pub using @video {type VideoFrames}
+
+pub using @video {type SegmentationResult as VideoSegResult}
+
+pub using @video {type SegmentationConfig as VideoSegmentationConfig}
+
+pub using @video {type VideoSegmentationMethod}
 
 pub using @video {type VideoStabilizationConfig}
 

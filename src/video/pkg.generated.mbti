@@ -25,6 +25,8 @@ pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
 
 pub fn average_motion_sad(Array[MotionVector]) -> Double
 
+pub fn build_background_model(Array[@types.Image]) -> BackgroundModel?
+
 pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
 
 pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
@@ -69,6 +71,8 @@ pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 
 pub fn default_search_config() -> SearchConfig
 
+pub fn default_segmentation_config() -> SegmentationConfig
+
 pub fn default_slow_motion_config() -> SlowMotionConfig
 
 pub fn default_stabilization_config() -> StabilizationConfig
@@ -103,6 +107,8 @@ pub fn estimate_motion_three_step(@types.Image, @types.Image, Int32, Int32, Int3
 
 pub fn estimate_quality(Int32, Int32) -> Double
 
+pub fn extract_foreground(@types.Image, SegmentationResult) -> @types.Image
+
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
 
 pub fn generate_slow_motion(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
@@ -127,6 +133,8 @@ pub fn motion_blur_sequence(Array[@types.Image], SlowMotionConfig) -> Array[@typ
 
 pub fn motion_compensation(@types.Image, Array[MotionVector], Int32) -> @types.Image
 
+pub fn motion_consistency(Array[SegmentationResult]) -> Double
+
 pub fn motion_estimate_and_compensate(@types.Image, @types.Image, SearchConfig) -> @types.Image
 
 pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
@@ -147,6 +155,10 @@ pub fn sample_frames(Array[@types.Image], Int32) -> Array[@types.Image]
 
 pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
 
+pub fn segment_frame_difference(@types.Image, @types.Image, Double) -> SegmentationResult
+
+pub fn segment_motion(Array[@types.Image], Double) -> Array[SegmentationResult]
+
 pub fn slow_motion_pipeline(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
 pub fn smooth_trajectory(Array[TrajectoryPoint], StabilizationConfig) -> Array[TrajectoryPoint]
@@ -159,11 +171,15 @@ pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@
 
 pub fn stabilize_video_sequence(Array[@types.Image], StabilizationConfig) -> StabilizationResult
 
+pub fn subtract_background(@types.Image, BackgroundModel, Double) -> SegmentationResult
+
 pub fn timelapse_pipeline(Array[@types.Image], TimelapseConfig, Double) -> Array[@types.Image]
 
 pub fn transcode_compression_ratio(Int32, Int32) -> Double
 
 pub fn transcode_video(Array[@types.Image], TranscodeParams) -> TranscodeResult
+
+pub fn update_background_model(BackgroundModel, @types.Image, Double) -> BackgroundModel
 
 pub fn update_tracking(TrackedObject, @types.Image) -> TrackedObject
 
@@ -186,6 +202,8 @@ pub fn video_get_frame(VideoFrames, Int32) -> @types.Image?
 pub fn video_reverse(VideoFrames) -> VideoFrames
 
 pub fn video_sample(VideoFrames, interval? : Int32) -> VideoFrames
+
+pub fn video_segmentation_pipeline(Array[@types.Image], SegmentationConfig) -> Array[SegmentationResult]
 
 pub fn zero_motion_ratio(Array[MotionVector]) -> Double
 
@@ -220,6 +238,15 @@ pub(all) enum ActionType {
 } derive(Eq)
 pub fn ActionType::equal(Self, Self) -> Bool
 pub fn ActionType::not_equal(Self, Self) -> Bool
+
+pub(all) struct BackgroundModel {
+  background : @types.Image
+  variance : @types.Image
+  frame_count : Int32
+} derive(Eq, @debug.Debug)
+pub fn BackgroundModel::equal(Self, Self) -> Bool
+pub fn BackgroundModel::not_equal(Self, Self) -> Bool
+pub fn BackgroundModel::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BitrateMode {
   CBR
@@ -342,6 +369,27 @@ pub(all) struct SearchConfig {
 pub fn SearchConfig::equal(Self, Self) -> Bool
 pub fn SearchConfig::not_equal(Self, Self) -> Bool
 pub fn SearchConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SegmentationConfig {
+  seg_method : VideoSegmentationMethod
+  threshold : Double
+  learning_rate : Double
+  min_motion_area : Int32
+} derive(Eq, @debug.Debug)
+pub fn SegmentationConfig::equal(Self, Self) -> Bool
+pub fn SegmentationConfig::not_equal(Self, Self) -> Bool
+pub fn SegmentationConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SegmentationResult {
+  foreground_mask : Array[Bool]
+  foreground_ratio : Double
+  motion_area : Int32
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn SegmentationResult::equal(Self, Self) -> Bool
+pub fn SegmentationResult::not_equal(Self, Self) -> Bool
+pub fn SegmentationResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SlowMotionConfig {
   sm_method : SlowMotionMethod
@@ -553,6 +601,15 @@ pub(all) struct VideoFrames {
   channels : Int32
   fps : Double
 }
+
+pub(all) enum VideoSegmentationMethod {
+  FrameDifference
+  BackgroundSubtraction
+  MotionBased
+} derive(Eq, @debug.Debug)
+pub fn VideoSegmentationMethod::equal(Self, Self) -> Bool
+pub fn VideoSegmentationMethod::not_equal(Self, Self) -> Bool
+pub fn VideoSegmentationMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VideoStabilizationConfig {
   smoothing_radius : Int32

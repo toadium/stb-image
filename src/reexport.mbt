@@ -19380,3 +19380,79 @@ pub fn compute_time_compression(
 ) -> Double {
   @video.compute_time_compression(source_duration, timelapse_duration)
 }
+// v399.0.0 视频分割 re-export
+
+///|
+pub type VideoSegmentationMethod = @video.VideoSegmentationMethod
+
+///|
+pub type VideoBackgroundModel = @video.BackgroundModel
+
+///|
+pub type VideoSegmentationConfig = @video.SegmentationConfig
+
+///|
+pub type VideoSegResult = @video.SegmentationResult
+
+///|
+pub fn default_segmentation_config() -> VideoSegmentationConfig {
+  @video.default_segmentation_config()
+}
+
+///|
+pub fn segment_frame_difference(
+  current : Image,
+  previous : Image,
+  threshold : Double,
+) -> VideoSegResult {
+  @video.segment_frame_difference(current, previous, threshold)
+}
+
+///|
+pub fn build_background_model(frames : Array[Image]) -> VideoBackgroundModel? {
+  @video.build_background_model(frames)
+}
+
+///|
+pub fn video_update_background_model(
+  model : VideoBackgroundModel,
+  frame : Image,
+  learning_rate : Double,
+) -> VideoBackgroundModel {
+  @video.update_background_model(model, frame, learning_rate)
+}
+
+///|
+pub fn video_subtract_background(
+  frame : Image,
+  model : VideoBackgroundModel,
+  threshold : Double,
+) -> VideoSegResult {
+  @video.subtract_background(frame, model, threshold)
+}
+
+///|
+pub fn segment_motion(
+  frames : Array[Image],
+  threshold : Double,
+) -> Array[VideoSegResult] {
+  @video.segment_motion(frames, threshold)
+}
+
+///|
+pub fn video_segmentation_pipeline(
+  frames : Array[Image],
+  config : VideoSegmentationConfig,
+) -> Array[VideoSegResult] {
+  @video.video_segmentation_pipeline(frames, config)
+}
+
+///|
+pub fn motion_consistency(results : Array[VideoSegResult]) -> Double {
+  @video.motion_consistency(results)
+}
+
+///|
+pub fn extract_foreground(img : Image, result : VideoSegResult) -> Image {
+  @video.extract_foreground(img, result)
+}

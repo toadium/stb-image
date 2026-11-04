@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v399.0.0 — 视频分割
+
+**2026-11-04** — 3种分割方法(帧差/背景减除/运动) + 背景模型构建/更新 + 前景提取 + 运动一致性。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoSegmentationMethod`(3) / `BackgroundModel` / `SegmentationConfig` / `SegmentationResult` |
+| 新增函数 | `default_segmentation_config` / `segment_frame_difference` / `build_background_model` / `update_background_model` / `subtract_background` / `segment_motion` / `video_segmentation_pipeline` / `motion_consistency` / `extract_foreground` |
+| 测试 | 15628×4（+16） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v398.0.0 — 时间 lapse
 
 **2026-11-04** — 3种曝光模式(线性/对数/伽马) + 帧采样 + 时间 lapse 流水线 + 时间压缩比计算。
