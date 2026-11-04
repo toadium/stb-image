@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v395.0.0 — 运动估计
+
+**2026-11-04** — 4种搜索方法(全搜索/菱形/六边形/三步) + 亚像素精化 + 运动场计算 + 运动补偿。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `MotionEstimationMethod`(4) / `MotionVector` / `SubpixelMotionVector` / `SearchConfig` |
+| 新增函数 | `default_search_config` / `estimate_motion_full_search` / `estimate_motion_diamond` / `estimate_motion_hex` / `estimate_motion_three_step` / `refine_subpixel` / `compute_motion_field` / `motion_compensation` / `motion_estimate_and_compensate` / `average_motion_sad` / `zero_motion_ratio` |
+| 测试 | 15555×4（+18） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v394.0.0 — 视频转码
 
 **2026-11-04** — 5种视频格式(Raw/MPEG/H264/VP9/AV1) + 3种分辨率调整(缩放/裁剪/填充) + 3种码率控制(CBR/VBR/CRF) + 帧率调整 + 转码流水线。

@@ -19027,3 +19027,126 @@ pub fn transcode_compression_ratio(
 ) -> Double {
   @video.transcode_compression_ratio(original_size, transcoded_size)
 }
+// v395.0.0 运动估计 re-export
+
+///|
+pub type MotionEstimationMethod = @video.MotionEstimationMethod
+
+///|
+pub type MotionVector = @video.MotionVector
+
+///|
+pub type SubpixelMotionVector = @video.SubpixelMotionVector
+
+///|
+pub type SearchConfig = @video.SearchConfig
+
+///|
+pub fn default_search_config() -> SearchConfig {
+  @video.default_search_config()
+}
+
+///|
+pub fn estimate_motion_full_search(
+  current : Image,
+  reference : Image,
+  bx : Int32,
+  by : Int32,
+  block_size : Int32,
+  search_range : Int32,
+) -> MotionVector {
+  @video.estimate_motion_full_search(
+    current, reference, bx, by, block_size, search_range,
+  )
+}
+
+///|
+pub fn estimate_motion_diamond(
+  current : Image,
+  reference : Image,
+  bx : Int32,
+  by : Int32,
+  block_size : Int32,
+  search_range : Int32,
+) -> MotionVector {
+  @video.estimate_motion_diamond(
+    current, reference, bx, by, block_size, search_range,
+  )
+}
+
+///|
+pub fn estimate_motion_hex(
+  current : Image,
+  reference : Image,
+  bx : Int32,
+  by : Int32,
+  block_size : Int32,
+  search_range : Int32,
+) -> MotionVector {
+  @video.estimate_motion_hex(
+    current, reference, bx, by, block_size, search_range,
+  )
+}
+
+///|
+pub fn estimate_motion_three_step(
+  current : Image,
+  reference : Image,
+  bx : Int32,
+  by : Int32,
+  block_size : Int32,
+  search_range : Int32,
+) -> MotionVector {
+  @video.estimate_motion_three_step(
+    current, reference, bx, by, block_size, search_range,
+  )
+}
+
+///|
+pub fn refine_subpixel(
+  current : Image,
+  reference : Image,
+  bx : Int32,
+  by : Int32,
+  mv : MotionVector,
+  block_size : Int32,
+) -> SubpixelMotionVector {
+  @video.refine_subpixel(current, reference, bx, by, mv, block_size)
+}
+
+///|
+pub fn compute_motion_field(
+  current : Image,
+  reference : Image,
+  config : SearchConfig,
+) -> Array[MotionVector] {
+  @video.compute_motion_field(current, reference, config)
+}
+
+///|
+pub fn motion_compensation(
+  reference : Image,
+  motion_field : Array[MotionVector],
+  block_size : Int32,
+) -> Image {
+  @video.motion_compensation(reference, motion_field, block_size)
+}
+
+///|
+pub fn motion_estimate_and_compensate(
+  current : Image,
+  reference : Image,
+  config : SearchConfig,
+) -> Image {
+  @video.motion_estimate_and_compensate(current, reference, config)
+}
+
+///|
+pub fn average_motion_sad(motion_field : Array[MotionVector]) -> Double {
+  @video.average_motion_sad(motion_field)
+}
+
+///|
+pub fn zero_motion_ratio(motion_field : Array[MotionVector]) -> Double {
+  @video.zero_motion_ratio(motion_field)
+}

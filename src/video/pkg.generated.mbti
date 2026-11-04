@@ -17,6 +17,8 @@ pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image
 
 pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
 
+pub fn average_motion_sad(Array[MotionVector]) -> Double
+
 pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
 
 pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
@@ -24,6 +26,8 @@ pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
 pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
+
+pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[MotionVector]
 
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
@@ -43,6 +47,8 @@ pub fn decode_frame_intra(EncodedFrame) -> @types.Image
 
 pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 
+pub fn default_search_config() -> SearchConfig
+
 pub fn default_transcode_params() -> TranscodeParams
 
 pub fn default_transition_params(TransitionType) -> TransitionParams
@@ -61,6 +67,14 @@ pub fn encode_frame_intra(@types.Image, VideoCodecParams) -> EncodedFrame
 
 pub fn encode_video(Array[@types.Image], VideoCodecParams) -> EncodedVideo
 
+pub fn estimate_motion_diamond(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> MotionVector
+
+pub fn estimate_motion_full_search(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> MotionVector
+
+pub fn estimate_motion_hex(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> MotionVector
+
+pub fn estimate_motion_three_step(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> MotionVector
+
 pub fn estimate_quality(Int32, Int32) -> Double
 
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
@@ -73,11 +87,17 @@ pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> 
 
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
 
+pub fn motion_compensation(@types.Image, Array[MotionVector], Int32) -> @types.Image
+
+pub fn motion_estimate_and_compensate(@types.Image, @types.Image, SearchConfig) -> @types.Image
+
 pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
 
 pub fn quantize(Array[Int32], Int32) -> Array[Int32]
 
 pub fn recognize_action(Array[@types.Image], Int32, Int32) -> ActionRecognitionResult
+
+pub fn refine_subpixel(@types.Image, @types.Image, Int32, Int32, MotionVector, Int32) -> SubpixelMotionVector
 
 pub fn resize_image(@types.Image, Int32, Int32, ResolutionMode) -> @types.Image
 
@@ -114,6 +134,8 @@ pub fn video_get_frame(VideoFrames, Int32) -> @types.Image?
 pub fn video_reverse(VideoFrames) -> VideoFrames
 
 pub fn video_sample(VideoFrames, interval? : Int32) -> VideoFrames
+
+pub fn zero_motion_ratio(Array[MotionVector]) -> Double
 
 // Errors
 
@@ -206,6 +228,25 @@ pub(all) enum KeyframeType {
 pub fn KeyframeType::equal(Self, Self) -> Bool
 pub fn KeyframeType::not_equal(Self, Self) -> Bool
 
+pub(all) enum MotionEstimationMethod {
+  FullSearch
+  DiamondSearch
+  HexSearch
+  ThreeStep
+} derive(Eq, @debug.Debug)
+pub fn MotionEstimationMethod::equal(Self, Self) -> Bool
+pub fn MotionEstimationMethod::not_equal(Self, Self) -> Bool
+pub fn MotionEstimationMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MotionVector {
+  dx : Int32
+  dy : Int32
+  sad : Double
+} derive(Eq, @debug.Debug)
+pub fn MotionVector::equal(Self, Self) -> Bool
+pub fn MotionVector::not_equal(Self, Self) -> Bool
+pub fn MotionVector::to_repr(Self) -> @debug.Repr
+
 pub(all) struct OpticalFlowField {
   width : Int32
   height : Int32
@@ -230,6 +271,25 @@ pub(all) enum ResolutionMode {
 pub fn ResolutionMode::equal(Self, Self) -> Bool
 pub fn ResolutionMode::not_equal(Self, Self) -> Bool
 pub fn ResolutionMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SearchConfig {
+  me_method : MotionEstimationMethod
+  block_size : Int32
+  search_range : Int32
+  subpixel_refinement : Bool
+} derive(Eq, @debug.Debug)
+pub fn SearchConfig::equal(Self, Self) -> Bool
+pub fn SearchConfig::not_equal(Self, Self) -> Bool
+pub fn SearchConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SubpixelMotionVector {
+  dx : Double
+  dy : Double
+  sad : Double
+} derive(Eq, @debug.Debug)
+pub fn SubpixelMotionVector::equal(Self, Self) -> Bool
+pub fn SubpixelMotionVector::not_equal(Self, Self) -> Bool
+pub fn SubpixelMotionVector::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TrackedObject {
   id : Int32

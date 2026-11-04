@@ -317,6 +317,8 @@ pub fn augment_random_scale(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSam
 
 pub fn augment_random_shift(@ocr.DLTrainingSample, Double) -> @ocr.DLTrainingSample
 
+pub fn average_motion_sad(Array[@video.MotionVector]) -> Double
+
 pub fn avif_decode(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn avif_info(Bytes) -> @codec.AvifInfo raise @types.LoadError
@@ -829,6 +831,8 @@ pub fn compute_mertens_weights(@types.Image, @cv_advanced.ExposureFusionParams) 
 
 pub fn compute_motion_energy(@cv_advanced.MotionMask) -> Double
 
+pub fn compute_motion_field(@types.Image, @types.Image, @video.SearchConfig) -> Array[@video.MotionVector]
+
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_mse(@types.Image, @types.Image) -> Double
@@ -1218,6 +1222,8 @@ pub fn default_exposure_fusion_params(@cv_advanced.ExposureFusionMethod) -> @cv_
 pub fn default_flash_removal_params(@cv_advanced.FlashDetectionMethod) -> @cv_advanced.FlashRemovalParams
 
 pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -> @cv_advanced.ReflectionRemovalParams
+
+pub fn default_search_config() -> @video.SearchConfig
 
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
@@ -1690,6 +1696,14 @@ pub fn estimate_dynamic_range(@types.Image) -> (Double, Double, Double)
 pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.FeaturePoint], Array[@stitch.FeaturePoint], iterations? : Int32, threshold? : Double) -> (@stitch.Homography?, Array[@stitch.MatchPair])
 
 pub fn estimate_memory_usage(Int32, Int32, Int32, Int32) -> @ocr.MemoryUsageStats
+
+pub fn estimate_motion_diamond(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> @video.MotionVector
+
+pub fn estimate_motion_full_search(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> @video.MotionVector
+
+pub fn estimate_motion_hex(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> @video.MotionVector
+
+pub fn estimate_motion_three_step(@types.Image, @types.Image, Int32, Int32, Int32, Int32) -> @video.MotionVector
 
 pub fn estimate_normals_3d(@stereo3d.PointCloud3D, Double) -> Array[(Double, Double, Double)]
 
@@ -3065,7 +3079,11 @@ pub fn morph_tophat_16(@types.Image16) -> @types.Image16
 
 pub fn morph_tophat_f(@types.ImageF) -> @types.ImageF
 
+pub fn motion_compensation(@types.Image, Array[@video.MotionVector], Int32) -> @types.Image
+
 pub fn motion_density(@cv_advanced.MotionMask, Int32, Int32) -> Array[Double]
+
+pub fn motion_estimate_and_compensate(@types.Image, @types.Image, @video.SearchConfig) -> @types.Image
 
 pub fn motion_morphology(@cv_advanced.MotionMask, Int32) -> @cv_advanced.MotionMask
 
@@ -3738,6 +3756,8 @@ pub fn record_training_metrics(@ocr.TrainingState, @ocr.TrainingMetrics) -> @ocr
 pub fn reed_solomon_decode(Array[Int32], Int32) -> (Array[Int32], Int32)
 
 pub fn refine_depth_edges(@cv_advanced.DepthMap, @types.Image) -> @cv_advanced.DepthMap
+
+pub fn refine_subpixel(@types.Image, @types.Image, Int32, Int32, @video.MotionVector, Int32) -> @video.SubpixelMotionVector
 
 pub fn reflection_removal_pipeline(@types.Image, @cv_advanced.ReflectionRemovalParams) -> @types.Image
 
@@ -4745,6 +4765,8 @@ pub fn ycbcr_to_rgb_16(Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @type
 
 pub fn ycbcr_to_rgb_f(Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError
 
+pub fn zero_motion_ratio(Array[@video.MotionVector]) -> Double
+
 // Errors
 
 // Types and methods
@@ -5714,11 +5736,15 @@ pub using @edge {type Moments}
 
 pub using @cv_advanced {type MonocularDepthMethod}
 
+pub using @video {type MotionEstimationMethod}
+
 pub using @cv_advanced {type MotionMask}
 
 pub using @cv_advanced {type MotionParams}
 
 pub using @cv_advanced {type MotionRegion}
+
+pub using @video {type MotionVector}
 
 pub using @ocr {type MultilingualOcrConfig}
 
@@ -6118,6 +6144,8 @@ pub using @cv_advanced {type ScheduleType}
 
 pub using @self_evolve {type ScoreFactor}
 
+pub using @video {type SearchConfig}
+
 pub using @retrieval {type SearchResult}
 
 pub using @intelligent_vision {type SecurityMonitoringTask as SecurityMonitoringTaskIV}
@@ -6223,6 +6251,8 @@ pub using @style_transfer {type StyleTransferResult}
 pub using @style_transfer {type StyleTransferTextureFeatures}
 
 pub using @stylize {type StylizeConfig}
+
+pub using @video {type SubpixelMotionVector}
 
 pub using @self_evolve {type SuggestionKind}
 
