@@ -13,6 +13,8 @@ pub fn add_map_point(SlamBackend, Point3D, Int32, Double) -> SlamBackend
 
 pub fn aggregate_neighbors(GraphData, Int32, GNNType) -> Array[Double]
 
+pub fn apply_perspective(PerspectiveTransform, Point2D) -> Point2D
+
 pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_warp(@types.Image, AffineMatrix) -> @types.Image
@@ -163,6 +165,8 @@ pub fn compute_motion_energy(MotionMask) -> Double
 
 pub fn compute_ncc(@types.Image, @types.Image) -> Double
 
+pub fn compute_perspective_transform(Array[Point2D], Array[Point2D]) -> PerspectiveTransform
+
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> RegistrationResult
 
 pub fn compute_prototypes(Array[Array[Double]], Array[Int32], Int32) -> Array[Array[Double]]
@@ -186,6 +190,8 @@ pub fn conv1d(Array[Double], Array[Double], Array[Double], Conv1DParams) -> Arra
 pub fn conv3d(Array[Double], Array[Double], Array[Double], Conv3DParams) -> Array[Double]
 
 pub fn correct_flash(@types.Image, Array[Bool], Double) -> @types.Image
+
+pub fn correct_perspective(@types.Image, PerspectiveTransform, Int32, Int32) -> @types.Image
 
 pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
@@ -239,6 +245,8 @@ pub fn dequantize(QuantizedTensor) -> Array[Double]
 
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[KeyPoint]
 
+pub fn detect_document_edges(@types.Image) -> DocumentDetectionResult
+
 pub fn detect_fast_corners(@types.Image, Int32) -> Array[KeyPoint]
 
 pub fn detect_flash_gradient(@types.Image, Double) -> FlashDetectionResult
@@ -290,6 +298,8 @@ pub fn dilate_flash_mask(Array[Bool], Int32, Int32, Int32) -> Array[Bool]
 pub fn dilated_conv2d(Array[Double], Array[Double], Double, Int32, Int32, Int32, Int32) -> Array[Double]
 
 pub fn disparity_to_depth(Double, Double, Double) -> Double
+
+pub fn document_scan(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn dose_compute_dvh(Array[Double], Array[Int32], Int32, Double, String) -> DVHResult
 
@@ -480,6 +490,8 @@ pub fn hyperspectral_ppi(Array[Array[Double]], Int32, Int32) -> Array[Int32]
 pub fn hyperspectral_sam(Array[Double], Array[Double]) -> Double
 
 pub fn identity_affine() -> AffineMatrix
+
+pub fn identity_perspective_transform() -> PerspectiveTransform
 
 pub fn identity_pose() -> SlamPose
 
@@ -696,6 +708,8 @@ pub fn pathology_stain_separation(Array[Double], Int32, Int32) -> StainSeparatio
 pub fn pathology_wsi_extract_tiles(Array[Double], Int32, Int32, WSIConfig) -> Array[Array[Double]]
 
 pub fn pathology_wsi_stitch_tiles(Array[Array[Double]], WSIConfig) -> Array[Double]
+
+pub fn perspective_correction_pipeline(@types.Image, Array[Point2D], Int32, Int32) -> @types.Image
 
 pub fn phase12_capabilities() -> Array[Phase12Capability]
 
@@ -1688,6 +1702,16 @@ pub fn DistillationType::equal(Self, Self) -> Bool
 pub fn DistillationType::not_equal(Self, Self) -> Bool
 pub fn DistillationType::to_repr(Self) -> @debug.Repr
 
+pub(all) struct DocumentDetectionResult {
+  corners : Array[Point2D]
+  confidence : Double
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn DocumentDetectionResult::equal(Self, Self) -> Bool
+pub fn DocumentDetectionResult::not_equal(Self, Self) -> Bool
+pub fn DocumentDetectionResult::to_repr(Self) -> @debug.Repr
+
 pub(all) struct DoseMetrics {
   d95 : Double
   d50 : Double
@@ -2503,6 +2527,20 @@ pub fn PathologyStain::equal(Self, Self) -> Bool
 pub fn PathologyStain::not_equal(Self, Self) -> Bool
 pub fn PathologyStain::to_repr(Self) -> @debug.Repr
 
+pub(all) struct PerspectiveTransform {
+  h00 : Double
+  h01 : Double
+  h02 : Double
+  h10 : Double
+  h11 : Double
+  h12 : Double
+  h20 : Double
+  h21 : Double
+} derive(Eq, @debug.Debug)
+pub fn PerspectiveTransform::equal(Self, Self) -> Bool
+pub fn PerspectiveTransform::not_equal(Self, Self) -> Bool
+pub fn PerspectiveTransform::to_repr(Self) -> @debug.Repr
+
 pub(all) struct Phase12Capability {
   version : String
   name : String
@@ -2595,6 +2633,14 @@ pub(all) struct Phase15Report {
 pub fn Phase15Report::equal(Self, Self) -> Bool
 pub fn Phase15Report::not_equal(Self, Self) -> Bool
 pub fn Phase15Report::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Point2D {
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn Point2D::equal(Self, Self) -> Bool
+pub fn Point2D::not_equal(Self, Self) -> Bool
+pub fn Point2D::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Point3D {
   x : Double

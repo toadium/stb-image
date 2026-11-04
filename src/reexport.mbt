@@ -18669,3 +18669,70 @@ pub fn default_reflection_removal_params(
 ) -> ReflectionRemovalParams {
   @cv_advanced.default_reflection_removal_params(rr_method)
 }
+// v390.0.0 透视校正 re-export
+
+///|
+pub type Point2D = @cv_advanced.Point2D
+
+///|
+pub type PerspectiveTransform = @cv_advanced.PerspectiveTransform
+
+///|
+pub type DocumentDetectionResult = @cv_advanced.DocumentDetectionResult
+
+///|
+pub fn compute_perspective_transform(
+  src : Array[Point2D],
+  dst : Array[Point2D],
+) -> PerspectiveTransform {
+  @cv_advanced.compute_perspective_transform(src, dst)
+}
+
+///|
+pub fn apply_perspective(
+  transform : PerspectiveTransform,
+  pt : Point2D,
+) -> Point2D {
+  @cv_advanced.apply_perspective(transform, pt)
+}
+
+///|
+pub fn correct_perspective(
+  img : Image,
+  transform : PerspectiveTransform,
+  out_width : Int32,
+  out_height : Int32,
+) -> Image {
+  @cv_advanced.correct_perspective(img, transform, out_width, out_height)
+}
+
+///|
+pub fn detect_document_edges(img : Image) -> DocumentDetectionResult {
+  @cv_advanced.detect_document_edges(img)
+}
+
+///|
+pub fn document_scan(
+  img : Image,
+  out_width : Int32,
+  out_height : Int32,
+) -> Image {
+  @cv_advanced.document_scan(img, out_width, out_height)
+}
+
+///|
+pub fn identity_perspective_transform() -> PerspectiveTransform {
+  @cv_advanced.identity_perspective_transform()
+}
+
+///|
+pub fn perspective_correction_pipeline(
+  img : Image,
+  src_corners : Array[Point2D],
+  out_width : Int32,
+  out_height : Int32,
+) -> Image {
+  @cv_advanced.perspective_correction_pipeline(
+    img, src_corners, out_width, out_height,
+  )
+}

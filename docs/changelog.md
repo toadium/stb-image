@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v390.0.0 — 透视校正
+
+**2026-11-04** — 透视变换矩阵计算/双线性插值校正/文档边缘检测/文档扫描流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `Point2D` / `PerspectiveTransform`(8自由度单应矩阵) / `DocumentDetectionResult` |
+| 新增函数 | `compute_perspective_transform` / `apply_perspective` / `correct_perspective` / `detect_document_edges` / `document_scan` / `identity_perspective_transform` / `perspective_correction_pipeline` |
+| 测试 | 15475×4（+16） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v389.0.0 — 反射去除
 
 **2026-10-21** — 偏振分离/多帧中值/深度感知/梯度反射检测与去除。

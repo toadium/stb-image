@@ -259,6 +259,8 @@ pub fn apply_homography(@stitch.Homography, Double, Double) -> (Double, Double)
 
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
+pub fn apply_perspective(@cv_advanced.PerspectiveTransform, @cv_advanced.Point2D) -> @cv_advanced.Point2D
+
 pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 
 pub fn apply_translation_fe(@types.Image, Int32, Int32) -> @types.Image
@@ -825,6 +827,8 @@ pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, sea
 
 pub fn compute_per_class_accuracy(Array[Array[Int32]]) -> Array[Double]
 
+pub fn compute_perspective_transform(Array[@cv_advanced.Point2D], Array[@cv_advanced.Point2D]) -> @cv_advanced.PerspectiveTransform
+
 pub fn compute_phase_correlation(@types.Image, @types.Image) -> @cv_advanced.RegistrationResult
 
 pub fn compute_prototypes(Array[Array[Double]], Array[Int32], Int32) -> Array[Array[Double]]
@@ -900,6 +904,8 @@ pub fn convolve_f(@types.ImageF, Array[Float], Float, Float) -> @types.ImageF ra
 pub fn correct_common_patterns(String) -> @ocr.CorrectionResult
 
 pub fn correct_flash(@types.Image, Array[Bool], Double) -> @types.Image
+
+pub fn correct_perspective(@types.Image, @cv_advanced.PerspectiveTransform, Int32, Int32) -> @types.Image
 
 pub fn correct_similar_chars(String, String) -> @ocr.CorrectionResult raise @types.LoadError
 
@@ -1271,6 +1277,8 @@ pub fn detect_distortions(@types.Image) -> Array[@ocr.DistortionDetectionResult]
 
 pub fn detect_document_columns(@types.Image) -> Int32 raise @types.LoadError
 
+pub fn detect_document_edges(@types.Image) -> @cv_advanced.DocumentDetectionResult
+
 pub fn detect_document_language(@types.Image) -> @ocr.LanguageType raise @types.LoadError
 
 pub fn detect_exposure_type(@types.Image) -> (@photo_enhance.ExposureType, Double)
@@ -1440,6 +1448,8 @@ pub fn distance_transform(@types.Image, distance_type? : Int32) -> Array[Float] 
 pub fn distill_cross_entropy_loss(Array[Double], Array[Double]) -> Double
 
 pub fn document_enhance(@types.Image) -> @types.Image raise @types.LoadError
+
+pub fn document_scan(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn document_statistics_enhanced(Array[@ocr.DocumentBlock]) -> (Int32, Int32, Int32, Int32, Int32, Int32, Int32)
 
@@ -2433,6 +2443,8 @@ pub fn identity_affine() -> @cv_advanced.AffineMatrix
 
 pub fn identity_homography() -> @stitch.Homography
 
+pub fn identity_perspective_transform() -> @cv_advanced.PerspectiveTransform
+
 pub fn identity_pose() -> @cv_advanced.SlamPose
 
 pub fn ifft_2d(@frequency.FFTResult) -> @types.Image
@@ -3292,6 +3304,8 @@ pub fn perf_improvement_pct(@self_evolve.PerfRegression) -> Int32
 pub fn perf_is_improvement(@self_evolve.PerfRegression) -> Bool
 
 pub fn perf_optimize_check(@imgir.IRPipeline) -> @self_evolve.PerfRegression
+
+pub fn perspective_correction_pipeline(@types.Image, Array[@cv_advanced.Point2D], Int32, Int32) -> @types.Image
 
 pub fn pet_synthesize_ai(Int32, Int32, String) -> @advanced_imaging.PETData
 
@@ -5072,6 +5086,8 @@ pub using @ocr {type DocumentBlock}
 
 pub using @ocr {type DocumentBlockType}
 
+pub using @cv_advanced {type DocumentDetectionResult}
+
 pub using @ocr {type DocumentElement}
 
 pub using @ocr {type DocumentElementType}
@@ -5746,6 +5762,8 @@ pub using @ocr {type PerformanceBenchmark}
 
 pub using @transform {type PerspectiveMatrix}
 
+pub using @cv_advanced {type PerspectiveTransform}
+
 pub using @self_evolve {type Phase10Capability}
 
 pub using @self_evolve {type Phase10Report}
@@ -5811,6 +5829,8 @@ pub using @codec {type PngInfoExtended}
 pub using @meta {type PngTextChunk}
 
 pub using @codec {type PnmInfoExtended}
+
+pub using @cv_advanced {type Point2D}
 
 pub using @cv_advanced {type Point3D}
 
