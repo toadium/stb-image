@@ -7,6 +7,14 @@ import {
 }
 
 // Values
+pub fn add_text_overlay(@types.Image, Int32, Int32, Int32, Int32, Byte) -> @types.Image
+
+pub fn add_timestamp(@types.Image, Int32, Int32) -> @types.Image
+
+pub fn add_watermark(@types.Image, @types.Image, Int32, Int32, Double) -> @types.Image
+
+pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
+
 pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
@@ -19,13 +27,19 @@ pub fn create_animation(Array[@types.Image], fps? : Double) -> VideoFrames
 
 pub fn create_default_stabilization_config() -> VideoStabilizationConfig
 
+pub fn create_transition_frame(@types.Image, @types.Image, Double, TransitionParams) -> @types.Image
+
 pub fn decode_frame_inter(EncodedFrame, @types.Image) -> @types.Image
 
 pub fn decode_frame_intra(EncodedFrame) -> @types.Image
 
 pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 
+pub fn default_transition_params(TransitionType) -> TransitionParams
+
 pub fn default_video_codec_params() -> VideoCodecParams
+
+pub fn default_video_filter_params(VideoFilterType) -> VideoFilterParams
 
 pub fn dequantize(Array[Int32], Int32) -> Array[Int32]
 
@@ -38,6 +52,8 @@ pub fn encode_frame_intra(@types.Image, VideoCodecParams) -> EncodedFrame
 pub fn encode_video(Array[@types.Image], VideoCodecParams) -> EncodedVideo
 
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
+
+pub fn generate_transition(@types.Image, @types.Image, TransitionParams) -> Array[@types.Image]
 
 pub fn generate_video_summary(Array[@types.Image], Double) -> VideoSummary
 
@@ -58,6 +74,8 @@ pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@
 pub fn update_tracking(TrackedObject, @types.Image) -> TrackedObject
 
 pub fn video_concat(VideoFrames, VideoFrames) -> VideoFrames
+
+pub fn video_effects_pipeline(Array[@types.Image], VideoFilterParams?, TransitionParams?) -> Array[@types.Image]
 
 pub fn video_fade_in(VideoFrames, duration_frames? : Int32) -> VideoFrames
 
@@ -199,6 +217,26 @@ pub(all) struct TrackingResult {
   num_objects : Int32
 }
 
+pub(all) struct TransitionParams {
+  transition_type : TransitionType
+  duration : Int32
+  direction : Int32
+} derive(Eq, @debug.Debug)
+pub fn TransitionParams::equal(Self, Self) -> Bool
+pub fn TransitionParams::not_equal(Self, Self) -> Bool
+pub fn TransitionParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TransitionType {
+  Fade
+  Dissolve
+  Slide
+  Wipe
+  Push
+} derive(Eq, @debug.Debug)
+pub fn TransitionType::equal(Self, Self) -> Bool
+pub fn TransitionType::not_equal(Self, Self) -> Bool
+pub fn TransitionType::to_repr(Self) -> @debug.Repr
+
 pub(all) struct VideoCodecParams {
   qp : Int32
   block_size : Int32
@@ -208,6 +246,26 @@ pub(all) struct VideoCodecParams {
 pub fn VideoCodecParams::equal(Self, Self) -> Bool
 pub fn VideoCodecParams::not_equal(Self, Self) -> Bool
 pub fn VideoCodecParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VideoFilterParams {
+  filter_type : VideoFilterType
+  intensity : Double
+} derive(Eq, @debug.Debug)
+pub fn VideoFilterParams::equal(Self, Self) -> Bool
+pub fn VideoFilterParams::not_equal(Self, Self) -> Bool
+pub fn VideoFilterParams::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VideoFilterType {
+  Blur
+  Sharpen
+  Vintage
+  Grayscale
+  Vignette
+  Sepia
+} derive(Eq, @debug.Debug)
+pub fn VideoFilterType::equal(Self, Self) -> Bool
+pub fn VideoFilterType::not_equal(Self, Self) -> Bool
+pub fn VideoFilterType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VideoFrames {
   frames : Array[@types.Image]

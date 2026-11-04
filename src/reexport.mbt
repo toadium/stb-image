@@ -18831,3 +18831,95 @@ pub fn compute_compression_ratio(
 ) -> Double {
   @video.compute_compression_ratio(original, encoded)
 }
+// v393.0.0 视频特效 re-export
+
+///|
+pub type VideoFilterType = @video.VideoFilterType
+
+///|
+pub type TransitionType = @video.TransitionType
+
+///|
+pub type VideoFilterParams = @video.VideoFilterParams
+
+///|
+pub type TransitionParams = @video.TransitionParams
+
+///|
+pub fn default_video_filter_params(
+  filter_type : VideoFilterType,
+) -> VideoFilterParams {
+  @video.default_video_filter_params(filter_type)
+}
+
+///|
+pub fn default_transition_params(
+  transition_type : TransitionType,
+) -> TransitionParams {
+  @video.default_transition_params(transition_type)
+}
+
+///|
+pub fn apply_video_filter(img : Image, params : VideoFilterParams) -> Image {
+  @video.apply_video_filter(img, params)
+}
+
+///|
+pub fn create_transition_frame(
+  from : Image,
+  to_ : Image,
+  progress : Double,
+  params : TransitionParams,
+) -> Image {
+  @video.create_transition_frame(from, to_, progress, params)
+}
+
+///|
+pub fn generate_transition(
+  from : Image,
+  to_ : Image,
+  params : TransitionParams,
+) -> Array[Image] {
+  @video.generate_transition(from, to_, params)
+}
+
+///|
+pub fn add_text_overlay(
+  img : Image,
+  x : Int32,
+  y : Int32,
+  width : Int32,
+  height : Int32,
+  color : Byte,
+) -> Image {
+  @video.add_text_overlay(img, x, y, width, height, color)
+}
+
+///|
+pub fn add_timestamp(
+  img : Image,
+  frame_index : Int32,
+  total_frames : Int32,
+) -> Image {
+  @video.add_timestamp(img, frame_index, total_frames)
+}
+
+///|
+pub fn add_watermark(
+  img : Image,
+  watermark : Image,
+  x : Int32,
+  y : Int32,
+  opacity : Double,
+) -> Image {
+  @video.add_watermark(img, watermark, x, y, opacity)
+}
+
+///|
+pub fn video_effects_pipeline(
+  frames : Array[Image],
+  filter_params : VideoFilterParams?,
+  transition_params : TransitionParams?,
+) -> Array[Image] {
+  @video.video_effects_pipeline(frames, filter_params, transition_params)
+}

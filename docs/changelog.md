@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v393.0.0 — 视频特效
+
+**2026-11-04** — 6种视频滤镜(模糊/锐化/复古/黑白/晕影/棕褐) + 5种转场(淡入淡出/溶解/滑动/擦除/推送) + 文本叠加/时间戳/水印 + 特效流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoFilterType`(6) / `TransitionType`(5) / `VideoFilterParams` / `TransitionParams` |
+| 新增函数 | `default_video_filter_params` / `default_transition_params` / `apply_video_filter` / `create_transition_frame` / `generate_transition` / `add_text_overlay` / `add_timestamp` / `add_watermark` / `video_effects_pipeline` |
+| 测试 | 15510×4（+20） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v392.0.0 — 视频编解码
 
 **2026-11-04** — 帧内编码(I帧)/帧间编码(P帧)/运动估计/游程编码/量化/视频编解码流水线。

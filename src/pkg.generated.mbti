@@ -97,7 +97,13 @@ pub fn add_noise_gaussian(@types.Image, Float, UInt32) -> @types.Image
 
 pub fn add_noise_salt_pepper(@types.Image, Float, UInt32) -> @types.Image
 
+pub fn add_text_overlay(@types.Image, Int32, Int32, Int32, Int32, Byte) -> @types.Image
+
+pub fn add_timestamp(@types.Image, Int32, Int32) -> @types.Image
+
 pub fn add_to_index_cbir(@retrieval.CBIRImageIndex, @retrieval.CBIRImageFeature) -> @retrieval.CBIRImageIndex
+
+pub fn add_watermark(@types.Image, @types.Image, Int32, Int32, Double) -> @types.Image
 
 pub fn adjacent_correlation(@types.Image, direction? : String) -> Double raise @types.LoadError
 
@@ -266,6 +272,8 @@ pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
 pub fn apply_translation_fe(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn apply_translation_ra(@types.Image, Int32, Int32) -> @types.Image
+
+pub fn apply_video_filter(@types.Image, @video.VideoFilterParams) -> @types.Image
 
 pub fn apply_warp(@types.Image, @cv_advanced.AffineMatrix) -> @types.Image
 
@@ -1077,6 +1085,8 @@ pub fn create_training_sample(@types.Image, Int32, String) -> @ocr.DLTrainingSam
 
 pub fn create_training_state() -> @ocr.TrainingState
 
+pub fn create_transition_frame(@types.Image, @types.Image, Double, @video.TransitionParams) -> @types.Image
+
 pub fn create_xmp_segment(@meta.XmpInfo) -> Bytes
 
 pub fn crop(@types.Image, Int32, Int32, Int32, Int32) -> @types.Image raise @types.LoadError
@@ -1207,7 +1217,11 @@ pub fn default_tile_config() -> @performance.TileConfig
 
 pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
 
+pub fn default_transition_params(@video.TransitionType) -> @video.TransitionParams
+
 pub fn default_video_codec_params() -> @video.VideoCodecParams
+
+pub fn default_video_filter_params(@video.VideoFilterType) -> @video.VideoFilterParams
 
 pub fn dehaze(@types.Image, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
@@ -2166,6 +2180,8 @@ pub fn generate_scene_graph_su(@types.Image, @scene_understanding.SceneUnderstan
 pub fn generate_training_progress_report(@ocr.TrainingState, @ocr.TrainingConfig) -> String
 
 pub fn generate_training_report(Array[@ocr.DLTrainingHistory], @ocr.DLCnnModelConfig) -> String
+
+pub fn generate_transition(@types.Image, @types.Image, @video.TransitionParams) -> Array[@types.Image]
 
 pub fn generate_video_summary(Array[@types.Image], Double) -> @video.VideoSummary
 
@@ -4563,6 +4579,8 @@ pub fn video_concat(@video.VideoFrames, @video.VideoFrames) -> @video.VideoFrame
 
 pub fn video_dequantize(Array[Int32], Int32) -> Array[Int32]
 
+pub fn video_effects_pipeline(Array[@types.Image], @video.VideoFilterParams?, @video.TransitionParams?) -> Array[@types.Image]
+
 pub fn video_fade_in(@video.VideoFrames, duration_frames? : Int32) -> @video.VideoFrames
 
 pub fn video_fade_out(@video.VideoFrames, duration_frames? : Int32) -> @video.VideoFrames
@@ -6314,6 +6332,10 @@ pub using @cv_advanced {type TransformerEncoder}
 
 pub using @cv_advanced {type TransformerLayerKind}
 
+pub using @video {type TransitionParams}
+
+pub using @video {type TransitionType}
+
 pub using @cv_advanced {type TrialResult}
 
 pub using @self_evolve {type TuneReport}
@@ -6347,6 +6369,10 @@ pub using @remote_sensing {type VegetationIndices}
 pub using @aoci {type VerifyResult}
 
 pub using @video {type VideoCodecParams}
+
+pub using @video {type VideoFilterParams}
+
+pub using @video {type VideoFilterType}
 
 pub using @video {type VideoFrames}
 
