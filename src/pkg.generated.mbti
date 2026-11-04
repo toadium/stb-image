@@ -771,6 +771,8 @@ pub fn compute_confusion_matrix(Array[Int32], Array[Int32], Int32) -> Array[Arra
 
 pub fn compute_correlation_filter(@types.Image, @cv_advanced.Track, Double) -> Double
 
+pub fn compute_crop_region(Int32, Int32, Double) -> (Int32, Int32, Int32, Int32)
+
 pub fn compute_depth_map(@cv_advanced.DisparityMap, Double, Double) -> @cv_advanced.DepthMap
 
 pub fn compute_depth_of_field(Double, Double, Double, Double) -> @cv_advanced.DepthOfFieldRange
@@ -880,6 +882,8 @@ pub fn compute_stats_16(@types.Image16) -> @util.ImageStats
 pub fn compute_stats_f(@types.ImageF) -> @util.ImageStatsF
 
 pub fn compute_surf_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.FloatDescriptor]
+
+pub fn compute_trajectory(Array[@types.Image]) -> Array[@video.TrajectoryPoint]
 
 pub fn connected_components(@types.Image, Int32) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
 
@@ -1226,6 +1230,8 @@ pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -
 pub fn default_search_config() -> @video.SearchConfig
 
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
+
+pub fn default_stabilization_config() -> @video.StabilizationConfig
 
 pub fn default_tile_config() -> @performance.TileConfig
 
@@ -4171,6 +4177,8 @@ pub fn smart_spacing_process(String, Array[String]) -> String
 
 pub fn smooth_depth_map(@cv_advanced.DepthMap, Int32) -> @cv_advanced.DepthMap
 
+pub fn smooth_trajectory(Array[@video.TrajectoryPoint], @video.StabilizationConfig) -> Array[@video.TrajectoryPoint]
+
 pub fn soft_targets(Array[Double], Double) -> Array[Double]
 
 pub fn softmax(Array[Double]) -> Array[Double]
@@ -4227,7 +4235,13 @@ pub fn st_subclip(@spatiotemporal.TImage, Float, Float) -> @spatiotemporal.TImag
 
 pub fn st_within(@spatiotemporal.TInterval, @spatiotemporal.TInterval) -> Bool
 
+pub fn stabilization_score(Array[@video.TrajectoryPoint], Array[@video.TrajectoryPoint]) -> Double
+
+pub fn stabilize_frame(@types.Image, @video.TrajectoryPoint, @video.TrajectoryPoint) -> @types.Image
+
 pub fn stabilize_video(Array[@types.Image], @video.VideoStabilizationConfig) -> Array[@types.Image]
+
+pub fn stabilize_video_sequence(Array[@types.Image], @video.StabilizationConfig) -> @video.StabilizationResult
 
 pub fn standardize_features(Array[Double]) -> Array[Double] raise @types.LoadError
 
@@ -6214,6 +6228,12 @@ pub using @remote_sensing {type SpectralSignature}
 
 pub using @ocr {type SplitPoint}
 
+pub using @video {type StabilizationConfig}
+
+pub using @video {type StabilizationMethod}
+
+pub using @video {type StabilizationResult}
+
 pub using @cv_advanced {type StainSeparation}
 
 pub using @intelligent_vision {type StarDetectionResult as StarDetectionResultIV}
@@ -6373,6 +6393,10 @@ pub using @ocr {type TrainingMetrics}
 pub using @ocr {type TrainingSample}
 
 pub using @ocr {type TrainingState}
+
+pub using @video {type TrajectoryPoint}
+
+pub using @video {type TrajectorySmoothing}
 
 pub using @video {type TranscodeParams}
 

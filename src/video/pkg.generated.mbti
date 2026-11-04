@@ -23,6 +23,8 @@ pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
 
 pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
 
+pub fn compute_crop_region(Int32, Int32, Double) -> (Int32, Int32, Int32, Int32)
+
 pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
@@ -32,6 +34,8 @@ pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[M
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, search_range? : Int32) -> OpticalFlowField
+
+pub fn compute_trajectory(Array[@types.Image]) -> Array[TrajectoryPoint]
 
 pub fn create_animation(Array[@types.Image], fps? : Double) -> VideoFrames
 
@@ -48,6 +52,8 @@ pub fn decode_frame_intra(EncodedFrame) -> @types.Image
 pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 
 pub fn default_search_config() -> SearchConfig
+
+pub fn default_stabilization_config() -> StabilizationConfig
 
 pub fn default_transcode_params() -> TranscodeParams
 
@@ -107,7 +113,15 @@ pub fn rle_encode(Array[Int32]) -> Bytes
 
 pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
 
+pub fn smooth_trajectory(Array[TrajectoryPoint], StabilizationConfig) -> Array[TrajectoryPoint]
+
+pub fn stabilization_score(Array[TrajectoryPoint], Array[TrajectoryPoint]) -> Double
+
+pub fn stabilize_frame(@types.Image, TrajectoryPoint, TrajectoryPoint) -> @types.Image
+
 pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@types.Image]
+
+pub fn stabilize_video_sequence(Array[@types.Image], StabilizationConfig) -> StabilizationResult
 
 pub fn transcode_compression_ratio(Int32, Int32) -> Double
 
@@ -282,6 +296,38 @@ pub fn SearchConfig::equal(Self, Self) -> Bool
 pub fn SearchConfig::not_equal(Self, Self) -> Bool
 pub fn SearchConfig::to_repr(Self) -> @debug.Repr
 
+pub(all) struct StabilizationConfig {
+  stab_method : StabilizationMethod
+  smoothing : TrajectorySmoothing
+  smoothing_radius : Int32
+  crop_margin : Double
+} derive(Eq, @debug.Debug)
+pub fn StabilizationConfig::equal(Self, Self) -> Bool
+pub fn StabilizationConfig::not_equal(Self, Self) -> Bool
+pub fn StabilizationConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum StabilizationMethod {
+  MotionModel
+  Affine
+  Perspective
+} derive(Eq, @debug.Debug)
+pub fn StabilizationMethod::equal(Self, Self) -> Bool
+pub fn StabilizationMethod::not_equal(Self, Self) -> Bool
+pub fn StabilizationMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct StabilizationResult {
+  frames : Array[@types.Image]
+  trajectory : Array[TrajectoryPoint]
+  smoothed_trajectory : Array[TrajectoryPoint]
+  crop_x : Int32
+  crop_y : Int32
+  crop_width : Int32
+  crop_height : Int32
+} derive(Eq, @debug.Debug)
+pub fn StabilizationResult::equal(Self, Self) -> Bool
+pub fn StabilizationResult::not_equal(Self, Self) -> Bool
+pub fn StabilizationResult::to_repr(Self) -> @debug.Repr
+
 pub(all) struct SubpixelMotionVector {
   dx : Double
   dy : Double
@@ -316,6 +362,24 @@ pub(all) struct TrackingResult {
   tracking_time_ms : Double
   num_objects : Int32
 }
+
+pub(all) struct TrajectoryPoint {
+  x : Double
+  y : Double
+  frame_index : Int32
+} derive(Eq, @debug.Debug)
+pub fn TrajectoryPoint::equal(Self, Self) -> Bool
+pub fn TrajectoryPoint::not_equal(Self, Self) -> Bool
+pub fn TrajectoryPoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TrajectorySmoothing {
+  Gaussian
+  MovingAverage
+  MedianFilter
+} derive(Eq, @debug.Debug)
+pub fn TrajectorySmoothing::equal(Self, Self) -> Bool
+pub fn TrajectorySmoothing::not_equal(Self, Self) -> Bool
+pub fn TrajectorySmoothing::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TranscodeParams {
   target_format : VideoFormat

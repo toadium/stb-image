@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v396.0.0 — 视频稳定
+
+**2026-11-04** — 3种稳定方法(运动模型/仿射/透视) + 3种平滑(高斯/移动平均/中值) + 轨迹计算 + 裁剪补偿 + 稳定评分。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `StabilizationMethod`(3) / `TrajectorySmoothing`(3) / `TrajectoryPoint` / `StabilizationConfig` / `StabilizationResult` |
+| 新增函数 | `default_stabilization_config` / `compute_trajectory` / `smooth_trajectory` / `stabilize_frame` / `compute_crop_region` / `stabilize_video_sequence` / `stabilization_score` |
+| 测试 | 15573×4（+18） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v395.0.0 — 运动估计
 
 **2026-11-04** — 4种搜索方法(全搜索/菱形/六边形/三步) + 亚像素精化 + 运动场计算 + 运动补偿。

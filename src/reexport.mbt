@@ -19150,3 +19150,71 @@ pub fn average_motion_sad(motion_field : Array[MotionVector]) -> Double {
 pub fn zero_motion_ratio(motion_field : Array[MotionVector]) -> Double {
   @video.zero_motion_ratio(motion_field)
 }
+// v396.0.0 视频稳定 re-export
+
+///|
+pub type StabilizationMethod = @video.StabilizationMethod
+
+///|
+pub type TrajectorySmoothing = @video.TrajectorySmoothing
+
+///|
+pub type TrajectoryPoint = @video.TrajectoryPoint
+
+///|
+pub type StabilizationConfig = @video.StabilizationConfig
+
+///|
+pub type StabilizationResult = @video.StabilizationResult
+
+///|
+pub fn default_stabilization_config() -> StabilizationConfig {
+  @video.default_stabilization_config()
+}
+
+///|
+pub fn compute_trajectory(frames : Array[Image]) -> Array[TrajectoryPoint] {
+  @video.compute_trajectory(frames)
+}
+
+///|
+pub fn smooth_trajectory(
+  trajectory : Array[TrajectoryPoint],
+  config : StabilizationConfig,
+) -> Array[TrajectoryPoint] {
+  @video.smooth_trajectory(trajectory, config)
+}
+
+///|
+pub fn stabilize_frame(
+  img : Image,
+  original_point : TrajectoryPoint,
+  smoothed_point : TrajectoryPoint,
+) -> Image {
+  @video.stabilize_frame(img, original_point, smoothed_point)
+}
+
+///|
+pub fn compute_crop_region(
+  width : Int32,
+  height : Int32,
+  margin : Double,
+) -> (Int32, Int32, Int32, Int32) {
+  @video.compute_crop_region(width, height, margin)
+}
+
+///|
+pub fn stabilize_video_sequence(
+  frames : Array[Image],
+  config : StabilizationConfig,
+) -> StabilizationResult {
+  @video.stabilize_video_sequence(frames, config)
+}
+
+///|
+pub fn stabilization_score(
+  original_trajectory : Array[TrajectoryPoint],
+  smoothed_trajectory : Array[TrajectoryPoint],
+) -> Double {
+  @video.stabilization_score(original_trajectory, smoothed_trajectory)
+}
