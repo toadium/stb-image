@@ -751,6 +751,8 @@ pub fn compute_circle_of_confusion(Double, Double, Double, Double) -> Double
 
 pub fn compute_client_drift(Array[Double], Array[Double]) -> Double
 
+pub fn compute_compression_ratio(Array[@types.Image], @video.EncodedVideo) -> Double
+
 pub fn compute_confusion_matrix(Array[Int32], Array[Int32], Int32) -> Array[Array[Int32]]
 
 pub fn compute_correlation_filter(@types.Image, @cv_advanced.Track, Double) -> Double
@@ -812,6 +814,8 @@ pub fn compute_mae(@types.Image, @types.Image) -> Double
 pub fn compute_mertens_weights(@types.Image, @cv_advanced.ExposureFusionParams) -> Array[Double]
 
 pub fn compute_motion_energy(@cv_advanced.MotionMask) -> Double
+
+pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_mse(@types.Image, @types.Image) -> Double
 
@@ -1149,6 +1153,10 @@ pub fn decode_cur(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_ean13(@types.Image, config? : @barcode.BarcodeConfig) -> @barcode.BarcodeResult? raise @types.LoadError
 
+pub fn decode_frame_inter(@video.EncodedFrame, @types.Image) -> @types.Image
+
+pub fn decode_frame_intra(@video.EncodedFrame) -> @types.Image
+
 pub fn decode_icns(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_ico(Bytes) -> @types.Image raise @types.LoadError
@@ -1170,6 +1178,8 @@ pub fn decode_stream_chunked(Bytes, Int32, (Int32, @types.Image) -> Unit) -> @li
 pub fn decode_tiff(Bytes) -> @types.Image raise @types.LoadError
 
 pub fn decode_upca(@types.Image) -> @barcode.BarcodeResult? raise @types.LoadError
+
+pub fn decode_video(@video.EncodedVideo) -> Array[@types.Image]
 
 pub fn decode_vp8_frame(Bytes, Int32) -> @types.Image raise @types.LoadError
 
@@ -1196,6 +1206,8 @@ pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.
 pub fn default_tile_config() -> @performance.TileConfig
 
 pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
+
+pub fn default_video_codec_params() -> @video.VideoCodecParams
 
 pub fn dehaze(@types.Image, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
@@ -1547,6 +1559,10 @@ pub fn encode_apng(@types.PngAnimation) -> Bytes raise @types.LoadError
 
 pub fn encode_cur(@types.Image) -> Bytes
 
+pub fn encode_frame_inter(@types.Image, @types.Image, @video.VideoCodecParams) -> @video.EncodedFrame
+
+pub fn encode_frame_intra(@types.Image, @video.VideoCodecParams) -> @video.EncodedFrame
+
 pub fn encode_gif(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_gif_animation(@types.GifAnimation) -> Bytes raise @types.LoadError
@@ -1566,6 +1582,8 @@ pub fn encode_ppm(@types.Image) -> Bytes
 pub fn encode_qoi(@types.Image) -> Bytes raise @types.LoadError
 
 pub fn encode_tiff(@types.Image) -> Bytes raise @types.LoadError
+
+pub fn encode_video(Array[@types.Image], @video.VideoCodecParams) -> @video.EncodedVideo
 
 pub fn encode_webp_lossy(@types.Image, quality? : Int32) -> Bytes raise @types.LoadError
 
@@ -3559,6 +3577,8 @@ pub fn quality_report_dimension_count(@self_evolve.QualityReport) -> Int32
 
 pub fn quality_report_is_passing(@self_evolve.QualityReport) -> Bool
 
+pub fn quantize(Array[Int32], Int32) -> Array[Int32]
+
 pub fn quantize_image_cp(@types.Image, Int32) -> @types.Image raise @types.LoadError
 
 pub fn quantize_int4(Array[Double], @cv_advanced.QuantizationConfig) -> @cv_advanced.QuantizedTensor
@@ -3840,6 +3860,10 @@ pub fn rgb_to_ycbcr(Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.L
 pub fn rgb_to_ycbcr_16(Int32, Int32, Int32) -> (Int32, Int32, Int32) raise @types.LoadError
 
 pub fn rgb_to_ycbcr_f(Float, Float, Float) -> (Float, Float, Float) raise @types.LoadError
+
+pub fn rle_decode(Bytes) -> Array[Int32]
+
+pub fn rle_encode(Array[Int32]) -> Bytes
 
 pub fn robustness_report_to_string(@ocr.RobustnessReport) -> String
 
@@ -4537,6 +4561,8 @@ pub fn vibe_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.B
 
 pub fn video_concat(@video.VideoFrames, @video.VideoFrames) -> @video.VideoFrames
 
+pub fn video_dequantize(Array[Int32], Int32) -> Array[Int32]
+
 pub fn video_fade_in(@video.VideoFrames, duration_frames? : Int32) -> @video.VideoFrames
 
 pub fn video_fade_out(@video.VideoFrames, duration_frames? : Int32) -> @video.VideoFrames
@@ -5112,6 +5138,10 @@ pub using @forensics_enhanced {type ElaAnalysisResult}
 
 pub using @cv_advanced {type ElastographyResult}
 
+pub using @video {type EncodedFrame}
+
+pub using @video {type EncodedVideo}
+
 pub using @encryption {type EncryptionAlgorithm}
 
 pub using @encryption {type EncryptionConfig}
@@ -5243,6 +5273,8 @@ pub using @cv_advanced {type FlowParams}
 pub using @feature {type FlowResult}
 
 pub using @cv_advanced {type ForegroundMask}
+
+pub using @video {type FrameType}
 
 pub using @frequency {type FreqFilterType}
 
@@ -6313,6 +6345,8 @@ pub using @fieldimg {type VectorField}
 pub using @remote_sensing {type VegetationIndices}
 
 pub using @aoci {type VerifyResult}
+
+pub using @video {type VideoCodecParams}
 
 pub using @video {type VideoFrames}
 

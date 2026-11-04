@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v392.0.0 — 视频编解码
+
+**2026-11-04** — 帧内编码(I帧)/帧间编码(P帧)/运动估计/游程编码/量化/视频编解码流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `FrameType`(3) / `VideoCodecParams` / `EncodedFrame` / `EncodedVideo` |
+| 新增函数 | `default_video_codec_params` / `rle_encode` / `rle_decode` / `quantize` / `dequantize` / `encode_frame_intra` / `decode_frame_intra` / `compute_motion_vectors` / `encode_frame_inter` / `decode_frame_inter` / `encode_video` / `decode_video` / `compute_compression_ratio` |
+| 测试 | 15490×4（+15） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v391.0.0 — Phase 16 总结
 
 **2026-11-04** — 计算摄影大扩展完成，共 15 个版本（v376-v390）。

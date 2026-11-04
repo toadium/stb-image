@@ -18736,3 +18736,98 @@ pub fn perspective_correction_pipeline(
     img, src_corners, out_width, out_height,
   )
 }
+// v392.0.0 视频编解码 re-export
+
+///|
+pub type FrameType = @video.FrameType
+
+///|
+pub type VideoCodecParams = @video.VideoCodecParams
+
+///|
+pub type EncodedFrame = @video.EncodedFrame
+
+///|
+pub type EncodedVideo = @video.EncodedVideo
+
+///|
+pub fn default_video_codec_params() -> VideoCodecParams {
+  @video.default_video_codec_params()
+}
+
+///|
+pub fn rle_encode(data : Array[Int32]) -> Bytes {
+  @video.rle_encode(data)
+}
+
+///|
+pub fn rle_decode(data : Bytes) -> Array[Int32] {
+  @video.rle_decode(data)
+}
+
+///|
+pub fn quantize(values : Array[Int32], qp : Int32) -> Array[Int32] {
+  @video.quantize(values, qp)
+}
+
+///|
+pub fn video_dequantize(values : Array[Int32], qp : Int32) -> Array[Int32] {
+  @video.dequantize(values, qp)
+}
+
+///|
+pub fn encode_frame_intra(
+  img : Image,
+  params : VideoCodecParams,
+) -> EncodedFrame {
+  @video.encode_frame_intra(img, params)
+}
+
+///|
+pub fn decode_frame_intra(frame : EncodedFrame) -> Image {
+  @video.decode_frame_intra(frame)
+}
+
+///|
+pub fn compute_motion_vectors(
+  current : Image,
+  reference : Image,
+  search_range : Int32,
+) -> Array[Int32] {
+  @video.compute_motion_vectors(current, reference, search_range)
+}
+
+///|
+pub fn encode_frame_inter(
+  current : Image,
+  reference : Image,
+  params : VideoCodecParams,
+) -> EncodedFrame {
+  @video.encode_frame_inter(current, reference, params)
+}
+
+///|
+pub fn decode_frame_inter(frame : EncodedFrame, reference : Image) -> Image {
+  @video.decode_frame_inter(frame, reference)
+}
+
+///|
+pub fn encode_video(
+  frames : Array[Image],
+  params : VideoCodecParams,
+) -> EncodedVideo {
+  @video.encode_video(frames, params)
+}
+
+///|
+pub fn decode_video(encoded : EncodedVideo) -> Array[Image] {
+  @video.decode_video(encoded)
+}
+
+///|
+pub fn compute_compression_ratio(
+  original : Array[Image],
+  encoded : EncodedVideo,
+) -> Double {
+  @video.compute_compression_ratio(original, encoded)
+}

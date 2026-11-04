@@ -2,11 +2,16 @@
 package "walkzzz/image/src/video"
 
 import {
+  "moonbitlang/core/debug",
   "walkzzz/image/src/types",
 }
 
 // Values
+pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
+
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
+
+pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, search_range? : Int32) -> OpticalFlowField
 
@@ -14,7 +19,23 @@ pub fn create_animation(Array[@types.Image], fps? : Double) -> VideoFrames
 
 pub fn create_default_stabilization_config() -> VideoStabilizationConfig
 
+pub fn decode_frame_inter(EncodedFrame, @types.Image) -> @types.Image
+
+pub fn decode_frame_intra(EncodedFrame) -> @types.Image
+
+pub fn decode_video(EncodedVideo) -> Array[@types.Image]
+
+pub fn default_video_codec_params() -> VideoCodecParams
+
+pub fn dequantize(Array[Int32], Int32) -> Array[Int32]
+
 pub fn detect_scene_change(@types.Image, @types.Image, threshold? : Double) -> (Bool, Double)
+
+pub fn encode_frame_inter(@types.Image, @types.Image, VideoCodecParams) -> EncodedFrame
+
+pub fn encode_frame_intra(@types.Image, VideoCodecParams) -> EncodedFrame
+
+pub fn encode_video(Array[@types.Image], VideoCodecParams) -> EncodedVideo
 
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
 
@@ -24,7 +45,13 @@ pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> 
 
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
 
+pub fn quantize(Array[Int32], Int32) -> Array[Int32]
+
 pub fn recognize_action(Array[@types.Image], Int32, Int32) -> ActionRecognitionResult
+
+pub fn rle_decode(Bytes) -> Array[Int32]
+
+pub fn rle_encode(Array[Int32]) -> Bytes
 
 pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@types.Image]
 
@@ -79,6 +106,38 @@ pub(all) enum ActionType {
 } derive(Eq)
 pub fn ActionType::equal(Self, Self) -> Bool
 pub fn ActionType::not_equal(Self, Self) -> Bool
+
+pub(all) struct EncodedFrame {
+  frame_type : FrameType
+  data : Bytes
+  motion_vectors : Array[Int32]
+  width : Int32
+  height : Int32
+  channels : Int32
+} derive(Eq, @debug.Debug)
+pub fn EncodedFrame::equal(Self, Self) -> Bool
+pub fn EncodedFrame::not_equal(Self, Self) -> Bool
+pub fn EncodedFrame::to_repr(Self) -> @debug.Repr
+
+pub(all) struct EncodedVideo {
+  frames : Array[EncodedFrame]
+  params : VideoCodecParams
+  width : Int32
+  height : Int32
+  channels : Int32
+} derive(Eq, @debug.Debug)
+pub fn EncodedVideo::equal(Self, Self) -> Bool
+pub fn EncodedVideo::not_equal(Self, Self) -> Bool
+pub fn EncodedVideo::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FrameType {
+  IFrame
+  PFrame
+  BFrame
+} derive(Eq, @debug.Debug)
+pub fn FrameType::equal(Self, Self) -> Bool
+pub fn FrameType::not_equal(Self, Self) -> Bool
+pub fn FrameType::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Keyframe {
   frame_index : Int32
@@ -139,6 +198,16 @@ pub(all) struct TrackingResult {
   tracking_time_ms : Double
   num_objects : Int32
 }
+
+pub(all) struct VideoCodecParams {
+  qp : Int32
+  block_size : Int32
+  search_range : Int32
+  iframe_interval : Int32
+} derive(Eq, @debug.Debug)
+pub fn VideoCodecParams::equal(Self, Self) -> Bool
+pub fn VideoCodecParams::not_equal(Self, Self) -> Bool
+pub fn VideoCodecParams::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VideoFrames {
   frames : Array[@types.Image]
