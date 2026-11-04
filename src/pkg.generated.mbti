@@ -267,6 +267,8 @@ pub fn apply_homography(@stitch.Homography, Double, Double) -> (Double, Double)
 
 pub fn apply_lut(@types.Image, Array[Byte]) -> @types.Image raise @types.LoadError
 
+pub fn apply_motion_blur(@types.Image, Double, Int32) -> @types.Image
+
 pub fn apply_perspective(@cv_advanced.PerspectiveTransform, @cv_advanced.Point2D) -> @cv_advanced.Point2D
 
 pub fn apply_pruning_mask(Array[Double], Array[Bool]) -> Array[Double]
@@ -821,6 +823,8 @@ pub fn compute_horn_schunck(@types.Image, @types.Image, @cv_advanced.FlowParams)
 
 pub fn compute_image_text_similarity_vlm(@types.Image, String, @vlm_multimodal.VLMConfig) -> @vlm_multimodal.VisionTextEmbedding
 
+pub fn compute_interpolated_count(Int32, Int32) -> Int32
+
 pub fn compute_iou(@cv_advanced.Track, @cv_advanced.Track) -> Double
 
 pub fn compute_kl_divergence(Array[Double], Array[Double]) -> Double
@@ -1230,6 +1234,8 @@ pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -
 pub fn default_search_config() -> @video.SearchConfig
 
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
+
+pub fn default_slow_motion_config() -> @video.SlowMotionConfig
 
 pub fn default_stabilization_config() -> @video.StabilizationConfig
 
@@ -2209,6 +2215,8 @@ pub fn generate_sample_lightfield_ci(@types.Image, @computational_imaging.LightF
 
 pub fn generate_scene_graph_su(@types.Image, @scene_understanding.SceneUnderstandingConfig) -> @scene_understanding.SceneGraph
 
+pub fn generate_slow_motion(Array[@types.Image], @video.SlowMotionConfig) -> Array[@types.Image]
+
 pub fn generate_training_progress_report(@ocr.TrainingState, @ocr.TrainingConfig) -> String
 
 pub fn generate_training_report(Array[@ocr.DLTrainingHistory], @ocr.DLCnnModelConfig) -> String
@@ -2639,7 +2647,15 @@ pub fn intent_matches(@agent_kit.Intent, String) -> Bool
 
 pub fn intent_to_string(@agent_kit.Intent) -> String
 
+pub fn interpolate_frame_blend(@types.Image, @types.Image, Double) -> @types.Image
+
+pub fn interpolate_frame_motion_compensation(@types.Image, @types.Image, Double) -> @types.Image
+
+pub fn interpolate_frame_optical_flow(@types.Image, @types.Image, Double) -> @types.Image
+
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
+
+pub fn interpolate_frames_slow_motion(@types.Image, @types.Image, Double, @video.SlowMotionMethod) -> @types.Image
 
 pub fn invert(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -3084,6 +3100,8 @@ pub fn morph_tophat(@types.Image) -> @types.Image
 pub fn morph_tophat_16(@types.Image16) -> @types.Image16
 
 pub fn morph_tophat_f(@types.ImageF) -> @types.ImageF
+
+pub fn motion_blur_sequence(Array[@types.Image], @video.SlowMotionConfig) -> Array[@types.Image]
 
 pub fn motion_compensation(@types.Image, Array[@video.MotionVector], Int32) -> @types.Image
 
@@ -4166,6 +4184,8 @@ pub fn slic(@types.Image, Int32, Int32, Int32) -> @segment.SuperpixelResult rais
 pub fn slic_16(@types.Image16, Int32, Int32, Int32) -> @segment.SuperpixelResult raise @types.LoadError
 
 pub fn slic_f(@types.ImageF, Int32, Int32, Int32) -> @segment.SuperpixelResult raise @types.LoadError
+
+pub fn slow_motion_pipeline(Array[@types.Image], @video.SlowMotionConfig) -> Array[@types.Image]
 
 pub fn smart_priority_report_top_priority(@self_evolve.SmartPriorityReport, Int32) -> Array[@self_evolve.SmartScore]
 
@@ -6211,6 +6231,10 @@ pub using @cv_advanced {type SlamKeyFrame}
 pub using @cv_advanced {type SlamMapPoint}
 
 pub using @cv_advanced {type SlamPose}
+
+pub using @video {type SlowMotionConfig}
+
+pub using @video {type SlowMotionMethod}
 
 pub using @self_evolve {type SmartPriorityReport}
 

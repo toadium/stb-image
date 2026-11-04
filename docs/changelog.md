@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v397.0.0 — 慢动作
+
+**2026-11-04** — 3种插帧方法(光流/帧混合/运动补偿) + 3种运动模糊(水平/垂直/径向) + 慢动作流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `SlowMotionMethod`(3) / `SlowMotionConfig` |
+| 新增函数 | `default_slow_motion_config` / `interpolate_frame_blend` / `interpolate_frame_optical_flow` / `interpolate_frame_motion_compensation` / `interpolate_frames_slow_motion` / `generate_slow_motion` / `apply_motion_blur` / `motion_blur_sequence` / `slow_motion_pipeline` / `compute_interpolated_count` |
+| 测试 | 15593×4（+20） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v396.0.0 — 视频稳定
 
 **2026-11-04** — 3种稳定方法(运动模型/仿射/透视) + 3种平滑(高斯/移动平均/中值) + 轨迹计算 + 裁剪补偿 + 稳定评分。

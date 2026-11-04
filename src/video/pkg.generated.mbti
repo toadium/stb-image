@@ -15,6 +15,8 @@ pub fn add_watermark(@types.Image, @types.Image, Int32, Int32, Double) -> @types
 
 pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image]
 
+pub fn apply_motion_blur(@types.Image, Double, Int32) -> @types.Image
+
 pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
 
 pub fn average_motion_sad(Array[MotionVector]) -> Double
@@ -28,6 +30,8 @@ pub fn compute_crop_region(Int32, Int32, Double) -> (Int32, Int32, Int32, Int32)
 pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
+
+pub fn compute_interpolated_count(Int32, Int32) -> Int32
 
 pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[MotionVector]
 
@@ -52,6 +56,8 @@ pub fn decode_frame_intra(EncodedFrame) -> @types.Image
 pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 
 pub fn default_search_config() -> SearchConfig
+
+pub fn default_slow_motion_config() -> SlowMotionConfig
 
 pub fn default_stabilization_config() -> StabilizationConfig
 
@@ -85,13 +91,25 @@ pub fn estimate_quality(Int32, Int32) -> Double
 
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
 
+pub fn generate_slow_motion(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
+
 pub fn generate_transition(@types.Image, @types.Image, TransitionParams) -> Array[@types.Image]
 
 pub fn generate_video_summary(Array[@types.Image], Double) -> VideoSummary
 
 pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> TrackedObject
 
+pub fn interpolate_frame_blend(@types.Image, @types.Image, Double) -> @types.Image
+
+pub fn interpolate_frame_motion_compensation(@types.Image, @types.Image, Double) -> @types.Image
+
+pub fn interpolate_frame_optical_flow(@types.Image, @types.Image, Double) -> @types.Image
+
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
+
+pub fn interpolate_frames_slow_motion(@types.Image, @types.Image, Double, SlowMotionMethod) -> @types.Image
+
+pub fn motion_blur_sequence(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
 pub fn motion_compensation(@types.Image, Array[MotionVector], Int32) -> @types.Image
 
@@ -112,6 +130,8 @@ pub fn rle_decode(Bytes) -> Array[Int32]
 pub fn rle_encode(Array[Int32]) -> Bytes
 
 pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
+
+pub fn slow_motion_pipeline(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
 pub fn smooth_trajectory(Array[TrajectoryPoint], StabilizationConfig) -> Array[TrajectoryPoint]
 
@@ -295,6 +315,25 @@ pub(all) struct SearchConfig {
 pub fn SearchConfig::equal(Self, Self) -> Bool
 pub fn SearchConfig::not_equal(Self, Self) -> Bool
 pub fn SearchConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SlowMotionConfig {
+  sm_method : SlowMotionMethod
+  speed_factor : Int32
+  blur_amount : Double
+  blur_direction : Int32
+} derive(Eq, @debug.Debug)
+pub fn SlowMotionConfig::equal(Self, Self) -> Bool
+pub fn SlowMotionConfig::not_equal(Self, Self) -> Bool
+pub fn SlowMotionConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SlowMotionMethod {
+  OpticalFlow
+  FrameBlending
+  MotionCompensation
+} derive(Eq, @debug.Debug)
+pub fn SlowMotionMethod::equal(Self, Self) -> Bool
+pub fn SlowMotionMethod::not_equal(Self, Self) -> Bool
+pub fn SlowMotionMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct StabilizationConfig {
   stab_method : StabilizationMethod

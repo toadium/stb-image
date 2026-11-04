@@ -19218,3 +19218,93 @@ pub fn stabilization_score(
 ) -> Double {
   @video.stabilization_score(original_trajectory, smoothed_trajectory)
 }
+// v397.0.0 慢动作 re-export
+
+///|
+pub type SlowMotionMethod = @video.SlowMotionMethod
+
+///|
+pub type SlowMotionConfig = @video.SlowMotionConfig
+
+///|
+pub fn default_slow_motion_config() -> SlowMotionConfig {
+  @video.default_slow_motion_config()
+}
+
+///|
+pub fn interpolate_frame_blend(
+  from : Image,
+  to_ : Image,
+  alpha : Double,
+) -> Image {
+  @video.interpolate_frame_blend(from, to_, alpha)
+}
+
+///|
+pub fn interpolate_frame_optical_flow(
+  from : Image,
+  to_ : Image,
+  alpha : Double,
+) -> Image {
+  @video.interpolate_frame_optical_flow(from, to_, alpha)
+}
+
+///|
+pub fn interpolate_frame_motion_compensation(
+  from : Image,
+  to_ : Image,
+  alpha : Double,
+) -> Image {
+  @video.interpolate_frame_motion_compensation(from, to_, alpha)
+}
+
+///|
+pub fn interpolate_frames_slow_motion(
+  from : Image,
+  to_ : Image,
+  alpha : Double,
+  sm_method : SlowMotionMethod,
+) -> Image {
+  @video.interpolate_frames_slow_motion(from, to_, alpha, sm_method)
+}
+
+///|
+pub fn generate_slow_motion(
+  frames : Array[Image],
+  config : SlowMotionConfig,
+) -> Array[Image] {
+  @video.generate_slow_motion(frames, config)
+}
+
+///|
+pub fn apply_motion_blur(
+  img : Image,
+  amount : Double,
+  direction : Int32,
+) -> Image {
+  @video.apply_motion_blur(img, amount, direction)
+}
+
+///|
+pub fn motion_blur_sequence(
+  frames : Array[Image],
+  config : SlowMotionConfig,
+) -> Array[Image] {
+  @video.motion_blur_sequence(frames, config)
+}
+
+///|
+pub fn slow_motion_pipeline(
+  frames : Array[Image],
+  config : SlowMotionConfig,
+) -> Array[Image] {
+  @video.slow_motion_pipeline(frames, config)
+}
+
+///|
+pub fn compute_interpolated_count(
+  frame_count : Int32,
+  speed_factor : Int32,
+) -> Int32 {
+  @video.compute_interpolated_count(frame_count, speed_factor)
+}
