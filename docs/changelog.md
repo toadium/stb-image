@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v394.0.0 — 视频转码
+
+**2026-11-04** — 5种视频格式(Raw/MPEG/H264/VP9/AV1) + 3种分辨率调整(缩放/裁剪/填充) + 3种码率控制(CBR/VBR/CRF) + 帧率调整 + 转码流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoFormat`(5) / `ResolutionMode`(3) / `BitrateMode`(3) / `TranscodeParams` / `TranscodeResult` |
+| 新增函数 | `default_transcode_params` / `scale_image` / `crop_image` / `pad_image` / `resize_image` / `compute_bitrate` / `estimate_quality` / `transcode_video` / `adjust_framerate` / `compute_duration` / `transcode_compression_ratio` |
+| 测试 | 15537×4（+27） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v393.0.0 — 视频特效
 
 **2026-11-04** — 6种视频滤镜(模糊/锐化/复古/黑白/晕影/棕褐) + 5种转场(淡入淡出/溶解/滑动/擦除/推送) + 文本叠加/时间戳/水印 + 特效流水线。

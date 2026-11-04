@@ -119,6 +119,8 @@ pub fn adjust_contrast_16(@types.Image16, Float) -> @types.Image16 raise @types.
 
 pub fn adjust_contrast_f(@types.ImageF, Float) -> @types.ImageF raise @types.LoadError
 
+pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image]
+
 pub fn adjust_gamma(@types.Image, Float) -> @types.Image raise @types.LoadError
 
 pub fn adjust_gamma_16(@types.Image16, Float) -> @types.Image16 raise @types.LoadError
@@ -751,6 +753,8 @@ pub fn compute_alpha_cumprod(Array[Double]) -> Array[Double]
 
 pub fn compute_beta_schedule(@cv_advanced.DiffusionConfig) -> Array[Double]
 
+pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
+
 pub fn compute_blur_map(@cv_advanced.DepthMap, Double, Double, Double, Double) -> Array[Double]
 
 pub fn compute_brief_descriptors(@types.Image, Array[@cv_advanced.KeyPoint]) -> Array[@cv_advanced.BinaryDescriptor]
@@ -778,6 +782,8 @@ pub fn compute_disparity_block_matching(@types.Image, @types.Image, @cv_advanced
 pub fn compute_disparity_sgm(@types.Image, @types.Image, @cv_advanced.StereoParams) -> @cv_advanced.DisparityMap
 
 pub fn compute_distance(Array[Double], Array[Double], @ocr.DistanceMetric) -> Double raise @types.LoadError
+
+pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_ecc_alignment(@types.Image, @types.Image, @cv_advanced.RegistrationParams) -> @cv_advanced.RegistrationResult
 
@@ -1095,6 +1101,8 @@ pub fn crop_16(@types.Image16, Int32, Int32, Int32, Int32) -> @types.Image16 rai
 
 pub fn crop_f(@types.ImageF, Int32, Int32, Int32, Int32) -> @types.ImageF raise @types.LoadError
 
+pub fn crop_image(@types.Image, Int32, Int32) -> @types.Image
+
 pub fn cross_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.AttentionParams) -> Array[Double]
 
 pub fn cross_entropy_loss(Array[Double], Int32) -> Double
@@ -1216,6 +1224,8 @@ pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.
 pub fn default_tile_config() -> @performance.TileConfig
 
 pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
+
+pub fn default_transcode_params() -> @video.TranscodeParams
 
 pub fn default_transition_params(@video.TransitionType) -> @video.TransitionParams
 
@@ -1682,6 +1692,8 @@ pub fn estimate_homography_ransac(Array[@stitch.MatchPair], Array[@stitch.Featur
 pub fn estimate_memory_usage(Int32, Int32, Int32, Int32) -> @ocr.MemoryUsageStats
 
 pub fn estimate_normals_3d(@stereo3d.PointCloud3D, Double) -> Array[(Double, Double, Double)]
+
+pub fn estimate_quality(Int32, Int32) -> Double
 
 pub fn estimate_sharpness(@types.Image) -> Double
 
@@ -3305,6 +3317,8 @@ pub fn outpaint_image_ig(@types.Image, Int32, Int32, @image_generation.EditingCo
 
 pub fn pad(@types.Image, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError
 
+pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
+
 pub fn parse_cli_args(Array[String]) -> @ocr.CliConfig raise @types.LoadError
 
 pub fn parse_dicom_metadata(String, String, String, String, String, Int32, Int32, Int32) -> @cv_advanced.DicomMetadata
@@ -3829,6 +3843,8 @@ pub fn resize_16(@types.Image16, Int32, Int32) -> @types.Image16
 
 pub fn resize_f(@types.ImageF, Int32, Int32) -> @types.ImageF
 
+pub fn resize_image(@types.Image, Int32, Int32, @video.ResolutionMode) -> @types.Image
+
 pub fn resize_image_for_cnn(@types.Image, Int32, Int32) -> Array[Double] raise @types.LoadError
 
 pub fn resize_to_contain(@types.Image, Int32, Int32, Array[Byte]) -> @types.Image raise @types.LoadError
@@ -4000,6 +4016,8 @@ pub fn scalar_field_size(@fieldimg.ScalarField) -> Int32
 pub fn scalar_field_to_image(@fieldimg.ScalarField) -> @types.Image
 
 pub fn scalar_field_zeros(Int32, Int32) -> @fieldimg.ScalarField raise @types.LoadError
+
+pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn scaled_dot_product_attention(Array[Double], Array[Double], Array[Double], Double) -> Array[Double]
 
@@ -4417,6 +4435,10 @@ pub fn track_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, (Double,
 
 pub fn track_objects(Array[@cv_advanced.Track], Array[@cv_advanced.Track], Double) -> Array[@cv_advanced.Track]
 
+pub fn transcode_compression_ratio(Int32, Int32) -> Double
+
+pub fn transcode_video(Array[@types.Image], @video.TranscodeParams) -> @video.TranscodeResult
+
 pub fn transformer_decode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.TransformerConfig) -> @cv_advanced.TransformerDecoder
 
 pub fn transformer_encode(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.TransformerConfig) -> @cv_advanced.TransformerEncoder
@@ -4823,6 +4845,8 @@ pub using @ocr {type BatchTaskStatus}
 pub using @cv_advanced {type BayerPattern}
 
 pub using @cv_advanced {type BinaryDescriptor}
+
+pub using @video {type BitrateMode}
 
 pub using @codec {type BmpInfoExtended}
 
@@ -6032,6 +6056,8 @@ pub using @types {type ResizeEdge}
 
 pub using @types {type ResizeFilter}
 
+pub using @video {type ResolutionMode}
+
 pub using @image_retrieval_advanced {type RetrievalResult}
 
 pub using @intelligent_vision {type RobotVisionTask as RobotVisionTaskIV}
@@ -6318,6 +6344,10 @@ pub using @ocr {type TrainingSample}
 
 pub using @ocr {type TrainingState}
 
+pub using @video {type TranscodeParams}
+
+pub using @video {type TranscodeResult}
+
 pub using @fusion_enhanced {type TransformMatrix}
 
 pub using @registration_advanced {type TransformMatrix as TransformMatrixRA}
@@ -6373,6 +6403,8 @@ pub using @video {type VideoCodecParams}
 pub using @video {type VideoFilterParams}
 
 pub using @video {type VideoFilterType}
+
+pub using @video {type VideoFormat}
 
 pub using @video {type VideoFrames}
 

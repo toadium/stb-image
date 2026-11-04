@@ -18923,3 +18923,107 @@ pub fn video_effects_pipeline(
 ) -> Array[Image] {
   @video.video_effects_pipeline(frames, filter_params, transition_params)
 }
+// v394.0.0 视频转码 re-export
+
+///|
+pub type VideoFormat = @video.VideoFormat
+
+///|
+pub type ResolutionMode = @video.ResolutionMode
+
+///|
+pub type BitrateMode = @video.BitrateMode
+
+///|
+pub type TranscodeParams = @video.TranscodeParams
+
+///|
+pub type TranscodeResult = @video.TranscodeResult
+
+///|
+pub fn default_transcode_params() -> TranscodeParams {
+  @video.default_transcode_params()
+}
+
+///|
+pub fn scale_image(
+  img : Image,
+  target_width : Int32,
+  target_height : Int32,
+) -> Image {
+  @video.scale_image(img, target_width, target_height)
+}
+
+///|
+pub fn crop_image(
+  img : Image,
+  target_width : Int32,
+  target_height : Int32,
+) -> Image {
+  @video.crop_image(img, target_width, target_height)
+}
+
+///|
+pub fn pad_image(
+  img : Image,
+  target_width : Int32,
+  target_height : Int32,
+  fill : Byte,
+) -> Image {
+  @video.pad_image(img, target_width, target_height, fill)
+}
+
+///|
+pub fn resize_image(
+  img : Image,
+  target_width : Int32,
+  target_height : Int32,
+  mode : ResolutionMode,
+) -> Image {
+  @video.resize_image(img, target_width, target_height, mode)
+}
+
+///|
+pub fn compute_bitrate(
+  width : Int32,
+  height : Int32,
+  fps : Int32,
+  crf : Int32,
+) -> Int32 {
+  @video.compute_bitrate(width, height, fps, crf)
+}
+
+///|
+pub fn estimate_quality(crf : Int32, bitrate : Int32) -> Double {
+  @video.estimate_quality(crf, bitrate)
+}
+
+///|
+pub fn transcode_video(
+  frames : Array[Image],
+  params : TranscodeParams,
+) -> TranscodeResult {
+  @video.transcode_video(frames, params)
+}
+
+///|
+pub fn adjust_framerate(
+  frames : Array[Image],
+  source_fps : Int32,
+  target_fps : Int32,
+) -> Array[Image] {
+  @video.adjust_framerate(frames, source_fps, target_fps)
+}
+
+///|
+pub fn compute_duration(frame_count : Int32, fps : Int32) -> Double {
+  @video.compute_duration(frame_count, fps)
+}
+
+///|
+pub fn transcode_compression_ratio(
+  original_size : Int32,
+  transcoded_size : Int32,
+) -> Double {
+  @video.transcode_compression_ratio(original_size, transcoded_size)
+}

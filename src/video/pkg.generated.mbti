@@ -13,9 +13,15 @@ pub fn add_timestamp(@types.Image, Int32, Int32) -> @types.Image
 
 pub fn add_watermark(@types.Image, @types.Image, Int32, Int32, Double) -> @types.Image
 
+pub fn adjust_framerate(Array[@types.Image], Int32, Int32) -> Array[@types.Image]
+
 pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
 
+pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
+
 pub fn compute_compression_ratio(Array[@types.Image], EncodedVideo) -> Double
+
+pub fn compute_duration(Int32, Int32) -> Double
 
 pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double) -> Double
 
@@ -29,11 +35,15 @@ pub fn create_default_stabilization_config() -> VideoStabilizationConfig
 
 pub fn create_transition_frame(@types.Image, @types.Image, Double, TransitionParams) -> @types.Image
 
+pub fn crop_image(@types.Image, Int32, Int32) -> @types.Image
+
 pub fn decode_frame_inter(EncodedFrame, @types.Image) -> @types.Image
 
 pub fn decode_frame_intra(EncodedFrame) -> @types.Image
 
 pub fn decode_video(EncodedVideo) -> Array[@types.Image]
+
+pub fn default_transcode_params() -> TranscodeParams
 
 pub fn default_transition_params(TransitionType) -> TransitionParams
 
@@ -51,6 +61,8 @@ pub fn encode_frame_intra(@types.Image, VideoCodecParams) -> EncodedFrame
 
 pub fn encode_video(Array[@types.Image], VideoCodecParams) -> EncodedVideo
 
+pub fn estimate_quality(Int32, Int32) -> Double
+
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
 
 pub fn generate_transition(@types.Image, @types.Image, TransitionParams) -> Array[@types.Image]
@@ -61,15 +73,25 @@ pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> 
 
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
 
+pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
+
 pub fn quantize(Array[Int32], Int32) -> Array[Int32]
 
 pub fn recognize_action(Array[@types.Image], Int32, Int32) -> ActionRecognitionResult
+
+pub fn resize_image(@types.Image, Int32, Int32, ResolutionMode) -> @types.Image
 
 pub fn rle_decode(Bytes) -> Array[Int32]
 
 pub fn rle_encode(Array[Int32]) -> Bytes
 
+pub fn scale_image(@types.Image, Int32, Int32) -> @types.Image
+
 pub fn stabilize_video(Array[@types.Image], VideoStabilizationConfig) -> Array[@types.Image]
+
+pub fn transcode_compression_ratio(Int32, Int32) -> Double
+
+pub fn transcode_video(Array[@types.Image], TranscodeParams) -> TranscodeResult
 
 pub fn update_tracking(TrackedObject, @types.Image) -> TrackedObject
 
@@ -124,6 +146,15 @@ pub(all) enum ActionType {
 } derive(Eq)
 pub fn ActionType::equal(Self, Self) -> Bool
 pub fn ActionType::not_equal(Self, Self) -> Bool
+
+pub(all) enum BitrateMode {
+  CBR
+  VBR
+  CRF
+} derive(Eq, @debug.Debug)
+pub fn BitrateMode::equal(Self, Self) -> Bool
+pub fn BitrateMode::not_equal(Self, Self) -> Bool
+pub fn BitrateMode::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EncodedFrame {
   frame_type : FrameType
@@ -191,6 +222,15 @@ pub(all) struct OpticalFlowVector {
   angle : Double
 }
 
+pub(all) enum ResolutionMode {
+  Scale
+  Crop
+  Pad
+} derive(Eq, @debug.Debug)
+pub fn ResolutionMode::equal(Self, Self) -> Bool
+pub fn ResolutionMode::not_equal(Self, Self) -> Bool
+pub fn ResolutionMode::to_repr(Self) -> @debug.Repr
+
 pub(all) struct TrackedObject {
   id : Int32
   label : String
@@ -216,6 +256,33 @@ pub(all) struct TrackingResult {
   tracking_time_ms : Double
   num_objects : Int32
 }
+
+pub(all) struct TranscodeParams {
+  target_format : VideoFormat
+  target_width : Int32
+  target_height : Int32
+  resolution_mode : ResolutionMode
+  bitrate_mode : BitrateMode
+  target_bitrate : Int32
+  crf : Int32
+  fps : Int32
+} derive(Eq, @debug.Debug)
+pub fn TranscodeParams::equal(Self, Self) -> Bool
+pub fn TranscodeParams::not_equal(Self, Self) -> Bool
+pub fn TranscodeParams::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TranscodeResult {
+  frames : Array[@types.Image]
+  format : VideoFormat
+  width : Int32
+  height : Int32
+  bitrate : Int32
+  fps : Int32
+  size_bytes : Int32
+} derive(Eq, @debug.Debug)
+pub fn TranscodeResult::equal(Self, Self) -> Bool
+pub fn TranscodeResult::not_equal(Self, Self) -> Bool
+pub fn TranscodeResult::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TransitionParams {
   transition_type : TransitionType
@@ -266,6 +333,17 @@ pub(all) enum VideoFilterType {
 pub fn VideoFilterType::equal(Self, Self) -> Bool
 pub fn VideoFilterType::not_equal(Self, Self) -> Bool
 pub fn VideoFilterType::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VideoFormat {
+  Raw
+  MPEG
+  H264
+  VP9
+  AV1
+} derive(Eq, @debug.Debug)
+pub fn VideoFormat::equal(Self, Self) -> Bool
+pub fn VideoFormat::not_equal(Self, Self) -> Bool
+pub fn VideoFormat::to_repr(Self) -> @debug.Repr
 
 pub(all) struct VideoFrames {
   frames : Array[@types.Image]
