@@ -62,4 +62,5 @@ import {
   "walkzzz/image/src/cv_advanced",
   "walkzzz/image/src/point_cloud",
   "walkzzz/image/src/mesh",
+  "walkzzz/image/src/texture",
 }

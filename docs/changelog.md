@@ -6,6 +6,18 @@
 
 ## Phase 17｜视频处理大扩展（v392 ~ v405）
 
+### v408.0.0 — 纹理映射
+
+**2026-11-04** — 最近邻/双线性/三线性采样 + 平面/球面/柱面UV映射 + 顶点颜色烘焙 + 纹理流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增包 | `src/texture` |
+| 新增类型 | `TextureFilterMode`(3) / `TextureMappingMethod`(3) / `TextureCoord` / `Texture2D` / `TextureConfig` |
+| 新增函数 | `default_texture_config` / `create_texture` / `nearest_sample` / `bilinear_sample` / `sample_texture` / `planar_mapping` / `spherical_mapping` / `cylindrical_mapping` / `compute_uv_mapping` / `bake_texture` / `texture_pipeline` |
+| 测试 | 15773×4（+16） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v407.0.0 — 网格处理
 
 **2026-11-04** — 边折叠/顶点聚类/二次误差简化 + Loop/Catmull-Clark/二分细分 + UV参数化 + 面积/体积计算。

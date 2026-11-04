@@ -56,6 +56,7 @@ import {
   "walkzzz/image/src/style_transfer",
   "walkzzz/image/src/stylize",
   "walkzzz/image/src/superres",
+  "walkzzz/image/src/texture",
   "walkzzz/image/src/transform",
   "walkzzz/image/src/types",
   "walkzzz/image/src/util",
@@ -337,6 +338,8 @@ pub fn avif_info_extended(Bytes) -> @codec.AvifInfoExtended raise @types.LoadErr
 
 pub fn background_normalization(@types.Image, kernel_size? : Int32) -> @types.Image raise @types.LoadError
 
+pub fn bake_texture(Array[(Double, Double, Double)], Array[(Double, Double, Double)], Array[@texture.TextureCoord], Int32, Int32) -> @types.Image
+
 pub fn barcode_default_config() -> @barcode.BarcodeConfig
 
 pub fn batch_correct_texts(Array[String], context_type? : String) -> Array[@ocr.CorrectionResult] raise @types.LoadError
@@ -398,6 +401,8 @@ pub fn bilateral_filter_fast_16(@types.Image16, Int32, Float, Float, Int32) -> @
 pub fn bilateral_filter_fast_f(@types.ImageF, Int32, Float, Float, Int32) -> @types.ImageF raise @types.LoadError
 
 pub fn bilinear_interpolate_sr(@types.Image, Double) -> @types.Image
+
+pub fn bilinear_sample(@texture.Texture2D, Double, Double) -> (Double, Double, Double)
 
 pub fn bilinear_upscale(@types.Image, Int32) -> @types.Image
 
@@ -929,6 +934,8 @@ pub fn compute_track_length(Array[@video.MultiTrackedObject]) -> Int32
 
 pub fn compute_trajectory(Array[@types.Image]) -> Array[@video.TrajectoryPoint]
 
+pub fn compute_uv_mapping(Array[(Double, Double, Double)], @texture.TextureMappingMethod) -> Array[@texture.TextureCoord]
+
 pub fn compute_video_quality(Array[@types.Image], Array[@types.Image], @video.VideoQualityMetric) -> @video.VideoQualityResult
 
 pub fn compute_vmaf_score(@types.Image, @types.Image) -> Double
@@ -1151,6 +1158,8 @@ pub fn create_rect_mask_ip(Int32, Int32, Int32, Int32, Int32, Int32) -> @types.I
 
 pub fn create_schedule(Array[@imgir.IROp]) -> @self_evolve.EvolutionSchedule
 
+pub fn create_texture(@types.Image, @texture.TextureConfig) -> @texture.Texture2D
+
 pub fn create_timelapse(Array[@types.Image], @video.TimelapseConfig) -> Array[@types.Image]
 
 pub fn create_training_history(Int32, Double, Double, Double, Double, Double, Double) -> @ocr.DLTrainingHistory
@@ -1192,6 +1201,8 @@ pub fn ct_reconstruct_fbp_ci(@computational_imaging.CTProjectionData, Int32) -> 
 pub fn cur_info_extended(Bytes) -> @codec.CurInfoExtended raise @types.LoadError
 
 pub fn cv_estimate_translation(@types.Image, @types.Image) -> (Double, Double)
+
+pub fn cylindrical_mapping(Double, Double, Double) -> @texture.TextureCoord
 
 pub fn dark_channel(@types.Image, patch_size? : Int32) -> @types.Image raise @types.LoadError
 
@@ -1308,6 +1319,8 @@ pub fn default_slow_motion_config() -> @video.SlowMotionConfig
 pub fn default_sr_config() -> @video.VideoSRConfig
 
 pub fn default_stabilization_config() -> @video.StabilizationConfig
+
+pub fn default_texture_config() -> @texture.TextureConfig
 
 pub fn default_tile_config() -> @performance.TileConfig
 
@@ -3297,6 +3310,8 @@ pub fn nas_search((Array[Double]) -> Double, Int32, Int32, @cv_advanced.AutoMLCo
 
 pub fn nearest_neighbor_interpolate_sr(@types.Image, Double) -> @types.Image
 
+pub fn nearest_sample(@texture.Texture2D, Double, Double) -> (Double, Double, Double)
+
 pub fn neural_rendering_report_to_string_nr(@neural_rendering.RenderingResult, @neural_rendering.NeuralRenderingAlgorithm) -> String
 
 pub fn next_batch(@ocr.DataLoader) -> (Array[@ocr.DLTrainingSample], @ocr.DataLoader) raise @types.LoadError
@@ -3686,6 +3701,8 @@ pub fn pipeline_new() -> @pipeline.Pipeline
 pub fn pipeline_opt_report_has_suggestions(@self_evolve.PipelineOptReport) -> Bool
 
 pub fn pixelate(@types.Image, Int32) -> @types.Image raise @types.LoadError
+
+pub fn planar_mapping(Double, Double, Double) -> @texture.TextureCoord
 
 pub fn plane_segmentation(@point_cloud.PointCloud3D, Double, Int32) -> (@point_cloud.Point3DLight, Double, Array[Int32])
 
@@ -4139,6 +4156,8 @@ pub fn sample_frames(Array[@types.Image], Int32) -> Array[@types.Image]
 
 pub fn sample_pointcloud(@point_cloud.PointCloud3D, @point_cloud.PointCloudConfig) -> @point_cloud.PointCloud3D
 
+pub fn sample_texture(@texture.Texture2D, Double, Double) -> (Double, Double, Double)
+
 pub fn sar_azimuth_compression(Array[Array[Double]], @cv_advanced.SarParams) -> Array[Array[Double]]
 
 pub fn sar_build_image(Array[Array[Double]], @cv_advanced.SarParams) -> @cv_advanced.SarImage
@@ -4357,6 +4376,8 @@ pub fn spatial_inpaint(@types.Image, Array[Bool], @video.VideoInpaintConfig) -> 
 
 pub fn spatio_temporal_sr(Array[@types.Image], @video.VideoSRConfig) -> Array[@types.Image]
 
+pub fn spherical_mapping(Double, Double, Double) -> @texture.TextureCoord
+
 pub fn split_train_validation(Array[@ocr.DLTrainingSample], Double, Bool) -> (Array[@ocr.DLTrainingSample], Array[@ocr.DLTrainingSample])
 
 pub fn sr_default_config() -> @superres.SuperResolutionConfig
@@ -4564,6 +4585,8 @@ pub fn tensor_field_structure_tensor(@fieldimg.VectorField) -> @fieldimg.TensorF
 pub fn tensor_field_zeros(Int32, Int32, Int32, Int32) -> @fieldimg.TensorField raise @types.LoadError
 
 pub fn text_to_image_vlm(String, @vlm_multimodal.GenerativeAIConfig, Int32) -> @vlm_multimodal.GenerativeAIResult
+
+pub fn texture_pipeline(Array[(Double, Double, Double)], Array[(Double, Double, Double)], @texture.TextureConfig, Int32, Int32) -> (Array[@texture.TextureCoord], @types.Image)
 
 pub fn tframe_make(@types.Image, Float, Float) -> @spatiotemporal.TFrame raise @types.LoadError
 
@@ -6604,9 +6627,19 @@ pub using @ocr {type TextRegion}
 
 pub using @ocr {type TextRegionType}
 
+pub using @texture {type Texture2D}
+
 pub using @forensics {type TextureAnalysisResult}
 
+pub using @texture {type TextureConfig}
+
+pub using @texture {type TextureCoord}
+
 pub using @remote_sensing {type TextureFeatures}
+
+pub using @texture {type TextureFilterMode}
+
+pub using @texture {type TextureMappingMethod}
 
 pub using @codec {type TgaInfoExtended}
 

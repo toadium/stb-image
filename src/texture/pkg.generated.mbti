@@ -1,0 +1,83 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/texture"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/image/src/types",
+}
+
+// Values
+pub fn bake_texture(Array[(Double, Double, Double)], Array[(Double, Double, Double)], Array[TextureCoord], Int32, Int32) -> @types.Image
+
+pub fn bilinear_sample(Texture2D, Double, Double) -> (Double, Double, Double)
+
+pub fn compute_uv_mapping(Array[(Double, Double, Double)], TextureMappingMethod) -> Array[TextureCoord]
+
+pub fn create_texture(@types.Image, TextureConfig) -> Texture2D
+
+pub fn cylindrical_mapping(Double, Double, Double) -> TextureCoord
+
+pub fn default_texture_config() -> TextureConfig
+
+pub fn nearest_sample(Texture2D, Double, Double) -> (Double, Double, Double)
+
+pub fn planar_mapping(Double, Double, Double) -> TextureCoord
+
+pub fn sample_texture(Texture2D, Double, Double) -> (Double, Double, Double)
+
+pub fn spherical_mapping(Double, Double, Double) -> TextureCoord
+
+pub fn texture_pipeline(Array[(Double, Double, Double)], Array[(Double, Double, Double)], TextureConfig, Int32, Int32) -> (Array[TextureCoord], @types.Image)
+
+// Errors
+
+// Types and methods
+pub(all) struct Texture2D {
+  image : @types.Image
+  filter_mode : TextureFilterMode
+  wrap_u : Bool
+  wrap_v : Bool
+} derive(Eq, @debug.Debug)
+pub fn Texture2D::equal(Self, Self) -> Bool
+pub fn Texture2D::not_equal(Self, Self) -> Bool
+pub fn Texture2D::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TextureConfig {
+  mapping_method : TextureMappingMethod
+  filter_mode : TextureFilterMode
+  wrap_u : Bool
+  wrap_v : Bool
+} derive(Eq, @debug.Debug)
+pub fn TextureConfig::equal(Self, Self) -> Bool
+pub fn TextureConfig::not_equal(Self, Self) -> Bool
+pub fn TextureConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TextureCoord {
+  u : Double
+  v : Double
+} derive(Eq, @debug.Debug)
+pub fn TextureCoord::equal(Self, Self) -> Bool
+pub fn TextureCoord::not_equal(Self, Self) -> Bool
+pub fn TextureCoord::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TextureFilterMode {
+  NearestFilter
+  BilinearFilter
+  TrilinearFilter
+} derive(Eq, @debug.Debug)
+pub fn TextureFilterMode::equal(Self, Self) -> Bool
+pub fn TextureFilterMode::not_equal(Self, Self) -> Bool
+pub fn TextureFilterMode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TextureMappingMethod {
+  PlanarMapping
+  SphericalMapping
+  CylindricalMapping
+} derive(Eq, @debug.Debug)
+pub fn TextureMappingMethod::equal(Self, Self) -> Bool
+pub fn TextureMappingMethod::not_equal(Self, Self) -> Bool
+pub fn TextureMappingMethod::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

@@ -20074,3 +20074,103 @@ pub fn mesh_pipeline(
 ) -> (Mesh3D, Array[UVCoord]) {
   @mesh.mesh_pipeline(mesh, config)
 }
+
+///|
+/// v408.0.0 纹理映射（UV/烘焙/采样）
+
+///|
+pub type TextureFilterMode = @texture.TextureFilterMode
+
+///|
+pub type TextureMappingMethod = @texture.TextureMappingMethod
+
+///|
+pub type TextureCoord = @texture.TextureCoord
+
+///|
+pub type Texture2D = @texture.Texture2D
+
+///|
+pub type TextureConfig = @texture.TextureConfig
+
+///|
+pub fn default_texture_config() -> TextureConfig {
+  @texture.default_texture_config()
+}
+
+///|
+pub fn create_texture(img : Image, config : TextureConfig) -> Texture2D {
+  @texture.create_texture(img, config)
+}
+
+///|
+pub fn nearest_sample(
+  tex : Texture2D,
+  u : Double,
+  v : Double,
+) -> (Double, Double, Double) {
+  @texture.nearest_sample(tex, u, v)
+}
+
+///|
+pub fn bilinear_sample(
+  tex : Texture2D,
+  u : Double,
+  v : Double,
+) -> (Double, Double, Double) {
+  @texture.bilinear_sample(tex, u, v)
+}
+
+///|
+pub fn sample_texture(
+  tex : Texture2D,
+  u : Double,
+  v : Double,
+) -> (Double, Double, Double) {
+  @texture.sample_texture(tex, u, v)
+}
+
+///|
+pub fn planar_mapping(x : Double, y : Double, z : Double) -> TextureCoord {
+  @texture.planar_mapping(x, y, z)
+}
+
+///|
+pub fn spherical_mapping(x : Double, y : Double, z : Double) -> TextureCoord {
+  @texture.spherical_mapping(x, y, z)
+}
+
+///|
+pub fn cylindrical_mapping(x : Double, y : Double, z : Double) -> TextureCoord {
+  @texture.cylindrical_mapping(x, y, z)
+}
+
+///|
+pub fn compute_uv_mapping(
+  vertices : Array[(Double, Double, Double)],
+  map_method : TextureMappingMethod,
+) -> Array[TextureCoord] {
+  @texture.compute_uv_mapping(vertices, map_method)
+}
+
+///|
+pub fn bake_texture(
+  vertices : Array[(Double, Double, Double)],
+  colors : Array[(Double, Double, Double)],
+  uv_coords : Array[TextureCoord],
+  tex_width : Int32,
+  tex_height : Int32,
+) -> Image {
+  @texture.bake_texture(vertices, colors, uv_coords, tex_width, tex_height)
+}
+
+///|
+pub fn texture_pipeline(
+  vertices : Array[(Double, Double, Double)],
+  colors : Array[(Double, Double, Double)],
+  config : TextureConfig,
+  tex_width : Int32,
+  tex_height : Int32,
+) -> (Array[TextureCoord], Image) {
+  @texture.texture_pipeline(vertices, colors, config, tex_width, tex_height)
+}
