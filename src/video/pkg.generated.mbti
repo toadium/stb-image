@@ -23,6 +23,8 @@ pub fn apply_motion_blur(@types.Image, Double, Int32) -> @types.Image
 
 pub fn apply_video_filter(@types.Image, VideoFilterParams) -> @types.Image
 
+pub fn associate_objects(Array[MultiTrackedObject], Array[MultiDetectedObject], MultiTrackingConfig) -> Array[(Int32, Int32)]
+
 pub fn average_motion_sad(Array[MotionVector]) -> Double
 
 pub fn build_background_model(Array[@types.Image]) -> BackgroundModel?
@@ -51,7 +53,11 @@ pub fn compute_timelapse_count(Int32, Int32) -> Int32
 
 pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
 
+pub fn compute_track_length(Array[MultiTrackedObject]) -> Int32
+
 pub fn compute_trajectory(Array[@types.Image]) -> Array[TrajectoryPoint]
+
+pub fn count_active_tracks(Array[MultiTrackedObject]) -> Int32
 
 pub fn create_animation(Array[@types.Image], fps? : Double) -> VideoFrames
 
@@ -78,6 +84,8 @@ pub fn default_slow_motion_config() -> SlowMotionConfig
 pub fn default_stabilization_config() -> StabilizationConfig
 
 pub fn default_timelapse_config() -> TimelapseConfig
+
+pub fn default_tracking_config() -> MultiTrackingConfig
 
 pub fn default_transcode_params() -> TranscodeParams
 
@@ -111,11 +119,15 @@ pub fn extract_foreground(@types.Image, SegmentationResult) -> @types.Image
 
 pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> Array[Keyframe]
 
+pub fn filter_detections(Array[MultiDetectedObject], Double) -> Array[MultiDetectedObject]
+
 pub fn generate_slow_motion(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
 pub fn generate_transition(@types.Image, @types.Image, TransitionParams) -> Array[@types.Image]
 
 pub fn generate_video_summary(Array[@types.Image], Double) -> VideoSummary
+
+pub fn init_tracker(Array[MultiDetectedObject], MultiTrackingConfig) -> Array[MultiTrackedObject]
 
 pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> TrackedObject
 
@@ -136,6 +148,8 @@ pub fn motion_compensation(@types.Image, Array[MotionVector], Int32) -> @types.I
 pub fn motion_consistency(Array[SegmentationResult]) -> Double
 
 pub fn motion_estimate_and_compensate(@types.Image, @types.Image, SearchConfig) -> @types.Image
+
+pub fn multi_object_track(Array[Array[MultiDetectedObject]], MultiTrackingConfig) -> Array[Array[MultiTrackedObject]]
 
 pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
 
@@ -175,11 +189,15 @@ pub fn subtract_background(@types.Image, BackgroundModel, Double) -> Segmentatio
 
 pub fn timelapse_pipeline(Array[@types.Image], TimelapseConfig, Double) -> Array[@types.Image]
 
+pub fn tracking_stability(Array[MultiTrackedObject]) -> Double
+
 pub fn transcode_compression_ratio(Int32, Int32) -> Double
 
 pub fn transcode_video(Array[@types.Image], TranscodeParams) -> TranscodeResult
 
 pub fn update_background_model(BackgroundModel, @types.Image, Double) -> BackgroundModel
+
+pub fn update_tracker(Array[MultiTrackedObject], Array[MultiDetectedObject], MultiTrackingConfig) -> Array[MultiTrackedObject]
 
 pub fn update_tracking(TrackedObject, @types.Image) -> TrackedObject
 
@@ -334,6 +352,59 @@ pub(all) struct MotionVector {
 pub fn MotionVector::equal(Self, Self) -> Bool
 pub fn MotionVector::not_equal(Self, Self) -> Bool
 pub fn MotionVector::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MultiDetectedObject {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+  confidence : Double
+} derive(Eq, @debug.Debug)
+pub fn MultiDetectedObject::equal(Self, Self) -> Bool
+pub fn MultiDetectedObject::not_equal(Self, Self) -> Bool
+pub fn MultiDetectedObject::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MultiTrackState {
+  Active
+  Lost
+  Terminated
+} derive(Eq, @debug.Debug)
+pub fn MultiTrackState::equal(Self, Self) -> Bool
+pub fn MultiTrackState::not_equal(Self, Self) -> Bool
+pub fn MultiTrackState::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MultiTrackedObject {
+  id : Int32
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+  state : MultiTrackState
+  age : Int32
+  lost_count : Int32
+} derive(Eq, @debug.Debug)
+pub fn MultiTrackedObject::equal(Self, Self) -> Bool
+pub fn MultiTrackedObject::not_equal(Self, Self) -> Bool
+pub fn MultiTrackedObject::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MultiTrackingConfig {
+  track_method : MultiTrackingMethod
+  max_lost_frames : Int32
+  association_threshold : Double
+  min_confidence : Double
+} derive(Eq, @debug.Debug)
+pub fn MultiTrackingConfig::equal(Self, Self) -> Bool
+pub fn MultiTrackingConfig::not_equal(Self, Self) -> Bool
+pub fn MultiTrackingConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MultiTrackingMethod {
+  Centroid
+  KalmanFilter
+  MeanShift
+} derive(Eq, @debug.Debug)
+pub fn MultiTrackingMethod::equal(Self, Self) -> Bool
+pub fn MultiTrackingMethod::not_equal(Self, Self) -> Bool
+pub fn MultiTrackingMethod::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OpticalFlowField {
   width : Int32

@@ -19456,3 +19456,83 @@ pub fn motion_consistency(results : Array[VideoSegResult]) -> Double {
 pub fn extract_foreground(img : Image, result : VideoSegResult) -> Image {
   @video.extract_foreground(img, result)
 }
+
+///|
+/// v400.0.0 视频跟踪（多目标/长程/关联）
+
+///|
+pub type MultiTrackingMethod = @video.MultiTrackingMethod
+
+///|
+pub type MultiTrackState = @video.MultiTrackState
+
+///|
+pub type MultiTrackedObject = @video.MultiTrackedObject
+
+///|
+pub type MultiDetectedObject = @video.MultiDetectedObject
+
+///|
+pub type MultiTrackingConfig = @video.MultiTrackingConfig
+
+///|
+pub fn default_tracking_config() -> MultiTrackingConfig {
+  @video.default_tracking_config()
+}
+
+///|
+pub fn associate_objects(
+  tracked : Array[MultiTrackedObject],
+  detected : Array[MultiDetectedObject],
+  config : MultiTrackingConfig,
+) -> Array[(Int32, Int32)] {
+  @video.associate_objects(tracked, detected, config)
+}
+
+///|
+pub fn multi_init_tracker(
+  detections : Array[MultiDetectedObject],
+  config : MultiTrackingConfig,
+) -> Array[MultiTrackedObject] {
+  @video.init_tracker(detections, config)
+}
+
+///|
+pub fn multi_update_tracker(
+  tracked : Array[MultiTrackedObject],
+  detections : Array[MultiDetectedObject],
+  config : MultiTrackingConfig,
+) -> Array[MultiTrackedObject] {
+  @video.update_tracker(tracked, detections, config)
+}
+
+///|
+pub fn multi_object_track(
+  detections_per_frame : Array[Array[MultiDetectedObject]],
+  config : MultiTrackingConfig,
+) -> Array[Array[MultiTrackedObject]] {
+  @video.multi_object_track(detections_per_frame, config)
+}
+
+///|
+pub fn compute_track_length(tracked : Array[MultiTrackedObject]) -> Int32 {
+  @video.compute_track_length(tracked)
+}
+
+///|
+pub fn count_active_tracks(tracked : Array[MultiTrackedObject]) -> Int32 {
+  @video.count_active_tracks(tracked)
+}
+
+///|
+pub fn tracking_stability(tracked : Array[MultiTrackedObject]) -> Double {
+  @video.tracking_stability(tracked)
+}
+
+///|
+pub fn filter_detections(
+  detections : Array[MultiDetectedObject],
+  min_confidence : Double,
+) -> Array[MultiDetectedObject] {
+  @video.filter_detections(detections, min_confidence)
+}

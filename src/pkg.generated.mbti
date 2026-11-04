@@ -295,6 +295,8 @@ pub fn are_equivalent(@imgir.IRPipeline, @imgir.IRPipeline) -> Bool
 
 pub fn arnold_scramble_enc(@types.Image, @encryption.ArnoldParams) -> @encryption.EncryptionResult raise @types.LoadError
 
+pub fn associate_objects(Array[@video.MultiTrackedObject], Array[@video.MultiDetectedObject], @video.MultiTrackingConfig) -> Array[(Int32, Int32)]
+
 pub fn atmo_build_params(Double, Double, Double, Double, Double, Double) -> @cv_advanced.AtmoParams
 
 pub fn atmo_correct(Array[Array[Double]], @cv_advanced.AtmoMethod, Double, Double, Double) -> Array[Array[Double]]
@@ -899,6 +901,8 @@ pub fn compute_timelapse_count(Int32, Int32) -> Int32
 
 pub fn compute_timelapse_duration(Int32, Int32, Int32) -> Double
 
+pub fn compute_track_length(Array[@video.MultiTrackedObject]) -> Int32
+
 pub fn compute_trajectory(Array[@types.Image]) -> Array[@video.TrajectoryPoint]
 
 pub fn connected_components(@types.Image, Int32) -> (@segment.ConnectedComponentLabelImage, Array[@segment.ConnectedComponent]) raise @types.LoadError
@@ -958,6 +962,8 @@ pub fn cosine_distance(Array[Double], Array[Double]) -> Double raise @types.Load
 pub fn cosine_similarity(Array[Double], Array[Double]) -> Double
 
 pub fn cosine_similarity_cbir_api(Array[Double], Array[Double]) -> Double
+
+pub fn count_active_tracks(Array[@video.MultiTrackedObject]) -> Int32
 
 pub fn coverage_gap_report_has_gaps(@self_evolve.CoverageGapReport) -> Bool
 
@@ -1260,6 +1266,8 @@ pub fn default_tile_config() -> @performance.TileConfig
 pub fn default_timelapse_config() -> @video.TimelapseConfig
 
 pub fn default_tone_mapping_params(@cv_advanced.ToneMappingMethod) -> @cv_advanced.ToneMappingParams
+
+pub fn default_tracking_config() -> @video.MultiTrackingConfig
 
 pub fn default_transcode_params() -> @video.TranscodeParams
 
@@ -1986,6 +1994,8 @@ pub fn filter_by_kind(Array[@self_evolve.RootCause], @self_evolve.DegradationKin
 pub fn filter_components_by_area(@ocr.OcrConnectedComponentsResult, Int32, Int32) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
 
 pub fn filter_components_by_aspect_ratio(@ocr.OcrConnectedComponentsResult, Double, Double) -> Array[@ocr.OcrConnectedComponent] raise @types.LoadError
+
+pub fn filter_detections(Array[@video.MultiDetectedObject], Double) -> Array[@video.MultiDetectedObject]
 
 pub fn filter_noise_segments(Array[(Int32, Int32, Int32, Int32)], Int32, Int32, min_area_ratio? : Double, max_area_ratio? : Double) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
 
@@ -3175,7 +3185,13 @@ pub fn multi_band_blend_f(@types.ImageF, @types.ImageF, @types.ImageF, num_bands
 
 pub fn multi_head_attention(Array[Double], Array[Double], Array[Double], Array[Double], Array[Double], @cv_advanced.AttentionParams) -> Array[Double]
 
+pub fn multi_init_tracker(Array[@video.MultiDetectedObject], @video.MultiTrackingConfig) -> Array[@video.MultiTrackedObject]
+
+pub fn multi_object_track(Array[Array[@video.MultiDetectedObject]], @video.MultiTrackingConfig) -> Array[Array[@video.MultiTrackedObject]]
+
 pub fn multi_scale_recognize(@types.Image, Array[(String, Array[Double])], Array[Int32], distance_metric? : String) -> (String, Double)
+
+pub fn multi_update_tracker(Array[@video.MultiTrackedObject], Array[@video.MultiDetectedObject], @video.MultiTrackingConfig) -> Array[@video.MultiTrackedObject]
 
 pub fn multilingual_ocr_default_config() -> @ocr.MultilingualOcrConfig
 
@@ -4519,6 +4535,8 @@ pub fn track_keyframe(@cv_advanced.SlamFrontend, @cv_advanced.SlamPose, (Double,
 
 pub fn track_objects(Array[@cv_advanced.Track], Array[@cv_advanced.Track], Double) -> Array[@cv_advanced.Track]
 
+pub fn tracking_stability(Array[@video.MultiTrackedObject]) -> Double
+
 pub fn transcode_compression_ratio(Int32, Int32) -> Double
 
 pub fn transcode_video(Array[@types.Image], @video.TranscodeParams) -> @video.TranscodeResult
@@ -5817,6 +5835,16 @@ pub using @cv_advanced {type MotionParams}
 pub using @cv_advanced {type MotionRegion}
 
 pub using @video {type MotionVector}
+
+pub using @video {type MultiDetectedObject}
+
+pub using @video {type MultiTrackState}
+
+pub using @video {type MultiTrackedObject}
+
+pub using @video {type MultiTrackingConfig}
+
+pub using @video {type MultiTrackingMethod}
 
 pub using @ocr {type MultilingualOcrConfig}
 

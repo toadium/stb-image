@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v400.0.0 — 视频跟踪
+
+**2026-11-04** — 多目标跟踪(质心/Kalman/MeanShift) + 数据关联(距离+IoU) + 跟踪状态管理(活跃/丢失/终止) + 稳定性评估。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `MultiTrackingMethod`(3) / `MultiTrackState`(3) / `MultiTrackedObject` / `MultiDetectedObject` / `MultiTrackingConfig` |
+| 新增函数 | `default_tracking_config` / `associate_objects` / `init_tracker` / `update_tracker` / `multi_object_track` / `compute_track_length` / `count_active_tracks` / `tracking_stability` / `filter_detections` |
+| 测试 | 15645×4（+17） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v399.0.0 — 视频分割
 
 **2026-11-04** — 3种分割方法(帧差/背景减除/运动) + 背景模型构建/更新 + 前景提取 + 运动一致性。
