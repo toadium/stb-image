@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v401.0.0 — 视频修复
+
+**2026-11-04** — 时域/空域/混合修复 + 闪烁检测 + 3种去闪烁(时域/直方图/亮度) + 去抖动 + 修复流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoInpaintMethod`(3) / `FlickerMethod`(3) / `VideoInpaintConfig` / `FlickerConfig` / `FlickerDetection` |
+| 新增函数 | `default_inpaint_config` / `default_flicker_config` / `temporal_inpaint` / `spatial_inpaint` / `video_inpaint` / `detect_flicker` / `deflicker_temporal` / `deflicker_histogram` / `deflicker_luminance` / `video_deflicker` / `deshimmer` / `inpaint_pipeline` |
+| 测试 | 15664×4（+19） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v400.0.0 — 视频跟踪
 
 **2026-11-04** — 多目标跟踪(质心/Kalman/MeanShift) + 数据关联(距离+IoU) + 跟踪状态管理(活跃/丢失/终止) + 稳定性评估。

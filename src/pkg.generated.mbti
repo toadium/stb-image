@@ -1249,6 +1249,10 @@ pub fn default_exposure_fusion_params(@cv_advanced.ExposureFusionMethod) -> @cv_
 
 pub fn default_flash_removal_params(@cv_advanced.FlashDetectionMethod) -> @cv_advanced.FlashRemovalParams
 
+pub fn default_flicker_config() -> @video.FlickerConfig
+
+pub fn default_inpaint_config() -> @video.VideoInpaintConfig
+
 pub fn default_reflection_removal_params(@cv_advanced.ReflectionRemovalMethod) -> @cv_advanced.ReflectionRemovalParams
 
 pub fn default_search_config() -> @video.SearchConfig
@@ -1276,6 +1280,12 @@ pub fn default_transition_params(@video.TransitionType) -> @video.TransitionPara
 pub fn default_video_codec_params() -> @video.VideoCodecParams
 
 pub fn default_video_filter_params(@video.VideoFilterType) -> @video.VideoFilterParams
+
+pub fn deflicker_histogram(Array[@types.Image], @video.FlickerConfig) -> Array[@types.Image]
+
+pub fn deflicker_luminance(Array[@types.Image], @video.FlickerConfig) -> Array[@types.Image]
+
+pub fn deflicker_temporal(Array[@types.Image], @video.FlickerConfig) -> Array[@types.Image]
 
 pub fn dehaze(@types.Image, patch_size? : Int32, omega? : Float, t0? : Float) -> @types.Image raise @types.LoadError
 
@@ -1335,6 +1345,8 @@ pub fn derain_ip(@types.Image, @inpainting.DerainAlgorithm) -> @inpainting.Derai
 
 pub fn derain_morphological_ip(@types.Image) -> @inpainting.DerainResult
 
+pub fn deshimmer(Array[@types.Image], Double) -> Array[@types.Image]
+
 pub fn deskew(@types.Image) -> @types.Image raise @types.LoadError
 
 pub fn detect_akaze_keypoints(@types.Image, Double) -> Array[@cv_advanced.KeyPoint]
@@ -1378,6 +1390,8 @@ pub fn detect_flash_local_peak(@types.Image, Double, Int32) -> @cv_advanced.Flas
 pub fn detect_flash_multi_frame(Array[@types.Image], Double) -> @cv_advanced.FlashDetectionResult
 
 pub fn detect_flash_threshold(@types.Image, Double) -> @cv_advanced.FlashDetectionResult
+
+pub fn detect_flicker(Array[@types.Image], Double) -> @video.FlickerDetection
 
 pub fn detect_format(Bytes) -> @types.ImageFormat
 
@@ -2628,6 +2642,8 @@ pub fn inpaint_fast_f(@types.ImageF, @types.ImageF, radius? : Int32) -> @types.I
 pub fn inpaint_image_ig(@types.Image, @types.Image, @image_generation.EditingConfig) -> @image_generation.EditingResult
 
 pub fn inpaint_ip(@types.Image, @types.Image, @inpainting.InpaintingConfig) -> @inpainting.InpaintingResult
+
+pub fn inpaint_pipeline(Array[@types.Image], Array[Bool], @video.VideoInpaintConfig, @video.FlickerConfig, Double) -> Array[@types.Image]
 
 pub fn inpaint_simple_ip(@types.Image, @types.Image, Int32) -> @types.Image
 
@@ -4251,6 +4267,8 @@ pub fn softmax_cross_entropy_backward(Array[Double], Int32) -> Array[Double] rai
 
 pub fn source_verification_report_to_string_fs(@forensics.SourceVerificationResult) -> String
 
+pub fn spatial_inpaint(@types.Image, Array[Bool], @video.VideoInpaintConfig) -> @types.Image
+
 pub fn split_train_validation(Array[@ocr.DLTrainingSample], Double, Bool) -> (Array[@ocr.DLTrainingSample], Array[@ocr.DLTrainingSample])
 
 pub fn sr_default_config() -> @superres.SuperResolutionConfig
@@ -4438,6 +4456,8 @@ pub fn template_matcher_add(@ocr.TemplateMatcher, String, Array[Double]) -> @ocr
 pub fn template_matcher_create(distance_metric? : String) -> @ocr.TemplateMatcher
 
 pub fn template_matcher_predict(@ocr.TemplateMatcher, Array[Double]) -> @ocr.ClassificationResult raise @types.LoadError
+
+pub fn temporal_inpaint(@types.Image, @types.Image, @types.Image, Array[Bool], @video.VideoInpaintConfig) -> @types.Image
 
 pub fn tensor_field_eigenvalues_2x2(@fieldimg.TensorField) -> @fieldimg.VectorField raise @types.LoadError
 
@@ -4701,6 +4721,8 @@ pub fn vibe_update(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.B
 
 pub fn video_concat(@video.VideoFrames, @video.VideoFrames) -> @video.VideoFrames
 
+pub fn video_deflicker(Array[@types.Image], @video.FlickerConfig) -> Array[@types.Image]
+
 pub fn video_dequantize(Array[Int32], Int32) -> Array[Int32]
 
 pub fn video_effects_pipeline(Array[@types.Image], @video.VideoFilterParams?, @video.TransitionParams?) -> Array[@types.Image]
@@ -4716,6 +4738,8 @@ pub fn video_frame_count(@video.VideoFrames) -> Int32
 pub fn video_frames_new(Array[@types.Image], fps? : Double) -> @video.VideoFrames
 
 pub fn video_get_frame(@video.VideoFrames, Int32) -> @types.Image?
+
+pub fn video_inpaint(Array[@types.Image], Array[Bool], @video.VideoInpaintConfig) -> Array[@types.Image]
 
 pub fn video_reverse(@video.VideoFrames) -> @video.VideoFrames
 
@@ -5417,6 +5441,12 @@ pub using @cv_advanced {type FlashDetectionMethod}
 pub using @cv_advanced {type FlashDetectionResult}
 
 pub using @cv_advanced {type FlashRemovalParams}
+
+pub using @video {type FlickerConfig}
+
+pub using @video {type FlickerDetection}
+
+pub using @video {type FlickerMethod}
 
 pub using @cv_advanced {type FloatDescriptor}
 
@@ -6555,6 +6585,10 @@ pub using @video {type VideoFilterType}
 pub using @video {type VideoFormat}
 
 pub using @video {type VideoFrames}
+
+pub using @video {type VideoInpaintConfig}
+
+pub using @video {type VideoInpaintMethod}
 
 pub using @video {type SegmentationResult as VideoSegResult}
 

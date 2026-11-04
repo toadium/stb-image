@@ -19536,3 +19536,118 @@ pub fn filter_detections(
 ) -> Array[MultiDetectedObject] {
   @video.filter_detections(detections, min_confidence)
 }
+
+///|
+/// v401.0.0 视频修复（补全/去抖/去闪烁）
+
+///|
+pub type VideoInpaintMethod = @video.VideoInpaintMethod
+
+///|
+pub type FlickerMethod = @video.FlickerMethod
+
+///|
+pub type VideoInpaintConfig = @video.VideoInpaintConfig
+
+///|
+pub type FlickerConfig = @video.FlickerConfig
+
+///|
+pub type FlickerDetection = @video.FlickerDetection
+
+///|
+pub fn default_inpaint_config() -> VideoInpaintConfig {
+  @video.default_inpaint_config()
+}
+
+///|
+pub fn default_flicker_config() -> FlickerConfig {
+  @video.default_flicker_config()
+}
+
+///|
+pub fn temporal_inpaint(
+  current : Image,
+  prev_frame : Image,
+  next_frame : Image,
+  mask : Array[Bool],
+  config : VideoInpaintConfig,
+) -> Image {
+  @video.temporal_inpaint(current, prev_frame, next_frame, mask, config)
+}
+
+///|
+pub fn spatial_inpaint(
+  current : Image,
+  mask : Array[Bool],
+  config : VideoInpaintConfig,
+) -> Image {
+  @video.spatial_inpaint(current, mask, config)
+}
+
+///|
+pub fn video_inpaint(
+  frames : Array[Image],
+  mask : Array[Bool],
+  config : VideoInpaintConfig,
+) -> Array[Image] {
+  @video.video_inpaint(frames, mask, config)
+}
+
+///|
+pub fn detect_flicker(
+  frames : Array[Image],
+  threshold : Double,
+) -> FlickerDetection {
+  @video.detect_flicker(frames, threshold)
+}
+
+///|
+pub fn deflicker_temporal(
+  frames : Array[Image],
+  config : FlickerConfig,
+) -> Array[Image] {
+  @video.deflicker_temporal(frames, config)
+}
+
+///|
+pub fn deflicker_histogram(
+  frames : Array[Image],
+  config : FlickerConfig,
+) -> Array[Image] {
+  @video.deflicker_histogram(frames, config)
+}
+
+///|
+pub fn deflicker_luminance(
+  frames : Array[Image],
+  config : FlickerConfig,
+) -> Array[Image] {
+  @video.deflicker_luminance(frames, config)
+}
+
+///|
+pub fn video_deflicker(
+  frames : Array[Image],
+  config : FlickerConfig,
+) -> Array[Image] {
+  @video.video_deflicker(frames, config)
+}
+
+///|
+pub fn deshimmer(frames : Array[Image], strength : Double) -> Array[Image] {
+  @video.deshimmer(frames, strength)
+}
+
+///|
+pub fn inpaint_pipeline(
+  frames : Array[Image],
+  mask : Array[Bool],
+  inpaint_config : VideoInpaintConfig,
+  flicker_config : FlickerConfig,
+  shimmer_strength : Double,
+) -> Array[Image] {
+  @video.inpaint_pipeline(
+    frames, mask, inpaint_config, flicker_config, shimmer_strength,
+  )
+}
