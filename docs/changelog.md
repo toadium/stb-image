@@ -6,6 +6,18 @@
 
 ## Phase 17｜视频处理大扩展（v392 ~ v405）
 
+### v407.0.0 — 网格处理
+
+**2026-11-04** — 边折叠/顶点聚类/二次误差简化 + Loop/Catmull-Clark/二分细分 + UV参数化 + 面积/体积计算。
+
+| 类型 | 内容 |
+|------|------|
+| 新增包 | `src/mesh` |
+| 新增类型 | `MeshSimplifyMethod`(3) / `MeshSubdivideMethod`(3) / `Vertex3D` / `TriangleFace` / `Mesh3D` / `MeshConfig` / `UVCoord` |
+| 新增函数 | `default_mesh_config` / `create_empty_mesh` / `create_mesh` / `compute_mesh_centroid` / `compute_mesh_area` / `compute_mesh_volume` / `edge_collapse_simplify` / `vertex_clustering_simplify` / `simplify_mesh` / `simple_bisection_subdivide` / `loop_subdivision` / `catmull_clark_subdivide` / `subdivide_mesh` / `mesh_parameterization` / `mesh_pipeline` |
+| 测试 | 15757×4（+23） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v406.0.0 — 点云处理
 
 **2026-11-04** — 随机/均匀/体素网格采样 + KNN法向估计 + 欧式聚类/区域生长/RANSAC平面分割 + 流水线。

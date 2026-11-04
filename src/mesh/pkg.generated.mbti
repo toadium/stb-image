@@ -1,0 +1,106 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/image/src/mesh"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn catmull_clark_subdivide(Mesh3D) -> Mesh3D
+
+pub fn compute_mesh_area(Mesh3D) -> Double
+
+pub fn compute_mesh_centroid(Mesh3D) -> Vertex3D
+
+pub fn compute_mesh_volume(Mesh3D) -> Double
+
+pub fn create_empty_mesh() -> Mesh3D
+
+pub fn create_mesh(Array[Vertex3D], Array[TriangleFace]) -> Mesh3D
+
+pub fn default_mesh_config() -> MeshConfig
+
+pub fn edge_collapse_simplify(Mesh3D, Double) -> Mesh3D
+
+pub fn loop_subdivision(Mesh3D) -> Mesh3D
+
+pub fn mesh_parameterization(Mesh3D) -> Array[UVCoord]
+
+pub fn mesh_pipeline(Mesh3D, MeshConfig) -> (Mesh3D, Array[UVCoord])
+
+pub fn simple_bisection_subdivide(Mesh3D) -> Mesh3D
+
+pub fn simplify_mesh(Mesh3D, MeshConfig) -> Mesh3D
+
+pub fn subdivide_mesh(Mesh3D, MeshConfig) -> Mesh3D
+
+pub fn vertex_clustering_simplify(Mesh3D, Double) -> Mesh3D
+
+// Errors
+
+// Types and methods
+pub(all) struct Mesh3D {
+  vertices : Array[Vertex3D]
+  faces : Array[TriangleFace]
+} derive(Eq, @debug.Debug)
+pub fn Mesh3D::equal(Self, Self) -> Bool
+pub fn Mesh3D::not_equal(Self, Self) -> Bool
+pub fn Mesh3D::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MeshConfig {
+  simplify_method : MeshSimplifyMethod
+  subdivide_method : MeshSubdivideMethod
+  target_ratio : Double
+  subdivide_levels : Int32
+} derive(Eq, @debug.Debug)
+pub fn MeshConfig::equal(Self, Self) -> Bool
+pub fn MeshConfig::not_equal(Self, Self) -> Bool
+pub fn MeshConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MeshSimplifyMethod {
+  EdgeCollapse
+  VertexClustering
+  QuadricError
+} derive(Eq, @debug.Debug)
+pub fn MeshSimplifyMethod::equal(Self, Self) -> Bool
+pub fn MeshSimplifyMethod::not_equal(Self, Self) -> Bool
+pub fn MeshSimplifyMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MeshSubdivideMethod {
+  LoopSubdivision
+  CatmullClark
+  SimpleBisection
+} derive(Eq, @debug.Debug)
+pub fn MeshSubdivideMethod::equal(Self, Self) -> Bool
+pub fn MeshSubdivideMethod::not_equal(Self, Self) -> Bool
+pub fn MeshSubdivideMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct TriangleFace {
+  v0 : Int32
+  v1 : Int32
+  v2 : Int32
+} derive(Eq, @debug.Debug)
+pub fn TriangleFace::equal(Self, Self) -> Bool
+pub fn TriangleFace::not_equal(Self, Self) -> Bool
+pub fn TriangleFace::to_repr(Self) -> @debug.Repr
+
+pub(all) struct UVCoord {
+  u : Double
+  v : Double
+} derive(Eq, @debug.Debug)
+pub fn UVCoord::equal(Self, Self) -> Bool
+pub fn UVCoord::not_equal(Self, Self) -> Bool
+pub fn UVCoord::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Vertex3D {
+  x : Double
+  y : Double
+  z : Double
+} derive(Eq, @debug.Debug)
+pub fn Vertex3D::equal(Self, Self) -> Bool
+pub fn Vertex3D::not_equal(Self, Self) -> Bool
+pub fn Vertex3D::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

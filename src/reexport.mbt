@@ -19969,3 +19969,108 @@ pub fn pointcloud_pipeline(
 ) -> (PCloud3D, PClusterResult) {
   @point_cloud.pointcloud_pipeline(cloud, config)
 }
+
+///|
+/// v407.0.0 网格处理（简化/细分/参数化）
+
+///|
+pub type MeshSimplifyMethod = @mesh.MeshSimplifyMethod
+
+///|
+pub type MeshSubdivideMethod = @mesh.MeshSubdivideMethod
+
+///|
+pub type Vertex3D = @mesh.Vertex3D
+
+///|
+pub type TriangleFace = @mesh.TriangleFace
+
+///|
+pub type Mesh3D = @mesh.Mesh3D
+
+///|
+pub type MeshConfig = @mesh.MeshConfig
+
+///|
+pub type UVCoord = @mesh.UVCoord
+
+///|
+pub fn default_mesh_config() -> MeshConfig {
+  @mesh.default_mesh_config()
+}
+
+///|
+pub fn create_empty_mesh() -> Mesh3D {
+  @mesh.create_empty_mesh()
+}
+
+///|
+pub fn create_mesh(
+  vertices : Array[Vertex3D],
+  faces : Array[TriangleFace],
+) -> Mesh3D {
+  @mesh.create_mesh(vertices, faces)
+}
+
+///|
+pub fn compute_mesh_centroid(mesh : Mesh3D) -> Vertex3D {
+  @mesh.compute_mesh_centroid(mesh)
+}
+
+///|
+pub fn compute_mesh_area(mesh : Mesh3D) -> Double {
+  @mesh.compute_mesh_area(mesh)
+}
+
+///|
+pub fn compute_mesh_volume(mesh : Mesh3D) -> Double {
+  @mesh.compute_mesh_volume(mesh)
+}
+
+///|
+pub fn edge_collapse_simplify(mesh : Mesh3D, target_ratio : Double) -> Mesh3D {
+  @mesh.edge_collapse_simplify(mesh, target_ratio)
+}
+
+///|
+pub fn vertex_clustering_simplify(mesh : Mesh3D, grid_size : Double) -> Mesh3D {
+  @mesh.vertex_clustering_simplify(mesh, grid_size)
+}
+
+///|
+pub fn simplify_mesh(mesh : Mesh3D, config : MeshConfig) -> Mesh3D {
+  @mesh.simplify_mesh(mesh, config)
+}
+
+///|
+pub fn simple_bisection_subdivide(mesh : Mesh3D) -> Mesh3D {
+  @mesh.simple_bisection_subdivide(mesh)
+}
+
+///|
+pub fn loop_subdivision(mesh : Mesh3D) -> Mesh3D {
+  @mesh.loop_subdivision(mesh)
+}
+
+///|
+pub fn catmull_clark_subdivide(mesh : Mesh3D) -> Mesh3D {
+  @mesh.catmull_clark_subdivide(mesh)
+}
+
+///|
+pub fn subdivide_mesh(mesh : Mesh3D, config : MeshConfig) -> Mesh3D {
+  @mesh.subdivide_mesh(mesh, config)
+}
+
+///|
+pub fn mesh_parameterization(mesh : Mesh3D) -> Array[UVCoord] {
+  @mesh.mesh_parameterization(mesh)
+}
+
+///|
+pub fn mesh_pipeline(
+  mesh : Mesh3D,
+  config : MeshConfig,
+) -> (Mesh3D, Array[UVCoord]) {
+  @mesh.mesh_pipeline(mesh, config)
+}

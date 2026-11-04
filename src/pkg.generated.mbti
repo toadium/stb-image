@@ -30,6 +30,7 @@ import {
   "walkzzz/image/src/intelligent_vision",
   "walkzzz/image/src/lib",
   "walkzzz/image/src/medical",
+  "walkzzz/image/src/mesh",
   "walkzzz/image/src/meta",
   "walkzzz/image/src/neural_rendering",
   "walkzzz/image/src/ocr",
@@ -590,6 +591,8 @@ pub fn cartoon(@types.Image, levels? : Int32, edge_threshold? : Double) -> @type
 
 pub fn cartoonize_st(@types.Image, Double) -> @types.Image raise @types.LoadError
 
+pub fn catmull_clark_subdivide(@mesh.Mesh3D) -> @mesh.Mesh3D
+
 pub fn change_count_changed(Array[Array[Int32]]) -> Int32
 
 pub fn change_detect(Array[Array[Double]], Array[Array[Double]], @cv_advanced.ChangeMethod, Double) -> @cv_advanced.ChangeResult
@@ -851,6 +854,12 @@ pub fn compute_lucas_kanade(@types.Image, @types.Image, Array[(Int32, Int32)], @
 pub fn compute_mae(@types.Image, @types.Image) -> Double
 
 pub fn compute_mertens_weights(@types.Image, @cv_advanced.ExposureFusionParams) -> Array[Double]
+
+pub fn compute_mesh_area(@mesh.Mesh3D) -> Double
+
+pub fn compute_mesh_centroid(@mesh.Mesh3D) -> @mesh.Vertex3D
+
+pub fn compute_mesh_volume(@mesh.Mesh3D) -> Double
 
 pub fn compute_motion_between_frames(@types.Image, @types.Image) -> @video.MotionEstimateResult
 
@@ -1118,6 +1127,8 @@ pub fn create_default_yolo_config() -> @detection.YoloConfig
 
 pub fn create_empty_cloud() -> @point_cloud.PointCloud3D
 
+pub fn create_empty_mesh() -> @mesh.Mesh3D
+
 pub fn create_exif_segment(@meta.ExifInfo) -> Bytes
 
 pub fn create_face_database_fr(@face_recognition.FaceRecognitionAlgorithm, Double) -> @face_recognition.FaceDatabase
@@ -1129,6 +1140,8 @@ pub fn create_handwriting_template(String, @ocr.HandwritingStyle, Array[@types.I
 pub fn create_image_index_cbir() -> @retrieval.CBIRImageIndex
 
 pub fn create_iptc_segment(@meta.IptcInfo) -> Bytes
+
+pub fn create_mesh(Array[@mesh.Vertex3D], Array[@mesh.TriangleFace]) -> @mesh.Mesh3D
 
 pub fn create_neural_layer(@ocr.DLLayerType, String, Array[Int32]) -> @ocr.DLNeuralLayer
 
@@ -1277,6 +1290,8 @@ pub fn default_flicker_config() -> @video.FlickerConfig
 pub fn default_inpaint_config() -> @video.VideoInpaintConfig
 
 pub fn default_interp_config() -> @video.FrameInterpConfig
+
+pub fn default_mesh_config() -> @mesh.MeshConfig
 
 pub fn default_pointcloud_config() -> @point_cloud.PointCloudConfig
 
@@ -1631,6 +1646,8 @@ pub fn draw_rectangle_16(@types.Image16, Int32, Int32, Int32, Int32, Array[Int32
 pub fn draw_rectangle_f(@types.ImageF, Int32, Int32, Int32, Int32, Array[Float], thickness? : Int32, fill? : Bool) -> @types.ImageF
 
 pub fn drop_fall_segmentation(@types.Image, start_x? : Int32) -> @ocr.DropFallResult raise @types.LoadError
+
+pub fn edge_collapse_simplify(@mesh.Mesh3D, Double) -> @mesh.Mesh3D
 
 pub fn edge_detect_laplacian(@types.Image) -> @types.Image raise @types.LoadError
 
@@ -3018,6 +3035,8 @@ pub fn lookup_char(@ocr.DictChineseDict, String) -> @ocr.DictCharEntry? raise @t
 
 pub fn loop_result_is_complete(@self_evolve.LoopResult) -> Bool
 
+pub fn loop_subdivision(@mesh.Mesh3D) -> @mesh.Mesh3D
+
 pub fn low_light_default_config() -> @photo_enhance.LowLightConfig
 
 pub fn low_light_enhance(@types.Image, config? : @photo_enhance.LowLightConfig) -> @types.Image
@@ -3129,6 +3148,10 @@ pub fn merge_adjacent_components(Array[@ocr.OcrConnectedComponent], Int32) -> Ar
 pub fn merge_map_points(@cv_advanced.SlamBackend, Double) -> @cv_advanced.SlamBackend
 
 pub fn merge_small_segments(Array[(Int32, Int32, Int32, Int32)], Int32, Int32) -> Array[(Int32, Int32, Int32, Int32)] raise @types.LoadError
+
+pub fn mesh_parameterization(@mesh.Mesh3D) -> Array[@mesh.UVCoord]
+
+pub fn mesh_pipeline(@mesh.Mesh3D, @mesh.MeshConfig) -> (@mesh.Mesh3D, Array[@mesh.UVCoord])
 
 pub fn meta_evolve_all() -> @self_evolve.MetaReport
 
@@ -4284,6 +4307,10 @@ pub fn sigmoid_backward(Array[Double], Array[Double]) -> Array[Double]
 
 pub fn simclr_forward(Array[Double], Array[Double], @cv_advanced.SSLConfig) -> Double
 
+pub fn simple_bisection_subdivide(@mesh.Mesh3D) -> @mesh.Mesh3D
+
+pub fn simplify_mesh(@mesh.Mesh3D, @mesh.MeshConfig) -> @mesh.Mesh3D
+
 pub fn simulate_lens_blur(@types.Image, @cv_advanced.DepthMap, @cv_advanced.BokehParams) -> @cv_advanced.BokehResult
 
 pub fn skeletonize(@types.Image) -> @types.Image raise @types.LoadError
@@ -4421,6 +4448,8 @@ pub fn stylegan_modulated_conv(Array[Double], Array[Double], Array[Double], Arra
 pub fn stylize(@types.Image, String, config? : @stylize.StylizeConfig) -> @types.Image
 
 pub fn stylize_default_config() -> @stylize.StylizeConfig
+
+pub fn subdivide_mesh(@mesh.Mesh3D, @mesh.MeshConfig) -> @mesh.Mesh3D
 
 pub fn subtract_background(@cv_advanced.BackgroundModel, @types.Image) -> @cv_advanced.ForegroundMask
 
@@ -4779,6 +4808,8 @@ pub fn verify_image_source_enhanced_fs(@types.Image, @forensics.EnhancedVerifica
 pub fn verify_image_source_fs(@types.Image, @forensics.SourceVerificationConfig) -> @forensics.SourceVerificationResult raise @types.LoadError
 
 pub fn verify_result_make(is_valid~ : Bool, issues? : Array[String]) -> @aoci.VerifyResult
+
+pub fn vertex_clustering_simplify(@mesh.Mesh3D, Double) -> @mesh.Mesh3D
 
 pub fn vertical_projection(@types.Image) -> @ocr.ProjectionResult raise @types.LoadError
 
@@ -5911,7 +5942,15 @@ pub using @medical {type MedicalSegmentationConfig}
 
 pub using @ocr {type MemoryUsageStats}
 
+pub using @mesh {type Mesh3D}
+
 pub using @stereo3d {type Mesh3d}
+
+pub using @mesh {type MeshConfig}
+
+pub using @mesh {type MeshSimplifyMethod}
+
+pub using @mesh {type MeshSubdivideMethod}
 
 pub using @self_evolve {type MetaAction}
 
@@ -6639,11 +6678,15 @@ pub using @video {type TransitionType}
 
 pub using @cv_advanced {type TrialResult}
 
+pub using @mesh {type TriangleFace}
+
 pub using @self_evolve {type TuneReport}
 
 pub using @self_evolve {type TunedParam}
 
 pub using @forensics {type UIDetectionResult}
+
+pub using @mesh {type UVCoord}
 
 pub using @cv_advanced {type UltrasoundConfig}
 
@@ -6668,6 +6711,8 @@ pub using @fieldimg {type VectorField}
 pub using @remote_sensing {type VegetationIndices}
 
 pub using @aoci {type VerifyResult}
+
+pub using @mesh {type Vertex3D}
 
 pub using @video {type BackgroundModel as VideoBackgroundModel}
 
