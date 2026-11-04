@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v402.0.0 — 视频超分
+
+**2026-11-04** — 双三次/双线性上采样 + 时空超分(时域信息增强) + 递归超分(级联放大) + 质量评估。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `VideoSRMethod`(3) / `VideoSRConfig` / `VideoSRResult` |
+| 新增函数 | `default_sr_config` / `bilinear_upscale` / `bicubic_super_resolve` / `spatio_temporal_sr` / `recursive_sr` / `video_super_resolve` / `compute_sr_quality` / `sr_pipeline` |
+| 测试 | 15680×4（+16） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v401.0.0 — 视频修复
 
 **2026-11-04** — 时域/空域/混合修复 + 闪烁检测 + 3种去闪烁(时域/直方图/亮度) + 去抖动 + 修复流水线。

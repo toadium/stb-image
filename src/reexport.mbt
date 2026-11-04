@@ -19651,3 +19651,74 @@ pub fn inpaint_pipeline(
     frames, mask, inpaint_config, flicker_config, shimmer_strength,
   )
 }
+
+///|
+/// v402.0.0 视频超分（时空/递归/深度）
+
+///|
+pub type VideoSRMethod = @video.VideoSRMethod
+
+///|
+pub type VideoSRConfig = @video.VideoSRConfig
+
+///|
+pub type VideoSRResult = @video.VideoSRResult
+
+///|
+pub fn default_sr_config() -> VideoSRConfig {
+  @video.default_sr_config()
+}
+
+///|
+pub fn bilinear_upscale(img : Image, scale : Int32) -> Image {
+  @video.bilinear_upscale(img, scale)
+}
+
+///|
+pub fn bicubic_super_resolve(
+  frames : Array[Image],
+  config : VideoSRConfig,
+) -> Array[Image] {
+  @video.bicubic_super_resolve(frames, config)
+}
+
+///|
+pub fn spatio_temporal_sr(
+  frames : Array[Image],
+  config : VideoSRConfig,
+) -> Array[Image] {
+  @video.spatio_temporal_sr(frames, config)
+}
+
+///|
+pub fn recursive_sr(
+  frames : Array[Image],
+  config : VideoSRConfig,
+) -> Array[Image] {
+  @video.recursive_sr(frames, config)
+}
+
+///|
+pub fn video_super_resolve(
+  frames : Array[Image],
+  config : VideoSRConfig,
+) -> VideoSRResult {
+  @video.video_super_resolve(frames, config)
+}
+
+///|
+pub fn compute_sr_quality(
+  original : Array[Image],
+  super_resolved : Array[Image],
+  scale : Int32,
+) -> Double {
+  @video.compute_sr_quality(original, super_resolved, scale)
+}
+
+///|
+pub fn sr_pipeline(
+  frames : Array[Image],
+  config : VideoSRConfig,
+) -> VideoSRResult {
+  @video.sr_pipeline(frames, config)
+}

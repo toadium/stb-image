@@ -379,6 +379,8 @@ pub fn bf_match_float(Array[@cv_advanced.FloatDescriptor], Array[@cv_advanced.Fl
 
 pub fn bicubic_interpolate_sr(@types.Image, Double) -> @types.Image
 
+pub fn bicubic_super_resolve(Array[@types.Image], @video.VideoSRConfig) -> Array[@types.Image]
+
 pub fn bilateral_filter(@types.Image, Int32, Float, Float) -> @types.Image raise @types.LoadError
 
 pub fn bilateral_filter_16(@types.Image16, Int32, Float, Float) -> @types.Image16 raise @types.LoadError
@@ -394,6 +396,8 @@ pub fn bilateral_filter_fast_16(@types.Image16, Int32, Float, Float, Int32) -> @
 pub fn bilateral_filter_fast_f(@types.ImageF, Int32, Float, Float, Int32) -> @types.ImageF raise @types.LoadError
 
 pub fn bilinear_interpolate_sr(@types.Image, Double) -> @types.Image
+
+pub fn bilinear_upscale(@types.Image, Int32) -> @types.Image
 
 pub fn blend_color_burn(@types.Image, @types.Image) -> @types.Image raise @types.LoadError
 
@@ -885,6 +889,8 @@ pub fn compute_reprojection_error(@cv_advanced.CameraIntrinsics, @cv_advanced.Ch
 
 pub fn compute_sparsity(Array[Double]) -> Double
 
+pub fn compute_sr_quality(Array[@types.Image], Array[@types.Image], Int32) -> Double
+
 pub fn compute_ssim(@types.Image, @types.Image) -> Double
 
 pub fn compute_stats(@types.Image) -> @util.ImageStats
@@ -1262,6 +1268,8 @@ pub fn default_segmentation_config() -> @video.SegmentationConfig
 pub fn default_sharpening_params(@cv_advanced.SharpeningMethod) -> @cv_advanced.SharpeningParams
 
 pub fn default_slow_motion_config() -> @video.SlowMotionConfig
+
+pub fn default_sr_config() -> @video.VideoSRConfig
 
 pub fn default_stabilization_config() -> @video.StabilizationConfig
 
@@ -3831,6 +3839,8 @@ pub fn record_snapshot(@imgir.IRPipeline, String) -> @self_evolve.HistoryEntry
 
 pub fn record_training_metrics(@ocr.TrainingState, @ocr.TrainingMetrics) -> @ocr.TrainingState
 
+pub fn recursive_sr(Array[@types.Image], @video.VideoSRConfig) -> Array[@types.Image]
+
 pub fn reed_solomon_decode(Array[Int32], Int32) -> (Array[Int32], Int32)
 
 pub fn refine_depth_edges(@cv_advanced.DepthMap, @types.Image) -> @cv_advanced.DepthMap
@@ -4269,9 +4279,13 @@ pub fn source_verification_report_to_string_fs(@forensics.SourceVerificationResu
 
 pub fn spatial_inpaint(@types.Image, Array[Bool], @video.VideoInpaintConfig) -> @types.Image
 
+pub fn spatio_temporal_sr(Array[@types.Image], @video.VideoSRConfig) -> Array[@types.Image]
+
 pub fn split_train_validation(Array[@ocr.DLTrainingSample], Double, Bool) -> (Array[@ocr.DLTrainingSample], Array[@ocr.DLTrainingSample])
 
 pub fn sr_default_config() -> @superres.SuperResolutionConfig
+
+pub fn sr_pipeline(Array[@types.Image], @video.VideoSRConfig) -> @video.VideoSRResult
 
 pub fn ssim(@types.Image, @types.Image) -> Double raise @types.LoadError
 
@@ -4748,6 +4762,8 @@ pub fn video_sample(@video.VideoFrames, interval? : Int32) -> @video.VideoFrames
 pub fn video_segmentation_pipeline(Array[@types.Image], @video.SegmentationConfig) -> Array[@video.SegmentationResult]
 
 pub fn video_subtract_background(@types.Image, @video.BackgroundModel, Double) -> @video.SegmentationResult
+
+pub fn video_super_resolve(Array[@types.Image], @video.VideoSRConfig) -> @video.VideoSRResult
 
 pub fn video_update_background_model(@video.BackgroundModel, @types.Image, Double) -> @video.BackgroundModel
 
@@ -6589,6 +6605,12 @@ pub using @video {type VideoFrames}
 pub using @video {type VideoInpaintConfig}
 
 pub using @video {type VideoInpaintMethod}
+
+pub using @video {type VideoSRConfig}
+
+pub using @video {type VideoSRMethod}
+
+pub using @video {type VideoSRResult}
 
 pub using @video {type SegmentationResult as VideoSegResult}
 

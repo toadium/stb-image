@@ -27,6 +27,10 @@ pub fn associate_objects(Array[MultiTrackedObject], Array[MultiDetectedObject], 
 
 pub fn average_motion_sad(Array[MotionVector]) -> Double
 
+pub fn bicubic_super_resolve(Array[@types.Image], VideoSRConfig) -> Array[@types.Image]
+
+pub fn bilinear_upscale(@types.Image, Int32) -> @types.Image
+
 pub fn build_background_model(Array[@types.Image]) -> BackgroundModel?
 
 pub fn compute_bitrate(Int32, Int32, Int32, Int32) -> Int32
@@ -46,6 +50,8 @@ pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[M
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
 
 pub fn compute_optical_flow(@types.Image, @types.Image, block_size? : Int32, search_range? : Int32) -> OpticalFlowField
+
+pub fn compute_sr_quality(Array[@types.Image], Array[@types.Image], Int32) -> Double
 
 pub fn compute_time_compression(Double, Double) -> Double
 
@@ -84,6 +90,8 @@ pub fn default_search_config() -> SearchConfig
 pub fn default_segmentation_config() -> SegmentationConfig
 
 pub fn default_slow_motion_config() -> SlowMotionConfig
+
+pub fn default_sr_config() -> VideoSRConfig
 
 pub fn default_stabilization_config() -> StabilizationConfig
 
@@ -173,6 +181,8 @@ pub fn quantize(Array[Int32], Int32) -> Array[Int32]
 
 pub fn recognize_action(Array[@types.Image], Int32, Int32) -> ActionRecognitionResult
 
+pub fn recursive_sr(Array[@types.Image], VideoSRConfig) -> Array[@types.Image]
+
 pub fn refine_subpixel(@types.Image, @types.Image, Int32, Int32, MotionVector, Int32) -> SubpixelMotionVector
 
 pub fn resize_image(@types.Image, Int32, Int32, ResolutionMode) -> @types.Image
@@ -194,6 +204,10 @@ pub fn slow_motion_pipeline(Array[@types.Image], SlowMotionConfig) -> Array[@typ
 pub fn smooth_trajectory(Array[TrajectoryPoint], StabilizationConfig) -> Array[TrajectoryPoint]
 
 pub fn spatial_inpaint(@types.Image, Array[Bool], VideoInpaintConfig) -> @types.Image
+
+pub fn spatio_temporal_sr(Array[@types.Image], VideoSRConfig) -> Array[@types.Image]
+
+pub fn sr_pipeline(Array[@types.Image], VideoSRConfig) -> VideoSRResult
 
 pub fn stabilization_score(Array[TrajectoryPoint], Array[TrajectoryPoint]) -> Double
 
@@ -246,6 +260,8 @@ pub fn video_reverse(VideoFrames) -> VideoFrames
 pub fn video_sample(VideoFrames, interval? : Int32) -> VideoFrames
 
 pub fn video_segmentation_pipeline(Array[@types.Image], SegmentationConfig) -> Array[SegmentationResult]
+
+pub fn video_super_resolve(Array[@types.Image], VideoSRConfig) -> VideoSRResult
 
 pub fn zero_motion_ratio(Array[MotionVector]) -> Double
 
@@ -742,6 +758,34 @@ pub(all) enum VideoInpaintMethod {
 pub fn VideoInpaintMethod::equal(Self, Self) -> Bool
 pub fn VideoInpaintMethod::not_equal(Self, Self) -> Bool
 pub fn VideoInpaintMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VideoSRConfig {
+  sr_method : VideoSRMethod
+  scale_factor : Int32
+  temporal_window : Int32
+  blend_factor : Double
+} derive(Eq, @debug.Debug)
+pub fn VideoSRConfig::equal(Self, Self) -> Bool
+pub fn VideoSRConfig::not_equal(Self, Self) -> Bool
+pub fn VideoSRConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum VideoSRMethod {
+  BicubicSR
+  SpatioTemporal
+  RecursiveSR
+} derive(Eq, @debug.Debug)
+pub fn VideoSRMethod::equal(Self, Self) -> Bool
+pub fn VideoSRMethod::not_equal(Self, Self) -> Bool
+pub fn VideoSRMethod::to_repr(Self) -> @debug.Repr
+
+pub(all) struct VideoSRResult {
+  frames : Array[@types.Image]
+  scale_factor : Int32
+  quality_score : Double
+} derive(Eq, @debug.Debug)
+pub fn VideoSRResult::equal(Self, Self) -> Bool
+pub fn VideoSRResult::not_equal(Self, Self) -> Bool
+pub fn VideoSRResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum VideoSegmentationMethod {
   FrameDifference
