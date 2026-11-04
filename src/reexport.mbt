@@ -19722,3 +19722,83 @@ pub fn sr_pipeline(
 ) -> VideoSRResult {
   @video.sr_pipeline(frames, config)
 }
+
+///|
+/// v403.0.0 视频插帧（光流/相位/深度）
+
+///|
+pub type FrameInterpMethod = @video.FrameInterpMethod
+
+///|
+pub type FrameInterpConfig = @video.FrameInterpConfig
+
+///|
+pub type MotionEstimateResult = @video.MotionEstimateResult
+
+///|
+pub fn default_interp_config() -> FrameInterpConfig {
+  @video.default_interp_config()
+}
+
+///|
+pub fn linear_interpolate_frames(
+  frame1 : Image,
+  frame2 : Image,
+  num_frames : Int32,
+) -> Array[Image] {
+  @video.linear_interpolate_frames(frame1, frame2, num_frames)
+}
+
+///|
+pub fn compute_motion_between_frames(
+  frame1 : Image,
+  frame2 : Image,
+) -> MotionEstimateResult {
+  @video.compute_motion_between_frames(frame1, frame2)
+}
+
+///|
+pub fn optical_flow_interpolate(
+  frame1 : Image,
+  frame2 : Image,
+  num_frames : Int32,
+  config : FrameInterpConfig,
+) -> Array[Image] {
+  @video.optical_flow_interpolate(frame1, frame2, num_frames, config)
+}
+
+///|
+pub fn phase_interpolate(
+  frame1 : Image,
+  frame2 : Image,
+  num_frames : Int32,
+  config : FrameInterpConfig,
+) -> Array[Image] {
+  @video.phase_interpolate(frame1, frame2, num_frames, config)
+}
+
+///|
+pub fn video_interpolate_frames(
+  frames : Array[Image],
+  config : FrameInterpConfig,
+) -> Array[Image] {
+  @video.video_interpolate_frames(frames, config)
+}
+
+///|
+pub fn frame_rate_conversion(
+  frames : Array[Image],
+  original_fps : Double,
+  target_fps : Double,
+  config : FrameInterpConfig,
+) -> Array[Image] {
+  @video.frame_rate_conversion(frames, original_fps, target_fps, config)
+}
+
+///|
+pub fn interp_pipeline(
+  frames : Array[Image],
+  config : FrameInterpConfig,
+) -> Array[Image] {
+  @video.interp_pipeline(frames, config)
+}

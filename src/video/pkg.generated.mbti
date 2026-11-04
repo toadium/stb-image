@@ -45,6 +45,8 @@ pub fn compute_frame_difference(@types.Image, @types.Image, threshold? : Double)
 
 pub fn compute_interpolated_count(Int32, Int32) -> Int32
 
+pub fn compute_motion_between_frames(@types.Image, @types.Image) -> MotionEstimateResult
+
 pub fn compute_motion_field(@types.Image, @types.Image, SearchConfig) -> Array[MotionVector]
 
 pub fn compute_motion_vectors(@types.Image, @types.Image, Int32) -> Array[Int32]
@@ -84,6 +86,8 @@ pub fn decode_video(EncodedVideo) -> Array[@types.Image]
 pub fn default_flicker_config() -> FlickerConfig
 
 pub fn default_inpaint_config() -> VideoInpaintConfig
+
+pub fn default_interp_config() -> FrameInterpConfig
 
 pub fn default_search_config() -> SearchConfig
 
@@ -143,6 +147,8 @@ pub fn extract_keyframes(Array[@types.Image], Double, method_type? : String) -> 
 
 pub fn filter_detections(Array[MultiDetectedObject], Double) -> Array[MultiDetectedObject]
 
+pub fn frame_rate_conversion(Array[@types.Image], Double, Double, FrameInterpConfig) -> Array[@types.Image]
+
 pub fn generate_slow_motion(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
 pub fn generate_transition(@types.Image, @types.Image, TransitionParams) -> Array[@types.Image]
@@ -155,6 +161,8 @@ pub fn initialize_tracking(@types.Image, Int32, Int32, Int32, Int32, String) -> 
 
 pub fn inpaint_pipeline(Array[@types.Image], Array[Bool], VideoInpaintConfig, FlickerConfig, Double) -> Array[@types.Image]
 
+pub fn interp_pipeline(Array[@types.Image], FrameInterpConfig) -> Array[@types.Image]
+
 pub fn interpolate_frame_blend(@types.Image, @types.Image, Double) -> @types.Image
 
 pub fn interpolate_frame_motion_compensation(@types.Image, @types.Image, Double) -> @types.Image
@@ -164,6 +172,8 @@ pub fn interpolate_frame_optical_flow(@types.Image, @types.Image, Double) -> @ty
 pub fn interpolate_frames(@types.Image, @types.Image, num_frames? : Int32) -> Array[@types.Image]
 
 pub fn interpolate_frames_slow_motion(@types.Image, @types.Image, Double, SlowMotionMethod) -> @types.Image
+
+pub fn linear_interpolate_frames(@types.Image, @types.Image, Int32) -> Array[@types.Image]
 
 pub fn motion_blur_sequence(Array[@types.Image], SlowMotionConfig) -> Array[@types.Image]
 
@@ -175,7 +185,11 @@ pub fn motion_estimate_and_compensate(@types.Image, @types.Image, SearchConfig) 
 
 pub fn multi_object_track(Array[Array[MultiDetectedObject]], MultiTrackingConfig) -> Array[Array[MultiTrackedObject]]
 
+pub fn optical_flow_interpolate(@types.Image, @types.Image, Int32, FrameInterpConfig) -> Array[@types.Image]
+
 pub fn pad_image(@types.Image, Int32, Int32, Byte) -> @types.Image
+
+pub fn phase_interpolate(@types.Image, @types.Image, Int32, FrameInterpConfig) -> Array[@types.Image]
 
 pub fn quantize(Array[Int32], Int32) -> Array[Int32]
 
@@ -254,6 +268,8 @@ pub fn video_frames_new(Array[@types.Image], fps? : Double) -> VideoFrames
 pub fn video_get_frame(VideoFrames, Int32) -> @types.Image?
 
 pub fn video_inpaint(Array[@types.Image], Array[Bool], VideoInpaintConfig) -> Array[@types.Image]
+
+pub fn video_interpolate_frames(Array[@types.Image], FrameInterpConfig) -> Array[@types.Image]
 
 pub fn video_reverse(VideoFrames) -> VideoFrames
 
@@ -374,6 +390,25 @@ pub fn FlickerMethod::equal(Self, Self) -> Bool
 pub fn FlickerMethod::not_equal(Self, Self) -> Bool
 pub fn FlickerMethod::to_repr(Self) -> @debug.Repr
 
+pub(all) struct FrameInterpConfig {
+  interp_method : FrameInterpMethod
+  num_interp_frames : Int32
+  motion_threshold : Double
+  blend_factor : Double
+} derive(Eq, @debug.Debug)
+pub fn FrameInterpConfig::equal(Self, Self) -> Bool
+pub fn FrameInterpConfig::not_equal(Self, Self) -> Bool
+pub fn FrameInterpConfig::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FrameInterpMethod {
+  LinearInterp
+  OpticalFlowInterp
+  PhaseInterp
+} derive(Eq, @debug.Debug)
+pub fn FrameInterpMethod::equal(Self, Self) -> Bool
+pub fn FrameInterpMethod::not_equal(Self, Self) -> Bool
+pub fn FrameInterpMethod::to_repr(Self) -> @debug.Repr
+
 pub(all) enum FrameType {
   IFrame
   PFrame
@@ -400,6 +435,15 @@ pub(all) enum KeyframeType {
 } derive(Eq)
 pub fn KeyframeType::equal(Self, Self) -> Bool
 pub fn KeyframeType::not_equal(Self, Self) -> Bool
+
+pub(all) struct MotionEstimateResult {
+  motion_score : Double
+  dominant_direction : (Double, Double)
+  static_ratio : Double
+} derive(Eq, @debug.Debug)
+pub fn MotionEstimateResult::equal(Self, Self) -> Bool
+pub fn MotionEstimateResult::not_equal(Self, Self) -> Bool
+pub fn MotionEstimateResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MotionEstimationMethod {
   FullSearch

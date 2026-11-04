@@ -4,6 +4,17 @@
 
 ## Phase 16｜计算摄影大扩展（v376 ~ v391）
 
+### v403.0.0 — 视频插帧
+
+**2026-11-04** — 线性/光流/相位插帧 + 帧间运动估计 + 帧率转换(升/降) + 插帧流水线。
+
+| 类型 | 内容 |
+|------|------|
+| 新增类型 | `FrameInterpMethod`(3) / `FrameInterpConfig` / `MotionEstimateResult` |
+| 新增函数 | `default_interp_config` / `linear_interpolate_frames` / `compute_motion_between_frames` / `optical_flow_interpolate` / `phase_interpolate` / `video_interpolate_frames` / `frame_rate_conversion` / `interp_pipeline` |
+| 测试 | 15696×4（+16） |
+| 状态 | ✅ 0 warning, 0 error |
+
 ### v402.0.0 — 视频超分
 
 **2026-11-04** — 双三次/双线性上采样 + 时空超分(时域信息增强) + 递归超分(级联放大) + 质量评估。
